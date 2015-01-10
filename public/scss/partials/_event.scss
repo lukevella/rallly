@@ -1,0 +1,39 @@
+.event-sidebar {
+    @include span-columns(4);
+}
+
+.event-main {
+    @include span-columns(7);
+    @include shift(1);
+}
+
+.event-author {
+    font-size: em(14px);
+    margin-top:em(-30px);
+    color: $body-clr;
+    margin-bottom:em(15px);
+    a {
+        color: $blue-clr;
+        text-decoration:none;
+    }
+}
+
+.event-description {
+    font-size: em(14px);
+    line-height: em(21px);
+    white-space: pre-wrap;
+}
+
+.event-poll {
+    width:100%;
+    text-align:center;
+    th {
+        text-align:center;
+        border-bottom:1px solid #ddd;
+        padding:em(10px);
+        box-shadow: 0 3px 0 rgba(black, 0.05);
+    }
+    td {
+        padding: em(10px);
+    }
+}

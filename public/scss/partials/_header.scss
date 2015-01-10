@@ -1,0 +1,29 @@
+.header {
+    border-bottom: 1px solid #ddd;
+    border-top: 5px solid $primary-clr;
+    @include row();
+    @include pad(em(20px) em(40px));
+    .primary-section {
+        @include span-columns(6);
+    }
+    .secondary-section {
+        @include span-columns(6);
+        text-align:right;
+    }
+    .nav-links {
+        font-size: em(12px);
+        font-weight: 600;
+        line-height: em(24px);
+        .nav-link {
+            text-decoration:none;
+            color: $dark-gray-clr;
+            margin: 0 em(10px);
+            &:hover {
+                color: $text-clr;
+            }
+        }
+        .btn {
+            margin: 0 0 0 em(20px);
+        }
+    }
+}

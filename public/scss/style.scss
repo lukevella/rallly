@@ -1,0 +1,27 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,400italic);
+@import "partials/vars";
+@import "partials/mixins";
+@import "partials/normalize";
+@import "bourbon/bourbon";
+@import "neat/neat";
+$mobile: new-breakpoint(max-width 1000px 4);
+
+body {
+    font-size: em(18px);
+    @include font();
+    color: $text-clr;
+    @include media($mobile){
+        font-size: em(14px);
+    }
+}
+@import "partials/header";
+@import "partials/buttons";
+@import "partials/type";
+@import "partials/form";
+@import "partials/datepicker";
+@import "partials/event";
+
+.container {
+    @include outer-container();
+    padding: 40px;
+}

@@ -1,0 +1,25 @@
+.btn-flat {
+    color:white;
+    background: $primary-clr;
+    text-decoration:none;
+    @include pad(em(10px) em(20px));
+    border-radius: 3px;
+}
+
+.btn-primary {
+    border:1px solid #E0E3E9;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 white, 0 1px 2px rgba(black, 0.1);
+    @include background-image(linear-gradient(#FAFAFA, #EFF1F3));
+    font-size: em(12px);
+    font-weight:600;
+    color: $dark-gray-clr;
+    text-decoration:none;
+    padding: em(10px) em(20px);
+    &:focus {
+        outline:0;
+    }
+    &:active{
+        box-shadow: inset 0 0 5px rgba(black, 0.1);
+    }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "myapp",
+  "version": "0.0.0",
+  "authors": [
+    "Luke Vella"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "public/vendor/"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.1",
+    "angular": "~1.3.3",
+    "bootstrap-datepicker": "~1.3.0",
+    "angular-ui-router": "~0.2.13",
+    "angular-resource": "~1.3.6",
+    "ngFx": "~1.0.5"
+  }
+}

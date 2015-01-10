@@ -1,0 +1,34 @@
+<html ng-app="rallly">
+    <head>
+        <title>Rallly - Collabrative Scheduling</title>
+        <base href="/">
+        <link rel="stylesheet" href="/css/style.css" media="screen" charset="utf-8">
+        <script type="text/javascript" src="/vendor/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="/vendor/angular/angular.min.js"></script>
+        <script type="text/javascript" src="/vendor/angular-resource/angular-resource.min.js"></script>
+        <script type="text/javascript" src="/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+        <script type="text/javascript" src="/vendor/ngFx/dist/ngFx.min.js"></script>
+        <script type="text/javascript" src="/build/app.js"></script>
+    </head>
+    <body>
+        <header class="header">
+            <section class="primary-section">
+                <a href="/">
+                    <img src="/images/logo@2x.png" width="100" alt="Rallly - Collabrative Scheduling" />
+                </a>
+            </section>
+            <section class="secondary-section">
+                <nav class="nav-links">
+                    <a class="nav-link" href="/about">About</a>
+                    <a class="btn btn-flat" href="/">
+                        Schedule New Event
+                    </a>
+                </nav>
+            </div>
+        </header>
+        <div class="container" ui-view>
+
+        </div>
+    </body>
+</html>

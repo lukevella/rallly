@@ -1,0 +1,51 @@
+<div ng-show="event">
+    <aside class="event-sidebar">
+        <h1>{{event.title}}</h1>
+        <div class="event-author">Created by <a href="mailto:{{event.creator.email}}">{{event.creator.name}}</a></div>
+        <div class="event-description">{{event.description}}</div>
+        <h2>Comments</h2>
+    </aside>
+    <section class="event-main">
+        <h2>When can you make it?</h2>
+        <form ng-submit="save(participant)">
+            <table class="event-poll">
+                <thead>
+                    <tr>
+                        <th>
+
+                        </th>
+                        <th ng-repeat="date in event.dates">
+                            <div class="daticon">
+                                <div class="day">
+                                    {{date | date: 'd'}}
+                                </div>
+                                <div class="month">
+                                    {{date | date : 'MMM'}}
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="participant in event.participants">
+                        <td>
+                            {{participant.name}} - <a href="javascript:" ng-click="deleteParticipant(participant._id)">Delete</a>
+                        </td>
+                        <td ng-repeat="date in event.dates">
+                            <input type="checkbox" disabled ng-checked="participant.dates[$index ]" ng-model="date" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" class="form-control" ng-model="participant.name" placeholder="Your name..."/>
+                        </td>
+                        <td ng-repeat="date in event.dates">
+                            <input ng-model="participant.dates[$index]" ng-false-value="false" type="checkbox" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </section>
+</div>

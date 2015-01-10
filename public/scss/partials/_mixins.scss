@@ -1,0 +1,3 @@
+@mixin font($font : $primary-font){
+    font-family: $font, $helvetica;
+}
