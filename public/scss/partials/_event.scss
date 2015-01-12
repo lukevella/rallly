@@ -21,10 +21,6 @@
         }
     }
     tr:hover {
-        td {
-            color: $blue-clr;
-            background: rgba(#F6FBFF,0.5);
-        }
         .hover {
             visibility:visible;
         }
@@ -57,7 +53,7 @@
             color: $text-clr;
             &:focus {
                 outline:0;
-                border-color: $primary-clr;
+                border-color: $blue-clr;
             }
         }
     }

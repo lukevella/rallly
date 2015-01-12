@@ -12,25 +12,25 @@
         <script type="text/javascript" src="/build/app.js"></script>
     </head>
     <body>
-        <header class="header">
-            <div class="container">
-            <section class="primary-section">
-                <a href="/">
-                    <img src="/images/logo@2x.png" width="100" alt="Rallly - Collabrative Scheduling" />
-                </a>
-            </section>
-            <section class="secondary-section">
-                <nav class="nav-links">
-                    <a class="nav-link" href="/about">What is this?</a>
-                    <a class="btn btn-flat" href="/">
-                        Schedule New Event
+        <div class="container">
+            <header class="header">
+                <div class="fixed">
+                <section class="primary-section">
+                    <a href="/">
+                        <img src="/images/logo@2x.png" width="100" alt="Rallly - Collabrative Scheduling" />
                     </a>
-                </nav>
-            </div>
-            </div>
-        </header>
-        <div class="container" ui-view>
+                </section>
+                <section class="secondary-section">
+                    <nav class="nav-links">
+                        <a class="nav-link" href="/">New Event</a>
+                        <a class="nav-link" href="/about">What is this?</a>
+                    </nav>
+                </section>
+                </div>
+            </header>
+            <div class="main-content" ui-view>
 
+            </div>
         </div>
     </body>
 </html>

@@ -1,28 +1,25 @@
 .header {
-    border-top: 5px solid $primary-clr;
-    @include row();
-    @include linear-gradient(white, transparent 50%, $fallback:transparent);
+    @include span-columns(3);
+    .fixed {
+        position: fixed;
+    }
     .primary-section {
-        @include span-columns(6);
+        margin: em(35px) 0;
     }
     .secondary-section {
-        @include span-columns(6);
-        text-align:right;
+
     }
     .nav-links {
-        font-size: em(12px);
-        font-weight: 600;
+        font-size: em(16px);
+        font-weight: normal;
         line-height: em(24px);
         .nav-link {
+            display:block;
             text-decoration:none;
             color: $dark-gray-clr;
-            margin: 0 em(10px);
-            &:hover {
+            &:hover, &.active {
                 color: $text-clr;
             }
-        }
-        .btn {
-            margin: 0 0 0 em(20px);
         }
     }
 }

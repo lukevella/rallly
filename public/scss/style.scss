@@ -24,8 +24,13 @@ body {
 @import "partials/eventsuccess";
 
 .container {
-    @include outer-container(800px);
+    @include outer-container();
     padding: em(30px) em(40px);
+}
+
+.main-content {
+    @include span-columns(8);
+    @include shift(2);
 }
 
 .rl-section {

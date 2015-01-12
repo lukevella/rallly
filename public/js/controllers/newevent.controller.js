@@ -1,6 +1,8 @@
 angular.module('rallly')
 .controller('NewEventCtrl', function($scope, $http, $state){
+    $(".nav-link[href='/']").addClass('active');
     $scope.event = {};
+    $scope.isNewEvent = true;
     $scope.submit = function(){
         $http.post('/api/event', $scope.event)
         .success(function(event, status, headers, config){

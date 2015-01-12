@@ -1,5 +1,6 @@
 angular.module('rallly')
 .controller('EventCtrl', function($scope, $http, $state, Event, Participant){
+    $(".nav-link").removeClass('active');
     var id = $state.params.id;
     $scope.event = Event.get({id:id}, function(data){}, function(e){
         $state.go('notfound');
@@ -18,7 +19,6 @@ angular.module('rallly')
             id : $scope.event._id,
             pid : participant._id
         }, participant);
-        // Event.update({'_id':$scope.event.id}, $scope.event);
     }
     $scope.edit = function(participant){
         $scope.defaults[$scope.event.participants.indexOf(participant)] = angular.copy(participant);

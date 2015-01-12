@@ -9,7 +9,7 @@
 .btn-primary {
     border:1px solid #E0E3E9;
     border-radius: 2px;
-    box-shadow: inset 0 1px 0 white, 0 1px 2px rgba(black, 0.1);
+    box-shadow: inset 0 1px 0 white, 0 1px 1px rgba(black, 0.1);
     @include background-image(linear-gradient(#FAFAFA, #EFF1F3));
     font-size: em(12px);
     font-weight:600;
@@ -17,7 +17,7 @@
     text-decoration:none;
     padding: em(8px) em(20px);
     &.danger {
-        color: $red-clr;
+        color: $danger-clr;
     }
     &:focus {
         outline:0;
