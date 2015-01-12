@@ -5,7 +5,7 @@ angular.module('rallly', ['ui.router','ngResource','ngFx'])
         $stateProvider
         .state('index',{
             url : '/',
-            templateUrl : 'templates/new.html',
+            templateUrl : 'templates/newevent.html',
             controller : 'NewEventCtrl'
         })
         .state('about', {
@@ -15,6 +15,11 @@ angular.module('rallly', ['ui.router','ngResource','ngFx'])
         .state('notfound', {
             url : '/notfound',
             templateUrl : 'templates/notfound.html'
+        })
+        .state('editevent', {
+            url: '/:id/edit',
+            templateUrl : 'templates/editevent.html',
+            controller : 'EditEventCtrl'
         })
         .state('event',{
             url : '/:id',

@@ -1,0 +1,92 @@
+
+<h1>Editing: {{event.title}}</h1>
+<div class="rl-page-desc">
+    You can makes changes to your existing event by changing the fields in the form below. When you're ready click save.
+</div>
+<section class="rl-section">
+    <aside class="rl-section-details">
+        <h2>Your Details</h2>
+    </aside>
+    <div class="rl-section-main">
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group" ng-class="{error:errors['creator.name']}">
+                    <label for="name">Name</label>
+                    <input id="name" ng-model="event.creator.name" type="text" placeholder="John Doe..." class="form-control extend"/>
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group" ng-class="{error:errors['creator.email']}">
+                    <label for="email">Email</label>
+                    <input id="email" ng-model="event.creator.email" type="text" placeholder="john.doe@email.com..." class="form-control extend"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="rl-section">
+    <aside class="rl-section-details">
+        <h2>Event Details</h2>
+    </aside>
+    <div class="rl-section-main">
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group" ng-class="{error:errors.title}">
+                    <label for="title">Title</label>
+                    <input id="title" ng-model="event.title" type="text" placeholder="Monthly Meetup..." class="form-control extend"/>
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="location" class="optional">Location</label>
+                    <input id="location" ng-model="event.location" type="text" placeholder="Rick's Cafe..." class="form-control extend"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="description" class="optional">Description</label>
+                <textarea id="description" ng-model="event.description" placeholder="Enter Description..." class="form-control extend"></textarea>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="rl-section">
+    <aside class="rl-section-details">
+        <h2>Change Dates</h2>
+    </aside>
+    <div class="rl-section-main">
+        <div class="form-row">
+            <div data-datepicker ng-model="event.dates" ng-class="{error:errors.dates}">
+
+            </div>
+            <ul class="daticon-list">
+                <li ng-repeat="date in event.dates">
+                    <div class="daticon">
+                        <div class="dow">
+                            {{date | date: 'EEE'}}
+                        </div>
+                        <div class="day">
+                            {{date | date: 'd'}}
+                        </div>
+                        <div class="month">
+                            {{date | date : 'MMM'}}
+                        </div>
+                        <span class="delete" ng-click="unsetDate(date)"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <p>
+
+        <button type="submit" ng-show="didChange()" ng-click="submit()" class="btn btn-primary" ng-class="{disabled : !didChange()}">
+            Save Changes
+        </button>
+        <a href="/{{event._id}}" class="btn-primary danger" ng-show="didChange()">Cancel Changes</a>
+        <a href="/{{event._id}}" class="btn-primary" ng-hide="didChange()">Done</a>
+        <span ng-show="errors" class="form-submit-message error fx-fade-normal fx-speed-100"><img src="/images/error@2x.png" width="22" height="22" /> Oops! Looks like you missed something!</span>
+        <span ng-show="didSave" class="form-submit-message fx-fade-normal fx-speed-100"><img src="/images/success@2x.png" width="22" height="22" /> Changes saved successfully!</span>
+        </p>
+
+    </div>
+</section>

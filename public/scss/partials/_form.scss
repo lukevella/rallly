@@ -55,7 +55,7 @@
         font-size:em(18px);
         @include transition(border-color 0.1s ease-in-out);
         &:focus {
-            border-color: $primary-clr;
+            border-color: $blue-clr;
             outline:none;
         }
         &.extend {
@@ -77,7 +77,20 @@
     }
     textarea.form-control {
         min-height: 100px;
-        font-size: em(14px);
+        font-size: em(18px);
         padding: em(8px) em(10px);
+    }
+}
+
+.form-submit-message {
+    display:inline-block;
+    margin-left: em(5px);
+    font-size: em(12px);
+    &.error {
+        color: $red-clr;
+    }
+    img {
+        vertical-align:middle;
+        margin-right: em(5px);
     }
 }

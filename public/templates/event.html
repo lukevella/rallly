@@ -3,13 +3,10 @@
         <h1 class="fx-rotate-clock">{{event.title}}</h1>
         <ul class="event-detail-list">
             <li class="event-created-by">
-                Created by: <a href="{{event.creator.email}}">{{event.creator.name}}</a>
+                Created by <a href="{{event.creator.email}}">{{event.creator.name}}</a> on {{event.created | date : 'medium'}}
             </li>
             <li>
-                Created on: {{event.created | date : 'medium'}}
-            </li>
-            <li>
-                Last updated: {{event.updated | date : 'medium'}}
+                Last updated {{event.updated | date : 'medium'}}
             </li>
             <li ng-show="event.location" class="event-location">
                 {{event.location}}
@@ -59,9 +56,9 @@
                             </td>
                             <td>
                                 <a ng-hide="editMode" href="javascript:" ng-click="editMode = true; edit(participant)" class="btn-primary hover">Edit</a>
-                                <a ng-hide="editMode" href="javascript:" ng-click="delete(participant)" class="btn-primary danger hover">Delete</a>
-                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; update(participant)" class="btn-primary">Save</a>
-                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; cancel($index)" class="btn-primary danger">Cancel</a>
+                                <a ng-hide="editMode" href="javascript:" ng-click="delete(participant)" class="btn-primary danger hover">Delete</button>
+                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; update(participant)" class="btn-primary">Save</button>
+                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; cancel($index)" class="btn-primary">Cancel</button>
                             </td>
                         </tr>
                         <tr class="event-poll-input">
@@ -80,4 +77,7 @@
                 </table>
             </form>
     </section>
+    <p>
+        <button class="btn-primary" ng-click="editEvent()">Edit Event</button>
+    </p>
 </div>

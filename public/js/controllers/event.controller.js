@@ -2,7 +2,13 @@ angular.module('rallly')
 .controller('EventCtrl', function($scope, $http, $state, Event, Participant){
     $(".nav-link").removeClass('active');
     var id = $state.params.id;
-    $scope.event = Event.get({id:id}, function(data){}, function(e){
+    $scope.event = Event.get({id:id}, function(data){
+        $scope.eventUrl = $state.href('event', {
+            id: $scope.event._id
+        }, {
+            absolute : true
+        });
+    }, function(e){
         $state.go('notfound');
     });
     $scope.delete = function(participant){
@@ -13,6 +19,10 @@ angular.module('rallly')
         }
     }
     $scope.defaults = [];
+
+    $scope.editEvent = function(){
+        $state.go('editevent', { id : $scope.event._id });
+    }
 
     $scope.update = function(participant){
         Participant.update({

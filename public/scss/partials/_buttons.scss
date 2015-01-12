@@ -16,13 +16,20 @@
     color: $dark-gray-clr;
     text-decoration:none;
     padding: em(8px) em(20px);
+    &.disabled {
+        cursor:default;
+        opacity: 0.5;
+        &:active {
+            box-shadow: inset 0 1px 0 white, 0 1px 1px rgba(black, 0.1);
+        }
+    }
     &.danger {
         color: $danger-clr;
     }
     &:focus {
         outline:0;
     }
-    &:active{
+    &:active {
         box-shadow: inset 0 0 5px rgba(black, 0.1);
     }
 }

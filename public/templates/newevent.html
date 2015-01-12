@@ -1,4 +1,4 @@
-<div ng-hide="event._id">
+<div ng-hide="eventUrl">
     <h1>Schedule New Event</h1>
     <div class="rl-page-desc">
         Fill in the form below to create your event and share it with your friends and colleagues.
@@ -91,12 +91,12 @@
                 </div>
             </div>
             <button type="submit" ng-click="submit()" class="btn btn-primary">Create &amp; Send</button>
-            <span ng-show="errors" class="form-global-error fx-zoom-normal fx-speed-100"><img src="/images/error@2x.png" width="22" height="22" /> Oops! Looks like you missed something!</span>
+            <span ng-show="errors" class="form-submit-message error fx-fade-normal fx-speed-100"><img src="/images/error@2x.png" width="22" height="22" /> Oops! Looks like you missed something!</span>
         </div>
     </section>
 </div>
-<div ng-show="event._id" class="form-success fx-fade-up">
-    <img src="/images/success@2x.png" width="128" height="128" />
+<div ng-show="eventUrl" class="form-success fx-fade-up">
+    <img src="/images/success_large@2x.png" width="128" height="128" />
     <h1>Good Job!</h1>
     <p>
         Your event has been created. An email has been sent to all the participants with a link to the event page. Make sure you visit the page and vote on the dates yourself.
