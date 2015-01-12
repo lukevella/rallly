@@ -22,10 +22,14 @@
         padding: em(10px);
         border-bottom:1px solid #ddd;
     }
+    .event-poll-name {
+        padding: em(6px) em(11px);
+        display:inline-block;
+    }
     .event-poll-user {
         text-align:left;
         font-size: em(14px);
-        padding: em(15px) em(10px);
+        padding: em(12px) em(10px);
         img {
             margin-right: 5px;
         }
@@ -38,6 +42,9 @@
                 border-color: $primary-clr;
             }
         }
+    }
+    .event-poll-input {
+        padding:0;
     }
     .event-poll-participants {
         text-align:left;

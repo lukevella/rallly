@@ -95,10 +95,10 @@
         }
         &.active {
             background:white;
-            color: $red-clr;
+            color: $primary-clr;
             &:after {
                 opacity:1;
-                background: rgba($red-clr,0.1);
+                background: rgba($primary-clr,0.1);
             }
         }
         &:active {

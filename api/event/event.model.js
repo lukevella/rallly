@@ -10,6 +10,14 @@ var EventSchema = new Schema({
         name : String,
         email : String
     },
+    created : {
+        type : Date,
+        default : Date.now
+    },
+    updated : {
+        type : Date,
+        default : Date.now
+    },
     title : String,
     dates : [Date],
     emails : [String],

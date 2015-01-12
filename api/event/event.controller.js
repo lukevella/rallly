@@ -19,6 +19,7 @@ exports.show = function(req, res, next){
 }
 
 exports.update = function(req, res){
+    req.body.updated = Date.now();
     Event.update({ '_id' : req.params.id }, req.body, function(){
         return res.status(204).end();
     });
@@ -29,6 +30,7 @@ exports.createParticipant = function(req, res, next){
     var participant = req.body;
     Event.findById(eventId, function(err, event){
         if (err) return handleError(res, err);
+        event.updated = Date.now();
         event.participants.push(participant);
         event.save(function(err, event){
             if (err) return next(err);
@@ -42,6 +44,7 @@ exports.deleteParticipant = function(req, res, next){
     var participantId = req.params.pid;
     Event.findById(eventId, function(err, event){
         if (err) return handleError(res, err);
+        event.updated = Date.now();
         event.participants.pull({ '_id' : participantId });
         event.save(function(err, event){
             res.json(event);
