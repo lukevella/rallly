@@ -10,7 +10,8 @@ angular.module('rallly', ['ui.router','ngResource','ngFx'])
         })
         .state('about', {
             url : '/about',
-            templateUrl : 'templates/about.html'
+            templateUrl : 'templates/about.html',
+            controller : 'AboutCtrl'
         })
         .state('notfound', {
             url : '/notfound',

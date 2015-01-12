@@ -2,6 +2,7 @@ angular.module('rallly')
 .controller('EventCtrl', function($scope, $http, $state, Event, Participant){
     $(".nav-link").removeClass('active');
     var id = $state.params.id;
+    $scope.participant = {};
     $scope.event = Event.get({id:id}, function(data){
         $scope.eventUrl = $state.href('event', {
             id: $scope.event._id

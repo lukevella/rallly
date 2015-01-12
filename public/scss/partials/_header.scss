@@ -17,8 +17,11 @@
             display:block;
             text-decoration:none;
             color: $dark-gray-clr;
-            &:hover, &.active {
+            &:hover {
                 color: $text-clr;
+            }
+            &.active {
+                color: $blue-clr;
             }
         }
     }

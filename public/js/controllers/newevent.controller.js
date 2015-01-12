@@ -1,5 +1,6 @@
 angular.module('rallly')
 .controller('NewEventCtrl', function($scope, $http, $state, Event){
+    $(".nav-link").removeClass('active');
     $(".nav-link[href='/']").addClass('active');
 
     $scope.submit = function(){
