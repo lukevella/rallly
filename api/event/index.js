@@ -9,4 +9,5 @@ router.get('/:id', controller.show);
 router.post('/:id/participant', controller.createParticipant);
 router.put('/:id', controller.update);
 router.delete('/:id/participant/:pid', controller.deleteParticipant);
+router.put('/:id/participant/:pid', controller.updateParticipant);
 module.exports = router;

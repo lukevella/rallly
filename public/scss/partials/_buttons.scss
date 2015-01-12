@@ -16,6 +16,9 @@
     color: $dark-gray-clr;
     text-decoration:none;
     padding: em(8px) em(20px);
+    &.danger {
+        color: $red-clr;
+    }
     &:focus {
         outline:0;
     }

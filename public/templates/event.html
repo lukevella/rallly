@@ -1,21 +1,18 @@
-<div ng-show="event">
+<div ng-show="event._id">
     <div class="event-details">
-        <h1>{{event.title}}</h1>
+        <h1 class="fx-rotate-clock">{{event.title}}</h1>
         <ul class="event-detail-list">
             <li class="event-created-by">
-                Created by <a href="{{event.creator.email}}">{{event.creator.name}}</a>
+                Created by: <a href="{{event.creator.email}}">{{event.creator.name}}</a>
             </li>
             <li>
-                Created on {{event.created | date : 'short'}}
+                Created on: {{event.created | date : 'medium'}}
             </li>
             <li>
-                Last updated {{event.updated | date : 'short'}}
+                Last updated: {{event.updated | date : 'medium'}}
             </li>
             <li ng-show="event.location" class="event-location">
                 {{event.location}}
-            </li>
-            <li ng-show="event.participants.length">
-                {{event.participants.length}} participants
             </li>
         </ul>
         <div ng-show="event.description" class="event-description">{{event.description}}</div>
@@ -61,10 +58,10 @@
                                 <input ng-model="participant.dates[$index]" ng-show="editMode" ng-false-value="false" type="checkbox" />
                             </td>
                             <td>
-                                <a ng-hide="editMode" href="javascript:" ng-click="editMode = true; edit(participant)" class="btn-primary">Edit</a>
-                                <a ng-hide="editMode" href="javascript:" ng-click="delete(participant)" class="btn-primary">Delete</a>
-                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; update(participant)" class="btn-primary">Save</a>
-                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; cancel($index)" class="btn-primary">Cancel</a>
+                                <a ng-hide="editMode" href="javascript:" ng-click="editMode = true; edit(participant)" class="btn-primary hover">Edit</a>
+                                <a ng-hide="editMode" href="javascript:" ng-click="delete(participant)" class="btn-primary danger hover">Delete</a>
+                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; update(participant)" class="btn-primary hover">Save</a>
+                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; cancel($index)" class="btn-primary hover">Cancel</a>
                             </td>
                         </tr>
                         <tr class="event-poll-input">

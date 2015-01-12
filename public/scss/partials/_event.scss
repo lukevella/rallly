@@ -15,6 +15,23 @@
         padding-bottom:em(10px);
         box-shadow: 0 3px 0 rgba(black, 0.05);
     }
+    tr:nth-child(even){
+        td {
+            background: #F9FAFA;
+        }
+    }
+    tr:hover {
+        td {
+            color: $blue-clr;
+            background: rgba(#F6FBFF,0.5);
+        }
+        .hover {
+            visibility:visible;
+        }
+    }
+    .hover {
+        visibility: hidden;
+    }
     td {
         &.center {
             text-align:center;
@@ -29,7 +46,7 @@
     .event-poll-user {
         text-align:left;
         font-size: em(14px);
-        padding: em(12px) em(10px);
+        padding: em(12px) em(20px);
         img {
             margin-right: 5px;
         }
@@ -37,6 +54,7 @@
             border:1px solid #ddd;
             padding: em(5px) em(10px);
             border-radius: 3px;
+            color: $text-clr;
             &:focus {
                 outline:0;
                 border-color: $primary-clr;

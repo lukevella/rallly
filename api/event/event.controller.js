@@ -13,7 +13,7 @@ exports.create = function(req, res){
 exports.show = function(req, res, next){
     Event.findById(req.params.id, function(err, event){
         if (err) return handleError(res, err);
-        if (!event) return res.status(404);
+        if (!event) return res.status(404).end();
         return res.json(event);
     });
 }
@@ -36,6 +36,23 @@ exports.createParticipant = function(req, res, next){
             if (err) return next(err);
             res.json(event);
         });
+    });
+}
+
+exports.updateParticipant = function(req, res, next){
+    var eventId = req.params.id;
+    var participantId = req.params.pid;
+    Event.update({
+        '_id' : eventId,
+        'participants._id': participantId
+    }, {
+        '$set': {
+            'updated' : Date.now(),
+            'participants.$' : req.body
+        }
+    }, function(err, num){
+        if (err) return next(err);
+        res.status(204).end();
     });
 }
 
