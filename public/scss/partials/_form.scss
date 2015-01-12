@@ -53,6 +53,7 @@
         border-radius: 3px;
         border: 1px solid #ddd;
         font-size:em(18px);
+        @include transition(border-color 0.1s ease-in-out);
         &:focus {
             border-color: $primary-clr;
             outline:none;
@@ -66,6 +67,7 @@
     }
     &.error {
         input.form-control, textarea.form-control {
+
             border-color: $red-clr;
             background: rgba($red-clr,0.02);
         }
@@ -75,6 +77,7 @@
     }
     textarea.form-control {
         min-height: 100px;
+        font-size: em(14px);
         padding: em(8px) em(10px);
     }
 }

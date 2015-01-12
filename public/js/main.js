@@ -23,7 +23,9 @@ angular.module('rallly', ['ui.router','ngResource','ngFx'])
         })
     })
     .factory('Event', function($resource){
-        return $resource('/api/event/:id', { id : '@_id' });
+        return $resource('/api/event/:id', { id : '@_id' }, {
+            'update' : { method : 'PUT' }
+        });
     })
     .factory('Participant', function($resource){
         return $resource('/api/event/:id/participant/:pid', { id: '@_id', pid : '@pid'});

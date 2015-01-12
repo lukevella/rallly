@@ -13,6 +13,7 @@ var EventSchema = new Schema({
     title : String,
     dates : [Date],
     emails : [String],
+    location: String,
     participants : [{
         id : Schema.Types.ObjectId,
         name : String,

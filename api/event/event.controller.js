@@ -18,6 +18,12 @@ exports.show = function(req, res, next){
     });
 }
 
+exports.update = function(req, res){
+    Event.update({ '_id' : req.params.id }, req.body, function(){
+        return res.status(204).end();
+    });
+}
+
 exports.createParticipant = function(req, res, next){
     var eventId = req.params.id;
     var participant = req.body;

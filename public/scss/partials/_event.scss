@@ -1,39 +1,96 @@
-.event-sidebar {
-    @include span-columns(4);
-}
-
-.event-main {
-    @include span-columns(7);
-    @include shift(1);
-}
-
-.event-author {
-    font-size: em(14px);
-    margin-top:em(-30px);
-    color: $body-clr;
-    margin-bottom:em(15px);
-    a {
-        color: $blue-clr;
-        text-decoration:none;
-    }
-}
-
 .event-description {
-    font-size: em(14px);
+    font-size: em(18px);
     line-height: em(21px);
+    color: $body-clr;
     white-space: pre-wrap;
 }
 
 .event-poll {
     width:100%;
-    text-align:center;
+    margin-top:em(-10px);
+    margin-bottom: em(10px);
     th {
         text-align:center;
         border-bottom:1px solid #ddd;
-        padding:em(10px);
+        padding-bottom:em(10px);
         box-shadow: 0 3px 0 rgba(black, 0.05);
     }
     td {
+        &.center {
+            text-align:center;
+        }
         padding: em(10px);
+        border-bottom:1px solid #ddd;
     }
+    .event-poll-user {
+        text-align:left;
+        font-size: em(14px);
+        padding: em(15px) em(10px);
+        img {
+            margin-right: 5px;
+        }
+        input {
+            border:1px solid #ddd;
+            padding: em(5px) em(10px);
+            border-radius: 3px;
+            &:focus {
+                outline:0;
+                border-color: $primary-clr;
+            }
+        }
+    }
+    .event-poll-participants {
+        text-align:left;
+        padding:0 em(10px);
+    }
+
+    .event-entry-button {
+        font-size: em(12px);
+        text-decoration:none;
+        color: #aaa;
+        border-radius: 3px;
+        margin-left: em(5px);
+        &:hover {
+            color: $primary-clr;
+            &.danger {
+                color: $red-clr;
+            }
+        }
+    }
+}
+
+
+.event-poll-buttons {
+    text-align:right;
+    padding: 0 em(10px);
+}
+
+.event-detail-list {
+    list-style:none;
+    margin-top:em(-20px);
+    margin-bottom:em(20px);
+    padding:0;
+    color: $body-clr;
+    font-size: em(12px);
+    li {
+        display:inline-block;
+        margin-right: em(40px);
+    }
+    a {
+        color: $text-clr;
+        text-decoration:none;
+        &:hover {
+            color: $primary-clr;
+        }
+    }
+}
+
+.event-details {
+    margin-bottom: em(40px);
+}
+.event-button-tip {
+    font-size: em(11px);
+    color: #C4CAD2;
+    display:inline-block;
+    margin-right: em(10px);
 }

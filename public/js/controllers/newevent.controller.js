@@ -1,9 +1,6 @@
 angular.module('rallly')
 .controller('NewEventCtrl', function($scope, $http, $state){
     $scope.event = {};
-    $scope.templates = {
-        modal : 'templates/modal.html'
-    };
     $scope.submit = function(){
         $http.post('/api/event', $scope.event)
         .success(function(event, status, headers, config){
@@ -17,7 +14,6 @@ angular.module('rallly')
         })
         .error(function(data, status, headers, config){
             $scope.errors = data.errors;
-            console.log(data.errors);
         })
     }
     $scope.clearDates = null
@@ -49,17 +45,6 @@ angular.module('rallly')
                     return el != date;
                 }));
             };
-        }
-    }
-})
-.directive('rallly-error', function(){
-    return {
-        restrict : 'A',
-        scope: {
-            'message': '='
-        },
-        controller : function($scope){
-            console.log($scope.message);
         }
     }
 });

@@ -7,5 +7,6 @@ var debug = require('debug')('api/event/index');
 router.post('/', controller.create);
 router.get('/:id', controller.show);
 router.post('/:id/participant', controller.createParticipant);
+router.put('/:id', controller.update);
 router.delete('/:id/participant/:pid', controller.deleteParticipant);
 module.exports = router;

@@ -7,6 +7,7 @@
     border-radius: 3px;
     background:white;
     padding: em(10px);
+    @include transition(border-color 0.1s ease-in-out);
     table {
         width:100%;
         font-size: em($em-base);
@@ -161,8 +162,17 @@
     position:relative;
     cursor:default;
     background:white;
+    .dow {
+        font-size: em(6px);
+        margin-top:em(-24px);
+        background:white;
+        color: #aaa;
+        margin-bottom: em(4px);
+        font-weight:normal;
+        text-transform: uppercase;
+    }
     .day {
-        font-size: em(24px);
+        font-size: em(20px);
         font-weight:normal;
         color: $red-clr;
         line-height: em(16px);

@@ -1,8 +1,7 @@
 .header {
-    border-bottom: 1px solid #ddd;
     border-top: 5px solid $primary-clr;
     @include row();
-    @include pad(em(20px) em(40px));
+    @include linear-gradient(white, transparent 50%, $fallback:transparent);
     .primary-section {
         @include span-columns(6);
     }
