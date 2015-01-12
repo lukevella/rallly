@@ -4,14 +4,14 @@
 @import "partials/normalize";
 @import "bourbon/bourbon";
 @import "neat/neat";
-$mobile: new-breakpoint(max-width 1000px 4);
+$mobile: new-breakpoint(max-width 768px 4);
 
 body {
     font-size: em(18px);
     @include font();
     color: $text-clr;
-    @include media($mobile){
-        font-size: em(14px);
+    @include media($mobile) {
+        font-size: em(15px);
     }
 }
 @import "partials/header";
@@ -20,8 +20,34 @@ body {
 @import "partials/form";
 @import "partials/datepicker";
 @import "partials/event";
+@import "partials/newevent";
+@import "partials/eventsuccess";
 
 .container {
-    @include outer-container();
-    padding: 40px;
+    @include outer-container(800px);
+    padding: em(30px) em(40px);
+}
+
+.rl-section {
+    @include outer-container(800px);
+    border-top:1px solid #ddd;
+    padding-top: em(20px);
+    margin-bottom: em(20px);
+}
+
+.rl-section-details {
+    @include span-columns(3);
+    h2 {
+        margin-top: em(5px);
+    }
+}
+
+.rl-section-main {
+    @include span-columns(9);
+}
+
+.rl-page-desc {
+    font-size: em(21px);
+    color: $body-clr;
+    margin-bottom: em(20px);
 }

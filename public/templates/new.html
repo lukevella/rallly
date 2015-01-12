@@ -1,70 +1,71 @@
-<h1>New Event</h1>
-<p>Write down a name for your event and choose a number of dates for your friends to decide from.</p>
-<form class="form" role="form" ng-submit="submit()">
-    <div class="form-row">
-        <div class="form-col">
-            <h2>Your Details</h2>
+<div ng-hide="event._id">
+    <h1>Schedule New Event</h1>
+    <div class="rl-page-desc">
+        Fill in the form below to create your event and share it with your friends and colleagues.
+    </div>
+    <section class="rl-section">
+        <aside class="rl-section-details">
+            <h2>1. Your Details</h2>
+        </aside>
+        <div class="rl-section-main">
             <div class="form-row">
                 <div class="form-col">
                     <div class="form-group" ng-class="{error:errors['creator.name']}">
                         <label for="name">Name</label>
                         <input id="name" ng-model="event.creator.name" type="text" placeholder="John Doe..." class="form-control extend"/>
-                        <div class="form-error-msg" ng-show="errors['creator.name']">{{errors['creator.name'].message}}</div>
                     </div>
                 </div>
                 <div class="form-col">
                     <div class="form-group" ng-class="{error:errors['creator.email']}">
                         <label for="email">Email</label>
                         <input id="email" ng-model="event.creator.email" type="text" placeholder="john.doe@email.com..." class="form-control extend"/>
-                        <div class="form-error-msg" ng-show="errors['creator.email']">{{errors['creator.email'].message}}</div>
                     </div>
                 </div>
-            </div>
-            <div class='fx-fade-down fx-easing-bounce'>
-                <h2>Event Details</h2>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group" ng-class="{error:errors.title}">
-                                <label for="title">Title</label>
-                                <input id="title" ng-model="event.title" type="text" placeholder="Monthly Meetup..." class="form-control extend"/>
-                                <div class="form-error-msg" ng-show="errors.title">{{errors.title.message}}</div>
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="location" class="optional">Location</label>
-                                <input id="location" ng-model="event.location" type="text" placeholder="Rick's Cafe..." class="form-control extend"/>
-                            </div>
-                        </div>
-                    </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="description" class="optional">Description</label>
-                        <textarea id="description" ng-model="event.description" placeholder="Enter Description..." class="form-control extend"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class='fx-fade-down'>
-                <h2>Invite Participants</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="emails" class="optional">Participant's emails (Separate emails with a comma)</label>
-                        <textarea id="emails" ng-list ng-model="event.emails" placeholder="Enter Emails..." class="form-control extend"></textarea>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Create &amp; Send</button>
             </div>
         </div>
-        <div class="form-col padded fx-fade-right">
-            <h2>Choose Dates</h2>
+    </section>
+    <section class="rl-section">
+        <aside class="rl-section-details">
+            <h2>2. Event Details</h2>
+        </aside>
+        <div class="rl-section-main">
             <div class="form-row">
-                <div data-datepicker ng-model="event.dates">
+                <div class="form-col">
+                    <div class="form-group" ng-class="{error:errors.title}">
+                        <label for="title">Title</label>
+                        <input id="title" ng-model="event.title" type="text" placeholder="Monthly Meetup..." class="form-control extend"/>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="location" class="optional">Location</label>
+                        <input id="location" ng-model="event.location" type="text" placeholder="Rick's Cafe..." class="form-control extend"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="description" class="optional">Description</label>
+                    <textarea id="description" ng-model="event.description" placeholder="Enter Description..." class="form-control extend"></textarea>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="rl-section">
+        <aside class="rl-section-details">
+            <h2>3. Choose Dates</h2>
+        </aside>
+        <div class="rl-section-main">
+            <div class="form-row">
+                <div data-datepicker ng-model="event.dates" ng-class="{error:errors.dates}">
 
                 </div>
                 <ul class="daticon-list">
                     <li ng-repeat="date in event.dates">
                         <div class="daticon">
+                            <div class="dow">
+                                {{date | date: 'EEE'}}
+                            </div>
                             <div class="day">
                                 {{date | date: 'd'}}
                             </div>
@@ -77,10 +78,33 @@
                 </ul>
             </div>
         </div>
-    </div>
-
-
-
-</form>
-
-<div ng-show="event._id" ng-include="templates.modal"></div>
+    </section>
+    <section class="rl-section">
+        <aside class="rl-section-details">
+            <h2>4. Invite Participants</h2>
+        </aside>
+        <div class="rl-section-main">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="emails" class="optional">Participant's emails (Separate emails with a comma)</label>
+                    <textarea id="emails" ng-list ng-model="event.emails" placeholder="Enter Emails..." class="form-control extend"></textarea>
+                </div>
+            </div>
+            <button type="submit" ng-click="submit()" class="btn btn-primary">Create &amp; Send</button>
+            <span ng-show="errors" class="form-global-error fx-zoom-normal fx-speed-100"><img src="/images/error@2x.png" width="22" height="22" /> Oops! Looks like you missed something!</span>
+        </div>
+    </section>
+</div>
+<div ng-show="event._id" class="form-success fx-fade-up">
+    <img src="/images/success@2x.png" width="128" height="128" />
+    <h1>Good Job!</h1>
+    <p>
+        Your event has been created. An email has been sent to all the participants with a link to the event page. Make sure you visit the page and vote on the dates yourself.
+    </p>
+    <p>
+        <input type="text" class="form-success-url" disabled="true" value="{{eventUrl}}" />
+    </p>
+    <p>
+        <a href="{{eventUrl}}">Go to the event page.</a>
+    </p>
+</div>

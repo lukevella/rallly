@@ -49,6 +49,7 @@ exports.deleteParticipant = function(req, res, next){
     });
 }
 
+
 function handleError(res, err) {
     return res.status(500).send(err);
 }
