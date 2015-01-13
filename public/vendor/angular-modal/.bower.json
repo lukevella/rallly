@@ -1,0 +1,30 @@
+{
+  "name": "angular-modal",
+  "version": "0.4.0",
+  "main": "modal.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.13"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.2.13"
+  },
+  "homepage": "https://github.com/btford/angular-modal",
+  "_release": "0.4.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.4.0",
+    "commit": "ecbdc657bfe0c4ad6281aee0c1432278f10c5026"
+  },
+  "_source": "git://github.com/btford/angular-modal.git",
+  "_target": "~0.4.0",
+  "_originalSource": "angular-modal",
+  "_direct": true
+}

@@ -1,0 +1,33 @@
+{
+  "name": "angular-modal",
+  "version": "0.4.0",
+  "description": "easily add a modal to your angular app",
+  "main": "modal.js",
+  "scripts": {
+    "test": "./node_modules/.bin/bower install && ./node_modules/.bin/karma start karma.conf.js --browsers Firefox --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/btford/angular-modal.git"
+  },
+  "keywords": [
+    "angular",
+    "angularjs",
+    "modal"
+  ],
+  "author": "Brian Ford",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/btford/angular-modal/issues"
+  },
+  "devDependencies": {
+    "karma": "~0.10",
+    "karma-junit-reporter": "~0.1.0",
+    "bower": "~1.2.7",
+    "gulp": "~3.5.5",
+    "gulp-util": "~2.2.14",
+    "gulp-uglify": "~0.2.1",
+    "gulp-rename": "~1.2.0",
+    "gulp-ngmin": "~0.1.2"
+  }
+}

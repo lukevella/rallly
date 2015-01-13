@@ -1,0 +1,12 @@
+<div class="rl-modal-overlay" ng-click="modal.cancel()"></div>
+
+<div class="rl-modal">
+    <div class="rl-modal-title">{{modal.title}}</div>
+    <div class="rl-modal-message">
+        {{modal.message}}
+    </div>
+    <div class="rl-modal-actions">
+        <button ng-click="modal.confirm()" class="btn-primary" ng-class="{danger : modal.isDestructive}">{{modal.confirmText}}</button>
+        <button ng-click="modal.cancel()" class="btn-primary">{{modal.cancelText}}</button>
+    </div>
+</div>

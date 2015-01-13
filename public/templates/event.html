@@ -3,10 +3,10 @@
         <h1 class="fx-rotate-clock">{{event.title}}</h1>
         <ul class="event-detail-list">
             <li class="event-created-by">
-                Created by <a href="{{event.creator.email}}">{{event.creator.name}}</a> on {{event.created | date : 'medium'}}
+                Created by <a href="{{event.creator.email}}">{{event.creator.name}}</a> - {{event.created | elapsed}}
             </li>
-            <li>
-                Last updated {{event.updated | date : 'medium'}}
+            <li ng-show="event.updated">
+                Updated {{event.updated | elapsed}}
             </li>
             <li ng-show="event.location" class="event-location">
                 {{event.location}}
@@ -24,7 +24,7 @@
                             <th class="event-poll-participants">
                                 {{event.participants.length}} participants
                             </th>
-                            <th class="center" ng-repeat="date in event.dates">
+                            <th width="70" class="center" ng-repeat="date in event.dates">
                                 <div class="daticon">
                                     <div class="dow">
                                         {{date | date: 'EEE'}}

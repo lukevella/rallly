@@ -25,7 +25,7 @@ angular.module('rallly')
         restrict : 'A',
         require : 'ngModel',
         link : function(scope, el, attrs, ngModel){
-            $(el).datepicker({
+            angular.element(el).datepicker({
                 multidate : true,
                 todayHighlight: true,
                 format : 'dd/mm/yyyy'
@@ -40,10 +40,10 @@ angular.module('rallly')
             });
 
             scope.clearDates = function(){
-                $(el).datepicker('setDate', null)
+                angular.element(el).datepicker('setDate', null)
             };
             scope.unsetDate = function(date){
-                $(el).datepicker('setDates', scope.event.dates.filter(function(el){
+                angular.element(el).datepicker('setDates', scope.event.dates.filter(function(el){
                     return el != date;
                 }));
             };

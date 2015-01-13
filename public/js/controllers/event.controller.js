@@ -1,5 +1,5 @@
 angular.module('rallly')
-.controller('EventCtrl', function($scope, $http, $state, Event, Participant){
+.controller('EventCtrl', function($scope, $http, $state, Event, Participant, ConfirmModal){
     $(".nav-link").removeClass('active');
     var id = $state.params.id;
     $scope.participant = {};
@@ -13,12 +13,21 @@ angular.module('rallly')
         $state.go('notfound');
     });
     $scope.delete = function(participant){
-        if (confirm("Are you sure you want to remove "+participant.name+"?")){
-            Participant.remove({ id : id , pid : participant._id }, function(event){
-                $scope.event = event;
-            });
-        }
+        var modal = new ConfirmModal({
+            title : 'Delete "'+participant.name+'"?',
+            message : 'Are you sure you want to remove '+participant.name+' from the poll?',
+            confirmText : 'Yes - delete',
+            cancelText : 'No - nevermind',
+            isDestructive : true,
+            confirm : function(){
+                Participant.remove({ id : id , pid : participant._id }, function(event){
+                    $scope.event = event;
+                });
+            }
+        });
+        modal.show();
     }
+
     $scope.defaults = [];
 
     $scope.editEvent = function(){
@@ -46,4 +55,6 @@ angular.module('rallly')
             $scope.participant = {};
         });
     }
+}).controller('DeleteModalCtrl', function(){
+
 });

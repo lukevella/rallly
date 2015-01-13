@@ -1,5 +1,5 @@
 angular.module('rallly')
-.controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event){
+.controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event, ConfirmModal){
     var id = $state.params.id
     $scope.event = Event.get({id:id}, function(data){
         var dates = [];
@@ -20,16 +20,23 @@ angular.module('rallly')
     $scope.submit = function(){
         if ($scope.didChange()){
             if ($scope.didChangeDates() ){
-                if (confirm("Changing the dates will reset all entries by the participants. Are you sure you want to proceed?")){
-                    update();
-                }
+                var modal = new ConfirmModal({
+                    title : 'Hold up!',
+                    message : 'Changing the dates will reset all entries by the participants. Are you sure you want to do that?',
+                    confirmText : 'Yes, I\'m sure',
+                    isDestructive : true,
+                    confirm : function(){
+                        update();
+                    }
+                });
+                modal.show();
+
             } else {
                 update();
             }
         }
     }
     var update = function(){
-        $scope.event.participants = [];
         Event.update({
             id : id
         }, $scope.event,
