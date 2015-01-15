@@ -1,5 +1,5 @@
 angular.module('rallly')
-.filter('elapsed', function(){
+.filter('elapsed', function($filter){
     return function(date){
         if (!date) return;
         var time = Date.parse(date),
@@ -9,7 +9,9 @@ angular.module('rallly')
             minutes = Math.floor(seconds / 60),
             hours = Math.floor(minutes / 60),
             days = Math.floor(hours / 24);
-        if (days > 1) {
+        if (days > 30) {
+            return 'on ' + $filter('date')(date, 'MMMM d');
+        } else if (days > 1) {
             return days + " days ago";
         } else if (days == 1) {
             return "1 day ago"
