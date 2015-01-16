@@ -1,59 +1,19 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,600,700,400italic);
-@import "partials/vars";
-@import "partials/mixins";
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,600,700);
+@import "modules/vars";
+@import "modules/mixins";
 @import "partials/normalize";
 @import "bourbon/bourbon";
 @import "neat/neat";
-$mobile: new-breakpoint(max-width 768px 4);
 
 body {
-    font-size: em(18px);
-    @include font();
-    color: $text-clr;
-    @include media($mobile) {
-        font-size: em(15px);
-    }
-}
-@import "partials/header";
-@import "partials/buttons";
-@import "partials/type";
-@import "partials/form";
-@import "partials/modal";
-@import "partials/datepicker";
-@import "partials/event";
-@import "partials/newevent";
-@import "partials/eventsuccess";
-
-.container {
-    @include outer-container();
-    padding: em(30px) em(40px);
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
 }
 
-.main-content {
-    @include span-columns(8);
-    @include shift(2);
-}
-
-.rl-section {
-    @include outer-container(800px);
-    border-top:1px solid #ddd;
-    padding-top: em(20px);
-    margin-bottom: em(20px);
-}
-
-.rl-section-details {
-    @include span-columns(3);
-    h2 {
-        margin-top: em(5px);
-    }
-}
-
-.rl-section-main {
-    @include span-columns(9);
-}
-
-.rl-page-desc {
-    font-size: em(21px);
-    color: $body-clr;
-    margin-bottom: em(20px);
-}
+@import "partials/applayout";
+@import "partials/navigation";
+@import "partials/topbar";
+@import "partials/pages/home";
+@import "partials/ui/buttons";
+@import "partials/ui/form";
+@import "partials/ui/box";
+@import "partials/ui/datepicker";

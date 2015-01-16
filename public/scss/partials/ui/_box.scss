@@ -1,0 +1,37 @@
+.box {
+    background: white;
+    border: 1px solid $border-clr;
+    border-radius: 3px;
+    margin: 0 auto 20px auto;
+    max-width: 800px;
+    padding: 20px 30px;
+}
+
+.box-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: $text-clr;
+    margin-bottom:20px;
+}
+
+.box-description {
+    font-size: 14px;
+    color: $text-3-clr;
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
+.box-section {
+    padding-top: 20px;
+    @include row;
+    .section-details {
+        @include span-columns(3);
+        .section-title {
+            font-size: em(14px);
+            color: $text-2-clr;
+            margin-bottom:20px;
+        }
+    }
+    .section-main {
+        @include span-columns(9);
+    }
+}

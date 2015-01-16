@@ -1,0 +1,101 @@
+$nav-padding: 40px;
+$vertical-space: 20px;
+$top-space: 15px;
+
+.main-navigation {
+    position:fixed;
+    width:100%;
+    z-index: 1000;
+    .wrapper {
+        background: $navigation-bg-clr;
+        height: em(60px);
+    }
+    .logo {
+        display:inline-block;
+        vertical-align:middle;
+        margin-top:$top-space;
+
+    }
+    .navigation {
+        display:inline-block;
+        vertical-align:middle;
+        margin-left: 60px;
+        margin-top:$top-space;
+        .links {
+            padding:0 ;
+            margin:0;
+            list-style: none;
+            display:inline-block;
+            li {
+                display:inline-block;
+                margin-right:em(30px);
+            }
+            a {
+                text-decoration: none;
+                color: #616F8D;
+                font-weight: bold;
+                line-height: em(24px);
+                font-size: em(15px);
+                opacity: 0.7;
+                &:hover {
+                    opacity: 1;
+                    color:white;
+                    .icon {
+                        background-position: center bottom;
+                    }
+                }
+                &.active {
+                    opacity:1;
+                    color: white;
+                    cursor: default;
+                    .icon {
+                        background-position: center bottom;
+                    }
+                }
+                .text {
+                    vertical-align:middle;
+                }
+                .icon {
+                    display:inline-block;
+                    vertical-align:middle;
+                    margin-right: 5px;
+                    width:16px;
+                    height:16px;
+                    background-size: 16px 32px;
+                }
+
+            }
+        }
+    }
+    .create-new {
+        display:inline-block;
+        float:right;
+        padding: 13px;
+        // border-bottom:1px solid lighten($navigation-bg-clr, 5%);
+        a {
+            display:block;
+            color:tint($green-clr,90%);
+            text-align:center;
+            border-radius: 2px;
+            background: $green-clr;
+            text-decoration:none;
+            font-size:12px;
+            font-weight: 600;
+            padding: 6px 15px 10px 15px;
+            &:hover {
+                background: lighten($green-clr, 5%);
+            }
+            &:active {
+                opacity:0.9;
+            }
+            img {
+                display:none;
+                vertical-align:middle;
+                margin-right: 5px;
+            }
+            span {
+                vertical-align:middle;
+            }
+        }
+    }
+}

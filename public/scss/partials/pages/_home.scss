@@ -1,0 +1,23 @@
+.page-placeholder {
+    margin:0 auto;
+    text-align:center;
+    color:#B0B8C4;
+    position:absolute;
+    top:50%;
+    left: 50%;
+    @include transform(translateX(-50%) translateY(-50%));
+    .image {
+        margin-bottom:20px;
+    }
+    .title {
+        font-size: em(36px);
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .content {
+        font-size: em(14px);
+        max-width: 320px;
+        font-weight: normal;
+        margin-bottom: 20px;
+    }
+}

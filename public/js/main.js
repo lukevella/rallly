@@ -5,6 +5,11 @@ angular.module('rallly', ['ui.router','ngResource','ngFx','btford.modal'])
         $stateProvider
         .state('index',{
             url : '/',
+            templateUrl : 'templates/home.html',
+            controller : 'HomeCtrl'
+        })
+        .state('newevent',{
+            url : '/new',
             templateUrl : 'templates/newevent.html',
             controller : 'NewEventCtrl'
         })

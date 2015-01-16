@@ -1,13 +1,13 @@
-<div ng-hide="eventUrl">
-    <h1>Schedule New Event</h1>
-    <div class="rl-page-desc">
+<div class="box" ng-hide="eventUrl">
+    <div class="box-title">Schedule a New Event</div>
+    <div class="box-description">
         Fill in the form below to create your event and share it with your friends and colleagues.
     </div>
-    <section class="rl-section">
-        <aside class="rl-section-details">
-            <h2>1. Your Details</h2>
-        </aside>
-        <div class="rl-section-main">
+    <section class="box-section">
+        <div class="section-details">
+            <div class="section-title">1. Your Details</div>
+        </div>
+        <div class="section-main">
             <div class="form-row">
                 <div class="form-col">
                     <div class="form-group" ng-class="{error:errors['creator.name']}">
@@ -18,17 +18,22 @@
                 <div class="form-col">
                     <div class="form-group" ng-class="{error:errors['creator.email']}">
                         <label for="email">Email</label>
-                        <input id="email" ng-model="event.creator.email" type="text" placeholder="john.doe@email.com..." class="form-control extend"/>
+                        <input id="email" ng-model="event.creator.email" type="email" placeholder="john.doe@email.com..." class="form-control extend"/>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="rl-section">
-        <aside class="rl-section-details">
-            <h2>2. Event Details</h2>
-        </aside>
-        <div class="rl-section-main">
+
+
+
+</div>
+<div class="box" ng-hide="eventUrl">
+    <section class="box-section">
+        <div class="section-details">
+            <div class="section-title">2. Event Details</div>
+        </div>
+        <div class="section-main">
             <div class="form-row">
                 <div class="form-col">
                     <div class="form-group" ng-class="{error:errors.title}">
@@ -51,39 +56,43 @@
             </div>
         </div>
     </section>
-    <section class="rl-section">
-        <aside class="rl-section-details">
-            <h2>3. Choose Dates</h2>
-        </aside>
-        <div class="rl-section-main">
+</div>
+<div class="box">
+    <section class="box-section">
+        <div class="section-details">
+            <div class="section-title">3. Choose Dates</div>
+            <ul class="daticon-list">
+                <li ng-repeat="date in event.dates">
+                    <div class="daticon">
+                        <div class="dow">
+                            {{date | date: 'EEE'}}
+                        </div>
+                        <div class="day">
+                            {{date | date: 'd'}}
+                        </div>
+                        <div class="month">
+                            {{date | date : 'MMM'}}
+                        </div>
+                        <span class="delete" ng-click="unsetDate(date)"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="section-main">
             <div class="form-row">
                 <div data-datepicker ng-model="event.dates" ng-class="{error:errors.dates}">
 
                 </div>
-                <ul class="daticon-list">
-                    <li ng-repeat="date in event.dates">
-                        <div class="daticon">
-                            <div class="dow">
-                                {{date | date: 'EEE'}}
-                            </div>
-                            <div class="day">
-                                {{date | date: 'd'}}
-                            </div>
-                            <div class="month">
-                                {{date | date : 'MMM'}}
-                            </div>
-                            <span class="delete" ng-click="unsetDate(date)"></span>
-                        </div>
-                    </li>
-                </ul>
             </div>
         </div>
     </section>
-    <section class="rl-section">
-        <aside class="rl-section-details">
-            <h2>4. Invite Participants</h2>
-        </aside>
-        <div class="rl-section-main">
+</div>
+<div class="box">
+    <section class="box-section">
+        <div class="section-details">
+            <div class="section-title">4. Invite Participants</div>
+        </div>
+        <div class="section-main">
             <div class="form-row">
                 <div class="form-group">
                     <label for="emails" class="optional">Participant's emails (Separate emails with a comma)</label>

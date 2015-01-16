@@ -1,0 +1,208 @@
+.error > .datepicker {
+    border-color: $red-clr;
+}
+.datepicker {
+    width:100%;
+    border:1px solid #eee;
+    border-radius: 3px;
+    background:white;
+    padding: em(10px);
+    @include transition(border-color 0.1s ease-in-out);
+    table {
+        width:100%;
+        font-size: em($em-base);
+    }
+    thead {
+
+    }
+    tbody {
+        &:before {
+            content: '';
+            display:block;
+            height: em(10px);
+        }
+    }
+    .prev, .next {
+        opacity: 0.5;
+        cursor: pointer;
+        border-radius:5px;
+        position:relative;
+        &:hover {
+            opacity: 1;
+            &:after {
+                opacity: 1;
+                background: rgba($border-clr, 0.3);
+            }
+        }
+        &:after {
+            content: " ";
+            cursor:pointer;
+            opacity: 0;
+            position:absolute;
+            $size: em(28px);
+            width:$size;
+            height:$size;
+            margin-left:$size * -0.5;
+            margin-top:$size * -0.5;
+            left:50%;
+            top:50%;
+            border-radius:100%;
+        }
+    }
+    .datepicker-switch {
+        padding: 10px;
+        font-weight:600;
+        font-size:em(18px);
+        border-radius: 3px;
+        cursor: pointer;
+        &:hover {
+            background: rgba($border-clr, 0.4);
+        }
+    }
+    .dow {
+        padding:10px;
+        font-weight:normal;
+        text-transform: uppercase;
+        color: $pink-clr;
+        font-size: em(14px);
+        border-bottom: 2px solid #eee;
+    }
+    .dow, .day {
+        padding:em(15px);
+    }
+    .day {
+        text-align:center;
+        font-weight:600;
+        position:relative;
+        font-size:em(14px);
+        &.today {
+            color:#818176;
+            &:after {
+                opacity:1;
+                background: rgba(yellow, 0.1);
+            }
+        }
+        &:hover {
+            &:after {
+                opacity:1;
+                background: rgba($border-clr,0.4);
+            }
+            cursor: pointer;
+        }
+        &.new, &.old {
+            font-weight:normal;
+            color: $text-3-clr;
+        }
+        &.active {
+            background:white;
+            color: $green-clr;
+            &:after {
+                opacity:1;
+                background: rgba($green-clr,0.1);
+            }
+        }
+        &:active {
+            &:after {
+                opacity: 0.8;
+            }
+        }
+        &:after {
+            content: " ";
+            cursor:pointer;
+            opacity: 0;
+            position:absolute;
+            $size: em(35px);
+            width:$size;
+            height:$size;
+            margin-left:$size * -0.5;
+            margin-top:$size * -0.5;
+            left:50%;
+            top:50%;
+            border-radius:100%;
+        }
+    }
+    .month, .year {
+        width: 33.3%;
+        display:inline-block;
+        text-align:center;
+        font-size: em(14px);
+        padding:em(20px);
+        cursor:pointer;
+        border-radius: 3px;
+        text-transform: uppercase;
+        &:hover {
+            background: rgba($border-clr, 0.1);
+        }
+    }
+}
+
+.daticon-list {
+    margin:0;
+    margin-left:-10px;
+    list-style:none;
+    padding:5px;
+    text-align:left;
+    .placeholder {
+        line-height: em(18px);
+        font-size: em(12px);
+        color: #ccc;
+    }
+    li {
+        margin: 5px;
+        display:inline-block;
+    }
+}
+
+.daticon {
+    box-shadow: 0 0 0 1px rgba($border-clr,0.5);
+    border-radius: 3px;
+    display:inline-block;
+    padding:em(8px) em(16px);
+    text-align:center;
+    position:relative;
+    cursor:default;
+    background:white;
+    .dow {
+        font-size: em(6px);
+        margin-top:em(-24px);
+        background:white;
+        color: $text-3-clr;
+        margin-bottom: em(4px);
+        font-weight:normal;
+        text-transform: uppercase;
+    }
+    .day {
+        font-size: em(20px);
+        font-weight:normal;
+        color: $pink-clr;
+        line-height: em(16px);
+    }
+    .month {
+        font-weight: 600;
+        font-size: em(12px);
+        text-transform: uppercase;
+    }
+    .delete {
+        text-align:center;
+        $size: 18px;
+        width: em($size);
+        height: em($size);
+        position:absolute;
+        top: $size * -0.4;
+        right: $size * -0.4;
+        border-radius:100%;
+        display:inline-block;
+        background: rgba($border-clr, 0.5) url(../images/close@2x.png) no-repeat center center;
+        background-size: 7px 8px;
+        cursor:pointer;
+        opacity:0;
+        &:hover {
+            background-color: rgba($border-clr, 0.8)
+        }
+    }
+    &:hover {
+        .delete {
+            opacity: 1;
+        }
+    }
+}

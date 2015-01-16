@@ -13,25 +13,53 @@
         <script type="text/javascript" src="/build/app.js"></script>
     </head>
     <body>
-        <div class="container">
-            <header class="header">
-                <div class="fixed">
-                <section class="primary-section">
-                    <a href="/">
-                        <img src="/images/logo@2x.png" width="100" alt="Rallly - Collabrative Scheduling" />
+        <div class="outer-container">
+            <div class="main-navigation">
+                <div class="wrapper">
+                    <a href="/" class="logo">
+                        <img class="logo-img" src="/images/logo.png" width="100" alt="Rallly - Collabrative Scheduling" />
                     </a>
-                </section>
-                <section class="secondary-section">
-                    <nav class="nav-links">
-                        <a class="nav-link" target="_blank" href="/">New Event</a>
-                        <a class="nav-link" href="/about">What is this?</a>
-                    </nav>
-                </section>
-                </div>
-            </header>
-            <div class="main-content" ui-view>
 
+                    <nav class="navigation" ng-controller="NavigationCtrl">
+                        <ul class="links">
+                            <li>
+                                <a href="/" ng-class="{active:isActive('/')}">
+                                    <i back-img="dashboard" class="icon"></i>
+                                    <span class="text">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/about" ng-class="{active: isActive('/about')}">
+                                    <i back-img="lightbulb" class="icon"></i>
+                                    <span class="text">What is this?</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="create-new">
+                        <a href="/new" rel="nofollow">
+                            <img src="/images/add.png" width="12" />
+                            <span>Create New</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="top-bar">
+                    <ul class="primary">
+                        <li class="item">
+                            <a class="hoverable dropdown" href="#">
+                                <img src="/images/person.png" height="16"/>
+                                <span>Guest</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
+            <div class="main-content">
+                <div ui-view class="main-view">
+                </div>
+            </div>
+
+
         </div>
     </body>
 </html>
