@@ -1,0 +1,125 @@
+$actions-col-width : 160px;
+$date-col-width: 70px;
+$name-col-width: 235px;
+
+.poll {
+    min-width: 100%;
+    display:block;
+}
+
+.poll-header {
+    display:table;
+    min-width: 100%;
+    border-bottom:1px solid $border-clr;
+    box-shadow: 0 3px 0 rgba($border-clr, 0.3);
+    .header {
+        display:table-cell;
+        vertical-align:bottom;
+        padding-bottom:20px;
+        &.date-header {
+            text-align:center;
+            min-width: $date-col-width;
+            width: $date-col-width;
+        }
+        &.actions-header {
+            min-width: $actions-col-width;
+        }
+        &.participants-header {
+            font-weight: bold;
+            min-width: $name-col-width;
+            width: $name-col-width;
+            padding-left: em(10px);
+        }
+    }
+}
+
+.poll-body {
+    min-width:100%;
+
+    .poll-entry.highlight {
+        background: lighten($border-clr,10%);
+    }
+    .poll-entry {
+        display:table;
+        min-width: 100%;
+        border-bottom: 1px solid rgba($border-clr,0.5);
+        .hover {
+            visibility:hidden;
+        }
+        &:hover {
+            .hover {
+                visibility: visible;
+            }
+        }
+        .cell {
+            padding: em(10px);
+            display:table-cell;
+            &.name-cell {
+                min-width: $name-col-width;
+                width: $name-col-width;
+                font-size: em(14px);
+                .avatar {
+                    display:inline-block;
+                    padding: 5px;
+                    margin-right: 5px;
+                    border-radius: 2px;
+                    background: #D0D5DF;
+                    @for $i from 0 to length($color-collection) {
+                        &.style-#{$i + 1} {
+                            background: nth($color-collection, $i+1);
+                        }
+                    }
+                }
+                .name {
+                    padding: 5px 3px;
+                    margin-left: 2px;
+                    border-radius: 2px;
+                    &:hover {
+                        background: $background-clr;
+                        cursor: pointer;
+                    }
+                }
+                .form-control {
+                    border:1px solid $border-clr;
+                    padding: em(5px);
+                    border-radius: 2px;
+                    color: $text-clr;
+                    &:focus {
+                        outline:0;
+                        border-color: $blue-clr;
+                        box-shadow: 0 0 3px rgba($blue-clr, 0.5);
+                    }
+                    @include placeholder {
+                        color: rgba($text-2-clr,0.7);
+                    }
+                }
+            }
+            &.action-cell {
+                min-width: $actions-col-width;
+            }
+            &.vote-cell {
+                min-width: $date-col-width;
+                width: $date-col-width;
+                text-align:center;
+                position: relative;
+                .overlay {
+                    position: absolute;
+                    top:0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 10;
+                    &:hover {
+                        background: rgba($border-clr, 0.2);
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+        &.ng-submitted {
+            .ng-invalid {
+                border-color: $pink-clr !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,64 @@
+<div class="poll-header">
+    <div class="header participants-header">
+        {{event.participants.length}} participants
+    </div>
+    <div class="header date-header" ng-repeat="date in event.dates">
+        <div class="daticon">
+            <div class="dow">
+                {{date | date: 'EEE'}}
+            </div>
+            <div class="day">
+                {{date | date: 'd'}}
+            </div>
+            <div class="month">
+                {{date | date : 'MMM'}}
+            </div>
+            <span class="count" ng-show="selectedDate($index)" ng-class={top:isTopDate($index)}>{{selectedDate($index)}}</span>
+        </div>
+    </div>
+    <div class="header actions-header">
+
+    </div>
+</div>
+<div class="poll-body">
+    <div class="poll-entry" ng-repeat="participant in event.participants">
+        <form novalidate ng-submit="update(participant); editMode = false">
+            <div class="cell name-cell">
+                <span class="avatar style-{{participant.style + 1}}">
+                    <img src="/images/user.png" width="11" />
+                </span>
+                <input required type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
+                <span ng-hide="editMode" class="name" ng-click="editMode = true; edit(participant)">{{participant.name}}</span>
+            </div>
+            <div class="cell vote-cell" ng-repeat="date in event.dates">
+                <img src="/images/tick@2x.png"  width="16" ng-hide="editMode" ng-if="participant.dates[$index]" />
+                <img src="/images/nope@2x.png" width="8" ng-hide="editMode" ng-if="!participant.dates[$index]" />
+                <input ng-model="participant.dates[$index]" ng-show="editMode" ng-false-value="false" type="checkbox" />
+                <div class="overlay" ng-show="editMode" ng-click="participant.dates[$index] = !participant.dates[$index]"></div>
+            </div>
+            <div class="cell action-cell">
+                <a href="#" ng-hide="editMode" ng-click="editMode = true; edit(participant)" class="btn hover">Edit</a>
+                <a href="#" ng-hide="editMode" ng-click="delete(participant)" class="btn danger hover">Delete</a>
+                <button ng-show="editMode" type="submit" class="btn">Save</button>
+                <a href="#" ng-show="editMode" ng-click="editMode = false; cancel($index)"  class="btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="poll-entry highlight">
+        <form novalidate name="formnew" ng-submit="save(participant)">
+            <div class="cell name-cell">
+                <span class="avatar style-{{participant.style}}">
+                    <img src="/images/user.png" width="11" />
+                </span>
+                <input name="username" type="text" class="form-control" placeholder="Your name..." ng-model="participant.name" required value="participant.name"/>
+            </div>
+            <div class="cell vote-cell" ng-repeat="date in event.dates">
+                <input ng-model="participant.dates[$index]" ng-false-value="false" type="checkbox" />
+                <div class="overlay" ng-click="participant.dates[$index] = !participant.dates[$index]"></div>
+            </div>
+            <div class="cell action-cell">
+                <button type="submit" class="btn">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

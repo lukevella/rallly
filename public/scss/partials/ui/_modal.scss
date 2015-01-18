@@ -1,0 +1,44 @@
+.rl-modal {
+    background:white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    max-width: 400px;
+    display:inline-block;
+    min-width: 200px;
+    height: auto;
+    z-index: 2000;
+    overflow:hidden;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px $border-clr, 0 0 0 5px rgba($border-clr,0.8), 0 0 10px 5px rgba(black, 0.2);
+    @include transform(translateX(-50%) translateY(-50%));
+    .rl-modal-message {
+        padding: 0 20px 20px 20px;
+        font-size: em(12px);
+        color: $text-2-clr;
+    }
+    .rl-modal-title {
+        padding:20px 20px 0 20px;
+        font-size: em(18px);
+        font-weight: bold;
+    }
+    .rl-modal-actions {
+        border-top:1px solid $border-clr;
+        box-shadow: inset 0 1px 0 white;
+        background: lighten($background-clr,1%);
+        text-align:right;
+        padding: em(10px) em(20px);
+    }
+}
+
+.rl-modal-overlay {
+    position:fixed;
+    z-index: 1999;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(black,0.1);
+
+}

@@ -1,0 +1,32 @@
+{
+  "name": "angular-hotkeys",
+  "version": "0.2.2",
+  "main": [
+    "angular-hotkeys.js",
+    "angular-hotkeys.min.js",
+    "angular-hotkeys.js.map"
+  ],
+  "tags": [
+    "hotkeys",
+    "shortcuts",
+    "angular",
+    "drahak"
+  ],
+  "description": "Hotkeys component for AngularJS",
+  "devDependencies": {
+    "angularjs": "latest",
+    "angular-mocks": "latest",
+    "jasmine": "v2.0.0.rc5"
+  },
+  "homepage": "https://github.com/drahak/angular-hotkeys",
+  "_release": "0.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.2",
+    "commit": "5fc06ea120357039f5eeec680f33071c104af85a"
+  },
+  "_source": "git://github.com/drahak/angular-hotkeys.git",
+  "_target": "~0.2.2",
+  "_originalSource": "angular-hotkeys",
+  "_direct": true
+}
