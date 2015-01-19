@@ -1,10 +1,29 @@
+$box-v-pad: 20px;
+$box-h-pad: 25px;
+
 .box {
     background: white;
     border: 1px solid $border-clr;
     border-radius: 3px;
     margin: 0 auto 20px auto;
     max-width: 800px;
-    padding: 20px 30px;
+    padding: $box-v-pad $box-h-pad;
+    &.box-x-scroll {
+        overflow-x: scroll;
+    }
+    &.invisible {
+        background: transparent;
+        border:0;
+        padding: 0;
+        margin-bottom:40px;
+    }
+    &.highlight {
+        border-color: $blue-clr;
+        box-shadow: 0 0 3px rgba($blue-clr, 0.5);
+    }
+    &:last-child {
+        margin-bottom: 40px;
+    }
 }
 
 .box-title {
@@ -16,9 +35,18 @@
 
 .box-description {
     font-size: 14px;
-    color: $text-3-clr;
+    color: $text-2-clr;
+    padding-bottom: 20px;
+    border-bottom: 1px solid $border-clr;
     margin-top: -20px;
     margin-bottom: 20px;
+    a {
+        color: $text-clr;
+        text-decoration:none;
+        &:hover {
+            border: 1px solid $border-clr;
+        }
+    }
 }
 .box-section {
     padding-top: 20px;
@@ -34,4 +62,62 @@
     .section-main {
         @include span-columns(9);
     }
+}
+
+.box-message {
+    text-align:center;
+    padding:40px;
+    max-width:450px;
+    margin:0 auto;
+    .main-image {
+        margin-bottom: 20px;
+    }
+    .title {
+        font-weight: bold;
+        font-size: em(24px);
+        color: $text-clr;
+        margin-bottom: em(10px);
+    }
+    .content {
+        font-size: em(14px);
+        color: $text-2-clr;
+        margin-bottom: 20px;
+    }
+    .mini-divider:after {
+        content: "";
+        display:inline-block;
+        width:200px;
+        height:1px;
+        background: $border-clr;
+        margin:20px auto;
+
+    }
+}
+
+.box-side-sticky {
+    padding: $box-v-pad $box-h-pad;
+    box-sizing: content-box;
+    width: 100%;
+    margin-left: $box-h-pad * -1;
+
+}
+
+.box-bottom-sticky {
+    padding: $box-v-pad $box-h-pad;
+    box-sizing: content-box;
+    width: 100%;
+    margin-top:20px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top: 1px solid $border-clr;
+    margin-bottom: $box-v-pad * -1;
+    margin-left: $box-h-pad * -1;
+}
+
+.box-controls {
+    text-align: right;
+    box-shadow: inset 0 1px 0 white;
+    background: lighten($background-clr, 1%);
+    margin-top: $box-v-pad;
+    padding: 15px $box-h-pad;
 }

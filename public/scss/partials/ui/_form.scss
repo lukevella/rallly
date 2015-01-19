@@ -1,3 +1,12 @@
+form {
+    margin:0;
+    &.ng-submitted {
+        .ng-invalid {
+            border-color: $pink-clr !important;
+        }
+    }
+}
+
 .form-container {
     width:100%;
 }
@@ -20,33 +29,31 @@
     }
 }
 
-.form-big-col {
-    @include span-columns(12);
-}
-
-.form-small-col {
-    @include span-columns(2);
-}
-
-.form-error-msg {
-    color: $red-clr;
-    font-size: em(12px);
-    padding: em(5px);
-}
-
 .form-group {
     & > label {
         font-size:em(12px);
         color: $text-3-clr;
-        display:block;
+        display:inline-block;
         line-height:em(30px);
-        &:after {
-            content: "*";
-            color: $red-clr;
-            margin-left:5px;
+
+    }
+    .form-error {
+        font-size: em(12px);
+        color: $red-clr;
+        float: right;
+        img {
+            vertical-align:bottom;
+            margin-right: 3px;
         }
-        &.optional:after {
-            content: "";
+    }
+    &.optional > label:after {
+        content: " (optional)";
+    }
+    &.error {
+        input.form-control, textarea.form-control {
+
+            border-color: $pink-clr;
+            background: rgba($pink-clr,0.02);
         }
     }
     input.form-control, textarea.form-control {
@@ -54,7 +61,7 @@
         border: 1px solid $border-clr;
         font-size:em(18px);
         &.ng-pristine {
-            background: $background-clr;
+            background: lighten($background-clr,1%);
         }
         @include transition(border-color 0.1s ease-in-out);
         &:focus {
@@ -70,22 +77,22 @@
             color: rgba($text-3-clr,0.7);
         }
     }
-    &.error {
-        input.form-control, textarea.form-control {
-
-            border-color: $red-clr;
-            background: rgba($red-clr,0.02);
-        }
+    .form-btn {
+        padding: em(12px) em(15px);
     }
     input.form-control {
+        vertical-align:middle;
         padding: em(5px) em(10px);
     }
+
     textarea.form-control {
-        min-height: 100px;
+        min-height: 135px;
         font-size: em(18px);
         padding: em(8px) em(10px);
     }
+
 }
+
 
 .form-submit-message {
     display:inline-block;

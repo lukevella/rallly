@@ -1,16 +1,16 @@
 angular.module('rallly')
-.controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event, ConfirmModal){
+.controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event, ConfirmModal, Title){
     var id = $state.params.id
     $scope.event = Event.get({id:id}, function(data){
-        var dates = [];
-        for (var i = 0; i < data.dates.length; i++){
-            dates.push(new Date(data.dates[i]));
-        }
-        $("[data-datepicker]").datepicker('setDates',dates);
+        Title.set("Edit: " + $scope.event.title);
         $scope.master = angular.copy($scope.event);
     }, function(e){
         $state.go('notfound');
     });
+    $scope.undoChanges = function(){
+        $scope.event = angular.copy($scope.master);
+        resetDates();
+    }
     $scope.didChange = function(){
         return JSON.stringify($scope.master) != JSON.stringify($scope.event);
     }
@@ -18,7 +18,7 @@ angular.module('rallly')
         return JSON.stringify($scope.master.dates) != JSON.stringify($scope.event.dates);
     }
     $scope.submit = function(){
-        if ($scope.didChange()){
+        if ($scope.form.$valid){
             if ($scope.didChangeDates() ){
                 var modal = new ConfirmModal({
                     title : 'Hold up!',
@@ -26,14 +26,20 @@ angular.module('rallly')
                     confirmText : 'Yes, I\'m sure',
                     isDestructive : true,
                     confirm : function(){
+                        $scope.event.participants = [];
                         update();
                     }
                 });
-                modal.show();
 
             } else {
                 update();
             }
+        } else {
+            var modal = new ConfirmModal({
+                title : 'Not so fast!',
+                message : 'Make sure you fill in all the required fields and try again.',
+                cancelText : 'OK'
+            });
         }
     }
     var update = function(){
@@ -41,7 +47,15 @@ angular.module('rallly')
             id : id
         }, $scope.event,
         function(){
-            $timeout.cancel($scope.didSave);
+            var modal = new ConfirmModal({
+                title : 'Event Updated',
+                message : 'Your changes have been saved successfully!',
+                confirmText : 'Back to Event Page',
+                cancelText : 'Stay here',
+                confirm : function(){
+                    $state.go('event',{id : $scope.event._id});
+                }
+            });
             $scope.master = angular.copy($scope.event);
             $scope.didSave = $timeout(function(){
                 $scope.didSave = false;

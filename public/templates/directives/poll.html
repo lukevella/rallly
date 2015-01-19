@@ -24,10 +24,10 @@
     <div class="poll-entry" ng-repeat="participant in event.participants">
         <form novalidate ng-submit="update(participant); editMode = false">
             <div class="cell name-cell">
-                <span class="avatar style-{{participant.style + 1}}">
+                <span class="avatar style-{{$index + 1}}">
                     <img src="/images/user.png" width="11" />
                 </span>
-                <input required type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
+                <input required autocomplete="off" type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
                 <span ng-hide="editMode" class="name" ng-click="editMode = true; edit(participant)">{{participant.name}}</span>
             </div>
             <div class="cell vote-cell" ng-repeat="date in event.dates">
@@ -50,14 +50,14 @@
                 <span class="avatar style-{{participant.style}}">
                     <img src="/images/user.png" width="11" />
                 </span>
-                <input name="username" type="text" class="form-control" placeholder="Your name..." ng-model="participant.name" required value="participant.name"/>
+                <input autocomplete="off" name="username" type="text" class="form-control" placeholder="Your name..." ng-model="participant.name" required value="participant.name"/>
             </div>
             <div class="cell vote-cell" ng-repeat="date in event.dates">
                 <input ng-model="participant.dates[$index]" ng-false-value="false" type="checkbox" />
                 <div class="overlay" ng-click="participant.dates[$index] = !participant.dates[$index]"></div>
             </div>
             <div class="cell action-cell">
-                <button type="submit" class="btn">Save</button>
+                <button type="submit" ng-class="{ 'animated shake' : formnew.$submitted && formnew.$invalid  }" class="btn">Save</button>
             </div>
         </form>
     </div>

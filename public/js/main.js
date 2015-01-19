@@ -22,15 +22,15 @@ angular.module('rallly', ['ui.router','ngResource','ngFx','btford.modal'])
             url : '/notfound',
             templateUrl : 'templates/notfound.html'
         })
-        .state('editevent', {
-            url: '/:id/edit',
-            templateUrl : 'templates/editevent.html',
-            controller : 'EditEventCtrl'
-        })
         .state('event',{
             url : '/:id',
             templateUrl : 'templates/event.html',
             controller : 'EventCtrl'
+        })
+        .state('editevent', {
+            url: '/:id/edit',
+            templateUrl : 'templates/editevent.html',
+            controller : 'EditEventCtrl'
         })
     })
     .factory('Event', function($resource){
@@ -42,4 +42,11 @@ angular.module('rallly', ['ui.router','ngResource','ngFx','btford.modal'])
         return $resource('/api/event/:id/participant/:pid', { id: '@_id', pid : '@pid'}, {
             'update' : { method : 'PUT' }
         });
+    })
+    .factory('Title', function(){
+        return {
+            set : function(title){
+                document.title = title;
+            }
+        }
     });

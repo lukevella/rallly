@@ -1,0 +1,31 @@
+<div class="section-details">
+    <div class="section-title">Event Details</div>
+</div>
+<div class="section-main">
+    <div class="form-row">
+        <div class="form-col">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <span class="form-error" ng-show="(form.title.$touched || form.$submitted) && errors.title">
+                    <img src="/images/error.png" width="14" /> {{errors.title}}
+                </span>
+                <input id="title" name="title" ng-maxlength="30" required ng-model="event.title" type="text" placeholder="Monthly Meetup..." class="form-control extend"/>
+            </div>
+        </div>
+        <div class="form-col">
+            <div class="form-group optional">
+                <label for="location">Location</label>
+                <span class="form-error" ng-show="(form.location.$touched || form.$submitted) && errors.location">
+                    <img src="/images/error.png" width="14" /> {{errors.location}}
+                </span>
+                <input id="location" name="location" ng-model="event.location" ng-maxlength="50" type="text" placeholder="Rick's Cafe..." class="form-control extend"/>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group optional">
+            <label for="description" >Description</label>
+            <textarea id="description" name="description" ng-model="event.description" placeholder="Enter Description..." class="form-control extend"></textarea>
+        </div>
+    </div>
+</div>

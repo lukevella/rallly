@@ -12,8 +12,13 @@ body {
 @import "partials/applayout";
 @import "partials/navigation";
 @import "partials/topbar";
-@import "partials/pages/home";
+@import "partials/ui/animations";
 @import "partials/ui/buttons";
 @import "partials/ui/form";
 @import "partials/ui/box";
 @import "partials/ui/datepicker";
+@import "partials/ui/modal";
+@import "partials/ui/poll";
+
+@import "partials/pages/home";
+@import "partials/pages/event";

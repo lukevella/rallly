@@ -8,6 +8,7 @@
     background: $background-clr;
     border-top: 1px solid $border-clr;
     margin-top: 20px;
+    margin-bottom:-20px;
 }
 
 .event-location {
@@ -93,7 +94,7 @@
         }
     }
     .actions {
-        visibility:hidden;
+        // visibility:hidden;
         float: right;
         margin-top: 30px;
     }

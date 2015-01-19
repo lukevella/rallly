@@ -1,83 +1,29 @@
 <div ng-show="event._id">
-    <div class="event-details">
-        <h1 class="fx-rotate-clock">{{event.title}}</h1>
-        <ul class="event-detail-list">
-            <li class="event-created-by">
-                Created by <a href="{{event.creator.email}}">{{event.creator.name}}</a> - {{event.created | elapsed}}
-            </li>
-            <li ng-show="event.updated">
-                Updated {{event.updated | elapsed}}
-            </li>
-            <li ng-show="event.location" class="event-location">
-                {{event.location}}
-            </li>
-        </ul>
-        <div ng-show="event.description" class="event-description">{{event.description}}</div>
+    <div class="box ">
+        <div class="event-header">
+            <div class="avatar">
+                <img src="/images/eventicon.png" width="32  " />
+            </div>
+            <div class="details">
+                <div class="title">
+                    {{event.title}}
+                </div>
+                <div class="subtitle">
+                    Created by <a href="mailto:{{event.creator.email}}">{{event.creator.name}}</a> &bull; {{event.created | elapsed}}
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" ng-click="editEvent()">Edit Event</button>
+            </div>
+        </div>
+        <div class="box-side-sticky event-description" ng-show="event.description">{{event.description}}</div>
+        <div class="box-bottom-sticky event-location" ng-show="event.location">
+            <img src="/images/location.png" width="18" /><a href="http://google.com/maps?q={{event.location}}" target="_blank">{{event.location}}</a>
+        </div>
+
     </div>
-
-    <h2>When can you make it?</h2>
-    <section class="rl-section">
-            <form ng-submit="save(participant)">
-                <table class="event-poll">
-                    <thead>
-                        <tr>
-                            <th class="event-poll-participants">
-                                {{event.participants.length}} participants
-                            </th>
-                            <th width="70" class="center" ng-repeat="date in event.dates">
-                                <div class="daticon">
-                                    <div class="dow">
-                                        {{date | date: 'EEE'}}
-                                    </div>
-                                    <div class="day">
-                                        {{date | date: 'd'}}
-                                    </div>
-                                    <div class="month">
-                                        {{date | date : 'MMM'}}
-                                    </div>
-                                </div>
-                            </th>
-                            <th width="160">
-
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="event-poll-entry" ng-repeat="participant in event.participants" ng-model="participant">
-                            <td class="event-poll-user">
-                                <img src="/images/user_gray@2x.png" width="11" />
-                                <input type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
-                                <span ng-hide="editMode" class="event-poll-name">{{participant.name}}</span>
-                            </td>
-                            <td class="center" ng-repeat="date in event.dates">
-                                <img src="/images/tick@2x.png"  width="16" ng-hide="editMode" ng-if="participant.dates[$index]" />
-                                <img src="/images/nope@2x.png" width="8" ng-hide="editMode" ng-if="!participant.dates[$index]" />
-                                <input ng-model="participant.dates[$index]" ng-show="editMode" ng-false-value="false" type="checkbox" />
-                            </td>
-                            <td>
-                                <a ng-hide="editMode" href="javascript:" ng-click="editMode = true; edit(participant)" class="btn-primary hover">Edit</a>
-                                <a ng-hide="editMode" href="javascript:" ng-click="delete(participant)" class="btn-primary danger hover">Delete</a>
-                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; update(participant)" class="btn-primary">Save</a>
-                                <a ng-show="editMode" href="javascript:" ng-click="editMode = false; cancel($index)" class="btn-primary">Cancel</a>
-                            </td>
-                        </tr>
-                        <tr class="event-poll-input">
-                            <td class="event-poll-user">
-                                <img src="/images/user_gray@2x.png" width="11" />
-                                <input type="text" class="form-control" ng-model="participant.name" placeholder="Your name..."/>
-                            </td>
-                            <td class="center" ng-repeat="date in event.dates">
-                                <input ng-model="participant.dates[$index]" ng-false-value="false" type="checkbox" />
-                            </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-    </section>
-    <p>
-        <button class="btn-primary" ng-click="editEvent()">Edit Event</button>
-    </p>
+    <div class="box box-x-scroll">
+        <div poll event="event" class="poll" participant="participant">
+        </div>
+    </div>
 </div>
