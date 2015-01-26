@@ -8,7 +8,15 @@ var EventSchema = new Schema({
     description : String,
     creator : {
         name : String,
-        email : String
+        email : String,
+        isVerified : {
+            type : Boolean,
+            default : false
+        },
+        allowNotifications : {
+            type : Boolean,
+            default : true
+        }
     },
     created : {
         type : Date,
@@ -17,18 +25,38 @@ var EventSchema = new Schema({
     updated : Date,
     title : String,
     dates : [Date],
-    emails : [String],
+    emails : [{
+        email : String
+    }],
+    comments : [{
+        id : Schema.Types.ObjectId,
+        author : {
+            name : String
+        },
+        content : String,
+        created : {
+            type: Date,
+            default : Date.now
+        }
+    }],
     location: String,
     participants : [{
         id : Schema.Types.ObjectId,
         name : String,
         dates : [Boolean]
     }],
-    comments : [{
-        id : Schema.Types.ObjectId,
-        author : String,
-        comment : String,
-    }]
+    isClosed : {
+        type : Boolean,
+        default : false
+    },
+    isDeleted : {
+        type : Boolean,
+        default : false
+    },
+    __private : {
+        verificationCode : String,
+        deleteCode : String,
+    }
 });
 
 var model = mongoose.model('Event', EventSchema);

@@ -1,5 +1,5 @@
 angular.module('rallly')
-.controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event, ConfirmModal, Title){
+.controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event, ConfirmModal, Notification, Title){
     var id = $state.params.id
     $scope.event = Event.get({id:id}, function(data){
         Title.set("Edit: " + $scope.event.title);
@@ -9,7 +9,6 @@ angular.module('rallly')
     });
     $scope.undoChanges = function(){
         $scope.event = angular.copy($scope.master);
-        resetDates();
     }
     $scope.didChange = function(){
         return JSON.stringify($scope.master) != JSON.stringify($scope.event);
@@ -35,10 +34,10 @@ angular.module('rallly')
                 update();
             }
         } else {
-            var modal = new ConfirmModal({
-                title : 'Not so fast!',
+            var notification = new Notification({
+                title : 'Not so fast',
                 message : 'Make sure you fill in all the required fields and try again.',
-                cancelText : 'OK'
+                type : 'error'
             });
         }
     }
@@ -47,19 +46,12 @@ angular.module('rallly')
             id : id
         }, $scope.event,
         function(){
-            var modal = new ConfirmModal({
-                title : 'Event Updated',
-                message : 'Your changes have been saved successfully!',
-                confirmText : 'Back to Event Page',
-                cancelText : 'Stay here',
-                confirm : function(){
-                    $state.go('event',{id : $scope.event._id});
-                }
+            var notification = new Notification({
+                title : 'Changes Saved',
+                message : 'Your changes have been saved successfully.',
+                type : 'success'
             });
             $scope.master = angular.copy($scope.event);
-            $scope.didSave = $timeout(function(){
-                $scope.didSave = false;
-            }, 2000);
         });
     }
 });

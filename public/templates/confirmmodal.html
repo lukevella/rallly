@@ -6,7 +6,7 @@
         {{modal.message}}
     </div>
     <div class="rl-modal-actions">
-        <button ng-click="modal.confirm()" ng-show="modal.confirm" class="btn" ng-class="{danger : modal.isDestructive}">{{modal.confirmText}}</button>
-        <button ng-click="modal.cancel()"  class="btn">{{modal.cancelText}}</button>
+        <button type="button" ng-click="modal.confirm()" ng-show="modal.confirm" class="btn" ng-class="{danger : modal.isDestructive}">{{modal.confirmText}}</button>
+        <button type="button" ng-click="modal.cancel()"  class="btn">{{modal.cancelText}}</button>
     </div>
 </div>

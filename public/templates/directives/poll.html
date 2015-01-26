@@ -28,7 +28,7 @@
                     <img src="/images/user.png" width="11" />
                 </span>
                 <input required autocomplete="off" type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
-                <span ng-hide="editMode" class="name" ng-click="editMode = true; edit(participant)">{{participant.name}}</span>
+                <span ng-hide="editMode" class="name" ng-click="editMode = true && !event.isClosed; edit(participant)">{{participant.name}}</span>
             </div>
             <div class="cell vote-cell" ng-repeat="date in event.dates">
                 <img src="/images/tick@2x.png"  width="16" ng-hide="editMode" ng-if="participant.dates[$index]" />
@@ -36,16 +36,16 @@
                 <input ng-model="participant.dates[$index]" ng-show="editMode" ng-false-value="false" type="checkbox" />
                 <div class="overlay" ng-show="editMode" ng-click="participant.dates[$index] = !participant.dates[$index]"></div>
             </div>
-            <div class="cell action-cell">
-                <a href="#" ng-hide="editMode" ng-click="editMode = true; edit(participant)" class="btn hover">Edit</a>
-                <a href="#" ng-hide="editMode" ng-click="delete(participant)" class="btn danger hover">Delete</a>
-                <button ng-show="editMode" type="submit" class="btn">Save</button>
-                <a href="#" ng-show="editMode" ng-click="editMode = false; cancel($index)"  class="btn">Cancel</a>
+            <div class="cell action-cell" ng-hide="event.isClosed">
+                <button type="button" ng-hide="editMode" ng-click="editMode = true; edit(participant)" class="btn hover">Edit</button>
+                <button type="button" ng-hide="editMode" ng-click="delete(participant)" class="btn danger hover">Delete</button>
+                <button type="submit" ng-show="editMode" class="btn">Save</button>
+                <button type="button" ng-show="editMode" ng-click="editMode = false; cancel($index)" class="btn">Cancel</button>
             </div>
         </form>
     </div>
-    <div class="poll-entry highlight">
-        <form novalidate name="formnew" ng-submit="save(participant)">
+    <div ng-hide="event.isClosed" class="poll-entry highlight">
+        <form novalidate name="formnew" ng-submit="save()">
             <div class="cell name-cell">
                 <span class="avatar style-{{participant.style}}">
                     <img src="/images/user.png" width="11" />

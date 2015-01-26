@@ -4,7 +4,7 @@
     border:1px solid #E0E3E9;
     display:inline-block;
     border-radius: 2px;
-    box-shadow: inset 0 1px 0 white, 0 1px 1px rgba(black, 0.1);
+    box-shadow: inset 0 1px 0 white, 0 1px 0 rgba($border-clr,0.5);
     @include linear-gradient($btn-top-clr, $btn-bottom-clr);
     font-size: em(12px);
     font-weight:600;

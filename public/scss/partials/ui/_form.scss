@@ -60,9 +60,6 @@ form {
         border-radius: 3px;
         border: 1px solid $border-clr;
         font-size:em(18px);
-        &.ng-pristine {
-            background: lighten($background-clr,1%);
-        }
         @include transition(border-color 0.1s ease-in-out);
         &:focus {
             border-color: $blue-clr;

@@ -11,7 +11,7 @@
     z-index: 2000;
     overflow:hidden;
     border-radius: 5px;
-    box-shadow: 0 0 0 1px $border-clr, 0 0 0 5px rgba($border-clr,0.8), 0 0 10px 5px rgba(black, 0.2);
+    box-shadow: 0 0 0 1px $border-clr, 0 0 0 5px rgba($border-clr,0.5);
     @include transform(translateX(-50%) translateY(-50%));
     .rl-modal-message {
         padding: 0 20px 20px 20px;

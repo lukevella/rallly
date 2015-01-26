@@ -1,4 +1,4 @@
-angular.module('rallly', ['ui.router','ngResource','ngFx','btford.modal'])
+angular.module('rallly', ['ui.router','ngResource','ngFx','btford.modal','ngTagsInput','ngAnimate'])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider){
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise("/notfound")
@@ -32,16 +32,31 @@ angular.module('rallly', ['ui.router','ngResource','ngFx','btford.modal'])
             templateUrl : 'templates/editevent.html',
             controller : 'EditEventCtrl'
         })
+        .state('verifyevent', {
+            url : '/verify/:id/code/:code',
+            controller : 'VerificationCtrl'
+        })
+        .state('deleteevent', {
+            url : '/delete/:id/code/:code',
+            controller : 'DeletionCtrl'
+        })
     })
     .factory('Event', function($resource){
         return $resource('/api/event/:id', { id : '@_id' }, {
-            'update' : { method : 'PUT' }
+            'update' : { method : 'PUT' },
+            'verify' : { method : 'GET', url : '/api/event/:id/code/:code' },
+            'destroy': { method : 'DELETE', url: '/api/event/:id/code/:code' }
         });
     })
     .factory('Participant', function($resource){
-        return $resource('/api/event/:id/participant/:pid', { id: '@_id', pid : '@pid'}, {
+        return $resource('/api/event/:id/participant/:pid', { id: '@_id'}, {
             'update' : { method : 'PUT' }
         });
+    })
+    .factory('Comment', function($resource){
+        return $resource('/api/event/:id/comment/:cid', { id : '@_id' }, {
+            'update' : { method : 'PUT' }
+        })
     })
     .factory('Title', function(){
         return {

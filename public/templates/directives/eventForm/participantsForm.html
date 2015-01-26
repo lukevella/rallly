@@ -4,8 +4,8 @@
 <div class="section-main">
     <div class="form-row">
         <div class="form-group optional">
-            <label for="emails">Participant's Emails</label>
-            <textarea id="emails" ng-list ng-model="event.emails" placeholder="Enter Emails..." class="form-control extend"></textarea>
+            <label>Participant's Emails</label>
+                <tags-input max-length="50" allowed-tags-pattern="{{emailRegex}}" display-property="email" ng-model="event.emails" placeholder="Add an Email" type="email" autocomplete="off"></tags-input>
         </div>
     </div>
 </div>

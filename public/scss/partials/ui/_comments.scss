@@ -1,0 +1,137 @@
+.comments-info {
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 2px solid $border-clr;
+}
+
+.comment-form {
+    @include row;
+    margin-bottom: 20px;
+    margin-top:20px;
+    padding: 0 10px;
+    .avatar-section {
+        @include span-columns(1);
+        img {
+            border-radius: 3px;
+            max-width: 100%;
+        }
+    }
+    .input-section {
+        @include span-columns(11);
+    }
+    .content-section {
+        margin-bottom:10px;
+    }
+    .name-section {
+        position:relative;
+        margin-bottom: 10px;
+    }
+    .form-control {
+        font-size: em(14px) !important;
+        border-width: 2px !important;
+    }
+    textarea.form-control {
+        min-height: 0;
+        min-width: 100%;
+    }
+}
+
+.comments-placeholder {
+    color: $text-3-clr;
+    text-align:center;
+}
+
+.comment-thread {
+    list-style:none;
+    margin:0;
+    padding:0;
+    margin-bottom: 20px;
+    max-height: 500px;
+    overflow-y: scroll;
+    .comment {
+        @include row;
+        padding: 10px;
+        .avatar-section {
+            @include span-columns(1);
+            img {
+                max-width: 100%;
+                border-radius: 3px;
+            }
+        }
+        .comment-section {
+            @include span-columns(11);
+            position:relative;
+            .comment-delete {
+                opacity:0;
+                text-decoration:none;
+                color:white;
+                background-color: $border-clr;
+                color: $text-3-clr;
+                border-radius: 2px;
+                display:inline-block;
+                position:absolute;
+                right:0;
+                top:0;
+                font-size: em(14px);
+                $cd-size: em(16px);
+                width: $cd-size;
+                height: $cd-size;
+                line-height: $cd-size;
+                text-align: center;
+                &:hover {
+                    background: $red-clr;
+                    color: white;
+                }
+                &:active {
+                    background: darken($red-clr, 5%);
+                }
+            }
+            .meta {
+                font-size: em(13px);
+                color: $text-2-clr;
+                margin-bottom: 5px;
+            }
+            .name {
+                color: $text-2-clr;
+                font-weight: 600;
+            }
+            .time:before {
+                content: " ";
+                display: inline-block;
+                height: 4px;
+                width: 4px;
+                background: $text-3-clr;
+                margin: 0 5px 2px 5px;
+                border-radius: 100%;
+            }
+            .content {
+                font-size: em(14px);
+                margin-bottom: 5px;
+                white-space: pre-wrap;
+                margin-right: 100px;
+            }
+            .actions {
+                opacity:0.8;
+                a {
+                    color: $text-2-clr;
+                    font-size: em(12px);
+                    text-decoration: none;
+                    &:hover {
+                        color: $blue-clr;
+                    }
+                }
+            }
+        }
+        &:hover {
+            background: $background-clr;
+            cursor:default;
+            border-radius: 3px;
+            .name {
+                color: $blue-clr;
+            }
+            .comment-delete {
+                opacity: 1;
+            }
+        }
+    }
+}

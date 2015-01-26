@@ -1,12 +1,14 @@
-<div ng-show="event._id">
+<div ng-show="event._id && !event.isDeleted">
     <div class="box ">
         <div class="event-header">
             <div class="avatar">
-                <img src="/images/eventicon.png" width="32  " />
+                <img src="/images/eventicon.png" width="32" />
             </div>
             <div class="details">
                 <div class="title">
                     {{event.title}}
+                    <span class="title-label danger" ng-show="event.isClosed">Poll Closed</span>
+                    <span class="title-label success" ng-hide="event.isClosed">Poll Open</span>
                 </div>
                 <div class="subtitle">
                     Created by <a href="mailto:{{event.creator.email}}">{{event.creator.name}}</a> &bull; {{event.created | elapsed}}
@@ -23,7 +25,19 @@
 
     </div>
     <div class="box box-x-scroll">
-        <div poll event="event" class="poll" participant="participant">
+        <div poll event="event" class="poll">
+        </div>
+    </div>
+
+    <div class="box" ng-hide="event.comments.length == 0 && event.isClosed">
+        <div class="box-title">
+            Discussion
+        </div>
+        <div class="box-description">
+            You can discuss the event with your friends by leaving a comment below.
+        </div>
+        <div discussion event="event">
+
         </div>
     </div>
 </div>

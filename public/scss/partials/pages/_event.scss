@@ -1,5 +1,5 @@
 .event-description {
-    font-size: em(16px);
+    font-size: em(14px);
     white-space: pre-wrap;
     padding-top:20px;
     padding-bottom: 20px;
@@ -12,7 +12,7 @@
 }
 
 .event-location {
-    font-size: em(16px);
+    font-size: em(14px);
     a {
         color: $text-clr;
         text-decoration:none;
@@ -80,6 +80,23 @@
         .title {
             font-size: em(24px);
             font-weight: bold;
+            .title-label {
+                font-size: 11px;
+                font-weight: normal;
+                margin-left: 5px;
+                position: relative;
+                top: -3px;
+                background: $text-2-clr;
+                color:white;
+                padding: 3px 10px;
+                border-radius: 20px;
+                &.success {
+                    background: $green-clr;
+                }
+                &.danger {
+                    background: $orangered-clr;
+                }
+            }
         }
         .subtitle {
             color: $text-2-clr;
@@ -94,7 +111,7 @@
         }
     }
     .actions {
-        // visibility:hidden;
+        visibility:hidden;
         float: right;
         margin-top: 30px;
     }

@@ -1,0 +1,45 @@
+.notification {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3000;
+    padding: 12px 40px;
+    background: $text-2-clr;
+    color: white;
+    @include transition(all 0.3s ease-in-out);
+    &.success {
+        background: $green-clr;
+    }
+    &.error {
+        background: $red-clr;
+    }
+    &.ng-enter {
+        top: -100px;
+        opacity:0;
+    }
+    &.ng-enter-active {
+        top:0;
+        opacity:1;
+    }
+    &.ng-leave-active {
+        top:-100px;
+        opacity:1;
+    }
+    .title {
+        font-size: em(14px);
+        margin-bottom: 2px;
+    }
+    .message {
+        font-size: em(12px);
+        color: rgba(white, 0.8);
+    }
+    .close {
+        position: absolute;
+        top: 5px;
+        right:10px;
+        color: white;
+        text-decoration:none;
+
+    }
+}

@@ -8,6 +8,7 @@ $box-h-pad: 25px;
     margin: 0 auto 20px auto;
     max-width: 800px;
     padding: $box-v-pad $box-h-pad;
+    box-shadow: 0 0 1px $border-clr;
     &.box-x-scroll {
         overflow-x: scroll;
     }

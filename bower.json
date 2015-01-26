@@ -23,6 +23,8 @@
     "ngFx": "~1.0.5",
     "angular-modal": "~0.4.0",
     "jquery": "~2.1.3",
-    "angular-hotkeys": "~0.2.2"
+    "angular-hotkeys": "~0.2.2",
+    "ng-tags-input": "2.1.1",
+    "angular-animate": "~1.3.10"
   }
 }

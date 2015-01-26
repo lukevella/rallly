@@ -1,16 +1,8 @@
 angular.module('rallly')
-.controller('NewEventCtrl', function($scope, $http, $state, Event, ConfirmModal){
+.controller('NewEventCtrl', function($scope, $http, $state, Event, ConfirmModal, Notification){
 
     $scope.title = "Schedule a New Event";
     $scope.description = "Fill in the form below to create your event and share it with your friends and colleagues.";
-
-    var showModal = function(title, message){
-        var modal = new ConfirmModal({
-            title : title || 'Not so fast!',
-            message : message || 'Make sure you fill in all the required fields and try again.',
-            cancelText : 'OK'
-        });
-    }
 
     $scope.submit = function(){
         if ($scope.form.$valid){
@@ -24,10 +16,18 @@ angular.module('rallly')
                 });
             })
             .error(function(){
-                showModal('Uh oh!', 'There was an error creating your event. Please try again later.');
+                var modal = new ConfirmModal({
+                    title : 'Uh oh!',
+                    message : 'There was an error creating your event. Please try again later.',
+                    cancelText : 'OK'
+                });
             });
         } else {
-            showModal();
+            var notification = new Notification({
+                title : 'Not so fast',
+                message : 'Make sure you fill in all the required fields and try again.',
+                type : 'error'
+            });
         }
     }
 

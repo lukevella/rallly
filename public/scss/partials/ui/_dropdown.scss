@@ -1,0 +1,30 @@
+.dropdown {
+    position:relative;
+    cursor: pointer;
+    .dropdown-menu {
+        position: absolute;
+        display:none;
+        z-index: 1000;
+        float:left;
+        min-width:160px;
+        max-width: 180px;
+        padding: 5px;
+        text-align:left;
+        left:0;
+    }
+    &.open .dropdown-menu {
+        display: block;
+    }
+    .dropdown-toggle {
+        &:after {
+            content: "";
+            width: 6px;
+            height: 4px;
+            margin-left: 10px;
+            display:inline-block;
+            background-image: url("../images/dropdown_arrow.png");
+            background-size: 6px 4px;
+            background-repeat:no-repeat;
+        }
+    }
+}

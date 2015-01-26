@@ -1,0 +1,34 @@
+<ul class="comment-thread" ng-show="event.comments.length">
+    <li ng-repeat="comment in event.comments" class="comment">
+        <div class="avatar-section">
+            <img src="/images/avatar.png" />
+        </div>
+        <div class="comment-section">
+            <a href="#" class="comment-delete" ng-click="deleteComment(comment)">&times;</a>
+            <div class="meta">
+                <span class="name">{{comment.author.name}}</span>
+                <span class="time">{{comment.created | elapsed}}</span>
+            </div>
+            <div class="content">{{comment.content}}</div>
+        </div>
+    </li>
+</ul>
+<form novalidate ng-submit="postComment()" name="commentForm" class="comment-form">
+    <div class="avatar-section">
+        <img src="/images/avatar.png" />
+    </div>
+    <div class="input-section form-group">
+        <div class="content-section">
+            <textarea class="form-control" required ng-model="comment.content" placeholder="Write a comment..."></textarea>
+        </div>
+        <div class="name-section">
+            <div class="name-container">
+                <input type="text" class="form-control" required placeholder="Your Name" ng-model="comment.author.name" />
+                <button type="submit" class="btn">Post Comment</button>
+                <span class="form-error" ng-show="commentForm.$submitted && commentForm.$error">
+                    <img src="/images/error.png" width="14" /> Make sure you fill in all the fields.
+                </span>
+            </div>
+        </div>
+    </div>
+</form>

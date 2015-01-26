@@ -29,15 +29,34 @@
                     border-color: darken($border-clr,10%);
                 }
             }
-            .dropdown:after {
-                content: "";
-                width: 6px;
-                height: 4px;
-                margin-left: 10px;
-                display:inline-block;
-                background-image: url("../images/dropdown_arrow.png");
-                background-size: 6px 4px;
-                background-repeat:no-repeat;
+            &.dropdown.open .dropdown-toggle {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                border-color: $border-clr;
+                border-bottom-color: white;
+                position: relative;
+                z-index:1001;
+            }
+            .dropdown-menu {
+                background: white;
+                color: $text-clr;
+                font-size: em(16px);
+                line-height: 1.5em;
+                border: 1px solid $border-clr;
+                border-radius: 3px;
+                padding: 20px;
+                margin-top:-9px;
+                border-top-left-radius:0;
+                box-shadow: 0 2px 3px $border-clr;
+                .dropdown-title {
+                    font-weight:bold;
+                    font-size: em(15px);
+                }
+                .dropdown-content {
+                    font-size: em(14px);
+                    line-height: 1.5em;
+                    color: $text-2-clr;
+                }
             }
         }
 

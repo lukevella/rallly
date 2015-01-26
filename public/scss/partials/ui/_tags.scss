@@ -1,0 +1,95 @@
+$tag-font-size: 14px;
+
+tags-input {
+    display: block;
+}
+tags-input *, tags-input *:before, tags-input *:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+tags-input .host {
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    &:focus {
+        outline:0;
+    }
+}
+tags-input .host:active {
+    outline: none;
+}
+
+tags-input .tags {
+    padding: 4px;
+    overflow: hidden;
+    word-wrap: break-word;
+    cursor: text;
+    border-radius: 3px;
+    background-color: white;
+    border: 1px solid $border-clr;
+    @include transition(border-color 0.1s ease-in-out);
+}
+tags-input .tags.focused {
+    outline: none;
+}
+
+tags-input .tags .tag-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+tags-input .tags .tag-item {
+    margin: 2px;
+    padding: 0 8px;
+    display: inline-block;
+    float: left;
+    font-size: em($tag-font-size);
+    height: 26px;
+    line-height: 25px;
+    border-radius: 1px;
+    background:#E5EBF2;
+    color: #7587A1;
+    box-shadow:0 0 0 1px #CBD4E2;
+}
+tags-input .tags .tag-item.selected {
+    background: $red-clr;
+    color: white;
+    box-shadow: none;
+}
+tags-input .tags .tag-item .remove-button {
+    margin: 0 0 0 5px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    vertical-align: middle;
+    font: bold em(16px) Arial, sans-serif;
+}
+
+tags-input .tags .input {
+    border: 0;
+    outline: none;
+    margin: 2px;
+    padding: 0;
+    padding-left: 8px;
+    float: left;
+    height: 26px;
+    font-size: em($tag-font-size);
+    @include placeholder {
+        color: $text-3-clr;
+    }
+}
+
+tags-input .tags .input.invalid-tag {
+    color: $red-clr;
+}
+
+tags-input .tags .input::-ms-clear {
+    display: none;
+}
+
+tags-input.ng-invalid .tags {
+    // highlight tags when model is invalid
+}

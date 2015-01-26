@@ -9,6 +9,10 @@ body {
     font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
 }
 
+a {
+    color: $blue-clr;
+}
+
 @import "partials/applayout";
 @import "partials/navigation";
 @import "partials/topbar";
@@ -19,6 +23,11 @@ body {
 @import "partials/ui/datepicker";
 @import "partials/ui/modal";
 @import "partials/ui/poll";
+@import "partials/ui/tags";
+@import "partials/ui/dropdown";
+@import "partials/ui/comments";
+@import "partials/ui/switch";
+@import "partials/ui/notification";
 
 @import "partials/pages/home";
 @import "partials/pages/event";

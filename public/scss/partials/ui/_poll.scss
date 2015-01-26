@@ -5,6 +5,7 @@ $name-col-width: 235px;
 .poll {
     min-width: 100%;
     display:block;
+    margin-bottom:20px;
 }
 
 .poll-header {
@@ -54,6 +55,8 @@ $name-col-width: 235px;
         .cell {
             padding: em(10px);
             display:table-cell;
+            height: 50px;
+            vertical-align:middle;
             &.name-cell {
                 min-width: $name-col-width;
                 width: $name-col-width;

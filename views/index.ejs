@@ -28,7 +28,8 @@
         <script type="text/javascript" src="/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script type="text/javascript" src="/vendor/ngFx/dist/ngFx.min.js"></script>
         <script type="text/javascript" src="/vendor/angular-modal/modal.min.js"></script>
-        <script type="text/javascript" src="/vendor/angular-hotkeys/angular-hotkeys.min.js"></script>
+        <script type="text/javascript" src="/vendor/ng-tags-input/ng-tags-input.min.js"></script>
+        <script type="text/javascript" src="/vendor/angular-animate/angular-animate.min.js"></script>
         <script type="text/javascript" src="/build/app.js"></script>
     </head>
     <body>
@@ -63,13 +64,19 @@
                     </div>
                 </div>
                 <div class="top-bar">
-                    <ul class="primary">
-                        <li class="item">
-                            <a class="hoverable dropdown" href="#">
+                    <ul class="primary" ng-controller="AccountCtrl">
+                        <li class="item" dropdown>
+                            <a class="dropdown-toggle hoverable" ng-click="toggle()" href="#">
                                 <img src="/images/person.png" height="16"/>
                                 <span>Guest</span>
                             </a>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-content">
+                                    User accounts will be added soon.
+                                </div>
+                            </div>
                         </li>
+
                     </ul>
                 </div>
             </div>

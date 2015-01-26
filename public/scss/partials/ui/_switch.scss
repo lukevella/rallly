@@ -1,0 +1,75 @@
+.switch-row {
+    display:table;
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid $border-clr;
+    &:last-child {
+        border:0;
+    }
+    .switch-details {
+        display:table-cell;
+        .title {
+            font-size: em(14px);
+            font-weight: bold;
+        }
+        .description {
+            font-size: em(12px);
+            color: $text-2-clr;
+        }
+    }
+    .switch {
+        display:table-cell;
+        text-align:right;
+        min-width: 150px;
+        vertical-align:middle;
+        .switch-value {
+            font-size: em(12px);
+            color: $text-2-clr;
+            display:inline-block;
+            vertical-align:middle;
+
+        }
+    }
+}
+
+.switch-toggle {
+    display:inline-block;
+    margin-left: 5px;
+    height: 20px;
+    width: 40px;
+    border-radius: 20px;
+    vertical-align:middle;
+    position:relative;
+    cursor:pointer;
+    background: $red-clr;
+    box-shadow: inset 0 0 0 1px rgba(black,0.1);
+    @include transition(all 0.1s ease-in-out);
+    $tog-size: 16px;
+    &:after {
+        content: " ";
+        @include transition(all 0.1s ease-in-out);
+        display:inline-block;
+        height: $tog-size;
+        width: $tog-size;
+        position: absolute;
+        $btn-top-clr: #FAFAFA;
+        $btn-bottom-clr: #EFF1F3;
+        box-shadow: inset 0 1px 0 white, 0 1px 1px rgba(black, 0.1);
+        @include linear-gradient($btn-top-clr, $btn-bottom-clr);
+        top: 50%;
+        margin-top: ($tog-size / 2) * -1;
+        left: 2px;
+        border-radius: 100px;
+    }
+    &:hover {
+        box-shadow:inset 0 0 0 1px rgba(black,0.1), inset 0 0 0 8px rgba(black,0.05);        
+    }
+    &.active {
+        background: $green-clr;
+        &:after {
+            left: 100%;
+            margin-left: ($tog-size * -1) - 2;
+        }
+    }
+}
