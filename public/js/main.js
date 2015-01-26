@@ -1,4 +1,4 @@
-angular.module('rallly', ['ui.router','ngResource','ngFx','btford.modal','ngTagsInput','ngAnimate'])
+angular.module('rallly', ['ui.router','ngResource','btford.modal','ngTagsInput','ngAnimate'])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider){
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise("/notfound")

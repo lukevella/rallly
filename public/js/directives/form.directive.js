@@ -73,7 +73,7 @@ angular.module('rallly')
         }
     }
 })
-.directive('settingsForm', function(Event){
+.directive('settingsForm', function(Event, ConfirmModal){
     return {
         scope : {
             event : '=',
@@ -82,8 +82,14 @@ angular.module('rallly')
         templateUrl : 'templates/directives/eventForm/settingsForm.html',
         link : function(scope, el, attrs){
             scope.deleteEvent = function(){
+                if (scope.deleteRequestSent) return;
                 Event.delete({'id' : scope.event._id}, function(){
-                    console.log('delete');
+                    scope.deleteRequestSent = true;
+                    var modal = new ConfirmModal({
+                        title : 'Delete Request Sent',
+                        message : 'An email has been sent to the creator of this event with instructions to delete it.',
+                        cancelText : 'OK'
+                    });
                 });
             }
         }

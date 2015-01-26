@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="switch">
-            <button type="button" ng-click="deleteEvent()" class="btn danger">Delete Event</button>
+            <button type="button" ng-click="deleteEvent()" class="btn" ng-class="{danger : !deleteRequestSent, disabled : deleteRequestSent}">{{deleteRequestSent ? 'Request Sent' : 'Delete Event' }}</button>
         </div>
     </div>
 </div>

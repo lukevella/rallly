@@ -27,6 +27,7 @@ exports.create = function(req, res, next){
     var event = req.body;
     event.__private = {
         'verificationCode' : getRandomString(),
+        'unsubscribeCode' : getRandomString(),
         'deleteCode' : getRandomString()
     }
     Event.create(req.body, function(err, event){
