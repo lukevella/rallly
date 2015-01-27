@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var debug = require('debug')('event.model');
+var debug = require('debug')('rallly');
 var ShortId = require('mongoose-shortid');
 
 var EventSchema = new Schema({
@@ -72,7 +72,6 @@ model.schema
     .path('creator.email')
     .required('You need to type in your email')
     .validate(function(email) {
-        debug("email: " + email);
         var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
         return emailRegex.test(email);
     }, 'You need to type in a valid email')
@@ -91,4 +90,5 @@ model.schema
         }
         return true;
     }, 'Participants must have a name')
+
 module.exports = model
