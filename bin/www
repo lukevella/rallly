@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var debug = require('debug')('www');
+var debug = require('debug')('rallly');
 var app = require('../app');
 
 var server = app.listen(app.get('port'), function() {

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=eventapi nodemon ./bin/www"
+    "start": "DEBUG=rallly nodemon ./bin/www"
   },
   "dependencies": {
     "amdefine": "^0.1.0",
@@ -21,6 +21,7 @@
     "serve-favicon": "^2.1.7"
   },
   "devDependencies": {
+    "chai": "^1.10.0",
     "gulp": "^3.8.10",
     "gulp-angular-templatecache": "^1.5.0",
     "gulp-concat": "^2.4.2",
@@ -28,6 +29,8 @@
     "gulp-notify": "^2.0.1",
     "gulp-sass": "^1.2.4",
     "gulp-sourcemaps": "^1.2.8",
-    "gulp-uglify": "^1.0.1"
+    "gulp-uglify": "^1.0.1",
+    "mocha": "^2.1.0",
+    "node-mocks-http": "^1.2.4"
   }
 }

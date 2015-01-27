@@ -4,7 +4,7 @@
 
 var app = require('../app');
 var communicator = require('../communicator');
-var debug = require('debug')('notification');
+var debug = require('debug')('rallly');
 var mandrill = require('mandrill-api');
 var mandrill_client = new mandrill.Mandrill(app.get('mandrillAPIKey'));
 
