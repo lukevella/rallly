@@ -33,52 +33,6 @@
     </head>
     <body>
         <div class="outer-container">
-            <div class="main-navigation">
-                <div class="wrapper">
-                    <a href="/" class="logo">
-                        <img class="logo-img" src="/images/logo.png" width="100" alt="Rallly - Collabrative Scheduling" />
-                    </a>
-
-                    <nav class="navigation" ng-controller="NavigationCtrl">
-                        <ul class="links">
-                            <li>
-                                <a href="/" ng-class="{active:isActive('/')}">
-                                    <i back-img="dashboard" class="icon"></i>
-                                    <span class="text">Dashboard</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/about" ng-class="{active: isActive('/about')}">
-                                    <i back-img="lightbulb" class="icon"></i>
-                                    <span class="text">About</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <div class="create-new">
-                        <a href="/new" target="_blank" rel="nofollow">
-                            <img src="/images/add.png" width="12" />
-                            <span>New Event</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="top-bar">
-                    <ul class="primary" ng-controller="AccountCtrl">
-                        <li class="item" dropdown>
-                            <a class="dropdown-toggle hoverable" ng-click="toggle()" href="#">
-                                <img src="/images/person.png" height="16"/>
-                                <span>Guest</span>
-                            </a>
-                            <div class="dropdown-menu">
-                                <div class="dropdown-content">
-                                    User accounts will be added soon.
-                                </div>
-                            </div>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
             <div class="main-content">
                 <div ui-view class="main-view">
                 </div>
