@@ -44,8 +44,8 @@
             </div>
         </form>
     </div>
-    <div class="poll-example" ng-show="event.participants.length == 0">
-        <div class="poll-entry" ng-repeat="example in event.examples">
+    <div class="poll-example" ng-class="{hidden : event.participants.length > 0}">
+        <div class="poll-entry" ng-repeat="example in examples">
             <div class="cell name-cell">
                 <span class="avatar style-{{$index + 1}}">
                     <img src="/images/user.png" width="11" />
@@ -61,7 +61,9 @@
             </div>
         </div>
         <div class="overlay">
-
+            <div class="overlay-text">
+                Fill in the form below to get started
+            </div>
         </div>
     </div>
     <div ng-hide="event.isClosed" class="poll-entry highlight">

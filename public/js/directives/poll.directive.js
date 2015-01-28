@@ -1,5 +1,5 @@
 angular.module('rallly')
-.directive('poll', function(Participant, ConfirmModal){
+.directive('poll', function($timeout, Participant, ConfirmModal){
     return {
         restrict : 'A',
         templateUrl : 'templates/directives/poll.html',
@@ -10,6 +10,21 @@ angular.module('rallly')
             scope.defaults = [];
             scope.participant = {};
             var datesCount = [];
+            var unbindListener;
+            scope.event.$promise.then(function(event){
+                var examplesNames = ['John Example', 'Jane Specimen','Mark Instance', 'Mary Case'];
+                var examples = [];
+                for (var i = 0; i < examplesNames.length; i++){
+                    var example = { name : examplesNames[i] };
+                    example.dates = [];
+                    for (var j = 0; j <  event.dates.length; j++){
+                        var answer = Math.random()<.5;
+                        example.dates[j] = answer;
+                    }
+                    examples.push(example);
+                }
+                scope.examples = examples;
+            })
             scope.delete = function(participant){
                 var modal = new ConfirmModal({
                     title : 'Delete ' + participant.name + '?',

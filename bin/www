@@ -2,6 +2,9 @@
 var debug = require('debug')('rallly');
 var app = require('../app');
 
+// Server is restricted to listen to localhost (127.0.0.1)
+// to disable direct requests to the application
+// Requests should come from Apache via mod_proxy on port 80
 var server = app.listen(app.get('port'), '127.0.0.1', function() {
   debug('Express server listening on port ' + server.address().port);
 });
