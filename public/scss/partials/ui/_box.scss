@@ -7,8 +7,8 @@ $box-h-pad: 25px;
     border-radius: 3px;
     margin: 0 auto 20px auto;
     max-width: 800px;
+    overflow:hidden;
     padding: $box-v-pad $box-h-pad;
-    box-shadow: 0 0 1px $border-clr;
     &.box-x-scroll {
         overflow-x: scroll;
     }
@@ -51,6 +51,9 @@ $box-h-pad: 25px;
 }
 .box-section {
     padding-top: 20px;
+    &:first-child {
+        border:0;
+    }
     @include row;
     .section-details {
         @include span-columns(3);
@@ -62,13 +65,14 @@ $box-h-pad: 25px;
     }
     .section-main {
         @include span-columns(9);
+
     }
 }
 
 .box-message {
     text-align:center;
     padding:40px;
-    max-width:450px;
+    max-width:500px;
     margin:0 auto;
     .main-image {
         margin-bottom: 20px;
@@ -121,4 +125,39 @@ $box-h-pad: 25px;
     background: lighten($background-clr, 1%);
     margin-top: $box-v-pad;
     padding: 15px $box-h-pad;
+}
+
+.box-steps {
+    @include display(flex);
+    width:100%;
+    list-style-position:inside;
+    padding:0;
+    margin:0 0 20px 0;
+    .step {
+        @include flex(1);
+        color: $text-2-clr;
+        font-size: em(14px);
+        margin: 0 0 0 0;
+        padding: 0 0 10px 0;
+        border-bottom:2px solid $border-clr;
+        position:relative;
+        @include transition(all 0.2s ease-in-out);
+        &:after {
+            content: "";
+            position:absolute;
+            bottom:-2px;
+            left:0;
+            height: 2px;
+            width:0;
+            background: $green-clr;
+            @include transition(all 0.2s ease-in-out);
+        }
+        &.active {
+            color: $text-clr;
+            font-weight:bold;
+            &:after {
+                width:100%;
+            }
+        }
+    }
 }

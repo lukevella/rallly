@@ -1,18 +1,18 @@
 <div class="section-details">
     <div class="section-title">Choose Dates</div>
     <ul class="daticon-list">
-        <li ng-repeat="date in event.dates">
+        <li ng-repeat="d in event.dates">
             <div class="daticon">
                 <div class="dow">
-                    {{date | date: 'EEE'}}
+                    {{d.date | date: 'EEE'}}
                 </div>
                 <div class="day">
-                    {{date | date: 'd'}}
+                    {{d.date | date: 'd'}}
                 </div>
                 <div class="month">
-                    {{date | date : 'MMM'}}
+                    {{d.date | date : 'MMM'}}
                 </div>
-                <span class="delete" ng-click="datepicker.unsetDate(date)"></span>
+                <span class="delete" ng-click="datepicker.unsetDate(d.date)"></span>
             </div>
         </li>
     </ul>
@@ -21,7 +21,7 @@
     <div class="form-row">
         <div class="form-group">
             <label for="email">Calendar</label>
-            <span class="form-error" ng-show="(form.datepicker.$dirty || form.$submitted) && form.datepicker.$error.required">
+            <span class="form-error" ng-show="form.$submitted && form.datepicker.$error.required">
                 <img src="/images/error.png" width="14" /> You need to select a few dates
             </span>
             <div datepicker required name="datepicker" control="datepicker" ng-model="event.dates">

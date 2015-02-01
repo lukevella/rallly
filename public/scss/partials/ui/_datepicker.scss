@@ -147,14 +147,8 @@
     list-style:none;
     padding:5px;
     text-align:left;
-    .placeholder {
-        line-height: em(18px);
-        font-size: em(12px);
-        color: #ccc;
-    }
     li {
-        margin: 5px;
-        display:inline-block;
+        margin-bottom: 10px;
     }
 }
 

@@ -10,8 +10,20 @@ angular.module('rallly', ['ui.router','ngResource','btford.modal','ngTagsInput',
         })
         .state('newevent',{
             url : '/new',
-            templateUrl : 'templates/newevent.html',
-            controller : 'NewEventCtrl'
+            templateUrl : 'templates/newEvent/layout.html',
+            controller : 'NewEventCtrl',
+        })
+        .state('newevent.general', {
+            templateUrl : 'templates/newEvent/general.html'
+        })
+        .state('newevent.datetime', {
+            templateUrl : 'templates/newEvent/datetime.html'
+        })
+        .state('newevent.invite', {
+            templateUrl : 'templates/newEvent/invite.html'
+        })
+        .state('newevent.success', {
+            templateUrl : 'templates/newEvent/success.html'
         })
         .state('about', {
             url : '/about',

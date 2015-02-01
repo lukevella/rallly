@@ -3,7 +3,7 @@ angular.module('rallly')
     var id = $state.params.id;
     // Get Event
     $scope.event = Event.get({id:id}, function(data){
-        // Set the page title to the event title        
+        // Set the page title to the event title
         Title.set($scope.event.title);
         // Generate event url - i.e. http://rallly.co/jF9F_Fd
         $scope.eventUrl = $state.href('event', {

@@ -5,7 +5,9 @@
     <div class="form-row">
         <div class="form-group optional">
             <label>Participant's Emails</label>
-                <tags-input max-length="50" allowed-tags-pattern="{{emailRegex}}" display-property="email" ng-model="event.emails" placeholder="Add an Email" type="email" autocomplete="off"></tags-input>
+            <tags-input max-length="50" allowed-tags-pattern="{{emailRegex}}" display-property="email" ng-model="event.emails" placeholder="Add an Email" type="email" autocomplete="off"></tags-input>
+            <input type="hidden" name="shouldCreate" value="true" />
+
         </div>
     </div>
 </div>

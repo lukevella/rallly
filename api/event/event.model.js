@@ -24,7 +24,10 @@ var EventSchema = new Schema({
     },
     updated : Date,
     title : String,
-    dates : [Date],
+    dates : [{
+        date : Date,
+        times : [Date]
+    }],
     emails : [{
         email : String
     }],
@@ -43,7 +46,7 @@ var EventSchema = new Schema({
     participants : [{
         id : Schema.Types.ObjectId,
         name : String,
-        dates : [Boolean]
+        votes : [Date]
     }],
     isClosed : {
         type : Boolean,

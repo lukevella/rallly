@@ -57,22 +57,7 @@ form {
         }
     }
     input.form-control, textarea.form-control {
-        border-radius: 3px;
-        border: 1px solid $border-clr;
-        font-size:em(18px);
-        @include transition(border-color 0.1s ease-in-out);
-        &:focus {
-            border-color: $blue-clr;
-            box-shadow: 0 0 3px rgba($blue-clr, 0.5);
-            outline:none;
-            background: white;
-        }
-        &.extend {
-            width:100%;
-        }
-        @include placeholder {
-            color: rgba($text-3-clr,0.7);
-        }
+        @include form-input;
     }
     .form-btn {
         padding: em(12px) em(15px);

@@ -1,0 +1,19 @@
+<div class="time-picker">
+    <div class="time-picker-col">
+        <div class="daticon">
+            <div class="dow">
+                {{date | date: 'EEE'}}
+            </div>
+            <div class="day">
+                {{date | date: 'd'}}
+            </div>
+            <div class="month">
+                {{date | date : 'MMM'}}
+            </div>
+            <!-- <span class="delete" ng-click="datepicker.unsetDate(date)"></span> -->
+        </div>
+    </div>
+    <div class="time-picker-col" ng-repeat="time in date.times track by $index">
+        <input type="text" class="time-picker-input" time-picker ng-model="time" ng-model-options="{ updateOn: 'blur' }" />
+    </div>
+</div>

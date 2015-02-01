@@ -1,5 +1,5 @@
 angular.module('rallly')
-.directive('datepicker', function(){
+.directive('datepicker', function(DatePickerService){
     return {
         restrict : 'A',
         require : 'ngModel',
@@ -8,34 +8,36 @@ angular.module('rallly')
             control : '='
         },
         link : function(scope, el, attrs, ngModel){
-            scope.model = scope.model || [];
+            var dateService  = new DatePickerService(scope.model),
+                dateBuffer = dateService.getDatesArray();
+
             angular.element(el).datepicker({
                 multidate : true,
                 todayHighlight: true
             })
             .on('changeDate', function(e){
-                var dates = e.dates;
-                dates.sort(function(a, b){
-                    if (a.getTime() > b.getTime()) return true;
-                    return false;
-                });
-                ngModel.$setViewValue(dates, e);
-            });
-
-            var update = function(modelValue, oldValue){
-                if (!modelValue || !oldValue || (modelValue.length == oldValue.length)) return;
-                var dates = [];
-                for (var i = 0; i < modelValue.length; i++){
-                    dates.push(new Date(modelValue[i]));
+                var datePickerDates = e.dates;
+                if (datePickerDates.length > dateBuffer.length) {
+                    var dateAdded = datePickerDates[datePickerDates.length-1];
+                    dateService.addDate(dateAdded);
+                } else {
+                    var dateRemoved = dateService.diffDates(dateBuffer, datePickerDates);
+                    if (dateRemoved)
+                        dateService.removeDate(dateRemoved);
                 }
-                angular.element(el).datepicker('setDates', dates);
-            }
-            scope.$watchCollection('model', update);
-
+                ngModel.$setViewValue(dateService.getDates())
+                dateBuffer = datePickerDates;
+            });
             scope.control = scope.control || {};
+            scope.$watchCollection('model', function(newValue, oldValue){
+                var datePickerDates = angular.element(el).datepicker('getDates');
+                var modelDates = dateService.getDatesArray();
+                if (datePickerDates.length != modelDates.length){
+                    angular.element(el).datepicker('setDates', modelDates);
+                }
+            });
             scope.control.unsetDate = function(date){
-                var index = scope.model.indexOf(date);
-                scope.model.splice(index, 1);
+                dateService.removeDate(date);
             }
 
             ngModel.$validators.required = function(modelValue, viewValue){
@@ -47,4 +49,47 @@ angular.module('rallly')
 
         }
     }
+})
+.service('DatePickerService', function(){
+    return function(defaultStore){
+
+        var store = defaultStore || [];
+
+        this.addDate = function(date){
+            store.push({ date : date });
+            store.sort(function(a, b){
+                if (Date.compare(a.date, b.date) > 0) return true;
+                return false;
+            });
+        }
+        this.removeDate = function(date){
+            for (var i = 0; i < store.length; i++){
+                if (Date.equals(store[i].date, date)){
+                    store.splice(i,1);
+                }
+            }
+        }
+        this.getDates = function(){
+            return (store.length > 0) ? store : null;
+        }
+        this.getDatesArray = function(){
+            var dates = [];
+            for (var i = 0; i < store.length; i++){
+                dates.push(store[i].date);
+            }
+            return dates;
+        }
+        this.diffDates = function(bigArr, smallArr){
+            var shouldReturn = true;
+            for (var i = 0; i < bigArr.length; i++){
+                shouldReturn = true;
+                for (var j = 0; j < smallArr.length; j++) {
+                    if (Date.equals(bigArr[i], smallArr[j])) {
+                        shouldReturn = false;
+                    }
+                }
+                if (shouldReturn) return bigArr[i];
+            }
+        }
+    };
 });

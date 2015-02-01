@@ -1,0 +1,26 @@
+<div class="box" ng-class="{'animated shake': form.$submitted && form.$invalid }">
+
+    <div class="box-title">Schedule a New Event</div>
+    <div class="box-description">
+        Fill in the form below to create your event and share it with your friends and colleagues.
+    </div>
+    <ol class="box-steps">
+        <li class="step active">
+            General Details
+        </li>
+        <li class="step" ng-class="{ active : page > 1 }">
+            Dates &amp; Times
+        </li>
+        <li class="step" ng-class="{ active : page > 2 }">
+            Invites
+        </li>
+        <li class="step" ng-class="{ active : page > 3 }">
+            Done
+        </li>
+    </ol>
+    <form novalidate autocomplete="off" name="form" ng-submit="submit()">
+        <div ui-view>
+
+        </div>
+    </form>
+</div>
