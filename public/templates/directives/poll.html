@@ -2,16 +2,16 @@
     <div class="header participants-header">
         {{event.participants.length}} participants
     </div>
-    <div class="header date-header" ng-repeat="date in event.dates">
+    <div class="header date-header" ng-repeat="d in event.dates">
         <div class="daticon">
             <div class="dow">
-                {{date | date: 'EEE'}}
+                {{d.date | date: 'EEE'}}
             </div>
             <div class="day">
-                {{date | date: 'd'}}
+                {{d.date | date: 'd'}}
             </div>
             <div class="month">
-                {{date | date : 'MMM'}}
+                {{d.date | date : 'MMM'}}
             </div>
             <span class="count" ng-show="selectedDate($index)" ng-class={top:isTopDate($index)}>{{selectedDate($index)}}</span>
         </div>
