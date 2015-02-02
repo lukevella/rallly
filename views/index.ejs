@@ -34,12 +34,59 @@
     </head>
     <body>
         <div class="outer-container">
+            <div class="main-navigation">
+                <a href="/" class="logo">
+                    <img src="/images/logo.png" width="100" />
+                </a>
+                <div class="menu-section">
+                    Menu
+                </div>
+                <nav class="navigation">
+                    <ul class="links" ng-controller="NavigationCtrl">
+                        <li>
+                            <a href="/" ng-class="{active : isActive('/')}">
+                                <i back-img="home" class="icon"></i>
+                                <span class="text">Homepage</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/about" ng-class="{active : isActive('/about')}">
+                                <i back-img="about" class="icon"></i>
+                                <span class="text">What is Rallly?</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/contact" ng-class="{active : isActive('/contact')}">
+                                <i back-img="contact" class="icon"></i>
+                                <span class="text">Contact</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="menu-section">
+                    Link
+                </div>
+                <a class="create-new" href="/new">Schedule an event</a>
+            </div>
             <div class="main-content">
+                <div class="top-bar">
+                    <ul class="primary ng-scope" ng-controller="AccountCtrl">
+                        <li class="item dropdown" dropdown="">
+                            <a class="dropdown-toggle hoverable" ng-click="toggle()" href="#">
+                                <img src="/images/person.png" height="16">
+                                <span>Guest</span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-content">
+                                    User accounts will be added soon.
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <div ui-view class="main-view">
                 </div>
             </div>
-
-
         </div>
     </body>
 </html>

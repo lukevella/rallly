@@ -64,17 +64,6 @@
 
 .event-header {
     width: 100%;
-    margin-top: -30px;
-    .avatar {
-        display:inline-block;
-        margin-right: 20px;
-        text-align: center;
-        border-radius: 1px;
-        box-shadow: 0 0 0 5px white, 0 0 0 6px $border-clr, inset 0 0 0 1px $border-clr;
-        padding: 20px;
-        background:$background-clr;
-        vertical-align: bottom;
-    }
     .details {
         display:inline-block;
         .title {
@@ -113,7 +102,6 @@
     .actions {
         visibility:hidden;
         float: right;
-        margin-top: 30px;
     }
     &:hover {
         .actions {

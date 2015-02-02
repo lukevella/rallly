@@ -7,6 +7,7 @@ $box-h-pad: 25px;
     border-radius: 3px;
     margin: 0 auto 20px auto;
     max-width: 800px;
+    min-width:700px;
     overflow:hidden;
     padding: $box-v-pad $box-h-pad;
     &.box-x-scroll {
@@ -21,9 +22,6 @@ $box-h-pad: 25px;
     &.highlight {
         border-color: $blue-clr;
         box-shadow: 0 0 3px rgba($blue-clr, 0.5);
-    }
-    &:last-child {
-        margin-bottom: 40px;
     }
 }
 
