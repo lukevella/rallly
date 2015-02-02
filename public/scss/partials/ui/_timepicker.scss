@@ -20,10 +20,10 @@
 }
 
 .time-picker-input {
-    @include form-input;
     padding: em(5px) 0;
     text-align:center;
-    font-size:em(26px);
+    border:0;
+    font-size:em(14px);
     &.ng-invalid {
         border-color: $red-clr;
         &:focus {
@@ -34,16 +34,34 @@
         border-color: $green-clr;
     }
     &:focus {
+        outline:0;
         color: $text-clr;
     }
 }
 
 .time-form {
     width:100%;
+    border:1px solid $border-clr;
+    th {
+        border-bottom:2px solid $border-clr;
+        padding: 10px;
+        font-size: 14px;
+        text-transform:uppercase;
+    }
     td {
-        padding: 10px 10px 10px 0;
+        border-right: 1px solid $border-clr;
+        padding: 10px 10px;
+        border-bottom:1px solid $border-clr;
+        &:last-child {
+            border-right:0;
+        }
         input {
             width: 100%;
+        }
+    }
+    tr:last-child {
+        td {
+            border-bottom:0;
         }
     }
 }

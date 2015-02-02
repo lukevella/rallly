@@ -141,7 +141,7 @@ angular.module('rallly')
         }
     }
 })
-.directive('timePicker', function(){
+.directive('timePicker', function($timeout){
     return {
         scope : {
             model : '=ngModel'
@@ -149,9 +149,12 @@ angular.module('rallly')
         require : 'ngModel',
         link : function(scope, el, attrs, ngModel){
             ngModel.$viewChangeListeners.push(function(){
-                scope.model = Date.parse(ngModel.$modelValue);
-                ngModel.$setViewValue(scope.model.toString("hh:mm tt"));
-                ngModel.$render();
+                scope.model = ngModel.$modelValue;
+            });
+
+            ngModel.$parsers.push(function (value) {
+                if (!value) return;
+                return Date.parse(value);
             });
 
             ngModel.$validators.time = function(modelValue, viewValue){

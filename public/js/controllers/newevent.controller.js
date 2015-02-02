@@ -11,7 +11,7 @@ angular.module('rallly')
         'newevent.invite'
     ];
 
-    $scope.page = 1;
+    $scope.page = 2;
 
     var goTo = function(page){
         $scope.page = page;

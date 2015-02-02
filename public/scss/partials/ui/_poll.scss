@@ -20,7 +20,6 @@ $name-col-width: 235px;
         &.date-header {
             text-align:center;
             min-width: $date-col-width;
-            width: $date-col-width;
         }
         &.actions-header {
             min-width: $actions-col-width;
@@ -127,7 +126,6 @@ $name-col-width: 235px;
             }
             &.vote-cell {
                 min-width: $date-col-width;
-                width: $date-col-width;
                 text-align:center;
                 position: relative;
                 .overlay {
