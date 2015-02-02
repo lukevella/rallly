@@ -11,7 +11,7 @@ angular.module('rallly')
         'newevent.invite'
     ];
 
-    $scope.page = 2;
+    $scope.page = 1;
 
     var goTo = function(page){
         $scope.page = page;
@@ -44,12 +44,6 @@ angular.module('rallly')
         } else if ($scope.form.$valid) {
             $scope.form.$setPristine();
             $scope.nextPage();
-        } else {
-            var notification = new Notification({
-                title : 'Not so fast',
-                message : 'Make sure you fill in all the required fields and try again.',
-                type : 'error'
-            });
         }
     }
 
