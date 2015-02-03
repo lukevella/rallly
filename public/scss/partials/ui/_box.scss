@@ -155,9 +155,10 @@ $box-h-pad: 25px;
         }
         &.active {
             color: $text-clr;
-            &:after {
-                width:100%;
-            }
+            font-weight:bold;
+        }
+        &.complete:after {
+            width:100%;
         }
     }
 }
