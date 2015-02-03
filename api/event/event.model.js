@@ -24,10 +24,7 @@ var EventSchema = new Schema({
     },
     updated : Date,
     title : String,
-    dates : [{
-        date : Date,
-        times : [Date]
-    }],
+    dates : [Date],
     emails : [{
         email : String
     }],

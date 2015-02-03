@@ -4,15 +4,15 @@
         <li ng-repeat="d in event.dates">
             <div class="daticon">
                 <div class="dow">
-                    {{d.date | date: 'EEE'}}
+                    {{d | date: 'EEE'}}
                 </div>
                 <div class="day">
-                    {{d.date | date: 'd'}}
+                    {{d | date: 'd'}}
                 </div>
                 <div class="month">
-                    {{d.date | date : 'MMM'}}
+                    {{d | date : 'MMM'}}
                 </div>
-                <span class="delete" ng-click="datepicker.unsetDate(d.date)"></span>
+                <span class="delete" ng-click="datepicker.removeDate(d)"></span>
             </div>
         </li>
     </ul>

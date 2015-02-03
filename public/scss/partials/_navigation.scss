@@ -32,7 +32,7 @@ $nav-pad: 20px;
         padding : 10px $nav-pad;
         border-bottom: 1px solid darken($navigation-bg-clr, 3%);
         margin-top:20px;
-        margin-bottom:20px;
+        margin-bottom:10px;
     }
     .create-new {
         display:block;
@@ -58,7 +58,8 @@ $nav-pad: 20px;
                 text-decoration: none;
                 color: #616F8D;
                 line-height: em(40px);
-                font-size: em(14px);
+                font-size: em(12px);
+                font-weight:bold;
                 &:hover {
                     opacity: 1;
                     color:white;

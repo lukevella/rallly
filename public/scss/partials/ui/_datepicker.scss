@@ -1,3 +1,119 @@
+.ng-submitted .ng-invalid > .date-picker {
+    border-color: $pink-clr;
+}
+
+.date-picker {
+    border: 1px solid $border-clr;
+    border-radius: 2px;
+    @include transition(border-color 0.2s ease-in-out);
+    .wrapper {
+        padding:20px;
+    }
+    .date-picker-head {
+        display:table;
+        width:100%;
+        margin-bottom:30px;
+        text-align:center;
+        .title {
+            display:inline-block;
+            width:200px;
+            margin: 0 20px;
+            font-weight:bold;
+            font-size: em(18px);
+        }
+        .arrow {
+            text-decoration:none;
+            color: $text-3-clr;
+            position:relative;
+            border: 1px solid $border-clr;
+            display:inline-block;
+            width: 25px;
+            border-radius: 2px;
+            font-size: 12px;
+            line-height:25px;
+            text-align:center;
+            float:left;
+            box-shadow: 0 1px 1px rgba($border-clr,0.5);
+            margin:0 20px;
+            &:last-child {
+                float:right;
+            }
+            &:hover {
+                color: $text-clr;
+            }
+            &:active {
+                box-shadow:none;
+            }
+
+        }
+    }
+    .dow {
+        font-size:0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid $border-clr;
+        margin-bottom: 10px;
+        .day {
+            text-transform:uppercase;
+            font-size: 14px;
+            display:inline-block;
+            width: (100% / 7);
+            text-align:center;
+            color: $pink-clr;
+        }
+    }
+    .values {
+        .value {
+            display:inline-block;
+            width: (100% / 7);
+            text-align:center;
+            font-size: em(14px);
+            line-height:em(55px);
+            position:relative;
+            font-weight: bold;
+            &.today {
+                color:#818176;
+                &:after {
+                    opacity:1;
+                    background: rgba(yellow, 0.1);
+                }
+            }
+            &.outside {
+                color: $text-3-clr;
+                font-weight:normal;
+            }
+            &:after {
+                content: " ";
+                cursor:pointer;
+                opacity: 0;
+                position:absolute;
+                $size: em(42px);
+                width:$size;
+                height:$size;
+                margin-left:$size * -0.5;
+                margin-top:$size * -0.5;
+                left:50%;
+                top:50%;
+                border-radius: 2px;
+            }
+            &:hover {
+                &:after {
+                    opacity:1;
+                    background: rgba($border-clr,0.4);
+                }
+                cursor: pointer;
+            }
+            &.active {
+                background:white;
+                color: $green-clr;
+                &:after {
+                    opacity:1;
+                    background: rgba($green-clr,0.1);
+                }
+            }
+        }
+    }
+}
+
 .ng-submitted .ng-invalid > .datepicker {
     border-color: $pink-clr;
 }

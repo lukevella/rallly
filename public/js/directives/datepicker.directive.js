@@ -1,5 +1,5 @@
 angular.module('rallly')
-.directive('datepicker', function(DatePickerService){
+.directive('datepicker', function(){
     return {
         restrict : 'A',
         require : 'ngModel',
@@ -7,44 +7,15 @@ angular.module('rallly')
             model : '=ngModel',
             control : '='
         },
+        templateUrl: 'templates/directives/datePicker.html',
         link : function(scope, el, attrs, ngModel){
-            var dateService  = new DatePickerService(scope.model);
-
-            angular.element(el).datepicker({
-                multidate : true,
-                todayHighlight: true
-            })
-            .on('changeDate', function(e){
-                var datePickerDates = e.dates;
-                if (datePickerDates.length > dateService.count()) {
-                    var dateAdded = datePickerDates[datePickerDates.length-1];
-                    dateService.addDate(dateAdded);
-                } else {
-                    var dateRemoved = dateService.diffDates(datePickerDates);
-                    if (dateRemoved)
-                        dateService.removeDate(dateRemoved);
-                }
-                ngModel.$setViewValue(dateService.getDates())
-            });
-            var init = false;
-            scope.$watchCollection('model', function(newValue, oldValue){
-                if (newValue){
-                    if (!init){
-                        init = true;
-                        dateService.setStore(newValue);
-                    }
-                    var modelDates = dateService.getDatesArray();
-                    var datePickerDates = angular.element(el).datepicker('getDates');
-                    if (datePickerDates.length != modelDates.length){
-                        angular.element(el).datepicker('setDates', modelDates);
-                    }
-                }
-            });
-
+            scope.model = scope.model || [];
             scope.control = scope.control || {};
-            scope.control.unsetDate = function(date){
-                dateService.removeDate(date);
-            }
+
+            scope.$watchCollection('model', function(newValue){
+                ngModel.$setViewValue(newValue);
+                ngModel.$validate();
+            });
 
             ngModel.$validators.required = function(modelValue, viewValue){
                 if (!modelValue || modelValue.length == 0){
@@ -53,62 +24,65 @@ angular.module('rallly')
                 return true;
             }
 
-        }
-    }
-})
-.service('DatePickerService', function(){
-    return function(defaultStore){
-
-        // Storage for the datepicker ui element
-        var store = defaultStore || [];
-        var me = this;
-
-        this.count = function(){
-            return store.length;
-        }
-        this.setStore = function(newStore){
-            store = newStore;
-        }
-        this.addDate = function(date){
-            store.push({ date : date });
-            store.sort(function(a, b){
-                if (Date.compare(a.date, b.date) > 0) return true;
-                return false;
-            });
-        }
-        this.removeDate = function(date){
-            console.log('removing date');
-            var parsedDate = Date.parse(date);
-            for (var i = 0; i < store.length; i++){
-                if (Date.equals(store[i].date, parsedDate)){
-                    store.splice(i,1);
-                }
-            }
-        }
-        // Returns the store
-        this.getDates = function(){
-            return (store.length > 0) ? store : null;
-        }
-        // Returns the store as an array of Dates
-        this.getDatesArray = function(){
-            var dates = [];
-            for (var i = 0; i < store.length; i++){
-                dates.push(Date.parse(store[i].date));
-            }
-            return dates;
-        }
-        // Takes two arrays of Dates and returns the first element in the first array that isn't in the second array
-        this.diffDates = function(smallArr){
-            var shouldReturn = true, bigArr = me.getDatesArray();
-            for (var i = 0; i < bigArr.length; i++){
-                shouldReturn = true;
-                for (var j = 0; j < smallArr.length; j++) {
-                    if (Date.equals(bigArr[i], smallArr[j])) {
-                        shouldReturn = false;
+            var today = Date.today(), activeDate = today.clone();
+            var setMonth = function(toDate){
+                activeDate = toDate;
+                var startDate = activeDate.clone().moveToFirstDayOfMonth(),
+                    startDateDOW = startDate.getDay();
+                startDate.add(startDateDOW - 7).days();
+                scope.title = activeDate.toString('MMMM yyyy');
+                var days = new Array(42);
+                for (var i = 0; i < days.length; i++){
+                    var date = startDate.clone().add(i).days()
+                    days[i] = {
+                        date : date,
+                        isOutsideMonth : (date.getMonth() != activeDate.getMonth()) ? true : false,
+                        isToday : (Date.equals(date, today))
                     }
                 }
-                if (shouldReturn) return bigArr[i];
+                scope.days = days;
+            }
+            setMonth(activeDate);
+            scope.selectDay = function(dayObj){
+                if (dayObj.isOutsideMonth) {
+                    setMonth(dayObj.date);
+                }
+                if ((index = scope.isActive(dayObj.date, true)) != -1) {
+                    // Already selected
+                    scope.model.splice(index, 1); // remove
+                } else {
+                    // Not selected
+                    var index = 0, inserted = false;
+                    do {
+                        if (scope.model[index] == undefined || Date.compare(Date.parse(scope.model[index]), dayObj.date) > 0){
+                            scope.model.splice(index, 0, dayObj.date);
+                            inserted = true;
+                        }
+                        index++;
+                    } while (inserted == false);
+                }
+            }
+            scope.isActive = function(date, returnIndex){
+                scope.model = scope.model || [];
+                for (var i = 0; i < scope.model.length; i++){
+                    if (Date.equals(Date.parse(scope.model[i]), date)){
+                        return (returnIndex) ? i : true;
+                    }
+                }
+                return (returnIndex) ? -1 : false;
+            }
+            scope.nextMonth = function(){
+                setMonth(activeDate.add(1).months());
+            }
+            scope.prevMonth = function(){
+                setMonth(activeDate.add(-1).months());
+            }
+
+            scope.control.removeDate = function(date){
+                if ((index = scope.isActive(Date.parse(date), true)) != -1) {
+                    scope.model.splice(index, 1)
+                }
             }
         }
-    };
+    }
 });

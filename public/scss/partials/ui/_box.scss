@@ -136,10 +136,13 @@ $box-h-pad: 25px;
         color: $text-2-clr;
         font-size: em(14px);
         margin: 0 0 0 0;
-        padding: 0 0 10px 0;
+        padding: 0 0 10px 10px;
         border-bottom:2px solid $border-clr;
         position:relative;
         @include transition(all 0.2s ease-in-out);
+        &:first-child {
+            padding-left : 0;
+        }
         &:after {
             content: "";
             position:absolute;
@@ -152,7 +155,6 @@ $box-h-pad: 25px;
         }
         &.active {
             color: $text-clr;
-            font-weight:bold;
             &:after {
                 width:100%;
             }
