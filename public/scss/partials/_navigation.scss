@@ -36,7 +36,7 @@ $nav-pad: 20px;
     }
     .create-new {
         display:block;
-        font-size: 12px;
+        font-size: em(12px);
         color: white;
         background: $green-clr;
         text-decoration: none;
@@ -58,7 +58,7 @@ $nav-pad: 20px;
                 text-decoration: none;
                 color: #616F8D;
                 line-height: em(40px);
-                font-size: em(12px);
+                font-size: em(14px);
                 &:hover {
                     opacity: 1;
                     color:white;

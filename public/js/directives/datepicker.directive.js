@@ -8,8 +8,7 @@ angular.module('rallly')
             control : '='
         },
         link : function(scope, el, attrs, ngModel){
-            var dateService  = new DatePickerService(scope.model),
-                dateBuffer = dateService.getDatesArray();
+            var dateService  = new DatePickerService(scope.model);
 
             angular.element(el).datepicker({
                 multidate : true,
@@ -17,25 +16,32 @@ angular.module('rallly')
             })
             .on('changeDate', function(e){
                 var datePickerDates = e.dates;
-                if (datePickerDates.length > dateBuffer.length) {
+                if (datePickerDates.length > dateService.count()) {
                     var dateAdded = datePickerDates[datePickerDates.length-1];
                     dateService.addDate(dateAdded);
                 } else {
-                    var dateRemoved = dateService.diffDates(dateBuffer, datePickerDates);
+                    var dateRemoved = dateService.diffDates(datePickerDates);
                     if (dateRemoved)
                         dateService.removeDate(dateRemoved);
                 }
                 ngModel.$setViewValue(dateService.getDates())
-                dateBuffer = datePickerDates;
             });
-            scope.control = scope.control || {};
+            var init = false;
             scope.$watchCollection('model', function(newValue, oldValue){
-                var datePickerDates = angular.element(el).datepicker('getDates');
-                var modelDates = dateService.getDatesArray();
-                if (datePickerDates.length != modelDates.length){
-                    angular.element(el).datepicker('setDates', modelDates);
+                if (newValue){
+                    if (!init){
+                        init = true;
+                        dateService.setStore(newValue);
+                    }
+                    var modelDates = dateService.getDatesArray();
+                    var datePickerDates = angular.element(el).datepicker('getDates');
+                    if (datePickerDates.length != modelDates.length){
+                        angular.element(el).datepicker('setDates', modelDates);
+                    }
                 }
             });
+
+            scope.control = scope.control || {};
             scope.control.unsetDate = function(date){
                 dateService.removeDate(date);
             }
@@ -53,8 +59,16 @@ angular.module('rallly')
 .service('DatePickerService', function(){
     return function(defaultStore){
 
+        // Storage for the datepicker ui element
         var store = defaultStore || [];
+        var me = this;
 
+        this.count = function(){
+            return store.length;
+        }
+        this.setStore = function(newStore){
+            store = newStore;
+        }
         this.addDate = function(date){
             store.push({ date : date });
             store.sort(function(a, b){
@@ -63,24 +77,29 @@ angular.module('rallly')
             });
         }
         this.removeDate = function(date){
+            console.log('removing date');
+            var parsedDate = Date.parse(date);
             for (var i = 0; i < store.length; i++){
-                if (Date.equals(store[i].date, date)){
+                if (Date.equals(store[i].date, parsedDate)){
                     store.splice(i,1);
                 }
             }
         }
+        // Returns the store
         this.getDates = function(){
             return (store.length > 0) ? store : null;
         }
+        // Returns the store as an array of Dates
         this.getDatesArray = function(){
             var dates = [];
             for (var i = 0; i < store.length; i++){
-                dates.push(store[i].date);
+                dates.push(Date.parse(store[i].date));
             }
             return dates;
         }
-        this.diffDates = function(bigArr, smallArr){
-            var shouldReturn = true;
+        // Takes two arrays of Dates and returns the first element in the first array that isn't in the second array
+        this.diffDates = function(smallArr){
+            var shouldReturn = true, bigArr = me.getDatesArray();
             for (var i = 0; i < bigArr.length; i++){
                 shouldReturn = true;
                 for (var j = 0; j < smallArr.length; j++) {
