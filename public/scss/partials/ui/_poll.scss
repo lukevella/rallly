@@ -47,6 +47,7 @@ $name-col-width: 235px;
             left:0;
             width:100%;
             height: 100%;
+            border-bottom:1px solid $border-clr;
             background: rgba(white, 0.75);
             text-align: center;
             .overlay-text {

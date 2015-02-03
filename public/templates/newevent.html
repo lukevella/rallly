@@ -1,4 +1,4 @@
-<div ng-hide="eventUrl">
+<div ng-if="!eventUrl">
     <div class="box" ng-class="{'animated shake': form.$submitted && form.$invalid }">
 
         <div class="box-title">Schedule a New Event</div>
@@ -7,30 +7,47 @@
         </div>
 
         <form novalidate autocomplete="off" name="form" ng-submit="submit()">
-            <section class="box-section" user-form form="form" event="event">
+            <div ng-if="page == 1">
 
-            </section>
+                <section class="box-section" user-form form="form" event="event">
 
-            <section class="box-section" event-form form="form" event="event">
+                </section>
 
-            </section>
+                <section class="box-section" event-form form="form" event="event">
 
-            <section class="box-section" date-form form="form" event="event">
+                </section>
+            </div>
+            <div ng-if="page==2">
 
-            </section>
+                <section class="box-section" date-form form="form" event="event">
+
+                </section>
+
+                <section class="box-section" ng-show="event.dates.length" time-form form="form" event="event">
+
+                </section>
+            </div>
+
+            <div ng-if="page==3">
 
             <section class="box-section" participants-form form="form" event="event">
 
             </section>
 
+            </div>
+
+
             <div class="box-controls box-bottom-sticky">
-                <button type="submit" class="btn btn-primary">Create Event</button>
+                <button type="button" ng-if="page!=1" class="btn" ng-click="prevPage()">Back</button>
+                <button type="button" ng-if="page!=3" class="btn" ng-click="nextPage()">Next</button>
+                <button type="submit" ng-if="page==3" class="btn btn-primary">Create Event</button>
             </div>
 
         </form>
     </div>
+
 </div>
-<div ng-show="eventUrl" class="box">
+<div ng-if="eventUrl" class="box">
     <div class="box-message">
             <div class="main-image">
                 <img src="/images/success_large.png" width="100" />

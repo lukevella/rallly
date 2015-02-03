@@ -1,0 +1,17 @@
+@mixin form-input {
+    border-radius: 2px;
+    border: 1px solid $border-clr;
+    font-size:em(18px);
+    @include transition(border-color 0.1s ease-in-out);
+    &:focus {
+        border-color: $blue-clr;
+        outline:none;
+        background: white;
+    }
+    &.extend {
+        width:100%;
+    }
+    @include placeholder {
+        color: rgba($text-3-clr,0.7);
+    }
+}

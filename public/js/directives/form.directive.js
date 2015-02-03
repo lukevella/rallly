@@ -15,7 +15,7 @@ angular.module('rallly')
             event : '=',
             form : '='
         },
-        templateUrl : 'templates/directives/eventForm/userForm.html',
+        templateUrl : 'templates/form/userForm.html',
         link : function(scope, el, attrs) {
             scope.errors = {};
 
@@ -37,7 +37,7 @@ angular.module('rallly')
             event : '=',
             form : '='
         },
-        templateUrl : 'templates/directives/eventForm/eventForm.html',
+        templateUrl : 'templates/form/eventForm.html',
         link : function(scope, el, attrs) {
             scope.errors = {};
 
@@ -58,7 +58,7 @@ angular.module('rallly')
             event : '=',
             form : '='
         },
-        templateUrl : 'templates/directives/eventForm/dateForm.html'
+        templateUrl : 'templates/form/dateForm.html'
     }
 })
 .directive('participantsForm', function(FormHelper){
@@ -67,7 +67,7 @@ angular.module('rallly')
             event : '=',
             form : '='
         },
-        templateUrl : 'templates/directives/eventForm/participantsForm.html',
+        templateUrl : 'templates/form/participantsForm.html',
         link : function(scope, el, attrs){
             scope.emailRegex = FormHelper.emailRegexString;
         }
@@ -79,7 +79,7 @@ angular.module('rallly')
             event : '=',
             form : '='
         },
-        templateUrl : 'templates/directives/eventForm/settingsForm.html',
+        templateUrl : 'templates/form/settingsForm.html',
         link : function(scope, el, attrs){
             scope.deleteEvent = function(){
                 if (scope.deleteRequestSent) return;
@@ -115,6 +115,58 @@ angular.module('rallly')
                 scope.model = !scope.model;
                 ngModel.$setViewValue(scope.model, e);
             });
+        }
+    }
+})
+.directive('timeForm', function(DatePickerService){
+    return {
+        scope : {
+            event : '=',
+            form : '='
+        },
+        templateUrl : 'templates/form/timeForm.html',
+        link : function(scope, el, attrs){
+            var init = false;
+            var dateService;
+            var deregister = scope.$watch('event.dates', function(value){
+                if (value && !init) {
+                    deregister();
+                }
+                init = true;
+                dateService = new DatePickerService(scope.event.dates);
+                scope.unsetDate = function(date){
+                    dateService.removeDate(date);
+                }
+            });
+        }
+    }
+})
+.directive('timePicker', function($timeout){
+    return {
+        scope : {
+            model : '=ngModel'
+        },
+        require : 'ngModel',
+        link : function(scope, el, attrs, ngModel){
+            ngModel.$viewChangeListeners.push(function(){
+                scope.model = ngModel.$modelValue;
+            });
+
+            ngModel.$parsers.push(function (value) {
+                if (!value) return;
+                return Date.parse(value);
+            });
+
+            ngModel.$validators.time = function(modelValue, viewValue){
+                if (ngModel.$isEmpty(modelValue)) return true;
+                var time = Date.parse(modelValue);
+                if (time) {
+                    ngModel.$setViewValue(time.toString("hh:mm tt"));
+                    ngModel.$render();
+                    return true;
+                }
+                return false;
+            }
         }
     }
 });

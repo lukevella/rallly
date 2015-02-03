@@ -1,0 +1,39 @@
+<div class="date-picker">
+    <div class="wrapper">
+        <div class="date-picker-head">
+            <a href="#" class="arrow" ng-click="prevMonth()">&#10094;</a>
+            <span class="title">
+                <span class="title-text">{{title}}</span>
+            </span>
+            <a href="#" class="arrow" ng-click="nextMonth()">&#10095;</a>
+        </div>
+        <div class="dow">
+            <div class="day">
+                Sun
+            </div>
+            <div class="day">
+                Mon
+            </div>
+            <div class="day">
+                Tue
+            </div>
+            <div class="day">
+                Wed
+            </div>
+            <div class="day">
+                Thu
+            </div>
+            <div class="day">
+                Fri
+            </div>
+            <div class="day">
+                Sat
+            </div>
+        </div>
+        <div class="values">
+            <div ng-repeat="day in days" class="value"  ng-class="{ outside : day.isOutsideMonth, today : day.isToday, active : isActive(day.date) }" ng-click="selectDay(day)">
+                {{day.date | date : 'd' }}
+            </div>
+        </div>
+    </div>
+</div>

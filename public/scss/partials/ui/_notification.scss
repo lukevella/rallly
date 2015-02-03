@@ -1,11 +1,14 @@
 .notification {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 80px;
+    $not-width: 300px;
+    right: 0;
+    width: $not-width;
     z-index: 3000;
-    padding: 12px 40px;
+    padding: 12px 20px;
     background: $text-2-clr;
+    border-top-left-radius:2px;
+    border-bottom-left-radius:2px;
     color: white;
     @include transition(all 0.3s ease-in-out);
     &.success {
@@ -15,15 +18,15 @@
         background: $red-clr;
     }
     &.ng-enter {
-        top: -100px;
+        right: -$not-width;
         opacity:0;
     }
     &.ng-enter-active {
-        top:0;
+        right:0;
         opacity:1;
     }
     &.ng-leave-active {
-        top:-100px;
+        right:-$not-width;
         opacity:1;
     }
     .title {

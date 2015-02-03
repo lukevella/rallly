@@ -1,0 +1,44 @@
+<div class="section-details">
+    <div class="section-title">Choose Times</div>
+</div>
+<div class="section-main">
+    <table class="time-form">
+        <thead>
+            <tr>
+                <th>
+
+                </th>
+                <th>
+                    Time 1
+                </th>
+                <th>
+                    Time 2
+                </th>
+                <th>
+                    Time 3
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in event.dates">
+                <td>
+                    <div class="daticon">
+                        <div class="dow">
+                            {{d.date | date: 'EEE'}}
+                        </div>
+                        <div class="day">
+                            {{d.date | date: 'd'}}
+                        </div>
+                        <div class="month">
+                            {{d.date | date : 'MMM'}}
+                        </div>
+                        <span class="delete" ng-click="unsetDate(d.date)"></span>
+                    </div>
+                </td>
+                <td ng-repeat="time in [1,2,3] track by $index">
+                    <input type="text" time-picker ng-model-options="{ updateOn: 'blur' }" ng-model="d.times[$index]" class="time-picker-input" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -49,7 +49,7 @@ angular.module('rallly')
             scope.selectedDate = function(index){
                 datesCount[index] = 0;
                 for (var i = 0; i < scope.event.participants.length; i++){
-                    if (scope.event.participants[i].dates[index]) datesCount[index]++;
+                    if (scope.event.participants[i].votes[index]) datesCount[index]++;
                 }
                 return datesCount[index];
             }
