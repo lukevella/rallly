@@ -17,7 +17,6 @@
   "dependencies": {
     "bootstrap": "~3.3.1",
     "angular": "~1.3.3",
-    "bootstrap-datepicker": "~1.3.0",
     "angular-ui-router": "~0.2.13",
     "angular-resource": "~1.3.6",
     "angular-modal": "~0.4.0",
@@ -25,6 +24,7 @@
     "angular-hotkeys": "~0.2.2",
     "ng-tags-input": "2.1.1",
     "angular-animate": "~1.3.10",
-    "datejs": "~1.0.0-rc3"
+    "datejs": "~1.0.0-rc3",
+    "ngFitText": "~3.3.0"
   }
 }

@@ -15,13 +15,12 @@
                 <button class="btn" ng-click="editEvent()">Edit Event</button>
             </div>
         </div>
-        <div class="box-side-sticky event-description" ng-show="event.description">{{event.description}}</div>
-        <div class="box-bottom-sticky event-location" ng-show="event.location">
-            <img src="/images/location.png" width="18" /><a href="http://google.com/maps?q={{event.location}}" target="_blank">{{event.location}}</a>
+        <div class="event-description box-side-sticky" ng-if="event.description">{{event.description}}</div>
+        <div class="event-location" ng-if="event.location">
+            Location:
+            <a  href="http://maps.google.com?q={{event.location}}"  target="_blank">{{event.location}}</a>
         </div>
 
-    </div>
-    <div class="box box-x-scroll">
         <div poll event="event" class="poll">
         </div>
     </div>

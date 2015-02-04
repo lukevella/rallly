@@ -1,69 +1,6 @@
-.event-description {
-    font-size: em(14px);
-    white-space: pre-wrap;
-    padding-top:20px;
-    padding-bottom: 20px;
-    line-height:em(24px);
-    color: $text-2-clr;
-    background: $background-clr;
-    border-top: 1px solid $border-clr;
-    margin-top: 20px;
-    margin-bottom:-20px;
-}
-
-.event-location {
-    font-size: em(14px);
-    a {
-        color: $text-clr;
-        text-decoration:none;
-        &:hover {
-            text-decoration:underline;
-        }
-    }
-    img {
-        vertical-align:middle;
-        margin-right: 10px;
-    }
-}
-
-
-.event-pair {
-    margin-bottom: 20px;
-    border-bottom: 1px solid $border-clr;
-    padding-bottom: 20px;
-    float: left;
-    width: 100%;
-    .icon {
-        display:inline-block;
-        width: 30px;
-        float:left;
-        position: relative;
-        text-align:center;
-        height: 35px;
-        border-radius: 3px;
-        margin-right: 10px;
-        img {
-            position: absolute;
-            top:50%;
-            left: 50%;
-            @include transform(translateX(-50%) translateY(-50%));
-        }
-    }
-    .content {
-        float:left;
-        display:inline-block;
-    }
-    .key {
-        font-weight:bold;
-        font-size: 11px;
-    }
-    .value {
-        color: $text-2-clr;
-    }
-}
-
 .event-header {
     width: 100%;
+    margin-bottom:20px;
     .details {
         display:inline-block;
         .title {
@@ -89,7 +26,7 @@
         }
         .subtitle {
             color: $text-2-clr;
-            font-size: em(14px);
+            font-size: em(13px);
             a {
                 color: $blue-clr;
                 text-decoration: none;
@@ -107,5 +44,34 @@
         .actions {
             visibility:visible;
         }
+    }
+}
+
+.event-description {
+    font-size: em(18px);
+    white-space: pre-wrap;
+    margin-bottom: 20px;
+    background: $background-clr;
+    line-height:em(24px);
+    position:relative;
+    color: $text-2-clr;
+    border-top:1px solid $border-clr;
+    border-bottom: 1px solid $border-clr;
+}
+
+.event-location {
+    font-size: em(14px);
+    margin-bottom:20px;
+    color: $text-3-clr;
+    a {
+        color: $text-clr;
+        text-decoration:none;
+        &:hover {
+            text-decoration:underline;
+        }
+    }
+    img {
+        vertical-align:middle;
+        margin-right: 10px;
     }
 }
