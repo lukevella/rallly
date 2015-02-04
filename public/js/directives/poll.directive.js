@@ -11,6 +11,7 @@ angular.module('rallly')
             scope.participant = {};
             var datesCount = [];
             scope.event.$promise.then(function(event){
+                console.log(event);
                 var examplesNames = ['John Example', 'Jane Specimen','Mark Instance', 'Mary Case'];
                 var examples = [];
                 for (var i = 0; i < examplesNames.length; i++){
