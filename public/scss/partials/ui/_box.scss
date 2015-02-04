@@ -23,6 +23,29 @@ $box-h-pad: 25px;
         border-color: $blue-clr;
         box-shadow: 0 0 3px rgba($blue-clr, 0.5);
     }
+    h1, h2, h3, h4 {
+        margin:0 0 10px 0;
+    }
+    h1 {
+        font-size: 24px;
+        margin-bottom:20px;
+    }
+    h2 {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    p {
+        margin: 0 0 20px 0;
+        color: lighten($text-clr,20%);
+        line-height: 1.5em;
+        font-size: em(14px);
+        a {
+            text-decoration:none;
+            &:hover{
+                text-decoration:underline;
+            }
+        }
+    }
 }
 
 .box-title {
