@@ -3,20 +3,25 @@ $date-col-width: 70px;
 $name-col-width: 235px;
 
 .poll {
+    margin-top:20px;
     min-width: 100%;
     display:block;
-    margin-bottom:20px;
+    border:1px solid rgba($border-clr, 0.5);
+    border-radius: 3px;
+    overflow-x:scroll;
 }
 
 .poll-header {
     display:table;
     min-width: 100%;
+    padding-top:20px;
+    overflow:hidden;
     border-bottom:1px solid $border-clr;
     box-shadow: 0 3px 0 rgba($border-clr, 0.3);
     .header {
         display:table-cell;
         vertical-align:bottom;
-        padding-bottom:20px;
+        padding-bottom:10px;
         &.date-header {
             text-align:center;
             min-width: $date-col-width;
@@ -29,13 +34,15 @@ $name-col-width: 235px;
             font-weight: bold;
             min-width: $name-col-width;
             width: $name-col-width;
-            padding-left: em(10px);
+            padding-left: 20px;
         }
     }
 }
 
 .poll-body {
     min-width:100%;
+    overflow:hidden;
+    display:table;
     .poll-example {
         position:relative;
         &.hidden {
@@ -70,6 +77,9 @@ $name-col-width: 235px;
         display:table;
         min-width: 100%;
         border-bottom: 1px solid rgba($border-clr,0.5);
+        &:last-child {
+            border-bottom:0;
+        }
         .hover {
             visibility:hidden;
         }
@@ -87,6 +97,7 @@ $name-col-width: 235px;
                 min-width: $name-col-width;
                 width: $name-col-width;
                 font-size: em(14px);
+                padding-left:20px;
                 .avatar {
                     display:inline-block;
                     padding: 5px;
