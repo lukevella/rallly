@@ -10,7 +10,7 @@ var templateCache = require('gulp-angular-templatecache');
 gulp.task('js', function () {
     gulp.src(['public/js/**/module.js', 'public/js/**/*.js'])
     .pipe(sourcemaps.init())
-        .pipe(concat('public/build/app.js'))
+        .pipe(concat('app.js'))
         .pipe(ngAnnotate())
         .on('error', notify.onError(function (error) {
             return error.message;
