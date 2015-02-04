@@ -41,7 +41,6 @@
     @include outer-container;
     .summary-pair {
         @include span-columns(6);
-        @include omega(2n);
         margin-bottom:10px;
         &.extend {
             width:100%;

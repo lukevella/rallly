@@ -16,9 +16,9 @@ gulp.task('js', function () {
             return error.message;
         }))
         .pipe(uglify())
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write('.'))
     .pipe(notify("Javascript compiled!"))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('public/build'))
 });
 
 gulp.task('sass', function(){
