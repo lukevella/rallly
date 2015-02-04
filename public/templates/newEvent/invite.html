@@ -1,3 +1,72 @@
+<section class="box-section">
+    <div class="section-details">
+        <div class="section-title">Summary</div>
+    </div>
+    <div class="section-main">
+        <div class="summary">
+            <div class="summary-pair">
+                <div class="key">
+                    Your Name
+                </div>
+                <div class="value">
+                    {{event.creator.name}}
+                </div>
+            </div>
+            <div class="summary-pair">
+                <div class="key">
+                    Email
+                </div>
+                <div class="value">
+                    {{event.creator.email}}
+                </div>
+            </div>
+            <div class="summary-pair">
+                <div class="key">
+                    Title
+                </div>
+                <div class="value">
+                    {{event.title}}
+                </div>
+            </div>
+            <div ng-if="event.location" class="summary-pair">
+                <div class="key">
+                    Location
+                </div>
+                <div class="value">
+                    {{event.location}}
+                </div>
+            </div>
+            <div ng-if="event.description" class="summary-pair extend">
+                <div class="key">
+                    Description
+                </div>
+                <div class="value wrap">{{event.description}}</div>
+            </div>
+            <div class="summary-pair extend">
+                <div class="key">
+                    Dates
+                </div>
+                <div class="value">
+                    <ul class="daticon-list">
+                        <li ng-repeat="d in event.dates">
+                            <div class="daticon">
+                                <div class="dow">
+                                    {{d | date: 'EEE'}}
+                                </div>
+                                <div class="day">
+                                    {{d | date: 'd'}}
+                                </div>
+                                <div class="month">
+                                    {{d | date : 'MMM'}}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="box-section" participants-form form="form" event="event">
 
 </section>
