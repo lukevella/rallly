@@ -14,6 +14,7 @@ angular.module('rallly')
 
             scope.$watch('model', function(newValue){
                 ngModel.$setViewValue(newValue);
+                ngModel.$validate();
             }, true);
 
             ngModel.$validators.required = function(modelValue, viewValue){
