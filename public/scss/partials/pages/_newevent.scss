@@ -28,7 +28,6 @@
         }
         &.active {
             color: $text-clr;
-            border-bottom: 2px solid darken($border-clr,10%);
             font-weight:bold;
         }
         &.complete:after {
