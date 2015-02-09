@@ -1,7 +1,6 @@
 @include media($tablet) {
     html {
         max-width:100%;
-        overflow:hidden;
     }
     body {
         font-size:em(14px);
@@ -10,6 +9,7 @@
         left:0;
         &.open-menu {
             left:200px;
+            overflow:hidden;
         }
     }
     .main-navigation {
