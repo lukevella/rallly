@@ -25,10 +25,10 @@
             position:relative;
             border: 1px solid $border-clr;
             display:inline-block;
-            width: em(25);
+            width: em(35);
             border-radius: 2px;
             font-size: em(12);
-            line-height:em(25);
+            line-height:em(30);
             text-align:center;
             float:left;
             margin-left:em(10);
@@ -130,7 +130,8 @@
     box-shadow: 0 0 0 1px rgba($border-clr,0.5);
     border-radius: 3px;
     display:inline-block;
-    padding:em(8px) em(16px);
+    padding:8px 10px;
+    width: 54px;
     text-align:center;
     position:relative;
     cursor:default;
