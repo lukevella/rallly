@@ -53,6 +53,10 @@ var EventSchema = new Schema({
         type : Boolean,
         default : false
     },
+    isExample : {
+        type : Boolean,
+        default : false
+    },
     __private : {
         verificationCode : String,
         unsubscribeCode : String,

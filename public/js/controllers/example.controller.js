@@ -43,7 +43,8 @@ angular.module('rallly')
                 name : "John Example"
             },
             content : "Thank you!"
-        }]
+        }],
+        "isExample" : true
     });
     event.$save(function(data){
 
