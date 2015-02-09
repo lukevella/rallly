@@ -9,13 +9,13 @@ var mandrill = require('mandrill-api');
 var mandrill_client = new mandrill.Mandrill(app.get('mandrillAPIKey'));
 
 communicator.on('event:create', function(event){
-    if (!event.creator.allowNotifications && event.isClosed) return;
+    if (!event.creator.allowNotifications || event.isClosed || event.isExample) return;
     sendEmailConfirmation(event);
     sendInvites(event);
 });
 
 communicator.on('event:update:creator.email', function(event, oldEvent){
-    if (!event.creator.allowNotifications && event.isClosed) return;
+    if (!event.creator.allowNotifications || event.isClosed || event.isExample) return;
     verifyEmail(event);
 });
 
