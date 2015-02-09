@@ -1,6 +1,6 @@
 $actions-col-width : 160px;
 $date-col-width: 70px;
-$name-col-width: 235px;
+$name-col-width: 250px;
 
 
 .poll-wrapper {
@@ -136,7 +136,14 @@ $name-col-width: 235px;
                 .name {
                     padding: 5px 3px;
                     margin-left: 2px;
+                    margin-top:-1px;
                     border-radius: 2px;
+                    white-space: nowrap;
+                    overflow:hidden;
+                    display:inline-block;
+                    vertical-align:middle;
+                    text-overflow: ellipsis;
+                    width:180px;
                     &.editable:hover {
                         background: $background-clr;
                         cursor: pointer;
@@ -145,7 +152,7 @@ $name-col-width: 235px;
                 .form-control {
                     @include form-input;
                     padding:em(5px);
-                    width:em(130);
+                    width:180px;
                     font-size:em(16px);
                 }
             }

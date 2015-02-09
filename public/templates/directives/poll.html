@@ -22,7 +22,7 @@
 </div>
 <div class="poll-body">
     <div class="poll-entry" ng-repeat="participant in event.participants">
-        <form novalidate ng-submit="update(participant); editMode = false">
+        <form novalidate ng-submit="editMode = false; update(participant);">
             <div class="cell name-cell">
                 <span class="avatar style-{{$index + 1}}">
                     <img src="/images/user.png" width="11" />

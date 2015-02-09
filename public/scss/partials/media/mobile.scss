@@ -145,6 +145,7 @@
     .poll-wrapper {
         width: calc(100% + 40px);
         margin-left:-20px;
+        border-bottom: 1px solid $border-clr;
     }
     .poll-body {
         .poll-example {
@@ -153,18 +154,10 @@
             }
         }
     }
-    .poll {
-        // border:0;
-        // border-top:1px solid $border-clr;
-        // margin-left:-20px;
-        // border-radius:0;
-        // margin-bottom:-20px;
-    }
     $col1-width : 160px;
     .poll-header {
         .header {
             &.participants-header {
-                // font-size: em(14px);
                 min-width: $col1-width;
                 width: $col1-width;
             }
@@ -176,6 +169,12 @@
                 &.name-cell {
                     min-width: $col1-width;
                     width: $col1-width;
+                    .form-control {
+                        width:100px;
+                    }
+                    .name {
+                        width:100px;
+                    }
                 }
             }
             .hover {
