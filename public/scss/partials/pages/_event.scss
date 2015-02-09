@@ -1,8 +1,10 @@
 .event-header {
     width: 100%;
-    margin-bottom:20px;
+    position:relative;
+    margin-bottom:10px;
     .details {
         display:inline-block;
+        max-width: 80%;
         .title {
             font-size: em(24px);
             font-weight: bold;
@@ -38,7 +40,9 @@
     }
     .actions {
         visibility:hidden;
-        float: right;
+        position:absolute;
+        top:0;
+        right:0;
     }
     &:hover {
         .actions {
@@ -48,15 +52,12 @@
 }
 
 .event-description {
-    font-size: em(18px);
+    font-size: em(16px);
     white-space: pre-wrap;
     margin-bottom: 20px;
-    background: $background-clr;
     line-height:em(24px);
     position:relative;
-    color: $text-2-clr;
-    border-top:1px solid $border-clr;
-    border-bottom: 1px solid $border-clr;
+    color: $text-clr;
 }
 
 .event-location {

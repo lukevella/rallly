@@ -14,3 +14,14 @@ $navigation-bg-clr: $dark-blue-clr;
 $background-clr: $light-blue-clr;
 
 $color-collection: (#8A75AE, #80A1DA, #B3DD8B, #7EE4E4, #FCD285, #F7967F, #E8669D, #F7B6E7, #F99D7B, #88D0CB);
+
+$mobile-size:em(320);
+$tablet-size:720px;
+$desktop-size:em(960);
+$largedesktop-size:em(1050);
+
+// Bourbon Neat Breakpoints
+$mobile: new-breakpoint(min-width $mobile-size 4);
+$tablet: new-breakpoint(max-width $tablet-size 8);
+$desktop: new-breakpoint(min-width $desktop-size 12);
+$largedesktop: new-breakpoint(min-width $largedesktop-size 16);

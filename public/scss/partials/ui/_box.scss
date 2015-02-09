@@ -7,11 +7,10 @@ $box-h-pad: 25px;
     border-radius: 3px;
     margin: 0 auto 20px auto;
     max-width: 800px;
-    min-width:700px;
     overflow:hidden;
     padding: $box-v-pad $box-h-pad;
-    &.box-x-scroll {
-        overflow-x: scroll;
+    &:last-child {
+        margin-bottom:0;
     }
     &.invisible {
         background: transparent;
@@ -49,18 +48,17 @@ $box-h-pad: 25px;
 }
 
 .box-title {
-    font-size: 24px;
+    font-size: em(24px);
     font-weight: bold;
     color: $text-clr;
-    margin-bottom:20px;
 }
 
 .box-description {
-    font-size: 14px;
+    font-size: em(14px);
     color: $text-2-clr;
+    line-height: em(21px);
     padding-bottom: 20px;
     border-bottom: 1px solid $border-clr;
-    margin-top: -20px;
     margin-bottom: 20px;
     a {
         color: $text-clr;
@@ -71,7 +69,7 @@ $box-h-pad: 25px;
     }
 }
 .box-section {
-    padding-top: 20px;
+    margin-bottom:20px;
     &:first-child {
         border:0;
     }
@@ -80,8 +78,8 @@ $box-h-pad: 25px;
         @include span-columns(3);
         .section-title {
             font-size: em(14px);
-            color: $text-2-clr;
-            margin-bottom:20px;
+            color: $text-3-clr;
+            margin-bottom:10px;
         }
     }
     .section-main {
@@ -92,7 +90,7 @@ $box-h-pad: 25px;
 
 .box-message {
     text-align:center;
-    padding:40px;
+    padding:20px;
     max-width:500px;
     margin:0 auto;
     .main-image {

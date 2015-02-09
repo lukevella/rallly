@@ -3,7 +3,7 @@
     width:100%;
     list-style-position:inside;
     padding:0;
-    margin:40px 0 10px 0;
+    margin:20px 0 40px 0;
     .step {
         @include flex(1);
         color: $text-2-clr;
@@ -28,6 +28,7 @@
         }
         &.active {
             color: $text-clr;
+            border-bottom: 2px solid darken($border-clr,10%);
             font-weight:bold;
         }
         &.complete:after {

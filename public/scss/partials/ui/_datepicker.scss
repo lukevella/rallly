@@ -7,17 +7,15 @@
     border-radius: 2px;
     @include transition(border-color 0.2s ease-in-out);
     .wrapper {
-        padding:20px;
+        padding:em(20);
     }
     .date-picker-head {
         display:table;
         width:100%;
-        margin-bottom:30px;
+        margin-bottom:em(30);
         text-align:center;
         .title {
             display:inline-block;
-            width:200px;
-            margin: 0 20px;
             font-weight:bold;
             font-size: em(18px);
         }
@@ -27,16 +25,19 @@
             position:relative;
             border: 1px solid $border-clr;
             display:inline-block;
-            width: 25px;
+            width: em(25);
             border-radius: 2px;
-            font-size: 12px;
-            line-height:25px;
+            font-size: em(12);
+            line-height:em(25);
             text-align:center;
             float:left;
+            margin-left:em(10);
             box-shadow: 0 1px 1px rgba($border-clr,0.5);
-            margin:0 20px;
             &:last-child {
                 float:right;
+                margin-left:0;
+                margin-right:em(10);
+
             }
             &:hover {
                 color: $text-clr;
@@ -48,15 +49,14 @@
         }
     }
     .dow {
-        font-size:0;
         padding-bottom: 10px;
+        display:table;
+        width:100%;
         border-bottom: 2px solid $border-clr;
         margin-bottom: 10px;
         .day {
-            text-transform:uppercase;
-            font-size: 14px;
-            display:inline-block;
-            width: (100% / 7);
+            font-size: em(14);
+            display:table-cell;
             text-align:center;
             color: $pink-clr;
         }

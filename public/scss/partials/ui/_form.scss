@@ -13,12 +13,12 @@ form {
 
 .form-row {
     @include row();
-    margin-bottom:10px;
     @include user-select(none);
 }
 
 .form-col {
     @include span-columns(6);
+    margin-bottom:10px;
     &.padded {
         &:first-child {
             padding: 0 20px 0 0;
@@ -31,10 +31,10 @@ form {
 
 .form-group {
     & > label {
-        font-size:em(12px);
-        color: $text-3-clr;
+        font-size:em(11px);
+        color: lighten($text-clr,20%);
+        margin-bottom:5px;
         display:inline-block;
-        line-height:em(30px);
 
     }
     .form-error {
@@ -48,6 +48,7 @@ form {
     }
     &.optional > label:after {
         content: " (optional)";
+        color: $text-3-clr;
     }
     &.error {
         input.form-control, textarea.form-control {
@@ -64,12 +65,12 @@ form {
     }
     input.form-control {
         vertical-align:middle;
-        padding: em(5px) em(10px);
+        padding: em(10px) em(12px);
     }
 
     textarea.form-control {
         min-height: 135px;
-        font-size: em(18px);
+        font-size: em(14px);
         padding: em(8px) em(10px);
     }
 

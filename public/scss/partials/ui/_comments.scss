@@ -25,8 +25,8 @@
         position:relative;
         margin-bottom: 10px;
     }
-    .form-control {
-        font-size: em(14px) !important;
+    input.form-control {
+        padding:em(6) em(10);
     }
     textarea.form-control {
         min-height: 0;

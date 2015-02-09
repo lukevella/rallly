@@ -2,6 +2,7 @@
     <head>
         <title>Rallly - Collaborative Scheduling</title>
         <base href="/">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-touch-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-touch-icon-114x114.png">
         <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-touch-icon-72x72.png">
@@ -33,15 +34,17 @@
     </head>
     <body>
         <div class="outer-container">
-            <div class="main-navigation">
+            <div class="main-navigation" ng-controller="NavigationCtrl">
                 <a href="/" class="logo">
                     <img src="/images/logo.png" width="100" />
                 </a>
+                <a href="#" class="menu-toggle" ng-click="toggleMenu($event)">Menu</a>
+                <div class="menu">
                 <div class="menu-section">
                     Menu
                 </div>
                 <nav class="navigation">
-                    <ul class="links" ng-controller="NavigationCtrl">
+                    <ul class="links">
                         <li>
                             <a href="/" ng-class="{active : isActive('/')}">
                                 <i back-img="home" class="icon"></i>
@@ -66,6 +69,7 @@
 
                 </div>
                 <a class="create-new" href="/new">Schedule an event</a>
+                </div>
             </div>
             <div class="main-content">
                 <div class="top-bar">

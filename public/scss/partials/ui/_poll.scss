@@ -2,19 +2,37 @@ $actions-col-width : 160px;
 $date-col-width: 70px;
 $name-col-width: 235px;
 
-.poll {
+
+.poll-wrapper {
     margin-top:20px;
-    min-width: 100%;
-    display:block;
-    border:1px solid rgba($border-clr, 0.5);
-    border-radius: 3px;
+    @include box-sizing(border-box);
+    border-radius:0;
+    border:0;
+    border-top:1px solid $border-clr;
+    width:calc(100% + 50px);
+    margin-left:-25px;
+    position:relative;
+    margin-bottom:-20px;
+    &:after {
+        content:"";
+        position:absolute;
+        top:0;
+        right:0;
+        width:100px;
+        height:100%;
+        pointer-events: none;
+        @include linear-gradient(90deg, rgba(white,0), white);
+    }
+}
+.poll {
+    width: 100%;
     overflow-x:scroll;
 }
 
 .poll-header {
     display:table;
     min-width: 100%;
-    padding-top:20px;
+    padding-top:em(20);
     overflow:hidden;
     border-bottom:1px solid $border-clr;
     box-shadow: 0 3px 0 rgba($border-clr, 0.3);
@@ -26,14 +44,18 @@ $name-col-width: 235px;
             text-align:center;
             min-width: $date-col-width;
             width: $date-col-width;
+            @include box-sizing(border-box);
         }
         &.actions-header {
             min-width: $actions-col-width;
+            @include box-sizing(border-box);
         }
         &.participants-header {
+            @include box-sizing(border-box);
             font-weight: bold;
             min-width: $name-col-width;
             width: $name-col-width;
+            padding: em(10px);
             padding-left: 20px;
         }
     }
@@ -93,6 +115,7 @@ $name-col-width: 235px;
             display:table-cell;
             height: 50px;
             vertical-align:middle;
+            @include box-sizing(border-box);
             &.name-cell {
                 min-width: $name-col-width;
                 width: $name-col-width;
@@ -120,18 +143,10 @@ $name-col-width: 235px;
                     }
                 }
                 .form-control {
-                    border:1px solid $border-clr;
-                    padding: em(5px);
-                    border-radius: 2px;
-                    color: $text-clr;
-                    &:focus {
-                        outline:0;
-                        border-color: $blue-clr;
-                        box-shadow: 0 0 3px rgba($blue-clr, 0.5);
-                    }
-                    @include placeholder {
-                        color: rgba($text-2-clr,0.7);
-                    }
+                    @include form-input;
+                    padding:em(5px);
+                    width:em(130);
+                    font-size:em(16px);
                 }
             }
             &.action-cell {

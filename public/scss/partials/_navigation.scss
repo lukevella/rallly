@@ -11,6 +11,15 @@ $nav-pad: 20px;
 
 .main-navigation {
     padding: 0 $nav-pad;
+    .menu-toggle {
+        color: white;
+        text-transform:uppercase;
+        font-size: em(14px);
+        font-weight:bold;
+        text-decoration:none;
+        line-height: 60px;
+        display:none;
+    }
     .logo {
         display:block;
         height: 60px;
@@ -58,7 +67,7 @@ $nav-pad: 20px;
                 text-decoration: none;
                 color: #616F8D;
                 line-height: em(40px);
-                font-size: em(12px);
+                font-size: em(14px);
                 font-weight:bold;
                 &:hover {
                     opacity: 1;

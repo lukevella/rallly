@@ -1,0 +1,238 @@
+@include media($tablet) {
+    html {
+        max-width:100%;
+        overflow:hidden;
+    }
+    body {
+        font-size:em(14px);
+        position:relative;
+        @include transition(all 0.3s ease-in-out);
+        left:0;
+        &.open-menu {
+            left:200px;
+        }
+    }
+    .main-navigation {
+        // display:none;
+        width:100%;
+        height:60px;
+        min-height:0;
+        overflow:hidden;
+        position:static;
+        .menu-toggle {
+            display:inline-block;
+        }
+        .logo {
+            display:inline-block;
+            width:110px;
+            padding:0;
+            float:right;
+            background:transparent;
+        }
+        .menu {
+            position:absolute;
+            box-shadow: inset -5px 0 10px rgba(black, 0.1);
+            background: darken($navigation-bg-clr, 5%);
+            top:0;
+            width:200px;
+            left:-200px;
+            height:100%;
+            padding:0 20px;
+        }
+    }
+
+    .main-content {
+        margin-left:0;
+        .main-view {
+            padding: 0;
+        }
+    }
+    .top-bar {
+        display:none;
+    }
+}
+
+@include media($tablet) {
+    .box {
+        border-radius:0;
+        padding-left: 20px;
+        padding-right:20px;
+    }
+}
+
+
+@include media($tablet) {
+    .box {
+        border-radius:0;
+        border:0;
+        margin:0;
+        .box-section {
+            .section-details {
+                @include span-columns(8);
+                .section-title {
+                    font-size: em(12px);
+                    text-transform:uppercase;
+                    font-weight: bold;
+                    color: $text-clr;
+                    margin-bottom:10px;
+                    border-bottom: 1px solid $border-clr;
+                    padding-bottom: 5px;
+                }
+            }
+            .section-main {
+                @include span-columns(8);
+
+            }
+        }
+    }
+
+}
+
+@include media($tablet) {
+    .newevent-steps {
+        display:none;
+    }
+}
+
+@include media($tablet) {
+    .event-header {
+        .details {
+            display:block;
+            max-width:100%;
+            margin-bottom:10px;
+        }
+        .actions {
+            visibility:visible;
+            position:static;
+            margin-bottom:20px;
+        }
+    }
+    .event-description {
+        background:transparent;
+        border:0;
+        padding-top:0;
+        padding-bottom:0;
+        font-size: em(16);
+    }
+}
+
+@include media($tablet) {
+    .date-picker {
+        .wrapper {
+            padding: em(10);
+        }
+        .values {
+            .value {
+                line-height: em(45px);
+            }
+        }
+    }
+    .daticon {
+        .delete {
+            opacity:1;
+        }
+    }
+}
+
+@include media($tablet) {
+    .form-col {
+        @include span-columns(8);
+        margin-bottom: 10px;
+    }
+}
+
+@include media($tablet) {
+    .poll-wrapper {
+        width: calc(100% + 40px);
+        margin-left:-20px;
+    }
+    .poll-body {
+        .poll-example {
+            .overlay {
+                text-align:left;
+            }
+        }
+    }
+    .poll {
+        // border:0;
+        // border-top:1px solid $border-clr;
+        // margin-left:-20px;
+        // border-radius:0;
+        // margin-bottom:-20px;
+    }
+    $col1-width : 160px;
+    .poll-header {
+        .header {
+            &.participants-header {
+                // font-size: em(14px);
+                min-width: $col1-width;
+                width: $col1-width;
+            }
+        }
+    }
+    .poll-body {
+        .poll-entry {
+            .cell {
+                &.name-cell {
+                    min-width: $col1-width;
+                    width: $col1-width;
+                }
+            }
+            .hover {
+                visibility:visible;
+            }
+        }
+    }
+}
+
+
+// NOTIFICATIONS
+@include media($tablet) {
+    .notification {
+        top:0;
+        min-height:60px;
+        width: 100%;
+        border-radius:0;
+        &.ng-enter {
+            max-height:0;
+            right:0;
+            top:-100px;
+            opacity:0;
+        }
+        &.ng-enter-active {
+            opacity:1;
+            top:0;
+            right:0
+
+        }
+        &.ng-leave-active {
+            opacity:1;
+            top:-100px;
+            right:0;
+        }
+    }
+}
+
+// MODAL
+
+@include media($tablet) {
+    .rl-modal {
+        position: fixed;
+        max-width:auto;
+        min-width:auto;
+        width:100%;
+        top:0;
+        left:0;
+        border-radius:0;
+        @include transform(none);
+        &.ng-enter-active {
+            background: black;
+        }
+        .rl-modal-message {
+        }
+        .rl-modal-title {
+        }
+        .rl-modal-actions {
+        }
+    }
+}

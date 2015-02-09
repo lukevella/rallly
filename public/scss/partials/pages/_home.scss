@@ -5,19 +5,23 @@
     position:absolute;
     top:50%;
     left: 50%;
+    width: 100%;
+    padding:0 20px;
+    @include box-sizing(border-box);
     @include transform(translateX(-50%) translateY(-50%));
     .image {
         margin-bottom:20px;
     }
     .title {
-        font-size: em(36px);
+        font-size: em(36);
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: em(5);
     }
     .content {
-        font-size: em(14px);
-        max-width: 320px;
+        font-size: em(14);
+        line-height: em(21);
         font-weight: normal;
-        margin-bottom: 20px;
+        max-width:360px;
+        margin: 0 auto em(20) auto;
     }
 }
