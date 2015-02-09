@@ -12,10 +12,9 @@ angular.module('rallly')
             scope.model = scope.model || [];
             scope.control = scope.control || {};
 
-            scope.$watchCollection('model', function(newValue){
+            scope.$watch('model', function(newValue){
                 ngModel.$setViewValue(newValue);
-                ngModel.$validate();
-            });
+            }, true);
 
             ngModel.$validators.required = function(modelValue, viewValue){
                 if (!modelValue || modelValue.length == 0){
@@ -65,7 +64,10 @@ angular.module('rallly')
             scope.isActive = function(date, returnIndex){
                 scope.model = scope.model || [];
                 for (var i = 0; i < scope.model.length; i++){
-                    if (Date.equals(Date.parse(scope.model[i]), date)){
+                    var modelDate = Date.parse(scope.model[i]);
+                    if (modelDate.getDate() == date.getDate() &&
+                        modelDate.getMonth() == date.getMonth() &&
+                        modelDate.getYear() == date.getYear()){
                         return (returnIndex) ? i : true;
                     }
                 }
