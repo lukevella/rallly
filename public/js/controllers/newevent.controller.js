@@ -23,8 +23,10 @@ angular.module('rallly')
 
     $scope.submit = function(){
         if ($scope.form.$valid && $scope.page == states.length){
-            $http.post('/api/event', $scope.event)
-            .success(function(event, status, headers, config){
+            console.log(JSON.stringify($scope.event));
+            var newEvent = new Event($scope.event);
+            newEvent.$save()
+            .then(function(event){
                 $scope.event = event;
                 $scope.eventUrl = $state.href('event', {
                     id: $scope.event._id
@@ -33,8 +35,7 @@ angular.module('rallly')
                 });
                 $scope.page++;
                 $state.go('newevent.success');
-            })
-            .error(function(){
+            }, function(){
                 var modal = new ConfirmModal({
                     title : 'Uh oh!',
                     message : 'There was an error creating your event. Please try again later.',

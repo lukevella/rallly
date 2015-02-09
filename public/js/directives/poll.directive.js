@@ -15,10 +15,10 @@ angular.module('rallly')
                 var examples = [];
                 for (var i = 0; i < examplesNames.length; i++){
                     var example = { name : examplesNames[i] };
-                    example.dates = [];
+                    example.votes = [];
                     for (var j = 0; j <  event.dates.length; j++){
                         var answer = Math.random()<.5;
-                        example.dates[j] = answer;
+                        example.votes[j] = answer;
                     }
                     examples.push(example);
                 }

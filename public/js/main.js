@@ -30,6 +30,10 @@ angular.module('rallly', ['ui.router','ngResource','btford.modal','ngTagsInput',
             templateUrl : 'templates/about.html',
             controller : 'AboutCtrl'
         })
+        .state('example', {
+            url : '/example',
+            controller : 'ExampleCtrl'
+        })
         .state('notfound', {
             url : '/notfound',
             templateUrl : 'templates/notfound.html'
