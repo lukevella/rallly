@@ -8,8 +8,8 @@
         @include flex(1);
         color: $text-2-clr;
         font-size: em(14px);
-        margin: 0 0 0 0;
-        padding: 0 0 10px 10px;
+        margin: 0 5px 0 0;
+        padding: 0 0 10px 0;
         border-bottom:2px solid $border-clr;
         position:relative;
         @include transition(all 0.2s ease-in-out);
@@ -27,8 +27,7 @@
             @include transition(all 0.2s ease-in-out);
         }
         &.active {
-            color: $text-clr;
-            font-weight:bold;
+            color: $green-clr;
         }
         &.complete:after {
             width:100%;

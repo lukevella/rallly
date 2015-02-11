@@ -78,7 +78,7 @@ $box-h-pad: 25px;
         @include span-columns(3);
         .section-title {
             font-size: em(14px);
-            color: lighten($text-clr,20%);
+            color: $text-clr;
             margin-bottom:10px;
         }
     }
