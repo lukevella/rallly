@@ -48,6 +48,8 @@ angular.module('rallly')
     });
     event.$save(function(data){
 
-        $state.go('event', { id : data._id });
+        $state.go('event', { id : data._id }, {
+            location : "replace"
+        });
     })
 });

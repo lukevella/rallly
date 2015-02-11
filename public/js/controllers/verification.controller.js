@@ -14,6 +14,8 @@ angular.module('rallly')
             type : 'error'
         });
     });
-    $state.go('event', { id : $state.params.id });
+    $state.go('event', { id : $state.params.id }, {
+        location : "replace"
+    });
 
 });

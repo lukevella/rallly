@@ -3,11 +3,11 @@ angular.module('rallly', ['ui.router','ngResource','btford.modal','ngTagsInput',
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise("/notfound")
         $stateProvider
-        .state('index',{
-            url : '/',
-            templateUrl : 'templates/home.html',
-            controller : 'HomeCtrl'
-        })
+        // .state('index',{
+        //     url : '/',
+        //     templateUrl : 'templates/home.html',
+        //     controller : 'HomeCtrl'
+        // })
         .state('newevent',{
             url : '/new',
             templateUrl : 'templates/newEvent/layout.html',
