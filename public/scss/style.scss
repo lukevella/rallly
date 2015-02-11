@@ -1,5 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,600,700);
 @import "bourbon/bourbon";
+$gutter: golden-ratio(4em, 1) !default;
 @import "neat/neat";
 @import "modules/vars";
 @import "modules/mixins";

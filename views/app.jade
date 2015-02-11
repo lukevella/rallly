@@ -13,35 +13,21 @@ block scripts
     
 block content
   .outer-container(ng-app='rallly')
-    .main-navigation(ng-controller='NavigationCtrl')
-      a.logo(href='/', target='_self')
-        img(src='/images/logo.png', width='100')
-      a.menu-toggle(href='#', ng-click='toggleMenu($event)') Menu
-      .menu
+    .main-navigation
+        a.logo(href='/', target='_self')
+            img(src='/images/logo_light.png', width='100')
         .menu-section Menu
-        nav.navigation
-          ul.links
-            li
-              a(href='/', target='_self')
-                i.icon(back-img='home')
-                span.text Homepage
-            li
-              a(href='/#about', target='_self')
-                i.icon(back-img='about')
-                span.text What is Rallly?
-            li
-              a(href='mailto:me@lukevella.com')
-                i.icon(back-img='contact')
-                span.text Contact
-        .menu-section
-        a.create-new(href='/new') Schedule an event
+        nav
+            a(href='/', target='_self') 
+                img(src='/images/home.png', width='12')
+                span Homepage
+            a(href='/#about', target='_self') 
+                img(src='/images/about.png', width='12')
+                span About / FAQ
+        .seperator
+        a.create-new(href='/new') 
+            img(src='/images/add.png', width='12')
+            span Schedule an Event
+        
     .main-content
-      .top-bar
-        ul.primary.ng-scope(ng-controller='AccountCtrl')
-          li.item.dropdown(dropdown='')
-            a.dropdown-toggle.hoverable(ng-click='toggle()', href='#')
-              img(src='/images/person.png', height='16')
-              span Guest
-            .dropdown-menu
-              .dropdown-content User accounts will be added soon.
-      .main-view(ui-view='')
+        .main-view(ui-view='')

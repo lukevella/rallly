@@ -5,6 +5,8 @@ $min-width: 820px;
 .outer-container {
     width:100%;
     overflow:hidden;
+    @include outer-container(1337px);
+    padding:0 40px;
 }
 
 body {
@@ -13,34 +15,18 @@ body {
 }
 
 .main-navigation {
-
-    position:fixed;
-    z-index: 2000;
-    min-height:100%;
-    width: $navigation-width;
-    background: $navigation-bg-clr;
-    color: white;
+    float:left;
+    width:160px;
 }
-
 .main-content {
+    margin-left: 200px;
     background: $background-clr;
-    margin-left: $navigation-width;
     overflow-y:scroll;
+    padding:40px 0;
     .main-view {
         position:relative;
-        padding: 100px 40px 20px 40px;
         width:100%;
         min-height: 600px;
         min-height:100%;
     }
-}
-
-.top-bar {
-    width:100%;
-    position:fixed;
-    top:0;
-    background: white;
-    height: $top-bar-height;
-    z-index: 1000;
-    line-height: $top-bar-height;
 }
