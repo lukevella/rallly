@@ -12,7 +12,7 @@ block scripts
   script(type='text/javascript', src='/build/app.js')
     
 block content
-  .outer-container
+  .outer-container(ng-app='rallly')
     .main-navigation(ng-controller='NavigationCtrl')
       a.logo(href='/', target='_self')
         img(src='/images/logo.png', width='100')
@@ -26,7 +26,7 @@ block content
                 i.icon(back-img='home')
                 span.text Homepage
             li
-              a(href='/about', ng-class="{active : isActive('/about')}")
+              a(href='/#about', target='_self')
                 i.icon(back-img='about')
                 span.text What is Rallly?
             li

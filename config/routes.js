@@ -1,7 +1,13 @@
+var Event = require('../api/event/event.model');
+var numeral = require('numeral');
+
 module.exports = function(app) {
 
     app.get('/', function(req,res){
-        res.render('index');
+        Event.count({}, function(err, count){
+            if (err) res.status(500);
+            res.render('index', { eventCount : numeral(count).format('0,0')});
+        });
     });
 
     app.use('/api/event', require('../api/event'));

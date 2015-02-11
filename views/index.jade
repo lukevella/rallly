@@ -2,18 +2,29 @@ extends ./layout.jade
 
 block style
     link(rel='stylesheet', href='/css/landing.css', media='screen', charset='utf-8')
+
+block scripts
+    script(type='text/javascript', src='/vendor/angular/angular.min.js')
+    script(type='text/javascript', src='/vendor/ngSmoothScroll/angular-smooth-scroll.min.js')
+    script(type='text/javascript', src='/vendor/skrollr/dist/skrollr.min.js')
+    script(type='text/javascript').
+        var app = angular.module('landing', ['smoothScroll']);
+        window.onload = function(){
+            var s = skrollr.init({forceHeight: false})
+        };
         
+
 block content
-    section.intro: .intro-overlay: .container    
+    section#intro.intro(ng-app='landing'): .intro-overlay: .container    
         header.header: .container
             a.logo(href='/')
                 img(src='/images/logo.png', alt='Rallly Collaborative Scheduling')
             nav.main-nav
                 ul.links
-                    li: a(href='/') Home
-                    li: a(href='/features') Features
-                    li: a(href='/about') About
-                    li: a(href='/contact') Contact
+                    li: a.active(href='#', scroll-to='intro') Home
+                    li: a(href='#', scroll-to='features') Features
+                    li: a(href='#', scroll-to='about') About
+                    li: a(href='#', scroll-to='footer') Contact
         .intro-headline
             h1 Collaborative Scheduling Done Right
             h2 Rallly lets you and your friends vote on a date to host an event
@@ -22,9 +33,9 @@ block content
                 span.free-label
             a.button(href='/example') View Demo
         .intro-shots
-            .desktop
-            .mobile
-    section.landing-section: .container
+            .desktop(data-200-top='top:0; position:relative', data-1200='top:600px')
+            .mobile(data-250-top='top:50px', data-1200='top:400px')
+    section#features.landing-section: .container
             h3 Features
             h4 Rallly makes collaborating with friends quick and easy
             .features
@@ -40,7 +51,7 @@ block content
                     .image: img(src='/images/landing/vote.png', width='48')
                     h5 Vote
                     p Let everyone know which dates best work for you and find a common date to host your event. 
-            .seperator
+            .seperator#about
             h3 About
             h4 Frequently Asked Questions
             .questions-section
@@ -75,13 +86,22 @@ block content
                             | Yes! Follow me on 
                             a(href='http://twitter.com/ralllyco') Twitter
                             |  and share with your friends!
-            .seperator
-            .stats
-                h3 Stats
-                h4 2,140 Events Created
+    //- section.landing-section.dark: .container
+    //-     .share
+    //-         h3 Share
+    //-         h4 Show your support
+    //-         .networks
+    section#stats.landing-section.bottom: .container
+        .seperator
+        .stats
+            h3 Stats
+            h4
+                span.event-count= eventCount
+                |  Events Created
+            .actions
                 a.button.primary(href='/new') Schedule an Event
                 a.button(href='/example') View Demo
-    section.footer-section: .container
+    section#footer.footer-section: .container
         footer.footer
             .logo.footer-col
                 img(src='/images/landing/footer_logo.png', width='100')
@@ -104,4 +124,3 @@ block content
                     | Rallly is a free collaborative scheduling service created by <a href="http://lukevella.com">Luke Vella</a>.
                     | Deciding a date to host an event is quick and easy and easy with Rallly.
                 p Designed &amp; Developed with love by Luke Vella
-    
