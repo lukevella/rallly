@@ -137,31 +137,31 @@
     cursor:default;
     background:white;
     .dow {
-        font-size: em(6px);
-        margin-top:em(-24px);
+        font-size: 6px;
+        margin-top:-12px;
         background:white;
         color: $text-3-clr;
-        margin-bottom: em(4px);
+        margin-bottom: 4px;
         font-weight:normal;
         text-transform: uppercase;
     }
     .day {
-        font-size: em(20px);
+        font-size: 20px;
         font-weight:normal;
         color: $pink-clr;
-        line-height: em(16px);
+        line-height:20px;
     }
     .month {
         font-weight: 600;
-        font-size: em(12px);
+        font-size: 12px;
         text-transform: uppercase;
     }
     .delete {
         text-align:center;
         border:0;
         $size: 18px;
-        width: em($size);
-        height: em($size);
+        width: $size;
+        height: $size;
         position:absolute;
         top: $size * -0.4;
         right: $size * -0.4;

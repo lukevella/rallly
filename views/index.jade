@@ -1,0 +1,107 @@
+extends ./layout.jade
+
+block style
+    link(rel='stylesheet', href='/css/landing.css', media='screen', charset='utf-8')
+        
+block content
+    section.intro: .intro-overlay: .container    
+        header.header: .container
+            a.logo(href='/')
+                img(src='/images/logo.png', alt='Rallly Collaborative Scheduling')
+            nav.main-nav
+                ul.links
+                    li: a(href='/') Home
+                    li: a(href='/features') Features
+                    li: a(href='/about') About
+                    li: a(href='/contact') Contact
+        .intro-headline
+            h1 Collaborative Scheduling Done Right
+            h2 Rallly lets you and your friends vote on a date to host an event
+        .intro-actions
+            a.button.primary(href='/new') Schedule an Event
+                span.free-label
+            a.button(href='/example') View Demo
+        .intro-shots
+            .desktop
+            .mobile
+    section.landing-section: .container
+            h3 Features
+            h4 Rallly makes collaborating with friends quick and easy
+            .features
+                .feature
+                    .image: img(src='/images/landing/share.png', width='48')
+                    h5 Share
+                    p Create a page for your upcoming event and share it with your friends.
+                .feature
+                    .image: img(src='/images/landing/discuss.png', width='48')
+                    h5 Discuss
+                    p Discuss details of the event with your friends right on the event page.
+                .feature
+                    .image: img(src='/images/landing/vote.png', width='48')
+                    h5 Vote
+                    p Let everyone know which dates best work for you and find a common date to host your event. 
+            .seperator
+            h3 About
+            h4 Frequently Asked Questions
+            .questions-section
+                .questions-col
+                    .question
+                        h6 Who made this?
+                        p Rallly was designed &amp; developed by Luke Vella. 
+                    .question
+                        h6 Is Rallly free?
+                        p Yes, Rallly is and always will be a free service.
+                    .question
+                        h6 Do events get deleted eventually?
+                        p An event will remain online for a year or until you delete it yourself.
+                    .question
+                        h6 Why did you create Rallly?
+                        p 
+                            | I wanted to create something that was useful, simple and beautiful.
+                            | Also I needed a project that could help me improve my skillset.  
+                .questions-col
+                    .question
+                        h6 Where can I submit a feature request?
+                        p 
+                            | You can send an email to 
+                            a(href='mailto:me@lukevella.com') me@lukevella.com
+                            |  with your feature requests.
+                    .question
+                        h6 This is great, is there anything I can do to help out?
+                        p Yes! Rallly is open source, so if you know how to write code you can contribute to the project over on Github.
+                    .question
+                        h6 I don't know how to code. Is there anything else I can do?
+                        p 
+                            | Yes! Follow me on 
+                            a(href='http://twitter.com/ralllyco') Twitter
+                            |  and share with your friends!
+            .seperator
+            .stats
+                h3 Stats
+                h4 2,140 Events Created
+                a.button.primary(href='/new') Schedule an Event
+                a.button(href='/example') View Demo
+    section.footer-section: .container
+        footer.footer
+            .logo.footer-col
+                img(src='/images/landing/footer_logo.png', width='100')
+            .menu.footer-col
+                h6 Menu
+                ul.links
+                    li: a(href='/') Home
+                    li: a(href='/features') Features
+                    li: a(href='/about') About
+                    li: a(href='/contact') Contact
+            .social.footer-col
+                h6 Social
+                ul.links
+                    li: a(href='http://twitter.com/ralllyco') Twitter
+                    li: a(href='http://github.com/lukevella/Rallly') Github
+                    li: a(href='http://facebook.com/rallly') Facebook
+            .about.footer-col
+                h6 About
+                p
+                    | Rallly is a free collaborative scheduling service created by <a href="http://lukevella.com">Luke Vella</a>.
+                    | Deciding a date to host an event is quick and easy and easy with Rallly.
+                p Designed &amp; Developed with love by Luke Vella
+    

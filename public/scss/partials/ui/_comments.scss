@@ -27,10 +27,42 @@
     }
     input.form-control {
         padding:em(6) em(10);
+        font-size:em(14);
+    }
+    .comment-input {
+        position:relative;
+        overflow:visible;
+        &:before {
+            content:'';
+            position:absolute;
+            z-index:1000;
+            width: 0;
+            top:5px;
+            left:-4px;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-right: 5px solid white;
+            border-bottom: 5px solid transparent;
+        }
+        &:after {
+            content:'';
+            position:absolute;
+            z-index:999;
+            width: 0;
+            top:5px;
+            left:-5px;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-right: 5px solid $border-clr;
+            border-bottom: 5px solid transparent;
+        }
+
     }
     textarea.form-control {
         min-height: 0;
         min-width: 100%;
+        position:relative;
+        font-size:em(14);
     }
 }
 

@@ -1,7 +1,7 @@
 @mixin form-input {
     border-radius: 2px;
     border: 1px solid $border-clr;
-    font-size:em(14px);
+    font-size:em(16px);
     @include appearance(none);
     &:focus {
         border-color: $blue-clr;
