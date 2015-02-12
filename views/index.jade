@@ -15,9 +15,11 @@ block scripts
             
         };
         
-
+block body 
+    body(ng-app='landing')
+        
 block content
-    div#skrollr-body(ng-app='landing')
+    div#skrollr-body
         section#intro.intro: .intro-overlay: .container    
             header.header: .container
                 a.logo(href='/')

@@ -1,13 +1,12 @@
 .notification {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     width: 100%;
     z-index: 3000;
-    max-height:60px;
     padding: 12px 20px;
-    background: rgba($text-2-clr,0.8);
-    text-align:center;
+    background: $text-2-clr;
+    text-align:left;
     color: white;
     @include transition(all 0.3s ease-in-out);
     &.success {
@@ -17,16 +16,12 @@
         background: $red-clr;
     }
     &.ng-enter {
-        max-height:0;
-        right:0;
         top:-100px;
         opacity:0;
     }
     &.ng-enter-active {
-        opacity:1;
         top:0;
-        right:0
-
+        opacity:1;
     }
     &.ng-leave-active {
         opacity:1;
