@@ -9,9 +9,9 @@ var mandrill = require('mandrill-api');
 var mandrill_client = new mandrill.Mandrill(app.get('mandrillAPIKey'));
 
 communicator.on('event:create', function(event){
+    sendInvites(event);
     if (!event.creator.allowNotifications || event.isClosed || event.isExample) return;
     sendEmailConfirmation(event);
-    sendInvites(event);
 });
 
 communicator.on('event:update:creator.email', function(event, oldEvent){
@@ -26,7 +26,7 @@ communicator.on('participant:add', function(event, participant){
 
 communicator.on('comment:add', function(event, comment){
     if (!event.creator.allowNotifications || event.isExample) return;
-    sendNewParticipantNotification(event, comment);
+    sendNewCommentNotification(event, comment);
 });
 
 // Send confirmation to the creator of the event with a link to verify the creators email address
