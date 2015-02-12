@@ -19,6 +19,15 @@ communicator.on('event:update:creator.email', function(event, oldEvent){
     verifyEmail(event);
 });
 
+communicator.on('participant:add', function(event, participant){
+    if (!event.creator.allowNotifications || event.isExample) return;
+    sendNewParticipantNotification(event, participant);
+});
+
+communicator.on('comment:add', function(event, comment){
+    if (!event.creator.allowNotifications || event.isExample) return;
+    sendNewParticipantNotification(event, comment);
+});
 
 // Send confirmation to the creator of the event with a link to verify the creators email address
 var sendEmailConfirmation = function(event){
@@ -122,23 +131,58 @@ var verifyEmail = function(event){
     }, mandrillSuccessHandler, mandrillErrorHandler);
 }
 
-var sendUpdate = function(event){
+var sendNewParticipantNotification = function(event, participant){
     var message = {
-        subject : "Rallly: " + event.title + " - Verify Email Address",
+        subject : "Rallly: " + event.title + " - New Partcipant",
         from_email : 'noreply@rallly.co',
         from_name : 'Rallly',
         to: [{
             'email': event.creator.email
         }],
         global_merge_vars : [{
-            'name' : 'Name',
-            'content' : event.creator.name
+            'name' : 'TITLE',
+            'content' : participant.name + ' has voted!'
         }, {
-            'name' : 'Event',
-            'content' : event.title
+            'name' : 'MESSAGE',
+            'content' : 'Hi ' + event.creator.name + ',<br /><br />' +
+            'Click the button below to see the updates made to your event page!'
         }, {
-            'name' : 'VerifyUrl',
-            'content' : app.get('absoluteUrl')('verify/'+event._id+'/code/'+event.creator.verificationCode)
+            'name' : 'BUTTONTEXT',
+            'content' : 'View Event'
+        }, {
+            'name' : 'BUTTONLINK',
+            'content' : app.get('absoluteUrl')(event._id)
+        }]
+    }
+    mandrill_client.messages.sendTemplate({
+        message : message,
+        template_name : 'rallly-standard',
+        async : true,
+        template_content : []
+    }, mandrillSuccessHandler, mandrillErrorHandler);
+}
+
+var sendNewCommentNotification = function(event, comment){
+    var message = {
+        subject : "Rallly: " + event.title + " - New Comment",
+        from_email : 'noreply@rallly.co',
+        from_name : 'Rallly',
+        to: [{
+            'email': event.creator.email
+        }],
+        global_merge_vars : [{
+            'name' : 'TITLE',
+            'content' : comment.author.name + ' has commented on your event!'
+        }, {
+            'name' : 'MESSAGE',
+            'content' : 'Hi ' + event.creator.name + ',<br /><br />' +
+            'Click the button below to see the updates made to your event page!'
+        }, {
+            'name' : 'BUTTONTEXT',
+            'content' : 'View Event'
+        }, {
+            'name' : 'BUTTONLINK',
+            'content' : app.get('absoluteUrl')(event._id)
         }]
     }
     mandrill_client.messages.sendTemplate({

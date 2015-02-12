@@ -2,7 +2,7 @@
     <div class="section-title">Settings</div>
 </div>
 <div class="section-main">
-    <div class="switch-row">
+    <div class="switch-row" ng-if="event._id">
         <div class="switch-details">
             <div class="title">
                 Poll Status
@@ -25,7 +25,7 @@
                 Notifications
             </div>
             <div class="description">
-                Send email notifications to the creator of this event.
+                Send me an email when someone votes or comments on the event.
             </div>
         </div>
         <div class="switch">
@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div class="switch-row">
+    <div class="switch-row" ng-if="event._id">
         <div class="switch-details">
             <div class="title">
                 Delete Event

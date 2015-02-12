@@ -110,6 +110,7 @@ exports.createComment = function(req, res, next){
             event.comments.push(comment);
             event.save(function(err, event){
                 if (err) return next(err);
+                communicator.emit('comment:add', event, comment);
                 req.event = event;
                 next();
             });
@@ -145,6 +146,7 @@ exports.createParticipant = function(req, res, next){
             event.participants.push(participant);
             event.save(function(err, event){
                 if (err) return next(err);
+                communicator.emit('participant:add', event, participant);
                 req.event = event;
                 next();
         });
