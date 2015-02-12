@@ -1,48 +1,43 @@
 @include media($tablet) {
     html {
-        max-width:100%;
+        width:100%;
     }
     body {
         font-size:em(14px);
         position:relative;
         @include transition(all 0.3s ease-in-out);
-        left:0;
+        right:0;
+        width:100%;
         &.open-menu {
-            left:200px;
             overflow:hidden;
+            right:200px;
+            .main-navigation {
+                display:block;
+            }
         }
+    }
+    .outer-container {
+        padding:0;
+        width:100%;
     }
     .main-navigation {
-        // display:none;
-        width:100%;
-        height:60px;
-        min-height:0;
-        overflow:hidden;
-        position:static;
-        .menu-toggle {
-            display:inline-block;
-        }
-        .logo {
-            display:inline-block;
-            width:110px;
-            padding:0;
-            float:right;
-            background:transparent;
-        }
-        .menu {
-            position:absolute;
-            box-shadow: inset -5px 0 10px rgba(black, 0.1);
-            background: darken($navigation-bg-clr, 5%);
-            top:0;
-            width:200px;
-            left:-200px;
-            height:100%;
-            padding:0 20px;
-        }
+        display:none;
+        box-shadow:inset 3px 0 3px rgba($border-clr,0.5);
+        height:100%;
+        right:-200px;
+        width:200px;
+        padding:20px;
+        top:0;
+        margin:0;
+        position:absolute;
     }
-
+    .mobile-navigation{
+        display:block;
+    }
     .main-content {
         margin-left:0;
+        width:100%;
+        padding:0;
         .main-view {
             padding: 0;
         }
@@ -184,33 +179,6 @@
     }
 }
 
-
-// NOTIFICATIONS
-@include media($tablet) {
-    .notification {
-        top:0;
-        min-height:60px;
-        width: 100%;
-        border-radius:0;
-        &.ng-enter {
-            max-height:0;
-            right:0;
-            top:-100px;
-            opacity:0;
-        }
-        &.ng-enter-active {
-            opacity:1;
-            top:0;
-            right:0
-
-        }
-        &.ng-leave-active {
-            opacity:1;
-            top:-100px;
-            right:0;
-        }
-    }
-}
 
 // MODAL
 

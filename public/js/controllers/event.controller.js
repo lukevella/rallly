@@ -1,5 +1,6 @@
 angular.module('rallly')
 .controller('EventCtrl', function($scope, $http, $state, Title, Event, ConfirmModal){
+
     var id = $state.params.id;
     // Get Event
     $scope.event = Event.get({id:id}, function(data){

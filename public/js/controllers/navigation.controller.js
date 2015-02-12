@@ -11,7 +11,7 @@ angular.module('rallly')
 
 
     var clickHandler = function(event){
-        var isClickedElementChildOfPopup = angular.element('.main-navigation').find(event.target).length > 0;
+        var isClickedElementChildOfPopup = angular.element('.mobile-navigation').find(event.target).length > 0;
         console.log(isClickedElementChildOfPopup);
         if (isClickedElementChildOfPopup) return;
         $scope.toggleMenu()
@@ -23,6 +23,7 @@ angular.module('rallly')
     });
 
     $scope.toggleMenu = function(){
+        console.log('click');
         var isOpen = angular.element('body').hasClass('open-menu');
         if (isOpen) {
             angular.element('body').removeClass('open-menu');

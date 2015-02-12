@@ -1,6 +1,8 @@
 angular.module('rallly')
 .controller('ExampleCtrl', function($state, Event){
     // Generate dates
+    mixpanel.track("View Demo");
+
     var dates = [], date = new Date();
     for (var i = 0; i < 4; i++){
         dates.push(date.add(Math.ceil(Math.random() * 5)).days().toISOString());

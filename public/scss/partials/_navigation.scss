@@ -1,5 +1,7 @@
 .main-navigation {
     margin-top:70px;
+    position:fixed;
+    z-index:1000;
     .logo {
         display:block;
         margin-bottom:20px;
@@ -32,16 +34,15 @@
         display:block;
         border-radius:2px;
         img {
-            margin-right: 8px;
+            margin-right: 10px;
             vertical-align:middle;
-            opacity:0.75;
         }
         span {
             vertical-align:middle;
         }
         &:hover {
+            color: $text-clr;
             background: darken($background-clr,4%);
-            img { opacity: 1 }
         }
     }
     .create-new {
@@ -60,6 +61,51 @@
         }
         img {
             margin-right:8px;
+        }
+        @include transition(background 0.2s ease-in-out);
+        &:hover {
+            background: darken($green-clr, 5%);
+        }
+    }
+}
+
+.mobile-navigation {
+    display:none;
+    background: $navigation-bg-clr;
+    padding:0 20px;
+    height:60px;
+    vertical-align:middle;
+    .logo {
+        float:left;
+        margin-top:20px;
+    }
+    nav {
+        text-align:right;
+    }
+    .menu-toggle {
+        color: white;
+        font-weight: bold;
+        text-transform:uppercase;
+        text-decoration:none;
+        img {
+            margin-top:19px;
+        }
+    }
+    .create-new {
+        margin-top:15px;
+        display:inline-block;
+        position:relative;
+        color:white;
+        text-align:center;
+        font-size:em(14);
+        font-weight: bold;
+        text-align:center;
+        text-decoration:none;
+        padding: 8px;
+        background: $green-clr;
+        border-radius: 2px;
+        img {
+            vertical-align:middle;
         }
         @include transition(background 0.2s ease-in-out);
         &:hover {

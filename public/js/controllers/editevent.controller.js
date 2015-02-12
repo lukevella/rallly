@@ -1,7 +1,7 @@
 angular.module('rallly')
 .controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event, ConfirmModal, Notification, Title){
     var id = $state.params.id
-    $scope.event = Event.get({id:id}, function(data){
+    $scope.event = Event.get({id:id}, function(data){        
         Title.set("Edit: " + $scope.event.title);
         $scope.master = angular.copy($scope.event);
     }, function(e){

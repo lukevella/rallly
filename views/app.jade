@@ -13,17 +13,23 @@ block scripts
     
 block content
   .outer-container(ng-app='rallly')
+    .mobile-navigation(ng-controller='NavigationCtrl')
+        a.logo(href='/', target='_self')
+            img(src='/images/logo.png', width='100')
+        nav
+            a.menu-toggle(href='#', ng-click='toggleMenu()')
+                img(src='/images/menu_toggle.png', width='24')
     .main-navigation
         a.logo(href='/', target='_self')
             img(src='/images/logo_light.png', width='100')
         .menu-section Menu
         nav
             a(href='/', target='_self') 
-                img(src='/images/home.png', width='12')
+                img(src='/images/home.png', width='14')
                 span Homepage
             a(href='/#about', target='_self') 
-                img(src='/images/about.png', width='12')
-                span About / FAQ
+                img(src='/images/about.png', width='14')
+                span Support
         .seperator
         a.create-new(href='/new') 
             img(src='/images/add.png', width='12')
