@@ -3,7 +3,9 @@ angular.module('rallly')
 
     $scope.title = "Schedule a New Event";
     $scope.description = "Fill in the form below to create your event and share it with your friends and colleagues.";
-    $scope.event = {};
+    $scope.event = { creator : {
+        allowNotifications : true
+    }};
 
 
     $scope.submit = function(){

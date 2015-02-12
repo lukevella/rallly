@@ -21,7 +21,8 @@ angular.module('rallly')
     var event =  new Event({
         "creator": {
          "name": "John Example",
-         "email": "rallly@lukevella.com"
+         "email": "rallly@lukevella.com",
+         "allowNotifications" : false
         },
         "title": "Lunch Meeting",
         "location": "Starbucks, 901 New York Avenue",
