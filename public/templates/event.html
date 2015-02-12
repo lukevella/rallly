@@ -8,7 +8,9 @@
                     <span class="title-label success" ng-hide="event.isClosed">Poll Open</span>
                 </div>
                 <div class="subtitle">
-                    Created by <a href="mailto:{{event.creator.email}}">{{event.creator.name}}</a> &bull; {{event.created | elapsed}}
+                    Created by <a href="mailto:{{event.creator.email}}">{{event.creator.name}}</a>
+                    &bull; {{event.created | elapsed}}
+                    &bull; <a href="#" ng-click="editEvent()">Edit Details</a>
                 </div>
             </div>
             <div class="actions">

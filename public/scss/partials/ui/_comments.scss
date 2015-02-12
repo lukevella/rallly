@@ -1,3 +1,5 @@
+$avatar-width: 20px;
+
 .comments-info {
     font-weight: bold;
     padding-bottom: 10px;
@@ -5,18 +7,18 @@
 }
 
 .comment-form {
-    @include row;
     margin-top:20px;
     padding: 0 10px;
     .avatar-section {
-        @include span-columns(1);
+        float:left;
+        width: $avatar-width;
         img {
             border-radius: 3px;
             max-width: 100%;
         }
     }
     .input-section {
-        @include span-columns(11);
+        margin-left: $avatar-width + 20px;
     }
     .content-section {
         margin-bottom:10px;
@@ -79,17 +81,17 @@
     max-height: 500px;
     overflow-y: scroll;
     .comment {
-        @include row;
         padding: 10px;
         .avatar-section {
-            @include span-columns(1);
+            float:left;
+            width:$avatar-width;
             img {
                 max-width: 100%;
                 border-radius: 3px;
             }
         }
         .comment-section {
-            @include span-columns(11);
+            margin-left:$avatar-width + 20px;
             position:relative;
             .comment-delete {
                 opacity:0;

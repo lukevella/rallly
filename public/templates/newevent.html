@@ -1,0 +1,43 @@
+<div class="box">
+    <div class="box-title">Schedule a New Event</div>
+    <div class="box-description">
+        Fill in the form below to create your event and share it with your friends and colleagues.
+    </div>
+    <form novalidate autocomplete="off" name="form" ng-hide="eventUrl" ng-submit="submit()">
+        <section class="box-section" user-form form="form" event="event">
+
+        </section>
+
+        <section class="box-section" event-form form="form" event="event">
+
+        </section>
+
+        <section class="box-section" date-form form="form" event="event">
+
+        </section>
+
+        <section class="box-section" participants-form form="form" event="event">
+
+        </section>
+
+        <div class="box-controls box-bottom-sticky">
+            <button type="submit" class="btn">Create Event</button>
+        </div>
+
+    </form>
+    <div class="box-message animated zoomIn" ng-show="eventUrl">
+        <div class="main-image">
+            <img src="/images/success_large.png" width="100" />
+        </div>
+        <div class="title">Event Created</div>
+        <div class="content">
+            Your event has been created successfully! You should receive an email shortly with instructions to verify your email address.
+        </div>
+        <div class="mini-divider">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" disabled="true" value="{{eventUrl}}" />
+            <a href="{{eventUrl}}" class="btn form-btn">GO</a>
+        </div>
+    </div>
+</div>
