@@ -434,22 +434,17 @@ body {
                 margin-bottom:20px;
             }
             .social {
+                margin-bottom:20px;
                 h6 {
-                    float:left;
-                    width:50px;
-                    &:after {
-                        content: ':'
-                    }
+                    display:none;
                 }
                 .links {
                     margin:0;
-                    margin-left:50px;
                     li {
                         display:inline-block;
-                        margin-right:10px;
+                        margin-right: 10px;
                     }
                 }
-                margin-bottom:10px;
             }
         }
     }
