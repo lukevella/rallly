@@ -18,7 +18,11 @@ body {
     background: url('../images/landing/intro_bg.jpg') no-repeat;
     background-size: cover;
     color: white;
+}
+.intro-overlay {
     position:relative;
+    background: rgba(#3B455B, 0.95);
+    padding-top:30px;
     overflow:hidden;
     &:after {
       content: "";
@@ -32,11 +36,6 @@ body {
       border-left: 2000px solid transparent;
       border-right: 0px solid transparent;
     }
-}
-.intro-overlay {
-    position:relative;
-    background: rgba(#3B455B, 0.95);
-    padding-top:30px;
 }
 
 
@@ -340,6 +339,117 @@ body {
                 text-transform: uppercase;
                 font-weight: bold;
                 color:$text-clr;
+            }
+        }
+    }
+}
+
+@include media($tablet) {
+    body {
+        font-size:14px;
+        height: 100%;
+        width: 100%;
+    }
+    .container {
+        padding:0 20px;
+    }
+    .main-nav {
+        display:none;
+    }
+    .header {
+        margin-top:40px;
+        margin-bottom:20px;
+        text-align:center;
+        .logo {
+            float:none;
+        }
+        .container {
+            padding:0;
+        }
+    }
+    .intro-overlay {
+        padding:0;
+    }
+    .intro-headline {
+        h1 {
+            font-size:30px;
+        }
+        h2 {
+            font-size:18px;
+        }
+    }
+    .intro-actions {
+        .free-label {
+            display:none;
+        }
+    }
+    .intro-shots {
+        min-width:0;
+        margin-top:0;
+        height:400px;
+        .desktop {
+            display:none;
+        }
+        .mobile {
+            left:50%;
+            margin-left:-130px
+        }
+    }
+    .landing-section {
+        &.bottom {
+            padding-bottom:100px;
+        }
+    }
+    .features {
+        margin:20px 0;
+        .feature {
+            @include span-columns(8);
+            margin-bottom:40px;
+            .image {
+                margin-bottom:10px;
+            }
+            h5 {
+                font-size: 24px;
+            }
+            p {
+                font-size: 16px;
+            }
+        }
+    }
+    .questions-section {
+        .questions-col {
+            @include span-columns(8);
+        }
+    }
+
+    .footer-section {
+        .footer {
+            .menu {
+                display:none;
+            }
+            .about, .social, .logo {
+                @include span-columns(8);
+            }
+            .logo {
+                margin-bottom:20px;
+            }
+            .social {
+                h6 {
+                    float:left;
+                    width:50px;
+                    &:after {
+                        content: ':'
+                    }
+                }
+                .links {
+                    margin:0;
+                    margin-left:50px;
+                    li {
+                        display:inline-block;
+                        margin-right:10px;
+                    }
+                }
+                margin-bottom:10px;
             }
         }
     }
