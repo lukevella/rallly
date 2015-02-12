@@ -13,6 +13,9 @@ angular.module('rallly', ['ui.router','ngResource','btford.modal','ngTagsInput',
             templateUrl : 'templates/newevent.html',
             controller : 'NewEventCtrl',
         })
+        .state('deletedevent',{
+            templateUrl : 'templates/deletedevent.html',
+        })
         .state('newevent.success', {
             templateUrl : 'templates/newEvent/success.html'
         })
@@ -26,7 +29,6 @@ angular.module('rallly', ['ui.router','ngResource','btford.modal','ngTagsInput',
             controller : 'ExampleCtrl'
         })
         .state('notfound', {
-            url : '/notfound',
             templateUrl : 'templates/notfound.html'
         })
         .state('event',{

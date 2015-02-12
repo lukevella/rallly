@@ -1,11 +1,16 @@
 angular.module('rallly')
 .controller('EditEventCtrl', function($scope, $http, $state, $timeout, Event, ConfirmModal, Notification, Title){
     var id = $state.params.id
-    $scope.event = Event.get({id:id}, function(data){        
+    $scope.event = Event.get({id:id}, function(data){
         Title.set("Edit: " + $scope.event.title);
         $scope.master = angular.copy($scope.event);
     }, function(e){
         $state.go('notfound');
+    });
+    $scope.$watch('event.isDeleted', function(value){
+        if (value){
+            $state.go('deletedevent');
+        }
     });
     $scope.undoChanges = function(){
         $scope.event = angular.copy($scope.master);

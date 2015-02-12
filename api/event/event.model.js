@@ -59,8 +59,7 @@ var EventSchema = new Schema({
     },
     __private : {
         verificationCode : String,
-        unsubscribeCode : String,
-        deleteCode : String
+        unsubscribeCode : String
     }
 });
 

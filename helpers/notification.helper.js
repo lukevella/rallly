@@ -19,9 +19,6 @@ communicator.on('event:update:creator.email', function(event, oldEvent){
     verifyEmail(event);
 });
 
-communicator.on('event:delete', function(event){
-    deleteConfirmation(event);
-});
 
 // Send confirmation to the creator of the event with a link to verify the creators email address
 var sendEmailConfirmation = function(event){
@@ -142,37 +139,6 @@ var sendUpdate = function(event){
         }, {
             'name' : 'VerifyUrl',
             'content' : app.get('absoluteUrl')('verify/'+event._id+'/code/'+event.creator.verificationCode)
-        }]
-    }
-    mandrill_client.messages.sendTemplate({
-        message : message,
-        template_name : 'rallly-standard',
-        async : true,
-        template_content : []
-    }, mandrillSuccessHandler, mandrillErrorHandler);
-}
-
-var deleteConfirmation = function(event){
-    var message = {
-        subject : "Rallly: " + event.title + " - Delete Request",
-        from_email : 'noreply@rallly.co',
-        from_name : 'Rallly',
-        to: [{
-            'email': event.creator.email
-        }],
-        global_merge_vars : [{
-            'name' : 'TITLE',
-            'content' : 'Are you sure you want to delete ' + event.title + '?'
-        }, {
-            'name' : 'MESSAGE',
-            'content' : 'Hi ' + event.creator.name + ',<br /><br />' +
-            'A request has been made to delete this event. If you would like to delete it click the button below. If you did not make this request, please ignore this email.'
-        }, {
-            'name' : 'BUTTONTEXT',
-            'content' : 'Delete Event'
-        }, {
-            'name' : 'BUTTONLINK',
-            'content' : app.get('absoluteUrl')('delete/'+event._id+'/code/'+event.__private.deleteCode)
         }]
     }
     mandrill_client.messages.sendTemplate({

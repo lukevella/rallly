@@ -1,5 +1,5 @@
 angular.module('rallly')
-.controller('NewEventCtrl', function($scope, $http, $state, Event, ConfirmModal, Notification){
+.controller('NewEventCtrl', function($scope, $http, $state, Event, ConfirmModal, Notification, Communicator){
 
     $scope.title = "Schedule a New Event";
     $scope.description = "Fill in the form below to create your event and share it with your friends and colleagues.";

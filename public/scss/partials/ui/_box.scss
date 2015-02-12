@@ -90,7 +90,7 @@ $box-h-pad: 25px;
 
 .box-message {
     text-align:center;
-    padding:20px;
+    padding:40px 20px;
     max-width:500px;
     margin:0 auto;
     .main-image {
@@ -100,7 +100,7 @@ $box-h-pad: 25px;
         font-weight: bold;
         font-size: em(24px);
         color: $text-clr;
-        margin-bottom: em(10px);
+        margin-bottom: 5px;
     }
     .content {
         font-size: em(14px);

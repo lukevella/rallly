@@ -33,8 +33,7 @@ exports.create = function(req, res, next){
 
     event.__private = {
         'verificationCode' : getRandomString(),
-        'unsubscribeCode' : getRandomString(),
-        'deleteCode' : getRandomString()
+        'unsubscribeCode' : getRandomString()
     }
 
     return Event
@@ -86,35 +85,18 @@ exports.update = function(req, res){
 }
 
 exports.delete = function(req, res, next){
-    var eventId = req.params.id,
-        code = req.params.code;
-
-    if (code){
-
-        Event
-            .update({
-                '_id' : eventId,
-                '__private.deleteCode' : code
-            }, {
-                'isDeleted' : true ,
-                '__private.deleteCode' : getRandomString()
-            })
-            .exec(function(err, num){
-                if (err) return handleError(res, err);
-                if (num == 0) return res.status(498).end();
-                next();
-            });
-    } else {
-
-        Event
-            .findById(eventId)
-            .exec(function(err, event){
-                if (err) return handleError(res, err);
-                if (!event) return res.status(404).end();
-                communicator.emit('event:delete', event);
-                next();
-            });
-    }
+    var eventId = req.params.id
+    Event
+        .update({
+            '_id' : eventId
+        }, {
+            'isDeleted' : true
+        })
+        .exec(function(err, num){
+            if (err) return handleError(res, err);
+            if (num == 0) return res.status(498).end();
+            next();
+        });
 }
 
 exports.createComment = function(req, res, next){

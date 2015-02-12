@@ -5,7 +5,13 @@ angular.module('rallly')
     // Get Event
     $scope.event = Event.get({id:id}, function(data){
         // Set the page title to the event title
+        if (data.isDeleted) {
+            $state.go('deletedevent');
+            return;
+        }
+        
         Communicator.trigger('view:event', data);
+
         Title.set($scope.event.title);
         // Generate event url - i.e. http://rallly.co/jF9F_Fd
         $scope.eventUrl = $state.href('event', {

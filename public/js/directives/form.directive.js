@@ -82,14 +82,17 @@ angular.module('rallly')
         templateUrl : 'templates/form/settingsForm.html',
         link : function(scope, el, attrs){
             scope.deleteEvent = function(){
-                if (scope.deleteRequestSent) return;
-                Event.delete({'id' : scope.event._id}, function(){
-                    scope.deleteRequestSent = true;
-                    var modal = new ConfirmModal({
-                        title : 'Delete Request Sent',
-                        message : 'An email has been sent to the creator of this event with instructions to delete it.',
-                        cancelText : 'OK'
-                    });
+                var modal = new ConfirmModal({
+                    title : 'Are you sure?',
+                    message : 'The event will no longer be accessible after it is deleted. Are you sure you want to continue?',
+                    isDestructive : true,
+                    confirmText : 'Yes - delete',
+                    cancelText : 'Cancel',
+                    confirm : function(){
+                        Event.delete({'id' : scope.event._id}, function(e){
+                            scope.event.isDeleted = true;
+                        });
+                    }
                 });
             }
         }
