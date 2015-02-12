@@ -1,5 +1,5 @@
 angular.module('rallly')
-.directive('discussion', function($timeout, Comment, ConfirmModal){
+.directive('discussion', function($timeout, Comment, ConfirmModal, Communicator){
     return {
         restrict : 'A',
         templateUrl : 'templates/directives/discussion.html',
@@ -32,6 +32,7 @@ angular.module('rallly')
                     comment.$save({id:scope.event._id}, function(event){
                         scope.event = event;
                         scope.comment = {};
+                        Communicator.trigger('add:comment', event);
                     });
                     scope.commentForm.$setPristine();
                 }

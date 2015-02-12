@@ -1,10 +1,11 @@
 angular.module('rallly')
-.controller('EventCtrl', function($scope, $http, $state, Title, Event, ConfirmModal){
+.controller('EventCtrl', function($scope, $http, $state, Title, Event, ConfirmModal, Communicator){
 
     var id = $state.params.id;
     // Get Event
     $scope.event = Event.get({id:id}, function(data){
         // Set the page title to the event title
+        Communicator.trigger('view:event', data);
         Title.set($scope.event.title);
         // Generate event url - i.e. http://rallly.co/jF9F_Fd
         $scope.eventUrl = $state.href('event', {

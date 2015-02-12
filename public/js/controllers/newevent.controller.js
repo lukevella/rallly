@@ -17,6 +17,7 @@ angular.module('rallly')
                 }, {
                     absolute : true
                 });
+                Communicator.trigger('add:event', event);
                 $state.go('newevent.success');
             }, function(){
                 var modal = new ConfirmModal({

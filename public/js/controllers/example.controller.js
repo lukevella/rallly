@@ -1,7 +1,6 @@
 angular.module('rallly')
 .controller('ExampleCtrl', function($state, Event){
     // Generate dates
-    mixpanel.track("View Demo");
 
     var dates = [], date = new Date();
     for (var i = 0; i < 4; i++){
@@ -49,7 +48,6 @@ angular.module('rallly')
         "isExample" : true
     });
     event.$save(function(data){
-
         $state.go('event', { id : data._id }, {
             location : "replace"
         });

@@ -1,5 +1,5 @@
 angular.module('rallly')
-.directive('poll', function($timeout, Participant, ConfirmModal){
+.directive('poll', function($timeout, Participant, ConfirmModal, Communicator){
     return {
         restrict : 'A',
         templateUrl : 'templates/directives/poll.html',
@@ -34,6 +34,7 @@ angular.module('rallly')
                     confirm : function(){
                         Participant.remove({ id : scope.event._id , pid : participant._id }, function(event){
                             scope.event = event;
+                            Communicator.trigger('delete:participant', event);
                         });
                     }
                 });
@@ -70,6 +71,7 @@ angular.module('rallly')
                     participant.$save({id:scope.event._id}, function(event){
                         scope.event = event;
                         scope.participant = {};
+                        Communicator.trigger('add:participant', event);
                     });
                     scope.formnew.$setPristine();
                 }
