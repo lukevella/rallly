@@ -264,9 +264,9 @@ body {
             a {
                 color: $blue-clr;
                 text-decoration:none;
-                @include transition(color 0.2s ease-in-out);
                 &:hover {
                     color: darken($blue-clr, 15%);
+                    text-decoration:underline;
                 }
             }
             h6 {
