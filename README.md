@@ -43,17 +43,14 @@ Open up `config/main.js` and fill in the parameters.
 ```
 
 ### Development
-If you're going to be developing run the `watch` task with gulp. This will process all the scss, js and templates and allow you to view any changes you make to them.
+If you're going to be developing, run the `watch` task with gulp. Gulp is used to build the css (with sass), js and templates.
 
 ```bash
 gulp watch
 ```
 
 ### Running
-To start the app simply run
-```bash
-npm start
-```
+To start the node server simply run `npm start`.
 
 ## License
 See the LICENSE file for license rights and limitations (CC-BY-NC)
