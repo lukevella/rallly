@@ -56,4 +56,4 @@ npm start
 ```
 
 ## License
-This project is distributed with the Creative Commons Attribution NonCommercial (CC-BY-NC). For the full license text, view the LICENSE.txt
+This project is distributed with the Creative Commons Attribution NonCommercial (CC-BY-NC) License. For the full license text, view the LICENSE.txt
