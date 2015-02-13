@@ -43,7 +43,7 @@ Open up `config/main.js` and fill in the parameters.
 ```
 
 ### Development
-If you're going to be developing, you will need to use gulp to run the `watch` task.
+If you're going to be developing, run `watch` task with gulp.  
 
 ```bash
 gulp watch
