@@ -1,5 +1,3 @@
-![Alt Text](https://pbs.twimg.com/profile_banners/2986438877/1423764183/1500x500)
-
 # Rallly
 
 Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event.
@@ -56,3 +54,6 @@ To start the app simply run
 ```bash
 npm start
 ```
+
+## License
+This project is distributed with the Creative Commons Attribution NonCommercial (CC-BY-NC). For the full license text, view the LICENSE.txt
