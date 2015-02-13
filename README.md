@@ -50,10 +50,7 @@ gulp watch
 ```
 
 ### Running
-To start the app simply run
-```bash
-npm start
-```
+To start the node server simply run `npm start`.
 
 ## License
 See the LICENSE file for license rights and limitations (CC-BY-NC)
