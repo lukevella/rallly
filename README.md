@@ -43,7 +43,7 @@ Open up `config/main.js` and fill in the parameters.
 ```
 
 ### Development
-If you're going to be developing, run `watch` task with gulp.  
+If you're going to be developing, run the `watch` task with gulp. Gulp is used to build the css (with sass), js and templates.
 
 ```bash
 gulp watch
