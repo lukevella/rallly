@@ -56,4 +56,4 @@ npm start
 ```
 
 ## License
-See the LICENSE file for license rights and limitations (Creative Commons Attribution NonCommercial (CC-BY-NC)
+See the LICENSE file for license rights and limitations (CC-BY-NC)
