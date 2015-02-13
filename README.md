@@ -43,7 +43,7 @@ Open up `config/main.js` and fill in the parameters.
 ```
 
 ### Development
-If you're going to be developing run the `watch` task with gulp. This will process all the scss, js and templates and allow you to view any changes you make to them.
+If you're going to be developing, run the `watch` task with gulp. This will process all the scss, js and templates and allow you to view any changes you make to them.
 
 ```bash
 gulp watch
