@@ -10,9 +10,6 @@ To run Rallly you will need:
 * Node.js + npm
 * Bower
 
-If you're going to do some development on Rallly you will need to install [gulp.js](http://gulpjs.com/).
-
-
 ## Setup
 
 Clone the repository on your machine and set the current directory to the root of the repository
