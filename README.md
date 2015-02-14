@@ -2,7 +2,7 @@
 
 Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event.
 
-## Dependencies
+## Requirements
 
 To run Rallly you will need:
 
