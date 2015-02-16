@@ -292,7 +292,26 @@ body {
 
 .share {
     .networks {
-        height:200px;
+        margin-bottom: 40px;
+        a {
+            display:inline-block;
+            width: 60px;
+            height:60px;
+            margin: 0 10px;
+            &.twitter {
+                background-image: url('../images/social/twitter.png');
+            }
+            &.github {
+                background-image: url('../images/social/github.png');
+            }
+            &.facebook {
+                background-image: url('../images/social/facebook.png');
+            }
+            background-size: 60px 120px;
+            &:hover {
+                background-position: 0 -60px;
+            }
+        }
     }
 }
 .footer-section {
