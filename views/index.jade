@@ -89,26 +89,26 @@ block content
                                 |  on Github or send an email to 
                                 a(href='mailto:hello@lukevella.com') hello@lukevella.com
                                 | .  
+        //- section#share.landing-section: .container
+        //-     .seperator
+        //-     .share
+        //-         h3 Share
+        //-         h4 Show your support
+        //-         .networks
+        //-             a.twitter(href='https://twitter.com/home?status=Check%20out%20Rallly,%20a%20free%20collaborative%20scheduling%20service%20by%20%40imlukevella.%20http://rallly.co')
+        //-             a.facebook(href='https://www.facebook.com/sharer/sharer.php?u=http://rallly.co')
+        //-             a.github(href='https://github.com/lukevella/Rallly')
+                        
         section#stats.landing-section.bottom: .container
             .seperator
-            .share
-                h3 Share
-                h4 Show your support
-                .networks
-                    a.twitter(href='https://twitter.com/home?status=Check%20out%20Rallly,%20a%20free%20collaborative%20scheduling%20service%20by%20%40imlukevella.%20http://rallly.co')
-                    a.facebook(href='https://www.facebook.com/sharer/sharer.php?u=http://rallly.co')
-                    a.github(href='https://github.com/lukevella/Rallly')
-                        
-        //- section#stats.landing-section.bottom: .container
-        //-     .seperator
-        //-     .stats
-        //-         h3 Stats
-        //-         h4
-        //-             span.event-count= eventCount
-        //-             |  Events Created
-        //-         .actions
-        //-             a.button.primary(href='/new') Schedule an Event
-        //-             a.button(href='/example') View Demo
+            .stats
+                h3 Stats
+                h4
+                    span.event-count= eventCount
+                    |  Events Created
+                .actions
+                    a.button.primary(href='/new') Schedule an Event
+                    a.button(href='/example') View Demo
         section#footer.footer-section: .container
             footer.footer
                 .logo.footer-col
