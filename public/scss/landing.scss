@@ -423,14 +423,20 @@ body {
         &.bottom {
             padding-bottom:100px;
         }
+        h3, h4 {
+        }
     }
     .features {
         margin:20px 0;
         .feature {
+            text-align:center;
             @include span-columns(8);
             margin-bottom:40px;
             .image {
                 margin-bottom:10px;
+                img {
+                    position:static;
+                }
             }
             h5 {
                 font-size: 24px;
@@ -441,13 +447,15 @@ body {
         }
     }
     .questions-section {
+        margin-top:40px;
+        text-align:center;
         .questions-col {
             @include span-columns(8);
         }
     }
-
     .footer-section {
         .footer {
+            text-align:center;
             .menu {
                 display:none;
             }
