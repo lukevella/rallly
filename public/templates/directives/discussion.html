@@ -4,7 +4,7 @@
             <img src="/images/avatar.png" />
         </div>
         <div class="comment-section">
-            <a href="#" class="comment-delete" ng-click="deleteComment(comment)">&times;</a>
+            <a href="#" class="comment-delete" ng-click="discussionCtrl.deleteComment(comment)">&times;</a>
             <div class="meta">
                 <span class="name">{{comment.author.name}}</span>
                 <span class="time">{{comment.created | elapsed}}</span>
@@ -13,7 +13,7 @@
         </div>
     </li>
 </ul>
-<form novalidate ng-submit="postComment()" name="commentForm" class="comment-form">
+<form novalidate ng-submit="discussionCtrl.postComment()" name="commentForm" class="comment-form">
     <div class="avatar-section">
         <img src="/images/avatar.png" />
     </div>

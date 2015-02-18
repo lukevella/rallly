@@ -14,15 +14,15 @@ angular.module('rallly')
             });
         })
 
-        $rootScope.$on('add:participant', function(e, data){
+        $rootScope.$on('add:participant', function(e, event, participant){
             mixpanel.track('Add Participant', {
-                id : data._id
+                id : event._id
             })
         })
 
-        $rootScope.$on('add:comment', function(e, data){
+        $rootScope.$on('add:comment', function(e, event, comment){
             mixpanel.track('Add Comment', {
-                id : data._id
+                id : event._id
             })
         })
 

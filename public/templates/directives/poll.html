@@ -22,13 +22,13 @@
 </div>
 <div class="poll-body">
     <div class="poll-entry" ng-repeat="participant in event.participants">
-        <form novalidate ng-submit="editMode = false; update(participant);">
+        <form novalidate ng-submit="editMode = false; pollCtrl.update(participant);">
             <div class="cell name-cell">
                 <span class="avatar style-{{$index + 1}}">
                     <img src="/images/user.png" width="11" />
                 </span>
                 <input required autocomplete="off" type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
-                <span ng-hide="editMode" class="name editable" ng-click="editMode = true && !event.isClosed; edit(participant)">{{participant.name}}</span>
+                <span ng-hide="editMode" class="name editable" ng-click="editMode = true && !event.isClosed; pollCtrl.edit(participant)">{{participant.name}}</span>
             </div>
             <div class="cell vote-cell" ng-repeat="date in event.dates">
                 <img src="/images/tick@2x.png"  width="16" ng-hide="editMode" ng-if="participant.votes[$index]" />
@@ -37,10 +37,10 @@
                 <div class="overlay" ng-show="editMode" ng-click="participant.votes[$index] = !participant.votes[$index]"></div>
             </div>
             <div class="cell action-cell" ng-hide="event.isClosed">
-                <button type="button" ng-hide="editMode" ng-click="editMode = true; edit(participant)" class="btn hover">Edit</button>
-                <button type="button" ng-hide="editMode" ng-click="delete(participant)" class="btn danger hover">Delete</button>
+                <button type="button" ng-hide="editMode" ng-click="editMode = true; pollCtrl.edit(participant)" class="btn hover">Edit</button>
+                <button type="button" ng-hide="editMode" ng-click="pollCtrl.delete(participant)" class="btn danger hover">Delete</button>
                 <button type="submit" ng-show="editMode" class="btn">Save</button>
-                <button type="button" ng-show="editMode" ng-click="editMode = false; cancel($index)" class="btn">Cancel</button>
+                <button type="button" ng-show="editMode" ng-click="editMode = false; pollCtrl.cancel($index)" class="btn">Cancel</button>
             </div>
         </form>
     </div>
@@ -67,7 +67,7 @@
         </div>
     </div>
     <div ng-hide="event.isClosed" class="poll-entry highlight">
-        <form novalidate name="formnew" ng-submit="save()">
+        <form novalidate name="formnew" ng-submit="pollCtrl.save()">
             <div class="cell name-cell">
                 <span class="avatar style-{{participant.style}}">
                     <img src="/images/user.png" width="11" />

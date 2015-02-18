@@ -6,13 +6,13 @@ angular.module('rallly')
         scope : {
             'event' : '='
         },
-        link : function(scope, el, attrs){
-            scope.comment = {};
-            var thread = angular.element('.comment-thread');
-            $timeout(function(){
-                thread.scrollTop(thread.prop('scrollHeight'));
+        controllerAs : 'discussionCtrl',
+        controller : function($scope, $rootScope){
+            $scope.comment = { author : {}, comment : '' };
+            $rootScope.$on('add:participant', function(e, event, participant){
+                $scope.comment.author.name = participant.name;
             });
-            scope.deleteComment = function(comment){
+            this.deleteComment = function(comment){
                 var modal = new ConfirmModal({
                     title : 'Are you sure?',
                     message : 'Are you sure you want to remove this comment?',
@@ -20,23 +20,31 @@ angular.module('rallly')
                     cancelText : 'No - nevermind',
                     isDestructive : true,
                     confirm : function(){
-                        Comment.remove({ id : scope.event._id , cid : comment._id }, function(event){
-                            scope.event = event;
+                        Comment.remove({ id : $scope.event._id , cid : comment._id }, function(event){
+                            $scope.event = event;
                         });
                     }
                 });
             }
-            scope.postComment = function(){
-                if (scope.commentForm.$valid){
-                    var comment = new Comment(scope.comment);
-                    comment.$save({id:scope.event._id}, function(event){
-                        scope.event = event;
-                        scope.comment = {};
-                        Communicator.trigger('add:comment', event);
+            this.postComment = function(){
+                if ($scope.commentForm.$valid){
+                    var comment = new Comment($scope.comment);
+                    comment.$save({id:$scope.event._id}, function(event){
+                        $scope.event = event;
+                        Communicator.trigger('add:comment', event, $scope.comment);
+                        $scope.comment.content = '';
+                        $timeout($scope.scrollToBottom);
                     });
-                    scope.commentForm.$setPristine();
+                    $scope.commentForm.$setPristine();
                 }
             }
+            $scope.scrollToBottom = function(){
+                var thread = angular.element('.comment-thread');
+                thread.scrollTop(thread.prop('scrollHeight'));
+            }
+        },
+        link : function(scope, el, attrs){
+            $timeout(scope.scrollToBottom);
         }
     }
 });
