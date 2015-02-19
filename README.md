@@ -1,6 +1,6 @@
 # Rallly
 
-Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event.
+Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event. The application has been developed with the [MEAN](http://en.wikipedia.org/wiki/MEAN) stack of technologies.
 
 ## Requirements
 
@@ -25,12 +25,13 @@ Run the install script. You may need to adjust the permissions of the file to ex
 ```
 
 ### Configuration
-Open up `config/main.js` and fill in the parameters. 
+Open up `config/main.js` and fill in the parameters.
 
 ```javascript
 app.set('port', 3000);
 app.set('siteUrl', ''); // Used for creating an absolute URL
 app.set('absoluteUrl', function(path){
+    // If you're using port 80 or a proxy, remove the port from the absoluteUrl
     return app.get('siteUrl') + ':' + app.get('port') + '/' + path;
 });
 app.set('dbname', ''); // MongoDB database name
