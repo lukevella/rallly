@@ -27,9 +27,14 @@ angular.module('rallly')
             var today = Date.today(), activeDate = today.clone();
             var setMonth = function(toDate){
                 activeDate = toDate;
-                var startDate = activeDate.clone().moveToFirstDayOfMonth(),
-                    startDateDOW = startDate.getDay();
-                startDate.add(startDateDOW - 7).days();
+                var startDate = activeDate.clone().moveToFirstDayOfMonth(), // get first day of active month
+                    startDateDOW = startDate.getDay(); // get day of the week for the active start date of the active month
+                // Set the startDate to the previous Sunday
+                if (startDateDOW == 0){
+                    startDate.add(-7).days();
+                } else {
+                    startDate.add(startDateDOW * -1).days();
+                }
                 scope.title = activeDate.toString('MMMM yyyy');
                 var days = new Array(42);
                 for (var i = 0; i < days.length; i++){
