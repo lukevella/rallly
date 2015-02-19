@@ -80,10 +80,10 @@ angular.module('rallly')
                 return (returnIndex) ? -1 : false;
             }
             scope.nextMonth = function(){
-                setMonth(activeDate.add(1).months());
+                setMonth(activeDate.clone().add(1).months());
             }
             scope.prevMonth = function(){
-                setMonth(activeDate.add(-1).months());
+                setMonth(activeDate.clone().add(-1).months());
             }
 
             scope.control.removeDate = function(date){
