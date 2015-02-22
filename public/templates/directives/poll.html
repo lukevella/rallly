@@ -24,7 +24,7 @@
     <div class="poll-entry" ng-repeat="participant in event.participants">
         <form novalidate ng-submit="editMode = false; pollCtrl.update(participant);">
             <div class="cell name-cell">
-                <span class="avatar style-{{$index + 1}}">
+                <span class="avatar style-{{($index % 10) + 1 }}">
                     <img src="/images/user.png" width="11" />
                 </span>
                 <input required autocomplete="off" type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
