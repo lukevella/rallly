@@ -1,4 +1,4 @@
-# Rallly
+# [Rallly](http://rallly.co)
 
 Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event. The application has been developed with the [MEAN](http://en.wikipedia.org/wiki/MEAN) stack of technologies.
 
