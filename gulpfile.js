@@ -8,7 +8,7 @@ var notify = require('gulp-notify');
 var templateCache = require('gulp-angular-templatecache');
 
 gulp.task('js', function () {
-    gulp.src(['public/js/**/module.js', 'public/js/**/*.js'])
+    gulp.src(['public/js/**/*.js'])
     .pipe(sourcemaps.init())
         .pipe(concat('app.js'))
         .pipe(ngAnnotate())
