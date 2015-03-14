@@ -1,12 +1,4 @@
 node_modules
 npm-debug.log
 config/main.js
-public/vendor/
-public/vendor/angular/.bower.json
-public/vendor/angular/angular.js
-public/vendor/angular/angular.min.js
-public/vendor/angular/angular.min.js.gzip
-public/vendor/angular/angular.min.js.map
-public/vendor/angular/bower.json
-public/vendor/angular/package.json
-public/vendor/angular/README.md
+public/vendor
