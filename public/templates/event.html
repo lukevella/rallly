@@ -17,7 +17,7 @@
                 <button class="btn" ng-click="editEvent()">Edit Event</button>
             </div>
         </div>
-        <div class="event-description" ng-if="event.description">{{event.description}}</div>
+        <div class="event-description" ng-if="event.description" ng-bind-html="event.description | linky"></div>
         <div class="event-location" ng-if="event.location">
             Location:
             <a  href="http://maps.google.com?q={{event.location}}"  target="_blank">{{event.location}}</a>
