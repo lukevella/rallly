@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.10
+ * @license AngularJS v1.3.14
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -54,7 +54,7 @@ function minErr(module, ErrorConstructor) {
       return match;
     });
 
-    message = message + '\nhttp://errors.angularjs.org/1.3.10/' +
+    message = message + '\nhttp://errors.angularjs.org/1.3.14/' +
       (module ? module + '/' : '') + code;
     for (i = 2; i < arguments.length; i++) {
       message = message + (i == 2 ? '?' : '&') + 'p' + (i - 2) + '=' +
@@ -381,8 +381,7 @@ function nextUid() {
 function setHashKey(obj, h) {
   if (h) {
     obj.$$hashKey = h;
-  }
-  else {
+  } else {
     delete obj.$$hashKey;
   }
 }
@@ -691,7 +690,7 @@ function isElement(node) {
 function makeMap(str) {
   var obj = {}, items = str.split(","), i;
   for (i = 0; i < items.length; i++)
-    obj[ items[i] ] = true;
+    obj[items[i]] = true;
   return obj;
 }
 
@@ -1472,8 +1471,12 @@ function bootstrap(element, modules, config) {
     forEach(extraModules, function(module) {
       modules.push(module);
     });
-    doBootstrap();
+    return doBootstrap();
   };
+
+  if (isFunction(angular.resumeDeferredBootstrap)) {
+    angular.resumeDeferredBootstrap();
+  }
 }
 
 /**
@@ -2118,11 +2121,11 @@ function toDebugString(obj) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.3.10',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.3.14',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 3,
-  dot: 10,
-  codeName: 'heliotropic-sundial'
+  dot: 14,
+  codeName: 'instantaneous-browserification'
 };
 
 
@@ -4157,7 +4160,7 @@ function createInjector(modulesToLoad, strictDi) {
       }
 
       var args = [],
-          $inject = annotate(fn, strictDi, serviceName),
+          $inject = createInjector.$$annotate(fn, strictDi, serviceName),
           length, i,
           key;
 
@@ -4196,7 +4199,7 @@ function createInjector(modulesToLoad, strictDi) {
       invoke: invoke,
       instantiate: instantiate,
       get: getService,
-      annotate: annotate,
+      annotate: createInjector.$$annotate,
       has: function(name) {
         return providerCache.hasOwnProperty(name + providerSuffix) || cache.hasOwnProperty(name);
       }
@@ -7870,8 +7873,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           afterTemplateChildLinkFn,
           beforeTemplateCompileNode = $compileNode[0],
           origAsyncDirective = directives.shift(),
-          // The fact that we have to copy and patch the directive seems wrong!
-          derivedSyncDirective = extend({}, origAsyncDirective, {
+          derivedSyncDirective = inherit(origAsyncDirective, {
             templateUrl: null, transclude: null, replace: null, $$originalDirective: origAsyncDirective
           }),
           templateUrl = (isFunction(origAsyncDirective.templateUrl))
@@ -8324,6 +8326,8 @@ function removeComments(jqNodes) {
   return jqNodes;
 }
 
+var $controllerMinErr = minErr('$controller');
+
 /**
  * @ngdoc provider
  * @name $controllerProvider
@@ -8411,7 +8415,12 @@ function $ControllerProvider() {
       }
 
       if (isString(expression)) {
-        match = expression.match(CNTRL_REG),
+        match = expression.match(CNTRL_REG);
+        if (!match) {
+          throw $controllerMinErr('ctrlfmt',
+            "Badly formed controller string '{0}'. " +
+            "Must match `__name__ as __id__` or `__name__`.", expression);
+        }
         constructor = match[1],
         identifier = identifier || match[3];
         expression = controllers.hasOwnProperty(constructor)
@@ -11320,7 +11329,7 @@ function $LocationProvider() {
       // TODO(vojta): rewrite link when opening in new tab/window (in legacy browser)
       // currently we open nice url link and redirect then
 
-      if (!html5Mode.rewriteLinks || event.ctrlKey || event.metaKey || event.which == 2) return;
+      if (!html5Mode.rewriteLinks || event.ctrlKey || event.metaKey || event.shiftKey || event.which == 2 || event.button == 2) return;
 
       var elm = jqLite(event.target);
 
@@ -11362,7 +11371,7 @@ function $LocationProvider() {
 
 
     // rewrite hashbang url <> html5 url
-    if ($location.absUrl() != initialUrl) {
+    if (trimEmptyHash($location.absUrl()) != trimEmptyHash(initialUrl)) {
       $browser.url($location.absUrl(), true);
     }
 
@@ -12336,6 +12345,11 @@ Parser.prototype = {
             ? fn.apply(context, args)
             : fn(args[0], args[1], args[2], args[3], args[4]);
 
+      if (args) {
+        // Free-up the memory (arguments of the last function call).
+        args.length = 0;
+      }
+
       return ensureSafeObject(v, expressionText);
       };
   },
@@ -13207,8 +13221,7 @@ function qFactory(nextTick, exceptionHandler) {
           'qcycle',
           "Expected promise to be resolved with value other than itself '{0}'",
           val));
-      }
-      else {
+      } else {
         this.$$resolve(val);
       }
 
@@ -17665,6 +17678,9 @@ var htmlAnchorDirective = valueFn({
   compile: function(element, attr) {
     if (!attr.href && !attr.xlinkHref && !attr.name) {
       return function(scope, element) {
+        // If the linked element is not an anchor tag anymore, do nothing
+        if (element[0].nodeName.toLowerCase() !== 'a') return;
+
         // SVGAElement does not use the href attribute, but rather the 'xlinkHref' attribute.
         var href = toString.call(element.prop('href')) === '[object SVGAnimatedString]' ?
                    'xlink:href' : 'href';
@@ -17838,20 +17854,23 @@ var htmlAnchorDirective = valueFn({
  *
  * @description
  *
- * We shouldn't do this, because it will make the button enabled on Chrome/Firefox but not on IE8 and older IEs:
+ * This directive sets the `disabled` attribute on the element if the
+ * {@link guide/expression expression} inside `ngDisabled` evaluates to truthy.
+ *
+ * A special directive is necessary because we cannot use interpolation inside the `disabled`
+ * attribute.  The following example would make the button enabled on Chrome/Firefox
+ * but not on older IEs:
+ *
  * ```html
- * <div ng-init="scope = { isDisabled: false }">
- *  <button disabled="{{scope.isDisabled}}">Disabled</button>
+ * <div ng-init="isDisabled = false">
+ *  <button disabled="{{isDisabled}}">Disabled</button>
  * </div>
  * ```
  *
- * The HTML specification does not require browsers to preserve the values of boolean attributes
- * such as disabled. (Their presence means true and their absence means false.)
+ * This is because the HTML specification does not require browsers to preserve the values of
+ * boolean attributes such as `disabled` (Their presence means true and their absence means false.)
  * If we put an Angular interpolation expression into such an attribute then the
  * binding information would be lost when the browser removes the attribute.
- * The `ngDisabled` directive solves this problem for the `disabled` attribute.
- * This complementary directive is not removed by the browser and so provides
- * a permanent reliable place to store the binding information.
  *
  * @example
     <example>
@@ -17870,7 +17889,7 @@ var htmlAnchorDirective = valueFn({
  *
  * @element INPUT
  * @param {expression} ngDisabled If the {@link guide/expression expression} is truthy,
- *     then special attribute "disabled" will be set on the element
+ *     then the `disabled` attribute will be set on the element
  */
 
 
@@ -18683,19 +18702,21 @@ var inputType = {
          <script>
            angular.module('textInputExample', [])
              .controller('ExampleController', ['$scope', function($scope) {
-               $scope.text = 'guest';
-               $scope.word = /^\s*\w*\s*$/;
+               $scope.example = {
+                 text: 'guest',
+                 word: /^\s*\w*\s*$/
+               };
              }]);
          </script>
          <form name="myForm" ng-controller="ExampleController">
-           Single word: <input type="text" name="input" ng-model="text"
-                               ng-pattern="word" required ng-trim="false">
+           Single word: <input type="text" name="input" ng-model="example.text"
+                               ng-pattern="example.word" required ng-trim="false">
            <span class="error" ng-show="myForm.input.$error.required">
              Required!</span>
            <span class="error" ng-show="myForm.input.$error.pattern">
              Single word only!</span>
 
-           <tt>text = {{text}}</tt><br/>
+           <tt>text = {{example.text}}</tt><br/>
            <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
            <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
            <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -18703,9 +18724,9 @@ var inputType = {
           </form>
         </file>
         <file name="protractor.js" type="protractor">
-          var text = element(by.binding('text'));
+          var text = element(by.binding('example.text'));
           var valid = element(by.binding('myForm.input.$valid'));
-          var input = element(by.model('text'));
+          var input = element(by.model('example.text'));
 
           it('should initialize to model', function() {
             expect(text.getText()).toContain('guest');
@@ -18767,18 +18788,20 @@ var inputType = {
        <script>
           angular.module('dateInputExample', [])
             .controller('DateController', ['$scope', function($scope) {
-              $scope.value = new Date(2013, 9, 22);
+              $scope.example = {
+                value: new Date(2013, 9, 22)
+              };
             }]);
        </script>
        <form name="myForm" ng-controller="DateController as dateCtrl">
           Pick a date in 2013:
-          <input type="date" id="exampleInput" name="input" ng-model="value"
+          <input type="date" id="exampleInput" name="input" ng-model="example.value"
               placeholder="yyyy-MM-dd" min="2013-01-01" max="2013-12-31" required />
           <span class="error" ng-show="myForm.input.$error.required">
               Required!</span>
           <span class="error" ng-show="myForm.input.$error.date">
               Not a valid date!</span>
-           <tt>value = {{value | date: "yyyy-MM-dd"}}</tt><br/>
+           <tt>value = {{example.value | date: "yyyy-MM-dd"}}</tt><br/>
            <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
            <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
            <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -18786,9 +18809,9 @@ var inputType = {
        </form>
      </file>
      <file name="protractor.js" type="protractor">
-        var value = element(by.binding('value | date: "yyyy-MM-dd"'));
+        var value = element(by.binding('example.value | date: "yyyy-MM-dd"'));
         var valid = element(by.binding('myForm.input.$valid'));
-        var input = element(by.model('value'));
+        var input = element(by.model('example.value'));
 
         // currently protractor/webdriver does not support
         // sending keys to all known HTML5 input controls
@@ -18858,18 +18881,20 @@ var inputType = {
       <script>
         angular.module('dateExample', [])
           .controller('DateController', ['$scope', function($scope) {
-            $scope.value = new Date(2010, 11, 28, 14, 57);
+            $scope.example = {
+              value: new Date(2010, 11, 28, 14, 57)
+            };
           }]);
       </script>
       <form name="myForm" ng-controller="DateController as dateCtrl">
         Pick a date between in 2013:
-        <input type="datetime-local" id="exampleInput" name="input" ng-model="value"
+        <input type="datetime-local" id="exampleInput" name="input" ng-model="example.value"
             placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2013-12-31T00:00:00" required />
         <span class="error" ng-show="myForm.input.$error.required">
             Required!</span>
         <span class="error" ng-show="myForm.input.$error.datetimelocal">
             Not a valid date!</span>
-        <tt>value = {{value | date: "yyyy-MM-ddTHH:mm:ss"}}</tt><br/>
+        <tt>value = {{example.value | date: "yyyy-MM-ddTHH:mm:ss"}}</tt><br/>
         <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
         <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
         <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -18877,9 +18902,9 @@ var inputType = {
       </form>
     </file>
     <file name="protractor.js" type="protractor">
-      var value = element(by.binding('value | date: "yyyy-MM-ddTHH:mm:ss"'));
+      var value = element(by.binding('example.value | date: "yyyy-MM-ddTHH:mm:ss"'));
       var valid = element(by.binding('myForm.input.$valid'));
-      var input = element(by.model('value'));
+      var input = element(by.model('example.value'));
 
       // currently protractor/webdriver does not support
       // sending keys to all known HTML5 input controls
@@ -18950,18 +18975,20 @@ var inputType = {
      <script>
       angular.module('timeExample', [])
         .controller('DateController', ['$scope', function($scope) {
-          $scope.value = new Date(1970, 0, 1, 14, 57, 0);
+          $scope.example = {
+            value: new Date(1970, 0, 1, 14, 57, 0)
+          };
         }]);
      </script>
      <form name="myForm" ng-controller="DateController as dateCtrl">
         Pick a between 8am and 5pm:
-        <input type="time" id="exampleInput" name="input" ng-model="value"
+        <input type="time" id="exampleInput" name="input" ng-model="example.value"
             placeholder="HH:mm:ss" min="08:00:00" max="17:00:00" required />
         <span class="error" ng-show="myForm.input.$error.required">
             Required!</span>
         <span class="error" ng-show="myForm.input.$error.time">
             Not a valid date!</span>
-        <tt>value = {{value | date: "HH:mm:ss"}}</tt><br/>
+        <tt>value = {{example.value | date: "HH:mm:ss"}}</tt><br/>
         <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
         <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
         <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -18969,9 +18996,9 @@ var inputType = {
      </form>
    </file>
    <file name="protractor.js" type="protractor">
-      var value = element(by.binding('value | date: "HH:mm:ss"'));
+      var value = element(by.binding('example.value | date: "HH:mm:ss"'));
       var valid = element(by.binding('myForm.input.$valid'));
-      var input = element(by.model('value'));
+      var input = element(by.model('example.value'));
 
       // currently protractor/webdriver does not support
       // sending keys to all known HTML5 input controls
@@ -19041,18 +19068,20 @@ var inputType = {
       <script>
       angular.module('weekExample', [])
         .controller('DateController', ['$scope', function($scope) {
-          $scope.value = new Date(2013, 0, 3);
+          $scope.example = {
+            value: new Date(2013, 0, 3)
+          };
         }]);
       </script>
       <form name="myForm" ng-controller="DateController as dateCtrl">
         Pick a date between in 2013:
-        <input id="exampleInput" type="week" name="input" ng-model="value"
+        <input id="exampleInput" type="week" name="input" ng-model="example.value"
             placeholder="YYYY-W##" min="2012-W32" max="2013-W52" required />
         <span class="error" ng-show="myForm.input.$error.required">
             Required!</span>
         <span class="error" ng-show="myForm.input.$error.week">
             Not a valid date!</span>
-        <tt>value = {{value | date: "yyyy-Www"}}</tt><br/>
+        <tt>value = {{example.value | date: "yyyy-Www"}}</tt><br/>
         <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
         <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
         <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -19060,9 +19089,9 @@ var inputType = {
       </form>
     </file>
     <file name="protractor.js" type="protractor">
-      var value = element(by.binding('value | date: "yyyy-Www"'));
+      var value = element(by.binding('example.value | date: "yyyy-Www"'));
       var valid = element(by.binding('myForm.input.$valid'));
-      var input = element(by.model('value'));
+      var input = element(by.model('example.value'));
 
       // currently protractor/webdriver does not support
       // sending keys to all known HTML5 input controls
@@ -19132,18 +19161,20 @@ var inputType = {
      <script>
       angular.module('monthExample', [])
         .controller('DateController', ['$scope', function($scope) {
-          $scope.value = new Date(2013, 9, 1);
+          $scope.example = {
+            value: new Date(2013, 9, 1)
+          };
         }]);
      </script>
      <form name="myForm" ng-controller="DateController as dateCtrl">
-       Pick a month int 2013:
-       <input id="exampleInput" type="month" name="input" ng-model="value"
+       Pick a month in 2013:
+       <input id="exampleInput" type="month" name="input" ng-model="example.value"
           placeholder="yyyy-MM" min="2013-01" max="2013-12" required />
        <span class="error" ng-show="myForm.input.$error.required">
           Required!</span>
        <span class="error" ng-show="myForm.input.$error.month">
           Not a valid month!</span>
-       <tt>value = {{value | date: "yyyy-MM"}}</tt><br/>
+       <tt>value = {{example.value | date: "yyyy-MM"}}</tt><br/>
        <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
        <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
        <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -19151,9 +19182,9 @@ var inputType = {
      </form>
    </file>
    <file name="protractor.js" type="protractor">
-      var value = element(by.binding('value | date: "yyyy-MM"'));
+      var value = element(by.binding('example.value | date: "yyyy-MM"'));
       var valid = element(by.binding('myForm.input.$valid'));
-      var input = element(by.model('value'));
+      var input = element(by.model('example.value'));
 
       // currently protractor/webdriver does not support
       // sending keys to all known HTML5 input controls
@@ -19229,17 +19260,19 @@ var inputType = {
          <script>
            angular.module('numberExample', [])
              .controller('ExampleController', ['$scope', function($scope) {
-               $scope.value = 12;
+               $scope.example = {
+                 value: 12
+               };
              }]);
          </script>
          <form name="myForm" ng-controller="ExampleController">
-           Number: <input type="number" name="input" ng-model="value"
+           Number: <input type="number" name="input" ng-model="example.value"
                           min="0" max="99" required>
            <span class="error" ng-show="myForm.input.$error.required">
              Required!</span>
            <span class="error" ng-show="myForm.input.$error.number">
              Not valid number!</span>
-           <tt>value = {{value}}</tt><br/>
+           <tt>value = {{example.value}}</tt><br/>
            <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
            <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
            <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -19247,9 +19280,9 @@ var inputType = {
           </form>
         </file>
         <file name="protractor.js" type="protractor">
-          var value = element(by.binding('value'));
+          var value = element(by.binding('example.value'));
           var valid = element(by.binding('myForm.input.$valid'));
-          var input = element(by.model('value'));
+          var input = element(by.model('example.value'));
 
           it('should initialize to model', function() {
             expect(value.getText()).toContain('12');
@@ -19317,16 +19350,18 @@ var inputType = {
          <script>
            angular.module('urlExample', [])
              .controller('ExampleController', ['$scope', function($scope) {
-               $scope.text = 'http://google.com';
+               $scope.url = {
+                 text: 'http://google.com'
+               };
              }]);
          </script>
          <form name="myForm" ng-controller="ExampleController">
-           URL: <input type="url" name="input" ng-model="text" required>
+           URL: <input type="url" name="input" ng-model="url.text" required>
            <span class="error" ng-show="myForm.input.$error.required">
              Required!</span>
            <span class="error" ng-show="myForm.input.$error.url">
              Not valid url!</span>
-           <tt>text = {{text}}</tt><br/>
+           <tt>text = {{url.text}}</tt><br/>
            <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
            <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
            <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -19335,9 +19370,9 @@ var inputType = {
           </form>
         </file>
         <file name="protractor.js" type="protractor">
-          var text = element(by.binding('text'));
+          var text = element(by.binding('url.text'));
           var valid = element(by.binding('myForm.input.$valid'));
-          var input = element(by.model('text'));
+          var input = element(by.model('url.text'));
 
           it('should initialize to model', function() {
             expect(text.getText()).toContain('http://google.com');
@@ -19406,16 +19441,18 @@ var inputType = {
          <script>
            angular.module('emailExample', [])
              .controller('ExampleController', ['$scope', function($scope) {
-               $scope.text = 'me@example.com';
+               $scope.email = {
+                 text: 'me@example.com'
+               };
              }]);
          </script>
            <form name="myForm" ng-controller="ExampleController">
-             Email: <input type="email" name="input" ng-model="text" required>
+             Email: <input type="email" name="input" ng-model="email.text" required>
              <span class="error" ng-show="myForm.input.$error.required">
                Required!</span>
              <span class="error" ng-show="myForm.input.$error.email">
                Not valid email!</span>
-             <tt>text = {{text}}</tt><br/>
+             <tt>text = {{email.text}}</tt><br/>
              <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
              <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
              <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
@@ -19424,9 +19461,9 @@ var inputType = {
            </form>
          </file>
         <file name="protractor.js" type="protractor">
-          var text = element(by.binding('text'));
+          var text = element(by.binding('email.text'));
           var valid = element(by.binding('myForm.input.$valid'));
-          var input = element(by.model('text'));
+          var input = element(by.model('email.text'));
 
           it('should initialize to model', function() {
             expect(text.getText()).toContain('me@example.com');
@@ -19473,7 +19510,9 @@ var inputType = {
          <script>
            angular.module('radioExample', [])
              .controller('ExampleController', ['$scope', function($scope) {
-               $scope.color = 'blue';
+               $scope.color = {
+                 name: 'blue'
+               };
                $scope.specialValue = {
                  "id": "12345",
                  "value": "green"
@@ -19481,20 +19520,20 @@ var inputType = {
              }]);
          </script>
          <form name="myForm" ng-controller="ExampleController">
-           <input type="radio" ng-model="color" value="red">  Red <br/>
-           <input type="radio" ng-model="color" ng-value="specialValue"> Green <br/>
-           <input type="radio" ng-model="color" value="blue"> Blue <br/>
-           <tt>color = {{color | json}}</tt><br/>
+           <input type="radio" ng-model="color.name" value="red">  Red <br/>
+           <input type="radio" ng-model="color.name" ng-value="specialValue"> Green <br/>
+           <input type="radio" ng-model="color.name" value="blue"> Blue <br/>
+           <tt>color = {{color.name | json}}</tt><br/>
           </form>
           Note that `ng-value="specialValue"` sets radio item's value to be the value of `$scope.specialValue`.
         </file>
         <file name="protractor.js" type="protractor">
           it('should change state', function() {
-            var color = element(by.binding('color'));
+            var color = element(by.binding('color.name'));
 
             expect(color.getText()).toContain('blue');
 
-            element.all(by.model('color')).get(0).click();
+            element.all(by.model('color.name')).get(0).click();
 
             expect(color.getText()).toContain('red');
           });
@@ -19524,28 +19563,30 @@ var inputType = {
          <script>
            angular.module('checkboxExample', [])
              .controller('ExampleController', ['$scope', function($scope) {
-               $scope.value1 = true;
-               $scope.value2 = 'YES'
+               $scope.checkboxModel = {
+                value1 : true,
+                value2 : 'YES'
+              };
              }]);
          </script>
          <form name="myForm" ng-controller="ExampleController">
-           Value1: <input type="checkbox" ng-model="value1"> <br/>
-           Value2: <input type="checkbox" ng-model="value2"
+           Value1: <input type="checkbox" ng-model="checkboxModel.value1"> <br/>
+           Value2: <input type="checkbox" ng-model="checkboxModel.value2"
                           ng-true-value="'YES'" ng-false-value="'NO'"> <br/>
-           <tt>value1 = {{value1}}</tt><br/>
-           <tt>value2 = {{value2}}</tt><br/>
+           <tt>value1 = {{checkboxModel.value1}}</tt><br/>
+           <tt>value2 = {{checkboxModel.value2}}</tt><br/>
           </form>
         </file>
         <file name="protractor.js" type="protractor">
           it('should change state', function() {
-            var value1 = element(by.binding('value1'));
-            var value2 = element(by.binding('value2'));
+            var value1 = element(by.binding('checkboxModel.value1'));
+            var value2 = element(by.binding('checkboxModel.value2'));
 
             expect(value1.getText()).toContain('true');
             expect(value2.getText()).toContain('YES');
 
-            element(by.model('value1')).click();
-            element(by.model('value2')).click();
+            element(by.model('checkboxModel.value1')).click();
+            element(by.model('checkboxModel.value2')).click();
 
             expect(value1.getText()).toContain('false');
             expect(value2.getText()).toContain('NO');
@@ -19850,7 +19891,7 @@ function numberInputType(scope, element, attr, ctrl, $sniffer, $browser) {
     return value;
   });
 
-  if (attr.min || attr.ngMin) {
+  if (isDefined(attr.min) || attr.ngMin) {
     var minVal;
     ctrl.$validators.min = function(value) {
       return ctrl.$isEmpty(value) || isUndefined(minVal) || value >= minVal;
@@ -19866,7 +19907,7 @@ function numberInputType(scope, element, attr, ctrl, $sniffer, $browser) {
     });
   }
 
-  if (attr.max || attr.ngMax) {
+  if (isDefined(attr.max) || attr.ngMax) {
     var maxVal;
     ctrl.$validators.max = function(value) {
       return ctrl.$isEmpty(value) || isUndefined(maxVal) || value <= maxVal;
@@ -22254,7 +22295,7 @@ var ngIncludeFillContentDirective = ['$compile',
  * **Note**: If you have assignment in `ngInit` along with {@link ng.$filter `$filter`}, make
  * sure you have parenthesis for correct precedence:
  * <pre class="prettyprint">
- *   <div ng-init="test1 = (data | orderBy:'name')"></div>
+ * `<div ng-init="test1 = (data | orderBy:'name')"></div>`
  * </pre>
  * </div>
  *
@@ -22672,6 +22713,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
       ngModelGet = parsedNgModel,
       ngModelSet = parsedNgModelAssign,
       pendingDebounce = null,
+      parserValid,
       ctrl = this;
 
   this.$$setOptions = function(options) {
@@ -22944,16 +22986,12 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
     // the model although neither viewValue nor the model on the scope changed
     var modelValue = ctrl.$$rawModelValue;
 
-    // Check if the there's a parse error, so we don't unset it accidentially
-    var parserName = ctrl.$$parserName || 'parse';
-    var parserValid = ctrl.$error[parserName] ? false : undefined;
-
     var prevValid = ctrl.$valid;
     var prevModelValue = ctrl.$modelValue;
 
     var allowInvalid = ctrl.$options && ctrl.$options.allowInvalid;
 
-    ctrl.$$runValidators(parserValid, modelValue, viewValue, function(allValid) {
+    ctrl.$$runValidators(modelValue, viewValue, function(allValid) {
       // If there was no change in validity, don't update the model
       // This prevents changing an invalid modelValue to undefined
       if (!allowInvalid && prevValid !== allValid) {
@@ -22971,12 +23009,12 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
 
   };
 
-  this.$$runValidators = function(parseValid, modelValue, viewValue, doneCallback) {
+  this.$$runValidators = function(modelValue, viewValue, doneCallback) {
     currentValidationRunId++;
     var localValidationRunId = currentValidationRunId;
 
     // check parser error
-    if (!processParseErrors(parseValid)) {
+    if (!processParseErrors()) {
       validationDone(false);
       return;
     }
@@ -22986,21 +23024,22 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
     }
     processAsyncValidators();
 
-    function processParseErrors(parseValid) {
+    function processParseErrors() {
       var errorKey = ctrl.$$parserName || 'parse';
-      if (parseValid === undefined) {
+      if (parserValid === undefined) {
         setValidity(errorKey, null);
       } else {
-        setValidity(errorKey, parseValid);
-        if (!parseValid) {
+        if (!parserValid) {
           forEach(ctrl.$validators, function(v, name) {
             setValidity(name, null);
           });
           forEach(ctrl.$asyncValidators, function(v, name) {
             setValidity(name, null);
           });
-          return false;
         }
+        // Set the parse error last, to prevent unsetting it, should a $validators key == parserName
+        setValidity(errorKey, parserValid);
+        return parserValid;
       }
       return true;
     }
@@ -23095,7 +23134,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
   this.$$parseAndValidate = function() {
     var viewValue = ctrl.$$lastCommittedViewValue;
     var modelValue = viewValue;
-    var parserValid = isUndefined(modelValue) ? undefined : true;
+    parserValid = isUndefined(modelValue) ? undefined : true;
 
     if (parserValid) {
       for (var i = 0; i < ctrl.$parsers.length; i++) {
@@ -23121,7 +23160,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
 
     // Pass the $$lastCommittedViewValue here, because the cached viewValue might be out of date.
     // This can happen if e.g. $setViewValue is called from inside a parser
-    ctrl.$$runValidators(parserValid, modelValue, ctrl.$$lastCommittedViewValue, function(allValid) {
+    ctrl.$$runValidators(modelValue, ctrl.$$lastCommittedViewValue, function(allValid) {
       if (!allowInvalid) {
         // Note: Don't check ctrl.$valid here, as we could have
         // external validators (e.g. calculated on the server),
@@ -23242,6 +23281,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
     // TODO(perf): why not move this to the action fn?
     if (modelValue !== ctrl.$modelValue) {
       ctrl.$modelValue = ctrl.$$rawModelValue = modelValue;
+      parserValid = undefined;
 
       var formatters = ctrl.$formatters,
           idx = formatters.length;
@@ -23254,7 +23294,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
         ctrl.$viewValue = ctrl.$$lastCommittedViewValue = viewValue;
         ctrl.$render();
 
-        ctrl.$$runValidators(undefined, modelValue, viewValue, noop);
+        ctrl.$$runValidators(modelValue, viewValue, noop);
       }
     }
 
@@ -24070,6 +24110,55 @@ var ngPluralizeDirective = ['$locale', '$interpolate', function($locale, $interp
  * when keys are deleted and reinstated.
  *
  *
+ * # Tracking and Duplicates
+ *
+ * When the contents of the collection change, `ngRepeat` makes the corresponding changes to the DOM:
+ *
+ * * When an item is added, a new instance of the template is added to the DOM.
+ * * When an item is removed, its template instance is removed from the DOM.
+ * * When items are reordered, their respective templates are reordered in the DOM.
+ *
+ * By default, `ngRepeat` does not allow duplicate items in arrays. This is because when
+ * there are duplicates, it is not possible to maintain a one-to-one mapping between collection
+ * items and DOM elements.
+ *
+ * If you do need to repeat duplicate items, you can substitute the default tracking behavior
+ * with your own using the `track by` expression.
+ *
+ * For example, you may track items by the index of each item in the collection, using the
+ * special scope property `$index`:
+ * ```html
+ *    <div ng-repeat="n in [42, 42, 43, 43] track by $index">
+ *      {{n}}
+ *    </div>
+ * ```
+ *
+ * You may use arbitrary expressions in `track by`, including references to custom functions
+ * on the scope:
+ * ```html
+ *    <div ng-repeat="n in [42, 42, 43, 43] track by myTrackingFunction(n)">
+ *      {{n}}
+ *    </div>
+ * ```
+ *
+ * If you are working with objects that have an identifier property, you can track
+ * by the identifier instead of the whole object. Should you reload your data later, `ngRepeat`
+ * will not have to rebuild the DOM elements for items it has already rendered, even if the
+ * JavaScript objects in the collection have been substituted for new ones:
+ * ```html
+ *    <div ng-repeat="model in collection track by model.id">
+ *      {{model.name}}
+ *    </div>
+ * ```
+ *
+ * When no `track by` expression is provided, it is equivalent to tracking by the built-in
+ * `$id` function, which tracks items by their identity:
+ * ```html
+ *    <div ng-repeat="obj in collection track by $id(obj)">
+ *      {{obj.prop}}
+ *    </div>
+ * ```
+ *
  * # Special repeat start and end points
  * To repeat a series of elements instead of just one parent element, ngRepeat (as well as other ng directives) supports extending
  * the range of the repeater by defining explicit start and end points by using **ng-repeat-start** and **ng-repeat-end** respectively.
@@ -24137,12 +24226,12 @@ var ngPluralizeDirective = ['$locale', '$interpolate', function($locale, $interp
  *
  *     For example: `(name, age) in {'adam':10, 'amalie':12}`.
  *
- *   * `variable in expression track by tracking_expression` – You can also provide an optional tracking function
- *     which can be used to associate the objects in the collection with the DOM elements. If no tracking function
- *     is specified the ng-repeat associates elements by identity in the collection. It is an error to have
- *     more than one tracking function to resolve to the same key. (This would mean that two distinct objects are
- *     mapped to the same DOM element, which is not possible.)  Filters should be applied to the expression,
- *     before specifying a tracking expression.
+ *   * `variable in expression track by tracking_expression` – You can also provide an optional tracking expression
+ *     which can be used to associate the objects in the collection with the DOM elements. If no tracking expression
+ *     is specified, ng-repeat associates elements by identity. It is an error to have
+ *     more than one tracking expression value resolve to the same key. (This would mean that two distinct objects are
+ *     mapped to the same DOM element, which is not possible.)  If filters are used in the expression, they should be
+ *     applied before the tracking expression.
  *
  *     For example: `item in items` is equivalent to `item in items track by $id(item)`. This implies that the DOM elements
  *     will be associated by item identity in the array.
@@ -24526,10 +24615,11 @@ var NG_HIDE_IN_PROGRESS_CLASS = 'ng-hide-animate';
  *
  * By default, the `.ng-hide` class will style the element with `display: none!important`. If you wish to change
  * the hide behavior with ngShow/ngHide then this can be achieved by restating the styles for the `.ng-hide`
- * class in CSS:
+ * class CSS. Note that the selector that needs to be used is actually `.ng-hide:not(.ng-hide-animate)` to cope
+ * with extra animation classes that can be added.
  *
  * ```css
- * .ng-hide {
+ * .ng-hide:not(.ng-hide-animate) {
  *   /&#42; this is just another form of hiding an element &#42;/
  *   display: block!important;
  *   position: absolute;
@@ -26045,7 +26135,7 @@ var maxlengthDirective = function() {
         ctrl.$validate();
       });
       ctrl.$validators.maxlength = function(modelValue, viewValue) {
-        return (maxlength < 0) || ctrl.$isEmpty(modelValue) || (viewValue.length <= maxlength);
+        return (maxlength < 0) || ctrl.$isEmpty(viewValue) || (viewValue.length <= maxlength);
       };
     }
   };
