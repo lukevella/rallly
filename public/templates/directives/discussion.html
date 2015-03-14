@@ -9,7 +9,7 @@
                 <span class="name">{{comment.author.name}}</span>
                 <span class="time">{{comment.created | elapsed}}</span>
             </div>
-            <div class="content" ng-bind-html="comment.content | linky"></div>
+            <div class="content">{{comment.content}}</div>
         </div>
     </li>
 </ul>
