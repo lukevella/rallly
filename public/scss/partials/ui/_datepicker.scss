@@ -50,14 +50,14 @@
     }
     .dow {
         padding-bottom: 10px;
-        display:flex;
+        @include display(flex);
         width:100%;
         border-bottom: 2px solid $border-clr;
         margin-bottom: 10px;
         .day {
             font-size: em(14);
             width: (100% / 7);
-            display:flex-item;
+            @include display(flex-item);
             text-align:center;
             color: $pink-clr;
         }
