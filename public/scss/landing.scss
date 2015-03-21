@@ -13,11 +13,6 @@ $dark-clr : #4C4D4F;
 body {
     font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
 }
-#skrollr-body{
-    width: 100%;
-    height: 100%;
-    position:relative;
-}
 
 .intro {
     background: url('../images/landing/intro_bg.jpg') no-repeat;
@@ -145,6 +140,7 @@ body {
     text-align: center;
     min-width:800px;
     .desktop {
+        position:relative;
         display:inline-block;
         background: url('../images/landing/desktop.png') no-repeat;
         background-size: cover;

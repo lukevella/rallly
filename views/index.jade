@@ -10,13 +10,9 @@ block scripts
     script(type='text/javascript').
         var app = angular.module('landing', ['smoothScroll']);
         
-        window.onload = function(){
-            var s = skrollr.init({forceHeight: false})
-            
-        };
         
 block content
-    div#skrollr-body(ng-app='landing')
+    div(ng-app='landing')
         section#intro.intro: .intro-overlay: .container    
             header.header: .container
                 a.logo(href='/')
@@ -35,8 +31,8 @@ block content
                     span.free-label
                 a#view-demo.button(href='/example') View Demo
             .intro-shots
-                .desktop(data-200-top='transform: translateY(0px)', data-950='transform: translateY(300px)')
-                //- .mobile(data-250-top='top:50px', data-1200='top:400px')
+                .desktop
+                .mobile
         section#features.landing-section: .container
                 h3 Features
                 h4 Rallly makes collaborating with friends quick and easy
