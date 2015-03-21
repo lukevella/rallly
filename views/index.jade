@@ -15,11 +15,8 @@ block scripts
             
         };
         
-block body 
-    body(ng-app='landing')
-        
 block content
-    div#skrollr-body
+    div#skrollr-body(ng-app='landing')
         section#intro.intro: .intro-overlay: .container    
             header.header: .container
                 a.logo(href='/')
@@ -38,8 +35,8 @@ block content
                     span.free-label
                 a#view-demo.button(href='/example') View Demo
             .intro-shots
-                .desktop(data-200-top='top:0; position:relative', data-1200='top:600px')
-                .mobile(data-250-top='top:50px', data-1200='top:400px')
+                .desktop(data-200-top='transform: translateY(0px)', data-950='transform: translateY(300px)')
+                //- .mobile(data-250-top='top:50px', data-1200='top:400px')
         section#features.landing-section: .container
                 h3 Features
                 h4 Rallly makes collaborating with friends quick and easy

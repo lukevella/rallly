@@ -11,12 +11,9 @@ block scripts
     script(type='text/javascript', src='/vendor/angular-animate/angular-animate.min.js')
     script(type='text/javascript', src='/vendor/angular-sanitize/angular-sanitize.min.js')
     script(type='text/javascript', src='/build/app.js')
-    
-block body
-    body(ng-app='rallly')
-        
+            
 block content
-  .outer-container
+  .outer-container(ng-app='rallly')
     .mobile-navigation(ng-controller='NavigationCtrl')
         a.logo(href='/', target='_self')
             img(src='/images/logo.png', width='100')
