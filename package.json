@@ -14,7 +14,7 @@
     "jade": "^1.6.0",
     "mandrill-api": "^1.0.41",
     "mongoose": "^3.8.19",
-    "mongoose-shortid": "^0.4.2",
+    "mongoose-shortid": "lukevella/mongoose-shortid",
     "morgan": "^1.5.1",
     "numeral": "^1.5.3",
     "serve-favicon": "^2.1.7"
