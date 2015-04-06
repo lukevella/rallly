@@ -6,16 +6,13 @@
         <thead>
             <tr>
                 <th>
-
+                    Date
                 </th>
                 <th>
-                    Time 1
+                    Start Time
                 </th>
                 <th>
-                    Time 2
-                </th>
-                <th>
-                    Time 3
+                    End Time
                 </th>
             </tr>
         </thead>
@@ -24,18 +21,18 @@
                 <td>
                     <div class="daticon">
                         <div class="dow">
-                            {{d.date | date: 'EEE'}}
+                            {{d | date: 'EEE'}}
                         </div>
                         <div class="day">
-                            {{d.date | date: 'd'}}
+                            {{d | date: 'd'}}
                         </div>
                         <div class="month">
-                            {{d.date | date : 'MMM'}}
+                            {{d | date: 'MMM'}}
                         </div>
                         <span class="delete" ng-click="unsetDate(d.date)"></span>
                     </div>
                 </td>
-                <td ng-repeat="time in [1,2,3] track by $index">
+                <td ng-repeat="time in [1,2] track by $index">
                     <input type="text" time-picker ng-model-options="{ updateOn: 'blur' }" ng-model="d.times[$index]" class="time-picker-input" />
                 </td>
             </tr>
