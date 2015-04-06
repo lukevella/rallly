@@ -59,8 +59,12 @@ angular.module('rallly')
                         // Not selected
                         var index = 0, inserted = false;
                         do {
-                            if (scope.model[index] == undefined || Date.compare(Date.parse(scope.model[index]), dayObj.date) > 0) {
-                                scope.model.splice(index, 0, dayObj.date);
+                            if (scope.model[index] == undefined || Date.compare(Date.parse(scope.model[index].raw_date), dayObj.date) > 0) {
+                                var dateObject = {
+                                    raw_date: dayObj.date,
+                                    possible_times: []
+                                };
+                                scope.model.splice(index, 0, dateObject);
                                 inserted = true;
                             }
                             index++;
@@ -70,7 +74,7 @@ angular.module('rallly')
                 scope.isActive = function (date, returnIndex) {
                     scope.model = scope.model || [];
                     for (var i = 0; i < scope.model.length; i++) {
-                        var modelDate = Date.parse(scope.model[i]);
+                        var modelDate = Date.parse(scope.model[i].raw_date);
                         if (modelDate.getDate() == date.getDate() &&
                             modelDate.getMonth() == date.getMonth() &&
                             modelDate.getYear() == date.getYear()) {
@@ -87,7 +91,7 @@ angular.module('rallly')
                 };
 
                 scope.control.removeDate = function (date) {
-                    if ((index = scope.isActive(Date.parse(date), true)) != -1) {
+                    if ((index = scope.isActive(Date.parse(date.raw_date), true)) != -1) {
                         scope.model.splice(index, 1)
                     }
                 }
