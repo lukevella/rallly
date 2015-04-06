@@ -121,7 +121,7 @@ angular.module('rallly')
             }
         }
     })
-    .directive('timeForm', function (DatePickerService) {
+    .directive('timeForm', function () {
         return {
             scope: {
                 event: '=',
@@ -130,16 +130,19 @@ angular.module('rallly')
             templateUrl: 'templates/form/timeForm.html',
             link: function (scope, el, attrs) {
                 var init = false;
-                var dateService;
                 var deregister = scope.$watch('event.dates', function (value) {
                     if (value && !init) {
                         deregister();
                     }
                     init = true;
-                    dateService = new DatePickerService(scope.event.dates);
+
                     scope.unsetDate = function (date) {
-                        dateService.removeDate(date);
-                    }
+                        console.log('unsetting date...');
+                    };
+
+                    scope.addTime = function(date) {
+                        scope.event.dates[scope.event.dates.indexOf(date)].possible_times.push({});
+                    };
                 });
             }
         }
