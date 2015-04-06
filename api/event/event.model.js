@@ -3,6 +3,20 @@ var Schema = mongoose.Schema;
 var debug = require('debug')('rallly');
 var ShortId = require('mongoose-shortid');
 
+var DateSchema = new Schema({
+    raw_date: {
+        type: Date
+    },
+    possible_times: [{
+        start_time: {
+            type: Date
+        },
+        end_time: {
+            type: Date
+        }
+    }]
+});
+
 var EventSchema = new Schema({
     _id: ShortId,
     description: String,
@@ -24,7 +38,7 @@ var EventSchema = new Schema({
     },
     updated: Date,
     title: String,
-    dates: [Date],
+    dates: [DateSchema],
     emails: [{
         email: String
     }],
