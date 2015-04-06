@@ -1,6 +1,6 @@
 angular.module('rallly')
-.controller('AccountCtrl', function($scope, ConfirmModal){
-    $scope.showNotice = function(){
-        
-    }
-})
+    .controller('AccountCtrl', function ($scope, ConfirmModal) {
+        $scope.showNotice = function () {
+
+        }
+    });
