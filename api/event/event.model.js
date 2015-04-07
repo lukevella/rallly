@@ -13,7 +13,10 @@ var DateSchema = new Schema({
         },
         end_time: {
             type: Date
-        }
+        },
+        voted_by: [{
+            id: Schema.Types.ObjectId // id of participants
+        }]
     }]
 });
 
