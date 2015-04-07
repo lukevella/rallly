@@ -20,12 +20,11 @@
         <div class="event-description" ng-if="event.description" ng-bind-html="event.description | linky"></div>
         <div class="event-location" ng-if="event.location">
             Location:
-            <a  href="http://maps.google.com?q={{event.location}}"  target="_blank">{{event.location}}</a>
+            <a href="http://maps.google.com?q={{event.location}}" target="_blank">{{event.location}}</a>
         </div>
 
         <div class="poll-wrapper">
-            <div poll event="event" class="poll">
-            </div>
+            <div poll event="event" class="poll"></div>
         </div>
     </div>
 
