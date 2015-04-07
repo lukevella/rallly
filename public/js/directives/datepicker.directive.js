@@ -62,7 +62,10 @@ angular.module('rallly')
                             if (scope.model[index] == undefined || Date.compare(Date.parse(scope.model[index].raw_date), dayObj.date) > 0) {
                                 var dateObject = {
                                     raw_date: dayObj.date,
-                                    possible_times: []
+                                    possible_times: [{
+                                        start_time: null,
+                                        end_time: null
+                                    }]
                                 };
                                 scope.model.splice(index, 0, dateObject);
                                 inserted = true;
