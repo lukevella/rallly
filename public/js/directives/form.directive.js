@@ -61,6 +61,61 @@ angular.module('rallly')
             templateUrl: 'templates/form/dateForm.html'
         }
     })
+    .directive('timeForm', function () {
+        return {
+            scope: {
+                event: '=',
+                form: '='
+            },
+            templateUrl: 'templates/form/timeForm.html',
+            link: function (scope, el, attrs) {
+                var init = false;
+                var deregister = scope.$watch('event.dates', function (value) {
+                    if (value && !init) {
+                        deregister();
+                    }
+                    init = true;
+
+                    scope.unsetDate = function (date) {
+                        console.log('unsetting date...');
+                    };
+
+                    scope.addTime = function(date) {
+                        scope.event.dates[scope.event.dates.indexOf(date)].possible_times.push({});
+                    };
+                });
+            }
+        }
+    })
+    .directive('timePicker', function ($timeout) {
+        return {
+            scope: {
+                model: '=ngModel'
+            },
+            require: 'ngModel',
+            link: function (scope, el, attrs, ngModel) {
+                ngModel.$viewChangeListeners.push(function () {
+                    scope.model = ngModel.$modelValue;
+                });
+
+                ngModel.$parsers.push(function (value) {
+                    if (!value) return;
+                    return Date.parse(value);
+                });
+
+                ngModel.$validators.time = function (modelValue, viewValue) {
+                    if (ngModel.$isEmpty(modelValue)) return true;
+                    var time = Date.parse(modelValue);
+                    if (time) {
+                        ngModel.$setViewValue(time.toString("hh:mm tt"));
+                        ngModel.$render();
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+    })
     .directive('participantsForm', function (FormHelper) {
         return {
             scope: {
@@ -118,61 +173,6 @@ angular.module('rallly')
                     scope.model = !scope.model;
                     ngModel.$setViewValue(scope.model, e);
                 });
-            }
-        }
-    })
-    .directive('timeForm', function () {
-        return {
-            scope: {
-                event: '=',
-                form: '='
-            },
-            templateUrl: 'templates/form/timeForm.html',
-            link: function (scope, el, attrs) {
-                var init = false;
-                var deregister = scope.$watch('event.dates', function (value) {
-                    if (value && !init) {
-                        deregister();
-                    }
-                    init = true;
-
-                    scope.unsetDate = function (date) {
-                        console.log('unsetting date...');
-                    };
-
-                    scope.addTime = function(date) {
-                        scope.event.dates[scope.event.dates.indexOf(date)].possible_times.push({});
-                    };
-                });
-            }
-        }
-    })
-    .directive('timePicker', function ($timeout) {
-        return {
-            scope: {
-                model: '=ngModel'
-            },
-            require: 'ngModel',
-            link: function (scope, el, attrs, ngModel) {
-                ngModel.$viewChangeListeners.push(function () {
-                    scope.model = ngModel.$modelValue;
-                });
-
-                ngModel.$parsers.push(function (value) {
-                    if (!value) return;
-                    return Date.parse(value);
-                });
-
-                ngModel.$validators.time = function (modelValue, viewValue) {
-                    if (ngModel.$isEmpty(modelValue)) return true;
-                    var time = Date.parse(modelValue);
-                    if (time) {
-                        ngModel.$setViewValue(time.toString("hh:mm tt"));
-                        ngModel.$render();
-                        return true;
-                    }
-                    return false;
-                }
             }
         }
     });
