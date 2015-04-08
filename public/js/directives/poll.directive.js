@@ -10,6 +10,7 @@ angular.module('rallly')
             controller: function ($scope, $rootScope) {
                 $scope.defaults = {};
                 $scope.participant = {};
+                $scope.participantVotes = {};
                 $rootScope.$on('add:comment', function (e, event, comment) {
                     // Don't repopulate field if user has already voted
                     if (!$scope.didVote) {
@@ -73,14 +74,28 @@ angular.module('rallly')
                     if ($scope.formnew.$valid) {
                         var participant = new Participant($scope.participant);
                         participant.$save({id: $scope.event._id}, function (event) {
+                            var currentParticipantIds = _.pluck($scope.event.participants, '_id');
+                            var newParticipantIds = _.pluck(event.participants, '_id');
+                            var newParticipant = _.difference(newParticipantIds, currentParticipantIds)[0];
+
                             $scope.event = event;
                             $scope.didVote = true;
                             Communicator.trigger('add:participant', event, $scope.participant);
+
+                            _.forEach($scope.event.dates, function(date) {
+                                if ($scope.participantVotes[date._id]) {
+                                    date.possible_times[0].voted_by.push(newParticipant);
+                                }
+                            });
+
+                            $scope.pollCtrl.update();
                             $scope.participant = {};
+                            $scope.participantVotes = {};
                         });
+
                         $scope.formnew.$setPristine();
                     }
-                }
+                };
             },
             link: function (scope, el, attrs, discussionCtrl) {
                 var datesCount = [];
