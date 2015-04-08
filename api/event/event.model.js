@@ -15,7 +15,7 @@ var DateSchema = new Schema({
             type: Date
         },
         voted_by: [{
-            id: Schema.Types.ObjectId // id of participants
+            type: Schema.Types.ObjectId // id of participants
         }]
     }]
 });

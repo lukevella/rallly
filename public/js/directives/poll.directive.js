@@ -1,5 +1,5 @@
 angular.module('rallly')
-    .directive('poll', function ($timeout, Participant, ConfirmModal, Communicator) {
+    .directive('poll', function ($timeout, Participant, Event, ConfirmModal, Communicator) {
         return {
             restrict: 'A',
             templateUrl: 'templates/directives/poll.html',
@@ -16,6 +16,18 @@ angular.module('rallly')
                         $scope.participant.name = comment.author.name;
                     }
                 });
+                this.toggleVote = function (date, participant) {
+                    if (!_.contains(date.possible_times[0].voted_by, participant._id)) {
+                        date.possible_times[0].voted_by.push(participant._id); // TODO: the [0] hack will be removed when the UI supports time
+                    } else {
+                        _.remove(date.possible_times[0].voted_by, function(voter) {
+                            return voter.toString() === participant._id.toString();
+                        });
+                    }
+                };
+                this.hasVote = function(date, participant) {
+                    return _.contains(date.possible_times[0].voted_by, participant._id);
+                };
                 this.delete = function (participant) {
                     var modal = new ConfirmModal({
                         title: 'Delete ' + participant.name + '?',
@@ -31,19 +43,19 @@ angular.module('rallly')
                         }
                     });
                 };
-                this.update = function (participant) {
-                    Participant.update({
-                        id: $scope.event._id,
-                        pid: participant._id
-                    }, participant);
+                this.update = function () {
+                    Event.update({
+                        id: $scope.event._id
+                    }, $scope.event);
                 };
                 this.edit = function (participant) {
-                    $scope.defaults[$scope.event.participants.indexOf(participant)] = angular.copy(participant);
+                    $scope.defaults[$scope.event.participants.indexOf(participant)] = angular.copy(participant); //TODO: copy over date instead?
                 };
                 this.cancel = function (index) {
-                    $scope.event.participants[index] = $scope.defaults[index];
+                    $scope.event.participants[index] = $scope.defaults[index]; //TODO: copy over default date instead
                 };
                 this.save = function () {
+                    console.log('saving');
                     if ($scope.formnew.$valid) {
                         var participant = new Participant($scope.participant);
                         participant.$save({id: $scope.event._id}, function (event) {
