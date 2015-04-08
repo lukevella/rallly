@@ -98,8 +98,6 @@ angular.module('rallly')
                 };
             },
             link: function (scope, el, attrs, discussionCtrl) {
-                var datesCount = [];
-
                 scope.event.$promise.then(function (event) {
                     var examplesNames = ['John Example', 'Jane Specimen', 'Mark Instance', 'Mary Case'];
                     var examples = [];
@@ -115,20 +113,18 @@ angular.module('rallly')
                     scope.examples = examples;
                 });
 
-                scope.isTopDate = function (index) {
-                    var count = datesCount[index];
-                    for (var i = 0; i < datesCount.length; i++) {
-                        if (datesCount[i] > count) return false;
+                scope.isTopDate = function (date) {
+                    var highest = scope.event.dates[0].possible_times[0].voted_by.length;
+                    for (var i=1; i<scope.event.dates.length; ++i) {
+                        if (scope.event.dates[i].possible_times[0].voted_by.length > highest) {
+                            highest = scope.event.dates[i].possible_times[0].voted_by.length;
+                        }
                     }
-                    return true;
+                    return date.possible_times[0].voted_by.length === highest;
                 };
 
-                scope.selectedDate = function (index) {
-                    datesCount[index] = 0;
-                    for (var i = 0; i < scope.event.participants.length; i++) {
-                        if (scope.event.participants[i].votes[index]) datesCount[index]++;
-                    }
-                    return datesCount[index];
+                scope.numberVotes = function(date) {
+                    return date.possible_times[0].voted_by.length;
                 }
             }
         }

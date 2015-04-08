@@ -13,7 +13,7 @@
             <div class="month">
                 {{d.raw_date | date : 'MMM'}}
             </div>
-            <span class="count" ng-show="selectedDate($index)" ng-class={top:isTopDate($index)}>{{selectedDate($index)}}</span>
+            <span class="count" ng-show="numberVotes(d)" ng-class={top:isTopDate(d)}>{{numberVotes(d)}}</span>
         </div>
     </div>
     <div class="header actions-header">
