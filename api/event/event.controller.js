@@ -2,6 +2,7 @@ var express = require('express');
 var Event = require('./event.model');
 var debug = require('debug')('rallly');
 var communicator = require('../../communicator');
+var _ = require('lodash');
 
 var getRandomString = function () {
     return require('crypto').randomBytes(16).toString('hex');
@@ -181,8 +182,13 @@ exports.deleteParticipant = function (req, res, next) {
         .findById(eventId)
         .exec(function (err, event) {
             if (err) return handleError(res, err);
+
             event.updated = Date.now();
             event.participants.pull({'_id': participantId});
+            _.forEach(event.dates, function(date) {
+                date.possible_times[0].voted_by.pull(participantId);
+            });
+
             event.save(function (err, event) {
                 req.event = event;
                 next();
