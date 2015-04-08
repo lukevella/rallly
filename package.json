@@ -12,6 +12,7 @@
     "debug": "~2.0.0",
     "express": "~4.9.0",
     "jade": "^1.6.0",
+    "lodash": "^3.6.0",
     "mandrill-api": "^1.0.41",
     "mongoose": "^3.8.19",
     "mongoose-shortid": "lukevella/mongoose-shortid",
