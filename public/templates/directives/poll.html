@@ -13,7 +13,7 @@
             <div class="month">
                 {{d.raw_date | date : 'MMM'}}
             </div>
-            <span class="count" ng-show="selectedDate($index)" ng-class={top:isTopDate($index)}>{{selectedDate($index)}}</span>
+            <span class="count" ng-show="numberVotes(d)" ng-class={top:isTopDate(d)}>{{numberVotes(d)}}</span>
         </div>
     </div>
     <div class="header actions-header">
@@ -22,7 +22,7 @@
 </div>
 <div class="poll-body">
     <div class="poll-entry" ng-repeat="participant in event.participants">
-        <form novalidate ng-submit="editMode = false; pollCtrl.update(participant);">
+        <form novalidate>
             <div class="cell name-cell">
                 <span class="avatar style-{{($index % 10) + 1 }}">
                     <img src="/images/user.png" width="11" />
@@ -30,17 +30,17 @@
                 <input required autocomplete="off" type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
                 <span ng-hide="editMode" class="name editable" ng-click="editMode = true && !event.isClosed; pollCtrl.edit(participant)">{{participant.name}}</span>
             </div>
-            <div class="cell vote-cell" ng-repeat="date in event.dates">
-                <img src="/images/tick@2x.png"  width="16" ng-hide="editMode" ng-if="participant.votes[$index]" />
-                <img src="/images/nope@2x.png" width="8" ng-hide="editMode" ng-if="!participant.votes[$index]" />
-                <input ng-model="participant.votes[$index]" ng-show="editMode" ng-false-value="false" type="checkbox" />
-                <div class="overlay" ng-show="editMode" ng-click="participant.votes[$index] = !participant.votes[$index]"></div>
+            <div class="cell vote-cell" ng-repeat="date in event.dates track by date._id">
+                <img src="/images/tick@2x.png"  width="16" ng-hide="editMode" ng-if="pollCtrl.hasVote(date, participant)" />
+                <img src="/images/nope@2x.png" width="8" ng-hide="editMode" ng-if="!pollCtrl.hasVote(date, participant)" />
+                <input ng-checked="pollCtrl.hasVote(date, participant)" ng-show="editMode" type="checkbox" />
+                <div class="overlay" ng-show="editMode" ng-click="pollCtrl.toggleVote(date, participant)"></div>
             </div>
             <div class="cell action-cell" ng-hide="event.isClosed">
                 <button type="button" ng-hide="editMode" ng-click="editMode = true; pollCtrl.edit(participant)" class="btn hover">Edit</button>
                 <button type="button" ng-hide="editMode" ng-click="pollCtrl.delete(participant)" class="btn danger hover">Delete</button>
-                <button type="submit" ng-show="editMode" class="btn">Save</button>
-                <button type="button" ng-show="editMode" ng-click="editMode = false; pollCtrl.cancel($index)" class="btn">Cancel</button>
+                <button type="submit" ng-show="editMode" ng-click="editMode = false; pollCtrl.update()" class="btn">Save</button>
+                <button type="button" ng-show="editMode" ng-click="editMode = false; pollCtrl.cancel(participant)" class="btn">Cancel</button>
             </div>
         </form>
     </div>
@@ -75,8 +75,8 @@
                 <input autocomplete="off" name="username" type="text" class="form-control" placeholder="Your name..." ng-model="participant.name" required value="participant.name"/>
             </div>
             <div class="cell vote-cell" ng-repeat="date in event.dates">
-                <input ng-model="participant.votes[$index]" ng-false-value="false" type="checkbox" />
-                <div class="overlay" ng-click="participant.votes[$index] = !participant.votes[$index]"></div>
+                <input ng-model="participantVotes[date._id]" ng-false-value="false" type="checkbox" />
+                <div class="overlay" ng-click="participantVotes[date._id] = !participantVotes[date._id]"></div>
             </div>
             <div class="cell action-cell">
                 <button type="submit" ng-class="{ 'animated shake' : formnew.$submitted && formnew.$invalid  }" class="btn">Save</button>

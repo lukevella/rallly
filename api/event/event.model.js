@@ -13,7 +13,10 @@ var DateSchema = new Schema({
         },
         end_time: {
             type: Date
-        }
+        },
+        voted_by: [{
+            type: Schema.Types.ObjectId // id of participants
+        }]
     }]
 });
 
@@ -56,8 +59,7 @@ var EventSchema = new Schema({
     location: String,
     participants: [{
         id: Schema.Types.ObjectId,
-        name: String,
-        votes: [Boolean]
+        name: String
     }],
     isClosed: {
         type: Boolean,
