@@ -40,7 +40,7 @@
                 <button type="button" ng-hide="editMode" ng-click="editMode = true; pollCtrl.edit(participant)" class="btn hover">Edit</button>
                 <button type="button" ng-hide="editMode" ng-click="pollCtrl.delete(participant)" class="btn danger hover">Delete</button>
                 <button type="submit" ng-show="editMode" ng-click="editMode = false; pollCtrl.update()" class="btn">Save</button>
-                <button type="button" ng-show="editMode" ng-click="editMode = false; pollCtrl.cancel($index)" class="btn">Cancel</button>
+                <button type="button" ng-show="editMode" ng-click="editMode = false; pollCtrl.cancel(participant)" class="btn">Cancel</button>
             </div>
         </form>
     </div>

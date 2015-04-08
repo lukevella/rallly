@@ -8,7 +8,7 @@ angular.module('rallly')
             },
             controllerAs: 'pollCtrl',
             controller: function ($scope, $rootScope) {
-                $scope.defaults = [];
+                $scope.defaults = {};
                 $scope.participant = {};
                 $rootScope.$on('add:comment', function (e, event, comment) {
                     // Don't repopulate field if user has already voted
@@ -20,12 +20,12 @@ angular.module('rallly')
                     if (!_.contains(date.possible_times[0].voted_by, participant._id)) {
                         date.possible_times[0].voted_by.push(participant._id); // TODO: the [0] hack will be removed when the UI supports time
                     } else {
-                        _.remove(date.possible_times[0].voted_by, function(voter) {
+                        _.remove(date.possible_times[0].voted_by, function (voter) {
                             return voter.toString() === participant._id.toString();
                         });
                     }
                 };
-                this.hasVote = function(date, participant) {
+                this.hasVote = function (date, participant) {
                     return _.contains(date.possible_times[0].voted_by, participant._id);
                 };
                 this.delete = function (participant) {
@@ -49,13 +49,27 @@ angular.module('rallly')
                     }, $scope.event);
                 };
                 this.edit = function (participant) {
-                    $scope.defaults[$scope.event.participants.indexOf(participant)] = angular.copy(participant); //TODO: copy over date instead?
+                    $scope.defaults[participant._id] = _.filter($scope.event.dates, function (date) {
+                        return _.contains(date.possible_times[0].voted_by, participant._id.toString());
+                    });
+
                 };
-                this.cancel = function (index) {
-                    $scope.event.participants[index] = $scope.defaults[index]; //TODO: copy over default date instead
+                this.cancel = function (participant) {
+                    _.forEach($scope.event.dates, function (date) {
+                        var votedForDateDefault = _.find($scope.defaults[participant._id], function (votedDate) {
+                            return (date.possible_times[0]._id === votedDate.possible_times[0]._id);
+                        });
+
+                        if (votedForDateDefault && !_.contains(date.possible_times[0].voted_by, participant._id.toString())) {
+                            date.possible_times[0].voted_by.push(participant._id);
+                        } else if (!votedForDateDefault && _.contains(date.possible_times[0].voted_by, participant._id.toString())) {
+                            _.remove(date.possible_times[0].voted_by, function (voter) {
+                                return voter.toString() === participant._id.toString();
+                            });
+                        }
+                    });
                 };
                 this.save = function () {
-                    console.log('saving');
                     if ($scope.formnew.$valid) {
                         var participant = new Participant($scope.participant);
                         participant.$save({id: $scope.event._id}, function (event) {
