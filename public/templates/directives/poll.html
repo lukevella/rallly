@@ -48,12 +48,12 @@
             <div class="time-group" ng-repeat="date in event.dates track by date._id">
                 <div class="cell vote-cell" ng-repeat="time in date.possible_times">
                     <img src="/images/tick@2x.png" width="16" ng-hide="editMode"
-                         ng-if="pollCtrl.hasVote(date, participant)"/>
+                         ng-if="pollCtrl.hasVote(time, participant)"/>
                     <img src="/images/nope@2x.png" width="8" ng-hide="editMode"
-                         ng-if="!pollCtrl.hasVote(date, participant)"/>
-                    <input ng-checked="pollCtrl.hasVote(date, participant)" ng-show="editMode" type="checkbox"/>
+                         ng-if="!pollCtrl.hasVote(time, participant)"/>
+                    <input ng-checked="pollCtrl.hasVote(time, participant)" ng-show="editMode" type="checkbox"/>
 
-                    <div class="overlay" ng-show="editMode" ng-click="pollCtrl.toggleVote(date, participant)"></div>
+                    <div class="overlay" ng-show="editMode" ng-click="pollCtrl.toggleVote(time, participant)"></div>
                 </div>
             </div>
             <div class="cell action-cell" ng-hide="event.isClosed">

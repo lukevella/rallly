@@ -17,17 +17,17 @@ angular.module('rallly')
                         $scope.participant.name = comment.author.name;
                     }
                 });
-                this.toggleVote = function (date, participant) {
-                    if (!_.contains(date.possible_times[0].voted_by, participant._id)) {
-                        date.possible_times[0].voted_by.push(participant._id); // TODO: the [0] hack will be removed when the UI supports time
+                this.toggleVote = function (time, participant) {
+                    if (!_.contains(time.voted_by, participant._id)) {
+                        time.voted_by.push(participant._id);
                     } else {
-                        _.remove(date.possible_times[0].voted_by, function (voter) {
+                        _.remove(time.voted_by, function (voter) {
                             return voter.toString() === participant._id.toString();
                         });
                     }
                 };
-                this.hasVote = function (date, participant) {
-                    return _.contains(date.possible_times[0].voted_by, participant._id);
+                this.hasVote = function (time, participant) {
+                    return _.contains(time.voted_by, participant._id);
                 };
                 this.delete = function (participant) {
                     var modal = new ConfirmModal({
