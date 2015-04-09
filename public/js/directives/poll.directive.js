@@ -82,7 +82,7 @@ angular.module('rallly')
                             $scope.didVote = true;
                             Communicator.trigger('add:participant', event, $scope.participant);
 
-                            _.forEach($scope.event.dates, function(date) {
+                            _.forEach($scope.event.dates, function (date) {
                                 if ($scope.participantVotes[date._id]) {
                                     date.possible_times[0].voted_by.push(newParticipant);
                                 }
@@ -115,7 +115,7 @@ angular.module('rallly')
 
                 scope.isTopDate = function (date) {
                     var highest = scope.event.dates[0].possible_times[0].voted_by.length;
-                    for (var i=1; i<scope.event.dates.length; ++i) {
+                    for (var i = 1; i < scope.event.dates.length; ++i) {
                         if (scope.event.dates[i].possible_times[0].voted_by.length > highest) {
                             highest = scope.event.dates[i].possible_times[0].voted_by.length;
                         }
@@ -123,7 +123,7 @@ angular.module('rallly')
                     return date.possible_times[0].voted_by.length === highest;
                 };
 
-                scope.numberVotes = function(date) {
+                scope.numberVotes = function (date) {
                     return date.possible_times[0].voted_by.length;
                 }
             }
