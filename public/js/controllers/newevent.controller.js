@@ -14,6 +14,14 @@ angular.module('rallly')
                 var newEvent = new Event($scope.event);
                 newEvent.$save()
                     .then(function (event) {
+                        _.forEach(event.dates, function(date) {
+                            date.raw_date = new Date(date.raw_date);
+                            _.forEach(date.possible_times, function(time) {
+                                time.start_time = new Date(time.start_time);
+                                time.end_time = new Date(time.end_time);
+                            });
+                        });
+
                         $scope.event = event;
                         $scope.eventUrl = $state.href('event', {
                             id: $scope.event._id
