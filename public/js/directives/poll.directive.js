@@ -113,18 +113,20 @@ angular.module('rallly')
                     scope.examples = examples;
                 });
 
-                scope.isTopDate = function (date) {
+                scope.isTopDate = function (time) {
                     var highest = scope.event.dates[0].possible_times[0].voted_by.length;
-                    for (var i = 1; i < scope.event.dates.length; ++i) {
-                        if (scope.event.dates[i].possible_times[0].voted_by.length > highest) {
-                            highest = scope.event.dates[i].possible_times[0].voted_by.length;
+                    for (var i = 0; i < scope.event.dates.length; ++i) {
+                        for (var j=1; j<scope.event.dates[i].possible_times.length; ++j) {
+                            if (scope.event.dates[i].possible_times[j].voted_by.length > highest) {
+                                highest = scope.event.dates[i].possible_times[j].voted_by.length;
+                            }
                         }
                     }
-                    return date.possible_times[0].voted_by.length === highest;
+                    return time.voted_by.length === highest;
                 };
 
-                scope.numberVotes = function (date) {
-                    return date.possible_times[0].voted_by.length;
+                scope.numberVotes = function (time) {
+                    return time.voted_by.length;
                 }
             }
         }

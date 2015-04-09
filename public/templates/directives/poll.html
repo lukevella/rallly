@@ -22,8 +22,8 @@
                     <div class="time-cell" ng-repeat="time in d.possible_times">
                         {{time.start_time | date: 'hh:mma'}}
                         {{time.end_time | date: 'hh:mma'}}
-                        <span class="count" ng-show="numberVotes(d)"
-                        ng-class={top:isTopDate(d)}>{{numberVotes(d)}}</span>
+                        <span class="count" ng-show="numberVotes(time)"
+                        ng-class={top:isTopDate(time)}>{{numberVotes(time)}}</span>
                     </div>
                 </div>
             </div>
