@@ -50,24 +50,22 @@ angular.module('rallly')
                     }, $scope.event);
                 };
                 this.edit = function (participant) {
-                    $scope.defaults[participant._id] = _.filter($scope.event.dates, function (date) {
-                        return _.contains(date.possible_times[0].voted_by, participant._id.toString());
+                    _.forEach($scope.event.dates, function (date) {
+                        _.forEach(date.possible_times, function (time) {
+                            $scope.defaults[participant._id] = $scope.defaults[participant._id] || {};
+                            $scope.defaults[participant._id][date._id] = $scope.defaults[participant._id][date._id] || {};
+                            $scope.defaults[participant._id][date._id][time._id] = $scope.defaults[participant._id][date._id][time._id] || {};
+                            $scope.defaults[participant._id][date._id][time._id] = _.contains(time.voted_by, participant._id.toString());
+                        });
                     });
-
                 };
                 this.cancel = function (participant) {
                     _.forEach($scope.event.dates, function (date) {
-                        var votedForDateDefault = _.find($scope.defaults[participant._id], function (votedDate) {
-                            return (date.possible_times[0]._id === votedDate.possible_times[0]._id);
+                        _.forEach(date.possible_times, function (time) {
+                            if ($scope.defaults[participant._id][date._id][time._id] !== _.contains(time.voted_by, participant._id.toString())) {
+                                $scope.pollCtrl.toggleVote(time, participant);
+                            }
                         });
-
-                        if (votedForDateDefault && !_.contains(date.possible_times[0].voted_by, participant._id.toString())) {
-                            date.possible_times[0].voted_by.push(participant._id);
-                        } else if (!votedForDateDefault && _.contains(date.possible_times[0].voted_by, participant._id.toString())) {
-                            _.remove(date.possible_times[0].voted_by, function (voter) {
-                                return voter.toString() === participant._id.toString();
-                            });
-                        }
                     });
                 };
                 this.save = function () {
@@ -116,7 +114,7 @@ angular.module('rallly')
                 scope.isTopDate = function (time) {
                     var highest = scope.event.dates[0].possible_times[0].voted_by.length;
                     for (var i = 0; i < scope.event.dates.length; ++i) {
-                        for (var j=1; j<scope.event.dates[i].possible_times.length; ++j) {
+                        for (var j = 1; j < scope.event.dates[i].possible_times.length; ++j) {
                             if (scope.event.dates[i].possible_times[j].voted_by.length > highest) {
                                 highest = scope.event.dates[i].possible_times[j].voted_by.length;
                             }
