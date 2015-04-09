@@ -81,9 +81,11 @@ angular.module('rallly')
                             Communicator.trigger('add:participant', event, $scope.participant);
 
                             _.forEach($scope.event.dates, function (date) {
-                                if ($scope.participantVotes[date._id]) {
-                                    date.possible_times[0].voted_by.push(newParticipant);
-                                }
+                                _.forEach(date.possible_times, function(time) {
+                                    if ($scope.participantVotes[date._id] &&  $scope.participantVotes[date._id][time._id]) {
+                                        time.voted_by.push(newParticipant);
+                                    }
+                                });
                             });
 
                             $scope.pollCtrl.update();

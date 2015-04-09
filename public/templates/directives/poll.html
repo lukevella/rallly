@@ -105,8 +105,8 @@
             </div>
             <div class="time-group" ng-repeat="date in event.dates track by date._id">
                 <div class="cell vote-cell" ng-repeat="time in date.possible_times">
-                    <input ng-model="participantVotes[date._id]" ng-false-value="false" type="checkbox"/>
-                    <div class="overlay" ng-click="participantVotes[date._id] = !participantVotes[date._id]"></div>
+                    <input ng-model="participantVotes[date._id][time._id]" ng-false-value="false" type="checkbox"/>
+                    <div class="overlay" ng-click="participantVotes[date._id][time._id] = !participantVotes[date._id][time._id]"></div>
                 </div>
             </div>
             <div class="cell action-cell">
