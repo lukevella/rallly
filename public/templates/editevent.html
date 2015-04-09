@@ -8,20 +8,11 @@
 
         <form novalidate name="form" ng-submit="submit()">
 
-            <section class="box-section" user-form form="form" event="event">
-
-            </section>
-
-            <section class="box-section" event-form form="form" event="event">
-
-            </section>
-            <section class="box-section" date-form form="form" event="event">
-
-            </section>
-
-            <section class="box-section" settings-form form="form" event="event">
-
-            </section>
+            <section class="box-section" user-form form="form" event="event"></section>
+            <section class="box-section" event-form form="form" event="event"></section>
+            <section class="box-section" date-form form="form" event="event"></section>
+            <section class="box-section" time-form form="form" event="event" ng-show="event.dates.length"></section>
+            <section class="box-section" settings-form form="form" event="event"></section>
 
             <div class="box-controls box-bottom-sticky">
                 <button type="submit" ng-show="didChange()" class="btn btn-primary" ng-class="{disabled : !didChange()}">
