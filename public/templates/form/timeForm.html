@@ -34,11 +34,11 @@
                 </td>
                 <td>
                     <input ng-repeat="time in d.possible_times" type="time" ng-model-options="{updateOn: 'blur'}" ng-model="d.possible_times[$index].start_time" class="time-picker-input" />
-                    <button ng-click="addTime(d); $event.stopPropagation();">Add</button>
+                    <button ng-click="addTime(d); $event.preventDefault();">Add</button>
                 </td>
                 <td>
                     <input ng-repeat="time in d.possible_times" type="time" ng-model-options="{updateOn: 'blur'}" ng-model="d.possible_times[$index].end_time" class="time-picker-input" />
-                    <button ng-click="addTime(d); $event.stopPropagation();">Add</button>
+                    <button ng-click="addTime(d); $event.preventDefault();">Add</button>
                 </td>
             </tr>
         </tbody>
