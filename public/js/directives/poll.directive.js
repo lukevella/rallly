@@ -118,7 +118,7 @@ angular.module('rallly')
                 scope.isTopDate = function (time) {
                     var highest = scope.event.dates[0].possible_times[0].voted_by.length;
                     for (var i = 0; i < scope.event.dates.length; ++i) {
-                        for (var j = 1; j < scope.event.dates[i].possible_times.length; ++j) {
+                        for (var j = 0; j < scope.event.dates[i].possible_times.length; ++j) {
                             if (scope.event.dates[i].possible_times[j].voted_by.length > highest) {
                                 highest = scope.event.dates[i].possible_times[j].voted_by.length;
                             }
