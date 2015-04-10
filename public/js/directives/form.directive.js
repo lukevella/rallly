@@ -76,8 +76,13 @@ angular.module('rallly')
                     }
                     init = true;
 
-                    scope.unsetDate = function (date) {
-                        console.log('unsetting date...');
+                    scope.unsetDate = function (dateToUnset) {
+                        var dateToUnset = new Date(dateToUnset.raw_date);
+
+                        _.remove(scope.event.dates, function(date) {
+                            var date =  new Date(date.raw_date);
+                            return date.getTime() === dateToUnset.getTime();
+                        });
                     };
 
                     scope.addTime = function(date) {
