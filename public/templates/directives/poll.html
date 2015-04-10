@@ -23,7 +23,7 @@
                         {{time.start_time | date: 'hh:mma'}}
                         {{time.end_time | date: 'hh:mma'}}
                         <span class="count" ng-show="numberVotes(time)"
-                        ng-class={top:isTopDate(time)}>{{numberVotes(time)}}</span>
+                              ng-class={top:isTopDate(time)}>{{numberVotes(time)}}</span>
                     </div>
                 </div>
             </div>
@@ -78,11 +78,13 @@
                 <span class="avatar style-{{$index + 1}}">
                     <img src="/images/user.png" width="11"/>
                 </span>
-                <span class="name">{{example.name}}</span>
+                <span class="name">{{example.name}}</span>x
             </div>
-            <div class="cell vote-cell" ng-repeat="date in event.dates">
-                <img src="/images/tick@2x.png" width="16" ng-if="example.votes[$index]"/>
-                <img src="/images/nope@2x.png" width="8" ng-if="!example.votes[$index]"/>
+            <div class="time-group" ng-repeat="date in event.dates">
+                <div class="cell vote-cell" ng-repeat="time in date.possible_times">
+                    <img src="/images/tick@2x.png" width="16" ng-if="example.votes[$index + $parent.$index]"/>
+                    <img src="/images/nope@2x.png" width="8" ng-if="!example.votes[$index + $parent.$index]"/>
+                </div>
             </div>
             <div class="cell action-cell">
 
@@ -106,7 +108,9 @@
             <div class="time-group" ng-repeat="date in event.dates track by date._id">
                 <div class="cell vote-cell" ng-repeat="time in date.possible_times">
                     <input ng-model="participantVotes[date._id][time._id]" ng-false-value="false" type="checkbox"/>
-                    <div class="overlay" ng-click="participantVotes[date._id][time._id] = !participantVotes[date._id][time._id]"></div>
+
+                    <div class="overlay"
+                         ng-click="participantVotes[date._id][time._id] = !participantVotes[date._id][time._id]"></div>
                 </div>
             </div>
             <div class="cell action-cell">
