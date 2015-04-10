@@ -204,3 +204,18 @@
         }
     }
 }
+
+.block {
+    display: block;
+    margin: 0 auto;
+}
+
+.center {
+    display: table;
+    margin: 5px auto -5px auto;
+}
+
+.date-label-cell {
+    width: 1px;
+    vertical-align: top;
+}
