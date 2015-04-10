@@ -159,7 +159,6 @@ $name-col-width: 250px;
         background: lighten($border-clr,10%);
     }
     .poll-entry {
-        display:table;
         min-width: 100%;
         border-bottom: 1px solid rgba($border-clr,0.5);
         &:last-child {

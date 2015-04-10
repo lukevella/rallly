@@ -78,16 +78,13 @@
                 <span class="avatar style-{{$index + 1}}">
                     <img src="/images/user.png" width="11"/>
                 </span>
-                <span class="name">{{example.name}}</span>x
+                <span class="name">{{example.name}}</span>
             </div>
             <div class="time-group" ng-repeat="date in event.dates">
                 <div class="cell vote-cell" ng-repeat="time in date.possible_times">
                     <img src="/images/tick@2x.png" width="16" ng-if="example.votes[$index + $parent.$index]"/>
                     <img src="/images/nope@2x.png" width="8" ng-if="!example.votes[$index + $parent.$index]"/>
                 </div>
-            </div>
-            <div class="cell action-cell">
-
             </div>
         </div>
         <div class="overlay">
