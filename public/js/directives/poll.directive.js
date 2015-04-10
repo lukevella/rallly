@@ -129,7 +129,26 @@ angular.module('rallly')
 
                 scope.numberVotes = function (time) {
                     return time.voted_by.length;
-                }
+                };
+
+                scope.isTopDateExample = function (index) {
+                    var highest = scope.numberVotesExample(0);
+                    for (var i =0; i< scope.event.dates.length; ++i) {
+                        for (var j=0; j<scope.event.dates[i].possible_times.length; ++j) {
+                            var numVotes = scope.numberVotesExample(i+j);
+                            if (numVotes > highest) {
+                                highest = numVotes;
+                            }
+                        }
+                    }
+                    return highest === scope.numberVotesExample(index);
+                };
+
+                scope.numberVotesExample = function (index) {
+                    return _.filter(scope.examples, function(participant) {
+                        return participant.votes[index];
+                    }).length;
+                };
             }
         }
     });
