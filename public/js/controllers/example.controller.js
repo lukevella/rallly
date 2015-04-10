@@ -1,23 +1,35 @@
 angular.module('rallly')
     .controller('ExampleCtrl', function ($state, Event) {
-        // Generate dates
 
-        var dates = [], date = new Date();
-        for (var i = 0; i < 4; i++) {
-            dates.push(date.add(Math.ceil(Math.random() * 5)).days().toISOString());
-        }
         // Generate Participants
         var examplesNames = ['John Example', 'Jane Specimen', 'Mark Instance', 'Mary Case'];
         var examples = [];
-        for (var i = 0; i < examplesNames.length; i++) {
-            var example = {name: examplesNames[i]};
-            example.votes = [];
-            for (var j = 0; j < dates.length; j++) {
-                var answer = Math.random() < .5;
-                example.votes[j] = answer;
+        _.forEach(examplesNames, function (name) {
+            examples.push({
+                name: name
+            });
+        });
+
+        // Generate dates
+        var dates = [];
+        var numberDatesToGenerate = 4;
+        var baseDate = new Date();
+        for (var i = 0; i < numberDatesToGenerate; ++i) {
+            var randomDate = {
+                raw_date: baseDate.add(Math.ceil(Math.random() * 5)).days().toISOString(),
+                possible_times: []
+            };
+            for (var j = 0; j < Math.ceil(Math.random() * 3); ++j) {
+                var startTime = baseDate.add(Math.ceil(Math.random() * 5000)).seconds().toISOString();
+                var endTime = (new Date(startTime)).add(Math.ceil(Math.random() * 5000)).seconds().toISOString();
+                randomDate.possible_times.push({
+                    start_time: startTime,
+                    end_time: endTime
+                });
             }
-            examples.push(example);
+            dates.push(randomDate);
         }
+
         var event = new Event({
             "creator": {
                 "name": "John Example",
@@ -49,8 +61,18 @@ angular.module('rallly')
             "isExample": true
         });
         event.$save(function (data) {
-            $state.go('event', {id: data._id}, {
-                location: "replace"
+            // Generate votes
+            _.forEach(data.dates, function (date) {
+                _.forEach(date.possible_times, function (time) {
+                    time.voted_by = _.sample(_.pluck(data.participants, '_id'), _.random(data.participants.length));
+                });
             });
+
+            Event
+                .update({id: data._id}, data, function (updatedEvent) {
+                    $state.go('event', {id: updatedEvent._id}, {
+                        location: "replace"
+                    });
+                });
         })
     });
