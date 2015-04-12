@@ -79,15 +79,19 @@ angular.module('rallly')
                     scope.unsetDate = function (dateToUnset) {
                         var dateToUnset = new Date(dateToUnset.raw_date);
 
-                        _.remove(scope.event.dates, function(date) {
-                            var date =  new Date(date.raw_date);
+                        _.remove(scope.event.dates, function (date) {
+                            var date = new Date(date.raw_date);
                             return date.getTime() === dateToUnset.getTime();
                         });
                     };
 
-                    scope.addTime = function(date) {
+                    scope.addTime = function (date) {
                         scope.event.dates[scope.event.dates.indexOf(date)].possible_times.push({});
                     };
+
+                    scope.removeTime = function (time, date, index) {
+                        scope.event.dates[scope.event.dates.indexOf(date)].possible_times.splice(index, 1);
+                    }
                 });
             }
         }
