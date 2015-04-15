@@ -13,18 +13,16 @@ angular.module('rallly')
         // Generate dates
         var dates = [];
         var numberDatesToGenerate = 4;
-        var baseDate = new Date();
-        baseDate.setSeconds(0);
-        baseDate.setMilliseconds(0);
+        var baseDate = moment().startOf('minute');
 
         for (var i = 0; i < numberDatesToGenerate; ++i) {
             var randomDate = {
-                raw_date: baseDate.add(Math.ceil(Math.random() * 5)).days().toISOString(),
+                raw_date: baseDate.add(Math.ceil(Math.random() * 5), 'days').toISOString(),
                 possible_times: []
             };
             for (var j = 0; j < Math.ceil(Math.random() * 3); ++j) {
-                var startTime = baseDate.add(Math.ceil(Math.random() * 5000)).minutes().toISOString();
-                var endTime = (new Date(startTime)).add(Math.ceil(Math.random() * 5000)).minutes().toISOString();
+                var startTime = baseDate.add(Math.ceil(Math.random() * 5000), 'minutes').toISOString();
+                var endTime = moment(startTime).add(Math.ceil(Math.random() * 5000), 'minutes').toISOString();
                 randomDate.possible_times.push({
                     start_time: startTime,
                     end_time: endTime
