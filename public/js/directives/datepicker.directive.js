@@ -24,25 +24,25 @@ angular.module('rallly')
                     return true;
                 };
 
-                var today = Date.today(), activeDate = today.clone();
+                var today = moment().startOf('day'), activeDate = today.clone();
                 var setMonth = function (toDate) {
                     activeDate = toDate;
-                    var startDate = activeDate.clone().moveToFirstDayOfMonth(), // get first day of active month
-                        startDateDOW = startDate.getDay(); // get day of the week for the active start date of the active month
+                    var startDate = activeDate.clone().startOf('month'), // get first day of active month
+                        startDateDOW = startDate.day(); // get day of the week for the active start date of the active month
                     // Set the startDate to the previous Sunday
                     if (startDateDOW == 0) {
-                        startDate.add(-7).days();
+                        startDate.add(-7, 'days');
                     } else {
-                        startDate.add(startDateDOW * -1).days();
+                        startDate.add(startDateDOW * -1, 'days');
                     }
-                    scope.title = activeDate.toString('MMMM yyyy');
+                    scope.title = activeDate.format('MMMM YYYY');
                     var days = new Array(42);
                     for (var i = 0; i < days.length; i++) {
-                        var date = startDate.clone().add(i).days()
+                        var date = startDate.clone().add(i, 'days');
                         days[i] = {
-                            date: date,
-                            isOutsideMonth: (date.getMonth() != activeDate.getMonth()) ? true : false,
-                            isToday: (Date.equals(date, today))
+                            date: date.toISOString(),
+                            isOutsideMonth: (date.month() != activeDate.month()) ? true : false,
+                            isToday: date.isSame(today)
                         }
                     }
                     scope.days = days;
@@ -75,22 +75,23 @@ angular.module('rallly')
                     }
                 };
                 scope.isActive = function (date, returnIndex) {
+                    date = moment(date);
                     scope.model = scope.model || [];
                     for (var i = 0; i < scope.model.length; i++) {
-                        var modelDate = Date.parse(scope.model[i].raw_date);
-                        if (modelDate.getDate() == date.getDate() &&
-                            modelDate.getMonth() == date.getMonth() &&
-                            modelDate.getYear() == date.getYear()) {
+                        var modelDate = moment(scope.model[i].raw_date);
+                        if (modelDate.date() === date.date() &&
+                            modelDate.month() === date.month() &&
+                            modelDate.year() === date.year()) {
                             return (returnIndex) ? i : true;
                         }
                     }
                     return (returnIndex) ? -1 : false;
                 };
                 scope.nextMonth = function () {
-                    setMonth(activeDate.clone().add(1).months());
+                    setMonth(activeDate.clone().add(1, 'months'));
                 };
                 scope.prevMonth = function () {
-                    setMonth(activeDate.clone().add(-1).months());
+                    setMonth(activeDate.clone().add(-1, 'months'));
                 };
 
                 scope.control.removeDate = function (date) {
