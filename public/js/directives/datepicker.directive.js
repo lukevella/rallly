@@ -26,7 +26,7 @@ angular.module('rallly')
 
                 var today = moment().startOf('day'), activeDate = today.clone();
                 var setMonth = function (toDate) {
-                    activeDate = toDate;
+                    activeDate = moment(toDate);
                     var startDate = activeDate.clone().startOf('month'), // get first day of active month
                         startDateDOW = startDate.day(); // get day of the week for the active start date of the active month
                     // Set the startDate to the previous Sunday
@@ -47,7 +47,7 @@ angular.module('rallly')
                     }
                     scope.days = days;
                 };
-                setMonth(activeDate);
+                setMonth(activeDate.toISOString());
                 scope.selectDay = function (dayObj) {
                     if (dayObj.isOutsideMonth) {
                         setMonth(dayObj.date);
@@ -88,10 +88,10 @@ angular.module('rallly')
                     return (returnIndex) ? -1 : false;
                 };
                 scope.nextMonth = function () {
-                    setMonth(activeDate.clone().add(1, 'months'));
+                    setMonth(activeDate.clone().add(1, 'months').toISOString());
                 };
                 scope.prevMonth = function () {
-                    setMonth(activeDate.clone().add(-1, 'months'));
+                    setMonth(activeDate.clone().add(-1, 'months').toISOString());
                 };
 
                 scope.control.removeDate = function (date) {
