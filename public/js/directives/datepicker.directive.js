@@ -59,7 +59,7 @@ angular.module('rallly')
                         // Not selected
                         var index = 0, inserted = false;
                         do {
-                            if (scope.model[index] == undefined || Date.compare(Date.parse(scope.model[index].raw_date), dayObj.date) > 0) {
+                            if (scope.model[index] == undefined || moment(scope.model[index].raw_date).isSame(moment(dayObj.date))) {
                                 var dateObject = {
                                     raw_date: dayObj.date,
                                     possible_times: [{
