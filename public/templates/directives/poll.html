@@ -1,46 +1,76 @@
 <div class="poll-header">
     <div class="header participants-header">
         {{event.participants.length}} participants
-    </div>
-    <div class="header date-header" ng-repeat="d in event.dates">
-        <div class="daticon">
-            <div class="dow">
-                {{d | date: 'EEE'}}
-            </div>
-            <div class="day">
-                {{d | date: 'd'}}
-            </div>
-            <div class="month">
-                {{d | date : 'MMM'}}
-            </div>
-            <span class="count" ng-show="selectedDate($index)" ng-class={top:isTopDate($index)}>{{selectedDate($index)}}</span>
+        <div class="time-label">
+            <div>Start:</div>
+            <div>End:</div>
         </div>
     </div>
-    <div class="header actions-header">
 
+    <div class="header date-header">
+        <div class="date-cell" ng-repeat="d in event.dates">
+            <div class="date-container">
+                <div class="daticon-container">
+                    <div class="dow">
+                        {{d.raw_date | date: 'EEE'}}
+                    </div>
+                    <div class="date">
+                        {{d.raw_date | date: 'MMM d'}}
+                    </div>
+                </div>
+                <div class="times-row">
+                    <div class="time-cell" ng-repeat="time in d.possible_times">
+                        {{time.start_time | date: 'hh:mma'}}
+                        {{time.end_time | date: 'hh:mma'}}
+                        <span class="count" ng-show="event.participants.length && numberVotes(time)"
+                              ng-class={top:isTopDate(time)}>{{numberVotes(time)}}</span>
+                        <span class="count" ng-show="!event.participants.length && numberVotesExample($index+$parent.$index)"
+                              ng-class={top:isTopDateExample($index+$parent.$index)}>{{numberVotesExample($index+$parent.$index)}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header actions-header">
     </div>
 </div>
 <div class="poll-body">
     <div class="poll-entry" ng-repeat="participant in event.participants">
-        <form novalidate ng-submit="editMode = false; pollCtrl.update(participant);">
+        <form novalidate>
             <div class="cell name-cell">
                 <span class="avatar style-{{($index % 10) + 1 }}">
-                    <img src="/images/user.png" width="11" />
+                    <img src="/images/user.png" width="11"/>
                 </span>
-                <input required autocomplete="off" type="text" class="form-control" ng-model="participant.name" ng-show="editMode" value="participant.name"/>
-                <span ng-hide="editMode" class="name editable" ng-click="editMode = true && !event.isClosed; pollCtrl.edit(participant)">{{participant.name}}</span>
+                <input required autocomplete="off" type="text" class="form-control" ng-model="participant.name"
+                       ng-show="editMode" value="participant.name"/>
+                <span ng-hide="editMode" class="name editable"
+                      ng-click="editMode = true && !event.isClosed; pollCtrl.edit(participant)">{{participant.name}}</span>
             </div>
-            <div class="cell vote-cell" ng-repeat="date in event.dates">
-                <img src="/images/tick@2x.png"  width="16" ng-hide="editMode" ng-if="participant.votes[$index]" />
-                <img src="/images/nope@2x.png" width="8" ng-hide="editMode" ng-if="!participant.votes[$index]" />
-                <input ng-model="participant.votes[$index]" ng-show="editMode" ng-false-value="false" type="checkbox" />
-                <div class="overlay" ng-show="editMode" ng-click="participant.votes[$index] = !participant.votes[$index]"></div>
+            <div class="time-group" ng-repeat="date in event.dates track by date._id">
+                <div class="cell vote-cell" ng-repeat="time in date.possible_times">
+                    <img src="/images/tick@2x.png" width="16" ng-hide="editMode"
+                         ng-if="pollCtrl.hasVote(time, participant)"/>
+                    <img src="/images/nope@2x.png" width="8" ng-hide="editMode"
+                         ng-if="!pollCtrl.hasVote(time, participant)"/>
+                    <input ng-checked="pollCtrl.hasVote(time, participant)" ng-show="editMode" type="checkbox"/>
+
+                    <div class="overlay" ng-show="editMode" ng-click="pollCtrl.toggleVote(time, participant)"></div>
+                </div>
             </div>
             <div class="cell action-cell" ng-hide="event.isClosed">
-                <button type="button" ng-hide="editMode" ng-click="editMode = true; pollCtrl.edit(participant)" class="btn hover">Edit</button>
-                <button type="button" ng-hide="editMode" ng-click="pollCtrl.delete(participant)" class="btn danger hover">Delete</button>
-                <button type="submit" ng-show="editMode" class="btn">Save</button>
-                <button type="button" ng-show="editMode" ng-click="editMode = false; pollCtrl.cancel($index)" class="btn">Cancel</button>
+                <button type="button" ng-hide="editMode" ng-click="editMode = true; pollCtrl.edit(participant)"
+                        class="btn hover">Edit
+                </button>
+                <button type="button" ng-hide="editMode" ng-click="pollCtrl.delete(participant)"
+                        class="btn danger hover">Delete
+                </button>
+                <button type="submit" ng-show="editMode" ng-click="editMode = false; pollCtrl.update()" class="btn">
+                    Save
+                </button>
+                <button type="button" ng-show="editMode" ng-click="editMode = false; pollCtrl.cancel(participant)"
+                        class="btn">Cancel
+                </button>
             </div>
         </form>
     </div>
@@ -48,16 +78,15 @@
         <div class="poll-entry" ng-repeat="example in examples">
             <div class="cell name-cell">
                 <span class="avatar style-{{$index + 1}}">
-                    <img src="/images/user.png" width="11" />
+                    <img src="/images/user.png" width="11"/>
                 </span>
                 <span class="name">{{example.name}}</span>
             </div>
-            <div class="cell vote-cell" ng-repeat="date in event.dates">
-                <img src="/images/tick@2x.png"  width="16" ng-if="example.votes[$index]" />
-                <img src="/images/nope@2x.png" width="8" ng-if="!example.votes[$index]" />
-            </div>
-            <div class="cell action-cell">
-
+            <div class="time-group" ng-repeat="date in event.dates">
+                <div class="cell vote-cell" ng-repeat="time in date.possible_times">
+                    <img src="/images/tick@2x.png" width="16" ng-if="example.votes[$index + $parent.$index]"/>
+                    <img src="/images/nope@2x.png" width="8" ng-if="!example.votes[$index + $parent.$index]"/>
+                </div>
             </div>
         </div>
         <div class="overlay">
@@ -70,16 +99,23 @@
         <form novalidate name="formnew" ng-submit="pollCtrl.save()">
             <div class="cell name-cell">
                 <span class="avatar style-{{participant.style}}">
-                    <img src="/images/user.png" width="11" />
+                    <img src="/images/user.png" width="11"/>
                 </span>
-                <input autocomplete="off" name="username" type="text" class="form-control" placeholder="Your name..." ng-model="participant.name" required value="participant.name"/>
+                <input autocomplete="off" name="username" type="text" class="form-control" placeholder="Your name..."
+                       ng-model="participant.name" required value="participant.name"/>
             </div>
-            <div class="cell vote-cell" ng-repeat="date in event.dates">
-                <input ng-model="participant.votes[$index]" ng-false-value="false" type="checkbox" />
-                <div class="overlay" ng-click="participant.votes[$index] = !participant.votes[$index]"></div>
+            <div class="time-group" ng-repeat="date in event.dates track by date._id">
+                <div class="cell vote-cell" ng-repeat="time in date.possible_times">
+                    <input ng-model="participantVotes[date._id][time._id]" ng-false-value="false" type="checkbox"/>
+
+                    <div class="overlay"
+                         ng-click="participantVotes[date._id][time._id] = !participantVotes[date._id][time._id]"></div>
+                </div>
             </div>
             <div class="cell action-cell">
-                <button type="submit" ng-class="{ 'animated shake' : formnew.$submitted && formnew.$invalid  }" class="btn">Save</button>
+                <button type="submit" ng-class="{ 'animated shake' : formnew.$submitted && formnew.$invalid  }"
+                        class="btn">Save
+                </button>
             </div>
         </form>
     </div>

@@ -4,13 +4,13 @@
         <li ng-repeat="d in event.dates">
             <div class="daticon">
                 <div class="dow">
-                    {{d | date: 'EEE'}}
+                    {{d.raw_date | date: 'EEE'}}
                 </div>
                 <div class="day">
-                    {{d | date: 'd'}}
+                    {{d.raw_date | date: 'd'}}
                 </div>
                 <div class="month">
-                    {{d | date : 'MMM'}}
+                    {{d.raw_date | date : 'MMM'}}
                 </div>
                 <span class="delete" ng-click="datepicker.removeDate(d)"></span>
             </div>
@@ -24,9 +24,7 @@
             <span class="form-error" ng-show="form.$submitted && form.datepicker.$error.required">
                 <img src="/images/error.png" width="14" /> You need to select a few dates
             </span>
-            <div datepicker required name="datepicker" control="datepicker" ng-model="event.dates">
-
-            </div>
+            <div datepicker required name="datepicker" control="datepicker" ng-model="event.dates"></div>
         </div>
     </div>
 </div>

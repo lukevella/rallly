@@ -4,41 +4,57 @@
 <div class="section-main">
     <table class="time-form">
         <thead>
-            <tr>
-                <th>
-
-                </th>
-                <th>
-                    Time 1
-                </th>
-                <th>
-                    Time 2
-                </th>
-                <th>
-                    Time 3
-                </th>
-            </tr>
+        <tr>
+            <th>
+                Date
+            </th>
+            <th>
+                Start Time
+            </th>
+            <th>
+                End Time
+            </th>
+            <th>
+            </th>
+        </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="d in event.dates">
-                <td>
-                    <div class="daticon">
-                        <div class="dow">
-                            {{d.date | date: 'EEE'}}
-                        </div>
-                        <div class="day">
-                            {{d.date | date: 'd'}}
-                        </div>
-                        <div class="month">
-                            {{d.date | date : 'MMM'}}
-                        </div>
-                        <span class="delete" ng-click="unsetDate(d.date)"></span>
+        <tr ng-repeat-start="d in event.dates">
+            <td class="date-label-cell" rowspan="2">
+                <div class="daticon block">
+                    <div class="dow">
+                        {{d.raw_date | date: 'EEE'}}
                     </div>
-                </td>
-                <td ng-repeat="time in [1,2,3] track by $index">
-                    <input type="text" time-picker ng-model-options="{ updateOn: 'blur' }" ng-model="d.times[$index]" class="time-picker-input" />
-                </td>
-            </tr>
+                    <div class="day">
+                        {{d.raw_date | date: 'd'}}
+                    </div>
+                    <div class="month">
+                        {{d.raw_date | date: 'MMM'}}
+                    </div>
+                    <span class="delete" ng-click="unsetDate(d)"></span>
+                </div>
+            </td>
+            <td class="start-column">
+                <input ng-repeat="time in d.possible_times" type="time" ng-model-options="{updateOn: 'blur'}"
+                       ng-model="d.possible_times[$index].start_time" class="time-picker-input"/>
+            </td>
+            <td class="end-column">
+                <input ng-repeat="time in d.possible_times" type="time" ng-model-options="{updateOn: 'blur'}"
+                       ng-model="d.possible_times[$index].end_time" class="time-picker-input"/>
+            </td>
+            <td style="min-width: 111px; vertical-align: bottom;">
+                <button class="center remove-time" ng-repeat="time in d.possible_times"
+                        ng-click="removeTime(time, d, $index); $event.preventDefault();" ng-if="$index !== 0">
+                    Remove
+                </button>
+            </td>
+        </tr>
+        <tr ng-repeat-end>
+            <td colspan="2">
+                <button class="center add-time" ng-click="addTime(d); $event.preventDefault();">Add</button>
+            </td>
+            <td></td>
+        </tr>
         </tbody>
     </table>
 </div>

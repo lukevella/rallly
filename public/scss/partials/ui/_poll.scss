@@ -45,6 +45,58 @@ $name-col-width: 250px;
             min-width: $date-col-width;
             width: $date-col-width;
             @include box-sizing(border-box);
+
+            .date-cell {
+                display: table-cell;
+                .date-container {
+                    display: table;
+                    .daticon-container {
+                        display: table-caption;
+                        text-align: left;
+                        margin: 0 10.5px;
+                        border-bottom: 1px solid #AEB4BE;
+                        padding: 0 0 5px;
+                        font-size: 12px;
+
+                        .dow {
+                            color: #AEB4BE;
+                        }
+
+                        .date {
+                            font-weight: 900;
+                        }
+                    }
+                    .times-row {
+                        border-right: 1px solid #AEB4BE;
+                        display: table-row;
+                        .time-cell {
+                            color: #AEB4BE;
+                            font-size: 12px;
+                            display: table-cell;
+                            padding: 5px 10.5px 0;
+                            position: relative;
+                            .count {
+                                text-align:center;
+                                right: 0;
+                                top: 0;
+                                display: inline-block;
+                                position: absolute;
+                                background: darken($border-clr, 10%);
+                                border-radius: 100%;
+                                font-size: 9px;
+                                line-height: 12px;
+                                height: 12px;
+                                width: 12px;
+                                color: white;
+                                &.top {
+                                  background: $orangered-clr;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
         }
         &.actions-header {
             min-width: $actions-col-width;
@@ -57,6 +109,17 @@ $name-col-width: 250px;
             width: $name-col-width;
             padding: em(10px);
             padding-left: 20px;
+            padding-right: 70px;
+            position: relative;
+
+            .time-label {
+                position: absolute;
+                bottom: 11px;
+                right: 5px;
+                font-weight: normal;
+                font-size: 12px;
+                text-align: right;
+            }
         }
     }
 }
@@ -96,7 +159,6 @@ $name-col-width: 250px;
         background: lighten($border-clr,10%);
     }
     .poll-entry {
-        display:table;
         min-width: 100%;
         border-bottom: 1px solid rgba($border-clr,0.5);
         &:last-child {
@@ -177,6 +239,9 @@ $name-col-width: 250px;
                     }
                 }
             }
+        }
+        .time-group {
+            display: table-cell;
         }
         &.ng-submitted {
             .ng-invalid {

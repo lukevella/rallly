@@ -22,7 +22,8 @@
 .time-picker-input {
     padding: em(5px) 0;
     text-align:center;
-    border:0;
+    border: 1px solid $border-clr;
+    margin: 3px auto 0px auto;
     font-size:em(14px);
     &.ng-invalid {
         border-color: $red-clr;
@@ -34,7 +35,7 @@
         border-color: $green-clr;
     }
     &:focus {
-        outline:0;
+        outline: 0;
         color: $text-clr;
     }
 }

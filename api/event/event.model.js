@@ -3,63 +3,79 @@ var Schema = mongoose.Schema;
 var debug = require('debug')('rallly');
 var ShortId = require('mongoose-shortid');
 
-var EventSchema = new Schema({
-    _id : ShortId,
-    description : String,
-    creator : {
-        name : String,
-        email : String,
-        isVerified : {
-            type : Boolean,
-            default : false
+var DateSchema = new Schema({
+    raw_date: {
+        type: Date
+    },
+    possible_times: [{
+        start_time: {
+            type: Date
         },
-        allowNotifications : {
-            type : Boolean,
-            default : true
+        end_time: {
+            type: Date
+        },
+        voted_by: [{
+            type: Schema.Types.ObjectId // id of participants
+        }]
+    }]
+});
+
+var EventSchema = new Schema({
+    _id: ShortId,
+    description: String,
+    creator: {
+        name: String,
+        email: String,
+        isVerified: {
+            type: Boolean,
+            default: false
+        },
+        allowNotifications: {
+            type: Boolean,
+            default: true
         }
     },
-    created : {
-        type : Date,
-        default : Date.now
+    created: {
+        type: Date,
+        default: Date.now
     },
-    updated : Date,
-    title : String,
-    dates : [Date],
-    emails : [{
-        email : String
+    updated: Date,
+    title: String,
+    dates: [DateSchema],
+    emails: [{
+        email: String
     }],
-    comments : [{
-        id : Schema.Types.ObjectId,
-        author : {
-            name : String
+    comments: [{
+        id: Schema.Types.ObjectId,
+        author: {
+            name: String
         },
-        content : String,
-        created : {
+        content: String,
+        created: {
             type: Date,
-            default : Date.now
+            default: Date.now
         }
     }],
     location: String,
-    participants : [{
-        id : Schema.Types.ObjectId,
-        name : String,
-        votes : [Boolean]
+    participants: [{
+        id: Schema.Types.ObjectId,
+        name: String
     }],
-    isClosed : {
-        type : Boolean,
-        default : false
+    isClosed: {
+        type: Boolean,
+        default: false
     },
-    isDeleted : {
-        type : Boolean,
-        default : false
+    isDeleted: {
+        type: Boolean,
+        default: false
     },
-    isExample : {
-        type : Boolean,
-        default : false
+    isExample: {
+        type: Boolean,
+        default: false
     },
-    __private : {
-        verificationCode : String,
-        unsubscribeCode : String
+    __private: {
+        verificationCode: String,
+        unsubscribeCode: String
     }
 });
 
@@ -70,28 +86,28 @@ model.schema
     .required('You need to give your event a title');
 model.schema
     .path('creator.name')
-    .required('You need to type in your name')
+    .required('You need to type in your name');
 model.schema
     .path('creator.email')
     .required('You need to type in your email')
-    .validate(function(email) {
+    .validate(function (email) {
         var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
         return emailRegex.test(email);
-    }, 'You need to type in a valid email')
+    }, 'You need to type in a valid email');
 model.schema
     .path('dates')
-    .validate(function(dates){
+    .validate(function (dates) {
         return dates.length
     }, 'You didn\'t select any dates');
 model.schema
     .path('participants')
-    .validate(function(participants){
-        for (var i = 0; i < participants.length; i++){
-            if (!participants[i].name){
+    .validate(function (participants) {
+        for (var i = 0; i < participants.length; i++) {
+            if (!participants[i].name) {
                 return false;
             }
         }
         return true;
-    }, 'Participants must have a name')
+    }, 'Participants must have a name');
 
-module.exports = model
+module.exports = model;

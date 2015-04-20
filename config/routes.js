@@ -1,12 +1,12 @@
 var Event = require('../api/event/event.model');
 var numeral = require('numeral');
 
-module.exports = function(app) {
+module.exports = function (app) {
 
-    app.get('/', function(req,res){
-        Event.count({}, function(err, count){
+    app.get('/', function (req, res) {
+        Event.count({}, function (err, count) {
             if (err) res.status(500);
-            res.render('index', { eventCount : numeral(count).format('0,0')});
+            res.render('index', {eventCount: numeral(count).format('0,0')});
         });
     });
 
@@ -18,12 +18,12 @@ module.exports = function(app) {
     // All other routes should redirect to the
 
     app.route('/*')
-    .get(function(req, res) {
-        res.render('app');
-    });
+        .get(function (req, res) {
+            res.render('app');
+        });
 
     if (app.get('env') === 'development') {
-        app.use(function(err, req, res, next) {
+        app.use(function (err, req, res, next) {
             res.status(err.status || 500);
             res.render('error.ejs', {
                 message: err.message,

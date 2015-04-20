@@ -4,25 +4,17 @@
         Fill in the form below to create your event and share it with your friends and colleagues.
     </div>
     <form novalidate autocomplete="off" name="form" ng-hide="eventUrl" ng-submit="submit()">
-        <section class="box-section" user-form form="form" event="event">
+        <section class="box-section" user-form form="form" event="event"></section>
 
-        </section>
+        <section class="box-section" event-form form="form" event="event"></section>
 
-        <section class="box-section" event-form form="form" event="event">
+        <section class="box-section" date-form form="form" event="event"></section>
 
-        </section>
+        <section class="box-section" time-form form="form" event="event" ng-show="event.dates.length"></section>
 
-        <section class="box-section" date-form form="form" event="event">
+        <section class="box-section" participants-form form="form" event="event"></section>
 
-        </section>
-
-        <section class="box-section" participants-form form="form" event="event">
-
-        </section>
-
-        <section class="box-section" settings-form form="form" event="event">
-
-        </section>
+        <section class="box-section" settings-form form="form" event="event"></section>
 
         <div class="box-controls box-bottom-sticky">
             <button type="submit" class="btn">Create Event</button>

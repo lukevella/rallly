@@ -204,3 +204,61 @@
         }
     }
 }
+
+.block {
+    display: block;
+    margin: 0 auto;
+}
+
+.center {
+    display: table;
+}
+
+.start-column {
+  width: 50%;
+}
+
+.end-column {
+  width: 50%;
+}
+
+.remove-time {
+    margin: 3px auto 0px auto;
+    border: 0px;
+    width: 90px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px;
+    background: $orangered-clr;
+
+    @include transition(background 0.2s ease-in-out);
+    &:hover {
+      background: darken($orangered-clr, 5%);
+    }
+}
+
+.add-time {
+    border: 0px;
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px;
+    background: $green-clr;
+    margin: -5px auto -5px auto;
+
+    @include transition(background 0.2s ease-in-out);
+    &:hover {
+        background: darken($green-clr, 5%);
+    }
+}
+
+.date-label-cell {
+    width: 1px;
+    vertical-align: top;
+}
