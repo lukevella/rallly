@@ -44,7 +44,6 @@ $name-col-width: 250px;
             text-align:center;
             min-width: $date-col-width;
             width: $date-col-width;
-            @include box-sizing(border-box);
         }
         &.actions-header {
             min-width: $actions-col-width;
@@ -55,7 +54,6 @@ $name-col-width: 250px;
             font-weight: bold;
             min-width: $name-col-width;
             width: $name-col-width;
-            padding: em(10px);
             padding-left: 20px;
         }
     }
@@ -111,7 +109,6 @@ $name-col-width: 250px;
             }
         }
         .cell {
-            padding: em(10px);
             display:table-cell;
             height: 50px;
             vertical-align:middle;
