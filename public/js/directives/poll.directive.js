@@ -8,8 +8,9 @@ angular.module('rallly')
         },
         controllerAs : 'pollCtrl',
         controller : function($scope, $rootScope){
+
             $scope.defaults = [];
-            $scope.participant = {};
+            $scope.participant = {votes: []};
             $rootScope.$on('add:comment', function(e, event, comment){
                 // Don't repopulate field if user has already voted
                 if (!$scope.didVote) {
@@ -50,7 +51,7 @@ angular.module('rallly')
                         $scope.event = event;
                         $scope.didVote = true;
                         Communicator.trigger('add:participant', event, $scope.participant);
-                        $scope.participant = {};
+                        $scope.participant = {votes: []};
                     });
                     $scope.formnew.$setPristine();
                 }
