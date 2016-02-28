@@ -26,5 +26,8 @@
     "ngSmoothScroll": "~1.7.1",
     "jquery": "~2.1.3",
     "angular-sanitize": "~1.3.14"
+  },
+  "resolutions": {
+    "angular": "1.3.20"
   }
 }

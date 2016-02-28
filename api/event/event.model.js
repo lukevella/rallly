@@ -1,10 +1,14 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var debug = require('debug')('rallly');
-var ShortId = require('mongoose-shortid');
+var shortid = require('shortid');
 
 var EventSchema = new Schema({
-    _id : ShortId,
+    _id : {
+      type: String,
+      unique: true,
+      default: shortid.generate
+    },
     description : String,
     creator : {
         name : String,

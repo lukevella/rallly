@@ -13,11 +13,11 @@
     "express": "~4.9.0",
     "jade": "^1.6.0",
     "mandrill-api": "^1.0.41",
-    "mongoose": "^3.8.19",
-    "mongoose-shortid": "lukevella/mongoose-shortid",
+    "mongoose": "^4.4.5",
     "morgan": "^1.5.1",
     "numeral": "^1.5.3",
-    "serve-favicon": "^2.1.7"
+    "serve-favicon": "^2.1.7",
+    "shortid": "^2.2.4"
   },
   "devDependencies": {
     "gulp": "^3.8.10",
@@ -25,8 +25,9 @@
     "gulp-concat": "^2.4.2",
     "gulp-ng-annotate": "^0.4.0",
     "gulp-notify": "^2.0.1",
-    "gulp-sass": "^1.2.4",
+    "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.2.8",
-    "gulp-uglify": "^1.0.1"
+    "gulp-uglify": "^1.0.1",
+    "node-sass": "^3.4.2"
   }
 }
