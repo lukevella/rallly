@@ -37,7 +37,7 @@ app.set('absoluteUrl', function(path){
 app.set('dbname', ''); // MongoDB database name
 app.set('dbuser', ''); // MongoDB user name
 app.set('dbpwd', ''); // MongoDB user password
-app.set('mandrillAPIKey',''); // https://mandrillapp.com
+app.set('sendGridAPIKey',''); // https://sendgrid.com
 ```
 
 ### Development
