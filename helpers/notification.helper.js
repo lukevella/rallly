@@ -41,12 +41,12 @@ communicator.on('event:update:creator.email', function(event, oldEvent){
 });
 
 communicator.on('participant:add', function(event, participant){
-    if (!event.creator.allowNotifications || event.isExample) return;
+    if (!event.creator.allowNotifications || !event.creator.isVerified || event.isExample) return;
     sendNewParticipantNotification(event, participant);
 });
 
 communicator.on('comment:add', function(event, comment){
-    if (!event.creator.allowNotifications || event.isExample) return;
+    if (!event.creator.allowNotifications || !event.creator.isVerified || event.isExample) return;
     sendNewCommentNotification(event, comment);
 });
 
