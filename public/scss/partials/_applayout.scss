@@ -21,7 +21,7 @@ body {
 .main-content {
     margin-left: 200px;
     background: $background-clr;
-    overflow-y:scroll;
+    overflow-y: auto;
     padding:40px 0;
     .main-view {
         position:relative;
