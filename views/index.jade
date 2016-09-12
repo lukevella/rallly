@@ -9,11 +9,11 @@ block scripts
     script(type='text/javascript', src='/vendor/skrollr/dist/skrollr.min.js')
     script(type='text/javascript').
         var app = angular.module('landing', ['smoothScroll']);
-        
-        
+
+
 block content
     div(ng-app='landing')
-        section#intro.intro: .intro-overlay: .container    
+        section#intro.intro: .intro-overlay: .container
             header.header: .container
                 a.logo(href='/')
                     img(src='/images/logo.png', alt='Rallly Collaborative Scheduling')
@@ -48,7 +48,7 @@ block content
                     .feature
                         .image: img(src='/images/landing/vote.png', width='48')
                         h5 Vote
-                        p Let everyone know which dates best work for you and find a common date to host your event. 
+                        p Let everyone know which dates best work for you and find a common date to host your event.
                 .seperator#about
                 h3 About
                 h4 Frequently Asked Questions
@@ -56,7 +56,7 @@ block content
                     .questions-col
                         .question
                             h6 Who made this?
-                            p Rallly was created by 
+                            p Rallly was created by
                                 a(href='http://lukevella.com') Luke Vella
                                 | .
                         .question
@@ -64,24 +64,24 @@ block content
                             p Yes, Rallly is completely free to use.
                         .question
                             h6 Why did you create Rallly?
-                            p 
+                            p
                                 | I wanted to create something that was useful, simple and beautiful.
-                                | Also I needed a project that could help me improve my skill set.  
+                                | Also I needed a project that could help me improve my skill set.
                     .questions-col
                         .question
                             h6 This is great, is there anything I can do to help out?
                             p
-                                | Yes! Rallly is open source, so you can contribute to the project on 
-                                a(href='https://github.com/lukevella/Rallly') Github
-                                | . 
+                                | Yes! Rallly is open source, so you can contribute to the project on
+                                a(href='https://github.com/lukevella/Rallly') GitHub
+                                | .
                         .question
                             h6 Where can I submit a feature request?
                             p
-                                | You can either create a 
+                                | You can either create a
                                 a(href='https://github.com/lukevella/Rallly/issues/new') new issue
-                                |  on Github or send an email to 
+                                |  on GitHub or send an email to
                                 a(href='mailto:hello@lukevella.com') hello@lukevella.com
-                                | .  
+                                | .
         section#share.landing-section.bottom: .container
             .seperator
             .share
@@ -91,7 +91,7 @@ block content
                     a.twitter(href='https://twitter.com/home?status=Check%20out%20Rallly,%20a%20free%20collaborative%20scheduling%20service%20by%20%40imlukevella.%20http://rallly.co')
                     a.facebook(href='https://www.facebook.com/sharer/sharer.php?u=http://rallly.co')
                     a.github(href='https://github.com/lukevella/Rallly')
-                        
+
         //- section#stats.landing-section.bottom: .container
         //-     .seperator
         //-     .stats
@@ -118,17 +118,17 @@ block content
                     ul.links
                         li: a(href='http://twitter.com/imlukevella') Twitter
                         li: a(href='http://dribbble.com/lukevella') Dribbble
-                        li: a(href='http://github.com/lukevella/Rallly') Github
+                        li: a(href='http://github.com/lukevella/Rallly') GitHub
                 .about.footer-col
                     h6 About
                     p
-                        | Rallly was designed &amp; developed by 
+                        | Rallly was designed &amp; developed by
                         a(href='http://lukevella.com') Luke Vella
                         | . If you'd like to stay up to date on new projects,
-                        | please follow on 
+                        | please follow on
                         a(href='http://twitter.com/imlukevella') Twitter
-                        | , 
+                        | ,
                         a(href='http://dribbble.com/lukevella') Dribbble
-                        |  and 
-                        a(href='http://github.com/lukevella/Rallly') Github
+                        |  and
+                        a(href='http://github.com/lukevella/Rallly') GitHub
                         | .
