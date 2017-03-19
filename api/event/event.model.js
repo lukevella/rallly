@@ -20,6 +20,10 @@ var EventSchema = new Schema({
         allowNotifications : {
             type : Boolean,
             default : true
+        },
+        shouldResetParticipants : {
+           type : Boolean,
+           default : false
         }
     },
     created : {

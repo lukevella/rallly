@@ -23,7 +23,7 @@ angular.module('rallly')
     }
     $scope.submit = function(){
         if ($scope.form.$valid){
-            if ($scope.didChangeDates() ){
+            if ($scope.didChangeDates() && $scope.event.creator.shouldResetParticipants){
                 var modal = new ConfirmModal({
                     title : 'Hold up!',
                     message : 'Changing the dates will reset all entries by the participants. Are you sure you want to do that?',

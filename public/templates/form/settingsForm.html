@@ -36,6 +36,23 @@
             </div>
         </div>
     </div>
+    <div class="switch-row">
+        <div class="switch-details">
+            <div class="title">
+                Reset participants and votes
+            </div>
+            <div class="description">
+                Reset all the current participiants and their votes when you edit the event dates.
+            </div>
+        </div>
+        <div class="switch">
+            <div class="switch-value">
+                {{event.creator.shouldResetParticipants ? 'On' : 'Off' }}
+            </div>
+            <div switch-toggle ng-model="event.creator.shouldResetParticipants">
+            </div>
+        </div>
+    </div>
     <div class="switch-row" ng-if="event._id">
         <div class="switch-details">
             <div class="title">
