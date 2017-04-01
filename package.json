@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=rallly nodemon ./bin/www"
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
     "amdefine": "^0.1.0",
