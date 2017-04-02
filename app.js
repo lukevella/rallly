@@ -24,7 +24,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 require('./config/routes')(app);
 
 var dbname = app.get('dbname');
-mongoose.connect('mongodb://localhost/' + dbname, {
+var dbaddress = app.get('dbaddress');
+var mongoAddress = 'mongodb://' + dbaddress + '/' + dbname;
+debug(mongoAddress);
+mongoose.connect(mongoAddress, {
     user : app.get('dbuser'),
     pass : app.get('dbpwd'),
 });

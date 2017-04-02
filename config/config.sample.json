@@ -1,0 +1,12 @@
+{
+    "port": 3000,
+    "siteUrl": "http://localhost:3000",
+    "fromName": "Rallly",
+    "fromEmail": "no-reploy@rallly.co",
+    "dbName": "rallly",
+    "dbUser": "",
+    "dbPwd": "",
+    "sgApiKey": "",
+    "sgTemplateId": "",
+    "dbAddress": "localhost"
+}

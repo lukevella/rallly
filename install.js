@@ -1,0 +1,127 @@
+var fs = require('fs');
+var prompt = require('prompt');
+var argv = require('yargs').argv;
+var env = process.env;
+
+fs.stat('config/config.json', function (err, stats) {
+    if (err) {
+        console.log('Configuration does not exists. Generating... ');
+        generateConfig();
+    } else {
+        if (argv.f) {
+            console.log('Overwriting config.json...')
+            generateConfig();
+        } else {
+            console.log('Configuration exists already. Doing nothing.');
+        }
+    }
+});
+
+function generateConfig() {
+    fs.readFile('config/config.sample.json', 'utf8', function (err, data) {
+        if (err) {
+            console.log(err)
+        }
+        if (argv.p) {
+            fs.createReadStream('config/config.sample.json').pipe(fs.createWriteStream('config/config.json'));
+            console.log('\nConfiguration file generated! Please open config/config.json and set the proper settings!');
+        } else {
+            if (argv.d) {
+                console.log('Configuration for docker...');
+                var json = {
+                    "port": env.PORT,
+                    "siteUrl": env.SITE_URL,
+                    "fromName": env.FROM_NAME,
+                    "fromEmail": env.FROM_EMAIL,
+                    "dbAddress": env.MONGO_ADDRESS,
+                    "dbName": env.DB_NAME,
+                    "dbUser": "",
+                    "dbPwd": "",
+                    "sgApiKey": env.SG_KEY,
+                    "sgTemplateId": env.SG_TEMPLATE_ID
+                }
+                fs.writeFile("config/config.json", JSON.stringify(json), function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log("\nConfiguration file generated!");
+                });
+            } else {
+                var obj = JSON.parse(data);
+                var schema = {
+                    properties: {
+                        port: {
+                            pattern: /^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/,
+                            message: 'Port must be only numbers',
+                            type: 'integer',
+                            required: true,
+                            default: obj.port,
+                        },
+                        siteUrl: {
+                            type: 'string',
+                            description: 'Used for creating an absolute URL. No trailing slashes. If port is not 80 or 443, include port number. ',
+                            required: true,
+                            default: obj.siteUrl,
+                        },
+                        fromName: {
+                            type: 'string',
+                            description: 'Email from name.',
+                            required: true,
+                            default: obj.fromName,
+                        },
+                        fromEmail: {
+                            type: 'string',
+                            description: 'Email from address.',
+                            required: true,
+                            default: obj.fromEmail,
+                        },
+                        dbAddress: {
+                            type: 'string',
+                            description: 'MongoDB server address.',
+                            required: true,
+                            default: obj.dbAddress,
+                        },
+                        dbName: {
+                            type: 'string',
+                            description: 'MongoDB database name.',
+                            required: true,
+                            default: obj.dbName,
+                        },
+                        dbUser: {
+                            type: 'string',
+                            description: 'MongoDB user name. Leave blank authentication is disabled.',
+                            default: obj.dbUser,
+                        },
+                        dbPwd: {
+                            type: 'string',
+                            hidden: true,
+                            description: 'MongoDB user password. Leave blank authentication is disabled.',
+                            default: obj.dbPwd,
+                        },
+                        sgApiKey: {
+                            type: 'string',
+                            description: 'SendGrid API Key. https://sendgrid.com',
+                            default: obj.sgApiKey,
+                        },
+                        sgTemplateId: {
+                            type: 'string',
+                            description: 'SendGrid Email Template ID. https://sendgrid.com',
+                            default: obj.sgTemplateId,
+                        }
+                    }
+                };
+                prompt.start();
+
+                prompt.get(schema, function (err, result) {
+                    fs.writeFile("config/config.json", JSON.stringify(result), function (err) {
+                        if (err) {
+                            return console.log(err);
+                        }
+
+                        console.log("\nConfiguration file generated!");
+                    });
+                });
+            }
+        }
+    });
+}
