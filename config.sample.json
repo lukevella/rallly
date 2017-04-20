@@ -10,5 +10,5 @@
     "smtpPort": 587,
     "smtpUser": "",
     "smtpPwd": "",
-    "smtpSecure": true
+    "smtpSecure": false
 }

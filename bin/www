@@ -6,5 +6,5 @@ var app = require('../app');
 // to disable direct requests to the application
 // Requests should come from Apache via mod_proxy on port 80
 var server = app.listen(app.get('port'), '0.0.0.0', function() {
-  debug('Express server listening on port ' + server.address().port);
+  debug(`Express server listening on port ${server.address().port} in ${process.env.NODE_ENV} mode`);
 });

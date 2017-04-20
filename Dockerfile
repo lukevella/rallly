@@ -11,4 +11,4 @@ COPY . /usr/src/app
 RUN npm run installation -- -d
 ENV DEBUG=rallly
 EXPOSE 3000
-CMD [ "node", "./bin/www" ]
+CMD ["node", "./bin/www"]

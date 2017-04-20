@@ -19,8 +19,8 @@ module.exports = function (app) {
     app.set('smtpPwd', env.SMTP_PWD || config.smtpPwd);
     app.set('smtpHost', env.SMTP_HOST || config.smtpHost);
     app.set('smtpPort', env.SMTP_PORT || config.smtpPort || 587);
-    app.set('smtpFrom', `"${app.get('fromName')}" <${app.get('fromEmail')}>`);
     app.set('smtpSecure', env.SMTP_SECURE || config.smtpSecure);
+    app.set('smtpFrom', `"${app.get('fromName')}" <${app.get('fromEmail')}>`);
 
     //SendGrid settings
     app.set('sendGridAPIKey', env.SG_KEY || config.sgApiKey);

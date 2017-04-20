@@ -6,7 +6,7 @@ services:
     ports:
      - "3000:3000"
     environment:
-     - NODE_ENV=development
+     - NODE_ENV=production
      - PORT=3000
      - SITE_URL=http://localhost:3000
      - FROM_NAME=Rallly

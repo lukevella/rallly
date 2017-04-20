@@ -1,0 +1,12 @@
+rallly.co {
+    tls hello@rallly.co
+
+    errors {
+        log ../error.log
+    }
+
+    proxy / 127.0.0.1:3000 {
+        health_check /health
+        transparent
+    }
+}

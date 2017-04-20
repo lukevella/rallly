@@ -24,7 +24,7 @@ function generateConfig() {
         }
         if (argv.p) {
             fs.createReadStream('config.sample.json').pipe(fs.createWriteStream('config.json'));
-            console.log('\nConfiguration file generated! Please open config/config.json and set the proper settings!');
+            console.log('\nConfiguration file generated! Please open config.json and set the proper settings!');
         } else {
             if (argv.d) {
                 console.log('Configuration for docker...');
@@ -43,7 +43,7 @@ function generateConfig() {
                     "smtpPwd": env.SMTP_PWD,
                     "smtpSecure": env.SMTP_SECURE
                 }
-                fs.writeFile("config/config.json", JSON.stringify(json), function (err) {
+                fs.writeFile("config.json", JSON.stringify(json), function (err) {
                     if (err) {
                         return console.log(err);
                     }
