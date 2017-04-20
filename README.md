@@ -9,7 +9,7 @@ Hey guys, thanks for all your feedback and your interest in Rallly! I'm currentl
 Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event. The application has been developed with the [MEAN](http://en.wikipedia.org/wiki/MEAN) stack of technologies.
 
 
-## Geting Started Quickly with Docker
+## Getting Started Quickly with Docker
 *This assumes that you have Docker installed*
 
 To get started quickly and easily, simply run the following:
@@ -27,9 +27,9 @@ Now run the server!
 docker-compose up -d
 ```
 
-Now that was simply!
+Now that was simple!
 
-## Manual Setup
+## Manual Setup [Detailed Production Docs](docs/production/README.md)
 ### Requirements
 
 To run Rallly you will need:
@@ -81,8 +81,8 @@ Open up `config.json` and fill in the parameters.
 #### Running
 To start the node server simply run `npm start`.
 
-### Development
-If you're going to be developing, run the `watch` task with gulp. Gulp is used to build the css (with sass), js and templates.
+### Development [Detailed Docs](docs/development/README.md)
+If you're going to be developing, run the `watch` task with gulp. Gulp is used to build the CSS (with SASS), JS and templates.
 
 ```bash
 gulp watch
