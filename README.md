@@ -18,7 +18,7 @@ cd Rallly
 ```
 Copy the sample `docker-compose.yml` then open it and set the variables. 
 ```bash
-cp docker-compose.sample.yml
+cp docker-compose.sample.yml docker-compose.yml
 ```
 Now run the server!
 ```bash
