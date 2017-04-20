@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "DEBUG=rallly nodemon ./bin/www",
     "postinstall": "bower install --allow-root",
     "installation": "npm i -q && npm run config -- -f",
     "config": "node install.js",
