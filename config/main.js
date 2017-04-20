@@ -1,6 +1,7 @@
 module.exports = function (app) {
     var env = process.env;
     var config = require('../config.json');
+    var isSecure = false;
     app.set('port', env.PORT || config.port);
     app.set('siteUrl', env.SITE_URL || config.siteUrl);
     app.set('absoluteUrl', function (path) {
@@ -19,7 +20,10 @@ module.exports = function (app) {
     app.set('smtpPwd', env.SMTP_PWD || config.smtpPwd);
     app.set('smtpHost', env.SMTP_HOST || config.smtpHost);
     app.set('smtpPort', env.SMTP_PORT || config.smtpPort || 587);
-    app.set('smtpSecure', env.SMTP_SECURE || config.smtpSecure);
+    
+    if (env.SMTP_SECURE) isSecure = (env.SMTP_SECURE == 'true');
+    else isSecure = (config.smtpSecure == 'true');
+    app.set('smtpSecure', isSecure);
     app.set('smtpFrom', `"${app.get('fromName')}" <${app.get('fromEmail')}>`);
 
     //SendGrid settings

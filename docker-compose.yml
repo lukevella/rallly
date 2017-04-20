@@ -5,19 +5,8 @@ services:
     image: nprail/rallly
     ports:
      - "3000:3000"
-    environment:
-     - NODE_ENV=production
-     - PORT=3000
-     - SITE_URL=http://localhost:3000
-     - FROM_NAME=Rallly
-     - FROM_EMAIL=no-reply@rallly.co
-     - DB_ADDRESS=db
-     - DB_NAME=rallly
-     - SMTP_HOST=
-     - SMTP_PORT=
-     - SMTP_USER=
-     - SMTP_PWD=
-     - SMTP_SECURE=false
+    env_file:
+     - .env
     depends_on:
       db:
         condition: service_healthy

@@ -3,6 +3,8 @@
 Hey guys, thanks for all your feedback and your interest in Rallly! I'm currently working on a new version that will address all the issues being brought up in this project along with a visual refresh and an up to date technology stack. I'm really excited to bring you this new and improved Rallly and hope to see even more people using it in the future. *– Luke*
 
 # [Rallly](http://rallly.co)
+[![Build Status](https://travis-ci.org/nprail/Rallly.svg?branch=master)](https://travis-ci.org/nprail/Rallly)
+[![Known Vulnerabilities](https://snyk.io/test/github/nprail/rallly/badge.svg)](https://snyk.io/test/github/nprail/rallly)
 
 Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event. The application has been developed with the [MEAN](http://en.wikipedia.org/wiki/MEAN) stack of technologies.
 
@@ -16,14 +18,16 @@ To get started quickly and easily, simply run the following:
 git clone git@github.com:lukevella/Rallly.git
 cd Rallly
 ```
-Copy the sample `docker-compose.yml` then open it and set the variables. 
+Copy the sample `.env` file then open it and set the variables. 
 ```bash
-cp docker-compose.sample.yml docker-compose.yml
+cp sample.env .env
 ```
 Now run the server!
 ```bash
 docker-compose up -d
 ```
+
+Now that was simply!
 
 ## Manual Setup
 ### Requirements

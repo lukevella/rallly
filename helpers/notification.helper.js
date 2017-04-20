@@ -34,7 +34,6 @@ transporter.use('compile', hbs(hbsOpts));
 transporter.verify(function (error, success) {
     if (error) {
         debug(error);
-        debug(transportConfig);
     } else {
         debug('Server is ready to take our messages');
     }
