@@ -25,7 +25,6 @@
     "nodemon": "^1.9.1",
     "numeral": "^1.5.3",
     "prompt": "^1.0.0",
-    "sendgrid": "^2.0.0",
     "serve-favicon": "^2.1.7",
     "shortid": "^2.2.4",
     "yargs": "^7.0.2"

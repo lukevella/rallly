@@ -33,9 +33,9 @@ transporter.use('compile', hbs(hbsOpts));
 // verify connection configuration
 transporter.verify(function (error, success) {
     if (error) {
-        console.log(error);
+        debug(error);
     } else {
-        console.log('Server is ready to take our messages');
+        debug('Server is ready to take our messages');
     }
 });
 
@@ -58,17 +58,11 @@ var sendEmail = function (options) {
 
     return transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            return console.log(error);
+            return debug(error);
         }
-        console.log('Message %s sent: %s', info.messageId, info.response);
+        debug('Message %s sent: %s', info.messageId, info.response);
     });
 };
-
-var responseHandler = function (err, json) {
-    if (err) {
-        debug('A mandrill error occurred: ' + err.name + ' - ' + err.message);
-    }
-}
 
 communicator.on('event:create', function (event) {
     sendInvites(event);
@@ -103,7 +97,6 @@ var sendEmailConfirmation = function (event) {
             'An email has been sent to each participant with a link to the event.<br /><br />' +
             'Important: To continue receiving email notifications about this event, please click the button below to verify your email address.'
     });
-    //sendgrid.send(email, responseHandler);
 }
 
 // Send an invite to all participants of the evnet
@@ -119,8 +112,6 @@ var sendInvites = function (event) {
             message: 'Rallly is a free collaborative scheduling service that lets you and your friends vote on a date to host an event. ' +
                 'Click on the button below to visit the event page and vote on the dates that best suit you.'
         });
-        //email.replyto = event.creator.email;
-        //sendgrid.send(email, responseHandler);
     });
 }
 
@@ -135,7 +126,6 @@ var verifyEmail = function (event) {
         message: `Hi ${event.creator.name},<br /><br />` +
             `If you would like to receive email updates from this event, please click on the button below to verify your email address.`
     });
-    //sendgrid.send(email, responseHandler);
 }
 
 var sendNewParticipantNotification = function (event, participant) {
