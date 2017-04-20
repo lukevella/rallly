@@ -3,6 +3,7 @@
     "siteUrl": "http://localhost:3000",
     "fromName": "Rallly",
     "fromEmail": "noreply@rallly.co",
+    "dbAddress":"localhost",
     "dbName": "rallly",
     "dbUser": "",
     "dbPwd": "",
