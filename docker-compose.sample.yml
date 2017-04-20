@@ -13,8 +13,11 @@ services:
      - FROM_EMAIL=no-reply@rallly.co
      - DB_ADDRESS=db
      - DB_NAME=rallly
-     - SG_KEY=
-     - SG_TEMPLATE_ID=
+     - SMTP_HOST=
+     - SMTP_PORT=
+     - SMTP_USER=
+     - SMTP_PWD=
+     - SMTP_SECURE=false
     depends_on:
       db:
         condition: service_healthy

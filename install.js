@@ -3,7 +3,7 @@ var prompt = require('prompt');
 var argv = require('yargs').argv;
 var env = process.env;
 
-fs.stat('config/config.json', function (err, stats) {
+fs.stat('config.json', function (err, stats) {
     if (err) {
         console.log('Configuration does not exists. Generating... ');
         generateConfig();
@@ -37,8 +37,11 @@ function generateConfig() {
                     "dbName": env.DB_NAME,
                     "dbUser": "",
                     "dbPwd": "",
-                    "sgApiKey": env.SG_KEY,
-                    "sgTemplateId": env.SG_TEMPLATE_ID
+                    "smtpHost": env.SMTP_HOST,
+                    "smtpPort": env.SMTP_PORT,
+                    "smtpUser": env.SMTP_USER,
+                    "smtpPwd": env.SMTP_PWD,
+                    "smtpSecure": env.SMTP_SECURE
                 }
                 fs.writeFile("config/config.json", JSON.stringify(json), function (err) {
                     if (err) {
@@ -121,7 +124,6 @@ function generateConfig() {
                         },
                         smtpSecure: {
                             type: 'boolean',
-                            hidden: true,
                             description: 'SMTP secure.',
                             default: obj.smtpSecure,
                         }

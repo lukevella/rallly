@@ -2,9 +2,13 @@
     "port": 3000,
     "siteUrl": "http://localhost:3000",
     "fromName": "Rallly",
-    "fromEmail": "no-reploy@rallly.co",
+    "fromEmail": "noreply@rallly.co",
     "dbName": "rallly",
     "dbUser": "",
     "dbPwd": "",
-    "dbAddress": "localhost"
+    "smtpHost": "",
+    "smtpPort": 587,
+    "smtpUser": "",
+    "smtpPwd": "",
+    "smtpSecure": true
 }
