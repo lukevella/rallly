@@ -55,7 +55,7 @@ Run the config script.
 ```bash
 npm run installation -- -p
 ```
-Open up `config/config.json` and fill in the parameters.
+Open up `config.json` and fill in the parameters.
 
 ```javascript
 {
@@ -67,8 +67,10 @@ Open up `config/config.json` and fill in the parameters.
     "dbAddress": "localhost", // MongoDB address not including port. 
     "dbUser": "", // MongoDB user name - leave blank if MongoDB auth is disabled
     "dbPwd": "", // MongoDB user password - leave blank if MongoDB auth is disabled
-    "sgApiKey": "", // https://sendgrid.com
-    "sgTemplateId": "" // https://sendgrid.com
+    "smtpUser": "", // SMTP user name
+    "smtpPwd": "", // SMTP user password
+    "smtpHost": "", // SMTP host
+    "smtpPort": 587 // SMTP port
 }
 ```
 
