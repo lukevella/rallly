@@ -18,12 +18,12 @@ fs.stat('config/config.json', function (err, stats) {
 });
 
 function generateConfig() {
-    fs.readFile('config/config.sample.json', 'utf8', function (err, data) {
+    fs.readFile('config.sample.json', 'utf8', function (err, data) {
         if (err) {
             console.log(err)
         }
         if (argv.p) {
-            fs.createReadStream('config/config.sample.json').pipe(fs.createWriteStream('config/config.json'));
+            fs.createReadStream('config.sample.json').pipe(fs.createWriteStream('config.json'));
             console.log('\nConfiguration file generated! Please open config/config.json and set the proper settings!');
         } else {
             if (argv.d) {
@@ -98,22 +98,39 @@ function generateConfig() {
                             description: 'MongoDB user password. Leave blank authentication is disabled.',
                             default: obj.dbPwd,
                         },
-                        sgApiKey: {
+                        smtpHost: {
                             type: 'string',
-                            description: 'SendGrid API Key. https://sendgrid.com',
-                            default: obj.sgApiKey,
+                            description: 'SMTP host.',
+                            default: obj.smtpHost,
                         },
-                        sgTemplateId: {
+                        smtpPort: {
+                            type: 'integer',
+                            description: 'SMTP port.',
+                            default: obj.smtpPort,
+                        },
+                        smtpUser: {
                             type: 'string',
-                            description: 'SendGrid Email Template ID. https://sendgrid.com',
-                            default: obj.sgTemplateId,
+                            description: 'SMTP user name.',
+                            default: obj.smtpUser,
+                        },
+                        smtpPwd: {
+                            type: 'string',
+                            hidden: true,
+                            description: 'SMTP user password.',
+                            default: obj.smtpPwd,
+                        },
+                        smtpSecure: {
+                            type: 'boolean',
+                            hidden: true,
+                            description: 'SMTP secure.',
+                            default: obj.smtpSecure,
                         }
                     }
                 };
                 prompt.start();
 
                 prompt.get(schema, function (err, result) {
-                    fs.writeFile("config/config.json", JSON.stringify(result), function (err) {
+                    fs.writeFile("config.json", JSON.stringify(result), function (err) {
                         if (err) {
                             return console.log(err);
                         }

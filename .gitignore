@@ -4,3 +4,4 @@ config/config.secret.js
 config/config.js
 public/vendor
 docker-compose.yml
+config.json

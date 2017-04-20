@@ -6,7 +6,5 @@
     "dbName": "rallly",
     "dbUser": "",
     "dbPwd": "",
-    "sgApiKey": "",
-    "sgTemplateId": "",
     "dbAddress": "localhost"
 }
