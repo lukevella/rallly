@@ -1,7 +1,6 @@
 language: node_js
 node_js:
   - "node"
-branches:
-  only:
-    - master
-    - develop
+script:
+  - npm test
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then npm test fi'
