@@ -22,6 +22,12 @@ Copy the sample `.env` file then open it and set the variables.
 ```bash
 cp sample.env .env
 ```
+
+Build the Dockerfile. 
+```bash
+docker-compose build
+```
+
 Now run the server!
 ```bash
 docker-compose up -d
