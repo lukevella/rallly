@@ -2,7 +2,8 @@ version: '2.1'
 services:
   app:
     restart: always
-    image: nprail/rallly
+    build:
+      context: .
     ports:
      - "3000:3000"
     env_file:

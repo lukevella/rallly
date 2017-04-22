@@ -8,7 +8,8 @@ RUN npm install -q
 
 COPY . /usr/src/app
 
-RUN npm run installation -- -d
+RUN npm run config -- -d
+
 ENV DEBUG=rallly
 EXPOSE 3000
 CMD ["node", "./bin/www"]
