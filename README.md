@@ -1,8 +1,5 @@
-### Update: 11 Nov 2016 📝
+![c3bc254fbaf76152cc6a9dc5d91714874bfc294b8d8d785db87157ed68aa2b3c45e82ab55f6f0e346aeec0bca00ea85862ba06e247ed4d365b968812fbc43c78](https://cloud.githubusercontent.com/assets/676849/25313656/e3a04458-2832-11e7-9bad-c9cf2c3264e0.png)
 
-Hey guys, thanks for all your feedback and your interest in Rallly! I'm currently working on a new version that will address all the issues being brought up in this project along with a visual refresh and an up to date technology stack. I'm really excited to bring you this new and improved Rallly and hope to see even more people using it in the future. *– Luke*
-
-# [Rallly](http://rallly.co)
 [![Build Status](https://travis-ci.org/lukevella/Rallly.svg?branch=master)](https://travis-ci.org/lukevella/Rallly)
 [![Known Vulnerabilities](https://snyk.io/test/github/lukevella/rallly/badge.svg)](https://snyk.io/test/github/lukevella/rallly)
 
