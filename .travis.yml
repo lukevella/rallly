@@ -3,4 +3,8 @@ node_js:
   - "node"
 script:
   - npm test
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then npm test fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run snyk; fi;'
+cache:
+  directories:
+    - node_modules
+    - public/vendor

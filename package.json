@@ -9,7 +9,7 @@
     "config": "node install.js",
     "prestart": "npm run config",
     "test": "",
-    "sync": "snyk test"
+    "snyk": "snyk test"
   },
   "dependencies": {
     "amdefine": "^0.1.0",
