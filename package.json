@@ -8,7 +8,7 @@
     "installation": "npm i -q && npm run config -- -f",
     "config": "node install.js",
     "prestart": "npm run config",
-    "test": "",
+    "test": "echo 'Error: no test specified'",
     "snyk": "snyk test"
   },
   "dependencies": {
