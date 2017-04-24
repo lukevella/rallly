@@ -8,7 +8,8 @@
     "installation": "npm i -q && npm run config -- -f",
     "config": "node install.js",
     "prestart": "npm run config",
-    "test": "snyk test"
+    "test": "",
+    "snyk": "snyk test"
   },
   "dependencies": {
     "amdefine": "^0.1.0",
