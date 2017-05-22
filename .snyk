@@ -1,4 +1,50 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.7.1
-ignore: {}
-patch: {}
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:brace-expansion:20170302':
+    - nodemon > chokidar > fsevents > node-pre-gyp > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2017-06-21T09:48:01.171Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > tar > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2017-06-21T09:48:01.171Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > tar-pack > tar > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2017-06-21T09:48:01.172Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > tar-pack > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2017-06-21T09:48:01.172Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > tar-pack > fstream-ignore > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2017-06-21T09:48:01.172Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > tar-pack > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2017-06-21T09:48:01.172Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > tar-pack > fstream-ignore > minimatch > brace-expansion:
+        reason: None given
+        expires: '2017-06-21T09:48:01.172Z'
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:ms:20170412':
+    - mongoose > ms:
+        patched: '2017-05-22T09:47:44.304Z'
+    - mongoose > mquery > debug > ms:
+        patched: '2017-05-22T09:47:44.304Z'
+    - morgan > debug > ms:
+        patched: '2017-05-22T09:38:57.195Z'
+      nodemon > chokidar > fsevents > node-pre-gyp > tar-pack > debug > ms:
+        patched: '2017-05-22T09:47:44.304Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > tar-pack > debug > ms:
+        patched: '2017-05-22T09:46:35.492Z'
+      morgan > debug > ms:
+        patched: '2017-05-22T09:47:44.304Z'
+  'npm:uglify-js:20150824':
+    - jade > transformers > uglify-js:
+        patched: '2017-05-22T09:38:57.195Z'
+  'npm:uglify-js:20151024':
+    - jade > transformers > uglify-js:
+        patched: '2017-05-22T09:38:57.195Z'
+  'npm:qs:20170213':
+    - nodemon > chokidar > fsevents > node-pre-gyp > request > qs:
+        patched: '2017-05-22T09:47:44.304Z'
