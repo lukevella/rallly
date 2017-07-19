@@ -3394,9 +3394,9 @@ sequencify@~0.0.7:
   version "0.0.7"
   resolved "https://npm.filiosoft.com/sequencify/-/sequencify-0.0.7.tgz#90cff19d02e07027fd767f5ead3e7b95d1e7380c"
 
-serve-favicon@^2.4.3:
+serve-favicon@^2.1.7:
   version "2.4.3"
-  resolved "https://npm.filiosoft.com/serve-favicon/-/serve-favicon-2.4.3.tgz#5986b17b0502642b641c21f818b1acce32025d23"
+  resolved "https://registry.npmjs.org/serve-favicon/-/serve-favicon-2.4.3.tgz#5986b17b0502642b641c21f818b1acce32025d23"
   dependencies:
     etag "~1.8.0"
     fresh "0.5.0"
