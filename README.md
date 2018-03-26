@@ -87,4 +87,4 @@ npm start
 ```
 
 ## License
-See the [LICENSE](LICENSE.txt) file for license rights and limitations (CC-BY-NC)
+See the [LICENSE](LICENSE) file.
