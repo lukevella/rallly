@@ -1,7 +1,6 @@
 ![c3bc254fbaf76152cc6a9dc5d91714874bfc294b8d8d785db87157ed68aa2b3c45e82ab55f6f0e346aeec0bca00ea85862ba06e247ed4d365b968812fbc43c78](https://cloud.githubusercontent.com/assets/676849/25313656/e3a04458-2832-11e7-9bad-c9cf2c3264e0.png)
 
 [![Build Status](https://travis-ci.org/lukevella/Rallly.svg?branch=master)](https://travis-ci.org/lukevella/Rallly)
-[![Known Vulnerabilities](https://snyk.io/test/github/lukevella/rallly/badge.svg)](https://snyk.io/test/github/lukevella/rallly)
 
 Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event. The application has been developed with the [MEAN](http://en.wikipedia.org/wiki/MEAN) stack of technologies.
 
@@ -15,7 +14,7 @@ To get started quickly and easily, simply run the following:
 git clone git@github.com:lukevella/Rallly.git
 cd Rallly
 ```
-Copy the sample `.env` file then open it and set the variables. 
+Copy the sample `.env` file then open it and set the variables.
 ```bash
 cp sample.env .env
 ```
@@ -53,7 +52,7 @@ npm run installation
 #### Manual Configuration
 *Only do this if you did not run `npm run installation`*
 
-Run the config script. 
+Run the config script.
 ```bash
 npm run installation -- -p
 ```
@@ -66,7 +65,7 @@ Open up `config.json` and fill in the parameters.
     "fromName": "Rallly", // Email from name
     "fromEmail": "no-reploy@rallly.co", // Email from address
     "dbName": "rallly", // MongoDB database name
-    "dbAddress": "localhost", // MongoDB address not including port. 
+    "dbAddress": "localhost", // MongoDB address not including port.
     "dbUser": "", // MongoDB user name - leave blank if MongoDB auth is disabled
     "dbPwd": "", // MongoDB user password - leave blank if MongoDB auth is disabled
     "smtpUser": "", // SMTP user name
@@ -88,4 +87,4 @@ npm start
 ```
 
 ## License
-See the [LICENSE](LICENSE.txt) file for license rights and limitations (CC-BY-NC)
+See the [LICENSE](LICENSE) file.
