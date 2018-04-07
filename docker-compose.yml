@@ -12,7 +12,7 @@ services:
       db:
         condition: service_healthy
   db:
-    image: mongo
+    image: mongo:3.4
     restart: always
     ports:
      - "27017:27017"
