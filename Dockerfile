@@ -8,7 +8,7 @@ RUN yarn
 
 COPY . /usr/src/app
 
-RUN npm run config -- -d
+RUN npm run config -- -df
 
 ENV DEBUG=rallly
 EXPOSE 3000

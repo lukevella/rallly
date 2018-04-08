@@ -11,6 +11,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mail:
+        condition: service_started
   db:
     image: mongo:3.4
     restart: always
@@ -18,10 +20,19 @@ services:
      - "27017:27017"
     healthcheck:
       test: ["CMD-SHELL", "echo 'db.stats().ok' | mongo 127.0.0.1/test --quiet"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
+      interval: 10s
+      timeout: 3s
+      retries: 10
     volumes:
       - /data/db
       - /var/lib/mongodb
       - /var/log/mongodb
+  mail:
+    image: djfarrelly/maildev
+    command: ["bin/maildev", "--web", "3001", "--smtp", "${SMTP_PORT:?SMTP_PORT}"]
+    restart: always
+    ports:
+     # SMTP port
+     - "${SMTP_PORT}:${SMTP_PORT}"
+     # Web UI for debugging mail
+     - "3001:3001"

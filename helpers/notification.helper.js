@@ -8,11 +8,14 @@ var debug = require('debug')('rallly');
 var nodemailer = require('nodemailer');
 var hbs = require('nodemailer-express-handlebars');
 
-var transportConfig = {
-    auth: {
+var transportConfig = {}
+
+// Add user/password auth if it is configured
+if (app.get('smtpUser')) {
+    transportConfig.auth = {
         user: app.get('smtpUser'),
         pass: app.get('smtpPwd')
-    }
+    };
 };
 
 // create reusable transporter object
@@ -23,6 +26,14 @@ if (app.get('smtpService')) {
     transportConfig.port = app.get('smtpPort');
     transportConfig.secure = app.get('smtpSecure');
 }
+
+// if we're in development, allow mail to self-sign certificates
+if (app.get('env') === 'development') {
+    transportConfig.tls = {
+        rejectUnauthorized: false
+    };
+};
+
 let transporter = nodemailer.createTransport(transportConfig);
 var hbsOpts = {
     viewEngine: 'express-handlebars',
@@ -33,6 +44,7 @@ transporter.use('compile', hbs(hbsOpts));
 // verify connection configuration
 transporter.verify(function (error, success) {
     if (error) {
+        debug('Server is not ready to take our messages');
         debug(error);
     } else {
         debug('Server is ready to take our messages');
@@ -58,6 +70,7 @@ var sendEmail = function (options) {
 
     return transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
+            debug('Message not sent:')
             return debug(error);
         }
         debug('Message %s sent: %s', info.messageId, info.response);
