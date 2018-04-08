@@ -15,7 +15,7 @@ To get started quickly and easily, simply run the following:
 git clone git@github.com:lukevella/Rallly.git
 cd Rallly
 ```
-Copy the sample `.env` file then open it and set the variables. 
+Copy the sample `.env` file. This contains a working development configuration.
 ```bash
 cp sample.env .env
 ```
@@ -26,6 +26,16 @@ docker-compose up -d
 ```
 
 Now that was simple!
+
+The following services are bound to `localhost` ports:
+
+| Port  | Service             |
+|-------|---------------------|
+| 3000  | Rallly UI           |
+| 3001  | Maildev UI          |
+| 3587  | Maildev SMTP        |
+| 27017 | Rallly MongoDB      |
+
 
 ## Manual Setup [Detailed Production Docs](docs/production/README.md)
 ### Requirements

@@ -5,7 +5,7 @@ services:
     build:
       context: .
     ports:
-     - "3000:3000"
+     - "${PORT}:${PORT}"
     env_file:
      - .env
     depends_on:
@@ -27,9 +27,12 @@ services:
       - /data/db
       - /var/lib/mongodb
       - /var/log/mongodb
+  
+  # Maildev will catch all mail sent to it
+  # It does not require authorisation
   mail:
     image: djfarrelly/maildev
-    command: ["bin/maildev", "--web", "3001", "--smtp", "${SMTP_PORT:?SMTP_PORT}"]
+    command: ["bin/maildev", "--web", "3001", "--smtp", "${SMTP_PORT}"]
     restart: always
     ports:
      # SMTP port
