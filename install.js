@@ -33,10 +33,7 @@ function generateConfig() {
                     "siteUrl": env.SITE_URL,
                     "fromName": env.FROM_NAME,
                     "fromEmail": env.FROM_EMAIL,
-                    "dbAddress": env.MONGO_ADDRESS,
-                    "dbName": env.DB_NAME,
-                    "dbUser": "",
-                    "dbPwd": "",
+                    "db": env.MONGO_URL,
                     "smtpHost": env.SMTP_HOST,
                     "smtpPort": env.SMTP_PORT,
                     "smtpUser": env.SMTP_USER,
@@ -78,28 +75,11 @@ function generateConfig() {
                             required: true,
                             default: obj.fromEmail,
                         },
-                        dbAddress: {
+                        db: {
                             type: 'string',
-                            description: 'MongoDB server address.',
+                            description: 'MongoDB connection string.',
                             required: true,
-                            default: obj.dbAddress,
-                        },
-                        dbName: {
-                            type: 'string',
-                            description: 'MongoDB database name.',
-                            required: true,
-                            default: obj.dbName,
-                        },
-                        dbUser: {
-                            type: 'string',
-                            description: 'MongoDB user name. Leave blank authentication is disabled.',
-                            default: obj.dbUser,
-                        },
-                        dbPwd: {
-                            type: 'string',
-                            hidden: true,
-                            description: 'MongoDB user password. Leave blank authentication is disabled.',
-                            default: obj.dbPwd,
+                            default: obj.db,
                         },
                         smtpHost: {
                             type: 'string',

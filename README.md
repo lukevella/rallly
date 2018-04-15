@@ -33,7 +33,7 @@ To run Rallly you will need:
 
 * MongoDB
 * Node.js + npm
-* Bower (Not Necessary)
+* Bower
 
 ### Setup
 
@@ -64,10 +64,7 @@ Open up `config.json` and fill in the parameters.
     "siteUrl": "http://localhost:3000", // Used for creating an absolute URL
     "fromName": "Rallly", // Email from name
     "fromEmail": "no-reploy@rallly.co", // Email from address
-    "dbName": "rallly", // MongoDB database name
-    "dbAddress": "localhost", // MongoDB address not including port.
-    "dbUser": "", // MongoDB user name - leave blank if MongoDB auth is disabled
-    "dbPwd": "", // MongoDB user password - leave blank if MongoDB auth is disabled
+    "db": "mongodb://localhost:27017/rallly", // MongoDB connection string
     "smtpUser": "", // SMTP user name
     "smtpPwd": "", // SMTP user password
     "smtpHost": "", // SMTP host

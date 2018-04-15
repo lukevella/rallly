@@ -23,16 +23,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 require('./config/routes')(app);
 
-var dbname = app.get('dbname');
-var dbaddress = app.get('dbaddress');
-var mongoAddress = 'mongodb://' + dbaddress + '/' + dbname;
-debug(mongoAddress);
+var mongoAddress = app.get('db');
 mongoose.connect(mongoAddress, {
-    user : app.get('dbuser'),
-    pass : app.get('dbpwd'),
+    useMongoClient: true,
 });
+
 var db = mongoose.connection;
 db.on('error', debug.bind(debug, 'connection error'));
 db.once('open', function(){
-    debug('connected successfully to db: ' + dbname);
+    debug('connected successfully to db: ' + mongoAddress);
 });

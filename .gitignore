@@ -3,3 +3,4 @@ npm-debug.log
 public/vendor
 config.json
 .env
+.config

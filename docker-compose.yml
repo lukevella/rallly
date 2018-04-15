@@ -4,10 +4,15 @@ services:
     restart: always
     build:
       context: .
+      args:
+        dev: "true"
+    command: "npm start"
     ports:
      - "3000:3000"
     env_file:
      - .env
+    volumes:
+     - .:/home/node
     depends_on:
       db:
         condition: service_healthy
@@ -15,10 +20,10 @@ services:
     image: mongo
     restart: always
     ports:
-     - "27017:27017"
+     - 27017
     healthcheck:
       test: ["CMD-SHELL", "echo 'db.stats().ok' | mongo 127.0.0.1/test --quiet"]
-      interval: 1m30s
+      interval: 2s
       timeout: 10s
       retries: 3
     volumes:

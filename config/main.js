@@ -9,10 +9,7 @@ module.exports = function (app) {
     });
     app.set('fromName', env.FROM_NAME || config.fromName);
     app.set('fromEmail', env.FROM_EMAIL || config.fromEmail);
-    app.set('dbaddress', env.DB_ADDRESS || config.dbAddress);
-    app.set('dbname', env.DB_NAME || config.dbName);
-    app.set('dbuser', config.dbUser);
-    app.set('dbpwd', config.dbPwd);
+    app.set('db', env.MONGO_URL || config.db);
 
     // SMTP settings
     app.set('smtpService', env.SMTP_SERVICE || config.smtpService);
@@ -25,8 +22,4 @@ module.exports = function (app) {
     else isSecure = (config.smtpSecure == 'true');
     app.set('smtpSecure', isSecure);
     app.set('smtpFrom', `"${app.get('fromName')}" <${app.get('fromEmail')}>`);
-
-    //SendGrid settings
-    app.set('sendGridAPIKey', env.SG_KEY || config.sgApiKey);
-    app.set('sendGridTemplateId', env.SG_TEMPLATE_ID || config.sgTemplateId);
 };

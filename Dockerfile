@@ -1,15 +1,31 @@
-FROM node:boron
+FROM node:8.9-alpine
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+ARG dev
 
-COPY package.json /usr/src/app/
-RUN npm install -q
+RUN if [ "$dev" = "true" ] ; then npm install -g nodemon ; fi;
 
-COPY . /usr/src/app
+RUN npm install -g bower
+
+RUN apk --update add git
+
+USER node
+
+WORKDIR /home/node
+
+COPY package.json .
+
+COPY package-lock.json .
+
+COPY bower.json .
+
+COPY .bowerrc .
+
+RUN npm install --only=production
+
+COPY . .
 
 RUN npm run config -- -d
 
-ENV DEBUG=rallly
 EXPOSE 3000
+
 CMD ["node", "./bin/www"]
