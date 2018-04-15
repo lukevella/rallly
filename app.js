@@ -21,7 +21,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-require('./config/routes')(app);
+if (process.env.NODE_ENV === 'maintenance') {
+    app.get('*', function(req, res) {
+        res.send('Rallly is down for maintenance. Please check back in a few minutes');
+    })
+} else {
+    require('./config/routes')(app);
+}
 
 var mongoAddress = app.get('db');
 mongoose.connect(mongoAddress, {
