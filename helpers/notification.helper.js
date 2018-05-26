@@ -131,7 +131,7 @@ var verifyEmail = function (event) {
 var sendNewParticipantNotification = function (event, participant) {
     sendEmail({
         to: event.creator.email,
-        subject: 'Rallly: ' + event.title + ' - New Partcipant',
+        subject: 'Rallly: ' + event.title + ' - New Participant',
         title: participant.name + ' has voted!',
         buttonText: 'View Event',
         buttonURL: app.get('absoluteUrl')(event._id),
