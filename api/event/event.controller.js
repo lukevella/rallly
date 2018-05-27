@@ -75,6 +75,10 @@ exports.update = function(req, res){
                     communicator.emit('event:update:creator.email', updatedEvent, event);
             }
 
+            if (event.creator.shouldResetParticipants != updatedEvent.creator.shouldResetParticipants) {
+              communicator.emit('event:update:creator.shouldResetParticipants', updatedEvent, event);
+            }
+
             Event
                 .update({ '_id' : req.params.id }, updatedEvent)
                 .exec(function(){
