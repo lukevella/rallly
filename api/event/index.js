@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var controller = require('./event.controller');
-var debug = require('debug')('rallly');
+var rateLimit = require("express-rate-limit")
 /* GET home page. */
 
 var after = function(req, res) {
@@ -14,7 +14,11 @@ var after = function(req, res) {
     }
 }
 
-router.post('/', controller.create, after);
+router.post('/', rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour window
+    max: 15, // start blocking after 5 requests
+    message: 'Too many requests from your IP, please try again after an hour'
+}), controller.create, after);
 router.get('/:id', controller.show, after);
 router.put('/:id', controller.update, after);
 router.delete('/:id', controller.delete, after);
@@ -27,8 +31,5 @@ router.delete('/:id/comment/:cid', controller.deleteComment, after);
 router.post('/:id/participant', controller.createParticipant, after);
 router.delete('/:id/participant/:pid', controller.deleteParticipant, after);
 router.put('/:id/participant/:pid', controller.updateParticipant, after);
-
-
-
 
 module.exports = router;
