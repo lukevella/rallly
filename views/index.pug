@@ -14,10 +14,11 @@ block scripts
 block content
     div(ng-app='landing')
         section#intro.intro: .intro-overlay: .container
-            header.header: .container
+            header.header: .container(style="display: flex; align-items: center;")
                 a.logo(href='/')
                     img(src='/images/logo.png', alt='Rallly Collaborative Scheduling')
-                nav.main-nav
+                    a(href="https://try.rallly.co" style="background: #5e63ab; padding: 3px 8px; border-radius: 5px; text-decoration: none; color: white; display: block; margin-left: 20px; font-size: 12px;") 🔥Try the new version
+                nav.main-nav(style="flex-grow: 1;")
                     ul.links
                         li: a.active(href='#', scroll-to='intro') Home
                         li: a(href='#', scroll-to='features') Features
