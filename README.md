@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/lukevella/Rallly.svg?branch=master)](https://travis-ci.org/lukevella/Rallly)
 
-Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event. The application has been developed with the [MEAN](https://en.wikipedia.org/wiki/MEAN_(solution_stack)) stack of technologies.
+Rallly is a free collaborative scheduling service that helps you and your friends vote on a date to host an event. The application has been developed with the [MEAN](https://en.wikipedia.org/wiki/MEAN_(solution_stack)) solution stack.
 
 
 ## Getting Started Quickly with Docker
