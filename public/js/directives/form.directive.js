@@ -1,6 +1,6 @@
 angular.module('rallly')
 .service('FormHelper', function(){
-    this.emailRegexString = '^([\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4})?$';
+    this.emailRegexString = '^\s+@\s+$';
     this.emailRegex = new RegExp(this.emailRegexString);
     this.prettyError = function(errors, field){
         if (errors.required) return field + " is required";
