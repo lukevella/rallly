@@ -57,7 +57,7 @@ model Link {
   urlId             String      @id @unique
   role              Role
   pollId            String
-  poll              Poll        @relation(fields: [pollId], references: [urlId])
+  poll              Poll        @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
   createdAt         DateTime    @default(now())
 
   @@unique([pollId, role])
@@ -79,7 +79,7 @@ model Option {
   id      String          @id @default(cuid())
   value   String
   pollId  String
-  poll    Poll           @relation(fields: [pollId], references: [urlId])
+  poll    Poll           @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
   votes   Vote[]
 }
 
@@ -96,7 +96,7 @@ model Vote {
 model Comment {
   id            String            @id @default(cuid())
   content       String
-  poll          Poll              @relation(fields:[pollId], references: [urlId])
+  poll          Poll              @relation(fields:[pollId], references: [urlId], onDelete: Cascade)
   pollId        String
   authorName    String
   user          User?             @relation(fields: [userId], references: [id])

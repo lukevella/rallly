@@ -46,13 +46,7 @@ export default async function handler(
   res: NextApiResponse<GetPollApiResponse>,
 ) {
   const urlId = getQueryParam(req, "urlId");
-
-  const existingPoll = await prisma.poll.findUnique({ where: { urlId } });
-
-  if (existingPoll) {
-    // if the poll already exists with this id then we probably shouldn't be here
-    return res.status(400).end();
-  }
+  const reset = req.query.reset;
 
   const client = await getMongoClient();
   if (!client) {
@@ -104,6 +98,10 @@ export default async function handler(
       }
     });
   });
+
+  if (reset) {
+    await prisma.poll.delete({ where: { urlId: legacyPoll._id } });
+  }
 
   const poll = await prisma.poll.create({
     data: {
