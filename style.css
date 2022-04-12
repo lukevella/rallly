@@ -134,10 +134,6 @@
   [data-popper-placement="bottom"] .tooltip-arrow {
     @apply bottom-full border-b-slate-700;
   }
-
-  .email {
-    @apply font-medium font-mono whitespace-nowrap text-indigo-300;
-  }
 }
 
 @layer components {

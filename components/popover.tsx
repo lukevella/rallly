@@ -34,7 +34,7 @@ const Popover: React.VoidFunctionComponent<PopoverProps> = ({
 
   const portal = document.getElementById("portal");
   return (
-    <HeadlessPopover>
+    <HeadlessPopover as={React.Fragment}>
       <HeadlessPopover.Button
         ref={setReferenceElement}
         as="div"

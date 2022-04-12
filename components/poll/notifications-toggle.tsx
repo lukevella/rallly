@@ -37,7 +37,9 @@ const NotificationsToggle: React.VoidFunctionComponent<NotificationsToggleProps>
                       email: poll.user.email,
                     }}
                     components={{
-                      b: <span className="email" />,
+                      b: (
+                        <span className="text-indigo-300 whitespace-nowrap font-medium font-mono " />
+                      ),
                     }}
                   />
                 </div>
