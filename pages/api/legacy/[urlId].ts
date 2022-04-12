@@ -1,45 +1,10 @@
 import { GetPollApiResponse } from "api-client/get-poll";
-import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { exclude, getQueryParam } from "utils/api-utils";
+import { LegacyPoll } from "utils/legacy-utils";
 import { getMongoClient } from "utils/mongodb-client";
 import { nanoid } from "utils/nanoid";
 import { prisma } from "../../../db";
-
-interface LegacyPoll {
-  __private: {
-    verificationCode: string;
-  };
-  _id: string;
-  title: string;
-  location: string;
-  isExample: boolean;
-  isDeleted: boolean;
-  isClosed: boolean;
-  emails: string[];
-  description: string;
-  dates?: Date[];
-  creator: {
-    name: string;
-    email: string;
-    isVerified: boolean;
-    allowNotifications: boolean;
-  };
-  created: Date;
-  comments?: Array<{
-    _id: ObjectId;
-    author: {
-      name: string;
-    };
-    content: string;
-    created: Date;
-  }>;
-  participants?: Array<{
-    _id: ObjectId;
-    name: string;
-    votes?: boolean[];
-  }>;
-}
 
 export default async function handler(
   req: NextApiRequest,

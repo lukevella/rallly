@@ -1,5 +1,7 @@
 import { GetPollApiResponse } from "api-client/get-poll";
 import { NextApiResponse } from "next";
+import { resetDates } from "utils/legacy-utils";
+import { getMongoClient } from "utils/mongodb-client";
 import { UpdatePollPayload } from "../../../../api-client/update-poll";
 import { prisma } from "../../../../db";
 import { exclude, withLink } from "../../../../utils/api-utils";
@@ -46,6 +48,25 @@ export default withLink(
           return res
             .status(404)
             .json({ status: 404, message: "Poll not found" });
+        }
+
+        if (
+          poll.legacy &&
+          // has converted options without timezone
+          poll.options.some(({ value }) => value.indexOf("T") === -1)
+        ) {
+          // We need to reset the dates for polls that lost their timezone data because some users
+          // of the old version will end up seeing the wrong dates
+          const fixedPoll = await resetDates(poll.urlId);
+
+          if (fixedPoll) {
+            return res.json({
+              ...exclude(fixedPoll, "verificationCode"),
+              role: link.role,
+              urlId: link.urlId,
+              pollId: poll.urlId,
+            });
+          }
         }
 
         return res.json({

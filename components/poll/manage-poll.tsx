@@ -32,7 +32,7 @@ const ManagePoll: React.VoidFunctionComponent<{
   const queryClient = useQueryClient();
   const { mutate: resetDates } = useMutation(
     async () => {
-      await axios.get(`/api/legacy/${poll.urlId}?reset=true`);
+      await axios.get(`/api/legacy/${poll.urlId}/reset`);
     },
     {
       onSettled: () => {
