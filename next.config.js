@@ -44,6 +44,10 @@ const moduleExports = {
         source: "/admin/:urlId",
         destination: "/poll?urlId=:urlId",
       },
+      {
+        source: "/verify/:urlId/code/:code",
+        destination: "/poll?urlId=:urlId&code=:code",
+      },
     ];
   },
 };
