@@ -66,19 +66,21 @@ export const resetDates = async (legacyPollId: string) => {
 
   const promises = [];
   for (let i = 0; i < existingOptions.length; i++) {
-    const legacyOption = legacyPoll.dates?.find(
-      (date) =>
-        date.toISOString().substring(0, 10) === existingOptions[i].value,
-    );
-    if (legacyOption) {
-      promises.push(
-        prisma.option.update({
-          where: { id: existingOptions[i].id },
-          data: {
-            value: legacyOption.toISOString(),
-          },
-        }),
+    const existingOption = existingOptions[i];
+    if (existingOption.value.indexOf("T") === -1) {
+      const legacyOption = legacyPoll.dates?.find(
+        (date) => date.toISOString().substring(0, 10) === existingOption.value,
       );
+      if (legacyOption) {
+        promises.push(
+          prisma.option.update({
+            where: { id: existingOption.id },
+            data: {
+              value: legacyOption.toISOString(),
+            },
+          }),
+        );
+      }
     }
   }
   await prisma.$transaction(promises);
