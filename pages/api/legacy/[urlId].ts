@@ -130,6 +130,7 @@ export default async function handler(
           },
         },
       },
+      notifications: legacyPoll.creator.allowNotifications,
       verificationCode: await nanoid(), // can't get it from api
       options: {
         createMany: {
