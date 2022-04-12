@@ -18,6 +18,7 @@ import Button from "@/components/button";
 import { Placement } from "@popperjs/core";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import { usePlausible } from "next-plausible";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
 
@@ -27,8 +28,9 @@ const ManagePoll: React.VoidFunctionComponent<{
 }> = ({ targetTimeZone, placement }) => {
   const { t } = useTranslation("app");
   const poll = usePoll();
+  const plausible = usePlausible();
   const queryClient = useQueryClient();
-  const { mutate: resetPoll } = useMutation(
+  const { mutate: resetDates } = useMutation(
     async () => {
       await axios.get(`/api/legacy/${poll.urlId}?reset=true`);
     },
@@ -42,22 +44,15 @@ const ManagePoll: React.VoidFunctionComponent<{
   const [resetModalContext, openResetModal] = useModal({
     overlayClosable: true,
     title: "Are you sure?",
-    description: (
-      <>
-        This will reset the poll to how it was before it was transferred to the
-        new version.
-        <em className="block mt-2">
-          Any changes (including votes or comments) that were done in the new
-          version will be lost.
-        </em>
-      </>
-    ),
+    description:
+      "This will reset the dates to how they were before the upgrade.",
     okText: "Reset",
     okButtonProps: {
       type: "danger",
     },
     onOk: () => {
-      resetPoll();
+      plausible("Reset dates");
+      resetDates();
     },
     cancelText: "Cancel",
   });
@@ -247,7 +242,7 @@ const ManagePoll: React.VoidFunctionComponent<{
         {poll.legacy && poll.options[0].value.indexOf("T") === -1 ? (
           <DropdownItem
             icon={Refresh}
-            label="Reset poll"
+            label="Reset dates"
             onClick={() => {
               openResetModal();
             }}

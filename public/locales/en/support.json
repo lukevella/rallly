@@ -15,7 +15,7 @@
   "howDoIShareQuestion": "How do I share my poll with my participants?",
   "howDoIShareAnswer": "To share your poll, click on the <b>Share</b> button next to the title of your poll and copy the participant link. You can share this link with your participants through your own channels such as email, whatsapp, facebook etc…",
   "wrongDaysShownQuestion": "My poll is now showing the wrong dates. What can I do?",
-  "wrongDaysShownAnswer": "A number of users have been affected by this bug which is caused by the previous version storing the incorrect dates in the database. However when the dates are adjusted for the user's time zone they appear to be correct. If you notice that your days have shifted you can reset your poll by clicking <b>Manage</b> > <b>Reset Poll</b>. This will refetch the data from the legacy database and revert it to how it was before the transfer. <b>Any changes (including votes or comments) made after the poll was transferred will be lost</b>.",
+  "wrongDaysShownAnswer": "A number of users have been affected by this bug which is caused by the previous version storing the incorrect dates in the database. However when the dates are adjusted for the user's time zone they appear to be correct. If you notice that your days have shifted you can reset your dates by clicking <b>Manage</b> > <b>Reset dates</b>. This will refetch the data from the legacy database and revert the dates to how they were before the upgrade.",
   "contributeQuestion": "How can I contribute?",
   "contributeAnswer": "Rallly is 100% self-funded so the best way to contribute is to become a <a>sponsor</a>. This money will go towards paying for hosting and will support future development of this website."
 }

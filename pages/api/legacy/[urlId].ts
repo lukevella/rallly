@@ -80,6 +80,69 @@ export default async function handler(
     });
   }
 
+  if (reset) {
+    const existingOptions = await prisma.option.findMany({
+      where: { pollId: legacyPoll._id },
+      orderBy: {
+        value: "asc",
+      },
+    });
+
+    if (!existingOptions) {
+      return res.status(400).end();
+    }
+
+    const promises = [];
+    for (let i = 0; i < existingOptions.length; i++) {
+      promises.push(
+        prisma.option.update({
+          where: { id: existingOptions[i].id },
+          data: {
+            value: newOptions[i].value,
+          },
+        }),
+      );
+    }
+    await prisma.$transaction(promises);
+
+    const poll = await prisma.poll.findUnique({
+      where: {
+        urlId: legacyPoll._id,
+      },
+      include: {
+        options: {
+          include: {
+            votes: true,
+          },
+        },
+        participants: {
+          include: {
+            votes: true,
+          },
+          orderBy: [
+            {
+              createdAt: "desc",
+            },
+            { name: "desc" },
+          ],
+        },
+        user: true,
+        links: true,
+      },
+    });
+
+    if (!poll) {
+      return res.status(404);
+    }
+
+    return res.json({
+      ...exclude(poll, "verificationCode"),
+      role: "admin",
+      urlId: poll.urlId,
+      pollId: poll.urlId,
+    });
+  }
+
   const newParticipants = legacyPoll.participants?.map((legacyParticipant) => ({
     name: legacyParticipant.name,
     id: legacyParticipant._id.toString(),
@@ -98,10 +161,6 @@ export default async function handler(
       }
     });
   });
-
-  if (reset) {
-    await prisma.poll.delete({ where: { urlId: legacyPoll._id } });
-  }
 
   const poll = await prisma.poll.create({
     data: {
