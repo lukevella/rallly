@@ -56,7 +56,11 @@ const ManagePoll: React.VoidFunctionComponent<{
                   }
                 : {
                     type: "date",
-                    date: start,
+                    date:
+                      start.indexOf("T") === -1
+                        ? start
+                        : // legacy polls
+                          new Date(start).toISOString().substring(0, 10),
                   };
             }),
             timeZone: poll.timeZone ?? "",
