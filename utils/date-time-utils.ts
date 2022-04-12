@@ -63,7 +63,8 @@ export const decodeDateOption = (
   }
 
   // we add the time because otherwise Date will assume UTC time which might change the day for some time zones
-  const date = new Date(option + "T00:00:00");
+  const dateString = option.indexOf("T") === -1 ? option + "T00:00:00" : option;
+  const date = new Date(dateString);
   return {
     type: "date",
     day: format(date, "dd"),

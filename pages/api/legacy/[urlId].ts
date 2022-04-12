@@ -82,7 +82,7 @@ export default async function handler(
     const date = legacyPoll.dates[i].toISOString();
     newOptions.push({
       id: await nanoid(),
-      value: date.substring(0, date.indexOf("T")), // remove time
+      value: date,
     });
   }
 
