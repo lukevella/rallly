@@ -89,7 +89,7 @@ model Vote {
   participantId String
   option        Option             @relation(fields: [optionId], references: [id], onDelete: Cascade)
   optionId      String         
-  poll          Poll              @relation(fields: [pollId], references: [urlId])
+  poll          Poll              @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
   pollId        String
 }
 
