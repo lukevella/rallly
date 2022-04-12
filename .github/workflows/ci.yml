@@ -1,0 +1,78 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+      - development
+
+jobs:
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: ESLint
+        run: yarn lint
+
+  # Label of the container job
+  integration-tests:
+    name: Run tests
+    # Containers must run in Linux based operating systems
+    runs-on: ubuntu-latest
+
+    steps:
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Set environment variables
+        run: |
+          echo "DATABASE_URL=postgresql://postgres:password@localhost:5432/db" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run db
+        run: |
+          docker pull postgres:14.2
+          docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db postgres:14.2
+          yarn wait-on --timeout 60000 tcp:localhost:5432
+
+      - name: Build
+        run: yarn build
+
+      - name: Deploy migrations
+        run: yarn prisma migrate deploy
+
+      - name: Install playwright dependencies
+        run: yarn playwright install --with-deps chromium
+
+      - name: Launch app
+        run: yarn start 2>&1 & # backgrounnd mode
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Upload artifact playwright-report
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: playwright-report
+          path: ./playwright-report

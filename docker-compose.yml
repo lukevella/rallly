@@ -1,0 +1,25 @@
+version: "3.3"
+services:
+  rallly_db:
+    image: postgres:14.2
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  rallly:
+    build:
+      context: .
+      args:
+        - DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db?pgbouncer=true
+    restart: always
+    command: sh -c "DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db yarn prisma migrate deploy && yarn start"
+    depends_on:
+      - rallly_db
+    ports:
+      - 3000:3000
+
+volumes:
+  db-data:
+    driver: local

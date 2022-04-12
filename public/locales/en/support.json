@@ -1,0 +1,19 @@
+{
+  "supportContactTitle": "Contact",
+  "supportContactMessage": "For any questions not covered here or if you'd like to share your feedback, send an email to: <a>support@rallly.co</a> or:",
+  "chatWithSupport": "Start chat",
+  "isMyDataSafeQuestion": "Is my data safe?",
+  "isMyDataSafeAnswer": "Yes! We do everything we can to keep your data safe and make sure your privacy is respected. We do not use your data to make a profit and it is not shared with any third-parties. If you have any concerns or would like to request the removal of your data from our servers please send an email to <a>support@rallly.co</a>",
+  "selfHostQuestion": "How do I run Rallly on my own server?",
+  "selfHostAnswer": "Check out the repository <a>README</a> for instructions on how to get Rallly running on your machine.",
+  "canYouHelpMeSetUpRalllyQuestion": "Can you help me set up Rallly on my own server?",
+  "canYouHelpMeSetUpRalllyAnswer": "Unfortunately it's not feasible to offer individual support to everyone. If you're having trouble getting it running you can ask for help on <a>github discussions</a>.",
+  "canRalllyDoQuestion": "How do I do <em>x</em>? Can Rallly do <em>y</em>?",
+  "canRalllyDoAnswer": "The best place to ask these questions are on our <a>github discussions</a>. You may find it has been asked already and if not your question will serve as a guide for others in the future.",
+  "legacyPollsQuestion": "What happened to the polls created with the previous version of Rallly?",
+  "legacyPollsAnswer": "Legacy polls are stored in a different database but you can still access the poll with the same URL. The polls will be transferred over in to the new database when you first try to access it. If a poll has not been accessed for at least two months then it might no longer be available but you can contact <a>support@rallly.co</a> to attempt to recover it.",
+  "howDoIShareQuestion": "How do I share my poll with my participants?",
+  "howDoIShareAnswer": "To share your poll, click on the <b>Share</b> button next to the title of your poll and copy the participant link. You can share this link with your participants through your own channels such as email, whatsapp, facebook etc…",
+  "contributeQuestion": "How can I contribute?",
+  "contributeAnswer": "Rallly is 100% self-funded so the best way to contribute is to become a <a>sponsor</a>. This money will go towards paying for hosting and will support future development of this website."
+}

@@ -1,0 +1,107 @@
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String           @id @default(cuid())
+  name          String
+  email         String           @unique
+  polls         Poll[]
+  participants  Participant[]
+  comments      Comment[]
+}
+
+enum PollType {
+  date
+}
+
+model Poll {
+  urlId            String        @id @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  deadline         DateTime?
+  title            String
+  type             PollType
+  description      String?
+  location         String?
+  user             User          @relation(fields: [userId], references: [id])
+  userId           String
+  votes            Vote[]
+  verificationCode String
+  timeZone         String?
+  verified         Boolean       @default(false)
+  options          Option[]
+  participants     Participant[]
+  authorName       String        @default("")
+  demo             Boolean       @default(false)
+  comments         Comment[]
+  links            Link[]
+  legacy           Boolean       @default(false)
+  closed           Boolean       @default(false)
+  notifications    Boolean       @default(false)
+
+  @@unique([urlId, verificationCode])
+}
+
+enum Role {
+  admin
+  participant
+}
+
+model Link {
+  urlId             String      @id @unique
+  role              Role
+  pollId            String
+  poll              Poll        @relation(fields: [pollId], references: [urlId])
+  createdAt         DateTime    @default(now())
+
+  @@unique([pollId, role])
+}
+
+model Participant {
+  id          String          @id @default(cuid())
+  name        String
+  user        User?           @relation(fields: [userId], references: [id])
+  userId      String?
+  poll        Poll           @relation(fields: [pollId], references: [urlId])
+  pollId      String
+  votes       Vote[]
+  createdAt   DateTime        @default(now())
+  @@unique([id, pollId])
+}
+
+model Option {
+  id      String          @id @default(cuid())
+  value   String
+  pollId  String
+  poll    Poll           @relation(fields: [pollId], references: [urlId])
+  votes   Vote[]
+}
+
+model Vote {
+  id            String             @id @default(cuid())
+  participant   Participant        @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  participantId String
+  option        Option             @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  optionId      String         
+  poll          Poll              @relation(fields: [pollId], references: [urlId])
+  pollId        String
+}
+
+model Comment {
+  id            String            @id @default(cuid())
+  content       String
+  poll          Poll              @relation(fields:[pollId], references: [urlId])
+  pollId        String
+  authorName    String
+  user          User?             @relation(fields: [userId], references: [id])
+  userId        String?
+  createdAt     DateTime          @default(now())
+
+  @@unique([id, pollId])
+}

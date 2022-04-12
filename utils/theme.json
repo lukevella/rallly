@@ -1,0 +1,18 @@
+{
+  "color": {
+    "background": "#FFFFFF",
+    "highlightBg": "#f9fafd",
+    "primary": "#8A75AE",
+    "orange": "#ff4d4f",
+    "border": "#ECEEF0",
+    "textDark": "#3f4650",
+    "textMid": "#666b77",
+    "textLight": "#A0A6BA",
+    "success": "#52c41a",
+    "danger": "#EA3B66"
+  },
+  "spacing": {
+    "xs": "4px",
+    "sm": "8px"
+  }
+}
