@@ -240,16 +240,18 @@ const PollPage: NextPage = () => {
                           }
                           targetTimeZone={targetTimeZone}
                         />
-                        <Popover
-                          trigger={
-                            <Button type="primary" icon={<Share />}>
-                              Share
-                            </Button>
-                          }
-                          placement={isWideScreen ? "bottom-end" : undefined}
-                        >
-                          <Sharing links={poll.links} />
-                        </Popover>
+                        <div>
+                          <Popover
+                            trigger={
+                              <Button type="primary" icon={<Share />}>
+                                Share
+                              </Button>
+                            }
+                            placement={isWideScreen ? "bottom-end" : undefined}
+                          >
+                            <Sharing links={poll.links} />
+                          </Popover>
+                        </div>
                       </div>
                     ) : null}
                   </div>

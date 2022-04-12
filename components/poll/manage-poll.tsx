@@ -3,6 +3,7 @@ import Dropdown, { DropdownItem } from "../dropdown";
 import { usePoll } from "../use-poll";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Table from "@/components/icons/table.svg";
+import Refresh from "@/components/icons/refresh.svg";
 import Save from "@/components/icons/save.svg";
 import Cog from "@/components/icons/cog.svg";
 import LockOpen from "@/components/icons/lock-open.svg";
@@ -15,6 +16,8 @@ import { useUpdatePollMutation } from "./mutations";
 import { PollDetailsForm } from "../forms";
 import Button from "@/components/button";
 import { Placement } from "@popperjs/core";
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
 
@@ -24,6 +27,40 @@ const ManagePoll: React.VoidFunctionComponent<{
 }> = ({ targetTimeZone, placement }) => {
   const { t } = useTranslation("app");
   const poll = usePoll();
+  const queryClient = useQueryClient();
+  const { mutate: resetPoll } = useMutation(
+    async () => {
+      await axios.get(`/api/legacy/${poll.urlId}?reset=true`);
+    },
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries(["getPoll", poll.urlId]);
+      },
+    },
+  );
+
+  const [resetModalContext, openResetModal] = useModal({
+    overlayClosable: true,
+    title: "Are you sure?",
+    description: (
+      <>
+        This will reset the poll to how it was before it was transferred to the
+        new version.
+        <em className="block mt-2">
+          Any changes (including votes or comments) that were done in the new
+          version will be lost.
+        </em>
+      </>
+    ),
+    okText: "Reset",
+    okButtonProps: {
+      type: "danger",
+    },
+    onOk: () => {
+      resetPoll();
+    },
+    cancelText: "Cancel",
+  });
 
   const { mutate: updatePollMutation, isLoading: isUpdating } =
     useUpdatePollMutation();
@@ -122,9 +159,10 @@ const ManagePoll: React.VoidFunctionComponent<{
     ),
   });
   return (
-    <>
+    <div>
       {changeOptionsModalContextHolder}
       {changePollDetailsModalContextHolder}
+      {resetModalContext}
       <Dropdown
         placement={placement}
         trigger={<Button icon={<Cog />}>Manage</Button>}
@@ -206,8 +244,17 @@ const ManagePoll: React.VoidFunctionComponent<{
             onClick={() => updatePollMutation({ closed: true })}
           />
         )}
+        {poll.legacy ? (
+          <DropdownItem
+            icon={Refresh}
+            label="Reset poll"
+            onClick={() => {
+              openResetModal();
+            }}
+          />
+        ) : null}
       </Dropdown>
-    </>
+    </div>
   );
 };
 
