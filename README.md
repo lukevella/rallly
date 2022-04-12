@@ -2,6 +2,10 @@
 
 Rallly is an open-source collaborative scheduling service – designed and developed by @lukevella
 
+## Self-hosting
+
+Although this is already technically possible by following the instructions below, I'm still working on ways to make this easier and will include better documentation to support this in the near future. Thank you for your patience.
+
 ## Running with docker
 
 _This assumes that you have Docker installed_
