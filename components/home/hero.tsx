@@ -13,7 +13,7 @@ const Hero: React.VoidFunctionComponent = () => {
   return (
     <div className="lg:flex p-8 items-end max-w-7xl mx-auto">
       <div className="my-8 text-center lg:text-left">
-        <h1 className="text-5xl font-bold">
+        <h1 className="text-4xl sm:text-5xl font-bold">
           Schedule
           <br />
           <span className="text-indigo-500">group&nbsp;meetings</span>
