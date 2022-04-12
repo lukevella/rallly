@@ -68,7 +68,7 @@ model Participant {
   name        String
   user        User?           @relation(fields: [userId], references: [id])
   userId      String?
-  poll        Poll           @relation(fields: [pollId], references: [urlId])
+  poll        Poll           @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
   pollId      String
   votes       Vote[]
   createdAt   DateTime        @default(now())
