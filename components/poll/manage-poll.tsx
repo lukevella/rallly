@@ -1,24 +1,20 @@
-import * as React from "react";
-import Dropdown, { DropdownItem } from "../dropdown";
-import { usePoll } from "../use-poll";
-import Pencil from "@/components/icons/pencil-alt.svg";
-import Table from "@/components/icons/table.svg";
-import Refresh from "@/components/icons/refresh.svg";
-import Save from "@/components/icons/save.svg";
-import Cog from "@/components/icons/cog.svg";
-import LockOpen from "@/components/icons/lock-open.svg";
-import LockClosed from "@/components/icons/lock-closed.svg";
-import { useTranslation } from "next-i18next";
-import { format } from "date-fns";
-import { decodeDateOption, encodeDateOption } from "utils/date-time-utils";
-import { useModal } from "../modal";
-import { useUpdatePollMutation } from "./mutations";
-import { PollDetailsForm } from "../forms";
 import Button from "@/components/button";
+import Cog from "@/components/icons/cog.svg";
+import LockClosed from "@/components/icons/lock-closed.svg";
+import LockOpen from "@/components/icons/lock-open.svg";
+import Pencil from "@/components/icons/pencil-alt.svg";
+import Save from "@/components/icons/save.svg";
+import Table from "@/components/icons/table.svg";
 import { Placement } from "@popperjs/core";
-import { useMutation, useQueryClient } from "react-query";
-import axios from "axios";
-import { usePlausible } from "next-plausible";
+import { format } from "date-fns";
+import { useTranslation } from "next-i18next";
+import * as React from "react";
+import { decodeDateOption, encodeDateOption } from "utils/date-time-utils";
+import Dropdown, { DropdownItem } from "../dropdown";
+import { PollDetailsForm } from "../forms";
+import { useModal } from "../modal";
+import { usePoll } from "../use-poll";
+import { useUpdatePollMutation } from "./mutations";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
 
@@ -28,34 +24,6 @@ const ManagePoll: React.VoidFunctionComponent<{
 }> = ({ targetTimeZone, placement }) => {
   const { t } = useTranslation("app");
   const poll = usePoll();
-  const plausible = usePlausible();
-  const queryClient = useQueryClient();
-  const { mutate: resetDates } = useMutation(
-    async () => {
-      await axios.get(`/api/legacy/${poll.urlId}/reset`);
-    },
-    {
-      onSettled: () => {
-        queryClient.invalidateQueries(["getPoll", poll.urlId]);
-      },
-    },
-  );
-
-  const [resetModalContext, openResetModal] = useModal({
-    overlayClosable: true,
-    title: "Are you sure?",
-    description:
-      "This will reset the dates to how they were before the upgrade.",
-    okText: "Reset",
-    okButtonProps: {
-      type: "danger",
-    },
-    onOk: () => {
-      plausible("Reset dates");
-      resetDates();
-    },
-    cancelText: "Cancel",
-  });
 
   const { mutate: updatePollMutation, isLoading: isUpdating } =
     useUpdatePollMutation();
@@ -157,7 +125,6 @@ const ManagePoll: React.VoidFunctionComponent<{
     <div>
       {changeOptionsModalContextHolder}
       {changePollDetailsModalContextHolder}
-      {resetModalContext}
       <Dropdown
         placement={placement}
         trigger={<Button icon={<Cog />}>Manage</Button>}
@@ -241,15 +208,6 @@ const ManagePoll: React.VoidFunctionComponent<{
             onClick={() => updatePollMutation({ closed: true })}
           />
         )}
-        {poll.legacy && poll.options[0].value.indexOf("T") === -1 ? (
-          <DropdownItem
-            icon={Refresh}
-            label="Reset dates"
-            onClick={() => {
-              openResetModal();
-            }}
-          />
-        ) : null}
       </Dropdown>
     </div>
   );

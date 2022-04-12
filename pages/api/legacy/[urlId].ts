@@ -11,7 +11,6 @@ export default async function handler(
   res: NextApiResponse<GetPollApiResponse>,
 ) {
   const urlId = getQueryParam(req, "urlId");
-  const reset = req.query.reset;
 
   const client = await getMongoClient();
   if (!client) {
@@ -42,69 +41,6 @@ export default async function handler(
     newOptions.push({
       id: await nanoid(),
       value: date,
-    });
-  }
-
-  if (reset) {
-    const existingOptions = await prisma.option.findMany({
-      where: { pollId: legacyPoll._id },
-      orderBy: {
-        value: "asc",
-      },
-    });
-
-    if (!existingOptions) {
-      return res.status(400).end();
-    }
-
-    const promises = [];
-    for (let i = 0; i < existingOptions.length; i++) {
-      promises.push(
-        prisma.option.update({
-          where: { id: existingOptions[i].id },
-          data: {
-            value: newOptions[i].value,
-          },
-        }),
-      );
-    }
-    await prisma.$transaction(promises);
-
-    const poll = await prisma.poll.findUnique({
-      where: {
-        urlId: legacyPoll._id,
-      },
-      include: {
-        options: {
-          include: {
-            votes: true,
-          },
-        },
-        participants: {
-          include: {
-            votes: true,
-          },
-          orderBy: [
-            {
-              createdAt: "desc",
-            },
-            { name: "desc" },
-          ],
-        },
-        user: true,
-        links: true,
-      },
-    });
-
-    if (!poll) {
-      return res.status(404);
-    }
-
-    return res.json({
-      ...exclude(poll, "verificationCode"),
-      role: "admin",
-      urlId: poll.urlId,
-      pollId: poll.urlId,
     });
   }
 
