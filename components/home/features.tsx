@@ -23,7 +23,7 @@ const Features: React.VoidFunctionComponent = () => {
           <p className="text">
             If you need more granular options, Rallly lets you choose time slots
             as options. If your participants are international, they can see
-            times in on their own time zone.
+            times in their own time zone.
           </p>
         </div>
         <div className="col-span-2 md:col-span-1">
