@@ -167,11 +167,13 @@ const ManagePoll: React.VoidFunctionComponent<{
           label="Edit details"
           onClick={openChangePollDetailsModa}
         />
-        <DropdownItem
-          icon={Table}
-          label="Edit options"
-          onClick={openChangeOptionsModal}
-        />
+        {!poll.legacy ? (
+          <DropdownItem
+            icon={Table}
+            label="Edit options"
+            onClick={openChangeOptionsModal}
+          />
+        ) : null}
         <DropdownItem
           icon={Save}
           label="Export to CSV"
