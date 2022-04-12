@@ -244,7 +244,7 @@ const ManagePoll: React.VoidFunctionComponent<{
             onClick={() => updatePollMutation({ closed: true })}
           />
         )}
-        {poll.legacy ? (
+        {poll.legacy && poll.options[0].value.indexOf("T") === -1 ? (
           <DropdownItem
             icon={Refresh}
             label="Reset poll"
