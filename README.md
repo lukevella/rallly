@@ -1,5 +1,7 @@
 <img src="./public/logo.png" width="200"  />
 
+[![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg)](https://github.com/lukevella/rallly/actions)
+
 Rallly is an open-source collaborative scheduling service – designed and developed by @lukevella
 
 ## Self-hosting
