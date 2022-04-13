@@ -71,14 +71,9 @@ export const ControlledScrollDiv: React.VoidFunctionComponent<{
   );
 };
 
-const Poll: React.VoidFunctionComponent<
-  PollProps & {
-    width?: number;
-    sidebarWidth?: number;
-    columnWidth?: number;
-    actionColumnWidth?: number;
-  }
-> = ({
+const minSidebarWidth = 200;
+
+const Poll: React.VoidFunctionComponent<PollProps> = ({
   pollId,
   role,
   timeZone,
@@ -87,27 +82,21 @@ const Poll: React.VoidFunctionComponent<
   highScore,
   targetTimeZone,
   onChangeTargetTimeZone,
-  actionColumnWidth = 160,
-  sidebarWidth: minSidebarWidth = 200,
-  columnWidth: defaultColumnWidth,
-  width: defaultWidth,
 }) => {
   const { t } = useTranslation("app");
 
-  const [ref, { width: measuredWidth }] = useMeasure<HTMLDivElement>();
+  const [ref, { width }] = useMeasure<HTMLDivElement>();
   const [editingParticipantId, setEditingParticipantId] =
     React.useState<string | null>(null);
 
-  const width = defaultWidth ?? measuredWidth;
-  const columnWidth =
-    defaultColumnWidth ??
-    Math.min(
-      100,
-      Math.max(
-        95,
-        (width - minSidebarWidth - actionColumnWidth) / options.length,
-      ),
-    );
+  const actionColumnWidth = 160;
+  const columnWidth = Math.min(
+    100,
+    Math.max(
+      95,
+      (width - minSidebarWidth - actionColumnWidth) / options.length,
+    ),
+  );
 
   const numberOfVisibleColumns = Math.min(
     options.length,
