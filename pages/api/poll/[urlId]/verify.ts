@@ -38,7 +38,7 @@ export default withLink(async (req, res, link) => {
           pollUrl,
           verifyEmailUrl,
           homePageUrl,
-          supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+          supportEmail: process.env.SUPPORT_EMAIL,
         },
       });
 

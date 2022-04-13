@@ -19,6 +19,20 @@ git clone https://github.com/lukevella/Rallly.git
 cd Rallly
 ```
 
+_optional_: Configure your SMTP server. Without this, Rallly won't be able to send out emails. You can set the following environment variables in a `.env` in the root of the project.
+
+```
+# /.env
+# This will appear as the FROM email address
+SUPPORT_EMAIL=""
+# SMTP Server Details
+SMTP_HOST=""
+SMTP_PORT=""
+SMTP_SECURE="" # Enable TLS - "true" or "false" (default: "false")
+SMTP_USER=""
+SMTP_PWD=""
+```
+
 Build and run with `docker-compose`
 
 ```bash
@@ -39,14 +53,23 @@ cd Rallly
 Copy the sample `.env` file then open it and set the variables.
 
 ```bash
-cp sample.env .env
+cp rallly-conf.env .env
 ```
 
 You will need to supply a url to an empty postgres database.
 
 ```
 # /.env
-DATABASE_URL='postgresql://user:password@hostname/dbname'
+# Postgres connection URL
+DATABASE_URL=""
+# This will appear as the FROM email address
+SUPPORT_EMAIL=""
+# SMTP Server Details
+SMTP_HOST=""
+SMTP_PORT=""
+SMTP_SECURE="" # Enable TLS - "true" or "false" (default: "false")
+SMTP_USER=""
+SMTP_PWD=""
 ```
 
 Install dependencies

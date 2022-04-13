@@ -61,7 +61,7 @@ export default withLink(async (req, res, link) => {
                 author: newComment.authorName,
                 pollUrl,
                 homePageUrl: absoluteUrl(req).origin,
-                supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+                supportEmail: process.env.SUPPORT_EMAIL,
                 unsubscribeUrl,
               },
             });

@@ -14,11 +14,15 @@ services:
       args:
         - DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db?pgbouncer=true
     restart: always
-    command: sh -c "DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db yarn prisma migrate deploy && yarn start"
+    command: sh -c "yarn prisma migrate deploy && yarn start"
     depends_on:
       - rallly_db
     ports:
       - 3000:3000
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db
+    env_file:
+      - .env
 
 volumes:
   db-data:

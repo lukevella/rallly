@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import sgTransport from "nodemailer-sendgrid-transport";
 
 interface SendEmailParameters {
   to: string;
@@ -7,35 +6,34 @@ interface SendEmailParameters {
   html: string;
 }
 
+let transport: nodemailer.Transporter;
+
 const getTransport = async () => {
-  if (process.env.SENDGRID_API_KEY) {
-    const sgTransportParams = sgTransport({
-      auth: { api_key: process.env.SENDGRID_API_KEY },
-    });
-    return nodemailer.createTransport(sgTransportParams);
-  } else {
-    const auth = await nodemailer.createTestAccount();
-
-    console.log(
-      `Email sent using ethereal.email account:\n${auth.user}\n${auth.pass}`,
-    );
-
-    return nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
-      // In development we use https://ethereal.email
-      auth,
+  if (!transport) {
+    transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT),
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PWD,
+      },
     });
   }
+  return transport;
 };
 
 export const sendEmail = async (params: SendEmailParameters) => {
   const transport = await getTransport();
-  return await transport.sendMail({
-    to: params.to,
-    from: `Rallly ${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`,
-    subject: params.subject,
-    html: params.html,
-  });
+  try {
+    await transport.verify();
+    return await transport.sendMail({
+      to: params.to,
+      from: `Rallly ${process.env.SUPPORT_EMAIL}`,
+      subject: params.subject,
+      html: params.html,
+    });
+  } catch {
+    console.log("SMTP server details are not configured or are incorrect");
+  }
 };
