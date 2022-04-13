@@ -76,14 +76,14 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
         className={clsx("flex shrink-0 h-14", className)}
       >
         {checkboxGroupHack}
-        <div className="flex items-center px-4" style={{ width: sidebarWidth }}>
+        <div className="flex items-center px-2" style={{ width: sidebarWidth }}>
           <Controller
             name="name"
             rules={{
               validate: requiredString,
             }}
             render={({ field }) => (
-              <div className="-ml-2">
+              <div className="w-full">
                 <NameInput
                   autoFocus={true}
                   className={clsx("w-full", {
