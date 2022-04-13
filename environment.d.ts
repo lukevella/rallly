@@ -9,6 +9,11 @@ declare global {
       PLAUSIBLE_DOMAIN?: string;
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;
       LEGACY_MONGODB_URI?: string;
+      SMTP_HOST: string;
+      SMTP_USER: string;
+      SMTP_PWD: string;
+      SMTP_SECURE: string;
+      SMTP_PORT: string;
     }
   }
 }

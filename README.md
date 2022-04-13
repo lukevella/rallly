@@ -19,6 +19,12 @@ git clone https://github.com/lukevella/Rallly.git
 cd Rallly
 ```
 
+_optional_: Configure your SMTP server.
+
+```
+
+```
+
 Build and run with `docker-compose`
 
 ```bash
@@ -39,14 +45,19 @@ cd Rallly
 Copy the sample `.env` file then open it and set the variables.
 
 ```bash
-cp sample.env .env
+cp rallly-conf.env .env
 ```
 
 You will need to supply a url to an empty postgres database.
 
 ```
 # /.env
-DATABASE_URL='postgresql://user:password@hostname/dbname'
+DATABASE_URL="" # Postgres connection URL
+SMTP_HOST=""
+SMTP_PORT=""
+SMTP_SECURE="" # Enable TLS - "true" or "false" (default: "false")
+SMTP_USER=""
+SMTP_PWD=""
 ```
 
 Install dependencies
