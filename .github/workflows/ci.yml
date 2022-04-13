@@ -1,9 +1,5 @@
 name: ci
-on:
-  push:
-    branches:
-      - main
-      - development
+on: pull_request
 
 jobs:
   linting:
