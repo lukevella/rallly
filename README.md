@@ -1,16 +1,12 @@
 <img src="./public/logo.png" width="200"  />
 
-[![Actions Status](https://github.com/lukevella/rallly/workflows/CI/badge.svg)](https://github.com/lukevella/rallly/actions)
+[![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg)](https://github.com/lukevella/rallly/actions)
 
-Rallly is an open-source collaborative scheduling service – designed and developed by @lukevella
+Rallly is a free group meeting scheduling tool – built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
 
-## Self-hosting
+## 🐳 Quickstart with docker
 
-Although this is already technically possible by following the instructions below, I'm still working on ways to make this easier and will include better documentation to support this in the near future. Thank you for your patience.
-
-## Running with docker
-
-_This assumes that you have Docker installed_
+_For running in a production environment_
 
 Clone this repo and change directory to the root of the repository.
 
@@ -40,7 +36,7 @@ docker-compose up -d
 
 Go to [http://localhost:3000](http://localhost:3000)
 
-## Running without docker
+## 💻 Running locally
 
 Clone this repo and change directory to the root of the repository.
 
@@ -92,18 +88,14 @@ yarn build
 yarn start
 ```
 
-## Contributors
+## 👨‍💻 Contributors
 
 If you would like to contribute to the development of the project please reach out first before spending significant time on it.
 
-## License
+## 👮‍♂️ License
 
 Rallly is open-source under the GNU Affero General Public License Version 3 (AGPLv3) or any later version. See [LICENSE](LICENSE) for more detail.
 
-## Credits
+## 🙏 Sponsors
 
-This project would not exist without the help of other great open-source projects. Thanks to the developers and teams at:
-
-- [Next.js](https://github.com/vercel/next.js)
-- [Prisma](https://github.com/prisma/prisma)
-- [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
+<a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss">![Powered by Vercel](/public/powered-by-vercel.svg)</a>

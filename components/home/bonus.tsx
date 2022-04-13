@@ -11,7 +11,7 @@ const Bonus: React.VoidFunctionComponent = () => {
       <p className="subheading">We&apos;re not like the others</p>
       <div className="grid grid-cols-4 gap-16">
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-slate-400">
+          <div className="mb-4 text-gray-400">
             <CursorClick className="w-16" />
           </div>
           <h3 className="heading-sm">No login required</h3>
@@ -20,7 +20,7 @@ const Bonus: React.VoidFunctionComponent = () => {
           </div>
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-slate-400">
+          <div className="mb-4 text-gray-400">
             <Code className="w-16" />
           </div>
           <h3 className="heading-sm">Open-source</h3>
@@ -33,7 +33,7 @@ const Bonus: React.VoidFunctionComponent = () => {
           </div>
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-slate-400">
+          <div className="mb-4 text-gray-400">
             <Server className="w-16" />
           </div>
           <h3 className="heading-sm">Self-hostable</h3>
@@ -42,7 +42,7 @@ const Bonus: React.VoidFunctionComponent = () => {
           </div>
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-slate-400">
+          <div className="mb-4 text-gray-400">
             <Ban className="w-16" />
           </div>
           <h3 className="heading-sm">Ad-free</h3>

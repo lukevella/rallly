@@ -11,7 +11,7 @@ const Hero: React.VoidFunctionComponent = () => {
   const names = ["Peter", "Christine", "Samantha", "Joseph"];
 
   return (
-    <div className="lg:flex p-8 items-end max-w-7xl mx-auto">
+    <div className="lg:flex lg:justify-between p-8 items-end max-w-7xl mx-auto">
       <div className="my-8 text-center lg:text-left">
         <h1 className="text-4xl sm:text-5xl font-bold">
           Schedule

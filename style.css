@@ -149,10 +149,6 @@
   .text {
     @apply text-lg leading-relaxed text-slate-500;
   }
-
-  .footer-menu a {
-    @apply text-slate-400 font-normal leading-loose transition-colors hover:text-indigo-500 hover:no-underline;
-  }
 }
 
 @layer utilities {
