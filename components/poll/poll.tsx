@@ -88,7 +88,7 @@ const Poll: React.VoidFunctionComponent<
   targetTimeZone,
   onChangeTargetTimeZone,
   actionColumnWidth = 160,
-  sidebarWidth = 200,
+  sidebarWidth: minSidebarWidth = 200,
   columnWidth: defaultColumnWidth,
   width: defaultWidth,
 }) => {
@@ -102,13 +102,20 @@ const Poll: React.VoidFunctionComponent<
   const columnWidth =
     defaultColumnWidth ??
     Math.min(
-      150,
-      Math.max(95, (width - sidebarWidth - actionColumnWidth) / options.length),
+      100,
+      Math.max(
+        95,
+        (width - minSidebarWidth - actionColumnWidth) / options.length,
+      ),
     );
 
-  const numberOfVisibleColumns = Math.floor(
-    (width - (sidebarWidth + actionColumnWidth)) / columnWidth,
+  const numberOfVisibleColumns = Math.min(
+    options.length,
+    Math.floor((width - (minSidebarWidth + actionColumnWidth)) / columnWidth),
   );
+
+  const sidebarWidth =
+    width - (numberOfVisibleColumns * columnWidth + actionColumnWidth);
 
   const availableSpace = Math.min(
     numberOfVisibleColumns * columnWidth,
