@@ -72,38 +72,36 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
 }) => {
   const breakpoint = useBreakpoint();
   return (
-    <div className="bg-pattern h-full overflow-x-hidden">
+    <div className="bg-pattern min-h-full overflow-x-hidden">
       <Head>
         <title>Rallly - Support</title>
       </Head>
-      <div className="">
-        <div className="py-8 flex items-center px-8 max-w-7xl mx-auto">
-          <div className="grow">
-            <div className="inline-block relative">
-              <Link href="/">
-                <a>
-                  <Logo className="w-40 text-indigo-500" alt="Rallly" />
-                </a>
-              </Link>
-              <span className="absolute transition-colors text-sm text-slate-400 -bottom-6 right-0">
-                Yes&mdash;with 3 <em>L</em>s
-              </span>
-            </div>
+      <div className="py-8 flex items-center px-8 max-w-7xl mx-auto">
+        <div className="grow">
+          <div className="inline-block relative">
+            <Link href="/">
+              <a>
+                <Logo className="w-40 text-indigo-500" alt="Rallly" />
+              </a>
+            </Link>
+            <span className="absolute transition-colors text-sm text-slate-400 -bottom-6 right-0">
+              Yes&mdash;with 3 <em>L</em>s
+            </span>
           </div>
-          <Menu className="hidden md:flex space-x-8 items-center" />
-          {breakpoint === "sm" ? (
-            <Popover
-              placement="left-start"
-              trigger={
-                <button className="text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors">
-                  <DotsVertical className="w-5" />
-                </button>
-              }
-            >
-              <Menu className="flex flex-col space-y-2" />
-            </Popover>
-          ) : null}
         </div>
+        <Menu className="hidden md:flex space-x-8 items-center" />
+        {breakpoint === "sm" ? (
+          <Popover
+            placement="left-start"
+            trigger={
+              <button className="text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors">
+                <DotsVertical className="w-5" />
+              </button>
+            }
+          >
+            <Menu className="flex flex-col space-y-2" />
+          </Popover>
+        ) : null}
       </div>
       <div className="md:min-h-[calc(100vh-460px)]">{children}</div>
       <Footer />

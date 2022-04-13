@@ -6,7 +6,7 @@ import CursorClick from "@/components/icons/cursor-click.svg";
 
 const Bonus: React.VoidFunctionComponent = () => {
   return (
-    <div className="py-16 max-w-7xl mx-auto px-8">
+    <div className="pt-8 pb-24 max-w-7xl mx-auto px-8">
       <h2 className="heading">Principles</h2>
       <p className="subheading">We&apos;re not like the others</p>
       <div className="grid grid-cols-4 gap-16">

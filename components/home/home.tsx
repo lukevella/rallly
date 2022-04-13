@@ -12,12 +12,8 @@ const Home: React.VoidFunctionComponent = () => {
         <title>Rallly - Schedule group meetings</title>
       </Head>
       <Hero />
-      <div className="bg-gradient-to-b from-transparent via-white to-white">
-        <Features />
-      </div>
-      <div className="bg-gradient-to-b from-white via-white to-transparent pb-16">
-        <Bonus />
-      </div>
+      <Features />
+      <Bonus />
     </PageLayout>
   );
 };

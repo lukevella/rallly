@@ -7,10 +7,10 @@ import Logo from "../../public/logo.svg";
 const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");
   return (
-    <div className="bg-gradient-to-b from-transparent via-slate-50 to-slate-100">
-      <div className="py-24 px-8 mx-auto max-w-7xl grid grid-cols-12 gap-8">
+    <div className="bg-gray-100">
+      <div className="py-20 px-8 mx-auto max-w-7xl grid grid-cols-12 gap-8">
         <div className="col-span-12 md:col-span-4">
-          <Logo className="w-32 text-slate-300 mb-8" />
+          <Logo className="w-32 text-gray-400/75 mb-8" />
         </div>
         <div className="col-span-6 md:col-span-2">
           <div className="font-medium mb-4">Links</div>
