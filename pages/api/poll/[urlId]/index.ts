@@ -52,7 +52,7 @@ export default withLink(
         if (
           poll.legacy &&
           // has converted options without timezone
-          poll.options.some(({ value }) => value.indexOf("T") === -1)
+          poll.options.every(({ value }) => value.indexOf("T") === -1)
         ) {
           // We need to reset the dates for polls that lost their timezone data because some users
           // of the old version will end up seeing the wrong dates
