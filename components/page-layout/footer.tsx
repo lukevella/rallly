@@ -28,9 +28,9 @@ const Footer: React.VoidFunctionComponent = () => {
           </p>
           <div className="flex space-x-3">
             <GitHubButton
-              href="https://github.com/lukevella/Rallly"
+              href="https://github.com/lukevella/rallly"
               data-icon="octicon-star"
-              aria-label="Star lukevella/Rallly on GitHub"
+              aria-label="Star lukevella/rallly on GitHub"
               data-show-count={true}
             >
               Star
@@ -50,7 +50,7 @@ const Footer: React.VoidFunctionComponent = () => {
             <li>
               <a
                 className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose"
-                href="https://github.com/lukevella/Rallly/discussions"
+                href="https://github.com/lukevella/rallly/discussions"
               >
                 Forum
               </a>
@@ -84,7 +84,7 @@ const Footer: React.VoidFunctionComponent = () => {
             <li>
               <a
                 className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose"
-                href="https://github.com/lukevella/Rallly"
+                href="https://github.com/lukevella/rallly"
               >
                 Github
               </a>

@@ -11,7 +11,7 @@ _For running in a production environment_
 Clone this repo and change directory to the root of the repository.
 
 ```bash
-git clone https://github.com/lukevella/Rallly.git
+git clone https://github.com/lukevella/rallly.git
 cd Rallly
 ```
 
@@ -41,7 +41,7 @@ Go to [http://localhost:3000](http://localhost:3000)
 Clone this repo and change directory to the root of the repository.
 
 ```bash
-git clone https://github.com/lukevella/Rallly.git
+git clone https://github.com/lukevella/rallly.git
 cd Rallly
 ```
 

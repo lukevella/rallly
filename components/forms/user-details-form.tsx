@@ -38,8 +38,11 @@ export const UserDetailsForm: React.VoidFunctionComponent<
       style={{ width: 400 }}
       onSubmit={handleSubmit(onSubmit)}
     >
+      <h2>Your details</h2>
       <div className="formField">
-        <label htmlFor="name">{t("name")}</label>
+        <label className="text-slate-500" htmlFor="name">
+          {t("name")}
+        </label>
         <input
           type="text"
           id="name"
@@ -52,7 +55,9 @@ export const UserDetailsForm: React.VoidFunctionComponent<
       </div>
 
       <div className="formField">
-        <label htmlFor="contact">{t("email")}</label>
+        <label className="text-slate-500" htmlFor="contact">
+          {t("email")}
+        </label>
         <input
           id="contact"
           className={clsx("input w-full", {

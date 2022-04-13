@@ -47,7 +47,7 @@ const Support: React.VoidFunctionComponent = () => {
                   i18nKey="canRalllyDoAnswer"
                   components={{
                     a: (
-                      <a href="https://github.com/lukevella/Rallly/discussions" />
+                      <a href="https://github.com/lukevella/rallly/discussions" />
                     ),
                   }}
                 />
@@ -114,7 +114,7 @@ const Support: React.VoidFunctionComponent = () => {
                   t={t}
                   i18nKey="selfHostAnswer"
                   components={{
-                    a: <a href="https://github.com/lukevella/Rallly" />,
+                    a: <a href="https://github.com/lukevella/rallly" />,
                   }}
                 />
               </Disclosure.Panel>
@@ -132,7 +132,7 @@ const Support: React.VoidFunctionComponent = () => {
                   i18nKey="canYouHelpMeSetUpRalllyAnswer"
                   components={{
                     a: (
-                      <a href="https://github.com/lukevella/Rallly/discussions" />
+                      <a href="https://github.com/lukevella/rallly/discussions" />
                     ),
                   }}
                 />

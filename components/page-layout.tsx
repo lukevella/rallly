@@ -58,7 +58,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
           Support
         </a>
       </Link>
-      <Link href="https://github.com/lukevella/Rallly">
+      <Link href="https://github.com/lukevella/rallly">
         <a className="text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors">
           <Github className="w-8" />
         </a>
