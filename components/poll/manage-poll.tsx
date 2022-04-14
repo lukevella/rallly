@@ -32,6 +32,7 @@ const ManagePoll: React.VoidFunctionComponent<{
     openChangeOptionsModal,
     closeChangeOptionsModal,
   ] = useModal({
+    overlayClosable: true,
     okText: "Save",
     okButtonProps: {
       form: "pollOptions",
@@ -98,6 +99,7 @@ const ManagePoll: React.VoidFunctionComponent<{
     openChangePollDetailsModa,
     closePollDetailsModal,
   ] = useModal({
+    overlayClosable: true,
     okText: "Save changes",
     okButtonProps: {
       form: "updateDetails",
