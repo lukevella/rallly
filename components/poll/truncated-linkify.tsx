@@ -1,7 +1,8 @@
 import * as React from "react";
+import ReactLinkify from "react-linkify";
 import Tooltip from "../tooltip";
 
-export const truncatedLink = (href: string, text: string, key: number) => {
+export const truncateLink = (href: string, text: string, key: number) => {
   const textWithoutProtocol = text.replace(/^https?:\/\//i, "");
   const beginningOfPath = textWithoutProtocol.indexOf("/");
   let finalText = textWithoutProtocol;
@@ -28,3 +29,13 @@ export const truncatedLink = (href: string, text: string, key: number) => {
     );
   }
 };
+
+const TruncatedLinkify: React.VoidFunctionComponent<{
+  children?: React.ReactNode;
+}> = ({ children }) => {
+  return (
+    <ReactLinkify componentDecorator={truncateLink}>{children}</ReactLinkify>
+  );
+};
+
+export default TruncatedLinkify;

@@ -18,6 +18,7 @@ import Dropdown, { DropdownItem } from "../dropdown";
 import DotsHorizontal from "../icons/dots-horizontal.svg";
 import Trash from "../icons/trash.svg";
 import NameInput from "../name-input";
+import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvater from "../poll/user-avatar";
 import { useUserName } from "../user-name-context";
 
@@ -82,7 +83,9 @@ const Comments: React.VoidFunctionComponent<{
                   </Dropdown>
                 ) : null}
               </div>
-              <div className="w-fit whitespace-pre-wrap">{comment.content}</div>
+              <div className="w-fit whitespace-pre-wrap">
+                <TruncatedLinkify>{comment.content}</TruncatedLinkify>
+              </div>
             </Transition>
           </div>
         );

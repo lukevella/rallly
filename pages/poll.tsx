@@ -31,7 +31,7 @@ import { GetPollResponse } from "../api-client/get-poll";
 import { getBrowserTimeZone } from "../utils/date-time-utils";
 import Custom404 from "./404";
 import Linkify from "react-linkify";
-import { truncatedLink } from "@/components/poll/truncated-link";
+import TruncatedLinkify from "@/components/poll/truncated-linkify";
 
 const Discussion = React.lazy(() => import("@/components/discussion"));
 
@@ -262,9 +262,9 @@ const PollPage: NextPage = () => {
               </div>
               {poll.description ? (
                 <div className="text-lg leading-relaxed max-w-2xl mb-4 whitespace-pre-line w-fit shadow-sm bg-white text-slate-600 rounded-xl px-4 py-3">
-                  <Linkify componentDecorator={truncatedLink}>
+                  <TruncatedLinkify>
                     {preventWidows(poll.description)}
-                  </Linkify>
+                  </TruncatedLinkify>
                 </div>
               ) : null}
               {poll.location ? (
@@ -275,9 +275,7 @@ const PollPage: NextPage = () => {
                       className="text-slate-400 mr-2"
                     />
                   </div>
-                  <Linkify componentDecorator={truncatedLink}>
-                    {poll.location}
-                  </Linkify>
+                  <TruncatedLinkify>{poll.location}</TruncatedLinkify>
                 </div>
               ) : null}
             </div>
