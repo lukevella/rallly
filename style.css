@@ -125,12 +125,6 @@
     @apply cursor-not-allowed;
   }
 
-  .tooltip {
-    @apply px-3 py-2 rounded-md pointer-events-none bg-slate-700 text-slate-200 shadow-md;
-  }
-  .tooltip-arrow {
-    @apply w-3 h-3 border-transparent border-[6px];
-  }
   [data-popper-placement="bottom"] .tooltip-arrow {
     @apply bottom-full border-b-slate-700;
   }

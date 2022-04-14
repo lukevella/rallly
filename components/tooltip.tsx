@@ -99,7 +99,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
               {...attributes.popper}
             >
               <Transition
-                className="tooltip"
+                className="px-3 py-2 rounded-md pointer-events-none bg-slate-700 text-slate-200 shadow-md"
                 as={"div"}
                 show={debouncedValue}
                 enter="transition transform duration-100"
@@ -108,7 +108,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
               >
                 <div
                   ref={setArrowElement}
-                  className="tooltip-arrow"
+                  className="tooltip-arrow w-3 h-3 border-transparent border-[6px]"
                   style={styles.arrow}
                   data-popper-arrow
                 ></div>

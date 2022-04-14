@@ -30,6 +30,8 @@ import { preventWidows } from "utils/prevent-widows";
 import { GetPollResponse } from "../api-client/get-poll";
 import { getBrowserTimeZone } from "../utils/date-time-utils";
 import Custom404 from "./404";
+import Linkify from "react-linkify";
+import { truncatedLink } from "@/components/poll/truncated-link";
 
 const Discussion = React.lazy(() => import("@/components/discussion"));
 
@@ -259,14 +261,23 @@ const PollPage: NextPage = () => {
                 </div>
               </div>
               {poll.description ? (
-                <div className="text-lg max-w-2xl mb-4 whitespace-pre-line w-fit shadow-sm bg-white text-slate-600 rounded-xl px-4 py-3">
-                  {preventWidows(poll.description)}
+                <div className="text-lg leading-relaxed max-w-2xl mb-4 whitespace-pre-line w-fit shadow-sm bg-white text-slate-600 rounded-xl px-4 py-3">
+                  <Linkify componentDecorator={truncatedLink}>
+                    {preventWidows(poll.description)}
+                  </Linkify>
                 </div>
               ) : null}
               {poll.location ? (
                 <div className="flex items-center mb-4">
-                  <LocationMarker width={20} className="text-slate-400 mr-2" />
-                  {poll.location}
+                  <div>
+                    <LocationMarker
+                      width={20}
+                      className="text-slate-400 mr-2"
+                    />
+                  </div>
+                  <Linkify componentDecorator={truncatedLink}>
+                    {poll.location}
+                  </Linkify>
                 </div>
               ) : null}
             </div>
