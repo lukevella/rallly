@@ -10,7 +10,9 @@ generator client {
 model User {
   id            String           @id @default(cuid())
   name          String
-  email         String           @unique
+  email         String           @unique() @db.Citext
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime?        @updatedAt
   polls         Poll[]
   participants  Participant[]
   comments      Comment[]
@@ -68,19 +70,22 @@ model Participant {
   name        String
   user        User?           @relation(fields: [userId], references: [id])
   userId      String?
-  poll        Poll           @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
+  poll        Poll            @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
   pollId      String
   votes       Vote[]
   createdAt   DateTime        @default(now())
+  updatedAt   DateTime?       @updatedAt
   @@unique([id, pollId])
 }
 
 model Option {
-  id      String          @id @default(cuid())
-  value   String
-  pollId  String
-  poll    Poll           @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
-  votes   Vote[]
+  id          String        @id @default(cuid())
+  value       String
+  pollId      String
+  poll        Poll          @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?     @updatedAt
+  votes       Vote[]
 }
 
 model Vote {
@@ -89,8 +94,10 @@ model Vote {
   participantId String
   option        Option             @relation(fields: [optionId], references: [id], onDelete: Cascade)
   optionId      String         
-  poll          Poll              @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
+  poll          Poll               @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
   pollId        String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime?         @updatedAt
 }
 
 model Comment {
@@ -102,6 +109,7 @@ model Comment {
   user          User?             @relation(fields: [userId], references: [id])
   userId        String?
   createdAt     DateTime          @default(now())
+  updatedAt     DateTime?         @updatedAt
 
   @@unique([id, pollId])
 }
