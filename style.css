@@ -105,10 +105,6 @@
     @apply text-indigo-500;
   }
 
-  .badge {
-    @apply cursor-default inline-block border px-1 rounded-lg text-sm;
-  }
-
   .menu {
     @apply relative;
   }
