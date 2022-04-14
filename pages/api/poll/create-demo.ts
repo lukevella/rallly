@@ -21,7 +21,7 @@ export default async function handler(
           type: "date",
           location: "Starbucks, 901 New York Avenue",
           description:
-            "This poll has been automatically generated just for you! Feel free to try out all the different features and when you're ready, you can schedule a new poll.",
+            "This poll has been automatically generated just for you! Feel free to try out all the different features and when you're ready, you can go to https://rallly.co/new to make a new poll.",
           authorName: "John Example",
           verified: true,
           demo: true,
