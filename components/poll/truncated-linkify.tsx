@@ -7,7 +7,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
   const beginningOfPath = textWithoutProtocol.indexOf("/");
   let finalText = textWithoutProtocol;
   if (beginningOfPath !== -1) {
-    finalText = textWithoutProtocol.substring(0, beginningOfPath + 30);
+    finalText = textWithoutProtocol.substring(0, beginningOfPath + 15);
   }
   if (finalText.length === textWithoutProtocol.length) {
     return (
