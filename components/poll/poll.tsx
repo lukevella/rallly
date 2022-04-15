@@ -71,7 +71,7 @@ export const ControlledScrollDiv: React.VoidFunctionComponent<{
   );
 };
 
-const minSidebarWidth = 200;
+const minSidebarWidth = 150;
 
 const Poll: React.VoidFunctionComponent<PollProps> = ({
   pollId,
