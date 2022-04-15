@@ -61,7 +61,12 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-fit my-8 mx-4 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
+            <div
+              className="inline-block w-fit my-8 mx-4 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+              }}
+            >
               {content ?? (
                 <div className="p-4 max-w-lg">
                   {title ? <Dialog.Title>{title}</Dialog.Title> : null}
