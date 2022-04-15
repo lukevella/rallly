@@ -54,9 +54,6 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
         key={i}
         className={styleMenuItem}
         value={optionValue.toISOString()}
-        onMouseDown={(e: React.MouseEvent<HTMLLIElement>) =>
-          e.stopPropagation()
-        }
       >
         {format(optionValue, "p")}
       </Combobox.Option>,
