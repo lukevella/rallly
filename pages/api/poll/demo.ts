@@ -1,8 +1,28 @@
-import { addDays, addMinutes, format } from "date-fns";
+import { addMinutes } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nanoid } from "utils/nanoid";
-
 import { prisma } from "../../../db";
+
+const participantData = [
+  {
+    name: "Reed",
+    votes: [0, 2],
+  },
+  {
+    name: "Susan",
+    votes: [0, 1, 2],
+  },
+  {
+    name: "Johnny",
+    votes: [2, 3],
+  },
+  {
+    name: "Ben",
+    votes: [0, 1, 2, 3],
+  },
+];
+
+const optionValues = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,7 +33,37 @@ export default async function handler(
       const adminUrlId = await nanoid();
       const demoUser = { name: "John Example", email: "noreply@rallly.co" };
       const today = new Date();
-      const poll = await prisma.poll.create({
+
+      let options: Array<{ value: string; id: string }> = [];
+
+      for (let i = 0; i < optionValues.length; i++) {
+        options.push({ id: await nanoid(), value: optionValues[i] });
+      }
+
+      let participants: Array<{
+        name: string;
+        id: string;
+        createdAt: Date;
+      }> = [];
+
+      let votes: Array<{ optionId: string; participantId: string }> = [];
+
+      for (let i = 0; i < participantData.length; i++) {
+        const { name, votes: participantVotes } = participantData[i];
+        const participantId = await nanoid();
+        participants.push({
+          id: participantId,
+          name,
+          createdAt: addMinutes(today, i * -1),
+        });
+
+        participantVotes.forEach((voteIndex) => {
+          const option = options[voteIndex];
+          votes.push({ optionId: option.id, participantId });
+        });
+      }
+
+      await prisma.poll.create({
         data: {
           urlId: await nanoid(),
           verificationCode: await nanoid(),
@@ -22,7 +72,7 @@ export default async function handler(
           location: "Starbucks, 901 New York Avenue",
           description:
             "This poll has been automatically generated just for you! Feel free to try out all the different features and when you're ready, you can go to https://rallly.co/new to make a new poll.",
-          authorName: "John Example",
+          authorName: "Johnny",
           verified: true,
           demo: true,
           user: {
@@ -35,9 +85,7 @@ export default async function handler(
           },
           options: {
             createMany: {
-              data: [...Array(4)].map((_, i) => {
-                return { value: format(addDays(today, i + 1), "yyyy-MM-dd") };
-              }),
+              data: options,
             },
           },
           links: {
@@ -54,45 +102,17 @@ export default async function handler(
               ],
             },
           },
-
           participants: {
             createMany: {
-              data: [
-                { name: "John", createdAt: addMinutes(today, -1) },
-                { name: "Alex", createdAt: addMinutes(today, -2) },
-                { name: "Mark", createdAt: addMinutes(today, -3) },
-                { name: "Samantha", createdAt: addMinutes(today, -4) },
-              ],
+              data: participants,
+            },
+          },
+          votes: {
+            createMany: {
+              data: votes,
             },
           },
         },
-        include: {
-          options: true,
-          participants: true,
-        },
-      });
-
-      const voteData: Array<{
-        optionId: string;
-        participantId: string;
-        pollId: string;
-      }> = [];
-
-      // Randomly generate votes
-      poll.options.forEach((option) => {
-        poll.participants.forEach((participant) => {
-          if (Math.random() >= 0.5) {
-            voteData.push({
-              optionId: option.id,
-              participantId: participant.id,
-              pollId: poll.urlId,
-            });
-          }
-        });
-      });
-
-      await prisma.vote.createMany({
-        data: voteData,
       });
 
       return res.json({ urlId: adminUrlId });

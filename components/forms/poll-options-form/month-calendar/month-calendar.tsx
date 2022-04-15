@@ -188,6 +188,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             </div>
             <div>
               <Switch
+                data-testid="specify-times-switch"
                 checked={isTimedEvent}
                 onChange={(checked) => {
                   if (checked) {
