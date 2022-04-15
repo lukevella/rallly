@@ -12,6 +12,7 @@ const Switch: React.VoidFunctionComponent<SwitchProps> = ({
   checked = false,
   onChange,
   srDescription,
+  ...rest
 }) => {
   return (
     <HeadlessSwitch
@@ -24,6 +25,7 @@ const Switch: React.VoidFunctionComponent<SwitchProps> = ({
           "bg-green-500": checked,
         },
       )}
+      {...rest}
     >
       {srDescription ? <span className="sr-only">{srDescription}</span> : null}
       <span
