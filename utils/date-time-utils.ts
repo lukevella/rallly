@@ -45,7 +45,7 @@ export const decodeDateOption = (
         type: "timeSlot",
         startTime: formatInTimeZone(startDate, targetTimeZone, "hh:mm a"),
         endTime: formatInTimeZone(endDate, targetTimeZone, "hh:mm a"),
-        day: formatInTimeZone(startDate, targetTimeZone, "dd"),
+        day: formatInTimeZone(startDate, targetTimeZone, "d"),
         dow: formatInTimeZone(startDate, targetTimeZone, "E"),
         month: formatInTimeZone(startDate, targetTimeZone, "MMM"),
       };
@@ -55,7 +55,7 @@ export const decodeDateOption = (
         type: "timeSlot",
         startTime: format(date, "hh:mm a"),
         endTime: format(new Date(end), "hh:mm a"),
-        day: format(date, "dd"),
+        day: format(date, "d"),
         dow: format(date, "E"),
         month: format(date, "MMM"),
       };
@@ -67,7 +67,7 @@ export const decodeDateOption = (
   const date = new Date(dateString);
   return {
     type: "date",
-    day: format(date, "dd"),
+    day: format(date, "d"),
     dow: format(date, "E"),
     month: format(date, "MMM"),
   };
@@ -87,7 +87,7 @@ export const removeAllOptionsForDay = (
 
 export const getDateProps = (date: Date) => {
   return {
-    day: format(date, "dd"),
+    day: format(date, "d"),
     dow: format(date, "E"),
     month: format(date, "MMM"),
   };
