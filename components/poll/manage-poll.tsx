@@ -13,8 +13,10 @@ import { decodeDateOption, encodeDateOption } from "utils/date-time-utils";
 import Dropdown, { DropdownItem } from "../dropdown";
 import { PollDetailsForm } from "../forms";
 import { useModal } from "../modal";
+import { useModalContext } from "../modal/modal-provider";
 import { usePoll } from "../use-poll";
 import { useUpdatePollMutation } from "./mutations";
+import { Trans } from "next-i18next";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
 
@@ -24,6 +26,8 @@ const ManagePoll: React.VoidFunctionComponent<{
 }> = ({ targetTimeZone, placement }) => {
   const { t } = useTranslation("app");
   const poll = usePoll();
+
+  const modalContext = useModalContext();
 
   const { mutate: updatePollMutation, isLoading: isUpdating } =
     useUpdatePollMutation();
@@ -68,26 +72,52 @@ const ManagePoll: React.VoidFunctionComponent<{
           }}
           onSubmit={(data) => {
             const encodedOptions = data.options.map(encodeDateOption);
-            const optionsToDelete = poll.options
-              .filter((option) => {
-                return !encodedOptions.includes(option.value);
-              })
-              .map((option) => option.id);
+            const optionsToDelete = poll.options.filter((option) => {
+              return !encodedOptions.includes(option.value);
+            });
 
             const optionsToAdd = encodedOptions.filter(
               (encodedOption) =>
                 !poll.options.find((o) => o.value === encodedOption),
             );
-            updatePollMutation(
-              {
-                timeZone: data.timeZone,
-                optionsToDelete,
-                optionsToAdd,
-              },
-              {
-                onSuccess: () => closeChangeOptionsModal(),
-              },
+
+            const onOk = () => {
+              updatePollMutation(
+                {
+                  timeZone: data.timeZone,
+                  optionsToDelete: optionsToDelete.map(({ id }) => id),
+                  optionsToAdd,
+                },
+                {
+                  onSuccess: () => closeChangeOptionsModal(),
+                },
+              );
+            };
+
+            const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
+              (option) => option.votes.length > 0,
             );
+
+            if (optionsToDeleteThatHaveVotes.length > 0) {
+              modalContext.render({
+                title: "Are you sure?",
+                description: (
+                  <Trans
+                    t={t}
+                    i18nKey="deletingOptionsWarning"
+                    components={{ b: <strong /> }}
+                  />
+                ),
+                onOk,
+                okButtonProps: {
+                  type: "danger",
+                },
+                okText: "Delete",
+                cancelText: "Cancel",
+              });
+            } else {
+              onOk();
+            }
           }}
         />
       </React.Suspense>

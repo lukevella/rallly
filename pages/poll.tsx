@@ -9,6 +9,7 @@ import MobilePoll from "@/components/poll/mobile-poll";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import PollSubheader from "@/components/poll/poll-subheader";
+import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { UserAvatarProvider } from "@/components/poll/user-avatar";
 import Popover from "@/components/popover";
 import Sharing from "@/components/sharing";
@@ -30,8 +31,6 @@ import { preventWidows } from "utils/prevent-widows";
 import { GetPollResponse } from "../api-client/get-poll";
 import { getBrowserTimeZone } from "../utils/date-time-utils";
 import Custom404 from "./404";
-import Linkify from "react-linkify";
-import TruncatedLinkify from "@/components/poll/truncated-linkify";
 
 const Discussion = React.lazy(() => import("@/components/discussion"));
 

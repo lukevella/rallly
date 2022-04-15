@@ -1,3 +1,4 @@
+import ModalProvider from "@/components/modal/modal-provider";
 import { NextPage } from "next";
 import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
@@ -42,9 +43,11 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
         </Head>
         <CrispChat />
         <Toaster />
-        <UserNameContext.Provider value={sessionUserName}>
-          <Component {...pageProps} />
-        </UserNameContext.Provider>
+        <ModalProvider>
+          <UserNameContext.Provider value={sessionUserName}>
+            <Component {...pageProps} />
+          </UserNameContext.Provider>
+        </ModalProvider>
       </QueryClientProvider>
     </PlausibleProvider>
   );
