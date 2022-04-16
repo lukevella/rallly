@@ -136,6 +136,9 @@ export default async function handler(
         include: {
           votes: true,
         },
+        orderBy: {
+          value: "asc",
+        },
       },
       participants: {
         include: {

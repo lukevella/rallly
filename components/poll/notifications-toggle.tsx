@@ -6,15 +6,15 @@ import Button from "@/components/button";
 import Bell from "@/components/icons/bell.svg";
 import BellCrossed from "@/components/icons/bell-crossed.svg";
 
+import { usePoll } from "../poll-context";
 import Tooltip from "../tooltip";
-import { usePoll } from "../use-poll";
 import { useUpdatePollMutation } from "./mutations";
 
 export interface NotificationsToggleProps {}
 
 const NotificationsToggle: React.VoidFunctionComponent<NotificationsToggleProps> =
   () => {
-    const poll = usePoll();
+    const { poll } = usePoll();
     const { t } = useTranslation("app");
     const [isUpdatingNotifications, setIsUpdatingNotifications] =
       React.useState(false);

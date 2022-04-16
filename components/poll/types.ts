@@ -5,6 +5,4 @@ export interface ParticipantForm {
 export interface PollProps {
   pollId: string;
   highScore: number;
-  onChangeTargetTimeZone: (timeZone: string) => void;
-  targetTimeZone: string;
 }

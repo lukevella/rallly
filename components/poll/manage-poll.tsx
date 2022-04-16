@@ -16,17 +16,16 @@ import Dropdown, { DropdownItem } from "../dropdown";
 import { PollDetailsForm } from "../forms";
 import { useModal } from "../modal";
 import { useModalContext } from "../modal/modal-provider";
-import { usePoll } from "../use-poll";
+import { usePoll } from "../poll-context";
 import { useUpdatePollMutation } from "./mutations";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
 
 const ManagePoll: React.VoidFunctionComponent<{
-  targetTimeZone: string;
   placement?: Placement;
-}> = ({ targetTimeZone, placement }) => {
+}> = ({ placement }) => {
   const { t } = useTranslation("app");
-  const poll = usePoll();
+  const { poll, targetTimeZone } = usePoll();
 
   const modalContext = useModalContext();
 
@@ -184,7 +183,7 @@ const ManagePoll: React.VoidFunctionComponent<{
               }),
               ...poll.options.map((option) => {
                 const decodedOption = decodeDateOption(
-                  option.value,
+                  option,
                   poll.timeZone,
                   targetTimeZone,
                 );

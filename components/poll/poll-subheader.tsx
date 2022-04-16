@@ -5,13 +5,13 @@ import * as React from "react";
 import { useMutation } from "react-query";
 
 import Button from "../button";
+import { usePoll } from "../poll-context";
 import Popover from "../popover";
-import { usePoll } from "../use-poll";
 
 export interface PollSubheaderProps {}
 
 const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
-  const poll = usePoll();
+  const { poll } = usePoll();
   const { t } = useTranslation("app");
 
   const {

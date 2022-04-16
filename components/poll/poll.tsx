@@ -11,8 +11,8 @@ import DateCard from "../date-card";
 import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
 import PlusCircle from "../icons/plus-circle.svg";
+import { usePoll } from "../poll-context";
 import TimeZonePicker from "../time-zone-picker";
-import { usePoll } from "../use-poll";
 import { useAddParticipantMutation } from "./mutations";
 import ParticipantRow from "./participant-row";
 import ParticipantRowForm from "./participant-row-form";
@@ -63,12 +63,10 @@ const minSidebarWidth = 180;
 const Poll: React.VoidFunctionComponent<PollProps> = ({
   pollId,
   highScore,
-  targetTimeZone,
-  onChangeTargetTimeZone,
 }) => {
   const { t } = useTranslation("app");
 
-  const poll = usePoll();
+  const { poll, targetTimeZone, setTargetTimeZone } = usePoll();
 
   const { timeZone, options, participants, role } = poll;
 
@@ -164,7 +162,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                   </div>
                   <TimeZonePicker
                     value={targetTimeZone}
-                    onChange={onChangeTargetTimeZone}
+                    onChange={setTargetTimeZone}
                     className="grow"
                   />
                 </div>
@@ -209,7 +207,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
               <ControlledScrollDiv>
                 {options.map((option) => {
                   const parsedOption = decodeDateOption(
-                    option.value,
+                    option,
                     timeZone,
                     targetTimeZone,
                   );
