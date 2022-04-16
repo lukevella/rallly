@@ -60,15 +60,15 @@ const minSidebarWidth = 180;
 
 const Poll: React.VoidFunctionComponent<PollProps> = ({
   pollId,
-  role,
-  timeZone,
-  options,
-  participants,
   highScore,
   targetTimeZone,
   onChangeTargetTimeZone,
 }) => {
   const { t } = useTranslation("app");
+
+  const poll = usePoll();
+
+  const { timeZone, options, participants, role } = poll;
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
   const [editingParticipantId, setEditingParticipantId] =
@@ -131,8 +131,6 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
     );
   };
 
-  const poll = usePoll();
-
   return (
     <PollContext.Provider
       value={{
@@ -156,35 +154,33 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
       >
         <div className=" border-t border-b bg-white shadow-sm md:rounded-lg md:border">
           <div className="sticky top-0 z-10 rounded-t-lg border-b border-gray-200 bg-white/80 shadow-sm shadow-slate-50 backdrop-blur-md">
-            {role !== "readOnly" ? (
-              <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
-                {timeZone ? (
-                  <div className="flex grow items-center">
-                    <div className="mr-2 text-sm font-medium text-slate-500">
-                      {t("timeZone")}
-                    </div>
-                    <TimeZonePicker
-                      value={targetTimeZone}
-                      onChange={onChangeTargetTimeZone}
-                      className="grow"
-                    />
+            <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
+              {timeZone ? (
+                <div className="flex grow items-center">
+                  <div className="mr-2 text-sm font-medium text-slate-500">
+                    {t("timeZone")}
                   </div>
-                ) : null}
-                <div className="flex shrink-0">
-                  {!shouldShowNewParticipantForm && !poll.closed ? (
-                    <Button
-                      type="primary"
-                      icon={<PlusCircle />}
-                      onClick={() => {
-                        setShouldShowNewParticipantForm(true);
-                      }}
-                    >
-                      New Participant
-                    </Button>
-                  ) : null}
+                  <TimeZonePicker
+                    value={targetTimeZone}
+                    onChange={onChangeTargetTimeZone}
+                    className="grow"
+                  />
                 </div>
+              ) : null}
+              <div className="flex shrink-0">
+                {!shouldShowNewParticipantForm && !poll.closed ? (
+                  <Button
+                    type="primary"
+                    icon={<PlusCircle />}
+                    onClick={() => {
+                      setShouldShowNewParticipantForm(true);
+                    }}
+                  >
+                    New Participant
+                  </Button>
+                ) : null}
               </div>
-            ) : null}
+            </div>
             <div className="flex">
               <div
                 className="flex shrink-0 items-center py-4 pl-4 pr-2 font-medium"

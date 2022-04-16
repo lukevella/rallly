@@ -6,41 +6,41 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import ChevronDown from "@/components/icons/chevron-down.svg";
+import Pencil from "@/components/icons/pencil.svg";
+import PlusCircle from "@/components/icons/plus-circle.svg";
+import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/use-poll";
 
-import { decodeDateOption } from "../../../utils/date-time-utils";
-import { requiredString } from "../../../utils/form-validation";
-import Button from "../../button";
-import DateCard from "../../date-card";
-import CheckCircle from "../../icons/check-circle.svg";
-import ChevronDown from "../../icons/chevron-down.svg";
-import Pencil from "../../icons/pencil.svg";
-import PlusCircle from "../../icons/plus-circle.svg";
-import Trash from "../../icons/trash.svg";
-import { styleMenuItem } from "../../menu-styles";
-import NameInput from "../../name-input";
-import TimeZonePicker from "../../time-zone-picker";
-import { useUserName } from "../../user-name-context";
+import { decodeDateOption } from "../../utils/date-time-utils";
+import { requiredString } from "../../utils/form-validation";
+import Button from "../button";
+import DateCard from "../date-card";
+import CheckCircle from "../icons/check-circle.svg";
+import { styleMenuItem } from "../menu-styles";
+import NameInput from "../name-input";
+import TimeZonePicker from "../time-zone-picker";
+import { useUserName } from "../user-name-context";
 import {
   useAddParticipantMutation,
   useUpdateParticipantMutation,
-} from "../mutations";
-import TimeRange from "../time-range";
-import { ParticipantForm, PollProps } from "../types";
-import { useDeleteParticipantModal } from "../use-delete-participant-modal";
-import UserAvater from "../user-avatar";
-import VoteIcon from "../vote-icon";
+} from "./mutations";
+import TimeRange from "./time-range";
+import { ParticipantForm, PollProps } from "./types";
+import { useDeleteParticipantModal } from "./use-delete-participant-modal";
+import UserAvater from "./user-avatar";
+import VoteIcon from "./vote-icon";
 
 const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
   pollId,
-  timeZone,
-  options,
-  participants,
   highScore,
   targetTimeZone,
   onChangeTargetTimeZone,
-  role,
 }) => {
+  const poll = usePoll();
+
+  const { timeZone, options, participants, role } = poll;
+
   const [, setUserName] = useUserName();
 
   const participantById = participants.reduce<
@@ -87,8 +87,6 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
   const checkboxGroupHack = (
     <input type="checkbox" className="hidden" {...register("votes")} />
   );
-
-  const poll = usePoll();
 
   return (
     <form

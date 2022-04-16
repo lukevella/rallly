@@ -292,10 +292,6 @@ const PollPage: NextPage = () => {
               <div className="mb-4 lg:mb-8">
                 <PollComponent
                   pollId={poll.urlId}
-                  role={poll.role}
-                  timeZone={poll.timeZone}
-                  options={sortedOptions}
-                  participants={poll.participants}
                   highScore={highScore}
                   targetTimeZone={targetTimeZone}
                   onChangeTargetTimeZone={setTargetTimeZone}
