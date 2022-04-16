@@ -4,6 +4,7 @@ import { addMinutes, format, isSameDay, setHours, setMinutes } from "date-fns";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { usePopper } from "react-popper";
+import { stopPropagation } from "utils/stop-propagation";
 
 import ChevronDown from "../../../icons/chevron-down.svg";
 import { styleMenuItem } from "../../../menu-styles";
@@ -94,6 +95,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
               {...attributes.popper}
               ref={setPopperElement}
               className="z-50 max-h-72 w-32 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              onMouseDown={stopPropagation}
             >
               {options}
             </Combobox.Options>,

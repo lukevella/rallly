@@ -4,6 +4,7 @@ import clsx from "clsx";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { usePopper } from "react-popper";
+import { stopPropagation } from "utils/stop-propagation";
 
 export interface DropdownProps {
   trigger?: React.ReactNode;
@@ -53,6 +54,7 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
             style={styles.popper}
             {...attributes.popper}
             className="z-30 divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            onMouseDown={stopPropagation}
           >
             {children}
           </Menu.Items>,

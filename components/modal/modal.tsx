@@ -61,9 +61,6 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               className="z-50 my-8 mx-4 inline-block w-fit transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl transition-all"
-              onMouseDown={(e) => {
-                e.stopPropagation();
-              }}
             >
               {content ?? (
                 <div className="max-w-lg p-4">
