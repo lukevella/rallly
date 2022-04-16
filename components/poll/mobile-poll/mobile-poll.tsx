@@ -144,7 +144,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                   <ChevronDown className="h-5" />
                 </Listbox.Button>
                 <TransitionPopInOut>
-                  <Listbox.Options className="menu-items w-full">
+                  <Listbox.Options className="menu-items w-full max-h-72 overflow-auto">
                     <Listbox.Option value={undefined} className={styleMenuItem}>
                       Show all
                     </Listbox.Option>
