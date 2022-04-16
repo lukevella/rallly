@@ -12,7 +12,7 @@ import DateCard from "../../date-card";
 import ChevronDown from "../../icons/chevron-down.svg";
 import Pencil from "../../icons/pencil.svg";
 import PlusCircle from "../../icons/plus-circle.svg";
-import Save from "../../icons/save.svg";
+import CheckCircle from "../../icons/check-circle.svg";
 import Trash from "../../icons/trash.svg";
 import { styleMenuItem } from "../../menu-styles";
 import NameInput from "../../name-input";
@@ -317,7 +317,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
             Cancel
           </Button>
           <Button
-            icon={<Save />}
+            icon={<CheckCircle />}
             htmlType="submit"
             className="grow"
             type="primary"
