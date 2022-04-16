@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import debounce from "lodash/debounce";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
@@ -105,11 +104,6 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
   const maxScrollPosition =
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
 
-  const debouncedSetScrollPosition = React.useMemo(
-    () => debounce(setScrollPosition, 200),
-    [],
-  );
-
   const numberOfInvisibleColumns = options.length - numberOfVisibleColumns;
 
   const [didUsePagination, setDidUsePagination] = React.useState(false);
@@ -123,7 +117,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
   const { mutate: addParticipant } = useAddParticipantMutation(pollId);
 
   const goToNextPage = () => {
-    debouncedSetScrollPosition(
+    setScrollPosition(
       Math.min(
         maxScrollPosition,
         scrollPosition + numberOfVisibleColumns * columnWidth,
@@ -145,7 +139,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
         activeOptionId,
         setActiveOptionId,
         scrollPosition,
-        setScrollPosition: debouncedSetScrollPosition,
+        setScrollPosition,
         columnWidth,
         sidebarWidth,
         goToNextPage,
