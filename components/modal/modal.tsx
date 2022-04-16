@@ -1,4 +1,5 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
+import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
 import Button, { ButtonProps } from "../button";
@@ -32,37 +33,34 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
 }) => {
   const initialFocusRef = React.useRef<HTMLButtonElement>(null);
   return (
-    <Transition appear={true} as={React.Fragment} show={visible}>
-      <Dialog
-        open={visible}
-        className="fixed inset-0 z-40 overflow-y-auto"
-        initialFocus={initialFocusRef}
-        onClose={() => {
-          if (overlayClosable) onCancel?.();
-        }}
-      >
-        <div className="flex min-h-screen items-center justify-center">
-          <Transition.Child
-            as={React.Fragment}
-            enter="ease-out duration-200"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+    <AnimatePresence>
+      {visible ? (
+        <Dialog
+          open={visible}
+          className="fixed inset-0 z-40 overflow-y-auto"
+          initialFocus={initialFocusRef}
+          onClose={() => {
+            if (overlayClosable) onCancel?.();
+          }}
+        >
+          <motion.div
+            transition={{ duration: 0.5 }}
+            className="flex min-h-screen items-center justify-center"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-slate-900 bg-opacity-10" />
-          </Transition.Child>
-          <Transition.Child
-            as={React.Fragment}
-            enter="ease-out duration-100"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-100"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            <div
-              className="my-8 mx-4 inline-block w-fit transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl transition-all"
+            <Dialog.Overlay
+              as={motion.div}
+              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-0 bg-slate-900 bg-opacity-10"
+            />
+            <motion.div
+              transition={{ duration: 0.1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="z-50 my-8 mx-4 inline-block w-fit transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl transition-all"
               onMouseDown={(e) => {
                 e.stopPropagation();
               }}
@@ -100,11 +98,11 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
                   ) : null}
                 </div>
               )}
-            </div>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition>
+            </motion.div>
+          </motion.div>
+        </Dialog>
+      ) : null}
+    </AnimatePresence>
   );
 };
 

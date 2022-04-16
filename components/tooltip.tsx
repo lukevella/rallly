@@ -1,6 +1,6 @@
-import { Transition } from "@headlessui/react";
 import { Placement } from "@popperjs/core";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { usePopper } from "react-popper";
@@ -16,7 +16,7 @@ export interface TooltipProps {
 }
 
 const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
-  placement,
+  placement = "bottom",
   className,
   children,
   disabled,
@@ -29,25 +29,30 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
   const [arrowElement, setArrowElement] =
     React.useState<HTMLDivElement | null>(null);
 
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement,
-    modifiers: [
-      {
-        name: "offset",
-        options: {
-          offset: [0, 14],
+  const { styles, attributes, update } = usePopper(
+    referenceElement,
+    popperElement,
+    {
+      placement,
+      modifiers: [
+        {
+          name: "offset",
+          options: {
+            offset: [0, 14],
+          },
         },
-      },
-      { name: "arrow", options: { element: arrowElement, padding: 5 } },
-    ],
-  });
+        { name: "arrow", options: { element: arrowElement, padding: 5 } },
+      ],
+    },
+  );
 
   const [isVisible, setIsVisible] = React.useState(false);
 
   const [debouncedValue, setDebouncedValue] = React.useState(false);
 
   const [, cancel] = useDebounce(
-    () => {
+    async () => {
+      await update?.();
       setDebouncedValue(isVisible);
     },
     300,
@@ -98,13 +103,20 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
               style={styles.popper}
               {...attributes.popper}
             >
-              <Transition
+              <motion.div
                 className="pointer-events-none rounded-md bg-slate-700 px-3 py-2 text-slate-200 shadow-md"
-                as={"div"}
-                show={debouncedValue}
-                enter="transition transform duration-100"
-                enterFrom="opacity-0 -translate-y-2"
-                enterTo="opacity-100 translate-y-0"
+                initial="hidden"
+                transition={{
+                  duration: 0.1,
+                }}
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    translateY: placement === "bottom" ? -4 : 4,
+                  },
+                  show: { opacity: 1, translateY: 0 },
+                }}
+                animate={debouncedValue ? "show" : "hidden"}
               >
                 <div
                   ref={setArrowElement}
@@ -113,7 +125,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
                   data-popper-arrow
                 ></div>
                 {typeof content === "string" ? preventWidows(content) : content}
-              </Transition>
+              </motion.div>
             </div>,
             portal,
           )

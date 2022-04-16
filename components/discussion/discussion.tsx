@@ -1,12 +1,12 @@
-import { Transition } from "@headlessui/react";
 import { Comment } from "@prisma/client";
 import axios from "axios";
+import clsx from "clsx";
 import { formatRelative } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useList } from "react-use";
 
 import {
   createComment,
@@ -33,75 +33,12 @@ interface CommentForm {
   content: string;
 }
 
-const Comments: React.VoidFunctionComponent<{
-  comments: {
-    id: string;
-    authorName: string;
-    content: string;
-    createdAt: string;
-  }[];
-  deletedComments: string[];
-  onDelete: (commentId: string) => void;
-  canDelete?: boolean;
-}> = ({ comments, deletedComments, onDelete, canDelete }) => {
-  return (
-    <div className="space-y-3 border-b bg-slate-50 p-4">
-      {comments.map((comment, i) => {
-        return (
-          <div className="flex" key={i}>
-            <Transition
-              show={!deletedComments.includes(comment.id)}
-              as="div"
-              enter="transition transform duration-300"
-              enterFrom="opacity-0 translate-y-4"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition transform duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-              className="w-fit rounded-xl border bg-white px-3 py-2 shadow-sm"
-            >
-              <div className="flex items-center space-x-2">
-                <UserAvater name={comment.authorName} />
-                <div className="mb-1">
-                  <span className="mr-1">{comment.authorName}</span>
-                  <span className="mr-1 text-slate-400">&bull;</span>
-                  <span className="text-sm text-slate-500">
-                    {formatRelative(new Date(comment.createdAt), Date.now())}
-                  </span>
-                </div>
-                {canDelete ? (
-                  <Dropdown
-                    placement="bottom-start"
-                    trigger={<CompactButton icon={DotsHorizontal} />}
-                  >
-                    <DropdownItem
-                      icon={Trash}
-                      label="Delete comment"
-                      onClick={() => {
-                        onDelete(comment.id);
-                      }}
-                    />
-                  </Dropdown>
-                ) : null}
-              </div>
-              <div className="w-fit whitespace-pre-wrap">
-                <TruncatedLinkify>{comment.content}</TruncatedLinkify>
-              </div>
-            </Transition>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
 const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
   pollId,
   canDelete,
 }) => {
   const getCommentsQueryKey = ["poll", pollId, "comments"];
   const [userName, setUserName] = useUserName();
-  const [deletedComments, { push }] = useList<string>([]);
   const queryClient = useQueryClient();
   const { data: comments } = useQuery(
     getCommentsQueryKey,
@@ -141,8 +78,7 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
       await axios.delete(`/api/poll/${pollId}/comments/${payload.commentId}`);
     },
     {
-      onMutate: ({ commentId }) => {
-        push(commentId);
+      onMutate: () => {
         plausible("Deleted comment");
       },
       onSuccess: () => {
@@ -179,14 +115,64 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
       <div className="border-b bg-white px-4 py-2">
         <div className="font-medium">Comments</div>
       </div>
-      {comments.length ? (
-        <Comments
-          comments={comments}
-          canDelete={canDelete}
-          onDelete={handleDelete}
-          deletedComments={deletedComments}
-        />
-      ) : null}
+      <div
+        className={clsx({
+          "space-y-3 border-b bg-slate-50 p-4": comments.length > 0,
+        })}
+      >
+        <AnimatePresence initial={false}>
+          {comments.map((comment) => {
+            return (
+              <motion.div
+                transition={{ duration: 0.2 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex"
+                key={comment.id}
+              >
+                <motion.div
+                  initial={{ scale: 0.8, y: 10 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.8 }}
+                  className="w-fit rounded-xl border bg-white px-3 py-2 shadow-sm"
+                >
+                  <div className="flex items-center space-x-2">
+                    <UserAvater name={comment.authorName} />
+                    <div className="mb-1">
+                      <span className="mr-1">{comment.authorName}</span>
+                      <span className="mr-1 text-slate-400">&bull;</span>
+                      <span className="text-sm text-slate-500">
+                        {formatRelative(
+                          new Date(comment.createdAt),
+                          Date.now(),
+                        )}
+                      </span>
+                    </div>
+                    {canDelete ? (
+                      <Dropdown
+                        placement="bottom-start"
+                        trigger={<CompactButton icon={DotsHorizontal} />}
+                      >
+                        <DropdownItem
+                          icon={Trash}
+                          label="Delete comment"
+                          onClick={() => {
+                            handleDelete(comment.id);
+                          }}
+                        />
+                      </Dropdown>
+                    ) : null}
+                  </div>
+                  <div className="w-fit whitespace-pre-wrap">
+                    <TruncatedLinkify>{comment.content}</TruncatedLinkify>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
       <form
         className="bg-white p-4"
         onSubmit={handleSubmit((data) => {

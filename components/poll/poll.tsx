@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
 import debounce from "lodash/debounce";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -12,7 +13,6 @@ import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
 import PlusCircle from "../icons/plus-circle.svg";
 import TimeZonePicker from "../time-zone-picker";
-import { TransitionPopInOut } from "../transitions";
 import { usePoll } from "../use-poll";
 import { useAddParticipantMutation } from "./mutations";
 import ParticipantRow from "./participant-row";
@@ -25,6 +25,8 @@ import { PollProps } from "./types";
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
 }
+
+const MotionButton = motion(Button);
 
 // There's a bug in Safari 15.4 that causes `scroll` to no work as intended
 const isSafariV154 =
@@ -214,11 +216,20 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                 <div className="flex h-full grow items-end">
                   {t("participantCount", { count: participants.length })}
                 </div>
-                <TransitionPopInOut show={scrollPosition > 0}>
-                  <Button rounded={true} onClick={goToPreviousPage}>
-                    <ArrowLeft className="h-4 w-4" />
-                  </Button>
-                </TransitionPopInOut>
+                <AnimatePresence initial={false}>
+                  {scrollPosition > 0 ? (
+                    <MotionButton
+                      transition={{ duration: 0.1 }}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      rounded={true}
+                      onClick={goToPreviousPage}
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                    </MotionButton>
+                  ) : null}
+                </AnimatePresence>
               </div>
               <ControlledScrollDiv>
                 {options.map((option) => {
@@ -271,22 +282,30 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                 className="flex items-center py-3 px-2"
                 style={{ width: actionColumnWidth }}
               >
-                <TransitionPopInOut show={scrollPosition < maxScrollPosition}>
-                  <Button
-                    className="text-xs"
-                    rounded={true}
-                    onClick={() => {
-                      setDidUsePagination(true);
-                      goToNextPage();
-                    }}
-                  >
-                    {didUsePagination ? (
-                      <ArrowRight className="h-4 w-4" />
-                    ) : (
-                      `+${numberOfInvisibleColumns} more…`
-                    )}
-                  </Button>
-                </TransitionPopInOut>
+                {maxScrollPosition > 0 ? (
+                  <AnimatePresence initial={false}>
+                    {scrollPosition < maxScrollPosition ? (
+                      <MotionButton
+                        transition={{ duration: 0.1 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="text-xs"
+                        rounded={true}
+                        onClick={() => {
+                          setDidUsePagination(true);
+                          goToNextPage();
+                        }}
+                      >
+                        {didUsePagination ? (
+                          <ArrowRight className="h-4 w-4" />
+                        ) : (
+                          `+${numberOfInvisibleColumns} more…`
+                        )}
+                      </MotionButton>
+                    ) : null}
+                  </AnimatePresence>
+                ) : null}
               </div>
             </div>
             {shouldShowNewParticipantForm ? (

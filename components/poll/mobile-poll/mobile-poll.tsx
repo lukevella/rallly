@@ -1,6 +1,7 @@
 import { Listbox } from "@headlessui/react";
 import { Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -19,7 +20,6 @@ import Trash from "../../icons/trash.svg";
 import { styleMenuItem } from "../../menu-styles";
 import NameInput from "../../name-input";
 import TimeZonePicker from "../../time-zone-picker";
-import { TransitionPopInOut } from "../../transitions";
 import { useUserName } from "../../user-name-context";
 import {
   useAddParticipantMutation,
@@ -145,25 +145,31 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                   </div>
                   <ChevronDown className="h-5" />
                 </Listbox.Button>
-                <TransitionPopInOut>
-                  <Listbox.Options className="menu-items max-h-72 w-full overflow-auto">
-                    <Listbox.Option value={undefined} className={styleMenuItem}>
-                      Show all
+                <Listbox.Options
+                  as={motion.div}
+                  transition={{
+                    duration: 0.1,
+                  }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="menu-items max-h-72 w-full overflow-auto"
+                >
+                  <Listbox.Option value={undefined} className={styleMenuItem}>
+                    Show all
+                  </Listbox.Option>
+                  {participants.map((participant) => (
+                    <Listbox.Option
+                      key={participant.id}
+                      value={participant.id}
+                      className={styleMenuItem}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <UserAvater name={participant.name} />
+                        <span>{participant.name}</span>
+                      </div>
                     </Listbox.Option>
-                    {participants.map((participant) => (
-                      <Listbox.Option
-                        key={participant.id}
-                        value={participant.id}
-                        className={styleMenuItem}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <UserAvater name={participant.name} />
-                          <span>{participant.name}</span>
-                        </div>
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </TransitionPopInOut>
+                  ))}
+                </Listbox.Options>
               </div>
             </Listbox>
             {!poll.closed ? (
