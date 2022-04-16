@@ -216,7 +216,7 @@ const PollPage: NextPage = () => {
   return (
     <UserAvatarProvider seed={poll.pollId} names={names}>
       <StandardLayout>
-        <div className="max-w-full lg:w-[1024px] bg-gray-50 relative py-4 md:px-4 lg:px-8">
+        <div className="relative max-w-full bg-gray-50 py-4 md:px-4 lg:w-[1024px] lg:px-8">
           <Head>
             <title>{poll.title}</title>
             <meta name="robots" content="noindex,nofollow" />
@@ -228,14 +228,14 @@ const PollPage: NextPage = () => {
             }}
           >
             <div className="mb-6 px-4 md:px-0">
-              <div className="md:flex md:space-x-4 items-start mb-3">
-                <div className="mb-3 md:mb-0 grow">
+              <div className="mb-3 items-start md:flex md:space-x-4">
+                <div className="mb-3 grow md:mb-0">
                   <div className="flex flex-col-reverse md:flex-row">
-                    <h1 className="grow mb-2 leading-tight text-3xl">
+                    <h1 className="mb-2 grow text-3xl leading-tight">
                       {preventWidows(poll.title)}
                     </h1>
                     {poll.role === "admin" ? (
-                      <div className="flex space-x-2 mb-4 md:mb-2">
+                      <div className="mb-4 flex space-x-2 md:mb-2">
                         <NotificationsToggle />
                         <ManagePoll
                           placement={
@@ -262,18 +262,18 @@ const PollPage: NextPage = () => {
                 </div>
               </div>
               {poll.description ? (
-                <div className="text-lg leading-relaxed max-w-2xl mb-4 whitespace-pre-line w-fit shadow-sm bg-white text-slate-600 rounded-xl px-4 py-3">
+                <div className="mb-4 w-fit max-w-2xl whitespace-pre-line rounded-xl bg-white px-4 py-3 text-lg leading-relaxed text-slate-600 shadow-sm">
                   <TruncatedLinkify>
                     {preventWidows(poll.description)}
                   </TruncatedLinkify>
                 </div>
               ) : null}
               {poll.location ? (
-                <div className="flex items-center mb-4">
+                <div className="mb-4 flex items-center">
                   <div>
                     <LocationMarker
                       width={20}
-                      className="text-slate-400 mr-2"
+                      className="mr-2 text-slate-400"
                     />
                   </div>
                   <TruncatedLinkify>{poll.location}</TruncatedLinkify>
@@ -281,7 +281,7 @@ const PollPage: NextPage = () => {
               ) : null}
             </div>
             {poll.closed ? (
-              <div className="bg-sky-100 text-sky-700 py-3 px-4 md:rounded-lg shadow-sm mb-4 flex items-center">
+              <div className="mb-4 flex items-center bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:rounded-lg">
                 <div className="mr-3 rounded-md">
                   <LockClosed className="w-5" />
                 </div>

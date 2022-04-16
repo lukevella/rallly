@@ -17,7 +17,7 @@ const NameInput: React.ForwardRefRenderFunction<
   NameInputProps
 > = ({ value, defaultValue, className, ...forwardProps }, ref) => {
   return (
-    <div className="flex items-center relative">
+    <div className="relative flex items-center">
       <UserAvater
         name={value ?? defaultValue ?? ""}
         className="absolute left-2"

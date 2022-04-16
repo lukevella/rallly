@@ -79,12 +79,12 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
             setQuery(e.target.value.toUpperCase().replace(/[\:\s]/g, ""));
           }}
         />
-        <Combobox.Button className="absolute inset-0 flex items-center cursor-default px-2 h-9 text-left">
+        <Combobox.Button className="absolute inset-0 flex h-9 cursor-default items-center px-2 text-left">
           <span className="grow truncate">
             {!query ? format(value, "p") : null}
           </span>
-          <span className="flex pointer-events-none">
-            <ChevronDown className="w-5 h-5" />
+          <span className="pointer-events-none flex">
+            <ChevronDown className="h-5 w-5" />
           </span>
         </Combobox.Button>
         {portal &&
@@ -93,7 +93,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
               style={styles.popper}
               {...attributes.popper}
               ref={setPopperElement}
-              className="z-50 w-32 py-1 overflow-auto bg-white rounded-md shadow-lg max-h-72 ring-1 ring-black ring-opacity-5 focus:outline-none"
+              className="z-50 max-h-72 w-32 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
               {options}
             </Combobox.Options>,

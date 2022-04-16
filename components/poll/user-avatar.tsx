@@ -91,11 +91,11 @@ const UserAvater: React.VoidFunctionComponent<UserAvaterProps> = ({
   return (
     <span
       className={clsx(
-        "inline-block w-5 h-5 text-white rounded-full shrink-0 text-center",
+        "inline-block h-5 w-5 shrink-0 rounded-full text-center text-white",
         color,
         {
-          "w-5 h-5 text-xs leading-5": size === "default",
-          "w-10 h-10 leading-10": size === "large",
+          "h-5 w-5 text-xs leading-5": size === "default",
+          "h-10 w-10 leading-10": size === "large",
         },
         className,
       )}

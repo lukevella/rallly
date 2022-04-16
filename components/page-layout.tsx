@@ -28,9 +28,9 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
       <Link href="/">
         <a
           className={clsx(
-            "text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors",
+            "text-gray-400 transition-colors hover:text-indigo-500 hover:no-underline hover:underline-offset-2",
             {
-              "font-bold text-gray-600 pointer-events-none":
+              "pointer-events-none font-bold text-gray-600":
                 pathname === "/home",
             },
           )}
@@ -41,7 +41,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
       <Link href="https://blog.rallly.co">
         <a
           className={clsx(
-            "text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors",
+            "text-gray-400 transition-colors hover:text-indigo-500 hover:no-underline hover:underline-offset-2",
           )}
         >
           Blog
@@ -50,9 +50,9 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
       <Link href="/support">
         <a
           className={clsx(
-            "text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors",
+            "text-gray-400 transition-colors hover:text-indigo-500 hover:no-underline hover:underline-offset-2",
             {
-              "font-bold text-gray-600 pointer-events-none":
+              "pointer-events-none font-bold text-gray-600":
                 pathname === "/support",
             },
           )}
@@ -61,7 +61,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
         </a>
       </Link>
       <Link href="https://github.com/lukevella/rallly">
-        <a className="text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors">
+        <a className="text-gray-400 transition-colors hover:text-indigo-500 hover:no-underline hover:underline-offset-2">
           <Github className="w-8" />
         </a>
       </Link>
@@ -78,25 +78,25 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
       <Head>
         <title>Rallly - Support</title>
       </Head>
-      <div className="py-8 flex items-center px-8 max-w-7xl mx-auto">
+      <div className="mx-auto flex max-w-7xl items-center py-8 px-8">
         <div className="grow">
-          <div className="inline-block relative">
+          <div className="relative inline-block">
             <Link href="/">
               <a>
                 <Logo className="w-40 text-indigo-500" alt="Rallly" />
               </a>
             </Link>
-            <span className="absolute transition-colors text-sm text-slate-400 -bottom-6 right-0">
+            <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
               Yes&mdash;with 3 <em>L</em>s
             </span>
           </div>
         </div>
-        <Menu className="hidden md:flex space-x-8 items-center" />
+        <Menu className="hidden items-center space-x-8 md:flex" />
         {breakpoint === "sm" ? (
           <Popover
             placement="left-start"
             trigger={
-              <button className="text-gray-400 hover:text-indigo-500 hover:underline-offset-2 hover:no-underline transition-colors">
+              <button className="text-gray-400 transition-colors hover:text-indigo-500 hover:no-underline hover:underline-offset-2">
                 <DotsVertical className="w-5" />
               </button>
             }

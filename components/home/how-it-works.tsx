@@ -3,7 +3,7 @@ import * as React from "react";
 const HowItWorks: React.VoidFunctionComponent = () => {
   return (
     <div className="bg-gradient-to-b from-transparent via-white to-white">
-      <div className="py-16 px-8 mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl py-16 px-8">
         <h2 className="heading text-center">How it works</h2>
         <p className="subheading text-center">It&#39;s simple!</p>
         <div className="grid grid-cols-3 gap-16">

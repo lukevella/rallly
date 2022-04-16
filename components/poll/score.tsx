@@ -17,7 +17,7 @@ const Score: React.VoidFunctionComponent<ScoreProps> = ({
   return (
     <div
       className={clsx(
-        " rounded-full text-xs w-5 h-5 flex justify-center items-center shadow-slate-200 shadow-sm transition-colors z-20",
+        " z-20 flex h-5 w-5 items-center justify-center rounded-full text-xs shadow-sm shadow-slate-200 transition-colors",
         {
           "bg-rose-500 text-white": highlight,
           "bg-slate-200 text-slate-500": !highlight,

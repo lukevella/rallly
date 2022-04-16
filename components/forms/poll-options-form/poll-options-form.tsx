@@ -144,7 +144,7 @@ const PollOptionsForm: React.VoidFunctionComponent<
     >
       {calendarHelpModal}
       {dateOrTimeRangeModal}
-      <div className="py-3 space-y-2 lg:space-y-0 border-b w-full lg:space-x-2 bg-slate-50 items-center lg:flex px-4">
+      <div className="w-full items-center space-y-2 border-b bg-slate-50 py-3 px-4 lg:flex lg:space-y-0 lg:space-x-2">
         <div className="grow">
           <Controller
             control={control}
@@ -172,7 +172,7 @@ const PollOptionsForm: React.VoidFunctionComponent<
               }}
               type="button"
             >
-              <Calendar className="h-5 w-5 mr-2" /> Month view
+              <Calendar className="mr-2 h-5 w-5" /> Month view
             </button>
             <button
               className={clsx({
@@ -183,12 +183,12 @@ const PollOptionsForm: React.VoidFunctionComponent<
                 setValue("view", "week");
               }}
             >
-              <Table className="h-5 w-5 mr-2" /> Week view
+              <Table className="mr-2 h-5 w-5" /> Week view
             </button>
           </div>
         </div>
       </div>
-      <div className="w-full relative">
+      <div className="relative w-full">
         <React.Suspense
           fallback={
             <FullPageLoader className="h-[400px]">Loading…</FullPageLoader>

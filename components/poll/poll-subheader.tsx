@@ -45,13 +45,13 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
         &nbsp;
         {poll.role === "admin" ? (
           poll.verified ? (
-            <span className="cursor-default inline-block border px-1 rounded-lg text-sm border-green-400 bg-green-50 text-green-500">
+            <span className="inline-block cursor-default rounded-lg border border-green-400 bg-green-50 px-1 text-sm text-green-500">
               Verified
             </span>
           ) : (
             <Popover
               trigger={
-                <button className="inline-block border px-2 rounded-lg text-sm hover:shadow-sm transition-colors hover:text-slate-700 hover:bg-white text-slate-400 active:bg-gray-100">
+                <button className="inline-block rounded-lg border px-2 text-sm text-slate-400 transition-colors hover:bg-white hover:text-slate-700 hover:shadow-sm active:bg-gray-100">
                   Unverified
                 </button>
               }
@@ -64,7 +64,7 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
                     values={{ email: poll.user.email }}
                     components={{
                       b: (
-                        <span className="text-indigo-500 font-medium font-mono whitespace-nowrap" />
+                        <span className="whitespace-nowrap font-mono font-medium text-indigo-500" />
                       ),
                     }}
                   />

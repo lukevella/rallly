@@ -92,7 +92,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
 
   return (
     <form
-      className="border-t border-b shadow-sm bg-white"
+      className="border-t border-b bg-white shadow-sm"
       onSubmit={handleSubmit((data) => {
         return new Promise<ParticipantForm>((resolve, reject) => {
           if (selectedParticipant) {
@@ -124,7 +124,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
       })}
     >
       {checkboxGroupHack}
-      <div className="sticky top-0 px-4 py-2 space-y-2 flex flex-col border-b z-30 bg-gray-50">
+      <div className="sticky top-0 z-30 flex flex-col space-y-2 border-b bg-gray-50 px-4 py-2">
         {mode === "default" ? (
           <div className="flex space-x-3">
             <Listbox
@@ -135,7 +135,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                 <Listbox.Button className="btn-default w-full text-left">
                   <div className="grow">
                     {selectedParticipant ? (
-                      <div className="flex space-x-2 items-center">
+                      <div className="flex items-center space-x-2">
                         <UserAvater name={selectedParticipant.name} />
                         <span>{selectedParticipant.name}</span>
                       </div>
@@ -146,7 +146,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                   <ChevronDown className="h-5" />
                 </Listbox.Button>
                 <TransitionPopInOut>
-                  <Listbox.Options className="menu-items w-full max-h-72 overflow-auto">
+                  <Listbox.Options className="menu-items max-h-72 w-full overflow-auto">
                     <Listbox.Option value={undefined} className={styleMenuItem}>
                       Show all
                     </Listbox.Option>
@@ -156,7 +156,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                         value={participant.id}
                         className={styleMenuItem}
                       >
-                        <div className="flex space-x-2 items-center">
+                        <div className="flex items-center space-x-2">
                           <UserAvater name={participant.name} />
                           <span>{participant.name}</span>
                         </div>
@@ -240,7 +240,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
           return (
             <div
               key={option.id}
-              className="px-4 py-2 flex items-center space-x-4"
+              className="flex items-center space-x-4 px-4 py-2"
             >
               <div>
                 <DateCard
@@ -257,11 +257,11 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                 />
               ) : null}
 
-              <div className="grow space-y-1 items-center">
+              <div className="grow items-center space-y-1">
                 <div>
                   <span
                     className={clsx(
-                      "inline-block px-2 leading-relaxed border rounded-full text-xs",
+                      "inline-block rounded-full border px-2 text-xs leading-relaxed",
                       {
                         "border-slate-200": numVotes !== highScore,
                         "border-rose-500 text-rose-500": numVotes === highScore,
@@ -286,14 +286,14 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                         );
                       })}
                     {option.votes.length > 6 ? (
-                      <span className="inline-flex ring-1 ring-white items-center justify-center rounded-full font-medium bg-slate-100 text-xs px-1 h-5">
+                      <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
                         +{option.votes.length - 5}
                       </span>
                     ) : null}
                   </div>
                 ) : null}
               </div>
-              <div className="w-12 items-center justify-center h-14 flex">
+              <div className="flex h-14 w-12 items-center justify-center">
                 {mode === "edit" ? (
                   <input
                     type="checkbox"
@@ -314,7 +314,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
         })}
       </div>
       {mode === "edit" ? (
-        <div className="p-2 border-t flex space-x-3">
+        <div className="flex space-x-3 border-t p-2">
           <Button className="grow" onClick={() => setMode("default")}>
             Cancel
           </Button>

@@ -22,7 +22,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
       <Tooltip
         key={key}
         content={
-          <div className="text-xs font-mono max-w-md break-all">{href}</div>
+          <div className="max-w-md break-all font-mono text-xs">{href}</div>
         }
       >
         <a href={href}>{finalText}</a>

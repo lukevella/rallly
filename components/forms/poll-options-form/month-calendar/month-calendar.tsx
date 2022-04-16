@@ -81,17 +81,17 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   });
 
   return (
-    <div className="lg:flex overflow-hidden">
-      <div className="p-4 border-b lg:border-r lg:border-b-0 shrink-0">
+    <div className="overflow-hidden lg:flex">
+      <div className="shrink-0 border-b p-4 lg:border-r lg:border-b-0">
         <div>
-          <div className="w-full flex flex-col">
-            <div className="flex space-x-4 items-center justify-center mb-3">
+          <div className="flex w-full flex-col">
+            <div className="mb-3 flex items-center justify-center space-x-4">
               <Button
                 icon={<ChevronLeft />}
                 title="Previous month"
                 onClick={datepicker.prev}
               />
-              <div className="grow text-center font-medium text-lg">
+              <div className="grow text-center text-lg font-medium">
                 {datepicker.label}
               </div>
               <Button
@@ -105,14 +105,14 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 return (
                   <div
                     key={dayOfWeek}
-                    className="flex items-center justify-center pb-2 text-slate-400 text-sm font-medium"
+                    className="flex items-center justify-center pb-2 text-sm font-medium text-slate-400"
                   >
                     {dayOfWeek.substring(0, 2)}
                   </div>
                 );
               })}
             </div>
-            <div className="grid grid-cols-7 grow border shadow-sm rounded-lg overflow-hidden bg-white">
+            <div className="grid grow grid-cols-7 overflow-hidden rounded-lg border bg-white shadow-sm">
               {datepicker.days.map((day, i) => {
                 return (
                   <button
@@ -152,13 +152,13 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                       }
                     }}
                     className={clsx(
-                      "flex items-center relative lg:w-14 justify-center focus:ring-0 focus:ring-offset-0 hover:bg-slate-50 px-4 py-3 text-sm active:bg-slate-100",
+                      "relative flex items-center justify-center px-4 py-3 text-sm hover:bg-slate-50 focus:ring-0 focus:ring-offset-0 active:bg-slate-100 lg:w-14",
                       {
-                        "text-slate-400 bg-slate-50": day.outOfMonth,
+                        "bg-slate-50 text-slate-400": day.outOfMonth,
                         "font-bold text-indigo-500": day.today,
                         "border-r": (i + 1) % 7 !== 0,
                         "border-b": i < datepicker.days.length - 7,
-                        "font-normal after:content-[''] after:animate-popIn after:absolute after:w-8 after:h-8 after:rounded-full after:bg-green-500 after:-z-0 text-white":
+                        "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:animate-popIn after:rounded-full after:bg-green-500 after:content-['']":
                           day.selected,
                       },
                     )}
@@ -174,13 +174,13 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
           </div>
         </div>
       </div>
-      <div className="grow flex flex-col">
+      <div className="flex grow flex-col">
         <div
           className={clsx("border-b", {
             hidden: datepicker.selection.length === 0,
           })}
         >
-          <div className="p-4 flex space-x-3 items-center">
+          <div className="flex items-center space-x-3 p-4">
             <div className="grow">
               <div className="font-medium">Specify times</div>
               <div className="text-sm text-slate-400">
@@ -233,7 +233,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                   return (
                     <div
                       key={dateString}
-                      className="py-4 space-y-3 xs:space-y-0 xs:space-x-4 xs:flex"
+                      className="space-y-3 py-4 xs:flex xs:space-y-0 xs:space-x-4"
                     >
                       <div>
                         <DateCard
@@ -249,7 +249,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                           return (
                             <div
                               key={index}
-                              className="flex space-x-3 items-center"
+                              className="flex items-center space-x-3"
                             >
                               <TimePicker
                                 value={startDate}
@@ -301,7 +301,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                             </div>
                           );
                         })}
-                        <div className="flex space-x-3 items-center">
+                        <div className="flex items-center space-x-3">
                           <Button
                             icon={<PlusSm />}
                             onClick={() => {
@@ -414,7 +414,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
           ) : (
             <div className="flex h-full items-center justify-center py-12">
               <div className="text-center font-medium text-gray-400">
-                <Calendar className="inline-block h-12 w-12 mb-2" />
+                <Calendar className="mb-2 inline-block h-12 w-12" />
                 <div>No dates selected</div>
               </div>
             </div>

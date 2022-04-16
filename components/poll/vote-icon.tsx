@@ -8,7 +8,7 @@ const VoteIcon: React.VoidFunctionComponent<{
   if (type === "yes") {
     return <CheckCircle className="h-5 w-5 text-green-400" />;
   }
-  return <span className="inline-block bg-slate-300 w-2 h-2 rounded-full" />;
+  return <span className="inline-block h-2 w-2 rounded-full bg-slate-300" />;
 };
 
 export default VoteIcon;

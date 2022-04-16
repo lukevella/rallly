@@ -19,7 +19,7 @@
   h3,
   h4,
   h5 {
-    @apply font-sans font-semibold mb-4 text-slate-700;
+    @apply mb-4 font-sans font-semibold text-slate-700;
   }
   h1 {
     @apply text-2xl;
@@ -31,17 +31,17 @@
     @apply outline-none;
   }
   a {
-    @apply text-indigo-500 font-medium hover:underline hover:text-indigo-400;
+    @apply font-medium text-indigo-500 hover:text-indigo-400 hover:underline;
   }
   label {
-    @apply block text-slate-800 text-sm mb-1;
+    @apply mb-1 block text-sm text-slate-800;
   }
   button {
     @apply focus:outline-none focus:ring-indigo-600;
   }
 
   #portal {
-    @apply absolute w-full z-50;
+    @apply absolute z-50 w-full;
   }
 }
 
@@ -50,7 +50,7 @@
     @apply mb-4;
   }
   .input {
-    @apply appearance-none placeholder:text-slate-400 px-2 py-1 border border-gray-200 rounded-md text-slate-700 shadow-sm focus:ring-indigo-500 focus:ring-1 focus:border-indigo-500;
+    @apply appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
   }
   input.input {
     @apply h-9;
@@ -59,26 +59,26 @@
     @apply input px-3 py-3;
   }
   .input-error {
-    @apply focus:ring-rose-500 focus:border-rose-400 bg-rose-50 border-rose-500 placeholder:text-rose-500;
+    @apply border-rose-500 bg-rose-50 placeholder:text-rose-500 focus:border-rose-400 focus:ring-rose-500;
   }
   .checkbox {
-    @apply focus:ring-indigo-500 h-4 w-4 text-indigo-500 border-slate-300 rounded cursor-pointer;
+    @apply h-4 w-4 cursor-pointer rounded border-slate-300 text-indigo-500 focus:ring-indigo-500;
   }
   .btn {
-    @apply inline-flex justify-center items-center h-9 px-3 border shadow-sm rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all whitespace-nowrap;
+    @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-1;
   }
   a.btn {
     @apply hover:no-underline;
   }
 
   .btn-default {
-    @apply btn bg-white active:bg-gray-100 focus:ring-offset-0 border-gray-300 focus:border-transparent text-gray-700 focus:ring-indigo-500 hover:text-indigo-500;
+    @apply btn border-gray-300 bg-white text-gray-700 hover:text-indigo-500 focus:border-transparent focus:ring-indigo-500 focus:ring-offset-0 active:bg-gray-100;
   }
   .btn-danger {
-    @apply btn border-rose-600 text-white bg-rose-500 hover:bg-rose-600 focus:ring-rose-500;
+    @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus:ring-rose-500;
   }
   .btn-link {
-    @apply text-indigo-500 inline-flex items-center underline;
+    @apply inline-flex items-center text-indigo-500 underline;
   }
   .btn-default.btn-disabled {
     @apply bg-gray-50;
@@ -87,18 +87,18 @@
     @apply pointer-events-none;
   }
   .btn-primary {
-    @apply btn text-white border-indigo-600 bg-indigo-500 hover:bg-opacity-90 focus:ring-indigo-500;
+    @apply btn border-indigo-600 bg-indigo-500 text-white hover:bg-opacity-90 focus:ring-indigo-500;
   }
   a.btn-primary {
     @apply text-white;
   }
 
   .segment-button {
-    @apply flex text-center h-9 shadow-sm;
+    @apply flex h-9 text-center shadow-sm;
   }
 
   .segment-button button {
-    @apply grow justify-center bg-white inline-flex items-center first:border-l first:rounded-l focus:z-10 last:rounded-r border-t border-b focus:ring-2 px-4 border-r font-medium hover:bg-slate-50 active:bg-slate-100 transition-colors;
+    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-white px-4 font-medium transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus:ring-2 active:bg-slate-100;
   }
 
   .segment-button .segment-button-active {
@@ -110,11 +110,11 @@
   }
 
   .menu-items {
-    @apply absolute z-30 bg-white rounded mt-1 shadow-md border focus:outline-none overflow-hidden;
+    @apply absolute z-30 mt-1 overflow-hidden rounded border bg-white shadow-md focus:outline-none;
   }
 
   .menu-item {
-    @apply px-4 py-2 block w-full text-left cursor-default truncate select-none;
+    @apply block w-full cursor-default select-none truncate px-4 py-2 text-left;
   }
 
   button[disabled] {
@@ -132,13 +132,13 @@
 
 @layer components {
   .heading {
-    @apply text-indigo-500 text-xl;
+    @apply text-xl text-indigo-500;
   }
   .subheading {
-    @apply text-4xl font-bold text-slate-800 mb-16;
+    @apply mb-16 text-4xl font-bold text-slate-800;
   }
   .heading-sm {
-    @apply font-bold text-xl text-slate-700;
+    @apply text-xl font-bold text-slate-700;
   }
   .text {
     @apply text-lg leading-relaxed text-slate-500;
@@ -197,14 +197,14 @@
 }
 
 .rbc-header a {
-  @apply block h-full w-full no-underline p-1 hover:text-gray-700;
+  @apply block h-full w-full p-1 no-underline hover:text-gray-700;
 }
 
 .rbc-day-slot .rbc-events-container {
   @apply mr-2;
 }
 .rbc-slot-selection {
-  @apply bg-green-50 rounded-sm text-green-500;
+  @apply rounded-sm bg-green-50 text-green-500;
 }
 
 .rbc-header.rbc-today {

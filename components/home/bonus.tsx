@@ -8,7 +8,7 @@ import Ban from "./ban-ads.svg";
 
 const Bonus: React.VoidFunctionComponent = () => {
   return (
-    <div className="pt-8 pb-24 max-w-7xl mx-auto px-8">
+    <div className="mx-auto max-w-7xl px-8 pt-8 pb-24">
       <h2 className="heading">Principles</h2>
       <p className="subheading">We&apos;re not like the others</p>
       <div className="grid grid-cols-4 gap-16">

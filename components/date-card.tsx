@@ -19,20 +19,20 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
   return (
     <div
       className={clsx(
-        "inline-block bg-white text-center border h-14 w-14 rounded-md relative shadow-md shadow-slate-100",
+        "relative inline-block h-14 w-14 rounded-md border bg-white text-center shadow-md shadow-slate-100",
         className,
       )}
     >
       {annotation ? (
         <div className="absolute -top-3 -right-3">{annotation}</div>
       ) : null}
-      <div className="text-xs -mt-2 mb-[-1px] text-slate-400 relative">
-        <span className="relative inline-block after:content-[''] after:inline-block after:absolute after:left-0 px-1 after:top-[7px] after:border-white after:-z-10 z-10 after:border-t after:w-full">
+      <div className="relative -mt-2 mb-[-1px] text-xs text-slate-400">
+        <span className="relative z-10 inline-block px-1 after:absolute after:left-0 after:top-[7px] after:-z-10 after:inline-block after:w-full after:border-t after:border-white after:content-['']">
           {dow}
         </span>
       </div>
-      <div className="text-red-500 text-lg -mb-1 text-center">{day}</div>
-      <div className="text-gray-800 text-center text-xs uppercase font-semibold">
+      <div className="-mb-1 text-center text-lg text-red-500">{day}</div>
+      <div className="text-center text-xs font-semibold uppercase text-gray-800">
         {month}
       </div>
     </div>

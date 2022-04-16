@@ -53,7 +53,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
   const [didCopy, setDidCopy] = React.useState(false);
   return (
     <div className="w-[300px] md:w-[400px]">
-      <div className="segment-button inline-flex mb-3">
+      <div className="segment-button mb-3 inline-flex">
         <button
           className={clsx({
             "segment-button-active": role === "participant",
@@ -77,10 +77,10 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
           {roleData["admin"].label}
         </button>
       </div>
-      <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3 mb-2">
+      <div className="mb-2 flex flex-col space-y-3 lg:flex-row lg:space-y-0 lg:space-x-3">
         <input readOnly={true} className="input lg:w-[280px]" value={pollUrl} />
         <Button
-          className="shrink-0 w-24"
+          className="w-24 shrink-0"
           disabled={didCopy}
           onClick={() => {
             copyToClipboard(pollUrl);

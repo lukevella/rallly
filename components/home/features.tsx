@@ -7,17 +7,17 @@ import DeviceMobile from "@/components/icons/device-mobile.svg";
 
 const Features: React.VoidFunctionComponent = () => {
   return (
-    <div className="py-16 px-8 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl py-16 px-8">
       <h2 className="heading">Features</h2>
       <p className="subheading">Everything you need to get the job done</p>
       <div className="grid grid-cols-2 gap-12">
         <div className="col-span-2 md:col-span-1">
-          <div className="p-3 bg-green-100/50 text-green-400 inline-block rounded-2xl mb-4">
-            <Clock className="w-8 h-8" />
+          <div className="mb-4 inline-block rounded-2xl bg-green-100/50 p-3 text-green-400">
+            <Clock className="h-8 w-8" />
           </div>
           <h3 className="heading-sm flex items-center">
             Time slots
-            <span className="ml-2 font-normal text-sm bg-green-500 text-white rounded-full px-2 py-1">
+            <span className="ml-2 rounded-full bg-green-500 px-2 py-1 text-sm font-normal text-white">
               New
             </span>
           </h3>
@@ -28,8 +28,8 @@ const Features: React.VoidFunctionComponent = () => {
           </p>
         </div>
         <div className="col-span-2 md:col-span-1">
-          <div className="p-3 bg-cyan-100/50 text-cyan-400 inline-block rounded-2xl mb-4">
-            <DeviceMobile className="w-8 h-8" />
+          <div className="mb-4 inline-block rounded-2xl bg-cyan-100/50 p-3 text-cyan-400">
+            <DeviceMobile className="h-8 w-8" />
           </div>
           <h3 className="heading-sm">Mobile friendly design</h3>
           <p className="text">
@@ -38,8 +38,8 @@ const Features: React.VoidFunctionComponent = () => {
           </p>
         </div>
         <div className="col-span-2 md:col-span-1">
-          <div className="p-3 bg-rose-100/50 text-rose-400 inline-block rounded-2xl mb-4">
-            <Bell className="w-8 h-8" />
+          <div className="mb-4 inline-block rounded-2xl bg-rose-100/50 p-3 text-rose-400">
+            <Bell className="h-8 w-8" />
           </div>
           <h3 className="heading-sm">Notifications</h3>
           <p className="text">
@@ -48,8 +48,8 @@ const Features: React.VoidFunctionComponent = () => {
           </p>
         </div>
         <div className="col-span-2 md:col-span-1">
-          <div className="p-3 bg-yellow-100/50 text-yellow-400 inline-block rounded-2xl mb-4">
-            <Chat className="w-8 h-8" />
+          <div className="mb-4 inline-block rounded-2xl bg-yellow-100/50 p-3 text-yellow-400">
+            <Chat className="h-8 w-8" />
           </div>
           <h3 className="heading-sm">Comments</h3>
           <p className="text">

@@ -44,7 +44,7 @@ const Button: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
           "btn-danger": type === "danger",
           "btn-link": type === "link",
           "btn-disabled": disabled,
-          "rounded-full p-2 h-auto": rounded,
+          "h-auto rounded-full p-2": rounded,
           "w-10 p-0": !children,
         },
         className,
@@ -54,7 +54,7 @@ const Button: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
     >
       {loading ? (
         <SpinnerIcon
-          className={clsx("w-5 animate-spin inline-block", {
+          className={clsx("inline-block w-5 animate-spin", {
             "mr-2": !!children,
           })}
         />

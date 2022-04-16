@@ -17,10 +17,10 @@ const CompactButton: React.VoidFunctionComponent<CompactButtonProps> = ({
   return (
     <button
       type="button"
-      className="h-5 w-5 rounded-full hover:bg-gray-200 transition-colors active:text-gray-500 active:bg-gray-300 text-gray-400 bg-gray-100 inline-flex items-center justify-center"
+      className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 active:bg-gray-300 active:text-gray-500"
       onClick={onClick}
     >
-      {Icon ? <Icon className="w-3 h-3" /> : children}
+      {Icon ? <Icon className="h-3 w-3" /> : children}
     </button>
   );
 };

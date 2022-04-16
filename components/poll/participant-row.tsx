@@ -81,11 +81,11 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   return (
     <div
       key={participant.id}
-      className="group flex hover:bg-slate-50 h-14 transition-colors"
+      className="group flex h-14 transition-colors hover:bg-slate-50"
     >
       {deleteParticipantConfirModal}
       <div
-        className="flex items-center px-4 shrink-0"
+        className="flex shrink-0 items-center px-4"
         style={{ width: sidebarWidth }}
       >
         <UserAvater className="mr-2" name={participant.name} />
@@ -99,7 +99,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
             <div
               key={option.id}
               className={clsx(
-                "justify-center items-center flex shrink-0 transition-colors",
+                "flex shrink-0 items-center justify-center transition-colors",
                 {
                   "bg-slate-50": activeOptionId === option.id,
                 },
@@ -122,7 +122,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
       {!poll.closed ? (
         <div
           style={{ width: actionColumnWidth }}
-          className="flex items-center overflow-hidden px-2 opacity-0 group-hover:opacity-100 delay-100 transition-all space-x-2"
+          className="flex items-center space-x-2 overflow-hidden px-2 opacity-0 transition-all delay-100 group-hover:opacity-100"
         >
           <Button
             icon={<Pencil />}

@@ -19,7 +19,7 @@ const Switch: React.VoidFunctionComponent<SwitchProps> = ({
       checked={checked}
       onChange={onChange}
       className={clsx(
-        "relative inline-flex flex-shrink-0 h-6 w-10 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75",
+        "relative inline-flex h-6 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75",
         {
           "bg-gray-200": !checked,
           "bg-green-500": checked,
@@ -31,7 +31,7 @@ const Switch: React.VoidFunctionComponent<SwitchProps> = ({
       <span
         aria-hidden="true"
         className={clsx(
-          "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200",
+          "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out",
           {
             "translate-x-4": checked,
             "translate-x-0": !checked,

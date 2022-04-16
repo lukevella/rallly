@@ -148,18 +148,18 @@ const Page: NextPage<{
       <Head>
         <title>{formData?.eventDetails?.title ?? t("newPoll")}</title>
       </Head>
-      <div className="max-w-full w-[1024px] py-4 px-3 lg:px-6">
-        <div className="flex space-x-4 items-center mb-4">
+      <div className="w-[1024px] max-w-full py-4 px-3 lg:px-6">
+        <div className="mb-4 flex items-center space-x-4">
           <h1 className="m-0">New Poll</h1>
           <Steps current={currentStepIndex} total={steps.length} />
         </div>
-        <div className="bg-white overflow-hidden rounded-lg max-w-full w-fit shadow-sm border">
+        <div className="w-fit max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
           {(() => {
             switch (currentStepName) {
               case "eventDetails":
                 return (
                   <PollDetailsForm
-                    className="px-4 pt-4 max-w-full"
+                    className="max-w-full px-4 pt-4"
                     name={currentStepName}
                     defaultValues={formData?.eventDetails}
                     onSubmit={handleSubmit}
@@ -180,7 +180,7 @@ const Page: NextPage<{
               case "userDetails":
                 return (
                   <UserDetailsForm
-                    className="px-4 pt-4 grow"
+                    className="grow px-4 pt-4"
                     name={currentStepName}
                     defaultValues={formData?.userDetails}
                     onSubmit={handleSubmit}
@@ -189,7 +189,7 @@ const Page: NextPage<{
                 );
             }
           })()}
-          <div className="bg-slate-50 w-full justify-end px-4 py-3 flex border-t space-x-3">
+          <div className="flex w-full justify-end space-x-3 border-t bg-slate-50 px-4 py-3">
             {currentStepIndex > 0 ? (
               <Button
                 disabled={isBusy}

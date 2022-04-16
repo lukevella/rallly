@@ -8,15 +8,15 @@ const Stats: React.VoidFunctionComponent = () => {
     <div className="py-16">
       <h2 className="heading text-center">Stats</h2>
       <p className="subheading text-center">100,000+ polls created</p>
-      <div className="flex space-x-3 justify-center">
+      <div className="flex justify-center space-x-3">
         <Link href="/new">
-          <a className="focus:ring-2 focus:ring-indigo-200 transition-all text-white bg-indigo-500 hover:bg-indigo-500/90 active:bg-indigo-600/90  px-5 py-3 font-semibold hover:text-white hover:no-underline shadow-sm  hover:shadow-md rounded-lg">
+          <a className="rounded-lg bg-indigo-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-indigo-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-indigo-200 active:bg-indigo-600/90">
             {t("getStarted")}
           </a>
         </Link>
         <Link href="/demo">
           <a
-            className="text-white focus:ring-2 focus:ring-indigo-200 transition-all bg-slate-500 hover:bg-slate-500/90 active:bg-slate-600/90  px-5 py-3 font-semibold hover:text-white hover:no-underline shadow-sm  hover:shadow-md rounded-lg"
+            className="rounded-lg bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-indigo-200 active:bg-slate-600/90"
             rel="nofollow"
           >
             {t("viewDemo")}

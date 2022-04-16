@@ -1,6 +1,6 @@
 import { Placement } from "@popperjs/core";
 import { format } from "date-fns";
-import { Trans,useTranslation  } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { decodeDateOption, encodeDateOption } from "utils/date-time-utils";
 

@@ -45,7 +45,7 @@ const Comments: React.VoidFunctionComponent<{
   canDelete?: boolean;
 }> = ({ comments, deletedComments, onDelete, canDelete }) => {
   return (
-    <div className="bg-slate-50 p-4 space-y-3 border-b">
+    <div className="space-y-3 border-b bg-slate-50 p-4">
       {comments.map((comment, i) => {
         return (
           <div className="flex" key={i}>
@@ -58,9 +58,9 @@ const Comments: React.VoidFunctionComponent<{
               leave="transition transform duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
-              className="bg-white border rounded-xl px-3 py-2 shadow-sm w-fit"
+              className="w-fit rounded-xl border bg-white px-3 py-2 shadow-sm"
             >
-              <div className="flex space-x-2 items-center">
+              <div className="flex items-center space-x-2">
                 <UserAvater name={comment.authorName} />
                 <div className="mb-1">
                   <span className="mr-1">{comment.authorName}</span>
@@ -175,8 +175,8 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
   }
 
   return (
-    <div className="border-t border-b md:border md:rounded-lg overflow-hidden shadow-sm">
-      <div className="px-4 py-2 bg-white border-b">
+    <div className="overflow-hidden border-t border-b shadow-sm md:rounded-lg md:border">
+      <div className="border-b bg-white px-4 py-2">
         <div className="font-medium">Comments</div>
       </div>
       {comments.length ? (
@@ -211,10 +211,10 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
         <textarea
           id="comment"
           placeholder="Add your comment…"
-          className="input pl-3 pr-4 py-2 w-full"
+          className="input w-full py-2 pl-3 pr-4"
           {...register("content", { validate: requiredString })}
         />
-        <div className="flex mt-1 space-x-3">
+        <div className="mt-1 flex space-x-3">
           <Controller
             name="authorName"
             control={control}

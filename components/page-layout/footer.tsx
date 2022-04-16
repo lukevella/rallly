@@ -10,9 +10,9 @@ const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");
   return (
     <div className="mt-16 bg-slate-50/70">
-      <div className="py-20 px-8 mx-auto max-w-7xl grid grid-cols-10 gap-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-10 gap-8 py-20 px-8">
         <div className="col-span-12 md:col-span-4">
-          <Logo className="w-32 mb-4 text-gray-400" />
+          <Logo className="mb-4 w-32 text-gray-400" />
           <p className="text-sm text-gray-400">
             <Trans
               t={t}
@@ -20,7 +20,7 @@ const Footer: React.VoidFunctionComponent = () => {
               components={{
                 a: (
                   <a
-                    className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose"
+                    className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
                     href="https://twitter.com/imlukevella"
                   />
                 ),
@@ -46,11 +46,11 @@ const Footer: React.VoidFunctionComponent = () => {
           </div>
         </div>
         <div className="col-span-6 md:col-span-2">
-          <div className="font-medium mb-4">Links</div>
+          <div className="mb-4 font-medium">Links</div>
           <ul>
             <li>
               <a
-                className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose"
+                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
                 Forum
@@ -58,21 +58,21 @@ const Footer: React.VoidFunctionComponent = () => {
             </li>
             <li>
               <Link href="/blog">
-                <a className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose">
+                <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
                   Blog
                 </a>
               </Link>
             </li>
             <li>
               <Link href="/support">
-                <a className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose">
+                <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
                   Support
                 </a>
               </Link>
             </li>
             <li>
               <Link href="/privacy-policy">
-                <a className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose">
+                <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
                   Privacy Policy
                 </a>
               </Link>
@@ -80,11 +80,11 @@ const Footer: React.VoidFunctionComponent = () => {
           </ul>
         </div>
         <div className="col-span-6 md:col-span-2">
-          <div className="font-medium mb-4">Follow</div>
+          <div className="mb-4 font-medium">Follow</div>
           <ul>
             <li>
               <a
-                className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose"
+                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly"
               >
                 Github
@@ -92,7 +92,7 @@ const Footer: React.VoidFunctionComponent = () => {
             </li>
             <li>
               <a
-                className="text-gray-400 hover:text-gray-800 hover:no-underline font-normal leading-loose"
+                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
                 href="https://twitter.com/ralllyco"
               >
                 Twitter
@@ -105,7 +105,7 @@ const Footer: React.VoidFunctionComponent = () => {
             href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
             className="inline-block text-white"
           >
-            <span className="inline-block w-full text-right italic text-gray-400 text-xs mb-1">
+            <span className="mb-1 inline-block w-full text-right text-xs italic text-gray-400">
               Powered by
             </span>
             <Vercel className="w-24" />

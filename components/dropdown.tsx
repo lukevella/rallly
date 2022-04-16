@@ -52,7 +52,7 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
             ref={setPopperElement}
             style={styles.popper}
             {...attributes.popper}
-            className="z-30 p-1 bg-white divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            className="z-30 divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           >
             {children}
           </Menu.Items>,
@@ -74,7 +74,7 @@ export const DropdownItem: React.VoidFunctionComponent<{
         <button
           onClick={onClick}
           className={clsx(
-            "group flex rounded items-center w-full py-2 pl-2 pr-4",
+            "group flex w-full items-center rounded py-2 pl-2 pr-4",
             {
               "bg-indigo-500 text-white": active,
               "text-gray-700": !active,
@@ -84,7 +84,7 @@ export const DropdownItem: React.VoidFunctionComponent<{
         >
           {Icon && (
             <Icon
-              className={clsx("w-5 h-5 mr-2", {
+              className={clsx("mr-2 h-5 w-5", {
                 "text-white": active,
                 "text-indigo-500": !disabled,
               })}

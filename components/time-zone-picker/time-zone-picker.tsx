@@ -174,15 +174,15 @@ const TimeZonePicker: React.VoidFunctionComponent<{
           }}
           onBlur={onBlur}
         />
-        <Combobox.Button className="absolute inset-0 w-full flex items-center cursor-default px-2 h-9 text-left">
+        <Combobox.Button className="absolute inset-0 flex h-9 w-full cursor-default items-center px-2 text-left">
           <span className="grow truncate">
             {!query ? selectedTimeZone.label : null}
           </span>
-          <span className="flex pointer-events-none">
-            <ChevronDown className="w-5 h-5" />
+          <span className="pointer-events-none flex">
+            <ChevronDown className="h-5 w-5" />
           </span>
         </Combobox.Button>
-        <Combobox.Options className="absolute w-full z-50 py-1 mt-1 overflow-auto bg-white rounded-md shadow-lg max-h-72 ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Combobox.Options className="absolute z-50 mt-1 max-h-72 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {filteredTimeZones.map((timeZone) => (
             <Combobox.Option
               key={timeZone.value}

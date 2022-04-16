@@ -17,21 +17,21 @@ const Steps: React.VoidFunctionComponent<StepsProps> = ({
 
   return (
     <div className={clsx("inline-flex items-center", className)}>
-      <div className="font-medium text-sm tracking-tight">
+      <div className="text-sm font-medium tracking-tight">
         {t("stepSummary", {
           current: current + 1,
           total,
         })}
       </div>
-      <div className="flex ml-2 items-center">
+      <div className="ml-2 flex items-center">
         {[...Array(total)].map((_, i) => {
           return (
             <span
               key={i}
-              className={clsx("w-2 h-2  rounded-full ml-3 transition-all", {
+              className={clsx("ml-3 h-2  w-2 rounded-full transition-all", {
                 "bg-indigo-400": i <= current,
                 "bg-gray-300": i > current,
-                "ring-4 ring-indigo-200 animate-pulse": i === current,
+                "animate-pulse ring-4 ring-indigo-200": i === current,
               })}
             />
           );

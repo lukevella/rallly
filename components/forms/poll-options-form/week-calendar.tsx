@@ -95,7 +95,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             <div
               // onClick prop doesn't work properly. Seems like some other element is cancelling the event before it reaches this element
               onMouseUp={props.onClick}
-              className="absolute p-1 ml-1 max-h-full hover:bg-opacity-50 transition-colors cursor-pointer overflow-hidden bg-green-100 bg-opacity-80 text-green-500 rounded-md text-xs"
+              className="absolute ml-1 max-h-full cursor-pointer overflow-hidden rounded-md bg-green-100 bg-opacity-80 p-1 text-xs text-green-500 transition-colors hover:bg-opacity-50"
               style={{
                 top: `calc(${props.style?.top}% + 4px)`,
                 height: `calc(${props.style?.height}% - 8px)`,
@@ -104,7 +104,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
               }}
             >
               <div>{format(props.event.start, "p")}</div>
-              <div className="font-bold w-full truncate">
+              <div className="w-full truncate font-bold">
                 {props.event.title}
               </div>
             </div>
@@ -134,14 +134,14 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                   }
                 }}
                 className={clsx(
-                  "inline-flex w-full justify-center hover:text-gray-700 hover:bg-slate-50 rounded-md items-center text-sm py-2",
+                  "inline-flex w-full items-center justify-center rounded-md py-2 text-sm hover:bg-slate-50 hover:text-gray-700",
                   {
-                    "bg-green-50 text-green-600 hover:bg-opacity-75 hover:bg-green-50 hover:text-green-600":
+                    "bg-green-50 text-green-600 hover:bg-green-50 hover:bg-opacity-75 hover:text-green-600":
                       !!selectedOption,
                   },
                 )}
               >
-                <span className="font-normal opacity-50 mr-1">
+                <span className="mr-1 font-normal opacity-50">
                   {format(date, "E")}
                 </span>
                 <span className="font-medium">{format(date, "dd")}</span>

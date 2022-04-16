@@ -43,15 +43,15 @@ const PollDemo: React.VoidFunctionComponent = () => {
 
   return (
     <div
-      className="rounded-lg bg-white border shadow-md"
+      className="rounded-lg border bg-white shadow-md"
       style={{ width: 600 }}
     >
       <div className="flex border-b shadow-sm">
         <div
-          className="flex items-center pl-4 pr-2 py-4 shrink-0 font-medium"
+          className="flex shrink-0 items-center py-4 pl-4 pr-2 font-medium"
           style={{ width: sidebarWidth }}
         >
-          <div className="grow h-full flex items-end">
+          <div className="flex h-full grow items-end">
             {t("participantCount", { count: participants.length })}
           </div>
         </div>
@@ -66,7 +66,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
           return (
             <div
               key={i}
-              className="py-4 text-center shrink-0 transition-colors"
+              className="shrink-0 py-4 text-center transition-colors"
               style={{ width: 100 }}
             >
               <DateCard
@@ -84,7 +84,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
       {participants.map((participant, i) => (
         <div className="flex h-14" key={i}>
           <div
-            className="flex items-center px-4 shrink-0"
+            className="flex shrink-0 items-center px-4"
             style={{ width: sidebarWidth }}
           >
             <UserAvater
@@ -101,7 +101,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
               return (
                 <div
                   key={i}
-                  className="justify-center items-center flex shrink-0"
+                  className="flex shrink-0 items-center justify-center"
                   style={{ width: 100 }}
                 >
                   {participant.votes.some((vote) => vote === i) ? (

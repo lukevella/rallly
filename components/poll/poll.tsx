@@ -171,17 +171,17 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
       }}
     >
       <div
-        className="relative max-w-full min-w-full" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
+        className="relative min-w-full max-w-full" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
         style={{ width: `min(${pollWidth}px, calc(100vw - 3rem))` }}
         ref={ref}
       >
-        <div className="md:rounded-lg shadow-sm bg-white border-t border-b md:border">
-          <div className="shadow-sm shadow-slate-50 bg-white/80 backdrop-blur-md rounded-t-lg border-gray-200 border-b sticky top-0 z-10">
+        <div className=" border-t border-b bg-white shadow-sm md:rounded-lg md:border">
+          <div className="sticky top-0 z-10 rounded-t-lg border-b border-gray-200 bg-white/80 shadow-sm shadow-slate-50 backdrop-blur-md">
             {role !== "readOnly" ? (
-              <div className="flex px-4 h-14 items-center justify-end space-x-4 border-b bg-gray-50 rounded-t-lg">
+              <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
                 {timeZone ? (
-                  <div className="flex items-center grow">
-                    <div className="text-sm mr-2 font-medium text-slate-500">
+                  <div className="flex grow items-center">
+                    <div className="mr-2 text-sm font-medium text-slate-500">
                       {t("timeZone")}
                     </div>
                     <TimeZonePicker
@@ -191,7 +191,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                     />
                   </div>
                 ) : null}
-                <div className="shrink-0 flex">
+                <div className="flex shrink-0">
                   {!shouldShowNewParticipantForm && !poll.closed ? (
                     <Button
                       type="primary"
@@ -208,10 +208,10 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
             ) : null}
             <div className="flex">
               <div
-                className="flex items-center pl-4 pr-2 py-4 shrink-0 font-medium"
+                className="flex shrink-0 items-center py-4 pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
               >
-                <div className="grow h-full flex items-end">
+                <div className="flex h-full grow items-end">
                   {t("participantCount", { count: participants.length })}
                 </div>
                 <TransitionPopInOut show={scrollPosition > 0}>
@@ -232,7 +232,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                     <div
                       key={option.id}
                       className={clsx(
-                        "py-4 text-center shrink-0 transition-colors",
+                        "shrink-0 py-4 text-center transition-colors",
                         {
                           "bg-slate-50": activeOptionId === option.id,
                         },
@@ -281,7 +281,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                     }}
                   >
                     {didUsePagination ? (
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="h-4 w-4" />
                     ) : (
                       `+${numberOfInvisibleColumns} more…`
                     )}

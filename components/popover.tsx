@@ -45,7 +45,7 @@ const Popover: React.VoidFunctionComponent<PopoverProps> = ({
       {portal &&
         ReactDOM.createPortal(
           <HeadlessPopover.Panel
-            className="shadow-md bg-white rounded-lg max-w-full border p-4"
+            className="max-w-full rounded-lg border bg-white p-4 shadow-md"
             style={styles.popper}
             {...attributes.popper}
             ref={setPopperElement}

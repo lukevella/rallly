@@ -28,16 +28,16 @@ const LegacyPollNotice: React.VoidFunctionComponent<{ show?: boolean }> = ({
   };
 
   return (
-    <div className="md:flex md:items-center space-y-3 md:space-y-0 text-sm shadow-sm rounded-lg mb-4 border md:space-x-4 p-2 bg-yellow-200 text-yellow-700">
+    <div className="mb-4 space-y-3 rounded-lg border bg-yellow-200 p-2 text-sm text-yellow-700 shadow-sm md:flex md:items-center md:space-y-0 md:space-x-4">
       <div className="flex space-x-3 md:grow md:items-center">
-        <div className="bg-yellow-400 w-9 h-9 p-2 rounded-lg">
+        <div className="h-9 w-9 rounded-lg bg-yellow-400 p-2">
           <Speakerphone className="w-5" />
         </div>
         <div className="grow">
           Notice anything different? We&apos;ve announced a new version release.
         </div>
       </div>
-      <div className="flex space-x-3 ml-12">
+      <div className="ml-12 flex space-x-3">
         <a
           onClick={() => setCookie()}
           className="btn-default border-0"
@@ -47,7 +47,7 @@ const LegacyPollNotice: React.VoidFunctionComponent<{ show?: boolean }> = ({
         </a>
         <button
           onClick={() => setCookie()}
-          className="py-2 px-3 transition-colors bg-yellow-300 rounded-lg active:bg-yellow-400"
+          className="rounded-lg bg-yellow-300 py-2 px-3 transition-colors active:bg-yellow-400"
         >
           Hide
         </button>

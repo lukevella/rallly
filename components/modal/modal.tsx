@@ -35,13 +35,13 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
     <Transition appear={true} as={React.Fragment} show={visible}>
       <Dialog
         open={visible}
-        className="fixed z-40 inset-0 overflow-y-auto"
+        className="fixed inset-0 z-40 overflow-y-auto"
         initialFocus={initialFocusRef}
         onClose={() => {
           if (overlayClosable) onCancel?.();
         }}
       >
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex min-h-screen items-center justify-center">
           <Transition.Child
             as={React.Fragment}
             enter="ease-out duration-200"
@@ -62,13 +62,13 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
             leaveTo="opacity-0 scale-95"
           >
             <div
-              className="inline-block w-fit my-8 mx-4 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl"
+              className="my-8 mx-4 inline-block w-fit transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl transition-all"
               onMouseDown={(e) => {
                 e.stopPropagation();
               }}
             >
               {content ?? (
-                <div className="p-4 max-w-lg">
+                <div className="max-w-lg p-4">
                   {title ? <Dialog.Title>{title}</Dialog.Title> : null}
                   {description ? (
                     <Dialog.Description>{description}</Dialog.Description>
@@ -76,7 +76,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
                 </div>
               )}
               {footer ?? (
-                <div className="px-4 space-x-3 h-14 flex justify-end bg-slate-50 items-center border-t">
+                <div className="flex h-14 items-center justify-end space-x-3 border-t bg-slate-50 px-4">
                   {cancelText ? (
                     <Button
                       ref={initialFocusRef}

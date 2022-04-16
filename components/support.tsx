@@ -12,16 +12,16 @@ const Support: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("support");
   return (
     <PageLayout>
-      <div className="pt-16 px-8 mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl px-8 pt-16">
         <h1 className="text-5xl">Support</h1>
-        <div className="lg:flex py-16">
-          <div className="grow mb-8">
-            <h2 className="text-3xl mb-4">General</h2>
+        <div className="py-16 lg:flex">
+          <div className="mb-8 grow">
+            <h2 className="mb-4 text-3xl">General</h2>
             <Disclosure
               as="div"
-              className="bg-white p-2 rounded-lg mb-4 shadow-md"
+              className="mb-4 rounded-lg bg-white p-2 shadow-md"
             >
-              <Disclosure.Button className="font-medium text-lg py-2 px-3 rounded-md active:bg-slate-100 block w-full text-left font-slate hover:text-indigo-500 hover:bg-slate-50 cursor-pointer">
+              <Disclosure.Button className="font-slate block w-full cursor-pointer rounded-md py-2 px-3 text-left text-lg font-medium hover:bg-slate-50 hover:text-indigo-500 active:bg-slate-100">
                 <Trans t={t} i18nKey="howDoIShareQuestion" />
               </Disclosure.Button>
               <Disclosure.Panel className="text py-2 px-3">
@@ -34,9 +34,9 @@ const Support: React.VoidFunctionComponent = () => {
             </Disclosure>
             <Disclosure
               as="div"
-              className="bg-white p-2 rounded-lg mb-4 shadow-md"
+              className="mb-4 rounded-lg bg-white p-2 shadow-md"
             >
-              <Disclosure.Button className="font-medium text-lg py-2 px-3 rounded-md active:bg-slate-100 block w-full text-left font-slate hover:text-indigo-500 hover:bg-slate-50 cursor-pointer">
+              <Disclosure.Button className="font-slate block w-full cursor-pointer rounded-md py-2 px-3 text-left text-lg font-medium hover:bg-slate-50 hover:text-indigo-500 active:bg-slate-100">
                 <Trans
                   t={t}
                   i18nKey="canRalllyDoQuestion"
@@ -57,9 +57,9 @@ const Support: React.VoidFunctionComponent = () => {
             </Disclosure>
             <Disclosure
               as="div"
-              className="bg-white p-2 rounded-lg mb-4 shadow-md"
+              className="mb-4 rounded-lg bg-white p-2 shadow-md"
             >
-              <Disclosure.Button className="font-medium text-lg py-2 px-3 rounded-md active:bg-slate-100 block w-full text-left font-slate hover:text-indigo-500 hover:bg-slate-50 cursor-pointer">
+              <Disclosure.Button className="font-slate block w-full cursor-pointer rounded-md py-2 px-3 text-left text-lg font-medium hover:bg-slate-50 hover:text-indigo-500 active:bg-slate-100">
                 {t("legacyPollsQuestion")}
               </Disclosure.Button>
               <Disclosure.Panel className="text py-2 px-3">
@@ -72,9 +72,9 @@ const Support: React.VoidFunctionComponent = () => {
             </Disclosure>
             <Disclosure
               as="div"
-              className="bg-white p-2 rounded-lg mb-4 shadow-md"
+              className="mb-4 rounded-lg bg-white p-2 shadow-md"
             >
-              <Disclosure.Button className="font-medium text-lg py-2 px-3 rounded-md active:bg-slate-100 block w-full text-left font-slate hover:text-indigo-500 hover:bg-slate-50 cursor-pointer">
+              <Disclosure.Button className="font-slate block w-full cursor-pointer rounded-md py-2 px-3 text-left text-lg font-medium hover:bg-slate-50 hover:text-indigo-500 active:bg-slate-100">
                 {t("contributeQuestion")}
               </Disclosure.Button>
               <Disclosure.Panel className="text py-2 px-3">
@@ -87,12 +87,12 @@ const Support: React.VoidFunctionComponent = () => {
                 />
               </Disclosure.Panel>
             </Disclosure>
-            <h2 className="text-3xl mb-4 mt-8">Privacy & Security</h2>
+            <h2 className="mb-4 mt-8 text-3xl">Privacy & Security</h2>
             <Disclosure
               as="div"
-              className="bg-white p-2 rounded-lg mb-4 shadow-md"
+              className="mb-4 rounded-lg bg-white p-2 shadow-md"
             >
-              <Disclosure.Button className="font-medium text-lg py-2 px-3 rounded-md active:bg-slate-100 block w-full text-left font-slate hover:text-indigo-500 hover:bg-slate-50 cursor-pointer">
+              <Disclosure.Button className="font-slate block w-full cursor-pointer rounded-md py-2 px-3 text-left text-lg font-medium hover:bg-slate-50 hover:text-indigo-500 active:bg-slate-100">
                 {t("isMyDataSafeQuestion")}
               </Disclosure.Button>
               <Disclosure.Panel className="text py-2 px-3">
@@ -103,12 +103,12 @@ const Support: React.VoidFunctionComponent = () => {
                 />
               </Disclosure.Panel>
             </Disclosure>
-            <h2 className="text-3xl mb-4 mt-8">Self-hosting</h2>
+            <h2 className="mb-4 mt-8 text-3xl">Self-hosting</h2>
             <Disclosure
               as="div"
-              className="bg-white p-2 rounded-lg mb-4 shadow-md"
+              className="mb-4 rounded-lg bg-white p-2 shadow-md"
             >
-              <Disclosure.Button className="font-medium text-lg py-2 px-3 rounded-md active:bg-slate-100 block w-full text-left font-slate hover:text-indigo-500 hover:bg-slate-50 cursor-pointer">
+              <Disclosure.Button className="font-slate block w-full cursor-pointer rounded-md py-2 px-3 text-left text-lg font-medium hover:bg-slate-50 hover:text-indigo-500 active:bg-slate-100">
                 {t("selfHostQuestion")}
               </Disclosure.Button>
               <Disclosure.Panel className="text py-2 px-3">
@@ -123,9 +123,9 @@ const Support: React.VoidFunctionComponent = () => {
             </Disclosure>
             <Disclosure
               as="div"
-              className="bg-white p-2 rounded-lg mb-4 shadow-md"
+              className="mb-4 rounded-lg bg-white p-2 shadow-md"
             >
-              <Disclosure.Button className="font-medium text-lg py-2 px-3 rounded-md active:bg-slate-100 block w-full text-left font-slate hover:text-indigo-500 hover:bg-slate-50 cursor-pointer">
+              <Disclosure.Button className="font-slate block w-full cursor-pointer rounded-md py-2 px-3 text-left text-lg font-medium hover:bg-slate-50 hover:text-indigo-500 active:bg-slate-100">
                 {t("canYouHelpMeSetUpRalllyQuestion")}
               </Disclosure.Button>
               <Disclosure.Panel className="text py-2 px-3">
@@ -141,10 +141,10 @@ const Support: React.VoidFunctionComponent = () => {
               </Disclosure.Panel>
             </Disclosure>
           </div>
-          <div className="lg:ml-16 shrink-0 lg:w-96">
-            <div className="p-8 bg-white rounded-xl shadow-md">
-              <div className="flex lg:flex-col items-start max-w-3xl">
-                <Chat className="hidden sm:block w-20 text-indigo-500 shrink-0 mr-8 mb-8" />
+          <div className="shrink-0 lg:ml-16 lg:w-96">
+            <div className="rounded-xl bg-white p-8 shadow-md">
+              <div className="flex max-w-3xl items-start lg:flex-col">
+                <Chat className="mr-8 mb-8 hidden w-20 shrink-0 text-indigo-500 sm:block" />
                 <div>
                   <h2 className="mb-2">{t("supportContactTitle")}</h2>
                   <p className="text">

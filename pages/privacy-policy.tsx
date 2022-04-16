@@ -6,7 +6,7 @@ import PageLayout from "@/components/page-layout";
 const PrivacyPolicy = () => {
   return (
     <PageLayout>
-      <div className="p-8 my-16 mx-auto max-w-3xl bg-white shadow-md rounded-lg prose prose-">
+      <div className="prose my-16 mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Privacy Policy</h1>
         <p>Last updated: April 04, 2022</p>
         <p>

@@ -12,27 +12,27 @@ const Hero: React.VoidFunctionComponent = () => {
   const names = ["Peter", "Christine", "Samantha", "Joseph"];
 
   return (
-    <div className="lg:flex lg:justify-between p-8 items-end max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl items-end p-8 lg:flex lg:justify-between">
       <div className="my-8 text-center lg:text-left">
-        <h1 className="text-4xl sm:text-5xl font-bold">
+        <h1 className="text-4xl font-bold sm:text-5xl">
           Schedule
           <br />
           <span className="text-indigo-500">group&nbsp;meetings</span>
           <br />
           with ease
         </h1>
-        <div className="text-xl text-gray-400 mb-12">
+        <div className="mb-12 text-xl text-gray-400">
           Find the right date without the back and&nbsp;forth.
         </div>
         <div className="space-x-3">
           <Link href="/new">
-            <a className="focus:ring-2 focus:ring-indigo-200 transition-all text-white bg-indigo-500 hover:bg-indigo-500/90 active:bg-indigo-600/90  px-5 py-3 font-semibold hover:text-white hover:no-underline shadow-sm  hover:shadow-md rounded-lg">
+            <a className="rounded-lg bg-indigo-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-indigo-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-indigo-200 active:bg-indigo-600/90">
               {t("getStarted")}
             </a>
           </Link>
           <Link href="/demo">
             <a
-              className="text-white focus:ring-2 focus:ring-indigo-200 transition-all bg-slate-500 hover:bg-slate-500/90 active:bg-slate-600/90  px-5 py-3 font-semibold hover:text-white hover:no-underline shadow-sm  hover:shadow-md rounded-lg"
+              className="rounded-lg bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-indigo-200 active:bg-slate-600/90"
               rel="nofollow"
             >
               {t("viewDemo")}
@@ -40,17 +40,17 @@ const Hero: React.VoidFunctionComponent = () => {
           </Link>
         </div>
       </div>
-      <div className="hidden mt-16 lg:mt-0 lg:ml-24 pointer-events-none select-none h-[380px] md:flex items-end justify-center">
+      <div className="pointer-events-none mt-16 hidden h-[380px] select-none items-end justify-center md:flex lg:mt-0 lg:ml-24">
         <UserAvatarProvider seed="mock" names={names}>
-          <div className="inline-block relative">
+          <div className="relative inline-block">
             <motion.div
-              className="absolute z-20 border-4 shadow-md bg-indigo-200/10 rounded-2xl border-indigo-500 h-full"
+              className="absolute z-20 h-full rounded-2xl border-4 border-indigo-500 bg-indigo-200/10 shadow-md"
               initial={{ opacity: 0, width: 100, scale: 1.2, translateX: 384 }}
               animate={{ opacity: 1, scale: 1.1 }}
               transition={{ type: "spring", delay: 1 }}
             />
             <motion.div
-              className="absolute bg-indigo-500 text-slate-100 py-1 px-3 rounded-full z-20 text-sm"
+              className="absolute z-20 rounded-full bg-indigo-500 py-1 px-3 text-sm text-slate-100"
               initial={{
                 opacity: 0,
                 right: 190,
@@ -61,10 +61,10 @@ const Hero: React.VoidFunctionComponent = () => {
               transition={{ type: "spring", delay: 2 }}
             >
               Perfect! 🤩
-              <ScribbleArrow className="absolute text-slate-400 -right-8 top-3" />
+              <ScribbleArrow className="absolute -right-8 top-3 text-slate-400" />
             </motion.div>
             <motion.div
-              className="shadow-lg rounded-lg"
+              className="rounded-lg shadow-lg"
               transition={{ type: "spring", delay: 0.5 }}
               initial={{ opacity: 0, translateY: -100 }}
               animate={{ opacity: 1, translateY: 0 }}

@@ -40,7 +40,7 @@ const NotificationsToggle: React.VoidFunctionComponent<NotificationsToggleProps>
                     }}
                     components={{
                       b: (
-                        <span className="text-indigo-300 whitespace-nowrap font-medium font-mono " />
+                        <span className="whitespace-nowrap font-mono font-medium text-indigo-300 " />
                       ),
                     }}
                   />

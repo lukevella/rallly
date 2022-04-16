@@ -74,7 +74,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
           });
           reset();
         })}
-        className={clsx("flex shrink-0 h-14", className)}
+        className={clsx("flex h-14 shrink-0", className)}
       >
         {checkboxGroupHack}
         <div className="flex items-center px-2" style={{ width: sidebarWidth }}>
@@ -88,7 +88,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
                 <NameInput
                   autoFocus={true}
                   className={clsx("w-full", {
-                    "animate-wiggle input-error":
+                    "input-error animate-wiggle":
                       errors.name && submitCount > 0,
                   })}
                   placeholder="Your name"
@@ -114,7 +114,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
               <div
                 key={option.id}
                 className={clsx(
-                  "flex justify-center items-center shrink-0 transition-colors",
+                  "flex shrink-0 items-center justify-center transition-colors",
                   {
                     "bg-slate-50": activeOptionId === option.id,
                   },
@@ -160,7 +160,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
             );
           })}
         </ControlledScrollDiv>
-        <div className="flex items-center px-2 space-x-2 transition-all">
+        <div className="flex items-center space-x-2 px-2 transition-all">
           <Tooltip content="Save" placement="top">
             <Button
               htmlType="submit"
