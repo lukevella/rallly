@@ -7,6 +7,7 @@ import soft from "timezone-soft";
 import ChevronDown from "../../components/icons/chevron-down.svg";
 import { styleMenuItem } from "../menu-styles";
 import timeZones from "./time-zones.json";
+
 interface TimeZoneOption {
   value: string;
   label: string;

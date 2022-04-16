@@ -1,14 +1,16 @@
-import Link from "next/link";
-import * as React from "react";
-import Github from "./home/github.svg";
-import Logo from "../public/logo.svg";
-import Footer from "./page-layout/footer";
-import Head from "next/head";
-import { useRouter } from "next/router";
 import clsx from "clsx";
-import DotsVertical from "@/components/icons/dots-vertical.svg";
 import dynamic from "next/dynamic";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import * as React from "react";
 import { createBreakpoint } from "react-use";
+
+import DotsVertical from "@/components/icons/dots-vertical.svg";
+
+import Logo from "../public/logo.svg";
+import Github from "./home/github.svg";
+import Footer from "./page-layout/footer";
 
 const Popover = dynamic(() => import("./popover"), { ssr: false });
 export interface PageLayoutProps {

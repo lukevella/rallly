@@ -1,4 +1,5 @@
 import { NextMiddleware, NextResponse } from "next/server";
+
 import { isInMaintenanceMode } from "../utils/constants";
 
 export const middleware: NextMiddleware = async (req) => {

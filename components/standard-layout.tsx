@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+
 import Logo from "../public/logo.svg";
 import Newspaper from "./icons/newspaper.svg";
 import Pencil from "./icons/pencil.svg";

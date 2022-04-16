@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { useTranslation } from "next-i18next";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
+
 import { UserAvatarProvider } from "../poll/user-avatar";
 import PollDemo from "./poll-demo";
 import ScribbleArrow from "./scribble-arrow.svg";

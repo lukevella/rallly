@@ -1,4 +1,5 @@
 import absoluteUrl from "utils/absolute-url";
+
 import { AddParticipantPayload } from "../../../../../api-client/add-participant";
 import { prisma } from "../../../../../db";
 import {

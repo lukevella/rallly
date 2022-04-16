@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom";
+
 import Modal, { ModalProps } from "./modal/modal";
 
 export const confirmPrompt = (props: ModalProps) => {

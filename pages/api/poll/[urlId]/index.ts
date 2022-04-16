@@ -1,6 +1,7 @@
 import { GetPollApiResponse } from "api-client/get-poll";
 import { NextApiResponse } from "next";
 import { resetDates } from "utils/legacy-utils";
+
 import { UpdatePollPayload } from "../../../../api-client/update-poll";
 import { prisma } from "../../../../db";
 import { exclude, withLink } from "../../../../utils/api-utils";

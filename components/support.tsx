@@ -1,10 +1,12 @@
-import * as React from "react";
-import PageLayout from "./page-layout";
 import { Disclosure } from "@headlessui/react";
-import Chat from "@/components/icons/chat.svg";
-import Button from "@/components/button";
-import { showCrispChat } from "./crisp-chat";
 import { Trans, useTranslation } from "next-i18next";
+import * as React from "react";
+
+import Button from "@/components/button";
+import Chat from "@/components/icons/chat.svg";
+
+import { showCrispChat } from "./crisp-chat";
+import PageLayout from "./page-layout";
 
 const Support: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("support");

@@ -1,6 +1,7 @@
+import React from "react";
+
 import ErrorPage from "@/components/error-page";
 import DocumentSearch from "@/components/icons/document-search.svg";
-import React from "react";
 
 const Custom404: React.VoidFunctionComponent = () => {
   return (

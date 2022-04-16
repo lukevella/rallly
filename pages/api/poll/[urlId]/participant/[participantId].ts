@@ -1,5 +1,5 @@
 import { prisma } from "../../../../../db";
-import { withLink, getQueryParam } from "../../../../../utils/api-utils";
+import { getQueryParam,withLink } from "../../../../../utils/api-utils";
 
 export default withLink(async (req, res, link) => {
   const participantId = getQueryParam(req, "participantId");

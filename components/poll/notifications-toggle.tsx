@@ -1,12 +1,14 @@
-import * as React from "react";
-import Tooltip from "../tooltip";
-import { usePoll } from "../use-poll";
 import { Trans, useTranslation } from "next-i18next";
+import { usePlausible } from "next-plausible";
+import * as React from "react";
+
 import Button from "@/components/button";
 import Bell from "@/components/icons/bell.svg";
 import BellCrossed from "@/components/icons/bell-crossed.svg";
+
+import Tooltip from "../tooltip";
+import { usePoll } from "../use-poll";
 import { useUpdatePollMutation } from "./mutations";
-import { usePlausible } from "next-plausible";
 
 export interface NotificationsToggleProps {}
 

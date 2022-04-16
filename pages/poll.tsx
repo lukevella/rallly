@@ -1,3 +1,16 @@
+import axios from "axios";
+import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { usePlausible } from "next-plausible";
+import React from "react";
+import { toast } from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMount } from "react-use";
+import { preventWidows } from "utils/prevent-widows";
+
 import Button from "@/components/button";
 import ErrorPage from "@/components/error-page";
 import FullPageLoader from "@/components/full-page-loader";
@@ -16,18 +29,7 @@ import Sharing from "@/components/sharing";
 import StandardLayout from "@/components/standard-layout";
 import { PollContext, usePoll } from "@/components/use-poll";
 import { useUserName } from "@/components/user-name-context";
-import axios from "axios";
-import { GetServerSideProps, NextPage } from "next";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { usePlausible } from "next-plausible";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import React from "react";
-import { toast } from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useMount } from "react-use";
-import { preventWidows } from "utils/prevent-widows";
+
 import { GetPollResponse } from "../api-client/get-poll";
 import { getBrowserTimeZone } from "../utils/date-time-utils";
 import Custom404 from "./404";

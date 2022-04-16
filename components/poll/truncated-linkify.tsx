@@ -1,5 +1,6 @@
 import * as React from "react";
 import ReactLinkify from "react-linkify";
+
 import Tooltip from "../tooltip";
 
 export const truncateLink = (href: string, text: string, key: number) => {

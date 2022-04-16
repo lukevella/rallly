@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import GitHubButton from "react-github-btn";
-import { Trans, useTranslation } from "next-i18next";
+
 import Logo from "../../public/logo.svg";
 import Vercel from "../../public/vercel-logotype-dark.svg";
 

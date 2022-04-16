@@ -1,10 +1,11 @@
 import { GetStaticProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { usePlausible } from "next-plausible";
-import { useRouter } from "next/router";
 import React from "react";
 import { useMount } from "react-use";
+
 import { createDemo } from "../api-client/create-demo";
 import FullPageLoader from "../components/full-page-loader";
 

@@ -1,3 +1,9 @@
+import { Placement } from "@popperjs/core";
+import { format } from "date-fns";
+import { Trans,useTranslation  } from "next-i18next";
+import * as React from "react";
+import { decodeDateOption, encodeDateOption } from "utils/date-time-utils";
+
 import Button from "@/components/button";
 import Cog from "@/components/icons/cog.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
@@ -5,18 +11,13 @@ import LockOpen from "@/components/icons/lock-open.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Save from "@/components/icons/save.svg";
 import Table from "@/components/icons/table.svg";
-import { Placement } from "@popperjs/core";
-import { format } from "date-fns";
-import { useTranslation } from "next-i18next";
-import * as React from "react";
-import { decodeDateOption, encodeDateOption } from "utils/date-time-utils";
+
 import Dropdown, { DropdownItem } from "../dropdown";
 import { PollDetailsForm } from "../forms";
 import { useModal } from "../modal";
 import { useModalContext } from "../modal/modal-provider";
 import { usePoll } from "../use-poll";
 import { useUpdatePollMutation } from "./mutations";
-import { Trans } from "next-i18next";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
 

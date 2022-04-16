@@ -1,13 +1,14 @@
 import { GetServerSideProps, NextPage } from "next";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { usePlausible } from "next-plausible";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { usePlausible } from "next-plausible";
 import React from "react";
 import { useMutation } from "react-query";
 import { useSessionStorage } from "react-use";
+
 import { createPoll } from "../api-client/create-poll";
 import Button from "../components/button";
 import {

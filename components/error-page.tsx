@@ -1,11 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
 import * as React from "react";
-import StandardLayout from "./standard-layout";
+
 import Button from "@/components/button";
 import Chat from "@/components/icons/chat.svg";
 import EmojiSad from "@/components/icons/emoji-sad.svg";
+
 import { showCrispChat } from "./crisp-chat";
+import StandardLayout from "./standard-layout";
 
 export interface ComponentProps {
   icon?: React.ComponentType<{ className?: string }>;

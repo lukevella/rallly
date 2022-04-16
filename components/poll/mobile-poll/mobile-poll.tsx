@@ -1,18 +1,20 @@
-import { usePoll } from "@/components/use-poll";
 import { Listbox } from "@headlessui/react";
 import { Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
+
+import { usePoll } from "@/components/use-poll";
+
 import { decodeDateOption } from "../../../utils/date-time-utils";
 import { requiredString } from "../../../utils/form-validation";
 import Button from "../../button";
 import DateCard from "../../date-card";
+import CheckCircle from "../../icons/check-circle.svg";
 import ChevronDown from "../../icons/chevron-down.svg";
 import Pencil from "../../icons/pencil.svg";
 import PlusCircle from "../../icons/plus-circle.svg";
-import CheckCircle from "../../icons/check-circle.svg";
 import Trash from "../../icons/trash.svg";
 import { styleMenuItem } from "../../menu-styles";
 import NameInput from "../../name-input";

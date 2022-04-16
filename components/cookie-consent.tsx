@@ -4,6 +4,7 @@ import Link from "next/link";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { getPortal } from "utils/selectors";
+
 import CookiesIllustration from "./cookie-consent/cookies.svg";
 
 const CookieConsentPopover: React.VoidFunctionComponent = () => {

@@ -1,6 +1,7 @@
 import { addMinutes } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nanoid } from "utils/nanoid";
+
 import { prisma } from "../../../db";
 
 const participantData = [

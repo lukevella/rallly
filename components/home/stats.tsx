@@ -1,6 +1,6 @@
 import Link from "next/link";
-import * as React from "react";
 import { useTranslation } from "next-i18next";
+import * as React from "react";
 
 const Stats: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");

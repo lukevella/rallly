@@ -1,4 +1,5 @@
 import absoluteUrl from "utils/absolute-url";
+
 import { prisma } from "../../../../../db";
 import {
   getAdminLink,

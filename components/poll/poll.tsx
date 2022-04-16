@@ -3,6 +3,8 @@ import debounce from "lodash/debounce";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
+import smoothscroll from "smoothscroll-polyfill";
+
 import { decodeDateOption } from "../../utils/date-time-utils";
 import Button from "../button";
 import DateCard from "../date-card";
@@ -11,6 +13,7 @@ import ArrowRight from "../icons/arrow-right.svg";
 import PlusCircle from "../icons/plus-circle.svg";
 import TimeZonePicker from "../time-zone-picker";
 import { TransitionPopInOut } from "../transitions";
+import { usePoll } from "../use-poll";
 import { useAddParticipantMutation } from "./mutations";
 import ParticipantRow from "./participant-row";
 import ParticipantRowForm from "./participant-row-form";
@@ -18,8 +21,6 @@ import { PollContext, usePollContext } from "./poll-context";
 import Score from "./score";
 import TimeRange from "./time-range";
 import { PollProps } from "./types";
-import smoothscroll from "smoothscroll-polyfill";
-import { usePoll } from "../use-poll";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();

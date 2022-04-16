@@ -1,11 +1,12 @@
-import { formatRelative } from "date-fns";
-import * as React from "react";
-import { Trans, useTranslation } from "next-i18next";
-import Button from "../button";
-import { usePoll } from "../use-poll";
-import Popover from "../popover";
-import { useMutation } from "react-query";
 import axios from "axios";
+import { formatRelative } from "date-fns";
+import { Trans, useTranslation } from "next-i18next";
+import * as React from "react";
+import { useMutation } from "react-query";
+
+import Button from "../button";
+import Popover from "../popover";
+import { usePoll } from "../use-poll";
 
 export interface PollSubheaderProps {}
 

@@ -1,8 +1,9 @@
+import * as React from "react";
+
 import Bell from "@/components/icons/bell.svg";
 import Chat from "@/components/icons/chat.svg";
 import Clock from "@/components/icons/clock.svg";
 import DeviceMobile from "@/components/icons/device-mobile.svg";
-import * as React from "react";
 
 const Features: React.VoidFunctionComponent = () => {
   return (

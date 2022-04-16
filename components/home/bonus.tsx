@@ -1,8 +1,10 @@
 import * as React from "react";
-import Ban from "./ban-ads.svg";
+
 import Code from "@/components/icons/code.svg";
-import Server from "@/components/icons/server.svg";
 import CursorClick from "@/components/icons/cursor-click.svg";
+import Server from "@/components/icons/server.svg";
+
+import Ban from "./ban-ads.svg";
 
 const Bonus: React.VoidFunctionComponent = () => {
   return (

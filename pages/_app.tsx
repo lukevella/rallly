@@ -1,17 +1,20 @@
-import ModalProvider from "@/components/modal/modal-provider";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "tailwindcss/tailwind.css";
+import "../style.css";
+
 import { NextPage } from "next";
-import { appWithTranslation } from "next-i18next";
-import PlausibleProvider from "next-plausible";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import { appWithTranslation } from "next-i18next";
+import PlausibleProvider from "next-plausible";
 import toast, { Toaster } from "react-hot-toast";
 import { MutationCache, QueryClient, QueryClientProvider } from "react-query";
 import { useSessionStorage } from "react-use";
-import "tailwindcss/tailwind.css";
+
+import ModalProvider from "@/components/modal/modal-provider";
+
 import { UserNameContext } from "../components/user-name-context";
-import "../style.css";
 
 const CrispChat = dynamic(() => import("@/components/crisp-chat"), {
   ssr: false,

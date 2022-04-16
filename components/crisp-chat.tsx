@@ -1,6 +1,8 @@
 import * as React from "react";
-import Button from "./button";
+
 import Chat from "@/components/icons/chat.svg";
+
+import Button from "./button";
 
 const crispWebsiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
 

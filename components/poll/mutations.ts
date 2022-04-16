@@ -1,6 +1,7 @@
 import { updatePoll, UpdatePollPayload } from "api-client/update-poll";
 import { usePlausible } from "next-plausible";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+
 import { addParticipant } from "../../api-client/add-participant";
 import {
   deleteParticipant,

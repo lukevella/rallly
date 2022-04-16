@@ -1,9 +1,9 @@
-import React from "react";
-import { usePopper } from "react-popper";
 import { Popover as HeadlessPopover } from "@headlessui/react";
-import clsx from "clsx";
-import ReactDOM from "react-dom";
 import { Placement } from "@popperjs/core";
+import clsx from "clsx";
+import React from "react";
+import ReactDOM from "react-dom";
+import { usePopper } from "react-popper";
 
 interface PopoverProps {
   trigger: React.ReactNode;
