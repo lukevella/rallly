@@ -1,6 +1,6 @@
 import { Placement } from "@popperjs/core";
 import clsx from "clsx";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { usePopper } from "react-popper";
@@ -98,35 +98,42 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
       </div>
       {portal
         ? ReactDOM.createPortal(
-            <div
-              ref={setPopperElement}
-              style={styles.popper}
-              {...attributes.popper}
-            >
-              <motion.div
-                className="pointer-events-none rounded-md bg-slate-700 px-3 py-2 text-slate-200 shadow-md"
-                initial="hidden"
-                transition={{
-                  duration: 0.1,
-                }}
-                variants={{
-                  hidden: {
-                    opacity: 0,
-                    translateY: placement === "bottom" ? -4 : 4,
-                  },
-                  show: { opacity: 1, translateY: 0 },
-                }}
-                animate={debouncedValue ? "show" : "hidden"}
-              >
+            <AnimatePresence>
+              {debouncedValue ? (
                 <div
-                  ref={setArrowElement}
-                  className="tooltip-arrow h-3 w-3 border-[6px] border-transparent"
-                  style={styles.arrow}
-                  data-popper-arrow
-                ></div>
-                {typeof content === "string" ? preventWidows(content) : content}
-              </motion.div>
-            </div>,
+                  className="pointer-events-none"
+                  ref={setPopperElement}
+                  style={styles.popper}
+                  {...attributes.popper}
+                >
+                  <motion.div
+                    className="rounded-md bg-slate-700 px-3 py-2 text-slate-200 shadow-md"
+                    initial="hidden"
+                    transition={{
+                      duration: 0.1,
+                    }}
+                    variants={{
+                      hidden: {
+                        opacity: 0,
+                        translateY: placement === "bottom" ? -4 : 4,
+                      },
+                      show: { opacity: 1, translateY: 0 },
+                    }}
+                    animate={debouncedValue ? "show" : "hidden"}
+                  >
+                    <div
+                      ref={setArrowElement}
+                      className="tooltip-arrow h-3 w-3 border-[6px] border-transparent"
+                      style={styles.arrow}
+                      data-popper-arrow
+                    ></div>
+                    {typeof content === "string"
+                      ? preventWidows(content)
+                      : content}
+                  </motion.div>
+                </div>
+              ) : null}
+            </AnimatePresence>,
             portal,
           )
         : null}
