@@ -91,7 +91,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
       >
         {children}
       </div>
-      {portal && debouncedValue
+      {portal
         ? ReactDOM.createPortal(
             <div
               ref={setPopperElement}

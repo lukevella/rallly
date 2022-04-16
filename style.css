@@ -124,6 +124,10 @@
   [data-popper-placement="bottom"] .tooltip-arrow {
     @apply bottom-full border-b-slate-700;
   }
+
+  [data-popper-placement="top"] .tooltip-arrow {
+    @apply top-full border-t-slate-700;
+  }
 }
 
 @layer components {

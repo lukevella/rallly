@@ -7,6 +7,7 @@ import { requiredString } from "../../utils/form-validation";
 import Button from "../button";
 import CheckCircle from "../icons/check-circle.svg";
 import NameInput from "../name-input";
+import Tooltip from "../tooltip";
 import { ControlledScrollDiv } from "./poll";
 import { usePollContext } from "./poll-context";
 import { ParticipantForm } from "./types";
@@ -160,13 +161,15 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
           })}
         </ControlledScrollDiv>
         <div className="flex items-center px-2 space-x-2 transition-all">
-          <Button
-            htmlType="submit"
-            icon={<CheckCircle />}
-            type="primary"
-            loading={isSubmitting}
-            data-testid="submitNewParticipant"
-          />
+          <Tooltip content="Save" placement="top">
+            <Button
+              htmlType="submit"
+              icon={<CheckCircle />}
+              type="primary"
+              loading={isSubmitting}
+              data-testid="submitNewParticipant"
+            />
+          </Tooltip>
           <Button onClick={onCancel} type="default">
             Cancel
           </Button>
