@@ -45,7 +45,7 @@ export const ControlledScrollDiv: React.VoidFunctionComponent<{
         className="flex h-full"
         transition={{
           type: "spring",
-          mass: 0.5,
+          mass: 0.4,
         }}
         initial={{ x: 0 }}
         animate={{ x: scrollPosition * -1 }}
