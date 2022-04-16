@@ -28,48 +28,31 @@ if (typeof window !== "undefined") {
 
 const MotionButton = motion(Button);
 
-// There's a bug in Safari 15.4 that causes `scroll` to no work as intended
-const isSafariV154 =
-  typeof window !== "undefined"
-    ? /Version\/15.[4-9]\sSafari/.test(navigator.userAgent)
-    : false;
-
 export const ControlledScrollDiv: React.VoidFunctionComponent<{
   children?: React.ReactNode;
   className?: string;
 }> = ({ className, children }) => {
-  const { setScrollPosition, availableSpace, scrollPosition } =
-    usePollContext();
+  const { availableSpace, scrollPosition } = usePollContext();
 
   const ref = React.useRef<HTMLDivElement>(null);
-
-  const didSetInitialScrollPosition = React.useRef(false);
-
-  React.useEffect(() => {
-    if (ref.current) {
-      if (!isSafariV154) {
-        ref.current.scroll({
-          left: scrollPosition,
-          behavior: didSetInitialScrollPosition?.current ? "smooth" : "auto",
-        });
-      } else {
-        ref.current.scrollLeft = scrollPosition;
-      }
-      didSetInitialScrollPosition.current = true;
-    }
-  }, [scrollPosition]);
 
   return (
     <div
       ref={ref}
-      className={clsx("flex min-w-0 overflow-hidden", className)}
+      className={clsx(" min-w-0 overflow-hidden", className)}
       style={{ width: availableSpace, maxWidth: availableSpace }}
-      onScroll={(e) => {
-        const div = e.target as HTMLDivElement;
-        setScrollPosition(div.scrollLeft);
-      }}
     >
-      {children}
+      <motion.div
+        className="flex h-full"
+        transition={{
+          type: "spring",
+          mass: 0.5,
+        }}
+        initial={{ x: 0 }}
+        animate={{ x: scrollPosition * -1 }}
+      >
+        {children}
+      </motion.div>
     </div>
   );
 };
