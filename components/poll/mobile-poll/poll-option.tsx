@@ -88,7 +88,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
       }}
       className={clsx(
         "flex items-center space-x-3 px-4 py-3 transition duration-75",
-        { "active:bg-indigo-50": editable },
+        { "active:bg-indigo-50": editable, "bg-indigo-50/50": vote === "yes" },
       )}
     >
       <div className="pointer-events-none flex grow items-center">

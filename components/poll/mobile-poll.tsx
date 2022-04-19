@@ -1,9 +1,11 @@
 import { Listbox } from "@headlessui/react";
 import { Participant, Vote } from "@prisma/client";
+import clsx from "clsx";
 import { motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import smoothscroll from "smoothscroll-polyfill";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
 import Pencil from "@/components/icons/pencil.svg";
@@ -27,6 +29,20 @@ import {
 import { ParticipantForm, PollProps } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
 import UserAvater from "./user-avatar";
+
+if (typeof window !== "undefined") {
+  smoothscroll.polyfill();
+}
+
+function isElementInViewport(el: HTMLElement) {
+  const rect = el.getBoundingClientRect();
+
+  return (
+    rect.bottom <=
+    (window.innerHeight ||
+      document.documentElement.clientHeight) /* or $(window).height() */
+  );
+}
 
 const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const pollContext = usePoll();
@@ -62,6 +78,30 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     participants.length > 0 ? "default" : "edit",
   );
 
+  const [saveVisible, setSaveVisible] = React.useState(false);
+  const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
+  const saveButtonRef = React.useRef<HTMLDivElement>(null);
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  React.useEffect(() => {
+    const setState = () => {
+      if (saveButtonRef.current && formRef.current) {
+        const saveButtonIsVisible = isElementInViewport(saveButtonRef.current);
+        setSaveVisible(saveButtonIsVisible);
+        setShouldShowSaveButton(
+          !saveButtonIsVisible &&
+            formRef.current.getBoundingClientRect().top <
+              window.innerHeight / 4,
+        );
+      }
+    };
+    setState();
+    window.addEventListener("scroll", setState, true);
+    return () => {
+      window.removeEventListener("scroll", setState, true);
+    };
+  }, []);
+
   const { t } = useTranslation("app");
 
   const { mutate: updateParticipantMutation } =
@@ -73,6 +113,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   return (
     <FormProvider {...form}>
       <form
+        ref={formRef}
         className="border-t border-b bg-white shadow-sm"
         onSubmit={handleSubmit((data) => {
           return new Promise<ParticipantForm>((resolve, reject) => {
@@ -204,18 +245,24 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
             </div>
           ) : null}
           {mode === "edit" ? (
-            <Controller
-              name="name"
-              control={control}
-              rules={{ validate: requiredString }}
-              render={({ field }) => (
-                <NameInput
-                  disabled={formState.isSubmitting}
-                  className="w-full"
-                  {...field}
+            <div className="flex space-x-3">
+              <div className="grow">
+                <Controller
+                  name="name"
+                  control={control}
+                  rules={{ validate: requiredString }}
+                  render={({ field }) => (
+                    <NameInput
+                      disabled={formState.isSubmitting}
+                      className={clsx("w-full", {
+                        "input-error": formState.errors.name,
+                      })}
+                      {...field}
+                    />
+                  )}
                 />
-              )}
-            />
+              </div>
+            </div>
           ) : null}
         </div>
         {(() => {
@@ -238,8 +285,29 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               );
           }
         })()}
-        {mode === "edit" ? (
-          <div className="flex w-full space-x-3 border-t bg-slate-50 p-2">
+        <div
+          ref={saveButtonRef}
+          className={clsx("overflow-hidden", {
+            "h-0": mode === "default",
+            "h-16": mode === "edit",
+          })}
+        >
+          <motion.div
+            variants={{
+              hidden: { y: 100 },
+              visible: { y: 0 },
+            }}
+            animate={shouldShowSaveButton || saveVisible ? "visible" : "hidden"}
+            style={{
+              boxShadow: !saveVisible ? "0 0 8px rgba(0,0,0,0.1)" : undefined,
+            }}
+            className={clsx(
+              "flex h-16 w-full space-x-3 border-t bg-gray-50/80 py-3 px-4 backdrop-blur-md",
+              {
+                "fixed bottom-0 z-10": mode === "edit" && !saveVisible,
+              },
+            )}
+          >
             <Button
               className="grow"
               onClick={() => {
@@ -250,16 +318,16 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               Cancel
             </Button>
             <Button
+              className="grow"
               icon={<CheckCircle />}
               htmlType="submit"
-              className="grow"
               type="primary"
               loading={formState.isSubmitting}
             >
               Save
             </Button>
-          </div>
-        ) : null}
+          </motion.div>
+        </div>
       </form>
     </FormProvider>
   );
