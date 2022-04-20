@@ -83,6 +83,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   const showVotes = !!(selectedParticipantId || editable);
   return (
     <div
+      data-testid="poll-option"
       onClick={() => {
         onChange(vote === "yes" ? "no" : "yes");
       }}

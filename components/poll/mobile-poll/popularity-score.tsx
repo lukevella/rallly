@@ -16,7 +16,10 @@ const PopularityScore: React.VoidFunctionComponent<PopularityScoreProps> = ({
   const multiplier = prevScore !== undefined ? score - prevScore : 0;
 
   return (
-    <div className="inline-flex  items-center font-mono text-sm font-semibold text-slate-500">
+    <div
+      data-testid="popularity-score"
+      className="inline-flex  items-center font-mono text-sm font-semibold text-slate-500"
+    >
       <Check className="mr-1 inline-block h-5 text-slate-400/80" />
       <span className="relative inline-block">
         <AnimatePresence initial={false}>

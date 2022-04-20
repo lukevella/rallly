@@ -18,7 +18,7 @@ export const useDeleteParticipantModal = () => {
       okButtonProps: {
         type: "danger",
       },
-      okText: "Remove",
+      okText: "Delete",
       onOk: () => {
         deleteParticipant({
           pollId: urlId,

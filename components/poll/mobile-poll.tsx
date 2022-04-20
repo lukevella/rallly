@@ -220,6 +220,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   {role === "admin" ? (
                     <Button
                       icon={<Trash />}
+                      data-testid="delete-participant-button"
                       type="danger"
                       onClick={() => {
                         if (selectedParticipant) {
