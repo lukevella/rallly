@@ -10,9 +10,10 @@ export const truncateLink = (href: string, text: string, key: number) => {
   if (beginningOfPath !== -1) {
     finalText = textWithoutProtocol.substring(0, beginningOfPath + 15);
   }
+
   if (finalText.length === textWithoutProtocol.length) {
     return (
-      <a key={key} href={href}>
+      <a key={key} href={href} rel="nofollow noreferrer">
         {finalText}
       </a>
     );
@@ -25,7 +26,9 @@ export const truncateLink = (href: string, text: string, key: number) => {
           <div className="max-w-md break-all font-mono text-xs">{href}</div>
         }
       >
-        <a href={href}>{finalText}</a>
+        <a href={href} rel="nofollow noreferrer">
+          {finalText}
+        </a>
       </Tooltip>
     );
   }
