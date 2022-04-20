@@ -297,6 +297,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               hidden: { y: 100 },
               visible: { y: 0 },
             }}
+            transition={{ duration: 0.2 }}
             animate={shouldShowSaveButton || saveVisible ? "visible" : "hidden"}
             style={{
               boxShadow: !saveVisible ? "0 0 8px rgba(0,0,0,0.1)" : undefined,
