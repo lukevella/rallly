@@ -24,14 +24,13 @@ import NotificationsToggle from "@/components/poll/notifications-toggle";
 import PollSubheader from "@/components/poll/poll-subheader";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { UserAvatarProvider } from "@/components/poll/user-avatar";
+import { PollContextProvider, usePoll } from "@/components/poll-context";
 import Popover from "@/components/popover";
 import Sharing from "@/components/sharing";
 import StandardLayout from "@/components/standard-layout";
-import { PollContext, usePoll } from "@/components/use-poll";
 import { useUserName } from "@/components/user-name-context";
 
 import { GetPollResponse } from "../api-client/get-poll";
-import { getBrowserTimeZone } from "../utils/date-time-utils";
 import Custom404 from "./404";
 
 const Discussion = React.lazy(() => import("@/components/discussion"));
@@ -100,14 +99,14 @@ const PollPageLoader: NextPage = () => {
   return !poll ? (
     <FullPageLoader>{t("loading")}</FullPageLoader>
   ) : (
-    <PollContext.Provider value={poll}>
+    <PollContextProvider value={poll}>
       <PollPage />
-    </PollContext.Provider>
+    </PollContextProvider>
   );
 };
 
 const PollPage: NextPage = () => {
-  const poll = usePoll();
+  const { poll } = usePoll();
 
   const router = useRouter();
 
@@ -174,17 +173,6 @@ const PollPage: NextPage = () => {
     }
   }, [plausible, router, updatePollMutation]);
 
-  const [targetTimeZone, setTargetTimeZone] =
-    React.useState(getBrowserTimeZone);
-
-  const sortedOptions = React.useMemo(
-    () =>
-      poll.options.sort((a, b) =>
-        a.value < b.value ? -1 : a.value > b.value ? 1 : 0,
-      ),
-    [poll.options],
-  );
-
   const checkIfWideScreen = () => window.innerWidth > 640;
 
   const [isWideScreen, setIsWideScreen] = React.useState(checkIfWideScreen);
@@ -202,7 +190,7 @@ const PollPage: NextPage = () => {
   const PollComponent = isWideScreen ? Poll : MobilePoll;
 
   let highScore = 1; // set to one because we don't want to highlight
-  sortedOptions.forEach((option) => {
+  poll.options.forEach((option) => {
     if (option.votes.length > highScore) {
       highScore = option.votes.length;
     }
@@ -241,7 +229,6 @@ const PollPage: NextPage = () => {
                           placement={
                             isWideScreen ? "bottom-end" : "bottom-start"
                           }
-                          targetTimeZone={targetTimeZone}
                         />
                         <div>
                           <Popover
@@ -290,12 +277,7 @@ const PollPage: NextPage = () => {
             ) : null}
             <React.Suspense fallback={<div>Loading…</div>}>
               <div className="mb-4 lg:mb-8">
-                <PollComponent
-                  pollId={poll.urlId}
-                  highScore={highScore}
-                  targetTimeZone={targetTimeZone}
-                  onChangeTargetTimeZone={setTargetTimeZone}
-                />
+                <PollComponent pollId={poll.urlId} highScore={highScore} />
               </div>
               <Discussion
                 pollId={poll.urlId}

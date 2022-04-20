@@ -62,7 +62,7 @@
     @apply border-rose-500 bg-rose-50 placeholder:text-rose-500 focus:border-rose-400 focus:ring-rose-500;
   }
   .checkbox {
-    @apply h-4 w-4 cursor-pointer rounded border-slate-300 text-indigo-500 focus:ring-indigo-500;
+    @apply h-4 w-4 cursor-pointer rounded border-slate-300 text-indigo-500 shadow-sm focus:ring-indigo-500;
   }
   .btn {
     @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-1;

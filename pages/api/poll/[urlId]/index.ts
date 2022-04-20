@@ -27,6 +27,9 @@ export default withLink(
               include: {
                 votes: true,
               },
+              orderBy: {
+                value: "asc",
+              },
             },
             participants: {
               include: {
@@ -118,6 +121,9 @@ export default withLink(
             options: {
               include: {
                 votes: true,
+              },
+              orderBy: {
+                value: "asc",
               },
             },
             participants: {

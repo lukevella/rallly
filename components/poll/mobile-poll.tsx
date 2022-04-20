@@ -1,45 +1,45 @@
 import { Listbox } from "@headlessui/react";
 import { Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
+import smoothscroll from "smoothscroll-polyfill";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
 import Pencil from "@/components/icons/pencil.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
+import Save from "@/components/icons/save.svg";
 import Trash from "@/components/icons/trash.svg";
-import { usePoll } from "@/components/use-poll";
+import { usePoll } from "@/components/poll-context";
 
-import { decodeDateOption } from "../../utils/date-time-utils";
 import { requiredString } from "../../utils/form-validation";
 import Button from "../button";
-import DateCard from "../date-card";
-import CheckCircle from "../icons/check-circle.svg";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
 import TimeZonePicker from "../time-zone-picker";
 import { useUserName } from "../user-name-context";
+import PollOptions from "./mobile-poll/poll-options";
+import TimeSlotOptions from "./mobile-poll/time-slot-options";
 import {
   useAddParticipantMutation,
   useUpdateParticipantMutation,
 } from "./mutations";
-import TimeRange from "./time-range";
 import { ParticipantForm, PollProps } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
 import UserAvater from "./user-avatar";
-import VoteIcon from "./vote-icon";
 
-const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
-  pollId,
-  highScore,
-  targetTimeZone,
-  onChangeTargetTimeZone,
-}) => {
-  const poll = usePoll();
+if (typeof window !== "undefined") {
+  smoothscroll.polyfill();
+}
 
-  const { timeZone, options, participants, role } = poll;
+const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
+  const pollContext = usePoll();
+
+  const { poll, targetTimeZone, setTargetTimeZone } = pollContext;
+
+  const { timeZone, participants, role } = poll;
 
   const [, setUserName] = useUserName();
 
@@ -50,13 +50,14 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
     return acc;
   }, {});
 
-  const { register, setValue, reset, handleSubmit, control, formState } =
-    useForm<ParticipantForm>({
-      defaultValues: {
-        name: "",
-        votes: [],
-      },
-    });
+  const form = useForm<ParticipantForm>({
+    defaultValues: {
+      name: "",
+      votes: [],
+    },
+  });
+
+  const { reset, handleSubmit, control, formState } = form;
   const [selectedParticipantId, setSelectedParticipantId] =
     React.useState<string>();
 
@@ -64,13 +65,32 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
     ? participantById[selectedParticipantId]
     : undefined;
 
-  const selectedParticipantVotedOption = selectedParticipant
-    ? selectedParticipant.votes.map((vote) => vote.optionId)
-    : undefined;
-
-  const [mode, setMode] = React.useState<"edit" | "default">(() =>
-    participants.length > 0 ? "default" : "edit",
+  const [editable, setEditable] = React.useState(() =>
+    participants.length > 0 ? false : true,
   );
+
+  const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  React.useEffect(() => {
+    const setState = () => {
+      if (formRef.current) {
+        const rect = formRef.current.getBoundingClientRect();
+        const saveButtonIsVisible = rect.bottom <= window.innerHeight;
+
+        setShouldShowSaveButton(
+          !saveButtonIsVisible &&
+            formRef.current.getBoundingClientRect().top <
+              window.innerHeight / 2,
+        );
+      }
+    };
+    setState();
+    window.addEventListener("scroll", setState, true);
+    return () => {
+      window.removeEventListener("scroll", setState, true);
+    };
+  }, []);
 
   const { t } = useTranslation("app");
 
@@ -78,59 +98,69 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
     useUpdateParticipantMutation(pollId);
 
   const { mutate: addParticipantMutation } = useAddParticipantMutation(pollId);
-  const [deleteParticipantModal, confirmDeleteParticipant] =
-    useDeleteParticipantModal(pollId, selectedParticipantId ?? ""); // TODO (Luke Vella) [2022-03-14]:  Figure out a better way to deal with these modals
+  const confirmDeleteParticipant = useDeleteParticipantModal();
 
-  // This hack is necessary because when there is only one checkbox,
-  // react-hook-form does not know to format the value into an array.
-  // See: https://github.com/react-hook-form/react-hook-form/issues/7834
-  const checkboxGroupHack = (
-    <input type="checkbox" className="hidden" {...register("votes")} />
-  );
-
+  const submitContainerRef = React.useRef<HTMLDivElement>(null);
+  const scrollToSave = () => {
+    if (submitContainerRef.current) {
+      window.scrollTo({
+        top:
+          document.documentElement.scrollTop +
+          submitContainerRef.current.getBoundingClientRect().bottom -
+          window.innerHeight +
+          100,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
-    <form
-      className="border-t border-b bg-white shadow-sm"
-      onSubmit={handleSubmit((data) => {
-        return new Promise<ParticipantForm>((resolve, reject) => {
-          if (selectedParticipant) {
-            updateParticipantMutation(
-              {
-                participantId: selectedParticipant.id,
-                pollId,
-                ...data,
-              },
-              {
-                onSuccess: () => {
-                  setMode("default");
+    <FormProvider {...form}>
+      <form
+        ref={formRef}
+        className="border-t border-b bg-white shadow-sm"
+        onSubmit={handleSubmit((data) => {
+          return new Promise<ParticipantForm>((resolve, reject) => {
+            if (selectedParticipant) {
+              updateParticipantMutation(
+                {
+                  participantId: selectedParticipant.id,
+                  pollId,
+                  ...data,
+                },
+                {
+                  onSuccess: () => {
+                    resolve(data);
+                    setEditable(false);
+                  },
+                  onError: reject,
+                },
+              );
+            } else {
+              addParticipantMutation(data, {
+                onSuccess: (newParticipant) => {
+                  setSelectedParticipantId(newParticipant.id);
                   resolve(data);
+                  setEditable(false);
                 },
                 onError: reject,
-              },
-            );
-          } else {
-            addParticipantMutation(data, {
-              onSuccess: (newParticipant) => {
-                setMode("default");
-                setSelectedParticipantId(newParticipant.id);
-                resolve(data);
-              },
-              onError: reject,
-            });
-          }
-        });
-      })}
-    >
-      {checkboxGroupHack}
-      <div className="sticky top-0 z-30 flex flex-col space-y-2 border-b bg-gray-50 px-4 py-2">
-        {mode === "default" ? (
+              });
+            }
+          });
+        })}
+      >
+        <div className="sticky top-0 z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
           <div className="flex space-x-3">
             <Listbox
               value={selectedParticipantId}
               onChange={setSelectedParticipantId}
+              disabled={editable}
             >
               <div className="menu grow">
-                <Listbox.Button className="btn-default w-full text-left">
+                <Listbox.Button
+                  className={clsx("btn-default w-full px-2 text-left", {
+                    "btn-disabled": editable,
+                  })}
+                >
                   <div className="grow">
                     {selectedParticipant ? (
                       <div className="flex items-center space-x-2">
@@ -153,7 +183,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                   className="menu-items max-h-72 w-full overflow-auto"
                 >
                   <Listbox.Option value={undefined} className={styleMenuItem}>
-                    Show all
+                    {t("participantCount", { count: participants.length })}
                   </Listbox.Option>
                   {participants.map((participant) => (
                     <Listbox.Option
@@ -170,18 +200,19 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                 </Listbox.Options>
               </div>
             </Listbox>
-            {!poll.closed ? (
+            {!poll.closed && !editable ? (
               selectedParticipant ? (
                 <div className="flex space-x-3">
                   <Button
                     icon={<Pencil />}
                     onClick={() => {
-                      setMode("edit");
-                      setValue("name", selectedParticipant.name);
-                      setValue(
-                        "votes",
-                        selectedParticipant.votes.map((vote) => vote.optionId),
-                      );
+                      setEditable(true);
+                      reset({
+                        name: selectedParticipant.name,
+                        votes: selectedParticipant.votes.map(
+                          (vote) => vote.optionId,
+                        ),
+                      });
                     }}
                   >
                     Edit
@@ -189,151 +220,141 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({
                   {role === "admin" ? (
                     <Button
                       icon={<Trash />}
+                      data-testid="delete-participant-button"
                       type="danger"
-                      onClick={confirmDeleteParticipant}
+                      onClick={() => {
+                        if (selectedParticipant) {
+                          confirmDeleteParticipant(selectedParticipant.id);
+                        }
+                      }}
                     />
                   ) : null}
-                  {deleteParticipantModal}
                 </div>
               ) : (
                 <Button
                   type="primary"
                   icon={<PlusCircle />}
                   onClick={() => {
-                    reset();
+                    reset({ name: "", votes: [] });
                     setUserName("");
-                    setMode("edit");
+                    setEditable(true);
                   }}
                 >
                   New
                 </Button>
               )
             ) : null}
+            {editable ? (
+              <Button
+                onClick={() => {
+                  setEditable(false);
+                  reset();
+                }}
+              >
+                Cancel
+              </Button>
+            ) : null}
           </div>
-        ) : null}
-        {mode === "edit" ? (
-          <Controller
-            name="name"
-            control={control}
-            rules={{ validate: requiredString }}
-            render={({ field }) => (
-              <NameInput
-                disabled={formState.isSubmitting}
-                autoFocus={!selectedParticipant}
-                className="w-full"
-                {...field}
-              />
-            )}
-          />
-        ) : null}
-        {timeZone ? (
-          <TimeZonePicker
-            value={targetTimeZone}
-            onChange={onChangeTargetTimeZone}
-          />
-        ) : null}
-      </div>
-      <div className="divide-y">
-        {options.map((option) => {
-          const parsedOption = decodeDateOption(
-            option.value,
-            timeZone,
-            targetTimeZone,
-          );
-          const numVotes = option.votes.length;
-          return (
-            <div
-              key={option.id}
-              className="flex items-center space-x-4 px-4 py-2"
-            >
-              <div>
-                <DateCard
-                  day={parsedOption.day}
-                  dow={parsedOption.dow}
-                  month={parsedOption.month}
-                />
-              </div>
-              {parsedOption.type === "timeSlot" ? (
-                <TimeRange
-                  startTime={parsedOption.startTime}
-                  endTime={parsedOption.endTime}
-                  className="shrink-0"
-                />
-              ) : null}
-
-              <div className="grow items-center space-y-1">
-                <div>
-                  <span
-                    className={clsx(
-                      "inline-block rounded-full border px-2 text-xs leading-relaxed",
-                      {
-                        "border-slate-200": numVotes !== highScore,
-                        "border-rose-500 text-rose-500": numVotes === highScore,
-                      },
-                    )}
-                  >
-                    {t("voteCount", { count: numVotes })}
-                  </span>
-                </div>
-                {option.votes.length ? (
-                  <div className="-space-x-1">
-                    {option.votes
-                      .slice(0, option.votes.length <= 6 ? 6 : 5)
-                      .map((vote) => {
-                        const participant = participantById[vote.participantId];
-                        return (
-                          <UserAvater
-                            key={vote.id}
-                            className="ring-1 ring-white"
-                            name={participant.name}
-                          />
-                        );
-                      })}
-                    {option.votes.length > 6 ? (
-                      <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
-                        +{option.votes.length - 5}
-                      </span>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-              <div className="flex h-14 w-12 items-center justify-center">
-                {mode === "edit" ? (
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    value={option.id}
-                    {...register("votes")}
-                  />
-                ) : selectedParticipantVotedOption ? (
-                  selectedParticipantVotedOption.includes(option.id) ? (
-                    <VoteIcon type="yes" />
-                  ) : (
-                    <VoteIcon type="no" />
-                  )
-                ) : null}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {mode === "edit" ? (
-        <div className="flex space-x-3 border-t p-2">
-          <Button className="grow" onClick={() => setMode("default")}>
-            Cancel
-          </Button>
-          <Button
-            icon={<CheckCircle />}
-            htmlType="submit"
-            className="grow"
-            type="primary"
-            loading={formState.isSubmitting}
-          >
-            Save
-          </Button>
+          {timeZone ? (
+            <TimeZonePicker
+              value={targetTimeZone}
+              onChange={setTargetTimeZone}
+            />
+          ) : null}
         </div>
-      ) : null}
-    </form>
+        {(() => {
+          switch (pollContext.pollType) {
+            case "date":
+              return (
+                <PollOptions
+                  selectedParticipantId={selectedParticipantId}
+                  options={pollContext.options}
+                  editable={editable}
+                />
+              );
+            case "timeSlot":
+              return (
+                <TimeSlotOptions
+                  selectedParticipantId={selectedParticipantId}
+                  options={pollContext.options}
+                  editable={editable}
+                />
+              );
+          }
+        })()}
+        <AnimatePresence>
+          {shouldShowSaveButton && editable ? (
+            <motion.button
+              type="button"
+              variants={{
+                exit: {
+                  opacity: 0,
+                  y: -50,
+                  transition: { duration: 0.2 },
+                },
+                hidden: { opacity: 0, y: 50 },
+                visible: { opacity: 1, y: 0, transition: { delay: 0.2 } },
+              }}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed bottom-8 left-1/2 z-10 -ml-6 inline-flex h-12 w-12 appearance-none items-center justify-center rounded-full bg-white text-slate-700 shadow-lg active:bg-gray-100"
+            >
+              <Save className="w-5" onClick={scrollToSave} />
+            </motion.button>
+          ) : null}
+        </AnimatePresence>
+        <AnimatePresence>
+          {editable ? (
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: -100, height: 0 },
+                visible: { opacity: 1, y: 0, height: "auto" },
+              }}
+              initial="hidden"
+              animate="visible"
+              exit={{
+                opacity: 0,
+                y: -10,
+                height: 0,
+                transition: { duration: 0.2 },
+              }}
+            >
+              <div
+                ref={submitContainerRef}
+                className="space-y-3 border-t bg-gray-50 p-3"
+              >
+                <div className="flex space-x-3">
+                  <Controller
+                    name="name"
+                    control={control}
+                    rules={{ validate: requiredString }}
+                    render={({ field }) => (
+                      <NameInput
+                        disabled={formState.isSubmitting}
+                        className={clsx("input w-full", {
+                          "input-error": formState.errors.name,
+                        })}
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Button
+                    className="grow"
+                    icon={<Save />}
+                    htmlType="submit"
+                    type="primary"
+                    loading={formState.isSubmitting}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </form>
+    </FormProvider>
   );
 };
 

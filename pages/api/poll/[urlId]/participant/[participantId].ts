@@ -1,5 +1,5 @@
 import { prisma } from "../../../../../db";
-import { getQueryParam,withLink } from "../../../../../utils/api-utils";
+import { getQueryParam, withLink } from "../../../../../utils/api-utils";
 
 export default withLink(async (req, res, link) => {
   const participantId = getQueryParam(req, "participantId");
@@ -44,5 +44,6 @@ export default withLink(async (req, res, link) => {
 
       return res.end();
     default:
+      return res.status(405);
   }
 });
