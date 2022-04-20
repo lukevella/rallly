@@ -5,10 +5,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import smoothscroll from "smoothscroll-polyfill";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
 import Pencil from "@/components/icons/pencil.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
+import Save from "@/components/icons/save.svg";
 import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 
@@ -28,6 +30,10 @@ import {
 import { ParticipantForm, PollProps } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
 import UserAvater from "./user-avatar";
+
+if (typeof window !== "undefined") {
+  smoothscroll.polyfill();
+}
 
 const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const pollContext = usePoll();
@@ -64,17 +70,15 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     participants.length > 0 ? false : true,
   );
 
-  const [saveVisible, setSaveVisible] = React.useState(false);
   const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   React.useEffect(() => {
     const setState = () => {
       if (formRef.current) {
-        const saveButtonIsVisible =
-          formRef.current.getBoundingClientRect().bottom <= window.innerHeight;
+        const rect = formRef.current.getBoundingClientRect();
+        const saveButtonIsVisible = rect.bottom <= window.innerHeight;
 
-        setSaveVisible(saveButtonIsVisible);
         setShouldShowSaveButton(
           !saveButtonIsVisible &&
             formRef.current.getBoundingClientRect().top <
@@ -97,6 +101,19 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const { mutate: addParticipantMutation } = useAddParticipantMutation(pollId);
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
+  const submitContainerRef = React.useRef<HTMLDivElement>(null);
+  const scrollToSave = () => {
+    if (submitContainerRef.current) {
+      window.scrollTo({
+        top:
+          document.documentElement.scrollTop +
+          submitContainerRef.current.getBoundingClientRect().bottom -
+          window.innerHeight +
+          20,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <FormProvider {...form}>
       <form
@@ -266,6 +283,28 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
           }
         })()}
         <AnimatePresence>
+          {shouldShowSaveButton && editable ? (
+            <motion.button
+              type="button"
+              variants={{
+                exit: {
+                  opacity: 0,
+                  y: -50,
+                  transition: { duration: 0.2 },
+                },
+                hidden: { opacity: 0, y: -50 },
+                visible: { opacity: 1, y: 0, transition: { delay: 0.2 } },
+              }}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed bottom-8 left-1/2 z-10 -ml-6 inline-flex h-12 w-12 appearance-none items-center justify-center rounded-full bg-white text-slate-700 shadow-lg active:bg-gray-100"
+            >
+              <Save className="w-5" onClick={scrollToSave} />
+            </motion.button>
+          ) : null}
+        </AnimatePresence>
+        <AnimatePresence>
           {editable ? (
             <motion.div
               variants={{
@@ -280,29 +319,11 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 height: 0,
                 transition: { duration: 0.2 },
               }}
-              className="h-28"
             >
-              {/* <motion.div
-                variants={{
-                  hidden: { y: 150 },
-                  visible: { y: 0 },
-                }}
-                transition={{ duration: 0.2 }}
-                initial={
-                  shouldShowSaveButton && !saveVisible ? "hidden" : undefined
-                }
-                animate={
-                  shouldShowSaveButton || saveVisible ? "visible" : "hidden"
-                }
-                className={clsx(
-                  "h-28 w-full space-y-3 border-t bg-gray-50 p-2 py-3",
-                  {
-                    "fixed bottom-0 z-10 m-4 w-11/12 rounded-lg border bg-white/80 shadow-lg backdrop-blur-md":
-                      editable && !saveVisible,
-                  },
-                )}
-              > */}
-              <div className="space-y-3 border-t bg-gray-50 p-3">
+              <div
+                ref={submitContainerRef}
+                className="space-y-3 border-t bg-gray-50 p-3"
+              >
                 <div className="flex space-x-3">
                   <Controller
                     name="name"
@@ -331,7 +352,6 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   </Button>
                 </div>
               </div>
-              {/* </motion.div> */}
             </motion.div>
           ) : null}
         </AnimatePresence>
