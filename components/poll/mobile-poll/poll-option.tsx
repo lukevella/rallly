@@ -88,17 +88,18 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
       }}
       className={clsx(
         "flex items-center space-x-3 px-4 py-3 transition duration-75",
-        { "active:bg-indigo-50": editable, "bg-indigo-50/50": vote === "yes" },
+        {
+          "active:bg-indigo-50": editable,
+          "bg-indigo-50/50": editable && vote === "yes",
+        },
       )}
     >
       <div className="pointer-events-none flex grow items-center">
         <div className="grow">{children}</div>
-        <div className="shrink-0">
-          <div className="text-right">
-            <PopularityScore score={numberOfVotes + difference} />
-          </div>
+        <div className="flex shrink-0 flex-col items-end">
+          <PopularityScore score={numberOfVotes + difference} />
           {participants.length > 0 ? (
-            <div className="grow items-center text-right ">
+            <div className="mt-1 -mr-1">
               <div className="-space-x-1">
                 {participants
                   .slice(0, participants.length <= 6 ? 6 : 5)
