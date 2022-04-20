@@ -96,7 +96,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
     >
       <div className="pointer-events-none flex grow items-center">
         <div className="grow">{children}</div>
-        <div className="flex shrink-0 flex-col items-end">
+        <div className="flex flex-col items-end">
           <PopularityScore score={numberOfVotes + difference} />
           {participants.length > 0 ? (
             <div className="mt-1 -mr-1">

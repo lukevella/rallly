@@ -18,10 +18,12 @@ const TimeSlotOption: React.VoidFunctionComponent<TimeSlotOptionProps> = ({
 }) => {
   return (
     <PollOption {...rest}>
-      <div className="h-7">{`${startTime} - ${endTime}`}</div>
-      <div className="flex grow items-center text-sm text-slate-400">
-        <Clock className="leading- mr-1 inline w-4" />
-        {duration}
+      <div className="grow">
+        <div className="h-7">{`${startTime} - ${endTime}`}</div>
+        <div className="flex grow items-center text-sm text-slate-400">
+          <Clock className="leading- mr-1 inline w-4" />
+          {duration}
+        </div>
       </div>
     </PollOption>
   );

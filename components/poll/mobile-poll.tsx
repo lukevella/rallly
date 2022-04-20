@@ -16,12 +16,11 @@ import { usePoll } from "@/components/poll-context";
 
 import { requiredString } from "../../utils/form-validation";
 import Button from "../button";
-import CheckCircle from "../icons/check-circle.svg";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
 import TimeZonePicker from "../time-zone-picker";
 import { useUserName } from "../user-name-context";
-import DateOptions from "./mobile-poll/date-options";
+import PollOptions from "./mobile-poll/poll-options";
 import TimeSlotOptions from "./mobile-poll/time-slot-options";
 import {
   useAddParticipantMutation,
@@ -109,7 +108,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
           document.documentElement.scrollTop +
           submitContainerRef.current.getBoundingClientRect().bottom -
           window.innerHeight +
-          20,
+          100,
         behavior: "smooth",
       });
     }
@@ -130,8 +129,8 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 },
                 {
                   onSuccess: () => {
-                    setEditable(false);
                     resolve(data);
+                    setEditable(false);
                   },
                   onError: reject,
                 },
@@ -139,9 +138,9 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
             } else {
               addParticipantMutation(data, {
                 onSuccess: (newParticipant) => {
-                  setEditable(false);
                   setSelectedParticipantId(newParticipant.id);
                   resolve(data);
+                  setEditable(false);
                 },
                 onError: reject,
               });
@@ -266,7 +265,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
           switch (pollContext.pollType) {
             case "date":
               return (
-                <DateOptions
+                <PollOptions
                   selectedParticipantId={selectedParticipantId}
                   options={pollContext.options}
                   editable={editable}
@@ -292,7 +291,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   y: -50,
                   transition: { duration: 0.2 },
                 },
-                hidden: { opacity: 0, y: -50 },
+                hidden: { opacity: 0, y: 50 },
                 visible: { opacity: 1, y: 0, transition: { delay: 0.2 } },
               }}
               initial="hidden"
@@ -330,10 +329,8 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                     control={control}
                     rules={{ validate: requiredString }}
                     render={({ field }) => (
-                      <input
-                        type="text"
+                      <NameInput
                         disabled={formState.isSubmitting}
-                        placeholder="What's your name?"
                         className={clsx("input w-full", {
                           "input-error": formState.errors.name,
                         })}
@@ -343,7 +340,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   />
                   <Button
                     className="grow"
-                    icon={<CheckCircle />}
+                    icon={<Save />}
                     htmlType="submit"
                     type="primary"
                     loading={formState.isSubmitting}
