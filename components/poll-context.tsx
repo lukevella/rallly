@@ -18,6 +18,7 @@ type PollContextValue = {
   targetTimeZone: string;
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
+  highScore: number;
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
   getParticipantById: (
     participantId: string,
@@ -60,6 +61,13 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   }, [participantById, poll.options]);
 
   const contextValue = React.useMemo<PollContextValue>(() => {
+    let highScore = 1;
+    poll.options.forEach((option) => {
+      if (option.votes.length > highScore) {
+        highScore = option.votes.length;
+      }
+    });
+
     const parsedOptions = decodeOptions(
       poll.options,
       poll.timeZone,
@@ -84,6 +92,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
+      highScore,
       getParticipantsWhoVotedForOption: (optionId: string) =>
         participantsByOptionId[optionId],
       getVote: (participantId, optionId) => {
