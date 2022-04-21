@@ -3,6 +3,7 @@ import { formatRelative } from "date-fns";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMutation } from "react-query";
+import { dateLocale } from "utils/date-time-utils";
 
 import Button from "../button";
 import { usePoll } from "../poll-context";
@@ -88,7 +89,9 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
       </div>
       <span className="hidden md:inline">&nbsp;&bull;&nbsp;</span>
       <span className="whitespace-nowrap">
-        {formatRelative(new Date(poll.createdAt), new Date())}
+        {formatRelative(new Date(poll.createdAt), new Date(), {
+          locale: dateLocale,
+        })}
       </span>
     </div>
   );

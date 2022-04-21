@@ -10,13 +10,14 @@ import {
 import React from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { useMount } from "react-use";
+import { localeFormat } from "utils/date-time-utils";
 
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "./utils";
 
 const localizer = dateFnsLocalizer({
-  format,
+  format: localeFormat,
   parse,
   startOfWeek: (date: Date | number) => startOfWeek(date, { weekStartsOn: 1 }),
   getDay,
@@ -103,7 +104,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 width: `calc(${props.style?.width}%)`,
               }}
             >
-              <div>{format(props.event.start, "p")}</div>
+              <div>{localeFormat(props.event.start, "p")}</div>
               <div className="w-full truncate font-bold">
                 {props.event.title}
               </div>

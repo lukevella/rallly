@@ -6,6 +6,7 @@ import {
   formatDuration,
   isSameDay,
 } from "date-fns";
+import { enGB, enUS } from "date-fns/locale";
 import { formatInTimeZone } from "date-fns-tz";
 import spacetime from "spacetime";
 
@@ -41,6 +42,9 @@ export interface ParsedTimeSlotOption {
   endTime: string;
   duration: string;
 }
+
+export const dateLocale =
+  window.navigator.languages[0] === "en-US" ? enUS : enGB;
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
@@ -106,11 +110,11 @@ const parseTimeSlotOption = (
     return {
       type: "timeSlot",
       optionId: option.id,
-      startTime: formatInTimeZone(startDate, targetTimeZone, "hh:mm a"),
-      endTime: formatInTimeZone(endDate, targetTimeZone, "hh:mm a"),
-      day: formatInTimeZone(startDate, targetTimeZone, "d"),
-      dow: formatInTimeZone(startDate, targetTimeZone, "E"),
-      month: formatInTimeZone(startDate, targetTimeZone, "MMM"),
+      startTime: localeFormatInTimezone(startDate, targetTimeZone, "p"),
+      endTime: localeFormatInTimezone(endDate, targetTimeZone, "p"),
+      day: localeFormatInTimezone(startDate, targetTimeZone, "d"),
+      dow: localeFormatInTimezone(startDate, targetTimeZone, "E"),
+      month: localeFormatInTimezone(startDate, targetTimeZone, "MMM"),
       duration: getDuration(startDate, endDate),
     };
   } else {
@@ -119,8 +123,8 @@ const parseTimeSlotOption = (
     return {
       type: "timeSlot",
       optionId: option.id,
-      startTime: format(startDate, "hh:mm a"),
-      endTime: format(endDate, "hh:mm a"),
+      startTime: format(startDate, "p"),
+      endTime: format(endDate, "p"),
       day: format(startDate, "d"),
       dow: format(startDate, "E"),
       month: format(startDate, "MMM"),
@@ -146,11 +150,11 @@ export const decodeDateOption = (
       return {
         type: "timeSlot",
         optionId: option.id,
-        startTime: formatInTimeZone(startDate, targetTimeZone, "hh:mm a"),
-        endTime: formatInTimeZone(endDate, targetTimeZone, "hh:mm a"),
-        day: formatInTimeZone(startDate, targetTimeZone, "d"),
-        dow: formatInTimeZone(startDate, targetTimeZone, "E"),
-        month: formatInTimeZone(startDate, targetTimeZone, "MMM"),
+        startTime: localeFormatInTimezone(startDate, targetTimeZone, "p"),
+        endTime: localeFormatInTimezone(endDate, targetTimeZone, "p"),
+        day: localeFormatInTimezone(startDate, targetTimeZone, "d"),
+        dow: localeFormatInTimezone(startDate, targetTimeZone, "E"),
+        month: localeFormatInTimezone(startDate, targetTimeZone, "MMM"),
         duration: getDuration(startDate, endDate),
       };
     } else {
@@ -159,8 +163,8 @@ export const decodeDateOption = (
       return {
         type: "timeSlot",
         optionId: option.id,
-        startTime: format(startDate, "hh:mm a"),
-        endTime: format(endDate, "hh:mm a"),
+        startTime: format(startDate, "p"),
+        endTime: format(endDate, "p"),
         day: format(startDate, "d"),
         dow: format(startDate, "E"),
         month: format(startDate, "MMM"),
@@ -209,4 +213,20 @@ export const expectTimeOption = (d: DateTimeOption): TimeOption => {
     throw new Error("Expected timeSlot but got date instead");
   }
   return d;
+};
+
+export const localeFormat = (date: Date, formatString: string) => {
+  return format(date, formatString, {
+    locale: dateLocale,
+  });
+};
+
+export const localeFormatInTimezone = (
+  date: Date,
+  timezone: string,
+  formatString: string,
+) => {
+  return formatInTimeZone(date, timezone, formatString, {
+    locale: dateLocale,
+  });
 };

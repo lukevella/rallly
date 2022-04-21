@@ -7,6 +7,7 @@ import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { dateLocale } from "utils/date-time-utils";
 
 import {
   createComment,
@@ -146,6 +147,9 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
                         {formatRelative(
                           new Date(comment.createdAt),
                           Date.now(),
+                          {
+                            locale: dateLocale,
+                          },
                         )}
                       </span>
                     </div>
