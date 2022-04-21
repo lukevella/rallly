@@ -249,7 +249,7 @@ const PollPage: NextPage = () => {
                 </div>
               </div>
               {poll.description ? (
-                <div className="mb-4 w-fit whitespace-pre-line bg-white px-4 py-3 text-lg leading-relaxed text-slate-600 shadow-sm md:rounded-xl md:bg-white">
+                <div className="mb-4 whitespace-pre-line bg-white px-4 py-3 text-lg leading-relaxed text-slate-600 shadow-sm md:w-fit md:rounded-xl md:bg-white">
                   <TruncatedLinkify>
                     {preventWidows(poll.description)}
                   </TruncatedLinkify>
