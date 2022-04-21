@@ -215,8 +215,8 @@ const PollPage: NextPage = () => {
               width: Math.max(600, poll.options.length * 95 + 200 + 160),
             }}
           >
-            <div className="mb-6 px-4 md:px-0">
-              <div className="mb-3 items-start md:flex md:space-x-4">
+            <div className="mb-6">
+              <div className="mb-3 items-start px-4 md:flex md:space-x-4">
                 <div className="mb-3 grow md:mb-0">
                   <div className="flex flex-col-reverse md:flex-row">
                     <h1 className="mb-2 grow text-3xl leading-tight">
@@ -249,14 +249,14 @@ const PollPage: NextPage = () => {
                 </div>
               </div>
               {poll.description ? (
-                <div className="mb-4 w-fit max-w-2xl whitespace-pre-line rounded-xl bg-white px-4 py-3 text-lg leading-relaxed text-slate-600 shadow-sm">
+                <div className="mb-4 w-fit whitespace-pre-line bg-white px-4 py-3 text-lg leading-relaxed text-slate-600 shadow-sm md:rounded-xl md:bg-white">
                   <TruncatedLinkify>
                     {preventWidows(poll.description)}
                   </TruncatedLinkify>
                 </div>
               ) : null}
               {poll.location ? (
-                <div className="mb-4 flex items-center">
+                <div className="mb-4 flex items-center px-4">
                   <div>
                     <LocationMarker
                       width={20}
