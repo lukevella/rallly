@@ -1,24 +1,20 @@
-import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
 import smoothscroll from "smoothscroll-polyfill";
 
-import { decodeDateOption } from "../../utils/date-time-utils";
 import Button from "../button";
-import DateCard from "../date-card";
 import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
 import PlusCircle from "../icons/plus-circle.svg";
 import { usePoll } from "../poll-context";
 import TimeZonePicker from "../time-zone-picker";
+import ParticipantRow from "./desktop-poll/participant-row";
+import ParticipantRowForm from "./desktop-poll/participant-row-form";
+import { PollContext } from "./desktop-poll/poll-context";
+import PollHeader from "./desktop-poll/poll-header";
 import { useAddParticipantMutation } from "./mutations";
-import ParticipantRow from "./participant-row";
-import ParticipantRowForm from "./participant-row-form";
-import { PollContext, usePollContext } from "./poll-context";
-import Score from "./score";
-import TimeRange from "./time-range";
 import { PollProps } from "./types";
 
 if (typeof window !== "undefined") {
@@ -27,48 +23,14 @@ if (typeof window !== "undefined") {
 
 const MotionButton = motion(Button);
 
-export const ControlledScrollDiv: React.VoidFunctionComponent<{
-  children?: React.ReactNode;
-  className?: string;
-}> = ({ className, children }) => {
-  const { availableSpace, scrollPosition } = usePollContext();
-
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  return (
-    <div
-      ref={ref}
-      className={clsx(" min-w-0 overflow-hidden", className)}
-      style={{ width: availableSpace, maxWidth: availableSpace }}
-    >
-      <AnimatePresence initial={false}>
-        <motion.div
-          className="flex h-full"
-          transition={{
-            type: "spring",
-            mass: 0.4,
-          }}
-          initial={{ x: 0 }}
-          animate={{ x: scrollPosition * -1 }}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-};
-
 const minSidebarWidth = 180;
 
-const Poll: React.VoidFunctionComponent<PollProps> = ({
-  pollId,
-  highScore,
-}) => {
+const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const { t } = useTranslation("app");
 
-  const { poll, targetTimeZone, setTargetTimeZone } = usePoll();
+  const { poll, targetTimeZone, setTargetTimeZone, options } = usePoll();
 
-  const { timeZone, options, participants, role } = poll;
+  const { timeZone, participants, role } = poll;
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
   const [editingParticipantId, setEditingParticipantId] =
@@ -204,53 +166,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                   ) : null}
                 </AnimatePresence>
               </div>
-              <ControlledScrollDiv>
-                {options.map((option) => {
-                  const parsedOption = decodeDateOption(
-                    option,
-                    timeZone,
-                    targetTimeZone,
-                  );
-                  const numVotes = option.votes.length;
-                  return (
-                    <div
-                      key={option.id}
-                      className={clsx(
-                        "shrink-0 py-4 text-center transition-colors",
-                        {
-                          "bg-slate-50": activeOptionId === option.id,
-                        },
-                      )}
-                      style={{ width: columnWidth }}
-                      onMouseOver={() => setActiveOptionId(option.id)}
-                      onMouseOut={() => setActiveOptionId(null)}
-                    >
-                      <div>
-                        <DateCard
-                          day={parsedOption.day}
-                          dow={parsedOption.dow}
-                          month={parsedOption.month}
-                          annotation={
-                            <Score
-                              count={numVotes}
-                              highlight={numVotes === highScore}
-                            />
-                          }
-                        />
-                      </div>
-                      <div>
-                        {parsedOption.type === "timeSlot" ? (
-                          <TimeRange
-                            className="mt-2 -mr-2"
-                            startTime={parsedOption.startTime}
-                            endTime={parsedOption.endTime}
-                          />
-                        ) : null}
-                      </div>
-                    </div>
-                  );
-                })}
-              </ControlledScrollDiv>
+              <PollHeader />
               <div
                 className="flex items-center py-3 px-2"
                 style={{ width: actionColumnWidth }}
@@ -295,7 +211,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                     });
                   });
                 }}
-                options={options}
+                options={poll.options}
                 onCancel={() => {
                   setShouldShowNewParticipantForm(false);
                 }}
@@ -309,7 +225,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({
                   urlId={pollId}
                   key={i}
                   participant={participant}
-                  options={options}
+                  options={poll.options}
                   canDelete={role === "admin"}
                   editMode={editingParticipantId === participant.id}
                   onChangeEditMode={(isEditing) => {

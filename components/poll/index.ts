@@ -1,1 +1,1 @@
-export { default } from "./poll";
+export { default } from "./desktop-poll";

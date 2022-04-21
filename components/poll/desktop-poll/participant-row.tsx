@@ -2,17 +2,18 @@ import { Option, Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
 import * as React from "react";
 
-import Button from "../button";
-import Pencil from "../icons/pencil.svg";
-import Trash from "../icons/trash.svg";
-import { usePoll } from "../poll-context";
-import { useUpdateParticipantMutation } from "./mutations";
+import Button from "@/components/button";
+import Pencil from "@/components/icons/pencil.svg";
+import Trash from "@/components/icons/trash.svg";
+import { usePoll } from "@/components/poll-context";
+
+import { useUpdateParticipantMutation } from "../mutations";
+import { useDeleteParticipantModal } from "../use-delete-participant-modal";
+import UserAvater from "../user-avatar";
+import VoteIcon from "../vote-icon";
+import ControlledScrollArea from "./controlled-scroll-area";
 import ParticipantRowForm from "./participant-row-form";
-import { ControlledScrollDiv } from "./poll";
 import { usePollContext } from "./poll-context";
-import { useDeleteParticipantModal } from "./use-delete-participant-modal";
-import UserAvater from "./user-avatar";
-import VoteIcon from "./vote-icon";
 
 export interface ParticipantRowProps {
   urlId: string;
@@ -91,7 +92,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
           {participant.name}
         </span>
       </div>
-      <ControlledScrollDiv>
+      <ControlledScrollArea>
         {options.map((option) => {
           return (
             <div
@@ -116,7 +117,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
             </div>
           );
         })}
-      </ControlledScrollDiv>
+      </ControlledScrollArea>
       {!poll.closed ? (
         <div
           style={{ width: actionColumnWidth }}

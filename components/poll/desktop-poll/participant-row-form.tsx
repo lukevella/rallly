@@ -3,14 +3,15 @@ import clsx from "clsx";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { requiredString } from "../../utils/form-validation";
-import Button from "../button";
-import CheckCircle from "../icons/check-circle.svg";
-import NameInput from "../name-input";
-import Tooltip from "../tooltip";
-import { ControlledScrollDiv } from "./poll";
+import CheckCircle from "@/components/icons/check-circle.svg";
+
+import { requiredString } from "../../../utils/form-validation";
+import Button from "../../button";
+import NameInput from "../../name-input";
+import Tooltip from "../../tooltip";
+import { ParticipantForm } from "../types";
+import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
-import { ParticipantForm } from "./types";
 
 export interface ParticipantRowFormProps {
   defaultValues?: Partial<ParticipantForm>;
@@ -99,7 +100,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
                       setScrollPosition(0);
                       setTimeout(() => {
                         checkboxRefs.current[0].focus();
-                      }, 800);
+                      }, 100);
                     }
                   }}
                 />
@@ -108,7 +109,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
             control={control}
           />
         </div>
-        <ControlledScrollDiv>
+        <ControlledScrollArea>
           {options.map((option, index) => {
             return (
               <div
@@ -142,7 +143,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
                       setTimeout(() => {
                         checkboxRefs.current[index + 1].focus();
                         isAnimatingRef.current = false;
-                      }, 500);
+                      }, 100);
                     }
                   }}
                   {...checkboxProps}
@@ -159,7 +160,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
               </div>
             );
           })}
-        </ControlledScrollDiv>
+        </ControlledScrollArea>
         <div className="flex items-center space-x-2 px-2 transition-all">
           <Tooltip content="Save" placement="top">
             <Button
