@@ -100,7 +100,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
                       setScrollPosition(0);
                       setTimeout(() => {
                         checkboxRefs.current[0].focus();
-                      }, 800);
+                      }, 100);
                     }
                   }}
                 />
@@ -143,7 +143,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
                       setTimeout(() => {
                         checkboxRefs.current[index + 1].focus();
                         isAnimatingRef.current = false;
-                      }, 500);
+                      }, 100);
                     }
                   }}
                   {...checkboxProps}
