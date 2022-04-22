@@ -1,6 +1,6 @@
-<img src="./public/logo-color.svg" width="200"  />
-
 [![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg)](https://github.com/lukevella/rallly/actions) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/ralllyco)
+
+![hero](./docs/images/hero-image.png)
 
 Rallly is a free group meeting scheduling tool – built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
 
