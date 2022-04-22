@@ -12,7 +12,7 @@ Clone this repo and change directory to the root of the repository.
 
 ```bash
 git clone https://github.com/lukevella/rallly.git
-cd Rallly
+cd rallly
 ```
 
 _optional_: Configure your SMTP server. Without this, Rallly won't be able to send out emails. You can set the following environment variables in a `.env` in the root of the project
@@ -42,7 +42,7 @@ Clone this repo and change directory to the root of the repository.
 
 ```bash
 git clone https://github.com/lukevella/rallly.git
-cd Rallly
+cd rallly
 ```
 
 Copy the sample `.env` file then open it and set the variables.
