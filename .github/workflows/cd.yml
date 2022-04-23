@@ -36,7 +36,7 @@ jobs:
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
       
     - name: Push image to GitHub
-      if: github.ref == 'refs/heads/main'
+      #if: github.ref == 'refs/heads/main'
       run: |
         docker push ghcr.io/m3nu/rallly:${{ env.RELEASE_VERSION }}
         docker push ghcr.io/m3nu/rallly:latest
