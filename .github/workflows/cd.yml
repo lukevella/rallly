@@ -29,8 +29,8 @@ jobs:
     - name: Build container image
       run: |
         docker build \
-        --tag ghcr.io/m3nu/rallly:${{ env.RELEASE_VERSION }} \
-        --tag ghcr.io/m3nu/rallly:latest \
+        --tag ghcr.io/lukevella/rallly:${{ env.RELEASE_VERSION }} \
+        --tag ghcr.io/lukevella/rallly:latest \
         .
     - name: Container registry login
       run: |
@@ -38,5 +38,5 @@ jobs:
       
     - name: Push image to GitHub
       run: |
-        docker push ghcr.io/m3nu/rallly:${{ env.RELEASE_VERSION }}
-        docker push ghcr.io/m3nu/rallly:latest
+        docker push ghcr.io/lukevella/rallly:${{ env.RELEASE_VERSION }}
+        docker push ghcr.io/lukevella/rallly:latest
