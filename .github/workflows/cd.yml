@@ -11,7 +11,8 @@ on:
 jobs:
   build:
     name: Build, push, and deploy
-    #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    #if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
 
@@ -36,7 +37,6 @@ jobs:
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
       
     - name: Push image to GitHub
-      #if: github.ref == 'refs/heads/main'
       run: |
         docker push ghcr.io/m3nu/rallly:${{ env.RELEASE_VERSION }}
         docker push ghcr.io/m3nu/rallly:latest
