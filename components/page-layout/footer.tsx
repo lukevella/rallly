@@ -57,7 +57,7 @@ const Footer: React.VoidFunctionComponent = () => {
               </a>
             </li>
             <li>
-              <Link href="/blog">
+              <Link href="https://blog.rallly.co">
                 <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
                   Blog
                 </a>
