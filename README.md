@@ -98,4 +98,10 @@ Rallly is open-source under the GNU Affero General Public License Version 3 (AGP
 
 ## 🙏 Sponsors
 
-<a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss">![Powered by Vercel](/public/powered-by-vercel.svg)</a>
+These companies have graciously offered their services in support of this project.
+
+<a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss"><img src="public/vercel-logotype-dark.svg" alt="Powered by Vercel" height="30" /></a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://m.do.co/c/f91efc9c9e50"><img src="public/digitalocean.svg" alt="Sentry" height="30" /></a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://sentry.io"><img src="public/sentry.svg" alt="Sentry" height="30" /></a>
