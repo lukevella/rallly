@@ -1,5 +1,6 @@
 import { addMinutes } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
+import absoluteUrl from "utils/absolute-url";
 import { nanoid } from "utils/nanoid";
 
 import { prisma } from "../../../db";
@@ -64,6 +65,8 @@ export default async function handler(
         });
       }
 
+      const homePageUrl = absoluteUrl(req).origin;
+
       await prisma.poll.create({
         data: {
           urlId: await nanoid(),
@@ -71,8 +74,7 @@ export default async function handler(
           title: "Lunch Meeting Demo",
           type: "date",
           location: "Starbucks, 901 New York Avenue",
-          description:
-            "This poll has been automatically generated just for you! Feel free to try out all the different features and when you're ready, you can go to https://rallly.co/new to make a new poll.",
+          description: `This poll has been automatically generated just for you! Feel free to try out all the different features and when you're ready, you can go to ${homePageUrl}/new to make a new poll.`,
           authorName: "Johnny",
           verified: true,
           demo: true,
