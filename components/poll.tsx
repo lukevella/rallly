@@ -131,7 +131,7 @@ const PollInner: NextPage = () => {
   return (
     <UserAvatarProvider seed={poll.pollId} names={names}>
       <StandardLayout>
-        <div className="relative max-w-full bg-gray-50 py-4 md:px-4 lg:w-[1024px] lg:px-8">
+        <div className="relative max-w-full bg-gray-50 py-4 md:px-4 lg:px-4">
           <Head>
             <title>{poll.title}</title>
             <meta name="robots" content="noindex,nofollow" />
@@ -139,7 +139,7 @@ const PollInner: NextPage = () => {
           <div
             className="max-w-full"
             style={{
-              width: Math.max(600, poll.options.length * 95 + 200 + 160),
+              width: Math.max(768, poll.options.length * 95 + 200 + 160),
             }}
           >
             <div className="mb-6">

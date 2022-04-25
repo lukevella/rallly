@@ -7,9 +7,9 @@ import * as React from "react";
 import { createBreakpoint } from "react-use";
 
 import DotsVertical from "@/components/icons/dots-vertical.svg";
+import Github from "@/components/icons/github.svg";
 
 import Logo from "../public/logo.svg";
-import Github from "./home/github.svg";
 import Footer from "./page-layout/footer";
 
 const Popover = dynamic(() => import("./popover"), { ssr: false });

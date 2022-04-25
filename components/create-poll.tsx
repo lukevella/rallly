@@ -146,7 +146,7 @@ const Page: NextPage<{
       <Head>
         <title>{formData?.eventDetails?.title ?? t("newPoll")}</title>
       </Head>
-      <div className="w-[1024px] max-w-full py-4 md:px-3 lg:px-6">
+      <div className="max-w-full py-4 md:px-3 lg:px-6">
         <div className="mb-4 flex items-center space-x-4 px-4">
           <h1 className="m-0">New Poll</h1>
           <Steps current={currentStepIndex} total={steps.length} />
