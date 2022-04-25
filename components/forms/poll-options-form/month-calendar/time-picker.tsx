@@ -1,9 +1,14 @@
+import {
+  flip,
+  FloatingPortal,
+  offset,
+  size,
+  useFloating,
+} from "@floating-ui/react-dom-interactions";
 import { Listbox } from "@headlessui/react";
 import clsx from "clsx";
 import { addMinutes, isSameDay, setHours, setMinutes } from "date-fns";
 import * as React from "react";
-import ReactDOM from "react-dom";
-import { usePopper } from "react-popper";
 import { localeFormat } from "utils/date-time-utils";
 import { stopPropagation } from "utils/stop-propagation";
 
@@ -23,19 +28,20 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
   className,
   startFrom = setMinutes(setHours(value, 0), 0),
 }) => {
-  const [referenceElement, setReferenceElement] =
-    React.useState<HTMLDivElement | null>(null);
-  const [popperElement, setPopperElement] =
-    React.useState<HTMLUListElement | null>(null);
-
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    modifiers: [
-      {
-        name: "offset",
-        options: {
-          offset: [0, 5],
+  const { reference, floating, x, y, strategy, refs } = useFloating({
+    strategy: "fixed",
+    middleware: [
+      offset(5),
+      flip(),
+      size({
+        apply: ({ reference }) => {
+          if (refs.floating.current) {
+            Object.assign(refs.floating.current.style, {
+              width: `${reference.width}px`,
+            });
+          }
         },
-      },
+      }),
     ],
   });
 
@@ -58,8 +64,6 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
     );
   }
 
-  const portal = document.getElementById("portal");
-
   return (
     <Listbox
       value={value.toISOString()}
@@ -67,27 +71,34 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
         onChange?.(new Date(newValue));
       }}
     >
-      <div ref={setReferenceElement} className={clsx("relative", className)}>
-        <Listbox.Button className="btn-default text-left">
-          <span className="grow truncate">{localeFormat(value, "p")}</span>
-          <span className="pointer-events-none ml-2 flex">
-            <ChevronDown className="h-5 w-5" />
-          </span>
-        </Listbox.Button>
-        {portal &&
-          ReactDOM.createPortal(
-            <Listbox.Options
-              style={styles.popper}
-              {...attributes.popper}
-              ref={setPopperElement}
-              className="z-50 max-h-64 w-24 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-              onMouseDown={stopPropagation}
-            >
-              {options}
-            </Listbox.Options>,
-            portal,
-          )}
-      </div>
+      {(open) => (
+        <>
+          <div ref={reference} className={clsx("relative", className)}>
+            <Listbox.Button className="btn-default text-left">
+              <span className="grow truncate">{localeFormat(value, "p")}</span>
+              <span className="pointer-events-none ml-2 flex">
+                <ChevronDown className="h-5 w-5" />
+              </span>
+            </Listbox.Button>
+          </div>
+          <FloatingPortal>
+            {open ? (
+              <Listbox.Options
+                style={{
+                  position: strategy,
+                  left: x ?? "",
+                  top: y ?? "",
+                }}
+                ref={floating}
+                className="max-h-52 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                onMouseDown={stopPropagation}
+              >
+                {options}
+              </Listbox.Options>
+            ) : null}
+          </FloatingPortal>
+        </>
+      )}
     </Listbox>
   );
 };

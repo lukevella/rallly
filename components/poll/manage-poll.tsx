@@ -1,4 +1,4 @@
-import { Placement } from "@popperjs/core";
+import { Placement } from "@floating-ui/react-dom-interactions";
 import { format } from "date-fns";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";

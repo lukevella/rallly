@@ -43,8 +43,7 @@ export interface ParsedTimeSlotOption {
   duration: string;
 }
 
-export const dateLocale =
-  window.navigator.languages[0] === "en-US" ? enUS : enGB;
+export const dateLocale = enUS;
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
