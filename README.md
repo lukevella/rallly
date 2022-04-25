@@ -1,4 +1,7 @@
-[![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg)](https://github.com/lukevella/rallly/actions) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/ralllyco)
+[![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg)](https://github.com/lukevella/rallly/actions)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/ralllyco)
+
 
 ![hero](./docs/images/hero-image.png)
 
