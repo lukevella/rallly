@@ -62,7 +62,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
       </Link>
       <Link href="https://github.com/lukevella/rallly">
         <a className="text-gray-400 transition-colors hover:text-indigo-500 hover:no-underline hover:underline-offset-2">
-          <Github className="w-8" />
+          <Github className="w-6" />
         </a>
       </Link>
     </nav>
