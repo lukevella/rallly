@@ -7,13 +7,14 @@ import { useMutation } from "react-query";
 import Button from "../button";
 import { usePoll } from "../poll-context";
 import Popover from "../popover";
+import { usePreferences } from "../preferences/use-preferences";
 
 export interface PollSubheaderProps {}
 
 const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
-
+  const { locale } = usePreferences();
   const {
     mutate: sendVerificationEmail,
     isLoading: isSendingVerificationEmail,
@@ -29,14 +30,6 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
           t={t}
           values={{
             name: poll.authorName,
-            date: Date.parse(poll.createdAt),
-            formatParams: {
-              date: {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-              },
-            },
           }}
           components={{
             b: <span className="font-medium text-indigo-500" />,
@@ -88,7 +81,9 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
       </div>
       <span className="hidden md:inline">&nbsp;&bull;&nbsp;</span>
       <span className="whitespace-nowrap">
-        {formatRelative(new Date(poll.createdAt), new Date())}
+        {formatRelative(new Date(poll.createdAt), new Date(), {
+          locale,
+        })}
       </span>
     </div>
   );

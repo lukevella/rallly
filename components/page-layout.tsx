@@ -7,9 +7,9 @@ import * as React from "react";
 import { createBreakpoint } from "react-use";
 
 import DotsVertical from "@/components/icons/dots-vertical.svg";
+import Github from "@/components/icons/github.svg";
 
 import Logo from "../public/logo.svg";
-import Github from "./home/github.svg";
 import Footer from "./page-layout/footer";
 
 const Popover = dynamic(() => import("./popover"), { ssr: false });
@@ -62,7 +62,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
       </Link>
       <Link href="https://github.com/lukevella/rallly">
         <a className="text-gray-400 transition-colors hover:text-indigo-500 hover:no-underline hover:underline-offset-2">
-          <Github className="w-8" />
+          <Github className="w-6" />
         </a>
       </Link>
     </nav>

@@ -9,6 +9,7 @@ import {
   ParsedTimeSlotOption,
 } from "utils/date-time-utils";
 
+import { usePreferences } from "./preferences/use-preferences";
 import { useRequiredContext } from "./use-required-context";
 
 type VoteType = "yes" | "no";
@@ -59,6 +60,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     });
     return res;
   }, [participantById, poll.options]);
+  const { locale } = usePreferences();
 
   const contextValue = React.useMemo<PollContextValue>(() => {
     let highScore = 1;
@@ -72,6 +74,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       poll.options,
       poll.timeZone,
       targetTimeZone,
+      locale,
     );
     const getParticipantById = (participantId: string) => {
       // TODO (Luke Vella) [2022-04-16]: Build an index instead
@@ -106,7 +109,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       targetTimeZone,
       setTargetTimeZone,
     };
-  }, [participantById, participantsByOptionId, poll, targetTimeZone]);
+  }, [locale, participantById, participantsByOptionId, poll, targetTimeZone]);
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
   );

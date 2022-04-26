@@ -5,6 +5,8 @@ import isSameDay from "date-fns/isSameDay";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 
+import { usePreferences } from "@/components/preferences/use-preferences";
+
 import {
   expectTimeOption,
   getDateProps,
@@ -74,15 +76,18 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
     );
   }, [optionsByDay]);
 
+  const { weekStartsOn } = usePreferences();
+
   const datepicker = useHeadlessDatePicker({
     selection: datepickerSelection,
     onNavigationChange: onNavigate,
+    weekStartsOn,
     date,
   });
 
   return (
     <div className="overflow-hidden lg:flex">
-      <div className="shrink-0 border-b p-4 lg:border-r lg:border-b-0">
+      <div className="border-b p-4 lg:w-[440px] lg:border-r lg:border-b-0">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -152,7 +157,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                       }
                     }}
                     className={clsx(
-                      "relative flex items-center justify-center px-4 py-3 text-sm hover:bg-slate-50 focus:ring-0 focus:ring-offset-0 active:bg-slate-100 lg:w-14",
+                      "relative flex h-12 items-center justify-center text-sm hover:bg-slate-50 focus:ring-0 focus:ring-offset-0 active:bg-slate-100",
                       {
                         "bg-slate-50 text-slate-400": day.outOfMonth,
                         "font-bold text-indigo-500": day.today,
@@ -233,7 +238,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                   return (
                     <div
                       key={dateString}
-                      className="space-y-3 py-4 xs:flex xs:space-y-0 xs:space-x-4"
+                      className="space-y-3 py-4 sm:flex sm:space-y-0 sm:space-x-4"
                     >
                       <div>
                         <DateCard

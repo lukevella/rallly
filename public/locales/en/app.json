@@ -42,5 +42,12 @@
   "participantDescription": "Partial access to vote and comment on this poll.",
   "unverifiedMessage": "An email has been sent to <b>{{email}}</b> with a link to verify the email address.",
   "notificationsOnDescription": "An email will be sent to <b>{{email}}</b> when there is activity on this poll.",
-  "deletingOptionsWarning": "You are deleting options that participants have voted for. Their votes will be also be deleted."
+  "deletingOptionsWarning": "You are deleting options that participants have voted for. Their votes will be also be deleted.",
+  "timeAndDate": "Time & date",
+  "weekStartsOn": "Week starts on:",
+  "timeFormat": "Time format:",
+  "monday": "Monday",
+  "sunday": "Sunday",
+  "12h": "12-hour",
+  "24h": "24-hour"
 }

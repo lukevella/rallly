@@ -12,9 +12,9 @@
     "test": "playwright test"
   },
   "dependencies": {
+    "@floating-ui/react-dom-interactions": "^0.3.1",
     "@headlessui/react": "^1.5.0",
     "@next/bundle-analyzer": "^12.1.0",
-    "@popperjs/core": "^2.11.4",
     "@prisma/client": "^3.12.0",
     "@sentry/nextjs": "^6.19.3",
     "@svgr/webpack": "^6.2.1",
@@ -44,7 +44,6 @@
     "react-hot-toast": "^2.2.0",
     "react-i18next": "^11.15.4",
     "react-linkify": "^1.0.0-alpha",
-    "react-popper": "^2.2.5",
     "react-query": "^3.34.12",
     "react-use": "^17.3.2",
     "smoothscroll-polyfill": "^0.4.4",

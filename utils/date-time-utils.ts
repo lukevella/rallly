@@ -5,6 +5,7 @@ import {
   format,
   formatDuration,
   isSameDay,
+  Locale,
 } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import spacetime from "spacetime";
@@ -58,6 +59,7 @@ export const decodeOptions = (
   options: Option[],
   timeZone: string | null,
   targetTimeZone: string,
+  locale: Locale,
 ):
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] } => {
@@ -67,7 +69,7 @@ export const decodeOptions = (
     return {
       pollType,
       options: options.map((option) =>
-        parseTimeSlotOption(option, timeZone, targetTimeZone),
+        parseTimeSlotOption(option, timeZone, targetTimeZone, locale),
       ),
     };
   } else {
@@ -98,7 +100,18 @@ const parseTimeSlotOption = (
   option: Option,
   timeZone: string | null,
   targetTimeZone: string,
+  locale: Locale,
 ): ParsedTimeSlotOption => {
+  const localeFormatInTimezone = (
+    date: Date,
+    timezone: string,
+    formatString: string,
+  ) => {
+    return formatInTimeZone(date, timezone, formatString, {
+      locale,
+    });
+  };
+
   const [start, end] = option.value.split("/");
   if (timeZone && targetTimeZone) {
     const startDate = spacetime(start, timeZone).toNativeDate();
@@ -106,11 +119,11 @@ const parseTimeSlotOption = (
     return {
       type: "timeSlot",
       optionId: option.id,
-      startTime: formatInTimeZone(startDate, targetTimeZone, "hh:mm a"),
-      endTime: formatInTimeZone(endDate, targetTimeZone, "hh:mm a"),
-      day: formatInTimeZone(startDate, targetTimeZone, "d"),
-      dow: formatInTimeZone(startDate, targetTimeZone, "E"),
-      month: formatInTimeZone(startDate, targetTimeZone, "MMM"),
+      startTime: localeFormatInTimezone(startDate, targetTimeZone, "p"),
+      endTime: localeFormatInTimezone(endDate, targetTimeZone, "p"),
+      day: localeFormatInTimezone(startDate, targetTimeZone, "d"),
+      dow: localeFormatInTimezone(startDate, targetTimeZone, "E"),
+      month: localeFormatInTimezone(startDate, targetTimeZone, "MMM"),
       duration: getDuration(startDate, endDate),
     };
   } else {
@@ -119,69 +132,14 @@ const parseTimeSlotOption = (
     return {
       type: "timeSlot",
       optionId: option.id,
-      startTime: format(startDate, "hh:mm a"),
-      endTime: format(endDate, "hh:mm a"),
+      startTime: format(startDate, "p"),
+      endTime: format(endDate, "p"),
       day: format(startDate, "d"),
       dow: format(startDate, "E"),
       month: format(startDate, "MMM"),
       duration: getDuration(startDate, endDate),
     };
   }
-};
-
-export const decodeDateOption = (
-  option: Option,
-  timeZone: string | null,
-  targetTimeZone: string,
-): ParsedDateTimeOpton => {
-  const isTimeRange = option.value.indexOf("/") !== -1;
-  // option can either be an ISO date (ex. 2000-01-01)
-  // or a time range (ex. 2000-01-01T08:00:00/2000-01-01T09:00:00)
-  if (isTimeRange) {
-    const [start, end] = option.value.split("/");
-
-    if (timeZone && targetTimeZone) {
-      const startDate = spacetime(start, timeZone).toNativeDate();
-      const endDate = spacetime(end, timeZone).toNativeDate();
-      return {
-        type: "timeSlot",
-        optionId: option.id,
-        startTime: formatInTimeZone(startDate, targetTimeZone, "hh:mm a"),
-        endTime: formatInTimeZone(endDate, targetTimeZone, "hh:mm a"),
-        day: formatInTimeZone(startDate, targetTimeZone, "d"),
-        dow: formatInTimeZone(startDate, targetTimeZone, "E"),
-        month: formatInTimeZone(startDate, targetTimeZone, "MMM"),
-        duration: getDuration(startDate, endDate),
-      };
-    } else {
-      const startDate = new Date(start);
-      const endDate = new Date(end);
-      return {
-        type: "timeSlot",
-        optionId: option.id,
-        startTime: format(startDate, "hh:mm a"),
-        endTime: format(endDate, "hh:mm a"),
-        day: format(startDate, "d"),
-        dow: format(startDate, "E"),
-        month: format(startDate, "MMM"),
-        duration: getDuration(startDate, endDate),
-      };
-    }
-  }
-
-  // we add the time because otherwise Date will assume UTC time which might change the day for some time zones
-  const dateString =
-    option.value.indexOf("T") === -1
-      ? option.value + "T00:00:00"
-      : option.value;
-  const date = new Date(dateString);
-  return {
-    type: "date",
-    optionId: option.id,
-    day: format(date, "d"),
-    dow: format(date, "E"),
-    month: format(date, "MMM"),
-  };
 };
 
 export const removeAllOptionsForDay = (

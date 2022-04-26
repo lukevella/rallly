@@ -1,10 +1,18 @@
-import { Placement } from "@popperjs/core";
+import {
+  arrow,
+  flip,
+  FloatingPortal,
+  offset,
+  Placement,
+  shift,
+  useFloating,
+  useHover,
+  useInteractions,
+  useRole,
+} from "@floating-ui/react-dom-interactions";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
-import ReactDOM from "react-dom";
-import { usePopper } from "react-popper";
-import { useClickAway, useDebounce } from "react-use";
 import { preventWidows } from "utils/prevent-widows";
 
 export interface TooltipProps {
@@ -16,127 +24,110 @@ export interface TooltipProps {
 }
 
 const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
-  placement = "bottom",
+  placement: preferredPlacement = "bottom",
   className,
   children,
   disabled,
   content,
 }) => {
-  const [referenceElement, setReferenceElement] =
-    React.useState<HTMLDivElement | null>(null);
-  const [popperElement, setPopperElement] =
-    React.useState<HTMLDivElement | null>(null);
-  const [arrowElement, setArrowElement] =
-    React.useState<HTMLDivElement | null>(null);
+  const arrowRef = React.useRef<HTMLDivElement | null>(null);
+  const [open, setOpen] = React.useState(false);
 
-  const { styles, attributes, update } = usePopper(
-    referenceElement,
-    popperElement,
-    {
-      placement,
-      modifiers: [
-        {
-          name: "offset",
-          options: {
-            offset: [0, 14],
-          },
-        },
-        { name: "arrow", options: { element: arrowElement, padding: 5 } },
-      ],
-    },
-  );
-
-  const [isVisible, setIsVisible] = React.useState(false);
-
-  const [debouncedValue, setDebouncedValue] = React.useState(false);
-
-  const [, cancel] = useDebounce(
-    async () => {
-      await update?.();
-      setDebouncedValue(isVisible);
-    },
-    300,
-    [isVisible],
-  );
-
-  const portal = document.getElementById("portal");
-
-  const [key, setKey] = React.useState(0);
-
-  React.useEffect(() => {
-    setKey((k) => k + 1);
-  }, [content]);
-
-  const ref = React.useRef<HTMLDivElement | null>(null);
-
-  useClickAway(ref, () => {
-    setIsVisible(false);
+  const {
+    reference,
+    floating,
+    x,
+    y,
+    strategy,
+    context,
+    middlewareData,
+    placement,
+  } = useFloating({
+    strategy: "fixed",
+    open,
+    onOpenChange: setOpen,
+    placement: preferredPlacement,
+    middleware: [
+      offset(10),
+      flip(),
+      shift({ padding: 5 }),
+      arrow({ element: arrowRef }),
+    ],
   });
 
-  if (disabled) {
-    return <>{children}</>;
-  }
+  const placementGroup = placement.split("-")[0] as
+    | "top"
+    | "right"
+    | "bottom"
+    | "left";
+
+  const staticSide = {
+    top: "bottom",
+    right: "left",
+    bottom: "top",
+    left: "right",
+  }[placementGroup];
+
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    useHover(context, {
+      enabled: !disabled,
+      restMs: 150,
+    }),
+    useRole(context, {
+      role: "tooltip",
+    }),
+  ]);
+
   return (
     <>
       <div
-        key={key}
         className={clsx("inline-block", className)}
-        onMouseEnter={() => {
-          setIsVisible(true);
-        }}
-        onMouseLeave={() => {
-          setIsVisible(false);
-          setDebouncedValue(false);
-          cancel();
-        }}
-        ref={(el) => {
-          setReferenceElement(el);
-          ref.current = el;
-        }}
+        {...getReferenceProps({ ref: reference })}
       >
         {children}
       </div>
-      {portal
-        ? ReactDOM.createPortal(
-            <AnimatePresence>
-              {debouncedValue ? (
-                <div
-                  className="pointer-events-none"
-                  ref={setPopperElement}
-                  style={styles.popper}
-                  {...attributes.popper}
-                >
-                  <motion.div
-                    className="rounded-md bg-slate-700 px-3 py-2 text-slate-200 shadow-md"
-                    initial="hidden"
-                    transition={{
-                      duration: 0.1,
-                    }}
-                    variants={{
-                      hidden: {
-                        opacity: 0,
-                        translateY: placement === "bottom" ? -4 : 4,
-                      },
-                      show: { opacity: 1, translateY: 0 },
-                    }}
-                    animate={debouncedValue ? "show" : "hidden"}
-                  >
-                    <div
-                      ref={setArrowElement}
-                      className="tooltip-arrow h-3 w-3 border-[6px] border-transparent"
-                      style={styles.arrow}
-                      data-popper-arrow
-                    ></div>
-                    {typeof content === "string"
-                      ? preventWidows(content)
-                      : content}
-                  </motion.div>
-                </div>
-              ) : null}
-            </AnimatePresence>,
-            portal,
-          )
-        : null}
+      <FloatingPortal>
+        <AnimatePresence>
+          {open ? (
+            <motion.div
+              className="z-30 rounded-md bg-slate-700 px-3 py-2 text-slate-200 shadow-md"
+              initial="hidden"
+              transition={{
+                duration: 0.1,
+              }}
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  translateY: placement === "bottom" ? -4 : 4,
+                },
+                show: { opacity: 1, translateY: 0 },
+              }}
+              animate={open ? "show" : "hidden"}
+              {...getFloatingProps({
+                ref: floating,
+                style: {
+                  position: strategy,
+                  top: y ?? "",
+                  left: x ?? "",
+                },
+              })}
+            >
+              <div
+                ref={arrowRef}
+                className="absolute rotate-45 bg-slate-700"
+                style={{
+                  width: 8,
+                  height: 8,
+                  left: middlewareData.arrow?.x,
+                  top: middlewareData.arrow?.y,
+                  [staticSide]: -4,
+                }}
+              />
+              {typeof content === "string" ? preventWidows(content) : content}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </FloatingPortal>
     </>
   );
 };

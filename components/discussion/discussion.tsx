@@ -21,6 +21,7 @@ import Trash from "../icons/trash.svg";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvater from "../poll/user-avatar";
+import { usePreferences } from "../preferences/use-preferences";
 import { useUserName } from "../user-name-context";
 
 export interface DiscussionProps {
@@ -37,6 +38,7 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
   pollId,
   canDelete,
 }) => {
+  const { locale } = usePreferences();
   const getCommentsQueryKey = ["poll", pollId, "comments"];
   const [userName, setUserName] = useUserName();
   const queryClient = useQueryClient();
@@ -146,6 +148,9 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
                         {formatRelative(
                           new Date(comment.createdAt),
                           Date.now(),
+                          {
+                            locale,
+                          },
                         )}
                       </span>
                     </div>

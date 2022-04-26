@@ -1,10 +1,18 @@
+import {
+  flip,
+  FloatingPortal,
+  offset,
+  Placement,
+  useFloating,
+} from "@floating-ui/react-dom-interactions";
 import { Menu } from "@headlessui/react";
-import { Placement } from "@popperjs/core";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import * as React from "react";
-import ReactDOM from "react-dom";
-import { usePopper } from "react-popper";
+import { transformOriginByPlacement } from "utils/constants";
 import { stopPropagation } from "utils/stop-propagation";
+
+const MotionMenuItems = motion(Menu.Items);
 
 export interface DropdownProps {
   trigger?: React.ReactNode;
@@ -17,49 +25,51 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
   children,
   className,
   trigger,
-  placement,
+  placement: preferredPlacement,
 }) => {
-  const [referenceElement, setReferenceElement] =
-    React.useState<HTMLDivElement | null>(null);
-  const [popperElement, setPopperElement] =
-    React.useState<HTMLDivElement | null>(null);
-
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement,
-    modifiers: [
-      {
-        name: "offset",
-        options: {
-          offset: [0, 5],
-        },
-      },
-    ],
+  const { reference, floating, x, y, strategy, placement } = useFloating({
+    placement: preferredPlacement,
+    middleware: [offset(5), flip()],
   });
 
-  const portal = document.getElementById("portal");
+  const animationOrigin = transformOriginByPlacement[placement];
+
   return (
     <Menu>
-      <Menu.Button
-        ref={setReferenceElement}
-        as="div"
-        className={clsx("inline-block", className)}
-      >
-        {trigger}
-      </Menu.Button>
-      {portal &&
-        ReactDOM.createPortal(
-          <Menu.Items
+      {({ open }) => (
+        <>
+          <Menu.Button
             as="div"
-            ref={setPopperElement}
-            style={styles.popper}
-            {...attributes.popper}
-            className="z-30 divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-            onMouseDown={stopPropagation}
+            className={clsx("inline-block", className)}
+            ref={reference}
           >
-            {children}
-          </Menu.Items>,
-          portal,
-        )}
+            {trigger}
+          </Menu.Button>
+          <FloatingPortal>
+            {open ? (
+              <MotionMenuItems
+                transition={{ duration: 0.1 }}
+                initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                className={clsx(
+                  "z-50 divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+                  animationOrigin,
+                )}
+                onMouseDown={stopPropagation}
+                ref={floating}
+                style={{
+                  position: strategy,
+                  left: x ?? "",
+                  top: y ?? "",
+                }}
+              >
+                {children}
+              </MotionMenuItems>
+            ) : null}
+          </FloatingPortal>
+        </>
+      )}
     </Menu>
   );
 };

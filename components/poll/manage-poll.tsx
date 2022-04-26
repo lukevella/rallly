@@ -1,8 +1,8 @@
-import { Placement } from "@popperjs/core";
+import { Placement } from "@floating-ui/react-dom-interactions";
 import { format } from "date-fns";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { decodeDateOption, encodeDateOption } from "utils/date-time-utils";
+import { encodeDateOption } from "utils/date-time-utils";
 
 import Button from "@/components/button";
 import Cog from "@/components/icons/cog.svg";
@@ -25,7 +25,7 @@ const ManagePoll: React.VoidFunctionComponent<{
   placement?: Placement;
 }> = ({ placement }) => {
   const { t } = useTranslation("app");
-  const { poll, targetTimeZone } = usePoll();
+  const { poll, options } = usePoll();
 
   const modalContext = useModalContext();
 
@@ -181,12 +181,7 @@ const ManagePoll: React.VoidFunctionComponent<{
               t("participantCount", {
                 count: poll.participants.length,
               }),
-              ...poll.options.map((option) => {
-                const decodedOption = decodeDateOption(
-                  option,
-                  poll.timeZone,
-                  targetTimeZone,
-                );
+              ...options.map((decodedOption) => {
                 const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month}`;
                 return decodedOption.type === "date"
                   ? day
