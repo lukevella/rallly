@@ -146,7 +146,10 @@ const PollInner: NextPage = () => {
               <div className="mb-3 items-start px-4 md:flex md:space-x-4">
                 <div className="mb-3 grow md:mb-0">
                   <div className="flex flex-col-reverse md:flex-row">
-                    <h1 className="mb-2 grow text-3xl leading-tight">
+                    <h1
+                      data-testid="poll-title"
+                      className="mb-2 grow text-3xl leading-tight"
+                    >
                       {preventWidows(poll.title)}
                     </h1>
                     {poll.role === "admin" ? (

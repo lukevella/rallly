@@ -35,5 +35,7 @@ test("should be able to create a new poll", async ({ page, context }) => {
 
   await page.click('text="Create poll"');
 
-  await expect(page.locator('text="Monthly Meetup"')).toBeVisible();
+  await expect(page.locator("data-testid=poll-title")).toHaveText(
+    "Monthly Meetup",
+  );
 });
