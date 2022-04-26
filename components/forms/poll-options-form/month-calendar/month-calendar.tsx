@@ -5,6 +5,8 @@ import isSameDay from "date-fns/isSameDay";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 
+import { usePreferences } from "@/components/preferences/use-preferences";
+
 import {
   expectTimeOption,
   getDateProps,
@@ -74,9 +76,12 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
     );
   }, [optionsByDay]);
 
+  const { weekStartsOn } = usePreferences();
+
   const datepicker = useHeadlessDatePicker({
     selection: datepickerSelection,
     onNavigationChange: onNavigate,
+    weekStartsOn,
     date,
   });
 

@@ -7,10 +7,11 @@ import {
 } from "@floating-ui/react-dom-interactions";
 import { Listbox } from "@headlessui/react";
 import clsx from "clsx";
-import { addMinutes, isSameDay, setHours, setMinutes } from "date-fns";
+import { addMinutes, format, isSameDay, setHours, setMinutes } from "date-fns";
 import * as React from "react";
-import { localeFormat } from "utils/date-time-utils";
 import { stopPropagation } from "utils/stop-propagation";
+
+import { usePreferences } from "@/components/preferences/use-preferences";
 
 import ChevronDown from "../../../icons/chevron-down.svg";
 import { styleMenuItem } from "../../../menu-styles";
@@ -28,6 +29,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
   className,
   startFrom = setMinutes(setHours(value, 0), 0),
 }) => {
+  const { locale } = usePreferences();
   const { reference, floating, x, y, strategy, refs } = useFloating({
     strategy: "fixed",
     middleware: [
@@ -59,7 +61,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
         className={styleMenuItem}
         value={optionValue.toISOString()}
       >
-        {localeFormat(optionValue, "p")}
+        {format(optionValue, "p", { locale })}
       </Listbox.Option>,
     );
   }
@@ -75,7 +77,9 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
         <>
           <div ref={reference} className={clsx("relative", className)}>
             <Listbox.Button className="btn-default text-left">
-              <span className="grow truncate">{localeFormat(value, "p")}</span>
+              <span className="grow truncate">
+                {format(value, "p", { locale })}
+              </span>
               <span className="pointer-events-none ml-2 flex">
                 <ChevronDown className="h-5 w-5" />
               </span>

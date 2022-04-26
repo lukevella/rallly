@@ -13,6 +13,7 @@ import { MutationCache, QueryClient, QueryClientProvider } from "react-query";
 import { useSessionStorage } from "react-use";
 
 import ModalProvider from "@/components/modal/modal-provider";
+import PreferencesProvider from "@/components/preferences/preferences-provider";
 
 import { UserNameContext } from "../components/user-name-context";
 
@@ -41,18 +42,23 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       selfHosted={true}
       enabled={!!process.env.PLAUSIBLE_DOMAIN}
     >
-      <QueryClientProvider client={queryClient}>
-        <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <CrispChat />
-        <Toaster />
-        <ModalProvider>
-          <UserNameContext.Provider value={sessionUserName}>
-            <Component {...pageProps} />
-          </UserNameContext.Provider>
-        </ModalProvider>
-      </QueryClientProvider>
+      <PreferencesProvider>
+        <QueryClientProvider client={queryClient}>
+          <Head>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
+          </Head>
+          <CrispChat />
+          <Toaster />
+          <ModalProvider>
+            <UserNameContext.Provider value={sessionUserName}>
+              <Component {...pageProps} />
+            </UserNameContext.Provider>
+          </ModalProvider>
+        </QueryClientProvider>
+      </PreferencesProvider>
     </PlausibleProvider>
   );
 };

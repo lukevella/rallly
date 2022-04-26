@@ -137,7 +137,7 @@ const PollInner: NextPage = () => {
             <meta name="robots" content="noindex,nofollow" />
           </Head>
           <div
-            className="max-w-full"
+            className="mx-auto max-w-full lg:mx-0"
             style={{
               width: Math.max(768, poll.options.length * 95 + 200 + 160),
             }}

@@ -5,8 +5,8 @@ import {
   format,
   formatDuration,
   isSameDay,
+  Locale,
 } from "date-fns";
-import { enGB, enUS } from "date-fns/locale";
 import { formatInTimeZone } from "date-fns-tz";
 import spacetime from "spacetime";
 
@@ -43,8 +43,6 @@ export interface ParsedTimeSlotOption {
   duration: string;
 }
 
-export const dateLocale = enUS;
-
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
 const isTimeSlot = (value: string) => value.indexOf("/") !== -1;
@@ -61,6 +59,7 @@ export const decodeOptions = (
   options: Option[],
   timeZone: string | null,
   targetTimeZone: string,
+  locale: Locale,
 ):
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] } => {
@@ -70,7 +69,7 @@ export const decodeOptions = (
     return {
       pollType,
       options: options.map((option) =>
-        parseTimeSlotOption(option, timeZone, targetTimeZone),
+        parseTimeSlotOption(option, timeZone, targetTimeZone, locale),
       ),
     };
   } else {
@@ -101,7 +100,18 @@ const parseTimeSlotOption = (
   option: Option,
   timeZone: string | null,
   targetTimeZone: string,
+  locale: Locale,
 ): ParsedTimeSlotOption => {
+  const localeFormatInTimezone = (
+    date: Date,
+    timezone: string,
+    formatString: string,
+  ) => {
+    return formatInTimeZone(date, timezone, formatString, {
+      locale,
+    });
+  };
+
   const [start, end] = option.value.split("/");
   if (timeZone && targetTimeZone) {
     const startDate = spacetime(start, timeZone).toNativeDate();
@@ -157,20 +167,4 @@ export const expectTimeOption = (d: DateTimeOption): TimeOption => {
     throw new Error("Expected timeSlot but got date instead");
   }
   return d;
-};
-
-export const localeFormat = (date: Date, formatString: string) => {
-  return format(date, formatString, {
-    locale: dateLocale,
-  });
-};
-
-export const localeFormatInTimezone = (
-  date: Date,
-  timezone: string,
-  formatString: string,
-) => {
-  return formatInTimeZone(date, timezone, formatString, {
-    locale: dateLocale,
-  });
 };

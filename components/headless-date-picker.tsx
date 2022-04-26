@@ -24,6 +24,7 @@ interface HeadlessDatePickerOptions {
   date?: Date;
   selection?: Date[];
   onNavigationChange?: (date: Date) => void;
+  weekStartsOn?: "monday" | "sunday";
 }
 
 const today = new Date();
@@ -47,7 +48,9 @@ export const useHeadlessDatePicker = (
   const navigationDate = options?.date ?? localNavigationDate;
 
   const firstDayOfMonth = startOfMonth(navigationDate);
-  const firstDayOfFirstWeek = startOfWeek(firstDayOfMonth, { weekStartsOn: 1 });
+  const firstDayOfFirstWeek = startOfWeek(firstDayOfMonth, {
+    weekStartsOn: options?.weekStartsOn === "monday" ? 1 : 0,
+  });
 
   const currentMonth = getMonth(navigationDate);
 

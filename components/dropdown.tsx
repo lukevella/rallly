@@ -9,6 +9,7 @@ import { Menu } from "@headlessui/react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import * as React from "react";
+import { transformOriginByPlacement } from "utils/constants";
 import { stopPropagation } from "utils/stop-propagation";
 
 const MotionMenuItems = motion(Menu.Items);
@@ -24,12 +25,14 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
   children,
   className,
   trigger,
-  placement,
+  placement: preferredPlacement,
 }) => {
-  const { reference, floating, x, y, strategy } = useFloating({
-    placement,
+  const { reference, floating, x, y, strategy, placement } = useFloating({
+    placement: preferredPlacement,
     middleware: [offset(5), flip()],
   });
+
+  const animationOrigin = transformOriginByPlacement[placement];
 
   return (
     <Menu>
@@ -49,7 +52,10 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
                 initial={{ opacity: 0, scale: 0.9, y: -10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: -10 }}
-                className="divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                className={clsx(
+                  "divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+                  animationOrigin,
+                )}
                 onMouseDown={stopPropagation}
                 ref={floating}
                 style={{

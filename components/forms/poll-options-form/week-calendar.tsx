@@ -10,19 +10,12 @@ import {
 import React from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { useMount } from "react-use";
-import { localeFormat } from "utils/date-time-utils";
+
+import { usePreferences } from "@/components/preferences/use-preferences";
 
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "./utils";
-
-const localizer = dateFnsLocalizer({
-  format: localeFormat,
-  parse,
-  startOfWeek: (date: Date | number) => startOfWeek(date, { weekStartsOn: 1 }),
-  getDay,
-  locales: {},
-});
 
 const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   title,
@@ -40,8 +33,28 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
     setScrollToTime(addMinutes(date, -60));
   });
 
+  const { weekStartsOn, timeFormat, locale } = usePreferences();
+
+  const localizer = React.useMemo(
+    () =>
+      dateFnsLocalizer({
+        format,
+        parse,
+        startOfWeek: (date: Date | number) =>
+          startOfWeek(date, {
+            weekStartsOn: weekStartsOn === "monday" ? 1 : 0,
+          }),
+        getDay,
+        locales: {
+          default: locale,
+        },
+      }),
+    [locale, weekStartsOn],
+  );
+
   return (
     <Calendar
+      key={timeFormat}
       events={options.map((option) => {
         if (option.type === "date") {
           return { title, start: new Date(option.date) };
@@ -53,6 +66,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
           };
         }
       })}
+      culture="default"
       onNavigate={onNavigate}
       date={date}
       className="h-[calc(100vh-220px)] max-h-[800px] min-h-[400px] w-full"
@@ -104,7 +118,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 width: `calc(${props.style?.width}%)`,
               }}
             >
-              <div>{localeFormat(props.event.start, "p")}</div>
+              <div>{format(props.event.start, "p", { locale })}</div>
               <div className="w-full truncate font-bold">
                 {props.event.title}
               </div>
