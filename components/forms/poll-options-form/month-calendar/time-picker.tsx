@@ -94,7 +94,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
                   top: y ?? "",
                 }}
                 ref={floating}
-                className="max-h-52 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                className="z-50 max-h-52 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                 onMouseDown={stopPropagation}
               >
                 {options}

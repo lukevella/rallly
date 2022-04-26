@@ -53,7 +53,7 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: -10 }}
                 className={clsx(
-                  "divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+                  "z-50 divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
                   animationOrigin,
                 )}
                 onMouseDown={stopPropagation}
