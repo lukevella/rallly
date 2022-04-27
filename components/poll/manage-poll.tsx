@@ -29,6 +29,20 @@ const ManagePoll: React.VoidFunctionComponent<{
 
   const modalContext = useModalContext();
 
+  const handleChangeOptions = () => {
+    if (poll.legacy) {
+      modalContext.render({
+        overlayClosable: true,
+        title: "Sorry!",
+        description:
+          "This poll was created with an older version of Rallly and does not support this feature.",
+        cancelText: "Close",
+      });
+    } else {
+      openChangeOptionsModal();
+    }
+  };
+
   const { mutate: updatePollMutation, isLoading: isUpdating } =
     useUpdatePollMutation();
   const [
@@ -61,11 +75,7 @@ const ManagePoll: React.VoidFunctionComponent<{
                   }
                 : {
                     type: "date",
-                    date:
-                      start.indexOf("T") === -1
-                        ? start
-                        : // legacy polls
-                          new Date(start).toISOString().substring(0, 10),
+                    date: start,
                   };
             }),
             timeZone: poll.timeZone ?? "",
@@ -166,13 +176,11 @@ const ManagePoll: React.VoidFunctionComponent<{
           label="Edit details"
           onClick={openChangePollDetailsModa}
         />
-        {!poll.legacy ? (
-          <DropdownItem
-            icon={Table}
-            label="Edit options"
-            onClick={openChangeOptionsModal}
-          />
-        ) : null}
+        <DropdownItem
+          icon={Table}
+          label="Edit options"
+          onClick={handleChangeOptions}
+        />
         <DropdownItem
           icon={Save}
           label="Export to CSV"

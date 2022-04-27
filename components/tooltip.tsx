@@ -21,6 +21,7 @@ export interface TooltipProps {
   content?: React.ReactNode;
   disabled?: boolean;
   className?: string;
+  width?: number;
 }
 
 const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
@@ -29,6 +30,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
   children,
   disabled,
   content,
+  width,
 }) => {
   const arrowRef = React.useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = React.useState(false);
@@ -109,6 +111,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
                   position: strategy,
                   top: y ?? "",
                   left: x ?? "",
+                  maxWidth: width,
                 },
               })}
             >
