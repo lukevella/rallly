@@ -82,12 +82,12 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
 
   return (
     <>
-      <div
-        className={clsx("inline-block", className)}
+      <span
+        className={clsx("inline-flex", className)}
         {...getReferenceProps({ ref: reference })}
       >
         {children}
-      </div>
+      </span>
       <FloatingPortal>
         <AnimatePresence>
           {open ? (

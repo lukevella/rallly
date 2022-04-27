@@ -37,7 +37,7 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
           }}
         />
         &nbsp;
-        <span className="inline-flex space-x-1">
+        <span className="inline-flex items-center space-x-1">
           {poll.role === "admin" ? (
             poll.verified ? (
               <span className="inline-flex h-5 cursor-default items-center rounded-md bg-green-100/50 px-1 text-xs text-green-500 transition-colors">
