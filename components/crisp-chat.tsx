@@ -42,14 +42,6 @@ const CrispChat: React.VoidFunctionComponent = () => {
       s.async = true;
       d.getElementsByTagName("body")[0].appendChild(s);
       window.$crisp.push(["safe", true]); // disable warning about other event listeners
-      window.$crisp.push(["do", "chat:hide"]);
-      window.$crisp.push([
-        "on",
-        "chat:closed",
-        () => {
-          window.$crisp?.push(["do", "chat:hide"]);
-        },
-      ]);
     })();
   });
 
