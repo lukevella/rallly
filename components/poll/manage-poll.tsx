@@ -32,9 +32,10 @@ const ManagePoll: React.VoidFunctionComponent<{
   const handleChangeOptions = () => {
     if (poll.legacy) {
       modalContext.render({
-        title: "Hold on!",
+        overlayClosable: true,
+        title: "Sorry!",
         description:
-          "This feature is not supported because this poll was created with an older version of Rallly. If you'd like the ability to edit your options, please create a new poll.",
+          "This poll was created with an older version of Rallly and does not support this feature.",
         cancelText: "Close",
       });
     } else {

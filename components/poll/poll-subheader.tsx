@@ -8,6 +8,7 @@ import Button from "../button";
 import { usePoll } from "../poll-context";
 import Popover from "../popover";
 import { usePreferences } from "../preferences/use-preferences";
+import Tooltip from "../tooltip";
 
 export interface PollSubheaderProps {}
 
@@ -36,48 +37,62 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
           }}
         />
         &nbsp;
-        {poll.role === "admin" ? (
-          poll.verified ? (
-            <span className="inline-block cursor-default rounded-lg border border-green-400 bg-green-50 px-1 text-sm text-green-500">
-              Verified
-            </span>
-          ) : (
-            <Popover
-              trigger={
-                <button className="inline-block rounded-lg border px-2 text-sm text-slate-400 transition-colors hover:bg-white hover:text-slate-700 hover:shadow-sm active:bg-gray-100">
-                  Unverified
-                </button>
-              }
-            >
-              <div className="max-w-sm">
-                <div className="mb-4">
-                  <Trans
-                    t={t}
-                    i18nKey="unverifiedMessage"
-                    values={{ email: poll.user.email }}
-                    components={{
-                      b: (
-                        <span className="whitespace-nowrap font-mono font-medium text-indigo-500" />
-                      ),
-                    }}
-                  />
+        <span className="inline-flex space-x-1">
+          {poll.role === "admin" ? (
+            poll.verified ? (
+              <span className="inline-flex h-5 cursor-default items-center rounded-md bg-green-100/50 px-1 text-xs text-green-500 transition-colors">
+                Verified
+              </span>
+            ) : (
+              <Popover
+                trigger={
+                  <button className="inline-flex h-5 items-center rounded-md bg-slate-200 px-1 text-xs text-slate-500 transition-colors hover:bg-slate-300 hover:shadow-sm active:bg-slate-200">
+                    Unverified
+                  </button>
+                }
+              >
+                <div className="max-w-sm">
+                  <div className="mb-4">
+                    <Trans
+                      t={t}
+                      i18nKey="unverifiedMessage"
+                      values={{ email: poll.user.email }}
+                      components={{
+                        b: (
+                          <span className="whitespace-nowrap font-mono font-medium text-indigo-500" />
+                        ),
+                      }}
+                    />
+                  </div>
+                  {didSendVerificationEmail ? (
+                    <div className="text-green-500">
+                      Verification email sent.
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        sendVerificationEmail();
+                      }}
+                      loading={isSendingVerificationEmail}
+                    >
+                      Resend verification email
+                    </Button>
+                  )}
                 </div>
-                {didSendVerificationEmail ? (
-                  <div className="text-green-500">Verification email sent.</div>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      sendVerificationEmail();
-                    }}
-                    loading={isSendingVerificationEmail}
-                  >
-                    Resend verification email
-                  </Button>
-                )}
-              </div>
-            </Popover>
-          )
-        ) : null}
+              </Popover>
+            )
+          ) : null}
+          {poll.legacy && poll.role === "admin" ? (
+            <Tooltip
+              width={400}
+              content="This poll was created with an older version of Rallly. Some features might not work."
+            >
+              <span className="inline-flex h-5 cursor-default items-center rounded-md bg-amber-100 px-1 text-xs text-amber-500">
+                Legacy
+              </span>
+            </Tooltip>
+          ) : null}
+        </span>
       </div>
       <span className="hidden md:inline">&nbsp;&bull;&nbsp;</span>
       <span className="whitespace-nowrap">
