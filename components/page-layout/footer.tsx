@@ -64,11 +64,12 @@ const Footer: React.VoidFunctionComponent = () => {
               </Link>
             </li>
             <li>
-              <Link href="/support">
-                <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
-                  Support
-                </a>
-              </Link>
+              <a
+                href="https://support.rallly.co"
+                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
+              >
+                Support
+              </a>
             </li>
             <li>
               <Link href="/privacy-policy">

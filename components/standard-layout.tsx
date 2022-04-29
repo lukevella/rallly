@@ -35,12 +35,15 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
           <span className="inline-block">New Poll</span>
         </a>
       </Link>
-      <Link href="/support">
-        <a className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
-          <Support className="h-5 opacity-75" />
-          <span className="inline-block">Support</span>
-        </a>
-      </Link>
+      <a
+        target="_blank"
+        href="https://support.rallly.co"
+        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+        rel="noreferrer"
+      >
+        <Support className="h-5 opacity-75" />
+        <span className="inline-block">Support</span>
+      </a>
     </div>
   );
 };
@@ -98,12 +101,15 @@ const StandardLayout: React.VoidFunctionComponent<{
                   <span className="inline-block">New Poll</span>
                 </a>
               </Link>
-              <Link href="/support">
-                <a className="mb-1 flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
-                  <Support className="h-5 opacity-75" />
-                  <span className="inline-block">Support</span>
-                </a>
-              </Link>
+              <a
+                target="_blank"
+                href="https://support.rallly.co"
+                className="mb-1 flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+                rel="noreferrer"
+              >
+                <Support className="h-5 opacity-75" />
+                <span className="inline-block">Support</span>
+              </a>
               <Popover
                 placement="right-start"
                 trigger={
@@ -133,11 +139,14 @@ const StandardLayout: React.VoidFunctionComponent<{
           </div>
           <div className="hidden text-slate-300 lg:block">&bull;</div>
           <div className="flex items-center justify-center space-x-6 md:justify-start">
-            <Link href="/support">
-              <a className="text-sm text-slate-400 transition-colors hover:text-indigo-500 hover:no-underline">
-                Support
-              </a>
-            </Link>
+            <a
+              target="_blank"
+              href="https://support.rallly.co"
+              className="text-sm text-slate-400 transition-colors hover:text-indigo-500 hover:no-underline"
+              rel="noreferrer"
+            >
+              Support
+            </a>
             <Link href="https://github.com/lukevella/rallly/discussions">
               <a className="text-sm text-slate-400 transition-colors hover:text-indigo-500 hover:no-underline">
                 Discussions
