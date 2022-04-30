@@ -1,0 +1,19 @@
+{
+  "supportContactTitle": "Kontakt",
+  "supportContactMessage": "Wenn du Fragen hast, die hier nicht behandelt werden, oder wenn du uns dein Feedback mitteilen möchtest, schicke eine E-Mail an: <a>support@rallly.co</a> oder:",
+  "chatWithSupport": "Chat starten",
+  "isMyDataSafeQuestion": "Sind meine Daten sicher?",
+  "isMyDataSafeAnswer": "Ja! Wir tun alles, was wir können, um deine Daten zu schützen und sicherzustellen, dass deine Privatsphäre respektiert wird. Wir verwenden deine Daten nicht zur Gewinnerzielung und geben sie nicht an Dritte weiter. Wenn du irgendwelche Bedenken hast oder die Löschung deiner Daten von unseren Servern beantragen möchtest, sende bitte eine E-Mail an <a>support@rallly.co</a>",
+  "selfHostQuestion": "Wie kann ich Rallly auf meinem eigenen Server betreiben?",
+  "selfHostAnswer": "Im Repository <a>README</a> findest du eine Anleitung, wie du Rallly auf deinem Server betreiben kannst.",
+  "canYouHelpMeSetUpRalllyQuestion": "Kannst du mir helfen, Rallly auf meinem eigenen Server einzurichten?",
+  "canYouHelpMeSetUpRalllyAnswer": "Leider ist es nicht möglich, jedem Einzelnen individuelle Unterstützung zu bieten. Wenn du Probleme hast, es zum Laufen zu bringen, kannst du auf <a>github discussions</a> um Hilfe bitten.",
+  "canRalllyDoQuestion": "Wie kann ich <em>x</em> tun? Kann Rallly <em>y</em>?",
+  "canRalllyDoAnswer": "Der beste Ort, um diese Fragen zu stellen, sind unsere <a>github discussions</a>. Vielleicht wurde diese Frage bereits gestellt, und wenn nicht, wird sie anderen als Hilfe für die Zukunft dienen.",
+  "legacyPollsQuestion": "Was ist mit den Umfragen passiert, die mit der vorherigen Version von Rallly erstellt wurden?",
+  "legacyPollsAnswer": "Ältere Umfragen werden in einer anderen Datenbank gespeichert, aber du kannst immer noch mit der gleichen URL auf die Umfrage zugreifen. Die Umfragen werden in die neue Datenbank übertragen, wenn du zum ersten Mal versuchst, darauf zuzugreifen. Wenn auf eine Umfrage seit mindestens zwei Monaten nicht mehr zugegriffen wurde, ist sie möglicherweise nicht mehr verfügbar, aber du kannst dich an <a>support@rallly.co</a> wenden um zu versuchen, sie wiederherzustellen.",
+  "howDoIShareQuestion": "Wie kann ich meine Umfrage mit meinen Teilnehmern teilen?",
+  "howDoIShareAnswer": "Um deine Umfrage zu teilen, klicke auf die Schaltfläche <b>Teilen</b> neben dem Titel deiner Umfrage und kopiere den Teilnehmerlink. Du kannst diesen Link mit deinen Teilnehmern über deine eigenen Kanäle wie E-Mail, Whatsapp, Facebook usw. teilen...",
+  "contributeQuestion": "Wie kann ich etwas beitragen?",
+  "contributeAnswer": "Rallly finanziert sich zu 100 % selbst, so dass die beste Möglichkeit, einen Beitrag zu leisten, darin besteht, ein <a>sponsor</a> zu werden. Dieses Geld wird für das Hosting und die zukünftige Entwicklung dieser Website verwendet."
+}
