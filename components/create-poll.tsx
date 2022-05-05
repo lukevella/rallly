@@ -21,7 +21,7 @@ import {
 import StandardLayout from "../components/standard-layout";
 import Steps from "../components/steps";
 import { encodeDateOption } from "../utils/date-time-utils";
-import { SessionProps, withSession } from "./session";
+import { SessionProps, useSession, withSession } from "./session";
 
 type StepName = "eventDetails" | "options" | "userDetails";
 
@@ -55,6 +55,8 @@ const Page: NextPage<CreatePollPageProps> = ({
 
   const router = useRouter();
 
+  const session = useSession();
+
   const [persistedFormData, setPersistedFormData] =
     useSessionStorage<NewEventData>(sessionStorageKey, {
       currentStep: 0,
@@ -66,6 +68,13 @@ const Page: NextPage<CreatePollPageProps> = ({
       options: {
         view,
       },
+      userDetails:
+        session.user?.isGuest === false
+          ? {
+              name: session.user.name,
+              contact: session.user.email,
+            }
+          : undefined,
     });
 
   const [formData, setTransientFormData] = React.useState(persistedFormData);

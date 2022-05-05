@@ -45,6 +45,7 @@ export default async function handler(
       const participants: Array<{
         name: string;
         id: string;
+        guestId: string;
         createdAt: Date;
       }> = [];
 
@@ -56,6 +57,7 @@ export default async function handler(
         participants.push({
           id: participantId,
           name,
+          guestId: "user-demo",
           createdAt: addMinutes(today, i * -1),
         });
 
