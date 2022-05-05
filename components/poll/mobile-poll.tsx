@@ -207,7 +207,9 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               </div>
             </Listbox>
             {!poll.closed && !editable ? (
-              selectedParticipant ? (
+              selectedParticipant &&
+              (poll.role === "admin" ||
+                session.ownsObject(selectedParticipant)) ? (
                 <div className="flex space-x-3">
                   <Button
                     icon={<Pencil />}
@@ -223,18 +225,16 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   >
                     Edit
                   </Button>
-                  {role === "admin" ? (
-                    <Button
-                      icon={<Trash />}
-                      data-testid="delete-participant-button"
-                      type="danger"
-                      onClick={() => {
-                        if (selectedParticipant) {
-                          confirmDeleteParticipant(selectedParticipant.id);
-                        }
-                      }}
-                    />
-                  ) : null}
+                  <Button
+                    icon={<Trash />}
+                    data-testid="delete-participant-button"
+                    type="danger"
+                    onClick={() => {
+                      if (selectedParticipant) {
+                        confirmDeleteParticipant(selectedParticipant.id);
+                      }
+                    }}
+                  />
                 </div>
               ) : (
                 <Button

@@ -6,6 +6,7 @@ import {
   offset,
   Placement,
   shift,
+  useDismiss,
   useFloating,
   useHover,
   useInteractions,
@@ -81,6 +82,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
     useRole(context, {
       role: "tooltip",
     }),
+    useDismiss(context, { ancestorScroll: true }),
   ]);
 
   React.useEffect(() => {
