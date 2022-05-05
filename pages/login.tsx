@@ -9,7 +9,6 @@ export default withSessionRoute(async (req, res) => {
       const homePageUrl = absoluteUrl(req).origin;
       const token = await createToken({
         email,
-        path: req.body.path,
       });
 
       const loginUrl = `${homePageUrl}/login?code=${token}`;
@@ -23,8 +22,6 @@ export default withSessionRoute(async (req, res) => {
           homePageUrl,
         },
       });
-
-      res.end();
       return;
     }
     default:

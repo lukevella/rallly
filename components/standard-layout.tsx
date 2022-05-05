@@ -13,11 +13,14 @@ import Adjustments from "./icons/adjustments.svg";
 import Cash from "./icons/cash.svg";
 import DotsVertical from "./icons/dots-vertical.svg";
 import Github from "./icons/github.svg";
+import Login from "./icons/login.svg";
 import Logout from "./icons/logout.svg";
 import Pencil from "./icons/pencil.svg";
 import Question from "./icons/question-mark-circle.svg";
 import Support from "./icons/support.svg";
 import Twitter from "./icons/twitter.svg";
+import LoginForm from "./login-form";
+import { useModal } from "./modal";
 import { useModalContext } from "./modal/modal-provider";
 import Popover from "./popover";
 import Preferences from "./preferences";
@@ -122,6 +125,10 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
         <Support className="h-5 opacity-75" />
         <span className="inline-block">Support</span>
       </a>
+      <button className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
+        <Login className="h-5 opacity-75 " />
+        <span className="inline-block">Login</span>
+      </button>
     </div>
   );
 };
@@ -144,13 +151,14 @@ const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
           label="What's this?"
           onClick={() => {
             modalContext.render({
+              showClose: true,
               content: (
                 <div className="w-96 p-6">
-                  <div className="mb-4 flex items-center space-x-3">
-                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-b from-purple-400 to-indigo-500">
+                  <div className="mb-4 -mt-14 text-center">
+                    <div className="inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400 to-indigo-500">
                       <User className="h-7 text-white" />
                     </div>
-                    <div>
+                    <div className="">
                       <div className="text-lg font-medium leading-snug">
                         Guest
                       </div>
@@ -166,11 +174,7 @@ const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
                 </div>
               ),
               overlayClosable: true,
-              onOk: () => {
-                window.open("https://support.rallly.co/sessions");
-              },
-              okText: "Read more",
-              cancelText: "Close",
+              footer: null,
             });
           }}
         />
@@ -205,12 +209,19 @@ const StandardLayout: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
   const { user } = useSession();
+  const [loginModal, openLoginModal] = useModal({
+    footer: null,
+    overlayClosable: true,
+    showClose: true,
+    content: <LoginForm />,
+  });
 
   return (
     <div
       className="relative flex min-h-full flex-col bg-gray-50 lg:flex-row"
       {...rest}
     >
+      {loginModal}
       <MobileNavigation />
       <div className="hidden grow px-4 pt-6 pb-5 lg:block">
         <div className="sticky top-6 float-right w-48 items-start">
@@ -245,6 +256,15 @@ const StandardLayout: React.VoidFunctionComponent<{
             >
               <Preferences />
             </Popover>
+            {user?.isGuest === false ? null : (
+              <button
+                onClick={openLoginModal}
+                className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
+              >
+                <Login className="h-5 opacity-75 group-hover:text-indigo-500 group-hover:opacity-100" />
+                <span className="grow text-left">Login</span>
+              </button>
+            )}
           </div>
           <AnimatePresence initial={false}>
             {user ? (

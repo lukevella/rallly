@@ -2,6 +2,8 @@ import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
+import X from "@/components/icons/x.svg";
+
 import Button, { ButtonProps } from "../button";
 
 export interface ModalProps {
@@ -16,6 +18,7 @@ export interface ModalProps {
   content?: React.ReactNode;
   overlayClosable?: boolean;
   visible?: boolean;
+  showClose?: boolean;
 }
 
 const Modal: React.VoidFunctionComponent<ModalProps> = ({
@@ -30,8 +33,9 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
   onCancel,
   onOk,
   visible,
+  showClose,
 }) => {
-  const initialFocusRef = React.useRef<HTMLDivElement>(null);
+  const initialFocusRef = React.useRef<HTMLButtonElement>(null);
   return (
     <AnimatePresence>
       {visible ? (
@@ -53,16 +57,23 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-0 bg-slate-900 bg-opacity-10"
+              className="fixed inset-0 z-0 bg-slate-900 bg-opacity-25"
             />
             <motion.div
               transition={{ duration: 0.1 }}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              ref={initialFocusRef}
-              className="z-50 my-8 mx-4 inline-block w-fit transform rounded-xl bg-white text-left align-middle shadow-xl transition-all"
+              className="relative z-50 my-8 mx-4 inline-block w-fit transform rounded-xl bg-white text-left align-middle shadow-xl transition-all"
             >
+              {showClose ? (
+                <button
+                  className="absolute right-1 top-1 p-2 text-slate-400 transition-colors hover:text-slate-500 active:text-slate-600"
+                  onClick={onCancel}
+                >
+                  <X className="h-5" />
+                </button>
+              ) : null}
               {content ?? (
                 <div className="max-w-md p-6">
                   {title ? (
@@ -90,6 +101,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
                   ) : null}
                   {okText ? (
                     <Button
+                      ref={initialFocusRef}
                       type="primary"
                       onClick={() => {
                         onOk?.();
