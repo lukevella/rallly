@@ -23,9 +23,9 @@ import TruncatedLinkify from "./poll/truncated-linkify";
 import { UserAvatarProvider } from "./poll/user-avatar";
 import { PollContextProvider, usePoll } from "./poll-context";
 import Popover from "./popover";
+import { useSession } from "./session";
 import Sharing from "./sharing";
 import StandardLayout from "./standard-layout";
-import { useUserName } from "./user-name-context";
 
 const Discussion = React.lazy(() => import("@/components/discussion"));
 
@@ -45,7 +45,7 @@ const PollInner: NextPage = () => {
     }
   });
 
-  const [, setUserName] = useUserName();
+  const session = useSession();
 
   const queryClient = useQueryClient();
   const plausible = usePlausible();
@@ -68,8 +68,8 @@ const PollInner: NextPage = () => {
           ...poll,
           verified: true,
         });
+        session.refresh();
         plausible("Verified email");
-        setUserName(poll.authorName);
       },
     },
   );
@@ -209,10 +209,7 @@ const PollInner: NextPage = () => {
               <div className="mb-4 lg:mb-8">
                 <PollComponent pollId={poll.urlId} highScore={highScore} />
               </div>
-              <Discussion
-                pollId={poll.urlId}
-                canDelete={poll.role === "admin"}
-              />
+              <Discussion pollId={poll.urlId} />
             </React.Suspense>
           </div>
         </div>

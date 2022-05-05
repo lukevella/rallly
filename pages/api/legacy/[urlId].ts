@@ -1,6 +1,6 @@
 import { GetPollApiResponse } from "api-client/get-poll";
 import { NextApiRequest, NextApiResponse } from "next";
-import { exclude, getQueryParam } from "utils/api-utils";
+import { getQueryParam } from "utils/api-utils";
 import { LegacyPoll } from "utils/legacy-utils";
 import { getMongoClient } from "utils/mongodb-client";
 import { nanoid } from "utils/nanoid";
@@ -53,6 +53,7 @@ export default async function handler(
   const votes: Array<{ optionId: string; participantId: string }> = [];
 
   newParticipants?.forEach((p, i) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const legacyVotes = legacyPoll.participants![i].votes;
     legacyVotes?.forEach((v, j) => {
       if (v) {
@@ -90,7 +91,6 @@ export default async function handler(
         },
       },
       notifications: legacyPoll.creator.allowNotifications,
-      verificationCode: legacyPoll.__private.verificationCode,
       options: {
         createMany: {
           data: newOptions,
@@ -157,7 +157,7 @@ export default async function handler(
   });
 
   return res.json({
-    ...exclude(poll, "verificationCode"),
+    ...poll,
     role: "admin",
     urlId: poll.urlId,
     pollId: poll.urlId,

@@ -3,7 +3,7 @@ declare global {
     interface ProcessEnv {
       DATABASE_URL: string;
       NODE_ENV: "development" | "production";
-      JWT_SECRET: string;
+      SECRET_PASSWORD: string;
       MAINTENANCE_MODE?: "true";
       PLAUSIBLE_DOMAIN?: string;
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;

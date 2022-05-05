@@ -21,12 +21,12 @@ import Trash from "../icons/trash.svg";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvater from "../poll/user-avatar";
+import { usePoll } from "../poll-context";
 import { usePreferences } from "../preferences/use-preferences";
-import { useUserName } from "../user-name-context";
+import { useSession } from "../session";
 
 export interface DiscussionProps {
   pollId: string;
-  canDelete?: boolean;
 }
 
 interface CommentForm {
@@ -36,11 +36,9 @@ interface CommentForm {
 
 const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
   pollId,
-  canDelete,
 }) => {
   const { locale } = usePreferences();
   const getCommentsQueryKey = ["poll", pollId, "comments"];
-  const [userName, setUserName] = useUserName();
   const queryClient = useQueryClient();
   const { data: comments } = useQuery(
     getCommentsQueryKey,
@@ -64,6 +62,7 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
     },
     {
       onSuccess: (newComment) => {
+        session.refresh();
         queryClient.setQueryData(getCommentsQueryKey, (comments) => {
           if (Array.isArray(comments)) {
             return [...comments, newComment];
@@ -74,6 +73,8 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
       },
     },
   );
+
+  const { poll } = usePoll();
 
   const { mutate: deleteCommentMutation } = useMutation(
     async (payload: { pollId: string; commentId: string }) => {
@@ -89,17 +90,15 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
     },
   );
 
+  const session = useSession();
+
   const { register, setValue, control, handleSubmit, formState } =
     useForm<CommentForm>({
       defaultValues: {
-        authorName: userName,
+        authorName: "",
         content: "",
       },
     });
-
-  React.useEffect(() => {
-    setValue("authorName", userName);
-  }, [setValue, userName]);
 
   const handleDelete = React.useCallback(
     (commentId: string) => {
@@ -124,6 +123,9 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
       >
         <AnimatePresence initial={false}>
           {comments.map((comment) => {
+            const canDelete =
+              poll.role === "admin" || session.ownsObject(comment);
+
             return (
               <motion.div
                 transition={{ duration: 0.2 }}
@@ -189,7 +191,6 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
               },
               {
                 onSuccess: () => {
-                  setUserName(data.authorName);
                   setValue("content", "");
                   resolve(data);
                 },
@@ -201,23 +202,28 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
       >
         <textarea
           id="comment"
-          placeholder="Add your comment…"
+          placeholder="Thanks for the invite!"
           className="input w-full py-2 pl-3 pr-4"
           {...register("content", { validate: requiredString })}
         />
         <div className="mt-1 flex space-x-3">
-          <Controller
-            name="authorName"
-            control={control}
-            rules={{ validate: requiredString }}
-            render={({ field }) => <NameInput className="w-full" {...field} />}
-          />
+          <div>
+            <Controller
+              name="authorName"
+              key={session.user?.id}
+              control={control}
+              rules={{ validate: requiredString }}
+              render={({ field }) => (
+                <NameInput {...field} className="w-full" />
+              )}
+            />
+          </div>
           <Button
             htmlType="submit"
             loading={formState.isSubmitting}
             type="primary"
           >
-            Send
+            Comment
           </Button>
         </div>
       </form>

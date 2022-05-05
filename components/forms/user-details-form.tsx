@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
-import { requiredString } from "../../utils/form-validation";
+import { requiredString, validEmail } from "../../utils/form-validation";
 import { PollFormProps } from "./types";
 
 export interface UserDetailsData {
@@ -65,9 +65,7 @@ export const UserDetailsForm: React.VoidFunctionComponent<
           })}
           placeholder={t("emailPlaceholder")}
           {...register("contact", {
-            validate: (value) => {
-              return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
-            },
+            validate: validEmail,
           })}
         />
       </div>

@@ -10,77 +10,72 @@ import { usePoll } from "../poll-context";
 import Tooltip from "../tooltip";
 import { useUpdatePollMutation } from "./mutations";
 
-export interface NotificationsToggleProps {}
+const NotificationsToggle: React.VoidFunctionComponent = () => {
+  const { poll } = usePoll();
+  const { t } = useTranslation("app");
+  const [isUpdatingNotifications, setIsUpdatingNotifications] =
+    React.useState(false);
 
-const NotificationsToggle: React.VoidFunctionComponent<NotificationsToggleProps> =
-  () => {
-    const { poll } = usePoll();
-    const { t } = useTranslation("app");
-    const [isUpdatingNotifications, setIsUpdatingNotifications] =
-      React.useState(false);
+  const { mutate: updatePollMutation } = useUpdatePollMutation();
 
-    const { mutate: updatePollMutation } = useUpdatePollMutation();
-
-    const plausible = usePlausible();
-    return (
-      <Tooltip
-        content={
-          poll.verified ? (
-            poll.notifications ? (
-              <div>
-                <div className="font-medium text-indigo-300">
-                  Notifications are on
-                </div>
-                <div className="max-w-sm">
-                  <Trans
-                    t={t}
-                    i18nKey="notificationsOnDescription"
-                    values={{
-                      email: poll.user.email,
-                    }}
-                    components={{
-                      b: (
-                        <span className="whitespace-nowrap font-mono font-medium text-indigo-300 " />
-                      ),
-                    }}
-                  />
-                </div>
+  const plausible = usePlausible();
+  return (
+    <Tooltip
+      content={
+        poll.verified ? (
+          poll.notifications ? (
+            <div>
+              <div className="font-medium text-indigo-300">
+                Notifications are on
               </div>
-            ) : (
-              "Notifications are off"
-            )
+              <div className="max-w-sm">
+                <Trans
+                  t={t}
+                  i18nKey="notificationsOnDescription"
+                  values={{
+                    email: poll.user.email,
+                  }}
+                  components={{
+                    b: (
+                      <span className="whitespace-nowrap font-mono font-medium text-indigo-300 " />
+                    ),
+                  }}
+                />
+              </div>
+            </div>
           ) : (
-            "You need to verify your email to turn on notifications"
+            "Notifications are off"
           )
-        }
-      >
-        <Button
-          loading={isUpdatingNotifications}
-          icon={
-            poll.verified && poll.notifications ? <Bell /> : <BellCrossed />
-          }
-          disabled={!poll.verified}
-          onClick={() => {
-            setIsUpdatingNotifications(true);
-            updatePollMutation(
-              {
-                notifications: !poll.notifications,
+        ) : (
+          "You need to verify your email to turn on notifications"
+        )
+      }
+    >
+      <Button
+        loading={isUpdatingNotifications}
+        icon={poll.verified && poll.notifications ? <Bell /> : <BellCrossed />}
+        disabled={!poll.verified}
+        onClick={() => {
+          setIsUpdatingNotifications(true);
+          updatePollMutation(
+            {
+              notifications: !poll.notifications,
+            },
+            {
+              onSuccess: ({ notifications }) => {
+                plausible(
+                  notifications
+                    ? "Turned notifications on"
+                    : "Turned notifications off",
+                );
+                setIsUpdatingNotifications(false);
               },
-              {
-                onSuccess: ({ notifications }) => {
-                  plausible(
-                    notifications
-                      ? "Turned notifications on"
-                      : "Turned notifications off",
-                  );
-                  setIsUpdatingNotifications(false);
-                },
-              },
-            );
-          }}
-        />
-      </Tooltip>
-    );
-  };
+            },
+          );
+        }}
+      />
+    </Tooltip>
+  );
+};
 
 export default NotificationsToggle;

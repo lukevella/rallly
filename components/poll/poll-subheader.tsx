@@ -4,15 +4,14 @@ import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMutation } from "react-query";
 
+import Badge from "../badge";
 import Button from "../button";
 import { usePoll } from "../poll-context";
 import Popover from "../popover";
 import { usePreferences } from "../preferences/use-preferences";
 import Tooltip from "../tooltip";
 
-export interface PollSubheaderProps {}
-
-const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
+const PollSubheader: React.VoidFunctionComponent = () => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
   const { locale } = usePreferences();
@@ -40,9 +39,7 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
         <span className="inline-flex items-center space-x-1">
           {poll.role === "admin" ? (
             poll.verified ? (
-              <span className="inline-flex h-5 cursor-default items-center rounded-md bg-green-100/50 px-1 text-xs text-green-500 transition-colors">
-                Verified
-              </span>
+              <Badge color="green">Verified</Badge>
             ) : (
               <Popover
                 trigger={
@@ -87,9 +84,7 @@ const PollSubheader: React.VoidFunctionComponent<PollSubheaderProps> = () => {
               width={400}
               content="This poll was created with an older version of Rallly. Some features might not work."
             >
-              <span className="inline-flex h-5 cursor-default items-center rounded-md bg-amber-100 px-1 text-xs text-amber-500">
-                Legacy
-              </span>
+              <Badge color="amber">Legacy</Badge>
             </Tooltip>
           ) : null}
         </span>

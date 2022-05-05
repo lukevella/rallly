@@ -13,12 +13,12 @@ import {
   UpdateParticipantPayload,
 } from "../../api-client/update-participant";
 import { usePoll } from "../poll-context";
-import { useUserName } from "../user-name-context";
+import { useSession } from "../session";
 import { ParticipantForm } from "./types";
 
 export const useAddParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
-  const [, setUserName] = useUserName();
+  const session = useSession();
   const plausible = usePlausible();
   return useMutation(
     (payload: ParticipantForm) =>
@@ -28,9 +28,9 @@ export const useAddParticipantMutation = (pollId: string) => {
         votes: payload.votes,
       }),
     {
-      onSuccess: (participant, { name }) => {
+      onSuccess: (participant) => {
         plausible("Add participant");
-        setUserName(name);
+        session.refresh();
         queryClient.setQueryData<GetPollResponse>(
           ["getPoll", pollId],
           (poll) => {
@@ -59,7 +59,6 @@ export const useAddParticipantMutation = (pollId: string) => {
 
 export const useUpdateParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
-  const [, setUserName] = useUserName();
   const plausible = usePlausible();
   return useMutation(
     (payload: UpdateParticipantPayload) =>
@@ -70,9 +69,6 @@ export const useUpdateParticipantMutation = (pollId: string) => {
         votes: payload.votes,
       }),
     {
-      onMutate: ({ name }) => {
-        setUserName(name);
-      },
       onSuccess: () => {
         plausible("Update participant");
       },

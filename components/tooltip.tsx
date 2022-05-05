@@ -1,5 +1,6 @@
 import {
   arrow,
+  autoUpdate,
   flip,
   FloatingPortal,
   offset,
@@ -38,6 +39,8 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
   const {
     reference,
     floating,
+    refs,
+    update,
     x,
     y,
     strategy,
@@ -79,6 +82,14 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
       role: "tooltip",
     }),
   ]);
+
+  React.useEffect(() => {
+    if (!refs.reference.current || !refs.floating.current) {
+      return;
+    }
+    // Only call this when the floating element is rendered
+    return update();
+  }, [update, content, refs.reference, refs.floating]);
 
   return (
     <>
@@ -135,4 +146,4 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
   );
 };
 
-export default Tooltip;
+export default React.memo(Tooltip);

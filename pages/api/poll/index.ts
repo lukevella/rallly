@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { sendEmailTemplate } from "utils/api-utils";
+import { createToken } from "utils/auth";
 import { nanoid } from "utils/nanoid";
 
 import { CreatePollPayload } from "../../../api-client/create-poll";
@@ -14,10 +15,10 @@ export default async function handler(
     case "POST": {
       const adminUrlId = await nanoid();
       const payload: CreatePollPayload = req.body;
+
       const poll = await prisma.poll.create({
         data: {
           urlId: await nanoid(),
-          verificationCode: await nanoid(),
           title: payload.title,
           type: payload.type,
           timeZone: payload.timeZone,
@@ -62,7 +63,10 @@ export default async function handler(
 
       const homePageUrl = absoluteUrl(req).origin;
       const pollUrl = `${homePageUrl}/admin/${adminUrlId}`;
-      const verifyEmailUrl = `${pollUrl}?code=${poll.verificationCode}`;
+      const verificationCode = await createToken({
+        pollId: poll.urlId,
+      });
+      const verifyEmailUrl = `${pollUrl}?code=${verificationCode}`;
 
       try {
         await sendEmailTemplate({

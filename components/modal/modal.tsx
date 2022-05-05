@@ -31,7 +31,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
   onOk,
   visible,
 }) => {
-  const initialFocusRef = React.useRef<HTMLButtonElement>(null);
+  const initialFocusRef = React.useRef<HTMLDivElement>(null);
   return (
     <AnimatePresence>
       {visible ? (
@@ -60,21 +60,27 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="z-50 my-8 mx-4 inline-block w-fit transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl transition-all"
+              ref={initialFocusRef}
+              className="z-50 my-8 mx-4 inline-block w-fit transform rounded-xl bg-white text-left align-middle shadow-xl transition-all"
             >
               {content ?? (
-                <div className="max-w-lg p-4">
-                  {title ? <Dialog.Title>{title}</Dialog.Title> : null}
+                <div className="max-w-md p-6">
+                  {title ? (
+                    <Dialog.Title className="mb-2 font-medium">
+                      {title}
+                    </Dialog.Title>
+                  ) : null}
                   {description ? (
-                    <Dialog.Description>{description}</Dialog.Description>
+                    <Dialog.Description className="m-0">
+                      {description}
+                    </Dialog.Description>
                   ) : null}
                 </div>
               )}
-              {footer ?? (
-                <div className="flex h-14 items-center justify-end space-x-3 border-t bg-slate-50 px-4">
+              {footer === undefined ? (
+                <div className="flex h-14 items-center justify-end space-x-3 rounded-br-lg rounded-bl-lg border-t bg-slate-50 px-4">
                   {cancelText ? (
                     <Button
-                      ref={initialFocusRef}
                       onClick={() => {
                         onCancel?.();
                       }}
@@ -94,7 +100,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
                     </Button>
                   ) : null}
                 </div>
-              )}
+              ) : null}
             </motion.div>
           </motion.div>
         </Dialog>

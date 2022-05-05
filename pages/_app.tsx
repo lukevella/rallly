@@ -10,12 +10,9 @@ import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
 import toast, { Toaster } from "react-hot-toast";
 import { MutationCache, QueryClient, QueryClientProvider } from "react-query";
-import { useSessionStorage } from "react-use";
 
 import ModalProvider from "@/components/modal/modal-provider";
 import PreferencesProvider from "@/components/preferences/preferences-provider";
-
-import { UserNameContext } from "../components/user-name-context";
 
 const CrispChat = dynamic(() => import("@/components/crisp-chat"), {
   ssr: false,
@@ -32,8 +29,6 @@ const queryClient = new QueryClient({
 });
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
-  const sessionUserName = useSessionStorage<string>("userName", "");
-
   return (
     <PlausibleProvider
       domain="rallly.co"
@@ -53,9 +48,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
           <CrispChat />
           <Toaster />
           <ModalProvider>
-            <UserNameContext.Provider value={sessionUserName}>
-              <Component {...pageProps} />
-            </UserNameContext.Provider>
+            <Component {...pageProps} />
           </ModalProvider>
         </QueryClientProvider>
       </PreferencesProvider>

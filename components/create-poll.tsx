@@ -20,14 +20,14 @@ import {
 } from "../components/forms";
 import StandardLayout from "../components/standard-layout";
 import Steps from "../components/steps";
-import { useUserName } from "../components/user-name-context";
 import { encodeDateOption } from "../utils/date-time-utils";
+import { SessionProps, withSession } from "./session";
 
 type StepName = "eventDetails" | "options" | "userDetails";
 
 const steps: StepName[] = ["eventDetails", "options", "userDetails"];
 
-const required = <T extends unknown>(v: T | undefined): T => {
+const required = <T,>(v: T | undefined): T => {
   if (!v) {
     throw new Error("Required value is missing");
   }
@@ -38,12 +38,19 @@ const required = <T extends unknown>(v: T | undefined): T => {
 const initialNewEventData: NewEventData = { currentStep: 0 };
 const sessionStorageKey = "newEventFormData";
 
-const Page: NextPage<{
+export interface CreatePollPageProps extends SessionProps {
   title?: string;
   location?: string;
   description?: string;
   view?: "week" | "month";
-}> = ({ title, location, description, view }) => {
+}
+
+const Page: NextPage<CreatePollPageProps> = ({
+  title,
+  location,
+  description,
+  view,
+}) => {
   const { t } = useTranslation("app");
 
   const router = useRouter();
@@ -77,8 +84,6 @@ const Page: NextPage<{
 
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
-  const [, setUserName] = useUserName();
-
   const plausible = usePlausible();
 
   const { mutate: createEventMutation, isLoading: isCreatingPoll } =
@@ -101,7 +106,6 @@ const Page: NextPage<{
       {
         onSuccess: (poll) => {
           setIsRedirecting(true);
-          setUserName(poll.authorName);
           plausible("Created poll", {
             props: {
               numberOfOptions: formData.options?.options?.length,
@@ -220,4 +224,4 @@ const Page: NextPage<{
   );
 };
 
-export default Page;
+export default withSession(Page);

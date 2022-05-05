@@ -33,7 +33,7 @@
         }
       </style>
     <![endif]-->
-      <title>Your poll has been created</title>
+      <title>Login with your email</title>
       <style>
 .hover-bg-indigo-400:hover {
   background-color: #818cf8 !important;
@@ -61,7 +61,7 @@
   </head>
   <body style="margin: 0; width: 100%; padding: 0; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #f3f4f6;">
       <div style="display: none;">
-        Please click the link below to verify your email address!&#847; &#847; &#847; &#847; &#847; &#847; &#847;
+        Please click the link below to verify your email address.&#847; &#847; &#847; &#847; &#847; &#847; &#847;
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
@@ -75,7 +75,7 @@
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &zwnj;
         &#160;&#847; &#847; &#847; &#847; &#847;
       </div>
-    <div role="article" aria-roledescription="email" aria-label="Your poll has been created" lang="en">
+    <div role="article" aria-roledescription="email" aria-label="Login with your email" lang="en">
     <table style="width: 100%; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
         <td align="center" style="background-color: #f3f4f6;">
@@ -92,32 +92,20 @@
                 <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
                   <tr>
                     <td class="sm-px-24" style="border-radius: 4px; background-color: #ffffff; padding: 36px; text-align: left; font-size: 16px; line-height: 24px; color: #1f2937;">
-                      <p style="margin-bottom: 8px;">Hi <%= it.name %>,</p>
+                      <p style="margin-bottom: 8px;">Hey there,</p>
                       <p style="margin-bottom: 8px;">
-                        Your poll <strong>"<%= it.title %>"</strong> has been
-                        created. Please verify your email address to claim
-                        ownership of this&nbsp;poll:
+                        To login with your email please click the button below:
                       </p>
                       <p style="margin-bottom: 24px;"></p>
                       <div style="margin-bottom: 24px; line-height: 100%;">
-                        <a href="<%= it.verifyEmailUrl %>" class="hover-bg-indigo-400" style="display: inline-block; border-radius: 4px; background-color: #6366f1; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px; text-align: center; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none;"> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%; mso-text-raise: 26pt;">&nbsp;</i><![endif]-->
-                          <span style="mso-text-raise: 16px">Verify your email &rarr;
+                        <a href="<%= it.loginUrl %>" class="hover-bg-indigo-400" style="display: inline-block; border-radius: 4px; background-color: #6366f1; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px; text-align: center; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none;"> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%; mso-text-raise: 26pt;">&nbsp;</i><![endif]-->
+                          <span style="mso-text-raise: 16px">Login &rarr;
                           </span> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%;">&nbsp;</i><![endif]-->
                         </a>
                       </div>
-                      <p style="margin-bottom: 24px; font-size: 14px; color: #6b7280;">
-                        If the link doesn't work, copy this address in to your
-                        browser:<br>
-                        <span style="color: #9ca3af;"><%= it.verifyEmailUrl %></span>
-                      </p>
-                      <p style="margin-bottom: 8px;">
-                        In case you lose it, here's a link to your poll for the
-                        future 😉
-                      </p>
-                      <p style="font-weight: 500;">
-                        <a href="<%= it.pollUrl %>" style="display: inline-block; background-color: #eef2ff; padding: 8px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 20px; color: #6366f1; text-decoration: none;">
-                          <%= it.pollUrl %>
-                        </a>
+                      <p style="font-size: 14px; color: #6b7280;">
+                        Or copy ths link into your browser:<br>
+                        <span style="color: #9ca3af;"><%= it.loginUrl %></span>
                       </p>
                       <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
                         <tr>

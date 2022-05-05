@@ -20,7 +20,7 @@ const Score: React.VoidFunctionComponent<ScoreProps> = ({
         " z-20 flex h-5 w-5 items-center justify-center rounded-full text-xs shadow-sm shadow-slate-200 transition-colors",
         {
           "bg-rose-500 text-white": highlight,
-          "bg-slate-200 text-slate-500": !highlight,
+          "bg-gray-200 text-gray-500": !highlight,
         },
         className,
       )}

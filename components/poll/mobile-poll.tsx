@@ -15,11 +15,12 @@ import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 
 import { requiredString } from "../../utils/form-validation";
+import Badge from "../badge";
 import Button from "../button";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
+import { useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
-import { useUserName } from "../user-name-context";
 import PollOptions from "./mobile-poll/poll-options";
 import TimeSlotOptions from "./mobile-poll/time-slot-options";
 import {
@@ -37,11 +38,10 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const pollContext = usePoll();
 
-  const { poll, targetTimeZone, setTargetTimeZone } = pollContext;
+  const { poll, targetTimeZone, setTargetTimeZone, userAlreadyVoted } =
+    pollContext;
 
   const { timeZone, participants, role } = poll;
-
-  const [, setUserName] = useUserName();
 
   const participantById = participants.reduce<
     Record<string, Participant & { votes: Vote[] }>
@@ -49,6 +49,8 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     acc[curr.id] = { ...curr };
     return acc;
   }, {});
+
+  const session = useSession();
 
   const form = useForm<ParticipantForm>({
     defaultValues: {
@@ -65,9 +67,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     ? participantById[selectedParticipantId]
     : undefined;
 
-  const [editable, setEditable] = React.useState(() =>
-    participants.length > 0 ? false : true,
-  );
+  const [editable, setEditable] = React.useState(!userAlreadyVoted);
 
   const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -148,7 +148,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
           });
         })}
       >
-        <div className="sticky top-0 z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
+        <div className="sticky top-12 z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
           <div className="flex space-x-3">
             <Listbox
               value={selectedParticipantId}
@@ -166,6 +166,9 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                       <div className="flex items-center space-x-2">
                         <UserAvater name={selectedParticipant.name} />
                         <span>{selectedParticipant.name}</span>
+                        {session.ownsObject(selectedParticipant) ? (
+                          <Badge>You</Badge>
+                        ) : null}
                       </div>
                     ) : (
                       t("participantCount", { count: participants.length })
@@ -194,6 +197,9 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                       <div className="flex items-center space-x-2">
                         <UserAvater name={participant.name} />
                         <span>{participant.name}</span>
+                        {session.ownsObject(participant) ? (
+                          <Badge>You</Badge>
+                        ) : null}
                       </div>
                     </Listbox.Option>
                   ))}
@@ -236,7 +242,6 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   icon={<PlusCircle />}
                   onClick={() => {
                     reset({ name: "", votes: [] });
-                    setUserName("");
                     setEditable(true);
                   }}
                 >

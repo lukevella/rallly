@@ -10,11 +10,13 @@ import {
 } from "utils/date-time-utils";
 
 import { usePreferences } from "./preferences/use-preferences";
+import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
 
 type VoteType = "yes" | "no";
 
 type PollContextValue = {
+  userAlreadyVoted: boolean;
   poll: GetPollResponse;
   targetTimeZone: string;
   setTargetTimeZone: (timeZone: string) => void;
@@ -43,6 +45,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   value: GetPollResponse;
   children?: React.ReactNode;
 }> = ({ value: poll, children }) => {
+  const { user } = useSession();
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
 
@@ -85,7 +88,16 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       return participant;
     };
 
+    const userAlreadyVoted = user
+      ? poll.participants.some((participant) =>
+          user.isGuest
+            ? participant.guestId === user.id
+            : participant.userId === user.id,
+        )
+      : false;
+
     return {
+      userAlreadyVoted,
       poll,
       getVotesForOption: (optionId: string) => {
         // TODO (Luke Vella) [2022-04-16]: Build an index instead
@@ -109,7 +121,14 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       targetTimeZone,
       setTargetTimeZone,
     };
-  }, [locale, participantById, participantsByOptionId, poll, targetTimeZone]);
+  }, [
+    locale,
+    participantById,
+    participantsByOptionId,
+    poll,
+    targetTimeZone,
+    user,
+  ]);
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
   );

@@ -1,4 +1,5 @@
 import {
+  autoUpdate,
   flip,
   FloatingPortal,
   offset,
@@ -27,22 +28,28 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
   trigger,
   placement: preferredPlacement,
 }) => {
-  const { reference, floating, x, y, strategy, placement } = useFloating({
-    placement: preferredPlacement,
-    middleware: [offset(5), flip()],
-  });
+  const { reference, floating, x, y, strategy, placement, refs, update } =
+    useFloating({
+      strategy: "fixed",
+      placement: preferredPlacement,
+      middleware: [offset(5), flip()],
+    });
 
   const animationOrigin = transformOriginByPlacement[placement];
+
+  React.useEffect(() => {
+    if (!refs.reference.current || !refs.floating.current) {
+      return;
+    }
+    // Only call this when the floating element is rendered
+    return autoUpdate(refs.reference.current, refs.floating.current, update);
+  }, [refs.reference, refs.floating, update]);
 
   return (
     <Menu>
       {({ open }) => (
         <>
-          <Menu.Button
-            as="div"
-            className={clsx("inline-block", className)}
-            ref={reference}
-          >
+          <Menu.Button as="div" className={className} ref={reference}>
             {trigger}
           </Menu.Button>
           <FloatingPortal>

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const useRequiredContext = <T extends any>(
+export const useRequiredContext = <T>(
   context: React.Context<T | null>,
   errorMessage?: string,
 ) => {
