@@ -67,7 +67,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     ? participantById[selectedParticipantId]
     : undefined;
 
-  const [editable, setEditable] = React.useState(!userAlreadyVoted);
+  const [editable, setEditable] = React.useState(false);
 
   const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);

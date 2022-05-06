@@ -30,7 +30,6 @@ export const useAddParticipantMutation = (pollId: string) => {
     {
       onSuccess: (participant) => {
         plausible("Add participant");
-        session.refresh();
         queryClient.setQueryData<GetPollResponse>(
           ["getPoll", pollId],
           (poll) => {
@@ -52,6 +51,7 @@ export const useAddParticipantMutation = (pollId: string) => {
             return poll;
           },
         );
+        session.refresh();
       },
     },
   );
@@ -60,6 +60,7 @@ export const useAddParticipantMutation = (pollId: string) => {
 export const useUpdateParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
   const plausible = usePlausible();
+
   return useMutation(
     (payload: UpdateParticipantPayload) =>
       updateParticipant({

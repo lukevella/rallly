@@ -30,16 +30,22 @@ const LoginForm: React.VoidFunctionComponent = () => {
               We&apos;ll send you an email with a magic link that you can use to
               login.
             </div>
-            <input
-              autoFocus={true}
-              readOnly={formState.isSubmitting}
-              className={clsx("input mb-4 w-full", {
-                "input-error": formState.errors.email,
-              })}
-              placeholder="john.doe@email.com"
-              {...register("email", { validate: validEmail })}
-            />
-            {formState.errors.email ? <div>Please </div> : null}
+            <div className="mb-4">
+              <input
+                autoFocus={true}
+                readOnly={formState.isSubmitting}
+                className={clsx("input w-full", {
+                  "input-error": formState.errors.email,
+                })}
+                placeholder="john.doe@email.com"
+                {...register("email", { validate: validEmail })}
+              />
+              {formState.errors.email ? (
+                <div className="mt-1 text-sm text-rose-500">
+                  Please enter a valid email address
+                </div>
+              ) : null}
+            </div>
             <div className="flex space-x-3">
               <Button
                 htmlType="submit"
