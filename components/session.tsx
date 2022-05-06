@@ -59,8 +59,8 @@ export const SessionProvider: React.VoidFunctionComponent<{
     },
     isLoading,
     logout: async () => {
-      await axios.get("/api/logout");
-      refetch();
+      await axios.post("/api/logout");
+      await refetch();
     },
     ownsObject: (obj) => {
       if (!user) {
