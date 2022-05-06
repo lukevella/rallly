@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
 import { useTimeoutFn } from "react-use";
-import { decryptToken, withSessionSsr } from "utils/auth";
+import { decryptToken, mergeGuestsIntoUser, withSessionSsr } from "utils/auth";
 import { nanoid } from "utils/nanoid";
 
 import FullPageLoader from "@/components/full-page-loader";
@@ -76,39 +76,19 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
       },
     });
 
-    // If logged in as guest, we update all participants
-    // and comments by this guest to the user that we just authenticated
-    if (req.session.user?.isGuest || guestId) {
-      const guestIds: string[] = [];
-      if (req.session.user?.isGuest) {
-        guestIds.push(req.session.user.id);
-      }
-      if (guestId && guestId !== req.session.user?.id) {
-        guestIds.push(guestId);
-      }
-      await prisma.participant.updateMany({
-        where: {
-          guestId: {
-            in: guestIds,
-          },
-        },
-        data: {
-          guestId: null,
-          userId: user.id,
-        },
-      });
+    const guestIds: string[] = [];
 
-      await prisma.comment.updateMany({
-        where: {
-          guestId: {
-            in: guestIds,
-          },
-        },
-        data: {
-          guestId: null,
-          userId: user.id,
-        },
-      });
+    // guest id from existing sessions
+    if (req.session.user?.isGuest) {
+      guestIds.push(req.session.user.id);
+    }
+    // guest id from token
+    if (guestId && guestId !== req.session.user?.id) {
+      guestIds.push(guestId);
+    }
+
+    if (guestIds.length > 0) {
+      await mergeGuestsIntoUser(user.id, guestIds);
     }
 
     req.session.user = {

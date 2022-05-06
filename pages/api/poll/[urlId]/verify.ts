@@ -1,5 +1,10 @@
 import absoluteUrl from "utils/absolute-url";
-import { createToken, decryptToken, withSessionRoute } from "utils/auth";
+import {
+  createToken,
+  decryptToken,
+  mergeGuestsIntoUser as mergeUsersWithGuests,
+  withSessionRoute,
+} from "utils/auth";
 
 import { prisma } from "../../../../db";
 import { sendEmailTemplate, withLink } from "../../../../utils/api-utils";
@@ -77,24 +82,7 @@ export default withSessionRoute(
         // If logged in as guest, we update all participants
         // and comments by this guest to the user that we just authenticated
         if (req.session.user?.isGuest) {
-          await prisma.participant.updateMany({
-            where: {
-              guestId: req.session.user.id,
-            },
-            data: {
-              guestId: null,
-              userId: poll.user.id,
-            },
-          });
-          await prisma.comment.updateMany({
-            where: {
-              guestId: req.session.user.id,
-            },
-            data: {
-              guestId: null,
-              userId: poll.user.id,
-            },
-          });
+          await mergeUsersWithGuests(poll.user.id, [req.session.user.id]);
         }
 
         req.session.user = {

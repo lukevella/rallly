@@ -2,6 +2,7 @@ import { IronSessionOptions, sealData, unsealData } from "iron-session";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { GetServerSideProps, NextApiHandler, NextApiRequest } from "next";
 
+import { prisma } from "../db";
 import { randomid } from "./nanoid";
 
 const sessionOptions: IronSessionOptions = {
@@ -42,4 +43,36 @@ export const createGuestUser = async (req: NextApiRequest) => {
     isGuest: true,
   };
   await req.session.save();
+};
+
+// assigns participants and comments created by guests to a user
+// we could have multiple guests because a login might be triggered from one device
+// and opened in another one.
+export const mergeGuestsIntoUser = async (
+  userId: string,
+  guestIds: string[],
+) => {
+  await prisma.participant.updateMany({
+    where: {
+      guestId: {
+        in: guestIds,
+      },
+    },
+    data: {
+      guestId: null,
+      userId: userId,
+    },
+  });
+
+  await prisma.comment.updateMany({
+    where: {
+      guestId: {
+        in: guestIds,
+      },
+    },
+    data: {
+      guestId: null,
+      userId: userId,
+    },
+  });
 };

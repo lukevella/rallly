@@ -27,5 +27,5 @@
     }
   },
   "exclude": ["node_modules", "**/.*/", "**/*.js"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "iron-session.d.ts"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }
