@@ -2,6 +2,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "../style.css";
 
+import axios from "axios";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
@@ -20,10 +21,12 @@ const CrispChat = dynamic(() => import("@/components/crisp-chat"), {
 
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
-    onError: () => {
-      toast.error(
-        "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
-      );
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 500) {
+        toast.error(
+          "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
+        );
+      }
     },
   }),
 });

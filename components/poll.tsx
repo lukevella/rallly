@@ -71,6 +71,9 @@ const PollInner: NextPage = () => {
         session.refresh();
         plausible("Verified email");
       },
+      onError: () => {
+        toast.error("Your link has expired or is no longer valid");
+      },
     },
   );
 

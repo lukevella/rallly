@@ -58,7 +58,11 @@ export default withSessionRoute(
         }>(verificationCode);
 
         if (pollId !== link.pollId) {
-          throw new Error("Poll ID in token did not match url");
+          res.status(401).json({
+            status: 401,
+            message: "Invalid token",
+          });
+          return;
         }
         const poll = await prisma.poll.update({
           where: {
