@@ -2,6 +2,7 @@ import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import { useTimeoutFn } from "react-use";
 import { decryptToken, withSessionSsr } from "utils/auth";
 import { nanoid } from "utils/nanoid";
@@ -16,19 +17,21 @@ const Page: NextPage<{ success: boolean; redirectTo: string }> = ({
 }) => {
   const router = useRouter();
 
+  if (!success) {
+    toast.error("Login failed! Link is expired or invalid");
+  }
+
   useTimeoutFn(() => {
     router.replace(redirectTo);
-  }, 1000);
+  }, 100);
 
   return (
-    <FullPageLoader>
+    <>
       <Head>
-        <title>Logging in</title>
+        <title>Logging in…</title>
       </Head>
-      {success
-        ? "Log in successful. Redirecting…"
-        : "Your link is invalid or expired. Redirecting…"}
-    </FullPageLoader>
+      <FullPageLoader>Logging in…</FullPageLoader>
+    </>
   );
 };
 
