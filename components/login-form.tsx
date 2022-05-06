@@ -23,7 +23,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
         {!formState.isSubmitSuccessful ? (
           <form
             onSubmit={handleSubmit(async ({ email }) => {
-              await axios.post("/api/login", { email, path: router.pathname });
+              await axios.post("/api/login", { email, path: router.asPath });
             })}
           >
             <div className="mb-2 text-slate-500">
