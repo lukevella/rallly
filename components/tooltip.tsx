@@ -1,6 +1,5 @@
 import {
   arrow,
-  autoUpdate,
   flip,
   FloatingPortal,
   offset,

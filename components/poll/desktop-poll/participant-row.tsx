@@ -32,13 +32,8 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   editMode,
   onChangeEditMode,
 }) => {
-  const {
-    setActiveOptionId,
-    activeOptionId,
-    columnWidth,
-    sidebarWidth,
-    actionColumnWidth,
-  } = usePollContext();
+  const { setActiveOptionId, activeOptionId, columnWidth, sidebarWidth } =
+    usePollContext();
 
   const { mutate: updateParticipantMutation } =
     useUpdateParticipantMutation(urlId);

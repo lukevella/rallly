@@ -208,8 +208,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
             </Listbox>
             {!poll.closed && !editable ? (
               selectedParticipant &&
-              (poll.role === "admin" ||
-                session.ownsObject(selectedParticipant)) ? (
+              (role === "admin" || session.ownsObject(selectedParticipant)) ? (
                 <div className="flex space-x-3">
                   <Button
                     icon={<Pencil />}

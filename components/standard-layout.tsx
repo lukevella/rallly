@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import React from "react";
 
-import Button from "@/components/button";
 import Menu from "@/components/icons/menu.svg";
 import User from "@/components/icons/user.svg";
 

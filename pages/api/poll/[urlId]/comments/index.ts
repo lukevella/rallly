@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid/async";
 import { createGuestUser, withSessionRoute } from "utils/auth";
 
 import { prisma } from "../../../../../db";
