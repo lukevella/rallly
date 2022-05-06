@@ -61,15 +61,17 @@ const PollInner: NextPage = () => {
     {
       onSuccess: () => {
         toast.success("Your poll has been verified");
-        router.replace(`/admin/${router.query.urlId}`, undefined, {
-          shallow: true,
-        });
         queryClient.setQueryData(["getPoll", poll.urlId], {
           ...poll,
           verified: true,
         });
         session.refresh();
         plausible("Verified email");
+      },
+      onSettled: () => {
+        router.replace(`/admin/${router.query.urlId}`, undefined, {
+          shallow: true,
+        });
       },
       onError: () => {
         toast.error("Your link has expired or is no longer valid");
