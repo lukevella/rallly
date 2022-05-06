@@ -73,15 +73,15 @@ const PollPageLoader: NextPage<SessionProps> = () => {
     );
   }
 
+  if (poll) {
+    return <PollPage poll={poll} />;
+  }
+
   if (didError) {
     return <Custom404 />;
   }
 
-  return !poll ? (
-    <FullPageLoader>{t("loading")}</FullPageLoader>
-  ) : (
-    <PollPage poll={poll} />
-  );
+  return <FullPageLoader>{t("loading")}</FullPageLoader>;
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
