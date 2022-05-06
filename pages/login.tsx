@@ -44,9 +44,15 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
         },
       };
     }
-    const { email, path } = await decryptToken<{
+
+    const {
+      email,
+      path = "/new",
+      guestId,
+    } = await decryptToken<{
       email?: string;
       path?: string;
+      guestId?: string;
     }>(code);
 
     if (!email) {
@@ -70,10 +76,19 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     // If logged in as guest, we update all participants
     // and comments by this guest to the user that we just authenticated
-    if (req.session.user?.isGuest) {
+    if (req.session.user?.isGuest || guestId) {
+      const guestIds: string[] = [];
+      if (req.session.user?.isGuest) {
+        guestIds.push(req.session.user.id);
+      }
+      if (guestId && guestId !== req.session.user?.id) {
+        guestIds.push(guestId);
+      }
       await prisma.participant.updateMany({
         where: {
-          guestId: req.session.user.id,
+          guestId: {
+            in: guestIds,
+          },
         },
         data: {
           guestId: null,
@@ -83,7 +98,9 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
 
       await prisma.comment.updateMany({
         where: {
-          guestId: req.session.user.id,
+          guestId: {
+            in: guestIds,
+          },
         },
         data: {
           guestId: null,

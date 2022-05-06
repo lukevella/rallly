@@ -9,6 +9,7 @@ export default withSessionRoute(async (req, res) => {
       const homePageUrl = absoluteUrl(req).origin;
       const token = await createToken({
         email,
+        guestId: req.session.user?.isGuest ? req.session.user.id : undefined,
         path: req.body.path,
       });
 

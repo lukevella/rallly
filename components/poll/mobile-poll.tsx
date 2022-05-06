@@ -330,22 +330,23 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 className="space-y-3 border-t bg-gray-50 p-3"
               >
                 <div className="flex space-x-3">
-                  <Controller
-                    name="name"
-                    control={control}
-                    rules={{ validate: requiredString }}
-                    render={({ field }) => (
-                      <NameInput
-                        disabled={formState.isSubmitting}
-                        className={clsx("input w-full", {
-                          "input-error": formState.errors.name,
-                        })}
-                        {...field}
-                      />
-                    )}
-                  />
+                  <div className="grow">
+                    <Controller
+                      name="name"
+                      control={control}
+                      rules={{ validate: requiredString }}
+                      render={({ field }) => (
+                        <NameInput
+                          disabled={formState.isSubmitting}
+                          className={clsx("input w-full", {
+                            "input-error": formState.errors.name,
+                          })}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </div>
                   <Button
-                    className="grow"
                     icon={<Save />}
                     htmlType="submit"
                     type="primary"

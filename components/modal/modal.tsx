@@ -64,11 +64,11 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="relative z-50 my-8 mx-4 inline-block w-fit transform rounded-xl bg-white text-left align-middle shadow-xl transition-all"
+              className="relative z-50 my-8 mx-4 inline-block max-w-full transform bg-white text-left align-middle shadow-xl transition-all sm:rounded-xl"
             >
               {showClose ? (
                 <button
-                  className="absolute right-1 top-1 p-2 text-slate-400 transition-colors hover:text-slate-500 active:text-slate-600"
+                  className="absolute right-1 top-1 p-2 text-slate-400 transition-colors hover:text-slate-500 active:text-slate-400"
                   onClick={onCancel}
                 >
                   <X className="h-5" />

@@ -15,7 +15,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
   const router = useRouter();
   return (
     <div className="flex">
-      <div className="flex items-center rounded-tl-lg rounded-bl-lg bg-slate-50 p-6">
+      <div className="hidden items-center rounded-tl-lg rounded-bl-lg bg-slate-50 p-6 md:flex">
         <Magic className="h-24 text-slate-300" />
       </div>
       <div className="w-96 p-6">
@@ -23,7 +23,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
         {!formState.isSubmitSuccessful ? (
           <form
             onSubmit={handleSubmit(async ({ email }) => {
-              await axios.post("/api/login", { email, path: router.asPath });
+              await axios.post("/api/login", { email, path: router.pathname });
             })}
           >
             <div className="mb-2 text-slate-500">

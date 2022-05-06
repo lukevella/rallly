@@ -13,6 +13,7 @@ import {
   CreateCommentPayload,
 } from "../../api-client/create-comment";
 import { requiredString } from "../../utils/form-validation";
+import Badge from "../badge";
 import Button from "../button";
 import CompactButton from "../compact-button";
 import Dropdown, { DropdownItem } from "../dropdown";
@@ -145,7 +146,8 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
                     <UserAvater name={comment.authorName} />
                     <div className="mb-1">
                       <span className="mr-1">{comment.authorName}</span>
-                      <span className="mr-1 text-slate-400">&bull;</span>
+                      {session.ownsObject(comment) ? <Badge>You</Badge> : null}
+                      <span className="mx-1 text-slate-400">&bull;</span>
                       <span className="text-sm text-slate-500">
                         {formatRelative(
                           new Date(comment.createdAt),

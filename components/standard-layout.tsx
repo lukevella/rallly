@@ -36,7 +36,9 @@ const HomeLink = () => {
   );
 };
 
-const MobileNavigation = () => {
+const MobileNavigation: React.VoidFunctionComponent<{
+  openLoginModal: () => void;
+}> = ({ openLoginModal }) => {
   const { user } = useSession();
   return (
     <div className="fixed top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50 px-4 lg:hidden">
@@ -44,9 +46,19 @@ const MobileNavigation = () => {
         <HomeLink />
       </div>
       <div className="flex items-center">
+        {user ? null : (
+          <button
+            onClick={openLoginModal}
+            className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+          >
+            <Login className="h-5 opacity-75 " />
+            <span className="inline-block">Login</span>
+          </button>
+        )}
         <AnimatePresence initial={false}>
           {user ? (
             <UserDropdown
+              openLoginModal={openLoginModal}
               placement="bottom-end"
               trigger={
                 <motion.button
@@ -68,10 +80,9 @@ const MobileNavigation = () => {
                   </div>
                 </motion.button>
               }
-            />
+            ></UserDropdown>
           ) : null}
         </AnimatePresence>
-
         <Popover
           placement="bottom-end"
           trigger={
@@ -125,18 +136,13 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
         <Support className="h-5 opacity-75" />
         <span className="inline-block">Support</span>
       </a>
-      <button className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
-        <Login className="h-5 opacity-75 " />
-        <span className="inline-block">Login</span>
-      </button>
     </div>
   );
 };
 
-const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
-  children,
-  ...forwardProps
-}) => {
+const UserDropdown: React.VoidFunctionComponent<
+  DropdownProps & { openLoginModal: () => void }
+> = ({ children, openLoginModal, ...forwardProps }) => {
   const { logout, user } = useSession();
   const modalContext = useModalContext();
   if (!user) {
@@ -153,7 +159,7 @@ const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
             modalContext.render({
               showClose: true,
               content: (
-                <div className="w-96 p-6">
+                <div className="w-96 max-w-full p-6">
                   <div className="mb-4 -mt-14 text-center">
                     <div className="inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400 to-indigo-500">
                       <User className="h-7 text-white" />
@@ -167,9 +173,18 @@ const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
                       </div>
                     </div>
                   </div>
-                  <div className="leading-snug">
-                    Guest sessions allow us to remember your device so that you
-                    can come back and edit your votes and comments.
+                  <p>
+                    You are using a guest session. This allows us to recognize
+                    you if you come back later so you can edit your votes.
+                  </p>
+                  <div>
+                    <a
+                      href="https://support.rallly.co/sessions"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Read more about sessions.
+                    </a>
                   </div>
                 </div>
               ),
@@ -178,6 +193,9 @@ const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
             });
           }}
         />
+      ) : null}
+      {user.isGuest ? (
+        <DropdownItem icon={Login} label="Login" onClick={openLoginModal} />
       ) : null}
       <DropdownItem
         icon={Logout}
@@ -222,7 +240,7 @@ const StandardLayout: React.VoidFunctionComponent<{
       {...rest}
     >
       {loginModal}
-      <MobileNavigation />
+      <MobileNavigation openLoginModal={openLoginModal} />
       <div className="hidden grow px-4 pt-6 pb-5 lg:block">
         <div className="sticky top-6 float-right w-48 items-start">
           <div className="mb-8 px-3">
@@ -256,7 +274,7 @@ const StandardLayout: React.VoidFunctionComponent<{
             >
               <Preferences />
             </Popover>
-            {user?.isGuest === false ? null : (
+            {user ? null : (
               <button
                 onClick={openLoginModal}
                 className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
@@ -271,6 +289,7 @@ const StandardLayout: React.VoidFunctionComponent<{
               <UserDropdown
                 className="w-full"
                 placement="bottom-end"
+                openLoginModal={openLoginModal}
                 trigger={
                   <motion.button
                     initial={{ x: -20, opacity: 0 }}

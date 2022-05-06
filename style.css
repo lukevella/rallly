@@ -76,7 +76,7 @@
     @apply btn border-gray-300 bg-white text-gray-700 hover:text-indigo-500 focus-visible:border-transparent focus-visible:ring-indigo-500 focus-visible:ring-offset-0 active:bg-gray-100;
   }
   .btn-danger {
-    @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus:ring-rose-500;
+    @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus-visible:ring-rose-500;
   }
   .btn-link {
     @apply inline-flex items-center text-indigo-500 underline;
