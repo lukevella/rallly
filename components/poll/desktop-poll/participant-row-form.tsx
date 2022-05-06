@@ -51,6 +51,14 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
       },
     });
 
+    React.useEffect(() => {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          onCancel?.();
+        }
+      });
+    }, [onCancel]);
+
     const isColumnVisible = (index: number) => {
       return (
         scrollPosition + numberOfColumns * columnWidth > columnWidth * index
