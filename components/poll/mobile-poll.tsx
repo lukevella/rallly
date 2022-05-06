@@ -38,8 +38,7 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const pollContext = usePoll();
 
-  const { poll, targetTimeZone, setTargetTimeZone, userAlreadyVoted } =
-    pollContext;
+  const { poll, targetTimeZone, setTargetTimeZone } = pollContext;
 
   const { timeZone, participants, role } = poll;
 
