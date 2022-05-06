@@ -66,7 +66,6 @@ const MobileNavigation: React.VoidFunctionComponent<{
                   exit={{
                     y: -50,
                     opacity: 0,
-                    transition: { duration: 0.2 },
                   }}
                   className="group inline-flex w-full items-center space-x-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
                 >
@@ -79,7 +78,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
                   </div>
                 </motion.button>
               }
-            ></UserDropdown>
+            />
           ) : null}
         </AnimatePresence>
         <Popover

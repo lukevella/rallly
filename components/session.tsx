@@ -1,7 +1,7 @@
 import axios from "axios";
 import { IronSessionData } from "iron-session";
 import React from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -31,6 +31,7 @@ export const SessionProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
   session: UserSessionData | null;
 }> = ({ children, session }) => {
+  const queryClient = useQueryClient();
   const {
     data: user = session,
     refetch,
@@ -59,8 +60,8 @@ export const SessionProvider: React.VoidFunctionComponent<{
     },
     isLoading,
     logout: async () => {
+      queryClient.setQueryData(["user"], null);
       await axios.post("/api/logout");
-      await refetch();
     },
     ownsObject: (obj) => {
       if (!user) {
