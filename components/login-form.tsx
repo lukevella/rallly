@@ -18,7 +18,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
       <div className="hidden items-center rounded-tl-lg rounded-bl-lg bg-slate-50 p-6 md:flex">
         <Magic className="h-24 text-slate-300" />
       </div>
-      <div className="w-96 p-6">
+      <div className="max-w-sm p-6">
         <div className="mb-2 text-xl font-semibold">Login via magic link</div>
         {!formState.isSubmitSuccessful ? (
           <form

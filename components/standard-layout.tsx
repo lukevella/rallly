@@ -50,7 +50,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
             onClick={openLoginModal}
             className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
           >
-            <Login className="h-5 opacity-75 " />
+            <Login className="h-5 opacity-75" />
             <span className="inline-block">Login</span>
           </button>
         )}
@@ -160,8 +160,8 @@ const UserDropdown: React.VoidFunctionComponent<
             modalContext.render({
               showClose: true,
               content: (
-                <div className="w-96 max-w-full p-6">
-                  <div className="mb-4 -mt-14 text-center">
+                <div className="pt-26 w-96 max-w-full p-6">
+                  <div className="absolute left-0 -top-10 w-full text-center">
                     <div className="inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400 to-indigo-500">
                       <User className="h-7 text-white" />
                     </div>
@@ -175,8 +175,8 @@ const UserDropdown: React.VoidFunctionComponent<
                     </div>
                   </div>
                   <p>
-                    You are using a guest session. This allows us to recognize
-                    you if you come back later so you can edit your votes.
+                    You are using a guest session. While this session exists you
+                    can come back later
                   </p>
                   <div>
                     <a
