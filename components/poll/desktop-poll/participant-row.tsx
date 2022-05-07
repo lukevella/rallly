@@ -11,7 +11,7 @@ import { useSession } from "@/components/session";
 
 import { useUpdateParticipantMutation } from "../mutations";
 import { useDeleteParticipantModal } from "../use-delete-participant-modal";
-import UserAvater from "../user-avatar";
+import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
 import ControlledScrollArea from "./controlled-scroll-area";
 import ParticipantRowForm from "./participant-row-form";
@@ -92,7 +92,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
         className="flex shrink-0 items-center px-4"
         style={{ width: sidebarWidth }}
       >
-        <UserAvater className="mr-2" name={participant.name} />
+        <UserAvatar className="mr-2" name={participant.name} />
         <span className="truncate" title={participant.name}>
           {participant.name}
         </span>

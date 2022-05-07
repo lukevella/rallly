@@ -21,7 +21,7 @@ import DotsHorizontal from "../icons/dots-horizontal.svg";
 import Trash from "../icons/trash.svg";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
-import UserAvater from "../poll/user-avatar";
+import UserAvatar from "../poll/user-avatar";
 import { usePoll } from "../poll-context";
 import { usePreferences } from "../preferences/use-preferences";
 import { useSession } from "../session";
@@ -144,7 +144,7 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
                   className="w-fit rounded-xl border bg-white px-3 py-2 shadow-sm"
                 >
                   <div className="flex items-center space-x-2">
-                    <UserAvater name={comment.authorName} />
+                    <UserAvatar name={comment.authorName} />
                     <div className="mb-1">
                       <span className="mr-1">{comment.authorName}</span>
                       {session.ownsObject(comment) ? <Badge>You</Badge> : null}

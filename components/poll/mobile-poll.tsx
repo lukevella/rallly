@@ -29,7 +29,7 @@ import {
 } from "./mutations";
 import { ParticipantForm, PollProps } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
-import UserAvater from "./user-avatar";
+import UserAvatar from "./user-avatar";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -164,7 +164,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   <div className="grow">
                     {selectedParticipant ? (
                       <div className="flex items-center space-x-2">
-                        <UserAvater name={selectedParticipant.name} />
+                        <UserAvatar name={selectedParticipant.name} />
                         <span>{selectedParticipant.name}</span>
                         {session.ownsObject(selectedParticipant) ? (
                           <Badge>You</Badge>
@@ -195,7 +195,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                       className={styleMenuItem}
                     >
                       <div className="flex items-center space-x-2">
-                        <UserAvater name={participant.name} />
+                        <UserAvatar name={participant.name} />
                         <span>{participant.name}</span>
                         {session.ownsObject(participant) ? (
                           <Badge>You</Badge>

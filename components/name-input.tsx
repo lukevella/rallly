@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import * as React from "react";
 
-import UserAvater from "./poll/user-avatar";
+import UserAvatar from "./poll/user-avatar";
 
 interface NameInputProps
   extends React.DetailedHTMLProps<
@@ -18,7 +18,7 @@ const NameInput: React.ForwardRefRenderFunction<
 > = ({ value, defaultValue, className, ...forwardProps }, ref) => {
   return (
     <div className="relative flex items-center">
-      <UserAvater
+      <UserAvatar
         name={value ?? defaultValue ?? ""}
         className="absolute left-2"
       />

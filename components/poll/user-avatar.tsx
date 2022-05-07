@@ -68,7 +68,7 @@ export const UserAvatarProvider: React.VoidFunctionComponent<{
   );
 };
 
-const UserAvater: React.VoidFunctionComponent<UserAvaterProps> = ({
+const UserAvatar: React.VoidFunctionComponent<UserAvaterProps> = ({
   name,
   className,
   color: colorOverride,
@@ -101,4 +101,4 @@ const UserAvater: React.VoidFunctionComponent<UserAvaterProps> = ({
   );
 };
 
-export default UserAvater;
+export default UserAvatar;
