@@ -8,7 +8,7 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
-import Pencil from "@/components/icons/pencil.svg";
+import Pencil from "@/components/icons/pencil-alt.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
 import Save from "@/components/icons/save.svg";
 import Trash from "@/components/icons/trash.svg";
