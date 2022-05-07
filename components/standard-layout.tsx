@@ -40,7 +40,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
 }> = ({ openLoginModal }) => {
   const { user } = useSession();
   return (
-    <div className="fixed top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50 px-4 lg:hidden">
+    <div className="fixed top-0 z-30 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50 px-4 shadow-sm lg:hidden">
       <div>
         <HomeLink />
       </div>
@@ -71,7 +71,9 @@ const MobileNavigation: React.VoidFunctionComponent<{
                   className="group inline-flex w-full items-center space-x-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
                 >
                   <div className="relative shrink-0">
-                    <span className="absolute right-0 top-0 h-1 w-1 rounded-full bg-indigo-500" />
+                    {user.isGuest ? (
+                      <span className="absolute right-0 top-0 h-1 w-1 rounded-full bg-indigo-500" />
+                    ) : null}
                     <User className="w-5 opacity-75 group-hover:text-indigo-500 group-hover:opacity-100" />
                   </div>
                   <div className="hidden max-w-[120px] truncate font-medium xs:block">
@@ -178,11 +180,11 @@ const UserDropdown: React.VoidFunctionComponent<
                   </p>
                   <div>
                     <a
-                      href="https://support.rallly.co/sessions"
+                      href="https://support.rallly.co/guest-sessions"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Read more about sessions.
+                      Read more about guest sessions.
                     </a>
                   </div>
                 </div>
@@ -298,7 +300,9 @@ const StandardLayout: React.VoidFunctionComponent<{
                   >
                     <div className="flex w-full items-center space-x-3">
                       <div className="relative">
-                        <span className="absolute right-0 top-0 h-1 w-1 rounded-full bg-indigo-500" />
+                        {user.isGuest ? (
+                          <span className="absolute right-0 top-0 h-1 w-1 rounded-full bg-indigo-500" />
+                        ) : null}
                         <User className="h-5 opacity-75 group-hover:text-indigo-500 group-hover:opacity-100" />
                       </div>
                       <div className="grow overflow-hidden">
