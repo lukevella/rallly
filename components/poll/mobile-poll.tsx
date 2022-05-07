@@ -159,6 +159,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   className={clsx("btn-default w-full px-2 text-left", {
                     "btn-disabled": editable,
                   })}
+                  data-testid="participant-selector"
                 >
                   <div className="grow">
                     {selectedParticipant ? (

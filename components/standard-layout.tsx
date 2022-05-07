@@ -67,6 +67,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
                     y: -50,
                     opacity: 0,
                   }}
+                  data-testid="user"
                   className="group inline-flex w-full items-center space-x-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
                 >
                   <div className="relative shrink-0">

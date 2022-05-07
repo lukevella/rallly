@@ -85,6 +85,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   return (
     <div
       key={participant.id}
+      data-testid="participant-row"
       className="group flex h-14 transition-colors hover:bg-slate-50"
     >
       <div

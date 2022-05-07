@@ -140,6 +140,7 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
                   initial={{ scale: 0.8, y: 10 }}
                   animate={{ scale: 1, y: 0 }}
                   exit={{ scale: 0.8 }}
+                  data-testid="comment"
                   className="w-fit rounded-xl border bg-white px-3 py-2 shadow-sm"
                 >
                   <div className="flex items-center space-x-2">
