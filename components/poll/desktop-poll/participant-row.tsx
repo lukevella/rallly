@@ -43,7 +43,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   const session = useSession();
   const { poll } = usePoll();
 
-  const isYou = session.user && session.ownsObject(participant);
+  const isYou = session.user && session.ownsObject(participant) ? true : false;
 
   const isAnonymous = !participant.userId && !participant.guestId;
 
@@ -92,13 +92,14 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
         className="flex shrink-0 items-center px-4"
         style={{ width: sidebarWidth }}
       >
-        <UserAvatar className="mr-2" name={participant.name} />
-        <span className="truncate" title={participant.name}>
-          {participant.name}
-        </span>
-        {isYou ? <Badge className="ml-2">You</Badge> : null}
+        <UserAvatar
+          className="mr-2"
+          name={participant.name}
+          showName={true}
+          isYou={isYou}
+        />
         {canEdit ? (
-          <div className="hidden items-center space-x-2 overflow-hidden px-2 group-hover:flex">
+          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden px-2 group-hover:flex">
             <CompactButton
               icon={Pencil}
               onClick={() => {

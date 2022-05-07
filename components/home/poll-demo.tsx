@@ -88,13 +88,10 @@ const PollDemo: React.VoidFunctionComponent = () => {
             style={{ width: sidebarWidth }}
           >
             <UserAvatar
-              className="mr-2"
               color={participant.color}
               name={participant.name}
+              showName={true}
             />
-            <span className="truncate" title={participant.name}>
-              {participant.name}
-            </span>
           </div>
           <div className="flex">
             {options.map((_, i) => {

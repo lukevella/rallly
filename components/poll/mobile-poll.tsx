@@ -154,27 +154,27 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               onChange={setSelectedParticipantId}
               disabled={editable}
             >
-              <div className="menu grow">
+              <div className="menu min-w-0 grow">
                 <Listbox.Button
-                  className={clsx("btn-default w-full px-2 text-left", {
-                    "btn-disabled": editable,
-                  })}
+                  as={Button}
+                  className="w-full"
+                  disabled={!editable}
                   data-testid="participant-selector"
                 >
-                  <div className="grow">
+                  <div className="min-w-0 grow text-left">
                     {selectedParticipant ? (
                       <div className="flex items-center space-x-2">
-                        <UserAvatar name={selectedParticipant.name} />
-                        <span>{selectedParticipant.name}</span>
-                        {session.ownsObject(selectedParticipant) ? (
-                          <Badge>You</Badge>
-                        ) : null}
+                        <UserAvatar
+                          name={selectedParticipant.name}
+                          showName={true}
+                          isYou={session.ownsObject(selectedParticipant)}
+                        />
                       </div>
                     ) : (
                       t("participantCount", { count: participants.length })
                     )}
                   </div>
-                  <ChevronDown className="h-5" />
+                  <ChevronDown className="h-5 shrink-0" />
                 </Listbox.Button>
                 <Listbox.Options
                   as={motion.div}
@@ -195,11 +195,11 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                       className={styleMenuItem}
                     >
                       <div className="flex items-center space-x-2">
-                        <UserAvatar name={participant.name} />
-                        <span>{participant.name}</span>
-                        {session.ownsObject(participant) ? (
-                          <Badge>You</Badge>
-                        ) : null}
+                        <UserAvatar
+                          name={participant.name}
+                          showName={true}
+                          isYou={session.ownsObject(participant)}
+                        />
                       </div>
                     </Listbox.Option>
                   ))}

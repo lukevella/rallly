@@ -144,11 +144,13 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
                   className="w-fit rounded-xl border bg-white px-3 py-2 shadow-sm"
                 >
                   <div className="flex items-center space-x-2">
-                    <UserAvatar name={comment.authorName} />
+                    <UserAvatar
+                      name={comment.authorName}
+                      showName={true}
+                      isYou={session.ownsObject(comment)}
+                    />
                     <div className="mb-1">
-                      <span className="mr-1">{comment.authorName}</span>
-                      {session.ownsObject(comment) ? <Badge>You</Badge> : null}
-                      <span className="mx-1 text-slate-400">&bull;</span>
+                      <span className="mr-1 text-slate-400">&bull;</span>
                       <span className="text-sm text-slate-500">
                         {formatRelative(
                           new Date(comment.createdAt),
