@@ -10,6 +10,10 @@ export default withSessionRoute(
       case "POST": {
         const payload: AddParticipantPayload = req.body;
 
+        if (!req.session.user) {
+          await createGuestUser(req);
+        }
+
         const participant = await prisma.participant.create({
           data: {
             pollId: link.pollId,
@@ -35,10 +39,6 @@ export default withSessionRoute(
             votes: true,
           },
         });
-
-        if (!req.session.user) {
-          await createGuestUser(req);
-        }
 
         await sendNotification(req, link.pollId, {
           type: "newParticipant",

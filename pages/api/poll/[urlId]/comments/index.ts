@@ -21,6 +21,10 @@ export default withSessionRoute(
         return res.json({ comments });
       }
       case "POST": {
+        if (!req.session.user) {
+          await createGuestUser(req);
+        }
+
         const newComment = await prisma.comment.create({
           data: {
             content: req.body.content,
@@ -34,10 +38,6 @@ export default withSessionRoute(
               : undefined,
           },
         });
-
-        if (!req.session.user) {
-          await createGuestUser(req);
-        }
 
         await sendNotification(req, link.pollId, {
           type: "newComment",
