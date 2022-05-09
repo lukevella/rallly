@@ -1,10 +1,11 @@
+import { VoteType } from "@prisma/client";
 import axios from "axios";
 
 export interface UpdateParticipantPayload {
   pollId: string;
   participantId: string;
   name: string;
-  votes: string[];
+  votes: { optionId: string; type: VoteType }[];
 }
 
 export const updateParticipant = async (

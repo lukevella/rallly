@@ -14,14 +14,14 @@ import {
 } from "../../api-client/update-participant";
 import { usePoll } from "../poll-context";
 import { useSession } from "../session";
-import { ParticipantForm } from "./types";
+import { ParticipantFormSubmitted } from "./types";
 
 export const useAddParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
   const session = useSession();
   const plausible = usePlausible();
   return useMutation(
-    (payload: ParticipantForm) =>
+    (payload: ParticipantFormSubmitted) =>
       addParticipant({
         pollId,
         name: payload.name.trim(),

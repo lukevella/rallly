@@ -87,6 +87,12 @@ model Option {
   votes     Vote[]
 }
 
+enum VoteType {
+  yes
+  no
+  ifNeedBe
+}
+
 model Vote {
   id            String      @id @default(cuid())
   participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
@@ -95,6 +101,7 @@ model Vote {
   optionId      String
   poll          Poll        @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
   pollId        String
+  type          VoteType    @default(yes)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime?   @updatedAt
 }

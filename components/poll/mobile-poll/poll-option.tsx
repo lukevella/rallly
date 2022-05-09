@@ -1,4 +1,4 @@
-import { Participant } from "@prisma/client";
+import { Participant, VoteType } from "@prisma/client";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
@@ -11,8 +11,8 @@ export interface PollOptionProps {
   children?: React.ReactNode;
   numberOfVotes: number;
   editable?: boolean;
-  vote?: "yes" | "no";
-  onChange: (vote: "yes" | "no") => void;
+  vote?: VoteType;
+  onChange: (vote: VoteType) => void;
   participants: Participant[];
   selectedParticipantId?: string;
 }

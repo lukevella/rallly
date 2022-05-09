@@ -1,3 +1,5 @@
+import { UpdateParticipantPayload } from "api-client/update-participant";
+
 import { prisma } from "../../../../../db";
 import { getQueryParam, withLink } from "../../../../../utils/api-utils";
 
@@ -7,6 +9,8 @@ export default withLink(async ({ req, res, link }) => {
   const pollId = link.pollId;
   switch (req.method) {
     case "PATCH":
+      const payload: UpdateParticipantPayload = req.body;
+
       await prisma.participant.update({
         where: {
           id_pollId: {
@@ -20,8 +24,9 @@ export default withLink(async ({ req, res, link }) => {
               pollId,
             },
             createMany: {
-              data: req.body.votes.map((optionId: string) => ({
+              data: payload.votes.map(({ optionId, type }) => ({
                 optionId,
+                type,
                 pollId,
               })),
             },

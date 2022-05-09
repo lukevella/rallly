@@ -1,3 +1,4 @@
+import { VoteType } from "@prisma/client";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ParsedDateTimeOpton } from "utils/date-time-utils";
@@ -44,7 +45,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                 ? getVote(selectedParticipant.id, option.optionId)
                 : undefined;
 
-              const handleChange = (newVote: "yes" | "no") => {
+              const handleChange = (newVote: VoteType) => {
                 if (!editable) {
                   return;
                 }

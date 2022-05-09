@@ -2,7 +2,6 @@ import { Option, Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
 import * as React from "react";
 
-import Badge from "@/components/badge";
 import CompactButton from "@/components/compact-button";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Trash from "@/components/icons/trash.svg";
@@ -41,7 +40,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const session = useSession();
-  const { poll } = usePoll();
+  const { poll, getVote } = usePoll();
 
   const isYou = session.user && session.ownsObject(participant) ? true : false;
 
@@ -55,7 +54,9 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
       <ParticipantRowForm
         defaultValues={{
           name: participant.name,
-          votes: participant.votes.map(({ optionId }) => optionId),
+          votes: options.map(({ id }) => {
+            return { optionId: id, type: getVote(participant.id, id) ?? "no" };
+          }),
         }}
         onSubmit={async ({ name, votes }) => {
           return new Promise((resolve, reject) => {
@@ -130,13 +131,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
               onMouseOver={() => setActiveOptionId(option.id)}
               onMouseOut={() => setActiveOptionId(null)}
             >
-              {option.votes.some(
-                (vote) => vote.participantId === participant.id,
-              ) ? (
-                <VoteIcon type="yes" />
-              ) : (
-                <VoteIcon type="no" />
-              )}
+              <VoteIcon type={getVote(participant.id, option.id)} />
             </div>
           );
         })}

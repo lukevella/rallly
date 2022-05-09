@@ -1,4 +1,4 @@
-import { Participant, Vote } from "@prisma/client";
+import { Participant, Vote, VoteType } from "@prisma/client";
 import { GetPollResponse } from "api-client/get-poll";
 import { keyBy } from "lodash";
 import React from "react";
@@ -13,8 +13,6 @@ import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
 
-type VoteType = "yes" | "no";
-
 type PollContextValue = {
   userAlreadyVoted: boolean;
   poll: GetPollResponse;
@@ -23,10 +21,11 @@ type PollContextValue = {
   pollType: "date" | "timeSlot";
   highScore: number;
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
+  getScore: (optionId: string) => number;
   getParticipantById: (
     participantId: string,
   ) => (Participant & { votes: Vote[] }) | undefined;
-  getVote: (participantId: string, optionId: string) => VoteType;
+  getVote: (participantId: string, optionId: string) => VoteType | undefined;
 } & (
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] }
@@ -65,6 +64,28 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   }, [participantById, poll.options]);
   const { locale } = usePreferences();
 
+  const getVotesForOption = React.useCallback(
+    (optionId: string) => {
+      // TODO (Luke Vella) [2022-04-16]: Build an index instead
+      const option = poll.options.find(({ id }) => id === optionId);
+      return option?.votes ?? [];
+    },
+    [poll.options],
+  );
+
+  const getScore = React.useCallback(
+    (optionId: string) => {
+      const votes = getVotesForOption(optionId);
+      return votes.reduce((acc, curr) => {
+        if (curr.type === "yes") {
+          acc += 1;
+        }
+        return acc;
+      }, 0);
+    },
+    [getVotesForOption],
+  );
+
   const contextValue = React.useMemo<PollContextValue>(() => {
     let highScore = 1;
     poll.options.forEach((option) => {
@@ -99,11 +120,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     return {
       userAlreadyVoted,
       poll,
-      getVotesForOption: (optionId: string) => {
-        // TODO (Luke Vella) [2022-04-16]: Build an index instead
-        const option = poll.options.find(({ id }) => id === optionId);
-        return option?.votes ?? [];
-      },
+      getVotesForOption,
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
@@ -111,17 +128,19 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       getParticipantsWhoVotedForOption: (optionId: string) =>
         participantsByOptionId[optionId],
       getVote: (participantId, optionId) => {
-        return getParticipantById(participantId)?.votes.some(
+        const vote = getParticipantById(participantId)?.votes.find(
           (vote) => vote.optionId === optionId,
-        )
-          ? "yes"
-          : "no";
+        );
+        return vote?.type;
       },
+      getScore,
       ...parsedOptions,
       targetTimeZone,
       setTargetTimeZone,
     };
   }, [
+    getScore,
+    getVotesForOption,
     locale,
     participantById,
     participantsByOptionId,

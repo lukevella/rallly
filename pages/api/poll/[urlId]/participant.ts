@@ -28,8 +28,9 @@ export default withSessionRoute(
                 : undefined,
             votes: {
               createMany: {
-                data: payload.votes.map((optionId) => ({
+                data: payload.votes.map(({ optionId, type }) => ({
                   optionId,
+                  type,
                   pollId: link.pollId,
                 })),
               },

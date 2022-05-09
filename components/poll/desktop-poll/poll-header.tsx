@@ -27,7 +27,8 @@ const TimeRange: React.VoidFunctionComponent<{
 };
 
 const PollHeader: React.VoidFunctionComponent = () => {
-  const { options, getParticipantsWhoVotedForOption, highScore } = usePoll();
+  const { options, getParticipantsWhoVotedForOption, getScore, highScore } =
+    usePoll();
   const { activeOptionId, setActiveOptionId, columnWidth } = usePollContext();
 
   return (
@@ -53,14 +54,6 @@ const PollHeader: React.VoidFunctionComponent = () => {
                 day={option.day}
                 dow={option.dow}
                 month={option.month}
-                annotation={
-                  numVotes > 0 ? (
-                    <Score
-                      count={numVotes}
-                      highlight={numVotes > 1 && highScore === numVotes}
-                    />
-                  ) : null
-                }
               />
             </div>
             {option.type === "timeSlot" ? (
