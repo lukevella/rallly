@@ -1,7 +1,7 @@
 import { createGuestUser, withSessionRoute } from "utils/auth";
 
-import { prisma } from "../../../../../db";
-import { sendNotification, withLink } from "../../../../../utils/api-utils";
+import { prisma } from "../../../../db";
+import { sendNotification, withLink } from "../../../../utils/api-utils";
 
 export default withSessionRoute(
   withLink(async ({ req, res, link }) => {
