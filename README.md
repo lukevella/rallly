@@ -23,7 +23,7 @@ Once inside the directory create a `.env` file where you can set your environmen
 cp sample.env .env
 ```
 
-_See [configuration](#-configuration) to see what parameters are availble._
+_See [configuration](#%EF%B8%8F-configuration) to see what parameters are availble._
 
 Build and run with `docker-compose`
 
@@ -48,7 +48,7 @@ Copy the sample `.env` file then open it and set the variables.
 cp sample.env .env
 ```
 
-_See [configuration](#-configuration) to see what parameters are availble._
+_See [configuration](#%EF%B8%8F-configuration) to see what parameters are availble._
 
 Install dependencies
 
