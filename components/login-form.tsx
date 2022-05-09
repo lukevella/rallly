@@ -1,6 +1,7 @@
 import axios from "axios";
 import clsx from "clsx";
 import { useRouter } from "next/router";
+import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { validEmail } from "utils/form-validation";
@@ -12,6 +13,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
   const { register, formState, handleSubmit, getValues } =
     useForm<{ email: string }>();
 
+  const plausible = usePlausible();
   const router = useRouter();
   return (
     <div className="flex">
@@ -23,6 +25,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
         {!formState.isSubmitSuccessful ? (
           <form
             onSubmit={handleSubmit(async ({ email }) => {
+              plausible("Login requested");
               await axios.post("/api/login", { email, path: router.asPath });
             })}
           >
