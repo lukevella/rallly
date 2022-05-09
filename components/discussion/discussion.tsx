@@ -13,7 +13,6 @@ import {
   CreateCommentPayload,
 } from "../../api-client/create-comment";
 import { requiredString } from "../../utils/form-validation";
-import Badge from "../badge";
 import Button from "../button";
 import CompactButton from "../compact-button";
 import Dropdown, { DropdownItem } from "../dropdown";
@@ -24,7 +23,7 @@ import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
 import { usePoll } from "../poll-context";
 import { usePreferences } from "../preferences/use-preferences";
-import { useSession } from "../session";
+import { isUnclaimed, useSession } from "../session";
 
 export interface DiscussionProps {
   pollId: string;
@@ -125,7 +124,9 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
         <AnimatePresence initial={false}>
           {comments.map((comment) => {
             const canDelete =
-              poll.role === "admin" || session.ownsObject(comment);
+              poll.role === "admin" ||
+              session.ownsObject(comment) ||
+              isUnclaimed(comment);
 
             return (
               <motion.div

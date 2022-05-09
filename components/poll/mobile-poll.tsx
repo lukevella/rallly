@@ -15,11 +15,10 @@ import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 
 import { requiredString } from "../../utils/form-validation";
-import Badge from "../badge";
 import Button from "../button";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
-import { useSession } from "../session";
+import { isUnclaimed, useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
 import PollOptions from "./mobile-poll/poll-options";
 import TimeSlotOptions from "./mobile-poll/time-slot-options";
@@ -66,7 +65,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     ? participantById[selectedParticipantId]
     : undefined;
 
-  const [editable, setEditable] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(false);
 
   const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -129,7 +128,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 {
                   onSuccess: () => {
                     resolve(data);
-                    setEditable(false);
+                    setIsEditing(false);
                   },
                   onError: reject,
                 },
@@ -139,7 +138,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 onSuccess: (newParticipant) => {
                   setSelectedParticipantId(newParticipant.id);
                   resolve(data);
-                  setEditable(false);
+                  setIsEditing(false);
                 },
                 onError: reject,
               });
@@ -152,13 +151,13 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
             <Listbox
               value={selectedParticipantId}
               onChange={setSelectedParticipantId}
-              disabled={editable}
+              disabled={isEditing}
             >
               <div className="menu min-w-0 grow">
                 <Listbox.Button
                   as={Button}
                   className="w-full"
-                  disabled={!editable}
+                  disabled={!isEditing}
                   data-testid="participant-selector"
                 >
                   <div className="min-w-0 grow text-left">
@@ -206,14 +205,16 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 </Listbox.Options>
               </div>
             </Listbox>
-            {!poll.closed && !editable ? (
+            {!poll.closed && !isEditing ? (
               selectedParticipant &&
-              (role === "admin" || session.ownsObject(selectedParticipant)) ? (
+              (role === "admin" ||
+                session.ownsObject(selectedParticipant) ||
+                isUnclaimed(selectedParticipant)) ? (
                 <div className="flex space-x-3">
                   <Button
                     icon={<Pencil />}
                     onClick={() => {
-                      setEditable(true);
+                      setIsEditing(true);
                       reset({
                         name: selectedParticipant.name,
                         votes: selectedParticipant.votes.map(
@@ -241,17 +242,17 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   icon={<PlusCircle />}
                   onClick={() => {
                     reset({ name: "", votes: [] });
-                    setEditable(true);
+                    setIsEditing(true);
                   }}
                 >
                   New
                 </Button>
               )
             ) : null}
-            {editable ? (
+            {isEditing ? (
               <Button
                 onClick={() => {
-                  setEditable(false);
+                  setIsEditing(false);
                   reset();
                 }}
               >
@@ -273,7 +274,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 <PollOptions
                   selectedParticipantId={selectedParticipantId}
                   options={pollContext.options}
-                  editable={editable}
+                  editable={isEditing}
                 />
               );
             case "timeSlot":
@@ -281,13 +282,13 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 <TimeSlotOptions
                   selectedParticipantId={selectedParticipantId}
                   options={pollContext.options}
-                  editable={editable}
+                  editable={isEditing}
                 />
               );
           }
         })()}
         <AnimatePresence>
-          {shouldShowSaveButton && editable ? (
+          {shouldShowSaveButton && isEditing ? (
             <motion.button
               type="button"
               variants={{
@@ -309,7 +310,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
           ) : null}
         </AnimatePresence>
         <AnimatePresence>
-          {editable ? (
+          {isEditing ? (
             <motion.div
               variants={{
                 hidden: { opacity: 0, y: -100, height: 0 },

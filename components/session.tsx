@@ -11,14 +11,16 @@ export type SessionProps = {
   user: UserSessionData | null;
 };
 
+type ParticipantOrComment = {
+  userId: string | null;
+  guestId: string | null;
+};
+
 type SessionContextValue = {
   logout: () => Promise<void>;
   user: (UserSessionData & { shortName: string }) | null;
   refresh: () => void;
-  ownsObject: (obj: {
-    userId: string | null;
-    guestId: string | null;
-  }) => boolean;
+  ownsObject: (obj: ParticipantOrComment) => boolean;
   isLoading: boolean;
 };
 
@@ -101,3 +103,6 @@ export const withSession = <P extends SessionProps>(
   ComposedComponent.displayName = component.displayName;
   return ComposedComponent;
 };
+
+export const isUnclaimed = (obj: ParticipantOrComment) =>
+  !obj.guestId && !obj.userId;
