@@ -2,6 +2,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "../style.css";
 
+import axios from "axios";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
@@ -10,12 +11,9 @@ import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
 import toast, { Toaster } from "react-hot-toast";
 import { MutationCache, QueryClient, QueryClientProvider } from "react-query";
-import { useSessionStorage } from "react-use";
 
 import ModalProvider from "@/components/modal/modal-provider";
 import PreferencesProvider from "@/components/preferences/preferences-provider";
-
-import { UserNameContext } from "../components/user-name-context";
 
 const CrispChat = dynamic(() => import("@/components/crisp-chat"), {
   ssr: false,
@@ -23,17 +21,17 @@ const CrispChat = dynamic(() => import("@/components/crisp-chat"), {
 
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
-    onError: () => {
-      toast.error(
-        "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
-      );
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 500) {
+        toast.error(
+          "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
+        );
+      }
     },
   }),
 });
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
-  const sessionUserName = useSessionStorage<string>("userName", "");
-
   return (
     <PlausibleProvider
       domain="rallly.co"
@@ -53,9 +51,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
           <CrispChat />
           <Toaster />
           <ModalProvider>
-            <UserNameContext.Provider value={sessionUserName}>
-              <Component {...pageProps} />
-            </UserNameContext.Provider>
+            <Component {...pageProps} />
           </ModalProvider>
         </QueryClientProvider>
       </PreferencesProvider>

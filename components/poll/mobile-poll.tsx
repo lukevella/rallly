@@ -8,18 +8,19 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
-import Pencil from "@/components/icons/pencil.svg";
+import Pencil from "@/components/icons/pencil-alt.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
 import Save from "@/components/icons/save.svg";
 import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 
 import { requiredString } from "../../utils/form-validation";
+import Badge from "../badge";
 import Button from "../button";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
+import { useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
-import { useUserName } from "../user-name-context";
 import PollOptions from "./mobile-poll/poll-options";
 import TimeSlotOptions from "./mobile-poll/time-slot-options";
 import {
@@ -28,7 +29,7 @@ import {
 } from "./mutations";
 import { ParticipantForm, PollProps } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
-import UserAvater from "./user-avatar";
+import UserAvatar from "./user-avatar";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -41,14 +42,14 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
 
   const { timeZone, participants, role } = poll;
 
-  const [, setUserName] = useUserName();
-
   const participantById = participants.reduce<
     Record<string, Participant & { votes: Vote[] }>
   >((acc, curr) => {
     acc[curr.id] = { ...curr };
     return acc;
   }, {});
+
+  const session = useSession();
 
   const form = useForm<ParticipantForm>({
     defaultValues: {
@@ -65,9 +66,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     ? participantById[selectedParticipantId]
     : undefined;
 
-  const [editable, setEditable] = React.useState(() =>
-    participants.length > 0 ? false : true,
-  );
+  const [editable, setEditable] = React.useState(false);
 
   const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -148,30 +147,34 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
           });
         })}
       >
-        <div className="sticky top-0 z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
+        <div className="sticky top-12 z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
           <div className="flex space-x-3">
             <Listbox
               value={selectedParticipantId}
               onChange={setSelectedParticipantId}
               disabled={editable}
             >
-              <div className="menu grow">
+              <div className="menu min-w-0 grow">
                 <Listbox.Button
-                  className={clsx("btn-default w-full px-2 text-left", {
-                    "btn-disabled": editable,
-                  })}
+                  as={Button}
+                  className="w-full"
+                  disabled={!editable}
+                  data-testid="participant-selector"
                 >
-                  <div className="grow">
+                  <div className="min-w-0 grow text-left">
                     {selectedParticipant ? (
                       <div className="flex items-center space-x-2">
-                        <UserAvater name={selectedParticipant.name} />
-                        <span>{selectedParticipant.name}</span>
+                        <UserAvatar
+                          name={selectedParticipant.name}
+                          showName={true}
+                          isYou={session.ownsObject(selectedParticipant)}
+                        />
                       </div>
                     ) : (
                       t("participantCount", { count: participants.length })
                     )}
                   </div>
-                  <ChevronDown className="h-5" />
+                  <ChevronDown className="h-5 shrink-0" />
                 </Listbox.Button>
                 <Listbox.Options
                   as={motion.div}
@@ -192,8 +195,11 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                       className={styleMenuItem}
                     >
                       <div className="flex items-center space-x-2">
-                        <UserAvater name={participant.name} />
-                        <span>{participant.name}</span>
+                        <UserAvatar
+                          name={participant.name}
+                          showName={true}
+                          isYou={session.ownsObject(participant)}
+                        />
                       </div>
                     </Listbox.Option>
                   ))}
@@ -201,7 +207,8 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               </div>
             </Listbox>
             {!poll.closed && !editable ? (
-              selectedParticipant ? (
+              selectedParticipant &&
+              (role === "admin" || session.ownsObject(selectedParticipant)) ? (
                 <div className="flex space-x-3">
                   <Button
                     icon={<Pencil />}
@@ -217,18 +224,16 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   >
                     Edit
                   </Button>
-                  {role === "admin" ? (
-                    <Button
-                      icon={<Trash />}
-                      data-testid="delete-participant-button"
-                      type="danger"
-                      onClick={() => {
-                        if (selectedParticipant) {
-                          confirmDeleteParticipant(selectedParticipant.id);
-                        }
-                      }}
-                    />
-                  ) : null}
+                  <Button
+                    icon={<Trash />}
+                    data-testid="delete-participant-button"
+                    type="danger"
+                    onClick={() => {
+                      if (selectedParticipant) {
+                        confirmDeleteParticipant(selectedParticipant.id);
+                      }
+                    }}
+                  />
                 </div>
               ) : (
                 <Button
@@ -236,7 +241,6 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   icon={<PlusCircle />}
                   onClick={() => {
                     reset({ name: "", votes: [] });
-                    setUserName("");
                     setEditable(true);
                   }}
                 >
@@ -325,22 +329,23 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 className="space-y-3 border-t bg-gray-50 p-3"
               >
                 <div className="flex space-x-3">
-                  <Controller
-                    name="name"
-                    control={control}
-                    rules={{ validate: requiredString }}
-                    render={({ field }) => (
-                      <NameInput
-                        disabled={formState.isSubmitting}
-                        className={clsx("input w-full", {
-                          "input-error": formState.errors.name,
-                        })}
-                        {...field}
-                      />
-                    )}
-                  />
+                  <div className="grow">
+                    <Controller
+                      name="name"
+                      control={control}
+                      rules={{ validate: requiredString }}
+                      render={({ field }) => (
+                        <NameInput
+                          disabled={formState.isSubmitting}
+                          className={clsx("input w-full", {
+                            "input-error": formState.errors.name,
+                          })}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </div>
                   <Button
-                    className="grow"
                     icon={<Save />}
                     htmlType="submit"
                     type="primary"

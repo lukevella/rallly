@@ -5,7 +5,7 @@ import { useTimeoutFn } from "react-use";
 
 import DateCard from "../date-card";
 import Score from "../poll/desktop-poll/score";
-import UserAvater from "../poll/user-avatar";
+import UserAvatar from "../poll/user-avatar";
 import VoteIcon from "../poll/vote-icon";
 
 const sidebarWidth = 180;
@@ -87,14 +87,11 @@ const PollDemo: React.VoidFunctionComponent = () => {
             className="flex shrink-0 items-center px-4"
             style={{ width: sidebarWidth }}
           >
-            <UserAvater
-              className="mr-2"
+            <UserAvatar
               color={participant.color}
               name={participant.name}
+              showName={true}
             />
-            <span className="truncate" title={participant.name}>
-              {participant.name}
-            </span>
           </div>
           <div className="flex">
             {options.map((_, i) => {

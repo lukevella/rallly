@@ -12,7 +12,6 @@ export interface ButtonProps {
   htmlType?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
   type?: "default" | "primary" | "danger" | "link";
   form?: string;
-  href?: string;
   rounded?: boolean;
   title?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -27,7 +26,6 @@ const Button: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
     className,
     icon,
     disabled,
-    href,
     rounded,
     ...passThroughProps
   },

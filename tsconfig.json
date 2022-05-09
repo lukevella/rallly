@@ -26,6 +26,6 @@
       "@/components/*": ["components/*"]
     }
   },
-  "exclude": ["**/node_modules", "**/.*/", "**/*.js"],
+  "exclude": ["node_modules", "**/.*/", "**/*.js"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

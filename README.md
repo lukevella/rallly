@@ -2,7 +2,6 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-orange.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E)
 
-
 ![hero](./docs/images/hero-image.png)
 
 Rallly is a free group meeting scheduling tool – built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
@@ -18,18 +17,13 @@ git clone https://github.com/lukevella/rallly.git
 cd rallly
 ```
 
-_optional_: Configure your SMTP server. Without this, Rallly won't be able to send out emails. You can set the following environment variables in a `.env` in the root of the project
+Once inside the directory create a `.env` file where you can set your environment variables. There is a `sample.env` that you can use as a reference.
 
+```bash
+cp sample.env .env
 ```
-# support email - used as FROM email by SMTP server
-SUPPORT_EMAIL=foo@yourdomain.com
-# SMTP server - required if you want to send emails
-SMTP_HOST=your-smtp-server
-SMTP_PORT=587
-SMTP_SECURE="false"
-SMTP_USER=your-smtp-user
-SMTP_PWD=your-smtp-password
-```
+
+_See [configuration](#-configuration) to see what parameters are availble._
 
 Build and run with `docker-compose`
 
@@ -54,20 +48,7 @@ Copy the sample `.env` file then open it and set the variables.
 cp sample.env .env
 ```
 
-Fill in the required environment variables.
-
-```
-# postgres database - not needed if running with docker-compose
-DATABASE_URL=postgres://your-database/db
-# support email - used as FROM email by SMTP server
-SUPPORT_EMAIL=foo@yourdomain.com
-# SMTP server - required if you want to send emails
-SMTP_HOST=your-smtp-server
-SMTP_PORT=587
-SMTP_SECURE="false"
-SMTP_USER=your-smtp-user
-SMTP_PWD=your-smtp-password
-```
+_See [configuration](#-configuration) to see what parameters are availble._
 
 Install dependencies
 
@@ -90,6 +71,19 @@ yarn dev
 yarn build
 yarn start
 ```
+
+## ⚙️ Configuration
+
+| Parameter       | Default                                        | Description                                                                                                                         |
+| --------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| DATABASE_URL    | postgres://postgres:postgres@rallly_db:5432/db | A postgres database URL. Leave out if using the docker-compose file since it will spin up and connect to its own database instance. |
+| SECRET_PASSWORD | -                                              | A long string (minimum 25 characters) that is used to encrypt session data.                                                         |
+| SUPPORT_EMAIL   | -                                              | An email address that will appear as the FROM email for all emails being sent out.                                                  |
+| SMTP_HOST       | -                                              | Host name of your SMTP server                                                                                                       |
+| SMTP_PORT       | -                                              | Port of your SMTP server                                                                                                            |
+| SMTP_SECURE     | false                                          | Set to "true" if SSL is enabled for your SMTP connection                                                                            |
+| SMTP_USER       | -                                              | Username to use for your SMTP connection                                                                                            |
+| SMTP_PWD        | -                                              | Password to use for your SMTP connection                                                                                            |
 
 ## 👨‍💻 Contributors
 

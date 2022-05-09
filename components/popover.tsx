@@ -13,7 +13,7 @@ import React from "react";
 import { transformOriginByPlacement } from "utils/constants";
 
 interface PopoverProps {
-  trigger: React.ReactNode;
+  trigger: React.ReactElement;
   children?: React.ReactNode;
   placement?: Placement;
 }
@@ -37,11 +37,7 @@ const Popover: React.VoidFunctionComponent<PopoverProps> = ({
     <HeadlessPopover as={React.Fragment}>
       {({ open }) => (
         <>
-          <HeadlessPopover.Button
-            ref={reference}
-            as="div"
-            className={clsx("inline-block")}
-          >
+          <HeadlessPopover.Button ref={reference} as="div">
             {trigger}
           </HeadlessPopover.Button>
           <FloatingPortal>

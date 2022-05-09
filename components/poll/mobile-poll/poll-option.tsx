@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
-import UserAvater from "../user-avatar";
+import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
 import PopularityScore from "./popularity-score";
 
@@ -106,7 +106,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
                   .slice(0, participants.length <= 6 ? 6 : 5)
                   .map((participant, i) => {
                     return (
-                      <UserAvater
+                      <UserAvatar
                         key={i}
                         className="ring-1 ring-white"
                         name={participant.name}

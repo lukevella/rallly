@@ -36,19 +36,20 @@ export default async function handler(
       const demoUser = { name: "John Example", email: "noreply@rallly.co" };
       const today = new Date();
 
-      let options: Array<{ value: string; id: string }> = [];
+      const options: Array<{ value: string; id: string }> = [];
 
       for (let i = 0; i < optionValues.length; i++) {
         options.push({ id: await nanoid(), value: optionValues[i] });
       }
 
-      let participants: Array<{
+      const participants: Array<{
         name: string;
         id: string;
+        guestId: string;
         createdAt: Date;
       }> = [];
 
-      let votes: Array<{ optionId: string; participantId: string }> = [];
+      const votes: Array<{ optionId: string; participantId: string }> = [];
 
       for (let i = 0; i < participantData.length; i++) {
         const { name, votes: participantVotes } = participantData[i];
@@ -56,6 +57,7 @@ export default async function handler(
         participants.push({
           id: participantId,
           name,
+          guestId: "user-demo",
           createdAt: addMinutes(today, i * -1),
         });
 
@@ -70,7 +72,6 @@ export default async function handler(
       await prisma.poll.create({
         data: {
           urlId: await nanoid(),
-          verificationCode: await nanoid(),
           title: "Lunch Meeting Demo",
           type: "date",
           location: "Starbucks, 901 New York Avenue",

@@ -2,11 +2,15 @@ import clsx from "clsx";
 import * as React from "react";
 import { stringToValue } from "utils/string-to-value";
 
+import Badge from "../badge";
+
 export interface UserAvaterProps {
   name: string;
   className?: string;
   size?: "default" | "large";
   color?: string;
+  showName?: boolean;
+  isYou?: boolean;
 }
 
 const UserAvatarContext =
@@ -68,7 +72,7 @@ export const UserAvatarProvider: React.VoidFunctionComponent<{
   );
 };
 
-const UserAvater: React.VoidFunctionComponent<UserAvaterProps> = ({
+const UserAvatarInner: React.VoidFunctionComponent<UserAvaterProps> = ({
   name,
   className,
   color: colorOverride,
@@ -101,4 +105,30 @@ const UserAvater: React.VoidFunctionComponent<UserAvaterProps> = ({
   );
 };
 
-export default UserAvater;
+const UserAvatar: React.VoidFunctionComponent<UserAvaterProps> = ({
+  showName,
+  isYou,
+  className,
+  ...forwardedProps
+}) => {
+  if (!showName) {
+    return <UserAvatarInner className={className} {...forwardedProps} />;
+  }
+
+  return (
+    <div
+      className={clsx(
+        "inline-flex items-center space-x-2 overflow-hidden",
+        className,
+      )}
+    >
+      <UserAvatarInner {...forwardedProps} />
+      <div className="min-w-0 truncate" title={forwardedProps.name}>
+        {forwardedProps.name}
+      </div>
+      {isYou ? <Badge>You</Badge> : null}
+    </div>
+  );
+};
+
+export default UserAvatar;

@@ -30,6 +30,7 @@ export default function Document() {
           integrity="sha512-8vEtrrc40OAQaCUaqVjNMQtQEPyNtllVG1RYy6bGEuWQkivCBeqOzuDJPPhD+MO6y6QGLuQYPCr8Nlzu9lTYaQ=="
           crossOrigin="anonymous"
         />
+        <meta name="theme-color" content="#f9fafb" />
       </Head>
       <body>
         <Main />

@@ -24,7 +24,7 @@ const TimeSlotOptions: React.VoidFunctionComponent<TimeSlotOptionsProps> = ({
       {Object.entries(grouped).map(([day, options]) => {
         return (
           <div key={day}>
-            <div className="sticky top-[105px] z-10 flex border-b bg-gray-50/80 py-2 px-4 text-sm font-semibold shadow-sm backdrop-blur-md">
+            <div className="sticky top-[152px] z-10 flex border-b bg-gray-50/80 py-2 px-4 text-sm font-semibold shadow-sm backdrop-blur-md">
               {day}
             </div>
             <PollOptions

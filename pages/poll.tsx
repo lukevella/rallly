@@ -7,16 +7,18 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { usePlausible } from "next-plausible";
 import React from "react";
 import { useQuery } from "react-query";
+import { withSessionSsr } from "utils/auth";
 
 import ErrorPage from "@/components/error-page";
 import FullPageLoader from "@/components/full-page-loader";
+import { SessionProps, withSession } from "@/components/session";
 
 import { GetPollResponse } from "../api-client/get-poll";
 import Custom404 from "./404";
 
 const PollPage = dynamic(() => import("@/components/poll"), { ssr: false });
 
-const PollPageLoader: NextPage = () => {
+const PollPageLoader: NextPage<SessionProps> = () => {
   const { query } = useRouter();
   const { t } = useTranslation("app");
   const urlId = query.urlId as string;
@@ -71,29 +73,30 @@ const PollPageLoader: NextPage = () => {
     );
   }
 
+  if (poll) {
+    return <PollPage poll={poll} />;
+  }
+
   if (didError) {
     return <Custom404 />;
   }
 
-  return !poll ? (
-    <FullPageLoader>{t("loading")}</FullPageLoader>
-  ) : (
-    <PollPage poll={poll} />
-  );
+  return <FullPageLoader>{t("loading")}</FullPageLoader>;
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  locale = "en",
-}) => {
-  try {
-    return {
-      props: {
-        ...(await serverSideTranslations(locale, ["app"])),
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
-};
+export const getServerSideProps: GetServerSideProps = withSessionSsr(
+  async ({ locale = "en", req }) => {
+    try {
+      return {
+        props: {
+          ...(await serverSideTranslations(locale, ["app"])),
+          user: req.session.user ?? null,
+        },
+      };
+    } catch {
+      return { notFound: true };
+    }
+  },
+);
 
-export default PollPageLoader;
+export default withSession(PollPageLoader);

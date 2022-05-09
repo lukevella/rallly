@@ -2,6 +2,8 @@ import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
+import X from "@/components/icons/x.svg";
+
 import Button, { ButtonProps } from "../button";
 
 export interface ModalProps {
@@ -16,6 +18,7 @@ export interface ModalProps {
   content?: React.ReactNode;
   overlayClosable?: boolean;
   visible?: boolean;
+  showClose?: boolean;
 }
 
 const Modal: React.VoidFunctionComponent<ModalProps> = ({
@@ -30,6 +33,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
   onCancel,
   onOk,
   visible,
+  showClose,
 }) => {
   const initialFocusRef = React.useRef<HTMLButtonElement>(null);
   return (
@@ -53,48 +57,64 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-0 bg-slate-900 bg-opacity-10"
+              className="fixed inset-0 z-0 bg-slate-900 bg-opacity-25"
             />
             <motion.div
               transition={{ duration: 0.1 }}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="z-50 my-8 mx-4 inline-block w-fit transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl transition-all"
+              className="relative z-50 my-8 inline-block max-w-full transform text-left align-middle"
             >
-              {content ?? (
-                <div className="max-w-lg p-4">
-                  {title ? <Dialog.Title>{title}</Dialog.Title> : null}
-                  {description ? (
-                    <Dialog.Description>{description}</Dialog.Description>
-                  ) : null}
-                </div>
-              )}
-              {footer ?? (
-                <div className="flex h-14 items-center justify-end space-x-3 border-t bg-slate-50 px-4">
-                  {cancelText ? (
-                    <Button
-                      ref={initialFocusRef}
-                      onClick={() => {
-                        onCancel?.();
-                      }}
-                    >
-                      {cancelText}
-                    </Button>
-                  ) : null}
-                  {okText ? (
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        onOk?.();
-                      }}
-                      {...okButtonProps}
-                    >
-                      {okText}
-                    </Button>
-                  ) : null}
-                </div>
-              )}
+              <div className="mx-4 max-w-full overflow-hidden rounded-xl bg-white shadow-xl xs:rounded-xl">
+                {showClose ? (
+                  <button
+                    className="absolute right-5 top-1 z-10 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
+                    onClick={onCancel}
+                  >
+                    <X className="h-4" />
+                  </button>
+                ) : null}
+                {content ?? (
+                  <div className="max-w-md p-6">
+                    {title ? (
+                      <Dialog.Title className="mb-2 font-medium">
+                        {title}
+                      </Dialog.Title>
+                    ) : null}
+                    {description ? (
+                      <Dialog.Description className="m-0">
+                        {description}
+                      </Dialog.Description>
+                    ) : null}
+                  </div>
+                )}
+                {footer === undefined ? (
+                  <div className="flex h-14 items-center justify-end space-x-3 rounded-br-lg rounded-bl-lg border-t bg-slate-50 px-4">
+                    {cancelText ? (
+                      <Button
+                        onClick={() => {
+                          onCancel?.();
+                        }}
+                      >
+                        {cancelText}
+                      </Button>
+                    ) : null}
+                    {okText ? (
+                      <Button
+                        ref={initialFocusRef}
+                        type="primary"
+                        onClick={() => {
+                          onOk?.();
+                        }}
+                        {...okButtonProps}
+                      >
+                        {okText}
+                      </Button>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
             </motion.div>
           </motion.div>
         </Dialog>

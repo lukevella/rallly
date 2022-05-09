@@ -216,7 +216,7 @@ const ManagePoll: React.VoidFunctionComponent<{
             )}`;
 
             const encodedCsv = encodeURI(csv);
-            var link = document.createElement("a");
+            const link = document.createElement("a");
             link.setAttribute("href", encodedCsv);
             link.setAttribute(
               "download",

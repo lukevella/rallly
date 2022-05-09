@@ -7,6 +7,7 @@
   body,
   #__next {
     height: 100%;
+    @apply bg-slate-50;
   }
   body {
     @apply bg-slate-50 text-base text-slate-600;
@@ -37,7 +38,7 @@
     @apply mb-1 block text-sm text-slate-800;
   }
   button {
-    @apply focus:outline-none focus:ring-indigo-600;
+    @apply cursor-default focus:outline-none focus:ring-indigo-600;
   }
 
   #floating-ui-root {
@@ -59,23 +60,23 @@
     @apply input px-3 py-3;
   }
   .input-error {
-    @apply border-rose-500 bg-rose-50 placeholder:text-rose-500 focus:border-rose-400 focus:ring-rose-500;
+    @apply border-rose-500 ring-1 ring-rose-400 focus:border-rose-400 focus:ring-rose-500;
   }
   .checkbox {
-    @apply h-4 w-4 cursor-pointer rounded border-slate-300 text-indigo-500 shadow-sm focus:ring-indigo-500;
+    @apply h-4 w-4 rounded border-slate-300 text-indigo-500 shadow-sm focus:ring-indigo-500;
   }
   .btn {
-    @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-1;
+    @apply inline-flex h-9 cursor-default items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }
   a.btn {
     @apply hover:no-underline;
   }
 
   .btn-default {
-    @apply btn border-gray-300 bg-white text-gray-700 hover:text-indigo-500 focus:border-transparent focus:ring-indigo-500 focus:ring-offset-0 active:bg-gray-100;
+    @apply btn border-gray-300 bg-white text-gray-700 hover:text-indigo-500 focus-visible:border-transparent focus-visible:ring-indigo-500 focus-visible:ring-offset-0 active:bg-gray-100;
   }
   .btn-danger {
-    @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus:ring-rose-500;
+    @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus-visible:ring-rose-500;
   }
   .btn-link {
     @apply inline-flex items-center text-indigo-500 underline;
@@ -87,7 +88,12 @@
     @apply pointer-events-none;
   }
   .btn-primary {
-    @apply btn border-indigo-600 bg-indigo-500 text-white hover:bg-opacity-90 focus:ring-indigo-500 active:bg-indigo-600;
+    text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
+    @apply btn border-indigo-600 bg-indigo-500 text-white hover:bg-opacity-90 focus-visible:ring-indigo-500 active:bg-indigo-600;
+  }
+  .btn-primary.btn-disabled {
+    text-shadow: none;
+    @apply border-gray-300/70 bg-gray-200/70 text-gray-400;
   }
   a.btn-primary {
     @apply text-white;

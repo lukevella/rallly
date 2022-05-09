@@ -3,12 +3,13 @@ import clsx from "clsx";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import CheckCircle from "@/components/icons/check-circle.svg";
+import CompactButton from "@/components/compact-button";
+import X from "@/components/icons/x.svg";
+import { useSession } from "@/components/session";
 
 import { requiredString } from "../../../utils/form-validation";
 import Button from "../../button";
 import NameInput from "../../name-input";
-import Tooltip from "../../tooltip";
 import { ParticipantForm } from "../types";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
@@ -34,6 +35,8 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
       setScrollPosition,
     } = usePollContext();
 
+    const session = useSession();
+
     const {
       handleSubmit,
       register,
@@ -41,8 +44,20 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
       formState: { errors, submitCount, isSubmitting },
       reset,
     } = useForm<ParticipantForm>({
-      defaultValues: { name: "", votes: [], ...defaultValues },
+      defaultValues: {
+        name: "",
+        votes: [],
+        ...defaultValues,
+      },
     });
+
+    React.useEffect(() => {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          onCancel?.();
+        }
+      });
+    }, [onCancel]);
 
     const isColumnVisible = (index: number) => {
       return (
@@ -87,7 +102,7 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
             render={({ field }) => (
               <div className="w-full">
                 <NameInput
-                  autoFocus={true}
+                  autoFocus={!session.user}
                   className={clsx("w-full", {
                     "input-error animate-wiggle":
                       errors.name && submitCount > 0,
@@ -162,18 +177,15 @@ const ParticipantRowForm: React.VoidFunctionComponent<ParticipantRowFormProps> =
           })}
         </ControlledScrollArea>
         <div className="flex items-center space-x-2 px-2 transition-all">
-          <Tooltip content="Save" placement="top">
-            <Button
-              htmlType="submit"
-              icon={<CheckCircle />}
-              type="primary"
-              loading={isSubmitting}
-              data-testid="submitNewParticipant"
-            />
-          </Tooltip>
-          <Button onClick={onCancel} type="default">
-            Cancel
+          <Button
+            htmlType="submit"
+            type="primary"
+            loading={isSubmitting}
+            data-testid="submitNewParticipant"
+          >
+            Save
           </Button>
+          <CompactButton onClick={onCancel} icon={X} />
         </div>
       </form>
     );

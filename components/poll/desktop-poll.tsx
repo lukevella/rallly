@@ -28,15 +28,16 @@ const minSidebarWidth = 180;
 const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const { t } = useTranslation("app");
 
-  const { poll, targetTimeZone, setTargetTimeZone, options } = usePoll();
+  const { poll, targetTimeZone, setTargetTimeZone, options, userAlreadyVoted } =
+    usePoll();
 
-  const { timeZone, participants, role } = poll;
+  const { timeZone, participants } = poll;
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
   const [editingParticipantId, setEditingParticipantId] =
     React.useState<string | null>(null);
 
-  const actionColumnWidth = 160;
+  const actionColumnWidth = 140;
   const columnWidth = Math.min(
     100,
     Math.max(
@@ -71,7 +72,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const [didUsePagination, setDidUsePagination] = React.useState(false);
 
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(participants.length === 0);
+    React.useState(!userAlreadyVoted);
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
@@ -115,7 +116,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
         ref={ref}
       >
         <div className=" border-t border-b bg-white shadow-sm md:rounded-lg md:border">
-          <div className="sticky top-0 z-10 rounded-t-lg border-b border-gray-200 bg-white/80 shadow-sm shadow-slate-50 backdrop-blur-md">
+          <div className="sticky top-12 z-10 rounded-t-lg border-b border-gray-200 bg-white/80 shadow-sm shadow-slate-50 backdrop-blur-md lg:top-0">
             <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
               {timeZone ? (
                 <div className="flex grow items-center">
@@ -226,7 +227,6 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   key={i}
                   participant={participant}
                   options={poll.options}
-                  canDelete={role === "admin"}
                   editMode={editingParticipantId === participant.id}
                   onChangeEditMode={(isEditing) => {
                     setEditingParticipantId(isEditing ? participant.id : null);
