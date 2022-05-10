@@ -27,7 +27,7 @@ const TimeRange: React.VoidFunctionComponent<{
 };
 
 const PollHeader: React.VoidFunctionComponent = () => {
-  const { options, getScore, highScore } = usePoll();
+  const { options, getScore } = usePoll();
   const { activeOptionId, setActiveOptionId, columnWidth } = usePollContext();
 
   return (
@@ -63,10 +63,7 @@ const PollHeader: React.VoidFunctionComponent = () => {
               />
             ) : null}
             <div className="flex justify-center">
-              <PopularityScore
-                score={numVotes}
-                highlight={highScore === numVotes}
-              />
+              <PopularityScore score={numVotes} />
             </div>
           </div>
         );

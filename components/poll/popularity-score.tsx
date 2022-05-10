@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
-import Fire from "@/components/icons/fire.svg";
+import Star from "@/components/icons/star.svg";
 import User from "@/components/icons/user-solid.svg";
 
 export interface PopularityScoreProps {
@@ -31,7 +31,7 @@ export const PopularityScore: React.VoidFunctionComponent<PopularityScoreProps> 
               exit={{ opacity: 0, y: -5, transition: { duration: 0.1 } }}
               className="absolute left-0"
             >
-              <Fire className="mr-1 inline-block h-4 text-amber-500" />
+              <Star className="mr-1 inline-block h-4 text-amber-400" />
             </motion.div>
           ) : null}
         </AnimatePresence>
