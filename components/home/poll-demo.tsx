@@ -36,10 +36,6 @@ const options = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
 
 const PollDemo: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
-  const [bestOption, setBestOption] = React.useState<number>();
-  useTimeoutFn(() => {
-    setBestOption(2);
-  }, 1500);
 
   return (
     <div
@@ -75,7 +71,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
                 month={format(d, "MMM")}
               />
               <div>
-                <PopularityScore score={score} highlight={bestOption === i} />
+                <PopularityScore score={score} />
               </div>
             </div>
           );
