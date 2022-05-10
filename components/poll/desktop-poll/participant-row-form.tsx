@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import CompactButton from "@/components/compact-button";
 import Check from "@/components/icons/check.svg";
 import X from "@/components/icons/x.svg";
-import { useSession } from "@/components/session";
 
 import { requiredString } from "../../../utils/form-validation";
 import Button from "../../button";
@@ -38,8 +37,6 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     goToNextPage,
     setScrollPosition,
   } = usePollContext();
-
-  const session = useSession();
 
   const {
     handleSubmit,
@@ -93,7 +90,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
           render={({ field }) => (
             <div className="w-full">
               <NameInput
-                autoFocus={!session.user}
+                autoFocus={true}
                 className={clsx("w-full", {
                   "input-error animate-wiggle": errors.name && submitCount > 0,
                 })}
