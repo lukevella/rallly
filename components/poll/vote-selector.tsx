@@ -29,6 +29,7 @@ export const VoteSelector = React.forwardRef<
 ) {
   return (
     <button
+      data-testid="vote-selector"
       type="button"
       onFocus={onFocus}
       onBlur={onBlur}
