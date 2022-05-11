@@ -87,7 +87,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
     <div
       key={participant.id}
       data-testid="participant-row"
-      className="group flex h-14 transition-colors hover:bg-slate-50"
+      className="group flex h-14 transition-colors hover:bg-slate-300/10"
     >
       <div
         className="flex shrink-0 items-center px-4"
@@ -124,7 +124,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
               className={clsx(
                 "flex shrink-0 items-center justify-center transition-colors",
                 {
-                  "bg-slate-50": activeOptionId === option.id,
+                  "bg-gray-50": activeOptionId === option.id,
                 },
               )}
               style={{ width: columnWidth }}

@@ -4,7 +4,7 @@ import * as React from "react";
 import DateCard from "@/components/date-card";
 import { usePoll } from "@/components/poll-context";
 
-import { PopularityScore } from "../popularity-score";
+import { ScoreSummary } from "../score-summary";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
@@ -41,7 +41,7 @@ const PollHeader: React.VoidFunctionComponent = () => {
             className={clsx(
               "shrink-0 space-y-3 py-3 text-center transition-colors",
               {
-                "bg-slate-50": activeOptionId === optionId,
+                "bg-gray-50": activeOptionId === optionId,
               },
             )}
             style={{ width: columnWidth }}
@@ -63,7 +63,11 @@ const PollHeader: React.VoidFunctionComponent = () => {
               />
             ) : null}
             <div className="flex justify-center">
-              <PopularityScore score={numVotes} />
+              <ScoreSummary
+                yesScore={numVotes.yes}
+                ifNeedBeScore={numVotes.ifNeedBe}
+                compact={true}
+              />
             </div>
           </div>
         );

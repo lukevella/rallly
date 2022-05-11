@@ -1,10 +1,9 @@
 import { format } from "date-fns";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { useTimeoutFn } from "react-use";
 
 import DateCard from "../date-card";
-import { PopularityScore } from "../poll/popularity-score";
+import { ScoreSummary } from "../poll/score-summary";
 import UserAvatar from "../poll/user-avatar";
 import VoteIcon from "../poll/vote-icon";
 
@@ -71,7 +70,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
                 month={format(d, "MMM")}
               />
               <div>
-                <PopularityScore score={score} />
+                <ScoreSummary yesScore={score} />
               </div>
             </div>
           );

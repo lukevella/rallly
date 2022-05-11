@@ -21,7 +21,8 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
   selectedParticipantId,
 }) => {
   const { control } = useFormContext<ParticipantForm>();
-  const { getParticipantsWhoVotedForOption, getParticipantById } = usePoll();
+  const { getParticipantsWhoVotedForOption, getParticipantById, getScore } =
+    usePoll();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
@@ -30,6 +31,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
     <div className="divide-y">
       {options.map((option, index) => {
         const participants = getParticipantsWhoVotedForOption(option.optionId);
+        const score = getScore(option.optionId);
         return (
           <Controller
             key={option.optionId}
@@ -51,7 +53,8 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                   return (
                     <TimeSlotOption
                       onChange={handleChange}
-                      numberOfVotes={participants.length}
+                      yesScore={score.yes}
+                      ifNeedBeScore={score.ifNeedBe}
                       participants={participants}
                       vote={vote.type}
                       startTime={option.startTime}
@@ -65,7 +68,8 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                   return (
                     <DateOption
                       onChange={handleChange}
-                      numberOfVotes={participants.length}
+                      yesScore={score.yes}
+                      ifNeedBeScore={score.ifNeedBe}
                       participants={participants}
                       vote={vote.type}
                       dow={option.dow}

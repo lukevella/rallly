@@ -126,7 +126,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                     className={clsx(
                       "flex shrink-0 items-center justify-center transition-colors",
                       {
-                        "bg-slate-50": activeOptionId === option.id,
+                        "bg-gray-50": activeOptionId === option.id,
                       },
                     )}
                     style={{ width: columnWidth }}

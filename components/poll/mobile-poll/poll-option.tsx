@@ -3,14 +3,15 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
-import { PopularityScore } from "../popularity-score";
+import { ScoreSummary } from "../score-summary";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
 import { VoteSelector } from "../vote-selector";
 
 export interface PollOptionProps {
   children?: React.ReactNode;
-  numberOfVotes: number;
+  yesScore: number;
+  ifNeedBeScore: number;
   editable?: boolean;
   vote?: VoteType;
   onChange: (vote: VoteType) => void;
@@ -67,7 +68,8 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   onChange,
   participants,
   editable,
-  numberOfVotes,
+  yesScore,
+  ifNeedBeScore,
 }) => {
   const showVotes = !!(selectedParticipantId || editable);
 
@@ -90,7 +92,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
       <div className="flex grow items-center">
         <div className="grow">{children}</div>
         <div className="flex flex-col items-end">
-          <PopularityScore score={numberOfVotes} />
+          <ScoreSummary yesScore={yesScore} ifNeedBeScore={ifNeedBeScore} />
           {participants.length > 0 ? (
             <div className="mt-1 -mr-1">
               <div className="-space-x-1">

@@ -21,7 +21,7 @@ type PollContextValue = {
   pollType: "date" | "timeSlot";
   highScore: number;
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
-  getScore: (optionId: string) => number;
+  getScore: (optionId: string) => { yes: number; ifNeedBe: number };
   getParticipantById: (
     participantId: string,
   ) => (Participant & { votes: Vote[] }) | undefined;
@@ -76,16 +76,25 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const getScore = React.useCallback(
     (optionId: string) => {
       const votes = getVotesForOption(optionId);
-      return votes.reduce((acc, curr) => {
-        return curr.type === "yes" ? acc + 1 : acc;
-      }, 0);
+      return votes.reduce(
+        (acc, curr) => {
+          if (curr.type === "yes") {
+            acc.yes += 1;
+          }
+          if (curr.type === "ifNeedBe") {
+            acc.ifNeedBe += 1;
+          }
+          return acc;
+        },
+        { yes: 0, ifNeedBe: 0 },
+      );
     },
     [getVotesForOption],
   );
 
   const contextValue = React.useMemo<PollContextValue>(() => {
     const highScore = poll.options.reduce((acc, curr) => {
-      const score = getScore(curr.id);
+      const score = getScore(curr.id).yes;
 
       return score > acc ? score : acc;
     }, 1);
