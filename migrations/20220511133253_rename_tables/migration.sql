@@ -4,79 +4,79 @@ ALTER TYPE "Role" RENAME TO "role";
 ALTER TYPE "PollType" RENAME TO "poll_type";
 
 -- Rename tables
-ALTER TABLE IF EXISTS "Comment" RENAME TO "comment";
-ALTER TABLE IF EXISTS "Link" RENAME TO "link";
-ALTER TABLE IF EXISTS "Option" RENAME TO "option";
-ALTER TABLE IF EXISTS "Participant" RENAME TO "participant";
-ALTER TABLE IF EXISTS "Poll" RENAME TO "poll";
-ALTER TABLE IF EXISTS "User" RENAME TO "user";
-ALTER TABLE IF EXISTS "Vote" RENAME TO "vote";
+ALTER TABLE IF EXISTS "Comment" RENAME TO "comments";
+ALTER TABLE IF EXISTS "Link" RENAME TO "links";
+ALTER TABLE IF EXISTS "Option" RENAME TO "options";
+ALTER TABLE IF EXISTS "Participant" RENAME TO "participants";
+ALTER TABLE IF EXISTS "Poll" RENAME TO "polls";
+ALTER TABLE IF EXISTS "User" RENAME TO "users";
+ALTER TABLE IF EXISTS "Vote" RENAME TO "votes";
 
 -- AlterTable
-ALTER TABLE "comment" RENAME CONSTRAINT "Comment_pkey" TO "comment_pkey";
+ALTER TABLE "comments" RENAME CONSTRAINT "Comment_pkey" TO "comments_pkey";
 
 -- AlterTable
-ALTER TABLE "link" RENAME CONSTRAINT "Link_pkey" TO "link_pkey";
+ALTER TABLE "links" RENAME CONSTRAINT "Link_pkey" TO "links_pkey";
 
 -- AlterTable
-ALTER TABLE "option" RENAME CONSTRAINT "Option_pkey" TO "option_pkey";
+ALTER TABLE "options" RENAME CONSTRAINT "Option_pkey" TO "options_pkey";
 
 -- AlterTable
-ALTER TABLE "participant" RENAME CONSTRAINT "Participant_pkey" TO "participant_pkey";
+ALTER TABLE "participants" RENAME CONSTRAINT "Participant_pkey" TO "participants_pkey";
 
 -- AlterTable
-ALTER TABLE "poll" RENAME CONSTRAINT "Poll_pkey" TO "poll_pkey";
+ALTER TABLE "polls" RENAME CONSTRAINT "Poll_pkey" TO "polls_pkey";
 
 -- AlterTable
-ALTER TABLE "user" RENAME CONSTRAINT "User_pkey" TO "user_pkey";
+ALTER TABLE "users" RENAME CONSTRAINT "User_pkey" TO "users_pkey";
 
 -- AlterTable
-ALTER TABLE "vote" RENAME CONSTRAINT "Vote_pkey" TO "vote_pkey";
+ALTER TABLE "votes" RENAME CONSTRAINT "Vote_pkey" TO "votes_pkey";
 
 -- RenameForeignKey
-ALTER TABLE "comment" RENAME CONSTRAINT "Comment_pollId_fkey" TO "comment_pollId_fkey";
+ALTER TABLE "comments" RENAME CONSTRAINT "Comment_pollsId_fkey" TO "comments_pollsId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "comment" RENAME CONSTRAINT "Comment_userId_fkey" TO "comment_userId_fkey";
+ALTER TABLE "comments" RENAME CONSTRAINT "Comment_usersId_fkey" TO "comments_usersId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "link" RENAME CONSTRAINT "Link_pollId_fkey" TO "link_pollId_fkey";
+ALTER TABLE "links" RENAME CONSTRAINT "Link_pollsId_fkey" TO "links_pollsId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "option" RENAME CONSTRAINT "Option_pollId_fkey" TO "option_pollId_fkey";
+ALTER TABLE "options" RENAME CONSTRAINT "Option_pollsId_fkey" TO "options_pollsId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "participant" RENAME CONSTRAINT "Participant_pollId_fkey" TO "participant_pollId_fkey";
+ALTER TABLE "participants" RENAME CONSTRAINT "Participant_pollsId_fkey" TO "participants_pollsId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "participant" RENAME CONSTRAINT "Participant_userId_fkey" TO "participant_userId_fkey";
+ALTER TABLE "participants" RENAME CONSTRAINT "Participant_usersId_fkey" TO "participants_usersId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "poll" RENAME CONSTRAINT "Poll_userId_fkey" TO "poll_userId_fkey";
+ALTER TABLE "polls" RENAME CONSTRAINT "Poll_usersId_fkey" TO "polls_usersId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "vote" RENAME CONSTRAINT "Vote_optionId_fkey" TO "vote_optionId_fkey";
+ALTER TABLE "votes" RENAME CONSTRAINT "Vote_optionsId_fkey" TO "votes_optionsId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "vote" RENAME CONSTRAINT "Vote_participantId_fkey" TO "vote_participantId_fkey";
+ALTER TABLE "votes" RENAME CONSTRAINT "Vote_participantsId_fkey" TO "votes_participantsId_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "vote" RENAME CONSTRAINT "Vote_pollId_fkey" TO "vote_pollId_fkey";
+ALTER TABLE "votes" RENAME CONSTRAINT "Vote_pollsId_fkey" TO "votes_pollsId_fkey";
 
 -- RenameIndex
-ALTER INDEX "Comment_id_pollId_key" RENAME TO "comment_id_pollId_key";
+ALTER INDEX "Comment_id_pollsId_key" RENAME TO "comments_id_pollsId_key";
 
 -- RenameIndex
-ALTER INDEX "Link_pollId_role_key" RENAME TO "link_pollId_role_key";
+ALTER INDEX "Link_pollsId_role_key" RENAME TO "links_pollsId_role_key";
 
 -- RenameIndex
-ALTER INDEX "Link_urlId_key" RENAME TO "link_urlId_key";
+ALTER INDEX "Link_urlId_key" RENAME TO "links_urlId_key";
 
 -- RenameIndex
-ALTER INDEX "Participant_id_pollId_key" RENAME TO "participant_id_pollId_key";
+ALTER INDEX "Participant_id_pollsId_key" RENAME TO "participants_id_pollsId_key";
 
 -- RenameIndex
-ALTER INDEX "Poll_urlId_key" RENAME TO "poll_urlId_key";
+ALTER INDEX "Poll_urlId_key" RENAME TO "polls_urlId_key";
 
 -- RenameIndex
-ALTER INDEX "User_email_key" RENAME TO "user_email_key";
+ALTER INDEX "User_email_key" RENAME TO "users_email_key";
