@@ -1,8 +1,6 @@
 import { Listbox } from "@headlessui/react";
-import { Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import { setValues } from "framer-motion/types/render/utils/setters";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
@@ -61,7 +59,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     },
   });
 
-  const { reset, handleSubmit, setValue, control, formState } = form;
+  const { reset, handleSubmit, control, formState } = form;
   const [selectedParticipantId, setSelectedParticipantId] =
     React.useState<string>();
 
