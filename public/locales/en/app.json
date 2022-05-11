@@ -49,5 +49,8 @@
   "monday": "Monday",
   "sunday": "Sunday",
   "12h": "12-hour",
-  "24h": "24-hour"
+  "24h": "24-hour",
+  "yes": "Yes",
+  "no": "No",
+  "ifNeedBe": "If need be"
 }
