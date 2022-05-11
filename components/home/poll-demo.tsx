@@ -70,7 +70,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
                 month={format(d, "MMM")}
               />
               <div>
-                <ScoreSummary yesScore={score} />
+                <ScoreSummary yesScore={score} compact={true} />
               </div>
             </div>
           );

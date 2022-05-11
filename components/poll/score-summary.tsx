@@ -80,7 +80,7 @@ export const ScoreSummary: React.VoidFunctionComponent<PopularityScoreProps> =
         className="inline-flex items-center space-x-2"
       >
         <Score icon={CheckCircle} compact={compact} score={yesScore} />
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {ifNeedBeScore ? (
             <MotionScore
               initial={{ opacity: 0, width: 0, x: -10 }}
