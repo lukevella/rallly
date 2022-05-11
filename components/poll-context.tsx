@@ -56,9 +56,11 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const participantsByOptionId = React.useMemo(() => {
     const res: Record<string, Participant[]> = {};
     poll.options.forEach((option) => {
-      res[option.id] = option.votes.map(
-        ({ participantId }) => participantById[participantId],
-      );
+      res[option.id] = option.votes
+        .filter((vote) => {
+          return vote.type !== "no";
+        })
+        .map(({ participantId }) => participantById[participantId]);
     });
     return res;
   }, [participantById, poll.options]);
