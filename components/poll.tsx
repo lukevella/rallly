@@ -1,4 +1,3 @@
-import { GetPollResponse } from "api-client/get-poll";
 import axios from "axios";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -21,7 +20,7 @@ import NotificationsToggle from "./poll/notifications-toggle";
 import PollSubheader from "./poll/poll-subheader";
 import TruncatedLinkify from "./poll/truncated-linkify";
 import { UserAvatarProvider } from "./poll/user-avatar";
-import { PollContextProvider, usePoll } from "./poll-context";
+import { usePoll } from "./poll-context";
 import Popover from "./popover";
 import { useSession } from "./session";
 import Sharing from "./sharing";
@@ -32,7 +31,7 @@ const Discussion = React.lazy(() => import("@/components/discussion"));
 const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
-const PollInner: NextPage = () => {
+const PollPage: NextPage = () => {
   const { poll } = usePoll();
 
   const router = useRouter();
@@ -220,14 +219,6 @@ const PollInner: NextPage = () => {
         </div>
       </StandardLayout>
     </UserAvatarProvider>
-  );
-};
-
-const PollPage = ({ poll }: { poll: GetPollResponse }) => {
-  return (
-    <PollContextProvider value={poll}>
-      <PollInner />
-    </PollContextProvider>
   );
 };
 
