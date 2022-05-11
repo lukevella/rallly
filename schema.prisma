@@ -36,7 +36,7 @@ model Poll {
   description   String?
   location      String?
   user          User          @relation(fields: [userId], references: [id])
-  userId        String
+  userId        String        @map("user_id")
   votes         Vote[]
   timeZone      String?       @map("time_zone")
   verified      Boolean       @default(false)
