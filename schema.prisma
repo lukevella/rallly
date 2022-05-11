@@ -16,10 +16,12 @@ model User {
   polls        Poll[]
   participants Participant[]
   comments     Comment[]
+  @@map("user")
 }
 
 enum PollType {
   date
+  @@map("poll_type")
 }
 
 model Poll {
@@ -45,11 +47,13 @@ model Poll {
   legacy           Boolean       @default(false)
   closed           Boolean       @default(false)
   notifications    Boolean       @default(false)
+  @@map("poll")
 }
 
 enum Role {
   admin
   participant
+  @@map("role")
 }
 
 model Link {
@@ -60,6 +64,7 @@ model Link {
   createdAt DateTime @default(now())
 
   @@unique([pollId, role])
+  @@map("link")
 }
 
 model Participant {
@@ -75,6 +80,7 @@ model Participant {
   updatedAt DateTime? @updatedAt
 
   @@unique([id, pollId])
+  @@map("participant")
 }
 
 model Option {
@@ -85,12 +91,14 @@ model Option {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   votes     Vote[]
+  @@map("option")
 }
 
 enum VoteType {
   yes
   no
   ifNeedBe
+  @@map("vote_type")
 }
 
 model Vote {
@@ -104,6 +112,7 @@ model Vote {
   type          VoteType    @default(yes)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime?   @updatedAt
+  @@map("vote")
 }
 
 model Comment {
@@ -119,4 +128,5 @@ model Comment {
   updatedAt  DateTime? @updatedAt
 
   @@unique([id, pollId])
+  @@map("comment")
 }
