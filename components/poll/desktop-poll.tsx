@@ -72,7 +72,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const [didUsePagination, setDidUsePagination] = React.useState(false);
 
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(!userAlreadyVoted);
+    React.useState(!userAlreadyVoted && !poll.closed);
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
@@ -198,7 +198,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 ) : null}
               </div>
             </div>
-            {shouldShowNewParticipantForm ? (
+            {shouldShowNewParticipantForm && !poll.closed ? (
               <ParticipantRowForm
                 className="border-t bg-slate-100 bg-opacity-0"
                 onSubmit={(data) => {
