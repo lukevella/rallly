@@ -25,7 +25,7 @@ const ManagePoll: React.VoidFunctionComponent<{
   placement?: Placement;
 }> = ({ placement }) => {
   const { t } = useTranslation("app");
-  const { poll } = usePoll();
+  const { poll, getParticipantsWhoVotedForOption } = usePoll();
 
   const { exportToCsv } = useCsvExporter();
 
@@ -107,7 +107,8 @@ const ManagePoll: React.VoidFunctionComponent<{
             };
 
             const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
-              (option) => option.votes.length > 0,
+              (option) =>
+                getParticipantsWhoVotedForOption(option.id).length > 0,
             );
 
             if (optionsToDeleteThatHaveVotes.length > 0) {

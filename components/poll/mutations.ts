@@ -41,15 +41,6 @@ export const useAddParticipantMutation = (pollId: string) => {
               );
             }
             poll.participants = [participant, ...poll.participants];
-            participant.votes.forEach((vote) => {
-              const votedOption = poll.options.find(
-                (option) => option.id === vote.optionId,
-              );
-              votedOption?.votes.push(vote);
-            });
-            poll.options.forEach((option) => {
-              participant.votes.some(({ optionId }) => optionId === option.id);
-            });
             return poll;
           },
         );
@@ -76,8 +67,23 @@ export const useUpdateParticipantMutation = (pollId: string) => {
         ),
       }),
     {
-      onSuccess: () => {
+      onSuccess: (participant) => {
         plausible("Update participant");
+        queryClient.setQueryData<GetPollResponse>(
+          ["getPoll", pollId],
+          (poll) => {
+            if (!poll) {
+              throw new Error(
+                "Tried to update poll but no result found in query cache",
+              );
+            }
+            const index = poll.participants.findIndex(
+              ({ id }) => participant.id === id,
+            );
+            poll.participants[index] = participant;
+            return poll;
+          },
+        );
       },
       onSettled: () => {
         queryClient.invalidateQueries(["getPoll", pollId]);
@@ -89,9 +95,28 @@ export const useUpdateParticipantMutation = (pollId: string) => {
 export const useDeleteParticipantMutation = () => {
   const queryClient = useQueryClient();
   const plausible = usePlausible();
+  const { poll } = usePoll();
   return useMutation(
     (payload: DeleteParticipantPayload) => deleteParticipant(payload),
     {
+      onMutate: ({ participantId }) => {
+        queryClient.setQueryData<GetPollResponse>(
+          ["getPoll", poll.urlId],
+          (poll) => {
+            if (!poll) {
+              throw new Error(
+                "Tried to update poll but no result found in query cache",
+              );
+            }
+
+            poll.participants = poll.participants.filter(
+              ({ id }) => id !== participantId,
+            );
+
+            return poll;
+          },
+        );
+      },
       onSuccess: () => {
         plausible("Remove participant");
       },

@@ -19,7 +19,7 @@ import { usePollContext } from "./poll-context";
 export interface ParticipantRowProps {
   urlId: string;
   participant: Participant & { votes: Vote[] };
-  options: Array<Option & { votes: Vote[] }>;
+  options: Option[];
   editMode: boolean;
   onChangeEditMode?: (value: boolean) => void;
 }

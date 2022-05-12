@@ -11,7 +11,7 @@ export default withLink(async ({ req, res, link }) => {
     case "PATCH":
       const payload: UpdateParticipantPayload = req.body;
 
-      await prisma.participant.update({
+      const participant = await prisma.participant.update({
         where: {
           id_pollId: {
             id: participantId,
@@ -33,9 +33,12 @@ export default withLink(async ({ req, res, link }) => {
           },
           name: req.body.name,
         },
+        include: {
+          votes: true,
+        },
       });
 
-      return res.end();
+      return res.json(participant);
 
     case "DELETE":
       await prisma.participant.delete({

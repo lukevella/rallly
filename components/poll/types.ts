@@ -17,5 +17,4 @@ export interface ParticipantFormSubmitted {
 }
 export interface PollProps {
   pollId: string;
-  highScore: number;
 }

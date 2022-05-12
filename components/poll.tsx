@@ -121,13 +121,6 @@ const PollPage: NextPage = () => {
 
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
 
-  let highScore = 1; // set to one because we don't want to highlight
-  poll.options.forEach((option) => {
-    if (option.votes.length > highScore) {
-      highScore = option.votes.length;
-    }
-  });
-
   const names = React.useMemo(
     () => poll.participants.map(({ name }) => name),
     [poll.participants],
@@ -231,7 +224,7 @@ const PollPage: NextPage = () => {
             </div>
             <React.Suspense fallback={<div>Loading…</div>}>
               <div className="mb-4 lg:mb-8">
-                <PollComponent pollId={poll.urlId} highScore={highScore} />
+                <PollComponent pollId={poll.urlId} />
               </div>
               <Discussion pollId={poll.urlId} />
             </React.Suspense>

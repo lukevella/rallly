@@ -56,42 +56,38 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const participantsByOptionId = React.useMemo(() => {
     const res: Record<string, Participant[]> = {};
     poll.options.forEach((option) => {
-      res[option.id] = option.votes
-        .filter((vote) => {
-          return vote.type !== "no";
-        })
-        .map(({ participantId }) => participantById[participantId]);
+      res[option.id] = poll.participants.filter((participant) =>
+        participant.votes.some(
+          ({ type, optionId }) => optionId === option.id && type !== "no",
+        ),
+      );
     });
     return res;
-  }, [participantById, poll.options]);
-  const { locale } = usePreferences();
+  }, [poll.options, poll.participants]);
 
-  const getVotesForOption = React.useCallback(
-    (optionId: string) => {
-      // TODO (Luke Vella) [2022-04-16]: Build an index instead
-      const option = poll.options.find(({ id }) => id === optionId);
-      return option?.votes ?? [];
-    },
-    [poll.options],
-  );
+  const { locale } = usePreferences();
 
   const getScore = React.useCallback(
     (optionId: string) => {
-      const votes = getVotesForOption(optionId);
-      return votes.reduce(
+      return poll.participants.reduce(
         (acc, curr) => {
-          if (curr.type === "yes") {
-            acc.yes += 1;
-          }
-          if (curr.type === "ifNeedBe") {
-            acc.ifNeedBe += 1;
-          }
+          curr.votes.forEach((vote) => {
+            if (vote.optionId !== optionId) {
+              return;
+            }
+            if (vote.type === "yes") {
+              acc.yes += 1;
+            }
+            if (vote.type === "ifNeedBe") {
+              acc.ifNeedBe += 1;
+            }
+          });
           return acc;
         },
         { yes: 0, ifNeedBe: 0 },
       );
     },
-    [getVotesForOption],
+    [poll.participants],
   );
 
   const contextValue = React.useMemo<PollContextValue>(() => {

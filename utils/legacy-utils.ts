@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
-import { getMongoClient } from "./mongodb-client";
+
 import { prisma } from "../db";
+import { getMongoClient } from "./mongodb-client";
 
 export interface LegacyPoll {
   __private: {
@@ -91,8 +92,8 @@ export const resetDates = async (legacyPollId: string) => {
     },
     include: {
       options: {
-        include: {
-          votes: true,
+        orderBy: {
+          value: "asc",
         },
       },
       participants: {

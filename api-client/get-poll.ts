@@ -1,7 +1,7 @@
 import { Link, Option, Participant, Poll, User, Vote } from "@prisma/client";
 
 export interface GetPollApiResponse extends Omit<Poll, "verificationCode"> {
-  options: Array<Option & { votes: Vote[] }>;
+  options: Option[];
   participants: Array<Participant & { votes: Vote[] }>;
   user: User;
   role: "admin" | "participant";

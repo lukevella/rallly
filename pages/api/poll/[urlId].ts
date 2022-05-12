@@ -18,9 +18,6 @@ export default withLink<
         },
         include: {
           options: {
-            include: {
-              votes: true,
-            },
             orderBy: {
               value: "asc",
             },
@@ -111,9 +108,6 @@ export default withLink<
         },
         include: {
           options: {
-            include: {
-              votes: true,
-            },
             orderBy: {
               value: "asc",
             },
