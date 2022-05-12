@@ -40,3 +40,6 @@ yarn-error.log*
 # playwright
 /playwright-report
 /test-results
+
+# ts
+tsconfig.tsbuildinfo
