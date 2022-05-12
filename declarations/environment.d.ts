@@ -4,7 +4,7 @@ declare global {
       DATABASE_URL: string;
       NODE_ENV: "development" | "production";
       SECRET_PASSWORD: string;
-      MAINTENANCE_MODE?: "true";
+      NEXT_PUBLIC_MAINTENANCE_MODE?: string;
       PLAUSIBLE_DOMAIN?: string;
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;
       LEGACY_MONGODB_URI?: string;

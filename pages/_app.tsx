@@ -12,6 +12,7 @@ import PlausibleProvider from "next-plausible";
 import toast, { Toaster } from "react-hot-toast";
 import { MutationCache, QueryClient, QueryClientProvider } from "react-query";
 
+import Maintenance from "@/components/maintenance";
 import ModalProvider from "@/components/modal/modal-provider";
 import PreferencesProvider from "@/components/preferences/preferences-provider";
 
@@ -32,6 +33,9 @@ const queryClient = new QueryClient({
 });
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
+  if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1") {
+    return <Maintenance />;
+  }
   return (
     <PlausibleProvider
       domain="rallly.co"
