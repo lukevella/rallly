@@ -19,7 +19,7 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
   return (
     <div
       className={clsx(
-        "relative inline-block h-14 w-14 rounded-md border bg-white text-center shadow-md shadow-slate-100",
+        "relative mt-1 inline-block h-14 w-14 rounded-md border bg-white text-center shadow-md shadow-slate-100",
         className,
       )}
     >
@@ -31,7 +31,7 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
           {dow}
         </span>
       </div>
-      <div className="-mb-1 text-center text-lg text-red-500">{day}</div>
+      <div className="-mb-1 text-center text-lg text-rose-500">{day}</div>
       <div className="text-center text-xs font-semibold uppercase text-gray-800">
         {month}
       </div>

@@ -77,22 +77,18 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     (optionId: string) => {
       const votes = getVotesForOption(optionId);
       return votes.reduce((acc, curr) => {
-        if (curr.type === "yes") {
-          acc += 1;
-        }
-        return acc;
+        return curr.type === "yes" ? acc + 1 : acc;
       }, 0);
     },
     [getVotesForOption],
   );
 
   const contextValue = React.useMemo<PollContextValue>(() => {
-    let highScore = 1;
-    poll.options.forEach((option) => {
-      if (option.votes.length > highScore) {
-        highScore = option.votes.length;
-      }
-    });
+    const highScore = poll.options.reduce((acc, curr) => {
+      const score = getScore(curr.id);
+
+      return score > acc ? score : acc;
+    }, 1);
 
     const parsedOptions = decodeOptions(
       poll.options,
@@ -120,7 +116,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     return {
       userAlreadyVoted,
       poll,
-      getVotesForOption,
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
@@ -140,7 +135,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     };
   }, [
     getScore,
-    getVotesForOption,
     locale,
     participantById,
     participantsByOptionId,

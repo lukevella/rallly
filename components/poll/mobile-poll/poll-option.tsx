@@ -3,9 +3,10 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
+import { PopularityScore } from "../popularity-score";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
-import PopularityScore from "./popularity-score";
+import { VoteSelector } from "../vote-selector";
 
 export interface PollOptionProps {
   children?: React.ReactNode;
@@ -68,37 +69,28 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   editable,
   numberOfVotes,
 }) => {
-  const difference = selectedParticipantId
-    ? participants.some(({ id }) => id === selectedParticipantId)
-      ? vote === "yes"
-        ? 0
-        : -1
-      : vote === "yes"
-      ? 1
-      : 0
-    : vote === "yes"
-    ? 1
-    : 0;
-
   const showVotes = !!(selectedParticipantId || editable);
+
+  const selectorRef = React.useRef<HTMLButtonElement>(null);
   return (
     <div
       data-testid="poll-option"
       onClick={() => {
-        onChange(vote === "yes" ? "no" : "yes");
+        if (selectorRef.current) {
+          selectorRef.current.click();
+        }
       }}
       className={clsx(
-        "flex items-center space-x-3 px-4 py-3 transition duration-75",
+        "flex select-none items-center space-x-3 px-4 py-3 transition duration-75",
         {
-          "active:bg-indigo-50": editable,
-          "bg-indigo-50/50": editable && vote === "yes",
+          "active:bg-slate-400/5": editable,
         },
       )}
     >
-      <div className="pointer-events-none flex grow items-center">
+      <div className="flex grow items-center">
         <div className="grow">{children}</div>
         <div className="flex flex-col items-end">
-          <PopularityScore score={numberOfVotes + difference} />
+          <PopularityScore score={numberOfVotes} />
           {participants.length > 0 ? (
             <div className="mt-1 -mr-1">
               <div className="-space-x-1">
@@ -127,27 +119,20 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
         expanded={showVotes}
         className="relative flex h-12 items-center justify-center rounded-lg"
       >
-        <AnimatePresence>
-          {editable ? (
-            <PopInOut className="h-full">
-              <div className="flex h-full w-14 items-center justify-center">
-                <input
-                  readOnly={true}
-                  type="checkbox"
-                  className="checkbox"
-                  checked={vote === "yes"}
-                />
-              </div>
-            </PopInOut>
-          ) : vote ? (
+        {editable ? (
+          <div className="flex h-full w-14 items-center justify-center">
+            <VoteSelector ref={selectorRef} value={vote} onChange={onChange} />
+          </div>
+        ) : vote ? (
+          <AnimatePresence initial={false}>
             <PopInOut
               key={vote}
               className="absolute inset-0 flex h-full w-full items-center justify-center"
             >
               <VoteIcon type={vote} />
             </PopInOut>
-          ) : null}
-        </AnimatePresence>
+          </AnimatePresence>
+        ) : null}
       </CollapsibleContainer>
     </div>
   );

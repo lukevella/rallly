@@ -21,15 +21,14 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
   selectedParticipantId,
 }) => {
   const { control } = useFormContext<ParticipantForm>();
-  const { getParticipantsWhoVotedForOption, getVote, getParticipantById } =
-    usePoll();
+  const { getParticipantsWhoVotedForOption, getParticipantById } = usePoll();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
   return (
     <div className="divide-y">
-      {options.map((option) => {
+      {options.map((option, index) => {
         const participants = getParticipantsWhoVotedForOption(option.optionId);
         return (
           <Controller
@@ -37,27 +36,14 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
             control={control}
             name="votes"
             render={({ field }) => {
-              const vote = editable
-                ? field.value.includes(option.optionId)
-                  ? "yes"
-                  : "no"
-                : selectedParticipant
-                ? getVote(selectedParticipant.id, option.optionId)
-                : undefined;
-
+              const vote = field.value[index];
               const handleChange = (newVote: VoteType) => {
                 if (!editable) {
                   return;
                 }
-                if (newVote === "no") {
-                  field.onChange(
-                    field.value.filter(
-                      (optionId) => optionId !== option.optionId,
-                    ),
-                  );
-                } else {
-                  field.onChange([...field.value, option.optionId]);
-                }
+                const newValue = [...field.value];
+                newValue[index] = { optionId: option.optionId, type: newVote };
+                field.onChange(newValue);
               };
 
               switch (option.type) {
@@ -67,7 +53,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                       onChange={handleChange}
                       numberOfVotes={participants.length}
                       participants={participants}
-                      vote={vote}
+                      vote={vote.type}
                       startTime={option.startTime}
                       endTime={option.endTime}
                       duration={option.duration}
@@ -81,7 +67,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                       onChange={handleChange}
                       numberOfVotes={participants.length}
                       participants={participants}
-                      vote={vote}
+                      vote={vote.type}
                       dow={option.dow}
                       day={option.day}
                       month={option.month}

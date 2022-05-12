@@ -100,7 +100,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
           isYou={isYou}
         />
         {canEdit ? (
-          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden px-2 group-hover:flex">
+          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden group-hover:flex">
             <CompactButton
               icon={Pencil}
               onClick={() => {

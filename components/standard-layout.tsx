@@ -29,7 +29,7 @@ const HomeLink = () => {
   return (
     <Link href="/">
       <a>
-        <Logo className="w-28 text-indigo-500 transition-colors active:text-indigo-600 lg:w-32" />
+        <Logo className="inline-block w-28 text-indigo-500 transition-colors active:text-indigo-600 lg:w-32" />
       </a>
     </Link>
   );
@@ -40,7 +40,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
 }> = ({ openLoginModal }) => {
   const { user } = useSession();
   return (
-    <div className="fixed top-0 z-30 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50 px-4 shadow-sm lg:hidden">
+    <div className="fixed top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50 px-4 lg:hidden">
       <div>
         <HomeLink />
       </div>

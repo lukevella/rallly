@@ -1,5 +1,4 @@
 import { VoteType } from "@prisma/client";
-import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
@@ -21,17 +20,20 @@ const getNext = (value: VoteType) => {
   ];
 };
 
-const VoteSelector: React.ForwardRefRenderFunction<
+export const VoteSelector = React.forwardRef<
   HTMLButtonElement,
   VoteSelectorProps
-> = ({ value = "no", onChange, onFocus, onBlur, onKeyDown }, ref) => {
+>(function VoteSelector(
+  { value = "no", onChange, onFocus, onBlur, onKeyDown },
+  ref,
+) {
   return (
     <button
       type="button"
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-white transition focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-indigo-500"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-white shadow-sm transition focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-95"
       onClick={() => {
         onChange?.(value ? getNext(value) : orderedVoteTypes[0]);
       }}
@@ -51,6 +53,4 @@ const VoteSelector: React.ForwardRefRenderFunction<
       </AnimatePresence>
     </button>
   );
-};
-
-export default React.forwardRef(VoteSelector);
+});
