@@ -46,10 +46,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
   } = useForm<ParticipantForm>({
     defaultValues: {
       name: "",
-      votes: options.map((option) => ({
-        optionId: option.id,
-        type: "no",
-      })),
+      votes: [],
       ...defaultValues,
     },
   });
@@ -75,7 +72,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
         await onSubmit({
           name,
           // no need to create votes for "no"
-          votes: votes.filter(({ type }) => type !== "no"),
+          votes,
         });
         reset();
       })}
@@ -134,7 +131,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                     onMouseOut={() => setActiveOptionId(null)}
                   >
                     <VoteSelector
-                      value={value.type}
+                      value={value?.type}
                       onKeyDown={(e) => {
                         if (
                           e.code === "Tab" &&

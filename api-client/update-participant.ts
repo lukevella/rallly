@@ -5,7 +5,7 @@ export interface UpdateParticipantPayload {
   pollId: string;
   participantId: string;
   name: string;
-  votes: { optionId: string; type: VoteType }[];
+  votes: Array<{ optionId: string; type: VoteType }>;
 }
 
 export const updateParticipant = async (

@@ -55,14 +55,14 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
         defaultValues={{
           name: participant.name,
           votes: options.map(({ id }) => {
-            return { optionId: id, type: getVote(participant.id, id) ?? "no" };
+            const type = getVote(participant.id, id);
+            return type ? { optionId: id, type } : undefined;
           }),
         }}
         onSubmit={async ({ name, votes }) => {
           return new Promise((resolve, reject) => {
             updateParticipantMutation(
               {
-                pollId: participant.pollId,
                 participantId: participant.id,
                 votes,
                 name,
@@ -118,6 +118,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
       </div>
       <ControlledScrollArea>
         {options.map((option) => {
+          const vote = getVote(participant.id, option.id);
           return (
             <div
               key={option.id}
@@ -131,7 +132,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
               onMouseOver={() => setActiveOptionId(option.id)}
               onMouseOut={() => setActiveOptionId(null)}
             >
-              <VoteIcon type={getVote(participant.id, option.id)} />
+              <VoteIcon type={vote} />
             </div>
           );
         })}

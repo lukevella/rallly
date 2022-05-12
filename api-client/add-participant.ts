@@ -4,7 +4,7 @@ import axios from "axios";
 export interface AddParticipantPayload {
   pollId: string;
   name: string;
-  votes: { optionId: string; type: VoteType }[];
+  votes: Array<{ optionId: string; type: VoteType }>;
 }
 
 export type AddParticipantResponse = Participant & {

@@ -1,3 +1,4 @@
+import { VoteType } from "@prisma/client";
 import { addMinutes } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 import absoluteUrl from "utils/absolute-url";
@@ -49,7 +50,11 @@ export default async function handler(
         createdAt: Date;
       }> = [];
 
-      const votes: Array<{ optionId: string; participantId: string }> = [];
+      const votes: Array<{
+        optionId: string;
+        participantId: string;
+        type: VoteType;
+      }> = [];
 
       for (let i = 0; i < participantData.length; i++) {
         const { name, votes: participantVotes } = participantData[i];
@@ -61,9 +66,12 @@ export default async function handler(
           createdAt: addMinutes(today, i * -1),
         });
 
-        participantVotes.forEach((voteIndex) => {
-          const option = options[voteIndex];
-          votes.push({ optionId: option.id, participantId });
+        options.forEach((option, index) => {
+          votes.push({
+            optionId: option.id,
+            participantId,
+            type: participantVotes.includes(index) ? "yes" : "no",
+          });
         });
       }
 

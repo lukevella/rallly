@@ -52,10 +52,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const form = useForm<ParticipantForm>({
     defaultValues: {
       name: "",
-      votes: poll.options.map((option) => ({
-        optionId: option.id,
-        type: "no",
-      })),
+      votes: [],
     },
   });
 
@@ -125,7 +122,6 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               updateParticipantMutation(
                 {
                   participantId: selectedParticipant.id,
-                  pollId,
                   ...data,
                 },
                 {

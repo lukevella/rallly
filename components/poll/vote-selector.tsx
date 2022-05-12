@@ -23,10 +23,7 @@ const getNext = (value: VoteType) => {
 export const VoteSelector = React.forwardRef<
   HTMLButtonElement,
   VoteSelectorProps
->(function VoteSelector(
-  { value = "no", onChange, onFocus, onBlur, onKeyDown },
-  ref,
-) {
+>(function VoteSelector({ value, onChange, onFocus, onBlur, onKeyDown }, ref) {
   return (
     <button
       data-testid="vote-selector"

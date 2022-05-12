@@ -14,10 +14,13 @@ const VoteIcon: React.VoidFunctionComponent<{
     case "ifNeedBe":
       return <IfNeedBe className="h-5 w-5 text-yellow-400" />;
 
-    default:
+    case "no":
       return (
         <span className="inline-block h-2 w-2 rounded-full bg-slate-300" />
       );
+
+    default:
+      return <span className="inline-block font-bold text-slate-300">?</span>;
   }
 };
 

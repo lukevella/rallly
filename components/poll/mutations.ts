@@ -8,24 +8,25 @@ import {
   DeleteParticipantPayload,
 } from "../../api-client/delete-participant";
 import { GetPollResponse } from "../../api-client/get-poll";
-import {
-  updateParticipant,
-  UpdateParticipantPayload,
-} from "../../api-client/update-participant";
+import { updateParticipant } from "../../api-client/update-participant";
 import { usePoll } from "../poll-context";
 import { useSession } from "../session";
-import { ParticipantFormSubmitted } from "./types";
+import { ParticipantForm } from "./types";
 
 export const useAddParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
   const session = useSession();
   const plausible = usePlausible();
+  const { options } = usePoll();
+
   return useMutation(
-    (payload: ParticipantFormSubmitted) =>
+    (payload: ParticipantForm) =>
       addParticipant({
         pollId,
         name: payload.name.trim(),
-        votes: payload.votes,
+        votes: payload.votes.map(
+          (vote, i) => vote ?? { optionId: options[i].optionId, type: "no" },
+        ),
       }),
     {
       onSuccess: (participant) => {
@@ -60,14 +61,17 @@ export const useAddParticipantMutation = (pollId: string) => {
 export const useUpdateParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
   const plausible = usePlausible();
+  const { options } = usePoll();
 
   return useMutation(
-    (payload: UpdateParticipantPayload) =>
+    (payload: ParticipantForm & { participantId: string }) =>
       updateParticipant({
         pollId,
         participantId: payload.participantId,
         name: payload.name.trim(),
-        votes: payload.votes,
+        votes: payload.votes.map(
+          (vote, i) => vote ?? { optionId: options[i].optionId, type: "no" },
+        ),
       }),
     {
       onSuccess: () => {
