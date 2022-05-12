@@ -6,22 +6,22 @@ import { nanoid } from "utils/nanoid";
 
 import { prisma } from "../../../db";
 
-const participantData = [
+const participantData: Array<{ name: string; votes: VoteType[] }> = [
   {
     name: "Reed",
-    votes: [0, 2],
+    votes: ["yes", "no", "ifNeedBe", "no"],
   },
   {
     name: "Susan",
-    votes: [0, 1, 2],
+    votes: ["yes", "yes", "yes", "no"],
   },
   {
     name: "Johnny",
-    votes: [2, 3],
+    votes: ["no", "no", "yes", "yes"],
   },
   {
     name: "Ben",
-    votes: [0, 1, 2, 3],
+    votes: ["yes", "yes", "yes", "yes"],
   },
 ];
 
@@ -70,7 +70,7 @@ export default async function handler(
           votes.push({
             optionId: option.id,
             participantId,
-            type: participantVotes.includes(index) ? "yes" : "no",
+            type: participantVotes[index],
           });
         });
       }
