@@ -37,13 +37,8 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const pollContext = usePoll();
 
-  const {
-    poll,
-    targetTimeZone,
-    setTargetTimeZone,
-    getVote,
-    getParticipantById,
-  } = pollContext;
+  const { poll, targetTimeZone, setTargetTimeZone, getParticipantById } =
+    pollContext;
 
   const { timeZone, participants, role } = poll;
 
@@ -151,23 +146,6 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               value={selectedParticipantId}
               onChange={(participantId) => {
                 setSelectedParticipantId(participantId);
-                if (participantId) {
-                  reset({
-                    name: getParticipantById(participantId)?.name,
-                    votes: poll.options.map((option) => ({
-                      optionId: option.id,
-                      type: getVote(participantId, option.id) ?? "no",
-                    })),
-                  });
-                } else {
-                  reset({
-                    name: "",
-                    votes: poll.options.map((option) => ({
-                      optionId: option.id,
-                      type: "no",
-                    })),
-                  });
-                }
               }}
               disabled={isEditing}
             >
@@ -233,6 +211,13 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                     icon={<Pencil />}
                     onClick={() => {
                       setIsEditing(true);
+                      reset({
+                        name: selectedParticipant.name,
+                        votes: selectedParticipant.votes.map((vote) => ({
+                          optionId: vote.optionId,
+                          type: vote.type,
+                        })),
+                      });
                     }}
                   >
                     Edit
@@ -253,6 +238,10 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   type="primary"
                   icon={<PlusCircle />}
                   onClick={() => {
+                    reset({
+                      name: "",
+                      votes: [],
+                    });
                     setIsEditing(true);
                   }}
                 >

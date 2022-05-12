@@ -21,8 +21,12 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
   selectedParticipantId,
 }) => {
   const { control } = useFormContext<ParticipantForm>();
-  const { getParticipantsWhoVotedForOption, getParticipantById, getScore } =
-    usePoll();
+  const {
+    getParticipantsWhoVotedForOption,
+    getParticipantById,
+    getScore,
+    getVote,
+  } = usePoll();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
@@ -38,7 +42,11 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
             control={control}
             name="votes"
             render={({ field }) => {
-              const vote = field.value[index];
+              const vote =
+                !editable && selectedParticipant
+                  ? getVote(selectedParticipant.id, option.optionId)
+                  : field.value[index]?.type;
+
               const handleChange = (newVote: VoteType) => {
                 if (!editable) {
                   return;
@@ -56,7 +64,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
                       participants={participants}
-                      vote={vote?.type}
+                      vote={vote}
                       startTime={option.startTime}
                       endTime={option.endTime}
                       duration={option.duration}
@@ -71,7 +79,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
                       participants={participants}
-                      vote={vote?.type}
+                      vote={vote}
                       dow={option.dow}
                       day={option.day}
                       month={option.month}
