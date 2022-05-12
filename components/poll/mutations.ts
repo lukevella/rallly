@@ -77,10 +77,11 @@ export const useUpdateParticipantMutation = (pollId: string) => {
                 "Tried to update poll but no result found in query cache",
               );
             }
-            const index = poll.participants.findIndex(
-              ({ id }) => participant.id === id,
+
+            poll.participants = poll.participants.map((p) =>
+              p.id === participant.id ? participant : p,
             );
-            poll.participants[index] = participant;
+
             return poll;
           },
         );
