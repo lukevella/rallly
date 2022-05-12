@@ -24,8 +24,9 @@ export const useAddParticipantMutation = (pollId: string) => {
       addParticipant({
         pollId,
         name: payload.name.trim(),
-        votes: payload.votes.map(
-          (vote, i) => vote ?? { optionId: options[i].optionId, type: "no" },
+        votes: options.map(
+          (option, i) =>
+            payload.votes[i] ?? { optionId: option.optionId, type: "no" },
         ),
       }),
     {
@@ -69,8 +70,9 @@ export const useUpdateParticipantMutation = (pollId: string) => {
         pollId,
         participantId: payload.participantId,
         name: payload.name.trim(),
-        votes: payload.votes.map(
-          (vote, i) => vote ?? { optionId: options[i].optionId, type: "no" },
+        votes: options.map(
+          (option, i) =>
+            payload.votes[i] ?? { optionId: option.optionId, type: "no" },
         ),
       }),
     {
