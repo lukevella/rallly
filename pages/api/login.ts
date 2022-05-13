@@ -1,4 +1,4 @@
-import absoluteUrl from "utils/absolute-url";
+import { absoluteUrl } from "utils/absolute-url";
 import { sendEmailTemplate } from "utils/api-utils";
 import { createToken, withSessionRoute } from "utils/auth";
 

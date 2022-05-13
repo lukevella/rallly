@@ -5,7 +5,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 
 import { prisma } from "../db";
-import absoluteUrl from "./absolute-url";
+import { absoluteUrl } from "./absolute-url";
 import { sendEmail } from "./send-email";
 
 export const getQueryParam = (req: NextApiRequest, queryKey: string) => {

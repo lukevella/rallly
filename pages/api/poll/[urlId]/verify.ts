@@ -1,4 +1,4 @@
-import absoluteUrl from "utils/absolute-url";
+import { absoluteUrl } from "utils/absolute-url";
 import {
   createToken,
   decryptToken,

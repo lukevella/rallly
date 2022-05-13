@@ -1,7 +1,7 @@
 import { VoteType } from "@prisma/client";
 import { addMinutes } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
-import absoluteUrl from "utils/absolute-url";
+import { absoluteUrl } from "utils/absolute-url";
 import { nanoid } from "utils/nanoid";
 
 import { prisma } from "../../../db";

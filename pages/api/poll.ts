@@ -4,7 +4,7 @@ import { nanoid } from "utils/nanoid";
 
 import { CreatePollPayload } from "../../api-client/create-poll";
 import { prisma } from "../../db";
-import absoluteUrl from "../../utils/absolute-url";
+import { absoluteUrl } from "../../utils/absolute-url";
 
 export default withSessionRoute(async (req, res) => {
   switch (req.method) {
