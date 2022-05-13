@@ -75,7 +75,7 @@ export default async function handler(
         });
       }
 
-      const homePageUrl = absoluteUrl(req).origin;
+      const homePageUrl = absoluteUrl();
 
       await prisma.poll.create({
         data: {

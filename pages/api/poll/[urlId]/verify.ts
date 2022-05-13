@@ -34,7 +34,7 @@ export default withSessionRoute(
             .json({ status: 404, message: "Poll not found" });
         }
 
-        const homePageUrl = absoluteUrl(req).origin;
+        const homePageUrl = absoluteUrl();
         const pollUrl = `${homePageUrl}/admin/${link.urlId}`;
         const token = await createToken({
           pollId: link.pollId,

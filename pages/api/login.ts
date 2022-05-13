@@ -6,7 +6,7 @@ export default withSessionRoute(async (req, res) => {
   switch (req.method) {
     case "POST": {
       const email = req.body.email;
-      const homePageUrl = absoluteUrl(req).origin;
+      const homePageUrl = absoluteUrl();
       const token = await createToken({
         email,
         guestId: req.session.user?.isGuest ? req.session.user.id : undefined,

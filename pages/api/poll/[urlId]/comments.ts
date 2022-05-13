@@ -39,7 +39,7 @@ export default withSessionRoute(
           },
         });
 
-        await sendNotification(req, link.pollId, {
+        await sendNotification(link.pollId, {
           type: "newComment",
           authorName: newComment.authorName,
         });

@@ -56,7 +56,6 @@ type NotificationAction =
     };
 
 export const sendNotification = async (
-  req: NextApiRequest,
   pollId: string,
   action: NotificationAction,
 ): Promise<void> => {
@@ -83,7 +82,7 @@ export const sendNotification = async (
       if (!adminLink) {
         throw new Error(`Missing admin link for poll: ${pollId}`);
       }
-      const homePageUrl = absoluteUrl(req).origin;
+      const homePageUrl = absoluteUrl();
       const pollUrl = `${homePageUrl}/admin/${adminLink.urlId}`;
       const unsubscribeUrl = `${pollUrl}?unsubscribe=true`;
 
@@ -98,7 +97,7 @@ export const sendNotification = async (
               name: poll.authorName,
               participantName: action.participantName,
               pollUrl,
-              homePageUrl: absoluteUrl(req).origin,
+              homePageUrl: absoluteUrl(),
               supportEmail: process.env.SUPPORT_EMAIL,
               unsubscribeUrl,
             },
@@ -114,7 +113,7 @@ export const sendNotification = async (
               name: poll.authorName,
               author: action.authorName,
               pollUrl,
-              homePageUrl: absoluteUrl(req).origin,
+              homePageUrl: absoluteUrl(),
               supportEmail: process.env.SUPPORT_EMAIL,
               unsubscribeUrl,
             },

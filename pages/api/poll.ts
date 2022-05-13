@@ -60,7 +60,7 @@ export default withSessionRoute(async (req, res) => {
         },
       });
 
-      const homePageUrl = absoluteUrl(req).origin;
+      const homePageUrl = absoluteUrl();
       const pollUrl = `${homePageUrl}/admin/${adminUrlId}`;
 
       try {
