@@ -1,3 +1,4 @@
+import { VoteType } from "@prisma/client";
 import { addMinutes } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 import absoluteUrl from "utils/absolute-url";
@@ -5,22 +6,22 @@ import { nanoid } from "utils/nanoid";
 
 import { prisma } from "../../../db";
 
-const participantData = [
+const participantData: Array<{ name: string; votes: VoteType[] }> = [
   {
     name: "Reed",
-    votes: [0, 2],
+    votes: ["yes", "no", "ifNeedBe", "no"],
   },
   {
     name: "Susan",
-    votes: [0, 1, 2],
+    votes: ["yes", "yes", "yes", "no"],
   },
   {
     name: "Johnny",
-    votes: [2, 3],
+    votes: ["no", "no", "yes", "yes"],
   },
   {
     name: "Ben",
-    votes: [0, 1, 2, 3],
+    votes: ["yes", "yes", "yes", "yes"],
   },
 ];
 
@@ -49,7 +50,11 @@ export default async function handler(
         createdAt: Date;
       }> = [];
 
-      const votes: Array<{ optionId: string; participantId: string }> = [];
+      const votes: Array<{
+        optionId: string;
+        participantId: string;
+        type: VoteType;
+      }> = [];
 
       for (let i = 0; i < participantData.length; i++) {
         const { name, votes: participantVotes } = participantData[i];
@@ -61,9 +66,12 @@ export default async function handler(
           createdAt: addMinutes(today, i * -1),
         });
 
-        participantVotes.forEach((voteIndex) => {
-          const option = options[voteIndex];
-          votes.push({ optionId: option.id, participantId });
+        options.forEach((option, index) => {
+          votes.push({
+            optionId: option.id,
+            participantId,
+            type: participantVotes[index],
+          });
         });
       }
 

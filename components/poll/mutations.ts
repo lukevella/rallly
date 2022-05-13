@@ -8,10 +8,7 @@ import {
   DeleteParticipantPayload,
 } from "../../api-client/delete-participant";
 import { GetPollResponse } from "../../api-client/get-poll";
-import {
-  updateParticipant,
-  UpdateParticipantPayload,
-} from "../../api-client/update-participant";
+import { updateParticipant } from "../../api-client/update-participant";
 import { usePoll } from "../poll-context";
 import { useSession } from "../session";
 import { ParticipantForm } from "./types";
@@ -20,12 +17,17 @@ export const useAddParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
   const session = useSession();
   const plausible = usePlausible();
+  const { options } = usePoll();
+
   return useMutation(
     (payload: ParticipantForm) =>
       addParticipant({
         pollId,
         name: payload.name.trim(),
-        votes: payload.votes,
+        votes: options.map(
+          (option, i) =>
+            payload.votes[i] ?? { optionId: option.optionId, type: "no" },
+        ),
       }),
     {
       onSuccess: (participant) => {
@@ -39,15 +41,6 @@ export const useAddParticipantMutation = (pollId: string) => {
               );
             }
             poll.participants = [participant, ...poll.participants];
-            participant.votes.forEach((vote) => {
-              const votedOption = poll.options.find(
-                (option) => option.id === vote.optionId,
-              );
-              votedOption?.votes.push(vote);
-            });
-            poll.options.forEach((option) => {
-              participant.votes.some(({ optionId }) => optionId === option.id);
-            });
             return poll;
           },
         );
@@ -60,18 +53,38 @@ export const useAddParticipantMutation = (pollId: string) => {
 export const useUpdateParticipantMutation = (pollId: string) => {
   const queryClient = useQueryClient();
   const plausible = usePlausible();
+  const { options } = usePoll();
 
   return useMutation(
-    (payload: UpdateParticipantPayload) =>
+    (payload: ParticipantForm & { participantId: string }) =>
       updateParticipant({
         pollId,
         participantId: payload.participantId,
         name: payload.name.trim(),
-        votes: payload.votes,
+        votes: options.map(
+          (option, i) =>
+            payload.votes[i] ?? { optionId: option.optionId, type: "no" },
+        ),
       }),
     {
-      onSuccess: () => {
+      onSuccess: (participant) => {
         plausible("Update participant");
+        queryClient.setQueryData<GetPollResponse>(
+          ["getPoll", pollId],
+          (poll) => {
+            if (!poll) {
+              throw new Error(
+                "Tried to update poll but no result found in query cache",
+              );
+            }
+
+            poll.participants = poll.participants.map((p) =>
+              p.id === participant.id ? participant : p,
+            );
+
+            return poll;
+          },
+        );
       },
       onSettled: () => {
         queryClient.invalidateQueries(["getPoll", pollId]);
@@ -83,9 +96,28 @@ export const useUpdateParticipantMutation = (pollId: string) => {
 export const useDeleteParticipantMutation = () => {
   const queryClient = useQueryClient();
   const plausible = usePlausible();
+  const { poll } = usePoll();
   return useMutation(
     (payload: DeleteParticipantPayload) => deleteParticipant(payload),
     {
+      onMutate: ({ participantId }) => {
+        queryClient.setQueryData<GetPollResponse>(
+          ["getPoll", poll.urlId],
+          (poll) => {
+            if (!poll) {
+              throw new Error(
+                "Tried to update poll but no result found in query cache",
+              );
+            }
+
+            poll.participants = poll.participants.filter(
+              ({ id }) => id !== participantId,
+            );
+
+            return poll;
+          },
+        );
+      },
       onSuccess: () => {
         plausible("Remove participant");
       },

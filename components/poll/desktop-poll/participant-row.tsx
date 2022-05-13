@@ -2,7 +2,6 @@ import { Option, Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
 import * as React from "react";
 
-import Badge from "@/components/badge";
 import CompactButton from "@/components/compact-button";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Trash from "@/components/icons/trash.svg";
@@ -20,7 +19,7 @@ import { usePollContext } from "./poll-context";
 export interface ParticipantRowProps {
   urlId: string;
   participant: Participant & { votes: Vote[] };
-  options: Array<Option & { votes: Vote[] }>;
+  options: Option[];
   editMode: boolean;
   onChangeEditMode?: (value: boolean) => void;
 }
@@ -41,7 +40,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const session = useSession();
-  const { poll } = usePoll();
+  const { poll, getVote } = usePoll();
 
   const isYou = session.user && session.ownsObject(participant) ? true : false;
 
@@ -55,13 +54,15 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
       <ParticipantRowForm
         defaultValues={{
           name: participant.name,
-          votes: participant.votes.map(({ optionId }) => optionId),
+          votes: options.map(({ id }) => {
+            const type = getVote(participant.id, id);
+            return type ? { optionId: id, type } : undefined;
+          }),
         }}
         onSubmit={async ({ name, votes }) => {
           return new Promise((resolve, reject) => {
             updateParticipantMutation(
               {
-                pollId: participant.pollId,
                 participantId: participant.id,
                 votes,
                 name,
@@ -86,7 +87,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
     <div
       key={participant.id}
       data-testid="participant-row"
-      className="group flex h-14 transition-colors hover:bg-slate-50"
+      className="group flex h-14 transition-colors hover:bg-slate-300/10"
     >
       <div
         className="flex shrink-0 items-center px-4"
@@ -99,7 +100,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
           isYou={isYou}
         />
         {canEdit ? (
-          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden px-2 group-hover:flex">
+          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden group-hover:flex">
             <CompactButton
               icon={Pencil}
               onClick={() => {
@@ -117,26 +118,21 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
       </div>
       <ControlledScrollArea>
         {options.map((option) => {
+          const vote = getVote(participant.id, option.id);
           return (
             <div
               key={option.id}
               className={clsx(
                 "flex shrink-0 items-center justify-center transition-colors",
                 {
-                  "bg-slate-50": activeOptionId === option.id,
+                  "bg-gray-50": activeOptionId === option.id,
                 },
               )}
               style={{ width: columnWidth }}
               onMouseOver={() => setActiveOptionId(option.id)}
               onMouseOut={() => setActiveOptionId(null)}
             >
-              {option.votes.some(
-                (vote) => vote.participantId === participant.id,
-              ) ? (
-                <VoteIcon type="yes" />
-              ) : (
-                <VoteIcon type="no" />
-              )}
+              <VoteIcon type={vote} />
             </div>
           );
         })}

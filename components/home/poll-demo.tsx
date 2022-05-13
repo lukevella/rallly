@@ -1,10 +1,9 @@
 import { format } from "date-fns";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { useTimeoutFn } from "react-use";
 
 import DateCard from "../date-card";
-import Score from "../poll/desktop-poll/score";
+import { ScoreSummary } from "../poll/score-summary";
 import UserAvatar from "../poll/user-avatar";
 import VoteIcon from "../poll/vote-icon";
 
@@ -36,10 +35,6 @@ const options = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
 
 const PollDemo: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
-  const [bestOption, setBestOption] = React.useState<number>();
-  useTimeoutFn(() => {
-    setBestOption(2);
-  }, 1500);
 
   return (
     <div
@@ -48,7 +43,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
     >
       <div className="flex border-b shadow-sm">
         <div
-          className="flex shrink-0 items-center py-4 pl-4 pr-2 font-medium"
+          className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
           style={{ width: sidebarWidth }}
         >
           <div className="flex h-full grow items-end">
@@ -66,17 +61,17 @@ const PollDemo: React.VoidFunctionComponent = () => {
           return (
             <div
               key={i}
-              className="shrink-0 py-4 text-center transition-colors"
+              className="shrink-0 space-y-3 py-2 pt-3 text-center transition-colors"
               style={{ width: 100 }}
             >
               <DateCard
                 day={format(d, "dd")}
                 dow={format(d, "E")}
                 month={format(d, "MMM")}
-                annotation={
-                  <Score count={score} highlight={i === bestOption} />
-                }
               />
+              <div>
+                <ScoreSummary yesScore={score} compact={true} />
+              </div>
             </div>
           );
         })}

@@ -1,10 +1,10 @@
-import { Participant, Vote } from "@prisma/client";
+import { Participant, Vote, VoteType } from "@prisma/client";
 import axios from "axios";
 
 export interface AddParticipantPayload {
   pollId: string;
   name: string;
-  votes: string[];
+  votes: Array<{ optionId: string; type: VoteType }>;
 }
 
 export type AddParticipantResponse = Participant & {

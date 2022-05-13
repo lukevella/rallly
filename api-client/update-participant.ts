@@ -1,15 +1,20 @@
+import { Participant, Vote, VoteType } from "@prisma/client";
 import axios from "axios";
 
 export interface UpdateParticipantPayload {
   pollId: string;
   participantId: string;
   name: string;
-  votes: string[];
+  votes: Array<{ optionId: string; type: VoteType }>;
 }
 
 export const updateParticipant = async (
   payload: UpdateParticipantPayload,
-): Promise<void> => {
+): Promise<Participant & { votes: Vote[] }> => {
   const { pollId, participantId, ...body } = payload;
-  await axios.patch(`/api/poll/${pollId}/participant/${participantId}`, body);
+  const res = await axios.patch<Participant & { votes: Vote[] }>(
+    `/api/poll/${pollId}/participant/${participantId}`,
+    body,
+  );
+  return res.data;
 };

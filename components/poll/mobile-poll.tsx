@@ -1,5 +1,4 @@
 import { Listbox } from "@headlessui/react";
-import { Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
@@ -7,6 +6,7 @@ import * as React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
+import Check from "@/components/icons/check.svg";
 import ChevronDown from "@/components/icons/chevron-down.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
@@ -37,16 +37,10 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const pollContext = usePoll();
 
-  const { poll, targetTimeZone, setTargetTimeZone } = pollContext;
+  const { poll, targetTimeZone, setTargetTimeZone, getParticipantById } =
+    pollContext;
 
   const { timeZone, participants, role } = poll;
-
-  const participantById = participants.reduce<
-    Record<string, Participant & { votes: Vote[] }>
-  >((acc, curr) => {
-    acc[curr.id] = { ...curr };
-    return acc;
-  }, {});
 
   const session = useSession();
 
@@ -62,7 +56,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
     React.useState<string>();
 
   const selectedParticipant = selectedParticipantId
-    ? participantById[selectedParticipantId]
+    ? getParticipantById(selectedParticipantId)
     : undefined;
 
   const [isEditing, setIsEditing] = React.useState(false);
@@ -111,6 +105,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
       });
     }
   };
+
   return (
     <FormProvider {...form}>
       <form
@@ -122,7 +117,6 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
               updateParticipantMutation(
                 {
                   participantId: selectedParticipant.id,
-                  pollId,
                   ...data,
                 },
                 {
@@ -150,7 +144,9 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
           <div className="flex space-x-3">
             <Listbox
               value={selectedParticipantId}
-              onChange={setSelectedParticipantId}
+              onChange={(participantId) => {
+                setSelectedParticipantId(participantId);
+              }}
               disabled={isEditing}
             >
               <div className="menu min-w-0 grow">
@@ -217,9 +213,10 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                       setIsEditing(true);
                       reset({
                         name: selectedParticipant.name,
-                        votes: selectedParticipant.votes.map(
-                          (vote) => vote.optionId,
-                        ),
+                        votes: selectedParticipant.votes.map((vote) => ({
+                          optionId: vote.optionId,
+                          type: vote.type,
+                        })),
                       });
                     }}
                   >
@@ -241,7 +238,10 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   type="primary"
                   icon={<PlusCircle />}
                   onClick={() => {
-                    reset({ name: "", votes: [] });
+                    reset({
+                      name: "",
+                      votes: [],
+                    });
                     setIsEditing(true);
                   }}
                 >
@@ -269,6 +269,8 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
         </div>
         {(() => {
           switch (pollContext.pollType) {
+            // we pass poll options as props since we are
+            // discriminating on poll type here
             case "date":
               return (
                 <PollOptions
@@ -347,7 +349,7 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                     />
                   </div>
                   <Button
-                    icon={<Save />}
+                    icon={<Check />}
                     htmlType="submit"
                     type="primary"
                     loading={formState.isSubmitting}

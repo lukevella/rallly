@@ -11,6 +11,7 @@ import { withSessionSsr } from "utils/auth";
 
 import ErrorPage from "@/components/error-page";
 import FullPageLoader from "@/components/full-page-loader";
+import { PollContextProvider } from "@/components/poll-context";
 import { SessionProps, withSession } from "@/components/session";
 
 import { GetPollResponse } from "../api-client/get-poll";
@@ -74,7 +75,11 @@ const PollPageLoader: NextPage<SessionProps> = () => {
   }
 
   if (poll) {
-    return <PollPage poll={poll} />;
+    return (
+      <PollContextProvider value={poll}>
+        <PollPage />
+      </PollContextProvider>
+    );
   }
 
   if (didError) {

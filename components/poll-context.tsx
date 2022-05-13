@@ -1,4 +1,4 @@
-import { Participant, Vote } from "@prisma/client";
+import { Participant, Vote, VoteType } from "@prisma/client";
 import { GetPollResponse } from "api-client/get-poll";
 import { keyBy } from "lodash";
 import React from "react";
@@ -13,8 +13,6 @@ import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
 
-type VoteType = "yes" | "no";
-
 type PollContextValue = {
   userAlreadyVoted: boolean;
   poll: GetPollResponse;
@@ -23,10 +21,11 @@ type PollContextValue = {
   pollType: "date" | "timeSlot";
   highScore: number;
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
+  getScore: (optionId: string) => { yes: number; ifNeedBe: number };
   getParticipantById: (
     participantId: string,
   ) => (Participant & { votes: Vote[] }) | undefined;
-  getVote: (participantId: string, optionId: string) => VoteType;
+  getVote: (participantId: string, optionId: string) => VoteType | undefined;
 } & (
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] }
@@ -57,21 +56,46 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const participantsByOptionId = React.useMemo(() => {
     const res: Record<string, Participant[]> = {};
     poll.options.forEach((option) => {
-      res[option.id] = option.votes.map(
-        ({ participantId }) => participantById[participantId],
+      res[option.id] = poll.participants.filter((participant) =>
+        participant.votes.some(
+          ({ type, optionId }) => optionId === option.id && type !== "no",
+        ),
       );
     });
     return res;
-  }, [participantById, poll.options]);
+  }, [poll.options, poll.participants]);
+
   const { locale } = usePreferences();
 
+  const getScore = React.useCallback(
+    (optionId: string) => {
+      return poll.participants.reduce(
+        (acc, curr) => {
+          curr.votes.forEach((vote) => {
+            if (vote.optionId !== optionId) {
+              return;
+            }
+            if (vote.type === "yes") {
+              acc.yes += 1;
+            }
+            if (vote.type === "ifNeedBe") {
+              acc.ifNeedBe += 1;
+            }
+          });
+          return acc;
+        },
+        { yes: 0, ifNeedBe: 0 },
+      );
+    },
+    [poll.participants],
+  );
+
   const contextValue = React.useMemo<PollContextValue>(() => {
-    let highScore = 1;
-    poll.options.forEach((option) => {
-      if (option.votes.length > highScore) {
-        highScore = option.votes.length;
-      }
-    });
+    const highScore = poll.options.reduce((acc, curr) => {
+      const score = getScore(curr.id).yes;
+
+      return score > acc ? score : acc;
+    }, 1);
 
     const parsedOptions = decodeOptions(
       poll.options,
@@ -99,11 +123,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     return {
       userAlreadyVoted,
       poll,
-      getVotesForOption: (optionId: string) => {
-        // TODO (Luke Vella) [2022-04-16]: Build an index instead
-        const option = poll.options.find(({ id }) => id === optionId);
-        return option?.votes ?? [];
-      },
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
@@ -111,17 +130,18 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       getParticipantsWhoVotedForOption: (optionId: string) =>
         participantsByOptionId[optionId],
       getVote: (participantId, optionId) => {
-        return getParticipantById(participantId)?.votes.some(
+        const vote = getParticipantById(participantId)?.votes.find(
           (vote) => vote.optionId === optionId,
-        )
-          ? "yes"
-          : "no";
+        );
+        return vote?.type;
       },
+      getScore,
       ...parsedOptions,
       targetTimeZone,
       setTargetTimeZone,
     };
   }, [
+    getScore,
     locale,
     participantById,
     participantsByOptionId,

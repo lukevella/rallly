@@ -23,6 +23,8 @@ if (typeof window !== "undefined") {
 
 const MotionButton = motion(Button);
 
+const MotionParticipantFormRow = motion(ParticipantRowForm);
+
 const minSidebarWidth = 180;
 
 const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
@@ -111,7 +113,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
       }}
     >
       <div
-        className="relative min-w-full max-w-full" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
+        className="relative min-w-full max-w-full select-none" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
         style={{ width: `min(${pollWidth}px, calc(100vw - 3rem))` }}
         ref={ref}
       >
@@ -131,22 +133,21 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 </div>
               ) : null}
               <div className="flex shrink-0">
-                {!shouldShowNewParticipantForm && !poll.closed ? (
-                  <Button
-                    type="primary"
-                    icon={<PlusCircle />}
-                    onClick={() => {
-                      setShouldShowNewParticipantForm(true);
-                    }}
-                  >
-                    New Participant
-                  </Button>
-                ) : null}
+                <Button
+                  type="primary"
+                  disabled={shouldShowNewParticipantForm || poll.closed}
+                  icon={<PlusCircle />}
+                  onClick={() => {
+                    setShouldShowNewParticipantForm(true);
+                  }}
+                >
+                  New Participant
+                </Button>
               </div>
             </div>
             <div className="flex">
               <div
-                className="flex shrink-0 items-center py-4 pl-4 pr-2 font-medium"
+                className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
               >
                 <div className="flex h-full grow items-end">
@@ -198,26 +199,31 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                 ) : null}
               </div>
             </div>
-            {shouldShowNewParticipantForm && !poll.closed ? (
-              <ParticipantRowForm
-                className="border-t bg-slate-100 bg-opacity-0"
-                onSubmit={(data) => {
-                  return new Promise((resolve, reject) => {
-                    addParticipant(data, {
-                      onSuccess: () => {
-                        setShouldShowNewParticipantForm(false);
-                        resolve();
-                      },
-                      onError: reject,
+            <AnimatePresence initial={false}>
+              {shouldShowNewParticipantForm && !poll.closed ? (
+                <MotionParticipantFormRow
+                  transition={{ duration: 0.2 }}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 55, y: 0 }}
+                  className="border-t bg-slate-100 bg-opacity-0"
+                  onSubmit={(data) => {
+                    return new Promise((resolve, reject) => {
+                      addParticipant(data, {
+                        onSuccess: () => {
+                          setShouldShowNewParticipantForm(false);
+                          resolve();
+                        },
+                        onError: reject,
+                      });
                     });
-                  });
-                }}
-                options={poll.options}
-                onCancel={() => {
-                  setShouldShowNewParticipantForm(false);
-                }}
-              />
-            ) : null}
+                  }}
+                  options={poll.options}
+                  onCancel={() => {
+                    setShouldShowNewParticipantForm(false);
+                  }}
+                />
+              ) : null}
+            </AnimatePresence>
           </div>
           <div className="min-h-0 overflow-y-auto">
             {participants.map((participant, i) => {

@@ -1,3 +1,4 @@
+import { VoteType } from "@prisma/client";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ParsedDateTimeOpton } from "utils/date-time-utils";
@@ -20,43 +21,39 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
   selectedParticipantId,
 }) => {
   const { control } = useFormContext<ParticipantForm>();
-  const { getParticipantsWhoVotedForOption, getVote, getParticipantById } =
-    usePoll();
+  const {
+    getParticipantsWhoVotedForOption,
+    getParticipantById,
+    getScore,
+    getVote,
+  } = usePoll();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
   return (
     <div className="divide-y">
-      {options.map((option) => {
+      {options.map((option, index) => {
         const participants = getParticipantsWhoVotedForOption(option.optionId);
+        const score = getScore(option.optionId);
         return (
           <Controller
             key={option.optionId}
             control={control}
             name="votes"
             render={({ field }) => {
-              const vote = editable
-                ? field.value.includes(option.optionId)
-                  ? "yes"
-                  : "no"
-                : selectedParticipant
-                ? getVote(selectedParticipant.id, option.optionId)
-                : undefined;
+              const vote =
+                !editable && selectedParticipant
+                  ? getVote(selectedParticipant.id, option.optionId)
+                  : field.value[index]?.type;
 
-              const handleChange = (newVote: "yes" | "no") => {
+              const handleChange = (newVote: VoteType) => {
                 if (!editable) {
                   return;
                 }
-                if (newVote === "no") {
-                  field.onChange(
-                    field.value.filter(
-                      (optionId) => optionId !== option.optionId,
-                    ),
-                  );
-                } else {
-                  field.onChange([...field.value, option.optionId]);
-                }
+                const newValue = [...field.value];
+                newValue[index] = { optionId: option.optionId, type: newVote };
+                field.onChange(newValue);
               };
 
               switch (option.type) {
@@ -64,7 +61,8 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                   return (
                     <TimeSlotOption
                       onChange={handleChange}
-                      numberOfVotes={participants.length}
+                      yesScore={score.yes}
+                      ifNeedBeScore={score.ifNeedBe}
                       participants={participants}
                       vote={vote}
                       startTime={option.startTime}
@@ -78,7 +76,8 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                   return (
                     <DateOption
                       onChange={handleChange}
-                      numberOfVotes={participants.length}
+                      yesScore={score.yes}
+                      ifNeedBeScore={score.ifNeedBe}
                       participants={participants}
                       vote={vote}
                       dow={option.dow}

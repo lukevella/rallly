@@ -1,5 +1,4 @@
 import { Placement } from "@floating-ui/react-dom-interactions";
-import { format } from "date-fns";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { encodeDateOption } from "utils/date-time-utils";
@@ -17,6 +16,7 @@ import { PollDetailsForm } from "../forms";
 import { useModal } from "../modal";
 import { useModalContext } from "../modal/modal-provider";
 import { usePoll } from "../poll-context";
+import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 import { useUpdatePollMutation } from "./mutations";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
@@ -25,7 +25,9 @@ const ManagePoll: React.VoidFunctionComponent<{
   placement?: Placement;
 }> = ({ placement }) => {
   const { t } = useTranslation("app");
-  const { poll, options } = usePoll();
+  const { poll, getParticipantsWhoVotedForOption } = usePoll();
+
+  const { exportToCsv } = useCsvExporter();
 
   const modalContext = useModalContext();
 
@@ -105,7 +107,8 @@ const ManagePoll: React.VoidFunctionComponent<{
             };
 
             const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
-              (option) => option.votes.length > 0,
+              (option) =>
+                getParticipantsWhoVotedForOption(option.id).length > 0,
             );
 
             if (optionsToDeleteThatHaveVotes.length > 0) {
@@ -181,55 +184,7 @@ const ManagePoll: React.VoidFunctionComponent<{
           label="Edit options"
           onClick={handleChangeOptions}
         />
-        <DropdownItem
-          icon={Save}
-          label="Export to CSV"
-          onClick={() => {
-            const header = [
-              t("participantCount", {
-                count: poll.participants.length,
-              }),
-              ...options.map((decodedOption) => {
-                const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month}`;
-                return decodedOption.type === "date"
-                  ? day
-                  : `${day} ${decodedOption.startTime} - ${decodedOption.endTime}`;
-              }),
-            ].join(",");
-            const rows = poll.participants.map((participant) => {
-              return [
-                participant.name,
-                ...poll.options.map((option) => {
-                  if (
-                    participant.votes.some((vote) => {
-                      return vote.optionId === option.id;
-                    })
-                  ) {
-                    return "Yes";
-                  }
-                  return "No";
-                }),
-              ].join(",");
-            });
-            const csv = `data:text/csv;charset=utf-8,${[header, ...rows].join(
-              "\r\n",
-            )}`;
-
-            const encodedCsv = encodeURI(csv);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedCsv);
-            link.setAttribute(
-              "download",
-              `${poll.title.replace(/\s/g, "_")}-${format(
-                Date.now(),
-                "yyyyMMddhhmm",
-              )}`,
-            );
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }}
-        />
+        <DropdownItem icon={Save} label="Export to CSV" onClick={exportToCsv} />
         {poll.closed ? (
           <DropdownItem
             icon={LockOpen}

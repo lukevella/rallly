@@ -1,4 +1,3 @@
-import { GetPollResponse } from "api-client/get-poll";
 import axios from "axios";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -21,7 +20,8 @@ import NotificationsToggle from "./poll/notifications-toggle";
 import PollSubheader from "./poll/poll-subheader";
 import TruncatedLinkify from "./poll/truncated-linkify";
 import { UserAvatarProvider } from "./poll/user-avatar";
-import { PollContextProvider, usePoll } from "./poll-context";
+import VoteIcon from "./poll/vote-icon";
+import { usePoll } from "./poll-context";
 import Popover from "./popover";
 import { useSession } from "./session";
 import Sharing from "./sharing";
@@ -32,7 +32,7 @@ const Discussion = React.lazy(() => import("@/components/discussion"));
 const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
-const PollInner: NextPage = () => {
+const PollPage: NextPage = () => {
   const { poll } = usePoll();
 
   const router = useRouter();
@@ -121,13 +121,6 @@ const PollInner: NextPage = () => {
 
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
 
-  let highScore = 1; // set to one because we don't want to highlight
-  poll.options.forEach((option) => {
-    if (option.votes.length > highScore) {
-      highScore = option.votes.length;
-    }
-  });
-
   const names = React.useMemo(
     () => poll.participants.map(({ name }) => name),
     [poll.participants],
@@ -210,9 +203,28 @@ const PollInner: NextPage = () => {
                 This poll has been locked (voting is disabled)
               </div>
             ) : null}
+
+            <div className="flex items-center space-x-3 px-4 py-2 sm:justify-end">
+              <span className="text-xs font-semibold text-slate-500">
+                Legend:
+              </span>
+              <span className="inline-flex items-center space-x-2">
+                <VoteIcon type="yes" />
+                <span className="text-xs text-slate-500">Yes</span>
+              </span>
+              <span className="inline-flex items-center space-x-2">
+                <VoteIcon type="ifNeedBe" />
+                <span className="text-xs text-slate-500">If need be</span>
+              </span>
+
+              <span className="inline-flex items-center space-x-2">
+                <VoteIcon type="no" />
+                <span className="text-xs text-slate-500">No</span>
+              </span>
+            </div>
             <React.Suspense fallback={<div>Loading…</div>}>
               <div className="mb-4 lg:mb-8">
-                <PollComponent pollId={poll.urlId} highScore={highScore} />
+                <PollComponent pollId={poll.urlId} />
               </div>
               <Discussion pollId={poll.urlId} />
             </React.Suspense>
@@ -220,14 +232,6 @@ const PollInner: NextPage = () => {
         </div>
       </StandardLayout>
     </UserAvatarProvider>
-  );
-};
-
-const PollPage = ({ poll }: { poll: GetPollResponse }) => {
-  return (
-    <PollContextProvider value={poll}>
-      <PollInner />
-    </PollContextProvider>
   );
 };
 

@@ -4,9 +4,9 @@ import * as React from "react";
 import DateCard from "@/components/date-card";
 import { usePoll } from "@/components/poll-context";
 
+import { ScoreSummary } from "../score-summary";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
-import Score from "./score";
 
 const TimeRange: React.VoidFunctionComponent<{
   startTime: string;
@@ -16,7 +16,7 @@ const TimeRange: React.VoidFunctionComponent<{
   return (
     <div
       className={clsx(
-        "relative inline-block pr-2 text-right text-xs font-semibold after:absolute after:top-2 after:right-0 after:h-4 after:w-1 after:border-t after:border-r after:border-b after:border-slate-300 after:content-['']",
+        "relative -mr-2 inline-block pr-2 text-right text-xs font-semibold after:absolute after:top-2 after:right-0 after:h-4 after:w-1 after:border-t after:border-r after:border-b after:border-slate-300 after:content-['']",
         className,
       )}
     >
@@ -27,21 +27,21 @@ const TimeRange: React.VoidFunctionComponent<{
 };
 
 const PollHeader: React.VoidFunctionComponent = () => {
-  const { options, getParticipantsWhoVotedForOption, highScore } = usePoll();
+  const { options, getScore } = usePoll();
   const { activeOptionId, setActiveOptionId, columnWidth } = usePollContext();
 
   return (
     <ControlledScrollArea>
       {options.map((option) => {
         const { optionId } = option;
-        const numVotes = getParticipantsWhoVotedForOption(optionId).length;
+        const numVotes = getScore(optionId);
         return (
           <div
             key={optionId}
             className={clsx(
-              "shrink-0 pt-4 pb-3 text-center transition-colors",
+              "shrink-0 space-y-3 py-3 text-center transition-colors",
               {
-                "bg-slate-50": activeOptionId === optionId,
+                "bg-gray-50": activeOptionId === optionId,
               },
             )}
             style={{ width: columnWidth }}
@@ -53,14 +53,6 @@ const PollHeader: React.VoidFunctionComponent = () => {
                 day={option.day}
                 dow={option.dow}
                 month={option.month}
-                annotation={
-                  numVotes > 0 ? (
-                    <Score
-                      count={numVotes}
-                      highlight={numVotes > 1 && highScore === numVotes}
-                    />
-                  ) : null
-                }
               />
             </div>
             {option.type === "timeSlot" ? (
@@ -70,6 +62,13 @@ const PollHeader: React.VoidFunctionComponent = () => {
                 endTime={option.endTime}
               />
             ) : null}
+            <div className="flex justify-center">
+              <ScoreSummary
+                yesScore={numVotes.yes}
+                ifNeedBeScore={numVotes.ifNeedBe}
+                compact={true}
+              />
+            </div>
           </div>
         );
       })}

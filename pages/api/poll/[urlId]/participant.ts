@@ -1,8 +1,8 @@
 import { createGuestUser, withSessionRoute } from "utils/auth";
 
-import { AddParticipantPayload } from "../../../../../api-client/add-participant";
-import { prisma } from "../../../../../db";
-import { sendNotification, withLink } from "../../../../../utils/api-utils";
+import { AddParticipantPayload } from "../../../../api-client/add-participant";
+import { prisma } from "../../../../db";
+import { sendNotification, withLink } from "../../../../utils/api-utils";
 
 export default withSessionRoute(
   withLink(async ({ req, res, link }) => {
@@ -28,8 +28,9 @@ export default withSessionRoute(
                 : undefined,
             votes: {
               createMany: {
-                data: payload.votes.map((optionId) => ({
+                data: payload.votes.map(({ optionId, type }) => ({
                   optionId,
+                  type,
                   pollId: link.pollId,
                 })),
               },

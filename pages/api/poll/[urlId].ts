@@ -1,9 +1,9 @@
 import { GetPollApiResponse } from "api-client/get-poll";
 import { resetDates } from "utils/legacy-utils";
 
-import { UpdatePollPayload } from "../../../../api-client/update-poll";
-import { prisma } from "../../../../db";
-import { withLink } from "../../../../utils/api-utils";
+import { UpdatePollPayload } from "../../../api-client/update-poll";
+import { prisma } from "../../../db";
+import { withLink } from "../../../utils/api-utils";
 
 export default withLink<
   GetPollApiResponse | { status: number; message: string }
@@ -18,9 +18,6 @@ export default withLink<
         },
         include: {
           options: {
-            include: {
-              votes: true,
-            },
             orderBy: {
               value: "asc",
             },
@@ -111,9 +108,6 @@ export default withLink<
         },
         include: {
           options: {
-            include: {
-              votes: true,
-            },
             orderBy: {
               value: "asc",
             },

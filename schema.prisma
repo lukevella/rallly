@@ -11,105 +11,129 @@ model User {
   id           String        @id @default(cuid())
   name         String
   email        String        @unique() @db.Citext
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime?     @updatedAt
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime?     @updatedAt @map("updated_at")
   polls        Poll[]
   participants Participant[]
   comments     Comment[]
+
+  @@map("users")
 }
 
 enum PollType {
   date
+
+  @@map("poll_type")
 }
 
 model Poll {
-  urlId            String        @id @unique
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  deadline         DateTime?
-  title            String
-  type             PollType
-  description      String?
-  location         String?
-  user             User          @relation(fields: [userId], references: [id])
-  userId           String
-  votes            Vote[]
-  timeZone         String?
-  verified         Boolean       @default(false)
-  options          Option[]
-  participants     Participant[]
-  authorName       String        @default("")
-  demo             Boolean       @default(false)
-  comments         Comment[]
-  links            Link[]
-  legacy           Boolean       @default(false)
-  closed           Boolean       @default(false)
-  notifications    Boolean       @default(false)
+  urlId         String        @id @unique @map("url_id")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  deadline      DateTime?
+  title         String
+  type          PollType
+  description   String?
+  location      String?
+  user          User          @relation(fields: [userId], references: [id])
+  userId        String        @map("user_id")
+  votes         Vote[]
+  timeZone      String?       @map("time_zone")
+  verified      Boolean       @default(false)
+  options       Option[]
+  participants  Participant[]
+  authorName    String        @default("") @map("author_name")
+  demo          Boolean       @default(false)
+  comments      Comment[]
+  links         Link[]
+  legacy        Boolean       @default(false)
+  closed        Boolean       @default(false)
+  notifications Boolean       @default(false)
+
+  @@map("polls")
 }
 
 enum Role {
   admin
   participant
+
+  @@map("role")
 }
 
 model Link {
-  urlId     String   @id @unique
+  urlId     String   @id @unique @map("url_id")
   role      Role
-  pollId    String
+  pollId    String   @map("poll_id")
   poll      Poll     @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@unique([pollId, role])
+  @@map("links")
 }
 
 model Participant {
   id        String    @id @default(cuid())
   name      String
   user      User?     @relation(fields: [userId], references: [id])
-  userId    String?
-  guestId   String?
+  userId    String?   @map("user_id")
+  guestId   String?   @map("guest_id")
   poll      Poll      @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
-  pollId    String
+  pollId    String    @map("poll_id")
   votes     Vote[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@unique([id, pollId])
+  @@map("participants")
 }
 
 model Option {
   id        String    @id @default(cuid())
   value     String
-  pollId    String
+  pollId    String    @map("poll_id")
   poll      Poll      @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
   votes     Vote[]
+
+  @@map("options")
+}
+
+enum VoteType {
+  yes
+  no
+  ifNeedBe
+
+  @@map("vote_type")
 }
 
 model Vote {
   id            String      @id @default(cuid())
   participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  participantId String
+  participantId String      @map("participant_id")
   option        Option      @relation(fields: [optionId], references: [id], onDelete: Cascade)
-  optionId      String
+  optionId      String      @map("option_id")
   poll          Poll        @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
-  pollId        String
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime?   @updatedAt
+  pollId        String      @map("poll_id")
+  type          VoteType    @default(yes)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime?   @updatedAt @map("updated_at")
+
+  @@map("votes")
 }
 
 model Comment {
   id         String    @id @default(cuid())
   content    String
   poll       Poll      @relation(fields: [pollId], references: [urlId], onDelete: Cascade)
-  pollId     String
-  authorName String
+  pollId     String    @map("poll_id")
+  authorName String    @map("author_name")
   user       User?     @relation(fields: [userId], references: [id])
-  userId     String?
-  guestId    String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @updatedAt
+  userId     String?   @map("user_id")
+  guestId    String?   @map("guest_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
 
   @@unique([id, pollId])
+  @@map("comments")
 }

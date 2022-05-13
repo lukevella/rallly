@@ -1,3 +1,4 @@
+import { VoteType } from "@prisma/client";
 import { GetPollApiResponse } from "api-client/get-poll";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getQueryParam } from "utils/api-utils";
@@ -50,18 +51,21 @@ export default async function handler(
     id: legacyParticipant._id.toString(),
   }));
 
-  const votes: Array<{ optionId: string; participantId: string }> = [];
+  const votes: Array<{
+    optionId: string;
+    participantId: string;
+    type: VoteType;
+  }> = [];
 
   newParticipants?.forEach((p, i) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const legacyVotes = legacyPoll.participants![i].votes;
     legacyVotes?.forEach((v, j) => {
-      if (v) {
-        votes.push({
-          optionId: newOptions[j].id,
-          participantId: p.id,
-        });
-      }
+      votes.push({
+        optionId: newOptions[j].id,
+        participantId: p.id,
+        type: v ? "yes" : "no",
+      });
     });
   });
 
@@ -133,9 +137,6 @@ export default async function handler(
     },
     include: {
       options: {
-        include: {
-          votes: true,
-        },
         orderBy: {
           value: "asc",
         },

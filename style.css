@@ -32,13 +32,13 @@
     @apply outline-none;
   }
   a {
-    @apply font-medium text-indigo-500 hover:text-indigo-400 hover:underline;
+    @apply rounded-sm font-medium text-indigo-500 outline-none hover:text-indigo-400 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1;
   }
   label {
     @apply mb-1 block text-sm text-slate-800;
   }
   button {
-    @apply cursor-default focus:outline-none focus:ring-indigo-600;
+    @apply cursor-default outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1;
   }
 
   #floating-ui-root {
@@ -66,14 +66,14 @@
     @apply h-4 w-4 rounded border-slate-300 text-indigo-500 shadow-sm focus:ring-indigo-500;
   }
   .btn {
-    @apply inline-flex h-9 cursor-default items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+    @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all active:scale-95;
   }
   a.btn {
     @apply hover:no-underline;
   }
 
   .btn-default {
-    @apply btn border-gray-300 bg-white text-gray-700 hover:text-indigo-500 focus-visible:border-transparent focus-visible:ring-indigo-500 focus-visible:ring-offset-0 active:bg-gray-100;
+    @apply btn border-slate-300 bg-white text-slate-700 hover:bg-indigo-50/10 active:bg-slate-100;
   }
   .btn-danger {
     @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus-visible:ring-rose-500;
@@ -81,20 +81,15 @@
   .btn-link {
     @apply inline-flex items-center text-indigo-500 underline;
   }
-  .btn-default.btn-disabled {
-    @apply bg-gray-50;
-  }
-  .btn-disabled {
-    @apply pointer-events-none;
+  .btn.btn-disabled {
+    text-shadow: none;
+    @apply pointer-events-none border-gray-200 bg-slate-500/5 text-gray-400 shadow-none;
   }
   .btn-primary {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
     @apply btn border-indigo-600 bg-indigo-500 text-white hover:bg-opacity-90 focus-visible:ring-indigo-500 active:bg-indigo-600;
   }
-  .btn-primary.btn-disabled {
-    text-shadow: none;
-    @apply border-gray-300/70 bg-gray-200/70 text-gray-400;
-  }
+
   a.btn-primary {
     @apply text-white;
   }
@@ -104,7 +99,7 @@
   }
 
   .segment-button button {
-    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-white px-4 font-medium transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus:ring-2 active:bg-slate-100;
+    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-white px-4 font-medium transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus-visible:ring-2 focus-visible:ring-offset-0 active:bg-slate-100;
   }
 
   .segment-button .segment-button-active {

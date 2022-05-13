@@ -31,7 +31,7 @@
   "voteCount_other": "{{count}} votes",
   "participantCount": "{{count}} participant",
   "participantCount_other": "{{count}} participants",
-  "createdBy": "Created by <b>{{name}}</b>",
+  "createdBy": "by <b>{{name}}</b>",
   "timeZone": "Time Zone:",
   "creatingDemo": "Creating demo poll…",
   "ok": "Ok",
@@ -49,5 +49,8 @@
   "monday": "Monday",
   "sunday": "Sunday",
   "12h": "12-hour",
-  "24h": "24-hour"
+  "24h": "24-hour",
+  "yes": "Yes",
+  "no": "No",
+  "ifNeedBe": "If need be"
 }
