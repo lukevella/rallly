@@ -26,6 +26,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
     getParticipantById,
     getScore,
     getVote,
+    options: allOptions,
   } = usePoll();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
@@ -33,9 +34,12 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
 
   return (
     <div className="divide-y">
-      {options.map((option, index) => {
+      {options.map((option) => {
         const participants = getParticipantsWhoVotedForOption(option.optionId);
         const score = getScore(option.optionId);
+        const index = allOptions.findIndex(
+          ({ optionId }) => option.optionId === optionId,
+        );
         return (
           <Controller
             key={option.optionId}
