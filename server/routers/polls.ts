@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 import { prisma } from "../../db";
+import { absoluteUrl } from "../../utils/absolute-url";
+import { sendEmailTemplate } from "../../utils/api-utils";
+import { createToken } from "../../utils/auth";
+import { nanoid } from "../../utils/nanoid";
 import {
   createPollResponse,
   getDefaultPollInclude,
@@ -13,6 +17,115 @@ import { demo } from "./polls/demo";
 
 export const polls = createRouter()
   .merge("demo.", demo)
+  .mutation("create", {
+    input: z.object({
+      title: z.string(),
+      type: z.literal("date"),
+      timeZone: z.string().optional(),
+      location: z.string().optional(),
+      description: z.string().optional(),
+      user: z.object({
+        name: z.string(),
+        email: z.string(),
+      }),
+      options: z.string().array(),
+      demo: z.boolean().optional(),
+    }),
+    resolve: async ({ ctx, input }) => {
+      const adminUrlId = await nanoid();
+
+      const poll = await prisma.poll.create({
+        data: {
+          urlId: await nanoid(),
+          title: input.title,
+          type: input.type,
+          timeZone: input.timeZone,
+          location: input.location,
+          description: input.description,
+          authorName: input.user.name,
+          demo: input.demo,
+          verified:
+            ctx.session.user?.isGuest === false &&
+            ctx.session.user.email === input.user.email,
+          user: {
+            connectOrCreate: {
+              where: {
+                email: input.user.email,
+              },
+              create: {
+                id: await nanoid(),
+                ...input.user,
+              },
+            },
+          },
+          options: {
+            createMany: {
+              data: input.options.map((value) => ({
+                value,
+              })),
+            },
+          },
+          links: {
+            createMany: {
+              data: [
+                {
+                  urlId: adminUrlId,
+                  role: "admin",
+                },
+                {
+                  urlId: await nanoid(),
+                  role: "participant",
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const homePageUrl = absoluteUrl();
+      const pollUrl = `${homePageUrl}/admin/${adminUrlId}`;
+
+      try {
+        if (poll.verified) {
+          await sendEmailTemplate({
+            templateName: "new-poll-verified",
+            to: input.user.email,
+            subject: `Rallly: ${poll.title}`,
+            templateVars: {
+              title: poll.title,
+              name: input.user.name,
+              pollUrl,
+              homePageUrl,
+              supportEmail: process.env.SUPPORT_EMAIL,
+            },
+          });
+        } else {
+          const verificationCode = await createToken({
+            pollId: poll.urlId,
+          });
+          const verifyEmailUrl = `${pollUrl}?code=${verificationCode}`;
+
+          await sendEmailTemplate({
+            templateName: "new-poll",
+            to: input.user.email,
+            subject: `Rallly: ${poll.title} - Verify your email address`,
+            templateVars: {
+              title: poll.title,
+              name: input.user.name,
+              pollUrl,
+              verifyEmailUrl,
+              homePageUrl,
+              supportEmail: process.env.SUPPORT_EMAIL,
+            },
+          });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      return { urlId: adminUrlId, authorName: poll.authorName };
+    },
+  })
   .query("get", {
     input: z.object({
       urlId: z.string(),

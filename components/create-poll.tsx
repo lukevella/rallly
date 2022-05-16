@@ -4,10 +4,8 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
-import { useMutation } from "react-query";
 import { useSessionStorage } from "react-use";
 
-import { createPoll } from "../api-client/create-poll";
 import Button from "../components/button";
 import {
   NewEventData,
@@ -21,6 +19,7 @@ import {
 import StandardLayout from "../components/standard-layout";
 import Steps from "../components/steps";
 import { encodeDateOption } from "../utils/date-time-utils";
+import { trpc } from "../utils/trpc";
 import { SessionProps, useSession, withSession } from "./session";
 
 type StepName = "eventDetails" | "options" | "userDetails";
@@ -95,41 +94,23 @@ const Page: NextPage<CreatePollPageProps> = ({
 
   const plausible = usePlausible();
 
-  const { mutate: createEventMutation, isLoading: isCreatingPoll } =
-    useMutation(
-      () => {
-        const title = required(formData?.eventDetails?.title);
-        return createPoll({
-          title: title,
-          type: "date",
-          location: formData?.eventDetails?.location,
-          description: formData?.eventDetails?.description,
-          user: {
-            name: required(formData?.userDetails?.name),
-            email: required(formData?.userDetails?.contact),
-          },
-          timeZone: formData?.options?.timeZone,
-          options: required(formData?.options?.options).map(encodeDateOption),
-        });
-      },
-      {
-        onSuccess: (poll) => {
-          setIsRedirecting(true);
-          plausible("Created poll", {
-            props: {
-              numberOfOptions: formData.options?.options?.length,
-              optionsView: formData?.options?.view,
-            },
-          });
-          setPersistedFormData(initialNewEventData);
-          router.replace(`/admin/${poll.urlId}`);
+  const createPoll = trpc.useMutation(["polls.create"], {
+    onSuccess: (poll) => {
+      setIsRedirecting(true);
+      plausible("Created poll", {
+        props: {
+          numberOfOptions: formData.options?.options?.length,
+          optionsView: formData?.options?.view,
         },
-      },
-    );
+      });
+      setPersistedFormData(initialNewEventData);
+      router.replace(`/admin/${poll.urlId}`);
+    },
+  });
 
-  const isBusy = isRedirecting || isCreatingPoll;
+  const isBusy = isRedirecting || createPoll.isLoading;
 
-  const handleSubmit = (
+  const handleSubmit = async (
     data: PollDetailsData | PollOptionsData | UserDetailsData,
   ) => {
     if (currentStepIndex < steps.length - 1) {
@@ -140,7 +121,20 @@ const Page: NextPage<CreatePollPageProps> = ({
       });
     } else {
       // last step
-      createEventMutation();
+      const title = required(formData?.eventDetails?.title);
+
+      await createPoll.mutateAsync({
+        title: title,
+        type: "date",
+        location: formData?.eventDetails?.location,
+        description: formData?.eventDetails?.description,
+        user: {
+          name: required(formData?.userDetails?.name),
+          email: required(formData?.userDetails?.contact),
+        },
+        timeZone: formData?.options?.timeZone,
+        options: required(formData?.options?.options).map(encodeDateOption),
+      });
     }
   };
 
