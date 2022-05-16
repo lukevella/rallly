@@ -1,10 +1,10 @@
 import { VoteType } from "@prisma/client";
-import { GetPollApiResponse } from "api-client/get-poll";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getQueryParam } from "utils/api-utils";
 import { LegacyPoll } from "utils/legacy-utils";
 import { getMongoClient } from "utils/mongodb-client";
 import { nanoid } from "utils/nanoid";
+import { GetPollApiResponse } from "utils/trpc/types";
 
 import { prisma } from "../../../db";
 

@@ -1,5 +1,5 @@
-import { GetPollApiResponse } from "api-client/get-poll";
 import { resetDates } from "utils/legacy-utils";
+import { GetPollApiResponse } from "utils/trpc/types";
 
 import { UpdatePollPayload } from "../../../api-client/update-poll";
 import { prisma } from "../../../db";

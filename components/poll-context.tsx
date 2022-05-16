@@ -1,5 +1,4 @@
 import { Participant, Vote, VoteType } from "@prisma/client";
-import { GetPollResponse } from "api-client/get-poll";
 import { keyBy } from "lodash";
 import React from "react";
 import {
@@ -8,6 +7,7 @@ import {
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "utils/date-time-utils";
+import { GetPollApiResponse } from "utils/trpc/types";
 
 import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
@@ -15,7 +15,7 @@ import { useRequiredContext } from "./use-required-context";
 
 type PollContextValue = {
   userAlreadyVoted: boolean;
-  poll: GetPollResponse;
+  poll: GetPollApiResponse;
   targetTimeZone: string;
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
@@ -41,7 +41,7 @@ export const usePoll = () => {
 };
 
 export const PollContextProvider: React.VoidFunctionComponent<{
-  value: GetPollResponse;
+  value: GetPollApiResponse;
   children?: React.ReactNode;
 }> = ({ value: poll, children }) => {
   const { user } = useSession();

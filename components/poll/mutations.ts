@@ -7,8 +7,8 @@ import {
   deleteParticipant,
   DeleteParticipantPayload,
 } from "../../api-client/delete-participant";
-import { GetPollResponse } from "../../api-client/get-poll";
 import { updateParticipant } from "../../api-client/update-participant";
+import { GetPollApiResponse } from "../../utils/trpc/types";
 import { usePoll } from "../poll-context";
 import { useSession } from "../session";
 import { ParticipantForm } from "./types";
@@ -32,7 +32,7 @@ export const useAddParticipantMutation = (pollId: string) => {
     {
       onSuccess: (participant) => {
         plausible("Add participant");
-        queryClient.setQueryData<GetPollResponse>(
+        queryClient.setQueryData<GetPollApiResponse>(
           ["getPoll", pollId],
           (poll) => {
             if (!poll) {
@@ -69,7 +69,7 @@ export const useUpdateParticipantMutation = (pollId: string) => {
     {
       onSuccess: (participant) => {
         plausible("Update participant");
-        queryClient.setQueryData<GetPollResponse>(
+        queryClient.setQueryData<GetPollApiResponse>(
           ["getPoll", pollId],
           (poll) => {
             if (!poll) {
@@ -101,7 +101,7 @@ export const useDeleteParticipantMutation = () => {
     (payload: DeleteParticipantPayload) => deleteParticipant(payload),
     {
       onMutate: ({ participantId }) => {
-        queryClient.setQueryData<GetPollResponse>(
+        queryClient.setQueryData<GetPollApiResponse>(
           ["getPoll", poll.urlId],
           (poll) => {
             if (!poll) {

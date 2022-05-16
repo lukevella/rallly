@@ -12,6 +12,7 @@ import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
 import toast, { Toaster } from "react-hot-toast";
 import { MutationCache } from "react-query";
+import superjson from "superjson";
 import { absoluteUrl } from "utils/absolute-url";
 
 import Maintenance from "@/components/maintenance";
@@ -55,6 +56,7 @@ export default withTRPC<AppRouter>({
     const url = `${absoluteUrl()}/api/trpc`;
 
     return {
+      transformer: superjson,
       url,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
