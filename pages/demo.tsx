@@ -6,18 +6,20 @@ import { usePlausible } from "next-plausible";
 import React from "react";
 import { useMount } from "react-use";
 
-import { createDemo } from "../api-client/create-demo";
 import FullPageLoader from "../components/full-page-loader";
+import { trpc } from "../utils/trpc";
 
 const Demo: NextPage = () => {
   const { t } = useTranslation("app");
 
   const router = useRouter();
   const plausible = usePlausible();
+  const createDemo = trpc.useMutation(["polls.demo.create"]);
+
   useMount(async () => {
-    const poll = await createDemo();
+    const urlId = await createDemo.mutateAsync();
     plausible("Create demo poll");
-    router.replace(`/admin/${poll.urlId}`);
+    router.replace(`/admin/${urlId}`);
   });
 
   return <FullPageLoader>{t("creatingDemo")}</FullPageLoader>;
