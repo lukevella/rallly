@@ -1062,6 +1062,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.9.0":
+  version "7.17.9"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
+  integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.16.7":
   version "7.16.7"
   resolved "https://registry.npmjs.org/@babel/template/-/template-7.16.7.tgz"
@@ -1695,6 +1702,33 @@
     lodash.castarray "^4.4.0"
     lodash.isplainobject "^4.0.6"
     lodash.merge "^4.6.2"
+
+"@trpc/client@^9.23.2":
+  version "9.23.2"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-9.23.2.tgz#db833db0884b5121b355ae70e6f7b36e66e58814"
+  integrity sha512-L4ZajhrrupESQXE565UekQH6SDXoL4zCRTF5+/tZ+Y0YkE1DUdBmwBUwWSFIco/QkkMdzNovjZU1xEEWMc+0rw==
+  dependencies:
+    "@babel/runtime" "^7.9.0"
+
+"@trpc/next@^9.23.2":
+  version "9.23.2"
+  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-9.23.2.tgz#4148098a22e4aa2284f667df9fe1cafbaec1e4f1"
+  integrity sha512-8i89WDpxQcGqsohTjZ5JnA/JAZXH+yTsHnabaHckGYqXP/BPyE6TrRVhbmftiF7ljdLYFidSEiP5FP+U8kWK5Q==
+  dependencies:
+    "@babel/runtime" "^7.9.0"
+    react-ssr-prepass "^1.5.0"
+
+"@trpc/react@^9.23.2":
+  version "9.23.2"
+  resolved "https://registry.yarnpkg.com/@trpc/react/-/react-9.23.2.tgz#35ac7bf7b1129813b8f741ca71384f405d2734b0"
+  integrity sha512-T30BCRUNPt5BcVqZMSrqhF1qBIUrSOxwLvyp6pr8CXYmnypPLHvdPm3cgxjddeMuVZg8aggU8lhfPkTuAZBpEw==
+  dependencies:
+    "@babel/runtime" "^7.9.0"
+
+"@trpc/server@^9.23.2":
+  version "9.23.2"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-9.23.2.tgz#ed2703d5b3c1e27a2749459458b248b07be07b87"
+  integrity sha512-uFvn2pFV+wJWLtvH3sqwF+1xfMp1m3Irq4S9MkNtUIFER9k3o6RN6FU2yUA+nefeCDkGsptPE7R4RbxojtpNXw==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -5103,6 +5137,11 @@ react-query@^3.34.12:
     broadcast-channel "^3.4.1"
     match-sorter "^6.0.2"
 
+react-ssr-prepass@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-ssr-prepass/-/react-ssr-prepass-1.5.0.tgz#bc4ca7fcb52365e6aea11cc254a3d1bdcbd030c5"
+  integrity sha512-yFNHrlVEReVYKsLI5lF05tZoHveA5pGzjFbFJY/3pOqqjGOmMmqx83N4hIjN2n6E1AOa+eQEUxs3CgRnPmT0RQ==
+
 react-universal-interface@^0.6.2:
   version "0.6.2"
   resolved "https://registry.npmjs.org/react-universal-interface/-/react-universal-interface-0.6.2.tgz"
@@ -6128,3 +6167,8 @@ yazl@2.5.1:
   integrity sha512-phENi2PLiHnHb6QBVot+dJnaAZ0xosj7p3fWl+znIjBDlnMI2PsZCJZ306BPTFOaHf5qdDEI8x5qFrSOBN5vrw==
   dependencies:
     buffer-crc32 "~0.2.3"
+
+zod@^3.16.0:
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.16.0.tgz#edfdbf77fcc9a5af13a2630a44bdda5b90e759b7"
+  integrity sha512-szrIkryADbTM+xBt2a1KoS2CJQXec4f9xG78bj5MJeEH/XqmmHpnO+fG3IE115AKBJak+2HrbxLZkc9mhdbDKA==

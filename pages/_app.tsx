@@ -2,6 +2,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "../style.css";
 
+import { withTRPC } from "@trpc/next";
 import axios from "axios";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -10,26 +11,17 @@ import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
 import toast, { Toaster } from "react-hot-toast";
-import { MutationCache, QueryClient, QueryClientProvider } from "react-query";
+import { MutationCache } from "react-query";
+import { absoluteUrl } from "utils/absolute-url";
 
 import Maintenance from "@/components/maintenance";
 import ModalProvider from "@/components/modal/modal-provider";
 import PreferencesProvider from "@/components/preferences/preferences-provider";
 
+import { AppRouter } from "./api/trpc/[trpc]";
+
 const CrispChat = dynamic(() => import("@/components/crisp-chat"), {
   ssr: false,
-});
-
-const queryClient = new QueryClient({
-  mutationCache: new MutationCache({
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 500) {
-        toast.error(
-          "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
-        );
-      }
-    },
-  }),
 });
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
@@ -45,22 +37,40 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       enabled={!!process.env.PLAUSIBLE_DOMAIN}
     >
       <PreferencesProvider>
-        <QueryClientProvider client={queryClient}>
-          <Head>
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1"
-            />
-          </Head>
-          <CrispChat />
-          <Toaster />
-          <ModalProvider>
-            <Component {...pageProps} />
-          </ModalProvider>
-        </QueryClientProvider>
+        <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+        </Head>
+        <CrispChat />
+        <Toaster />
+        <ModalProvider>
+          <Component {...pageProps} />
+        </ModalProvider>
       </PreferencesProvider>
     </PlausibleProvider>
   );
 };
 
-export default appWithTranslation(MyApp);
+export default withTRPC<AppRouter>({
+  config() {
+    const url = `${absoluteUrl()}/api/trpc`;
+
+    return {
+      url,
+      /**
+       * @link https://react-query.tanstack.com/reference/QueryClient
+       */
+      queryClientConfig: {
+        mutationCache: new MutationCache({
+          onError: (error) => {
+            if (axios.isAxiosError(error) && error.response?.status === 500) {
+              toast.error(
+                "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
+              );
+            }
+          },
+        }),
+      },
+    };
+  },
+  ssr: true,
+})(appWithTranslation(MyApp));

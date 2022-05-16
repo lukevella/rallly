@@ -1,7 +1,6 @@
-import axios from "axios";
 import { IronSessionData } from "iron-session";
 import React from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { trpc } from "utils/trpc";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -17,7 +16,7 @@ type ParticipantOrComment = {
 };
 
 type SessionContextValue = {
-  logout: () => Promise<void>;
+  logout: () => void;
   user: (UserSessionData & { shortName: string }) | null;
   refresh: () => void;
   ownsObject: (obj: ParticipantOrComment) => boolean;
@@ -33,14 +32,17 @@ export const SessionProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
   session: UserSessionData | null;
 }> = ({ children, session }) => {
-  const queryClient = useQueryClient();
+  const queryClient = trpc.useContext();
   const {
     data: user = session,
     refetch,
     isLoading,
-  } = useQuery(["user"], async () => {
-    const res = await axios.get<{ user: UserSessionData | null }>("/api/user");
-    return res.data.user;
+  } = trpc.useQuery(["session.get"]);
+
+  const { mutate: logout } = trpc.useMutation(["session.destroy"], {
+    onMutate: () => {
+      queryClient.setQueryData(["session.get"], null);
+    },
   });
 
   const sessionData: SessionContextValue = {
@@ -61,9 +63,8 @@ export const SessionProvider: React.VoidFunctionComponent<{
       refetch();
     },
     isLoading,
-    logout: async () => {
-      queryClient.setQueryData(["user"], null);
-      await axios.post("/api/logout");
+    logout: () => {
+      logout();
     },
     ownsObject: (obj) => {
       if (!user) {
