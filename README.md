@@ -77,7 +77,7 @@ yarn start
 | Parameter       | Default                                        | Description                                                                                                                         |
 | --------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | DATABASE_URL    | postgres://postgres:postgres@rallly_db:5432/db | A postgres database URL. Leave out if using the docker-compose file since it will spin up and connect to its own database instance. |
-| SECRET_PASSWORD | -                                              | A long string (minimum 25 characters) that is used to encrypt session data.                                                         |
+| SECRET_PASSWORD | -                                              | A long string (minimum 32 characters) that is used to encrypt session data.                                                         |
 | SUPPORT_EMAIL   | -                                              | An email address that will appear as the FROM email for all emails being sent out.                                                  |
 | SMTP_HOST       | -                                              | Host name of your SMTP server                                                                                                       |
 | SMTP_PORT       | -                                              | Port of your SMTP server                                                                                                            |
