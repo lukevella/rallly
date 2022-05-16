@@ -1,4 +1,3 @@
-import axios from "axios";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { usePlausible } from "next-plausible";
@@ -9,9 +8,13 @@ import { validEmail } from "utils/form-validation";
 import Button from "@/components/button";
 import Magic from "@/components/icons/magic.svg";
 
+import { trpc } from "../utils/trpc";
+
 const LoginForm: React.VoidFunctionComponent = () => {
   const { register, formState, handleSubmit, getValues } =
     useForm<{ email: string }>();
+
+  const login = trpc.useMutation(["login"]);
 
   const plausible = usePlausible();
   const router = useRouter();
@@ -26,7 +29,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
           <form
             onSubmit={handleSubmit(async ({ email }) => {
               plausible("Login requested");
-              await axios.post("/api/login", { email, path: router.asPath });
+              await login.mutateAsync({ email, path: router.asPath });
             })}
           >
             <div className="mb-2 text-slate-500">
