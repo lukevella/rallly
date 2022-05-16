@@ -1,18 +1,12 @@
-import { Comment } from "@prisma/client";
-import axios from "axios";
 import clsx from "clsx";
 import { formatRelative } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import {
-  createComment,
-  CreateCommentPayload,
-} from "../../api-client/create-comment";
 import { requiredString } from "../../utils/form-validation";
+import { trpc } from "../../utils/trpc";
 import Button from "../button";
 import CompactButton from "../compact-button";
 import Dropdown, { DropdownItem } from "../dropdown";
@@ -25,29 +19,20 @@ import { usePoll } from "../poll-context";
 import { usePreferences } from "../preferences/use-preferences";
 import { isUnclaimed, useSession } from "../session";
 
-export interface DiscussionProps {
-  pollId: string;
-}
-
 interface CommentForm {
   authorName: string;
   content: string;
 }
 
-const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
-  pollId,
-}) => {
+const Discussion: React.VoidFunctionComponent = () => {
   const { locale } = usePreferences();
-  const getCommentsQueryKey = ["poll", pollId, "comments"];
-  const queryClient = useQueryClient();
-  const { data: comments } = useQuery(
-    getCommentsQueryKey,
-    async () => {
-      const res = await axios.get<{
-        comments: Array<Omit<Comment, "createdAt"> & { createdAt: string }>;
-      }>(`/api/poll/${pollId}/comments`);
-      return res.data.comments;
-    },
+  const queryClient = trpc.useContext();
+  const {
+    poll: { pollId },
+  } = usePoll();
+
+  const { data: comments } = trpc.useQuery(
+    ["polls.comments.list", { pollId }],
     {
       refetchInterval: 10000, // refetch every 10 seconds
     },
@@ -55,57 +40,44 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
 
   const plausible = usePlausible();
 
-  const { mutate: createCommentMutation } = useMutation(
-    (payload: CreateCommentPayload) => {
-      // post comment
-      return createComment(payload);
+  const addComment = trpc.useMutation("polls.comments.add", {
+    onSuccess: (newComment) => {
+      session.refresh();
+      queryClient.setQueryData(
+        ["polls.comments.list", { pollId }],
+        (existingComments = []) => {
+          return [...existingComments, newComment];
+        },
+      );
+      plausible("Created comment");
     },
-    {
-      onSuccess: (newComment) => {
-        session.refresh();
-        queryClient.setQueryData(getCommentsQueryKey, (comments) => {
-          if (Array.isArray(comments)) {
-            return [...comments, newComment];
-          }
-          return [newComment];
-        });
-        plausible("Created comment");
-      },
-    },
-  );
+  });
 
   const { poll } = usePoll();
 
-  const { mutate: deleteCommentMutation } = useMutation(
-    async (payload: { pollId: string; commentId: string }) => {
-      await axios.delete(`/api/poll/${pollId}/comments/${payload.commentId}`);
+  const deleteComment = trpc.useMutation("polls.comments.delete", {
+    onMutate: ({ commentId }) => {
+      queryClient.setQueryData(
+        ["polls.comments.list", { pollId }],
+        (existingComments = []) => {
+          return [...existingComments].filter(({ id }) => id !== commentId);
+        },
+      );
     },
-    {
-      onMutate: () => {
-        plausible("Deleted comment");
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries(getCommentsQueryKey);
-      },
+    onSuccess: () => {
+      plausible("Deleted comment");
     },
-  );
+  });
 
   const session = useSession();
 
-  const { register, setValue, control, handleSubmit, formState } =
+  const { register, reset, control, handleSubmit, formState } =
     useForm<CommentForm>({
       defaultValues: {
         authorName: "",
         content: "",
       },
     });
-
-  const handleDelete = React.useCallback(
-    (commentId: string) => {
-      deleteCommentMutation({ pollId, commentId });
-    },
-    [deleteCommentMutation, pollId],
-  );
 
   if (!comments) {
     return null;
@@ -130,6 +102,7 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
 
             return (
               <motion.div
+                layoutId={comment.id}
                 transition={{ duration: 0.2 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -171,7 +144,10 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
                           icon={Trash}
                           label="Delete comment"
                           onClick={() => {
-                            handleDelete(comment.id);
+                            deleteComment.mutate({
+                              commentId: comment.id,
+                              pollId,
+                            });
                           }}
                         />
                       </Dropdown>
@@ -188,22 +164,9 @@ const Discussion: React.VoidFunctionComponent<DiscussionProps> = ({
       </div>
       <form
         className="bg-white p-4"
-        onSubmit={handleSubmit((data) => {
-          return new Promise((resolve, reject) => {
-            createCommentMutation(
-              {
-                ...data,
-                pollId,
-              },
-              {
-                onSuccess: () => {
-                  setValue("content", "");
-                  resolve(data);
-                },
-                onError: reject,
-              },
-            );
-          });
+        onSubmit={handleSubmit(async ({ authorName, content }) => {
+          await addComment.mutateAsync({ authorName, content, pollId });
+          reset({ authorName, content: "" });
         })}
       >
         <textarea

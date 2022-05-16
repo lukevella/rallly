@@ -226,7 +226,7 @@ const PollPage: NextPage = () => {
               <div className="mb-4 lg:mb-8">
                 <PollComponent />
               </div>
-              <Discussion pollId={poll.urlId} />
+              <Discussion />
             </React.Suspense>
           </div>
         </div>
