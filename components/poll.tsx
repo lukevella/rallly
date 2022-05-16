@@ -33,7 +33,7 @@ const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
 const PollPage: NextPage = () => {
-  const { poll } = usePoll();
+  const { poll, participants } = usePoll();
 
   const router = useRouter();
 
@@ -122,8 +122,8 @@ const PollPage: NextPage = () => {
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
 
   const names = React.useMemo(
-    () => poll.participants.map(({ name }) => name),
-    [poll.participants],
+    () => participants.map(({ name }) => name),
+    [participants],
   );
 
   return (
@@ -222,9 +222,9 @@ const PollPage: NextPage = () => {
                 <span className="text-xs text-slate-500">No</span>
               </span>
             </div>
-            <React.Suspense fallback={<div>Loading…</div>}>
+            <React.Suspense fallback={<div className="p-4">Loading…</div>}>
               <div className="mb-4 lg:mb-8">
-                <PollComponent pollId={poll.urlId} />
+                <PollComponent />
               </div>
               <Discussion pollId={poll.urlId} />
             </React.Suspense>

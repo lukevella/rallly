@@ -1,7 +1,6 @@
-import { Option } from "@prisma/client";
 import clsx from "clsx";
 import * as React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 import CompactButton from "@/components/compact-button";
 import Check from "@/components/icons/check.svg";
@@ -10,23 +9,24 @@ import X from "@/components/icons/x.svg";
 import { requiredString } from "../../../utils/form-validation";
 import Button from "../../button";
 import NameInput from "../../name-input";
-import { ParticipantForm } from "../types";
+import { usePoll } from "../../poll-context";
+import { useParticipantForm } from "../mutations";
+import { ParticipantForm, ParticipantFormSubmitted } from "../types";
 import { VoteSelector } from "../vote-selector";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
 export interface ParticipantRowFormProps {
   defaultValues?: Partial<ParticipantForm>;
-  onSubmit: (data: ParticipantForm) => Promise<void>;
+  onSubmit: (data: ParticipantFormSubmitted) => Promise<void>;
   className?: string;
-  options: Option[];
   onCancel?: () => void;
 }
 
 const ParticipantRowForm: React.ForwardRefRenderFunction<
   HTMLFormElement,
   ParticipantRowFormProps
-> = ({ defaultValues, onSubmit, className, options, onCancel }, ref) => {
+> = ({ defaultValues, onSubmit, className, onCancel }, ref) => {
   const {
     setActiveOptionId,
     activeOptionId,
@@ -38,12 +38,13 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     setScrollPosition,
   } = usePollContext();
 
+  const { options } = usePoll();
   const {
     handleSubmit,
     control,
     formState: { errors, submitCount, isSubmitting },
     reset,
-  } = useForm<ParticipantForm>({
+  } = useParticipantForm({
     defaultValues: {
       name: "",
       votes: [],
@@ -71,7 +72,6 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
       onSubmit={handleSubmit(async ({ name, votes }) => {
         await onSubmit({
           name,
-          // no need to create votes for "no"
           votes,
         });
         reset();
@@ -114,20 +114,20 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
         render={({ field }) => {
           return (
             <ControlledScrollArea>
-              {options.map((option, index) => {
+              {options.map(({ optionId }, index) => {
                 const value = field.value[index];
 
                 return (
                   <div
-                    key={option.id}
+                    key={optionId}
                     className={clsx(
                       "flex shrink-0 items-center justify-center transition-colors",
                       {
-                        "bg-gray-50": activeOptionId === option.id,
+                        "bg-gray-50": activeOptionId === optionId,
                       },
                     )}
                     style={{ width: columnWidth }}
-                    onMouseOver={() => setActiveOptionId(option.id)}
+                    onMouseOver={() => setActiveOptionId(optionId)}
                     onMouseOut={() => setActiveOptionId(null)}
                   >
                     <VoteSelector
@@ -147,14 +147,14 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                       }}
                       onChange={(vote) => {
                         const newValue = [...field.value];
-                        newValue[index] = { optionId: option.id, type: vote };
+                        newValue[index] = { optionId, type: vote };
                         field.onChange(newValue);
                       }}
                       ref={(el) => {
                         checkboxRefs.current[index] = el;
                       }}
                       onFocus={() => {
-                        setActiveOptionId(option.id);
+                        setActiveOptionId(optionId);
                       }}
                     />
                   </div>

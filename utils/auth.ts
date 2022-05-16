@@ -1,6 +1,11 @@
-import { IronSessionOptions, sealData, unsealData } from "iron-session";
+import {
+  IronSession,
+  IronSessionOptions,
+  sealData,
+  unsealData,
+} from "iron-session";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
-import { GetServerSideProps, NextApiHandler, NextApiRequest } from "next";
+import { GetServerSideProps, NextApiHandler } from "next";
 
 import { prisma } from "../db";
 import { randomid } from "./nanoid";
@@ -37,12 +42,12 @@ export const createToken = async <T extends Record<string, unknown>>(
   });
 };
 
-export const createGuestUser = async (req: NextApiRequest) => {
-  req.session.user = {
+export const createGuestUser = async (session: IronSession) => {
+  session.user = {
     id: `user-${await randomid()}`,
     isGuest: true,
   };
-  await req.session.save();
+  await session.save();
 };
 
 // assigns participants and comments created by guests to a user

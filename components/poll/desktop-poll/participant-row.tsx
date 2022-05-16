@@ -1,4 +1,4 @@
-import { Option, Participant, Vote } from "@prisma/client";
+import { Participant, Vote } from "@prisma/client";
 import clsx from "clsx";
 import * as React from "react";
 
@@ -17,30 +17,25 @@ import ParticipantRowForm from "./participant-row-form";
 import { usePollContext } from "./poll-context";
 
 export interface ParticipantRowProps {
-  urlId: string;
   participant: Participant & { votes: Vote[] };
-  options: Option[];
   editMode: boolean;
   onChangeEditMode?: (value: boolean) => void;
 }
 
 const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
-  urlId,
   participant,
-  options,
   editMode,
   onChangeEditMode,
 }) => {
   const { setActiveOptionId, activeOptionId, columnWidth, sidebarWidth } =
     usePollContext();
 
-  const { mutate: updateParticipantMutation } =
-    useUpdateParticipantMutation(urlId);
+  const updateParticipant = useUpdateParticipantMutation();
 
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const session = useSession();
-  const { poll, getVote } = usePoll();
+  const { poll, getVote, options } = usePoll();
 
   const isYou = session.user && session.ownsObject(participant) ? true : false;
 
@@ -54,30 +49,20 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
       <ParticipantRowForm
         defaultValues={{
           name: participant.name,
-          votes: options.map(({ id }) => {
-            const type = getVote(participant.id, id);
-            return type ? { optionId: id, type } : undefined;
+          votes: options.map(({ optionId }) => {
+            const type = getVote(participant.id, optionId);
+            return type ? { optionId, type } : undefined;
           }),
         }}
         onSubmit={async ({ name, votes }) => {
-          return new Promise((resolve, reject) => {
-            updateParticipantMutation(
-              {
-                participantId: participant.id,
-                votes,
-                name,
-              },
-              {
-                onSuccess: () => {
-                  onChangeEditMode?.(false);
-                  resolve();
-                },
-                onError: reject,
-              },
-            );
+          await updateParticipant.mutateAsync({
+            participantId: participant.id,
+            pollId: poll.pollId,
+            votes,
+            name,
           });
+          onChangeEditMode?.(false);
         }}
-        options={options}
         onCancel={() => onChangeEditMode?.(false)}
       />
     );
@@ -117,19 +102,19 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
         ) : null}
       </div>
       <ControlledScrollArea>
-        {options.map((option) => {
-          const vote = getVote(participant.id, option.id);
+        {options.map(({ optionId }) => {
+          const vote = getVote(participant.id, optionId);
           return (
             <div
-              key={option.id}
+              key={optionId}
               className={clsx(
                 "flex shrink-0 items-center justify-center transition-colors",
                 {
-                  "bg-gray-50": activeOptionId === option.id,
+                  "bg-gray-50": activeOptionId === optionId,
                 },
               )}
               style={{ width: columnWidth }}
-              onMouseOver={() => setActiveOptionId(option.id)}
+              onMouseOver={() => setActiveOptionId(optionId)}
               onMouseOut={() => setActiveOptionId(null)}
             >
               <VoteIcon type={vote} />

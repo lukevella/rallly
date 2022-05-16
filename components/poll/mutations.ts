@@ -1,131 +1,99 @@
 import { usePlausible } from "next-plausible";
-import { useMutation, useQueryClient } from "react-query";
-
-import { addParticipant } from "../../api-client/add-participant";
 import {
-  deleteParticipant,
-  DeleteParticipantPayload,
-} from "../../api-client/delete-participant";
-import { updateParticipant } from "../../api-client/update-participant";
+  SubmitErrorHandler,
+  SubmitHandler,
+  useForm,
+  UseFormProps,
+} from "react-hook-form";
+
 import { trpc } from "../../utils/trpc";
-import { GetPollApiResponse } from "../../utils/trpc/types";
 import { usePoll } from "../poll-context";
 import { useSession } from "../session";
-import { ParticipantForm } from "./types";
+import { ParticipantForm, ParticipantFormSubmitted } from "./types";
 
-export const useAddParticipantMutation = (pollId: string) => {
-  const queryClient = useQueryClient();
-  const session = useSession();
-  const plausible = usePlausible();
+export const useParticipantForm = (props?: UseFormProps<ParticipantForm>) => {
+  const form = useForm<ParticipantForm>(props);
   const { options } = usePoll();
-
-  return useMutation(
-    (payload: ParticipantForm) =>
-      addParticipant({
-        pollId,
-        name: payload.name.trim(),
-        votes: options.map(
-          (option, i) =>
-            payload.votes[i] ?? { optionId: option.optionId, type: "no" },
-        ),
-      }),
-    {
-      onSuccess: (participant) => {
-        plausible("Add participant");
-        queryClient.setQueryData<GetPollApiResponse>(
-          ["getPoll", pollId],
-          (poll) => {
-            if (!poll) {
-              throw new Error(
-                "Tried to update poll but no result found in query cache",
-              );
-            }
-            poll.participants = [participant, ...poll.participants];
-            return poll;
-          },
-        );
-        session.refresh();
-      },
+  return {
+    ...form,
+    handleSubmit: (
+      onValid: SubmitHandler<ParticipantFormSubmitted>,
+      onInvalid?: SubmitErrorHandler<ParticipantForm>,
+    ) => {
+      return form.handleSubmit((data) => {
+        onValid({
+          name: data.name,
+          votes: options.map(
+            ({ optionId }, i) =>
+              data.votes[i] ?? { optionId, type: "no" as const },
+          ),
+        });
+      }, onInvalid);
     },
-  );
+  };
 };
 
-export const useUpdateParticipantMutation = (pollId: string) => {
-  const queryClient = useQueryClient();
+export const useAddParticipantMutation = () => {
+  const queryClient = trpc.useContext();
+  const session = useSession();
   const plausible = usePlausible();
-  const { options } = usePoll();
 
-  return useMutation(
-    (payload: ParticipantForm & { participantId: string }) =>
-      updateParticipant({
-        pollId,
-        participantId: payload.participantId,
-        name: payload.name.trim(),
-        votes: options.map(
-          (option, i) =>
-            payload.votes[i] ?? { optionId: option.optionId, type: "no" },
-        ),
-      }),
-    {
-      onSuccess: (participant) => {
-        plausible("Update participant");
-        queryClient.setQueryData<GetPollApiResponse>(
-          ["getPoll", pollId],
-          (poll) => {
-            if (!poll) {
-              throw new Error(
-                "Tried to update poll but no result found in query cache",
-              );
-            }
-
-            poll.participants = poll.participants.map((p) =>
-              p.id === participant.id ? participant : p,
-            );
-
-            return poll;
-          },
-        );
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries(["getPoll", pollId]);
-      },
+  return trpc.useMutation(["polls.participants.add"], {
+    onSuccess: (participant) => {
+      plausible("Add participant");
+      queryClient.setQueryData(
+        ["polls.participants.list", { pollId: participant.pollId }],
+        (existingParticipants = []) => {
+          return [participant, ...existingParticipants];
+        },
+      );
+      session.refresh();
     },
-  );
+  });
+};
+
+export const useUpdateParticipantMutation = () => {
+  const queryClient = trpc.useContext();
+  const plausible = usePlausible();
+  return trpc.useMutation("polls.participants.update", {
+    onSuccess: (participant) => {
+      plausible("Update participant");
+      queryClient.setQueryData(
+        ["polls.participants.list", { pollId: participant.pollId }],
+        (existingParticipants = []) => {
+          const newParticipants = [...existingParticipants];
+
+          const index = newParticipants.findIndex(
+            ({ id }) => id === participant.id,
+          );
+
+          if (index !== -1) {
+            newParticipants[index] = participant;
+          }
+
+          return newParticipants;
+        },
+      );
+    },
+  });
 };
 
 export const useDeleteParticipantMutation = () => {
-  const queryClient = useQueryClient();
+  const queryClient = trpc.useContext();
   const plausible = usePlausible();
-  const { poll } = usePoll();
-  return useMutation(
-    (payload: DeleteParticipantPayload) => deleteParticipant(payload),
-    {
-      onMutate: ({ participantId }) => {
-        queryClient.setQueryData<GetPollApiResponse>(
-          ["getPoll", poll.urlId],
-          (poll) => {
-            if (!poll) {
-              throw new Error(
-                "Tried to update poll but no result found in query cache",
-              );
-            }
-
-            poll.participants = poll.participants.filter(
-              ({ id }) => id !== participantId,
-            );
-
-            return poll;
-          },
-        );
-      },
-      onSuccess: () => {
-        plausible("Remove participant");
-      },
-      onSettled: (_data, _error, { pollId }) => {
-        queryClient.invalidateQueries(["getPoll", pollId]);
-      },
+  return trpc.useMutation("polls.participants.delete", {
+    onMutate: ({ participantId, pollId }) => {
+      queryClient.setQueryData(
+        ["polls.participants.list", { pollId: pollId }],
+        (existingParticipants = []) => {
+          return existingParticipants.filter(({ id }) => id !== participantId);
+        },
+      );
     },
-  );
+    onSuccess: () => {
+      plausible("Remove participant");
+    },
+  });
 };
 
 export const useUpdatePollMutation = () => {

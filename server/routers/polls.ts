@@ -14,9 +14,11 @@ import {
 import { GetPollApiResponse } from "../../utils/trpc/types";
 import { createRouter } from "../createRouter";
 import { demo } from "./polls/demo";
+import { participants } from "./polls/participants";
 
 export const polls = createRouter()
   .merge("demo.", demo)
+  .merge("participants.", participants)
   .mutation("create", {
     input: z.object({
       title: z.string(),

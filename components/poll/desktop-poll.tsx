@@ -15,7 +15,6 @@ import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import { PollContext } from "./desktop-poll/poll-context";
 import PollHeader from "./desktop-poll/poll-header";
 import { useAddParticipantMutation } from "./mutations";
-import { PollProps } from "./types";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -27,13 +26,19 @@ const MotionParticipantFormRow = motion(ParticipantRowForm);
 
 const minSidebarWidth = 180;
 
-const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
+const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const { poll, targetTimeZone, setTargetTimeZone, options, userAlreadyVoted } =
-    usePoll();
+  const {
+    poll,
+    participants,
+    targetTimeZone,
+    setTargetTimeZone,
+    options,
+    userAlreadyVoted,
+  } = usePoll();
 
-  const { timeZone, participants } = poll;
+  const { timeZone } = poll;
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
   const [editingParticipantId, setEditingParticipantId] =
@@ -79,7 +84,7 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
 
-  const { mutate: addParticipant } = useAddParticipantMutation(pollId);
+  const addParticipant = useAddParticipantMutation();
 
   const goToNextPage = () => {
     setScrollPosition(
@@ -206,18 +211,14 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 55, y: 0 }}
                   className="border-t bg-slate-100 bg-opacity-0"
-                  onSubmit={(data) => {
-                    return new Promise((resolve, reject) => {
-                      addParticipant(data, {
-                        onSuccess: () => {
-                          setShouldShowNewParticipantForm(false);
-                          resolve();
-                        },
-                        onError: reject,
-                      });
+                  onSubmit={async ({ name, votes }) => {
+                    await addParticipant.mutateAsync({
+                      name,
+                      votes,
+                      pollId: poll.pollId,
                     });
+                    setShouldShowNewParticipantForm(false);
                   }}
-                  options={poll.options}
                   onCancel={() => {
                     setShouldShowNewParticipantForm(false);
                   }}
@@ -229,10 +230,8 @@ const Poll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
             {participants.map((participant, i) => {
               return (
                 <ParticipantRow
-                  urlId={pollId}
                   key={i}
                   participant={participant}
-                  options={poll.options}
                   editMode={editingParticipantId === participant.id}
                   onChangeEditMode={(isEditing) => {
                     setEditingParticipantId(isEditing ? participant.id : null);

@@ -5,9 +5,9 @@ import { useDeleteParticipantMutation } from "./mutations";
 export const useDeleteParticipantModal = () => {
   const { render } = useModalContext();
 
-  const { mutate: deleteParticipant } = useDeleteParticipantMutation();
+  const deleteParticipant = useDeleteParticipantMutation();
   const {
-    poll: { urlId },
+    poll: { pollId },
   } = usePoll();
 
   return (participantId: string) => {
@@ -20,8 +20,8 @@ export const useDeleteParticipantModal = () => {
       },
       okText: "Delete",
       onOk: () => {
-        deleteParticipant({
-          pollId: urlId,
+        deleteParticipant.mutate({
+          pollId,
           participantId,
         });
       },

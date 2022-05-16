@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
 import Check from "@/components/icons/check.svg";
@@ -24,9 +24,9 @@ import PollOptions from "./mobile-poll/poll-options";
 import TimeSlotOptions from "./mobile-poll/time-slot-options";
 import {
   useAddParticipantMutation,
+  useParticipantForm,
   useUpdateParticipantMutation,
 } from "./mutations";
-import { ParticipantForm, PollProps } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
 import UserAvatar from "./user-avatar";
 
@@ -34,17 +34,22 @@ if (typeof window !== "undefined") {
   smoothscroll.polyfill();
 }
 
-const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
+const MobilePoll: React.VoidFunctionComponent = () => {
   const pollContext = usePoll();
 
-  const { poll, targetTimeZone, setTargetTimeZone, getParticipantById } =
-    pollContext;
+  const {
+    poll,
+    participants,
+    targetTimeZone,
+    setTargetTimeZone,
+    getParticipantById,
+  } = pollContext;
 
-  const { timeZone, participants, role } = poll;
+  const { timeZone, role } = poll;
 
   const session = useSession();
 
-  const form = useForm<ParticipantForm>({
+  const form = useParticipantForm({
     defaultValues: {
       name: "",
       votes: [],
@@ -86,10 +91,9 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
 
   const { t } = useTranslation("app");
 
-  const { mutate: updateParticipantMutation } =
-    useUpdateParticipantMutation(pollId);
+  const updateParticipant = useUpdateParticipantMutation();
 
-  const { mutate: addParticipantMutation } = useAddParticipantMutation(pollId);
+  const addParticipant = useAddParticipantMutation();
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const submitContainerRef = React.useRef<HTMLDivElement>(null);
@@ -111,33 +115,24 @@ const MobilePoll: React.VoidFunctionComponent<PollProps> = ({ pollId }) => {
       <form
         ref={formRef}
         className="border-t border-b bg-white shadow-sm"
-        onSubmit={handleSubmit((data) => {
-          return new Promise<ParticipantForm>((resolve, reject) => {
-            if (selectedParticipant) {
-              updateParticipantMutation(
-                {
-                  participantId: selectedParticipant.id,
-                  ...data,
-                },
-                {
-                  onSuccess: () => {
-                    resolve(data);
-                    setIsEditing(false);
-                  },
-                  onError: reject,
-                },
-              );
-            } else {
-              addParticipantMutation(data, {
-                onSuccess: (newParticipant) => {
-                  setSelectedParticipantId(newParticipant.id);
-                  resolve(data);
-                  setIsEditing(false);
-                },
-                onError: reject,
-              });
-            }
-          });
+        onSubmit={handleSubmit(async ({ name, votes }) => {
+          if (selectedParticipant) {
+            await updateParticipant.mutateAsync({
+              pollId: poll.pollId,
+              participantId: selectedParticipant.id,
+              name,
+              votes,
+            });
+            setIsEditing(false);
+          } else {
+            const newParticipant = await addParticipant.mutateAsync({
+              pollId: poll.pollId,
+              name,
+              votes,
+            });
+            setSelectedParticipantId(newParticipant.id);
+            setIsEditing(false);
+          }
         })}
       >
         <div className="sticky top-12 z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">

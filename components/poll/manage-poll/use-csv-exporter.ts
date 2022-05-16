@@ -4,14 +4,14 @@ import { useTranslation } from "next-i18next";
 import { usePoll } from "@/components/poll-context";
 
 export const useCsvExporter = () => {
-  const { poll, options } = usePoll();
+  const { poll, participants, options } = usePoll();
   const { t } = useTranslation("app");
 
   return {
     exportToCsv: () => {
       const header = [
         t("participantCount", {
-          count: poll.participants.length,
+          count: participants.length,
         }),
         ...options.map((decodedOption) => {
           const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month}`;
@@ -20,7 +20,7 @@ export const useCsvExporter = () => {
             : `${day} ${decodedOption.startTime} - ${decodedOption.endTime}`;
         }),
       ].join(",");
-      const rows = poll.participants.map((participant) => {
+      const rows = participants.map((participant) => {
         return [
           participant.name,
           ...poll.options.map((option) => {

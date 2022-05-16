@@ -22,7 +22,7 @@ export default withSessionRoute(
       }
       case "POST": {
         if (!req.session.user) {
-          await createGuestUser(req);
+          await createGuestUser(req.session);
         }
 
         const newComment = await prisma.comment.create({

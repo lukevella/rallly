@@ -1,3 +1,4 @@
+import { withSentry } from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 import superjson from "superjson";
 
@@ -17,10 +18,17 @@ export const appRouter = createRouter()
 // export type definition of API
 export type AppRouter = typeof appRouter;
 
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
 // export API handler
-export default withSessionRoute(
-  trpcNext.createNextApiHandler({
-    router: appRouter,
-    createContext,
-  }),
+export default withSentry(
+  withSessionRoute(
+    trpcNext.createNextApiHandler({
+      router: appRouter,
+      createContext,
+    }),
+  ),
 );

@@ -1,4 +1,5 @@
-import { Link, Option, Participant, Poll, User, Vote } from "@prisma/client";
+import { Link, Option, Poll, User } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
 import { prisma } from "../db";
 import { GetPollApiResponse } from "./trpc/types";
@@ -11,17 +12,6 @@ export const getDefaultPollInclude = <V extends boolean>(
       value: "asc";
     };
   };
-  participants: {
-    include: {
-      votes: true;
-    };
-    orderBy: [
-      {
-        createdAt: "desc";
-      },
-      { name: "desc" },
-    ];
-  };
   user: true;
   links: V;
 } => {
@@ -30,17 +20,6 @@ export const getDefaultPollInclude = <V extends boolean>(
       orderBy: {
         value: "asc",
       },
-    },
-    participants: {
-      include: {
-        votes: true,
-      },
-      orderBy: [
-        {
-          createdAt: "desc",
-        },
-        { name: "desc" },
-      ],
     },
     user: true,
     links: includeLinks,
@@ -55,7 +34,10 @@ export const getLink = async (urlId: string) => {
   });
 
   if (!link) {
-    throw new Error(`Link not found with id: ${urlId}`);
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `Link not found with id: ${urlId}`,
+    });
   }
 
   return link;
@@ -72,7 +54,10 @@ export const getPollFromLink = async (
   });
 
   if (!poll) {
-    throw new Error(`Poll not found with id: ${link.pollId}`);
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `Poll not found with id: ${link.pollId}`,
+    });
   }
 
   return createPollResponse(poll, link);
@@ -81,7 +66,6 @@ export const getPollFromLink = async (
 export const createPollResponse = (
   poll: Poll & {
     options: Option[];
-    participants: Array<Participant & { votes: Vote[] }>;
     user: User;
     links: Link[];
   },

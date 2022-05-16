@@ -15,6 +15,3 @@ export interface ParticipantFormSubmitted {
   name: string;
   votes: Array<{ optionId: string; type: VoteType }>;
 }
-export interface PollProps {
-  pollId: string;
-}

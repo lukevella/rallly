@@ -9,6 +9,7 @@ import {
 } from "utils/date-time-utils";
 import { GetPollApiResponse } from "utils/trpc/types";
 
+import { trpc } from "../utils/trpc";
 import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
@@ -17,6 +18,7 @@ type PollContextValue = {
   userAlreadyVoted: boolean;
   poll: GetPollApiResponse;
   targetTimeZone: string;
+  participants: (Participant & { votes: Vote[] })[];
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
@@ -44,32 +46,37 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   value: GetPollApiResponse;
   children?: React.ReactNode;
 }> = ({ value: poll, children }) => {
+  const { data: participants = [] } = trpc.useQuery([
+    "polls.participants.list",
+    { pollId: poll.pollId },
+  ]);
+
   const { user } = useSession();
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
 
   const participantById = React.useMemo(
-    () => keyBy(poll.participants, (participant) => participant.id),
-    [poll.participants],
+    () => keyBy(participants, (participant) => participant.id),
+    [participants],
   );
 
   const participantsByOptionId = React.useMemo(() => {
     const res: Record<string, Participant[]> = {};
     poll.options.forEach((option) => {
-      res[option.id] = poll.participants.filter((participant) =>
+      res[option.id] = participants.filter((participant) =>
         participant.votes.some(
           ({ type, optionId }) => optionId === option.id && type !== "no",
         ),
       );
     });
     return res;
-  }, [poll.options, poll.participants]);
+  }, [poll.options, participants]);
 
   const { locale } = usePreferences();
 
   const getScore = React.useCallback(
     (optionId: string) => {
-      return poll.participants.reduce(
+      return participants.reduce(
         (acc, curr) => {
           curr.votes.forEach((vote) => {
             if (vote.optionId !== optionId) {
@@ -87,7 +94,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
         { yes: 0, ifNeedBe: 0 },
       );
     },
-    [poll.participants],
+    [participants],
   );
 
   const contextValue = React.useMemo<PollContextValue>(() => {
@@ -105,15 +112,13 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     );
     const getParticipantById = (participantId: string) => {
       // TODO (Luke Vella) [2022-04-16]: Build an index instead
-      const participant = poll.participants.find(
-        ({ id }) => id === participantId,
-      );
+      const participant = participants.find(({ id }) => id === participantId);
 
       return participant;
     };
 
     const userAlreadyVoted = user
-      ? poll.participants.some((participant) =>
+      ? participants.some((participant) =>
           user.isGuest
             ? participant.guestId === user.id
             : participant.userId === user.id,
@@ -123,6 +128,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     return {
       userAlreadyVoted,
       poll,
+      participants,
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
@@ -144,11 +150,13 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     getScore,
     locale,
     participantById,
+    participants,
     participantsByOptionId,
     poll,
     targetTimeZone,
     user,
   ]);
+
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
   );
