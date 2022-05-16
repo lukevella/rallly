@@ -59,6 +59,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
           setIsUpdatingNotifications(true);
           updatePollMutation(
             {
+              urlId: poll.urlId,
               notifications: !poll.notifications,
             },
             {

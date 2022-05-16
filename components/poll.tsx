@@ -91,7 +91,7 @@ const PollPage: NextPage = () => {
   React.useEffect(() => {
     if (router.query.unsubscribe) {
       updatePollMutation(
-        { notifications: false },
+        { urlId: poll.urlId, notifications: false },
         {
           onSuccess: () => {
             toast.success("Notifications have been disabled");
@@ -103,7 +103,7 @@ const PollPage: NextPage = () => {
         shallow: true,
       });
     }
-  }, [plausible, router, updatePollMutation]);
+  }, [plausible, poll.urlId, router, updatePollMutation]);
 
   const checkIfWideScreen = () => window.innerWidth > 640;
 

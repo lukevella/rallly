@@ -96,6 +96,7 @@ const ManagePoll: React.VoidFunctionComponent<{
             const onOk = () => {
               updatePollMutation(
                 {
+                  urlId: poll.urlId,
                   timeZone: data.timeZone,
                   optionsToDelete: optionsToDelete.map(({ id }) => id),
                   optionsToAdd,
@@ -161,7 +162,10 @@ const ManagePoll: React.VoidFunctionComponent<{
         className="p-4"
         onSubmit={(data) => {
           //submit
-          updatePollMutation(data, { onSuccess: closePollDetailsModal });
+          updatePollMutation(
+            { urlId: poll.urlId, ...data },
+            { onSuccess: closePollDetailsModal },
+          );
         }}
       />
     ),
@@ -189,13 +193,17 @@ const ManagePoll: React.VoidFunctionComponent<{
           <DropdownItem
             icon={LockOpen}
             label="Unlock poll"
-            onClick={() => updatePollMutation({ closed: false })}
+            onClick={() =>
+              updatePollMutation({ urlId: poll.urlId, closed: false })
+            }
           />
         ) : (
           <DropdownItem
             icon={LockClosed}
             label="Lock poll"
-            onClick={() => updatePollMutation({ closed: true })}
+            onClick={() =>
+              updatePollMutation({ urlId: poll.urlId, closed: true })
+            }
           />
         )}
       </Dropdown>

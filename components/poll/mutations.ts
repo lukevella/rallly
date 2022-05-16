@@ -1,4 +1,3 @@
-import { updatePoll, UpdatePollPayload } from "api-client/update-poll";
 import { usePlausible } from "next-plausible";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -8,6 +7,7 @@ import {
   DeleteParticipantPayload,
 } from "../../api-client/delete-participant";
 import { updateParticipant } from "../../api-client/update-participant";
+import { trpc } from "../../utils/trpc";
 import { GetPollApiResponse } from "../../utils/trpc/types";
 import { usePoll } from "../poll-context";
 import { useSession } from "../session";
@@ -131,15 +131,11 @@ export const useDeleteParticipantMutation = () => {
 export const useUpdatePollMutation = () => {
   const { poll } = usePoll();
   const plausible = usePlausible();
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    (payload: UpdatePollPayload) => updatePoll(poll.urlId, payload),
-    {
-      onSuccess: (data) => {
-        queryClient.setQueryData(["getPoll", poll.urlId], data);
-        plausible("Updated poll");
-      },
+  const queryClient = trpc.useContext();
+  return trpc.useMutation(["polls.update"], {
+    onSuccess: (data) => {
+      queryClient.setQueryData(["polls.get", { urlId: poll.urlId }], data);
+      plausible("Updated poll");
     },
-  );
+  });
 };
