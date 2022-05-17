@@ -4,6 +4,7 @@ declare global {
       DATABASE_URL: string;
       NODE_ENV: "development" | "production";
       SECRET_PASSWORD: string;
+      NEXT_PUBLIC_LEGACY_POLLS?: string;
       NEXT_PUBLIC_MAINTENANCE_MODE?: string;
       PLAUSIBLE_DOMAIN?: string;
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;

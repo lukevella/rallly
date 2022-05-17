@@ -74,5 +74,5 @@ export default withTRPC<AppRouter>({
       },
     };
   },
-  ssr: true,
+  ssr: false, // doesn't play well with how we're fetching legacy endpoints. consider switching it on when we don't need to get legacy polls
 })(appWithTranslation(MyApp));
