@@ -125,7 +125,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
           <div className="flex h-full w-14 items-center justify-center">
             <VoteSelector ref={selectorRef} value={vote} onChange={onChange} />
           </div>
-        ) : vote ? (
+        ) : (
           <AnimatePresence initial={false}>
             <PopInOut
               key={vote}
@@ -134,7 +134,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
               <VoteIcon type={vote} />
             </PopInOut>
           </AnimatePresence>
-        ) : null}
+        )}
       </CollapsibleContainer>
     </div>
   );

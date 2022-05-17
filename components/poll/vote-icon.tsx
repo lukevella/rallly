@@ -20,7 +20,7 @@ const VoteIcon: React.VoidFunctionComponent<{
       );
 
     default:
-      return <span className="inline-block font-bold text-slate-300">?</span>;
+      return <span className="inline-block font-bold text-slate-400">?</span>;
   }
 };
 
