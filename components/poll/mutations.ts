@@ -1,36 +1,17 @@
 import { usePlausible } from "next-plausible";
-import {
-  SubmitErrorHandler,
-  SubmitHandler,
-  useForm,
-  UseFormProps,
-} from "react-hook-form";
 
 import { trpc } from "../../utils/trpc";
 import { usePoll } from "../poll-context";
 import { useSession } from "../session";
-import { ParticipantForm, ParticipantFormSubmitted } from "./types";
+import { ParticipantForm } from "./types";
 
-export const useParticipantForm = (props?: UseFormProps<ParticipantForm>) => {
-  const form = useForm<ParticipantForm>(props);
-  const { options } = usePoll();
-  return {
-    ...form,
-    handleSubmit: (
-      onValid: SubmitHandler<ParticipantFormSubmitted>,
-      onInvalid?: SubmitErrorHandler<ParticipantForm>,
-    ) => {
-      return form.handleSubmit((data) => {
-        onValid({
-          name: data.name,
-          votes: options.map(
-            ({ optionId }, i) =>
-              data.votes[i] ?? { optionId, type: "no" as const },
-          ),
-        });
-      }, onInvalid);
-    },
-  };
+export const normalizeVotes = (
+  optionIds: string[],
+  votes: ParticipantForm["votes"],
+) => {
+  return optionIds.map(
+    (optionId, i) => votes[i] ?? { optionId, type: "no" as const },
+  );
 };
 
 export const useAddParticipantMutation = () => {

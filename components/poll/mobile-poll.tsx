@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, FormProvider } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
 import Check from "@/components/icons/check.svg";
@@ -23,10 +23,11 @@ import TimeZonePicker from "../time-zone-picker";
 import PollOptions from "./mobile-poll/poll-options";
 import TimeSlotOptions from "./mobile-poll/time-slot-options";
 import {
+  normalizeVotes,
   useAddParticipantMutation,
-  useParticipantForm,
   useUpdateParticipantMutation,
 } from "./mutations";
+import { ParticipantForm } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
 import UserAvatar from "./user-avatar";
 
@@ -43,13 +44,14 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     targetTimeZone,
     setTargetTimeZone,
     getParticipantById,
+    optionIds,
   } = pollContext;
 
   const { timeZone, role } = poll;
 
   const session = useSession();
 
-  const form = useParticipantForm({
+  const form = useForm<ParticipantForm>({
     defaultValues: {
       name: "",
       votes: [],
@@ -121,14 +123,14 @@ const MobilePoll: React.VoidFunctionComponent = () => {
               pollId: poll.pollId,
               participantId: selectedParticipant.id,
               name,
-              votes,
+              votes: normalizeVotes(optionIds, votes),
             });
             setIsEditing(false);
           } else {
             const newParticipant = await addParticipant.mutateAsync({
               pollId: poll.pollId,
               name,
-              votes,
+              votes: normalizeVotes(optionIds, votes),
             });
             setSelectedParticipantId(newParticipant.id);
             setIsEditing(false);

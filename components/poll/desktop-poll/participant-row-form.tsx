@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import * as React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import CompactButton from "@/components/compact-button";
 import Check from "@/components/icons/check.svg";
@@ -10,7 +10,7 @@ import { requiredString } from "../../../utils/form-validation";
 import Button from "../../button";
 import NameInput from "../../name-input";
 import { usePoll } from "../../poll-context";
-import { useParticipantForm } from "../mutations";
+import { normalizeVotes } from "../mutations";
 import { ParticipantForm, ParticipantFormSubmitted } from "../types";
 import { VoteSelector } from "../vote-selector";
 import ControlledScrollArea from "./controlled-scroll-area";
@@ -38,13 +38,13 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     setScrollPosition,
   } = usePollContext();
 
-  const { options } = usePoll();
+  const { options, optionIds } = usePoll();
   const {
     handleSubmit,
     control,
     formState: { errors, submitCount, isSubmitting },
     reset,
-  } = useParticipantForm({
+  } = useForm({
     defaultValues: {
       name: "",
       votes: [],
@@ -72,7 +72,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
       onSubmit={handleSubmit(async ({ name, votes }) => {
         await onSubmit({
           name,
-          votes,
+          votes: normalizeVotes(optionIds, votes),
         });
         reset();
       })}

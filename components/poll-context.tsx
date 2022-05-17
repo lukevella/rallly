@@ -22,6 +22,7 @@ type PollContextValue = {
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
+  optionIds: string[];
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
   getScore: (optionId: string) => { yes: number; ifNeedBe: number };
   getParticipantById: (
@@ -125,7 +126,10 @@ export const PollContextProvider: React.VoidFunctionComponent<{
         )
       : false;
 
+    const optionIds = parsedOptions.options.map(({ optionId }) => optionId);
+
     return {
+      optionIds,
       userAlreadyVoted,
       poll,
       participants,
