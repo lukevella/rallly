@@ -16,11 +16,13 @@ import { createRouter } from "../createRouter";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { participants } from "./polls/participants";
+import { verification } from "./polls/verification";
 
 export const polls = createRouter()
   .merge("demo.", demo)
   .merge("participants.", participants)
   .merge("comments.", comments)
+  .merge("verification.", verification)
   .mutation("create", {
     input: z.object({
       title: z.string(),

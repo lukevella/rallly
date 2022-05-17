@@ -46,16 +46,12 @@ const PollPageLoader: NextPage<SessionProps> = () => {
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
   async ({ locale = "en", req }) => {
-    try {
-      return {
-        props: {
-          ...(await serverSideTranslations(locale, ["app"])),
-          user: req.session.user ?? null,
-        },
-      };
-    } catch {
-      return { notFound: true };
-    }
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ["app"])),
+        user: req.session.user ?? null,
+      },
+    };
   },
 );
 

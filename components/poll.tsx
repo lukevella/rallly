@@ -1,11 +1,9 @@
-import axios from "axios";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { usePlausible } from "next-plausible";
 import React from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
 import { useMount } from "react-use";
 import { preventWidows } from "utils/prevent-widows";
 
@@ -14,6 +12,7 @@ import LocationMarker from "@/components/icons/location-marker.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import Share from "@/components/icons/share.svg";
 
+import { trpc } from "../utils/trpc";
 import ManagePoll from "./poll/manage-poll";
 import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
@@ -47,46 +46,37 @@ const PollPage: NextPage = () => {
 
   const session = useSession();
 
-  const queryClient = useQueryClient();
+  const queryClient = trpc.useContext();
   const plausible = usePlausible();
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
 
-  const { mutate: verifyEmail } = useMutation(
-    async (verificationCode: string) => {
-      await axios.post(`/api/poll/${poll.urlId}/verify`, {
-        verificationCode,
+  const verifyEmail = trpc.useMutation(["polls.verification.verify"], {
+    onSuccess: () => {
+      toast.success("Your poll has been verified");
+      queryClient.setQueryData(["polls.get", { urlId: poll.urlId }], {
+        ...poll,
+        verified: true,
+      });
+      session.refresh();
+      plausible("Verified email");
+    },
+    onError: () => {
+      toast.error("Your link has expired or is no longer valid");
+    },
+    onSettled: () => {
+      router.replace(`/admin/${router.query.urlId}`, undefined, {
+        shallow: true,
       });
     },
-    {
-      onSuccess: () => {
-        toast.success("Your poll has been verified");
-        queryClient.setQueryData(["getPoll", poll.urlId], {
-          ...poll,
-          verified: true,
-        });
-        session.refresh();
-        plausible("Verified email");
-      },
-      onSettled: () => {
-        router.replace(`/admin/${router.query.urlId}`, undefined, {
-          shallow: true,
-        });
-      },
-      onError: () => {
-        toast.error("Your link has expired or is no longer valid");
-      },
-    },
-  );
+  });
 
-  React.useEffect(() => {
-    // TODO (Luke Vella) [2022-03-29]: stop looking for "verificationCode". We switched to
-    // "code" for compatability with v1 and it's generally better since it's more concise
-    const verificationCode = router.query.verificationCode ?? router.query.code;
-    if (typeof verificationCode === "string") {
-      verifyEmail(verificationCode);
+  useMount(() => {
+    const { code } = router.query;
+    if (typeof code === "string" && !poll.verified) {
+      verifyEmail.mutate({ code, pollId: poll.pollId });
     }
-  }, [router, verifyEmail]);
+  });
 
   React.useEffect(() => {
     if (router.query.unsubscribe) {

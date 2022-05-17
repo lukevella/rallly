@@ -1,9 +1,8 @@
-import axios from "axios";
 import { formatRelative } from "date-fns";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useMutation } from "react-query";
 
+import { trpc } from "../../utils/trpc";
 import Badge from "../badge";
 import Button from "../button";
 import { usePoll } from "../poll-context";
@@ -15,13 +14,10 @@ const PollSubheader: React.VoidFunctionComponent = () => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
   const { locale } = usePreferences();
-  const {
-    mutate: sendVerificationEmail,
-    isLoading: isSendingVerificationEmail,
-    isSuccess: didSendVerificationEmail,
-  } = useMutation(async () => {
-    await axios.post(`/api/poll/${poll.urlId}/verify`);
-  });
+  const requestVerificationEmail = trpc.useMutation(
+    "polls.verification.request",
+  );
+
   return (
     <div className="text-slate-500">
       <div className="md:inline">
@@ -61,16 +57,19 @@ const PollSubheader: React.VoidFunctionComponent = () => {
                       }}
                     />
                   </div>
-                  {didSendVerificationEmail ? (
+                  {requestVerificationEmail.isSuccess ? (
                     <div className="text-green-500">
                       Verification email sent.
                     </div>
                   ) : (
                     <Button
                       onClick={() => {
-                        sendVerificationEmail();
+                        requestVerificationEmail.mutate({
+                          pollId: poll.pollId,
+                          adminUrlId: poll.urlId,
+                        });
                       }}
-                      loading={isSendingVerificationEmail}
+                      loading={requestVerificationEmail.isLoading}
                     >
                       Resend verification email
                     </Button>
