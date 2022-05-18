@@ -12,7 +12,7 @@ import {
   getDateProps,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
-import Button from "../../../button";
+import { Button } from "../../../button";
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
 import Dropdown, { DropdownItem } from "../../../dropdown";

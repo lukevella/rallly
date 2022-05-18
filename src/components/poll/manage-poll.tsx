@@ -2,7 +2,7 @@ import { Placement } from "@floating-ui/react-dom-interactions";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
-import Button from "@/components/button";
+import { Button } from "@/components/button";
 import Cog from "@/components/icons/cog.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import LockOpen from "@/components/icons/lock-open.svg";

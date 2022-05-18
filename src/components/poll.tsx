@@ -6,7 +6,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import { useMount } from "react-use";
 
-import Button from "@/components/button";
+import { Button } from "@/components/button";
 import LocationMarker from "@/components/icons/location-marker.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import Share from "@/components/icons/share.svg";

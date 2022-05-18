@@ -4,7 +4,7 @@ import * as React from "react";
 
 import X from "@/components/icons/x.svg";
 
-import Button, { ButtonProps } from "../button";
+import { Button, ButtonProps } from "../button";
 
 export interface ModalProps {
   description?: React.ReactNode;

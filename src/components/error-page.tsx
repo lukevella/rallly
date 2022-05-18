@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import * as React from "react";
 
-import Button from "@/components/button";
+import { Button } from "@/components/button";
 import Chat from "@/components/icons/chat.svg";
 import EmojiSad from "@/components/icons/emoji-sad.svg";
 
