@@ -3,10 +3,12 @@ import { useTranslation } from "next-i18next";
 
 import { usePoll } from "@/components/poll-context";
 
-export const useCsvExporter = () => {
-  const { poll, participants = [], options } = usePoll();
-  const { t } = useTranslation("app");
+import { useParticipants } from "../../participants-provider";
 
+export const useCsvExporter = () => {
+  const { poll, options } = usePoll();
+  const { t } = useTranslation("app");
+  const { participants } = useParticipants();
   return {
     exportToCsv: () => {
       const header = [

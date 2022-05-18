@@ -13,6 +13,7 @@ import Share from "@/components/icons/share.svg";
 import { preventWidows } from "@/utils/prevent-widows";
 
 import { trpc } from "../utils/trpc";
+import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
 import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
@@ -32,8 +33,8 @@ const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
 const PollPage: NextPage = () => {
-  const { poll, participants } = usePoll();
-
+  const { poll } = usePoll();
+  const { participants } = useParticipants();
   const router = useRouter();
 
   useMount(() => {

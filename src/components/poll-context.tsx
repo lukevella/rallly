@@ -10,7 +10,7 @@ import {
 } from "@/utils/date-time-utils";
 import { GetPollApiResponse } from "@/utils/trpc/types";
 
-import { trpc } from "../utils/trpc";
+import { useParticipants } from "./participants-provider";
 import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
@@ -19,11 +19,11 @@ type PollContextValue = {
   userAlreadyVoted: boolean;
   poll: GetPollApiResponse;
   targetTimeZone: string;
-  participants?: (Participant & { votes: Vote[] })[];
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
   optionIds: string[];
+  // TODO (Luke Vella) [2022-05-18]: Move this stuff to participants provider
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
   getScore: (optionId: string) => { yes: number; ifNeedBe: number };
   getParticipantById: (
@@ -48,31 +48,11 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   value: GetPollApiResponse;
   children?: React.ReactNode;
 }> = ({ value: poll, children }) => {
-  const { data: participants } = trpc.useQuery([
-    "polls.participants.list",
-    { pollId: poll.pollId },
-  ]);
+  const { participants } = useParticipants();
 
   const { user } = useSession();
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
-
-  const participantById = React.useMemo(
-    () => keyBy(participants, (participant) => participant.id),
-    [participants],
-  );
-
-  const participantsByOptionId = React.useMemo(() => {
-    const res: Record<string, Participant[]> = {};
-    poll.options.forEach((option) => {
-      res[option.id] = (participants ?? []).filter((participant) =>
-        participant.votes.some(
-          ({ type, optionId }) => optionId === option.id && type !== "no",
-        ),
-      );
-    });
-    return res;
-  }, [poll.options, participants]);
 
   const { locale } = usePreferences();
 
@@ -130,11 +110,25 @@ export const PollContextProvider: React.VoidFunctionComponent<{
 
     const optionIds = parsedOptions.options.map(({ optionId }) => optionId);
 
+    const participantById = keyBy(
+      participants,
+      (participant) => participant.id,
+    );
+
+    const participantsByOptionId: Record<string, Participant[]> = {};
+    poll.options.forEach((option) => {
+      participantsByOptionId[option.id] = (participants ?? []).filter(
+        (participant) =>
+          participant.votes.some(
+            ({ type, optionId }) => optionId === option.id && type !== "no",
+          ),
+      );
+    });
+
     return {
       optionIds,
       userAlreadyVoted,
       poll,
-      participants,
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
@@ -152,16 +146,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       targetTimeZone,
       setTargetTimeZone,
     };
-  }, [
-    getScore,
-    locale,
-    participantById,
-    participants,
-    participantsByOptionId,
-    poll,
-    targetTimeZone,
-    user,
-  ]);
+  }, [getScore, locale, participants, poll, targetTimeZone, user]);
 
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>

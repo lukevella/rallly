@@ -11,6 +11,7 @@ import FullPageLoader from "@/components/full-page-loader";
 import { PollContextProvider } from "@/components/poll-context";
 import { SessionProps, withSession } from "@/components/session";
 
+import { ParticipantsProvider } from "../components/participants-provider";
 import { withSessionSsr } from "../utils/auth";
 import { trpc } from "../utils/trpc";
 import { GetPollApiResponse } from "../utils/trpc/types";
@@ -47,9 +48,11 @@ const PollPageLoader: NextPage<SessionProps> = () => {
 
   if (poll) {
     return (
-      <PollContextProvider value={poll}>
-        <PollPage />
-      </PollContextProvider>
+      <ParticipantsProvider pollId={poll.pollId}>
+        <PollContextProvider value={poll}>
+          <PollPage />
+        </PollContextProvider>
+      </ParticipantsProvider>
     );
   }
 

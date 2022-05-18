@@ -18,6 +18,7 @@ import { requiredString } from "../../utils/form-validation";
 import Button from "../button";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
+import { useParticipants } from "../participants-provider";
 import { isUnclaimed, useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
 import PollOptions from "./mobile-poll/poll-options";
@@ -40,13 +41,13 @@ const MobilePoll: React.VoidFunctionComponent = () => {
 
   const {
     poll,
-    participants = [],
     targetTimeZone,
     setTargetTimeZone,
     getParticipantById,
     optionIds,
   } = pollContext;
 
+  const { participants } = useParticipants();
   const { timeZone, role } = poll;
 
   const session = useSession();

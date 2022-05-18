@@ -8,6 +8,7 @@ import Button from "../button";
 import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
 import PlusCircle from "../icons/plus-circle.svg";
+import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
 import TimeZonePicker from "../time-zone-picker";
 import ParticipantRow from "./desktop-poll/participant-row";
@@ -29,14 +30,10 @@ const minSidebarWidth = 180;
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const {
-    poll,
-    participants = [],
-    targetTimeZone,
-    setTargetTimeZone,
-    options,
-    userAlreadyVoted,
-  } = usePoll();
+  const { poll, targetTimeZone, setTargetTimeZone, options, userAlreadyVoted } =
+    usePoll();
+
+  const { participants } = useParticipants();
 
   const { timeZone } = poll;
 
