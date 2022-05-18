@@ -4,7 +4,7 @@ import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
-import Button from "@/components/button";
+import { Button } from "@/components/button";
 import Magic from "@/components/icons/magic.svg";
 import { validEmail } from "@/utils/form-validation";
 

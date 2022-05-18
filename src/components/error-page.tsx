@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import * as React from "react";
 
-import Button from "@/components/button";
+import { Button } from "@/components/button";
 import Chat from "@/components/icons/chat.svg";
 import EmojiSad from "@/components/icons/emoji-sad.svg";
 
@@ -28,7 +28,7 @@ const ErrorPage: React.VoidFunctionComponent<ComponentProps> = ({
       <div className="flex items-start">
         <div className="text-center">
           <Icon className="mb-4 inline-block w-24 text-slate-400" />
-          <div className="text-3xl font-bold uppercase text-indigo-500 ">
+          <div className="mb-2 text-3xl font-bold text-indigo-500 ">
             {title}
           </div>
           <p>{description}</p>

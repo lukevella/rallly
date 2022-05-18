@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { requiredString } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
-import Button from "../button";
+import { Button } from "../button";
 import CompactButton from "../compact-button";
 import Dropdown, { DropdownItem } from "../dropdown";
 import DotsHorizontal from "../icons/dots-horizontal.svg";

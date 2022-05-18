@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { trpc } from "../../utils/trpc";
 import Badge from "../badge";
-import Button from "../button";
+import { Button } from "../button";
 import { usePoll } from "../poll-context";
 import Popover from "../popover";
 import { usePreferences } from "../preferences/use-preferences";

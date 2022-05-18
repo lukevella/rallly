@@ -4,7 +4,7 @@ import * as React from "react";
 import { useMeasure } from "react-use";
 import smoothscroll from "smoothscroll-polyfill";
 
-import Button from "../button";
+import { Button } from "../button";
 import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
 import PlusCircle from "../icons/plus-circle.svg";

@@ -7,7 +7,7 @@ import Check from "@/components/icons/check.svg";
 import X from "@/components/icons/x.svg";
 
 import { requiredString } from "../../../utils/form-validation";
-import Button from "../../button";
+import { Button } from "../../button";
 import NameInput from "../../name-input";
 import { usePoll } from "../../poll-context";
 import { normalizeVotes } from "../mutations";

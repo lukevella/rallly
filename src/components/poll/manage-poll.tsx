@@ -2,13 +2,14 @@ import { Placement } from "@floating-ui/react-dom-interactions";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
-import Button from "@/components/button";
+import { Button } from "@/components/button";
 import Cog from "@/components/icons/cog.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import LockOpen from "@/components/icons/lock-open.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Save from "@/components/icons/save.svg";
 import Table from "@/components/icons/table.svg";
+import Trash from "@/components/icons/trash.svg";
 import { encodeDateOption } from "@/utils/date-time-utils";
 
 import Dropdown, { DropdownItem } from "../dropdown";
@@ -16,6 +17,7 @@ import { PollDetailsForm } from "../forms";
 import { useModal } from "../modal";
 import { useModalContext } from "../modal/modal-provider";
 import { usePoll } from "../poll-context";
+import { DeletePollForm } from "./manage-poll/delete-poll-form";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 import { useUpdatePollMutation } from "./mutations";
 
@@ -25,7 +27,7 @@ const ManagePoll: React.VoidFunctionComponent<{
   placement?: Placement;
 }> = ({ placement }) => {
   const { t } = useTranslation("app");
-  const { poll, getParticipantsWhoVotedForOption } = usePoll();
+  const { poll, getParticipantsWhoVotedForOption, setDeleted } = usePoll();
 
   const { exportToCsv } = useCsvExporter();
 
@@ -206,6 +208,26 @@ const ManagePoll: React.VoidFunctionComponent<{
             }
           />
         )}
+        <DropdownItem
+          icon={Trash}
+          label="Delete poll"
+          onClick={() => {
+            modalContext.render({
+              overlayClosable: true,
+              content: ({ close }) => (
+                <DeletePollForm
+                  onConfirm={async () => {
+                    close();
+                    setDeleted(true);
+                  }}
+                  onCancel={close}
+                  urlId={poll.urlId}
+                />
+              ),
+              footer: null,
+            });
+          }}
+        />
       </Dropdown>
     </div>
   );

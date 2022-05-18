@@ -6,7 +6,7 @@ import * as React from "react";
 import toast from "react-hot-toast";
 import { useCopyToClipboard } from "react-use";
 
-import Button from "./button";
+import { Button } from "./button";
 
 export interface SharingProps {
   links: Link[];

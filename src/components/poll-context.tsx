@@ -2,6 +2,7 @@ import { Participant, Vote, VoteType } from "@prisma/client";
 import { keyBy } from "lodash";
 import React from "react";
 
+import Trash from "@/components/icons/trash.svg";
 import {
   decodeOptions,
   getBrowserTimeZone,
@@ -10,6 +11,7 @@ import {
 } from "@/utils/date-time-utils";
 import { GetPollApiResponse } from "@/utils/trpc/types";
 
+import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
 import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
@@ -22,6 +24,8 @@ type PollContextValue = {
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
+  isDeleted: boolean;
+  setDeleted: React.Dispatch<React.SetStateAction<boolean>>;
   optionIds: string[];
   // TODO (Luke Vella) [2022-05-18]: Move this stuff to participants provider
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
@@ -49,7 +53,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ value: poll, children }) => {
   const { participants } = useParticipants();
-
+  const [isDeleted, setDeleted] = React.useState(false);
   const { user } = useSession();
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
@@ -145,9 +149,20 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       ...parsedOptions,
       targetTimeZone,
       setTargetTimeZone,
+      isDeleted,
+      setDeleted,
     };
-  }, [getScore, locale, participants, poll, targetTimeZone, user]);
+  }, [getScore, isDeleted, locale, participants, poll, targetTimeZone, user]);
 
+  if (isDeleted) {
+    return (
+      <ErrorPage
+        icon={Trash}
+        title="Deleted poll"
+        description="This poll doesn't exist anymore."
+      />
+    );
+  }
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
   );

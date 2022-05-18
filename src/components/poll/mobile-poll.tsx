@@ -15,7 +15,7 @@ import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 
 import { requiredString } from "../../utils/form-validation";
-import Button from "../button";
+import { Button } from "../button";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
 import { useParticipants } from "../participants-provider";

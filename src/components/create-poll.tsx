@@ -8,7 +8,7 @@ import { useSessionStorage } from "react-use";
 
 import { encodeDateOption } from "../utils/date-time-utils";
 import { trpc } from "../utils/trpc";
-import Button from "./button";
+import { Button } from "./button";
 import {
   NewEventData,
   PollDetailsData,

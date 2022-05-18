@@ -8,9 +8,15 @@ export interface ModalProviderProps {
   children?: React.ReactNode;
 }
 
+type ModalContentProps = { close: () => void };
+
+interface ModalConfig extends ModalProps {
+  content?: React.ReactNode | ((props: ModalContentProps) => React.ReactNode);
+}
+
 const ModalContext =
   React.createContext<{
-    render: (el: ModalProps) => void;
+    render: (el: ModalConfig) => void;
   } | null>(null);
 
 ModalContext.displayName = "<ModalProvider />";
@@ -22,7 +28,7 @@ export const useModalContext = () => {
 const ModalProvider: React.VoidFunctionComponent<ModalProviderProps> = ({
   children,
 }) => {
-  const [modals, { push, removeAt, updateAt }] = useList<ModalProps>([]);
+  const [modals, { push, removeAt, updateAt }] = useList<ModalConfig>([]);
 
   const removeModalAt = (index: number) => {
     updateAt(index, { ...modals[index], visible: false });
@@ -44,6 +50,11 @@ const ModalProvider: React.VoidFunctionComponent<ModalProviderProps> = ({
           key={i}
           visible={true}
           {...props}
+          content={
+            typeof props.content === "function"
+              ? props.content({ close: () => removeModalAt(i) })
+              : props.content
+          }
           onOk={() => {
             props.onOk?.();
             removeModalAt(i);
