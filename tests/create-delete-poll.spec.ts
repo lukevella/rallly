@@ -1,15 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-test("should be able to create a new poll", async ({ page, context }) => {
-  await context.addCookies([
-    {
-      name: "rallly_cookie_consent",
-      value: "1",
-      url: "http://localhost",
-    },
-  ]);
+test("should be able to create a new poll and delete it", async ({ page }) => {
   await page.goto("/new");
-  // // // Find an element with the text 'About Page' and click on it
   await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
   // click on label to focus on input
   await page.click('text="Location"');
@@ -23,6 +15,7 @@ test("should be able to create a new poll", async ({ page, context }) => {
 
   await page.click('[title="Next month"]');
 
+  // Select a few days
   await page.click("text=/^5$/");
   await page.click("text=/^7$/");
   await page.click("text=/^10$/");
@@ -38,4 +31,22 @@ test("should be able to create a new poll", async ({ page, context }) => {
   await expect(page.locator("data-testid=poll-title")).toHaveText(
     "Monthly Meetup",
   );
+
+  // let's delete the poll we just created
+  await page.click("text=Manage");
+  await page.click("text=Delete poll");
+
+  const deletePollForm = page.locator("data-testid=delete-poll-form");
+
+  // button should be disabled
+  await expect(deletePollForm.locator("text=Delete poll")).toBeDisabled();
+
+  // enter confirmation text
+  await page.type("[placeholder=delete-me]", "delete-me");
+
+  // button should now be enabled
+  await deletePollForm.locator("text=Delete poll").click();
+
+  // expect delete message to appear
+  await expect(page.locator("text=Deleted poll")).toBeVisible();
 });

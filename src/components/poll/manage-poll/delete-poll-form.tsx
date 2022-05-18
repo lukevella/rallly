@@ -39,6 +39,7 @@ export const DeletePollForm: React.VoidFunctionComponent<{
         </div>
       </div>
       <form
+        data-testid="delete-poll-form"
         onSubmit={handleSubmit(async () => {
           await deletePoll.mutateAsync({ urlId });
           onConfirm();
