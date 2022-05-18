@@ -1,6 +1,8 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { prisma } from "~/prisma/db";
+
 import { absoluteUrl } from "../../utils/absolute-url";
 import { sendEmailTemplate } from "../../utils/api-utils";
 import { createToken } from "../../utils/auth";
@@ -198,5 +200,21 @@ export const polls = createRouter()
       });
 
       return createPollResponse(poll, link);
+    },
+  })
+  .mutation("delete", {
+    input: z.object({
+      urlId: z.string(),
+    }),
+    resolve: async ({ input: { urlId } }) => {
+      const link = await getLink(urlId);
+      if (link.role !== "admin") {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Tried to delete poll using participant url",
+        });
+      }
+
+      await prisma.poll.delete({ where: { urlId: link.pollId } });
     },
   });
