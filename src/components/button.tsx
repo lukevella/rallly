@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import * as React from "react";
 
-import SpinnerIcon from "../icons/spinner.svg";
+import SpinnerIcon from "@/components/icons/spinner.svg";
 
 export interface ButtonProps {
   children?: React.ReactNode;
