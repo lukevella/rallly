@@ -1,7 +1,7 @@
 import { Link, Option, Poll, User } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "../db";
+import { prisma } from "../prisma/db";
 import { GetPollApiResponse } from "./trpc/types";
 
 export const getDefaultPollInclude = <V extends boolean>(

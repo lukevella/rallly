@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "../../../db";
+import { prisma } from "../../../prisma/db";
 import { absoluteUrl } from "../../../utils/absolute-url";
 import { sendEmailTemplate } from "../../../utils/api-utils";
 import {

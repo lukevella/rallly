@@ -1,7 +1,7 @@
 import { VoteType } from "@prisma/client";
 import addMinutes from "date-fns/addMinutes";
 
-import { prisma } from "../../../db";
+import { prisma } from "../../../prisma/db";
 import { absoluteUrl } from "../../../utils/absolute-url";
 import { nanoid } from "../../../utils/nanoid";
 import { createRouter } from "../../createRouter";

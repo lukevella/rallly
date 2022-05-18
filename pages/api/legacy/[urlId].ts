@@ -6,7 +6,7 @@ import { getMongoClient } from "utils/mongodb-client";
 import { nanoid } from "utils/nanoid";
 import { GetPollApiResponse } from "utils/trpc/types";
 
-import { prisma } from "../../../db";
+import { prisma } from "../../../prisma/db";
 
 export default async function handler(
   req: NextApiRequest,

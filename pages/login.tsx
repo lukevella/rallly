@@ -10,7 +10,7 @@ import { nanoid } from "utils/nanoid";
 
 import FullPageLoader from "@/components/full-page-loader";
 
-import { prisma } from "../db";
+import { prisma } from "../prisma/db";
 
 const Page: NextPage<{ success: boolean; redirectTo: string }> = ({
   success,

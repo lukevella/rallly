@@ -7,7 +7,7 @@ import {
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { GetServerSideProps, NextApiHandler } from "next";
 
-import { prisma } from "../db";
+import { prisma } from "../prisma/db";
 import { randomid } from "./nanoid";
 
 const sessionOptions: IronSessionOptions = {

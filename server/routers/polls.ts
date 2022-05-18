@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { prisma } from "../../db";
+import { prisma } from "../../prisma/db";
 import { absoluteUrl } from "../../utils/absolute-url";
 import { sendEmailTemplate } from "../../utils/api-utils";
 import { createToken } from "../../utils/auth";
