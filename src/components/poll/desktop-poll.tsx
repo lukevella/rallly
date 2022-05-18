@@ -31,7 +31,7 @@ const Poll: React.VoidFunctionComponent = () => {
 
   const {
     poll,
-    participants,
+    participants = [],
     targetTimeZone,
     setTargetTimeZone,
     options,

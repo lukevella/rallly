@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 import { usePoll } from "@/components/poll-context";
 
 export const useCsvExporter = () => {
-  const { poll, participants, options } = usePoll();
+  const { poll, participants = [], options } = usePoll();
   const { t } = useTranslation("app");
 
   return {

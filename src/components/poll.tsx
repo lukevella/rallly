@@ -112,7 +112,7 @@ const PollPage: NextPage = () => {
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
 
   const names = React.useMemo(
-    () => participants.map(({ name }) => name),
+    () => participants?.map(({ name }) => name) ?? [],
     [participants],
   );
 
@@ -213,9 +213,11 @@ const PollPage: NextPage = () => {
               </span>
             </div>
             <React.Suspense fallback={<div className="p-4">Loading…</div>}>
-              <div className="mb-4 lg:mb-8">
-                <PollComponent />
-              </div>
+              {participants ? (
+                <div className="mb-4 lg:mb-8">
+                  <PollComponent />
+                </div>
+              ) : null}
               <Discussion />
             </React.Suspense>
           </div>

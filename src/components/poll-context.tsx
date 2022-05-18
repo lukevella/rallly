@@ -19,7 +19,7 @@ type PollContextValue = {
   userAlreadyVoted: boolean;
   poll: GetPollApiResponse;
   targetTimeZone: string;
-  participants: (Participant & { votes: Vote[] })[];
+  participants?: (Participant & { votes: Vote[] })[];
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
@@ -48,7 +48,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   value: GetPollApiResponse;
   children?: React.ReactNode;
 }> = ({ value: poll, children }) => {
-  const { data: participants = [] } = trpc.useQuery([
+  const { data: participants } = trpc.useQuery([
     "polls.participants.list",
     { pollId: poll.pollId },
   ]);
@@ -65,7 +65,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const participantsByOptionId = React.useMemo(() => {
     const res: Record<string, Participant[]> = {};
     poll.options.forEach((option) => {
-      res[option.id] = participants.filter((participant) =>
+      res[option.id] = (participants ?? []).filter((participant) =>
         participant.votes.some(
           ({ type, optionId }) => optionId === option.id && type !== "no",
         ),
@@ -78,7 +78,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
 
   const getScore = React.useCallback(
     (optionId: string) => {
-      return participants.reduce(
+      return (participants ?? []).reduce(
         (acc, curr) => {
           curr.votes.forEach((vote) => {
             if (vote.optionId !== optionId) {
@@ -114,18 +114,19 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     );
     const getParticipantById = (participantId: string) => {
       // TODO (Luke Vella) [2022-04-16]: Build an index instead
-      const participant = participants.find(({ id }) => id === participantId);
+      const participant = participants?.find(({ id }) => id === participantId);
 
       return participant;
     };
 
-    const userAlreadyVoted = user
-      ? participants.some((participant) =>
-          user.isGuest
-            ? participant.guestId === user.id
-            : participant.userId === user.id,
-        )
-      : false;
+    const userAlreadyVoted =
+      user && participants
+        ? participants.some((participant) =>
+            user.isGuest
+              ? participant.guestId === user.id
+              : participant.userId === user.id,
+          )
+        : false;
 
     const optionIds = parsedOptions.options.map(({ optionId }) => optionId);
 

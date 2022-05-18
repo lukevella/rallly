@@ -40,7 +40,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
 
   const {
     poll,
-    participants,
+    participants = [],
     targetTimeZone,
     setTargetTimeZone,
     getParticipantById,
