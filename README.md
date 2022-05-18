@@ -74,16 +74,17 @@ yarn start
 
 ## ⚙️ Configuration
 
-| Parameter       | Default                                        | Description                                                                                                                         |
-| --------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| DATABASE_URL    | postgres://postgres:postgres@rallly_db:5432/db | A postgres database URL. Leave out if using the docker-compose file since it will spin up and connect to its own database instance. |
-| SECRET_PASSWORD | -                                              | A long string (minimum 32 characters) that is used to encrypt session data.                                                         |
-| SUPPORT_EMAIL   | -                                              | An email address that will appear as the FROM email for all emails being sent out.                                                  |
-| SMTP_HOST       | -                                              | Host name of your SMTP server                                                                                                       |
-| SMTP_PORT       | -                                              | Port of your SMTP server                                                                                                            |
-| SMTP_SECURE     | false                                          | Set to "true" if SSL is enabled for your SMTP connection                                                                            |
-| SMTP_USER       | -                                              | Username to use for your SMTP connection                                                                                            |
-| SMTP_PWD        | -                                              | Password to use for your SMTP connection                                                                                            |
+| Parameter            | Default                                        | Description                                                                                                                         |
+| -------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| NEXT_PUBLIC_BASE_URL | http://localhost:3000                          | The hosting url of the server, used for creating links and making api calls from the client.                                        |
+| DATABASE_URL         | postgres://postgres:postgres@rallly_db:5432/db | A postgres database URL. Leave out if using the docker-compose file since it will spin up and connect to its own database instance. |
+| SECRET_PASSWORD      | -                                              | A long string (minimum 32 characters) that is used to encrypt session data.                                                         |
+| SUPPORT_EMAIL        | -                                              | An email address that will appear as the FROM email for all emails being sent out.                                                  |
+| SMTP_HOST            | -                                              | Host name of your SMTP server                                                                                                       |
+| SMTP_PORT            | -                                              | Port of your SMTP server                                                                                                            |
+| SMTP_SECURE          | false                                          | Set to "true" if SSL is enabled for your SMTP connection                                                                            |
+| SMTP_USER            | -                                              | Username to use for your SMTP connection                                                                                            |
+| SMTP_PWD             | -                                              | Password to use for your SMTP connection                                                                                            |
 
 ## 👨‍💻 Contributors
 

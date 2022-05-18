@@ -36,6 +36,7 @@
   "creatingDemo": "Creating demo poll…",
   "ok": "Ok",
   "loading": "Loading…",
+  "loadingParticipants": "Loading participants…",
   "admin": "Admin",
   "adminDescription": "Full access to edit this poll.",
   "participant": "Participant",

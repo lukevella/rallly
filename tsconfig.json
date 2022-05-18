@@ -23,7 +23,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/components/*": ["components/*"]
+      "@/*": ["src/*"],
+      "~/*": ["./*"]
     }
   },
   "exclude": ["node_modules", "**/.*/", "**/*.js"],
