@@ -13,6 +13,7 @@ services:
       context: .
       args:
         - DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db?pgbouncer=true
+        - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
     restart: always
     command: sh -c "yarn prisma migrate deploy && yarn start"
     depends_on:
