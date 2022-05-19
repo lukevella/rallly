@@ -11,9 +11,12 @@ COPY package.json /usr/src/app
 COPY yarn.lock /usr/src/app
 COPY prisma/schema.prisma /usr/src/app
 
-RUN yarn --production
+RUN yarn --frozen-lockfile
 
 COPY . /usr/src/app
+
+ARG NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_BASE_URL $NEXT_PUBLIC_BASE_URL
 
 RUN yarn build
 
