@@ -8,7 +8,7 @@
     "build": "next build",
     "analyze": "ANALYZE=true next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "lint:tsc": "tsc --noEmit",
     "test": "playwright test"
   },
