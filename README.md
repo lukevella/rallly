@@ -4,7 +4,9 @@
 
 ![hero](./docs/images/hero-image.png)
 
-Rallly is a free group meeting scheduling tool – built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
+Self-hostable doodle poll alternative. Find the best date for a meeting with your colleagues or friends without the back and forth emails.
+
+Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma), [tRPC](https://github.com/trpc/trpc) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
 
 ## 🐳 Quickstart with docker
 
