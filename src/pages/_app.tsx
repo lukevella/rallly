@@ -3,7 +3,6 @@ import "tailwindcss/tailwind.css";
 import "~/style.css";
 
 import { withTRPC } from "@trpc/next";
-import axios from "axios";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
@@ -63,12 +62,10 @@ export default withTRPC<AppRouter>({
        */
       queryClientConfig: {
         mutationCache: new MutationCache({
-          onError: (error) => {
-            if (axios.isAxiosError(error) && error.response?.status === 500) {
-              toast.error(
-                "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
-              );
-            }
+          onError: () => {
+            toast.error(
+              "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
+            );
           },
         }),
       },
