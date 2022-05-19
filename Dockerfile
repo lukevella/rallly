@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app
 COPY yarn.lock /usr/src/app
-COPY schema.prisma /usr/src/app
+COPY prisma/schema.prisma /usr/src/app
 
 RUN yarn --production
 
