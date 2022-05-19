@@ -10,10 +10,19 @@ export const session = createRouter()
           where: { id: ctx.session.user.id },
         });
 
-        return user
-          ? { id: user.id, name: user.name, email: user.email, isGuest: false }
-          : null;
+        if (!user) {
+          ctx.session.destroy();
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          isGuest: false,
+        };
       }
+
       return ctx.session.user;
     },
   })
