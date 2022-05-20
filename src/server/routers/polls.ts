@@ -217,4 +217,19 @@ export const polls = createRouter()
 
       await prisma.poll.delete({ where: { urlId: link.pollId } });
     },
+  })
+  .mutation("touch", {
+    input: z.object({
+      pollId: z.string(),
+    }),
+    resolve: async ({ input: { pollId } }) => {
+      await prisma.poll.update({
+        where: {
+          urlId: pollId,
+        },
+        data: {
+          touchedAt: new Date(),
+        },
+      });
+    },
   });

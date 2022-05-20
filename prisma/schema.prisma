@@ -50,6 +50,7 @@ model Poll {
   closed        Boolean       @default(false)
   notifications Boolean       @default(false)
   deleted       Boolean       @default(false)
+  touchedAt     DateTime      @default(now()) @map("touched_at")
 
   @@map("polls")
 }
