@@ -35,14 +35,19 @@ export const participants = createRouter()
       participantId: z.string(),
     }),
     resolve: async ({ input: { participantId, pollId } }) => {
-      await prisma.participant.delete({
-        where: {
-          id_pollId: {
-            id: participantId,
-            pollId: pollId,
+      await prisma.$transaction([
+        prisma.vote.deleteMany({
+          where: { participantId: participantId },
+        }),
+        prisma.participant.delete({
+          where: {
+            id_pollId: {
+              id: participantId,
+              pollId: pollId,
+            },
           },
-        },
-      });
+        }),
+      ]);
     },
   })
   .mutation("add", {
