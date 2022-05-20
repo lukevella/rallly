@@ -56,5 +56,6 @@
   "ifNeedBe": "If need be",
   "areYouSure": "Are you sure?",
   "deletePollDescription": "All data related to this poll will be deleted. This action <b>cannot be undone</b>. To confirm, please type <s>“{{confirmText}}”</s> in to the input below:",
-  "deletePoll": "Delete poll"
+  "deletePoll": "Delete poll",
+  "demoPollNotice": "Demo polls are automatically deleted after 1 day"
 }
