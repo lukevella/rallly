@@ -19,6 +19,7 @@ import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
 import PollSubheader from "./poll/poll-subheader";
 import TruncatedLinkify from "./poll/truncated-linkify";
+import { useTouchBeacon } from "./poll/use-touch-beacon";
 import { UserAvatarProvider } from "./poll/user-avatar";
 import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
@@ -36,6 +37,8 @@ const PollPage: NextPage = () => {
   const { poll } = usePoll();
   const { participants } = useParticipants();
   const router = useRouter();
+
+  useTouchBeacon(poll.pollId);
 
   useMount(() => {
     const path = poll.role === "admin" ? "admin" : "p";

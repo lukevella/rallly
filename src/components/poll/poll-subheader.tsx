@@ -33,7 +33,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
         />
         &nbsp;
         <span className="inline-flex items-center space-x-1">
-          {poll.role === "admin" ? (
+          {poll.role === "admin" && !poll.demo ? (
             poll.verified ? (
               <Badge color="green">Verified</Badge>
             ) : (
@@ -84,6 +84,11 @@ const PollSubheader: React.VoidFunctionComponent = () => {
               content="This poll was created with an older version of Rallly. Some features might not work."
             >
               <Badge color="amber">Legacy</Badge>
+            </Tooltip>
+          ) : null}
+          {poll.demo ? (
+            <Tooltip content={<Trans t={t} i18nKey="demoPollNotice" />}>
+              <Badge color="blue">Demo</Badge>
             </Tooltip>
           ) : null}
         </span>

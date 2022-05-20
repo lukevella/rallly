@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
+import { softDeleteMiddleware } from "./middlewares/softDeleteMiddleware";
+
 declare global {
   // allow global `var` declarations
   // eslint-disable-next-line no-var
@@ -7,5 +9,7 @@ declare global {
 }
 
 export const prisma = global.prisma || new PrismaClient();
+
+softDeleteMiddleware(prisma, "Poll");
 
 if (process.env.NODE_ENV !== "production") global.prisma = prisma;

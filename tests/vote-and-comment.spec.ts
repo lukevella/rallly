@@ -1,6 +1,12 @@
 import { expect, test } from "@playwright/test";
 
 test("should be able to vote and comment on a poll", async ({ page }) => {
+  const touchRequest = page.waitForRequest(
+    (request) =>
+      request.method() === "POST" &&
+      request.url().includes("/api/trpc/polls.touch"),
+  );
+
   await page.goto("/demo");
 
   await expect(page.locator('text="Lunch Meeting Demo"')).toBeVisible();
@@ -26,4 +32,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
   const comment = page.locator("data-testid=comment");
   await expect(comment.locator("text='This is a comment!'")).toBeVisible();
   await expect(comment.locator("text=You")).toBeVisible();
+
+  // make sure call to touch RPC is made
+  await touchRequest;
 });
