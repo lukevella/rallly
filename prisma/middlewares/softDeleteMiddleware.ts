@@ -31,17 +31,6 @@ export const softDeleteMiddleware = (
         // ID filter maintained
         params.args.where["deleted"] = false;
       }
-      if (params.action === "findMany") {
-        // Find many queries
-        if (params.args.where) {
-          if (params.args.where.deleted == undefined) {
-            // Exclude deleted records if they have not been explicitly requested
-            params.args.where["deleted"] = false;
-          }
-        } else {
-          params.args["where"] = { deleted: false };
-        }
-      }
     }
     return next(params);
   });

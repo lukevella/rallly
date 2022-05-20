@@ -28,9 +28,8 @@ export default async function handler(
       : NaN;
 
   // If not specified we default to a max of 500 polls
-  const batchSize = !isNaN(parsedBatchSizeQueryParam)
-    ? parsedBatchSizeQueryParam
-    : 500;
+  const batchSize =
+    parsedBatchSizeQueryParam > 0 ? parsedBatchSizeQueryParam : 500;
 
   const { authorization } = req.headers;
 
