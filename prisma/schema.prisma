@@ -1,10 +1,12 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 model User {
@@ -111,9 +113,9 @@ enum VoteType {
 
 model Vote {
   id            String      @id @default(cuid())
-  participant   Participant @relation(fields: [participantId], references: [id])
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
   participantId String      @map("participant_id")
-  option        Option      @relation(fields: [optionId], references: [id])
+  option        Option      @relation(fields: [optionId], references: [id], onDelete: Cascade)
   optionId      String      @map("option_id")
   poll          Poll        @relation(fields: [pollId], references: [urlId])
   pollId        String      @map("poll_id")

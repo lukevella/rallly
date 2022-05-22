@@ -7,7 +7,8 @@ import { prisma } from "~/prisma/db";
 /**
  * This endpoint will permanently delete polls that:
  * * have been soft deleted OR
- * * are demo polls that are older than 1 day
+ * * are demo polls that are older than 1 day OR
+ * * polls that have not been accessed for 30 days
  * All dependant records are also deleted.
  */
 export default async function handler(
@@ -72,78 +73,52 @@ export default async function handler(
 
   if (pollIds.length !== 0) {
     // Delete links
-    await prisma.$transaction([
-      prisma.$executeRawUnsafe("ALTER TABLE links DISABLE TRIGGER ALL"),
-      prisma.link.deleteMany({
-        where: {
-          pollId: {
-            in: pollIds,
-          },
+    await prisma.link.deleteMany({
+      where: {
+        pollId: {
+          in: pollIds,
         },
-      }),
-      prisma.$executeRawUnsafe("ALTER TABLE links ENABLE TRIGGER ALL"),
-    ]);
-
+      },
+    });
     // Delete comments
-    await prisma.$transaction([
-      prisma.$executeRawUnsafe("ALTER TABLE comments DISABLE TRIGGER ALL"),
-      prisma.comment.deleteMany({
-        where: {
-          pollId: {
-            in: pollIds,
-          },
+    await prisma.comment.deleteMany({
+      where: {
+        pollId: {
+          in: pollIds,
         },
-      }),
-      prisma.$executeRawUnsafe("ALTER TABLE comments ENABLE TRIGGER ALL"),
-    ]);
+      },
+    });
 
-    await prisma.$transaction([
-      prisma.$executeRawUnsafe("ALTER TABLE votes DISABLE TRIGGER ALL"),
-      prisma.vote.deleteMany({
-        where: {
-          pollId: {
-            in: pollIds,
-          },
+    await prisma.vote.deleteMany({
+      where: {
+        pollId: {
+          in: pollIds,
         },
-      }),
-      prisma.$executeRawUnsafe("ALTER TABLE votes ENABLE TRIGGER ALL"),
-    ]);
+      },
+    });
 
     // Delete participants
-    await prisma.$transaction([
-      prisma.$executeRawUnsafe("ALTER TABLE participants DISABLE TRIGGER ALL"),
-      prisma.participant.deleteMany({
-        where: {
-          pollId: {
-            in: pollIds,
-          },
+    await prisma.participant.deleteMany({
+      where: {
+        pollId: {
+          in: pollIds,
         },
-      }),
-      prisma.$executeRawUnsafe("ALTER TABLE participants ENABLE TRIGGER ALL"),
-    ]);
+      },
+    });
 
     // Delete options
-    await prisma.$transaction([
-      prisma.$executeRawUnsafe("ALTER TABLE options DISABLE TRIGGER ALL"),
-      prisma.option.deleteMany({
-        where: {
-          pollId: {
-            in: pollIds,
-          },
+    await prisma.option.deleteMany({
+      where: {
+        pollId: {
+          in: pollIds,
         },
-      }),
-      prisma.$executeRawUnsafe("ALTER TABLE options ENABLE TRIGGER ALL"),
-    ]);
+      },
+    });
 
     // Delete polls
-    await prisma.$transaction([
-      prisma.$executeRawUnsafe("ALTER TABLE polls DISABLE TRIGGER ALL"),
-      // Using raw query to bypass soft delete middleware
-      prisma.$executeRaw`DELETE FROM polls WHERE url_id IN (${Prisma.join(
-        pollIds,
-      )})`,
-      prisma.$executeRawUnsafe("ALTER TABLE polls ENABLE TRIGGER ALL"),
-    ]);
+    prisma.$executeRaw`DELETE FROM polls WHERE url_id IN (${Prisma.join(
+      pollIds,
+    )})`;
   }
 
   res.status(200).json({
