@@ -5,11 +5,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "~/prisma/db";
 
 /**
- * This endpoint will permanently delete polls that:
- * * have been soft deleted OR
- * * are demo polls that are older than 1 day OR
- * * polls that have not been accessed for 30 days
- * All dependant records are also deleted.
+ * DANGER: This endpoint will permanently delete polls.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -21,17 +17,6 @@ export default async function handler(
     return;
   }
 
-  // Batch size is the max number of polls we will attempt to delete
-  // We can adjust this value through the batchSize query param
-  const parsedBatchSizeQueryParam =
-    typeof req.query["batchSize"] === "string"
-      ? parseInt(req.query["batchSize"])
-      : NaN;
-
-  // If not specified we default to a max of 500 polls
-  const batchSize =
-    parsedBatchSizeQueryParam > 0 ? parsedBatchSizeQueryParam : 500;
-
   const { authorization } = req.headers;
 
   if (authorization !== `Bearer ${process.env.API_SECRET}`) {
@@ -39,24 +24,32 @@ export default async function handler(
     return;
   }
 
-  const pollIds = (
+  // soft delete polls that have not been accessed for over 30 days
+  const inactivePolls = await prisma.poll.deleteMany({
+    where: {
+      deleted: false,
+      touchedAt: {
+        lte: addDays(new Date(), -30),
+      },
+    },
+  });
+
+  // Permantly delete old demos and polls that have been soft deleted for 7 days
+  const pollIdsToDelete = (
     await prisma.poll.findMany({
       where: {
         OR: [
           {
             deleted: true,
+            deletedAt: {
+              lte: addDays(new Date(), -7),
+            },
           },
           // demo polls that are 1 day old
           {
             demo: true,
             createdAt: {
               lte: addDays(new Date(), -1),
-            },
-          },
-          // polls that have not been accessed for over 30 days
-          {
-            touchedAt: {
-              lte: addDays(new Date(), -30),
             },
           },
         ],
@@ -67,16 +60,15 @@ export default async function handler(
       orderBy: {
         createdAt: "asc", // oldest first
       },
-      take: batchSize,
     })
   ).map(({ urlId }) => urlId);
 
-  if (pollIds.length !== 0) {
+  if (pollIdsToDelete.length !== 0) {
     // Delete links
     await prisma.link.deleteMany({
       where: {
         pollId: {
-          in: pollIds,
+          in: pollIdsToDelete,
         },
       },
     });
@@ -84,7 +76,7 @@ export default async function handler(
     await prisma.comment.deleteMany({
       where: {
         pollId: {
-          in: pollIds,
+          in: pollIdsToDelete,
         },
       },
     });
@@ -92,7 +84,7 @@ export default async function handler(
     await prisma.vote.deleteMany({
       where: {
         pollId: {
-          in: pollIds,
+          in: pollIdsToDelete,
         },
       },
     });
@@ -101,7 +93,7 @@ export default async function handler(
     await prisma.participant.deleteMany({
       where: {
         pollId: {
-          in: pollIds,
+          in: pollIdsToDelete,
         },
       },
     });
@@ -110,18 +102,20 @@ export default async function handler(
     await prisma.option.deleteMany({
       where: {
         pollId: {
-          in: pollIds,
+          in: pollIdsToDelete,
         },
       },
     });
 
     // Delete polls
-    prisma.$executeRaw`DELETE FROM polls WHERE url_id IN (${Prisma.join(
-      pollIds,
+    // Using execute raw to bypass soft delete middelware
+    await prisma.$executeRaw`DELETE FROM polls WHERE url_id IN (${Prisma.join(
+      pollIdsToDelete,
     )})`;
   }
 
   res.status(200).json({
-    deleted: pollIds,
+    inactive: inactivePolls.count,
+    deleted: pollIdsToDelete.length,
   });
 }

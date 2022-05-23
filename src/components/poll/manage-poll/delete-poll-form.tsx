@@ -54,8 +54,7 @@ export const DeletePollForm: React.VoidFunctionComponent<{
             i18nKey="deletePollDescription"
             values={{ confirmText }}
             components={{
-              b: <strong />,
-              s: <span className="whitespace-nowrap" />,
+              s: <span className="whitespace-nowrap font-mono" />,
             }}
           />
         </p>
