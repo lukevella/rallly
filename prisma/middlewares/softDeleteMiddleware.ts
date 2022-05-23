@@ -12,7 +12,7 @@ export const softDeleteMiddleware = (
         // Delete queries
         // Change action to an update
         params.action = "update";
-        params.args["data"] = { deleted: true };
+        params.args["data"] = { deleted: true, deletedAt: new Date() };
       }
       if (params.action == "deleteMany") {
         // Delete many queries
@@ -20,7 +20,7 @@ export const softDeleteMiddleware = (
         if (params.args.data != undefined) {
           params.args.data["deleted"] = true;
         } else {
-          params.args["data"] = { deleted: true };
+          params.args["data"] = { deleted: true, deletedAt: new Date() };
         }
       }
       if (params.action === "findUnique" || params.action === "findFirst") {
@@ -29,7 +29,7 @@ export const softDeleteMiddleware = (
         params.action = "findFirst";
         // Add 'deleted' filter
         // ID filter maintained
-        params.args.where["deleted"] = false;
+        params.args.where["deleted"] = params.args.where["deleted"] || false;
       }
     }
     return next(params);
