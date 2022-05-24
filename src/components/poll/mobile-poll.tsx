@@ -45,6 +45,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     setTargetTimeZone,
     getParticipantById,
     optionIds,
+    getVote,
   } = pollContext;
 
   const { participants } = useParticipants();
@@ -211,9 +212,9 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                       setIsEditing(true);
                       reset({
                         name: selectedParticipant.name,
-                        votes: selectedParticipant.votes.map((vote) => ({
-                          optionId: vote.optionId,
-                          type: vote.type,
+                        votes: optionIds.map((optionId) => ({
+                          optionId,
+                          type: getVote(selectedParticipant.id, optionId),
                         })),
                       });
                     }}
