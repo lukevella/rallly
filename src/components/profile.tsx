@@ -1,6 +1,7 @@
 import { formatRelative } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import Calendar from "@/components/icons/calendar.svg";
@@ -8,7 +9,6 @@ import Pencil from "@/components/icons/pencil.svg";
 import User from "@/components/icons/user.svg";
 
 import { trpc } from "../utils/trpc";
-import Badge from "./badge";
 import { EmptyState } from "./empty-state";
 import { UserDetails } from "./profile/user-details";
 import { useSession } from "./session";
@@ -16,6 +16,7 @@ import { useSession } from "./session";
 export const Profile: React.VoidFunctionComponent = () => {
   const { user } = useSession();
 
+  const { t } = useTranslation("app");
   const { data: userPolls } = trpc.useQuery(["user.getPolls"]);
 
   const router = useRouter();
@@ -54,11 +55,11 @@ export const Profile: React.VoidFunctionComponent = () => {
       {createdPolls ? (
         <div className="card p-0">
           <div className="flex items-center justify-between border-b p-4 shadow-sm">
-            <div className="text-lg text-slate-700">Polls</div>
+            <div className="text-lg text-slate-700">{t("yourPolls")}</div>
             <Link href="/new">
               <a className="btn-default">
                 <Pencil className="mr-1 h-5" />
-                New poll
+                {t("newPoll")}
               </a>
             </Link>
           </div>
