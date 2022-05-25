@@ -72,7 +72,7 @@ export const Profile: React.VoidFunctionComponent = () => {
                       <div>
                         <div className="flex">
                           <Calendar className="mr-2 mt-[1px] h-5 text-indigo-500" />
-                          <Link href={`/p/${poll.links[0].urlId}`}>
+                          <Link href={`/admin/${poll.links[0].urlId}`}>
                             <a className="text-slate-700 hover:text-indigo-500 hover:no-underline">
                               <div>{poll.title}</div>
                             </a>
