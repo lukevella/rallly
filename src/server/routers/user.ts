@@ -40,7 +40,7 @@ export const user = createRouter()
                 },
               },
             },
-            take: 10,
+            take: 5,
             orderBy: {
               createdAt: "desc",
             },

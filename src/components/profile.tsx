@@ -32,8 +32,8 @@ export const Profile: React.VoidFunctionComponent = () => {
   }
 
   return (
-    <div className="mx-auto max-w-3xl lg:mx-0">
-      <div className="flex items-center p-4">
+    <div className="mx-auto max-w-3xl py-4 lg:mx-0">
+      <div className="mb-4 flex items-center px-4">
         <div className="mr-4 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-indigo-50">
           <User className="h-7 text-indigo-500" />
         </div>
@@ -49,11 +49,18 @@ export const Profile: React.VoidFunctionComponent = () => {
           </div>
         </div>
       </div>
+
       <UserDetails userId={user.id} name={user.name} email={user.email} />
       {createdPolls ? (
-        <div className="card mb-4 p-0">
-          <div className="border-b p-4 text-lg text-slate-700 shadow-sm">
-            Polls
+        <div className="card p-0">
+          <div className="flex items-center justify-between border-b p-4 shadow-sm">
+            <div className="text-lg text-slate-700">Polls</div>
+            <Link href="/new">
+              <a className="btn-default">
+                <Pencil className="mr-1 h-5" />
+                New poll
+              </a>
+            </Link>
           </div>
           {createdPolls.length > 0 ? (
             <div className="w-full sm:table sm:border-collapse">
@@ -62,8 +69,8 @@ export const Profile: React.VoidFunctionComponent = () => {
                   <div className="p-4 sm:table-row sm:p-0" key={i}>
                     <div className="sm:table-cell sm:p-4">
                       <div>
-                        <div className="flex items-center">
-                          <Calendar className="mr-2 h-5 text-indigo-500" />
+                        <div className="flex">
+                          <Calendar className="mr-2 mt-[1px] h-5 text-indigo-500" />
                           <Link href={`/p/${poll.links[0].urlId}`}>
                             <a className="text-slate-700 hover:text-indigo-500 hover:no-underline">
                               <div>{poll.title}</div>
@@ -71,22 +78,8 @@ export const Profile: React.VoidFunctionComponent = () => {
                           </Link>
                         </div>
                         <div className="ml-7 text-sm text-slate-500">
-                          Created: {formatRelative(poll.createdAt, new Date())}
+                          {formatRelative(poll.createdAt, new Date())}
                         </div>
-                      </div>
-                    </div>
-                    <div className="ml-7 mt-4 sm:m-0 sm:table-cell sm:p-4">
-                      <div className="flex space-x-2">
-                        {poll.verified ? (
-                          <Badge color="green">Verified</Badge>
-                        ) : (
-                          <Badge>Unverified</Badge>
-                        )}
-                        {poll.closed ? (
-                          <Badge color="amber">Locked</Badge>
-                        ) : (
-                          <Badge color="blue">Open</Badge>
-                        )}
                       </div>
                     </div>
                   </div>

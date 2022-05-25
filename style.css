@@ -75,6 +75,10 @@
   .btn-default {
     @apply btn border-slate-300 bg-white text-slate-700 hover:bg-indigo-50/10 active:bg-slate-100;
   }
+
+  a.btn-default {
+    @apply hover:text-indigo-500;
+  }
   .btn-danger {
     @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus-visible:ring-rose-500;
   }
