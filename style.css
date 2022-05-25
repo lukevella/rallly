@@ -69,7 +69,7 @@
     @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all active:scale-95;
   }
   a.btn {
-    @apply hover:no-underline;
+    @apply cursor-pointer hover:no-underline;
   }
 
   .btn-default {
@@ -123,8 +123,7 @@
   }
 
   .card {
-    @apply rounded-lg border bg-white p-6
-     shadow-sm;
+    @apply border-t border-b bg-white p-6 shadow-sm sm:rounded-lg sm:border-l sm:border-r;
   }
 }
 
