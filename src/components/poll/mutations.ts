@@ -9,9 +9,10 @@ export const normalizeVotes = (
   optionIds: string[],
   votes: ParticipantForm["votes"],
 ) => {
-  return optionIds.map(
-    (optionId, i) => votes[i] ?? { optionId, type: "no" as const },
-  );
+  return optionIds.map((optionId, i) => ({
+    optionId,
+    type: votes[i]?.type ?? ("no" as const),
+  }));
 };
 
 export const useAddParticipantMutation = () => {
