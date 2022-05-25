@@ -46,7 +46,7 @@
     "react-big-calendar": "^0.38.9",
     "react-dom": "17.0.2",
     "react-github-btn": "^1.2.2",
-    "react-hook-form": "^7.27.0",
+    "react-hook-form": "^7.31.2",
     "react-hot-toast": "^2.2.0",
     "react-i18next": "^11.15.4",
     "react-linkify": "^1.0.0-alpha",
@@ -62,7 +62,6 @@
   "devDependencies": {
     "@playwright/test": "^1.20.1",
     "@types/lodash": "^4.14.178",
-    "@types/mixpanel-browser": "^2.38.0",
     "@types/nodemailer": "^6.4.4",
     "@types/react": "^17.0.5",
     "@types/react-big-calendar": "^0.31.0",

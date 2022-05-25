@@ -5,6 +5,7 @@ import React from "react";
 
 import Menu from "@/components/icons/menu.svg";
 import User from "@/components/icons/user.svg";
+import UserCircle from "@/components/icons/user-circle.svg";
 import Logo from "~/public/logo.svg";
 
 import Dropdown, { DropdownItem, DropdownProps } from "./dropdown";
@@ -71,10 +72,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
                   className="group inline-flex w-full items-center space-x-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
                 >
                   <div className="relative shrink-0">
-                    {user.isGuest ? (
-                      <span className="absolute right-0 top-0 h-1 w-1 rounded-full bg-indigo-500" />
-                    ) : null}
-                    <User className="w-5 opacity-75 group-hover:text-indigo-500 group-hover:opacity-100" />
+                    <UserCircle className="w-5 opacity-75 group-hover:text-indigo-500 group-hover:opacity-100" />
                   </div>
                   <div className="hidden max-w-[120px] truncate font-medium xs:block">
                     {user.shortName}
@@ -195,6 +193,9 @@ const UserDropdown: React.VoidFunctionComponent<
           }}
         />
       ) : null}
+      {!user.isGuest ? (
+        <DropdownItem href="/profile" icon={User} label="Your profile" />
+      ) : null}
       {user.isGuest ? (
         <DropdownItem icon={Login} label="Login" onClick={openLoginModal} />
       ) : null}
@@ -300,10 +301,7 @@ const StandardLayout: React.VoidFunctionComponent<{
                   >
                     <div className="flex w-full items-center space-x-3">
                       <div className="relative">
-                        {user.isGuest ? (
-                          <span className="absolute right-0 top-0 h-1 w-1 rounded-full bg-indigo-500" />
-                        ) : null}
-                        <User className="h-5 opacity-75 group-hover:text-indigo-500 group-hover:opacity-100" />
+                        <UserCircle className="h-5 opacity-75 group-hover:text-indigo-500 group-hover:opacity-100" />
                       </div>
                       <div className="grow overflow-hidden">
                         <div className="truncate font-medium leading-snug text-slate-600">

@@ -1,7 +1,7 @@
 {
   "next": "Continue",
   "back": "Back",
-  "newPoll": "New Poll",
+  "newPoll": "New poll",
   "eventDetails": "Poll Details",
   "options": "Options",
   "finish": "Finish",
@@ -11,8 +11,8 @@
   "titlePlaceholder": "Monthly Meetup",
   "locationPlaceholder": "Joe's Coffee Shop",
   "descriptionPlaceholder": "Hey everyone, please choose the dates that work for you!",
-  "namePlaceholder": "John Doe",
-  "emailPlaceholder": "john.doe@email.com",
+  "namePlaceholder": "Jessie Smith",
+  "emailPlaceholder": "jessie.smith@email.com",
   "createPoll": "Create poll",
   "location": "Location",
   "description": "Description",
@@ -57,5 +57,7 @@
   "areYouSure": "Are you sure?",
   "deletePollDescription": "All data related to this poll will be deleted. To confirm, please type <s>“{{confirmText}}”</s> in to the input below:",
   "deletePoll": "Delete poll",
-  "demoPollNotice": "Demo polls are automatically deleted after 1 day"
+  "demoPollNotice": "Demo polls are automatically deleted after 1 day",
+  "yourDetails": "Your details",
+  "yourPolls": "Your polls"
 }

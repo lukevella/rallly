@@ -18,8 +18,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: ESLint
+      - name: Check linting rules
         run: yarn lint
+
+      - name: Check types
+        run: yarn lint:tsc
 
   # Label of the container job
   integration-tests:
