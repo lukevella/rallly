@@ -1,5 +1,6 @@
 import { formatRelative } from "date-fns";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import * as React from "react";
 
 import Calendar from "@/components/icons/calendar.svg";
@@ -8,8 +9,8 @@ import User from "@/components/icons/user.svg";
 
 import { trpc } from "../utils/trpc";
 import Badge from "./badge";
-import { Button } from "./button";
 import { EmptyState } from "./empty-state";
+import { UserDetails } from "./profile/user-details";
 import { useSession } from "./session";
 
 export const Profile: React.VoidFunctionComponent = () => {
@@ -17,7 +18,14 @@ export const Profile: React.VoidFunctionComponent = () => {
 
   const { data: userPolls } = trpc.useQuery(["user.getPolls"]);
 
+  const router = useRouter();
   const createdPolls = userPolls?.polls;
+
+  React.useEffect(() => {
+    if (!user) {
+      router.replace("/new");
+    }
+  }, [user, router]);
 
   if (!user || user.isGuest) {
     return null;
@@ -41,46 +49,11 @@ export const Profile: React.VoidFunctionComponent = () => {
           </div>
         </div>
       </div>
-      <div className="card mb-4 p-0">
-        <div className="flex items-center justify-between border-b p-4 shadow-sm">
-          <div className="text-lg text-slate-700 ">User details</div>
-          <Button disabled={true} type="primary">
-            Save
-          </Button>
-        </div>
-        <div className="divide-y">
-          <div className="flex p-4 pr-8">
-            <label htmlFor="name" className="w-1/3 text-slate-500">
-              Name
-            </label>
-            <div className="w-2/3">
-              <input
-                id="name"
-                className="input w-full"
-                value={user.name}
-                placeholder="Jessie"
-              />
-            </div>
-          </div>
-          <div className="flex p-4 pr-8">
-            <label htmlFor="random-8904" className="w-1/3 text-slate-500">
-              Email
-            </label>
-            <div className="w-2/3">
-              <input
-                id="random-8904"
-                value={user.email}
-                className="input w-full"
-                placeholder="jessie.jackson@example.com"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <UserDetails userId={user.id} name={user.name} email={user.email} />
       {createdPolls ? (
         <div className="card mb-4 p-0">
           <div className="border-b p-4 text-lg text-slate-700 shadow-sm">
-            Recently created
+            Polls
           </div>
           {createdPolls.length > 0 ? (
             <div className="w-full sm:table sm:border-collapse">

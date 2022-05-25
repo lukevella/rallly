@@ -23,8 +23,11 @@ test("should be able to create a new poll and delete it", async ({ page }) => {
 
   await page.click('text="Continue"');
 
-  await page.type('[placeholder="John Doe"]', "John");
-  await page.type('[placeholder="john.doe@email.com"]', "john.doe@email.com");
+  await page.type('[placeholder="Jessie Smith"]', "John");
+  await page.type(
+    '[placeholder="jessie.smith@email.com"]',
+    "john.doe@email.com",
+  );
 
   await page.click('text="Create poll"');
 

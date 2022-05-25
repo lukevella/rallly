@@ -15,12 +15,14 @@ export const session = createRouter()
           return null;
         }
 
-        return {
+        ctx.session.user = {
           id: user.id,
           name: user.name,
           email: user.email,
           isGuest: false,
         };
+
+        await ctx.session.save();
       }
 
       return ctx.session.user;

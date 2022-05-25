@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { IronSessionData } from "iron-session";
+import { z } from "zod";
 
 import { prisma } from "~/prisma/db";
 
@@ -39,7 +40,7 @@ export const user = createRouter()
                 },
               },
             },
-            take: 5,
+            take: 10,
             orderBy: {
               createdAt: "desc",
             },
@@ -49,29 +50,19 @@ export const user = createRouter()
       return userPolls;
     },
   })
-  .query("getParticipants", {
-    resolve: async ({ ctx }) => {
-      const user = requireUser(ctx.session.user);
-      const participants = await prisma.participant.findMany({
+  .mutation("changeName", {
+    input: z.object({
+      userId: z.string(),
+      name: z.string().min(1).max(100),
+    }),
+    resolve: async ({ input }) => {
+      await prisma.user.update({
         where: {
-          guestId: user.isGuest ? user.id : undefined,
-          userId: !user.isGuest ? user.id : undefined,
+          id: input.userId,
         },
-        select: {
-          name: true,
-          poll: {
-            select: {
-              title: true,
-              links: {
-                where: {
-                  role: "participant",
-                },
-              },
-            },
-          },
+        data: {
+          name: input.name,
         },
       });
-
-      return participants;
     },
   });

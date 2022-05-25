@@ -13,7 +13,7 @@ const Page: NextPage<{ user: UserSessionData }> = ({ user }) => {
   return (
     <SessionProvider session={user}>
       <Head>
-        <title>{name}</title>
+        <title>Profile - {name}</title>
       </Head>
       <StandardLayout>
         <Profile />
@@ -24,8 +24,8 @@ const Page: NextPage<{ user: UserSessionData }> = ({ user }) => {
 
 export const getServerSideProps = withSessionSsr(
   async ({ locale = "en", query, req }) => {
-    if (!req.session.user) {
-      return { notFound: true };
+    if (!req.session.user || req.session.user.isGuest) {
+      return { redirect: { destination: "/new" }, props: {} };
     }
     return {
       props: {

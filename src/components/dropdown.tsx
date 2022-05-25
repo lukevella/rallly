@@ -9,6 +9,7 @@ import {
 import { Menu } from "@headlessui/react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import * as React from "react";
 
 import { transformOriginByPlacement } from "@/utils/constants";
@@ -82,16 +83,39 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
   );
 };
 
+const AnchorLink: React.VoidFunctionComponent<{
+  href?: string;
+  children?: React.ReactNode;
+  className?: string;
+}> = ({ href = "", className, children, ...forwardProps }) => {
+  return (
+    <Link href={href} passHref>
+      <a
+        className={clsx(
+          "font-normal hover:text-white hover:no-underline",
+          className,
+        )}
+        {...forwardProps}
+      >
+        {children}
+      </a>
+    </Link>
+  );
+};
+
 export const DropdownItem: React.VoidFunctionComponent<{
   icon?: React.ComponentType<{ className?: string }>;
   label?: React.ReactNode;
   disabled?: boolean;
+  href?: string;
   onClick?: () => void;
-}> = ({ icon: Icon, label, onClick, disabled }) => {
+}> = ({ icon: Icon, label, onClick, disabled, href }) => {
+  const Element = href ? AnchorLink : "button";
   return (
     <Menu.Item disabled={disabled}>
       {({ active }) => (
-        <button
+        <Element
+          href={href}
           onClick={onClick}
           className={clsx(
             "group flex w-full items-center rounded py-2 pl-2 pr-4",
@@ -111,7 +135,7 @@ export const DropdownItem: React.VoidFunctionComponent<{
             />
           )}
           {label}
-        </button>
+        </Element>
       )}
     </Menu.Item>
   );

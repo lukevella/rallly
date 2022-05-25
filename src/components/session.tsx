@@ -1,5 +1,6 @@
 import { IronSessionData } from "iron-session";
 import React from "react";
+import toast from "react-hot-toast";
 
 import { trpc } from "@/utils/trpc";
 
@@ -16,9 +17,13 @@ type ParticipantOrComment = {
   guestId: string | null;
 };
 
+export type UserSessionDataExtended = UserSessionData & {
+  shortName: string;
+};
+
 type SessionContextValue = {
   logout: () => void;
-  user: (UserSessionData & { shortName: string }) | null;
+  user: UserSessionDataExtended | null;
   refresh: () => void;
   ownsObject: (obj: ParticipantOrComment) => boolean;
   isLoading: boolean;
@@ -40,8 +45,8 @@ export const SessionProvider: React.VoidFunctionComponent<{
     isLoading,
   } = trpc.useQuery(["session.get"]);
 
-  const { mutate: logout } = trpc.useMutation(["session.destroy"], {
-    onMutate: () => {
+  const logout = trpc.useMutation(["session.destroy"], {
+    onSuccess: () => {
       queryClient.setQueryData(["session.get"], null);
     },
   });
@@ -65,7 +70,11 @@ export const SessionProvider: React.VoidFunctionComponent<{
     },
     isLoading,
     logout: () => {
-      logout();
+      toast.promise(logout.mutateAsync(), {
+        loading: "Logging out…",
+        success: "Logged out",
+        error: "Failed to log out",
+      });
     },
     ownsObject: (obj) => {
       if (!user) {
