@@ -91,14 +91,14 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
         exit={{ height: 0, opacity: 0, y: -10 }}
         className="px-4 text-sm"
       >
-        <div className="space-y-2 rounded-lg border bg-white p-2 shadow-sm">
+        <div className="divide-y rounded-lg border bg-white shadow-sm">
           {noVotes ? (
-            <div className="text-center text-slate-400">
+            <div className="p-2 text-center text-slate-400">
               No one has vote for this option
             </div>
           ) : null}
           {participantsWhoVotedYes.length > 0 ? (
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 border-gray-200 p-2">
               <div className="flex h-5 w-5 items-center justify-center">
                 <VoteIcon type="yes" />
               </div>
@@ -108,7 +108,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
             </div>
           ) : null}
           {participantsWhoVotedIfNeedBe.length > 0 ? (
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 border-gray-200 p-2">
               <div className="flex h-5 w-5 items-center justify-center">
                 <VoteIcon type="ifNeedBe" />
               </div>
@@ -120,7 +120,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
             </div>
           ) : null}
           {participantsWhoVotedNo.length > 0 ? (
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 border-gray-200 p-2">
               <div className="flex h-5 w-5 items-center justify-center">
                 <VoteIcon type="no" />
               </div>
