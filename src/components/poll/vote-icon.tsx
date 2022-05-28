@@ -3,6 +3,7 @@ import * as React from "react";
 
 import CheckCircle from "@/components/icons/check-circle.svg";
 import IfNeedBe from "@/components/icons/if-need-be.svg";
+import X from "@/components/icons/x.svg";
 
 const VoteIcon: React.VoidFunctionComponent<{
   type?: VoteType;
@@ -15,9 +16,7 @@ const VoteIcon: React.VoidFunctionComponent<{
       return <IfNeedBe className="h-5 w-5 text-yellow-400" />;
 
     case "no":
-      return (
-        <span className="inline-block h-2 w-2 rounded-full bg-slate-300" />
-      );
+      return <X className="h-5 w-5 text-rose-500" />;
 
     default:
       return <span className="inline-block font-bold text-slate-300">?</span>;

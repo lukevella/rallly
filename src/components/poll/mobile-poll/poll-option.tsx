@@ -91,44 +91,39 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
         exit={{ height: 0, opacity: 0, y: -10 }}
         className="px-4 text-sm"
       >
-        <div className="divide-y rounded-lg border bg-white shadow-sm">
+        <div className="rounded-lg border bg-white p-2 shadow-sm">
           {noVotes ? (
-            <div className="p-2 text-center text-slate-400">
+            <div className="text-center text-slate-400">
               No one has vote for this option
             </div>
-          ) : null}
-          {participantsWhoVotedYes.length > 0 ? (
-            <div className="flex space-x-2 border-gray-200 p-2">
-              <div className="flex h-5 w-5 items-center justify-center">
-                <VoteIcon type="yes" />
-              </div>
-              <div className="text-slate-500">
-                {participantsWhoVotedYes.map(({ name }) => name).join(", ")}
-              </div>
+          ) : (
+            <div className="space-y-1">
+              {participantsWhoVotedYes.map(({ name }, i) => (
+                <div key={i} className="flex items-center">
+                  <div className="mr-2 flex h-5 w-5 items-center justify-center">
+                    <VoteIcon type="yes" />
+                  </div>
+                  <div className="text-slate-500"> {name}</div>
+                </div>
+              ))}
+              {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
+                <div key={i} className="flex items-center">
+                  <div className="mr-2 flex h-5 w-5 items-center justify-center">
+                    <VoteIcon type="ifNeedBe" />
+                  </div>
+                  <div className="text-slate-500"> {name}</div>
+                </div>
+              ))}
+              {participantsWhoVotedNo.map(({ name }, i) => (
+                <div key={i} className="flex items-center">
+                  <div className="mr-2 flex h-5 w-5 items-center justify-center">
+                    <VoteIcon type="no" />
+                  </div>
+                  <div className="text-slate-500"> {name}</div>
+                </div>
+              ))}
             </div>
-          ) : null}
-          {participantsWhoVotedIfNeedBe.length > 0 ? (
-            <div className="flex space-x-2 border-gray-200 p-2">
-              <div className="flex h-5 w-5 items-center justify-center">
-                <VoteIcon type="ifNeedBe" />
-              </div>
-              <div className="text-slate-500">
-                {participantsWhoVotedIfNeedBe
-                  .map(({ name }) => name)
-                  .join(", ")}
-              </div>
-            </div>
-          ) : null}
-          {participantsWhoVotedNo.length > 0 ? (
-            <div className="flex space-x-2 border-gray-200 p-2">
-              <div className="flex h-5 w-5 items-center justify-center">
-                <VoteIcon type="no" />
-              </div>
-              <div className="text-slate-500">
-                {participantsWhoVotedNo.map(({ name }) => name).join(", ")}
-              </div>
-            </div>
-          ) : null}
+          )}
         </div>
       </motion.div>
     );
