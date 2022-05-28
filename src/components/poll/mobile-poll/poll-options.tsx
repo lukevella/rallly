@@ -65,6 +65,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                   return (
                     <TimeSlotOption
                       onChange={handleChange}
+                      optionId={option.optionId}
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
                       participants={participants}
@@ -80,6 +81,7 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                   return (
                     <DateOption
                       onChange={handleChange}
+                      optionId={option.optionId}
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
                       participants={participants}

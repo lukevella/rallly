@@ -1,4 +1,4 @@
-import { Participant, Vote } from "@prisma/client";
+import { Participant, Vote, VoteType } from "@prisma/client";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -9,6 +9,7 @@ import { useRequiredContext } from "./use-required-context";
 const ParticipantsContext =
   React.createContext<{
     participants: Array<Participant & { votes: Vote[] }>;
+    getParticipants: (optionId: string, voteType: VoteType) => Participant[];
   } | null>(null);
 
 export const useParticipants = () => {
@@ -26,6 +27,20 @@ export const ParticipantsProvider: React.VoidFunctionComponent<{
     { pollId },
   ]);
 
+  const getParticipants = (
+    optionId: string,
+    voteType: VoteType,
+  ): Participant[] => {
+    if (!participants) {
+      return [];
+    }
+    return participants.filter((participant) => {
+      return participant.votes.some((vote) => {
+        return vote.optionId === optionId && vote.type === voteType;
+      });
+    });
+  };
+
   // TODO (Luke Vella) [2022-05-18]: Add mutations here
 
   if (!participants) {
@@ -33,7 +48,7 @@ export const ParticipantsProvider: React.VoidFunctionComponent<{
   }
 
   return (
-    <ParticipantsContext.Provider value={{ participants }}>
+    <ParticipantsContext.Provider value={{ participants, getParticipants }}>
       {children}
     </ParticipantsContext.Provider>
   );
