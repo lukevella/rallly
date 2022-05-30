@@ -5068,10 +5068,10 @@ react-github-btn@^1.2.2:
   dependencies:
     github-buttons "^2.21.1"
 
-react-hook-form@^7.31.2:
-  version "7.31.2"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.31.2.tgz#efb7ac469810954488b7cf40be4e5017122c6e5e"
-  integrity sha512-oPudn3YuyzWg//IsT9z2cMEjWocAgHWX/bmueDT8cmsYQnGY5h7/njjvMDfLVv3mbdhYBjslTRnII2MIT7eNCA==
+react-hook-form@^7.31.3:
+  version "7.31.3"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.31.3.tgz#b61bafb9a7435f91695351a7a9f714d8c4df0121"
+  integrity sha512-NVZdCWViIWXXXlQ3jxVQH0NuNfwPf8A/0KvuCxrM9qxtP1qYosfR2ZudarziFrVOC7eTUbWbm1T4OyYCwv9oSQ==
 
 react-hot-toast@^2.2.0:
   version "2.2.0"
@@ -5080,19 +5080,19 @@ react-hot-toast@^2.2.0:
   dependencies:
     goober "^2.1.1"
 
-react-i18next@^11.15.4:
-  version "11.15.4"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.15.4.tgz#fe0c792ea93f038548e838cecae3ed4173822937"
-  integrity sha512-jKJNAcVcbPGK+yrTcXhLblgPY16n6NbpZZL3Mk8nswj1v3ayIiUBVDU09SgqnT+DluyQBS97hwSvPU5yVFG0yg==
+react-i18next@^11.15.5:
+  version "11.16.1"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.16.1.tgz#707e6ce56e97df97a271a2274d401ba8bec4b679"
+  integrity sha512-6Wf/YtPqANloFmnN5ol0ANeweFPzDWGykRq/dk4wU3ZkjWBR3d5iH210gMg8e8AgLQ1Dq7suUIL7WGfu08OehQ==
   dependencies:
     "@babel/runtime" "^7.14.5"
     html-escaper "^2.0.2"
     html-parse-stringify "^3.0.1"
 
-react-i18next@^11.15.5:
-  version "11.16.1"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.16.1.tgz#707e6ce56e97df97a271a2274d401ba8bec4b679"
-  integrity sha512-6Wf/YtPqANloFmnN5ol0ANeweFPzDWGykRq/dk4wU3ZkjWBR3d5iH210gMg8e8AgLQ1Dq7suUIL7WGfu08OehQ==
+react-i18next@^11.16.9:
+  version "11.16.9"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.16.9.tgz#890cdac0c49120e075d6c520b43dbad3f91bd2df"
+  integrity sha512-euXxWvcEAvsY7ZVkwx9ztCq4butqtsGHEkpkuo0RMj8Ru09IF9o2KxCyN+zyv51Nr0aBh/elaTIiR6fMb8YfVg==
   dependencies:
     "@babel/runtime" "^7.14.5"
     html-escaper "^2.0.2"
