@@ -66,14 +66,14 @@
     @apply h-4 w-4 rounded border-slate-300 text-indigo-500 shadow-sm focus:ring-indigo-500;
   }
   .btn {
-    @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all active:scale-95;
+    @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all sm:active:scale-95;
   }
   a.btn {
     @apply cursor-pointer hover:no-underline;
   }
 
   .btn-default {
-    @apply btn border-slate-300 bg-white text-slate-700 hover:bg-indigo-50/10 active:bg-slate-100;
+    @apply btn bg-white text-slate-700 hover:bg-indigo-50/10 active:bg-slate-100;
   }
 
   a.btn-default {

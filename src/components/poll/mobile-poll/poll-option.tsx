@@ -3,8 +3,9 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
-import ViewList from "@/components/icons/chevron-down.svg";
+import ChevronDown from "@/components/icons/chevron-down.svg";
 
+import { Button } from "../../button";
 import { useParticipants } from "../../participants-provider";
 import { ScoreSummary } from "../score-summary";
 import UserAvatar from "../user-avatar";
@@ -36,12 +37,10 @@ const CollapsibleContainer: React.VoidFunctionComponent<{
             collapsed: {
               width: 0,
               opacity: 0,
-              x: -5,
             },
             expanded: {
               opacity: 1,
               width: 58,
-              x: 0,
             },
           }}
           initial="collapsed"
@@ -89,9 +88,11 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
         initial={{ height: 0, opacity: 0, y: -10 }}
         animate={{ height: "auto", opacity: 1, y: 0 }}
         exit={{ height: 0, opacity: 0, y: -10 }}
-        className="px-4 text-sm"
+        className="text-sm"
+        onTouchStart={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="rounded-lg border bg-white p-2 shadow-sm">
+        <div className="overflow-y-auto rounded-lg border bg-white p-2">
           {noVotes ? (
             <div className="text-center text-slate-400">
               No one has vote for this option
@@ -135,7 +136,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   vote,
   onChange,
   participants,
-  editable,
+  editable = false,
   yesScore,
   ifNeedBeScore,
   optionId,
@@ -143,28 +144,37 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   const showVotes = !!(selectedParticipantId || editable);
   const [expanded, setExpanded] = React.useState(false);
   const selectorRef = React.useRef<HTMLButtonElement>(null);
+  const [active, setActive] = React.useState(false);
   return (
     <div
-      className={clsx("space-y-3 py-3", {
-        "active:bg-slate-400/5": editable,
+      className={clsx("space-y-4 p-4", {
+        "bg-slate-400/5": editable && active,
       })}
+      onTouchStart={() => setActive(editable)}
+      onTouchEnd={() => setActive(false)}
       data-testid="poll-option"
       onClick={() => {
         selectorRef.current?.click();
       }}
     >
-      <div
-        className={clsx(
-          "flex select-none items-center px-4 transition duration-75 ",
-        )}
-      >
-        <div className="flex grow items-center">
-          <div className="grow">{children}</div>
-          <div className="mx-3 flex flex-col items-end">
-            <ScoreSummary yesScore={yesScore} ifNeedBeScore={ifNeedBeScore} />
-            {participants.length > 0 ? (
-              <div className="mt-1 -mr-1">
-                <div className="-space-x-1">
+      <div className="flex select-none transition duration-75">
+        <div className="flex grow space-x-8">
+          <div className="w-30">{children}</div>
+          <div className="grow items-center space-y-1">
+            <button
+              type="button"
+              onTouchStart={(e) => e.stopPropagation()}
+              className="-mt-2 flex w-full items-center justify-between rounded-lg p-2 active:bg-slate-500/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded((value) => !value);
+              }}
+            >
+              <div className="text-left">
+                <div>
+                  <ScoreSummary yesScore={yesScore} />
+                </div>
+                <div className="inline-flex -space-x-1">
                   {participants
                     .slice(0, participants.length <= 6 ? 6 : 5)
                     .map((participant, i) => {
@@ -183,12 +193,13 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
                   ) : null}
                 </div>
               </div>
-            ) : null}
+              <ChevronDown className="ml-1 h-5 text-slate-400" />
+            </button>
           </div>
         </div>
         <CollapsibleContainer
           expanded={showVotes}
-          className="relative flex h-12 items-center justify-center rounded-lg"
+          className="relative flex justify-center"
         >
           {editable ? (
             <div className="flex h-full w-14 items-center justify-center">
@@ -202,27 +213,13 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
             <AnimatePresence initial={false}>
               <PopInOut
                 key={vote}
-                className="absolute inset-0 flex h-full w-full items-center justify-center"
+                className="absolute inset-0 flex h-full items-center justify-center"
               >
                 <VoteIcon type={vote} />
               </PopInOut>
             </AnimatePresence>
           )}
         </CollapsibleContainer>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setExpanded((value) => !value);
-          }}
-          className="h-full rounded-lg p-2 active:bg-slate-400/5"
-        >
-          <ViewList
-            className={clsx("h-5 text-slate-400 transition-transform", {
-              "rotate-180": expanded,
-            })}
-          />
-        </button>
       </div>
       <AnimatePresence>
         {expanded ? <PollOptionVoteSummary optionId={optionId} /> : null}

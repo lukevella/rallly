@@ -124,7 +124,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       participantsByOptionId[option.id] = (participants ?? []).filter(
         (participant) =>
           participant.votes.some(
-            ({ type, optionId }) => optionId === option.id && type !== "no",
+            ({ type, optionId }) => optionId === option.id && type === "yes",
           ),
       );
     });

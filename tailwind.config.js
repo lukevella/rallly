@@ -36,7 +36,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
-        mono: [...defaultTheme.fontFamily.mono],
+        mono: ["Noto Sans Mono", ...defaultTheme.fontFamily.mono],
       },
       transitionTimingFunction: {
         "in-expo": "cubic-bezier(0.68, -0.6, 0.32, 1.6)",

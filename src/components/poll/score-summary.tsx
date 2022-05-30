@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
-import CheckCircle from "@/components/icons/check-circle.svg";
+import Check from "@/components/icons/check.svg";
 import IfNeedBe from "@/components/icons/if-need-be.svg";
 
 export interface PopularityScoreProps {
@@ -28,21 +28,18 @@ const Score = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={clsx(
-        "relative inline-flex items-center font-mono font-semibold text-slate-500",
-        { "text-sm": !compact, "text-xs": compact },
-      )}
+      className={clsx("relative inline-flex items-center font-bold ", {
+        "text-sm": !compact,
+        "text-xs": compact,
+      })}
     >
       <Icon
-        className={clsx(
-          "mr-1 inline-block text-slate-400/80 transition-opacity",
-          {
-            "h-4": !compact,
-            "h-3": compact,
-          },
-        )}
+        className={clsx("mr-1 inline-block text-slate-300 transition-opacity", {
+          "h-4": !compact,
+          "h-3": compact,
+        })}
       />
-      <span className="relative inline-block">
+      <span className="relative inline-block text-slate-500">
         <AnimatePresence initial={false}>
           <motion.span
             transition={{
@@ -79,24 +76,7 @@ export const ScoreSummary: React.VoidFunctionComponent<PopularityScoreProps> =
         data-testid="popularity-score"
         className="inline-flex items-center space-x-2"
       >
-        <Score icon={CheckCircle} compact={compact} score={yesScore} />
-        <AnimatePresence initial={false}>
-          {ifNeedBeScore ? (
-            <MotionScore
-              initial={{ opacity: 0, width: 0, x: -10 }}
-              animate={{ opacity: 1, width: "auto", x: 0 }}
-              exit={{
-                opacity: 0,
-                width: 0,
-                x: -10,
-                transition: { duration: 0.1 },
-              }}
-              icon={IfNeedBe}
-              compact={compact}
-              score={ifNeedBeScore}
-            />
-          ) : null}
-        </AnimatePresence>
+        <Score icon={Check} compact={compact} score={yesScore} />
       </div>
     );
   });

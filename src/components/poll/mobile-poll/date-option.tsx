@@ -18,7 +18,12 @@ const DateOption: React.VoidFunctionComponent<DateOptionProps> = ({
 }) => {
   return (
     <PollOption {...rest}>
-      <DateCard dow={dow} day={day} month={month} />
+      <div className="grow">
+        <div className="flex grow items-center text-sm text-slate-400">
+          {dow}
+        </div>
+        <div className="h-7 text-xl font-bold">{day}</div>
+      </div>
     </PollOption>
   );
 };

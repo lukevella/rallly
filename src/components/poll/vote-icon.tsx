@@ -1,8 +1,9 @@
 import { VoteType } from "@prisma/client";
 import * as React from "react";
 
-import CheckCircle from "@/components/icons/check-circle.svg";
+import CheckCircle from "@/components/icons/check.svg";
 import IfNeedBe from "@/components/icons/if-need-be.svg";
+import QuestionMark from "@/components/icons/question-mark.svg";
 import X from "@/components/icons/x.svg";
 
 const VoteIcon: React.VoidFunctionComponent<{
@@ -16,10 +17,10 @@ const VoteIcon: React.VoidFunctionComponent<{
       return <IfNeedBe className="h-5 w-5 text-yellow-400" />;
 
     case "no":
-      return <X className="h-5 w-5 text-rose-500" />;
+      return <X className="h-5 w-5 text-slate-300" />;
 
     default:
-      return <span className="inline-block font-bold text-slate-300">?</span>;
+      return <QuestionMark className="h-5 w-5 text-slate-300" />;
   }
 };
 
