@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
-import Check from "@/components/icons/check.svg";
 import IfNeedBe from "@/components/icons/if-need-be.svg";
+import Check from "@/components/icons/user-solid.svg";
 
 export interface PopularityScoreProps {
   yesScore: number;

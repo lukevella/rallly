@@ -98,31 +98,35 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
               No one has vote for this option
             </div>
           ) : (
-            <div className="space-y-1">
-              {participantsWhoVotedYes.map(({ name }, i) => (
-                <div key={i} className="flex items-center">
-                  <div className="mr-2 flex h-5 w-5 items-center justify-center">
-                    <VoteIcon type="yes" />
+            <div className="grid grid-cols-2">
+              <div className="col-span-1 space-y-1">
+                {participantsWhoVotedYes.map(({ name }, i) => (
+                  <div key={i} className="flex">
+                    <div className="mr-2 flex h-5 w-5 items-center justify-center">
+                      <VoteIcon type="yes" />
+                    </div>
+                    <div className="text-slate-500"> {name}</div>
                   </div>
-                  <div className="text-slate-500"> {name}</div>
-                </div>
-              ))}
-              {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
-                <div key={i} className="flex items-center">
-                  <div className="mr-2 flex h-5 w-5 items-center justify-center">
-                    <VoteIcon type="ifNeedBe" />
+                ))}
+                {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
+                  <div key={i} className="flex">
+                    <div className="mr-2 flex h-5 w-5 items-center justify-center">
+                      <VoteIcon type="ifNeedBe" />
+                    </div>
+                    <div className="text-slate-500"> {name}</div>
                   </div>
-                  <div className="text-slate-500"> {name}</div>
-                </div>
-              ))}
-              {participantsWhoVotedNo.map(({ name }, i) => (
-                <div key={i} className="flex items-center">
-                  <div className="mr-2 flex h-5 w-5 items-center justify-center">
-                    <VoteIcon type="no" />
+                ))}
+              </div>
+              <div className="col-span-1 space-y-1">
+                {participantsWhoVotedNo.map(({ name }, i) => (
+                  <div key={i} className="flex">
+                    <div className="mr-2 flex h-5 w-5 items-center justify-center">
+                      <VoteIcon type="no" />
+                    </div>
+                    <div className="text-slate-500"> {name}</div>
                   </div>
-                  <div className="text-slate-500"> {name}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -159,41 +163,19 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
     >
       <div className="flex select-none transition duration-75">
         <div className="flex grow space-x-8">
-          <div className="w-30">{children}</div>
-          <div className="grow items-center space-y-1">
+          <div>{children}</div>
+          <div className="flex grow items-center justify-end">
             <button
               type="button"
               onTouchStart={(e) => e.stopPropagation()}
-              className="-mt-2 flex w-full items-center justify-between rounded-lg p-2 active:bg-slate-500/10"
+              className="flex justify-end rounded-lg p-2 active:bg-slate-500/10"
               onClick={(e) => {
                 e.stopPropagation();
                 setExpanded((value) => !value);
               }}
             >
-              <div className="text-left">
-                <div>
-                  <ScoreSummary yesScore={yesScore} />
-                </div>
-                <div className="inline-flex -space-x-1">
-                  {participants
-                    .slice(0, participants.length <= 6 ? 6 : 5)
-                    .map((participant, i) => {
-                      return (
-                        <UserAvatar
-                          key={i}
-                          className="ring-1 ring-white"
-                          name={participant.name}
-                        />
-                      );
-                    })}
-                  {participants.length > 6 ? (
-                    <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
-                      +{participants.length - 5}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-              <ChevronDown className="ml-1 h-5 text-slate-400" />
+              <ScoreSummary yesScore={yesScore} />
+              <ChevronDown className="h-5 text-slate-400" />
             </button>
           </div>
         </div>
@@ -221,8 +203,29 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
           )}
         </CollapsibleContainer>
       </div>
-      <AnimatePresence>
-        {expanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
+      <AnimatePresence initial={false}>
+        {expanded ? (
+          <PollOptionVoteSummary optionId={optionId} />
+        ) : (
+          <motion.div className="flex -space-x-1">
+            {participants
+              .slice(0, participants.length <= 6 ? 6 : 5)
+              .map((participant, i) => {
+                return (
+                  <UserAvatar
+                    key={i}
+                    className="ring-1 ring-white"
+                    name={participant.name}
+                  />
+                );
+              })}
+            {participants.length > 8 ? (
+              <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
+                +{participants.length - 7}
+              </span>
+            ) : null}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

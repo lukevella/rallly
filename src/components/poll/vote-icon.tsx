@@ -1,10 +1,10 @@
 import { VoteType } from "@prisma/client";
 import * as React from "react";
 
-import CheckCircle from "@/components/icons/check.svg";
+import CheckCircle from "@/components/icons/check-circle.svg";
 import IfNeedBe from "@/components/icons/if-need-be.svg";
 import QuestionMark from "@/components/icons/question-mark.svg";
-import X from "@/components/icons/x.svg";
+import X from "@/components/icons/x-circle.svg";
 
 const VoteIcon: React.VoidFunctionComponent<{
   type?: VoteType;
