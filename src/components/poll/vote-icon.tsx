@@ -1,4 +1,5 @@
 import { VoteType } from "@prisma/client";
+import clsx from "clsx";
 import * as React from "react";
 
 import CheckCircle from "@/components/icons/check-circle.svg";
@@ -8,19 +9,49 @@ import X from "@/components/icons/x-circle.svg";
 
 const VoteIcon: React.VoidFunctionComponent<{
   type?: VoteType;
-}> = ({ type }) => {
+  size?: "sm" | "md";
+  className?: string;
+}> = ({ type, className, size = "md" }) => {
   switch (type) {
     case "yes":
-      return <CheckCircle className="h-5 w-5 text-green-400" />;
+      return (
+        <CheckCircle
+          className={clsx("text-green-400", className, {
+            "h-5": size === "md",
+            "h-3": size === "sm",
+          })}
+        />
+      );
 
     case "ifNeedBe":
-      return <IfNeedBe className="h-5 w-5 text-yellow-400" />;
+      return (
+        <IfNeedBe
+          className={clsx("text-amber-300", className, {
+            "h-5": size === "md",
+            "h-3": size === "sm",
+          })}
+        />
+      );
 
     case "no":
-      return <X className="h-5 w-5 text-slate-300" />;
+      return (
+        <X
+          className={clsx("text-slate-300", className, {
+            "h-5": size === "md",
+            "h-3": size === "sm",
+          })}
+        />
+      );
 
     default:
-      return <QuestionMark className="h-5 w-5 text-slate-300" />;
+      return (
+        <QuestionMark
+          className={clsx("text-slate-300", className, {
+            "h-5": size === "md",
+            "h-3": size === "sm",
+          })}
+        />
+      );
   }
 };
 

@@ -49,11 +49,16 @@ const PollHeader: React.VoidFunctionComponent = () => {
             onMouseOut={() => setActiveOptionId(null)}
           >
             <div>
-              <DateCard
-                day={option.day}
-                dow={option.dow}
-                month={option.month}
-              />
+              <div className="font-semibold leading-9">
+                <span className="text-2xl">{option.day}</span>
+                &nbsp;
+                <span className="text-sm uppercase text-slate-400">
+                  {option.dow}
+                </span>
+              </div>
+              <div className="text-xs uppercase text-slate-400">
+                {option.month}
+              </div>
             </div>
             {option.type === "timeSlot" ? (
               <TimeRange
@@ -66,7 +71,6 @@ const PollHeader: React.VoidFunctionComponent = () => {
               <ScoreSummary
                 yesScore={numVotes.yes}
                 ifNeedBeScore={numVotes.ifNeedBe}
-                compact={true}
               />
             </div>
           </div>
