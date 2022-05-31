@@ -164,7 +164,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   const [active, setActive] = React.useState(false);
   return (
     <div
-      className={clsx("space-y-4 p-4", {
+      className={clsx("space-y-4 overflow-hidden p-4", {
         "bg-slate-400/5": editable && active,
       })}
       onTouchStart={() => setActive(editable)}
