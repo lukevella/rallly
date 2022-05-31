@@ -50,14 +50,13 @@ const PollHeader: React.VoidFunctionComponent = () => {
           >
             <div>
               <div className="font-semibold leading-9">
-                <span className="text-2xl">{option.day}</span>
-                &nbsp;
-                <span className="text-sm uppercase text-slate-400">
+                <div className="text-sm uppercase text-slate-400">
                   {option.dow}
-                </span>
-              </div>
-              <div className="text-xs uppercase text-slate-400">
-                {option.month}
+                </div>
+                <div className="text-2xl">{option.day}</div>
+                <div className="text-xs font-medium uppercase text-slate-400/75">
+                  {option.month}
+                </div>
               </div>
             </div>
             {option.type === "timeSlot" ? (
