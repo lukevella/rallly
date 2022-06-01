@@ -1,31 +1,39 @@
+import clsx from "clsx";
 import { groupBy } from "lodash";
 import * as React from "react";
 
-import { ParsedTimeSlotOption } from "@/utils/date-time-utils";
+import { ParsedDateTimeOpton } from "@/utils/date-time-utils";
 
 import PollOptions from "./poll-options";
 
-export interface TimeSlotOptionsProps {
-  options: ParsedTimeSlotOption[];
+export interface GroupedOptionsProps {
+  options: ParsedDateTimeOpton[];
   editable?: boolean;
   selectedParticipantId?: string;
+  group: (option: ParsedDateTimeOpton) => string;
+  groupClassName?: string;
 }
 
-const TimeSlotOptions: React.VoidFunctionComponent<TimeSlotOptionsProps> = ({
+const GroupedOptions: React.VoidFunctionComponent<GroupedOptionsProps> = ({
   options,
   editable,
   selectedParticipantId,
+  group,
+  groupClassName,
 }) => {
-  const grouped = groupBy(options, (option) => {
-    return `${option.dow} ${option.day} ${option.month}`;
-  });
+  const grouped = groupBy(options, group);
 
   return (
     <div className="select-none divide-y">
       {Object.entries(grouped).map(([day, options]) => {
         return (
           <div key={day}>
-            <div className="sticky top-[152px] z-10 flex border-b bg-gray-50/80 py-2 px-4 text-sm font-semibold shadow-sm backdrop-blur-md">
+            <div
+              className={clsx(
+                "sticky z-10 flex border-b bg-gray-50/80 py-2 px-4 text-sm font-semibold shadow-sm backdrop-blur-md",
+                groupClassName,
+              )}
+            >
               {day}
             </div>
             <PollOptions
@@ -40,4 +48,4 @@ const TimeSlotOptions: React.VoidFunctionComponent<TimeSlotOptionsProps> = ({
   );
 };
 
-export default TimeSlotOptions;
+export default GroupedOptions;

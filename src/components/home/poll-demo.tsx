@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import DateCard from "../date-card";
 import { ScoreSummary } from "../poll/score-summary";
 import UserAvatar from "../poll/user-avatar";
 import VoteIcon from "../poll/vote-icon";
@@ -64,13 +63,19 @@ const PollDemo: React.VoidFunctionComponent = () => {
               className="shrink-0 space-y-3 py-2 pt-3 text-center transition-colors"
               style={{ width: 100 }}
             >
-              <DateCard
-                day={format(d, "dd")}
-                dow={format(d, "E")}
-                month={format(d, "MMM")}
-              />
               <div>
-                <ScoreSummary yesScore={score} compact={true} />
+                <div className="font-semibold leading-9">
+                  <div className="text-sm uppercase text-slate-400">
+                    {format(d, "E")}
+                  </div>
+                  <div className="text-2xl">{format(d, "dd")}</div>
+                  <div className="text-xs font-medium uppercase text-slate-400/75">
+                    {format(d, "MMM")}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <ScoreSummary yesScore={score} />
               </div>
             </div>
           );

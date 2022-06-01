@@ -30,6 +30,7 @@ export interface ParsedDateOption {
   day: string;
   dow: string;
   month: string;
+  year: string;
 }
 
 export interface ParsedTimeSlotOption {
@@ -41,6 +42,7 @@ export interface ParsedTimeSlotOption {
   startTime: string;
   endTime: string;
   duration: string;
+  year: string;
 }
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
@@ -91,8 +93,9 @@ const parseDateOption = (option: Option): ParsedDateOption => {
     type: "date",
     optionId: option.id,
     day: format(date, "d"),
-    dow: format(date, "E"),
+    dow: format(date, "EEE"),
     month: format(date, "MMM"),
+    year: format(date, "yyyy"),
   };
 };
 
@@ -122,9 +125,10 @@ const parseTimeSlotOption = (
       startTime: localeFormatInTimezone(startDate, targetTimeZone, "p"),
       endTime: localeFormatInTimezone(endDate, targetTimeZone, "p"),
       day: localeFormatInTimezone(startDate, targetTimeZone, "d"),
-      dow: localeFormatInTimezone(startDate, targetTimeZone, "E"),
+      dow: localeFormatInTimezone(startDate, targetTimeZone, "EEE"),
       month: localeFormatInTimezone(startDate, targetTimeZone, "MMM"),
       duration: getDuration(startDate, endDate),
+      year: localeFormatInTimezone(startDate, targetTimeZone, "yyyy"),
     };
   } else {
     const startDate = new Date(start);
@@ -138,6 +142,7 @@ const parseTimeSlotOption = (
       dow: format(startDate, "E"),
       month: format(startDate, "MMM"),
       duration: getDuration(startDate, endDate),
+      year: format(startDate, "yyyy"),
     };
   }
 };

@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import * as React from "react";
 
-import DateCard from "@/components/date-card";
 import { usePoll } from "@/components/poll-context";
 
 import { ScoreSummary } from "../score-summary";
@@ -49,11 +48,15 @@ const PollHeader: React.VoidFunctionComponent = () => {
             onMouseOut={() => setActiveOptionId(null)}
           >
             <div>
-              <DateCard
-                day={option.day}
-                dow={option.dow}
-                month={option.month}
-              />
+              <div className="font-semibold leading-9">
+                <div className="text-sm uppercase text-slate-400">
+                  {option.dow}
+                </div>
+                <div className="text-2xl">{option.day}</div>
+                <div className="text-xs font-medium uppercase text-slate-400/75">
+                  {option.month}
+                </div>
+              </div>
             </div>
             {option.type === "timeSlot" ? (
               <TimeRange
@@ -66,7 +69,6 @@ const PollHeader: React.VoidFunctionComponent = () => {
               <ScoreSummary
                 yesScore={numVotes.yes}
                 ifNeedBeScore={numVotes.ifNeedBe}
-                compact={true}
               />
             </div>
           </div>

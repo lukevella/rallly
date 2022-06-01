@@ -3,7 +3,14 @@ import * as React from "react";
 
 import SpinnerIcon from "@/components/icons/spinner.svg";
 
-export interface ButtonProps {
+export interface ButtonProps
+  extends Omit<
+    React.DetailedHTMLProps<
+      React.ButtonHTMLAttributes<HTMLButtonElement>,
+      HTMLButtonElement
+    >,
+    "type" | "ref"
+  > {
   children?: React.ReactNode;
   className?: string;
   disabled?: boolean;

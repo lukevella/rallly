@@ -199,19 +199,17 @@ const PollPage: NextPage = () => {
             ) : null}
 
             <div className="flex items-center space-x-3 px-4 py-2 sm:justify-end">
-              <span className="text-xs font-semibold text-slate-500">
-                Legend:
-              </span>
-              <span className="inline-flex items-center space-x-2">
+              <span className="text-xs font-semibold text-slate-500">Key:</span>
+              <span className="inline-flex items-center space-x-1">
                 <VoteIcon type="yes" />
                 <span className="text-xs text-slate-500">Yes</span>
               </span>
-              <span className="inline-flex items-center space-x-2">
+              <span className="inline-flex items-center space-x-1">
                 <VoteIcon type="ifNeedBe" />
                 <span className="text-xs text-slate-500">If need be</span>
               </span>
 
-              <span className="inline-flex items-center space-x-2">
+              <span className="inline-flex items-center space-x-1">
                 <VoteIcon type="no" />
                 <span className="text-xs text-slate-500">No</span>
               </span>

@@ -21,8 +21,7 @@ import NameInput from "../name-input";
 import { useParticipants } from "../participants-provider";
 import { isUnclaimed, useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
-import PollOptions from "./mobile-poll/poll-options";
-import TimeSlotOptions from "./mobile-poll/time-slot-options";
+import GroupedOptions from "./mobile-poll/grouped-options";
 import {
   normalizeVotes,
   useAddParticipantMutation,
@@ -139,7 +138,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
           }
         })}
       >
-        <div className="sticky top-12 z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
+        <div className="sticky top-[47px] z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
           <div className="flex space-x-3">
             <Listbox
               value={selectedParticipantId}
@@ -266,28 +265,20 @@ const MobilePoll: React.VoidFunctionComponent = () => {
             />
           ) : null}
         </div>
-        {(() => {
-          switch (pollContext.pollType) {
-            // we pass poll options as props since we are
-            // discriminating on poll type here
-            case "date":
-              return (
-                <PollOptions
-                  selectedParticipantId={selectedParticipantId}
-                  options={pollContext.options}
-                  editable={isEditing}
-                />
-              );
-            case "timeSlot":
-              return (
-                <TimeSlotOptions
-                  selectedParticipantId={selectedParticipantId}
-                  options={pollContext.options}
-                  editable={isEditing}
-                />
-              );
+        <GroupedOptions
+          selectedParticipantId={selectedParticipantId}
+          options={pollContext.options}
+          editable={isEditing}
+          groupClassName={
+            pollContext.pollType === "timeSlot" ? "top-[151px]" : "top-[108px]"
           }
-        })()}
+          group={(option) => {
+            if (option.type === "timeSlot") {
+              return `${option.dow} ${option.day} ${option.month}`;
+            }
+            return `${option.month} ${option.year}`;
+          }}
+        />
         <AnimatePresence>
           {shouldShowSaveButton && isEditing ? (
             <motion.button
