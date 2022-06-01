@@ -22,7 +22,6 @@ import { useParticipants } from "../participants-provider";
 import { isUnclaimed, useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
 import GroupedOptions from "./mobile-poll/grouped-options";
-import PollOptions from "./mobile-poll/poll-options";
 import {
   normalizeVotes,
   useAddParticipantMutation,

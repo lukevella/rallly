@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import * as React from "react";
 
-import DateCard from "@/components/date-card";
 import { usePoll } from "@/components/poll-context";
 
 import { ScoreSummary } from "../score-summary";

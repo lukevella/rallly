@@ -88,7 +88,6 @@ const PollOptions: React.VoidFunctionComponent<PollOptions> = ({
                       vote={vote}
                       dow={option.dow}
                       day={option.day}
-                      month={option.month}
                       editable={editable}
                       selectedParticipantId={selectedParticipant?.id}
                     />

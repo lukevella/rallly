@@ -5,7 +5,6 @@ import * as React from "react";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
 
-import { Button } from "../../button";
 import { useParticipants } from "../../participants-provider";
 import { ScoreSummary } from "../score-summary";
 import UserAvatar from "../user-avatar";
@@ -155,7 +154,6 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   participants,
   editable = false,
   yesScore,
-  ifNeedBeScore,
   optionId,
 }) => {
   const showVotes = !!(selectedParticipantId || editable);
