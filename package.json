@@ -17,7 +17,7 @@
     "@headlessui/react": "^1.5.0",
     "@next/bundle-analyzer": "^12.1.0",
     "@prisma/client": "^3.14.0",
-    "@sentry/nextjs": "^6.19.3",
+    "@sentry/nextjs": "^7.0.0",
     "@svgr/webpack": "^6.2.1",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
