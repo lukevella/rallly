@@ -40,10 +40,10 @@ export const VoteSelector = React.forwardRef<
       <AnimatePresence initial={false}>
         <motion.span
           className="absolute flex items-center justify-center"
-          transition={{ duration: 0.2 }}
-          initial={{ opacity: 0, rotateY: 180, scale: 0.5 }}
-          animate={{ opacity: 1, rotateY: 0, scale: 1 }}
-          exit={{ opacity: 0, rotateY: -180, scale: 0.5 }}
+          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 15 }}
           key={value}
         >
           <VoteIcon type={value} />
