@@ -12,7 +12,7 @@ const Maintenance: NextPage = () => {
       </Head>
       <div className="w-96 rounded-lg border bg-white p-8 text-center shadow-sm">
         <div className="mb-4">
-          <Clock className="inline-block h-20 text-indigo-500" />
+          <Clock className="text-primary-500 inline-block h-20" />
         </div>
         <div className="">
           The site is currently down for some maintenance and will be back

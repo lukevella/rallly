@@ -31,7 +31,7 @@ export const VoteSelector = React.forwardRef<
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-white shadow-sm transition focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-95"
+      className="focus-visible:ring-primary-500 relative inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-white shadow-sm transition focus-visible:border-0 focus-visible:ring-2 active:scale-95"
       onClick={() => {
         onChange?.(value ? getNext(value) : orderedVoteTypes[0]);
       }}

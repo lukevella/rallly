@@ -20,7 +20,7 @@ const participants = [
   },
   {
     name: "Johnny",
-    color: "bg-indigo-400",
+    color: "bg-primary-400",
     votes: [2, 3],
   },
   {

@@ -35,8 +35,8 @@ export const Profile: React.VoidFunctionComponent = () => {
   return (
     <div className="mx-auto max-w-3xl py-4 lg:mx-0">
       <div className="mb-4 flex items-center px-4">
-        <div className="mr-4 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-indigo-50">
-          <User className="h-7 text-indigo-500" />
+        <div className="bg-primary-50 mr-4 inline-flex h-14 w-14 items-center justify-center rounded-lg">
+          <User className="text-primary-500 h-7" />
         </div>
         <div>
           <div
@@ -71,9 +71,9 @@ export const Profile: React.VoidFunctionComponent = () => {
                     <div className="sm:table-cell sm:p-4">
                       <div>
                         <div className="flex">
-                          <Calendar className="mr-2 mt-[1px] h-5 text-indigo-500" />
+                          <Calendar className="text-primary-500 mr-2 mt-[1px] h-5" />
                           <Link href={`/admin/${poll.links[0].urlId}`}>
-                            <a className="text-slate-700 hover:text-indigo-500 hover:no-underline">
+                            <a className="hover:text-primary-500 text-slate-700 hover:no-underline">
                               <div>{poll.title}</div>
                             </a>
                           </Link>

@@ -120,7 +120,7 @@ export const DropdownItem: React.VoidFunctionComponent<{
           className={clsx(
             "group flex w-full items-center rounded py-2 pl-2 pr-4",
             {
-              "bg-indigo-500 text-white": active,
+              "bg-primary-500 text-white": active,
               "text-gray-700": !active,
               "opacity-50": disabled,
             },
@@ -130,7 +130,7 @@ export const DropdownItem: React.VoidFunctionComponent<{
             <Icon
               className={clsx("mr-2 h-5 w-5", {
                 "text-white": active,
-                "text-indigo-500": !active,
+                "text-primary-500": !active,
               })}
             />
           )}

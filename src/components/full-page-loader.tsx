@@ -16,7 +16,7 @@ const FullPageLoader: React.VoidFunctionComponent<FullPageLoaderProps> = ({
     <div
       className={clsx(" flex h-full items-center justify-center", className)}
     >
-      <div className="flex items-center rounded-lg bg-indigo-500 px-4 py-3 text-sm text-white shadow-sm">
+      <div className="bg-primary-500 flex items-center rounded-lg px-4 py-3 text-sm text-white shadow-sm">
         <Spinner className="mr-3 h-5 animate-spin" />
         {children}
       </div>

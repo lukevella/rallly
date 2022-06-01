@@ -29,9 +29,9 @@ const Steps: React.VoidFunctionComponent<StepsProps> = ({
             <span
               key={i}
               className={clsx("ml-3 h-2  w-2 rounded-full transition-all", {
-                "bg-indigo-400": i <= current,
+                "bg-primary-400": i <= current,
                 "bg-gray-300": i > current,
-                "animate-pulse ring-4 ring-indigo-200": i === current,
+                "ring-primary-200 animate-pulse ring-4": i === current,
               })}
             />
           );
