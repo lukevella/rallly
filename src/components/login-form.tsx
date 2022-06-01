@@ -65,7 +65,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
         ) : (
           <div>
             <div className="text-slate-500">A magic link has been sent to:</div>
-            <div className="font-mono text-indigo-500">
+            <div className="text-primary-500 font-mono">
               {getValues("email")}
             </div>
             <div className="mt-2 text-slate-500">Please check you inbox.</div>

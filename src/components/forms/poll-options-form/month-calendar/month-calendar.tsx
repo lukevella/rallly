@@ -161,7 +161,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                       {
                         "bg-slate-50 text-slate-400": day.outOfMonth,
                         "font-bold": day.today,
-                        "text-indigo-500": day.today && !day.selected,
+                        "text-primary-500": day.today && !day.selected,
                         "border-r": (i + 1) % 7 !== 0,
                         "border-b": i < datepicker.days.length - 7,
                         "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:animate-popIn after:rounded-full after:bg-green-500 after:content-['']":

@@ -5,11 +5,8 @@ module.exports = {
   content: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      primary: colors.indigo,
       colors: {
-        green: colors.emerald,
-        yellow: colors.amber,
-        purple: colors.violet,
+        primary: colors.indigo,
       },
       keyframes: {
         wiggle: {

@@ -25,7 +25,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
         poll.verified ? (
           poll.notifications ? (
             <div>
-              <div className="font-medium text-indigo-300">
+              <div className="text-primary-300 font-medium">
                 Notifications are on
               </div>
               <div className="max-w-sm">
@@ -37,7 +37,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
                   }}
                   components={{
                     b: (
-                      <span className="whitespace-nowrap font-mono font-medium text-indigo-300 " />
+                      <span className="text-primary-300 whitespace-nowrap font-mono font-medium " />
                     ),
                   }}
                 />
