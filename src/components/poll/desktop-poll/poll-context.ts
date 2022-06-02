@@ -9,7 +9,7 @@ export const PollContext = React.createContext<{
   columnWidth: number;
   sidebarWidth: number;
   numberOfColumns: number;
-  availableSpace: number;
+  availableSpace: number | string;
   actionColumnWidth: number;
   goToNextPage: () => void;
   goToPreviousPage: () => void;
@@ -21,7 +21,7 @@ export const PollContext = React.createContext<{
   columnWidth: 100,
   sidebarWidth: 200,
   numberOfColumns: 0,
-  availableSpace: 0,
+  availableSpace: "auto",
   goToNextPage: noop,
   goToPreviousPage: noop,
   actionColumnWidth: 0,

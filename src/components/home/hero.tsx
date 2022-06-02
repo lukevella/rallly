@@ -26,13 +26,13 @@ const Hero: React.VoidFunctionComponent = () => {
         </div>
         <div className="space-x-3">
           <Link href="/new">
-            <a className="bg-primary-500 hover:bg-primary-500/90 focus:ring-primary-200 active:bg-primary-600/90 rounded-lg px-5 py-3  font-semibold text-white shadow-sm transition-all hover:text-white hover:no-underline  hover:shadow-md focus:ring-2">
+            <a className="rounded-lg bg-primary-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-primary-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-primary-200 active:bg-primary-600/90">
               {t("getStarted")}
             </a>
           </Link>
           <Link href="/demo">
             <a
-              className="focus:ring-primary-200 rounded-lg bg-slate-500 px-5 py-3 font-semibold text-white  shadow-sm transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md  focus:ring-2 active:bg-slate-600/90"
+              className="rounded-lg bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-primary-200 active:bg-slate-600/90"
               rel="nofollow"
             >
               {t("viewDemo")}
@@ -44,13 +44,13 @@ const Hero: React.VoidFunctionComponent = () => {
         <UserAvatarProvider seed="mock" names={names}>
           <div className="relative inline-block">
             <motion.div
-              className="border-primary-500 bg-primary-200/10 absolute z-20 h-full rounded-2xl border-4 shadow-md"
-              initial={{ opacity: 0, width: 100, scale: 1.2, translateX: 384 }}
-              animate={{ opacity: 1, scale: 1.1 }}
+              className="absolute z-20 h-full rounded-2xl border-4 border-primary-500 bg-primary-200/10 shadow-md"
+              initial={{ opacity: 0, width: 100, scale: 1.1, x: 480 }}
+              animate={{ opacity: 1, x: 381 }}
               transition={{ type: "spring", delay: 1 }}
             />
             <motion.div
-              className="bg-primary-500 absolute z-20 rounded-full py-1 px-3 text-sm text-slate-100"
+              className="absolute z-20 rounded-full bg-primary-500 py-1 px-3 text-sm text-slate-100"
               initial={{
                 opacity: 0,
                 right: 190,
