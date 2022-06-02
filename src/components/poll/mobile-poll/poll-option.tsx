@@ -146,6 +146,31 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
     );
   };
 
+const SummarizedParticipantList: React.VoidFunctionComponent<{
+  participants: Participant[];
+}> = ({ participants }) => {
+  return (
+    <div className="flex -space-x-1">
+      {participants
+        .slice(0, participants.length <= 8 ? 8 : 7)
+        .map((participant, i) => {
+          return (
+            <UserAvatar
+              key={i}
+              className="ring-1 ring-white"
+              name={participant.name}
+            />
+          );
+        })}
+      {participants.length > 8 ? (
+        <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
+          +{participants.length - 7}
+        </span>
+      ) : null}
+    </div>
+  );
+};
+
 const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   children,
   selectedParticipantId,
@@ -222,24 +247,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
         {expanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
       </AnimatePresence>
       {!expanded && participants.length > 0 ? (
-        <div className="flex -space-x-1">
-          {participants
-            .slice(0, participants.length <= 6 ? 6 : 5)
-            .map((participant, i) => {
-              return (
-                <UserAvatar
-                  key={i}
-                  className="ring-1 ring-white"
-                  name={participant.name}
-                />
-              );
-            })}
-          {participants.length > 8 ? (
-            <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
-              +{participants.length - 7}
-            </span>
-          ) : null}
-        </div>
+        <SummarizedParticipantList participants={participants} />
       ) : null}
     </div>
   );
