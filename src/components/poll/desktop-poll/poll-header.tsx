@@ -27,7 +27,7 @@ const TimeRange: React.VoidFunctionComponent<{
 
 const PollHeader: React.VoidFunctionComponent = () => {
   const { options, getScore } = usePoll();
-  const { activeOptionId, setActiveOptionId, columnWidth } = usePollContext();
+  const { setActiveOptionId, columnWidth } = usePollContext();
 
   return (
     <ControlledScrollArea>
@@ -37,12 +37,7 @@ const PollHeader: React.VoidFunctionComponent = () => {
         return (
           <div
             key={optionId}
-            className={clsx(
-              "shrink-0 space-y-3 py-3 text-center transition-colors",
-              {
-                "bg-gray-50": activeOptionId === optionId,
-              },
-            )}
+            className="shrink-0 space-y-3 py-3 text-center"
             style={{ width: columnWidth }}
             onMouseOver={() => setActiveOptionId(optionId)}
             onMouseOut={() => setActiveOptionId(null)}

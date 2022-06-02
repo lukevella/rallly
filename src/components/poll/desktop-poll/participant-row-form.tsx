@@ -28,8 +28,6 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
   ParticipantRowFormProps
 > = ({ defaultValues, onSubmit, className, onCancel }, ref) => {
   const {
-    setActiveOptionId,
-    activeOptionId,
     columnWidth,
     scrollPosition,
     sidebarWidth,
@@ -120,15 +118,8 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                 return (
                   <div
                     key={optionId}
-                    className={clsx(
-                      "flex shrink-0 items-center justify-center transition-colors",
-                      {
-                        "bg-gray-50": activeOptionId === optionId,
-                      },
-                    )}
+                    className="flex shrink-0 items-center justify-center"
                     style={{ width: columnWidth }}
-                    onMouseOver={() => setActiveOptionId(optionId)}
-                    onMouseOut={() => setActiveOptionId(null)}
                   >
                     <VoteSelector
                       value={value?.type}
@@ -152,9 +143,6 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                       }}
                       ref={(el) => {
                         checkboxRefs.current[index] = el;
-                      }}
-                      onFocus={() => {
-                        setActiveOptionId(optionId);
                       }}
                     />
                   </div>

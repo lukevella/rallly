@@ -1,4 +1,4 @@
-import { Participant, Vote } from "@prisma/client";
+import { Participant, Vote, VoteType } from "@prisma/client";
 import clsx from "clsx";
 import * as React from "react";
 
@@ -19,16 +19,84 @@ import { usePollContext } from "./poll-context";
 export interface ParticipantRowProps {
   participant: Participant & { votes: Vote[] };
   editMode: boolean;
-  onChangeEditMode?: (value: boolean) => void;
+  onChangeEditMode: (value: boolean) => void;
 }
+
+export const ParticipantRowView: React.VoidFunctionComponent<{
+  name: string;
+  editable?: boolean;
+  color?: string;
+  votes: Array<VoteType | undefined>;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  columnWidth: number;
+  sidebarWidth: number;
+  isYou?: boolean;
+}> = ({
+  name,
+  editable,
+  votes,
+  onEdit,
+  onDelete,
+  sidebarWidth,
+  columnWidth,
+  isYou,
+  color,
+}) => {
+  return (
+    <div data-testid="participant-row" className="group flex h-14">
+      <div
+        className="flex shrink-0 items-center px-4"
+        style={{ width: sidebarWidth }}
+      >
+        <UserAvatar
+          className="mr-2"
+          name={name}
+          showName={true}
+          isYou={isYou}
+          color={color}
+        />
+        {editable ? (
+          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden group-hover:flex">
+            <CompactButton icon={Pencil} onClick={onEdit} />
+            <CompactButton icon={Trash} onClick={onDelete} />
+          </div>
+        ) : null}
+      </div>
+      <ControlledScrollArea>
+        {votes.map((vote, i) => {
+          return (
+            <div
+              key={i}
+              className="relative shrink-0 transition-colors"
+              style={{ width: columnWidth }}
+            >
+              <div
+                className={clsx(
+                  "absolute inset-1 flex items-center justify-center rounded-lg",
+                  {
+                    "bg-green-50": vote === "yes",
+                    "bg-amber-50": vote === "ifNeedBe",
+                    "bg-slate-50": vote === "no",
+                  },
+                )}
+              >
+                <VoteIcon type={vote} />
+              </div>
+            </div>
+          );
+        })}
+      </ControlledScrollArea>
+    </div>
+  );
+};
 
 const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   participant,
   editMode,
   onChangeEditMode,
 }) => {
-  const { setActiveOptionId, activeOptionId, columnWidth, sidebarWidth } =
-    usePollContext();
+  const { columnWidth, sidebarWidth } = usePollContext();
 
   const updateParticipant = useUpdateParticipantMutation();
 
@@ -69,60 +137,22 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   }
 
   return (
-    <div
-      key={participant.id}
-      data-testid="participant-row"
-      className="group flex h-14 transition-colors hover:bg-slate-300/10"
-    >
-      <div
-        className="flex shrink-0 items-center px-4"
-        style={{ width: sidebarWidth }}
-      >
-        <UserAvatar
-          className="mr-2"
-          name={participant.name}
-          showName={true}
-          isYou={isYou}
-        />
-        {canEdit ? (
-          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden group-hover:flex">
-            <CompactButton
-              icon={Pencil}
-              onClick={() => {
-                onChangeEditMode?.(true);
-              }}
-            />
-            <CompactButton
-              icon={Trash}
-              onClick={() => {
-                confirmDeleteParticipant(participant.id);
-              }}
-            />
-          </div>
-        ) : null}
-      </div>
-      <ControlledScrollArea>
-        {options.map(({ optionId }) => {
-          const vote = getVote(participant.id, optionId);
-          return (
-            <div
-              key={optionId}
-              className={clsx(
-                "flex shrink-0 items-center justify-center transition-colors",
-                {
-                  "bg-gray-50": activeOptionId === optionId,
-                },
-              )}
-              style={{ width: columnWidth }}
-              onMouseOver={() => setActiveOptionId(optionId)}
-              onMouseOut={() => setActiveOptionId(null)}
-            >
-              <VoteIcon type={vote} />
-            </div>
-          );
-        })}
-      </ControlledScrollArea>
-    </div>
+    <ParticipantRowView
+      sidebarWidth={sidebarWidth}
+      columnWidth={columnWidth}
+      name={participant.name}
+      votes={options.map(({ optionId }) => {
+        return getVote(participant.id, optionId);
+      })}
+      editable={canEdit}
+      isYou={isYou}
+      onEdit={() => {
+        onChangeEditMode?.(true);
+      }}
+      onDelete={() => {
+        confirmDeleteParticipant(participant.id);
+      }}
+    />
   );
 };
 
