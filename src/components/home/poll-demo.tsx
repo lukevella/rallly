@@ -2,11 +2,11 @@ import { format } from "date-fns";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { ParticipantRowView } from "../poll/desktop-poll/participant-row";
 import { ScoreSummary } from "../poll/score-summary";
-import UserAvatar from "../poll/user-avatar";
-import VoteIcon from "../poll/vote-icon";
 
 const sidebarWidth = 180;
+const columnWidth = 100;
 const participants = [
   {
     name: "Reed",
@@ -61,7 +61,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
             <div
               key={i}
               className="shrink-0 space-y-3 py-2 pt-3 text-center transition-colors"
-              style={{ width: 100 }}
+              style={{ width: columnWidth }}
             >
               <div>
                 <div className="font-semibold leading-9">
@@ -82,35 +82,16 @@ const PollDemo: React.VoidFunctionComponent = () => {
         })}
       </div>
       {participants.map((participant, i) => (
-        <div className="flex h-14" key={i}>
-          <div
-            className="flex shrink-0 items-center px-4"
-            style={{ width: sidebarWidth }}
-          >
-            <UserAvatar
-              color={participant.color}
-              name={participant.name}
-              showName={true}
-            />
-          </div>
-          <div className="flex">
-            {options.map((_, i) => {
-              return (
-                <div
-                  key={i}
-                  className="flex shrink-0 items-center justify-center"
-                  style={{ width: 100 }}
-                >
-                  {participant.votes.some((vote) => vote === i) ? (
-                    <VoteIcon type="yes" />
-                  ) : (
-                    <VoteIcon type="no" />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <ParticipantRowView
+          key={i}
+          color={participant.color}
+          sidebarWidth={sidebarWidth}
+          columnWidth={columnWidth}
+          name={participant.name}
+          votes={options.map((_, i) => {
+            return participant.votes.some((vote) => vote === i) ? "yes" : "no";
+          })}
+        />
       ))}
     </div>
   );
