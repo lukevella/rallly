@@ -100,6 +100,12 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                     }, 100);
                   }
                 }}
+                onKeyPress={(e) => {
+                  if (e.code === "Enter") {
+                    e.preventDefault();
+                    checkboxRefs.current[0]?.focus();
+                  }
+                }}
               />
             </div>
           )}
