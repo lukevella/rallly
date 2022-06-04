@@ -37,10 +37,10 @@ const PollDemo: React.VoidFunctionComponent = () => {
 
   return (
     <div
-      className="rounded-lg border bg-white shadow-md"
+      className="rounded-lg bg-white py-1 shadow-huge"
       style={{ width: 600 }}
     >
-      <div className="flex border-b shadow-sm">
+      <div className="flex">
         <div
           className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
           style={{ width: sidebarWidth }}

@@ -120,7 +120,7 @@ const Poll: React.VoidFunctionComponent = () => {
         ref={ref}
       >
         <div className=" border-t border-b bg-white shadow-sm md:rounded-lg md:border">
-          <div className="sticky top-12 z-10 rounded-t-lg border-b border-gray-200 bg-white/80 shadow-sm shadow-slate-50 backdrop-blur-md lg:top-0">
+          <div className="sticky top-12 z-10 rounded-t-lg border-gray-200 bg-white/80 shadow-slate-50 backdrop-blur-md lg:top-0">
             <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
               {timeZone ? (
                 <div className="flex grow items-center">
@@ -207,7 +207,7 @@ const Poll: React.VoidFunctionComponent = () => {
                   transition={{ duration: 0.2 }}
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 55, y: 0 }}
-                  className="border-t bg-slate-100 bg-opacity-0"
+                  className="border-t border-b bg-gray-50"
                   onSubmit={async ({ name, votes }) => {
                     await addParticipant.mutateAsync({
                       name,

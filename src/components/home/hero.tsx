@@ -40,7 +40,7 @@ const Hero: React.VoidFunctionComponent = () => {
           </Link>
         </div>
       </div>
-      <div className="pointer-events-none mt-16 hidden h-[380px] select-none items-end justify-center md:flex lg:mt-0 lg:ml-24">
+      <div className="pointer-events-none mt-24 hidden h-[380px] select-none items-end justify-center md:flex lg:mt-8 lg:ml-24">
         <UserAvatarProvider seed="mock" names={names}>
           <div className="relative inline-block">
             <motion.div
@@ -64,7 +64,7 @@ const Hero: React.VoidFunctionComponent = () => {
               <ScribbleArrow className="absolute -right-8 top-3 text-slate-400" />
             </motion.div>
             <motion.div
-              className="rounded-lg shadow-lg"
+              className="rounded-lg"
               transition={{ type: "spring", delay: 0.5 }}
               initial={{ opacity: 0, translateY: -100 }}
               animate={{ opacity: 1, translateY: 0 }}
