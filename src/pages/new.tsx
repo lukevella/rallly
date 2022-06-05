@@ -12,7 +12,7 @@ const getProps: GetServerSideProps<CreatePollPageProps> = async ({
 }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["app"])),
+      ...(await serverSideTranslations(locale, ["app", "common"])),
       ...query,
       user: req.session.user ?? null,
     },

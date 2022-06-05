@@ -15,14 +15,14 @@ const Hero: React.VoidFunctionComponent = () => {
     <div className="mx-auto max-w-7xl items-end p-8 lg:flex lg:justify-between">
       <div className="my-8 text-center lg:text-left">
         <h1 className="text-4xl font-bold sm:text-5xl">
-          Schedule
+          {t("slogan_Schedule")}
           <br />
-          <span className="text-primary-500">group&nbsp;meetings</span>
+          <span className="text-primary-500">{t("slogan_GroupsMeetings")}</span>
           <br />
-          with ease
+          {t("slogan_WithEase")}
         </h1>
         <div className="mb-12 text-xl text-gray-400">
-          Find the right date without the back and&nbsp;forth.
+          {t("slogan_Catchphrase")}
         </div>
         <div className="space-x-3">
           <Link href="/new">
@@ -60,7 +60,7 @@ const Hero: React.VoidFunctionComponent = () => {
               animate={{ opacity: 1, translateY: 0 }}
               transition={{ type: "spring", delay: 2 }}
             >
-              Perfect! 🤩
+              {t("perfect")} 🤩
               <ScribbleArrow className="absolute -right-8 top-3 text-slate-400" />
             </motion.div>
             <motion.div

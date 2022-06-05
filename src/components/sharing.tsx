@@ -32,6 +32,7 @@ const useRoleData = (): Record<
 };
 
 const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
+  const { t } = useTranslation("app");
   const [state, copyToClipboard] = useCopyToClipboard();
 
   const plausible = usePlausible();
@@ -45,7 +46,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
   const [role, setRole] = React.useState<Role>("participant");
   const link = links.find((link) => link.role === role);
   if (!link) {
-    throw new Error(`Missing link for role: ${role}`);
+    throw new Error(t("MissingLinkForRole", {'role': role}));
   }
   const roleData = useRoleData();
   const { path } = roleData[link.role];
@@ -86,14 +87,14 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
             copyToClipboard(pollUrl);
             setDidCopy(true);
             setTimeout(() => setDidCopy(false), 1000);
-            plausible("Copied share link", {
+            plausible(t("copiedShareLink"), {
               props: {
                 role,
               },
             });
           }}
         >
-          {didCopy ? "Copied" : "Copy Link"}
+          {didCopy ? t("copied") : t("copyLink")}
         </Button>
       </div>
       <div className="text-slate-500">{roleData[link.role].description}</div>

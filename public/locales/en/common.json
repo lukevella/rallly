@@ -1,3 +1,19 @@
 {
-  "appName": "Rallly"
+  "appName": "Rallly",
+  "yesWithThreeL": "Yes—with 3 <em>L</em>s",
+  "home": "Home",
+  "support": "Support",
+  "blog": "Blog",
+  "preferences": "Preferences",
+  "newPoll": "New Poll",
+  "footerCredit": "Self-funded and built by <a>@imlukevella</a>",
+  "star": "Star",
+  "sponsorThisProject": "Sponsor this project",
+  "links": "Links",
+  "forum": "Forum",
+  "privacyPolicy": "Privacy Policy",
+  "follow": "Follow",
+  "github": "Github",
+  "twitter": "Twitter",
+  "poweredBy": "Powered by"
 }

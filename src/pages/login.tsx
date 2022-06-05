@@ -5,6 +5,8 @@ import { usePlausible } from "next-plausible";
 import React from "react";
 import toast from "react-hot-toast";
 import { useTimeoutFn } from "react-use";
+import { useTranslation } from "next-i18next";
+
 
 import FullPageLoader from "@/components/full-page-loader";
 import {
@@ -21,6 +23,8 @@ const Page: NextPage<{ success: boolean; redirectTo: string }> = ({
 }) => {
   const router = useRouter();
   const pluasible = usePlausible();
+  const { t } = useTranslation("app");
+
   if (!success) {
     toast.error("Login failed! Link is expired or invalid");
   }
@@ -35,9 +39,9 @@ const Page: NextPage<{ success: boolean; redirectTo: string }> = ({
   return (
     <>
       <Head>
-        <title>Logging in…</title>
+        <title>{t("loggingIn")}</title>
       </Head>
-      <FullPageLoader>Logging in…</FullPageLoader>
+      <FullPageLoader>{t("loggingIn")}</FullPageLoader>
     </>
   );
 };

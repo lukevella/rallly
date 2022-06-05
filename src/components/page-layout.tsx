@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import {Trans, useTranslation} from "next-i18next";
 import * as React from "react";
 import { createBreakpoint } from "react-use";
 
@@ -23,6 +24,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
   className,
 }) => {
   const { pathname } = useRouter();
+  const { t } = useTranslation("common");
   return (
     <nav className={className}>
       <Link href="/">
@@ -35,7 +37,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
             },
           )}
         >
-          Home
+          {t("home")}
         </a>
       </Link>
       <Link href="https://blog.rallly.co">
@@ -44,14 +46,14 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
             "hover:text-primary-500 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2",
           )}
         >
-          Blog
+          {t("blog")}
         </a>
       </Link>
       <a
         href="https://support.rallly.co"
         className="hover:text-primary-500 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
       >
-        Support
+        {t("support")}
       </a>
       <Link href="https://github.com/lukevella/rallly">
         <a className="hover:text-primary-500 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2">
@@ -65,11 +67,12 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
 const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
   children,
 }) => {
+  const { t } = useTranslation();
   const breakpoint = useBreakpoint();
   return (
     <div className="bg-pattern min-h-full overflow-x-hidden">
       <Head>
-        <title>Rallly - Support</title>
+        <title>{t("appName")} - {t("support")}</title>
       </Head>
       <div className="mx-auto flex max-w-7xl items-center py-8 px-8">
         <div className="grow">
@@ -80,7 +83,7 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
               </a>
             </Link>
             <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
-              Yes&mdash;with 3 <em>L</em>s
+                <Trans t={t} i18nKey="yesWithThreeL" components={{ em: <em /> }} />
             </span>
           </div>
         </div>

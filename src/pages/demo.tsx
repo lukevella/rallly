@@ -28,7 +28,7 @@ const Demo: NextPage = () => {
 export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["app"])),
+      ...(await serverSideTranslations(locale, ["app", "common"])),
     },
   };
 };

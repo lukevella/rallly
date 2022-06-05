@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 
 import { withSessionSsr } from "@/utils/auth";
 
@@ -10,10 +11,12 @@ import StandardLayout from "../components/standard-layout";
 
 const Page: NextPage<{ user: UserSessionData }> = ({ user }) => {
   const name = user.isGuest ? user.id : user.name;
+  const { t } = useTranslation("app");
+
   return (
     <SessionProvider session={user}>
       <Head>
-        <title>Profile - {name}</title>
+        <title>{t("profile")} - {name}</title>
       </Head>
       <StandardLayout>
         <Profile />

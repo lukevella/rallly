@@ -7,7 +7,7 @@ import Logo from "~/public/logo.svg";
 import Vercel from "~/public/vercel-logotype-dark.svg";
 
 const Footer: React.VoidFunctionComponent = () => {
-  const { t } = useTranslation("homepage");
+  const { t } = useTranslation("common");
   return (
     <div className="mt-16 bg-slate-50/70">
       <div className="mx-auto grid max-w-7xl grid-cols-10 gap-8 py-20 px-8">
@@ -34,32 +34,32 @@ const Footer: React.VoidFunctionComponent = () => {
               aria-label="Star lukevella/rallly on GitHub"
               data-show-count={true}
             >
-              Star
+              {t("star")}
             </GitHubButton>
             <GitHubButton
               href="https://github.com/sponsors/lukevella"
               data-icon="octicon-heart"
               aria-label="Sponsor @lukevella on GitHub"
             >
-              Sponsor this project
+              {t("sponsorThisProject")}
             </GitHubButton>
           </div>
         </div>
         <div className="col-span-6 md:col-span-2">
-          <div className="mb-4 font-medium">Links</div>
+          <div className="mb-4 font-medium">{t("links")}</div>
           <ul>
             <li>
               <a
                 className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
-                Forum
+                {t("forum")}
               </a>
             </li>
             <li>
               <Link href="https://blog.rallly.co">
                 <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
-                  Blog
+                  {t("blog")}
                 </a>
               </Link>
             </li>
@@ -68,27 +68,27 @@ const Footer: React.VoidFunctionComponent = () => {
                 href="https://support.rallly.co"
                 className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
               >
-                Support
+                {t("support")}
               </a>
             </li>
             <li>
               <Link href="/privacy-policy">
                 <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
-                  Privacy Policy
+                  {t("privacyPolicy")}
                 </a>
               </Link>
             </li>
           </ul>
         </div>
         <div className="col-span-6 md:col-span-2">
-          <div className="mb-4 font-medium">Follow</div>
+          <div className="mb-4 font-medium">{t("follow")}</div>
           <ul>
             <li>
               <a
                 className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly"
               >
-                Github
+                {t("github")}
               </a>
             </li>
             <li>
@@ -96,7 +96,7 @@ const Footer: React.VoidFunctionComponent = () => {
                 className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
                 href="https://twitter.com/ralllyco"
               >
-                Twitter
+                {t("twitter")}
               </a>
             </li>
           </ul>
@@ -107,7 +107,7 @@ const Footer: React.VoidFunctionComponent = () => {
             className="inline-block text-white"
           >
             <span className="mb-1 inline-block w-full text-right text-xs italic text-gray-400">
-              Powered by
+              {t("poweredBy")}
             </span>
             <Vercel className="w-24" />
           </a>

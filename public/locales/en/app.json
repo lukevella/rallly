@@ -59,5 +59,12 @@
   "deletePoll": "Delete poll",
   "demoPollNotice": "Demo polls are automatically deleted after 1 day",
   "yourDetails": "Your details",
-  "yourPolls": "Your polls"
+  "yourPolls": "Your polls",
+  "new": "New",
+  "copiedShareLink": "Copied share link",
+  "copied": "copied",
+  "copyLink": "copy link",
+  "MissingLinkForRole": "Missing link for role: {{role}}",
+  "loggingIn": "Logging in…",
+  "profile": "Profile"
 }
