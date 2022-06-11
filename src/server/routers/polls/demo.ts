@@ -3,7 +3,6 @@ import addMinutes from "date-fns/addMinutes";
 
 import { prisma } from "~/prisma/db";
 
-import { absoluteUrl } from "../../../utils/absolute-url";
 import { nanoid } from "../../../utils/nanoid";
 import { createRouter } from "../../createRouter";
 
@@ -22,6 +21,38 @@ const participantData: Array<{ name: string; votes: VoteType[] }> = [
   },
   {
     name: "Ben",
+    votes: ["yes", "yes", "yes", "yes"],
+  },
+  {
+    name: "James",
+    votes: ["yes", "no", "ifNeedBe", "no"],
+  },
+  {
+    name: "Alfie",
+    votes: ["yes", "yes", "yes", "no"],
+  },
+  {
+    name: "Sam",
+    votes: ["no", "no", "yes", "yes"],
+  },
+  {
+    name: "Carmen",
+    votes: ["yes", "yes", "yes", "yes"],
+  },
+  {
+    name: "Anne",
+    votes: ["yes", "no", "ifNeedBe", "no"],
+  },
+  {
+    name: "Martha",
+    votes: ["yes", "yes", "yes", "no"],
+  },
+  {
+    name: "Joe P.",
+    votes: ["no", "no", "yes", "yes"],
+  },
+  {
+    name: "Luke",
     votes: ["yes", "yes", "yes", "yes"],
   },
 ];
@@ -72,15 +103,13 @@ export const demo = createRouter().mutation("create", {
       });
     }
 
-    const homePageUrl = absoluteUrl();
-
     await prisma.poll.create({
       data: {
         urlId: await nanoid(),
-        title: "Lunch Meeting Demo",
+        title: "Lunch Meeting",
         type: "date",
         location: "Starbucks, 901 New York Avenue",
-        description: `This poll has been automatically generated just for you! Feel free to try out all the different features and when you're ready, you can go to ${homePageUrl}/new to make a new poll.`,
+        description: `Hey everyone, please choose the dates when you are available to meet for our monthly get together. Looking forward to see you all!`,
         authorName: "Johnny",
         verified: true,
         demo: true,

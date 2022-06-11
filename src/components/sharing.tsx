@@ -77,7 +77,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
           {roleData["admin"].label}
         </button>
       </div>
-      <div className="mb-2 flex flex-col space-y-3 lg:flex-row lg:space-y-0 lg:space-x-3">
+      <div className="flex flex-col space-y-3 lg:flex-row lg:space-y-0 lg:space-x-3">
         <input readOnly={true} className="input lg:w-[280px]" value={pollUrl} />
         <Button
           className="w-24 shrink-0"
@@ -96,7 +96,6 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
           {didCopy ? "Copied" : "Copy Link"}
         </Button>
       </div>
-      <div className="text-slate-500">{roleData[link.role].description}</div>
     </div>
   );
 };

@@ -30,7 +30,7 @@ const HomeLink = () => {
   return (
     <Link href="/">
       <a>
-        <Logo className="text-primary-500 active:text-primary-600 inline-block w-28 transition-colors lg:w-32" />
+        <Logo className="inline-block w-28 text-primary-500 transition-colors active:text-primary-600 lg:w-32" />
       </a>
     </Link>
   );
@@ -41,7 +41,10 @@ const MobileNavigation: React.VoidFunctionComponent<{
 }> = ({ openLoginModal }) => {
   const { user } = useSession();
   return (
-    <div className="fixed top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50 px-4 lg:hidden">
+    <div
+      className="fixed top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50
+     px-4 lg:hidden"
+    >
       <div>
         <HomeLink />
       </div>
@@ -72,7 +75,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
                   className="group inline-flex w-full items-center space-x-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
                 >
                   <div className="relative shrink-0">
-                    <UserCircle className="group-hover:text-primary-500 w-5 opacity-75 group-hover:opacity-100" />
+                    <UserCircle className="w-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                   </div>
                   <div className="hidden max-w-[120px] truncate font-medium xs:block">
                     {user.shortName}
@@ -89,7 +92,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
               type="button"
               className="group flex items-center whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
-              <Adjustments className="group-hover:text-primary-500 h-5 opacity-75" />
+              <Adjustments className="h-5 opacity-75 group-hover:text-primary-500" />
               <span className="ml-2 hidden sm:block">Preferences</span>
             </button>
           }
@@ -103,7 +106,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
               type="button"
               className="group flex items-center rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
-              <Menu className="group-hover:text-primary-500 w-5" />
+              <Menu className="w-5 group-hover:text-primary-500" />
               <span className="ml-2 hidden sm:block">Menu</span>
             </button>
           }
@@ -160,7 +163,7 @@ const UserDropdown: React.VoidFunctionComponent<
               content: (
                 <div className="w-96 max-w-full p-6 pt-28">
                   <div className="absolute left-0 -top-8 w-full text-center">
-                    <div className="to-primary-500 inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400">
+                    <div className="inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400 to-primary-500">
                       <User className="h-7 text-white" />
                     </div>
                     <div className="">
@@ -251,7 +254,7 @@ const StandardLayout: React.VoidFunctionComponent<{
           <div className="mb-4">
             <Link href="/new">
               <a className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
-                <Pencil className="group-hover:text-primary-500 h-5 opacity-75 group-hover:opacity-100" />
+                <Pencil className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                 <span className="grow text-left">New Poll</span>
               </a>
             </Link>
@@ -261,14 +264,14 @@ const StandardLayout: React.VoidFunctionComponent<{
               className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
               rel="noreferrer"
             >
-              <Support className="group-hover:text-primary-500 h-5 opacity-75 group-hover:opacity-100" />
+              <Support className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
               <span className="grow text-left">Support</span>
             </a>
             <Popover
               placement="right-start"
               trigger={
                 <button className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
-                  <Adjustments className="group-hover:text-primary-500 h-5 opacity-75 group-hover:opacity-100" />
+                  <Adjustments className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                   <span className="grow text-left">Preferences</span>
                   <DotsVertical className="h-4 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100" />
                 </button>
@@ -281,7 +284,7 @@ const StandardLayout: React.VoidFunctionComponent<{
                 onClick={openLoginModal}
                 className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
               >
-                <Login className="group-hover:text-primary-500 h-5 opacity-75 group-hover:opacity-100" />
+                <Login className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                 <span className="grow text-left">Login</span>
               </button>
             )}
@@ -301,7 +304,7 @@ const StandardLayout: React.VoidFunctionComponent<{
                   >
                     <div className="flex w-full items-center space-x-3">
                       <div className="relative">
-                        <UserCircle className="group-hover:text-primary-500 h-5 opacity-75 group-hover:opacity-100" />
+                        <UserCircle className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                       </div>
                       <div className="grow overflow-hidden">
                         <div className="truncate font-medium leading-snug text-slate-600">
@@ -327,7 +330,7 @@ const StandardLayout: React.VoidFunctionComponent<{
         <div className="flex flex-col items-center space-y-4 px-6 pt-3 pb-6 text-slate-400 lg:h-16 lg:flex-row lg:space-y-0 lg:space-x-6 lg:py-0 lg:px-8 lg:pb-3">
           <div>
             <Link href="https://rallly.co">
-              <a className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline">
+              <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
                 <Logo className="h-5" />
               </a>
             </Link>
@@ -337,30 +340,30 @@ const StandardLayout: React.VoidFunctionComponent<{
             <a
               target="_blank"
               href="https://support.rallly.co"
-              className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline"
+              className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
               rel="noreferrer"
             >
               Support
             </a>
             <Link href="https://github.com/lukevella/rallly/discussions">
-              <a className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline">
+              <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
                 Discussions
               </a>
             </Link>
             <Link href="https://blog.rallly.co">
-              <a className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline">
+              <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
                 Blog
               </a>
             </Link>
             <div className="hidden text-slate-300 lg:block">&bull;</div>
             <div className="flex items-center space-x-6">
               <Link href="https://twitter.com/ralllyco">
-                <a className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline">
+                <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
                   <Twitter className="h-5 w-5" />
                 </a>
               </Link>
               <Link href="https://github.com/lukevella/rallly">
-                <a className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline">
+                <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
                   <Github className="h-5 w-5" />
                 </a>
               </Link>
@@ -368,7 +371,7 @@ const StandardLayout: React.VoidFunctionComponent<{
           </div>
           <div className="hidden text-slate-300 lg:block">&bull;</div>
           <Link href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E">
-            <a className="hover:bg-primary-500 focus:ring-primary-500 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1">
+            <a className="inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:bg-primary-500 hover:text-white hover:no-underline focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 active:bg-primary-600">
               <Cash className="mr-1 inline-block w-5" />
               <span>Donate</span>
             </a>

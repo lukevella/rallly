@@ -25,7 +25,7 @@ const MotionButton = motion(Button);
 
 const MotionParticipantFormRow = motion(ParticipantRowForm);
 
-const minSidebarWidth = 180;
+const minSidebarWidth = 200;
 
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
@@ -43,9 +43,9 @@ const Poll: React.VoidFunctionComponent = () => {
 
   const actionColumnWidth = 140;
   const columnWidth = Math.min(
-    100,
+    130,
     Math.max(
-      95,
+      80,
       (width - minSidebarWidth - actionColumnWidth) / options.length,
     ),
   );
@@ -207,7 +207,6 @@ const Poll: React.VoidFunctionComponent = () => {
                   transition={{ duration: 0.2 }}
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 55, y: 0 }}
-                  className="border-t border-b bg-gray-50"
                   onSubmit={async ({ name, votes }) => {
                     await addParticipant.mutateAsync({
                       name,

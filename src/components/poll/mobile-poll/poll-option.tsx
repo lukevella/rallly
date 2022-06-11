@@ -92,7 +92,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
         <div>
           {noVotes ? (
             <div className="rounded-lg bg-slate-50 p-2 text-center text-slate-400">
-              No one has vote for this option
+              No one has voted for this option
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-x-4">

@@ -28,7 +28,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
             name: poll.authorName,
           }}
           components={{
-            b: <span className="text-primary-500 font-medium" />,
+            b: <span className="font-medium text-primary-500" />,
           }}
         />
         &nbsp;
@@ -52,7 +52,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
                       values={{ email: poll.user.email }}
                       components={{
                         b: (
-                          <span className="text-primary-500 whitespace-nowrap font-mono font-medium" />
+                          <span className="whitespace-nowrap font-mono font-medium text-primary-500" />
                         ),
                       }}
                     />

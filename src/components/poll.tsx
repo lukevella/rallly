@@ -1,13 +1,14 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMount } from "react-use";
 
 import { Button } from "@/components/button";
-import LocationMarker from "@/components/icons/location-marker.svg";
+import Key from "@/components/icons/key.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import Share from "@/components/icons/share.svg";
 import { preventWidows } from "@/utils/prevent-widows";
@@ -47,6 +48,8 @@ const PollPage: NextPage = () => {
       router.replace(`/${path}/${poll.urlId}`, undefined, { shallow: true });
     }
   });
+
+  const { t } = useTranslation("app");
 
   const session = useSession();
 
@@ -123,7 +126,7 @@ const PollPage: NextPage = () => {
   return (
     <UserAvatarProvider seed={poll.pollId} names={names}>
       <StandardLayout>
-        <div className="relative max-w-full bg-gray-50 py-4 md:px-4 lg:px-4">
+        <div className="relative max-w-full pb-4 md:px-4 md:pt-4">
           <Head>
             <title>{poll.title}</title>
             <meta name="robots" content="noindex,nofollow" />
@@ -134,89 +137,88 @@ const PollPage: NextPage = () => {
               width: Math.max(768, poll.options.length * 95 + 200 + 160),
             }}
           >
-            <div className="mb-6">
-              <div className="mb-3 items-start px-4 md:flex md:space-x-4">
-                <div className="mb-3 grow md:mb-0">
-                  <div className="flex flex-col-reverse md:flex-row">
-                    <h1
-                      data-testid="poll-title"
-                      className="mb-2 grow text-3xl leading-tight"
+            {poll.role === "admin" ? (
+              <div className="flex items-center rounded-lg py-4 px-4 md:mb-4 md:justify-between md:border  md:p-2">
+                <div className="hidden  md:flex md:items-center">
+                  <Key className="h-5 px-2 text-primary-500" />
+                  <div>{t("adminNotice")}</div>
+                </div>
+                <div className="flex space-x-2">
+                  <NotificationsToggle />
+                  <ManagePoll
+                    placement={isWideScreen ? "bottom-end" : "bottom-start"}
+                  />
+                  <div>
+                    <Popover
+                      trigger={
+                        <Button type="primary" icon={<Share />}>
+                          Share
+                        </Button>
+                      }
+                      placement={isWideScreen ? "bottom-end" : undefined}
                     >
-                      {preventWidows(poll.title)}
-                    </h1>
-                    {poll.role === "admin" ? (
-                      <div className="mb-4 flex space-x-2 md:mb-2">
-                        <NotificationsToggle />
-                        <ManagePoll
-                          placement={
-                            isWideScreen ? "bottom-end" : "bottom-start"
-                          }
-                        />
-                        <div>
-                          <Popover
-                            trigger={
-                              <Button type="primary" icon={<Share />}>
-                                Share
-                              </Button>
-                            }
-                            placement={isWideScreen ? "bottom-end" : undefined}
-                          >
-                            <Sharing links={poll.links} />
-                          </Popover>
-                        </div>
-                      </div>
-                    ) : null}
+                      <Sharing links={poll.links} />
+                    </Popover>
                   </div>
-                  <PollSubheader />
                 </div>
               </div>
-              {poll.description ? (
-                <div className="mb-4 whitespace-pre-line bg-white px-4 py-3 text-lg leading-relaxed text-slate-600 shadow-sm md:w-fit md:rounded-xl md:bg-white">
-                  <TruncatedLinkify>
-                    {preventWidows(poll.description)}
-                  </TruncatedLinkify>
-                </div>
-              ) : null}
-              {poll.location ? (
-                <div className="mb-4 flex items-center px-4">
+            ) : null}
+            <div className="card -mb-1 space-y-4 p-4 md:mb-4 md:border-b">
+              <div>
+                <div className="space-y-4">
                   <div>
-                    <LocationMarker
-                      width={20}
-                      className="mr-2 text-slate-400"
-                    />
+                    <div className="mb-1 text-2xl font-semibold text-slate-700 md:text-left md:text-3xl">
+                      {preventWidows(poll.title)}
+                    </div>
+                    <PollSubheader />
                   </div>
-                  <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+                  {poll.description ? (
+                    <div className="border-primary whitespace-pre-line text-slate-500">
+                      <TruncatedLinkify>
+                        {preventWidows(poll.description)}
+                      </TruncatedLinkify>
+                    </div>
+                  ) : null}
+                  {poll.location ? (
+                    <div className="text-slate-500">
+                      <div className="font-semibold text-slate-700">
+                        {t("location")}
+                      </div>
+                      <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+                    </div>
+                  ) : null}
+                  <div className="flex items-center space-x-3">
+                    <span className="text-xs font-semibold text-slate-500">
+                      Key:
+                    </span>
+                    <span className="inline-flex items-center space-x-1">
+                      <VoteIcon type="yes" />
+                      <span className="text-xs text-slate-500">Yes</span>
+                    </span>
+                    <span className="inline-flex items-center space-x-1">
+                      <VoteIcon type="ifNeedBe" />
+                      <span className="text-xs text-slate-500">If need be</span>
+                    </span>
+
+                    <span className="inline-flex items-center space-x-1">
+                      <VoteIcon type="no" />
+                      <span className="text-xs text-slate-500">No</span>
+                    </span>
+                  </div>
                 </div>
-              ) : null}
+              </div>
             </div>
             {poll.closed ? (
-              <div className="mb-4 flex items-center bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:rounded-lg">
+              <div className="flex items-center bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:mb-4 md:rounded-lg">
                 <div className="mr-3 rounded-md">
                   <LockClosed className="w-5" />
                 </div>
                 This poll has been locked (voting is disabled)
               </div>
             ) : null}
-
-            <div className="flex items-center space-x-3 px-4 py-2 sm:justify-end">
-              <span className="text-xs font-semibold text-slate-500">Key:</span>
-              <span className="inline-flex items-center space-x-1">
-                <VoteIcon type="yes" />
-                <span className="text-xs text-slate-500">Yes</span>
-              </span>
-              <span className="inline-flex items-center space-x-1">
-                <VoteIcon type="ifNeedBe" />
-                <span className="text-xs text-slate-500">If need be</span>
-              </span>
-
-              <span className="inline-flex items-center space-x-1">
-                <VoteIcon type="no" />
-                <span className="text-xs text-slate-500">No</span>
-              </span>
-            </div>
             <React.Suspense fallback={<div className="p-4">Loading…</div>}>
               {participants ? (
-                <div className="mb-4 lg:mb-8">
+                <div className="mb-4">
                   <PollComponent />
                 </div>
               ) : null}

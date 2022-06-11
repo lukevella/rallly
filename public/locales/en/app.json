@@ -59,5 +59,6 @@
   "deletePoll": "Delete poll",
   "demoPollNotice": "Demo polls are automatically deleted after 1 day",
   "yourDetails": "Your details",
-  "yourPolls": "Your polls"
+  "yourPolls": "Your polls",
+  "adminNotice": "You're an administrator of this poll"
 }
