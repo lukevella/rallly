@@ -199,54 +199,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                 </Listbox.Options>
               </div>
             </Listbox>
-            {!poll.closed && !isEditing ? (
-              selectedParticipant &&
-              (role === "admin" ||
-                session.ownsObject(selectedParticipant) ||
-                isUnclaimed(selectedParticipant)) ? (
-                <div className="flex space-x-3">
-                  <Button
-                    icon={<Pencil />}
-                    onClick={() => {
-                      setIsEditing(true);
-                      reset({
-                        name: selectedParticipant.name,
-                        votes: optionIds.map((optionId) => ({
-                          optionId,
-                          type: getVote(selectedParticipant.id, optionId),
-                        })),
-                      });
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    icon={<Trash />}
-                    data-testid="delete-participant-button"
-                    type="danger"
-                    onClick={() => {
-                      if (selectedParticipant) {
-                        confirmDeleteParticipant(selectedParticipant.id);
-                      }
-                    }}
-                  />
-                </div>
-              ) : (
-                <Button
-                  type="primary"
-                  icon={<PlusCircle />}
-                  onClick={() => {
-                    reset({
-                      name: "",
-                      votes: [],
-                    });
-                    setIsEditing(true);
-                  }}
-                >
-                  New
-                </Button>
-              )
-            ) : null}
             {isEditing ? (
               <Button
                 onClick={() => {
@@ -256,7 +208,70 @@ const MobilePoll: React.VoidFunctionComponent = () => {
               >
                 Cancel
               </Button>
-            ) : null}
+            ) : selectedParticipant ? (
+              <div className="flex space-x-3">
+                <Button
+                  icon={<Pencil />}
+                  disabled={
+                    poll.closed ||
+                    // if user is  participant (not admin)
+                    (role === "participant" &&
+                      // and does not own this participant
+                      !session.ownsObject(selectedParticipant) &&
+                      // and the participant has been claimed by a different user
+                      !isUnclaimed(selectedParticipant))
+                    // not allowed to edit
+                  }
+                  onClick={() => {
+                    setIsEditing(true);
+                    reset({
+                      name: selectedParticipant.name,
+                      votes: optionIds.map((optionId) => ({
+                        optionId,
+                        type: getVote(selectedParticipant.id, optionId),
+                      })),
+                    });
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  icon={<Trash />}
+                  disabled={
+                    poll.closed ||
+                    // if user is  participant (not admin)
+                    (role === "participant" &&
+                      // and does not own this participant
+                      !session.ownsObject(selectedParticipant) &&
+                      // or the participant has been claimed by a different user
+                      !isUnclaimed(selectedParticipant))
+                    // not allowed to edit
+                  }
+                  data-testid="delete-participant-button"
+                  type="danger"
+                  onClick={() => {
+                    if (selectedParticipant) {
+                      confirmDeleteParticipant(selectedParticipant.id);
+                    }
+                  }}
+                />
+              </div>
+            ) : (
+              <Button
+                type="primary"
+                icon={<PlusCircle />}
+                disabled={poll.closed}
+                onClick={() => {
+                  reset({
+                    name: "",
+                    votes: [],
+                  });
+                  setIsEditing(true);
+                }}
+              >
+                New
+              </Button>
+            )}
           </div>
           {timeZone ? (
             <TimeZonePicker
