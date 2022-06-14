@@ -23,38 +23,6 @@ const participantData: Array<{ name: string; votes: VoteType[] }> = [
     name: "Ben",
     votes: ["yes", "yes", "yes", "yes"],
   },
-  {
-    name: "James",
-    votes: ["yes", "no", "ifNeedBe", "no"],
-  },
-  {
-    name: "Alfie",
-    votes: ["yes", "yes", "yes", "no"],
-  },
-  {
-    name: "Sam",
-    votes: ["no", "no", "yes", "yes"],
-  },
-  {
-    name: "Carmen",
-    votes: ["yes", "yes", "yes", "yes"],
-  },
-  {
-    name: "Anne",
-    votes: ["yes", "no", "ifNeedBe", "no"],
-  },
-  {
-    name: "Martha",
-    votes: ["yes", "yes", "yes", "no"],
-  },
-  {
-    name: "Joe P.",
-    votes: ["no", "no", "yes", "yes"],
-  },
-  {
-    name: "Luke",
-    votes: ["yes", "yes", "yes", "yes"],
-  },
 ];
 
 const optionValues = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];

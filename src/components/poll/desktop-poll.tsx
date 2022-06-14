@@ -207,6 +207,7 @@ const Poll: React.VoidFunctionComponent = () => {
                   transition={{ duration: 0.2 }}
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 55, y: 0 }}
+                  className="border-y bg-gray-50"
                   onSubmit={async ({ name, votes }) => {
                     await addParticipant.mutateAsync({
                       name,

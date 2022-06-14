@@ -173,15 +173,15 @@ const PollPage: NextPage = () => {
                     <PollSubheader />
                   </div>
                   {poll.description ? (
-                    <div className="border-primary whitespace-pre-line text-slate-500">
+                    <div className="border-primary whitespace-pre-line lg:text-lg">
                       <TruncatedLinkify>
                         {preventWidows(poll.description)}
                       </TruncatedLinkify>
                     </div>
                   ) : null}
                   {poll.location ? (
-                    <div className="text-slate-500">
-                      <div className="font-semibold text-slate-700">
+                    <div className="lg:text-lg">
+                      <div className="text-sm text-slate-500">
                         {t("location")}
                       </div>
                       <TruncatedLinkify>{poll.location}</TruncatedLinkify>
