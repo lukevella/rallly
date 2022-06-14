@@ -135,23 +135,22 @@ const Discussion: React.VoidFunctionComponent = () => {
                         )}
                       </span>
                     </div>
-                    {canDelete ? (
-                      <Dropdown
-                        placement="bottom-start"
-                        trigger={<CompactButton icon={DotsHorizontal} />}
-                      >
-                        <DropdownItem
-                          icon={Trash}
-                          label="Delete comment"
-                          onClick={() => {
-                            deleteComment.mutate({
-                              commentId: comment.id,
-                              pollId,
-                            });
-                          }}
-                        />
-                      </Dropdown>
-                    ) : null}
+                    <Dropdown
+                      placement="bottom-start"
+                      trigger={<CompactButton icon={DotsHorizontal} />}
+                    >
+                      <DropdownItem
+                        icon={Trash}
+                        label="Delete comment"
+                        disabled={!canDelete}
+                        onClick={() => {
+                          deleteComment.mutate({
+                            commentId: comment.id,
+                            pollId,
+                          });
+                        }}
+                      />
+                    </Dropdown>
                   </div>
                   <div className="w-fit whitespace-pre-wrap">
                     <TruncatedLinkify>{comment.content}</TruncatedLinkify>

@@ -1,5 +1,7 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
@@ -24,7 +26,6 @@ import { useTouchBeacon } from "./poll/use-touch-beacon";
 import { UserAvatarProvider } from "./poll/user-avatar";
 import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
-import Popover from "./popover";
 import { useSession } from "./session";
 import Sharing from "./sharing";
 import StandardLayout from "./standard-layout";
@@ -123,10 +124,11 @@ const PollPage: NextPage = () => {
     [participants],
   );
 
+  const [isSharingVisible, setSharingVisible] = React.useState(false);
   return (
     <UserAvatarProvider seed={poll.pollId} names={names}>
       <StandardLayout>
-        <div className="relative max-w-full pb-4 md:px-4 md:pt-4">
+        <div className="relative max-w-full overflow-hidden pb-4 md:px-4 md:pt-4">
           <Head>
             <title>{poll.title}</title>
             <meta name="robots" content="noindex,nofollow" />
@@ -138,31 +140,60 @@ const PollPage: NextPage = () => {
             }}
           >
             {poll.role === "admin" ? (
-              <div className="flex items-center rounded-lg py-4 px-4 md:mb-4 md:justify-between md:border  md:p-2">
-                <div className="hidden  md:flex md:items-center">
-                  <Key className="h-5 px-2 text-primary-500" />
-                  <div>{t("adminNotice")}</div>
-                </div>
-                <div className="flex space-x-2">
-                  <NotificationsToggle />
-                  <ManagePoll
-                    placement={isWideScreen ? "bottom-end" : "bottom-start"}
-                  />
-                  <div>
-                    <Popover
-                      trigger={
-                        <Button type="primary" icon={<Share />}>
-                          Share
-                        </Button>
-                      }
-                      placement={isWideScreen ? "bottom-end" : undefined}
+              <>
+                <div className="flex items-center rounded-lg py-4 px-4 md:mb-4 md:justify-between md:border  md:p-2">
+                  <div className="hidden  md:flex md:items-center">
+                    <Key className="h-5 px-2 text-primary-500" />
+                    <div>{t("adminNotice")}</div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <NotificationsToggle />
+                    <ManagePoll
+                      placement={isWideScreen ? "bottom-end" : "bottom-start"}
+                    />
+                    <Button
+                      type="primary"
+                      icon={<Share />}
+                      onClick={() => {
+                        setSharingVisible((value) => !value);
+                      }}
                     >
-                      <Sharing links={poll.links} />
-                    </Popover>
+                      Share
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </>
             ) : null}
+            <AnimatePresence initial={false}>
+              {isSharingVisible ? (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                    height: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    height: "auto",
+                    marginBottom: 16,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.8,
+                    height: 0,
+                    marginBottom: 0,
+                  }}
+                >
+                  <Sharing
+                    links={poll.links}
+                    onHide={() => {
+                      setSharingVisible(false);
+                    }}
+                  />
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
             <div className="card -mb-1 space-y-4 p-4 md:mb-4 md:border-b">
               <div>
                 <div className="space-y-4">

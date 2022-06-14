@@ -19,7 +19,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
   );
 
   return (
-    <div className="text-slate-400 lg:text-lg">
+    <div className="text-slate-500/75 lg:text-lg">
       <div className="md:inline">
         <Trans
           i18nKey="createdBy"
@@ -28,7 +28,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
             name: poll.authorName,
           }}
           components={{
-            b: <span className="text-slate-500" />,
+            b: <span />,
           }}
         />
         &nbsp;

@@ -1,7 +1,6 @@
-import { Link, Role } from "@prisma/client";
+import { Link } from "@prisma/client";
 import clsx from "clsx";
-import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useCopyToClipboard } from "react-use";
@@ -10,31 +9,17 @@ import { Button } from "./button";
 
 export interface SharingProps {
   links: Link[];
+  onHide: () => void;
+  className?: string;
 }
 
-const useRoleData = (): Record<
-  Role,
-  { path: string; label: string; description: string }
-> => {
+const Sharing: React.VoidFunctionComponent<SharingProps> = ({
+  links,
+  onHide,
+  className,
+}) => {
   const { t } = useTranslation("app");
-  return {
-    admin: {
-      path: "admin",
-      label: t("admin"),
-      description: t("adminDescription"),
-    },
-    participant: {
-      path: "p",
-      label: t("participant"),
-      description: t("participantDescription"),
-    },
-  };
-};
-
-const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
   const [state, copyToClipboard] = useCopyToClipboard();
-
-  const plausible = usePlausible();
 
   React.useEffect(() => {
     if (state.error) {
@@ -42,56 +27,53 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ links }) => {
     }
   }, [state]);
 
-  const [role, setRole] = React.useState<Role>("participant");
-  const link = links.find((link) => link.role === role);
+  const link = links.find((link) => link.role === "participant");
   if (!link) {
-    throw new Error(`Missing link for role: ${role}`);
+    throw new Error("Missing participant link");
   }
-  const roleData = useRoleData();
-  const { path } = roleData[link.role];
-  const pollUrl = `${window.location.origin}/${path}/${link.urlId}`;
+  const pollUrl = `${window.location.origin}/p/${link.urlId}`;
   const [didCopy, setDidCopy] = React.useState(false);
   return (
-    <div className="w-[300px] md:w-[400px]">
-      <div className="segment-button mb-3 inline-flex">
+    <div className={clsx("card p-4", className)}>
+      <div className="mb-4 flex items-center justify-between">
+        <div className="text-lg font-semibold text-slate-700">
+          Share via link
+        </div>
         <button
-          className={clsx({
-            "segment-button-active": role === "participant",
-          })}
-          onClick={() => {
-            setRole("participant");
-          }}
-          type="button"
+          onClick={onHide}
+          className="h-8 items-center justify-center rounded-md px-3 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
         >
-          {roleData["participant"].label}
-        </button>
-        <button
-          className={clsx({
-            "segment-button-active": role === "admin",
-          })}
-          onClick={() => {
-            setRole("admin");
-          }}
-          type="button"
-        >
-          {roleData["admin"].label}
+          Hide
         </button>
       </div>
-      <div className="flex flex-col space-y-3 lg:flex-row lg:space-y-0 lg:space-x-3">
-        <input readOnly={true} className="input lg:w-[280px]" value={pollUrl} />
+      <p className="text-slate-500 lg:text-lg">
+        <Trans
+          t={t}
+          i18nKey="shareDescription"
+          components={{ b: <strong /> }}
+        />
+      </p>
+      <div className="relative">
+        <input
+          readOnly={true}
+          className={clsx(
+            "mb-4 w-full rounded-md border bg-white p-3 font-mono text-primary-500 transition-all md:mb-0 md:text-xl",
+            {
+              "bg-slate-50 opacity-75": didCopy,
+            },
+          )}
+          value={pollUrl}
+        />
         <Button
-          className="w-24 shrink-0"
           disabled={didCopy}
           onClick={() => {
             copyToClipboard(pollUrl);
             setDidCopy(true);
-            setTimeout(() => setDidCopy(false), 1000);
-            plausible("Copied share link", {
-              props: {
-                role,
-              },
-            });
+            setTimeout(() => {
+              setDidCopy(false);
+            }, 1000);
           }}
+          className="md:absolute md:top-1/2 md:right-3 md:-translate-y-1/2"
         >
           {didCopy ? "Copied" : "Copy Link"}
         </Button>
