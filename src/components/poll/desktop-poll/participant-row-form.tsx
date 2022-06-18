@@ -87,7 +87,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
               <NameInput
                 autoFocus={true}
                 className={clsx("w-full", {
-                  "input-error animate-wiggle": errors.name && submitCount > 0,
+                  "input-error": errors.name && submitCount > 0,
                 })}
                 placeholder="Your name"
                 {...field}
@@ -169,7 +169,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
         >
           Save
         </Button>
-        <CompactButton onClick={onCancel} icon={X} />
+        {onCancel ? <CompactButton onClick={onCancel} icon={X} /> : null}
       </div>
     </form>
   );

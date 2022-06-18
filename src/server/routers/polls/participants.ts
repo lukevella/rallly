@@ -21,7 +21,7 @@ export const participants = createRouter()
         },
         orderBy: [
           {
-            createdAt: "desc",
+            createdAt: "asc",
           },
           { name: "desc" },
         ],

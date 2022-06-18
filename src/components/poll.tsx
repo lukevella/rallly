@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
@@ -124,11 +123,13 @@ const PollPage: NextPage = () => {
     [participants],
   );
 
-  const [isSharingVisible, setSharingVisible] = React.useState(false);
+  const [isSharingVisible, setSharingVisible] = React.useState(
+    !!router.query.sharing,
+  );
   return (
     <UserAvatarProvider seed={poll.pollId} names={names}>
       <StandardLayout>
-        <div className="relative max-w-full overflow-hidden pb-4 md:px-4 md:pt-4">
+        <div className="relative max-w-full pb-4 md:px-4 md:pt-4">
           <Head>
             <title>{poll.title}</title>
             <meta name="robots" content="noindex,nofollow" />
@@ -184,9 +185,9 @@ const PollPage: NextPage = () => {
                     height: 0,
                     marginBottom: 0,
                   }}
+                  className="overflow-hidden"
                 >
                   <Sharing
-                    links={poll.links}
                     onHide={() => {
                       setSharingVisible(false);
                     }}
@@ -247,6 +248,7 @@ const PollPage: NextPage = () => {
                 This poll has been locked (voting is disabled)
               </div>
             ) : null}
+
             <React.Suspense fallback={<div className="p-4">Loading…</div>}>
               {participants ? (
                 <div className="mb-4">

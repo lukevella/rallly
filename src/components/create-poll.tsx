@@ -104,7 +104,7 @@ const Page: NextPage<CreatePollPageProps> = ({
         },
       });
       setPersistedFormData(initialNewEventData);
-      router.replace(`/admin/${poll.urlId}`);
+      router.replace(`/admin/${poll.urlId}?sharing=true`);
     },
   });
 

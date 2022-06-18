@@ -7,7 +7,7 @@
   body,
   #__next {
     height: 100%;
-    @apply bg-slate-50;
+    @apply overflow-x-hidden bg-slate-50;
   }
   body {
     @apply bg-slate-50 text-base text-slate-600;

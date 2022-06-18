@@ -26,7 +26,7 @@ export const useAddParticipantMutation = () => {
       queryClient.setQueryData(
         ["polls.participants.list", { pollId: participant.pollId }],
         (existingParticipants = []) => {
-          return [participant, ...existingParticipants];
+          return [...existingParticipants, participant];
         },
       );
       session.refresh();

@@ -1,4 +1,3 @@
-import { Link } from "@prisma/client";
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
@@ -6,18 +5,19 @@ import toast from "react-hot-toast";
 import { useCopyToClipboard } from "react-use";
 
 import { Button } from "./button";
+import { usePoll } from "./poll-context";
 
 export interface SharingProps {
-  links: Link[];
   onHide: () => void;
   className?: string;
 }
 
 const Sharing: React.VoidFunctionComponent<SharingProps> = ({
-  links,
   onHide,
   className,
 }) => {
+  const { poll } = usePoll();
+  const { links } = poll;
   const { t } = useTranslation("app");
   const [state, copyToClipboard] = useCopyToClipboard();
 
@@ -27,11 +27,11 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
     }
   }, [state]);
 
-  const link = links.find((link) => link.role === "participant");
-  if (!link) {
+  const participantLink = links.find((link) => link.role === "participant");
+  if (!participantLink) {
     throw new Error("Missing participant link");
   }
-  const pollUrl = `${window.location.origin}/p/${link.urlId}`;
+  const participantUrl = `${window.location.origin}/p/${participantLink.urlId}`;
   const [didCopy, setDidCopy] = React.useState(false);
   return (
     <div className={clsx("card p-4", className)}>
@@ -46,7 +46,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
           Hide
         </button>
       </div>
-      <p className="text-slate-500 lg:text-lg">
+      <p className="text-slate-600 lg:text-lg">
         <Trans
           t={t}
           i18nKey="shareDescription"
@@ -62,12 +62,13 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
               "bg-slate-50 opacity-75": didCopy,
             },
           )}
-          value={pollUrl}
+          value={participantUrl}
         />
         <Button
           disabled={didCopy}
+          type="primary"
           onClick={() => {
-            copyToClipboard(pollUrl);
+            copyToClipboard(participantUrl);
             setDidCopy(true);
             setTimeout(() => {
               setDidCopy(false);
