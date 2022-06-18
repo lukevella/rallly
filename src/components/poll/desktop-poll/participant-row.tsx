@@ -32,6 +32,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   columnWidth: number;
   sidebarWidth: number;
   isYou?: boolean;
+  participantId: string;
 }> = ({
   name,
   editable,
@@ -42,9 +43,14 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   columnWidth,
   isYou,
   color,
+  participantId,
 }) => {
   return (
-    <div data-testid="participant-row" className="group flex h-14">
+    <div
+      data-testid="participant-row"
+      data-participantid={participantId}
+      className="group flex h-14"
+    >
       <div
         className="flex shrink-0 items-center px-4"
         style={{ width: sidebarWidth }}
@@ -144,6 +150,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
       votes={options.map(({ optionId }) => {
         return getVote(participant.id, optionId);
       })}
+      participantId={participant.id}
       editable={canEdit}
       isYou={isYou}
       onEdit={() => {

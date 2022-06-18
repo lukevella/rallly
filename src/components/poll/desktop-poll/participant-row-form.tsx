@@ -85,7 +85,6 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
           render={({ field }) => (
             <div className="w-full">
               <NameInput
-                autoFocus={true}
                 className={clsx("w-full", {
                   "input-error": errors.name && submitCount > 0,
                 })}

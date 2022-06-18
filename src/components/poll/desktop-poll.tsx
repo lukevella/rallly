@@ -94,6 +94,7 @@ const Poll: React.VoidFunctionComponent = () => {
     );
   };
 
+  const participantListContainerRef = React.useRef<HTMLDivElement>(null);
   return (
     <PollContext.Provider
       value={{
@@ -187,7 +188,10 @@ const Poll: React.VoidFunctionComponent = () => {
             </div>
           </div>
           {participants.length > 0 ? (
-            <div className="min-h-0 overflow-y-auto py-2">
+            <div
+              className="min-h-0 overflow-y-auto py-2"
+              ref={participantListContainerRef}
+            >
               {participants.map((participant, i) => {
                 return (
                   <ParticipantRow
@@ -208,11 +212,16 @@ const Poll: React.VoidFunctionComponent = () => {
             <ParticipantRowForm
               className="border-t bg-gray-50"
               onSubmit={async ({ name, votes }) => {
-                await addParticipant.mutateAsync({
+                const participant = await addParticipant.mutateAsync({
                   name,
                   votes,
                   pollId: poll.pollId,
                 });
+                setTimeout(() => {
+                  participantListContainerRef.current
+                    ?.querySelector(`[data-participantid=${participant.id}]`)
+                    ?.scrollIntoView();
+                }, 100);
               }}
             />
           ) : null}
