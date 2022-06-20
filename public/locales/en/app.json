@@ -58,6 +58,5 @@
   "demoPollNotice": "Demo polls are automatically deleted after 1 day",
   "yourDetails": "Your details",
   "yourPolls": "Your polls",
-  "adminNotice": "You're an administrator of this poll",
-  "toVoteNotice": "To vote, please use the participant link: <a>{{participantUrl}}</a>"
+  "adminNotice": "You're an administrator of this poll"
 }

@@ -70,8 +70,7 @@ const Poll: React.VoidFunctionComponent = () => {
 
   const [didUsePagination, setDidUsePagination] = React.useState(false);
 
-  const shouldShowNewParticipantForm =
-    !userAlreadyVoted && !poll.closed && poll.role === "participant";
+  const shouldShowNewParticipantForm = !userAlreadyVoted && !poll.closed;
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
@@ -191,17 +190,6 @@ const Poll: React.VoidFunctionComponent = () => {
                   />
                 );
               })}
-            </div>
-          ) : poll.role === "admin" ? (
-            <div className="m-4 rounded-lg border p-2 text-center text-slate-400">
-              <Trans
-                t={t}
-                i18nKey="toVoteNotice"
-                values={{ participantUrl }}
-                components={{
-                  a: <a href={participantUrl} />,
-                }}
-              />
             </div>
           ) : null}
           {shouldShowNewParticipantForm ? (
