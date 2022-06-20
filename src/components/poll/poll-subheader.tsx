@@ -25,22 +25,23 @@ const PollSubheader: React.VoidFunctionComponent = () => {
             b: <span />,
           }}
         />
-        &nbsp;
-        <span className="inline-flex items-center space-x-1">
-          {poll.legacy && poll.role === "admin" ? (
-            <Tooltip
-              width={400}
-              content="This poll was created with an older version of Rallly. Some features might not work."
-            >
-              <Badge color="amber">Legacy</Badge>
-            </Tooltip>
-          ) : null}
-          {poll.demo ? (
-            <Tooltip content={<Trans t={t} i18nKey="demoPollNotice" />}>
-              <Badge color="blue">Demo</Badge>
-            </Tooltip>
-          ) : null}
-        </span>
+        {poll.legacy && poll.role === "admin" ? (
+          <Tooltip
+            width={400}
+            content="This poll was created with an older version of Rallly. Some features might not work."
+          >
+            <Badge color="amber" className="ml-1">
+              Legacy
+            </Badge>
+          </Tooltip>
+        ) : null}
+        {poll.demo ? (
+          <Tooltip content={<Trans t={t} i18nKey="demoPollNotice" />}>
+            <Badge color="blue" className="ml-1">
+              Demo
+            </Badge>
+          </Tooltip>
+        ) : null}
       </div>
       <span className="hidden md:inline">&nbsp;&bull;&nbsp;</span>
       <span className="whitespace-nowrap">
