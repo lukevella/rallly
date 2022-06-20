@@ -52,8 +52,23 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   });
 
   const { reset, handleSubmit, control, formState } = form;
-  const [selectedParticipantId, setSelectedParticipantId] =
-    React.useState<string>();
+  const [selectedParticipantId, setSelectedParticipantId] = React.useState<
+    string | undefined
+  >(() => {
+    if (poll.role === "admin") {
+      // don't select a particpant if admin
+      return;
+    }
+    const { user } = session;
+    if (user) {
+      const userParticipant = participants.find((participant) =>
+        user.isGuest
+          ? participant.guestId === user.id
+          : participant.userId === user.id,
+      );
+      return userParticipant?.id;
+    }
+  });
 
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
