@@ -21,6 +21,7 @@ import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
 import PollSubheader from "./poll/poll-subheader";
 import TruncatedLinkify from "./poll/truncated-linkify";
+import { UnverifiedPollNotice } from "./poll/unverified-poll-notice";
 import { useTouchBeacon } from "./poll/use-touch-beacon";
 import { UserAvatarProvider } from "./poll/user-avatar";
 import VoteIcon from "./poll/vote-icon";
@@ -189,11 +190,23 @@ const PollPage: NextPage = () => {
                       <Sharing
                         onHide={() => {
                           setSharingVisible(false);
+                          router.replace(
+                            `/admin/${router.query.urlId}`,
+                            undefined,
+                            {
+                              shallow: true,
+                            },
+                          );
                         }}
                       />
                     </motion.div>
                   ) : null}
                 </AnimatePresence>
+                {poll.verified === false ? (
+                  <div className="mb-4 overflow-hidden border-y p-4 md:rounded-lg md:border-x">
+                    <UnverifiedPollNotice />
+                  </div>
+                ) : null}
               </>
             ) : null}
             <div className="card mb-4 space-y-4">
