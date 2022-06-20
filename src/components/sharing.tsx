@@ -46,18 +46,18 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
           Hide
         </button>
       </div>
-      <p className="text-slate-600 lg:text-lg">
+      <div className="mb-2 text-slate-600">
         <Trans
           t={t}
           i18nKey="shareDescription"
           components={{ b: <strong /> }}
         />
-      </p>
+      </div>
       <div className="relative">
         <input
           readOnly={true}
           className={clsx(
-            "mb-4 w-full rounded-md border bg-white p-2 transition-all md:mb-0 md:p-3 md:text-xl",
+            "mb-4 w-full rounded-md border bg-white p-2 transition-all md:mb-0 md:p-3",
             {
               "bg-slate-50 opacity-75": didCopy,
             },
