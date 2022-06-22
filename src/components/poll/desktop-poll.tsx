@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
-import { Trans, useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
 import smoothscroll from "smoothscroll-polyfill";
@@ -10,12 +9,12 @@ import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
+import TimeZonePicker from "../time-zone-picker";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import { PollContext } from "./desktop-poll/poll-context";
 import PollHeader from "./desktop-poll/poll-header";
 import { useAddParticipantMutation } from "./mutations";
-import VoteIcon from "./vote-icon";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -28,7 +27,8 @@ const minSidebarWidth = 200;
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const { poll, options, userAlreadyVoted, participantUrl } = usePoll();
+  const { poll, options, userAlreadyVoted, targetTimeZone, setTargetTimeZone } =
+    usePoll();
 
   const { participants } = useParticipants();
 
@@ -115,6 +115,21 @@ const Poll: React.VoidFunctionComponent = () => {
         ref={ref}
       >
         <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden border-y bg-white md:rounded-lg md:border">
+          <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
+            {poll.timeZone ? (
+              <div className="flex grow items-center">
+                <div className="mr-2 text-sm font-medium text-slate-500">
+                  {t("timeZone")}
+                </div>
+                <TimeZonePicker
+                  value={targetTimeZone}
+                  onChange={setTargetTimeZone}
+                  className="grow"
+                />
+              </div>
+            ) : null}
+          </div>
+
           <div>
             <div className="flex">
               <div

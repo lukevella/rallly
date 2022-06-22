@@ -29,7 +29,7 @@ const CollapsibleContainer: React.VoidFunctionComponent<{
   className?: string;
 }> = ({ className, children, expanded }) => {
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {expanded ? (
         <motion.div
           variants={{

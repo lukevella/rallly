@@ -253,17 +253,6 @@ const PollPage: NextPage = () => {
                 </div>
               </div>
             </div>
-            {poll.timeZone ? (
-              <div className="card border-t md:mb-4">
-                <div className="mb-2">Showing times in:</div>
-                <div>
-                  <TimeZonePicker
-                    value={targetTimeZone}
-                    onChange={setTargetTimeZone}
-                  />
-                </div>
-              </div>
-            ) : null}
 
             {poll.closed ? (
               <div className="flex items-center bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:mb-4 md:rounded-lg">
