@@ -293,7 +293,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   }}
                 />
               </div>
-            ) : (
+            ) : !userAlreadyVoted ? (
               <Button
                 type="primary"
                 icon={<PlusCircle />}
@@ -308,7 +308,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
               >
                 New
               </Button>
-            )}
+            ) : null}
           </div>
           {timeZone ? (
             <TimeZonePicker
