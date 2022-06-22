@@ -209,7 +209,7 @@ const PollPage: NextPage = () => {
                 ) : null}
               </>
             ) : null}
-            <div className="card mb-4 space-y-4">
+            <div className="md:card space-y-4 border-t bg-white p-4 md:mb-4">
               <div>
                 <div className="space-y-4">
                   <div>
