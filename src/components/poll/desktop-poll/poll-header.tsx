@@ -47,7 +47,7 @@ const PollHeader: React.VoidFunctionComponent = () => {
                 <div className="text-xs font-semibold uppercase text-slate-500/75">
                   {option.dow}
                 </div>
-                <div className="text-xl font-semibold">{option.day}</div>
+                <div className="text-2xl font-semibold">{option.day}</div>
                 <div className="text-xs font-medium uppercase text-slate-500/50">
                   {option.month}
                 </div>

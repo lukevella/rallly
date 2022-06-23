@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import { useMount } from "react-use";
 
 import { Button } from "@/components/button";
-import Key from "@/components/icons/key.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import Share from "@/components/icons/share.svg";
 import { preventWidows } from "@/utils/prevent-widows";
@@ -143,22 +142,20 @@ const PollPage: NextPage = () => {
           >
             {poll.role === "admin" ? (
               <>
-                <div className="-mt-4 flex flex-col rounded-lg p-4 md:mt-0 md:mb-4 md:flex-row md:items-center md:justify-between md:border md:p-2">
-                  <div className="flex space-x-2">
-                    <NotificationsToggle />
-                    <ManagePoll
-                      placement={isWideScreen ? "bottom-end" : "bottom-start"}
-                    />
-                    <Button
-                      type="primary"
-                      icon={<Share />}
-                      onClick={() => {
-                        setSharingVisible((value) => !value);
-                      }}
-                    >
-                      Share
-                    </Button>
-                  </div>
+                <div className="mb-4 flex space-x-2 px-4 md:justify-end md:px-0">
+                  <NotificationsToggle />
+                  <ManagePoll
+                    placement={isWideScreen ? "bottom-end" : "bottom-start"}
+                  />
+                  <Button
+                    type="primary"
+                    icon={<Share />}
+                    onClick={() => {
+                      setSharingVisible((value) => !value);
+                    }}
+                  >
+                    Share
+                  </Button>
                 </div>
                 <AnimatePresence initial={false}>
                   {isSharingVisible ? (
@@ -228,22 +225,26 @@ const PollPage: NextPage = () => {
                       <TruncatedLinkify>{poll.location}</TruncatedLinkify>
                     </div>
                   ) : null}
-                  <div className="flex items-center space-x-3">
-                    <span className="text-xs font-semibold text-slate-500">
-                      Key:
-                    </span>
-                    <span className="inline-flex items-center space-x-1">
-                      <VoteIcon type="yes" />
-                      <span className="text-xs text-slate-500">Yes</span>
-                    </span>
-                    <span className="inline-flex items-center space-x-1">
-                      <VoteIcon type="ifNeedBe" />
-                      <span className="text-xs text-slate-500">If need be</span>
-                    </span>
-                    <span className="inline-flex items-center space-x-1">
-                      <VoteIcon type="no" />
-                      <span className="text-xs text-slate-500">No</span>
-                    </span>
+                  <div>
+                    <div className="mb-2 text-sm text-slate-500">
+                      Answer key
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span className="inline-flex items-center space-x-1">
+                        <VoteIcon type="yes" />
+                        <span className="text-xs text-slate-500">Yes</span>
+                      </span>
+                      <span className="inline-flex items-center space-x-1">
+                        <VoteIcon type="ifNeedBe" />
+                        <span className="text-xs text-slate-500">
+                          If need be
+                        </span>
+                      </span>
+                      <span className="inline-flex items-center space-x-1">
+                        <VoteIcon type="no" />
+                        <span className="text-xs text-slate-500">No</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
