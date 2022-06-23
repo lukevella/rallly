@@ -29,7 +29,6 @@ import { usePoll } from "./poll-context";
 import { useSession } from "./session";
 import Sharing from "./sharing";
 import StandardLayout from "./standard-layout";
-import TimeZonePicker from "./time-zone-picker";
 
 const Discussion = React.lazy(() => import("@/components/discussion"));
 
@@ -37,7 +36,7 @@ const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
 const PollPage: NextPage = () => {
-  const { poll, targetTimeZone, setTargetTimeZone } = usePoll();
+  const { poll } = usePoll();
   const { participants } = useParticipants();
   const router = useRouter();
 
@@ -144,11 +143,7 @@ const PollPage: NextPage = () => {
           >
             {poll.role === "admin" ? (
               <>
-                <div className="-mt-4 flex items-center rounded-lg p-4 md:mt-0 md:mb-4 md:justify-between md:border  md:p-2">
-                  <div className="hidden  md:flex md:items-center">
-                    <Key className="h-5 px-2 text-primary-500" />
-                    <div>{t("adminNotice")}</div>
-                  </div>
+                <div className="-mt-4 flex flex-col rounded-lg p-4 md:mt-0 md:mb-4 md:flex-row md:items-center md:justify-between md:border md:p-2">
                   <div className="flex space-x-2">
                     <NotificationsToggle />
                     <ManagePoll

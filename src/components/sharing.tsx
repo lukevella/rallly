@@ -57,7 +57,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
         <input
           readOnly={true}
           className={clsx(
-            "mb-4 w-full rounded-md border bg-white p-2 font-mono transition-all md:mb-0 md:p-3",
+            "mb-4 w-full rounded-md bg-gray-100 p-2 text-slate-600 transition-all md:mb-0 md:p-3 md:text-lg",
             {
               "bg-slate-50 opacity-75": didCopy,
             },
