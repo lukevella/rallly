@@ -27,9 +27,9 @@ interface CommentForm {
 const Discussion: React.VoidFunctionComponent = () => {
   const { locale } = usePreferences();
   const queryClient = trpc.useContext();
-  const {
-    poll: { pollId },
-  } = usePoll();
+  const { poll } = usePoll();
+
+  const pollId = poll.id;
 
   const { data: comments } = trpc.useQuery(
     ["polls.comments.list", { pollId }],
@@ -52,8 +52,6 @@ const Discussion: React.VoidFunctionComponent = () => {
       plausible("Created comment");
     },
   });
-
-  const { poll } = usePoll();
 
   const deleteComment = trpc.useMutation("polls.comments.delete", {
     onMutate: ({ commentId }) => {
@@ -96,9 +94,7 @@ const Discussion: React.VoidFunctionComponent = () => {
         <AnimatePresence initial={false}>
           {comments.map((comment) => {
             const canDelete =
-              poll.role === "admin" ||
-              session.ownsObject(comment) ||
-              isUnclaimed(comment);
+              poll.admin || session.ownsObject(comment) || isUnclaimed(comment);
 
             return (
               <motion.div

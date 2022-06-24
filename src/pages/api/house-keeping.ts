@@ -55,23 +55,15 @@ export default async function handler(
         ],
       },
       select: {
-        urlId: true,
+        id: true,
       },
       orderBy: {
         createdAt: "asc", // oldest first
       },
     })
-  ).map(({ urlId }) => urlId);
+  ).map(({ id }) => id);
 
   if (pollIdsToDelete.length !== 0) {
-    // Delete links
-    await prisma.link.deleteMany({
-      where: {
-        pollId: {
-          in: pollIdsToDelete,
-        },
-      },
-    });
     // Delete comments
     await prisma.comment.deleteMany({
       where: {

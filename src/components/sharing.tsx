@@ -17,7 +17,6 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
   className,
 }) => {
   const { poll } = usePoll();
-  const { links } = poll;
   const { t } = useTranslation("app");
   const [state, copyToClipboard] = useCopyToClipboard();
 
@@ -27,11 +26,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
     }
   }, [state]);
 
-  const participantLink = links.find((link) => link.role === "participant");
-  if (!participantLink) {
-    throw new Error("Missing participant link");
-  }
-  const participantUrl = `${window.location.origin}/p/${participantLink.urlId}`;
+  const participantUrl = `${window.location.origin}/p/${poll.participantUrlId}`;
   const [didCopy, setDidCopy] = React.useState(false);
   return (
     <div className={clsx("card p-4", className)}>
@@ -57,7 +52,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
         <input
           readOnly={true}
           className={clsx(
-            "mb-4 w-full rounded-lg bg-gray-100 p-2 text-slate-600 transition-all md:mb-0 md:p-3 md:text-lg",
+            "mb-4 w-full rounded-md bg-gray-100 p-2 text-slate-600 transition-all md:mb-0 md:p-3 md:text-lg",
             {
               "bg-slate-50 opacity-75": didCopy,
             },

@@ -87,6 +87,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
           color={participant.color}
           sidebarWidth={sidebarWidth}
           columnWidth={columnWidth}
+          participantId={`participant${i}`}
           name={participant.name}
           votes={options.map((_, i) => {
             return participant.votes.some((vote) => vote === i) ? "yes" : "no";

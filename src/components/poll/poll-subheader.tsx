@@ -25,7 +25,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
             b: <span />,
           }}
         />
-        {poll.legacy && poll.role === "admin" ? (
+        {poll.legacy && poll.admin ? (
           <Tooltip
             width={400}
             content="This poll was created with an older version of Rallly. Some features might not work."
@@ -45,7 +45,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
       </div>
       <span className="hidden md:inline">&nbsp;&bull;&nbsp;</span>
       <span className="whitespace-nowrap">
-        {formatRelative(new Date(poll.createdAt), new Date(), {
+        {formatRelative(poll.createdAt, new Date(), {
           locale,
         })}
       </span>

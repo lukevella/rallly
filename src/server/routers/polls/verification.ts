@@ -32,7 +32,7 @@ export const verification = createRouter()
 
       const poll = await prisma.poll.update({
         where: {
-          urlId: pollId,
+          id: pollId,
         },
         data: {
           verified: true,
@@ -63,11 +63,10 @@ export const verification = createRouter()
     resolve: async ({ input: { pollId, adminUrlId } }) => {
       const poll = await prisma.poll.findUnique({
         where: {
-          urlId: pollId,
+          id: pollId,
         },
         include: {
           user: true,
-          links: true,
         },
       });
 

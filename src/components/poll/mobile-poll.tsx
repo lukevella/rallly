@@ -49,7 +49,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   } = pollContext;
 
   const { participants } = useParticipants();
-  const { timeZone, role } = poll;
+  const { timeZone } = poll;
 
   const session = useSession();
 
@@ -64,7 +64,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   const [selectedParticipantId, setSelectedParticipantId] = React.useState<
     string | undefined
   >(() => {
-    if (poll.role === "admin") {
+    if (poll.admin) {
       // don't select a particpant if admin
       return;
     }
@@ -84,7 +84,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     : undefined;
 
   const [isEditing, setIsEditing] = React.useState(
-    !userAlreadyVoted && !poll.closed && poll.role === "participant",
+    !userAlreadyVoted && !poll.closed && !poll.admin,
   );
 
   const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
@@ -139,7 +139,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
         onSubmit={handleSubmit(async ({ name, votes }) => {
           if (selectedParticipant) {
             await updateParticipant.mutateAsync({
-              pollId: poll.pollId,
+              pollId: poll.id,
               participantId: selectedParticipant.id,
               name,
               votes: normalizeVotes(optionIds, votes),
@@ -147,7 +147,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
             setIsEditing(false);
           } else {
             const newParticipant = await addParticipant.mutateAsync({
-              pollId: poll.pollId,
+              pollId: poll.id,
               name,
               votes: normalizeVotes(optionIds, votes),
             });
@@ -252,7 +252,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   disabled={
                     poll.closed ||
                     // if user is  participant (not admin)
-                    (role === "participant" &&
+                    (!poll.admin &&
                       // and does not own this participant
                       !session.ownsObject(selectedParticipant) &&
                       // and the participant has been claimed by a different user
@@ -277,7 +277,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   disabled={
                     poll.closed ||
                     // if user is  participant (not admin)
-                    (role === "participant" &&
+                    (!poll.admin &&
                       // and does not own this participant
                       !session.ownsObject(selectedParticipant) &&
                       // or the participant has been claimed by a different user

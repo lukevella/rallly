@@ -27,7 +27,8 @@ const ManagePoll: React.VoidFunctionComponent<{
   placement?: Placement;
 }> = ({ placement }) => {
   const { t } = useTranslation("app");
-  const { poll, getParticipantsWhoVotedForOption, setDeleted } = usePoll();
+  const { poll, getParticipantsWhoVotedForOption, setDeleted, urlId } =
+    usePoll();
 
   const { exportToCsv } = useCsvExporter();
 
@@ -98,7 +99,7 @@ const ManagePoll: React.VoidFunctionComponent<{
             const onOk = () => {
               updatePollMutation(
                 {
-                  urlId: poll.urlId,
+                  urlId: urlId,
                   timeZone: data.timeZone,
                   optionsToDelete: optionsToDelete.map(({ id }) => id),
                   optionsToAdd,
@@ -165,7 +166,7 @@ const ManagePoll: React.VoidFunctionComponent<{
         onSubmit={(data) => {
           //submit
           updatePollMutation(
-            { urlId: poll.urlId, ...data },
+            { urlId, ...data },
             { onSuccess: closePollDetailsModal },
           );
         }}
@@ -195,17 +196,13 @@ const ManagePoll: React.VoidFunctionComponent<{
           <DropdownItem
             icon={LockOpen}
             label="Unlock poll"
-            onClick={() =>
-              updatePollMutation({ urlId: poll.urlId, closed: false })
-            }
+            onClick={() => updatePollMutation({ urlId, closed: false })}
           />
         ) : (
           <DropdownItem
             icon={LockClosed}
             label="Lock poll"
-            onClick={() =>
-              updatePollMutation({ urlId: poll.urlId, closed: true })
-            }
+            onClick={() => updatePollMutation({ urlId, closed: true })}
           />
         )}
         <DropdownItem
@@ -221,7 +218,7 @@ const ManagePoll: React.VoidFunctionComponent<{
                     setDeleted(true);
                   }}
                   onCancel={close}
-                  urlId={poll.urlId}
+                  urlId={urlId}
                 />
               ),
               footer: null,

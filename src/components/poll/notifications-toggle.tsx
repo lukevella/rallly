@@ -11,7 +11,7 @@ import Tooltip from "../tooltip";
 import { useUpdatePollMutation } from "./mutations";
 
 const NotificationsToggle: React.VoidFunctionComponent = () => {
-  const { poll } = usePoll();
+  const { poll, urlId } = usePoll();
   const { t } = useTranslation("app");
   const [isUpdatingNotifications, setIsUpdatingNotifications] =
     React.useState(false);
@@ -25,7 +25,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
         poll.verified ? (
           poll.notifications ? (
             <div>
-              <div className="text-primary-300 font-medium">
+              <div className="font-medium text-primary-300">
                 Notifications are on
               </div>
               <div className="max-w-sm">
@@ -37,7 +37,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
                   }}
                   components={{
                     b: (
-                      <span className="text-primary-300 whitespace-nowrap font-mono font-medium " />
+                      <span className="whitespace-nowrap font-mono font-medium text-primary-300 " />
                     ),
                   }}
                 />
@@ -59,7 +59,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
           setIsUpdatingNotifications(true);
           updatePollMutation(
             {
-              urlId: poll.urlId,
+              urlId,
               notifications: !poll.notifications,
             },
             {

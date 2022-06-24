@@ -34,13 +34,9 @@ export const user = createRouter()
               closed: true,
               verified: true,
               createdAt: true,
-              links: {
-                where: {
-                  role: "admin",
-                },
-              },
+              adminUrlId: true,
             },
-            take: 5,
+            take: 10,
             orderBy: {
               createdAt: "desc",
             },

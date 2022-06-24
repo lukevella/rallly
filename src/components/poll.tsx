@@ -35,19 +35,11 @@ const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
 const PollPage: NextPage = () => {
-  const { poll } = usePoll();
+  const { poll, urlId, admin } = usePoll();
   const { participants } = useParticipants();
   const router = useRouter();
 
-  useTouchBeacon(poll.pollId);
-
-  useMount(() => {
-    const path = poll.role === "admin" ? "admin" : "p";
-
-    if (!new RegExp(`^/${path}`).test(router.asPath)) {
-      router.replace(`/${path}/${poll.urlId}`, undefined, { shallow: true });
-    }
-  });
+  useTouchBeacon(poll.id);
 
   const { t } = useTranslation("app");
 
@@ -61,7 +53,7 @@ const PollPage: NextPage = () => {
   const verifyEmail = trpc.useMutation(["polls.verification.verify"], {
     onSuccess: () => {
       toast.success("Your poll has been verified");
-      queryClient.setQueryData(["polls.get", { urlId: poll.urlId }], {
+      queryClient.setQueryData(["polls.get", { urlId, admin }], {
         ...poll,
         verified: true,
       });
@@ -81,14 +73,14 @@ const PollPage: NextPage = () => {
   useMount(() => {
     const { code } = router.query;
     if (typeof code === "string" && !poll.verified) {
-      verifyEmail.mutate({ code, pollId: poll.pollId });
+      verifyEmail.mutate({ code, pollId: poll.id });
     }
   });
 
   React.useEffect(() => {
     if (router.query.unsubscribe) {
       updatePollMutation(
-        { urlId: poll.urlId, notifications: false },
+        { urlId: urlId, notifications: false },
         {
           onSuccess: () => {
             toast.success("Notifications have been disabled");
@@ -100,7 +92,7 @@ const PollPage: NextPage = () => {
         shallow: true,
       });
     }
-  }, [plausible, poll.urlId, router, updatePollMutation]);
+  }, [plausible, urlId, router, updatePollMutation]);
 
   const checkIfWideScreen = () => window.innerWidth > 640;
 
@@ -127,7 +119,7 @@ const PollPage: NextPage = () => {
     !!router.query.sharing,
   );
   return (
-    <UserAvatarProvider seed={poll.pollId} names={names}>
+    <UserAvatarProvider seed={poll.id} names={names}>
       <StandardLayout>
         <div className="relative max-w-full py-4 md:px-4">
           <Head>
@@ -140,7 +132,7 @@ const PollPage: NextPage = () => {
               width: Math.max(768, poll.options.length * 95 + 200 + 160),
             }}
           >
-            {poll.role === "admin" ? (
+            {admin ? (
               <>
                 <div className="mb-4 flex space-x-2 px-4 md:justify-end md:px-0">
                   <NotificationsToggle />

@@ -115,8 +115,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
 
   const isAnonymous = !participant.userId && !participant.guestId;
 
-  const canEdit =
-    !poll.closed && (poll.role === "admin" || isYou || isAnonymous);
+  const canEdit = !poll.closed && (poll.admin || isYou || isAnonymous);
 
   if (editMode) {
     return (
@@ -131,7 +130,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
         onSubmit={async ({ name, votes }) => {
           await updateParticipant.mutateAsync({
             participantId: participant.id,
-            pollId: poll.pollId,
+            pollId: poll.id,
             votes,
             name,
           });

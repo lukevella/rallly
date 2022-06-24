@@ -1,9 +1,21 @@
-import { Link, Option, Poll, Role, User } from "@prisma/client";
+import { Option, User } from "@prisma/client";
 
-export interface GetPollApiResponse extends Poll {
+export type GetPollApiResponse = {
+  id: string;
+  title: string;
+  authorName: string;
+  location: string | null;
+  description: string | null;
   options: Option[];
   user: User;
-  role: Role;
-  links: Array<Link>;
-  pollId: string;
-}
+  timeZone: string | null;
+  adminUrlId: string;
+  participantUrlId: string;
+  verified: boolean;
+  closed: boolean;
+  admin: boolean;
+  legacy: boolean;
+  demo: boolean;
+  notifications: boolean;
+  createdAt: Date;
+};

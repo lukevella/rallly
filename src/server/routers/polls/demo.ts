@@ -73,7 +73,7 @@ export const demo = createRouter().mutation("create", {
 
     await prisma.poll.create({
       data: {
-        urlId: await nanoid(),
+        id: await nanoid(),
         title: "Lunch Meeting",
         type: "date",
         location: "Starbucks, 901 New York Avenue",
@@ -81,6 +81,8 @@ export const demo = createRouter().mutation("create", {
         authorName: "Johnny",
         verified: true,
         demo: true,
+        adminUrlId,
+        participantUrlId: await nanoid(),
         user: {
           connectOrCreate: {
             where: {
@@ -92,20 +94,6 @@ export const demo = createRouter().mutation("create", {
         options: {
           createMany: {
             data: options,
-          },
-        },
-        links: {
-          createMany: {
-            data: [
-              {
-                role: "admin",
-                urlId: adminUrlId,
-              },
-              {
-                role: "participant",
-                urlId: await nanoid(),
-              },
-            ],
           },
         },
         participants: {

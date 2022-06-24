@@ -214,7 +214,7 @@ const Poll: React.VoidFunctionComponent = () => {
                 const participant = await addParticipant.mutateAsync({
                   name,
                   votes,
-                  pollId: poll.pollId,
+                  pollId: poll.id,
                 });
                 setTimeout(() => {
                   participantListContainerRef.current

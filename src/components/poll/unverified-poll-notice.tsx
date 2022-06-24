@@ -29,8 +29,8 @@ export const UnverifiedPollNotice = () => {
         <Button
           onClick={() => {
             requestVerificationEmail.mutate({
-              pollId: poll.pollId,
-              adminUrlId: poll.urlId,
+              pollId: poll.id,
+              adminUrlId: poll.adminUrlId,
             });
           }}
           disabled={requestVerificationEmail.isSuccess}
