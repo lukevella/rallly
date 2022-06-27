@@ -40,7 +40,7 @@ const Poll: React.VoidFunctionComponent = () => {
   const columnWidth = Math.min(
     130,
     Math.max(
-      80,
+      90,
       (width - minSidebarWidth - actionColumnWidth) / options.length,
     ),
   );
@@ -65,10 +65,6 @@ const Poll: React.VoidFunctionComponent = () => {
 
   const maxScrollPosition =
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
-
-  const numberOfInvisibleColumns = options.length - numberOfVisibleColumns;
-
-  const [didUsePagination, setDidUsePagination] = React.useState(false);
 
   const shouldShowNewParticipantForm = !userAlreadyVoted && !poll.closed;
 
@@ -107,6 +103,7 @@ const Poll: React.VoidFunctionComponent = () => {
         numberOfColumns: numberOfVisibleColumns,
         availableSpace,
         actionColumnWidth,
+        maxScrollPosition,
       }}
     >
       <div
@@ -114,9 +111,9 @@ const Poll: React.VoidFunctionComponent = () => {
         style={{ width: pollWidth }}
         ref={ref}
       >
-        <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden border-y bg-white md:rounded-lg md:border">
-          <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
-            {poll.timeZone ? (
+        <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden bg-white">
+          {poll.timeZone ? (
+            <div className="flex h-14 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
               <div className="flex grow items-center">
                 <div className="mr-2 text-sm font-medium text-slate-500">
                   {t("timeZone")}
@@ -127,9 +124,8 @@ const Poll: React.VoidFunctionComponent = () => {
                   className="grow"
                 />
               </div>
-            ) : null}
-          </div>
-
+            </div>
+          ) : null}
           <div>
             <div className="flex">
               <div
@@ -170,15 +166,10 @@ const Poll: React.VoidFunctionComponent = () => {
                         className="text-xs"
                         rounded={true}
                         onClick={() => {
-                          setDidUsePagination(true);
                           goToNextPage();
                         }}
                       >
-                        {didUsePagination ? (
-                          <ArrowRight className="h-4 w-4" />
-                        ) : (
-                          `+${numberOfInvisibleColumns} more…`
-                        )}
+                        <ArrowRight className="h-4 w-4" />
                       </MotionButton>
                     ) : null}
                   </AnimatePresence>

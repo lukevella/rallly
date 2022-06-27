@@ -187,14 +187,24 @@ const PollPage: NextPage = () => {
                   ) : null}
                 </AnimatePresence>
                 {poll.verified === false ? (
-                  <div className="mb-4 overflow-hidden border-y p-4 md:rounded-lg md:border-x">
+                  <div className="m-4 overflow-hidden rounded-lg border p-4 md:mx-0 md:mt-0">
                     <UnverifiedPollNotice />
                   </div>
                 ) : null}
               </>
             ) : null}
-            <div className="md:card space-y-4 border-t bg-white p-4 md:mb-4">
-              <div>
+            {poll.closed ? (
+              <div className="m-4 flex rounded-lg bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:mx-0 md:mt-0">
+                <div className="mr-2 rounded-md">
+                  <LockClosed className="w-6" />
+                </div>
+                <div>
+                  <div className="font-medium">This poll has been locked</div>
+                </div>
+              </div>
+            ) : null}
+            <div className="md:card mb-4 border-t bg-white md:space-y-4 md:overflow-hidden md:p-0">
+              <div className="p-4 md:border-b md:p-6">
                 <div className="space-y-4">
                   <div>
                     <div className="mb-1 text-2xl font-semibold text-slate-700 md:text-left md:text-3xl">
@@ -219,7 +229,7 @@ const PollPage: NextPage = () => {
                   ) : null}
                   <div>
                     <div className="mb-2 text-sm text-slate-500">
-                      Answer key
+                      Possible answers
                     </div>
                     <div className="flex items-center space-x-3">
                       <span className="inline-flex items-center space-x-1">
@@ -240,23 +250,12 @@ const PollPage: NextPage = () => {
                   </div>
                 </div>
               </div>
+              <React.Suspense fallback={null}>
+                {participants ? <PollComponent /> : null}
+              </React.Suspense>
             </div>
 
-            {poll.closed ? (
-              <div className="flex items-center bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:mb-4 md:rounded-lg">
-                <div className="mr-3 rounded-md">
-                  <LockClosed className="w-5" />
-                </div>
-                This poll has been locked (voting is disabled)
-              </div>
-            ) : null}
-
             <React.Suspense fallback={<div className="p-4">Loading…</div>}>
-              {participants ? (
-                <div className="mb-4">
-                  <PollComponent />
-                </div>
-              ) : null}
               <Discussion />
             </React.Suspense>
           </div>
