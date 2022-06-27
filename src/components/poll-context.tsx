@@ -21,6 +21,7 @@ type PollContextValue = {
   userAlreadyVoted: boolean;
   poll: GetPollApiResponse;
   targetTimeZone: string;
+  participantUrl: string;
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
@@ -129,10 +130,17 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       );
     });
 
+    const participantUrlId =
+      poll.links?.find((link) => link.role === "participant")?.urlId ??
+      poll.urlId;
+
+    const participantUrl = `${window.location.origin}/p/${participantUrlId}`;
+
     return {
       optionIds,
       userAlreadyVoted,
       poll,
+      participantUrl,
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },

@@ -9,7 +9,6 @@ import smoothscroll from "smoothscroll-polyfill";
 import Check from "@/components/icons/check.svg";
 import ChevronDown from "@/components/icons/chevron-down.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
-import PlusCircle from "@/components/icons/plus-circle.svg";
 import Save from "@/components/icons/save.svg";
 import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
@@ -20,7 +19,6 @@ import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
 import { useParticipants } from "../participants-provider";
 import { isUnclaimed, useSession } from "../session";
-import TimeZonePicker from "../time-zone-picker";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import {
   normalizeVotes,
@@ -38,17 +36,11 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.VoidFunctionComponent = () => {
   const pollContext = usePoll();
 
-  const {
-    poll,
-    targetTimeZone,
-    setTargetTimeZone,
-    getParticipantById,
-    optionIds,
-    getVote,
-  } = pollContext;
+  const { poll, getParticipantById, optionIds, getVote, userAlreadyVoted } =
+    pollContext;
 
   const { participants } = useParticipants();
-  const { timeZone, role } = poll;
+  const { role } = poll;
 
   const session = useSession();
 
@@ -67,7 +59,9 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
-  const [isEditing, setIsEditing] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(
+    !userAlreadyVoted && !poll.closed && poll.role === "participant",
+  );
 
   const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -100,6 +94,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const submitContainerRef = React.useRef<HTMLDivElement>(null);
+
   const scrollToSave = () => {
     if (submitContainerRef.current) {
       window.scrollTo({
@@ -139,154 +134,153 @@ const MobilePoll: React.VoidFunctionComponent = () => {
         })}
       >
         <div className="sticky top-[47px] z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
-          <div className="flex space-x-3">
-            <Listbox
-              value={selectedParticipantId}
-              onChange={(participantId) => {
-                setSelectedParticipantId(participantId);
-              }}
-              disabled={isEditing}
-            >
-              <div className="menu min-w-0 grow">
-                <Listbox.Button
-                  as={Button}
-                  className="w-full"
-                  disabled={!isEditing}
-                  data-testid="participant-selector"
-                >
-                  <div className="min-w-0 grow text-left">
-                    {selectedParticipant ? (
-                      <div className="flex items-center space-x-2">
-                        <UserAvatar
-                          name={selectedParticipant.name}
-                          showName={true}
-                          isYou={session.ownsObject(selectedParticipant)}
-                        />
-                      </div>
-                    ) : (
-                      t("participantCount", { count: participants.length })
-                    )}
-                  </div>
-                  <ChevronDown className="h-5 shrink-0" />
-                </Listbox.Button>
-                <Listbox.Options
-                  as={motion.div}
-                  transition={{
-                    duration: 0.1,
-                  }}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="menu-items max-h-72 w-full overflow-auto"
-                >
-                  <Listbox.Option value={undefined} className={styleMenuItem}>
-                    {t("participantCount", { count: participants.length })}
-                  </Listbox.Option>
-                  {participants.map((participant) => (
-                    <Listbox.Option
-                      key={participant.id}
-                      value={participant.id}
-                      className={styleMenuItem}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <UserAvatar
-                          name={participant.name}
-                          showName={true}
-                          isYou={session.ownsObject(participant)}
-                        />
-                      </div>
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </div>
-            </Listbox>
-            {isEditing ? (
-              <Button
-                onClick={() => {
-                  setIsEditing(false);
-                  reset();
-                }}
-              >
-                Cancel
-              </Button>
-            ) : selectedParticipant ? (
-              <div className="flex space-x-3">
-                <Button
-                  icon={<Pencil />}
-                  disabled={
-                    poll.closed ||
-                    // if user is  participant (not admin)
-                    (role === "participant" &&
-                      // and does not own this participant
-                      !session.ownsObject(selectedParticipant) &&
-                      // and the participant has been claimed by a different user
-                      !isUnclaimed(selectedParticipant))
-                    // not allowed to edit
-                  }
-                  onClick={() => {
-                    setIsEditing(true);
-                    reset({
-                      name: selectedParticipant.name,
-                      votes: optionIds.map((optionId) => ({
-                        optionId,
-                        type: getVote(selectedParticipant.id, optionId),
-                      })),
-                    });
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  icon={<Trash />}
-                  disabled={
-                    poll.closed ||
-                    // if user is  participant (not admin)
-                    (role === "participant" &&
-                      // and does not own this participant
-                      !session.ownsObject(selectedParticipant) &&
-                      // or the participant has been claimed by a different user
-                      !isUnclaimed(selectedParticipant))
-                    // not allowed to edit
-                  }
-                  data-testid="delete-participant-button"
-                  type="danger"
-                  onClick={() => {
-                    if (selectedParticipant) {
-                      confirmDeleteParticipant(selectedParticipant.id);
-                    }
-                  }}
+          {isEditing ? (
+            <div className="flex space-x-3">
+              <div className="grow">
+                <Controller
+                  name="name"
+                  control={control}
+                  rules={{ validate: requiredString }}
+                  render={({ field }) => (
+                    <NameInput
+                      disabled={formState.isSubmitting}
+                      className={clsx("input w-full", {
+                        "input-error": formState.errors.name,
+                      })}
+                      {...field}
+                    />
+                  )}
                 />
               </div>
-            ) : (
-              <Button
-                type="primary"
-                icon={<PlusCircle />}
-                disabled={poll.closed}
-                onClick={() => {
-                  reset({
-                    name: "",
-                    votes: [],
-                  });
-                  setIsEditing(true);
+              {selectedParticipant ? (
+                <Button
+                  onClick={() => {
+                    setIsEditing(false);
+                    reset();
+                  }}
+                >
+                  Cancel
+                </Button>
+              ) : null}
+            </div>
+          ) : (
+            <div className="flex space-x-3">
+              <Listbox
+                value={selectedParticipantId}
+                onChange={(participantId) => {
+                  setSelectedParticipantId(participantId);
                 }}
+                disabled={isEditing}
               >
-                New
-              </Button>
-            )}
-          </div>
-          {timeZone ? (
-            <TimeZonePicker
-              value={targetTimeZone}
-              onChange={setTargetTimeZone}
-            />
-          ) : null}
+                <div className="menu min-w-0 grow">
+                  <Listbox.Button
+                    as={Button}
+                    className="w-full"
+                    disabled={!isEditing}
+                    data-testid="participant-selector"
+                  >
+                    <div className="min-w-0 grow text-left">
+                      {selectedParticipant ? (
+                        <div className="flex items-center space-x-2">
+                          <UserAvatar
+                            name={selectedParticipant.name}
+                            showName={true}
+                            isYou={session.ownsObject(selectedParticipant)}
+                          />
+                        </div>
+                      ) : (
+                        t("participantCount", { count: participants.length })
+                      )}
+                    </div>
+                    <ChevronDown className="h-5 shrink-0" />
+                  </Listbox.Button>
+                  <Listbox.Options
+                    as={motion.div}
+                    transition={{
+                      duration: 0.1,
+                    }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="menu-items max-h-72 w-full overflow-auto"
+                  >
+                    <Listbox.Option value={undefined} className={styleMenuItem}>
+                      {t("participantCount", { count: participants.length })}
+                    </Listbox.Option>
+                    {participants.map((participant) => (
+                      <Listbox.Option
+                        key={participant.id}
+                        value={participant.id}
+                        className={styleMenuItem}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <UserAvatar
+                            name={participant.name}
+                            showName={true}
+                            isYou={session.ownsObject(participant)}
+                          />
+                        </div>
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </div>
+              </Listbox>
+              {selectedParticipant ? (
+                <div className="flex space-x-3">
+                  <Button
+                    icon={<Pencil />}
+                    disabled={
+                      poll.closed ||
+                      // if user is  participant (not admin)
+                      (role === "participant" &&
+                        // and does not own this participant
+                        !session.ownsObject(selectedParticipant) &&
+                        // and the participant has been claimed by a different user
+                        !isUnclaimed(selectedParticipant))
+                      // not allowed to edit
+                    }
+                    onClick={() => {
+                      setIsEditing(true);
+                      reset({
+                        name: selectedParticipant.name,
+                        votes: optionIds.map((optionId) => ({
+                          optionId,
+                          type: getVote(selectedParticipant.id, optionId),
+                        })),
+                      });
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    icon={<Trash />}
+                    disabled={
+                      poll.closed ||
+                      // if user is  participant (not admin)
+                      (role === "participant" &&
+                        // and does not own this participant
+                        !session.ownsObject(selectedParticipant) &&
+                        // or the participant has been claimed by a different user
+                        !isUnclaimed(selectedParticipant))
+                      // not allowed to edit
+                    }
+                    data-testid="delete-participant-button"
+                    type="danger"
+                    onClick={() => {
+                      if (selectedParticipant) {
+                        confirmDeleteParticipant(selectedParticipant.id);
+                      }
+                    }}
+                  />
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
         <GroupedOptions
           selectedParticipantId={selectedParticipantId}
           options={pollContext.options}
           editable={isEditing}
-          groupClassName={
-            pollContext.pollType === "timeSlot" ? "top-[151px]" : "top-[108px]"
-          }
+          groupClassName="top-[108px]"
           group={(option) => {
             if (option.type === "timeSlot") {
               return `${option.dow} ${option.day} ${option.month}`;
@@ -336,32 +330,15 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                 ref={submitContainerRef}
                 className="space-y-3 border-t bg-gray-50 p-3"
               >
-                <div className="flex space-x-3">
-                  <div className="grow">
-                    <Controller
-                      name="name"
-                      control={control}
-                      rules={{ validate: requiredString }}
-                      render={({ field }) => (
-                        <NameInput
-                          disabled={formState.isSubmitting}
-                          className={clsx("input w-full", {
-                            "input-error": formState.errors.name,
-                          })}
-                          {...field}
-                        />
-                      )}
-                    />
-                  </div>
-                  <Button
-                    icon={<Check />}
-                    htmlType="submit"
-                    type="primary"
-                    loading={formState.isSubmitting}
-                  >
-                    Save
-                  </Button>
-                </div>
+                <Button
+                  icon={<Check />}
+                  htmlType="submit"
+                  type="primary"
+                  className="w-full"
+                  loading={formState.isSubmitting}
+                >
+                  Save
+                </Button>
               </div>
             </motion.div>
           ) : null}

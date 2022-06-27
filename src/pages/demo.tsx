@@ -19,7 +19,7 @@ const Demo: NextPage = () => {
   useMount(async () => {
     const urlId = await createDemo.mutateAsync();
     plausible("Create demo poll");
-    router.replace(`/admin/${urlId}`);
+    router.replace(`/admin/${urlId}?sharing=true`);
   });
 
   return <FullPageLoader>{t("creatingDemo")}</FullPageLoader>;

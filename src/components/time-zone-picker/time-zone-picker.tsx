@@ -182,7 +182,7 @@ const TimeZonePicker: React.VoidFunctionComponent<{
             <ChevronDown className="h-5 w-5" />
           </span>
         </Combobox.Button>
-        <Combobox.Options className="absolute z-50 mt-1 max-h-72 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Combobox.Options className="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {filteredTimeZones.map((timeZone) => (
             <Combobox.Option
               key={timeZone.value}

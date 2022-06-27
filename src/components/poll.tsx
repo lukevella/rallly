@@ -28,6 +28,7 @@ import { usePoll } from "./poll-context";
 import { useSession } from "./session";
 import Sharing from "./sharing";
 import StandardLayout from "./standard-layout";
+import TimeZonePicker from "./time-zone-picker";
 
 const Discussion = React.lazy(() => import("@/components/discussion"));
 
@@ -35,7 +36,7 @@ const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
 const PollPage: NextPage = () => {
-  const { poll } = usePoll();
+  const { poll, targetTimeZone, setTargetTimeZone } = usePoll();
   const { participants } = useParticipants();
   const router = useRouter();
 
@@ -129,7 +130,7 @@ const PollPage: NextPage = () => {
   return (
     <UserAvatarProvider seed={poll.pollId} names={names}>
       <StandardLayout>
-        <div className="relative max-w-full pb-4 md:px-4 md:pt-4">
+        <div className="relative max-w-full py-4 md:px-4">
           <Head>
             <title>{poll.title}</title>
             <meta name="robots" content="noindex,nofollow" />
@@ -142,7 +143,7 @@ const PollPage: NextPage = () => {
           >
             {poll.role === "admin" ? (
               <>
-                <div className="flex items-center rounded-lg py-4 px-4 md:mb-4 md:justify-between md:border  md:p-2">
+                <div className="-mt-4 flex items-center rounded-lg p-4 md:mt-0 md:mb-4 md:justify-between md:border  md:p-2">
                   <div className="hidden  md:flex md:items-center">
                     <Key className="h-5 px-2 text-primary-500" />
                     <div>{t("adminNotice")}</div>
@@ -163,39 +164,39 @@ const PollPage: NextPage = () => {
                     </Button>
                   </div>
                 </div>
+                <AnimatePresence initial={false}>
+                  {isSharingVisible ? (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        scale: 0.8,
+                        height: 0,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        height: "auto",
+                        marginBottom: 16,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.8,
+                        height: 0,
+                        marginBottom: 0,
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <Sharing
+                        onHide={() => {
+                          setSharingVisible(false);
+                        }}
+                      />
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
               </>
             ) : null}
-            <AnimatePresence initial={false}>
-              {isSharingVisible ? (
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    scale: 0.8,
-                    height: 0,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    height: "auto",
-                    marginBottom: 16,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.8,
-                    height: 0,
-                    marginBottom: 0,
-                  }}
-                  className="overflow-hidden"
-                >
-                  <Sharing
-                    onHide={() => {
-                      setSharingVisible(false);
-                    }}
-                  />
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-            <div className="card -mb-1 space-y-4 p-4 md:mb-4 md:border-b">
+            <div className="card mb-4 space-y-4">
               <div>
                 <div className="space-y-4">
                   <div>
@@ -231,7 +232,6 @@ const PollPage: NextPage = () => {
                       <VoteIcon type="ifNeedBe" />
                       <span className="text-xs text-slate-500">If need be</span>
                     </span>
-
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="no" />
                       <span className="text-xs text-slate-500">No</span>
@@ -240,6 +240,18 @@ const PollPage: NextPage = () => {
                 </div>
               </div>
             </div>
+            {poll.timeZone ? (
+              <div className="card border-t md:mb-4">
+                <div className="mb-2">Showing times in:</div>
+                <div>
+                  <TimeZonePicker
+                    value={targetTimeZone}
+                    onChange={setTargetTimeZone}
+                  />
+                </div>
+              </div>
+            ) : null}
+
             {poll.closed ? (
               <div className="flex items-center bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:mb-4 md:rounded-lg">
                 <div className="mr-3 rounded-md">

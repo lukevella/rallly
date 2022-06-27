@@ -127,7 +127,7 @@
   }
 
   .card {
-    @apply border-t border-b bg-white p-6 shadow-sm sm:border-l sm:border-r md:rounded-lg;
+    @apply border-y bg-white p-4 shadow-sm md:rounded-lg md:border;
   }
 }
 

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useTranslation } from "next-i18next";
+import Link from "next/link";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
 import smoothscroll from "smoothscroll-polyfill";
@@ -9,12 +10,12 @@ import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
-import TimeZonePicker from "../time-zone-picker";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import { PollContext } from "./desktop-poll/poll-context";
 import PollHeader from "./desktop-poll/poll-header";
 import { useAddParticipantMutation } from "./mutations";
+import VoteIcon from "./vote-icon";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -27,12 +28,9 @@ const minSidebarWidth = 200;
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const { poll, targetTimeZone, setTargetTimeZone, options, userAlreadyVoted } =
-    usePoll();
+  const { poll, options, userAlreadyVoted, participantUrl } = usePoll();
 
   const { participants } = useParticipants();
-
-  const { timeZone } = poll;
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
   const [editingParticipantId, setEditingParticipantId] =
@@ -72,7 +70,8 @@ const Poll: React.VoidFunctionComponent = () => {
 
   const [didUsePagination, setDidUsePagination] = React.useState(false);
 
-  const shouldShowNewParticipantForm = !userAlreadyVoted && !poll.closed;
+  const shouldShowNewParticipantForm =
+    !userAlreadyVoted && !poll.closed && poll.role === "participant";
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
@@ -116,22 +115,8 @@ const Poll: React.VoidFunctionComponent = () => {
         style={{ width: pollWidth }}
         ref={ref}
       >
-        <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden bg-white md:rounded-lg md:border">
+        <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden border-y bg-white md:rounded-lg md:border">
           <div>
-            <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
-              {timeZone ? (
-                <div className="flex grow items-center">
-                  <div className="mr-2 text-sm font-medium text-slate-500">
-                    {t("timeZone")}
-                  </div>
-                  <TimeZonePicker
-                    value={targetTimeZone}
-                    onChange={setTargetTimeZone}
-                    className="grow"
-                  />
-                </div>
-              ) : null}
-            </div>
             <div className="flex">
               <div
                 className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
@@ -189,7 +174,7 @@ const Poll: React.VoidFunctionComponent = () => {
           </div>
           {participants.length > 0 ? (
             <div
-              className="min-h-0 overflow-y-auto py-2"
+              className="min-h-0 overflow-y-auto pb-2"
               ref={participantListContainerRef}
             >
               {participants.map((participant, i) => {
@@ -207,8 +192,19 @@ const Poll: React.VoidFunctionComponent = () => {
                 );
               })}
             </div>
+          ) : poll.role === "admin" ? (
+            <div className="m-4 rounded-lg border p-2 text-center text-slate-400">
+              <Trans
+                t={t}
+                i18nKey="toVoteNotice"
+                values={{ participantUrl }}
+                components={{
+                  a: <a href={participantUrl} />,
+                }}
+              />
+            </div>
           ) : null}
-          {shouldShowNewParticipantForm && !poll.closed ? (
+          {shouldShowNewParticipantForm ? (
             <ParticipantRowForm
               className="border-t bg-gray-50"
               onSubmit={async ({ name, votes }) => {

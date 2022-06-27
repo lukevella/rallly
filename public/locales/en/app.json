@@ -20,7 +20,7 @@
   "calendarHelp": "You can't create a poll without any options. Add at least one option to continue.",
   "errorCreate": "Uh oh! There was a problem creating your poll. The error has been logged and we'll try to fix it.",
   "share": "Share",
-  "shareDescription": "This is your <b>participant link</b>. Give this link to your participants to allow them to vote and comment on your poll.",
+  "shareDescription": "Give this link to your <b>participants</b> to allow them to vote on your poll.",
   "requiredNameError": "Name is required",
   "remove": "Remove",
   "change": "Change",
@@ -58,5 +58,6 @@
   "demoPollNotice": "Demo polls are automatically deleted after 1 day",
   "yourDetails": "Your details",
   "yourPolls": "Your polls",
-  "adminNotice": "You're an administrator of this poll"
+  "adminNotice": "You're an administrator of this poll",
+  "toVoteNotice": "To vote, please use the participant link: <a>{{participantUrl}}</a>"
 }
