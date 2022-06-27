@@ -59,7 +59,7 @@
     "zod": "^3.16.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.20.1",
+    "@playwright/test": "^1.22.2",
     "@types/lodash": "^4.14.178",
     "@types/nodemailer": "^6.4.4",
     "@types/react": "^17.0.5",

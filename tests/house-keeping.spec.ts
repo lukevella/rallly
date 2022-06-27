@@ -2,8 +2,6 @@ import { expect, test } from "@playwright/test";
 import { Prisma } from "@prisma/client";
 import { addDays } from "date-fns";
 
-import { nanoid } from "@/utils/nanoid";
-
 import { prisma } from "../prisma/db";
 
 /**
@@ -21,8 +19,8 @@ test.beforeAll(async ({ request, baseURL }) => {
         id: "active-poll",
         type: "date",
         userId: "user1",
-        participantUrlId: await nanoid(),
-        adminUrlId: await nanoid(),
+        participantUrlId: "p1",
+        adminUrlId: "a1",
       },
       // Poll that has been deleted 6 days ago
       {
@@ -32,8 +30,8 @@ test.beforeAll(async ({ request, baseURL }) => {
         userId: "user1",
         deleted: true,
         deletedAt: addDays(new Date(), -6),
-        participantUrlId: await nanoid(),
-        adminUrlId: await nanoid(),
+        participantUrlId: "p2",
+        adminUrlId: "a2",
       },
       // Poll that has been deleted 7 days ago
       {
@@ -43,8 +41,8 @@ test.beforeAll(async ({ request, baseURL }) => {
         userId: "user1",
         deleted: true,
         deletedAt: addDays(new Date(), -7),
-        participantUrlId: await nanoid(),
-        adminUrlId: await nanoid(),
+        participantUrlId: "p3",
+        adminUrlId: "a3",
       },
       // Poll that has been inactive for 29 days
       {
@@ -53,8 +51,8 @@ test.beforeAll(async ({ request, baseURL }) => {
         type: "date",
         userId: "user1",
         touchedAt: addDays(new Date(), -29),
-        participantUrlId: await nanoid(),
-        adminUrlId: await nanoid(),
+        participantUrlId: "p4",
+        adminUrlId: "a4",
       },
       // Poll that has been inactive for 30 days
       {
@@ -63,8 +61,8 @@ test.beforeAll(async ({ request, baseURL }) => {
         type: "date",
         userId: "user1",
         touchedAt: addDays(new Date(), -30),
-        participantUrlId: await nanoid(),
-        adminUrlId: await nanoid(),
+        participantUrlId: "p5",
+        adminUrlId: "a5",
       },
       // Demo poll
       {
@@ -74,8 +72,8 @@ test.beforeAll(async ({ request, baseURL }) => {
         type: "date",
         userId: "user1",
         createdAt: new Date(),
-        participantUrlId: await nanoid(),
-        adminUrlId: await nanoid(),
+        participantUrlId: "p6",
+        adminUrlId: "a6",
       },
       // Old demo poll
       {
@@ -85,8 +83,8 @@ test.beforeAll(async ({ request, baseURL }) => {
         type: "date",
         userId: "user1",
         createdAt: addDays(new Date(), -2),
-        participantUrlId: await nanoid(),
-        adminUrlId: await nanoid(),
+        participantUrlId: "p7",
+        adminUrlId: "a7",
       },
     ],
   });

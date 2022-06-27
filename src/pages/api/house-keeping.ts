@@ -99,9 +99,13 @@ export default async function handler(
       },
     });
 
+    await prisma.$executeRaw`DELETE FROM options WHERE poll_id IN (${Prisma.join(
+      pollIdsToDelete,
+    )})`;
+
     // Delete polls
     // Using execute raw to bypass soft delete middelware
-    await prisma.$executeRaw`DELETE FROM polls WHERE url_id IN (${Prisma.join(
+    await prisma.$executeRaw`DELETE FROM polls WHERE id IN (${Prisma.join(
       pollIdsToDelete,
     )})`;
   }
