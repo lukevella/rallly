@@ -9,7 +9,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
 
   await page.goto("/demo");
 
-  await expect(page.locator('text="Lunch Meeting Demo"')).toBeVisible();
+  await expect(page.locator('text="Lunch Meeting"')).toBeVisible();
 
   await page.type('[placeholder="Your name"]', "Test user");
   // There is a hidden checkbox (nth=0) that exists so that the behaviour of the form is consistent even

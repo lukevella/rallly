@@ -4,7 +4,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto("/demo");
 
-  await expect(page.locator('text="Lunch Meeting Demo"')).toBeVisible();
+  await expect(page.locator('text="Lunch Meeting"')).toBeVisible();
 
   await page.click("text='New'");
   await page.click("data-testid=poll-option >> nth=0");
