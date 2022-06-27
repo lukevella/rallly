@@ -182,11 +182,7 @@ const Discussion: React.VoidFunctionComponent = () => {
               )}
             />
           </div>
-          <Button
-            htmlType="submit"
-            loading={formState.isSubmitting}
-            type="primary"
-          >
+          <Button htmlType="submit" loading={formState.isSubmitting}>
             Comment
           </Button>
         </div>
