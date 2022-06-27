@@ -127,7 +127,7 @@ const Poll: React.VoidFunctionComponent = () => {
             </div>
           ) : null}
           <div>
-            <div className="flex">
+            <div className="flex border-b py-2">
               <div
                 className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
@@ -179,7 +179,7 @@ const Poll: React.VoidFunctionComponent = () => {
           </div>
           {participants.length > 0 ? (
             <div
-              className="min-h-0 overflow-y-auto pb-2"
+              className="min-h-0 overflow-y-auto py-2"
               ref={participantListContainerRef}
             >
               {participants.map((participant, i) => {
