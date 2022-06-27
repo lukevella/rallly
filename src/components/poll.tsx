@@ -207,7 +207,10 @@ const PollPage: NextPage = () => {
               <div className="p-4 md:border-b md:p-6">
                 <div className="space-y-4">
                   <div>
-                    <div className="mb-1 text-2xl font-semibold text-slate-700 md:text-left md:text-3xl">
+                    <div
+                      className="mb-1 text-2xl font-semibold text-slate-700 md:text-left md:text-3xl"
+                      data-testid="poll-title"
+                    >
                       {preventWidows(poll.title)}
                     </div>
                     <PollSubheader />

@@ -256,7 +256,7 @@ test("should delete old demo poll", async () => {
 
 // Teardown
 test.afterAll(async () => {
-  await prisma.$executeRaw`DELETE FROM polls WHERE url_id IN (${Prisma.join([
+  await prisma.$executeRaw`DELETE FROM polls WHERE id IN (${Prisma.join([
     "active-poll",
     "deleted-poll-6d",
     "deleted-poll-7d",
