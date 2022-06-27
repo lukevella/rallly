@@ -16,7 +16,6 @@ import superjson from "superjson";
 import Maintenance from "@/components/maintenance";
 import ModalProvider from "@/components/modal/modal-provider";
 import PreferencesProvider from "@/components/preferences/preferences-provider";
-import { absoluteUrl } from "@/utils/absolute-url";
 
 import { AppRouter } from "./api/trpc/[trpc]";
 
@@ -52,7 +51,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
 
 export default withTRPC<AppRouter>({
   config() {
-    const url = `${absoluteUrl()}/api/trpc`;
+    const url = "/api/trpc";
 
     return {
       transformer: superjson,
