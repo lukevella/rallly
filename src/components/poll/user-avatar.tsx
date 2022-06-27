@@ -46,9 +46,7 @@ export const UserAvatarProvider: React.VoidFunctionComponent<{
       "": defaultColor,
     };
     for (let i = 0; i < names.length; i++) {
-      const lastIndex = names.length - 1;
-      // start from the end since the names is "most recent" first.
-      const name = names[lastIndex - i].trim().toLowerCase();
+      const name = names[i].trim().toLowerCase();
       const color = colors[(seedValue + i) % colors.length];
       res[name] = color;
     }
