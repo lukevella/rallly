@@ -193,8 +193,19 @@ const PollPage: NextPage = () => {
                 ) : null}
               </>
             ) : null}
+            {!poll.admin && poll.adminUrlId ? (
+              <div className="mb-4 items-center justify-between rounded-lg px-4 md:flex md:space-x-4 md:border md:p-2 md:pl-4">
+                <div className="mb-4 font-medium md:mb-0">
+                  Hey {poll.user.name}, looks like you are the owner of this
+                  poll.
+                </div>
+                <a href={`/admin/${poll.adminUrlId}`} className="btn-default">
+                  Go to admin &rarr;
+                </a>
+              </div>
+            ) : null}
             {poll.closed ? (
-              <div className="m-4 flex rounded-lg bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:mx-0 md:mt-0">
+              <div className="flex bg-sky-100 py-3 px-4 text-sky-700 md:mb-4 md:rounded-lg md:shadow-sm">
                 <div className="mr-2 rounded-md">
                   <LockClosed className="w-6" />
                 </div>
