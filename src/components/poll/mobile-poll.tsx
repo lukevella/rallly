@@ -10,7 +10,6 @@ import Check from "@/components/icons/check.svg";
 import ChevronDown from "@/components/icons/chevron-down.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
-import Save from "@/components/icons/save.svg";
 import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 
@@ -87,28 +86,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     !userAlreadyVoted && !poll.closed && !poll.admin,
   );
 
-  const [shouldShowSaveButton, setShouldShowSaveButton] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
-
-  React.useEffect(() => {
-    const setState = () => {
-      if (formRef.current) {
-        const rect = formRef.current.getBoundingClientRect();
-        const saveButtonIsVisible = rect.bottom <= window.innerHeight;
-
-        setShouldShowSaveButton(
-          !saveButtonIsVisible &&
-            formRef.current.getBoundingClientRect().top <
-              window.innerHeight / 2,
-        );
-      }
-    };
-    setState();
-    window.addEventListener("scroll", setState, true);
-    return () => {
-      window.removeEventListener("scroll", setState, true);
-    };
-  }, []);
 
   const { t } = useTranslation("app");
 
@@ -116,20 +94,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
 
   const addParticipant = useAddParticipantMutation();
   const confirmDeleteParticipant = useDeleteParticipantModal();
-
-  const submitContainerRef = React.useRef<HTMLDivElement>(null);
-  const scrollToSave = () => {
-    if (submitContainerRef.current) {
-      window.scrollTo({
-        top:
-          document.documentElement.scrollTop +
-          submitContainerRef.current.getBoundingClientRect().bottom -
-          window.innerHeight +
-          100,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <FormProvider {...form}>
@@ -332,28 +296,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
           }}
         />
         <AnimatePresence>
-          {shouldShowSaveButton && isEditing ? (
-            <motion.button
-              type="button"
-              variants={{
-                exit: {
-                  opacity: 0,
-                  y: -50,
-                  transition: { duration: 0.2 },
-                },
-                hidden: { opacity: 0, y: 50 },
-                visible: { opacity: 1, y: 0, transition: { delay: 0.2 } },
-              }}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="fixed bottom-8 left-1/2 z-10 -ml-6 inline-flex h-12 w-12 appearance-none items-center justify-center rounded-full bg-white text-slate-700 shadow-lg active:bg-gray-100"
-            >
-              <Save className="w-5" onClick={scrollToSave} />
-            </motion.button>
-          ) : null}
-        </AnimatePresence>
-        <AnimatePresence>
           {isEditing ? (
             <motion.div
               variants={{
@@ -369,10 +311,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                 transition: { duration: 0.2 },
               }}
             >
-              <div
-                ref={submitContainerRef}
-                className="space-y-3 border-t bg-gray-50 p-3"
-              >
+              <div className="space-y-3 border-t bg-gray-50 p-3">
                 <Button
                   icon={<Check />}
                   className="w-full"
