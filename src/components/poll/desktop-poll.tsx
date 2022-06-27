@@ -113,7 +113,7 @@ const Poll: React.VoidFunctionComponent = () => {
       >
         <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden bg-white">
           {poll.timeZone ? (
-            <div className="flex h-14 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
+            <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
               <div className="flex grow items-center">
                 <div className="mr-2 text-sm font-medium text-slate-500">
                   {t("timeZone")}
