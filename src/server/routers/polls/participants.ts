@@ -21,7 +21,7 @@ export const participants = createRouter()
         },
         orderBy: [
           {
-            createdAt: "desc",
+            createdAt: "asc",
           },
           { name: "desc" },
         ],
@@ -48,7 +48,7 @@ export const participants = createRouter()
   .mutation("add", {
     input: z.object({
       pollId: z.string(),
-      name: z.string(),
+      name: z.string().nonempty("Participant name is required"),
       votes: z
         .object({
           optionId: z.string(),

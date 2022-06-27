@@ -1,13 +1,14 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMount } from "react-use";
 
 import { Button } from "@/components/button";
-import LocationMarker from "@/components/icons/location-marker.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import Share from "@/components/icons/share.svg";
 import { preventWidows } from "@/utils/prevent-widows";
@@ -19,11 +20,11 @@ import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
 import PollSubheader from "./poll/poll-subheader";
 import TruncatedLinkify from "./poll/truncated-linkify";
+import { UnverifiedPollNotice } from "./poll/unverified-poll-notice";
 import { useTouchBeacon } from "./poll/use-touch-beacon";
 import { UserAvatarProvider } from "./poll/user-avatar";
 import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
-import Popover from "./popover";
 import { useSession } from "./session";
 import Sharing from "./sharing";
 import StandardLayout from "./standard-layout";
@@ -34,19 +35,13 @@ const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
 const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
 const PollPage: NextPage = () => {
-  const { poll } = usePoll();
+  const { poll, urlId, admin } = usePoll();
   const { participants } = useParticipants();
   const router = useRouter();
 
-  useTouchBeacon(poll.pollId);
+  useTouchBeacon(poll.id);
 
-  useMount(() => {
-    const path = poll.role === "admin" ? "admin" : "p";
-
-    if (!new RegExp(`^/${path}`).test(router.asPath)) {
-      router.replace(`/${path}/${poll.urlId}`, undefined, { shallow: true });
-    }
-  });
+  const { t } = useTranslation("app");
 
   const session = useSession();
 
@@ -58,7 +53,7 @@ const PollPage: NextPage = () => {
   const verifyEmail = trpc.useMutation(["polls.verification.verify"], {
     onSuccess: () => {
       toast.success("Your poll has been verified");
-      queryClient.setQueryData(["polls.get", { urlId: poll.urlId }], {
+      queryClient.setQueryData(["polls.get", { urlId, admin }], {
         ...poll,
         verified: true,
       });
@@ -78,14 +73,14 @@ const PollPage: NextPage = () => {
   useMount(() => {
     const { code } = router.query;
     if (typeof code === "string" && !poll.verified) {
-      verifyEmail.mutate({ code, pollId: poll.pollId });
+      verifyEmail.mutate({ code, pollId: poll.id });
     }
   });
 
   React.useEffect(() => {
     if (router.query.unsubscribe) {
       updatePollMutation(
-        { urlId: poll.urlId, notifications: false },
+        { urlId: urlId, notifications: false },
         {
           onSuccess: () => {
             toast.success("Notifications have been disabled");
@@ -97,7 +92,7 @@ const PollPage: NextPage = () => {
         shallow: true,
       });
     }
-  }, [plausible, poll.urlId, router, updatePollMutation]);
+  }, [plausible, urlId, router, updatePollMutation]);
 
   const checkIfWideScreen = () => window.innerWidth > 640;
 
@@ -120,10 +115,13 @@ const PollPage: NextPage = () => {
     [participants],
   );
 
+  const [isSharingVisible, setSharingVisible] = React.useState(
+    !!router.query.sharing,
+  );
   return (
-    <UserAvatarProvider seed={poll.pollId} names={names}>
+    <UserAvatarProvider seed={poll.id} names={names}>
       <StandardLayout>
-        <div className="relative max-w-full bg-gray-50 py-4 md:px-4 lg:px-4">
+        <div className="relative max-w-full py-4 md:px-4">
           <Head>
             <title>{poll.title}</title>
             <meta name="robots" content="noindex,nofollow" />
@@ -134,92 +132,144 @@ const PollPage: NextPage = () => {
               width: Math.max(768, poll.options.length * 95 + 200 + 160),
             }}
           >
-            <div className="mb-6">
-              <div className="mb-3 items-start px-4 md:flex md:space-x-4">
-                <div className="mb-3 grow md:mb-0">
-                  <div className="flex flex-col-reverse md:flex-row">
-                    <h1
-                      data-testid="poll-title"
-                      className="mb-2 grow text-3xl leading-tight"
+            {admin ? (
+              <>
+                <div className="mb-4 flex space-x-2 px-4 md:justify-end md:px-0">
+                  <NotificationsToggle />
+                  <ManagePoll
+                    placement={isWideScreen ? "bottom-end" : "bottom-start"}
+                  />
+                  <Button
+                    type="primary"
+                    icon={<Share />}
+                    onClick={() => {
+                      setSharingVisible((value) => !value);
+                    }}
+                  >
+                    Share
+                  </Button>
+                </div>
+                <AnimatePresence initial={false}>
+                  {isSharingVisible ? (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        scale: 0.8,
+                        height: 0,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        height: "auto",
+                        marginBottom: 16,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.8,
+                        height: 0,
+                        marginBottom: 0,
+                      }}
+                      className="overflow-hidden"
                     >
-                      {preventWidows(poll.title)}
-                    </h1>
-                    {poll.role === "admin" ? (
-                      <div className="mb-4 flex space-x-2 md:mb-2">
-                        <NotificationsToggle />
-                        <ManagePoll
-                          placement={
-                            isWideScreen ? "bottom-end" : "bottom-start"
-                          }
-                        />
-                        <div>
-                          <Popover
-                            trigger={
-                              <Button type="primary" icon={<Share />}>
-                                Share
-                              </Button>
-                            }
-                            placement={isWideScreen ? "bottom-end" : undefined}
-                          >
-                            <Sharing links={poll.links} />
-                          </Popover>
-                        </div>
-                      </div>
-                    ) : null}
+                      <Sharing
+                        onHide={() => {
+                          setSharingVisible(false);
+                          router.replace(
+                            `/admin/${router.query.urlId}`,
+                            undefined,
+                            {
+                              shallow: true,
+                            },
+                          );
+                        }}
+                      />
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+                {poll.verified === false ? (
+                  <div className="m-4 overflow-hidden rounded-lg border p-4 md:mx-0 md:mt-0">
+                    <UnverifiedPollNotice />
                   </div>
-                  <PollSubheader />
+                ) : null}
+              </>
+            ) : null}
+            {!poll.admin && poll.adminUrlId ? (
+              <div className="mb-4 items-center justify-between rounded-lg px-4 md:flex md:space-x-4 md:border md:p-2 md:pl-4">
+                <div className="mb-4 font-medium md:mb-0">
+                  Hey {poll.user.name}, looks like you are the owner of this
+                  poll.
                 </div>
-              </div>
-              {poll.description ? (
-                <div className="mb-4 whitespace-pre-line bg-white px-4 py-3 text-lg leading-relaxed text-slate-600 shadow-sm md:w-fit md:rounded-xl md:bg-white">
-                  <TruncatedLinkify>
-                    {preventWidows(poll.description)}
-                  </TruncatedLinkify>
-                </div>
-              ) : null}
-              {poll.location ? (
-                <div className="mb-4 flex items-center px-4">
-                  <div>
-                    <LocationMarker
-                      width={20}
-                      className="mr-2 text-slate-400"
-                    />
-                  </div>
-                  <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-                </div>
-              ) : null}
-            </div>
-            {poll.closed ? (
-              <div className="mb-4 flex items-center bg-sky-100 py-3 px-4 text-sky-700 shadow-sm md:rounded-lg">
-                <div className="mr-3 rounded-md">
-                  <LockClosed className="w-5" />
-                </div>
-                This poll has been locked (voting is disabled)
+                <a href={`/admin/${poll.adminUrlId}`} className="btn-default">
+                  Go to admin &rarr;
+                </a>
               </div>
             ) : null}
-
-            <div className="flex items-center space-x-3 px-4 py-2 sm:justify-end">
-              <span className="text-xs font-semibold text-slate-500">Key:</span>
-              <span className="inline-flex items-center space-x-1">
-                <VoteIcon type="yes" />
-                <span className="text-xs text-slate-500">Yes</span>
-              </span>
-              <span className="inline-flex items-center space-x-1">
-                <VoteIcon type="ifNeedBe" />
-                <span className="text-xs text-slate-500">If need be</span>
-              </span>
-
-              <span className="inline-flex items-center space-x-1">
-                <VoteIcon type="no" />
-                <span className="text-xs text-slate-500">No</span>
-              </span>
-            </div>
-            <React.Suspense fallback={<div className="p-4">Loading…</div>}>
-              {participants ? (
-                <div className="mb-4 lg:mb-8">
-                  <PollComponent />
+            {poll.closed ? (
+              <div className="flex bg-sky-100 py-3 px-4 text-sky-700 md:mb-4 md:rounded-lg md:shadow-sm">
+                <div className="mr-2 rounded-md">
+                  <LockClosed className="w-6" />
                 </div>
-              ) : null}
+                <div>
+                  <div className="font-medium">This poll has been locked</div>
+                </div>
+              </div>
+            ) : null}
+            <div className="md:card mb-4 border-t bg-white md:overflow-hidden md:p-0">
+              <div className="p-4 md:border-b md:p-6">
+                <div className="space-y-4">
+                  <div>
+                    <div
+                      className="mb-1 text-2xl font-semibold text-slate-700 md:text-left md:text-3xl"
+                      data-testid="poll-title"
+                    >
+                      {preventWidows(poll.title)}
+                    </div>
+                    <PollSubheader />
+                  </div>
+                  {poll.description ? (
+                    <div className="border-primary whitespace-pre-line lg:text-lg">
+                      <TruncatedLinkify>
+                        {preventWidows(poll.description)}
+                      </TruncatedLinkify>
+                    </div>
+                  ) : null}
+                  {poll.location ? (
+                    <div className="lg:text-lg">
+                      <div className="text-sm text-slate-500">
+                        {t("location")}
+                      </div>
+                      <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+                    </div>
+                  ) : null}
+                  <div>
+                    <div className="mb-2 text-sm text-slate-500">
+                      Possible answers
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span className="inline-flex items-center space-x-1">
+                        <VoteIcon type="yes" />
+                        <span className="text-xs text-slate-500">Yes</span>
+                      </span>
+                      <span className="inline-flex items-center space-x-1">
+                        <VoteIcon type="ifNeedBe" />
+                        <span className="text-xs text-slate-500">
+                          If need be
+                        </span>
+                      </span>
+                      <span className="inline-flex items-center space-x-1">
+                        <VoteIcon type="no" />
+                        <span className="text-xs text-slate-500">No</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <React.Suspense fallback={null}>
+                {participants ? <PollComponent /> : null}
+              </React.Suspense>
+            </div>
+
+            <React.Suspense fallback={<div className="p-4">Loading…</div>}>
               <Discussion />
             </React.Suspense>
           </div>

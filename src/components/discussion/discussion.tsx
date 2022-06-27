@@ -27,9 +27,9 @@ interface CommentForm {
 const Discussion: React.VoidFunctionComponent = () => {
   const { locale } = usePreferences();
   const queryClient = trpc.useContext();
-  const {
-    poll: { pollId },
-  } = usePoll();
+  const { poll } = usePoll();
+
+  const pollId = poll.id;
 
   const { data: comments } = trpc.useQuery(
     ["polls.comments.list", { pollId }],
@@ -52,8 +52,6 @@ const Discussion: React.VoidFunctionComponent = () => {
       plausible("Created comment");
     },
   });
-
-  const { poll } = usePoll();
 
   const deleteComment = trpc.useMutation("polls.comments.delete", {
     onMutate: ({ commentId }) => {
@@ -96,9 +94,7 @@ const Discussion: React.VoidFunctionComponent = () => {
         <AnimatePresence initial={false}>
           {comments.map((comment) => {
             const canDelete =
-              poll.role === "admin" ||
-              session.ownsObject(comment) ||
-              isUnclaimed(comment);
+              poll.admin || session.ownsObject(comment) || isUnclaimed(comment);
 
             return (
               <motion.div
@@ -135,23 +131,22 @@ const Discussion: React.VoidFunctionComponent = () => {
                         )}
                       </span>
                     </div>
-                    {canDelete ? (
-                      <Dropdown
-                        placement="bottom-start"
-                        trigger={<CompactButton icon={DotsHorizontal} />}
-                      >
-                        <DropdownItem
-                          icon={Trash}
-                          label="Delete comment"
-                          onClick={() => {
-                            deleteComment.mutate({
-                              commentId: comment.id,
-                              pollId,
-                            });
-                          }}
-                        />
-                      </Dropdown>
-                    ) : null}
+                    <Dropdown
+                      placement="bottom-start"
+                      trigger={<CompactButton icon={DotsHorizontal} />}
+                    >
+                      <DropdownItem
+                        icon={Trash}
+                        label="Delete comment"
+                        disabled={!canDelete}
+                        onClick={() => {
+                          deleteComment.mutate({
+                            commentId: comment.id,
+                            pollId,
+                          });
+                        }}
+                      />
+                    </Dropdown>
                   </div>
                   <div className="w-fit whitespace-pre-wrap">
                     <TruncatedLinkify>{comment.content}</TruncatedLinkify>
@@ -187,11 +182,7 @@ const Discussion: React.VoidFunctionComponent = () => {
               )}
             />
           </div>
-          <Button
-            htmlType="submit"
-            loading={formState.isSubmitting}
-            type="primary"
-          >
+          <Button htmlType="submit" loading={formState.isSubmitting}>
             Comment
           </Button>
         </div>

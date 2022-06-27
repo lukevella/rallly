@@ -1,3 +1,10 @@
+import {
+  flip,
+  FloatingPortal,
+  offset,
+  size,
+  useFloating,
+} from "@floating-ui/react-dom-interactions";
 import { Combobox } from "@headlessui/react";
 import clsx from "clsx";
 import React from "react";
@@ -119,6 +126,23 @@ const TimeZonePicker: React.VoidFunctionComponent<{
 }> = ({ value, onChange, onBlur, className, style, disabled }) => {
   const { options, findFuzzyTz } = useTimeZones();
 
+  const { reference, floating, x, y, strategy, refs } = useFloating({
+    strategy: "fixed",
+    middleware: [
+      offset(5),
+      flip(),
+      size({
+        apply: ({ reference }) => {
+          if (refs.floating.current) {
+            Object.assign(refs.floating.current.style, {
+              width: `${reference.width}px`,
+            });
+          }
+        },
+      }),
+    ],
+  });
+
   const timeZoneOptions = React.useMemo(
     () => [
       {
@@ -164,7 +188,11 @@ const TimeZonePicker: React.VoidFunctionComponent<{
       }}
       disabled={disabled}
     >
-      <div className={clsx("relative", className)} style={style}>
+      <div
+        className={clsx("relative", className)}
+        ref={reference}
+        style={style}
+      >
         {/* Remove generic params once Combobox.Input can infer the types */}
         <Combobox.Input<"input", TimeZoneOption>
           className="input w-full pr-8"
@@ -182,17 +210,27 @@ const TimeZonePicker: React.VoidFunctionComponent<{
             <ChevronDown className="h-5 w-5" />
           </span>
         </Combobox.Button>
-        <Combobox.Options className="absolute z-50 mt-1 max-h-72 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          {filteredTimeZones.map((timeZone) => (
-            <Combobox.Option
-              key={timeZone.value}
-              className={styleMenuItem}
-              value={timeZone}
-            >
-              {timeZone.label}
-            </Combobox.Option>
-          ))}
-        </Combobox.Options>
+        <FloatingPortal>
+          <Combobox.Options
+            ref={floating}
+            className="z-50 mt-1 max-h-72 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            style={{
+              position: strategy,
+              left: x ?? "",
+              top: y ?? "",
+            }}
+          >
+            {filteredTimeZones.map((timeZone) => (
+              <Combobox.Option
+                key={timeZone.value}
+                className={styleMenuItem}
+                value={timeZone}
+              >
+                {timeZone.label}
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
+        </FloatingPortal>
       </div>
     </Combobox>
   );

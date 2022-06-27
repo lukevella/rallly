@@ -33,6 +33,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     sidebarWidth,
     numberOfColumns,
     goToNextPage,
+    maxScrollPosition,
     setScrollPosition,
   } = usePollContext();
 
@@ -85,9 +86,8 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
           render={({ field }) => (
             <div className="w-full">
               <NameInput
-                autoFocus={true}
                 className={clsx("w-full", {
-                  "input-error animate-wiggle": errors.name && submitCount > 0,
+                  "input-error": errors.name && submitCount > 0,
                 })}
                 placeholder="Your name"
                 {...field}
@@ -160,16 +160,28 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
       />
 
       <div className="flex items-center space-x-2 px-2 transition-all">
-        <Button
-          htmlType="submit"
-          icon={<Check />}
-          type="primary"
-          loading={isSubmitting}
-          data-testid="submitNewParticipant"
-        >
-          Save
-        </Button>
-        <CompactButton onClick={onCancel} icon={X} />
+        {scrollPosition >= maxScrollPosition ? (
+          <Button
+            htmlType="submit"
+            icon={<Check />}
+            type="primary"
+            loading={isSubmitting}
+            data-testid="submitNewParticipant"
+          >
+            Save
+          </Button>
+        ) : null}
+        {scrollPosition < maxScrollPosition ? (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              goToNextPage();
+            }}
+          >
+            Next &rarr;
+          </Button>
+        ) : null}
+        {onCancel ? <CompactButton onClick={onCancel} icon={X} /> : null}
       </div>
     </form>
   );

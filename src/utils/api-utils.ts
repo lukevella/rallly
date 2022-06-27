@@ -1,7 +1,6 @@
-import { Link } from "@prisma/client";
 import * as Eta from "eta";
 import { readFileSync } from "fs";
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 import path from "path";
 
 import { prisma } from "~/prisma/db";
@@ -12,38 +11,6 @@ import { sendEmail } from "./send-email";
 export const getQueryParam = (req: NextApiRequest, queryKey: string) => {
   const value = req.query[queryKey];
   return typeof value === "string" ? value : value[0];
-};
-
-type ApiMiddleware<T, P extends Record<string, unknown>> = (
-  ctx: {
-    req: NextApiRequest;
-    res: NextApiResponse<T>;
-  } & P,
-) => Promise<void | NextApiResponse>;
-
-/**
- * Gets the Link from `req.query.urlId` and passes it to handler
- * @param handler
- * @returns
- */
-export const withLink = <T>(
-  handler: ApiMiddleware<T, { link: Link }>,
-): NextApiHandler => {
-  return async (req, res) => {
-    const urlId = getQueryParam(req, "urlId");
-    const link = await prisma.link.findUnique({ where: { urlId } });
-
-    if (!link) {
-      res.status(404).json({
-        status: 404,
-        message: `Could not find link with urlId: ${urlId}`,
-      });
-      return;
-    }
-
-    await handler({ req, res, link });
-    return;
-  };
 };
 
 type NotificationAction =
@@ -62,8 +29,8 @@ export const sendNotification = async (
 ): Promise<void> => {
   try {
     const poll = await prisma.poll.findUnique({
-      where: { urlId: pollId },
-      include: { user: true, links: true },
+      where: { id: pollId },
+      include: { user: true },
     });
     /**
      * poll needs to:
@@ -79,12 +46,8 @@ export const sendNotification = async (
       !poll.demo &&
       poll.notifications
     ) {
-      const adminLink = getAdminLink(poll.links);
-      if (!adminLink) {
-        throw new Error(`Missing admin link for poll: ${pollId}`);
-      }
       const homePageUrl = absoluteUrl();
-      const pollUrl = `${homePageUrl}/admin/${adminLink.urlId}`;
+      const pollUrl = `${homePageUrl}/admin/${poll.adminUrlId}`;
       const unsubscribeUrl = `${pollUrl}?unsubscribe=true`;
 
       switch (action.type) {
@@ -126,9 +89,6 @@ export const sendNotification = async (
     console.error(e);
   }
 };
-
-export const getAdminLink = (links: Link[]) =>
-  links.find((link) => link.role === "admin");
 
 interface SendEmailTemplateParams {
   templateName: string;

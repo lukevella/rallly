@@ -95,7 +95,7 @@ const Page: NextPage<CreatePollPageProps> = ({
   const plausible = usePlausible();
 
   const createPoll = trpc.useMutation(["polls.create"], {
-    onSuccess: (poll) => {
+    onSuccess: (res) => {
       setIsRedirecting(true);
       plausible("Created poll", {
         props: {
@@ -104,7 +104,7 @@ const Page: NextPage<CreatePollPageProps> = ({
         },
       });
       setPersistedFormData(initialNewEventData);
-      router.replace(`/admin/${poll.urlId}`);
+      router.replace(`/admin/${res.urlId}?sharing=true`);
     },
   });
 

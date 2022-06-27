@@ -20,7 +20,10 @@ import { useRequiredContext } from "./use-required-context";
 type PollContextValue = {
   userAlreadyVoted: boolean;
   poll: GetPollApiResponse;
+  urlId: string;
+  admin: boolean;
   targetTimeZone: string;
+  participantUrl: string;
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
@@ -49,9 +52,11 @@ export const usePoll = () => {
 };
 
 export const PollContextProvider: React.VoidFunctionComponent<{
-  value: GetPollApiResponse;
+  poll: GetPollApiResponse;
+  urlId: string;
+  admin: boolean;
   children?: React.ReactNode;
-}> = ({ value: poll, children }) => {
+}> = ({ poll, urlId, admin, children }) => {
   const { participants } = useParticipants();
   const [isDeleted, setDeleted] = React.useState(false);
   const { user } = useSession();
@@ -129,10 +134,17 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       );
     });
 
+    const { participantUrlId } = poll;
+
+    const participantUrl = `${window.location.origin}/p/${participantUrlId}`;
+
     return {
       optionIds,
       userAlreadyVoted,
       poll,
+      urlId,
+      admin,
+      participantUrl,
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
@@ -152,7 +164,17 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       isDeleted,
       setDeleted,
     };
-  }, [getScore, isDeleted, locale, participants, poll, targetTimeZone, user]);
+  }, [
+    admin,
+    getScore,
+    isDeleted,
+    locale,
+    participants,
+    poll,
+    targetTimeZone,
+    urlId,
+    user,
+  ]);
 
   if (isDeleted) {
     return (

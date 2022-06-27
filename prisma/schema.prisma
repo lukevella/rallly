@@ -1,11 +1,11 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider             = "postgresql"
+  url                  = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
 
@@ -29,51 +29,34 @@ enum PollType {
 }
 
 model Poll {
-  urlId         String        @id @unique @map("url_id")
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
-  deadline      DateTime?
-  title         String
-  type          PollType
-  description   String?
-  location      String?
-  user          User          @relation(fields: [userId], references: [id])
-  userId        String        @map("user_id")
-  votes         Vote[]
-  timeZone      String?       @map("time_zone")
-  verified      Boolean       @default(false)
-  options       Option[]
-  participants  Participant[]
-  authorName    String        @default("") @map("author_name")
-  demo          Boolean       @default(false)
-  comments      Comment[]
-  links         Link[]
-  legacy        Boolean       @default(false)
-  closed        Boolean       @default(false)
-  notifications Boolean       @default(false)
-  deleted       Boolean       @default(false)
-  deletedAt     DateTime?     @map("deleted_at")
-  touchedAt     DateTime      @default(now()) @map("touched_at")
+  id               String        @id @unique @map("id")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+  deadline         DateTime?
+  title            String
+  type             PollType
+  description      String?
+  location         String?
+  user             User          @relation(fields: [userId], references: [id])
+  userId           String        @map("user_id")
+  votes            Vote[]
+  timeZone         String?       @map("time_zone")
+  verified         Boolean       @default(false)
+  options          Option[]
+  participants     Participant[]
+  authorName       String        @default("") @map("author_name")
+  demo             Boolean       @default(false)
+  comments         Comment[]
+  legacy           Boolean       @default(false)
+  closed           Boolean       @default(false)
+  notifications    Boolean       @default(false)
+  deleted          Boolean       @default(false)
+  deletedAt        DateTime?     @map("deleted_at")
+  touchedAt        DateTime      @default(now()) @map("touched_at")
+  participantUrlId String        @unique @map("participant_url_id")
+  adminUrlId       String        @unique @map("admin_url_id")
 
   @@map("polls")
-}
-
-enum Role {
-  admin
-  participant
-
-  @@map("role")
-}
-
-model Link {
-  urlId     String   @id @unique @map("url_id")
-  role      Role
-  pollId    String   @map("poll_id")
-  poll      Poll     @relation(fields: [pollId], references: [urlId])
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@unique([pollId, role])
-  @@map("links")
 }
 
 model Participant {
@@ -82,7 +65,7 @@ model Participant {
   user      User?     @relation(fields: [userId], references: [id])
   userId    String?   @map("user_id")
   guestId   String?   @map("guest_id")
-  poll      Poll      @relation(fields: [pollId], references: [urlId])
+  poll      Poll      @relation(fields: [pollId], references: [id])
   pollId    String    @map("poll_id")
   votes     Vote[]
   createdAt DateTime  @default(now()) @map("created_at")
@@ -96,7 +79,7 @@ model Option {
   id        String    @id @default(cuid())
   value     String
   pollId    String    @map("poll_id")
-  poll      Poll      @relation(fields: [pollId], references: [urlId])
+  poll      Poll      @relation(fields: [pollId], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   votes     Vote[]
@@ -118,7 +101,7 @@ model Vote {
   participantId String      @map("participant_id")
   option        Option      @relation(fields: [optionId], references: [id], onDelete: Cascade)
   optionId      String      @map("option_id")
-  poll          Poll        @relation(fields: [pollId], references: [urlId])
+  poll          Poll        @relation(fields: [pollId], references: [id])
   pollId        String      @map("poll_id")
   type          VoteType    @default(yes)
   createdAt     DateTime    @default(now()) @map("created_at")
@@ -130,7 +113,7 @@ model Vote {
 model Comment {
   id         String    @id @default(cuid())
   content    String
-  poll       Poll      @relation(fields: [pollId], references: [urlId])
+  poll       Poll      @relation(fields: [pollId], references: [id])
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
   user       User?     @relation(fields: [userId], references: [id])

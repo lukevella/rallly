@@ -7,7 +7,7 @@
   body,
   #__next {
     height: 100%;
-    @apply bg-slate-50;
+    @apply overflow-x-hidden bg-slate-50;
   }
   body {
     @apply bg-slate-50 text-base text-slate-600;
@@ -32,13 +32,13 @@
     @apply outline-none;
   }
   a {
-    @apply text-primary-500 hover:text-primary-400 focus-visible:ring-primary-500 rounded-sm font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+    @apply rounded-sm font-medium text-primary-500 outline-none hover:text-primary-400 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
   }
   label {
     @apply mb-1 block text-sm text-slate-800;
   }
   button {
-    @apply focus-visible:ring-primary-500 cursor-default outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+    @apply cursor-default outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
   }
 
   #floating-ui-root {
@@ -51,7 +51,7 @@
     @apply mb-4;
   }
   .input {
-    @apply focus:border-primary-500 focus:ring-primary-500 appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 shadow-sm placeholder:text-slate-400 focus:ring-1;
+    @apply appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500;
   }
   input.input {
     @apply h-9;
@@ -63,17 +63,17 @@
     @apply border-rose-500 ring-1 ring-rose-400 focus:border-rose-400 focus:ring-rose-500;
   }
   .checkbox {
-    @apply text-primary-500 focus:ring-primary-500 h-4 w-4 rounded border-slate-300 shadow-sm;
+    @apply h-4 w-4 rounded border-slate-300 text-primary-500 shadow-sm focus:ring-primary-500;
   }
   .btn {
-    @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all sm:active:scale-95;
+    @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all;
   }
   a.btn {
     @apply cursor-pointer hover:no-underline;
   }
 
   .btn-default {
-    @apply btn hover:bg-primary-50/10 bg-white text-slate-700 active:bg-slate-100;
+    @apply btn bg-white text-slate-700 hover:bg-slate-100/10 active:bg-slate-500/10;
   }
 
   a.btn-default {
@@ -83,7 +83,7 @@
     @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus-visible:ring-rose-500;
   }
   .btn-link {
-    @apply text-primary-500 inline-flex items-center underline;
+    @apply inline-flex items-center text-primary-500 underline;
   }
   .btn.btn-disabled {
     text-shadow: none;
@@ -91,7 +91,7 @@
   }
   .btn-primary {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
-    @apply btn border-primary-600 bg-primary-500 focus-visible:ring-primary-500 active:bg-primary-600 text-white hover:bg-opacity-90;
+    @apply btn border-primary-600 bg-primary-500 text-white hover:bg-opacity-90 focus-visible:ring-primary-500 active:bg-primary-600;
   }
 
   a.btn-primary {
@@ -127,13 +127,13 @@
   }
 
   .card {
-    @apply border-t border-b bg-white p-6 shadow-sm sm:rounded-lg sm:border-l sm:border-r;
+    @apply border-y bg-white p-4 shadow-sm md:rounded-lg md:border;
   }
 }
 
 @layer components {
   .heading {
-    @apply text-primary-500 text-xl;
+    @apply text-xl text-primary-500;
   }
   .subheading {
     @apply mb-16 text-4xl font-bold text-slate-800;

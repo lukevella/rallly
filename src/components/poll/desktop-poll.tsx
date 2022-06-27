@@ -7,7 +7,6 @@ import smoothscroll from "smoothscroll-polyfill";
 import { Button } from "../button";
 import ArrowLeft from "../icons/arrow-left.svg";
 import ArrowRight from "../icons/arrow-right.svg";
-import PlusCircle from "../icons/plus-circle.svg";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
 import TimeZonePicker from "../time-zone-picker";
@@ -23,19 +22,15 @@ if (typeof window !== "undefined") {
 
 const MotionButton = motion(Button);
 
-const MotionParticipantFormRow = motion(ParticipantRowForm);
-
-const minSidebarWidth = 180;
+const minSidebarWidth = 200;
 
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const { poll, targetTimeZone, setTargetTimeZone, options, userAlreadyVoted } =
+  const { poll, options, userAlreadyVoted, targetTimeZone, setTargetTimeZone } =
     usePoll();
 
   const { participants } = useParticipants();
-
-  const { timeZone } = poll;
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
   const [editingParticipantId, setEditingParticipantId] =
@@ -43,9 +38,9 @@ const Poll: React.VoidFunctionComponent = () => {
 
   const actionColumnWidth = 140;
   const columnWidth = Math.min(
-    100,
+    130,
     Math.max(
-      95,
+      90,
       (width - minSidebarWidth - actionColumnWidth) / options.length,
     ),
   );
@@ -71,12 +66,7 @@ const Poll: React.VoidFunctionComponent = () => {
   const maxScrollPosition =
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
 
-  const numberOfInvisibleColumns = options.length - numberOfVisibleColumns;
-
-  const [didUsePagination, setDidUsePagination] = React.useState(false);
-
-  const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(!userAlreadyVoted && !poll.closed);
+  const shouldShowNewParticipantForm = !userAlreadyVoted && !poll.closed;
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
@@ -98,6 +88,7 @@ const Poll: React.VoidFunctionComponent = () => {
     );
   };
 
+  const participantListContainerRef = React.useRef<HTMLDivElement>(null);
   return (
     <PollContext.Provider
       value={{
@@ -112,42 +103,31 @@ const Poll: React.VoidFunctionComponent = () => {
         numberOfColumns: numberOfVisibleColumns,
         availableSpace,
         actionColumnWidth,
+        maxScrollPosition,
       }}
     >
       <div
-        className="relative min-w-full max-w-full select-none" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
-        style={{ width: `min(${pollWidth}px, calc(100vw - 3rem))` }}
+        className="relative min-w-full max-w-full" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
+        style={{ width: pollWidth }}
         ref={ref}
       >
-        <div className=" border-t border-b bg-white shadow-sm md:rounded-lg md:border">
-          <div className="sticky top-12 z-10 rounded-t-lg border-gray-200 bg-white/80 shadow-slate-50 backdrop-blur-md lg:top-0">
-            <div className="flex h-14 items-center justify-end space-x-4 rounded-t-lg border-b bg-gray-50 px-4">
-              {timeZone ? (
-                <div className="flex grow items-center">
-                  <div className="mr-2 text-sm font-medium text-slate-500">
-                    {t("timeZone")}
-                  </div>
-                  <TimeZonePicker
-                    value={targetTimeZone}
-                    onChange={setTargetTimeZone}
-                    className="grow"
-                  />
+        <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden bg-white">
+          {poll.timeZone ? (
+            <div className="flex h-14 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
+              <div className="flex grow items-center">
+                <div className="mr-2 text-sm font-medium text-slate-500">
+                  {t("timeZone")}
                 </div>
-              ) : null}
-              <div className="flex shrink-0">
-                <Button
-                  type="primary"
-                  disabled={shouldShowNewParticipantForm || poll.closed}
-                  icon={<PlusCircle />}
-                  onClick={() => {
-                    setShouldShowNewParticipantForm(true);
-                  }}
-                >
-                  New Participant
-                </Button>
+                <TimeZonePicker
+                  value={targetTimeZone}
+                  onChange={setTargetTimeZone}
+                  className="grow"
+                />
               </div>
             </div>
-            <div className="flex">
+          ) : null}
+          <div>
+            <div className="flex border-b py-2">
               <div
                 className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
@@ -186,57 +166,55 @@ const Poll: React.VoidFunctionComponent = () => {
                         className="text-xs"
                         rounded={true}
                         onClick={() => {
-                          setDidUsePagination(true);
                           goToNextPage();
                         }}
                       >
-                        {didUsePagination ? (
-                          <ArrowRight className="h-4 w-4" />
-                        ) : (
-                          `+${numberOfInvisibleColumns} more…`
-                        )}
+                        <ArrowRight className="h-4 w-4" />
                       </MotionButton>
                     ) : null}
                   </AnimatePresence>
                 ) : null}
               </div>
             </div>
-            <AnimatePresence initial={false}>
-              {shouldShowNewParticipantForm && !poll.closed ? (
-                <MotionParticipantFormRow
-                  transition={{ duration: 0.2 }}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 55, y: 0 }}
-                  className="border-t border-b bg-gray-50"
-                  onSubmit={async ({ name, votes }) => {
-                    await addParticipant.mutateAsync({
-                      name,
-                      votes,
-                      pollId: poll.pollId,
-                    });
-                    setShouldShowNewParticipantForm(false);
-                  }}
-                  onCancel={() => {
-                    setShouldShowNewParticipantForm(false);
-                  }}
-                />
-              ) : null}
-            </AnimatePresence>
           </div>
-          <div className="min-h-0 overflow-y-auto">
-            {participants.map((participant, i) => {
-              return (
-                <ParticipantRow
-                  key={i}
-                  participant={participant}
-                  editMode={editingParticipantId === participant.id}
-                  onChangeEditMode={(isEditing) => {
-                    setEditingParticipantId(isEditing ? participant.id : null);
-                  }}
-                />
-              );
-            })}
-          </div>
+          {participants.length > 0 ? (
+            <div
+              className="min-h-0 overflow-y-auto py-2"
+              ref={participantListContainerRef}
+            >
+              {participants.map((participant, i) => {
+                return (
+                  <ParticipantRow
+                    key={i}
+                    participant={participant}
+                    editMode={editingParticipantId === participant.id}
+                    onChangeEditMode={(isEditing) => {
+                      setEditingParticipantId(
+                        isEditing ? participant.id : null,
+                      );
+                    }}
+                  />
+                );
+              })}
+            </div>
+          ) : null}
+          {shouldShowNewParticipantForm ? (
+            <ParticipantRowForm
+              className="border-t bg-gray-50"
+              onSubmit={async ({ name, votes }) => {
+                const participant = await addParticipant.mutateAsync({
+                  name,
+                  votes,
+                  pollId: poll.id,
+                });
+                setTimeout(() => {
+                  participantListContainerRef.current
+                    ?.querySelector(`[data-participantid=${participant.id}]`)
+                    ?.scrollIntoView();
+                }, 100);
+              }}
+            />
+          ) : null}
         </div>
       </div>
     </PollContext.Provider>

@@ -7,18 +7,72 @@ import { absoluteUrl } from "../../utils/absolute-url";
 import { sendEmailTemplate } from "../../utils/api-utils";
 import { createToken } from "../../utils/auth";
 import { nanoid } from "../../utils/nanoid";
-import {
-  createPollResponse,
-  getDefaultPollInclude,
-  getLink,
-  getPollFromLink,
-} from "../../utils/queries";
 import { GetPollApiResponse } from "../../utils/trpc/types";
 import { createRouter } from "../createRouter";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { participants } from "./polls/participants";
 import { verification } from "./polls/verification";
+
+const defaultSelectFields: {
+  id: true;
+  timeZone: true;
+  title: true;
+  authorName: true;
+  location: true;
+  description: true;
+  createdAt: true;
+  participantUrlId: true;
+  adminUrlId: true;
+  verified: true;
+  closed: true;
+  legacy: true;
+  demo: true;
+  notifications: true;
+  options: {
+    orderBy: {
+      value: "asc";
+    };
+  };
+  user: true;
+} = {
+  id: true,
+  timeZone: true,
+  title: true,
+  authorName: true,
+  location: true,
+  description: true,
+  createdAt: true,
+  participantUrlId: true,
+  adminUrlId: true,
+  verified: true,
+  closed: true,
+  legacy: true,
+  notifications: true,
+  demo: true,
+  options: {
+    orderBy: {
+      value: "asc",
+    },
+  },
+  user: true,
+};
+
+const getPollIdFromAdminUrlId = async (urlId: string) => {
+  const res = await prisma.poll.findUnique({
+    select: {
+      id: true,
+    },
+    where: { adminUrlId: urlId },
+  });
+
+  if (!res) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+    });
+  }
+  return res.id;
+};
 
 export const polls = createRouter()
   .merge("demo.", demo)
@@ -39,12 +93,12 @@ export const polls = createRouter()
       options: z.string().array(),
       demo: z.boolean().optional(),
     }),
-    resolve: async ({ ctx, input }) => {
+    resolve: async ({ ctx, input }): Promise<{ urlId: string }> => {
       const adminUrlId = await nanoid();
 
       const poll = await prisma.poll.create({
         data: {
-          urlId: await nanoid(),
+          id: await nanoid(),
           title: input.title,
           type: input.type,
           timeZone: input.timeZone,
@@ -55,6 +109,8 @@ export const polls = createRouter()
           verified:
             ctx.session.user?.isGuest === false &&
             ctx.session.user.email === input.user.email,
+          adminUrlId,
+          participantUrlId: await nanoid(),
           user: {
             connectOrCreate: {
               where: {
@@ -71,20 +127,6 @@ export const polls = createRouter()
               data: input.options.map((value) => ({
                 value,
               })),
-            },
-          },
-          links: {
-            createMany: {
-              data: [
-                {
-                  urlId: adminUrlId,
-                  role: "admin",
-                },
-                {
-                  urlId: await nanoid(),
-                  role: "participant",
-                },
-              ],
             },
           },
         },
@@ -109,7 +151,7 @@ export const polls = createRouter()
           });
         } else {
           const verificationCode = await createToken({
-            pollId: poll.urlId,
+            pollId: poll.id,
           });
           const verifyEmailUrl = `${pollUrl}?code=${verificationCode}`;
 
@@ -131,16 +173,38 @@ export const polls = createRouter()
         console.error(e);
       }
 
-      return { urlId: adminUrlId, authorName: poll.authorName };
+      return { urlId: adminUrlId };
     },
   })
   .query("get", {
     input: z.object({
       urlId: z.string(),
+      admin: z.boolean(),
     }),
-    resolve: async ({ input }): Promise<GetPollApiResponse> => {
-      const link = await getLink(input.urlId);
-      return await getPollFromLink(link);
+    resolve: async ({ input, ctx }): Promise<GetPollApiResponse> => {
+      const poll = await prisma.poll.findFirst({
+        select: defaultSelectFields,
+        where: input.admin
+          ? {
+              adminUrlId: input.urlId,
+            }
+          : {
+              participantUrlId: input.urlId,
+            },
+      });
+
+      if (!poll) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      // We want to keep the adminUrlId in if the user is view
+      if (!input.admin && ctx.session.user?.id !== poll.user.id) {
+        return { ...poll, admin: input.admin, adminUrlId: "" };
+      }
+
+      return { ...poll, admin: input.admin };
     },
   })
   .mutation("update", {
@@ -156,13 +220,7 @@ export const polls = createRouter()
       closed: z.boolean().optional(),
     }),
     resolve: async ({ input }): Promise<GetPollApiResponse> => {
-      const link = await getLink(input.urlId);
-
-      if (link.role !== "admin") {
-        throw new Error("Use admin link to update poll");
-      }
-
-      const { pollId } = link;
+      const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
         await prisma.option.deleteMany({
@@ -185,8 +243,9 @@ export const polls = createRouter()
       }
 
       const poll = await prisma.poll.update({
+        select: defaultSelectFields,
         where: {
-          urlId: pollId,
+          id: pollId,
         },
         data: {
           title: input.title,
@@ -196,10 +255,9 @@ export const polls = createRouter()
           notifications: input.notifications,
           closed: input.closed,
         },
-        include: getDefaultPollInclude(link.role === "admin"),
       });
 
-      return createPollResponse(poll, link);
+      return { ...poll, admin: true };
     },
   })
   .mutation("delete", {
@@ -207,15 +265,8 @@ export const polls = createRouter()
       urlId: z.string(),
     }),
     resolve: async ({ input: { urlId } }) => {
-      const link = await getLink(urlId);
-      if (link.role !== "admin") {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Tried to delete poll using participant url",
-        });
-      }
-
-      await prisma.poll.delete({ where: { urlId: link.pollId } });
+      const pollId = await getPollIdFromAdminUrlId(urlId);
+      await prisma.poll.delete({ where: { id: pollId } });
     },
   })
   .mutation("touch", {
@@ -225,7 +276,7 @@ export const polls = createRouter()
     resolve: async ({ input: { pollId } }) => {
       await prisma.poll.update({
         where: {
-          urlId: pollId,
+          id: pollId,
         },
         data: {
           touchedAt: new Date(),

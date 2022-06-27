@@ -5,7 +5,7 @@ test("should show warning when deleting options with votes in them", async ({
 }) => {
   await page.goto("/demo");
 
-  await expect(page.locator('text="Lunch Meeting Demo"')).toBeVisible();
+  await expect(page.locator('text="Lunch Meeting"')).toBeVisible();
 
   await page.click("text='Manage'");
   await page.click("text='Edit options'");

@@ -9,7 +9,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
 
   await page.goto("/demo");
 
-  await expect(page.locator('text="Lunch Meeting Demo"')).toBeVisible();
+  await expect(page.locator('text="Lunch Meeting"')).toBeVisible();
 
   await page.type('[placeholder="Your name"]', "Test user");
   // There is a hidden checkbox (nth=0) that exists so that the behaviour of the form is consistent even
@@ -20,7 +20,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
   await expect(page.locator("text='Test user'")).toBeVisible();
   await expect(page.locator("text=Guest")).toBeVisible();
   await expect(
-    page.locator("data-testid=participant-row >> nth=0").locator("text=You"),
+    page.locator("data-testid=participant-row >> nth=4").locator("text=You"),
   ).toBeVisible();
   await page.type(
     "[placeholder='Thanks for the invite!']",

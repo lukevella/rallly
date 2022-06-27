@@ -7,18 +7,28 @@ export interface TextInputProps
     HTMLInputElement
   > {
   error?: boolean;
+  proportions?: "lg" | "md";
 }
 
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
-  function TextInput({ className, error, ...forwardProps }, ref) {
+  function TextInput(
+    { className, error, proportions: size = "md", ...forwardProps },
+    ref,
+  ) {
     return (
       <input
         ref={ref}
         type="text"
-        className={clsx("input", className, {
-          "input-error": error,
-          "bg-slate-50 text-slate-500": forwardProps.disabled,
-        })}
+        className={clsx(
+          "appearance-none rounded-md border border-gray-300 text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500",
+          className,
+          {
+            "px-2 py-1": size === "md",
+            "px-3 py-2 text-xl": size === "lg",
+            "input-error": error,
+            "bg-slate-50 text-slate-500": forwardProps.disabled,
+          },
+        )}
         {...forwardProps}
       />
     );
