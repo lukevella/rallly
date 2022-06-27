@@ -20,7 +20,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
   await expect(page.locator("text='Test user'")).toBeVisible();
   await expect(page.locator("text=Guest")).toBeVisible();
   await expect(
-    page.locator("data-testid=participant-row >> nth=0").locator("text=You"),
+    page.locator("data-testid=participant-row >> nth=4").locator("text=You"),
   ).toBeVisible();
   await page.type(
     "[placeholder='Thanks for the invite!']",
