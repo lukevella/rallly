@@ -93,7 +93,7 @@ const parseDateOption = (option: Option): ParsedDateOption => {
     type: "date",
     optionId: option.id,
     day: date.format("D"),
-    dow: date.format("DDD"),
+    dow: date.format("ddd"),
     month: date.format("MMM"),
     year: date.format("YYYY"),
   };
