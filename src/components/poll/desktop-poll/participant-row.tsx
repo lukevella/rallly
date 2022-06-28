@@ -113,9 +113,9 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
 
   const isYou = session.user && session.ownsObject(participant) ? true : false;
 
-  const isAnonymous = !participant.userId && !participant.guestId;
+  const isUnclaimed = !participant.userId;
 
-  const canEdit = !poll.closed && (poll.admin || isYou || isAnonymous);
+  const canEdit = !poll.closed && (poll.admin || isYou || isUnclaimed);
 
   if (editMode) {
     return (

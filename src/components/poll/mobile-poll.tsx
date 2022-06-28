@@ -69,10 +69,8 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     }
     const { user } = session;
     if (user) {
-      const userParticipant = participants.find((participant) =>
-        user.isGuest
-          ? participant.guestId === user.id
-          : participant.userId === user.id,
+      const userParticipant = participants.find(
+        (participant) => participant.userId === user.id,
       );
       return userParticipant?.id;
     }
