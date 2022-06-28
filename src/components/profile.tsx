@@ -1,6 +1,6 @@
 import { formatRelative } from "date-fns";
+import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -10,6 +10,7 @@ import User from "@/components/icons/user.svg";
 
 import { trpc } from "../utils/trpc";
 import { EmptyState } from "./empty-state";
+import LoginForm from "./login-form";
 import { UserDetails } from "./profile/user-details";
 import { useSession } from "./session";
 
@@ -19,21 +20,24 @@ export const Profile: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
   const { data: userPolls } = trpc.useQuery(["user.getPolls"]);
 
-  const router = useRouter();
   const createdPolls = userPolls?.polls;
 
-  React.useEffect(() => {
-    if (!user) {
-      router.replace("/new");
-    }
-  }, [user, router]);
-
-  if (!user || user.isGuest) {
-    return null;
+  if (user.isGuest) {
+    return (
+      <div className="card my-4 p-0">
+        <Head>
+          <title>Profile - Login</title>
+        </Head>
+        <LoginForm />
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-3xl py-4 lg:mx-0">
+      <Head>
+        <title>Profile - {user.name}</title>
+      </Head>
       <div className="mb-4 flex items-center px-4">
         <div className="mr-4 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary-50">
           <User className="h-7 text-primary-500" />

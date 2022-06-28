@@ -100,8 +100,6 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     req.session.user = {
       isGuest: false,
-      name: user.name,
-      email: user.email,
       id: user.id,
     };
 

@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 import { trpc } from "@/utils/trpc";
 
+import FullPageLoader from "./full-page-loader";
 import { useRequiredContext } from "./use-required-context";
 
 export type UserSessionData = NonNullable<IronSessionData["user"]>;
@@ -16,13 +17,23 @@ type ParticipantOrComment = {
   userId: string | null;
 };
 
-export type UserSessionDataExtended = UserSessionData & {
-  shortName: string;
-};
+export type UserSessionDataExtended =
+  | {
+      isGuest: true;
+      id: string;
+      shortName: string;
+    }
+  | {
+      isGuest: false;
+      id: string;
+      name: string;
+      shortName: string;
+      email: string;
+    };
 
 type SessionContextValue = {
   logout: () => void;
-  user: UserSessionDataExtended | null;
+  user: UserSessionDataExtended;
   refresh: () => void;
   ownsObject: (obj: ParticipantOrComment) => boolean;
   isLoading: boolean;
@@ -35,20 +46,19 @@ SessionContext.displayName = "SessionContext";
 
 export const SessionProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
-  defaultUser: UserSessionData;
-}> = ({ children, defaultUser }) => {
+}> = ({ children }) => {
   const queryClient = trpc.useContext();
-  const {
-    data: user = defaultUser,
-    refetch,
-    isLoading,
-  } = trpc.useQuery(["session.get"]);
+  const { data: user, refetch, isLoading } = trpc.useQuery(["session.get"]);
 
   const logout = trpc.useMutation(["session.destroy"], {
     onSuccess: () => {
       queryClient.invalidateQueries(["session.get"]);
     },
   });
+
+  if (!user) {
+    return <FullPageLoader>Loading user…</FullPageLoader>;
+  }
 
   const sessionData: SessionContextValue = {
     user: {
@@ -95,7 +105,7 @@ export const withSession = <P extends SessionProps>(
   const ComposedComponent: React.VoidFunctionComponent<P> = (props: P) => {
     const Component = component;
     return (
-      <SessionProvider defaultUser={props.user}>
+      <SessionProvider>
         <Component {...props} />
       </SessionProvider>
     );
