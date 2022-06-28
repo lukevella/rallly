@@ -4,6 +4,7 @@ import React from "react";
 import { Calendar } from "react-big-calendar";
 import { useMount } from "react-use";
 
+import { getDuration } from "../../../utils/date-time-utils";
 import { usePreferences } from "../../preferences/use-preferences";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
@@ -83,11 +84,13 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
           );
         },
         eventWrapper: (props) => {
+          const start = dayjs(props.event.start);
+          const end = dayjs(props.event.end);
           return (
             <div
               // onClick prop doesn't work properly. Seems like some other element is cancelling the event before it reaches this element
               onMouseUp={props.onClick}
-              className="absolute ml-1 max-h-full overflow-hidden rounded-md bg-green-100 bg-opacity-80 p-1 text-xs text-green-500 transition-colors hover:bg-opacity-50"
+              className="absolute ml-1 max-h-full overflow-hidden rounded-md bg-green-100 p-1 text-xs text-green-500 transition-colors"
               style={{
                 top: `calc(${props.style?.top}% + 4px)`,
                 height: `calc(${props.style?.height}% - 8px)`,
@@ -95,10 +98,8 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 width: `calc(${props.style?.width}%)`,
               }}
             >
-              <div>{dayjs(props.event.start).format("LT")}</div>
-              <div className="w-full truncate font-bold">
-                {props.event.title}
-              </div>
+              <div>{start.format("LT")}</div>
+              <div className="font-semibold">{getDuration(start, end)}</div>
             </div>
           );
         },
@@ -143,7 +144,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
           },
         },
         timeSlotWrapper: ({ children }) => {
-          return <div className="h-12 text-xs text-gray-500">{children}</div>;
+          return <div className="h-8 text-xs text-gray-500">{children}</div>;
         },
       }}
       step={15}

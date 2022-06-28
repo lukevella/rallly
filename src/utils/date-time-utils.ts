@@ -40,10 +40,20 @@ export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
 const isTimeSlot = (value: string) => value.indexOf("/") !== -1;
 
-const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
+export const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
   const hours = Math.floor(endTime.diff(startTime, "hours"));
   const minutes = Math.floor(endTime.diff(startTime, "minute") - hours * 60);
-  return dayjs.duration({ hours, minutes }).humanize();
+  let res = "";
+  if (hours) {
+    res += `${hours}h`;
+  }
+  if (hours && minutes) {
+    res += " ";
+  }
+  if (minutes) {
+    res += `${minutes}m`;
+  }
+  return res;
 };
 
 export const decodeOptions = (

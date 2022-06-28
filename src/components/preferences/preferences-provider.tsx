@@ -16,7 +16,22 @@ type TimeFormat = "12h" | "24h";
 type StartOfWeek = "monday" | "sunday";
 
 dayjs.extend(localizedFormat);
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime, {
+  rounding: (x) => x,
+  thresholds: [
+    { l: "s", r: 1 },
+    { l: "m", r: 1 },
+    { l: "mm", r: 59, d: "minute" },
+    { l: "h", r: 1 },
+    { l: "hh", r: 23, d: "hour" },
+    { l: "d", r: 1 },
+    { l: "dd", r: 29, d: "day" },
+    { l: "M", r: 1 },
+    { l: "MM", r: 11, d: "month" },
+    { l: "y" },
+    { l: "yy", d: "year" },
+  ],
+});
 dayjs.extend(localeData);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isBetween);
@@ -49,7 +64,7 @@ const PreferencesProvider: React.VoidFunctionComponent<{
   dayjs.locale({
     ...en,
     weekStart: weekStartsOn === "monday" ? 1 : 0,
-    formats: { LT: timeFormat === "12h" ? "h:mm a" : "HH:mm" },
+    formats: { LT: timeFormat === "12h" ? "h:mm A" : "HH:mm" },
   });
 
   const contextValue = React.useMemo(
