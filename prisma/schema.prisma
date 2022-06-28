@@ -16,8 +16,6 @@ model User {
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime?     @updatedAt @map("updated_at")
   polls        Poll[]
-  participants Participant[]
-  comments     Comment[]
 
   @@map("users")
 }
@@ -62,9 +60,7 @@ model Poll {
 model Participant {
   id        String    @id @default(cuid())
   name      String
-  user      User?     @relation(fields: [userId], references: [id])
   userId    String?   @map("user_id")
-  guestId   String?   @map("guest_id")
   poll      Poll      @relation(fields: [pollId], references: [id])
   pollId    String    @map("poll_id")
   votes     Vote[]
@@ -116,9 +112,7 @@ model Comment {
   poll       Poll      @relation(fields: [pollId], references: [id])
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
-  user       User?     @relation(fields: [userId], references: [id])
   userId     String?   @map("user_id")
-  guestId    String?   @map("guest_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 

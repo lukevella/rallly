@@ -1,9 +1,4 @@
-import {
-  IronSession,
-  IronSessionOptions,
-  sealData,
-  unsealData,
-} from "iron-session";
+import { IronSessionOptions, sealData, unsealData } from "iron-session";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { GetServerSideProps, NextApiHandler } from "next";
 
@@ -21,11 +16,24 @@ const sessionOptions: IronSessionOptions = {
 };
 
 export function withSessionRoute(handler: NextApiHandler) {
-  return withIronSessionApiRoute(handler, sessionOptions);
+  return withIronSessionApiRoute(async (req, res) => {
+    if (!req.session.user) {
+      req.session.user = await createGuestUser();
+      await req.session.save();
+    }
+    return await handler(req, res);
+  }, sessionOptions);
 }
 
 export function withSessionSsr(handler: GetServerSideProps) {
-  return withIronSessionSsr(handler, sessionOptions);
+  return withIronSessionSsr(async (context) => {
+    const { req } = context;
+    if (!req.session.user) {
+      req.session.user = await createGuestUser();
+      await req.session.save();
+    }
+    return await handler(context);
+  }, sessionOptions);
 }
 
 export const decryptToken = async <P extends Record<string, unknown>>(
@@ -43,12 +51,14 @@ export const createToken = async <T extends Record<string, unknown>>(
   });
 };
 
-export const createGuestUser = async (session: IronSession) => {
-  session.user = {
+const createGuestUser = async (): Promise<{
+  isGuest: true;
+  id: string;
+}> => {
+  return {
     id: `user-${await randomid()}`,
     isGuest: true,
   };
-  await session.save();
 };
 
 // assigns participants and comments created by guests to a user
@@ -60,24 +70,22 @@ export const mergeGuestsIntoUser = async (
 ) => {
   await prisma.participant.updateMany({
     where: {
-      guestId: {
+      userId: {
         in: guestIds,
       },
     },
     data: {
-      guestId: null,
       userId: userId,
     },
   });
 
   await prisma.comment.updateMany({
     where: {
-      guestId: {
+      userId: {
         in: guestIds,
       },
     },
     data: {
-      guestId: null,
       userId: userId,
     },
   });

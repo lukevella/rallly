@@ -110,11 +110,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
 
     const userAlreadyVoted =
       user && participants
-        ? participants.some((participant) =>
-            user.isGuest
-              ? participant.guestId === user.id
-              : participant.userId === user.id,
-          )
+        ? participants.some((participant) => participant.userId === user.id)
         : false;
 
     const optionIds = parsedOptions.options.map(({ optionId }) => optionId);

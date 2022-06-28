@@ -42,7 +42,7 @@ export const demo = createRouter().mutation("create", {
     const participants: Array<{
       name: string;
       id: string;
-      guestId: string;
+      userId: string;
       createdAt: Date;
     }> = [];
 
@@ -58,7 +58,7 @@ export const demo = createRouter().mutation("create", {
       participants.push({
         id: participantId,
         name,
-        guestId: "user-demo",
+        userId: "user-demo",
         createdAt: addMinutes(today, i * -1),
       });
 

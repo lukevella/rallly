@@ -13,9 +13,11 @@ export const login = createRouter().mutation("login", {
   resolve: async ({ ctx, input }) => {
     const { email, path } = input;
     const homePageUrl = absoluteUrl();
+    const user = ctx.session.user;
+
     const token = await createToken({
       email,
-      guestId: ctx.session.user?.isGuest ? ctx.session.user.id : undefined,
+      guestId: user.id,
       path,
     });
 

@@ -3,7 +3,6 @@ import { z } from "zod";
 import { prisma } from "~/prisma/db";
 
 import { sendNotification } from "../../../utils/api-utils";
-import { createGuestUser } from "../../../utils/auth";
 import { createRouter } from "../../createRouter";
 
 export const comments = createRouter()
@@ -29,17 +28,14 @@ export const comments = createRouter()
       content: z.string(),
     }),
     resolve: async ({ ctx, input: { pollId, authorName, content } }) => {
-      if (!ctx.session.user) {
-        await createGuestUser(ctx.session);
-      }
+      const user = ctx.session.user;
 
       const newComment = await prisma.comment.create({
         data: {
           content,
           pollId,
           authorName,
-          userId: ctx.session.user?.isGuest ? undefined : ctx.session.user?.id,
-          guestId: ctx.session.user?.isGuest ? ctx.session.user.id : undefined,
+          userId: user.id,
         },
       });
 

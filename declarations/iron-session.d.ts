@@ -2,7 +2,7 @@ import "iron-session";
 
 declare module "iron-session" {
   export interface IronSessionData {
-    user?:
+    user:
       | {
           id: string;
           name: string;

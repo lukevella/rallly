@@ -11,7 +11,7 @@ import StandardLayout from "../components/standard-layout";
 const Page: NextPage<{ user: UserSessionData }> = ({ user }) => {
   const name = user.isGuest ? user.id : user.name;
   return (
-    <SessionProvider session={user}>
+    <SessionProvider defaultUser={user}>
       <Head>
         <title>Profile - {name}</title>
       </Head>
