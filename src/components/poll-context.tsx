@@ -63,8 +63,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
 
-  const { locale } = usePreferences();
-
   const getScore = React.useCallback(
     (optionId: string) => {
       return (participants ?? []).reduce(
@@ -88,6 +86,8 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     [participants],
   );
 
+  const { timeFormat } = usePreferences();
+
   const contextValue = React.useMemo<PollContextValue>(() => {
     const highScore = poll.options.reduce((acc, curr) => {
       const score = getScore(curr.id).yes;
@@ -99,7 +99,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       poll.options,
       poll.timeZone,
       targetTimeZone,
-      locale,
+      timeFormat,
     );
     const getParticipantById = (participantId: string) => {
       // TODO (Luke Vella) [2022-04-16]: Build an index instead
@@ -164,10 +164,10 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     admin,
     getScore,
     isDeleted,
-    locale,
     participants,
     poll,
     targetTimeZone,
+    timeFormat,
     urlId,
     user,
   ]);

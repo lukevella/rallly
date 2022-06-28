@@ -1,5 +1,5 @@
 import { VoteType } from "@prisma/client";
-import addMinutes from "date-fns/addMinutes";
+import dayjs from "dayjs";
 
 import { prisma } from "~/prisma/db";
 
@@ -31,7 +31,6 @@ export const demo = createRouter().mutation("create", {
   resolve: async () => {
     const adminUrlId = await nanoid();
     const demoUser = { name: "John Example", email: "noreply@rallly.co" };
-    const today = new Date();
 
     const options: Array<{ value: string; id: string }> = [];
 
@@ -59,7 +58,9 @@ export const demo = createRouter().mutation("create", {
         id: participantId,
         name,
         userId: "user-demo",
-        createdAt: addMinutes(today, i * -1),
+        createdAt: dayjs()
+          .add(i * -1, "minutes")
+          .toDate(),
       });
 
       options.forEach((option, index) => {

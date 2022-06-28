@@ -1,14 +1,5 @@
 import { Option } from "@prisma/client";
-import {
-  differenceInHours,
-  differenceInMinutes,
-  format,
-  formatDuration,
-  isSameDay,
-  Locale,
-} from "date-fns";
-import { formatInTimeZone } from "date-fns-tz";
-import spacetime from "spacetime";
+import dayjs from "dayjs";
 
 import {
   DateTimeOption,
@@ -49,19 +40,28 @@ export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
 const isTimeSlot = (value: string) => value.indexOf("/") !== -1;
 
-const getDuration = (startTime: Date, endTime: Date) => {
-  const hours = Math.floor(differenceInHours(endTime, startTime));
-  const minutes = Math.floor(
-    differenceInMinutes(endTime, startTime) - hours * 60,
-  );
-  return formatDuration({ hours, minutes });
+export const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
+  const hours = Math.floor(endTime.diff(startTime, "hours"));
+  const minutes = Math.floor(endTime.diff(startTime, "minute") - hours * 60);
+  let res = "";
+  if (hours) {
+    res += `${hours}h`;
+  }
+  if (hours && minutes) {
+    res += " ";
+  }
+  if (minutes) {
+    res += `${minutes}m`;
+  }
+  return res;
 };
 
 export const decodeOptions = (
   options: Option[],
   timeZone: string | null,
   targetTimeZone: string,
-  locale: Locale,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _timeFormat: string, // TODO (Luke Vella) [2022-06-28]: Need to pass timeFormat so that we recalculate the options when timeFormat changes. There is definitely a better way to do this
 ):
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] } => {
@@ -71,7 +71,7 @@ export const decodeOptions = (
     return {
       pollType,
       options: options.map((option) =>
-        parseTimeSlotOption(option, timeZone, targetTimeZone, locale),
+        parseTimeSlotOption(option, timeZone, targetTimeZone),
       ),
     };
   } else {
@@ -88,14 +88,14 @@ const parseDateOption = (option: Option): ParsedDateOption => {
       ? // we add the time because otherwise Date will assume UTC time which might change the day for some time zones
         option.value + "T00:00:00"
       : option.value;
-  const date = new Date(dateString);
+  const date = dayjs(dateString);
   return {
     type: "date",
     optionId: option.id,
-    day: format(date, "d"),
-    dow: format(date, "EEE"),
-    month: format(date, "MMM"),
-    year: format(date, "yyyy"),
+    day: date.format("D"),
+    dow: date.format("ddd"),
+    month: date.format("MMM"),
+    year: date.format("YYYY"),
   };
 };
 
@@ -103,48 +103,29 @@ const parseTimeSlotOption = (
   option: Option,
   timeZone: string | null,
   targetTimeZone: string,
-  locale: Locale,
 ): ParsedTimeSlotOption => {
-  const localeFormatInTimezone = (
-    date: Date,
-    timezone: string,
-    formatString: string,
-  ) => {
-    return formatInTimeZone(date, timezone, formatString, {
-      locale,
-    });
-  };
-
   const [start, end] = option.value.split("/");
-  if (timeZone && targetTimeZone) {
-    const startDate = spacetime(start, timeZone).toNativeDate();
-    const endDate = spacetime(end, timeZone).toNativeDate();
-    return {
-      type: "timeSlot",
-      optionId: option.id,
-      startTime: localeFormatInTimezone(startDate, targetTimeZone, "p"),
-      endTime: localeFormatInTimezone(endDate, targetTimeZone, "p"),
-      day: localeFormatInTimezone(startDate, targetTimeZone, "d"),
-      dow: localeFormatInTimezone(startDate, targetTimeZone, "EEE"),
-      month: localeFormatInTimezone(startDate, targetTimeZone, "MMM"),
-      duration: getDuration(startDate, endDate),
-      year: localeFormatInTimezone(startDate, targetTimeZone, "yyyy"),
-    };
-  } else {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    return {
-      type: "timeSlot",
-      optionId: option.id,
-      startTime: format(startDate, "p"),
-      endTime: format(endDate, "p"),
-      day: format(startDate, "d"),
-      dow: format(startDate, "E"),
-      month: format(startDate, "MMM"),
-      duration: getDuration(startDate, endDate),
-      year: format(startDate, "yyyy"),
-    };
-  }
+
+  const startDate =
+    timeZone && targetTimeZone
+      ? dayjs(start).tz(timeZone, true).tz(targetTimeZone)
+      : dayjs(start);
+  const endDate =
+    timeZone && targetTimeZone
+      ? dayjs(end).tz(timeZone, true).tz(targetTimeZone)
+      : dayjs(end);
+
+  return {
+    type: "timeSlot",
+    optionId: option.id,
+    startTime: startDate.format("LT"),
+    endTime: endDate.format("LT"),
+    day: startDate.format("D"),
+    dow: startDate.format("ddd"),
+    month: startDate.format("MMM"),
+    duration: getDuration(startDate, endDate),
+    year: startDate.format("YYYY"),
+  };
 };
 
 export const removeAllOptionsForDay = (
@@ -152,18 +133,19 @@ export const removeAllOptionsForDay = (
   date: Date,
 ) => {
   return options.filter((option) => {
-    const optionDate = spacetime(
+    const optionDate = new Date(
       option.type === "date" ? option.date : option.start,
-    ).toNativeDate();
-    return !isSameDay(date, optionDate);
+    );
+    return !dayjs(date).isSame(optionDate, "day");
   });
 };
 
 export const getDateProps = (date: Date) => {
+  const d = dayjs(date);
   return {
-    day: format(date, "d"),
-    dow: format(date, "E"),
-    month: format(date, "MMM"),
+    day: d.format("D"),
+    dow: d.format("ddd"),
+    month: d.format("MMM"),
   };
 };
 

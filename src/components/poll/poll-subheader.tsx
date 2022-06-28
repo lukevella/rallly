@@ -1,16 +1,14 @@
-import { formatRelative } from "date-fns";
+import dayjs from "dayjs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
 import Badge from "../badge";
 import { usePoll } from "../poll-context";
-import { usePreferences } from "../preferences/use-preferences";
 import Tooltip from "../tooltip";
 
 const PollSubheader: React.VoidFunctionComponent = () => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
-  const { locale } = usePreferences();
 
   return (
     <div className="text-slate-500/75 lg:text-lg">
@@ -45,9 +43,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
       </div>
       <span className="hidden md:inline">&nbsp;&bull;&nbsp;</span>
       <span className="whitespace-nowrap">
-        {formatRelative(poll.createdAt, new Date(), {
-          locale,
-        })}
+        {dayjs(poll.createdAt).fromNow()}
       </span>
     </div>
   );

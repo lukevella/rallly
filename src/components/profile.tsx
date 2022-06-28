@@ -1,4 +1,4 @@
-import { formatRelative } from "date-fns";
+import dayjs from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -83,7 +83,7 @@ export const Profile: React.VoidFunctionComponent = () => {
                           </Link>
                         </div>
                         <div className="ml-7 text-sm text-slate-500">
-                          {formatRelative(poll.createdAt, new Date())}
+                          {dayjs(poll.createdAt).fromNow()}
                         </div>
                       </div>
                     </div>
