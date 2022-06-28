@@ -63,7 +63,7 @@ const PreferencesProvider: React.VoidFunctionComponent<{
   );
 
   return (
-    <PreferencesContext.Provider key={timeFormat} value={contextValue}>
+    <PreferencesContext.Provider value={contextValue}>
       {children}
     </PreferencesContext.Provider>
   );

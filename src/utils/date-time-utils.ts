@@ -50,6 +50,8 @@ export const decodeOptions = (
   options: Option[],
   timeZone: string | null,
   targetTimeZone: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _timeFormat: string, // TODO (Luke Vella) [2022-06-28]: Need to pass timeFormat so that we recalculate the options when timeFormat changes. There is definitely a better way to do this
 ):
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] } => {
@@ -93,35 +95,27 @@ const parseTimeSlotOption = (
   targetTimeZone: string,
 ): ParsedTimeSlotOption => {
   const [start, end] = option.value.split("/");
-  if (timeZone && targetTimeZone) {
-    const startDate = dayjs(start).tz(timeZone, true);
-    const endDate = dayjs(end).tz(timeZone, true);
-    return {
-      type: "timeSlot",
-      optionId: option.id,
-      startTime: startDate.tz(targetTimeZone).format("LT"),
-      endTime: endDate.tz(targetTimeZone).format("LT"),
-      day: startDate.tz(targetTimeZone).format("D"),
-      dow: startDate.tz(targetTimeZone).format("ddd"),
-      month: startDate.tz(targetTimeZone).format("MMM"),
-      duration: getDuration(startDate, endDate),
-      year: startDate.tz(targetTimeZone).format("YYYY"),
-    };
-  } else {
-    const startDate = dayjs(start);
-    const endDate = dayjs(end);
-    return {
-      type: "timeSlot",
-      optionId: option.id,
-      startTime: startDate.format("LT"),
-      endTime: endDate.format("LT"),
-      day: startDate.format("D"),
-      dow: startDate.format("ddd"),
-      month: startDate.format("MMM"),
-      duration: getDuration(startDate, endDate),
-      year: startDate.format("YYYY"),
-    };
-  }
+
+  const startDate =
+    timeZone && targetTimeZone
+      ? dayjs(start).tz(timeZone, true).tz(targetTimeZone)
+      : dayjs(start);
+  const endDate =
+    timeZone && targetTimeZone
+      ? dayjs(end).tz(timeZone, true).tz(targetTimeZone)
+      : dayjs(end);
+
+  return {
+    type: "timeSlot",
+    optionId: option.id,
+    startTime: startDate.format("LT"),
+    endTime: endDate.format("LT"),
+    day: startDate.format("D"),
+    dow: startDate.format("ddd"),
+    month: startDate.format("MMM"),
+    duration: getDuration(startDate, endDate),
+    year: startDate.format("YYYY"),
+  };
 };
 
 export const removeAllOptionsForDay = (

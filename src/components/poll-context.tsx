@@ -13,6 +13,7 @@ import { GetPollApiResponse } from "@/utils/trpc/types";
 
 import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
+import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
 
@@ -85,6 +86,8 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     [participants],
   );
 
+  const { timeFormat } = usePreferences();
+
   const contextValue = React.useMemo<PollContextValue>(() => {
     const highScore = poll.options.reduce((acc, curr) => {
       const score = getScore(curr.id).yes;
@@ -96,6 +99,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       poll.options,
       poll.timeZone,
       targetTimeZone,
+      timeFormat,
     );
     const getParticipantById = (participantId: string) => {
       // TODO (Luke Vella) [2022-04-16]: Build an index instead
@@ -163,6 +167,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     participants,
     poll,
     targetTimeZone,
+    timeFormat,
     urlId,
     user,
   ]);
