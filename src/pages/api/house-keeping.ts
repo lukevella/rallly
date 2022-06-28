@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { addDays } from "date-fns";
+import dayjs from "dayjs";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "~/prisma/db";
@@ -29,7 +29,7 @@ export default async function handler(
     where: {
       deleted: false,
       touchedAt: {
-        lte: addDays(new Date(), -30),
+        lte: dayjs().add(-30, "days").toDate(),
       },
     },
   });
@@ -42,14 +42,14 @@ export default async function handler(
           {
             deleted: true,
             deletedAt: {
-              lte: addDays(new Date(), -7),
+              lte: dayjs().add(-7, "days").toDate(),
             },
           },
           // demo polls that are 1 day old
           {
             demo: true,
             createdAt: {
-              lte: addDays(new Date(), -1),
+              lte: dayjs().add(-1, "days").toDate(),
             },
           },
         ],

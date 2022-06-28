@@ -7,10 +7,9 @@ import {
 } from "@floating-ui/react-dom-interactions";
 import { Listbox } from "@headlessui/react";
 import clsx from "clsx";
-import { addMinutes, format, isSameDay, setHours, setMinutes } from "date-fns";
+import dayjs from "dayjs";
 import * as React from "react";
 
-import { usePreferences } from "@/components/preferences/use-preferences";
 import { stopPropagation } from "@/utils/stop-propagation";
 
 import ChevronDown from "../../../icons/chevron-down.svg";
@@ -27,9 +26,8 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
   value,
   onChange,
   className,
-  startFrom = setMinutes(setHours(value, 0), 0),
+  startFrom,
 }) => {
-  const { locale } = usePreferences();
   const { reference, floating, x, y, strategy, refs } = useFloating({
     strategy: "fixed",
     middleware: [
@@ -47,10 +45,14 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
     ],
   });
 
+  const startFromDate = startFrom
+    ? dayjs(startFrom)
+    : dayjs(value).startOf("day");
+
   const options: React.ReactNode[] = [];
   for (let i = 0; i < 96; i++) {
-    const optionValue = addMinutes(startFrom, i * 15);
-    if (!isSameDay(value, optionValue)) {
+    const optionValue = startFromDate.add(i * 15, "minutes");
+    if (!optionValue.isSame(value, "day")) {
       // we only support event that start and end on the same day for now
       // because react-big-calendar does not support events that span days
       break;
@@ -61,7 +63,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
         className={styleMenuItem}
         value={optionValue.toISOString()}
       >
-        {format(optionValue, "p", { locale })}
+        {optionValue.format("LT")}
       </Listbox.Option>,
     );
   }
@@ -77,9 +79,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
         <>
           <div ref={reference} className={clsx("relative", className)}>
             <Listbox.Button className="btn-default text-left">
-              <span className="grow truncate">
-                {format(value, "p", { locale })}
-              </span>
+              <span className="grow truncate">{dayjs(value).format("LT")}</span>
               <span className="pointer-events-none ml-2 flex">
                 <ChevronDown className="h-5 w-5" />
               </span>

@@ -1,21 +1,16 @@
 import clsx from "clsx";
-import {
-  addMinutes,
-  differenceInMinutes,
-  format,
-  getDay,
-  parse,
-  startOfWeek,
-} from "date-fns";
+import dayjs from "dayjs";
 import React from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar } from "react-big-calendar";
 import { useMount } from "react-use";
 
-import { usePreferences } from "@/components/preferences/use-preferences";
-
+import { usePreferences } from "../../preferences/use-preferences";
 import DateNavigationToolbar from "./date-navigation-toolbar";
+import dayjsLocalizer from "./dayjs-localizer";
 import { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "./utils";
+
+const localizer = dayjsLocalizer(dayjs);
 
 const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   title,
@@ -28,29 +23,11 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
 }) => {
   const [scrollToTime, setScrollToTime] = React.useState<Date>();
 
+  const { timeFormat } = usePreferences();
   useMount(() => {
     // Bit of a hack to force rbc to scroll to the right time when we close/open a modal
-    setScrollToTime(addMinutes(date, -60));
+    setScrollToTime(dayjs(date).add(-60, "minutes").toDate());
   });
-
-  const { weekStartsOn, timeFormat, locale } = usePreferences();
-
-  const localizer = React.useMemo(
-    () =>
-      dateFnsLocalizer({
-        format,
-        parse,
-        startOfWeek: (date: Date | number) =>
-          startOfWeek(date, {
-            weekStartsOn: weekStartsOn === "monday" ? 1 : 0,
-          }),
-        getDay,
-        locales: {
-          default: locale,
-        },
-      }),
-    [locale, weekStartsOn],
-  );
 
   return (
     <Calendar
@@ -118,7 +95,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 width: `calc(${props.style?.width}%)`,
               }}
             >
-              <div>{format(props.event.start, "p", { locale })}</div>
+              <div>{dayjs(props.event.start).format("LT")}</div>
               <div className="w-full truncate font-bold">
                 {props.event.title}
               </div>
@@ -158,9 +135,9 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 )}
               >
                 <span className="mr-1 font-normal opacity-50">
-                  {format(date, "E")}
+                  {dayjs(date).format("ddd")}
                 </span>
-                <span className="font-medium">{format(date, "dd")}</span>
+                <span className="font-medium">{dayjs(date).format("DD")}</span>
               </span>
             );
           },
@@ -182,12 +159,14 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
         };
 
         if (action === "select") {
-          const diff = differenceInMinutes(endDate, startDate);
+          const diff = dayjs(endDate).diff(startDate, "minutes");
           if (diff < 60 * 24) {
             onChangeDuration(diff);
           }
         } else {
-          newEvent.end = formatDateWithoutTz(addMinutes(startDate, duration));
+          newEvent.end = formatDateWithoutTz(
+            dayjs(startDate).add(duration, "minutes").toDate(),
+          );
         }
 
         const alreadyExists = options.some(

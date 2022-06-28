@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { Prisma } from "@prisma/client";
-import { addDays } from "date-fns";
+import dayjs from "dayjs";
 
 import { prisma } from "../prisma/db";
 
@@ -29,7 +29,7 @@ test.beforeAll(async ({ request, baseURL }) => {
         type: "date",
         userId: "user1",
         deleted: true,
-        deletedAt: addDays(new Date(), -6),
+        deletedAt: dayjs().add(-6, "days").toDate(),
         participantUrlId: "p2",
         adminUrlId: "a2",
       },
@@ -40,7 +40,7 @@ test.beforeAll(async ({ request, baseURL }) => {
         type: "date",
         userId: "user1",
         deleted: true,
-        deletedAt: addDays(new Date(), -7),
+        deletedAt: dayjs().add(-7, "days").toDate(),
         participantUrlId: "p3",
         adminUrlId: "a3",
       },
@@ -50,7 +50,7 @@ test.beforeAll(async ({ request, baseURL }) => {
         id: "still-active-poll",
         type: "date",
         userId: "user1",
-        touchedAt: addDays(new Date(), -29),
+        touchedAt: dayjs().add(-29, "days").toDate(),
         participantUrlId: "p4",
         adminUrlId: "a4",
       },
@@ -60,7 +60,7 @@ test.beforeAll(async ({ request, baseURL }) => {
         id: "inactive-poll",
         type: "date",
         userId: "user1",
-        touchedAt: addDays(new Date(), -30),
+        touchedAt: dayjs().add(-30, "days").toDate(),
         participantUrlId: "p5",
         adminUrlId: "a5",
       },
@@ -82,7 +82,7 @@ test.beforeAll(async ({ request, baseURL }) => {
         id: "demo-poll-old",
         type: "date",
         userId: "user1",
-        createdAt: addDays(new Date(), -2),
+        createdAt: dayjs().add(-2, "days").toDate(),
         participantUrlId: "p7",
         adminUrlId: "a7",
       },

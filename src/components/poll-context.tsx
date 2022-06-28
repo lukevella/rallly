@@ -13,7 +13,6 @@ import { GetPollApiResponse } from "@/utils/trpc/types";
 
 import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
-import { usePreferences } from "./preferences/use-preferences";
 import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
 
@@ -63,8 +62,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
 
-  const { locale } = usePreferences();
-
   const getScore = React.useCallback(
     (optionId: string) => {
       return (participants ?? []).reduce(
@@ -99,7 +96,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       poll.options,
       poll.timeZone,
       targetTimeZone,
-      locale,
     );
     const getParticipantById = (participantId: string) => {
       // TODO (Luke Vella) [2022-04-16]: Build an index instead
@@ -164,7 +160,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     admin,
     getScore,
     isDeleted,
-    locale,
     participants,
     poll,
     targetTimeZone,

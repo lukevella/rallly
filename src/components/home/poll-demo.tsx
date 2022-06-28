@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -66,11 +66,11 @@ const PollDemo: React.VoidFunctionComponent = () => {
               <div>
                 <div className="font-semibold leading-9">
                   <div className="text-sm uppercase text-slate-400">
-                    {format(d, "E")}
+                    {dayjs(d).format("ddd")}
                   </div>
-                  <div className="text-2xl">{format(d, "dd")}</div>
+                  <div className="text-2xl">{dayjs(d).format("DD")}</div>
                   <div className="text-xs font-medium uppercase text-slate-400/75">
-                    {format(d, "MMM")}
+                    {dayjs(d).format("MMM")}
                   </div>
                 </div>
               </div>

@@ -1,13 +1,4 @@
-import {
-  addDays,
-  addMonths,
-  format,
-  getMonth,
-  isSameDay,
-  isWeekend,
-  startOfMonth,
-  startOfWeek,
-} from "date-fns";
+import dayjs from "dayjs";
 import React from "react";
 
 interface DayProps {
@@ -45,52 +36,50 @@ export const useHeadlessDatePicker = (
   const [localSelection, setSelection] = React.useState<Date[]>([]);
   const selection = options?.selection ?? localSelection;
   const [localNavigationDate, setNavigationDate] = React.useState(today);
-  const navigationDate = options?.date ?? localNavigationDate;
+  const navigationDate = dayjs(options?.date ?? localNavigationDate);
 
-  const firstDayOfMonth = startOfMonth(navigationDate);
-  const firstDayOfFirstWeek = startOfWeek(firstDayOfMonth, {
-    weekStartsOn: options?.weekStartsOn === "monday" ? 1 : 0,
-  });
+  const firstDayOfMonth = navigationDate.startOf("month");
+  const firstDayOfFirstWeek = firstDayOfMonth.startOf("week");
 
-  const currentMonth = getMonth(navigationDate);
+  const currentMonth = navigationDate.get("month");
 
   const days: DayProps[] = [];
 
   const daysOfWeek: string[] = [];
 
   for (let i = 0; i < 7; i++) {
-    daysOfWeek.push(format(addDays(firstDayOfFirstWeek, i), "EE"));
+    daysOfWeek.push(firstDayOfFirstWeek.add(i, "days").format("dd"));
   }
 
   let reachedEnd = false;
   let i = 0;
   do {
-    const d = addDays(firstDayOfFirstWeek, i);
+    const d = firstDayOfFirstWeek.add(i, "days");
     days.push({
-      date: d,
-      day: format(d, "d"),
-      weekend: isWeekend(d),
-      outOfMonth: getMonth(d) !== currentMonth,
-      today: isSameDay(d, today),
-      selected: selection.some((selectedDate) => isSameDay(selectedDate, d)),
+      date: d.toDate(),
+      day: d.format("D"),
+      weekend: d.day() === 0 || d.day() === 6,
+      outOfMonth: d.month() !== currentMonth,
+      today: d.isSame(today, "day"),
+      selected: selection.some((selectedDate) => d.isSame(selectedDate, "day")),
     });
     i++;
     reachedEnd =
-      i > 34 && i % 7 === 0 && addDays(d, 1).getMonth() !== currentMonth;
+      i > 34 && i % 7 === 0 && d.add(1, "day").month() !== currentMonth;
   } while (reachedEnd === false);
 
   return {
-    navigationDate,
-    label: format(navigationDate, "MMMM yyyy"),
+    navigationDate: navigationDate.toDate(),
+    label: navigationDate.format("MMMM YYYY"),
     next: () => {
-      const newDate = startOfMonth(addMonths(navigationDate, 1));
+      const newDate = navigationDate.add(1, "month").startOf("month").toDate();
       if (!options?.date) {
         setNavigationDate(newDate);
       }
       options?.onNavigationChange?.(newDate);
     },
     prev: () => {
-      const newDate = startOfMonth(addMonths(navigationDate, -1));
+      const newDate = navigationDate.add(-1, "month").startOf("month").toDate();
       if (!options?.date) {
         setNavigationDate(newDate);
       }
