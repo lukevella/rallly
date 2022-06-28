@@ -51,7 +51,7 @@ export const createToken = async <T extends Record<string, unknown>>(
   });
 };
 
-const createGuestUser = async (): Promise<{
+export const createGuestUser = async (): Promise<{
   isGuest: true;
   id: string;
 }> => {

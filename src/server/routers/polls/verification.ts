@@ -49,8 +49,6 @@ export const verification = createRouter()
       ctx.session.user = {
         id: poll.user.id,
         isGuest: false,
-        name: poll.user.name,
-        email: poll.user.email,
       };
       await ctx.session.save();
     },

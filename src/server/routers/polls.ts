@@ -96,6 +96,19 @@ export const polls = createRouter()
     resolve: async ({ ctx, input }): Promise<{ urlId: string }> => {
       const adminUrlId = await nanoid();
 
+      let verified = false;
+
+      if (ctx.session.user.isGuest === false) {
+        const user = await prisma.user.findUnique({
+          where: { id: ctx.session.user.id },
+        });
+
+        // If user is logged in with the same email address
+        if (user?.email === input.user.email) {
+          verified = true;
+        }
+      }
+
       const poll = await prisma.poll.create({
         data: {
           id: await nanoid(),
@@ -106,9 +119,7 @@ export const polls = createRouter()
           description: input.description,
           authorName: input.user.name,
           demo: input.demo,
-          verified:
-            ctx.session.user?.isGuest === false &&
-            ctx.session.user.email === input.user.email,
+          verified: verified,
           adminUrlId,
           participantUrlId: await nanoid(),
           user: {

@@ -11,8 +11,8 @@ import { TextInput } from "../text-input";
 
 export interface UserDetailsProps {
   userId: string;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
 }
 
 const MotionButton = motion(Button);
