@@ -24,7 +24,7 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
       )}
     >
       {annotation ? (
-        <div className="absolute -top-3 -right-3">{annotation}</div>
+        <div className="absolute -top-3 -right-3 z-20">{annotation}</div>
       ) : null}
       <div className="relative -mt-2 mb-[-1px] text-xs text-slate-400">
         <span className="relative z-10 inline-block px-1 after:absolute after:left-0 after:top-[7px] after:-z-10 after:inline-block after:w-full after:border-t after:border-white after:content-['']">
