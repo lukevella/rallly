@@ -133,10 +133,10 @@ export const removeAllOptionsForDay = (
   date: Date,
 ) => {
   return options.filter((option) => {
-    const optionDate = new Date(
+    return !dayjs(date).isSame(
       option.type === "date" ? option.date : option.start,
+      "day",
     );
-    return !dayjs(date).isSame(optionDate, "day");
   });
 };
 
