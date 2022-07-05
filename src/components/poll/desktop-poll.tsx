@@ -27,8 +27,7 @@ const minSidebarWidth = 200;
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const { poll, options, userAlreadyVoted, targetTimeZone, setTargetTimeZone } =
-    usePoll();
+  const { poll, options, targetTimeZone, setTargetTimeZone } = usePoll();
 
   const { participants } = useParticipants();
 
