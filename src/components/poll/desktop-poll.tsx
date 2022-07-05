@@ -27,8 +27,7 @@ const minSidebarWidth = 200;
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const { poll, options, userAlreadyVoted, targetTimeZone, setTargetTimeZone } =
-    usePoll();
+  const { poll, options, targetTimeZone, setTargetTimeZone } = usePoll();
 
   const { participants } = useParticipants();
 
@@ -66,7 +65,7 @@ const Poll: React.VoidFunctionComponent = () => {
   const maxScrollPosition =
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
 
-  const shouldShowNewParticipantForm = !userAlreadyVoted && !poll.closed;
+  const shouldShowNewParticipantForm = !poll.closed;
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
