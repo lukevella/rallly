@@ -66,7 +66,7 @@ const Poll: React.VoidFunctionComponent = () => {
   const maxScrollPosition =
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
 
-  const shouldShowNewParticipantForm = !userAlreadyVoted && !poll.closed;
+  const shouldShowNewParticipantForm = !poll.closed;
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
