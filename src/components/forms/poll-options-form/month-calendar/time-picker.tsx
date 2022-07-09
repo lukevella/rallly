@@ -70,7 +70,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
 
   return (
     <Listbox
-      value={value.toISOString()}
+      value={dayjs(value).format("YYYY-MM-DDTHH:mm:ss")}
       onChange={(newValue) => {
         onChange?.(new Date(newValue));
       }}
