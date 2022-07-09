@@ -61,7 +61,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
       <Listbox.Option
         key={i}
         className={styleMenuItem}
-        value={optionValue.toISOString()}
+        value={optionValue.format("YYYY-MM-DDTHH:mm:ss")}
       >
         {optionValue.format("LT")}
       </Listbox.Option>,
