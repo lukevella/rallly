@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { UserAvatarProvider } from "../poll/user-avatar";
@@ -15,15 +15,16 @@ const Hero: React.VoidFunctionComponent = () => {
     <div className="mx-auto max-w-7xl items-end p-8 lg:flex lg:justify-between">
       <div className="my-8 text-center lg:text-left">
         <h1 className="text-4xl font-bold sm:text-5xl">
-          Schedule
-          <br />
-          <span className="text-primary-500">group&nbsp;meetings</span>
-          <br />
-          with ease
+          <Trans
+            t={t}
+            i18nKey="heroText"
+            components={{
+              br: <br />,
+              s: <span className="whitespace-nowrap text-primary-500" />,
+            }}
+          />
         </h1>
-        <div className="mb-12 text-xl text-gray-400">
-          Find the right date without the back and&nbsp;forth.
-        </div>
+        <div className="mb-12 text-xl text-gray-400">{t("heroSubText")}</div>
         <div className="space-x-3">
           <Link href="/new">
             <a className="rounded-lg bg-primary-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-primary-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-primary-200 active:bg-primary-600/90">
@@ -35,7 +36,7 @@ const Hero: React.VoidFunctionComponent = () => {
               className="rounded-lg bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md focus:ring-2  focus:ring-primary-200 active:bg-slate-600/90"
               rel="nofollow"
             >
-              {t("viewDemo")}
+              {t("liveDemo")}
             </a>
           </Link>
         </div>
@@ -60,7 +61,7 @@ const Hero: React.VoidFunctionComponent = () => {
               animate={{ opacity: 1, translateY: 0 }}
               transition={{ type: "spring", delay: 2 }}
             >
-              Perfect! 🤩
+              {t("perfect")} 🤩
               <ScribbleArrow className="absolute -right-8 top-3 text-slate-400" />
             </motion.div>
             <motion.div
