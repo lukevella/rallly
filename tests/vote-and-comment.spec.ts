@@ -23,7 +23,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
     page.locator("data-testid=participant-row >> nth=4").locator("text=You"),
   ).toBeVisible();
   await page.type(
-    "[placeholder='Thanks for the invite!']",
+    "[placeholder='Leave a comment on this poll (visible to everyone)']",
     "This is a comment!",
   );
   await page.type('[placeholder="Your name…"]', "Test user");
