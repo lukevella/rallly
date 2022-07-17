@@ -160,7 +160,7 @@ const UserDropdown: React.VoidFunctionComponent<
       {user.isGuest ? (
         <DropdownItem
           icon={Question}
-          label="What's this?"
+          label={t("whatsThis")}
           onClick={() => {
             modalContext.render({
               showClose: true,
