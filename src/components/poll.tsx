@@ -52,7 +52,7 @@ const PollPage: NextPage = () => {
 
   const verifyEmail = trpc.useMutation(["polls.verification.verify"], {
     onSuccess: () => {
-      toast.success("Your poll has been verified");
+      toast.success(t("pollHasBeenVerified"));
       queryClient.setQueryData(["polls.get", { urlId, admin }], {
         ...poll,
         verified: true,
@@ -61,7 +61,7 @@ const PollPage: NextPage = () => {
       plausible("Verified email");
     },
     onError: () => {
-      toast.error("Your link has expired or is no longer valid");
+      toast.error(t("linkHasExpired"));
     },
     onSettled: () => {
       router.replace(`/admin/${router.query.urlId}`, undefined, {
@@ -83,7 +83,7 @@ const PollPage: NextPage = () => {
         { urlId: urlId, notifications: false },
         {
           onSuccess: () => {
-            toast.success("Notifications have been disabled");
+            toast.success(t("notificationsDisabled"));
             plausible("Unsubscribed from notifications");
           },
         },
@@ -92,7 +92,7 @@ const PollPage: NextPage = () => {
         shallow: true,
       });
     }
-  }, [plausible, urlId, router, updatePollMutation]);
+  }, [plausible, urlId, router, updatePollMutation, t]);
 
   const checkIfWideScreen = () => window.innerWidth > 640;
 
@@ -146,7 +146,7 @@ const PollPage: NextPage = () => {
                       setSharingVisible((value) => !value);
                     }}
                   >
-                    Share
+                    {t("share")}
                   </Button>
                 </div>
                 <AnimatePresence initial={false}>
@@ -196,11 +196,10 @@ const PollPage: NextPage = () => {
             {!poll.admin && poll.adminUrlId ? (
               <div className="mb-4 items-center justify-between rounded-lg px-4 md:flex md:space-x-4 md:border md:p-2 md:pl-4">
                 <div className="mb-4 font-medium md:mb-0">
-                  Hey {poll.user.name}, looks like you are the owner of this
-                  poll.
+                  {t("pollOwnerNotice", { name: poll.user.name })}
                 </div>
                 <a href={`/admin/${poll.adminUrlId}`} className="btn-default">
-                  Go to admin &rarr;
+                  {t("goToAdmin")} &rarr;
                 </a>
               </div>
             ) : null}
@@ -210,7 +209,7 @@ const PollPage: NextPage = () => {
                   <LockClosed className="w-6" />
                 </div>
                 <div>
-                  <div className="font-medium">This poll has been locked</div>
+                  <div className="font-medium">{t("pollHasBeenLocked")}</div>
                 </div>
               </div>
             ) : null}
@@ -243,22 +242,26 @@ const PollPage: NextPage = () => {
                   ) : null}
                   <div>
                     <div className="mb-2 text-sm text-slate-500">
-                      Possible answers
+                      {t("possibleAnswers")}
                     </div>
                     <div className="flex items-center space-x-3">
                       <span className="inline-flex items-center space-x-1">
                         <VoteIcon type="yes" />
-                        <span className="text-xs text-slate-500">Yes</span>
+                        <span className="text-xs text-slate-500">
+                          {t("yes")}
+                        </span>
                       </span>
                       <span className="inline-flex items-center space-x-1">
                         <VoteIcon type="ifNeedBe" />
                         <span className="text-xs text-slate-500">
-                          If need be
+                          {t("ifNeedBe")}
                         </span>
                       </span>
                       <span className="inline-flex items-center space-x-1">
                         <VoteIcon type="no" />
-                        <span className="text-xs text-slate-500">No</span>
+                        <span className="text-xs text-slate-500">
+                          {t("no")}
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -269,7 +272,9 @@ const PollPage: NextPage = () => {
               </React.Suspense>
             </div>
 
-            <React.Suspense fallback={<div className="p-4">Loading…</div>}>
+            <React.Suspense
+              fallback={<div className="p-4">{t("loading")}</div>}
+            >
               <Discussion />
             </React.Suspense>
           </div>

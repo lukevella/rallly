@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
 import React from "react";
 
 import Menu from "@/components/icons/menu.svg";
@@ -40,6 +41,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
   openLoginModal: () => void;
 }> = ({ openLoginModal }) => {
   const { user } = useSession();
+  const { t } = useTranslation("app");
   return (
     <div
       className="fixed top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50
@@ -55,7 +57,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
             className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
           >
             <Login className="h-5 opacity-75" />
-            <span className="inline-block">Login</span>
+            <span className="inline-block">{t("login")}</span>
           </button>
         )}
         <AnimatePresence initial={false}>
@@ -93,7 +95,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
               className="group flex items-center whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
               <Adjustments className="h-5 opacity-75 group-hover:text-primary-500" />
-              <span className="ml-2 hidden sm:block">Preferences</span>
+              <span className="ml-2 hidden sm:block">{t("preferences")}</span>
             </button>
           }
         >
@@ -107,7 +109,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
               className="group flex items-center rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
               <Menu className="w-5 group-hover:text-primary-500" />
-              <span className="ml-2 hidden sm:block">Menu</span>
+              <span className="ml-2 hidden sm:block">{t("menu")}</span>
             </button>
           }
         >
@@ -121,12 +123,13 @@ const MobileNavigation: React.VoidFunctionComponent<{
 const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   className,
 }) => {
+  const { t } = useTranslation("app");
   return (
     <div className={clsx("space-y-1", className)}>
       <Link href="/new">
         <a className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
           <Pencil className="h-5 opacity-75 " />
-          <span className="inline-block">New Poll</span>
+          <span className="inline-block">{t("newPoll")}</span>
         </a>
       </Link>
       <a
@@ -136,7 +139,7 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
         rel="noreferrer"
       >
         <Support className="h-5 opacity-75" />
-        <span className="inline-block">Support</span>
+        <span className="inline-block">{t("support")}</span>
       </a>
     </div>
   );
@@ -146,6 +149,7 @@ const UserDropdown: React.VoidFunctionComponent<
   DropdownProps & { openLoginModal: () => void }
 > = ({ children, openLoginModal, ...forwardProps }) => {
   const { logout, user } = useSession();
+  const { t } = useTranslation("app");
   const modalContext = useModalContext();
   if (!user) {
     return null;
@@ -175,17 +179,14 @@ const UserDropdown: React.VoidFunctionComponent<
                       </div>
                     </div>
                   </div>
-                  <p>
-                    You are using a guest session. This allows us to recognize
-                    you if you come back later so you can edit your votes.
-                  </p>
+                  <p>{t("guestSessionNotice")}</p>
                   <div>
                     <a
                       href="https://support.rallly.co/guest-sessions"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Read more about guest sessions.
+                      {t("guestSessionReadMore")}
                     </a>
                   </div>
                 </div>
@@ -204,20 +205,19 @@ const UserDropdown: React.VoidFunctionComponent<
       ) : null}
       <DropdownItem
         icon={Logout}
-        label={user.isGuest ? "Forget me" : "Logout"}
+        label={user.isGuest ? t("forgetMe") : t("logout")}
         onClick={() => {
           if (user?.isGuest) {
             modalContext.render({
-              title: "Are you sure?",
-              description:
-                "Once a guest session ends it cannot be resumed. You will not be able to edit any votes or comments you've made with this session.",
+              title: t("areYouSure"),
+              description: t("endingGuestSessionNotice"),
 
               onOk: logout,
               okButtonProps: {
                 type: "danger",
               },
-              okText: "End session",
-              cancelText: "Cancel",
+              okText: t("endSession"),
+              cancelText: t("cancel"),
             });
           } else {
             logout();
@@ -232,6 +232,7 @@ const StandardLayout: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
   const { user } = useSession();
+  const { t } = useTranslation("app");
   const [loginModal, openLoginModal] = useModal({
     footer: null,
     overlayClosable: true,
@@ -255,7 +256,7 @@ const StandardLayout: React.VoidFunctionComponent<{
             <Link href="/new">
               <a className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
                 <Pencil className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                <span className="grow text-left">New Poll</span>
+                <span className="grow text-left">{t("newPoll")}</span>
               </a>
             </Link>
             <a
@@ -265,14 +266,14 @@ const StandardLayout: React.VoidFunctionComponent<{
               rel="noreferrer"
             >
               <Support className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-              <span className="grow text-left">Support</span>
+              <span className="grow text-left">{t("support")}</span>
             </a>
             <Popover
               placement="right-start"
               trigger={
                 <button className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
                   <Adjustments className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                  <span className="grow text-left">Preferences</span>
+                  <span className="grow text-left">{t("preferences")}</span>
                   <DotsVertical className="h-4 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100" />
                 </button>
               }
@@ -285,7 +286,7 @@ const StandardLayout: React.VoidFunctionComponent<{
                 className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
               >
                 <Login className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                <span className="grow text-left">Login</span>
+                <span className="grow text-left">{t("login")}</span>
               </button>
             )}
           </div>
@@ -311,7 +312,7 @@ const StandardLayout: React.VoidFunctionComponent<{
                           {user.shortName}
                         </div>
                         <div className="truncate text-xs text-slate-500">
-                          {user.isGuest ? "Guest" : "User"}
+                          {user.isGuest ? t("guest") : t("user")}
                         </div>
                       </div>
                       <DotsVertical className="h-4 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -343,16 +344,16 @@ const StandardLayout: React.VoidFunctionComponent<{
               className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
               rel="noreferrer"
             >
-              Support
+              {t("support")}
             </a>
             <Link href="https://github.com/lukevella/rallly/discussions">
               <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                Discussions
+                {t("discussions")}
               </a>
             </Link>
             <Link href="https://blog.rallly.co">
               <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                Blog
+                {t("blog")}
               </a>
             </Link>
             <div className="hidden text-slate-300 lg:block">&bull;</div>
@@ -373,7 +374,7 @@ const StandardLayout: React.VoidFunctionComponent<{
           <Link href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E">
             <a className="inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:bg-primary-500 hover:text-white hover:no-underline focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 active:bg-primary-600">
               <Cash className="mr-1 inline-block w-5" />
-              <span>Donate</span>
+              <span>{t("donate")}</span>
             </a>
           </Link>
         </div>

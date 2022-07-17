@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -25,6 +26,7 @@ interface CommentForm {
 
 const Discussion: React.VoidFunctionComponent = () => {
   const queryClient = trpc.useContext();
+  const { t } = useTranslation("app");
   const { poll } = usePoll();
 
   const pollId = poll.id;
@@ -82,7 +84,7 @@ const Discussion: React.VoidFunctionComponent = () => {
   return (
     <div className="overflow-hidden border-t border-b shadow-sm md:rounded-lg md:border">
       <div className="border-b bg-white px-4 py-2">
-        <div className="font-medium">Comments</div>
+        <div className="font-medium">{t("comments")}</div>
       </div>
       <div
         className={clsx({
@@ -129,7 +131,7 @@ const Discussion: React.VoidFunctionComponent = () => {
                     >
                       <DropdownItem
                         icon={Trash}
-                        label="Delete comment"
+                        label={t("deleteComment")}
                         disabled={!canDelete}
                         onClick={() => {
                           deleteComment.mutate({
@@ -158,7 +160,7 @@ const Discussion: React.VoidFunctionComponent = () => {
       >
         <textarea
           id="comment"
-          placeholder="Thanks for the invite!"
+          placeholder={t("commentPlaceholder")}
           className="input w-full py-2 pl-3 pr-4"
           {...register("content", { validate: requiredString })}
         />
@@ -175,7 +177,7 @@ const Discussion: React.VoidFunctionComponent = () => {
             />
           </div>
           <Button htmlType="submit" loading={formState.isSubmitting}>
-            Comment
+            {t("comment")}
           </Button>
         </div>
       </form>

@@ -26,7 +26,7 @@ export const Profile: React.VoidFunctionComponent = () => {
     return (
       <div className="card my-4 p-0">
         <Head>
-          <title>Profile - Login</title>
+          <title>{t("profileLogin")}</title>
         </Head>
         <LoginForm />
       </div>
@@ -36,7 +36,11 @@ export const Profile: React.VoidFunctionComponent = () => {
   return (
     <div className="mx-auto max-w-3xl py-4 lg:mx-0">
       <Head>
-        <title>Profile - {user.name}</title>
+        <title>
+          {t("profileUser", {
+            username: user.name,
+          })}
+        </title>
       </Head>
       <div className="mb-4 flex items-center px-4">
         <div className="mr-4 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary-50">
@@ -50,7 +54,7 @@ export const Profile: React.VoidFunctionComponent = () => {
             {user.shortName}
           </div>
           <div className="text-slate-500">
-            {user.isGuest ? "Guest" : "User"}
+            {user.isGuest ? t("guest") : t("user")}
           </div>
         </div>
       </div>
@@ -92,7 +96,7 @@ export const Profile: React.VoidFunctionComponent = () => {
               </div>
             </div>
           ) : (
-            <EmptyState icon={Pencil} text="No polls created" />
+            <EmptyState icon={Pencil} text={t("pollsEmpty")} />
           )}
         </div>
       ) : null}

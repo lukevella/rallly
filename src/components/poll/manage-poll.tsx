@@ -55,13 +55,13 @@ const ManagePoll: React.VoidFunctionComponent<{
     openChangeOptionsModal,
     closeChangeOptionsModal,
   ] = useModal({
-    okText: "Save",
+    okText: t("save"),
     okButtonProps: {
       form: "pollOptions",
       htmlType: "submit",
       loading: isUpdating,
     },
-    cancelText: "Cancel",
+    cancelText: t("cancel"),
     content: (
       <React.Suspense fallback={null}>
         <PollOptionsForm
@@ -116,7 +116,7 @@ const ManagePoll: React.VoidFunctionComponent<{
 
             if (optionsToDeleteThatHaveVotes.length > 0) {
               modalContext.render({
-                title: "Are you sure?",
+                title: t("areYouSure"),
                 description: (
                   <Trans
                     t={t}
@@ -128,8 +128,8 @@ const ManagePoll: React.VoidFunctionComponent<{
                 okButtonProps: {
                   type: "danger",
                 },
-                okText: "Delete",
-                cancelText: "Cancel",
+                okText: t("delete"),
+                cancelText: t("cancel"),
               });
             } else {
               onOk();
@@ -145,13 +145,13 @@ const ManagePoll: React.VoidFunctionComponent<{
     openChangePollDetailsModa,
     closePollDetailsModal,
   ] = useModal({
-    okText: "Save changes",
+    okText: t("save"),
     okButtonProps: {
       form: "updateDetails",
       loading: isUpdating,
       htmlType: "submit",
     },
-    cancelText: "Cancel",
+    cancelText: t("cancel"),
     content: (
       <PollDetailsForm
         name="updateDetails"
@@ -181,31 +181,35 @@ const ManagePoll: React.VoidFunctionComponent<{
       >
         <DropdownItem
           icon={Pencil}
-          label="Edit details"
+          label={t("editDetails")}
           onClick={openChangePollDetailsModa}
         />
         <DropdownItem
           icon={Table}
-          label="Edit options"
+          label={t("editOptions")}
           onClick={handleChangeOptions}
         />
-        <DropdownItem icon={Save} label="Export to CSV" onClick={exportToCsv} />
+        <DropdownItem
+          icon={Save}
+          label={t("exportToCsv")}
+          onClick={exportToCsv}
+        />
         {poll.closed ? (
           <DropdownItem
             icon={LockOpen}
-            label="Unlock poll"
+            label={t("unlockPoll")}
             onClick={() => updatePollMutation({ urlId, closed: false })}
           />
         ) : (
           <DropdownItem
             icon={LockClosed}
-            label="Lock poll"
+            label={t("lockPoll")}
             onClick={() => updatePollMutation({ urlId, closed: true })}
           />
         )}
         <DropdownItem
           icon={Trash}
-          label="Delete poll"
+          label={t("deletePoll")}
           onClick={() => {
             modalContext.render({
               overlayClosable: true,
