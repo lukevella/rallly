@@ -340,7 +340,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                               ]);
                             }}
                           >
-                            Add time option
+                            {t("addTimeOption")}
                           </Button>
                           <Dropdown
                             trigger={<CompactButton icon={DotsHorizontal} />}
@@ -349,7 +349,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                             <DropdownItem
                               icon={Magic}
                               disabled={datepicker.selection.length < 2}
-                              label="Apply to all dates"
+                              label={t("applyToAllDates")}
                               onClick={() => {
                                 plausible("Applied options to all dates");
                                 const times = optionsForDay.map(
@@ -386,7 +386,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                               }}
                             />
                             <DropdownItem
-                              label="Delete date"
+                              label={t("deleteDate")}
                               icon={Trash}
                               onClick={() => {
                                 onChange(
