@@ -26,7 +26,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
           poll.notifications ? (
             <div>
               <div className="font-medium text-primary-300">
-                Notifications are on
+                {t("notificationsOn")}
               </div>
               <div className="max-w-sm">
                 <Trans
@@ -44,10 +44,10 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
               </div>
             </div>
           ) : (
-            "Notifications are off"
+            t("notificationsOff")
           )
         ) : (
-          "You need to verify your email to turn on notifications"
+          t("notificationsVerifyEmail")
         )
       }
     >

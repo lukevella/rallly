@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -27,6 +28,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
   HTMLFormElement,
   ParticipantRowFormProps
 > = ({ defaultValues, onSubmit, className, onCancel }, ref) => {
+  const { t } = useTranslation("app");
   const {
     columnWidth,
     scrollPosition,
@@ -168,7 +170,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
             loading={isSubmitting}
             data-testid="submitNewParticipant"
           >
-            Save
+            {t("save")}
           </Button>
         ) : null}
         {scrollPosition < maxScrollPosition ? (
@@ -178,7 +180,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
               goToNextPage();
             }}
           >
-            Next &rarr;
+            {t("next")} &rarr;
           </Button>
         ) : null}
         {onCancel ? <CompactButton onClick={onCancel} icon={X} /> : null}

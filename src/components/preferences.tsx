@@ -22,7 +22,9 @@ const Preferences: React.VoidFunctionComponent = () => {
       </div>
       <div className="grow">
         <div className="mb-2">
-          <div className="mb-2 grow text-sm text-slate-500">Week starts on</div>
+          <div className="mb-2 grow text-sm text-slate-500">
+            {t("weekStartsOn")}
+          </div>
           <div>
             <div className="segment-button inline-flex">
               <button
@@ -61,7 +63,9 @@ const Preferences: React.VoidFunctionComponent = () => {
           </div>
         </div>
         <div className="mb-2">
-          <div className="mb-2 grow text-sm text-slate-500">Time format</div>
+          <div className="mb-2 grow text-sm text-slate-500">
+            {t("timeFormat")}
+          </div>
           <div className="segment-button inline-flex">
             <button
               className={clsx({

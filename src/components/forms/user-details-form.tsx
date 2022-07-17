@@ -38,7 +38,7 @@ export const UserDetailsForm: React.VoidFunctionComponent<
       style={{ width: 400 }}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2>Your details</h2>
+      <h2>{t("yourDetails")}</h2>
       <div className="formField">
         <label className="text-slate-500" htmlFor="name">
           {t("name")}

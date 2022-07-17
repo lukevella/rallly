@@ -52,18 +52,18 @@ const PollOptionsForm: React.VoidFunctionComponent<
   const views = React.useMemo(() => {
     const res = [
       {
-        label: "Month view",
+        label: t("monthView"),
         value: "month",
         Component: MonthCalendar,
       },
       {
-        label: "Week view",
+        label: t("weekView"),
         value: "week",
         Component: WeekCalendar,
       },
     ];
     return res;
-  }, []);
+  }, [t]);
 
   const watchView = watch("view");
 
@@ -79,10 +79,9 @@ const PollOptionsForm: React.VoidFunctionComponent<
   const datesOnly = watchOptions.every((option) => option.type === "date");
 
   const [dateOrTimeRangeModal, openDateOrTimeRangeModal] = useModal({
-    title: "Wait a minute… 🤔",
-    description:
-      "You can't have both time and date options in the same poll. Which would you like to keep?",
-    okText: "Keep time options",
+    title: t("mixedOptionsTitle"),
+    description: t("mixedOptionsDescription"),
+    okText: t("mixedOptionsKeepTimes"),
     onOk: () => {
       setValue(
         "options",
@@ -92,7 +91,7 @@ const PollOptionsForm: React.VoidFunctionComponent<
         setValue("timeZone", getBrowserTimeZone());
       }
     },
-    cancelText: "Keep date options",
+    cancelText: t("mixedOptionsKeepDates"),
     onCancel: () => {
       setValue(
         "options",
@@ -130,7 +129,7 @@ const PollOptionsForm: React.VoidFunctionComponent<
 
   const [calendarHelpModal, openHelpModal] = useModal({
     overlayClosable: true,
-    title: "Forget something?",
+    title: t("calendarHelpTitle"),
     description: t("calendarHelp"),
     okText: t("ok"),
   });
@@ -172,7 +171,7 @@ const PollOptionsForm: React.VoidFunctionComponent<
               }}
               type="button"
             >
-              <Calendar className="mr-2 h-5 w-5" /> Month view
+              <Calendar className="mr-2 h-5 w-5" /> {t("monthView")}
             </button>
             <button
               className={clsx({
@@ -183,7 +182,7 @@ const PollOptionsForm: React.VoidFunctionComponent<
                 setValue("view", "week");
               }}
             >
-              <Table className="mr-2 h-5 w-5" /> Week view
+              <Table className="mr-2 h-5 w-5" /> {t("weekView")}
             </button>
           </div>
         </div>
@@ -191,7 +190,9 @@ const PollOptionsForm: React.VoidFunctionComponent<
       <div className="relative w-full">
         <React.Suspense
           fallback={
-            <FullPageLoader className="h-[400px]">Loading…</FullPageLoader>
+            <FullPageLoader className="h-[400px]">
+              {t("loading")}
+            </FullPageLoader>
           }
         >
           <selectedView.Component

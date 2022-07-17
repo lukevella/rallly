@@ -1,5 +1,6 @@
 import { Participant, Vote, VoteType } from "@prisma/client";
 import { keyBy } from "lodash";
+import { useTranslation } from "next-i18next";
 import React from "react";
 
 import Trash from "@/components/icons/trash.svg";
@@ -57,6 +58,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   admin: boolean;
   children?: React.ReactNode;
 }> = ({ poll, urlId, admin, children }) => {
+  const { t } = useTranslation("app");
   const { participants } = useParticipants();
   const [isDeleted, setDeleted] = React.useState(false);
   const { user } = useSession();
@@ -176,8 +178,8 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     return (
       <ErrorPage
         icon={Trash}
-        title="Deleted poll"
-        description="This poll doesn't exist anymore."
+        title={t("deletedPoll")}
+        description={t("deletedPollInfo")}
       />
     );
   }

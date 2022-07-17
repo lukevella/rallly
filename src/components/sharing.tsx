@@ -32,13 +32,13 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
     <div className={clsx("card p-4", className)}>
       <div className="mb-1 flex items-center justify-between">
         <div className="text-lg font-semibold text-slate-700">
-          Share via link
+          {t("shareLink")}
         </div>
         <button
           onClick={onHide}
           className="h-8 items-center justify-center rounded-md px-3 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
         >
-          Hide
+          {t("hide")}
         </button>
       </div>
       <div className="mb-4 text-slate-600">
@@ -71,7 +71,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
           }}
           className="md:absolute md:top-1/2 md:right-3 md:-translate-y-1/2"
         >
-          {didCopy ? "Copied" : "Copy Link"}
+          {didCopy ? t("copied") : t("copyLink")}
         </Button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import dayjs from "dayjs";
+import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 
@@ -37,6 +38,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   duration,
   onChangeDuration,
 }) => {
+  const { t } = useTranslation("app");
   const isTimedEvent = options.some((option) => option.type === "timeSlot");
 
   const plausible = usePlausible();
@@ -91,14 +93,14 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             <div className="mb-3 flex items-center justify-center space-x-4">
               <Button
                 icon={<ChevronLeft />}
-                title="Previous month"
+                title={t("previousMonth")}
                 onClick={datepicker.prev}
               />
               <div className="grow text-center text-lg font-medium">
                 {datepicker.label}
               </div>
               <Button
-                title="Next month"
+                title={t("nextMonth")}
                 icon={<ChevronRight />}
                 onClick={datepicker.next}
               />
@@ -190,9 +192,9 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
         >
           <div className="flex items-center space-x-3 p-4">
             <div className="grow">
-              <div className="font-medium">Specify times</div>
+              <div className="font-medium">{t("specifyTimes")}</div>
               <div className="text-sm text-slate-400">
-                Include start and end times for each option
+                {t("specifyTimesDescription")}
               </div>
             </div>
             <div>
@@ -338,7 +340,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                               ]);
                             }}
                           >
-                            Add time option
+                            {t("addTimeOption")}
                           </Button>
                           <Dropdown
                             trigger={<CompactButton icon={DotsHorizontal} />}
@@ -347,7 +349,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                             <DropdownItem
                               icon={Magic}
                               disabled={datepicker.selection.length < 2}
-                              label="Apply to all dates"
+                              label={t("applyToAllDates")}
                               onClick={() => {
                                 plausible("Applied options to all dates");
                                 const times = optionsForDay.map(
@@ -384,7 +386,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                               }}
                             />
                             <DropdownItem
-                              label="Delete date"
+                              label={t("deleteDate")}
                               icon={Trash}
                               onClick={() => {
                                 onChange(
@@ -431,7 +433,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             <div className="flex h-full items-center justify-center py-12">
               <div className="text-center font-medium text-gray-400">
                 <Calendar className="mb-2 inline-block h-12 w-12" />
-                <div>No dates selected</div>
+                <div>{t("noDatesSelected")}</div>
               </div>
             </div>
           )}

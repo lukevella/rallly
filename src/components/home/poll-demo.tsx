@@ -33,7 +33,7 @@ const participants = [
 const options = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
 
 const PollDemo: React.VoidFunctionComponent = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation("homepage");
 
   return (
     <div

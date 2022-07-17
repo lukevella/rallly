@@ -216,7 +216,7 @@ const Page: NextPage<CreatePollPageProps> = ({
                 type="primary"
               >
                 {currentStepIndex < steps.length - 1
-                  ? t("next")
+                  ? t("continue")
                   : t("createPoll")}
               </Button>
             </div>
