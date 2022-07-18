@@ -177,7 +177,7 @@ const ManagePoll: React.VoidFunctionComponent<{
       {changePollDetailsModalContextHolder}
       <Dropdown
         placement={placement}
-        trigger={<Button icon={<Cog />}>Manage</Button>}
+        trigger={<Button icon={<Cog />}>{t("manage")}</Button>}
       >
         <DropdownItem
           icon={Pencil}

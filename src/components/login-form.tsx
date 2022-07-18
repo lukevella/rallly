@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -11,6 +12,7 @@ import { validEmail } from "@/utils/form-validation";
 import { trpc } from "../utils/trpc";
 
 const LoginForm: React.VoidFunctionComponent = () => {
+  const { t } = useTranslation("app");
   const { register, formState, handleSubmit, getValues } =
     useForm<{ email: string }>();
 
@@ -24,7 +26,9 @@ const LoginForm: React.VoidFunctionComponent = () => {
         <Magic className="h-24 text-slate-300" />
       </div>
       <div className="max-w-sm p-6">
-        <div className="mb-2 text-xl font-semibold">Login via magic link</div>
+        <div className="mb-2 text-xl font-semibold">
+          {t("loginViaMagicLink")}
+        </div>
         {!formState.isSubmitSuccessful ? (
           <form
             onSubmit={handleSubmit(async ({ email }) => {
@@ -33,8 +37,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
             })}
           >
             <div className="mb-2 text-slate-500">
-              We&apos;ll send you an email with a magic link that you can use to
-              login.
+              {t("loginViaMagicLinkDescription")}
             </div>
             <div className="mb-4">
               <input
@@ -48,7 +51,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
               />
               {formState.errors.email ? (
                 <div className="mt-1 text-sm text-rose-500">
-                  Please enter a valid email address
+                  {t("loginWithValidEmail")}
                 </div>
               ) : null}
             </div>
@@ -58,17 +61,17 @@ const LoginForm: React.VoidFunctionComponent = () => {
                 loading={formState.isSubmitting}
                 type="primary"
               >
-                Send me a magic link
+                {t("loginSendMagicLink")}
               </Button>
             </div>
           </form>
         ) : (
           <div>
-            <div className="text-slate-500">A magic link has been sent to:</div>
-            <div className="text-primary-500 font-mono">
+            <div className="text-slate-500">{t("loginMagicLinkSent")}</div>
+            <div className="font-mono text-primary-500">
               {getValues("email")}
             </div>
-            <div className="mt-2 text-slate-500">Please check you inbox.</div>
+            <div className="mt-2 text-slate-500">{t("loginCheckInbox")}</div>
           </div>
         )}
       </div>
