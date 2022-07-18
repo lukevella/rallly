@@ -93,6 +93,10 @@ yarn start
 
 If you would like to contribute to the development of the project please reach out first before spending significant time on it.
 
+### Translators 🇫🇷 🇩🇪 🇮🇹 🇪🇸
+
+If you'd like to volunteer to translate Rallly to another language, check out our [guide for translators](https://github.com/lukevella/rallly/wiki/Guide-for-translators).
+
 ## 👮‍♂️ License
 
 Rallly is open-source under the GNU Affero General Public License Version 3 (AGPLv3) or any later version. See [LICENSE](LICENSE) for more detail.
