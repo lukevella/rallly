@@ -3,6 +3,7 @@ import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import GitHubButton from "react-github-btn";
 
+import DigitalOcean from "~/public/digitalocean.svg";
 import Logo from "~/public/logo.svg";
 import Vercel from "~/public/vercel-logotype-dark.svg";
 
@@ -102,15 +103,22 @@ const Footer: React.VoidFunctionComponent = () => {
           </ul>
         </div>
         <div className="col-span-12 md:col-span-2">
-          <a
-            href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
-            className="inline-block text-white"
-          >
-            <span className="mb-1 inline-block w-full text-right text-xs italic text-gray-400">
-              {t("poweredBy")}
-            </span>
-            <Vercel className="w-24" />
-          </a>
+          <div className="mb-4 font-medium">{t("poweredBy")}</div>
+          <div className="flex items-end space-x-4 md:block md:space-x-0 md:space-y-2">
+            <div>
+              <a
+                href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
+                className="inline-block text-white"
+              >
+                <Vercel className="h-6" />
+              </a>
+            </div>
+            <div>
+              <a href="https://m.do.co/c/f91efc9c9e50">
+                <DigitalOcean className="h-8" />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
