@@ -293,7 +293,7 @@ const StandardLayout: React.VoidFunctionComponent<{
           <AnimatePresence initial={false}>
             {user ? (
               <UserDropdown
-                className="w-full"
+                className="mb-4 w-full"
                 placement="bottom-end"
                 openLoginModal={openLoginModal}
                 trigger={
@@ -322,6 +322,20 @@ const StandardLayout: React.VoidFunctionComponent<{
               />
             ) : null}
           </AnimatePresence>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm">
+            <div className="mb-1 text-3xl">🇫🇷</div>
+            <div className="mb-2 font-medium text-slate-700">
+              Become a translator
+            </div>
+            <p className="text-slate-600">
+              Would you like to help translate Rallly to your own language?
+            </p>
+            <div>
+              <a href="https://github.com/lukevella/rallly/wiki/Guide-for-translators">
+                Get started &rarr;
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div className="min-w-0 grow">
