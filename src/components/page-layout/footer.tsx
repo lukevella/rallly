@@ -103,19 +103,19 @@ const Footer: React.VoidFunctionComponent = () => {
           </ul>
         </div>
         <div className="col-span-12 md:col-span-2">
-          <div className="mb-4 font-medium">{t("poweredBy")}</div>
-          <div className="flex items-end space-x-4 md:block md:space-x-0 md:space-y-2">
+          <div className="mb-6 font-medium">{t("poweredBy")}</div>
+          <div className="flex items-center space-x-4 md:block md:space-x-0 md:space-y-2">
             <div>
               <a
                 href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
                 className="inline-block text-white"
               >
-                <Vercel className="h-6" />
+                <Vercel className="h-5" />
               </a>
             </div>
             <div>
-              <a href="https://m.do.co/c/f91efc9c9e50">
-                <DigitalOcean className="h-8" />
+              <a className="inline-block" href="https://m.do.co/c/f91efc9c9e50">
+                <DigitalOcean className="h-7" />
               </a>
             </div>
           </div>
