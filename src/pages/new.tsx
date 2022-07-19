@@ -8,7 +8,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   async ({ locale = "en", query, req }) => {
     return {
       props: {
-        ...(await serverSideTranslations(locale, ["app"])),
+        ...(await serverSideTranslations(locale, ["common", "app"])),
         ...query,
         user: req.session.user ?? null,
       },

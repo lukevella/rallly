@@ -156,7 +156,7 @@ const Page: NextPage<CreatePollPageProps> = ({
       <div className="max-w-full py-4 md:px-3 lg:px-6">
         <div className="mx-auto w-fit max-w-full lg:mx-0">
           <div className="mb-4 flex items-center justify-center space-x-4 px-4 lg:justify-start">
-            <h1 className="m-0">New Poll</h1>
+            <h1 className="m-0">{t("newPoll")}</h1>
             <Steps current={currentStepIndex} total={steps.length} />
           </div>
           <div className="overflow-hidden border-t border-b bg-white shadow-sm md:rounded-lg md:border">

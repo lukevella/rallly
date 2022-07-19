@@ -1,3 +1,8 @@
 {
-  "appName": "Rallly"
+  "language": "Language",
+  "english": "English",
+  "german": "German",
+  "home": "Home",
+  "blog": "Blog",
+  "support": "Support"
 }
