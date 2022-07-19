@@ -23,7 +23,7 @@
   "deleteComment": "Delete comment",
   "deleteDate": "Delete date",
   "deletedPoll": "Deleted poll",
-  "deletedPollInfo": "this poll doesn't exist anymore.",
+  "deletedPollInfo": "This poll doesn't exist anymore.",
   "deletePoll": "Delete poll",
   "deletePollDescription": "All data related to this poll will be deleted. To confirm, please type <s>“{{confirmText}}”</s> in to the input below:",
   "deletingOptionsWarning": "You are deleting options that participants have voted for. Their votes will be also be deleted.",
