@@ -213,16 +213,18 @@ const ManagePoll: React.VoidFunctionComponent<{
           onClick={() => {
             modalContext.render({
               overlayClosable: true,
-              content: ({ close }) => (
-                <DeletePollForm
-                  onConfirm={async () => {
-                    close();
-                    setDeleted(true);
-                  }}
-                  onCancel={close}
-                  urlId={urlId}
-                />
-              ),
+              content: function Content({ close }) {
+                return (
+                  <DeletePollForm
+                    onConfirm={async () => {
+                      close();
+                      setDeleted(true);
+                    }}
+                    onCancel={close}
+                    urlId={urlId}
+                  />
+                );
+              },
               footer: null,
             });
           }}
