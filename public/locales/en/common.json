@@ -4,5 +4,10 @@
   "german": "German",
   "home": "Home",
   "blog": "Blog",
-  "support": "Support"
+  "support": "Support",
+  "donate": "Donate",
+  "volunteerTranslator": "Help translate this site",
+  "starOnGithub": "Star us on Github",
+  "footerCredit": "Made by <a>@imlukevella</a>",
+  "footerSponsor": "This project is user-funded. Please consider supporting it by <a>donating</a>."
 }
