@@ -5,7 +5,7 @@ export const withPageTranslations = (
   namespaces: string[],
 ): GetServerSideProps => {
   return async (ctx: GetServerSidePropsContext) => {
-    const locale = ctx.req.cookies.NEXT_LOCALE ?? ctx.locale ?? "en";
+    const locale = ctx.locale ?? "en";
     return {
       props: {
         ...(await serverSideTranslations(locale, namespaces)),

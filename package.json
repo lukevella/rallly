@@ -70,7 +70,7 @@
     "@typescript-eslint/parser": "^5.21.0",
     "autoprefixer": "^10.4.2",
     "eslint": "^7.26.0",
-    "eslint-config-next": "12.1.0",
+    "eslint-config-next": "^12.2.2",
     "eslint-import-resolver-typescript": "^2.7.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2",

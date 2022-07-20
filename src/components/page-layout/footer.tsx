@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import GitHubButton from "react-github-btn";
@@ -7,21 +8,24 @@ import DigitalOcean from "~/public/digitalocean.svg";
 import Logo from "~/public/logo.svg";
 import Vercel from "~/public/vercel-logotype-dark.svg";
 
+import { LanguageSelect } from "../poll/language-selector";
+
 const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");
+  const router = useRouter();
   return (
     <div className="mt-16 bg-slate-50/70">
-      <div className="mx-auto grid max-w-7xl grid-cols-10 gap-8 py-20 px-8">
-        <div className="col-span-12 md:col-span-4">
-          <Logo className="mb-4 w-32 text-gray-400" />
-          <p className="text-sm text-gray-400">
+      <div className="mx-auto grid max-w-7xl grid-cols-10 gap-16 py-20 px-8">
+        <div className="col-span-12 space-y-4 md:col-span-4">
+          <Logo className="w-32 text-slate-400" />
+          <p className="text-slate-400">
             <Trans
               t={t}
               i18nKey="footerCredit"
               components={{
                 a: (
                   <a
-                    className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
+                    className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
                     href="https://twitter.com/imlukevella"
                   />
                 ),
@@ -45,13 +49,21 @@ const Footer: React.VoidFunctionComponent = () => {
               {t("sponsorThisProject")}
             </GitHubButton>
           </div>
+          <div className="space-y-4">
+            <LanguageSelect
+              className="w-48"
+              onChange={(locale) => {
+                router.push(router.asPath, router.asPath, { locale });
+              }}
+            />
+          </div>
         </div>
         <div className="col-span-6 md:col-span-2">
           <div className="mb-4 font-medium">{t("links")}</div>
           <ul>
             <li>
               <a
-                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
+                className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
                 {t("discussions")}
@@ -59,7 +71,7 @@ const Footer: React.VoidFunctionComponent = () => {
             </li>
             <li>
               <Link href="https://blog.rallly.co">
-                <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
+                <a className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline">
                   {t("blog")}
                 </a>
               </Link>
@@ -67,14 +79,14 @@ const Footer: React.VoidFunctionComponent = () => {
             <li>
               <a
                 href="https://support.rallly.co"
-                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
+                className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
               >
                 {t("support")}
               </a>
             </li>
             <li>
               <Link href="/privacy-policy">
-                <a className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline">
+                <a className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline">
                   {t("privacyPolicy")}
                 </a>
               </Link>
@@ -86,7 +98,7 @@ const Footer: React.VoidFunctionComponent = () => {
           <ul>
             <li>
               <a
-                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
+                className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly"
               >
                 Github
@@ -94,7 +106,7 @@ const Footer: React.VoidFunctionComponent = () => {
             </li>
             <li>
               <a
-                className="font-normal leading-loose text-gray-400 hover:text-gray-800 hover:no-underline"
+                className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
                 href="https://twitter.com/ralllyco"
               >
                 Twitter

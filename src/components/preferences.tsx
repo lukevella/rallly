@@ -1,10 +1,10 @@
 import clsx from "clsx";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
 
+import { LanguageSelect } from "./poll/language-selector";
 import { usePreferences } from "./preferences/use-preferences";
 
 const Preferences: React.VoidFunctionComponent = () => {
@@ -16,26 +16,13 @@ const Preferences: React.VoidFunctionComponent = () => {
   const router = useRouter();
 
   const plausible = usePlausible();
-  const locale = Cookies.get("NEXT_LOCALE") ?? "en";
   return (
     <div>
       <div className="mb-4 space-y-2">
         <div className="grow text-sm text-slate-500">
           {t("common:language")}
         </div>
-        <select
-          className="input w-full"
-          defaultValue={locale}
-          onChange={(e) => {
-            Cookies.set("NEXT_LOCALE", e.target.value, {
-              expires: 365,
-            });
-            router.reload();
-          }}
-        >
-          <option value="en">{t("common:english")}</option>
-          <option value="de">{t("common:german")}</option>
-        </select>
+        <LanguageSelect className="w-full" onChange={() => router.reload()} />
       </div>
       <div className="grow space-y-2">
         <div>

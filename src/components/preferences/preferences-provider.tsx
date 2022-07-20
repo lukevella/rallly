@@ -10,7 +10,7 @@ import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 import * as React from "react";
 import { useLocalStorage } from "react-use";
 
@@ -50,8 +50,8 @@ const PreferencesProvider: React.VoidFunctionComponent<{
   const [weekStartsOn = "monday", setWeekStartsOn] =
     useLocalStorage<StartOfWeek>("rallly-week-starts-on");
 
-  const localeCode = Cookies.get("NEXT_LOCALE") ?? "en";
-  const userLocale = dayJsLocales[localeCode];
+  const router = useRouter();
+  const userLocale = dayJsLocales[router.locale ?? "en"];
   const [timeFormat = "12h", setTimeFormat] =
     useLocalStorage<TimeFormat>("rallly-time-format");
 
