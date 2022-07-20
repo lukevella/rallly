@@ -18,8 +18,8 @@ const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation(["common", "homepage"]);
   const router = useRouter();
   return (
-    <div className="mt-16 bg-slate-50/70 p-8">
-      <div className="space-y-8 lg:grid lg:grid-cols-12 lg:gap-16 lg:space-y-0">
+    <div className="mt-16 bg-slate-50/70">
+      <div className="mx-auto max-w-7xl space-y-8 p-8 lg:grid lg:grid-cols-12 lg:gap-16 lg:space-y-0">
         <div className=" lg:col-span-4">
           <Logo className="w-32 text-slate-400" />
           <div className="mb-8 mt-4 text-slate-400">
