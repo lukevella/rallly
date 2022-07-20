@@ -49,7 +49,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
     <div
       data-testid="participant-row"
       data-participantid={participantId}
-      className="group flex h-14"
+      className="group flex h-14 items-center"
     >
       <div
         className="flex shrink-0 items-center px-4"
@@ -74,12 +74,12 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
           return (
             <div
               key={i}
-              className="relative shrink-0 transition-colors"
+              className="relative flex shrink-0 items-center justify-center px-2 transition-colors"
               style={{ width: columnWidth }}
             >
               <div
                 className={clsx(
-                  "absolute inset-1 flex items-center justify-center rounded-lg",
+                  "flex h-10 w-full items-center justify-center rounded-md",
                   {
                     "bg-green-50": vote === "yes",
                     "bg-amber-50": vote === "ifNeedBe",

@@ -84,6 +84,8 @@
   "ok": "Ok",
   "options": "Options",
   "participant": "Participant",
+  "addParticipant": "Add participant",
+  "alreadyVoted": "You have already voted",
   "participantCount_other": "{{count}} participants",
   "participantCount": "{{count}} participant",
   "pollHasBeenLocked": "This poll has been locked",
@@ -97,6 +99,7 @@
   "profileUser": "Profile - {{username}}",
   "requiredNameError": "Name is required",
   "save": "Save",
+  "saveInstruction": "Select your availability and click <b>{{save}}</b>",
   "share": "Share",
   "shareDescription": "Give this link to your <b>participants</b> to allow them to vote on your poll.",
   "shareLink": "Share via link",
@@ -121,5 +124,6 @@
   "whatsThis": "What's this?",
   "yes": "Yes",
   "yourDetails": "Your details",
+  "yourName": "Your name…",
   "yourPolls": "Your polls"
 }

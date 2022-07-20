@@ -1,12 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useTranslation } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
-import smoothscroll from "smoothscroll-polyfill";
+
+import ArrowLeft from "@/components/icons/arrow-left.svg";
+import ArrowRight from "@/components/icons/arrow-right.svg";
+import Check from "@/components/icons/check.svg";
+import Plus from "@/components/icons/plus-sm.svg";
 
 import { Button } from "../button";
-import ArrowLeft from "../icons/arrow-left.svg";
-import ArrowRight from "../icons/arrow-right.svg";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
 import TimeZonePicker from "../time-zone-picker";
@@ -16,10 +18,6 @@ import { PollContext } from "./desktop-poll/poll-context";
 import PollHeader from "./desktop-poll/poll-header";
 import { useAddParticipantMutation } from "./mutations";
 
-if (typeof window !== "undefined") {
-  smoothscroll.polyfill();
-}
-
 const MotionButton = motion(Button);
 
 const minSidebarWidth = 200;
@@ -27,7 +25,8 @@ const minSidebarWidth = 200;
 const Poll: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const { poll, options, targetTimeZone, setTargetTimeZone } = usePoll();
+  const { poll, options, targetTimeZone, setTargetTimeZone, userAlreadyVoted } =
+    usePoll();
 
   const { participants } = useParticipants();
 
@@ -35,7 +34,7 @@ const Poll: React.VoidFunctionComponent = () => {
   const [editingParticipantId, setEditingParticipantId] =
     React.useState<string | null>(null);
 
-  const actionColumnWidth = 140;
+  const actionColumnWidth = 100;
   const columnWidth = Math.min(
     130,
     Math.max(
@@ -65,7 +64,8 @@ const Poll: React.VoidFunctionComponent = () => {
   const maxScrollPosition =
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
 
-  const shouldShowNewParticipantForm = !poll.closed;
+  const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
+    React.useState(!poll.closed && !userAlreadyVoted);
 
   const pollWidth =
     sidebarWidth + options.length * columnWidth + actionColumnWidth;
@@ -197,22 +197,69 @@ const Poll: React.VoidFunctionComponent = () => {
               })}
             </div>
           ) : null}
-          {shouldShowNewParticipantForm ? (
+          {shouldShowNewParticipantForm &&
+          !poll.closed &&
+          !editingParticipantId ? (
             <ParticipantRowForm
-              className="border-t bg-gray-50"
+              className="shrink-0 border-t bg-gray-50"
               onSubmit={async ({ name, votes }) => {
-                const participant = await addParticipant.mutateAsync({
+                await addParticipant.mutateAsync({
                   name,
                   votes,
                   pollId: poll.id,
                 });
-                setTimeout(() => {
-                  participantListContainerRef.current
-                    ?.querySelector(`[data-participantid=${participant.id}]`)
-                    ?.scrollIntoView();
-                }, 100);
+                setShouldShowNewParticipantForm(false);
               }}
             />
+          ) : null}
+          {!poll.closed ? (
+            <div className="flex h-14 shrink-0 items-center border-t bg-gray-50 px-3">
+              {shouldShowNewParticipantForm || editingParticipantId ? (
+                <div className="flex items-center space-x-3">
+                  <Button
+                    onClick={() => {
+                      if (editingParticipantId) {
+                        setEditingParticipantId(null);
+                      } else {
+                        setShouldShowNewParticipantForm(false);
+                      }
+                    }}
+                  >
+                    {t("cancel")}
+                  </Button>
+                  <Button
+                    form="participant-row-form"
+                    htmlType="submit"
+                    type="primary"
+                    icon={<Check />}
+                  >
+                    {t("save")}
+                  </Button>
+                  <div>
+                    <Trans
+                      t={t}
+                      i18nKey="saveInstruction"
+                      values={{
+                        save: t("save"),
+                      }}
+                      components={{ b: <strong /> }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Button
+                    onClick={() => {
+                      setShouldShowNewParticipantForm(true);
+                    }}
+                    icon={<Plus />}
+                  >
+                    {t("addParticipant")}
+                  </Button>
+                  {userAlreadyVoted ? <div>{t("alreadyVoted")}</div> : null}
+                </div>
+              )}
+            </div>
           ) : null}
         </div>
       </div>

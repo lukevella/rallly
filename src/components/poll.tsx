@@ -174,13 +174,6 @@ const PollPage: NextPage = () => {
                       <Sharing
                         onHide={() => {
                           setSharingVisible(false);
-                          router.replace(
-                            `/admin/${router.query.urlId}`,
-                            undefined,
-                            {
-                              shallow: true,
-                            },
-                          );
                         }}
                       />
                     </motion.div>
