@@ -13,7 +13,6 @@ const moduleExports = {
   future: {
     webpack5: false,
   },
-  trailingSlash: true,
   i18n: i18n,
   productionBrowserSourceMaps: true,
   webpack(config) {
