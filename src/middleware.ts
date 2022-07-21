@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const supportedLocales = ["en", "de"];
+
 export function middleware({ headers, cookies, nextUrl }: NextRequest) {
   const locale =
     cookies.get("NEXT_LOCALE") ??
@@ -11,7 +13,10 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
       "en");
 
   const newUrl = nextUrl.clone();
-  newUrl.pathname = `/${locale}${newUrl.pathname}`;
+
+  if (supportedLocales.includes(locale)) {
+    newUrl.pathname = `/${locale}${newUrl.pathname}`;
+  }
 
   return NextResponse.rewrite(newUrl);
 }
