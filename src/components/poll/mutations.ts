@@ -21,14 +21,38 @@ export const useAddParticipantMutation = () => {
   const plausible = usePlausible();
 
   return trpc.useMutation(["polls.participants.add"], {
-    onSuccess: (participant) => {
-      plausible("Add participant");
+    onMutate: (participant) => {
       queryClient.setQueryData(
         ["polls.participants.list", { pollId: participant.pollId }],
         (existingParticipants = []) => {
-          return [...existingParticipants, participant];
+          const now = new Date();
+          return [
+            ...existingParticipants,
+            {
+              id: "temp",
+              userId: session.user?.id,
+              createdAt: now,
+              updatedAt: null,
+              ...participant,
+              votes: participant.votes.map((vote, i) => ({
+                createdAt: now,
+                participantId: "temp",
+                id: `vote-${i}`,
+                pollId: participant.pollId,
+                updatedAt: null,
+                ...vote,
+              })),
+            },
+          ];
         },
       );
+    },
+    onSuccess: (participant) => {
+      plausible("Add participant");
+      queryClient.invalidateQueries([
+        "polls.participants.list",
+        { pollId: participant.pollId },
+      ]);
       session.refresh();
     },
   });

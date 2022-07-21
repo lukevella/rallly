@@ -217,6 +217,15 @@ const Poll: React.VoidFunctionComponent = () => {
               {shouldShowNewParticipantForm || editingParticipantId ? (
                 <div className="flex items-center space-x-3">
                   <Button
+                    key="submit"
+                    form="participant-row-form"
+                    htmlType="submit"
+                    type="primary"
+                    icon={<Check />}
+                  >
+                    {t("save")}
+                  </Button>
+                  <Button
                     onClick={() => {
                       if (editingParticipantId) {
                         setEditingParticipantId(null);
@@ -227,15 +236,7 @@ const Poll: React.VoidFunctionComponent = () => {
                   >
                     {t("cancel")}
                   </Button>
-                  <Button
-                    form="participant-row-form"
-                    htmlType="submit"
-                    type="primary"
-                    icon={<Check />}
-                  >
-                    {t("save")}
-                  </Button>
-                  <div>
+                  <div className="text-sm">
                     <Trans
                       t={t}
                       i18nKey="saveInstruction"
@@ -249,6 +250,7 @@ const Poll: React.VoidFunctionComponent = () => {
               ) : (
                 <div className="flex items-center space-x-3">
                   <Button
+                    key="add-participant"
                     onClick={() => {
                       setShouldShowNewParticipantForm(true);
                     }}
