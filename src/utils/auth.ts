@@ -32,7 +32,13 @@ export function withSessionSsr(handler: GetServerSideProps) {
       req.session.user = await createGuestUser();
       await req.session.save();
     }
-    return await handler(context);
+    const res = await handler(context);
+
+    if ("props" in res) {
+      return { ...res, props: { ...res.props, user: req.session.user } };
+    }
+
+    return res;
   }, sessionOptions);
 }
 

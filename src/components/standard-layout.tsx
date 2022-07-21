@@ -12,6 +12,7 @@ import Logo from "~/public/logo.svg";
 import Dropdown, { DropdownItem, DropdownProps } from "./dropdown";
 import Adjustments from "./icons/adjustments.svg";
 import Cash from "./icons/cash.svg";
+import Discord from "./icons/discord.svg";
 import DotsVertical from "./icons/dots-vertical.svg";
 import Github from "./icons/github.svg";
 import Login from "./icons/login.svg";
@@ -293,7 +294,7 @@ const StandardLayout: React.VoidFunctionComponent<{
           <AnimatePresence initial={false}>
             {user ? (
               <UserDropdown
-                className="w-full"
+                className="mb-4 w-full"
                 placement="bottom-end"
                 openLoginModal={openLoginModal}
                 trigger={
@@ -358,25 +359,34 @@ const StandardLayout: React.VoidFunctionComponent<{
             </Link>
             <div className="hidden text-slate-300 lg:block">&bull;</div>
             <div className="flex items-center space-x-6">
-              <Link href="https://twitter.com/ralllyco">
-                <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                  <Twitter className="h-5 w-5" />
-                </a>
-              </Link>
-              <Link href="https://github.com/lukevella/rallly">
-                <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                  <Github className="h-5 w-5" />
-                </a>
-              </Link>
+              <a
+                href="https://twitter.com/ralllyco"
+                className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a
+                href="https://github.com/lukevella/rallly"
+                className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+              <a
+                href="https://discord.gg/m5UFXavc2C"
+                className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+              >
+                <Discord className="h-5 w-5" />
+              </a>
             </div>
           </div>
           <div className="hidden text-slate-300 lg:block">&bull;</div>
-          <Link href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E">
-            <a className="inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:bg-primary-500 hover:text-white hover:no-underline focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 active:bg-primary-600">
-              <Cash className="mr-1 inline-block w-5" />
-              <span>{t("donate")}</span>
-            </a>
-          </Link>
+          <a
+            href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
+            className="inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:bg-primary-500 hover:text-white hover:no-underline focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 active:bg-primary-600"
+          >
+            <Cash className="mr-1 inline-block w-5" />
+            <span>{t("donate")}</span>
+          </a>
         </div>
       </div>
     </div>

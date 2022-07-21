@@ -1,29 +1,33 @@
 import clsx from "clsx";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
 
-import Calendar from "@/components/icons/calendar.svg";
-
+import { LanguageSelect } from "./poll/language-selector";
 import { usePreferences } from "./preferences/use-preferences";
 
 const Preferences: React.VoidFunctionComponent = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation(["app", "common"]);
 
   const { weekStartsOn, setWeekStartsOn, timeFormat, setTimeFormat } =
     usePreferences();
 
+  const router = useRouter();
+
   const plausible = usePlausible();
   return (
-    <div className="-mb-2">
-      <div className="mb-4 flex items-center space-x-2 text-base font-semibold">
-        <Calendar className="inline-block w-5" />
-        <span>{t("timeAndDate")}</span>
+    <div>
+      <div className="mb-4 space-y-2">
+        <div className="grow text-sm text-slate-500">
+          {t("common:language")}
+        </div>
+        <LanguageSelect className="w-full" onChange={() => router.reload()} />
       </div>
-      <div className="grow">
-        <div className="mb-2">
+      <div className="grow space-y-2">
+        <div>
           <div className="mb-2 grow text-sm text-slate-500">
-            {t("weekStartsOn")}
+            {t("app:weekStartsOn")}
           </div>
           <div>
             <div className="segment-button inline-flex">
@@ -41,7 +45,7 @@ const Preferences: React.VoidFunctionComponent = () => {
                 }}
                 type="button"
               >
-                {t("monday")}
+                {t("app:monday")}
               </button>
               <button
                 className={clsx({
@@ -57,14 +61,14 @@ const Preferences: React.VoidFunctionComponent = () => {
                 }}
                 type="button"
               >
-                {t("sunday")}
+                {t("app:sunday")}
               </button>
             </div>
           </div>
         </div>
-        <div className="mb-2">
+        <div className="">
           <div className="mb-2 grow text-sm text-slate-500">
-            {t("timeFormat")}
+            {t("app:timeFormat")}
           </div>
           <div className="segment-button inline-flex">
             <button
@@ -81,7 +85,7 @@ const Preferences: React.VoidFunctionComponent = () => {
               }}
               type="button"
             >
-              {t("12h")}
+              {t("app:12h")}
             </button>
             <button
               className={clsx({
@@ -97,7 +101,7 @@ const Preferences: React.VoidFunctionComponent = () => {
               }}
               type="button"
             >
-              {t("24h")}
+              {t("app:24h")}
             </button>
           </div>
         </div>

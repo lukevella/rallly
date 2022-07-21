@@ -1,17 +1,11 @@
 import * as Eta from "eta";
 import { readFileSync } from "fs";
-import { NextApiRequest } from "next";
 import path from "path";
 
 import { prisma } from "~/prisma/db";
 
 import { absoluteUrl } from "./absolute-url";
 import { sendEmail } from "./send-email";
-
-export const getQueryParam = (req: NextApiRequest, queryKey: string) => {
-  const value = req.query[queryKey];
-  return typeof value === "string" ? value : value[0];
-};
 
 type NotificationAction =
   | {

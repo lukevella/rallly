@@ -10,7 +10,7 @@ import Ban from "./ban-ads.svg";
 const Bonus: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");
   return (
-    <div className="mx-auto max-w-7xl px-8 pt-8 pb-24">
+    <div className="mx-auto max-w-7xl px-8 py-8">
       <h2 className="heading">{t("principles")}</h2>
       <p className="subheading">{t("principlesSubheading")}</p>
       <div className="grid grid-cols-4 gap-16">

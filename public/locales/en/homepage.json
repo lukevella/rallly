@@ -9,7 +9,6 @@
   "features": "Features",
   "featuresSubheading": "Scheduling, the smart way",
   "follow": "Follow",
-  "footerCredit": "Self-funded and built by <a>@imlukevella</a>",
   "getStarted": "Get started",
   "heroSubText": "Find the right date without the back and forth",
   "heroText": "Schedule<br/><s>group meetings</s><br />with ease",
@@ -28,6 +27,7 @@
   "openSourceDescription": "The codebase is fully open-source and <a>available on GitHub</a>.",
   "participant": "Participant",
   "participantCount_other": "{{count}} participants",
+  "social": "Social",
   "participantCount": "{{count}} participant",
   "perfect": "Perfect!",
   "poweredBy": "Powered by",
@@ -38,7 +38,7 @@
   "selfHostableDescription": "Run it on your own server to take full control of your data",
   "sponsorThisProject": "Sponsor this project",
   "star": "Star",
-  "support": "support",
+  "support": "Support",
   "timeSlots": "Time slots",
   "timeSlotsDescription": "Set individual start and end times for each option in your poll. Times can be automatically adjusted to each participant's timezone or they can be set to ignore timezones completely."
 }

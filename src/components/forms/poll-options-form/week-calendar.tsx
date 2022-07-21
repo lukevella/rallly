@@ -66,7 +66,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
         );
       }}
       components={{
-        toolbar: (props) => {
+        toolbar: function Toolbar(props) {
           return (
             <DateNavigationToolbar
               year={props.date.getFullYear()}
@@ -83,7 +83,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             />
           );
         },
-        eventWrapper: (props) => {
+        eventWrapper: function EventWraper(props) {
           const start = dayjs(props.event.start);
           const end = dayjs(props.event.end);
           return (
@@ -105,7 +105,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
         },
         week: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          header: ({ date }: any) => {
+          header: function Header({ date }: any) {
             const dateString = formatDateWithoutTime(date);
             const selectedOption = options.find((option) => {
               return option.type === "date" && option.date === dateString;
@@ -143,7 +143,7 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             );
           },
         },
-        timeSlotWrapper: ({ children }) => {
+        timeSlotWrapper: function TimeSlotWrapper({ children }) {
           return <div className="h-8 text-xs text-gray-500">{children}</div>;
         },
       }}

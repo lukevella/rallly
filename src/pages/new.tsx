@@ -1,19 +1,11 @@
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { withSessionSsr } from "../utils/auth";
+import { withPageTranslations } from "../utils/with-page-translations";
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  async ({ locale = "en", query, req }) => {
-    return {
-      props: {
-        ...(await serverSideTranslations(locale, ["app"])),
-        ...query,
-        user: req.session.user ?? null,
-      },
-    };
-  },
+  withPageTranslations(["common", "app"]),
 );
 
 export default dynamic(() => import("@/components/create-poll"), {

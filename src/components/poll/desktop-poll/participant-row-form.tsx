@@ -1,11 +1,10 @@
 import clsx from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import CompactButton from "@/components/compact-button";
-import Check from "@/components/icons/check.svg";
-import X from "@/components/icons/x.svg";
+import ArrowRight from "@/components/icons/arrow-right.svg";
 
 import { requiredString } from "../../../utils/form-validation";
 import { Button } from "../../button";
@@ -17,6 +16,7 @@ import { VoteSelector } from "../vote-selector";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
+const MotionButton = motion(Button);
 export interface ParticipantRowFormProps {
   defaultValues?: Partial<ParticipantForm>;
   onSubmit: (data: ParticipantFormSubmitted) => Promise<void>;
@@ -43,7 +43,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
   const {
     handleSubmit,
     control,
-    formState: { errors, submitCount, isSubmitting },
+    formState: { errors, submitCount },
     reset,
   } = useForm({
     defaultValues: {
@@ -69,6 +69,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
 
   return (
     <form
+      id="participant-row-form"
       ref={ref}
       onSubmit={handleSubmit(async ({ name, votes }) => {
         await onSubmit({
@@ -91,7 +92,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                 className={clsx("w-full", {
                   "input-error": errors.name && submitCount > 0,
                 })}
-                placeholder="Your name"
+                placeholder={t("yourName")}
                 {...field}
                 onKeyDown={(e) => {
                   if (e.code === "Tab" && scrollPosition > 0) {
@@ -126,7 +127,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                 return (
                   <div
                     key={optionId}
-                    className="flex shrink-0 items-center justify-center"
+                    className="flex shrink-0 items-center justify-center px-2"
                     style={{ width: columnWidth }}
                   >
                     <VoteSelector
@@ -162,28 +163,25 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
       />
 
       <div className="flex items-center space-x-2 px-2 transition-all">
-        {scrollPosition >= maxScrollPosition ? (
-          <Button
-            htmlType="submit"
-            icon={<Check />}
-            type="primary"
-            loading={isSubmitting}
-            data-testid="submitNewParticipant"
-          >
-            {t("save")}
-          </Button>
-        ) : null}
         {scrollPosition < maxScrollPosition ? (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              goToNextPage();
-            }}
-          >
-            {t("next")} &rarr;
-          </Button>
+          <AnimatePresence initial={false}>
+            {scrollPosition < maxScrollPosition ? (
+              <MotionButton
+                transition={{ duration: 0.1 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="text-xs"
+                rounded={true}
+                onClick={() => {
+                  goToNextPage();
+                }}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </MotionButton>
+            ) : null}
+          </AnimatePresence>
         ) : null}
-        {onCancel ? <CompactButton onClick={onCancel} icon={X} /> : null}
       </div>
     </form>
   );

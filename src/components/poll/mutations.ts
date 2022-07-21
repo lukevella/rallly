@@ -29,6 +29,10 @@ export const useAddParticipantMutation = () => {
           return [...existingParticipants, participant];
         },
       );
+      queryClient.invalidateQueries([
+        "polls.participants.list",
+        { pollId: participant.pollId },
+      ]);
       session.refresh();
     },
   });

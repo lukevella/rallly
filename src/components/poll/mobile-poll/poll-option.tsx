@@ -229,6 +229,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
                 ref={selectorRef}
                 value={vote}
                 onChange={onChange}
+                className="w-9"
               />
             </div>
           ) : (

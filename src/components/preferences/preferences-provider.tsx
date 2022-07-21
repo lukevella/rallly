@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import de from "dayjs/locale/de";
 import en from "dayjs/locale/en";
 import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
@@ -9,11 +10,17 @@ import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { useRouter } from "next/router";
 import * as React from "react";
 import { useLocalStorage } from "react-use";
 
 type TimeFormat = "12h" | "24h";
 type StartOfWeek = "monday" | "sunday";
+
+const dayJsLocales = {
+  de,
+  en,
+};
 
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
@@ -43,11 +50,13 @@ const PreferencesProvider: React.VoidFunctionComponent<{
   const [weekStartsOn = "monday", setWeekStartsOn] =
     useLocalStorage<StartOfWeek>("rallly-week-starts-on");
 
+  const router = useRouter();
+  const userLocale = dayJsLocales[router.locale ?? "en"];
   const [timeFormat = "12h", setTimeFormat] =
     useLocalStorage<TimeFormat>("rallly-time-format");
 
   dayjs.locale({
-    ...en,
+    ...userLocale,
     weekStart: weekStartsOn === "monday" ? 1 : 0,
     formats: { LT: timeFormat === "12h" ? "h:mm A" : "HH:mm" },
   });

@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
@@ -24,6 +23,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
   className,
 }) => {
   const { pathname } = useRouter();
+  const { t } = useTranslation("common");
   return (
     <nav className={className}>
       <Link href="/">
@@ -36,7 +36,7 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
             },
           )}
         >
-          Home
+          {t("home")}
         </a>
       </Link>
       <Link href="https://blog.rallly.co">
@@ -45,14 +45,14 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
             "text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2",
           )}
         >
-          Blog
+          {t("blog")}
         </a>
       </Link>
       <a
         href="https://support.rallly.co"
         className="text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2"
       >
-        Support
+        {t("support")}
       </a>
       <Link href="https://github.com/lukevella/rallly">
         <a className="text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2">
@@ -70,9 +70,6 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
   const { t } = useTranslation("homepage");
   return (
     <div className="bg-pattern min-h-full overflow-x-hidden">
-      <Head>
-        <title>Rallly - Support</title>
-      </Head>
       <div className="mx-auto flex max-w-7xl items-center py-8 px-8">
         <div className="grow">
           <div className="relative inline-block">
