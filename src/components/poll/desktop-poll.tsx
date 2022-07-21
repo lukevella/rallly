@@ -16,7 +16,10 @@ import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import { PollContext } from "./desktop-poll/poll-context";
 import PollHeader from "./desktop-poll/poll-header";
-import { useAddParticipantMutation } from "./mutations";
+import {
+  useAddParticipantMutation,
+  useUpdateParticipantMutation,
+} from "./mutations";
 
 const MotionButton = motion(Button);
 
@@ -86,6 +89,8 @@ const Poll: React.VoidFunctionComponent = () => {
       Math.max(0, scrollPosition - numberOfVisibleColumns * columnWidth),
     );
   };
+
+  const updateParticipant = useUpdateParticipantMutation();
 
   const participantListContainerRef = React.useRef<HTMLDivElement>(null);
   return (
@@ -192,6 +197,14 @@ const Poll: React.VoidFunctionComponent = () => {
                         isEditing ? participant.id : null,
                       );
                     }}
+                    onSubmit={async ({ name, votes }) => {
+                      await updateParticipant.mutateAsync({
+                        participantId: participant.id,
+                        pollId: poll.id,
+                        votes,
+                        name,
+                      });
+                    }}
                   />
                 );
               })}
@@ -222,6 +235,9 @@ const Poll: React.VoidFunctionComponent = () => {
                     htmlType="submit"
                     type="primary"
                     icon={<Check />}
+                    loading={
+                      addParticipant.isLoading || updateParticipant.isLoading
+                    }
                   >
                     {t("save")}
                   </Button>
