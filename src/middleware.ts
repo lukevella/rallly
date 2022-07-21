@@ -22,6 +22,5 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
 }
 
 export const config = {
-  // these are paths we should rewrite to prev
-  matcher: ["/admin/:id", "/demo", "/p/:id", "/profile", "/new"],
+  matcher: ["/admin/:id", "/demo", "/p/:id", "/profile", "/new", "/login"],
 };
