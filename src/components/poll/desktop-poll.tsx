@@ -264,7 +264,7 @@ const Poll: React.VoidFunctionComponent = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center space-x-3">
+                <div className="flex w-full items-center space-x-3">
                   <Button
                     key="add-participant"
                     onClick={() => {
@@ -274,7 +274,12 @@ const Poll: React.VoidFunctionComponent = () => {
                   >
                     {t("addParticipant")}
                   </Button>
-                  {userAlreadyVoted ? <div>{t("alreadyVoted")}</div> : null}
+                  {userAlreadyVoted ? (
+                    <div className="flex items-center text-sm text-gray-400">
+                      <Check className="mr-1 h-5" />
+                      <div>{t("alreadyVoted")}</div>
+                    </div>
+                  ) : null}
                 </div>
               )}
             </div>
