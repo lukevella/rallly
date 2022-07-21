@@ -161,29 +161,30 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
           );
         }}
       />
-
-      <div className="flex items-center space-x-2 px-2 transition-all">
-        <Button
-          disabled={scrollPosition === 0}
-          className="text-xs"
-          rounded={true}
-          onClick={() => {
-            goToPreviousPage();
-          }}
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          disabled={scrollPosition >= maxScrollPosition}
-          className="text-xs"
-          rounded={true}
-          onClick={() => {
-            goToNextPage();
-          }}
-        >
-          <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
+      {maxScrollPosition > 0 ? (
+        <div className="flex items-center space-x-2 px-2 transition-all">
+          <Button
+            disabled={scrollPosition === 0}
+            className="text-xs"
+            rounded={true}
+            onClick={() => {
+              goToPreviousPage();
+            }}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            disabled={scrollPosition >= maxScrollPosition}
+            className="text-xs"
+            rounded={true}
+            onClick={() => {
+              goToNextPage();
+            }}
+          >
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      ) : null}
     </form>
   );
 };
