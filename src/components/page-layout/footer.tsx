@@ -15,7 +15,7 @@ import Vercel from "~/public/vercel-logotype-dark.svg";
 import { LanguageSelect } from "../poll/language-selector";
 
 const Footer: React.VoidFunctionComponent = () => {
-  const { t } = useTranslation(["common", "homepage"]);
+  const { t } = useTranslation("common");
   const router = useRouter();
   return (
     <div className="mt-16 bg-slate-50/70">
@@ -26,7 +26,7 @@ const Footer: React.VoidFunctionComponent = () => {
             <p>
               <Trans
                 t={t}
-                i18nKey="common:footerSponsor"
+                i18nKey="footerSponsor"
                 components={{
                   a: (
                     <a
@@ -40,7 +40,7 @@ const Footer: React.VoidFunctionComponent = () => {
             <div>
               <Trans
                 t={t}
-                i18nKey="common:footerCredit"
+                i18nKey="footerCredit"
                 components={{
                   a: (
                     <a
@@ -70,25 +70,25 @@ const Footer: React.VoidFunctionComponent = () => {
               className="inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:bg-primary-500 hover:text-white hover:no-underline focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 active:bg-primary-600"
             >
               <Star className="mr-2 inline-block w-5" />
-              <span>{t("common:starOnGithub")}</span>
+              <span>{t("starOnGithub")}</span>
             </a>
           </div>
         </div>
         <div className="lg:col-span-2">
-          <div className="mb-4 font-medium">{t("homepage:links")}</div>
+          <div className="mb-4 font-medium">{t("links")}</div>
           <ul>
             <li>
               <a
                 className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
-                {t("homepage:discussions")}
+                {t("discussions")}
               </a>
             </li>
             <li>
               <Link href="https://blog.rallly.co">
                 <a className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline">
-                  {t("homepage:blog")}
+                  {t("blog")}
                 </a>
               </Link>
             </li>
@@ -97,20 +97,20 @@ const Footer: React.VoidFunctionComponent = () => {
                 href="https://support.rallly.co"
                 className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
               >
-                {t("homepage:support")}
+                {t("support")}
               </a>
             </li>
             <li>
               <Link href="/privacy-policy">
                 <a className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline">
-                  {t("homepage:privacyPolicy")}
+                  {t("privacyPolicy")}
                 </a>
               </Link>
             </li>
           </ul>
         </div>
         <div className="lg:col-span-3">
-          <div className="mb-4 font-medium">{t("homepage:poweredBy")}</div>
+          <div className="mb-4 font-medium">{t("poweredBy")}</div>
           <div className="block space-y-4">
             <div>
               <a
@@ -133,7 +133,7 @@ const Footer: React.VoidFunctionComponent = () => {
           </div>
         </div>
         <div className="lg:col-span-3">
-          <div className="mb-4 font-medium">{t("common:language")}</div>
+          <div className="mb-4 font-medium">{t("language")}</div>
           <LanguageSelect
             className="mb-4 w-full"
             onChange={(locale) => {
@@ -145,7 +145,7 @@ const Footer: React.VoidFunctionComponent = () => {
             className="inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
           >
             <Translate className="mr-2 h-5 w-5" />
-            {t("common:volunteerTranslator")} &rarr;
+            {t("volunteerTranslator")} &rarr;
           </a>
         </div>
       </div>
