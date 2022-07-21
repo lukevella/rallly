@@ -51,8 +51,10 @@ const Poll: React.VoidFunctionComponent = () => {
     Math.floor((width - (minSidebarWidth + actionColumnWidth)) / columnWidth),
   );
 
-  const sidebarWidth =
-    width - (numberOfVisibleColumns * columnWidth + actionColumnWidth);
+  const sidebarWidth = Math.min(
+    width - (numberOfVisibleColumns * columnWidth + actionColumnWidth),
+    300,
+  );
 
   const availableSpace = Math.min(
     numberOfVisibleColumns * columnWidth,

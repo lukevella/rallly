@@ -1,13 +1,17 @@
 {
-  "language": "Sprache",
+  "blog": "Blog",
+  "discussions": "Diskussion",
+  "donate": "Spenden",
   "english": "Englisch",
+  "footerCredit": "Made by <a>@imlukevella</a>",
+  "footerSponsor": "This project is user-funded. Please consider supporting it by <a>donating</a>.",
   "german": "Deutsch",
   "home": "Home",
-  "blog": "Blog",
-  "support": "Support",
-  "donate": "Donate",
-  "volunteerTranslator": "Help translate this site",
+  "language": "Sprache",
+  "links": "Links",
+  "poweredBy": "Unterstützt von",
+  "privacyPolicy": "Datenschutzerklärung",
   "starOnGithub": "Star us on Github",
-  "footerCredit": "Made by <a>@imlukevella</a>",
-  "footerSponsor": "This project is user-funded. Please consider supporting it by <a>donating</a>."
+  "support": "Hilfe",
+  "volunteerTranslator": "Help translate this site"
 }

@@ -1,9 +1,9 @@
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import ArrowLeft from "@/components/icons/arrow-left.svg";
 import ArrowRight from "@/components/icons/arrow-right.svg";
 
 import { requiredString } from "../../../utils/form-validation";
@@ -16,7 +16,6 @@ import { VoteSelector } from "../vote-selector";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
-const MotionButton = motion(Button);
 export interface ParticipantRowFormProps {
   defaultValues?: Partial<ParticipantForm>;
   onSubmit: (data: ParticipantFormSubmitted) => Promise<void>;
@@ -35,6 +34,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     sidebarWidth,
     numberOfColumns,
     goToNextPage,
+    goToPreviousPage,
     maxScrollPosition,
     setScrollPosition,
   } = usePollContext();
@@ -161,28 +161,30 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
           );
         }}
       />
-
-      <div className="flex items-center space-x-2 px-2 transition-all">
-        {scrollPosition < maxScrollPosition ? (
-          <AnimatePresence initial={false}>
-            {scrollPosition < maxScrollPosition ? (
-              <MotionButton
-                transition={{ duration: 0.1 }}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="text-xs"
-                rounded={true}
-                onClick={() => {
-                  goToNextPage();
-                }}
-              >
-                <ArrowRight className="h-4 w-4" />
-              </MotionButton>
-            ) : null}
-          </AnimatePresence>
-        ) : null}
-      </div>
+      {maxScrollPosition > 0 ? (
+        <div className="flex items-center space-x-2 px-2 transition-all">
+          <Button
+            disabled={scrollPosition === 0}
+            className="text-xs"
+            rounded={true}
+            onClick={() => {
+              goToPreviousPage();
+            }}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            disabled={scrollPosition >= maxScrollPosition}
+            className="text-xs"
+            rounded={true}
+            onClick={() => {
+              goToNextPage();
+            }}
+          >
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      ) : null}
     </form>
   );
 };
