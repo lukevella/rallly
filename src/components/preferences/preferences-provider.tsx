@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import de from "dayjs/locale/de";
 import en from "dayjs/locale/en";
+import fr from "dayjs/locale/fr";
 import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -20,6 +21,7 @@ type StartOfWeek = "monday" | "sunday";
 const dayJsLocales = {
   de,
   en,
+  fr,
 };
 
 dayjs.extend(localizedFormat);
