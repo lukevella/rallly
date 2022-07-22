@@ -10,12 +10,12 @@ generator client {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  name         String
-  email        String        @unique() @db.Citext
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime?     @updatedAt @map("updated_at")
-  polls        Poll[]
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique() @db.Citext
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  polls     Poll[]
 
   @@map("users")
 }
