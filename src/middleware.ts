@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const supportedLocales = ["en", "de"];
+const supportedLocales = ["en", "de", "fr"];
 
 export function middleware({ headers, cookies, nextUrl }: NextRequest) {
   const locale =

@@ -179,7 +179,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
               })}
             </div>
             <Button className="mt-3" onClick={datepicker.today}>
-              Today
+              {t("today")}
             </Button>
           </div>
         </div>
