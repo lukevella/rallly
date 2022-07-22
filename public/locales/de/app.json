@@ -82,8 +82,8 @@
   "ok": "Ok",
   "options": "Optionen",
   "participant": "Teilnehmer",
-  "addParticipant": "Add participant",
-  "alreadyVoted": "You have already voted",
+  "addParticipant": "Teilnehmer hinzufügen",
+  "alreadyVoted": "Du hast bereits abgestimmt",
   "participantCount_other": "{{count}} Teilnehmer",
   "participantCount": "{{count}} Teilnehmer",
   "pollHasBeenLocked": "Diese Umfrage wurde gesperrt",
@@ -97,7 +97,7 @@
   "profileUser": "Profil - {{username}}",
   "requiredNameError": "Bitte gib einen Namen an",
   "save": "Speichern",
-  "saveInstruction": "Select your availability and click <b>{{save}}</b>",
+  "saveInstruction": "Wähle deine Verfügbarkeit und klicke auf <b>{{save}}</b>",
   "share": "Teilen",
   "shareDescription": "Gib diesen Link deinen <b>Teilnehmern</b> damit sie an deiner Umfrage teilnehmen können.",
   "shareLink": "Über Link teilen",
@@ -121,6 +121,6 @@
   "whatsThis": "Was ist das?",
   "yes": "Ja",
   "yourDetails": "Persönliche Angaben",
-  "yourName": "Your name…",
+  "yourName": "Dein Name…",
   "yourPolls": "Deine Umfragen"
 }
