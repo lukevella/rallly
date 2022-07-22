@@ -19,8 +19,8 @@ const Footer: React.VoidFunctionComponent = () => {
   const router = useRouter();
   return (
     <div className="mt-16 bg-slate-50/70">
-      <div className="mx-auto max-w-7xl space-y-8 p-8 lg:grid lg:grid-cols-12 lg:gap-16 lg:space-y-0">
-        <div className=" lg:col-span-4">
+      <div className="mx-auto max-w-7xl space-y-8 p-8 lg:flex lg:space-x-16 lg:space-y-0">
+        <div className=" lg:w-2/6">
           <Logo className="w-32 text-slate-400" />
           <div className="mb-8 mt-4 text-slate-400">
             <p>
@@ -74,12 +74,12 @@ const Footer: React.VoidFunctionComponent = () => {
             </a>
           </div>
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:w-1/6">
           <div className="mb-4 font-medium">{t("links")}</div>
-          <ul>
+          <ul className="space-y-2">
             <li>
               <a
-                className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
+                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
                 {t("discussions")}
@@ -87,7 +87,7 @@ const Footer: React.VoidFunctionComponent = () => {
             </li>
             <li>
               <Link href="https://blog.rallly.co">
-                <a className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline">
+                <a className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline">
                   {t("blog")}
                 </a>
               </Link>
@@ -95,21 +95,21 @@ const Footer: React.VoidFunctionComponent = () => {
             <li>
               <a
                 href="https://support.rallly.co"
-                className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline"
+                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
               >
                 {t("support")}
               </a>
             </li>
             <li>
               <Link href="/privacy-policy">
-                <a className="font-normal leading-loose text-slate-400 hover:text-slate-800 hover:no-underline">
+                <a className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline">
                   {t("privacyPolicy")}
                 </a>
               </Link>
             </li>
           </ul>
         </div>
-        <div className="lg:col-span-3">
+        <div className="lg:w-1/6">
           <div className="mb-4 font-medium">{t("poweredBy")}</div>
           <div className="block space-y-4">
             <div>
@@ -132,7 +132,7 @@ const Footer: React.VoidFunctionComponent = () => {
             </div>
           </div>
         </div>
-        <div className="lg:col-span-3">
+        <div className="lg:w-2/6">
           <div className="mb-4 font-medium">{t("language")}</div>
           <LanguageSelect
             className="mb-4 w-full"
