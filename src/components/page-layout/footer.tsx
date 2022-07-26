@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -16,7 +15,6 @@ import { LanguageSelect } from "../poll/language-selector";
 
 const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("common");
-  const router = useRouter();
   return (
     <div className="mt-16 bg-slate-50/70">
       <div className="mx-auto max-w-7xl space-y-8 p-8 lg:flex lg:space-x-16 lg:space-y-0">

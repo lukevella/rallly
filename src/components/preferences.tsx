@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
