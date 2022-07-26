@@ -134,12 +134,7 @@ const Footer: React.VoidFunctionComponent = () => {
         </div>
         <div className="lg:w-2/6">
           <div className="mb-4 font-medium">{t("language")}</div>
-          <LanguageSelect
-            className="mb-4 w-full"
-            onChange={(locale) => {
-              router.push(router.asPath, router.asPath, { locale });
-            }}
-          />
+          <LanguageSelect className="mb-4 w-full" />
           <a
             href="https://github.com/lukevella/rallly/wiki/Guide-for-translators"
             className="inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
