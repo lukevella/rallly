@@ -17,12 +17,14 @@ export const LanguageSelect: React.VoidFunctionComponent<{
         Cookies.set("NEXT_LOCALE", e.target.value, {
           expires: 365,
         });
+        router.push(router.asPath, router.asPath, { locale: e.target.value });
         onChange?.(e.target.value);
       }}
     >
       <option value="en">{t("english")}</option>
       <option value="fr">{t("french")}</option>
       <option value="de">{t("german")}</option>
+      <option value="sv">{t("swedish")}</option>
     </select>
   );
 };

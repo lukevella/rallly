@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import de from "dayjs/locale/de";
 import en from "dayjs/locale/en";
 import fr from "dayjs/locale/fr";
+import sv from "dayjs/locale/sv";
 import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -22,6 +23,7 @@ const dayJsLocales = {
   de,
   en,
   fr,
+  sv,
 };
 
 dayjs.extend(localizedFormat);

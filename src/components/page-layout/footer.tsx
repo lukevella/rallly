@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -16,7 +15,6 @@ import { LanguageSelect } from "../poll/language-selector";
 
 const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("common");
-  const router = useRouter();
   return (
     <div className="mt-16 bg-slate-50/70">
       <div className="mx-auto max-w-7xl space-y-8 p-8 lg:flex lg:space-x-16 lg:space-y-0">
@@ -134,12 +132,7 @@ const Footer: React.VoidFunctionComponent = () => {
         </div>
         <div className="lg:w-2/6">
           <div className="mb-4 font-medium">{t("language")}</div>
-          <LanguageSelect
-            className="mb-4 w-full"
-            onChange={(locale) => {
-              router.push(router.asPath, router.asPath, { locale });
-            }}
-          />
+          <LanguageSelect className="mb-4 w-full" />
           <a
             href="https://github.com/lukevella/rallly/wiki/Guide-for-translators"
             className="inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"

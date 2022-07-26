@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
@@ -13,8 +12,6 @@ const Preferences: React.VoidFunctionComponent = () => {
   const { weekStartsOn, setWeekStartsOn, timeFormat, setTimeFormat } =
     usePreferences();
 
-  const router = useRouter();
-
   const plausible = usePlausible();
   return (
     <div>
@@ -22,7 +19,7 @@ const Preferences: React.VoidFunctionComponent = () => {
         <div className="grow text-sm text-slate-500">
           {t("common:language")}
         </div>
-        <LanguageSelect className="w-full" onChange={() => router.reload()} />
+        <LanguageSelect className="w-full" />
       </div>
       <div className="grow space-y-2">
         <div>
