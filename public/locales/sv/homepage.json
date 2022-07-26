@@ -1,7 +1,7 @@
 {
   "3Ls": "Ja, med 3 <e>L</e>",
   "adFree": "Reklamfritt",
-  "adFreeDescription": "Du kan låta din annonsblockerare vila - du behöver det inte här.",
+  "adFreeDescription": "Du kan låta din annonsblockerare vila - du behöver den inte här.",
   "comments": "Kommentarer",
   "commentsDescription": "Deltagarna kan kommentera din enkät och kommentarerna kommer att vara synliga för alla.",
   "features": "Funktioner",
@@ -16,13 +16,13 @@
   "metaTitle": "Rallly - Schemalägg gruppmöten",
   "mobileFriendly": "Mobil vänlig",
   "mobileFriendlyDescription": "Fungerar bra på mobila enheter så att deltagarna kan svara på enkäter var de än befinner sig.",
-  "new": "Ny",
+  "new": "Nytt",
   "noLoginRequired": "Ingen inloggning krävs",
   "noLoginRequiredDescription": "Du behöver inte logga in för att skapa eller delta i en enkät",
   "notifications": "Aviseringar",
   "notificationsDescription": "Håll koll på vem som har svarat. Få aviseringar när deltagarna röstar eller kommenterar på din enkät.",
   "openSource": "Öppen källkod",
-  "openSourceDescription": "Kodebasen är helt öppen källkod och är <a>tillgänglig på GitHub</a>.",
+  "openSourceDescription": "Kodbasen är helt öppen källkod och är <a>tillgänglig på GitHub</a>.",
   "participant": "Deltagare",
   "participantCount_other": "{{count}} deltagare",
   "participantCount": "{{count}} deltagare",
@@ -30,7 +30,7 @@
   "principles": "Principer",
   "principlesSubheading": "Vi är inte som de andra",
   "selfHostable": "Självhostbar",
-  "selfHostableDescription": "Kör det på din egen server för att ta full kontroll över din data",
+  "selfHostableDescription": "Kör Rallly på din egen server för att ta full kontroll över din data",
   "timeSlots": "Tidsluckor",
   "timeSlotsDescription": "Ange individuella start- och sluttider för varje alternativ i din enkät. Tiderna kan justeras automatiskt till varje deltagares tidszon eller så kan de ställas in så att tidszoner ignoreras helt."
 }
