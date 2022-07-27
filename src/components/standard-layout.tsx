@@ -374,7 +374,7 @@ const StandardLayout: React.VoidFunctionComponent<{
                 <Github className="h-5 w-5" />
               </a>
               <a
-                href="https://discord.gg/m5UFXavc2C"
+                href="https://discord.gg/uzg4ZcHbuM"
                 className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
               >
                 <Discord className="h-5 w-5" />
