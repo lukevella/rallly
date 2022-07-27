@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import ChevronLeft from "../../icons/chevron-left.svg";
@@ -13,6 +14,7 @@ export interface DateNavigationToolbarProps {
 
 const DateNavigationToolbar: React.VoidFunctionComponent<DateNavigationToolbarProps> =
   ({ year, label, onPrevious, onToday, onNext }) => {
+    const { t } = useTranslation("app");
     return (
       <div className="flex h-14 w-full shrink-0 items-center border-b px-4">
         <div className="grow">
@@ -25,7 +27,7 @@ const DateNavigationToolbar: React.VoidFunctionComponent<DateNavigationToolbarPr
               <ChevronLeft className="h-5" />
             </button>
             <button type="button" onClick={onToday}>
-              Today
+              {t("today")}
             </button>
             <button type="button" onClick={onNext}>
               <ChevronRight className="h-5" />
