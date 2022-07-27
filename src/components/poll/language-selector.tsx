@@ -17,7 +17,6 @@ export const LanguageSelect: React.VoidFunctionComponent<{
         Cookies.set("NEXT_LOCALE", e.target.value, {
           expires: 365,
         });
-        router.push(router.asPath, router.asPath, { locale: e.target.value });
         onChange?.(e.target.value);
       }}
     >
