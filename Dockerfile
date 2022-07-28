@@ -15,9 +15,6 @@ RUN yarn --frozen-lockfile
 
 COPY . /usr/src/app
 
-ARG NEXT_PUBLIC_BASE_URL
-ENV NEXT_PUBLIC_BASE_URL $NEXT_PUBLIC_BASE_URL
-
 RUN yarn build
 
 EXPOSE 3000
