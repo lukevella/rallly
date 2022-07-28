@@ -109,7 +109,7 @@ export const DayjsProvider: React.VoidFunctionComponent<{
     weekStart: weekStartsOn ? (weekStartsOn === "monday" ? 1 : 0) : undefined,
     formats: {
       ...dayjsLocale.formats,
-      LT: timeFormat === "12h" ? "h:mm a" : "H:mm",
+      LT: timeFormat === "12h" ? "h:mm A" : "H:mm",
     },
   });
 
