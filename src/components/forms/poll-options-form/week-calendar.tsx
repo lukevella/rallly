@@ -1,17 +1,14 @@
 import clsx from "clsx";
-import dayjs from "dayjs";
 import React from "react";
 import { Calendar } from "react-big-calendar";
 import { useMount } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
-import { usePreferences } from "../../preferences/use-preferences";
+import { useDayjs } from "../../../utils/dayjs";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
 import { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "./utils";
-
-const localizer = dayjsLocalizer(dayjs);
 
 const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   title,
@@ -23,8 +20,9 @@ const WeekCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const [scrollToTime, setScrollToTime] = React.useState<Date>();
+  const { dayjs, timeFormat } = useDayjs();
+  const localizer = React.useMemo(() => dayjsLocalizer(dayjs), [dayjs]);
 
-  const { timeFormat } = usePreferences();
   useMount(() => {
     // Bit of a hack to force rbc to scroll to the right time when we close/open a modal
     setScrollToTime(dayjs(date).add(-60, "minutes").toDate());

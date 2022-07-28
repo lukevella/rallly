@@ -9,6 +9,7 @@ import { PollContextProvider } from "@/components/poll-context";
 import { withSession } from "@/components/session";
 
 import { ParticipantsProvider } from "../components/participants-provider";
+import StandardLayout from "../components/standard-layout";
 import { withSessionSsr } from "../utils/auth";
 import { trpc } from "../utils/trpc";
 import { withPageTranslations } from "../utils/with-page-translations";
@@ -34,11 +35,13 @@ const PollPageLoader: NextPage = () => {
 
   if (poll) {
     return (
-      <ParticipantsProvider pollId={poll.id}>
-        <PollContextProvider poll={poll} urlId={urlId} admin={admin}>
-          <PollPage />
-        </PollContextProvider>
-      </ParticipantsProvider>
+      <StandardLayout>
+        <ParticipantsProvider pollId={poll.id}>
+          <PollContextProvider poll={poll} urlId={urlId} admin={admin}>
+            <PollPage />
+          </PollContextProvider>
+        </ParticipantsProvider>
+      </StandardLayout>
     );
   }
 
@@ -50,7 +53,7 @@ const PollPageLoader: NextPage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  withPageTranslations(["common", "app"]),
+  withPageTranslations(["common", "app", "errors"]),
 );
 
 export default withSession(PollPageLoader);

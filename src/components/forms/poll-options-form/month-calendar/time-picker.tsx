@@ -7,11 +7,11 @@ import {
 } from "@floating-ui/react-dom-interactions";
 import { Listbox } from "@headlessui/react";
 import clsx from "clsx";
-import dayjs from "dayjs";
 import * as React from "react";
 
 import { stopPropagation } from "@/utils/stop-propagation";
 
+import { useDayjs } from "../../../../utils/dayjs";
 import ChevronDown from "../../../icons/chevron-down.svg";
 import { styleMenuItem } from "../../../menu-styles";
 
@@ -28,6 +28,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
   className,
   startFrom,
 }) => {
+  const { dayjs } = useDayjs();
   const { reference, floating, x, y, strategy, refs } = useFloating({
     strategy: "fixed",
     middleware: [

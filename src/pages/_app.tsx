@@ -14,8 +14,6 @@ import { MutationCache } from "react-query";
 import superjson from "superjson";
 
 import Maintenance from "@/components/maintenance";
-import ModalProvider from "@/components/modal/modal-provider";
-import PreferencesProvider from "@/components/preferences/preferences-provider";
 
 import { AppRouter } from "./api/trpc/[trpc]";
 
@@ -35,16 +33,12 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       selfHosted={true}
       enabled={!!process.env.PLAUSIBLE_DOMAIN}
     >
-      <PreferencesProvider>
-        <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <CrispChat />
-        <Toaster />
-        <ModalProvider>
-          <Component {...pageProps} />
-        </ModalProvider>
-      </PreferencesProvider>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <CrispChat />
+      <Toaster />
+      <Component {...pageProps} />
     </PlausibleProvider>
   );
 };

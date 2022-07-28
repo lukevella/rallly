@@ -1,5 +1,6 @@
-import dayjs from "dayjs";
 import React from "react";
+
+import { useDayjs } from "../utils/dayjs";
 
 interface DayProps {
   date: Date;
@@ -33,6 +34,7 @@ export const useHeadlessDatePicker = (
   selection: Date[];
   toggle: (date: Date) => void;
 } => {
+  const { dayjs } = useDayjs();
   const [localSelection, setSelection] = React.useState<Date[]>([]);
   const selection = options?.selection ?? localSelection;
   const [localNavigationDate, setNavigationDate] = React.useState(today);
