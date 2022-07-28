@@ -82,9 +82,13 @@ export const useDayjs = () => {
 export const DayjsProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children }) => {
-  const { t } = useTranslation();
-  const { locale = "en" } = useRouter();
+  const { t, i18n } = useTranslation();
 
+  // Using language instead of router.locale because when transitioning from homepage to
+  // the app via <Link locale={false}> it will be set to "en" instead of the current locale.
+  const locale = i18n.language;
+
+  console.log(`router locale: ${locale}`);
   const [weekStartsOn = dayjsLocales[locale].weekStartsOn, , setWeekStartsOn] =
     useLocalStorage<StartOfWeek>("rallly-week-starts-on");
 
@@ -92,6 +96,7 @@ export const DayjsProvider: React.VoidFunctionComponent<{
     useLocalStorage<TimeFormat>("rallly-time-format");
 
   const { value: dayjsLocale } = useAsync(async () => {
+    console.log(`loading: ${locale}`);
     return await dayjsLocales[locale ?? "en"].import();
   }, [locale]);
 
@@ -108,6 +113,7 @@ export const DayjsProvider: React.VoidFunctionComponent<{
     },
   });
 
+  console.log(dayjsLocale.name);
   return (
     <DayjsContext.Provider
       value={{
