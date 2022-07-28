@@ -12,7 +12,6 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useAsync, useLocalStorage } from "react-use";
 
-import FullPageLoader from "../components/full-page-loader";
 import { useRequiredContext } from "../components/use-required-context";
 
 export type TimeFormat = "12h" | "24h";
@@ -81,7 +80,7 @@ export const useDayjs = () => {
 export const DayjsProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   // Using language instead of router.locale because when transitioning from homepage to
   // the app via <Link locale={false}> it will be set to "en" instead of the current locale.
@@ -97,18 +96,16 @@ export const DayjsProvider: React.VoidFunctionComponent<{
     return await dayjsLocales[locale ?? "en"].import();
   }, [locale]);
 
-  if (!dayjsLocale) {
-    return <FullPageLoader>{t("loading")}</FullPageLoader>;
+  if (dayjsLocale) {
+    dayjs.locale({
+      ...dayjsLocale,
+      weekStart: weekStartsOn ? (weekStartsOn === "monday" ? 1 : 0) : undefined,
+      formats: {
+        ...dayjsLocale.formats,
+        LT: timeFormat === "12h" ? "h:mm A" : "H:mm",
+      },
+    });
   }
-
-  dayjs.locale({
-    ...dayjsLocale,
-    weekStart: weekStartsOn ? (weekStartsOn === "monday" ? 1 : 0) : undefined,
-    formats: {
-      ...dayjsLocale.formats,
-      LT: timeFormat === "12h" ? "h:mm A" : "H:mm",
-    },
-  });
 
   return (
     <DayjsContext.Provider

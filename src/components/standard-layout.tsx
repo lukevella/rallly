@@ -9,6 +9,7 @@ import User from "@/components/icons/user.svg";
 import UserCircle from "@/components/icons/user-circle.svg";
 import Logo from "~/public/logo.svg";
 
+import { DayjsProvider } from "../utils/dayjs";
 import Dropdown, { DropdownItem, DropdownProps } from "./dropdown";
 import Adjustments from "./icons/adjustments.svg";
 import Cash from "./icons/cash.svg";
@@ -23,7 +24,7 @@ import Support from "./icons/support.svg";
 import Twitter from "./icons/twitter.svg";
 import LoginForm from "./login-form";
 import { useModal } from "./modal";
-import { useModalContext } from "./modal/modal-provider";
+import ModalProvider, { useModalContext } from "./modal/modal-provider";
 import Popover from "./popover";
 import Preferences from "./preferences";
 import { useSession } from "./session";
@@ -244,154 +245,164 @@ const StandardLayout: React.VoidFunctionComponent<{
   });
 
   return (
-    <div
-      className="relative flex min-h-full flex-col bg-gray-50 lg:flex-row"
-      {...rest}
-    >
-      {loginModal}
-      <MobileNavigation openLoginModal={openLoginModal} />
-      <div className="hidden grow px-4 pt-6 pb-5 lg:block">
-        <div className="sticky top-6 float-right w-48 items-start">
-          <div className="mb-8 px-3">
-            <HomeLink />
-          </div>
-          <div className="mb-4">
-            <Link href="/new">
-              <a className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
-                <Pencil className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                <span className="grow text-left">{t("app:newPoll")}</span>
-              </a>
-            </Link>
-            <a
-              target="_blank"
-              href="https://support.rallly.co"
-              className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
-              rel="noreferrer"
-            >
-              <Support className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-              <span className="grow text-left">{t("common:support")}</span>
-            </a>
-            <Popover
-              placement="right-start"
-              trigger={
-                <button className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
-                  <Adjustments className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                  <span className="grow text-left">{t("app:preferences")}</span>
-                  <DotsVertical className="h-4 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100" />
-                </button>
-              }
-            >
-              <Preferences />
-            </Popover>
-            {user ? null : (
-              <button
-                onClick={openLoginModal}
-                className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
-              >
-                <Login className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                <span className="grow text-left">{t("app:login")}</span>
-              </button>
-            )}
-          </div>
-          <AnimatePresence initial={false}>
-            {user ? (
-              <UserDropdown
-                className="mb-4 w-full"
-                placement="bottom-end"
-                openLoginModal={openLoginModal}
-                trigger={
-                  <motion.button
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -20, opacity: 0, transition: { duration: 0.2 } }}
-                    className="group w-full rounded-lg p-2 px-3 text-left text-inherit transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
-                  >
-                    <div className="flex w-full items-center space-x-3">
-                      <div className="relative">
-                        <UserCircle className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                      </div>
-                      <div className="grow overflow-hidden">
-                        <div className="truncate font-medium leading-snug text-slate-600">
-                          {user.shortName}
-                        </div>
-                        <div className="truncate text-xs text-slate-500">
-                          {user.isGuest ? t("app:guest") : t("app:user")}
-                        </div>
-                      </div>
+    <ModalProvider>
+      <DayjsProvider>
+        <div
+          className="relative flex min-h-full flex-col bg-gray-50 lg:flex-row"
+          {...rest}
+        >
+          {loginModal}
+          <MobileNavigation openLoginModal={openLoginModal} />
+          <div className="hidden grow px-4 pt-6 pb-5 lg:block">
+            <div className="sticky top-6 float-right w-48 items-start">
+              <div className="mb-8 px-3">
+                <HomeLink />
+              </div>
+              <div className="mb-4">
+                <Link href="/new">
+                  <a className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
+                    <Pencil className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                    <span className="grow text-left">{t("app:newPoll")}</span>
+                  </a>
+                </Link>
+                <a
+                  target="_blank"
+                  href="https://support.rallly.co"
+                  className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
+                  rel="noreferrer"
+                >
+                  <Support className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                  <span className="grow text-left">{t("common:support")}</span>
+                </a>
+                <Popover
+                  placement="right-start"
+                  trigger={
+                    <button className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
+                      <Adjustments className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                      <span className="grow text-left">
+                        {t("app:preferences")}
+                      </span>
                       <DotsVertical className="h-4 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100" />
-                    </div>
-                  </motion.button>
-                }
-              />
-            ) : null}
-          </AnimatePresence>
-        </div>
-      </div>
-      <div className="min-w-0 grow">
-        <div className="max-w-full pt-12 md:w-[1024px] lg:min-h-[calc(100vh-64px)] lg:pt-0">
-          {children}
-        </div>
-        <div className="flex flex-col items-center space-y-4 px-6 pt-3 pb-6 text-slate-400 lg:h-16 lg:flex-row lg:space-y-0 lg:space-x-6 lg:py-0 lg:px-8 lg:pb-3">
-          <div>
-            <Link href="https://rallly.co">
-              <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                <Logo className="h-5" />
-              </a>
-            </Link>
+                    </button>
+                  }
+                >
+                  <Preferences />
+                </Popover>
+                {user ? null : (
+                  <button
+                    onClick={openLoginModal}
+                    className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
+                  >
+                    <Login className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                    <span className="grow text-left">{t("app:login")}</span>
+                  </button>
+                )}
+              </div>
+              <AnimatePresence initial={false}>
+                {user ? (
+                  <UserDropdown
+                    className="mb-4 w-full"
+                    placement="bottom-end"
+                    openLoginModal={openLoginModal}
+                    trigger={
+                      <motion.button
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{
+                          x: -20,
+                          opacity: 0,
+                          transition: { duration: 0.2 },
+                        }}
+                        className="group w-full rounded-lg p-2 px-3 text-left text-inherit transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
+                      >
+                        <div className="flex w-full items-center space-x-3">
+                          <div className="relative">
+                            <UserCircle className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                          </div>
+                          <div className="grow overflow-hidden">
+                            <div className="truncate font-medium leading-snug text-slate-600">
+                              {user.shortName}
+                            </div>
+                            <div className="truncate text-xs text-slate-500">
+                              {user.isGuest ? t("app:guest") : t("app:user")}
+                            </div>
+                          </div>
+                          <DotsVertical className="h-4 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100" />
+                        </div>
+                      </motion.button>
+                    }
+                  />
+                ) : null}
+              </AnimatePresence>
+            </div>
           </div>
-          <div className="hidden text-slate-300 lg:block">&bull;</div>
-          <div className="flex items-center justify-center space-x-6 md:justify-start">
-            <a
-              target="_blank"
-              href="https://support.rallly.co"
-              className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
-              rel="noreferrer"
-            >
-              {t("common:support")}
-            </a>
-            <Link href="https://github.com/lukevella/rallly/discussions">
-              <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                {t("common:discussions")}
-              </a>
-            </Link>
-            <Link href="https://blog.rallly.co">
-              <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                {t("common:blog")}
-              </a>
-            </Link>
-            <div className="hidden text-slate-300 lg:block">&bull;</div>
-            <div className="flex items-center space-x-6">
+          <div className="min-w-0 grow">
+            <div className="max-w-full pt-12 md:w-[1024px] lg:min-h-[calc(100vh-64px)] lg:pt-0">
+              {children}
+            </div>
+            <div className="flex flex-col items-center space-y-4 px-6 pt-3 pb-6 text-slate-400 lg:h-16 lg:flex-row lg:space-y-0 lg:space-x-6 lg:py-0 lg:px-8 lg:pb-3">
+              <div>
+                <Link href="https://rallly.co">
+                  <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
+                    <Logo className="h-5" />
+                  </a>
+                </Link>
+              </div>
+              <div className="hidden text-slate-300 lg:block">&bull;</div>
+              <div className="flex items-center justify-center space-x-6 md:justify-start">
+                <a
+                  target="_blank"
+                  href="https://support.rallly.co"
+                  className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                  rel="noreferrer"
+                >
+                  {t("common:support")}
+                </a>
+                <Link href="https://github.com/lukevella/rallly/discussions">
+                  <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
+                    {t("common:discussions")}
+                  </a>
+                </Link>
+                <Link href="https://blog.rallly.co">
+                  <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
+                    {t("common:blog")}
+                  </a>
+                </Link>
+                <div className="hidden text-slate-300 lg:block">&bull;</div>
+                <div className="flex items-center space-x-6">
+                  <a
+                    href="https://twitter.com/ralllyco"
+                    className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                  >
+                    <Twitter className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="https://github.com/lukevella/rallly"
+                    className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                  >
+                    <Github className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="https://discord.gg/uzg4ZcHbuM"
+                    className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                  >
+                    <Discord className="h-5 w-5" />
+                  </a>
+                </div>
+              </div>
+              <div className="hidden text-slate-300 lg:block">&bull;</div>
               <a
-                href="https://twitter.com/ralllyco"
-                className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
+                className="inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:bg-primary-500 hover:text-white hover:no-underline focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 active:bg-primary-600"
               >
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a
-                href="https://github.com/lukevella/rallly"
-                className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="https://discord.gg/uzg4ZcHbuM"
-                className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
-              >
-                <Discord className="h-5 w-5" />
+                <Cash className="mr-1 inline-block w-5" />
+                <span>{t("app:donate")}</span>
               </a>
             </div>
           </div>
-          <div className="hidden text-slate-300 lg:block">&bull;</div>
-          <a
-            href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
-            className="inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:bg-primary-500 hover:text-white hover:no-underline focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 active:bg-primary-600"
-          >
-            <Cash className="mr-1 inline-block w-5" />
-            <span>{t("app:donate")}</span>
-          </a>
         </div>
-      </div>
-    </div>
+      </DayjsProvider>
+    </ModalProvider>
   );
 };
 
