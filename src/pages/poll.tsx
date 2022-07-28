@@ -35,13 +35,13 @@ const PollPageLoader: NextPage = () => {
 
   if (poll) {
     return (
-      <StandardLayout>
-        <ParticipantsProvider pollId={poll.id}>
+      <ParticipantsProvider pollId={poll.id}>
+        <StandardLayout>
           <PollContextProvider poll={poll} urlId={urlId} admin={admin}>
             <PollPage />
           </PollContextProvider>
-        </ParticipantsProvider>
-      </StandardLayout>
+        </StandardLayout>
+      </ParticipantsProvider>
     );
   }
 
