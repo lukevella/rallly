@@ -50,7 +50,7 @@ const PollPageLoader: NextPage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  withPageTranslations(["common", "app"]),
+  withPageTranslations(["common", "app", "errors"]),
 );
 
 export default withSession(PollPageLoader);
