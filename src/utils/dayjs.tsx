@@ -8,7 +8,6 @@ import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useAsync, useLocalStorage } from "react-use";
