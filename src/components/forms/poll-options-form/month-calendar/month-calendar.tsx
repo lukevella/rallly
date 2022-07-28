@@ -1,16 +1,14 @@
 import clsx from "clsx";
-import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
-
-import { usePreferences } from "@/components/preferences/use-preferences";
 
 import {
   expectTimeOption,
   getDateProps,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
+import { useDayjs } from "../../../../utils/dayjs";
 import { Button } from "../../../button";
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
@@ -38,6 +36,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   duration,
   onChangeDuration,
 }) => {
+  const { dayjs, weekStartsOn } = useDayjs();
   const { t } = useTranslation("app");
   const isTimedEvent = options.some((option) => option.type === "timeSlot");
 
@@ -75,8 +74,6 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
       (dateString) => new Date(dateString + "T12:00:00"),
     );
   }, [optionsByDay]);
-
-  const { weekStartsOn } = usePreferences();
 
   const datepicker = useHeadlessDatePicker({
     selection: datepickerSelection,

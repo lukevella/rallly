@@ -1,11 +1,11 @@
 import clsx from "clsx";
-import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
 import { Button } from "../button";
@@ -25,6 +25,7 @@ interface CommentForm {
 }
 
 const Discussion: React.VoidFunctionComponent = () => {
+  const { dayjs } = useDayjs();
   const queryClient = trpc.useContext();
   const { t } = useTranslation("app");
   const { poll } = usePoll();

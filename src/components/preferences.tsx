@@ -4,15 +4,14 @@ import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
 import React from "react";
 
+import { useDayjs } from "../utils/dayjs";
 import { LanguageSelect } from "./poll/language-selector";
-import { usePreferences } from "./preferences/use-preferences";
 
 const Preferences: React.VoidFunctionComponent = () => {
   const { t } = useTranslation(["app", "common"]);
 
   const { weekStartsOn, setWeekStartsOn, timeFormat, setTimeFormat } =
-    usePreferences();
-
+    useDayjs();
   const router = useRouter();
 
   const plausible = usePlausible();

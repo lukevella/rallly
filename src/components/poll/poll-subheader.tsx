@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { useDayjs } from "../../utils/dayjs";
 import Badge from "../badge";
 import { usePoll } from "../poll-context";
 import Tooltip from "../tooltip";
@@ -9,7 +9,7 @@ import Tooltip from "../tooltip";
 const PollSubheader: React.VoidFunctionComponent = () => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
-
+  const { dayjs } = useDayjs();
   return (
     <div className="text-slate-500/75 lg:text-lg">
       <div className="md:inline">
