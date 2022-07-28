@@ -96,16 +96,19 @@ export const DayjsProvider: React.VoidFunctionComponent<{
     return await dayjsLocales[locale ?? "en"].import();
   }, [locale]);
 
-  if (dayjsLocale) {
-    dayjs.locale({
-      ...dayjsLocale,
-      weekStart: weekStartsOn ? (weekStartsOn === "monday" ? 1 : 0) : undefined,
-      formats: {
-        ...dayjsLocale.formats,
-        LT: timeFormat === "12h" ? "h:mm A" : "H:mm",
-      },
-    });
+  if (!dayjsLocale) {
+    // wait for locale to load before rendering content
+    return null;
   }
+
+  dayjs.locale({
+    ...dayjsLocale,
+    weekStart: weekStartsOn ? (weekStartsOn === "monday" ? 1 : 0) : undefined,
+    formats: {
+      ...dayjsLocale.formats,
+      LT: timeFormat === "12h" ? "h:mm A" : "H:mm",
+    },
+  });
 
   return (
     <DayjsContext.Provider
