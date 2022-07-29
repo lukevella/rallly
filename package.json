@@ -25,6 +25,7 @@
     "@trpc/next": "^9.23.2",
     "@trpc/react": "^9.23.2",
     "@trpc/server": "^9.23.2",
+    "accept-language-parser": "^1.5.0",
     "axios": "^0.24.0",
     "clsx": "^1.1.1",
     "dayjs": "^1.11.3",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.22.2",
+    "@types/accept-language-parser": "^1.5.3",
     "@types/lodash": "^4.14.178",
     "@types/nodemailer": "^6.4.4",
     "@types/react": "^17.0.5",
