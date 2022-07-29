@@ -1,27 +1,35 @@
+import languageParser from "accept-language-parser";
 import { NextRequest, NextResponse } from "next/server";
 
-const supportedLocales = ["en", "es", "de", "fr", "pt-BR", "sv"];
+const supportedLocales = ["en", "es", "de", "fr", "sv", "pt-BR"];
 
 export function middleware({ headers, cookies, nextUrl }: NextRequest) {
-  const language =
-    cookies.get("NEXT_LOCALE") ??
-    (headers
-      .get("accept-language")
-      ?.split(",")?.[0]
-      .split("-")?.[0]
-      .toLowerCase() ||
-      "en");
-
   const newUrl = nextUrl.clone();
 
-  if (supportedLocales.includes(language)) {
-    newUrl.pathname = `/${language}${newUrl.pathname}`;
-  } else if (language === "pt") {
-    // For now we send all portuguese language requests to pt-BR
-    newUrl.pathname = `/pt-BR${newUrl.pathname}`;
+  // Check if locale is specified in cookie
+  const localeCookie = cookies.get("NEXT_LOCALE");
+
+  if (localeCookie && supportedLocales.includes(localeCookie)) {
+    newUrl.pathname = `/${localeCookie}${newUrl.pathname}`;
+    return NextResponse.rewrite(newUrl);
+  } else {
+    // Check if locale is specified in header
+    const acceptLanguageHeader = headers.get("accept-language");
+
+    if (acceptLanguageHeader) {
+      const locale = languageParser.pick(
+        supportedLocales,
+        acceptLanguageHeader,
+      );
+
+      if (locale) {
+        newUrl.pathname = `/${locale}${newUrl.pathname}`;
+        return NextResponse.rewrite(newUrl);
+      }
+    }
   }
 
-  return NextResponse.rewrite(newUrl);
+  return NextResponse.next();
 }
 
 export const config = {
