@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const supportedLocales = ["en", "es", "de", "fr", "sv"];
+const supportedLocales = ["en", "es", "de", "fr", "pt-BR", "sv"];
 
 export function middleware({ headers, cookies, nextUrl }: NextRequest) {
-  const locale =
+  const language =
     cookies.get("NEXT_LOCALE") ??
     (headers
       .get("accept-language")
@@ -14,8 +14,11 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
 
   const newUrl = nextUrl.clone();
 
-  if (supportedLocales.includes(locale)) {
-    newUrl.pathname = `/${locale}${newUrl.pathname}`;
+  if (supportedLocales.includes(language)) {
+    newUrl.pathname = `/${language}${newUrl.pathname}`;
+  } else if (language === "pt") {
+    // For now we send all portuguese language requests to pt-BR
+    newUrl.pathname = `/pt-BR${newUrl.pathname}`;
   }
 
   return NextResponse.rewrite(newUrl);
