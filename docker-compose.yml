@@ -14,7 +14,6 @@ services:
       args:
         - DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db?pgbouncer=true
     restart: always
-    command: sh -c "yarn prisma migrate deploy --schema prisma/schema.prisma && yarn start"
     depends_on:
       - rallly_db
     ports:

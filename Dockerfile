@@ -19,4 +19,4 @@ RUN yarn build
 
 EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+CMD sh -c "yarn prisma migrate deploy --schema prisma/schema.prisma && yarn start"
