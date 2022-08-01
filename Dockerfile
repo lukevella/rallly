@@ -24,4 +24,4 @@ WORKDIR /usr/src/app
 
 COPY --from=build /app .
 
-CMD [ "yarn", "start" ]
+CMD sh -c "yarn prisma migrate deploy --schema prisma/schema.prisma && yarn start"
