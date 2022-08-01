@@ -1,4 +1,11 @@
 node_modules
+.git
+.github
+.vscode
 .env
 .sentryclirc
 sentry.properties
+Dockerfile
+docker-compose.yml
+docs
+README.md
