@@ -1,22 +1,27 @@
-FROM node:alpine
+FROM node:alpine as build
 
-RUN mkdir -p /usr/src/app
+WORKDIR /app
+
+COPY package.json .
+COPY yarn.lock .
+COPY prisma/schema.prisma .
+
+RUN yarn --frozen-lockfile
+
+COPY . .
+
+RUN yarn build
+
+FROM node:alpine	
+
 ENV PORT 3000
+EXPOSE 3000
+
 ARG DATABASE_URL
 ENV DATABASE_URL $DATABASE_URL
 
 WORKDIR /usr/src/app
 
-COPY package.json /usr/src/app
-COPY yarn.lock /usr/src/app
-COPY prisma/schema.prisma /usr/src/app
-
-RUN yarn --frozen-lockfile
-
-COPY . /usr/src/app
-
-RUN yarn build
-
-EXPOSE 3000
+COPY --from=build /app .
 
 CMD [ "yarn", "start" ]
