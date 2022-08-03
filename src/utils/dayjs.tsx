@@ -91,7 +91,7 @@ export const DayjsProvider: React.VoidFunctionComponent<{
   // the app via <Link locale={false}> it will be set to "en" instead of the current locale.
   const localeConfig = dayjsLocales[i18n.language];
 
-  const [weekStartsOn = localeConfig.weekStartsOn, , setWeekStartsOn] =
+  const [weekStartsOn = localeConfig.weekStartsOn, setWeekStartsOn] =
     useLocalStorage<StartOfWeek>("rallly-week-starts-on");
 
   const [timeFormat = localeConfig.timeFormat, setTimeFormat] =
