@@ -26,7 +26,7 @@
   "deletedPollInfo": "This poll doesn't exist anymore.",
   "deletePoll": "Delete poll",
   "deletePollDescription": "All data related to this poll will be deleted. To confirm, please type <s>“{{confirmText}}”</s> in to the input below:",
-  "deletingOptionsWarning": "You are deleting options that participants have voted for. Their votes will be also be deleted.",
+  "deletingOptionsWarning": "You are deleting options that participants have voted for. Their votes will also be deleted.",
   "demoPollNotice": "Demo polls are automatically deleted after 1 day",
   "description": "Description",
   "descriptionPlaceholder": "Hey everyone, please choose the dates that work for you!",
