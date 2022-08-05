@@ -75,16 +75,24 @@ test.beforeAll(async ({ request, baseURL }) => {
         participantUrlId: "p6",
         adminUrlId: "a6",
       },
-      // Old demo poll
       {
         demo: true,
-        title: "Demo poll",
+        title: "Old demo poll",
         id: "demo-poll-old",
         type: "date",
         userId: "user1",
         createdAt: dayjs().add(-2, "days").toDate(),
         participantUrlId: "p7",
         adminUrlId: "a7",
+      },
+      {
+        title: "Inactive poll with future option",
+        id: "inactive-poll-future-option",
+        type: "date",
+        userId: "user1",
+        touchedAt: dayjs().add(-30, "days").toDate(),
+        participantUrlId: "p8",
+        adminUrlId: "a8",
       },
     ],
   });
@@ -105,6 +113,21 @@ test.beforeAll(async ({ request, baseURL }) => {
         id: "option-3",
         value: "2022-02-24",
         pollId: "deleted-poll-7d",
+      },
+      {
+        id: "option-4",
+        value: `${dayjs()
+          .add(10, "days")
+          .format("YYYY-MM-DDTHH:mm:ss")}/${dayjs()
+          .add(10, "days")
+          .add(1, "hour")
+          .format("YYYY-MM-DDTHH:mm:ss")}`,
+        pollId: "inactive-poll-future-option",
+      },
+      {
+        id: "option-5",
+        value: dayjs().add(-1, "days").format("YYYY-MM-DD"),
+        pollId: "inactive-poll",
       },
     ],
   });
@@ -144,7 +167,7 @@ test.beforeAll(async ({ request, baseURL }) => {
   });
 
   expect(await res.json()).toMatchObject({
-    inactive: 1,
+    softDeleted: 1,
     deleted: 2,
   });
 });
@@ -252,9 +275,28 @@ test("should delete old demo poll", async () => {
   expect(oldDemoPoll).toBeNull();
 });
 
+test("should not delete poll that has options in the future", async () => {
+  const futureOptionPoll = await prisma.poll.findFirst({
+    where: {
+      id: "inactive-poll-future-option",
+    },
+  });
+
+  expect(futureOptionPoll).not.toBeNull();
+});
+
 // Teardown
 test.afterAll(async () => {
   await prisma.$executeRaw`DELETE FROM polls WHERE id IN (${Prisma.join([
+    "active-poll",
+    "deleted-poll-6d",
+    "deleted-poll-7d",
+    "still-active-poll",
+    "inactive-poll",
+    "demo-poll-new",
+    "demo-poll-old",
+  ])})`;
+  await prisma.$executeRaw`DELETE FROM options WHERE id IN (${Prisma.join([
     "active-poll",
     "deleted-poll-6d",
     "deleted-poll-7d",
