@@ -1,7 +1,7 @@
 import languageParser from "accept-language-parser";
 import { NextRequest, NextResponse } from "next/server";
 
-const supportedLocales = ["en", "es", "de", "fr", "sv", "pt-BR"];
+const supportedLocales = ["en", "es", "de", "fr", "it", "sv", "pt-BR"];
 
 export function middleware({ headers, cookies, nextUrl }: NextRequest) {
   const newUrl = nextUrl.clone();
