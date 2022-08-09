@@ -1,6 +1,7 @@
 import { Participant, VoteType } from "@prisma/client";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
@@ -72,6 +73,7 @@ const PopInOut: React.VoidFunctionComponent<{
 
 const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
   ({ optionId }) => {
+    const { t } = useTranslation("app");
     const { getParticipants } = useParticipants();
     const participantsWhoVotedYes = getParticipants(optionId, "yes");
     const participantsWhoVotedIfNeedBe = getParticipants(optionId, "ifNeedBe");
@@ -92,7 +94,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
         <div>
           {noVotes ? (
             <div className="rounded-lg bg-slate-50 p-2 text-center text-slate-400">
-              No one has voted for this option
+              {t("noVotes")}
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-x-4">
