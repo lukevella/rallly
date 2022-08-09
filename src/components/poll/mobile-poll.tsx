@@ -205,7 +205,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   reset();
                 }}
               >
-                Cancel
+                {t("cancel")}
               </Button>
             ) : selectedParticipant ? (
               <div className="flex space-x-3">
@@ -232,7 +232,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                     });
                   }}
                 >
-                  Edit
+                  {t("edit")}
                 </Button>
                 <Button
                   icon={<Trash />}
@@ -268,7 +268,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   setIsEditing(true);
                 }}
               >
-                New
+                {t("new")}
               </Button>
             )}
           </div>
@@ -317,7 +317,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   type="primary"
                   loading={formState.isSubmitting}
                 >
-                  Save
+                  {t("save")}
                 </Button>
               </div>
             </motion.div>
