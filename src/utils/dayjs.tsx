@@ -122,7 +122,7 @@ export const DayjsProvider: React.VoidFunctionComponent<{
       localeConfig.timeFormat !== timeFormat
         ? {
             ...dayjsLocale.formats,
-            LT: timeFormat === "12h" ? "h:mm A" : "H:mm",
+            LT: timeFormat === "12h" ? "h:mm A" : "HH:mm",
           }
         : dayjsLocale.formats,
   });
