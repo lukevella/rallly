@@ -41,7 +41,7 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return NextResponse.rewrite(newUrl);
 }
 
 export const config = {
