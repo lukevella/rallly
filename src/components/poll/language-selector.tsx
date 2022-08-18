@@ -23,6 +23,8 @@ export const LanguageSelect: React.VoidFunctionComponent<{
       <option value="de">{t("german")}</option>
       <option value="fr">{t("french")}</option>
       <option value="it">{t("italian")}</option>
+      <option value="ko">{t("korean")}</option>
+      <option value="pt">{t("portuguese")}</option>
       <option value="pt-BR">{t("portugueseBr")}</option>
       <option value="sv">{t("swedish")}</option>
     </select>
