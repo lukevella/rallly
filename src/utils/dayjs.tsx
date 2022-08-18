@@ -55,10 +55,20 @@ const dayjsLocales: Record<
     timeFormat: "24h",
     import: () => import("dayjs/locale/sv"),
   },
+  pt: {
+    weekStartsOn: "sunday",
+    timeFormat: "24h",
+    import: () => import("dayjs/locale/pt"),
+  },
   "pt-BR": {
     weekStartsOn: "sunday",
     timeFormat: "24h",
     import: () => import("dayjs/locale/pt-br"),
+  },
+  ko: {
+    weekStartsOn: "sunday",
+    timeFormat: "12h",
+    import: () => import("dayjs/locale/ko"),
   },
 };
 
