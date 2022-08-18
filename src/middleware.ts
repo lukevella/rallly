@@ -32,6 +32,8 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
         acceptLanguageHeader,
       );
 
+      console.log("using", locale, acceptLanguageHeader, newUrl["pathname"]);
+
       if (locale) {
         newUrl.pathname = `/${locale}${newUrl.pathname}`;
         return NextResponse.rewrite(newUrl);
