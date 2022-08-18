@@ -39,11 +39,7 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
     }
   }
 
-  // TODO (Luke Vella) [2022-08-18]: There seems to be a bug on vercel that
-  // results in the component being remounted when doing NextResponse.next() rather
-  // than loading the correct component.
-  // return NextResponse.next();
-  return NextResponse.rewrite(newUrl);
+  return NextResponse.next();
 }
 
 export const config = {
