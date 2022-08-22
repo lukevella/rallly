@@ -96,6 +96,7 @@ export default async function handler(
       },
     });
 
+    // Delete votes
     await prisma.vote.deleteMany({
       where: {
         pollId: {
@@ -121,10 +122,6 @@ export default async function handler(
         },
       },
     });
-
-    await prisma.$executeRaw`DELETE FROM options WHERE poll_id IN (${Prisma.join(
-      pollIdsToDelete,
-    )})`;
 
     // Delete polls
     // Using execute raw to bypass soft delete middelware
