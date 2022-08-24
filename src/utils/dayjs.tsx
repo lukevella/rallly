@@ -70,6 +70,16 @@ const dayjsLocales: Record<
     timeFormat: "12h",
     import: () => import("dayjs/locale/ko"),
   },
+  hu: {
+    weekStartsOn: "monday",
+    timeFormat: "24h",
+    import: () => import("dayjs/locale/hu"),
+  },
+  zh: {
+    weekStartsOn: "monday",
+    timeFormat: "24h",
+    import: () => import("dayjs/locale/zh"),
+  },
 };
 
 dayjs.extend(localizedFormat);
