@@ -9,6 +9,8 @@ const supportedLocales = [
   "it",
   "ko",
   "sv",
+  "hu",
+  "zh",
   "pt",
   "pt-BR",
 ];

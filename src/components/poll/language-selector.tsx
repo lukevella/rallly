@@ -6,7 +6,7 @@ export const LanguageSelect: React.VoidFunctionComponent<{
   className?: string;
   onChange?: (language: string) => void;
 }> = ({ className, onChange }) => {
-  const { t, i18n } = useTranslation("common");
+  const { i18n } = useTranslation("common");
   return (
     <select
       className={clsx("input", className)}
@@ -18,15 +18,17 @@ export const LanguageSelect: React.VoidFunctionComponent<{
         onChange?.(e.target.value);
       }}
     >
-      <option value="en">{t("english")}</option>
-      <option value="es">{t("spanish")}</option>
-      <option value="de">{t("german")}</option>
-      <option value="fr">{t("french")}</option>
-      <option value="it">{t("italian")}</option>
-      <option value="ko">{t("korean")}</option>
-      <option value="pt">{t("portuguese")}</option>
-      <option value="pt-BR">{t("portugueseBr")}</option>
-      <option value="sv">{t("swedish")}</option>
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="hu">Magyar</option>
+      <option value="it">Italiano</option>
+      <option value="ko">한국어</option>
+      <option value="pt">Português</option>
+      <option value="pt-BR">Português - Brasil</option>
+      <option value="sv">Svenska</option>
+      <option value="zh">汉语</option>
     </select>
   );
 };
