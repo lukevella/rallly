@@ -6,7 +6,7 @@ export const LanguageSelect: React.VoidFunctionComponent<{
   className?: string;
   onChange?: (language: string) => void;
 }> = ({ className, onChange }) => {
-  const { t, i18n } = useTranslation("common");
+  const { i18n } = useTranslation("common");
   return (
     <select
       className={clsx("input", className)}
