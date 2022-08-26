@@ -106,7 +106,7 @@
   "shareLink": "Megosztás linkkel",
   "specifyTimes": "Időpontok megadása",
   "specifyTimesDescription": "Adj meg kezdő és záró időpontot minden lehetőséghez",
-  "stepSummary": "{{current}}.lépés a {{total}}-ból",
+  "stepSummary": "{{current}}. lépés a {{total}}-ból",
   "sunday": "Vasárnap",
   "timeAndDate": "Idő és dátum",
   "timeFormat": "Időformátum:",
