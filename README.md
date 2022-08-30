@@ -87,6 +87,7 @@ yarn start
 | SMTP_HOST            | -                                              | Host name of your SMTP server                                                                                                       |
 | SMTP_PORT            | -                                              | Port of your SMTP server                                                                                                            |
 | SMTP_SECURE          | false                                          | Set to "true" if SSL is enabled for your SMTP connection                                                                            |
+| SMTP_IGNORETLS       | false                                          | Set to "true" if your SMTP server only works without STARTTLS                                                                       |
 | SMTP_USER            | -                                              | Username to use for your SMTP connection                                                                                            |
 | SMTP_PWD             | -                                              | Password to use for your SMTP connection                                                                                            |
 

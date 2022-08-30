@@ -14,6 +14,7 @@ declare global {
       SMTP_USER: string;
       SMTP_PWD: string;
       SMTP_SECURE: string;
+      SMTP_IGNORETLS: string;
       SMTP_PORT: string;
     }
   }
