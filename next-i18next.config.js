@@ -10,6 +10,7 @@ module.exports = {
       "fr",
       "it",
       "ko",
+      "nl",
       "sv",
       "pt",
       "pt-BR",

@@ -8,6 +8,7 @@ const supportedLocales = [
   "fr",
   "it",
   "ko",
+  "nl",
   "sv",
   "hu",
   "zh",

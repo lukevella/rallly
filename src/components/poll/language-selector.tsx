@@ -25,6 +25,7 @@ export const LanguageSelect: React.VoidFunctionComponent<{
       <option value="hu">Magyar</option>
       <option value="it">Italiano</option>
       <option value="ko">한국어</option>
+      <option value="nl">Nederlands</option>
       <option value="pt">Português</option>
       <option value="pt-BR">Português - Brasil</option>
       <option value="sv">Svenska</option>
