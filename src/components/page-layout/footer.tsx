@@ -18,7 +18,7 @@ const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
   return (
-    <div className="mt-16 bg-slate-50/70">
+    <div className="mt-16 bg-gradient-to-b from-gray-50/0 via-gray-50 to-gray-50 ">
       <div className="mx-auto max-w-7xl space-y-8 p-8 lg:flex lg:space-x-16 lg:space-y-0">
         <div className=" lg:w-2/6">
           <Logo className="w-32 text-slate-400" />
