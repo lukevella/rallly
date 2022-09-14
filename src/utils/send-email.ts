@@ -33,7 +33,7 @@ export const sendEmail = async (params: SendEmailParameters) => {
       subject: params.subject,
       html: params.html,
     });
-  } catch {
-    console.log("SMTP server details are not configured or are incorrect");
+  } catch (e) {
+    console.error(e);
   }
 };
