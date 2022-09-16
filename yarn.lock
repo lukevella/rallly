@@ -3800,10 +3800,10 @@ joi@^17.6.0:
     "@sideway/formula" "^3.0.0"
     "@sideway/pinpoint" "^2.0.0"
 
-jose@^4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.5.1.tgz#1531d491fafe567338fd517f118293cce27aa0aa"
-  integrity sha512-uhjuzZjKGKmi5DVJ/eghN8hJklLhwZRLRAaaG9MkkMAdfRYlHvZ10i4z/4WSN1hSTMffCet+k7iRHvbdGwmZPw==
+jose@^4.9.2:
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.9.2.tgz#268994df4443b9c191de0b001c2e3796ac6cf368"
+  integrity sha512-EqKvu2PqJCD3Jrg3PvcYZVS7D21qMVLSYMDAFcOdGUEOpJSLNtJO7NjLANvu3SYHVl6pdP2ff7ve6EZW2nX7Nw==
 
 js-cookie@^2.2.1:
   version "2.2.1"
