@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const supportedLocales = [
   "en",
   "es",
+  "da",
   "de",
   "fr",
   "it",
