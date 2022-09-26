@@ -35,6 +35,11 @@ const dayjsLocales: Record<
     timeFormat: "24h",
     import: () => import("dayjs/locale/es"),
   },
+  da: {
+    weekStartsOn: "monday",
+    timeFormat: "24h",
+    import: () => import("dayjs/locale/da"),
+  },
   de: {
     weekStartsOn: "monday",
     timeFormat: "24h",
