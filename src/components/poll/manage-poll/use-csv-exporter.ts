@@ -51,7 +51,9 @@ export const useCsvExporter = () => {
       link.setAttribute("href", encodedCsv);
       link.setAttribute(
         "download",
-        `${poll.title.replace(/\s/g, "_")}-${dayjs().format("YYYYMMDDHHmm")}`,
+        `${poll.title.replace(/\s/g, "_")}-${dayjs().format(
+          "YYYYMMDDHHmm",
+        )}.csv`,
       );
       document.body.appendChild(link);
       link.click();
