@@ -12,16 +12,14 @@ COPY . .
 
 RUN yarn build
 
-FROM node:alpine	
+FROM node:alpine
 
 ENV PORT 3000
 EXPOSE 3000
 
-ARG DATABASE_URL
-ENV DATABASE_URL $DATABASE_URL
-
 WORKDIR /usr/src/app
 
 COPY --from=build /app .
+COPY docker_start.sh .
 
-CMD sh -c "yarn prisma migrate deploy --schema prisma/schema.prisma && yarn start"
+ENTRYPOINT [ "./docker_start.sh" ]
