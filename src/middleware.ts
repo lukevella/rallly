@@ -15,6 +15,7 @@ const supportedLocales = [
   "zh",
   "pt",
   "pt-BR",
+  "pl",
 ];
 
 export function middleware({ headers, cookies, nextUrl }: NextRequest) {
