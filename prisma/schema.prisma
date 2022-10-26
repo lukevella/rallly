@@ -67,6 +67,8 @@ model Participant {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
+
+  @@index([pollId], type: Hash)
   @@unique([id, pollId])
   @@map("participants")
 }
@@ -103,6 +105,7 @@ model Vote {
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime?   @updatedAt @map("updated_at")
 
+  @@index([participantId], type: Hash)
   @@map("votes")
 }
 
