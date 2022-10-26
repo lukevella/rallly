@@ -2,20 +2,21 @@ import languageParser from "accept-language-parser";
 import { NextRequest, NextResponse } from "next/server";
 
 const supportedLocales = [
-  "en",
-  "es",
+  "cs",
   "da",
   "de",
+  "en",
+  "es",
   "fr",
+  "hu",
   "it",
   "ko",
   "nl",
-  "sv",
-  "hu",
-  "zh",
-  "pt",
-  "pt-BR",
   "pl",
+  "pt-BR",
+  "pt",
+  "sv",
+  "zh",
 ];
 
 export function middleware({ headers, cookies, nextUrl }: NextRequest) {
