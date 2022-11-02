@@ -263,22 +263,29 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                               <TimePicker
                                 value={startDate}
                                 onChange={(newStart) => {
-                                  const newEnd = dayjs(newStart)
-                                    .add(duration, "minutes")
-                                    .toDate();
+                                  let newEnd = dayjs(newStart).add(
+                                    duration,
+                                    "minutes",
+                                  );
+
+                                  if (!newEnd.isSame(newStart, "day")) {
+                                    newEnd = newEnd
+                                      .set("hour", 23)
+                                      .set("minute", 45);
+                                  }
                                   // replace enter with updated start time
                                   onChange([
                                     ...options.slice(0, index),
                                     {
                                       ...option,
                                       start: formatDateWithoutTz(newStart),
-                                      end: formatDateWithoutTz(newEnd),
+                                      end: formatDateWithoutTz(newEnd.toDate()),
                                     },
                                     ...options.slice(index + 1),
                                   ]);
                                   onNavigate(newStart);
                                   onChangeDuration(
-                                    dayjs(newEnd).diff(newStart, "minutes"),
+                                    newEnd.diff(newStart, "minutes"),
                                   );
                                 }}
                               />

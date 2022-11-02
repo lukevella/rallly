@@ -46,28 +46,29 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
     ],
   });
 
-  const startFromDate = startFrom
-    ? dayjs(startFrom)
-    : dayjs(value).startOf("day");
+  const renderOptions = () => {
+    const startFromDate = startFrom
+      ? dayjs(startFrom)
+      : dayjs(value).startOf("day");
 
-  const options: React.ReactNode[] = [];
-  for (let i = 0; i < 96; i++) {
-    const optionValue = startFromDate.add(i * 15, "minutes");
-    if (!optionValue.isSame(value, "day")) {
-      // we only support event that start and end on the same day for now
-      // because react-big-calendar does not support events that span days
-      break;
+    const options: React.ReactNode[] = [];
+    const startMinute =
+      startFromDate.get("hour") * 60 + startFromDate.get("minute");
+    const intervals = Math.floor((1440 - startMinute) / 15);
+    for (let i = 0; i < intervals; i++) {
+      const optionValue = startFromDate.add(i * 15, "minutes");
+      options.push(
+        <Listbox.Option
+          key={i}
+          className={styleMenuItem}
+          value={optionValue.format("YYYY-MM-DDTHH:mm:ss")}
+        >
+          {optionValue.format("LT")}
+        </Listbox.Option>,
+      );
     }
-    options.push(
-      <Listbox.Option
-        key={i}
-        className={styleMenuItem}
-        value={optionValue.format("YYYY-MM-DDTHH:mm:ss")}
-      >
-        {optionValue.format("LT")}
-      </Listbox.Option>,
-    );
-  }
+    return options;
+  };
 
   return (
     <Listbox
@@ -98,7 +99,7 @@ const TimePicker: React.VoidFunctionComponent<TimePickerProps> = ({
                 className="z-50 max-h-52 overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                 onMouseDown={stopPropagation}
               >
-                {options}
+                {renderOptions()}
               </Listbox.Options>
             ) : null}
           </FloatingPortal>
