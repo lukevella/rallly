@@ -17,7 +17,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
  
       - name: Build and publish image
         uses: docker/build-push-action@v3
