@@ -32,6 +32,7 @@ export const LanguageSelect: React.VoidFunctionComponent<{
       <option value="pl">Polski</option>
       <option value="pt">Português</option>
       <option value="pt-BR">Português - Brasil</option>
+      <option value="sk">Slovenčina</option>
       <option value="sv">Svenska</option>
     </select>
   );

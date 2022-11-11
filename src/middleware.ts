@@ -15,6 +15,7 @@ const supportedLocales = [
   "pl",
   "pt-BR",
   "pt",
+  "sk",
   "sv",
   "zh",
 ];

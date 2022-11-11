@@ -17,6 +17,7 @@ module.exports = {
       "pl",
       "pt-BR",
       "pt",
+      "sk",
       "sv",
       "zh",
     ],
