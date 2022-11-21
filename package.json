@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:tsc": "tsc --noEmit",
+    "lint:i18n": "i18n-unused remove-unused",
     "test": "playwright test"
   },
   "dependencies": {
@@ -77,6 +78,7 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "i18n-unused": "^0.12.0",
     "postcss": "^8.4.6",
     "prettier": "^2.3.0",
     "prettier-plugin-tailwindcss": "^0.1.8",
