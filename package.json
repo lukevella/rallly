@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:tsc": "tsc --noEmit",
-    "lint:i18n": "i18n-unused display-unused && i18n-unused remove-unused",
+    "lint:i18n": "i18n-unused remove-unused",
     "test": "playwright test"
   },
   "dependencies": {
