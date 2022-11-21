@@ -113,7 +113,6 @@
   "unlockPoll": "Szavazás feloldása",
   "unverifiedMessage": "Egy emailt küldtünk <b>{{email}}</b> címedre egy linkkel, amivel hitelesítheted az email címed.",
   "user": "Felhasználó",
-  "voteCount_other": "{{count}} szavazat",
   "weekStartsOn": "Hét kezdőnapja",
   "weekView": "Heti nézet",
   "whatsThis": "Mi ez?",

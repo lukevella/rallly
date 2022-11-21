@@ -113,7 +113,6 @@
   "unlockPoll": "解锁投票",
   "unverifiedMessage": "一封带有验证链接地址的电子邮件已发送至 <b>{{email}}</b> 。",
   "user": "用户",
-  "voteCount_other": "{{count}} 票",
   "weekStartsOn": "每周开始于",
   "weekView": "周视图",
   "whatsThis": "这是什么？",
