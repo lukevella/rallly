@@ -1,7 +1,7 @@
 {
   "3Ls": "Sí, amb 3 <e>L</e>s",
   "adFree": "Sense anuncis",
-  "adFreeDescription": "Li pots donar un descans al teu bloquejador d'anuncis - No el necessitarà aquí.",
+  "adFreeDescription": "Li pots donar un descans al teu bloquejador d'anuncis - No el necessitaràs aquí.",
   "comments": "Comentaris",
   "commentsDescription": "Els participants poden fer comentaris a la teva enquesta i aquests seran visibles per a tothom.",
   "features": "Característiques",
@@ -29,7 +29,7 @@
   "principles": "Principis",
   "principlesSubheading": "No som com la resta",
   "selfHostable": "Autoallotjable",
-  "selfHostableDescription": "Executa-ho al teu servir per tenir control absolut de totes les dades",
+  "selfHostableDescription": "Executa-ho al teu servidor per tenir control absolut de totes les dades",
   "timeSlots": "Franges horàries",
   "timeSlotsDescription": "Definiu els temps d'inici i final individuals per a cada opció a l'enquesta. Els temps es poden ajustar automàticament a la zona horària de cada participant o es poden establir per ignorar completament les zones horàries."
 }
