@@ -9,12 +9,14 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
+import { DefaultSeo } from "next-seo";
 import toast, { Toaster } from "react-hot-toast";
 import { MutationCache } from "react-query";
 import superjson from "superjson";
 
 import Maintenance from "@/components/maintenance";
 
+import { absoluteUrl } from "../utils/absolute-url";
 import { AppRouter } from "./api/trpc/[trpc]";
 
 const CrispChat = dynamic(() => import("@/components/crisp-chat"), {
@@ -33,6 +35,22 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       selfHosted={true}
       enabled={!!process.env.PLAUSIBLE_DOMAIN}
     >
+      <DefaultSeo
+        canonical={absoluteUrl()}
+        openGraph={{
+          siteName: "Rallly",
+          url: absoluteUrl(),
+          images: [
+            {
+              url: absoluteUrl("/og-image-1200.png"),
+              width: 1200,
+              height: 630,
+              alt: "Rallly | Schedule group meetings",
+              type: "image/png",
+            },
+          ],
+        }}
+      />
       <Head>
         <meta
           name="viewport"

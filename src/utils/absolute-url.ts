@@ -4,10 +4,10 @@ const getVercelUrl = () => {
     : null;
 };
 
-export function absoluteUrl() {
-  return (
+export function absoluteUrl(path = "") {
+  return `${
     process.env.NEXT_PUBLIC_BASE_URL ??
     getVercelUrl() ??
     "http://localhost:3000"
-  );
+  }${path}`;
 }
