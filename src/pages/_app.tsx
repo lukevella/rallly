@@ -36,15 +36,10 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       enabled={!!process.env.PLAUSIBLE_DOMAIN}
     >
       <DefaultSeo
-        title="Rallly | Schedule group meetings"
-        description="Open source meeting scheduler. Create meeting polls and find the best time or date to book an event."
         canonical={absoluteUrl()}
         openGraph={{
           siteName: "Rallly",
           url: absoluteUrl(),
-          title: "Rallly | Schedule group meetings",
-          description:
-            "Open source meeting scheduler. Create meeting polls and find the best time or date to book an event.",
           images: [
             {
               url: absoluteUrl("/og-image-1200.png"),
