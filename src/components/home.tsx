@@ -11,7 +11,15 @@ const Home: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");
   return (
     <PageLayout>
-      <NextSeo title={t("metaTitle")} description={t("metaDescription")} />
+      <NextSeo
+        title={t("metaTitle")}
+        description={t("metaDescription")}
+        twitter={{
+          handle: "@imlukevella",
+          site: "@ralllyco",
+          cardType: "summary_large_image",
+        }}
+      />
       <Hero />
       <Features />
       <Bonus />
