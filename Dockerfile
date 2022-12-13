@@ -1,4 +1,4 @@
-FROM node:alpine as build
+FROM node:lts as build
 
 WORKDIR /app
 
@@ -6,13 +6,13 @@ COPY package.json .
 COPY yarn.lock .
 COPY prisma/schema.prisma .
 
-RUN yarn --frozen-lockfile
+RUN yarn --frozen-lockfile --no-cache --production
 
 COPY . .
 
 RUN yarn build
 
-FROM node:alpine
+FROM node:lts
 
 ENV PORT 3000
 EXPOSE 3000
