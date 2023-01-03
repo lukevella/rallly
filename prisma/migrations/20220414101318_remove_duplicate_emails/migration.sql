@@ -36,7 +36,7 @@ DELETE FROM "User" u
 WHERE NOT EXISTS (SELECT * FROM "Poll" p WHERE u.id = p."userId");
 
 -- Add citext extension
-CREATE EXTENSION citext;
+CREATE EXTENSION IF NOT EXISTS citext;
 
 -- Change email to citext
 ALTER TABLE "User"
