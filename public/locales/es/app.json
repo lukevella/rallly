@@ -99,7 +99,7 @@
   "save": "Guardar",
   "saveInstruction": "Selecciona tu disponibilidad y haz clic en <b>{{save}}</b>",
   "share": "Compartir",
-  "shareDescription": "Dale este enlace a tus <b>participantes</b> para permitirles votar en tu encuesta.",
+  "shareDescription": "Da este enlace a tus <b>participantes</b> para permitirles votar en tu encuesta.",
   "shareLink": "Compartir con un enlace",
   "specifyTimes": "Especificar tiempos",
   "specifyTimesDescription": "Incluir horas de inicio y fin para cada opción",
