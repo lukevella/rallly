@@ -3,14 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-  html,
+  html {
+    @apply h-full overflow-auto bg-slate-50 text-base text-slate-600;
+  }
   body,
   #__next {
-    height: 100%;
-    @apply overflow-x-hidden bg-slate-50;
-  }
-  body {
-    @apply bg-slate-50 text-base text-slate-600;
+    @apply h-full;
   }
   p {
     @apply mb-4;
