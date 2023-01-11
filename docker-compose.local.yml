@@ -1,0 +1,5 @@
+# Build and run the project locally
+services:
+  rallly:
+    build:
+      context: .
