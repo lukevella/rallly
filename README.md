@@ -12,7 +12,7 @@ Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://githu
 
 ## Self-hosting
 
-_The docker configuration has been moved to a dedicated repository._
+_[2023-01-12]: The docker configuration has been moved to a dedicated repository._
 
 Check out the [self-hosting repo](https://github.com/lukevella/rallly-selfhosted) for more information on running your own instance of Rallly.
 
