@@ -6,15 +6,15 @@
 
 ![hero](./docs/images/hero-image.png)
 
-Schedule group meetings with friends, colleagues and teams. Create meeting polls to find the best date and time to organize an event based on your participants availability. Save time and avoid back and forth emails.
+Schedule group meetings with friends, colleagues and teams. Create meeting polls to find the best date and time to organize an event based on your participants' availability. Save time and avoid back-and-forth emails.
 
 Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma), [tRPC](https://github.com/trpc/trpc) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
 
 ## Self-hosting
 
-_[2023-01-12]: The docker configuration has been moved to a dedicated repository._
-
 Check out the [self-hosting repo](https://github.com/lukevella/rallly-selfhosted) for more information on running your own instance of Rallly.
+
+_[2023-01-12]: The docker configuration for self-hosters previously stored in this repo has been moved to the self-hosting repo mentioned above. Please switch to that repo if you are self-hosting._
 
 ## Running locally
 
@@ -31,7 +31,7 @@ Copy the sample `.env` file then open it and set the variables.
 cp sample.env .env
 ```
 
-_See [configuration](#%EF%B8%8F-configuration) to see what parameters are availble._
+_See [configuration](#configuration) to see what parameters are availble._
 
 Install dependencies
 
