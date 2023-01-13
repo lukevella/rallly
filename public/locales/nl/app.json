@@ -85,7 +85,7 @@
   "ok": "OK",
   "participant": "Deelnemer",
   "participantCount_other": "{{count}} deelnemers",
-  "participantCount": "{{count}} deelnemer",
+  "participantCount_one": "{{count}} deelnemer",
   "pollHasBeenLocked": "Deze poll is vergrendeld",
   "pollHasBeenVerified": "Je e-mailadres is geverifieerd",
   "pollOwnerNotice": "Hey {{name}}, het lijkt erop dat jij de eigenaar bent van deze poll.",

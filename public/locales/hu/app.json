@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Résztvevő",
   "participantCount_other": "{{count}} résztvevő",
-  "participantCount": "{{count}} résztvevő",
+  "participantCount_one": "{{count}} résztvevő",
   "pollHasBeenLocked": "A szavazás le lett zárva",
   "pollHasBeenVerified": "A szavazásod hitelesítve lett",
   "pollOwnerNotice": "Szia {{name}}, úgy tűnik, hogy te vagy ennek a szavazásnak a tulajdonosa.",

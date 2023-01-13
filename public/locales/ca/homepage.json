@@ -24,7 +24,7 @@
   "openSourceDescription": "El codi font és completament obert i <a>disponible a GitHub</a>.",
   "participant": "Participant",
   "participantCount_other": "{{count}} participants",
-  "participantCount": "{{count}} participant",
+  "participantCount_one": "{{count}} participant",
   "perfect": "Perfecte!",
   "principles": "Principis",
   "principlesSubheading": "No som com la resta",

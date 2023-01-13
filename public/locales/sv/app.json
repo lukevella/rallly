@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Deltagare",
   "participantCount_other": "{{count}} deltagare",
-  "participantCount": "{{count}} deltagare",
+  "participantCount_one": "{{count}} deltagare",
   "pollHasBeenLocked": "Denna förfrågan har låsts",
   "pollHasBeenVerified": "Din förfrågan har blivit verifierad",
   "pollOwnerNotice": "Hej {{name}}, ser ut som du är ägare av denna förfrågan.",

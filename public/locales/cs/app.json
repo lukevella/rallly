@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Účastník",
   "participantCount_other": "{{count}} účastníků",
-  "participantCount": "{{count}} účastník",
+  "participantCount_one": "{{count}} účastník",
   "pollHasBeenLocked": "Anketa byla uzamčena",
   "pollHasBeenVerified": "Vaše anketa byla ověřena",
   "pollOwnerNotice": "Dobrý den, {{name}}, zdá se, že jste vlastníkem této ankety.",

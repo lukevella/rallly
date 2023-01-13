@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Participant",
   "participantCount_other": "{{count}} participants",
-  "participantCount": "{{count}} participant",
+  "participantCount_one": "{{count}} participant",
   "pollHasBeenLocked": "Ce sondage a été verrouillé",
   "pollHasBeenVerified": "Votre sondage a été vérifié",
   "pollOwnerNotice": "Hé {{name}}, il semble que vous soyez le propriétaire de ce sondage.",

@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Deltager",
   "participantCount_other": "{{count}} deltagere",
-  "participantCount": "{{count}} deltager",
+  "participantCount_one": "{{count}} deltager",
   "pollHasBeenLocked": "Denne afstemning er blevet låst",
   "pollHasBeenVerified": "Din afstemning er blevet bekræftet",
   "pollOwnerNotice": "Hej {{name}}, det ser ud til at du er ejer af denne afstemning.",

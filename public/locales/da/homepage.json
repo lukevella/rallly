@@ -24,7 +24,7 @@
   "openSourceDescription": "Kodebasen er fuldt open source og <a>tilgængelig på GitHub</a>.",
   "participant": "Deltager",
   "participantCount_other": "{{count}} deltagere",
-  "participantCount": "{{count}} deltager",
+  "participantCount_one": "{{count}} deltager",
   "perfect": "Perfekt!",
   "principles": "Principper",
   "principlesSubheading": "Vi er ikke som de andre",

@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Uczestnik",
   "participantCount_other": "{{count}} uczestników",
-  "participantCount": "{{count}} uczestnik",
+  "participantCount_one": "{{count}} uczestnik",
   "pollHasBeenLocked": "Ta ankieta została zablokowana",
   "pollHasBeenVerified": "Twoja ankieta została zweryfikowana",
   "pollOwnerNotice": "Hej {{name}}, wygląda na to, że jesteś właścicielem tej ankiety.",

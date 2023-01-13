@@ -24,7 +24,7 @@
   "openSourceDescription": "Desenvolvido em código aberto e <a>disponível no GitHub</a>.",
   "participant": "Participante",
   "participantCount_other": "{{count}} participantes",
-  "participantCount": "{{count}} participante",
+  "participantCount_one": "{{count}} participante",
   "perfect": "Perfeito!",
   "principles": "Princípios",
   "principlesSubheading": "Não somos como os outros",

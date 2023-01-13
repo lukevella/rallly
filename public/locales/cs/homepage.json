@@ -24,7 +24,7 @@
   "openSourceDescription": "Veškerý kód je plně open-source a <a>k dispozici na GitHub</a>.",
   "participant": "Účastník",
   "participantCount_other": "{{count}} účastníků",
-  "participantCount": "{{count}} účastník",
+  "participantCount_one": "{{count}} účastník",
   "perfect": "Skvěle!",
   "principles": "Zásady",
   "principlesSubheading": "Nejsme jako ostatní",

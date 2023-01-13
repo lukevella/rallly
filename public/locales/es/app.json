@@ -85,7 +85,7 @@
   "ok": "Aceptar",
   "participant": "Participante",
   "participantCount_other": "{{count}} participantes",
-  "participantCount": "{{count}} participante",
+  "participantCount_one": "{{count}} participante",
   "pollHasBeenLocked": "Esta encuesta ha sido bloqueada",
   "pollHasBeenVerified": "Esta encuesta ha sido verificada",
   "pollOwnerNotice": "Hola {{name}}, parece que eres el dueño de esta encuesta.",

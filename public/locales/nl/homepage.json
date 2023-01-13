@@ -24,7 +24,7 @@
   "openSourceDescription": "De code is volledig open-source en <a>beschikbaar op GitHub</a>.",
   "participant": "Deelnemer",
   "participantCount_other": "{{count}} deelnemers",
-  "participantCount": "{{count}} deelnemer",
+  "participantCount_one": "{{count}} deelnemer",
   "perfect": "Perfect!",
   "principles": "Principes",
   "principlesSubheading": "We zijn niet zoals de anderen",

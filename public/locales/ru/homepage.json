@@ -24,7 +24,7 @@
   "openSourceDescription": "Код полностью открыт и <a>доступен на GitHub</a>.",
   "participant": "Участник",
   "participantCount_other": "{{count}} участников",
-  "participantCount": "{{count}} участник",
+  "participantCount_one": "{{count}} участник",
   "perfect": "Превосходно!",
   "principles": "Принципиальные отличия",
   "principlesSubheading": "Мы не такие, как все",

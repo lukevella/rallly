@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Participant",
   "participantCount_other": "{{count}} participants",
-  "participantCount": "{{count}} participant",
+  "participantCount_one": "{{count}} participant",
   "pollHasBeenLocked": "This poll has been locked",
   "pollHasBeenVerified": "Your poll has been verified",
   "pollOwnerNotice": "Hey {{name}}, looks like you are the owner of this poll.",

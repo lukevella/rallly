@@ -24,7 +24,7 @@
   "openSourceDescription": "The codebase is fully open-source and <a>available on GitHub</a>.",
   "participant": "Participant",
   "participantCount_other": "{{count}} participants",
-  "participantCount": "{{count}} participant",
+  "participantCount_one": "{{count}} participant",
   "perfect": "Perfect!",
   "principles": "Principles",
   "principlesSubheading": "We're not like the others",

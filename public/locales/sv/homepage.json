@@ -24,7 +24,7 @@
   "openSourceDescription": "Kodbasen är helt öppen källkod och är <a>tillgänglig på GitHub</a>.",
   "participant": "Deltagare",
   "participantCount_other": "{{count}} deltagare",
-  "participantCount": "{{count}} deltagare",
+  "participantCount_one": "{{count}} deltagare",
   "perfect": "Perfekt!",
   "principles": "Principer",
   "principlesSubheading": "Vi är inte som de andra",
