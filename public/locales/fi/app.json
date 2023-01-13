@@ -85,7 +85,7 @@
   "ok": "OK",
   "participant": "Osallistuja",
   "participantCount_other": "{{count}} osallistujaa",
-  "participantCount": "{{count}} osallistuja",
+  "participantCount_one": "{{count}} osallistuja",
   "pollHasBeenLocked": "Tämä kysely on lukittu",
   "pollHasBeenVerified": "Kyselysi on vahvistettu",
   "pollOwnerNotice": "Hei {{name}}, näyttää siltä, että olet tämän kyselyn omistaja.",

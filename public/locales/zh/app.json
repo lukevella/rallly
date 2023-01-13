@@ -85,7 +85,7 @@
   "ok": "确定",
   "participant": "参与者",
   "participantCount_other": "{{count}} 位参与者",
-  "participantCount": "{{count}} 位参与者",
+  "participantCount_one": "{{count}} 位参与者",
   "pollHasBeenLocked": "此投票已锁定",
   "pollHasBeenVerified": "你的投票已通过验证",
   "pollOwnerNotice": "嘿 {{name}}，看起来你是这个投票的所有者。",
