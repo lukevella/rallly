@@ -85,7 +85,7 @@
   "ok": "D'acord",
   "participant": "Participant",
   "participantCount_other": "{{count}} participants",
-  "participantCount": "{{count}} participant",
+  "participantCount_one": "{{count}} participant",
   "pollHasBeenLocked": "Aquesta enquesta ha estat bloquejada",
   "pollHasBeenVerified": "S'ha verificat la vostra enquesta",
   "pollOwnerNotice": "Hola {{name}}, sembla que ets el creador d'aquesta enquesta.",

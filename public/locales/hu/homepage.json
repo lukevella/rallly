@@ -24,7 +24,7 @@
   "openSourceDescription": "A forráskód teljesen nyílt forráskódú és <a>elérhető GitHub-on</a>.",
   "participant": "Résztvevő",
   "participantCount_other": "{{count}} résztvevő",
-  "participantCount": "{{count}} résztvevő",
+  "participantCount_one": "{{count}} résztvevő",
   "perfect": "Tökéletes!",
   "principles": "Alapelveink",
   "principlesSubheading": "Mások vagyok, mint a többiek",

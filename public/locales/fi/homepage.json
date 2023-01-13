@@ -24,7 +24,7 @@
   "openSourceDescription": "Sovelluksen koodi on täysin avointa ja <a>löytyy GitHubista</a>.",
   "participant": "Osallistuja",
   "participantCount_other": "{{count}} osallistujaa",
-  "participantCount": "{{count}} osallistuja",
+  "participantCount_one": "{{count}} osallistuja",
   "perfect": "Täydellinen!",
   "principles": "Periaatteet",
   "principlesSubheading": "Emme ole niin kuin muut",

@@ -24,7 +24,7 @@
   "openSourceDescription": "代码库完全开源，<a>可在GitHub上获取</a>。",
   "participant": "参与者",
   "participantCount_other": "{{count}} 位参与者",
-  "participantCount": "{{count}} 位参与者",
+  "participantCount_one": "{{count}} 位参与者",
   "perfect": "太棒了！",
   "principles": "原则",
   "principlesSubheading": "我们和其他人不一样",

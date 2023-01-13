@@ -85,7 +85,7 @@
   "ok": "Ok",
   "participant": "Teilnehmer",
   "participantCount_other": "{{count}} Teilnehmer",
-  "participantCount": "{{count}} Teilnehmer",
+  "participantCount_one": "{{count}} Teilnehmer",
   "pollHasBeenLocked": "Diese Umfrage wurde gesperrt",
   "pollHasBeenVerified": "Deine Umfrage wurde verifiziert",
   "pollOwnerNotice": "Hallo {{name}}, sieht so aus, als ob du der Besitzer dieser Umfrage bist.",

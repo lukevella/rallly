@@ -85,7 +85,7 @@
   "ok": "باشه",
   "participant": "شرکت‌کننده",
   "participantCount_other": "{{count}} شرکت‌کننده",
-  "participantCount": "{{count}} شرکت‌کننده",
+  "participantCount_one": "{{count}} شرکت‌کننده",
   "pollHasBeenLocked": "این نظرسنجی قفل شده است",
   "pollHasBeenVerified": "نظرسنجی شما تایید شده است",
   "pollOwnerNotice": "{{name}} جان، به نظر می‌آید خودت صاحب این نظرسنجی هستی.",
