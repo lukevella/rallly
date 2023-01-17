@@ -1,13 +1,12 @@
 datasource db {
-  provider             = "postgresql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
-  binaryTargets   = ["native"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
 }
 
 model User {
@@ -55,6 +54,7 @@ model Poll {
   participantUrlId String        @unique @map("participant_url_id")
   adminUrlId       String        @unique @map("admin_url_id")
 
+  @@index([userId], type: Hash)
   @@map("polls")
 }
 
@@ -68,9 +68,7 @@ model Participant {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-
   @@index([pollId], type: Hash)
-  @@unique([id, pollId])
   @@map("participants")
 }
 
@@ -81,8 +79,8 @@ model Option {
   poll      Poll      @relation(fields: [pollId], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  votes     Vote[]
 
+  @@index([pollId], type: Hash)
   @@map("options")
 }
 
@@ -98,7 +96,6 @@ model Vote {
   id            String      @id @default(cuid())
   participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
   participantId String      @map("participant_id")
-  option        Option      @relation(fields: [optionId], references: [id], onDelete: Cascade)
   optionId      String      @map("option_id")
   poll          Poll        @relation(fields: [pollId], references: [id])
   pollId        String      @map("poll_id")
@@ -107,6 +104,7 @@ model Vote {
   updatedAt     DateTime?   @updatedAt @map("updated_at")
 
   @@index([participantId], type: Hash)
+  @@index([pollId], type: Hash)
   @@map("votes")
 }
 
@@ -121,5 +119,6 @@ model Comment {
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
   @@unique([id, pollId])
+  @@index([pollId], type: Hash)
   @@map("comments")
 }
