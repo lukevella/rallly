@@ -1,10 +1,10 @@
 import { GetServerSideProps, NextPage } from "next";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import FullPageLoader from "@/components/full-page-loader";
+import PollPage from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
 import { withSession } from "@/components/session";
 
@@ -14,8 +14,6 @@ import { withSessionSsr } from "../utils/auth";
 import { trpc } from "../utils/trpc";
 import { withPageTranslations } from "../utils/with-page-translations";
 import Custom404 from "./404";
-
-const PollPage = dynamic(() => import("@/components/poll"), { ssr: false });
 
 const PollPageLoader: NextPage = () => {
   const { query, asPath } = useRouter();

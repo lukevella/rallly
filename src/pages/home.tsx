@@ -10,7 +10,6 @@ export default function Page() {
 export const getServerSideProps: GetServerSideProps = async ({
   locale = "en",
 }) => {
-  console.log("hello");
   return {
     props: {
       ...(await serverSideTranslations(locale, ["common", "homepage"])),

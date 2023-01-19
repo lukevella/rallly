@@ -9,12 +9,13 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-const moduleExports = {
+const nextConfig = {
   i18n: i18n,
   productionBrowserSourceMaps: true,
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
+      issuer: /\.[jt]sx?$/,
       use: ["@svgr/webpack"],
     });
 
@@ -40,6 +41,10 @@ const moduleExports = {
         destination: "/home",
       },
       {
+        source: "/p/:urlId",
+        destination: "/poll?urlId=:urlId",
+      },
+      {
         source: "/admin/:urlId",
         destination: "/poll?urlId=:urlId",
       },
@@ -48,6 +53,9 @@ const moduleExports = {
         destination: "/poll?urlId=:urlId&code=:code",
       },
     ];
+  },
+  sentry: {
+    hideSourceMaps: false,
   },
 };
 
@@ -66,5 +74,5 @@ const sentryWebpackPluginOptions = {
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
 module.exports = withBundleAnalyzer(
-  withSentryConfig(moduleExports, sentryWebpackPluginOptions),
+  withSentryConfig(nextConfig, sentryWebpackPluginOptions),
 );

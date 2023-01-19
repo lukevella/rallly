@@ -18,7 +18,7 @@ const legacyRouter = createRouter()
 export const appRouter = mergeRouters(
   legacyRouter.interop(),
   router({
-    polls: router({
+    p: router({
       touch: publicProcedure
         .input(
           z.object({

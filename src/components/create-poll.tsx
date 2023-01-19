@@ -18,7 +18,7 @@ import {
   UserDetailsData,
   UserDetailsForm,
 } from "./forms";
-import { SessionProps, useSession, withSession } from "./session";
+import { useSession, withSession } from "./session";
 import StandardLayout from "./standard-layout";
 import Steps from "./steps";
 
@@ -37,7 +37,7 @@ const required = <T,>(v: T | undefined): T => {
 const initialNewEventData: NewEventData = { currentStep: 0 };
 const sessionStorageKey = "newEventFormData";
 
-export interface CreatePollPageProps extends SessionProps {
+export interface CreatePollPageProps {
   title?: string;
   location?: string;
   description?: string;

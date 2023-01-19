@@ -126,6 +126,7 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   className,
 }) => {
   const { t } = useTranslation(["common", "app"]);
+  console.log("logo", Logo);
   return (
     <div className={clsx("space-y-1", className)}>
       <Link
