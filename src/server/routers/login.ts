@@ -30,6 +30,7 @@ export const login = createRouter().mutation("login", {
       templateVars: {
         loginUrl,
         homePageUrl,
+        supportEmail: process.env.SUPPORT_EMAIL,
       },
     });
   },
