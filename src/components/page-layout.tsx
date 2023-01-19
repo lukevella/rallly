@@ -26,27 +26,24 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
   const { t } = useTranslation("common");
   return (
     <nav className={className}>
-      <Link href="/">
-        <a
-          className={clsx(
-            "text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2",
-            {
-              "pointer-events-none font-bold text-gray-600":
-                pathname === "/home",
-            },
-          )}
-        >
-          {t("home")}
-        </a>
+      <Link
+        href="/"
+        className={clsx(
+          "text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2",
+          {
+            "pointer-events-none font-bold text-gray-600": pathname === "/home",
+          },
+        )}
+      >
+        {t("home")}
       </Link>
-      <Link href="https://blog.rallly.co">
-        <a
-          className={clsx(
-            "text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2",
-          )}
-        >
-          {t("blog")}
-        </a>
+      <Link
+        href="https://blog.rallly.co"
+        className={clsx(
+          "text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2",
+        )}
+      >
+        {t("blog")}
       </Link>
       <a
         href="https://support.rallly.co"
@@ -54,10 +51,11 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
       >
         {t("support")}
       </a>
-      <Link href="https://github.com/lukevella/rallly">
-        <a className="text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2">
-          <Github className="w-6" />
-        </a>
+      <Link
+        href="https://github.com/lukevella/rallly"
+        className="text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2"
+      >
+        <Github className="w-6" />
       </Link>
     </nav>
   );
@@ -74,9 +72,7 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
         <div className="grow">
           <div className="relative inline-block">
             <Link href="/">
-              <a>
-                <Logo className="w-40 text-primary-500" alt="Rallly" />
-              </a>
+              <Logo className="w-40 text-primary-500" alt="Rallly" />
             </Link>
             <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
               <Trans t={t} i18nKey="3Ls" components={{ e: <em /> }} />

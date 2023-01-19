@@ -86,10 +86,11 @@ const Footer: React.VoidFunctionComponent = () => {
               </a>
             </li>
             <li>
-              <Link href="https://blog.rallly.co">
-                <a className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline">
-                  {t("blog")}
-                </a>
+              <Link
+                href="https://blog.rallly.co"
+                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
+              >
+                {t("blog")}
               </Link>
             </li>
             <li>
@@ -101,10 +102,11 @@ const Footer: React.VoidFunctionComponent = () => {
               </a>
             </li>
             <li>
-              <Link href="/privacy-policy">
-                <a className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline">
-                  {t("privacyPolicy")}
-                </a>
+              <Link
+                href="/privacy-policy"
+                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
+              >
+                {t("privacyPolicy")}
               </Link>
             </li>
           </ul>

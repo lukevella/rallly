@@ -65,11 +65,9 @@ export const Profile: React.VoidFunctionComponent = () => {
         <div className="card p-0">
           <div className="flex items-center justify-between border-b p-4 shadow-sm">
             <div className="text-lg text-slate-700">{t("yourPolls")}</div>
-            <Link href="/new">
-              <a className="btn-default">
-                <Pencil className="mr-1 h-5" />
-                {t("newPoll")}
-              </a>
+            <Link href="/new" className="btn-default">
+              <Pencil className="mr-1 h-5" />
+              {t("newPoll")}
             </Link>
           </div>
           {createdPolls.length > 0 ? (
@@ -81,10 +79,11 @@ export const Profile: React.VoidFunctionComponent = () => {
                       <div>
                         <div className="flex">
                           <Calendar className="mr-2 mt-[1px] h-5 text-primary-500" />
-                          <Link href={`/admin/${poll.adminUrlId}`}>
-                            <a className="text-slate-700 hover:text-primary-500 hover:no-underline">
-                              <div>{poll.title}</div>
-                            </a>
+                          <Link
+                            href={`/admin/${poll.adminUrlId}`}
+                            className="text-slate-700 hover:text-primary-500 hover:no-underline"
+                          >
+                            <div>{poll.title}</div>
                           </Link>
                         </div>
                         <div className="ml-7 text-sm text-slate-500">
