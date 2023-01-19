@@ -22,7 +22,7 @@ const ErrorPage: React.VoidFunctionComponent<ComponentProps> = ({
 }) => {
   const { t } = useTranslation("errors");
   return (
-    <div className="mx-auto flex h-full max-w-full items-center justify-center bg-gray-50 px-4 py-8 lg:w-[1024px]">
+    <div className="mx-auto flex h-full max-w-full items-center justify-center px-4 py-8 lg:w-[1024px]">
       <Head>
         <title>{title}</title>
         <meta name="robots" content="noindex,nofollow" />
@@ -35,8 +35,8 @@ const ErrorPage: React.VoidFunctionComponent<ComponentProps> = ({
           </div>
           <p>{description}</p>
           <div className="flex justify-center space-x-3">
-            <Link href="/" passHref={true}>
-              <a className="btn-default">{t("goToHome")}</a>
+            <Link href="/" passHref={true} className="btn-default">
+              {t("goToHome")}
             </Link>
             <Button icon={<Chat />} onClick={showCrispChat}>
               {t("startChat")}

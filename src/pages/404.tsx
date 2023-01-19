@@ -8,13 +8,7 @@ import DocumentSearch from "@/components/icons/document-search.svg";
 
 const Custom404: NextPage = () => {
   const { t } = useTranslation("errors");
-  return (
-    <ErrorPage
-      icon={DocumentSearch}
-      title={t("notFoundTitle")}
-      description={t("notFoundDescription")}
-    />
-  );
+  return <div>404</div>;
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {

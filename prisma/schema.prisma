@@ -15,6 +15,7 @@ model User {
   email     String    @unique() @db.Citext
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
+  comments  Comment[]
   polls     Poll[]
 
   @@map("users")
@@ -69,6 +70,7 @@ model Participant {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([pollId], type: Hash)
+  @@unique([id, pollId])
   @@map("participants")
 }
 
@@ -114,11 +116,13 @@ model Comment {
   poll       Poll      @relation(fields: [pollId], references: [id])
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
+  user       User?     @relation(fields:[userId], references: [id])
   userId     String?   @map("user_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
   @@unique([id, pollId])
+  @@index([userId], type: Hash)
   @@index([pollId], type: Hash)
   @@map("comments")
 }

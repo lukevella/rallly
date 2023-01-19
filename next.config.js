@@ -10,9 +10,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 
 const moduleExports = {
-  future: {
-    webpack5: false,
-  },
   i18n: i18n,
   productionBrowserSourceMaps: true,
   webpack(config) {
@@ -41,10 +38,6 @@ const moduleExports = {
       {
         source: "/",
         destination: "/home",
-      },
-      {
-        source: "/p/:urlId",
-        destination: "/poll?urlId=:urlId",
       },
       {
         source: "/admin/:urlId",
