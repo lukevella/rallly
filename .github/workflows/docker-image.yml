@@ -1,9 +1,8 @@
 name: Build and publish Docker image
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1" # Every Monday at 6:00am UTC
 
 jobs:
   publish:
