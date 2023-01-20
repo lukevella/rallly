@@ -85,7 +85,8 @@ export const sendNotification = async (
 };
 
 interface SendEmailTemplateParams {
-  templateName: string;
+  templateName?: string;
+  templateString?: string;
   to: string;
   subject: string;
   templateVars: Record<string, string | undefined>;
@@ -93,13 +94,16 @@ interface SendEmailTemplateParams {
 
 export const sendEmailTemplate = async ({
   templateName,
+  templateString,
   templateVars,
   to,
   subject,
 }: SendEmailTemplateParams) => {
-  const template = readFileSync(
-    path.resolve(process.cwd(), `./templates/${templateName}.html`),
-  ).toString();
+  const template =
+    templateString ??
+    readFileSync(
+      path.join(process.cwd(), "templates", `${templateName}.html`),
+    ).toString();
 
   const rendered = await Eta.render(template, templateVars);
 

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import loginTemplate from "~/templates/login";
+
 import { absoluteUrl } from "../../utils/absolute-url";
 import { sendEmailTemplate } from "../../utils/api-utils";
 import { createToken } from "../../utils/auth";
@@ -24,7 +26,7 @@ export const login = createRouter().mutation("login", {
     const loginUrl = `${homePageUrl}/login?code=${token}`;
 
     await sendEmailTemplate({
-      templateName: "login",
+      templateString: loginTemplate,
       to: email,
       subject: "Rallly - Login",
       templateVars: {
