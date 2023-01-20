@@ -9,8 +9,11 @@ import toast from "react-hot-toast";
 import { useMount } from "react-use";
 
 import { Button } from "@/components/button";
+import Discussion from "@/components/discussion";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import Share from "@/components/icons/share.svg";
+import DesktopPoll from "@/components/poll/desktop-poll";
+import MobilePoll from "@/components/poll/mobile-poll";
 import { preventWidows } from "@/utils/prevent-widows";
 
 import { trpc } from "../utils/trpc";
@@ -27,11 +30,6 @@ import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
 import { useSession } from "./session";
 import Sharing from "./sharing";
-
-const Discussion = React.lazy(() => import("@/components/discussion"));
-
-const DesktopPoll = React.lazy(() => import("@/components/poll/desktop-poll"));
-const MobilePoll = React.lazy(() => import("@/components/poll/mobile-poll"));
 
 const PollPage: NextPage = () => {
   const { poll, urlId, admin } = usePoll();

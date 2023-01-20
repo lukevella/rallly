@@ -10,10 +10,10 @@ import Table from "../../icons/table.svg";
 import { useModal } from "../../modal";
 import TimeZonePicker from "../../time-zone-picker";
 import { PollFormProps } from "../types";
+import MonthCalendar from "./month-calendar";
 import { DateTimeOption } from "./types";
 
 const WeekCalendar = React.lazy(() => import("./week-calendar"));
-const MonthCalendar = React.lazy(() => import("./month-calendar"));
 
 export type PollOptionsData = {
   navigationDate: string; // used to navigate to the right part of the calendar
