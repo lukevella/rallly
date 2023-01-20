@@ -28,7 +28,7 @@ export const ChatButton: React.VoidFunctionComponent<{ text?: string }> = ({
   );
 };
 
-const CrispChat: React.VoidFunctionComponent = () => {
+export const useCrispChat = () => {
   React.useEffect(() => {
     if (!crispWebsiteId) {
       return;
@@ -44,8 +44,4 @@ const CrispChat: React.VoidFunctionComponent = () => {
       window.$crisp.push(["safe", true]); // disable warning about other event listeners
     })();
   });
-
-  return null;
 };
-
-export default CrispChat;
