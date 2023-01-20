@@ -12,6 +12,7 @@ module.exports = {
       "es",
       "fi",
       "fr",
+      "hr",
       "hu",
       "it",
       "ko",
