@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply h-full overflow-auto bg-slate-50 text-base text-slate-600;
+    @apply h-full overflow-auto bg-slate-50 font-sans text-base text-slate-600;
   }
   body,
   #__next {
