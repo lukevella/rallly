@@ -98,7 +98,7 @@ export const sendEmailTemplate = async ({
   subject,
 }: SendEmailTemplateParams) => {
   const template = readFileSync(
-    path.resolve(process.cwd(), `./templates/${templateName}.html`),
+    path.join(process.cwd(), "templates", `${templateName}.html`),
   ).toString();
 
   const rendered = await Eta.render(template, templateVars);
