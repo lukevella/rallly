@@ -2,6 +2,7 @@ import * as Eta from "eta";
 
 import { prisma } from "~/prisma/db";
 import newCommentTemplate from "~/templates/new-comment";
+import newParticipantTemplate from "~/templates/new-participant";
 
 import { absoluteUrl } from "./absolute-url";
 import { sendEmail } from "./send-email";
@@ -46,7 +47,7 @@ export const sendNotification = async (
       switch (action.type) {
         case "newParticipant":
           await sendEmailTemplate({
-            templateString: newCommentTemplate,
+            templateString: newParticipantTemplate,
             to: poll.user.email,
             subject: `Rallly: ${poll.title} - New Participant`,
             templateVars: {
