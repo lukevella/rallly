@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+const template = `<!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
   <head>
     <meta charset="utf-8">
@@ -33,7 +33,7 @@
         }
       </style>
     <![endif]-->
-      <title>Somone left a comment on your poll</title>
+      <title>Your poll has been created</title>
       <style>
 .hover-bg-indigo-400:hover {
   background-color: #818cf8 !important;
@@ -61,7 +61,7 @@
   </head>
   <body style="margin: 0; width: 100%; padding: 0; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #f3f4f6;">
       <div style="display: none;">
-        Go to your poll to see what they wrote&#847; &#847; &#847; &#847; &#847; &#847; &#847;
+        Click the button below to access your poll!&#847; &#847; &#847; &#847; &#847; &#847; &#847;
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
@@ -75,14 +75,14 @@
         &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &zwnj;
         &#160;&#847; &#847; &#847; &#847; &#847;
       </div>
-    <div role="article" aria-roledescription="email" aria-label="Somone left a comment on your poll" lang="en">
+    <div role="article" aria-roledescription="email" aria-label="Your poll has been created" lang="en">
     <table style="width: 100%; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
         <td align="center" style="background-color: #f3f4f6;">
           <table class="sm-w-full" style="width: 600px;" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td class="sm-py-32 sm-px-24" style="padding-left: 48px; padding-right: 48px; padding-top: 36px; padding-bottom: 36px; text-align: center;">
-                <a href="<%= it.homePageUrl %>>">
+                <a href="<%= it.homePageUrl %>">
                   <img src="<%= it.homePageUrl %>/logo.png" width="150" alt="Rallly" style="max-width: 100%; vertical-align: middle; line-height: 100%; border: 0;">
                 </a>
               </td>
@@ -94,19 +94,16 @@
                     <td class="sm-px-24" style="border-radius: 4px; background-color: #ffffff; padding: 36px; text-align: left; font-size: 16px; line-height: 24px; color: #1f2937;">
                       <p style="margin-bottom: 8px;">Hi <%= it.name %>,</p>
                       <p style="margin-bottom: 8px;">
-                        <strong><%= it.author %></strong> has left a comment on
-                        your&nbsp;poll.
+                        Your poll <strong>"<%= it.title %>"</strong> has been
+                        created.
                       </p>
                       <p style="margin-bottom: 24px;"></p>
-                      <div style="margin-bottom: 24px; line-height: 100%;">
+                      <div style="line-height: 100%;">
                         <a href="<%= it.pollUrl %>" class="hover-bg-indigo-400" style="display: inline-block; border-radius: 4px; background-color: #6366f1; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px; text-align: center; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none;"> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%; mso-text-raise: 26pt;">&nbsp;</i><![endif]-->
                           <span style="mso-text-raise: 16px">Go to poll &rarr;
                           </span> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%;">&nbsp;</i><![endif]-->
                         </a>
                       </div>
-                      <p>
-                        <a href="<%= it.unsubscribeUrl %>" class="hover-no-underline" style="color: #6366f1; text-decoration: underline;">Stop receiving notifications for this poll.</a>
-                      </p>
                       <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
                         <tr>
                           <td style="padding-top: 32px; padding-bottom: 32px;">
@@ -149,4 +146,6 @@
     </table>
     </div>
   </body>
-</html>
+</html>`;
+
+export default template;

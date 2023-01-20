@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { prisma } from "~/prisma/db";
+import newPollTemplate from "~/templates/new-poll";
+import newVerfiedPollTemplate from "~/templates/new-poll-verified";
 
 import { absoluteUrl } from "../../utils/absolute-url";
 import { sendEmailTemplate } from "../../utils/api-utils";
@@ -149,7 +151,7 @@ export const polls = createRouter()
       try {
         if (poll.verified) {
           await sendEmailTemplate({
-            templateName: "new-poll-verified",
+            templateString: newVerfiedPollTemplate,
             to: input.user.email,
             subject: `Rallly: ${poll.title}`,
             templateVars: {
@@ -167,7 +169,7 @@ export const polls = createRouter()
           const verifyEmailUrl = `${pollUrl}?code=${verificationCode}`;
 
           await sendEmailTemplate({
-            templateName: "new-poll",
+            templateString: newPollTemplate,
             to: input.user.email,
             subject: `Rallly: ${poll.title} - Verify your email address`,
             templateVars: {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+const template = `<!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
   <head>
     <meta charset="utf-8">
@@ -149,4 +149,6 @@
     </table>
     </div>
   </body>
-</html>
+</html>`;
+
+export default template;
