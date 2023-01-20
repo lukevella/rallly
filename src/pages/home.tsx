@@ -3,9 +3,9 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import Home from "@/components/home";
 
-const Page = () => <Home />;
-
-export default Page;
+export default function Page() {
+  return <Home />;
+}
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale = "en",

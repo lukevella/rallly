@@ -32,9 +32,7 @@ import { useSession } from "./session";
 const HomeLink = () => {
   return (
     <Link href="/">
-      <a>
-        <Logo className="inline-block w-28 text-primary-500 transition-colors active:text-primary-600 lg:w-32" />
-      </a>
+      <Logo className="inline-block w-28 text-primary-500 transition-colors active:text-primary-600 lg:w-32" />
     </Link>
   );
 };
@@ -128,13 +126,15 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   className,
 }) => {
   const { t } = useTranslation(["common", "app"]);
+  console.log("logo", Logo);
   return (
     <div className={clsx("space-y-1", className)}>
-      <Link href="/new">
-        <a className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
-          <Pencil className="h-5 opacity-75 " />
-          <span className="inline-block">{t("app:newPoll")}</span>
-        </a>
+      <Link
+        href="/new"
+        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+      >
+        <Pencil className="h-5 opacity-75 " />
+        <span className="inline-block">{t("app:newPoll")}</span>
       </Link>
       <a
         target="_blank"
@@ -267,11 +267,12 @@ const StandardLayout: React.VoidFunctionComponent<{
                 <HomeLink />
               </div>
               <div className="mb-4">
-                <Link href="/new">
-                  <a className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
-                    <Pencil className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
-                    <span className="grow text-left">{t("app:newPoll")}</span>
-                  </a>
+                <Link
+                  href="/new"
+                  className="group mb-1 flex items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
+                >
+                  <Pencil className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                  <span className="grow text-left">{t("app:newPoll")}</span>
                 </Link>
                 <a
                   target="_blank"
@@ -350,10 +351,11 @@ const StandardLayout: React.VoidFunctionComponent<{
             </div>
             <div className="flex flex-col items-center space-y-4 px-6 pt-3 pb-6 text-slate-400 lg:h-16 lg:flex-row lg:space-y-0 lg:space-x-6 lg:py-0 lg:px-8 lg:pb-3">
               <div>
-                <Link href="https://rallly.co">
-                  <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                    <Logo className="h-5" />
-                  </a>
+                <Link
+                  href="https://rallly.co"
+                  className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                >
+                  <Logo className="h-5" />
                 </Link>
               </div>
               <div className="hidden text-slate-300 lg:block">&bull;</div>
@@ -366,15 +368,17 @@ const StandardLayout: React.VoidFunctionComponent<{
                 >
                   {t("common:support")}
                 </a>
-                <Link href="https://github.com/lukevella/rallly/discussions">
-                  <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                    {t("common:discussions")}
-                  </a>
+                <Link
+                  href="https://github.com/lukevella/rallly/discussions"
+                  className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                >
+                  {t("common:discussions")}
                 </Link>
-                <Link href="https://blog.rallly.co">
-                  <a className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline">
-                    {t("common:blog")}
-                  </a>
+                <Link
+                  href="https://blog.rallly.co"
+                  className="text-sm text-slate-400 transition-colors hover:text-primary-500 hover:no-underline"
+                >
+                  {t("common:blog")}
                 </Link>
                 <div className="hidden text-slate-300 lg:block">&bull;</div>
                 <div className="flex items-center space-x-6">

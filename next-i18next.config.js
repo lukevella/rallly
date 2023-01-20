@@ -24,7 +24,7 @@ module.exports = {
       "sv",
       "zh",
     ],
-    localePath: path.resolve("./public/locales"),
-    reloadOnPrerender: process.env.NODE_ENV === "development",
   },
+  reloadOnPrerender: process.env.NODE_ENV === "development",
+  localePath: path.resolve("./public/locales"),
 };

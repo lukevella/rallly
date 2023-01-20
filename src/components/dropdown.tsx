@@ -89,16 +89,16 @@ const AnchorLink: React.VoidFunctionComponent<{
   className?: string;
 }> = ({ href = "", className, children, ...forwardProps }) => {
   return (
-    <Link href={href} passHref>
-      <a
-        className={clsx(
-          "font-normal hover:text-white hover:no-underline",
-          className,
-        )}
-        {...forwardProps}
-      >
-        {children}
-      </a>
+    <Link
+      href={href}
+      passHref
+      className={clsx(
+        "font-normal hover:text-white hover:no-underline",
+        className,
+      )}
+      {...forwardProps}
+    >
+      {children}
     </Link>
   );
 };

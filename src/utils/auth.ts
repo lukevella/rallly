@@ -1,4 +1,9 @@
-import { IronSessionOptions, sealData, unsealData } from "iron-session";
+import {
+  IronSession,
+  IronSessionOptions,
+  sealData,
+  unsealData,
+} from "iron-session";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { GetServerSideProps, NextApiHandler } from "next";
 
@@ -95,4 +100,16 @@ export const mergeGuestsIntoUser = async (
       userId: userId,
     },
   });
+};
+
+export const getCurrentUser = async (
+  session: IronSession,
+): Promise<{ isGuest: boolean; id: string }> => {
+  const user = session.user;
+
+  if (!user) {
+    throw new Error("Tried to get user but no user found.");
+  }
+
+  return user;
 };
