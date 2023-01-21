@@ -32,6 +32,7 @@
     "@trpc/next": "^10.0.0-rc.8",
     "@trpc/react-query": "^10.0.0-rc.8",
     "@trpc/server": "^10.0.0-rc.8",
+    "@vercel/analytics": "^0.1.8",
     "accept-language-parser": "^1.5.0",
     "autoprefixer": "^10.4.2",
     "axios": "^0.24.0",
