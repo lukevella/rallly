@@ -20,6 +20,6 @@ EXPOSE 3000
 WORKDIR /usr/src/app
 
 COPY --from=build /app .
-COPY docker_start.sh .
+COPY docker-start.sh .
 
-ENTRYPOINT [ "./docker_start.sh" ]
+ENTRYPOINT ["./docker-start.sh"]
