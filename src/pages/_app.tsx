@@ -2,7 +2,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "~/style.css";
 
-import { Inter } from "@next/font/google";
+import { Inter, Noto_Sans_Mono } from "@next/font/google";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -18,6 +18,11 @@ import { absoluteUrl } from "../utils/absolute-url";
 import { trpcNext } from "../utils/trpc";
 
 const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const noto = Noto_Sans_Mono({
   subsets: ["latin"],
   display: "swap",
 });
@@ -66,6 +71,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       <style jsx global>{`
         html {
           --font-inter: ${inter.style.fontFamily};
+          --font-noto: ${noto.style.fontFamily};
         }
       `}</style>
       <Component {...pageProps} />
