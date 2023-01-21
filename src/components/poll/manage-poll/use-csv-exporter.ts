@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 
 import { usePoll } from "@/components/poll-context";
 

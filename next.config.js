@@ -4,13 +4,12 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require("@sentry/nextjs");
-const { i18n } = require("./next-i18next.config");
+const nextTranslate = require("next-translate");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
 const nextConfig = {
-  i18n: i18n,
   productionBrowserSourceMaps: true,
   webpack(config) {
     config.module.rules.push({
@@ -74,5 +73,5 @@ const sentryWebpackPluginOptions = {
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
 module.exports = withBundleAnalyzer(
-  withSentryConfig(nextConfig, sentryWebpackPluginOptions),
+  withSentryConfig(nextTranslate(nextConfig), sentryWebpackPluginOptions),
 );

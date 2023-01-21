@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -17,7 +17,7 @@ import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
 import { usePoll } from "../poll-context";
-import { isUnclaimed, useSession } from "../session";
+import { useUser } from "../user-provider";
 
 interface CommentForm {
   authorName: string;
@@ -43,7 +43,6 @@ const Discussion: React.VoidFunctionComponent = () => {
 
   const addComment = trpc.useMutation("polls.comments.add", {
     onSuccess: (newComment) => {
-      session.refresh();
       queryClient.setQueryData(
         ["polls.comments.list", { pollId }],
         (existingComments = []) => {
@@ -68,7 +67,7 @@ const Discussion: React.VoidFunctionComponent = () => {
     },
   });
 
-  const session = useSession();
+  const session = useUser();
 
   const { register, reset, control, handleSubmit, formState } =
     useForm<CommentForm>({
@@ -94,8 +93,8 @@ const Discussion: React.VoidFunctionComponent = () => {
       >
         <AnimatePresence initial={false}>
           {comments.map((comment) => {
-            const canDelete =
-              poll.admin || session.ownsObject(comment) || isUnclaimed(comment);
+            const isYou = session.user.id === comment.userId;
+            const canDelete = poll.admin || isYou;
 
             return (
               <motion.div
@@ -118,7 +117,7 @@ const Discussion: React.VoidFunctionComponent = () => {
                     <UserAvatar
                       name={comment.authorName}
                       showName={true}
-                      isYou={session.ownsObject(comment)}
+                      isYou={isYou}
                     />
                     <div className="mb-1">
                       <span className="mr-1 text-slate-400">&bull;</span>

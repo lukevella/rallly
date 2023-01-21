@@ -1,6 +1,3 @@
-import { GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
 import PageLayout from "@/components/page-layout";
 
 const PrivacyPolicy = () => {
@@ -365,15 +362,3 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
-
-export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {
-  try {
-    return {
-      props: {
-        ...(await serverSideTranslations(locale, ["common", "homepage"])),
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
-};

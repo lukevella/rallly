@@ -2,8 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMount } from "react-use";
@@ -28,8 +28,8 @@ import { useTouchBeacon } from "./poll/use-touch-beacon";
 import { UserAvatarProvider } from "./poll/user-avatar";
 import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
-import { useSession } from "./session";
 import Sharing from "./sharing";
+import { useUser } from "./user-provider";
 
 const PollPage: NextPage = () => {
   const { poll, urlId, admin } = usePoll();
@@ -40,7 +40,7 @@ const PollPage: NextPage = () => {
 
   const { t } = useTranslation("app");
 
-  const session = useSession();
+  const session = useUser();
 
   const queryClient = trpc.useContext();
   const plausible = usePlausible();

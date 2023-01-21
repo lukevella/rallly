@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Trans, useTranslation } from "next-i18next";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 import { useMeasure } from "react-use";
 
@@ -256,7 +257,7 @@ const Poll: React.VoidFunctionComponent = () => {
                   </Button>
                   <div className="text-sm">
                     <Trans
-                      t={t}
+                      ns="app"
                       i18nKey="saveInstruction"
                       values={{
                         save: t("save"),

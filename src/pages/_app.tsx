@@ -7,7 +7,6 @@ import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import React from "react";
@@ -18,6 +17,7 @@ import Maintenance from "@/components/maintenance";
 import { useCrispChat } from "../components/crisp-chat";
 import { absoluteUrl } from "../utils/absolute-url";
 import { trpcNext } from "../utils/trpc";
+import { UserProvider } from "../components/user-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -83,9 +83,11 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
           --font-noto: ${noto.style.fontFamily};
         }
       `}</style>
-      <Component {...pageProps} />
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
     </PlausibleProvider>
   );
 };
 
-export default trpcNext.withTRPC(appWithTranslation(MyApp));
+export default trpcNext.withTRPC(MyApp);

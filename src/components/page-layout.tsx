@@ -1,7 +1,8 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Trans, useTranslation } from "next-i18next";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import DotsVertical from "@/components/icons/dots-vertical.svg";
@@ -60,7 +61,6 @@ const Menu: React.VoidFunctionComponent<{ className: string }> = ({
 const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
   children,
 }) => {
-  const { t } = useTranslation("homepage");
   return (
     <div className="bg-pattern min-h-full overflow-x-hidden">
       <div className="mx-auto flex max-w-7xl items-center py-8 px-8">
@@ -70,7 +70,7 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
               <Logo className="w-40 text-primary-500" alt="Rallly" />
             </Link>
             <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
-              <Trans t={t} i18nKey="3Ls" components={{ e: <em /> }} />
+              <Trans ns="homepage" i18nKey="3Ls" components={{ e: <em /> }} />
             </span>
           </div>
         </div>

@@ -1,4 +1,5 @@
-import { Trans, useTranslation } from "next-i18next";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import { useDayjs } from "../../utils/dayjs";
@@ -14,8 +15,8 @@ const PollSubheader: React.VoidFunctionComponent = () => {
     <div className="text-slate-500/75 lg:text-lg">
       <div className="md:inline">
         <Trans
+          ns="app"
           i18nKey="createdBy"
-          t={t}
           values={{
             name: poll.authorName,
           }}
@@ -34,7 +35,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
           </Tooltip>
         ) : null}
         {poll.demo ? (
-          <Tooltip content={<Trans t={t} i18nKey="demoPollNotice" />}>
+          <Tooltip content={<Trans i18nKey="demoPollNotice" />}>
             <Badge color="blue" className="ml-1">
               Demo
             </Badge>

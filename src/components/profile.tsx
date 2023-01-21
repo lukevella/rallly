@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import Calendar from "@/components/icons/calendar.svg";
@@ -12,10 +12,10 @@ import { trpc } from "../utils/trpc";
 import { EmptyState } from "./empty-state";
 import LoginForm from "./login-form";
 import { UserDetails } from "./profile/user-details";
-import { useSession } from "./session";
+import { useUser } from "./user-provider";
 
 export const Profile: React.VoidFunctionComponent = () => {
-  const { user } = useSession();
+  const { user, alias } = useUser();
   const { dayjs } = useDayjs();
 
   const { t } = useTranslation("app");
@@ -52,7 +52,7 @@ export const Profile: React.VoidFunctionComponent = () => {
             data-testid="user-name"
             className="mb-0 text-xl font-medium leading-tight"
           >
-            {user.shortName}
+            {alias}
           </div>
           <div className="text-slate-500">
             {user.isGuest ? t("guest") : t("user")}

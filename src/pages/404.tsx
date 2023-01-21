@@ -1,6 +1,5 @@
-import { GetStaticProps, NextPage } from "next";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { NextPage } from "next";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 
 import ErrorPage from "@/components/error-page";
@@ -15,14 +14,6 @@ const Custom404: NextPage = () => {
       description={t("notFoundDescription")}
     />
   );
-};
-
-export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ["errors"])),
-    },
-  };
 };
 
 export default Custom404;

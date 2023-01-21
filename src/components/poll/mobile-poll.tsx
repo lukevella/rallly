@@ -1,7 +1,7 @@
 import { Listbox } from "@headlessui/react";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
@@ -18,8 +18,8 @@ import { Button } from "../button";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
 import { useParticipants } from "../participants-provider";
-import { isUnclaimed, useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
+import { useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import {
   normalizeVotes,
@@ -50,7 +50,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   const { participants } = useParticipants();
   const { timeZone } = poll;
 
-  const session = useSession();
+  const session = useUser();
 
   const form = useForm<ParticipantForm>({
     defaultValues: {
@@ -218,7 +218,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                       // and does not own this participant
                       !session.ownsObject(selectedParticipant) &&
                       // and the participant has been claimed by a different user
-                      !isUnclaimed(selectedParticipant))
+                      !selectedParticipant.userId)
                     // not allowed to edit
                   }
                   onClick={() => {
@@ -243,7 +243,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                       // and does not own this participant
                       !session.ownsObject(selectedParticipant) &&
                       // or the participant has been claimed by a different user
-                      !isUnclaimed(selectedParticipant))
+                      !selectedParticipant.userId)
                     // not allowed to edit
                   }
                   data-testid="delete-participant-button"

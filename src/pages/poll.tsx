@@ -1,18 +1,15 @@
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 
 import FullPageLoader from "@/components/full-page-loader";
 import PollPage from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-import { withSession } from "@/components/session";
 
 import { ParticipantsProvider } from "../components/participants-provider";
 import StandardLayout from "../components/standard-layout";
-import { withSessionSsr } from "../utils/auth";
 import { trpc } from "../utils/trpc";
-import { withPageTranslations } from "../utils/with-page-translations";
 import Custom404 from "./404";
 
 const PollPageLoader: NextPage = () => {
@@ -50,8 +47,4 @@ const PollPageLoader: NextPage = () => {
   return <FullPageLoader>{t("loading")}</FullPageLoader>;
 };
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  withPageTranslations(["common", "app", "errors"]),
-);
-
-export default withSession(PollPageLoader);
+export default PollPageLoader;

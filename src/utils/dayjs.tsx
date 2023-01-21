@@ -8,7 +8,7 @@ import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 import { useAsync, useLocalStorage } from "react-use";
 
@@ -155,11 +155,11 @@ export const useDayjs = () => {
 export const DayjsProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children }) => {
-  const { i18n } = useTranslation();
+  const { lang } = useTranslation();
 
   // Using language instead of router.locale because when transitioning from homepage to
   // the app via <Link locale={false}> it will be set to "en" instead of the current locale.
-  const localeConfig = dayjsLocales[i18n.language];
+  const localeConfig = dayjsLocales[lang];
 
   const [weekStartsOn = localeConfig.weekStartsOn, setWeekStartsOn] =
     useLocalStorage<StartOfWeek>("rallly-week-starts-on");

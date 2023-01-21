@@ -1,13 +1,12 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 import { useMount } from "react-use";
 
 import FullPageLoader from "../components/full-page-loader";
 import { trpc } from "../utils/trpc";
-import { withPageTranslations } from "../utils/with-page-translations";
 
 const Demo: NextPage = () => {
   const { t } = useTranslation("app");
@@ -24,7 +23,5 @@ const Demo: NextPage = () => {
 
   return <FullPageLoader>{t("creatingDemo")}</FullPageLoader>;
 };
-
-export const getServerSideProps = withPageTranslations(["common", "app"]);
 
 export default Demo;

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import { Button } from "@/components/button";

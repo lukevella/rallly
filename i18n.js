@@ -1,0 +1,28 @@
+module.exports = {
+  defaultLocale: "en",
+  locales: [
+    "ca",
+    "cs",
+    "da",
+    "de",
+    "en",
+    "es",
+    "fi",
+    "fr",
+    "hu",
+    "it",
+    "ko",
+    "nl",
+    "pl",
+    "pt-BR",
+    "pt",
+    "ru",
+    "sk",
+    "sv",
+    "zh",
+  ],
+  pages: {
+    "*": ["common", "homepage", "app", "errors"],
+  },
+  logBuild: false,
+};

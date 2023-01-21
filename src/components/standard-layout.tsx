@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 
 import Menu from "@/components/icons/menu.svg";
@@ -27,7 +27,7 @@ import { useModal } from "./modal";
 import ModalProvider, { useModalContext } from "./modal/modal-provider";
 import Popover from "./popover";
 import Preferences from "./preferences";
-import { useSession } from "./session";
+import { useUser } from "./user-provider";
 
 const HomeLink = () => {
   return (
@@ -40,8 +40,8 @@ const HomeLink = () => {
 const MobileNavigation: React.VoidFunctionComponent<{
   openLoginModal: () => void;
 }> = ({ openLoginModal }) => {
-  const { user } = useSession();
-  const { t } = useTranslation(["common", "app"]);
+  const { user, alias } = useUser();
+  const { t } = useTranslation();
   return (
     <div
       className="fixed top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b bg-gray-50
@@ -80,7 +80,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
                     <UserCircle className="w-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                   </div>
                   <div className="hidden max-w-[120px] truncate font-medium xs:block">
-                    {user.shortName}
+                    {alias}
                   </div>
                 </motion.button>
               }
@@ -125,8 +125,7 @@ const MobileNavigation: React.VoidFunctionComponent<{
 const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   className,
 }) => {
-  const { t } = useTranslation(["common", "app"]);
-  console.log("logo", Logo);
+  const { t } = useTranslation();
   return (
     <div className={clsx("space-y-1", className)}>
       <Link
@@ -152,8 +151,9 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
 const UserDropdown: React.VoidFunctionComponent<
   DropdownProps & { openLoginModal: () => void }
 > = ({ children, openLoginModal, ...forwardProps }) => {
-  const { logout, user } = useSession();
-  const { t } = useTranslation(["common", "app"]);
+  const { user, logout, alias } = useUser();
+
+  const { t } = useTranslation();
   const modalContext = useModalContext();
   if (!user) {
     return null;
@@ -178,9 +178,7 @@ const UserDropdown: React.VoidFunctionComponent<
                       <div className="text-lg font-medium leading-snug">
                         Guest
                       </div>
-                      <div className="text-sm text-slate-500">
-                        {user.shortName}
-                      </div>
+                      <div className="text-sm text-slate-500">{alias}</div>
                     </div>
                   </div>
                   <p>{t("app:guestSessionNotice")}</p>
@@ -243,8 +241,8 @@ const UserDropdown: React.VoidFunctionComponent<
 const StandardLayout: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
-  const { user } = useSession();
-  const { t } = useTranslation(["common", "app"]);
+  const { user, alias } = useUser();
+  const { t } = useTranslation();
   const [loginModal, openLoginModal] = useModal({
     footer: null,
     overlayClosable: true,
@@ -330,7 +328,7 @@ const StandardLayout: React.VoidFunctionComponent<{
                           </div>
                           <div className="grow overflow-hidden">
                             <div className="truncate font-medium leading-snug text-slate-600">
-                              {user.shortName}
+                              {alias}
                             </div>
                             <div className="truncate text-xs text-slate-500">
                               {user.isGuest ? t("app:guest") : t("app:user")}

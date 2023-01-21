@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { motion } from "framer-motion";
-import { Trans, useTranslation } from "next-i18next";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import { DayjsProvider } from "../../utils/dayjs";
@@ -17,7 +18,7 @@ const Hero: React.VoidFunctionComponent = () => {
       <div className="my-8 text-center lg:text-left">
         <h1 className="text-4xl font-bold sm:text-5xl">
           <Trans
-            t={t}
+            ns="homepage"
             i18nKey="heroText"
             components={{
               br: <br />,

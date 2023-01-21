@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
 import { Button } from "../button";
-import { useSession } from "../session";
 import { TextInput } from "../text-input";
+import { useUser } from "../user-provider";
 
 export interface UserDetailsProps {
   userId: string;
@@ -30,7 +30,7 @@ export const UserDetails: React.VoidFunctionComponent<UserDetailsProps> = ({
     defaultValues: { name, email },
   });
 
-  const { refresh } = useSession();
+  const { refresh } = useUser();
 
   const changeName = trpc.useMutation("user.changeName", {
     onSuccess: () => {

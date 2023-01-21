@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 import { useSessionStorage } from "react-use";
 
@@ -18,9 +18,9 @@ import {
   UserDetailsData,
   UserDetailsForm,
 } from "./forms";
-import { SessionProps, useSession, withSession } from "./session";
 import StandardLayout from "./standard-layout";
 import Steps from "./steps";
+import { useUser } from "./user-provider";
 
 type StepName = "eventDetails" | "options" | "userDetails";
 
@@ -37,7 +37,7 @@ const required = <T,>(v: T | undefined): T => {
 const initialNewEventData: NewEventData = { currentStep: 0 };
 const sessionStorageKey = "newEventFormData";
 
-export interface CreatePollPageProps extends SessionProps {
+export interface CreatePollPageProps {
   title?: string;
   location?: string;
   description?: string;
@@ -54,7 +54,7 @@ const Page: NextPage<CreatePollPageProps> = ({
 
   const router = useRouter();
 
-  const session = useSession();
+  const session = useUser();
 
   const [persistedFormData, setPersistedFormData] =
     useSessionStorage<NewEventData>(sessionStorageKey, {
@@ -228,4 +228,4 @@ const Page: NextPage<CreatePollPageProps> = ({
   );
 };
 
-export default withSession(Page);
+export default Page;

@@ -1,4 +1,5 @@
-import { Trans, useTranslation } from "next-i18next";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import Code from "@/components/icons/code.svg";
@@ -30,7 +31,7 @@ const Bonus: React.VoidFunctionComponent = () => {
           <h3 className="heading-sm">{t("openSource")}</h3>
           <div className="text text-base leading-relaxed">
             <Trans
-              t={t}
+              ns="homepage"
               i18nKey={"openSourceDescription"}
               components={{
                 a: <a href="https://github.com/lukevella/rallly" />,

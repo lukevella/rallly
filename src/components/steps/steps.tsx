@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 
 export interface StepsProps {
@@ -31,7 +31,7 @@ const Steps: React.VoidFunctionComponent<StepsProps> = ({
               className={clsx("ml-3 h-2  w-2 rounded-full transition-all", {
                 "bg-primary-400": i <= current,
                 "bg-gray-300": i > current,
-                "ring-primary-200 animate-pulse ring-4": i === current,
+                "animate-pulse ring-4 ring-primary-200": i === current,
               })}
             />
           );

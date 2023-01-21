@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import {

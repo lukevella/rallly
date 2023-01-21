@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Trans, useTranslation } from "next-i18next";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import Discord from "@/components/icons/discord.svg";
@@ -25,7 +26,7 @@ const Footer: React.VoidFunctionComponent = () => {
           <div className="mb-8 mt-4 text-slate-400">
             <p>
               <Trans
-                t={t}
+                ns="common"
                 i18nKey="footerSponsor"
                 components={{
                   a: (
@@ -39,7 +40,7 @@ const Footer: React.VoidFunctionComponent = () => {
             </p>
             <div>
               <Trans
-                t={t}
+                ns="common"
                 i18nKey="footerCredit"
                 components={{
                   a: (

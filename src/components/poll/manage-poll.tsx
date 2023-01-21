@@ -1,5 +1,6 @@
 import { Placement } from "@floating-ui/react-dom-interactions";
-import { Trans, useTranslation } from "next-i18next";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import { Button } from "@/components/button";
@@ -119,7 +120,7 @@ const ManagePoll: React.VoidFunctionComponent<{
                 title: t("areYouSure"),
                 description: (
                   <Trans
-                    t={t}
+                    ns="app"
                     i18nKey="deletingOptionsWarning"
                     components={{ b: <strong /> }}
                   />

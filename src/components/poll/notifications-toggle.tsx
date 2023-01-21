@@ -1,5 +1,6 @@
-import { Trans, useTranslation } from "next-i18next";
 import { usePlausible } from "next-plausible";
+import Trans from "next-translate/Trans";
+import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import { Button } from "@/components/button";
@@ -30,7 +31,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
               </div>
               <div className="max-w-sm">
                 <Trans
-                  t={t}
+                  ns="app"
                   i18nKey="notificationsOnDescription"
                   values={{
                     email: poll.user.email,
