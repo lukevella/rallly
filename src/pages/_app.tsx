@@ -3,12 +3,14 @@ import "tailwindcss/tailwind.css";
 import "~/style.css";
 
 import { Inter, Noto_Sans_Mono } from "@next/font/google";
+import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
+import React from "react";
 import { Toaster } from "react-hot-toast";
 
 import Maintenance from "@/components/maintenance";
@@ -29,6 +31,13 @@ const noto = Noto_Sans_Mono({
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   useCrispChat();
+
+  React.useEffect(() => {
+    if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
+      // calling inject directly to avoid having this run for self-hosted instances
+      inject();
+    }
+  }, []);
 
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1") {
     return <Maintenance />;
