@@ -8,7 +8,7 @@ import { useDayjs } from "../utils/dayjs";
 import { LanguageSelect } from "./poll/language-selector";
 
 const Preferences: React.VoidFunctionComponent = () => {
-  const { t } = useTranslation(["app", "common"]);
+  const { t } = useTranslation();
 
   const { weekStartsOn, setWeekStartsOn, timeFormat, setTimeFormat } =
     useDayjs();

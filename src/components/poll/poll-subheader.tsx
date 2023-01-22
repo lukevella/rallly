@@ -1,5 +1,4 @@
 import Trans from "next-translate/Trans";
-import useTranslation from "next-translate/useTranslation";
 import * as React from "react";
 
 import { useDayjs } from "../../utils/dayjs";
@@ -9,7 +8,6 @@ import Tooltip from "../tooltip";
 
 const PollSubheader: React.VoidFunctionComponent = () => {
   const { poll } = usePoll();
-  const { t } = useTranslation("app");
   const { dayjs } = useDayjs();
   return (
     <div className="text-slate-500/75 lg:text-lg">

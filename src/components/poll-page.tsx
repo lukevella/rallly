@@ -4,21 +4,19 @@ import useTranslation from "next-translate/useTranslation";
 import React from "react";
 
 import FullPageLoader from "@/components/full-page-loader";
-import PollPage from "@/components/poll";
+import { ParticipantsProvider } from "@/components/participants-provider";
+import Poll from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
+import StandardLayout from "@/components/standard-layout";
+import Custom404 from "@/pages/404";
+import { trpc } from "@/utils/trpc";
 
-import { ParticipantsProvider } from "../components/participants-provider";
-import StandardLayout from "../components/standard-layout";
-import { trpc } from "../utils/trpc";
-import Custom404 from "./404";
-
-const PollPageLoader: NextPage = () => {
-  const { query, asPath } = useRouter();
+export const PollPage: NextPage<{ admin: boolean }> = ({ admin }) => {
+  const { query } = useRouter();
   const { t } = useTranslation("app");
   const urlId = query.urlId as string;
   const [notFound, setNotFound] = React.useState(false);
 
-  const admin = /^\/admin/.test(asPath);
   const pollQuery = trpc.useQuery(["polls.get", { urlId, admin }], {
     onError: () => {
       setNotFound(true);
@@ -33,7 +31,7 @@ const PollPageLoader: NextPage = () => {
       <ParticipantsProvider pollId={poll.id}>
         <StandardLayout>
           <PollContextProvider poll={poll} urlId={urlId} admin={admin}>
-            <PollPage />
+            <Poll />
           </PollContextProvider>
         </StandardLayout>
       </ParticipantsProvider>
@@ -46,5 +44,3 @@ const PollPageLoader: NextPage = () => {
 
   return <FullPageLoader>{t("loading")}</FullPageLoader>;
 };
-
-export default PollPageLoader;

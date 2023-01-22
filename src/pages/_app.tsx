@@ -15,9 +15,9 @@ import { Toaster } from "react-hot-toast";
 import Maintenance from "@/components/maintenance";
 
 import { useCrispChat } from "../components/crisp-chat";
+import { UserProvider } from "../components/user-provider";
 import { absoluteUrl } from "../utils/absolute-url";
 import { trpcNext } from "../utils/trpc";
-import { UserProvider } from "../components/user-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,7 +35,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   React.useEffect(() => {
     if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
       // calling inject directly to avoid having this run for self-hosted instances
-      inject();
+      inject({ debug: false });
     }
   }, []);
 
