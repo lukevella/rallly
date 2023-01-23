@@ -154,7 +154,7 @@ export const polls = createRouter()
             templateString: newVerfiedPollTemplate,
             to: input.user.email,
             subject: `Rallly: ${poll.title}`,
-            bcc: process.env.TRUSTPILOT_REVIEW_BCC,
+            bcc: process.env.TRUSTPILOT_EMAIL,
             templateVars: {
               title: poll.title,
               name: input.user.name,
@@ -173,7 +173,7 @@ export const polls = createRouter()
             templateString: newPollTemplate,
             to: input.user.email,
             subject: `Rallly: ${poll.title} - Verify your email address`,
-            bcc: process.env.TRUSTPILOT_REVIEW_BCC,
+            bcc: process.env.TRUSTPILOT_EMAIL,
             templateVars: {
               title: poll.title,
               name: input.user.name,
