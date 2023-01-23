@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 
 interface SendEmailParameters {
   to: string;
+  bcc?: string;
   subject: string;
   html: string;
 }
@@ -30,6 +31,7 @@ export const sendEmail = async (params: SendEmailParameters) => {
     return await transport.sendMail({
       to: params.to,
       from: `Rallly ${process.env.SUPPORT_EMAIL}`,
+      bcc: params.bcc,
       subject: params.subject,
       html: params.html,
     });

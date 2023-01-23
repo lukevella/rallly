@@ -87,6 +87,7 @@ export const sendNotification = async (
 interface SendEmailTemplateParams {
   templateString: string;
   to: string;
+  bcc?: string;
   subject: string;
   templateVars: Record<string, string | undefined>;
 }
@@ -95,14 +96,15 @@ export const sendEmailTemplate = async ({
   templateString,
   templateVars,
   to,
+  bcc,
   subject,
 }: SendEmailTemplateParams) => {
   const rendered = await Eta.render(templateString, templateVars);
-
   if (rendered) {
     await sendEmail({
       html: rendered,
       to,
+      bcc,
       subject,
     });
   } else {
