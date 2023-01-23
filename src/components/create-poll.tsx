@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
+import posthog from "posthog-js";
 import React from "react";
 import { useSessionStorage } from "react-use";
 
@@ -92,16 +92,12 @@ const Page: NextPage<CreatePollPageProps> = ({
 
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
-  const plausible = usePlausible();
-
   const createPoll = trpc.useMutation(["polls.create"], {
     onSuccess: (res) => {
       setIsRedirecting(true);
-      plausible("Created poll", {
-        props: {
-          numberOfOptions: formData.options?.options?.length,
-          optionsView: formData?.options?.view,
-        },
+      posthog.capture("created poll", {
+        numberOfOptions: formData.options?.options?.length,
+        optionsView: formData?.options?.view,
       });
       setPersistedFormData(initialNewEventData);
       router.replace(`/admin/${res.urlId}?sharing=true`);

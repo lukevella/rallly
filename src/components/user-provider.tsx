@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import posthog from "posthog-js";
 import React from "react";
 
 import { UserSession } from "@/utils/auth";
@@ -48,7 +49,19 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
 
-  const { data: user, refetch } = trpcNext.whoami.get.useQuery();
+  const { data: user, refetch } = trpcNext.whoami.get.useQuery(undefined, {
+    onSuccess: (user) => {
+      if (user.isGuest) {
+        posthog.identify(user.id);
+      } else {
+        posthog.identify(user.id, {
+          email: user.email,
+          name: user.name,
+        });
+      }
+    },
+  });
+
   const logout = trpcNext.whoami.destroy.useMutation();
 
   const shortName = user

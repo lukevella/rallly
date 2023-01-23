@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
+import posthog from "posthog-js";
 import React from "react";
 import { useMount } from "react-use";
 
@@ -13,12 +13,11 @@ const Demo: NextPage = () => {
   const { t } = useTranslation("app");
 
   const router = useRouter();
-  const plausible = usePlausible();
   const createDemo = trpc.useMutation(["polls.demo.create"]);
 
   useMount(async () => {
     const urlId = await createDemo.mutateAsync();
-    plausible("Create demo poll");
+    posthog.capture("create demo poll");
     router.replace(`/admin/${urlId}`);
   });
 

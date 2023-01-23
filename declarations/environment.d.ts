@@ -6,7 +6,8 @@ declare global {
       SECRET_PASSWORD: string;
       NEXT_PUBLIC_LEGACY_POLLS?: string;
       NEXT_PUBLIC_MAINTENANCE_MODE?: string;
-      PLAUSIBLE_DOMAIN?: string;
+      NEXT_PUBLIC_POSTHOG_API_KEY?: string;
+      NEXT_PUBLIC_POSTHOG_API_HOST?: string;
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;
       LEGACY_MONGODB_URI?: string;
       SUPPORT_EMAIL: string;

@@ -8,10 +8,11 @@ import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
-import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
+import posthog from "posthog-js";
 import React from "react";
 import { Toaster } from "react-hot-toast";
+import { useMount } from "react-use";
 
 import Maintenance from "@/components/maintenance";
 
@@ -39,18 +40,31 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
     }
   }, []);
 
+  useMount(() => {
+    if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+      return;
+    }
+
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+      api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+      opt_out_capturing_by_default: !process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+      capture_pageview: false,
+      capture_pageleave: false,
+      autocapture: false,
+      loaded: (posthog) => {
+        if (process.env.NODE_ENV === "development") {
+          posthog.opt_out_capturing();
+        }
+      },
+    });
+  });
+
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1") {
     return <Maintenance />;
   }
 
   return (
-    <PlausibleProvider
-      domain="rallly.co"
-      customDomain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-      trackOutboundLinks={true}
-      selfHosted={true}
-      enabled={!!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-    >
+    <>
       <DefaultSeo
         openGraph={{
           siteName: "Rallly",
@@ -84,7 +98,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
         }
       `}</style>
       <Component {...pageProps} />
-    </PlausibleProvider>
+    </>
   );
 };
 

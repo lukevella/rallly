@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
+import posthog from "posthog-js";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -39,18 +39,16 @@ const Discussion: React.VoidFunctionComponent = () => {
     },
   );
 
-  const plausible = usePlausible();
-
   const addComment = trpc.useMutation("polls.comments.add", {
     onSuccess: (newComment) => {
-      session.refresh();
+      posthog.capture("created comment");
+
       queryClient.setQueryData(
         ["polls.comments.list", { pollId }],
         (existingComments = []) => {
           return [...existingComments, newComment];
         },
       );
-      plausible("Created comment");
     },
   });
 
@@ -64,7 +62,7 @@ const Discussion: React.VoidFunctionComponent = () => {
       );
     },
     onSuccess: () => {
-      plausible("Deleted comment");
+      posthog.capture("deleted comment");
     },
   });
 

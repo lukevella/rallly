@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
+import posthog from "posthog-js";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMount } from "react-use";
@@ -43,7 +43,6 @@ const PollPage: NextPage = () => {
   const session = useUser();
 
   const queryClient = trpc.useContext();
-  const plausible = usePlausible();
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
 
@@ -55,7 +54,7 @@ const PollPage: NextPage = () => {
         verified: true,
       });
       session.refresh();
-      plausible("Verified email");
+      posthog.capture("verified email");
     },
     onError: () => {
       toast.error(t("linkHasExpired"));
@@ -81,7 +80,7 @@ const PollPage: NextPage = () => {
         {
           onSuccess: () => {
             toast.success(t("notificationsDisabled"));
-            plausible("Unsubscribed from notifications");
+            posthog.capture("unsubscribed from notifications");
           },
         },
       );
@@ -89,7 +88,7 @@ const PollPage: NextPage = () => {
         shallow: true,
       });
     }
-  }, [plausible, urlId, router, updatePollMutation, t]);
+  }, [urlId, router, updatePollMutation, t]);
 
   const checkIfWideScreen = () => window.innerWidth > 640;
 

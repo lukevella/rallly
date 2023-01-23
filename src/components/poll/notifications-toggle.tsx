@@ -1,5 +1,4 @@
 import { Trans, useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
 import * as React from "react";
 
 import { Button } from "@/components/button";
@@ -18,7 +17,6 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
 
-  const plausible = usePlausible();
   return (
     <Tooltip
       content={
@@ -63,12 +61,7 @@ const NotificationsToggle: React.VoidFunctionComponent = () => {
               notifications: !poll.notifications,
             },
             {
-              onSuccess: ({ notifications }) => {
-                plausible(
-                  notifications
-                    ? "Turned notifications on"
-                    : "Turned notifications off",
-                );
+              onSuccess: () => {
                 setIsUpdatingNotifications(false);
               },
             },

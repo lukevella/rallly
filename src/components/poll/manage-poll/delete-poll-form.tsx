@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
+import posthog from "posthog-js";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
@@ -19,13 +19,11 @@ export const DeletePollForm: React.VoidFunctionComponent<{
   const { register, handleSubmit, formState, watch } =
     useForm<{ confirmation: string }>();
 
-  const plausible = usePlausible();
-
   const confirmationText = watch("confirmation");
   const canDelete = confirmationText === confirmText;
   const deletePoll = trpc.useMutation("polls.delete", {
     onSuccess: () => {
-      plausible("Deleted poll");
+      posthog.capture("deleted poll");
     },
   });
 
