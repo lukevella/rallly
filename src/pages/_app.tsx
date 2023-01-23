@@ -35,7 +35,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   React.useEffect(() => {
     if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
       // calling inject directly to avoid having this run for self-hosted instances
-      inject();
+      inject({ debug: false });
     }
   }, []);
 
@@ -49,7 +49,10 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       customDomain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
       trackOutboundLinks={true}
       selfHosted={true}
-      enabled={!!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+      enabled={
+        typeof window !== undefined &&
+        !!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+      }
     >
       <DefaultSeo
         openGraph={{
