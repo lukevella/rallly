@@ -15,8 +15,8 @@ import { GetPollApiResponse } from "@/utils/trpc/types";
 import { useDayjs } from "../utils/dayjs";
 import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
-import { useSession } from "./session";
 import { useRequiredContext } from "./use-required-context";
+import { useUser } from "./user-provider";
 
 type PollContextValue = {
   userAlreadyVoted: boolean;
@@ -61,7 +61,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
   const { t } = useTranslation("app");
   const { participants } = useParticipants();
   const [isDeleted, setDeleted] = React.useState(false);
-  const { user } = useSession();
+  const { user } = useUser();
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
 

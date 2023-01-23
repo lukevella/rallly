@@ -27,7 +27,7 @@ import { useModal } from "./modal";
 import ModalProvider, { useModalContext } from "./modal/modal-provider";
 import Popover from "./popover";
 import Preferences from "./preferences";
-import { useSession } from "./session";
+import { useUser } from "./user-provider";
 
 const HomeLink = () => {
   return (
@@ -40,7 +40,7 @@ const HomeLink = () => {
 const MobileNavigation: React.VoidFunctionComponent<{
   openLoginModal: () => void;
 }> = ({ openLoginModal }) => {
-  const { user } = useSession();
+  const { user } = useUser();
   const { t } = useTranslation(["common", "app"]);
   return (
     <div
@@ -152,7 +152,7 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
 const UserDropdown: React.VoidFunctionComponent<
   DropdownProps & { openLoginModal: () => void }
 > = ({ children, openLoginModal, ...forwardProps }) => {
-  const { logout, user } = useSession();
+  const { logout, user } = useUser();
   const { t } = useTranslation(["common", "app"]);
   const modalContext = useModalContext();
   if (!user) {
@@ -243,7 +243,7 @@ const UserDropdown: React.VoidFunctionComponent<
 const StandardLayout: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
-  const { user } = useSession();
+  const { user } = useUser();
   const { t } = useTranslation(["common", "app"]);
   const [loginModal, openLoginModal] = useModal({
     footer: null,

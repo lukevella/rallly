@@ -17,7 +17,7 @@ import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
 import { usePoll } from "../poll-context";
-import { isUnclaimed, useSession } from "../session";
+import { isUnclaimed, useUser } from "../user-provider";
 
 interface CommentForm {
   authorName: string;
@@ -68,7 +68,7 @@ const Discussion: React.VoidFunctionComponent = () => {
     },
   });
 
-  const session = useSession();
+  const session = useUser();
 
   const { register, reset, control, handleSubmit, formState } =
     useForm<CommentForm>({

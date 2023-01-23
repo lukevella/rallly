@@ -12,10 +12,10 @@ import { trpc } from "../utils/trpc";
 import { EmptyState } from "./empty-state";
 import LoginForm from "./login-form";
 import { UserDetails } from "./profile/user-details";
-import { useSession } from "./session";
+import { useUser } from "./user-provider";
 
 export const Profile: React.VoidFunctionComponent = () => {
-  const { user } = useSession();
+  const { user } = useUser();
   const { dayjs } = useDayjs();
 
   const { t } = useTranslation("app");

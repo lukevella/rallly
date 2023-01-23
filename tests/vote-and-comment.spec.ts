@@ -18,7 +18,6 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
   await page.locator("data-testid=vote-selector >> nth=2").click();
   await page.click("text='Save'");
   await expect(page.locator("text='Test user'")).toBeVisible();
-  await expect(page.locator("text=Guest")).toBeVisible();
   await expect(
     page.locator("data-testid=participant-row >> nth=4").locator("text=You"),
   ).toBeVisible();

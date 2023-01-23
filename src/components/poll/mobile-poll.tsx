@@ -18,8 +18,8 @@ import { Button } from "../button";
 import { styleMenuItem } from "../menu-styles";
 import NameInput from "../name-input";
 import { useParticipants } from "../participants-provider";
-import { isUnclaimed, useSession } from "../session";
 import TimeZonePicker from "../time-zone-picker";
+import { isUnclaimed, useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import {
   normalizeVotes,
@@ -50,7 +50,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   const { participants } = useParticipants();
   const { timeZone } = poll;
 
-  const session = useSession();
+  const session = useUser();
 
   const form = useForm<ParticipantForm>({
     defaultValues: {
