@@ -49,10 +49,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       customDomain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
       trackOutboundLinks={true}
       selfHosted={true}
-      enabled={
-        typeof window !== undefined &&
-        !!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
-      }
+      enabled={!!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
     >
       <DefaultSeo
         openGraph={{

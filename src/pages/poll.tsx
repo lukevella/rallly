@@ -6,10 +6,10 @@ import React from "react";
 import FullPageLoader from "@/components/full-page-loader";
 import PollPage from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-import { withSession } from "@/components/session";
 
 import { ParticipantsProvider } from "../components/participants-provider";
 import StandardLayout from "../components/standard-layout";
+import { withSession } from "../components/user-provider";
 import { withSessionSsr } from "../utils/auth";
 import { trpc } from "../utils/trpc";
 import { withPageTranslations } from "../utils/with-page-translations";

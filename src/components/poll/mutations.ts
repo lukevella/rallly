@@ -2,7 +2,7 @@ import { usePlausible } from "next-plausible";
 
 import { trpc } from "../../utils/trpc";
 import { usePoll } from "../poll-context";
-import { useSession } from "../session";
+import { useUser } from "../user-provider";
 import { ParticipantForm } from "./types";
 
 export const normalizeVotes = (
@@ -17,7 +17,7 @@ export const normalizeVotes = (
 
 export const useAddParticipantMutation = () => {
   const queryClient = trpc.useContext();
-  const session = useSession();
+  const session = useUser();
   const plausible = usePlausible();
 
   return trpc.useMutation(["polls.participants.add"], {

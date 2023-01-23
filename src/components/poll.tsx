@@ -28,8 +28,8 @@ import { useTouchBeacon } from "./poll/use-touch-beacon";
 import { UserAvatarProvider } from "./poll/user-avatar";
 import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
-import { useSession } from "./session";
 import Sharing from "./sharing";
+import { useUser } from "./user-provider";
 
 const PollPage: NextPage = () => {
   const { poll, urlId, admin } = usePoll();
@@ -40,7 +40,7 @@ const PollPage: NextPage = () => {
 
   const { t } = useTranslation("app");
 
-  const session = useSession();
+  const session = useUser();
 
   const queryClient = trpc.useContext();
   const plausible = usePlausible();
