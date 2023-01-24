@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
+import posthog from "posthog-js";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
@@ -33,7 +34,8 @@ export const UserDetails: React.VoidFunctionComponent<UserDetailsProps> = ({
   const { refresh } = useUser();
 
   const changeName = trpc.useMutation("user.changeName", {
-    onSuccess: () => {
+    onSuccess: (_, { name }) => {
+      posthog.people.set({ name });
       refresh();
     },
   });

@@ -6,6 +6,8 @@ import React from "react";
 import { useMount } from "react-use";
 
 import FullPageLoader from "../components/full-page-loader";
+import { withSession } from "../components/user-provider";
+import { withSessionSsr } from "../utils/auth";
 import { trpc } from "../utils/trpc";
 import { withPageTranslations } from "../utils/with-page-translations";
 
@@ -24,6 +26,8 @@ const Demo: NextPage = () => {
   return <FullPageLoader>{t("creatingDemo")}</FullPageLoader>;
 };
 
-export const getServerSideProps = withPageTranslations(["common", "app"]);
+export const getServerSideProps = withSessionSsr(
+  withPageTranslations(["common", "app"]),
+);
 
-export default Demo;
+export default withSession(Demo);

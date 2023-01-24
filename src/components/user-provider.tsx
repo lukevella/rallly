@@ -1,6 +1,7 @@
 import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
 import React from "react";
+import { useMount } from "react-use";
 
 import { UserSession } from "@/utils/auth";
 
@@ -49,24 +50,35 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
 
-  const { data: user, refetch } = trpcNext.whoami.get.useQuery(undefined, {
-    onSuccess: (user) => {
-      if (user.isGuest) {
-        posthog.identify(user.id);
-      } else {
-        posthog.identify(
-          user.id,
-          {},
-          {
-            email: user.email,
-            name: user.name,
-          },
-        );
-      }
+  const { data: user, refetch } = trpcNext.whoami.get.useQuery();
+
+  const logout = trpcNext.whoami.destroy.useMutation({
+    onSuccess: () => {
+      posthog.reset();
     },
   });
 
-  const logout = trpcNext.whoami.destroy.useMutation();
+  useMount(() => {
+    if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+      return;
+    }
+
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+      api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+      opt_out_capturing_by_default: false,
+      capture_pageview: false,
+      capture_pageleave: false,
+      autocapture: false,
+      loaded: (posthog) => {
+        if (process.env.NODE_ENV === "development") {
+          posthog.opt_out_capturing();
+        }
+        if (user?.isGuest === false && posthog.get_distinct_id() !== user.id) {
+          posthog.identify(user.id, { email: user.email, name: user.name });
+        }
+      },
+    });
+  });
 
   const shortName = user
     ? user.isGuest === false
