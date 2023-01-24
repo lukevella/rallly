@@ -54,10 +54,14 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
       if (user.isGuest) {
         posthog.identify(user.id);
       } else {
-        posthog.identify(user.id, {
-          email: user.email,
-          name: user.name,
-        });
+        posthog.identify(
+          user.id,
+          {},
+          {
+            email: user.email,
+            name: user.name,
+          },
+        );
       }
     },
   });
