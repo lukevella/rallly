@@ -73,8 +73,13 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
         if (process.env.NODE_ENV === "development") {
           posthog.opt_out_capturing();
         }
-        if (user?.isGuest === false && posthog.get_distinct_id() !== user.id) {
-          posthog.identify(user.id, { email: user.email, name: user.name });
+        if (user && posthog.get_distinct_id() !== user.id) {
+          posthog.identify(
+            user.id,
+            !user.isGuest
+              ? { email: user.email, name: user.name }
+              : { name: user.id },
+          );
         }
       },
     });
