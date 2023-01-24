@@ -83,7 +83,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const shortName = user
     ? user.isGuest === false
       ? user.name
-      : `${t("guest")}-${user.id.substring(user.id.length - 4)}`
+      : user.id.substring(0, 10)
     : t("guest");
 
   if (!user) {
