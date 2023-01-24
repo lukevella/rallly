@@ -23,7 +23,7 @@
     "@radix-ui/react-slider": "^1.0.0",
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-tabs": "^1.0.1",
-    "@sentry/nextjs": "^7.32.1",
+    "@sentry/nextjs": "^7.33.0",
     "@svgr/webpack": "^6.2.1",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
