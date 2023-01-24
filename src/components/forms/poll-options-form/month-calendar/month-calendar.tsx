@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
 import * as React from "react";
 
 import {
@@ -39,8 +38,6 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
   const { dayjs, weekStartsOn } = useDayjs();
   const { t } = useTranslation("app");
   const isTimedEvent = options.some((option) => option.type === "timeSlot");
-
-  const plausible = usePlausible();
 
   const optionsByDay = React.useMemo(() => {
     const res: Record<
@@ -355,7 +352,6 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                               disabled={datepicker.selection.length < 2}
                               label={t("applyToAllDates")}
                               onClick={() => {
-                                plausible("Applied options to all dates");
                                 const times = optionsForDay.map(
                                   ({ option }) => {
                                     if (option.type === "date") {

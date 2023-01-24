@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
+import posthog from "posthog-js";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
@@ -18,7 +18,6 @@ const LoginForm: React.VoidFunctionComponent = () => {
 
   const login = trpc.useMutation(["login"]);
 
-  const plausible = usePlausible();
   const router = useRouter();
   return (
     <div className="flex">
@@ -32,7 +31,7 @@ const LoginForm: React.VoidFunctionComponent = () => {
         {!formState.isSubmitSuccessful ? (
           <form
             onSubmit={handleSubmit(async ({ email }) => {
-              plausible("Login requested");
+              posthog.capture("login requested", { email });
               await login.mutateAsync({ email, path: router.asPath });
             })}
           >

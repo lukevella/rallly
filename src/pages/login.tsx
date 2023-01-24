@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { usePlausible } from "next-plausible";
+import posthog from "posthog-js";
 import React from "react";
 import toast from "react-hot-toast";
 import { useTimeoutFn } from "react-use";
@@ -20,14 +20,13 @@ const Page: NextPage<{ success: boolean; redirectTo: string }> = ({
   redirectTo,
 }) => {
   const router = useRouter();
-  const pluasible = usePlausible();
   if (!success) {
     toast.error("Login failed! Link is expired or invalid");
   }
 
   useTimeoutFn(() => {
     if (success) {
-      pluasible("Login completed");
+      posthog.capture("login completed");
     }
     router.replace(redirectTo);
   }, 100);

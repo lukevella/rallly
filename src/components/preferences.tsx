@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import { usePlausible } from "next-plausible";
 import React from "react";
 
 import { useDayjs } from "../utils/dayjs";
@@ -14,7 +13,6 @@ const Preferences: React.VoidFunctionComponent = () => {
     useDayjs();
   const router = useRouter();
 
-  const plausible = usePlausible();
   return (
     <div>
       <div className="mb-4 space-y-2">
@@ -36,11 +34,6 @@ const Preferences: React.VoidFunctionComponent = () => {
                 })}
                 onClick={() => {
                   setWeekStartsOn("monday");
-                  plausible("Change week start", {
-                    props: {
-                      timeFormat: "monday",
-                    },
-                  });
                 }}
                 type="button"
               >
@@ -52,11 +45,6 @@ const Preferences: React.VoidFunctionComponent = () => {
                 })}
                 onClick={() => {
                   setWeekStartsOn("sunday");
-                  plausible("Change week start", {
-                    props: {
-                      timeFormat: "sunday",
-                    },
-                  });
                 }}
                 type="button"
               >
@@ -76,11 +64,6 @@ const Preferences: React.VoidFunctionComponent = () => {
               })}
               onClick={() => {
                 setTimeFormat("12h");
-                plausible("Change time format", {
-                  props: {
-                    timeFormat: "12h",
-                  },
-                });
               }}
               type="button"
             >
@@ -92,11 +75,6 @@ const Preferences: React.VoidFunctionComponent = () => {
               })}
               onClick={() => {
                 setTimeFormat("24h");
-                plausible("Change time format", {
-                  props: {
-                    timeFormat: "24h",
-                  },
-                });
               }}
               type="button"
             >

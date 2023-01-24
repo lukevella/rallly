@@ -8,7 +8,6 @@ import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
-import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import React from "react";
 import { Toaster } from "react-hot-toast";
@@ -44,13 +43,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   }
 
   return (
-    <PlausibleProvider
-      domain="rallly.co"
-      customDomain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-      trackOutboundLinks={true}
-      selfHosted={true}
-      enabled={!!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-    >
+    <>
       <DefaultSeo
         openGraph={{
           siteName: "Rallly",
@@ -84,7 +77,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
         }
       `}</style>
       <Component {...pageProps} />
-    </PlausibleProvider>
+    </>
   );
 };
 

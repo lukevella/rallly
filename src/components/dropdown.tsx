@@ -83,13 +83,20 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
   );
 };
 
-const AnchorLink: React.VoidFunctionComponent<{
-  href?: string;
-  children?: React.ReactNode;
-  className?: string;
-}> = ({ href = "", className, children, ...forwardProps }) => {
+const AnchorLink = React.forwardRef<
+  HTMLAnchorElement,
+  {
+    href?: string;
+    children?: React.ReactNode;
+    className?: string;
+  }
+>(function AnchorLink(
+  { href = "", className, children, ...forwardProps },
+  ref,
+) {
   return (
     <Link
+      ref={ref}
       href={href}
       passHref
       className={clsx(
@@ -101,7 +108,7 @@ const AnchorLink: React.VoidFunctionComponent<{
       {children}
     </Link>
   );
-};
+});
 
 export const DropdownItem: React.VoidFunctionComponent<{
   icon?: React.ComponentType<{ className?: string }>;
