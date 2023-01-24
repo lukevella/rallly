@@ -33,5 +33,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/rallly:latest
-            ${{ secrets.DOCKER_USERNAME }}/rallly:${{ github.sha }}
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:latest
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:${{ github.sha }}
