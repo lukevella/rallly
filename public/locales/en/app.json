@@ -11,6 +11,7 @@
   "verificationCodePlaceholder": "Enter your 6-digit code",
   "verificationCodeHelp": "Didn't get the email? Check your spam/junk.",
   "resendVerificationCode": "Resend verification code",
+  "register": "Register",
   "userAlreadyExists": "A user with this email already exists",
   "createAnAccount": "Create an account",
   "alreadyRegistered": "Already registered? <a>Login →</a>",
