@@ -1,14 +1,14 @@
+import Link from "next/link";
 import React from "react";
 
 import Logo from "~/public/logo.svg";
 
-import { RegisteredUserSession } from "../../utils/auth";
 import { useModalContext } from "../modal/modal-provider";
 import { useUser } from "../user-provider";
 import { LoginForm, RegisterForm } from "./login-form";
 
 export const LoginModal: React.VoidFunctionComponent<{
-  onDone: (user: RegisteredUserSession) => void;
+  onDone: () => void;
 }> = ({ onDone }) => {
   const [hasAccount, setHasAccount] = React.useState(false);
   const [defaultEmail, setDefaultEmail] = React.useState("");
@@ -45,17 +45,17 @@ export const LoginModal: React.VoidFunctionComponent<{
 
 export const useLoginModal = () => {
   const modalContext = useModalContext();
-  const { setUser } = useUser();
+  const { refresh } = useUser();
 
   const openLoginModal = () => {
     modalContext.render({
-      overlayClosable: true,
+      overlayClosable: false,
       showClose: true,
       content: function Content({ close }) {
         return (
           <LoginModal
-            onDone={(user) => {
-              setUser(user);
+            onDone={() => {
+              refresh();
               close();
             }}
           />
@@ -65,4 +65,23 @@ export const useLoginModal = () => {
     });
   };
   return { openLoginModal };
+};
+
+export const LoginLink = ({
+  children,
+  className,
+}: React.PropsWithChildren<{ className?: string }>) => {
+  const { openLoginModal } = useLoginModal();
+  return (
+    <Link
+      href="/login"
+      onClick={(e) => {
+        e.preventDefault();
+        openLoginModal();
+      }}
+      className={className}
+    >
+      {children}
+    </Link>
+  );
 };

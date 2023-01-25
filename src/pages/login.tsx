@@ -2,6 +2,7 @@ import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
+import React from "react";
 
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { LoginForm } from "@/components/auth/login-form";
@@ -10,10 +11,11 @@ import { useUser, withSession } from "@/components/user-provider";
 import { withSessionSsr } from "../utils/auth";
 import { withPageTranslations } from "../utils/with-page-translations";
 
-const Page: NextPage<{ referer: string | null }> = ({ referer }) => {
+const Page: NextPage<{ referer: string | null }> = () => {
   const { t } = useTranslation("app");
   const router = useRouter();
   const { refresh } = useUser();
+
   return (
     <AuthLayout>
       <Head>
@@ -21,8 +23,8 @@ const Page: NextPage<{ referer: string | null }> = ({ referer }) => {
       </Head>
       <LoginForm
         onAuthenticated={async () => {
-          await refresh();
-          router.replace(referer ?? "/profile");
+          refresh();
+          router.replace("/profile");
         }}
       />
     </AuthLayout>
@@ -34,9 +36,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
     if (ctx.req.session.user?.isGuest === false) {
       return {
         redirect: { destination: "/profile" },
-        props: {
-          referer: (ctx.query.redirect as string) ?? null,
-        },
+        props: {},
       };
     }
 

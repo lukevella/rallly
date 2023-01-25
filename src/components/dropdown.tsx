@@ -115,14 +115,13 @@ export const DropdownItem: React.VoidFunctionComponent<{
   label?: React.ReactNode;
   disabled?: boolean;
   href?: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }> = ({ icon: Icon, label, onClick, disabled, href }) => {
-  const Element = href ? AnchorLink : "button";
+  const Element = href ? "a" : "button";
   return (
     <Menu.Item disabled={disabled}>
       {({ active }) => (
         <Element
-          href={href}
           onClick={onClick}
           className={clsx(
             "group flex w-full items-center rounded py-2 pl-2 pr-4",

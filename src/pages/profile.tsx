@@ -19,7 +19,7 @@ export const getServerSideProps = withSessionSsr(async (ctx) => {
   if (ctx.req.session.user.isGuest !== false) {
     return {
       redirect: {
-        destination: "/login?redirect=/profile",
+        destination: "/login",
       },
       props: {},
     };

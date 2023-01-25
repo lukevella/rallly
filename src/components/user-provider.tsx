@@ -51,9 +51,14 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
 
-  const { data: user, refetch } = trpcNext.whoami.get.useQuery();
+  const queryClient = trpcNext.useContext();
+  const { data: user } = trpcNext.whoami.get.useQuery();
 
-  const router = useRouter();
+  const logout = trpcNext.whoami.destroy.useMutation({
+    onSuccess: () => {
+      queryClient.whoami.invalidate();
+    },
+  });
 
   useMount(() => {
     if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
@@ -96,7 +101,9 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     <UserContext.Provider
       value={{
         user: { ...user, shortName },
-        refresh: refetch,
+        refresh: () => {
+          return queryClient.whoami.invalidate();
+        },
         ownsObject: ({ userId }) => {
           if (userId && user.id === userId) {
             return true;
@@ -104,7 +111,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           return false;
         },
         logout: () => {
-          router.push("/logout");
+          logout.mutate();
         },
       }}
     >
