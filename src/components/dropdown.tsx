@@ -122,6 +122,7 @@ export const DropdownItem: React.VoidFunctionComponent<{
     <Menu.Item disabled={disabled}>
       {({ active }) => (
         <Element
+          href={href}
           onClick={onClick}
           className={clsx(
             "group flex w-full items-center rounded py-2 pl-2 pr-4",

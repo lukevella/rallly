@@ -29,9 +29,7 @@
   input {
     @apply outline-none;
   }
-  a {
-    @apply rounded-sm font-medium text-primary-500 outline-none hover:text-primary-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
-  }
+
   label {
     @apply mb-1 block text-sm text-slate-800;
   }
@@ -45,6 +43,9 @@
 }
 
 @layer components {
+  .text-link {
+    @apply rounded-sm font-medium text-primary-500 outline-none hover:text-primary-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
+  }
   .formField {
     @apply mb-4;
   }
