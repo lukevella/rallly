@@ -16,8 +16,6 @@
   "alreadyRegistered": "Already registered? <a>Login →</a>",
   "userNotFound": "A user with that email doesn't exist",
   "notRegistered": "Create a new account →",
-  "whyLogin": "Why should I login?",
-  "whyLoginAnswer": "As a <b>guest</b>, your activity is associated to a user identity that is <b>stored in your web browser</b>. Logging in ensures you do not lose access to your content if your browser data is deleted.",
   "back": "Back",
   "calendarHelp": "You can't create a poll without any options. Add at least one option to continue.",
   "calendarHelpTitle": "Forget something?",

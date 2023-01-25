@@ -1,11 +1,7 @@
-import { Disclosure } from "@headlessui/react";
-import clsx from "clsx";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
 import { useForm } from "react-hook-form";
-
-import ChevronRight from "@/components/icons/chevron-right.svg";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
@@ -361,29 +357,6 @@ export const LoginForm: React.VoidFunctionComponent<{
           {t("notRegistered")}
         </Link>
       </div>
-      <Disclosure as="div" className="mt-4 text-sm">
-        {({ open }) => (
-          <>
-            <Disclosure.Button className="group flex items-center font-semibold">
-              <ChevronRight
-                className={clsx("mr-1 h-5 transition-transform", {
-                  "rotate-90": open,
-                })}
-              />
-              <div className="group-hover:text-primary-500 group-hover:underline">
-                {t("whyLogin")}
-              </div>
-            </Disclosure.Button>
-            <Disclosure.Panel className="mt-2">
-              <Trans
-                t={t}
-                i18nKey="whyLoginAnswer"
-                components={{ b: <strong /> }}
-              />
-            </Disclosure.Panel>
-          </>
-        )}
-      </Disclosure>
     </form>
   );
 };
