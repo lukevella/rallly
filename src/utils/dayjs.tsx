@@ -10,7 +10,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { useAsync, useLocalStorage } from "react-use";
+import { useAsync, useLocalStorage, useMount } from "react-use";
 
 import { useRequiredContext } from "../components/use-required-context";
 
@@ -152,7 +152,7 @@ export const useDayjs = () => {
   return useRequiredContext(DayjsContext);
 };
 
-export const DayjsProvider: React.VoidFunctionComponent<{
+const DayjsProviderInner: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children }) => {
   const { i18n } = useTranslation();
@@ -205,4 +205,19 @@ export const DayjsProvider: React.VoidFunctionComponent<{
       {children}
     </DayjsContext.Provider>
   );
+};
+
+export const DayjsProvider: React.VoidFunctionComponent<{
+  children?: React.ReactNode;
+}> = ({ children }) => {
+  const [isMounted, setIsMounted] = React.useState(false);
+  useMount(() => {
+    setIsMounted(true);
+  });
+
+  if (!isMounted) {
+    return null;
+  }
+
+  return <DayjsProviderInner>{children}</DayjsProviderInner>;
 };
