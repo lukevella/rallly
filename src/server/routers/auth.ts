@@ -14,7 +14,7 @@ import {
   RegistrationTokenPayload,
 } from "../../utils/auth";
 import { generateOtp } from "../../utils/nanoid";
-import { createRouter } from "../createRouter";
+import { publicProcedure, router } from "../trpc";
 
 const sendVerificationEmail = async (
   email: string,
@@ -33,15 +33,15 @@ const sendVerificationEmail = async (
   });
 };
 
-export const auth = createRouter()
-  .mutation("requestRegistration", {
-    input: z.object({
-      name: z.string(),
-      email: z.string(),
-    }),
-    resolve: async ({
-      input,
-    }): Promise<
+export const auth = router({
+  requestRegistration: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        email: z.string(),
+      }),
+    )
+    .mutation(async ({ input }): Promise<
       { ok: true; token: string } | { ok: false; code: "userAlreadyExists" }
     > => {
       const user = await prisma.user.findUnique({
@@ -68,14 +68,15 @@ export const auth = createRouter()
       await sendVerificationEmail(input.email, input.name, code);
 
       return { ok: true, token };
-    },
-  })
-  .mutation("authenticateRegistration", {
-    input: z.object({
-      token: z.string(),
-      code: z.string(),
     }),
-    resolve: async ({ input, ctx }) => {
+  authenticateRegistration: publicProcedure
+    .input(
+      z.object({
+        token: z.string(),
+        code: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
       const { name, email, code } =
         await decryptToken<RegistrationTokenPayload>(input.token);
 
@@ -102,13 +103,14 @@ export const auth = createRouter()
       await ctx.session.save();
 
       return { ok: true, user: ctx.session.user };
-    },
-  })
-  .mutation("requestLogin", {
-    input: z.object({
-      email: z.string(),
     }),
-    resolve: async ({ input }): Promise<{ token?: string }> => {
+  requestLogin: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      }),
+    )
+    .mutation(async ({ input }): Promise<{ token?: string }> => {
       const user = await prisma.user.findUnique({
         where: {
           email: input.email,
@@ -129,14 +131,15 @@ export const auth = createRouter()
       await sendVerificationEmail(input.email, user.name, code);
 
       return { token };
-    },
-  })
-  .mutation("authenticateLogin", {
-    input: z.object({
-      token: z.string(),
-      code: z.string(),
     }),
-    resolve: async ({ input, ctx }) => {
+  authenticateLogin: publicProcedure
+    .input(
+      z.object({
+        token: z.string(),
+        code: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
       const { userId, code } = await decryptToken<LoginTokenPayload>(
         input.token,
       );
@@ -169,5 +172,5 @@ export const auth = createRouter()
       await ctx.session.save();
 
       return { user: ctx.session.user };
-    },
-  });
+    }),
+});

@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import React from "react";
-import { flushSync } from "react-dom";
 
 import Menu from "@/components/icons/menu.svg";
 import User from "@/components/icons/user.svg";
