@@ -21,6 +21,17 @@ const sessionOptions: IronSessionOptions = {
   ttl: 0, // basically forever
 };
 
+export type RegistrationTokenPayload = {
+  name: string;
+  email: string;
+  code: string;
+};
+
+export type LoginTokenPayload = {
+  userId: string;
+  code: string;
+};
+
 export type RegisteredUserSession = {
   isGuest: false;
   id: string;

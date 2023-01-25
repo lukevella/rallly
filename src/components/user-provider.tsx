@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
 import React from "react";
@@ -12,7 +13,7 @@ export const UserContext =
   React.createContext<{
     user: UserSession & { shortName: string };
     refresh: () => void;
-    logout: () => Promise<void>;
+    logout: () => void;
     ownsObject: (obj: { userId: string | null }) => boolean;
   } | null>(null);
 
@@ -52,11 +53,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
 
   const { data: user, refetch } = trpcNext.whoami.get.useQuery();
 
-  const logout = trpcNext.whoami.destroy.useMutation({
-    onSuccess: () => {
-      posthog.reset();
-    },
-  });
+  const router = useRouter();
 
   useMount(() => {
     if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
@@ -106,9 +103,8 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           }
           return false;
         },
-        logout: async () => {
-          await logout.mutateAsync();
-          refetch();
+        logout: () => {
+          router.push("/logout");
         },
       }}
     >
