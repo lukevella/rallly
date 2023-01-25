@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
@@ -153,6 +154,7 @@ const UserDropdown: React.VoidFunctionComponent<
   DropdownProps & { openLoginModal: () => void }
 > = ({ children, openLoginModal, ...forwardProps }) => {
   const { logout, user } = useUser();
+  const router = useRouter();
   const { t } = useTranslation(["common", "app"]);
   const modalContext = useModalContext();
   if (!user) {
@@ -212,7 +214,7 @@ const UserDropdown: React.VoidFunctionComponent<
         <DropdownItem
           icon={Login}
           label={t("app:login")}
-          onClick={openLoginModal}
+          href={`/login?redirect=${router.asPath}`}
         />
       ) : null}
       <DropdownItem
