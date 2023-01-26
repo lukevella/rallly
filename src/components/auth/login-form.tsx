@@ -242,7 +242,13 @@ export const RegisterForm: React.VoidFunctionComponent<{
           t={t}
           i18nKey="alreadyRegistered"
           components={{
-            a: <Link href="/login" onClick={onClickLogin} />,
+            a: (
+              <Link
+                href="/login"
+                className="text-link"
+                onClick={onClickLogin}
+              />
+            ),
           }}
         />
       </div>
