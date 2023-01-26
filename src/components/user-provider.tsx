@@ -51,7 +51,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
 
   const queryClient = trpcNext.useContext();
-  const { data: user } = trpcNext.whoami.get.useQuery();
+  const { data: user, isFetching } = trpcNext.whoami.get.useQuery();
 
   const logout = trpcNext.whoami.destroy.useMutation({
     onSuccess: () => {
@@ -82,7 +82,9 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     });
   });
 
-  const shortName = user
+  const shortName = isFetching
+    ? t("loading")
+    : user
     ? user.isGuest === false
       ? user.name
       : user.id.substring(0, 10)
