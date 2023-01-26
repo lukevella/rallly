@@ -85,6 +85,7 @@ export const auth = router({
       }
 
       const user = await prisma.user.create({
+        select: { id: true, name: true, email: true },
         data: {
           name,
           email,
@@ -102,7 +103,7 @@ export const auth = router({
 
       await ctx.session.save();
 
-      return { ok: true, user: ctx.session.user };
+      return { ok: true, user };
     }),
   requestLogin: publicProcedure
     .input(
@@ -171,6 +172,6 @@ export const auth = router({
 
       await ctx.session.save();
 
-      return { user: ctx.session.user };
+      return { user };
     }),
 });

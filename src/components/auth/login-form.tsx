@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
+import posthog from "posthog-js";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -150,6 +151,10 @@ export const RegisterForm: React.VoidFunctionComponent<{
           }
 
           onRegistered();
+          posthog.identify(res.user.id, {
+            email: res.user.email,
+            name: res.user.name,
+          });
         }}
         onResend={async () => {
           const values = getValues();
@@ -284,6 +289,10 @@ export const LoginForm: React.VoidFunctionComponent<{
             throw new Error("Failed to authenticate user");
           } else {
             onAuthenticated();
+            posthog.identify(res.user.id, {
+              email: res.user.email,
+              name: res.user.name,
+            });
           }
         }}
         onResend={async () => {
