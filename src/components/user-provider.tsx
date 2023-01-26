@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
 import React from "react";
@@ -61,18 +60,14 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   });
 
   useMount(() => {
-    if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
-      return;
-    }
-
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY ?? "fake token", {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
       opt_out_capturing_by_default: false,
       capture_pageview: false,
       capture_pageleave: false,
       autocapture: false,
       loaded: (posthog) => {
-        if (process.env.NODE_ENV === "development") {
+        if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
           posthog.opt_out_capturing();
         }
         if (user && posthog.get_distinct_id() !== user.id) {
