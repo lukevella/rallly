@@ -19,7 +19,7 @@ const Page: NextPage = () => {
       </Head>
       <RegisterForm
         onRegistered={() => {
-          router.replace("/polls");
+          router.replace("/profile");
         }}
       />
     </AuthLayout>

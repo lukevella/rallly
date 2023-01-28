@@ -115,7 +115,7 @@
   "unlockPoll": "Unlock poll",
   "unverifiedMessage": "An email has been sent to <b>{{email}}</b> with a link to verify the email address.",
   "user": "User",
-  "userAlreadyExists": "A user with this email already exists",
+  "userAlreadyExists": "A user with that email already exists",
   "userNotFound": "A user with that email doesn't exist",
   "verificationCodeHelp": "Didn't get the email? Check your spam/junk.",
   "verificationCodePlaceholder": "Enter your 6-digit code",

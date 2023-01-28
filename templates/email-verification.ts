@@ -164,7 +164,7 @@ const template = `<!DOCTYPE html>
                             line-height: 24px;
                           "
                         >
-                          Hey <strong><%= it.name %></strong>,
+                          Hey <strong id="name"><%= it.name %></strong>,
                         </p>
                         <div
                           style="
@@ -196,6 +196,7 @@ const template = `<!DOCTYPE html>
                               letter-spacing: 8px;
                               color: #1e293b;
                             "
+                            id="code"
                           >
                             <%= it.code %>
                           </p>
