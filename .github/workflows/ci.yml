@@ -55,17 +55,11 @@ jobs:
           docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db postgres:14.2
           yarn wait-on --timeout 60000 tcp:localhost:5432
 
-      - name: Build
-        run: yarn build
-
       - name: Deploy migrations
         run: yarn prisma migrate deploy
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium
-
-      - name: Launch app
-        run: yarn start 2>&1 & # backgrounnd mode
 
       - name: Run tests
         run: yarn test
