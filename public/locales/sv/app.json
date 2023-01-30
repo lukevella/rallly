@@ -78,12 +78,12 @@
   "noVotes": "Ingen har röstat för detta alternativ",
   "ok": "Ok",
   "participant": "Deltagare",
-  "participantCount_zero": "{{count}} deltagare",
-  "participantCount_one": "{{count}} deltagare",
-  "participantCount_two": "{{count}} deltagare",
   "participantCount_few": "{{count}} deltagare",
   "participantCount_many": "{{count}} deltagare",
+  "participantCount_one": "{{count}} deltagare",
   "participantCount_other": "{{count}} deltagare",
+  "participantCount_two": "{{count}} deltagare",
+  "participantCount_zero": "{{count}} deltagare",
   "pollHasBeenLocked": "Denna förfrågan har låsts",
   "pollHasBeenVerified": "Din förfrågan har blivit verifierad",
   "pollOwnerNotice": "Hej {{name}}, ser ut som du är ägare av denna förfrågan.",
@@ -117,6 +117,6 @@
   "you": "Du",
   "yourDetails": "Dina uppgifter",
   "yourName": "Ditt namn…",
-  "yourProfile": "Din profil",
-  "yourPolls": "Dina förfrågningar"
+  "yourPolls": "Dina förfrågningar",
+  "yourProfile": "Din profil"
 }
