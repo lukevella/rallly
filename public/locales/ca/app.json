@@ -78,12 +78,12 @@
   "noVotes": "Ningú ha votat aquesta opció",
   "ok": "D'acord",
   "participant": "Participant",
-  "participantCount_zero": "{{count}} participants",
-  "participantCount_one": "{{count}} participant",
-  "participantCount_two": "{{count}} participants",
   "participantCount_few": "{{count}} participants",
   "participantCount_many": "{{count}} participants",
+  "participantCount_one": "{{count}} participant",
   "participantCount_other": "{{count}} participants",
+  "participantCount_two": "{{count}} participants",
+  "participantCount_zero": "{{count}} participants",
   "pollHasBeenLocked": "Aquesta enquesta ha estat bloquejada",
   "pollHasBeenVerified": "S'ha verificat la vostra enquesta",
   "pollOwnerNotice": "Hola {{name}}, sembla que ets el creador d'aquesta enquesta.",
@@ -117,6 +117,6 @@
   "you": "Tu",
   "yourDetails": "Les teves dades",
   "yourName": "El teu nom…",
-  "yourProfile": "El teu perfil",
-  "yourPolls": "Les teves enquestes"
+  "yourPolls": "Les teves enquestes",
+  "yourProfile": "El teu perfil"
 }
