@@ -78,12 +78,12 @@
   "noVotes": "Nikto pre túto možnosť nehlasoval",
   "ok": "OK",
   "participant": "Účastník",
-  "participantCount_zero": "{{count}} účastníkov",
-  "participantCount_one": "{{count}} účastník",
-  "participantCount_two": "{{count}} účastníkov",
   "participantCount_few": "{{count}} účastníkov",
   "participantCount_many": "{{count}} účastníkov",
+  "participantCount_one": "{{count}} účastník",
   "participantCount_other": "{{count}} účastníkov",
+  "participantCount_two": "{{count}} účastníkov",
+  "participantCount_zero": "{{count}} účastníkov",
   "pollHasBeenLocked": "Anketa bola uzamknutá",
   "pollHasBeenVerified": "Vaša anketa bola overená",
   "pollOwnerNotice": "Dobrý deň, {{name}}, zdá sa, že ste vlastníkom tejto ankety.",
@@ -117,6 +117,6 @@
   "you": "Vy",
   "yourDetails": "Vaše údaje",
   "yourName": "Vaše meno…",
-  "yourProfile": "Váš profil",
-  "yourPolls": "Vaše ankety"
+  "yourPolls": "Vaše ankety",
+  "yourProfile": "Váš profil"
 }

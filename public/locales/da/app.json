@@ -78,8 +78,8 @@
   "noVotes": "Ingen har stemt for denne mulighed",
   "ok": "Ok",
   "participant": "Deltager",
-  "participantCount_other": "{{count}} deltagere",
   "participantCount_one": "{{count}} deltager",
+  "participantCount_other": "{{count}} deltagere",
   "pollHasBeenLocked": "Denne afstemning er blevet låst",
   "pollHasBeenVerified": "Din afstemning er blevet bekræftet",
   "pollOwnerNotice": "Hej {{name}}, det ser ud til at du er ejer af denne afstemning.",
@@ -113,6 +113,6 @@
   "you": "Dig",
   "yourDetails": "Dine detaljer",
   "yourName": "Dit navn…",
-  "yourProfile": "Din profil",
-  "yourPolls": "Dine afstemninger"
+  "yourPolls": "Dine afstemninger",
+  "yourProfile": "Din profil"
 }

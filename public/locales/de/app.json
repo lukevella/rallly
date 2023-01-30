@@ -78,12 +78,12 @@
   "noVotes": "Niemand hat für diese Option gestimmt",
   "ok": "Ok",
   "participant": "Teilnehmer",
-  "participantCount_zero": "{{count}} Teilnehmer",
-  "participantCount_one": "{{count}} Teilnehmer",
-  "participantCount_two": "{{count}} Teilnehmer",
   "participantCount_few": "{{count}} Teilnehmer",
   "participantCount_many": "{{count}} Teilnehmer",
+  "participantCount_one": "{{count}} Teilnehmer",
   "participantCount_other": "{{count}} Teilnehmer",
+  "participantCount_two": "{{count}} Teilnehmer",
+  "participantCount_zero": "{{count}} Teilnehmer",
   "pollHasBeenLocked": "Diese Umfrage wurde gesperrt",
   "pollHasBeenVerified": "Deine Umfrage wurde verifiziert",
   "pollOwnerNotice": "Hallo {{name}}, sieht so aus, als ob du der Besitzer dieser Umfrage bist.",
@@ -117,6 +117,6 @@
   "you": "Du",
   "yourDetails": "Persönliche Angaben",
   "yourName": "Dein Name…",
-  "yourProfile": "Profil",
-  "yourPolls": "Deine Umfragen"
+  "yourPolls": "Deine Umfragen",
+  "yourProfile": "Profil"
 }

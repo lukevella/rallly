@@ -78,12 +78,12 @@
   "noVotes": "Nikt nie głosował na tę opcję",
   "ok": "Ok",
   "participant": "Uczestnik",
-  "participantCount_zero": "{{count}} uczestników",
-  "participantCount_two": "{{count}} uczestników",
   "participantCount_few": "{{count}} uczestników",
   "participantCount_many": "{{count}} uczestników",
-  "participantCount_other": "{{count}} uczestników",
   "participantCount_one": "{{count}} uczestnik",
+  "participantCount_other": "{{count}} uczestników",
+  "participantCount_two": "{{count}} uczestników",
+  "participantCount_zero": "{{count}} uczestników",
   "pollHasBeenLocked": "Ta ankieta została zablokowana",
   "pollHasBeenVerified": "Twoja ankieta została zweryfikowana",
   "pollOwnerNotice": "Hej {{name}}, wygląda na to, że jesteś właścicielem tej ankiety.",
@@ -117,6 +117,6 @@
   "you": "Ty",
   "yourDetails": "Twoje dane",
   "yourName": "Twoje imię…",
-  "yourProfile": "Twój profil",
-  "yourPolls": "Twoje ankiety"
+  "yourPolls": "Twoje ankiety",
+  "yourProfile": "Twój profil"
 }

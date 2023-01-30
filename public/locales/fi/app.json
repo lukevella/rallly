@@ -78,8 +78,12 @@
   "noVotes": "Kukaan ei ole äänestänyt tätä vaihtoehtoa",
   "ok": "OK",
   "participant": "Osallistuja",
-  "participantCount_other": "{{count}} osallistujaa",
+  "participantCount_few": "{{count}} osallistujaa",
+  "participantCount_many": "{{count}} osallistujaa",
   "participantCount_one": "{{count}} osallistuja",
+  "participantCount_other": "{{count}} osallistujaa",
+  "participantCount_two": "{{count}} osallistujaa",
+  "participantCount_zero": "{{count}} osallistujaa",
   "pollHasBeenLocked": "Tämä kysely on lukittu",
   "pollHasBeenVerified": "Kyselysi on vahvistettu",
   "pollOwnerNotice": "Hei {{name}}, näyttää siltä, että olet tämän kyselyn omistaja.",
@@ -113,6 +117,6 @@
   "you": "Sinä",
   "yourDetails": "Tietosi",
   "yourName": "Nimesi…",
-  "yourProfile": "Profiilisi",
-  "yourPolls": "Kyselysi"
+  "yourPolls": "Kyselysi",
+  "yourProfile": "Profiilisi"
 }
