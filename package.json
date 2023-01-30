@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "lint:tsc": "tsc --noEmit",
     "lint:i18n": "i18n-unused remove-unused",
-    "test": "playwright test"
+    "test": "PORT=3001 playwright test",
+    "test:codegen": "playwright codegen http://localhost:3000"
   },
   "dependencies": {
     "@floating-ui/react-dom-interactions": "^0.4.0",
@@ -73,7 +74,7 @@
     "zod": "^3.16.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.28.1",
+    "@playwright/test": "^1.30.0",
     "@types/accept-language-parser": "^1.5.3",
     "@types/lodash": "^4.14.178",
     "@types/nodemailer": "^6.4.4",
@@ -84,6 +85,7 @@
     "@types/smoothscroll-polyfill": "^0.3.1",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
+    "cheerio": "^1.0.0-rc.12",
     "eslint": "^7.26.0",
     "eslint-config-next": "^13.0.1",
     "eslint-import-resolver-typescript": "^2.7.0",
@@ -94,6 +96,7 @@
     "i18n-unused": "^0.12.0",
     "prettier": "^2.3.0",
     "prettier-plugin-tailwindcss": "^0.1.8",
+    "smtp-tester": "^2.0.1",
     "wait-on": "^6.0.1"
   }
 }

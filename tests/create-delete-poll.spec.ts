@@ -1,55 +1,87 @@
 import { expect, test } from "@playwright/test";
+import smtpTester from "smtp-tester";
 
-test("should be able to create a new poll and delete it", async ({ page }) => {
-  await page.goto("/new");
-  await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
-  // click on label to focus on input
-  await page.click('text="Location"');
-  await page.keyboard.type("Joe's Coffee Shop");
+test.describe.serial(() => {
+  let mailServer: smtpTester.SmtpTester;
 
-  await page.click('text="Description"');
+  let pollUrl: string;
 
-  await page.keyboard.type("This is a test description");
+  test.beforeAll(async () => {
+    mailServer = smtpTester.init(4025);
+  });
 
-  await page.click('text="Continue"');
+  test.afterAll(async () => {
+    mailServer.stop();
+  });
 
-  await page.click('[title="Next month"]');
+  test("create a new poll", async ({ page }) => {
+    await page.goto("/new");
+    await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
+    // click on label to focus on input
+    await page.click('text="Location"');
+    await page.keyboard.type("Joe's Coffee Shop");
 
-  // Select a few days
-  await page.click("text=/^5$/");
-  await page.click("text=/^7$/");
-  await page.click("text=/^10$/");
-  await page.click("text=/^15$/");
+    await page.click('text="Description"');
 
-  await page.click('text="Continue"');
+    await page.keyboard.type("This is a test description");
 
-  await page.type('[placeholder="Jessie Smith"]', "John");
-  await page.type(
-    '[placeholder="jessie.smith@email.com"]',
-    "john.doe@email.com",
-  );
+    await page.click('text="Continue"');
 
-  await page.click('text="Create poll"');
+    await page.click('[title="Next month"]');
 
-  await expect(page.locator("data-testid=poll-title")).toHaveText(
-    "Monthly Meetup",
-  );
+    // Select a few days
+    await page.click("text=/^5$/");
+    await page.click("text=/^7$/");
+    await page.click("text=/^10$/");
+    await page.click("text=/^15$/");
 
-  // let's delete the poll we just created
-  await page.click("text=Manage");
-  await page.click("text=Delete poll");
+    await page.click('text="Continue"');
 
-  const deletePollForm = page.locator("data-testid=delete-poll-form");
+    await page.type('[placeholder="Jessie Smith"]', "John");
+    await page.type(
+      '[placeholder="jessie.smith@email.com"]',
+      "john.doe@email.com",
+    );
 
-  // button should be disabled
-  await expect(deletePollForm.locator("text=Delete poll")).toBeDisabled();
+    await page.click('text="Create poll"');
 
-  // enter confirmation text
-  await page.type("[placeholder=delete-me]", "delete-me");
+    const { email } = await mailServer.captureOne("john.doe@email.com", {
+      wait: 5000,
+    });
 
-  // button should now be enabled
-  await deletePollForm.locator("text=Delete poll").click();
+    expect(email.headers.subject).toBe(
+      "Rallly: Monthly Meetup - Verify your email address",
+    );
 
-  // expect delete message to appear
-  await expect(page.locator("text=Deleted poll")).toBeVisible();
+    const title = page.getByTestId("poll-title");
+
+    await title.waitFor();
+
+    pollUrl = page.url();
+
+    await expect(title).toHaveText("Monthly Meetup");
+  });
+
+  // delete the poll we just created
+  test("delete existing poll", async ({ page }) => {
+    await page.goto(pollUrl);
+    const manageButton = page.getByText("Manage");
+    await manageButton.waitFor();
+    await manageButton.click();
+    await page.click("text=Delete poll");
+
+    const deletePollForm = page.locator("data-testid=delete-poll-form");
+
+    // button should be disabled
+    await expect(deletePollForm.locator("text=Delete poll")).toBeDisabled();
+
+    // enter confirmation text
+    await page.type("[placeholder=delete-me]", "delete-me");
+
+    // button should now be enabled
+    await deletePollForm.locator("text=Delete poll").click();
+
+    // expect delete message to appear
+    await expect(page.locator("text=Deleted poll")).toBeVisible();
+  });
 });

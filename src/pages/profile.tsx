@@ -15,8 +15,16 @@ const Page: NextPage = () => {
   );
 };
 
-export const getServerSideProps = withSessionSsr(
-  withPageTranslations(["common", "app"]),
-);
+export const getServerSideProps = withSessionSsr(async (ctx) => {
+  if (ctx.req.session.user.isGuest !== false) {
+    return {
+      redirect: {
+        destination: "/login",
+      },
+      props: {},
+    };
+  }
+  return withPageTranslations(["common", "app"])(ctx);
+});
 
 export default withSession(Page);

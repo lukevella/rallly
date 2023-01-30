@@ -1,116 +1,47 @@
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import posthog from "posthog-js";
+import { useTranslation } from "next-i18next";
 import React from "react";
-import toast from "react-hot-toast";
-import { useTimeoutFn } from "react-use";
 
-import FullPageLoader from "@/components/full-page-loader";
-import {
-  decryptToken,
-  mergeGuestsIntoUser,
-  withSessionSsr,
-} from "@/utils/auth";
-import { nanoid } from "@/utils/nanoid";
-import { prisma } from "~/prisma/db";
+import { AuthLayout } from "@/components/auth/auth-layout";
+import { LoginForm } from "@/components/auth/login-form";
+import { useUser, withSession } from "@/components/user-provider";
 
-const Page: NextPage<{ success: boolean; redirectTo: string }> = ({
-  success,
-  redirectTo,
-}) => {
+import { withSessionSsr } from "../utils/auth";
+import { withPageTranslations } from "../utils/with-page-translations";
+
+const Page: NextPage<{ referer: string | null }> = () => {
+  const { t } = useTranslation("app");
   const router = useRouter();
-  if (!success) {
-    toast.error("Login failed! Link is expired or invalid");
-  }
-
-  useTimeoutFn(() => {
-    if (success) {
-      posthog.capture("login completed");
-    }
-    router.replace(redirectTo);
-  }, 100);
+  const { refresh } = useUser();
 
   return (
-    <>
+    <AuthLayout>
       <Head>
-        <title>Logging in…</title>
+        <title>{t("login")}</title>
       </Head>
-      <FullPageLoader>Logging in…</FullPageLoader>
-    </>
+      <LoginForm
+        onAuthenticated={async () => {
+          refresh();
+          router.replace("/profile");
+        }}
+      />
+    </AuthLayout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  async ({ req, query }) => {
-    const { code } = query;
-    if (typeof code !== "string") {
+  async (ctx) => {
+    if (ctx.req.session.user?.isGuest === false) {
       return {
+        redirect: { destination: "/profile" },
         props: {},
-        redirect: {
-          destination: "/new",
-        },
       };
     }
 
-    const {
-      email,
-      path = "/new",
-      guestId,
-    } = await decryptToken<{
-      email?: string;
-      path?: string;
-      guestId?: string;
-    }>(code);
-
-    if (!email) {
-      return {
-        props: {
-          success: false,
-          redirectTo: path,
-        },
-      };
-    }
-
-    const user = await prisma.user.upsert({
-      where: { email },
-      update: {},
-      create: {
-        id: await nanoid(),
-        name: email.substring(0, email.indexOf("@")),
-        email,
-      },
-    });
-
-    const guestIds: string[] = [];
-
-    // guest id from existing sessions
-    if (req.session.user?.isGuest) {
-      guestIds.push(req.session.user.id);
-    }
-    // guest id from token
-    if (guestId && guestId !== req.session.user?.id) {
-      guestIds.push(guestId);
-    }
-
-    if (guestIds.length > 0) {
-      await mergeGuestsIntoUser(user.id, guestIds);
-    }
-
-    req.session.user = {
-      isGuest: false,
-      id: user.id,
-    };
-
-    await req.session.save();
-
-    return {
-      props: {
-        success: true,
-        redirectTo: path,
-      },
-    };
+    return await withPageTranslations(["common", "app"])(ctx);
   },
 );
 
-export default Page;
+export default withSession(Page);

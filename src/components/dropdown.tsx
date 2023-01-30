@@ -9,7 +9,6 @@ import {
 import { Menu } from "@headlessui/react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import * as React from "react";
 
 import { transformOriginByPlacement } from "@/utils/constants";
@@ -83,41 +82,14 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
   );
 };
 
-const AnchorLink = React.forwardRef<
-  HTMLAnchorElement,
-  {
-    href?: string;
-    children?: React.ReactNode;
-    className?: string;
-  }
->(function AnchorLink(
-  { href = "", className, children, ...forwardProps },
-  ref,
-) {
-  return (
-    <Link
-      ref={ref}
-      href={href}
-      passHref
-      className={clsx(
-        "font-normal hover:text-white hover:no-underline",
-        className,
-      )}
-      {...forwardProps}
-    >
-      {children}
-    </Link>
-  );
-});
-
 export const DropdownItem: React.VoidFunctionComponent<{
   icon?: React.ComponentType<{ className?: string }>;
   label?: React.ReactNode;
   disabled?: boolean;
   href?: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }> = ({ icon: Icon, label, onClick, disabled, href }) => {
-  const Element = href ? AnchorLink : "button";
+  const Element = href ? "a" : "button";
   return (
     <Menu.Item disabled={disabled}>
       {({ active }) => (

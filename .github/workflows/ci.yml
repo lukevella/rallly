@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: yarn
@@ -33,10 +33,10 @@ jobs:
     steps:
       # Downloads a copy of the code in your repository before running CI tests
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: yarn
@@ -55,24 +55,18 @@ jobs:
           docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db postgres:14.2
           yarn wait-on --timeout 60000 tcp:localhost:5432
 
-      - name: Build
-        run: yarn build
-
       - name: Deploy migrations
         run: yarn prisma migrate deploy
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium
 
-      - name: Launch app
-        run: yarn start 2>&1 & # backgrounnd mode
-
       - name: Run tests
         run: yarn test
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: playwright-report
           path: ./playwright-report

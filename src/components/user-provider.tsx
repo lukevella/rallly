@@ -12,7 +12,7 @@ export const UserContext =
   React.createContext<{
     user: UserSession & { shortName: string };
     refresh: () => void;
-    logout: () => Promise<void>;
+    logout: () => void;
     ownsObject: (obj: { userId: string | null }) => boolean;
   } | null>(null);
 
@@ -50,27 +50,24 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
 
-  const { data: user, refetch } = trpcNext.whoami.get.useQuery();
+  const queryClient = trpcNext.useContext();
+  const { data: user, isFetching } = trpcNext.whoami.get.useQuery();
 
   const logout = trpcNext.whoami.destroy.useMutation({
     onSuccess: () => {
-      posthog.reset();
+      queryClient.whoami.invalidate();
     },
   });
 
   useMount(() => {
-    if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
-      return;
-    }
-
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY ?? "fake token", {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
       opt_out_capturing_by_default: false,
       capture_pageview: false,
       capture_pageleave: false,
       autocapture: false,
       loaded: (posthog) => {
-        if (process.env.NODE_ENV === "development") {
+        if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
           posthog.opt_out_capturing();
         }
         if (user && posthog.get_distinct_id() !== user.id) {
@@ -85,7 +82,9 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     });
   });
 
-  const shortName = user
+  const shortName = isFetching
+    ? t("loading")
+    : user
     ? user.isGuest === false
       ? user.name
       : user.id.substring(0, 10)
@@ -99,16 +98,17 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     <UserContext.Provider
       value={{
         user: { ...user, shortName },
-        refresh: refetch,
+        refresh: () => {
+          return queryClient.whoami.invalidate();
+        },
         ownsObject: ({ userId }) => {
           if (userId && user.id === userId) {
             return true;
           }
           return false;
         },
-        logout: async () => {
-          await logout.mutateAsync();
-          refetch();
+        logout: () => {
+          logout.mutate();
         },
       }}
     >

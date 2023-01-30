@@ -144,7 +144,7 @@ const Footer: React.VoidFunctionComponent = () => {
           />
           <a
             href="https://github.com/lukevella/rallly/wiki/Guide-for-translators"
-            className="inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
+            className="inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500 hover:border-primary-500 hover:text-primary-500"
           >
             <Translate className="mr-2 h-5 w-5" />
             {t("volunteerTranslator")} &rarr;

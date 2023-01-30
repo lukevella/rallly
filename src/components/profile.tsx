@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -10,7 +11,6 @@ import User from "@/components/icons/user.svg";
 import { useDayjs } from "../utils/dayjs";
 import { trpc } from "../utils/trpc";
 import { EmptyState } from "./empty-state";
-import LoginForm from "./login-form";
 import { UserDetails } from "./profile/user-details";
 import { useUser } from "./user-provider";
 
@@ -22,16 +22,16 @@ export const Profile: React.VoidFunctionComponent = () => {
   const { data: userPolls } = trpc.useQuery(["user.getPolls"]);
 
   const createdPolls = userPolls?.polls;
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (user.isGuest) {
+      router.push("/profile");
+    }
+  }, [router, user.isGuest]);
 
   if (user.isGuest) {
-    return (
-      <div className="card my-4 p-0">
-        <Head>
-          <title>{t("profileLogin")}</title>
-        </Head>
-        <LoginForm />
-      </div>
-    );
+    return null;
   }
 
   return (

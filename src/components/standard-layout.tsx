@@ -10,6 +10,7 @@ import UserCircle from "@/components/icons/user-circle.svg";
 import Logo from "~/public/logo.svg";
 
 import { DayjsProvider } from "../utils/dayjs";
+import { LoginLink, useLoginModal } from "./auth/login-modal";
 import Dropdown, { DropdownItem, DropdownProps } from "./dropdown";
 import Adjustments from "./icons/adjustments.svg";
 import Cash from "./icons/cash.svg";
@@ -22,8 +23,6 @@ import Pencil from "./icons/pencil.svg";
 import Question from "./icons/question-mark-circle.svg";
 import Support from "./icons/support.svg";
 import Twitter from "./icons/twitter.svg";
-import LoginForm from "./login-form";
-import { useModal } from "./modal";
 import ModalProvider, { useModalContext } from "./modal/modal-provider";
 import Popover from "./popover";
 import Preferences from "./preferences";
@@ -37,9 +36,7 @@ const HomeLink = () => {
   );
 };
 
-const MobileNavigation: React.VoidFunctionComponent<{
-  openLoginModal: () => void;
-}> = ({ openLoginModal }) => {
+const MobileNavigation: React.VoidFunctionComponent = () => {
   const { user } = useUser();
   const { t } = useTranslation(["common", "app"]);
   return (
@@ -52,18 +49,14 @@ const MobileNavigation: React.VoidFunctionComponent<{
       </div>
       <div className="flex items-center">
         {user ? null : (
-          <button
-            onClick={openLoginModal}
-            className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
-          >
+          <LoginLink className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
             <Login className="h-5 opacity-75" />
             <span className="inline-block">{t("app:login")}</span>
-          </button>
+          </LoginLink>
         )}
         <AnimatePresence initial={false}>
           {user ? (
             <UserDropdown
-              openLoginModal={openLoginModal}
               placement="bottom-end"
               trigger={
                 <motion.button
@@ -126,7 +119,6 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   className,
 }) => {
   const { t } = useTranslation(["common", "app"]);
-  console.log("logo", Logo);
   return (
     <div className={clsx("space-y-1", className)}>
       <Link
@@ -149,11 +141,13 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   );
 };
 
-const UserDropdown: React.VoidFunctionComponent<
-  DropdownProps & { openLoginModal: () => void }
-> = ({ children, openLoginModal, ...forwardProps }) => {
+const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
+  children,
+  ...forwardProps
+}) => {
   const { logout, user } = useUser();
   const { t } = useTranslation(["common", "app"]);
+  const { openLoginModal } = useLoginModal();
   const modalContext = useModalContext();
   if (!user) {
     return null;
@@ -245,12 +239,6 @@ const StandardLayout: React.VoidFunctionComponent<{
 }> = ({ children, ...rest }) => {
   const { user } = useUser();
   const { t } = useTranslation(["common", "app"]);
-  const [loginModal, openLoginModal] = useModal({
-    footer: null,
-    overlayClosable: true,
-    showClose: true,
-    content: <LoginForm />,
-  });
 
   return (
     <ModalProvider>
@@ -259,8 +247,7 @@ const StandardLayout: React.VoidFunctionComponent<{
           className="relative flex min-h-full flex-col bg-gray-50 lg:flex-row"
           {...rest}
         >
-          {loginModal}
-          <MobileNavigation openLoginModal={openLoginModal} />
+          <MobileNavigation />
           <div className="hidden grow px-4 pt-6 pb-5 lg:block">
             <div className="sticky top-6 float-right w-48 items-start">
               <div className="mb-8 px-3">
@@ -298,13 +285,10 @@ const StandardLayout: React.VoidFunctionComponent<{
                   <Preferences />
                 </Popover>
                 {user ? null : (
-                  <button
-                    onClick={openLoginModal}
-                    className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20"
-                  >
+                  <LoginLink className="group flex w-full items-center space-x-3 whitespace-nowrap rounded-md px-3 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-500/10 hover:text-slate-600 hover:no-underline active:bg-slate-500/20">
                     <Login className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                     <span className="grow text-left">{t("app:login")}</span>
-                  </button>
+                  </LoginLink>
                 )}
               </div>
               <AnimatePresence initial={false}>
@@ -312,7 +296,6 @@ const StandardLayout: React.VoidFunctionComponent<{
                   <UserDropdown
                     className="mb-4 w-full"
                     placement="bottom-end"
-                    openLoginModal={openLoginModal}
                     trigger={
                       <motion.button
                         initial={{ x: -20, opacity: 0 }}

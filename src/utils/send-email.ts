@@ -8,17 +8,23 @@ interface SendEmailParameters {
 
 let transport: nodemailer.Transporter;
 
+const env = process.env["NODE" + "_ENV"] || "development";
+
 const getTransport = async () => {
   if (!transport) {
-    transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PWD,
-      },
-    });
+    if (env === "test") {
+      transport = nodemailer.createTransport({ port: 4025 });
+    } else {
+      transport = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT),
+        secure: process.env.SMTP_SECURE === "true",
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PWD,
+        },
+      });
+    }
   }
   return transport;
 };

@@ -28,7 +28,11 @@ export const useModalContext = () => {
 const ModalProvider: React.VoidFunctionComponent<ModalProviderProps> = ({
   children,
 }) => {
-  const [modals, { push, removeAt, updateAt }] = useList<ModalConfig>([]);
+  const counter = React.useRef(0);
+
+  const [modals, { push, removeAt, updateAt }] = useList<
+    ModalConfig & { id: number }
+  >([]);
 
   const removeModalAt = (index: number) => {
     updateAt(index, { ...modals[index], visible: false });
@@ -40,14 +44,14 @@ const ModalProvider: React.VoidFunctionComponent<ModalProviderProps> = ({
     <ModalContext.Provider
       value={{
         render: (props) => {
-          push(props);
+          push({ ...props, id: counter.current++ });
         },
       }}
     >
       {children}
       {modals.map((props, i) => (
         <Modal
-          key={i}
+          key={`modal-${props.id}`}
           visible={true}
           {...props}
           content={
