@@ -1,6 +1,23 @@
-import { expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
+import smtpTester from "smtp-tester";
 
-test("should be able to create a new poll and delete it", async ({ page }) => {
+test.describe.configure({ mode: "serial" });
+
+let mailServer: smtpTester.SmtpTester;
+
+let page: Page;
+
+test.beforeAll(async ({ browser }) => {
+  page = await browser.newPage();
+  mailServer = smtpTester.init(4025);
+});
+
+test.afterAll(async () => {
+  page.close();
+  mailServer.stop();
+});
+
+test("create a new poll", async () => {
   await page.goto("/new");
   await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
   // click on label to focus on input
@@ -31,10 +48,22 @@ test("should be able to create a new poll and delete it", async ({ page }) => {
 
   await page.click('text="Create poll"');
 
-  await expect(page.locator("data-testid=poll-title")).toHaveText(
-    "Monthly Meetup",
+  const { email } = await mailServer.captureOne("john.doe@email.com", {
+    wait: 5000,
+  });
+
+  expect(email.headers.subject).toBe(
+    "Rallly: Monthly Meetup - Verify your email address",
   );
 
+  const title = page.getByTestId("poll-title");
+
+  await title.waitFor();
+
+  await expect(title).toHaveText("Monthly Meetup");
+});
+
+test("delete existing poll", async () => {
   // let's delete the poll we just created
   await page.click("text=Manage");
   await page.click("text=Delete poll");
