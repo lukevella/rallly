@@ -1,4 +1,4 @@
-FROM node:lts as build
+FROM node:lts-slim as build
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN yarn build
 
-FROM node:lts
+FROM node:lts-slim
 
 ENV PORT 3000
 EXPOSE 3000
