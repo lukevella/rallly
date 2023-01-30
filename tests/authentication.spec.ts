@@ -6,105 +6,105 @@ import { prisma } from "~/prisma/db";
 
 const testUserEmail = "test@example.com";
 
-test.describe.configure({ mode: "serial" });
+test.describe.serial(() => {
+  let mailServer: smtpTester.SmtpTester;
 
-let mailServer: smtpTester.SmtpTester;
-
-test.beforeAll(() => {
-  mailServer = smtpTester.init(4025);
-});
-
-test.afterAll(async () => {
-  try {
-    await prisma.user.delete({
-      where: {
-        email: testUserEmail,
-      },
-    });
-  } catch {
-    // User doesn't exist
-  }
-  mailServer.stop();
-});
-
-/**
- * Get the 6-digit code from the email
- * @returns 6-digit code
- */
-const getCode = async () => {
-  const { email } = await mailServer.captureOne(testUserEmail, {
-    wait: 5000,
+  test.beforeAll(() => {
+    mailServer = smtpTester.init(4025);
   });
 
-  const $ = load(email.html);
+  test.afterAll(async () => {
+    try {
+      await prisma.user.delete({
+        where: {
+          email: testUserEmail,
+        },
+      });
+    } catch {
+      // User doesn't exist
+    }
+    mailServer.stop();
+  });
 
-  return $("#code").text().trim();
-};
+  /**
+   * Get the 6-digit code from the email
+   * @returns 6-digit code
+   */
+  const getCode = async () => {
+    const { email } = await mailServer.captureOne(testUserEmail, {
+      wait: 5000,
+    });
 
-test("shows that user doesn't exist yet", async ({ page }) => {
-  await page.goto("/login");
+    const $ = load(email.html);
 
-  // your login page test logic
-  await page.type("input[name=email]", "test@example.com");
+    return $("#code").text().trim();
+  };
 
-  await page.click("text=Continue");
+  test("shows that user doesn't exist yet", async ({ page }) => {
+    await page.goto("/login");
 
-  // Make sure the user doesn't exist yet and that logging in is not possible
-  await expect(
-    page.getByText("A user with that email doesn't exist"),
-  ).toBeVisible();
-});
+    // your login page test logic
+    await page.type("input[name=email]", "test@example.com");
 
-test("user registration", async ({ page }) => {
-  await page.goto("/register");
+    await page.click("text=Continue");
 
-  await page.getByText("Create an account").waitFor();
+    // Make sure the user doesn't exist yet and that logging in is not possible
+    await expect(
+      page.getByText("A user with that email doesn't exist"),
+    ).toBeVisible();
+  });
 
-  await page.getByPlaceholder("Jessie Smith").type("Test User");
-  await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+  test("user registration", async ({ page }) => {
+    await page.goto("/register");
 
-  await page.click("text=Continue");
+    await page.getByText("Create an account").waitFor();
 
-  const codeInput = page.getByPlaceholder("Enter your 6-digit code");
+    await page.getByPlaceholder("Jessie Smith").type("Test User");
+    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-  codeInput.waitFor({ state: "visible" });
+    await page.click("text=Continue");
 
-  const code = await getCode();
+    const codeInput = page.getByPlaceholder("Enter your 6-digit code");
 
-  await codeInput.type(code);
+    codeInput.waitFor({ state: "visible" });
 
-  await page.getByText("Continue").click();
+    const code = await getCode();
 
-  await expect(page.getByText("Your details")).toBeVisible();
-});
+    await codeInput.type(code);
 
-test("can't register with the same email", async ({ page }) => {
-  await page.goto("/register");
+    await page.getByText("Continue").click();
 
-  await page.getByText("Create an account").waitFor();
+    await expect(page.getByText("Your details")).toBeVisible();
+  });
 
-  await page.getByPlaceholder("Jessie Smith").type("Test User");
-  await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+  test("can't register with the same email", async ({ page }) => {
+    await page.goto("/register");
 
-  await page.click("text=Continue");
+    await page.getByText("Create an account").waitFor();
 
-  await expect(
-    page.getByText("A user with that email already exists"),
-  ).toBeVisible();
-});
+    await page.getByPlaceholder("Jessie Smith").type("Test User");
+    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-test("user login", async ({ page }) => {
-  await page.goto("/login");
+    await page.click("text=Continue");
 
-  await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+    await expect(
+      page.getByText("A user with that email already exists"),
+    ).toBeVisible();
+  });
 
-  await page.getByText("Continue").click();
+  test("user login", async ({ page }) => {
+    await page.goto("/login");
 
-  const code = await getCode();
+    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-  await page.getByPlaceholder("Enter your 6-digit code").type(code);
+    await page.getByText("Continue").click();
 
-  await page.getByText("Continue").click();
+    const code = await getCode();
 
-  await expect(page.getByText("Your details")).toBeVisible();
+    await page.getByPlaceholder("Enter your 6-digit code").type(code);
+
+    await page.getByText("Continue").click();
+
+    await expect(page.getByText("Your details")).toBeVisible();
+  });
 });
