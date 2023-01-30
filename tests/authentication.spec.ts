@@ -44,7 +44,7 @@ test.describe.serial(() => {
     await page.goto("/login");
 
     // your login page test logic
-    await page.getByPlaceholder("Jessie Smith").type("Test User");
+    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
     await page.getByText("Continue").click();
 
