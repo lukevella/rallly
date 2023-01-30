@@ -78,12 +78,12 @@
   "noVotes": "Ninguém votou nesta opção",
   "ok": "Ok",
   "participant": "Participante",
-  "participantCount_zero": "{{count}} participantes",
-  "participantCount_one": "{{count}} participante",
-  "participantCount_two": "{{count}} participantes",
   "participantCount_few": "{{count}} participantes",
   "participantCount_many": "{{count}} participantes",
+  "participantCount_one": "{{count}} participante",
   "participantCount_other": "{{count}} participantes",
+  "participantCount_two": "{{count}} participantes",
+  "participantCount_zero": "{{count}} participantes",
   "pollHasBeenLocked": "Esta enquete foi bloqueada",
   "pollHasBeenVerified": "Sua enquete foi verificada",
   "pollOwnerNotice": "Oi {{name}}, parece que você é o proprietário desta enquete.",
@@ -117,6 +117,6 @@
   "you": "Você",
   "yourDetails": "Seus detalhes",
   "yourName": "Seu nome…",
-  "yourProfile": "Seu perfil",
-  "yourPolls": "Suas enquetes"
+  "yourPolls": "Suas enquetes",
+  "yourProfile": "Seu perfil"
 }
