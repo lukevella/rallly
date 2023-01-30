@@ -97,7 +97,7 @@ export const sendEmailTemplate = async ({
   to,
   subject,
 }: SendEmailTemplateParams) => {
-  const rendered = await Eta.render(templateString, templateVars);
+  const rendered = Eta.render(templateString, templateVars);
 
   if (rendered) {
     await sendEmail({

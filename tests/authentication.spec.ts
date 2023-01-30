@@ -44,9 +44,9 @@ test.describe.serial(() => {
     await page.goto("/login");
 
     // your login page test logic
-    await page.type("input[name=email]", "test@example.com");
+    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-    await page.click("text=Continue");
+    await page.getByText("Continue").click();
 
     // Make sure the user doesn't exist yet and that logging in is not possible
     await expect(
