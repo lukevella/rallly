@@ -12,6 +12,7 @@ export const UserContext =
   React.createContext<{
     user: UserSession & { shortName: string };
     refresh: () => void;
+    isUpdating: boolean;
     logout: () => void;
     ownsObject: (obj: { userId: string | null }) => boolean;
   } | null>(null);
@@ -82,9 +83,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     });
   });
 
-  const shortName = isFetching
-    ? t("loading")
-    : user
+  const shortName = user
     ? user.isGuest === false
       ? user.name
       : user.id.substring(0, 10)
@@ -97,6 +96,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   return (
     <UserContext.Provider
       value={{
+        isUpdating: isFetching,
         user: { ...user, shortName },
         refresh: () => {
           return queryClient.whoami.invalidate();
