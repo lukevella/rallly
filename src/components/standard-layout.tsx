@@ -21,6 +21,7 @@ import Login from "./icons/login.svg";
 import Logout from "./icons/logout.svg";
 import Pencil from "./icons/pencil.svg";
 import Question from "./icons/question-mark-circle.svg";
+import Spinner from "./icons/spinner.svg";
 import Support from "./icons/support.svg";
 import Twitter from "./icons/twitter.svg";
 import ModalProvider, { useModalContext } from "./modal/modal-provider";
@@ -37,7 +38,7 @@ const HomeLink = () => {
 };
 
 const MobileNavigation: React.VoidFunctionComponent = () => {
-  const { user } = useUser();
+  const { user, isUpdating } = useUser();
   const { t } = useTranslation(["common", "app"]);
   return (
     <div
@@ -70,7 +71,11 @@ const MobileNavigation: React.VoidFunctionComponent = () => {
                   className="group inline-flex w-full items-center space-x-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20"
                 >
                   <div className="relative shrink-0">
-                    <UserCircle className="w-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                    {isUpdating ? (
+                      <Spinner className="h-5 animate-spin" />
+                    ) : (
+                      <UserCircle className="w-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                    )}
                   </div>
                   <div className="hidden max-w-[120px] truncate font-medium xs:block">
                     {user.shortName}
@@ -237,7 +242,7 @@ const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
 const StandardLayout: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
-  const { user } = useUser();
+  const { user, isUpdating } = useUser();
   const { t } = useTranslation(["common", "app"]);
 
   return (
@@ -309,7 +314,11 @@ const StandardLayout: React.VoidFunctionComponent<{
                       >
                         <div className="flex w-full items-center space-x-3">
                           <div className="relative">
-                            <UserCircle className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                            {isUpdating ? (
+                              <Spinner className="h-5 animate-spin" />
+                            ) : (
+                              <UserCircle className="h-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                            )}
                           </div>
                           <div className="grow overflow-hidden">
                             <div className="truncate font-medium leading-snug text-slate-600">
