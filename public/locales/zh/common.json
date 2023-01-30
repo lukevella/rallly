@@ -1,15 +1,15 @@
 {
   "blog": "博客",
-  "discussions": "讨论",
-  "donate": "捐赠",
+  "discussions": "讨论区",
+  "donate": "捐助支持",
   "footerCredit": "由 <a>@imlukevella</a> 制作",
   "footerSponsor": "此项目由用户资助。请考虑通过 <a>捐赠</a> 来支持它。",
   "home": "主页",
   "language": "语言",
   "links": "链接",
-  "poweredBy": "提供服务",
+  "poweredBy": "服务提供商",
   "privacyPolicy": "隐私条款",
   "starOnGithub": "在 GitHub 上 Star",
-  "support": "支持",
-  "volunteerTranslator": "帮助翻译此网站"
+  "support": "客服",
+  "volunteerTranslator": "协助翻译本站"
 }
