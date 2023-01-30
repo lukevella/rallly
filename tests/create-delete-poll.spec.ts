@@ -1,4 +1,4 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import smtpTester from "smtp-tester";
 
 test.describe.serial(() => {
@@ -6,7 +6,7 @@ test.describe.serial(() => {
 
   let pollUrl: string;
 
-  test.beforeAll(async ({ browser }) => {
+  test.beforeAll(async () => {
     mailServer = smtpTester.init(4025);
   });
 
