@@ -4,19 +4,17 @@ import smtpTester from "smtp-tester";
 test.describe.serial(() => {
   let mailServer: smtpTester.SmtpTester;
 
-  let page: Page;
+  let pollUrl: string;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
     mailServer = smtpTester.init(4025);
   });
 
   test.afterAll(async () => {
-    page.close();
     mailServer.stop();
   });
 
-  test("create a new poll", async () => {
+  test("create a new poll", async ({ page }) => {
     await page.goto("/new");
     await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
     // click on label to focus on input
@@ -59,12 +57,17 @@ test.describe.serial(() => {
 
     await title.waitFor();
 
+    pollUrl = page.url();
+
     await expect(title).toHaveText("Monthly Meetup");
   });
 
-  test("delete existing poll", async () => {
-    // let's delete the poll we just created
-    await page.click("text=Manage");
+  // delete the poll we just created
+  test("delete existing poll", async ({ page }) => {
+    await page.goto(pollUrl);
+    const manageButton = page.getByText("Manage");
+    await manageButton.waitFor();
+    await manageButton.click();
     await page.click("text=Delete poll");
 
     const deletePollForm = page.locator("data-testid=delete-poll-form");
