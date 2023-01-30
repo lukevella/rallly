@@ -78,12 +78,12 @@
   "noVotes": "Niemand heeft voor deze optie gestemd",
   "ok": "OK",
   "participant": "Deelnemer",
-  "participantCount_zero": "{{count}} deelnemers",
-  "participantCount_one": "{{count}} deelnemer",
-  "participantCount_two": "{{count}} deelnemers",
   "participantCount_few": "{{count}} deelnemers",
   "participantCount_many": "{{count}} deelnemers",
+  "participantCount_one": "{{count}} deelnemer",
   "participantCount_other": "{{count}} deelnemers",
+  "participantCount_two": "{{count}} deelnemers",
+  "participantCount_zero": "{{count}} deelnemers",
   "pollHasBeenLocked": "Deze poll is vergrendeld",
   "pollHasBeenVerified": "Je e-mailadres is geverifieerd",
   "pollOwnerNotice": "Hey {{name}}, het lijkt erop dat jij de eigenaar bent van deze poll.",
@@ -117,6 +117,6 @@
   "you": "Jij",
   "yourDetails": "Jouw gegevens",
   "yourName": "Jouw naam…",
-  "yourProfile": "Jouw profiel",
-  "yourPolls": "Jouw polls"
+  "yourPolls": "Jouw polls",
+  "yourProfile": "Jouw profiel"
 }
