@@ -155,6 +155,7 @@ export const RegisterForm: React.VoidFunctionComponent<{
             email: res.user.email,
             name: res.user.name,
           });
+          posthog.capture("register");
         }}
         onResend={async () => {
           const values = getValues();
