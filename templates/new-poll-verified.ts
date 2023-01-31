@@ -99,7 +99,7 @@ const template = `<!DOCTYPE html>
                       </p>
                       <p style="margin-bottom: 24px;"></p>
                       <div style="line-height: 100%;">
-                        <a id="pollUrl href="<%= it.pollUrl %>" class="hover-bg-indigo-400" style="display: inline-block; border-radius: 4px; background-color: #6366f1; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px; text-align: center; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none;"> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%; mso-text-raise: 26pt;">&nbsp;</i><![endif]-->
+                        <a id="pollUrl" href="<%= it.pollUrl %>" class="hover-bg-indigo-400" style="display: inline-block; border-radius: 4px; background-color: #6366f1; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px; text-align: center; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none;"> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%; mso-text-raise: 26pt;">&nbsp;</i><![endif]-->
                           <span style="mso-text-raise: 16px">Go to poll &rarr;
                           </span> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%;">&nbsp;</i><![endif]-->
                         </a>
