@@ -12,7 +12,7 @@ import Logo from "~/public/logo.svg";
 import Sentry from "~/public/sentry.svg";
 import Vercel from "~/public/vercel-logotype-dark.svg";
 
-import { LanguageSelect } from "../poll/language-selector";
+import { LanguageSelect } from "../../poll/language-selector";
 
 const Footer: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("common");
