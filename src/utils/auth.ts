@@ -5,7 +5,11 @@ import {
   unsealData,
 } from "iron-session";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
-import { GetServerSideProps, NextApiHandler } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextApiHandler,
+} from "next";
 
 import { prisma } from "~/prisma/db";
 
@@ -72,23 +76,58 @@ export function withSessionRoute(handler: NextApiHandler) {
   }, sessionOptions);
 }
 
-export function withSessionSsr(handler: GetServerSideProps) {
-  return withIronSessionSsr(async (context) => {
-    const { req } = context;
+type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T;
 
-    await setUser(req.session);
+const compose = (...fns: GetServerSideProps[]): GetServerSideProps => {
+  return async (ctx) => {
+    const res = { props: {} };
+    for (const getServerSideProps of fns) {
+      const fnRes = await getServerSideProps(ctx);
 
-    const ssg = await createSSGHelperFromContext(context);
-    await ssg.whoami.get.prefetch();
+      if ("props" in fnRes) {
+        res.props = {
+          ...res.props,
+          ...fnRes.props,
+        };
+      } else {
+        return { notFound: true };
+      }
+    }
 
-    const res = await handler(context);
+    return res;
+  };
+};
 
+export function withSessionSsr(
+  handler: GetServerSideProps | GetServerSideProps[],
+  options?: {
+    onPrefetch?: (
+      ssg: Awaited<ReturnType<typeof createSSGHelperFromContext>>,
+      ctx: GetServerSidePropsContext,
+    ) => Promise<void>;
+  },
+): GetServerSideProps {
+  const composedHandler = Array.isArray(handler)
+    ? compose(...handler)
+    : handler;
+
+  return withIronSessionSsr(async (ctx) => {
+    const ssg = await createSSGHelperFromContext(ctx);
+    await ssg.whoami.get.prefetch(); // always prefetch user
+    if (options?.onPrefetch) {
+      try {
+        await options.onPrefetch(ssg, ctx);
+      } catch {
+        return {
+          notFound: true,
+        };
+      }
+    }
+    const res = await composedHandler(ctx);
     if ("props" in res) {
       return {
-        ...res,
         props: {
           ...res.props,
-          user: req.session.user,
           trpcState: ssg.dehydrate(),
         },
       };
@@ -156,11 +195,7 @@ export const mergeGuestsIntoUser = async (
 export const getCurrentUser = async (
   session: IronSession,
 ): Promise<{ isGuest: boolean; id: string }> => {
-  const user = session.user;
+  await setUser(session);
 
-  if (!user) {
-    throw new Error("Tried to get user but no user found.");
-  }
-
-  return user;
+  return session.user;
 };

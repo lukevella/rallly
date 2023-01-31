@@ -39,6 +39,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
 
   const {
     poll,
+    admin,
     targetTimeZone,
     setTargetTimeZone,
     getParticipantById,
@@ -63,7 +64,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   const [selectedParticipantId, setSelectedParticipantId] = React.useState<
     string | undefined
   >(() => {
-    if (poll.admin) {
+    if (admin) {
       // don't select a particpant if admin
       return;
     }
@@ -81,7 +82,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     : undefined;
 
   const [isEditing, setIsEditing] = React.useState(
-    !userAlreadyVoted && !poll.closed && !poll.admin,
+    !userAlreadyVoted && !poll.closed && !admin,
   );
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -214,7 +215,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   disabled={
                     poll.closed ||
                     // if user is  participant (not admin)
-                    (!poll.admin &&
+                    (!admin &&
                       // and does not own this participant
                       !session.ownsObject(selectedParticipant) &&
                       // and the participant has been claimed by a different user
@@ -239,7 +240,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   disabled={
                     poll.closed ||
                     // if user is  participant (not admin)
-                    (!poll.admin &&
+                    (!admin &&
                       // and does not own this participant
                       !session.ownsObject(selectedParticipant) &&
                       // or the participant has been claimed by a different user

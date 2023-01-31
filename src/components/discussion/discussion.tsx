@@ -28,7 +28,7 @@ const Discussion: React.VoidFunctionComponent = () => {
   const { dayjs } = useDayjs();
   const queryClient = trpc.useContext();
   const { t } = useTranslation("app");
-  const { poll } = usePoll();
+  const { poll, admin } = usePoll();
 
   const pollId = poll.id;
 
@@ -93,7 +93,7 @@ const Discussion: React.VoidFunctionComponent = () => {
         <AnimatePresence initial={false}>
           {comments.map((comment) => {
             const canDelete =
-              poll.admin || session.ownsObject(comment) || isUnclaimed(comment);
+              admin || session.ownsObject(comment) || isUnclaimed(comment);
 
             return (
               <motion.div

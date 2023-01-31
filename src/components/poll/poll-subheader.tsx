@@ -7,7 +7,7 @@ import { usePoll } from "../poll-context";
 import Tooltip from "../tooltip";
 
 const PollSubheader: React.VoidFunctionComponent = () => {
-  const { poll } = usePoll();
+  const { poll, admin } = usePoll();
   const { t } = useTranslation("app");
   const { dayjs } = useDayjs();
   return (
@@ -23,7 +23,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
             b: <span />,
           }}
         />
-        {poll.legacy && poll.admin ? (
+        {poll.legacy && admin ? (
           <Tooltip
             width={400}
             content="This poll was created with an older version of Rallly. Some features might not work."

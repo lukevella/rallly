@@ -9,6 +9,7 @@ export type GetPollApiResponse = {
   options: Option[];
   user: User;
   timeZone: string | null;
+  adminUrlId: string;
   participantUrlId: string;
   verified: boolean;
   closed: boolean;

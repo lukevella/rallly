@@ -109,13 +109,13 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const session = useUser();
-  const { poll, getVote, options } = usePoll();
+  const { poll, getVote, options, admin } = usePoll();
 
   const isYou = session.user && session.ownsObject(participant) ? true : false;
 
   const isUnclaimed = !participant.userId;
 
-  const canEdit = !poll.closed && (poll.admin || isYou || isUnclaimed);
+  const canEdit = !poll.closed && (admin || isYou || isUnclaimed);
 
   if (editMode) {
     return (

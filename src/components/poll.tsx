@@ -16,7 +16,7 @@ import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { preventWidows } from "@/utils/prevent-widows";
 
-import { trpc } from "../utils/trpc";
+import { trpc, trpcNext } from "../utils/trpc";
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
 import { useUpdatePollMutation } from "./poll/mutations";
@@ -41,18 +41,16 @@ const PollPage: NextPage = () => {
   const { t } = useTranslation("app");
 
   const session = useUser();
+  const isOwner = poll.user.id === session.user.id;
 
-  const queryClient = trpc.useContext();
+  const queryClient = trpcNext.useContext();
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
 
   const verifyEmail = trpc.useMutation(["polls.verification.verify"], {
     onSuccess: () => {
       toast.success(t("pollHasBeenVerified"));
-      queryClient.setQueryData(["polls.get", { urlId, admin }], {
-        ...poll,
-        verified: true,
-      });
+      queryClient.poll.invalidate();
       session.refresh();
       posthog.capture("verified email");
     },
@@ -181,7 +179,7 @@ const PollPage: NextPage = () => {
               ) : null}
             </>
           ) : null}
-          {!poll.admin && poll.adminUrlId ? (
+          {!admin && isOwner ? (
             <div className="mb-4 items-center justify-between rounded-lg px-4 md:flex md:space-x-4 md:border md:p-2 md:pl-4">
               <div className="mb-4 font-medium md:mb-0">
                 {t("pollOwnerNotice", { name: poll.user.name })}

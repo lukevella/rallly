@@ -4,30 +4,21 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import FullPageLoader from "@/components/full-page-loader";
+import StandardLayout from "@/components/layouts/standard-layout";
+import { ParticipantsProvider } from "@/components/participants-provider";
 import PollPage from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-
-import { ParticipantsProvider } from "../components/participants-provider";
-import StandardLayout from "../components/standard-layout";
-import { withSession } from "../components/user-provider";
-import { withSessionSsr } from "../utils/auth";
-import { trpc } from "../utils/trpc";
-import { withPageTranslations } from "../utils/with-page-translations";
-import Custom404 from "./404";
+import { withSession } from "@/components/user-provider";
+import { withSessionSsr } from "@/utils/auth";
+import { trpcNext } from "@/utils/trpc";
+import { withPageTranslations } from "@/utils/with-page-translations";
 
 const PollPageLoader: NextPage = () => {
-  const { query, asPath } = useRouter();
+  const { query } = useRouter();
   const { t } = useTranslation("app");
   const urlId = query.urlId as string;
-  const [notFound, setNotFound] = React.useState(false);
 
-  const admin = /^\/admin/.test(asPath);
-  const pollQuery = trpc.useQuery(["polls.get", { urlId, admin }], {
-    onError: () => {
-      setNotFound(true);
-    },
-    retry: false,
-  });
+  const pollQuery = trpcNext.poll.getByParticipantUrlId.useQuery({ urlId });
 
   const poll = pollQuery.data;
 
@@ -35,7 +26,7 @@ const PollPageLoader: NextPage = () => {
     return (
       <ParticipantsProvider pollId={poll.id}>
         <StandardLayout>
-          <PollContextProvider poll={poll} urlId={urlId} admin={admin}>
+          <PollContextProvider poll={poll} urlId={urlId} admin={false}>
             <PollPage />
           </PollContextProvider>
         </StandardLayout>
@@ -43,15 +34,18 @@ const PollPageLoader: NextPage = () => {
     );
   }
 
-  if (notFound) {
-    return <Custom404 />;
-  }
-
   return <FullPageLoader>{t("loading")}</FullPageLoader>;
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
   withPageTranslations(["common", "app", "errors"]),
+  {
+    onPrefetch: async (ssg, ctx) => {
+      await ssg.poll.getByParticipantUrlId.fetch({
+        urlId: ctx.params?.urlId as string,
+      });
+    },
+  },
 );
 
 export default withSession(PollPageLoader);

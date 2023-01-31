@@ -25,8 +25,8 @@ const defaultSelectFields: {
   location: true;
   description: true;
   createdAt: true;
-  participantUrlId: true;
   adminUrlId: true;
+  participantUrlId: true;
   verified: true;
   closed: true;
   legacy: true;
@@ -46,8 +46,8 @@ const defaultSelectFields: {
   location: true,
   description: true,
   createdAt: true,
-  participantUrlId: true,
   adminUrlId: true,
+  participantUrlId: true,
   verified: true,
   closed: true,
   legacy: true,
@@ -190,37 +190,6 @@ export const legacyPolls = createRouter()
       return { urlId: adminUrlId };
     },
   })
-  .query("get", {
-    input: z.object({
-      urlId: z.string(),
-      admin: z.boolean(),
-    }),
-    resolve: async ({ input, ctx }): Promise<GetPollApiResponse> => {
-      const poll = await prisma.poll.findFirst({
-        select: defaultSelectFields,
-        where: input.admin
-          ? {
-              adminUrlId: input.urlId,
-            }
-          : {
-              participantUrlId: input.urlId,
-            },
-      });
-
-      if (!poll) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-        });
-      }
-
-      // We want to keep the adminUrlId in if the user is view
-      if (!input.admin && ctx.session.user?.id !== poll.user.id) {
-        return { ...poll, admin: input.admin, adminUrlId: "" };
-      }
-
-      return { ...poll, admin: input.admin };
-    },
-  })
   .mutation("update", {
     input: z.object({
       urlId: z.string(),
@@ -271,7 +240,7 @@ export const legacyPolls = createRouter()
         },
       });
 
-      return { ...poll, admin: true };
+      return { ...poll };
     },
   })
   .mutation("delete", {
@@ -300,7 +269,7 @@ export const legacyPolls = createRouter()
   });
 
 export const poll = router({
-  getByAdminId: publicProcedure
+  getByAdminUrlId: publicProcedure
     .input(
       z.object({
         urlId: z.string(),
@@ -323,5 +292,33 @@ export const poll = router({
       }
 
       return res;
+    }),
+  getByParticipantUrlId: publicProcedure
+    .input(
+      z.object({
+        urlId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const res = await prisma.poll.findUnique({
+        select: defaultSelectFields,
+        where: {
+          participantUrlId: input.urlId,
+        },
+        rejectOnNotFound: false,
+      });
+
+      if (!res) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Poll not found",
+        });
+      }
+
+      if (ctx.user.id === res.user.id) {
+        return res;
+      } else {
+        return { ...res, adminUrlId: "" };
+      }
     }),
 });

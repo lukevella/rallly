@@ -1,7 +1,6 @@
 import posthog from "posthog-js";
 
-import { trpc } from "../../utils/trpc";
-import { usePoll } from "../poll-context";
+import { trpc, trpcNext } from "../../utils/trpc";
 import { ParticipantForm } from "./types";
 
 export const normalizeVotes = (
@@ -83,11 +82,10 @@ export const useDeleteParticipantMutation = () => {
 };
 
 export const useUpdatePollMutation = () => {
-  const { urlId, admin } = usePoll();
-  const queryClient = trpc.useContext();
+  const queryClient = trpcNext.useContext();
   return trpc.useMutation(["polls.update"], {
     onSuccess: (data) => {
-      queryClient.setQueryData(["polls.get", { urlId, admin }], data);
+      queryClient.poll.invalidate();
       posthog.capture("updated poll", {
         id: data.id,
       });
