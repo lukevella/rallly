@@ -11,6 +11,7 @@ import { createToken } from "../../utils/auth";
 import { nanoid } from "../../utils/nanoid";
 import { GetPollApiResponse } from "../../utils/trpc/types";
 import { createRouter } from "../createRouter";
+import { publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { participants } from "./polls/participants";
@@ -76,7 +77,7 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
   return res.id;
 };
 
-export const polls = createRouter()
+export const legacyPolls = createRouter()
   .merge("demo.", demo)
   .merge("participants.", participants)
   .merge("comments.", comments)
@@ -297,3 +298,30 @@ export const polls = createRouter()
       });
     },
   });
+
+export const poll = router({
+  getByAdminId: publicProcedure
+    .input(
+      z.object({
+        urlId: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const res = await prisma.poll.findUnique({
+        select: defaultSelectFields,
+        where: {
+          adminUrlId: input.urlId,
+        },
+        rejectOnNotFound: false,
+      });
+
+      if (!res) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Poll not found",
+        });
+      }
+
+      return res;
+    }),
+});
