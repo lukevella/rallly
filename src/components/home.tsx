@@ -5,7 +5,7 @@ import React from "react";
 import Bonus from "./home/bonus";
 import Features from "./home/features";
 import Hero from "./home/hero";
-import PageLayout from "./page-layout";
+import PageLayout from "./layouts/page-layout";
 
 const Home: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");

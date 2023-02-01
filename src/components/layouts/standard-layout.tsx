@@ -4,30 +4,31 @@ import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { LoginLink, useLoginModal } from "@/components/auth/login-modal";
+import Dropdown, { DropdownItem, DropdownProps } from "@/components/dropdown";
+import Adjustments from "@/components/icons/adjustments.svg";
+import Cash from "@/components/icons/cash.svg";
+import Discord from "@/components/icons/discord.svg";
+import DotsVertical from "@/components/icons/dots-vertical.svg";
+import Github from "@/components/icons/github.svg";
+import Login from "@/components/icons/login.svg";
+import Logout from "@/components/icons/logout.svg";
 import Menu from "@/components/icons/menu.svg";
+import Pencil from "@/components/icons/pencil.svg";
+import Question from "@/components/icons/question-mark-circle.svg";
+import Spinner from "@/components/icons/spinner.svg";
+import Support from "@/components/icons/support.svg";
+import Twitter from "@/components/icons/twitter.svg";
 import User from "@/components/icons/user.svg";
 import UserCircle from "@/components/icons/user-circle.svg";
+import ModalProvider, {
+  useModalContext,
+} from "@/components/modal/modal-provider";
+import Popover from "@/components/popover";
+import Preferences from "@/components/preferences";
+import { useUser } from "@/components/user-provider";
+import { DayjsProvider } from "@/utils/dayjs";
 import Logo from "~/public/logo.svg";
-
-import { DayjsProvider } from "../utils/dayjs";
-import { LoginLink, useLoginModal } from "./auth/login-modal";
-import Dropdown, { DropdownItem, DropdownProps } from "./dropdown";
-import Adjustments from "./icons/adjustments.svg";
-import Cash from "./icons/cash.svg";
-import Discord from "./icons/discord.svg";
-import DotsVertical from "./icons/dots-vertical.svg";
-import Github from "./icons/github.svg";
-import Login from "./icons/login.svg";
-import Logout from "./icons/logout.svg";
-import Pencil from "./icons/pencil.svg";
-import Question from "./icons/question-mark-circle.svg";
-import Spinner from "./icons/spinner.svg";
-import Support from "./icons/support.svg";
-import Twitter from "./icons/twitter.svg";
-import ModalProvider, { useModalContext } from "./modal/modal-provider";
-import Popover from "./popover";
-import Preferences from "./preferences";
-import { useUser } from "./user-provider";
 
 const HomeLink = () => {
   return (

@@ -1,7 +1,7 @@
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import PageLayout from "@/components/page-layout";
+import PageLayout from "@/components/layouts/page-layout";
 
 const PrivacyPolicy = () => {
   return (

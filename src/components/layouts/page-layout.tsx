@@ -8,8 +8,8 @@ import DotsVertical from "@/components/icons/dots-vertical.svg";
 import Github from "@/components/icons/github.svg";
 import Logo from "~/public/logo.svg";
 
+import Popover from "../popover";
 import Footer from "./page-layout/footer";
-import Popover from "./popover";
 
 export interface PageLayoutProps {
   children?: React.ReactNode;

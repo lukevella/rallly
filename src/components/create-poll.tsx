@@ -18,7 +18,7 @@ import {
   UserDetailsData,
   UserDetailsForm,
 } from "./forms";
-import StandardLayout from "./standard-layout";
+import StandardLayout from "./layouts/standard-layout";
 import Steps from "./steps";
 import { useUser } from "./user-provider";
 

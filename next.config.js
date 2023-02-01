@@ -40,18 +40,6 @@ const nextConfig = {
         source: "/",
         destination: "/home",
       },
-      {
-        source: "/p/:urlId",
-        destination: "/poll?urlId=:urlId",
-      },
-      {
-        source: "/admin/:urlId",
-        destination: "/poll?urlId=:urlId",
-      },
-      {
-        source: "/verify/:urlId/code/:code",
-        destination: "/poll?urlId=:urlId&code=:code",
-      },
     ];
   },
   sentry: {
