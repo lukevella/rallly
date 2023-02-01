@@ -106,8 +106,7 @@ const template = `<!DOCTYPE html>
                         </a>
                       </div>
                       <p style="margin-bottom: 8px;">
-                        In case you lose it, here's a link to your poll for the
-                        future 😉
+                        You can use the <em>admin link</em> below to manage your poll.
                       </p>
                       <p style="font-weight: 500;">
                         <a id="pollUrl" href="<%= it.pollUrl %>" style="display: inline-block; background-color: #eef2ff; padding: 8px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 20px; color: #6366f1; text-decoration: none;">
