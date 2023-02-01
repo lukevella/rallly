@@ -210,14 +210,5 @@ const DayjsProviderInner: React.VoidFunctionComponent<{
 export const DayjsProvider: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children }) => {
-  const [isMounted, setIsMounted] = React.useState(false);
-  useMount(() => {
-    setIsMounted(true);
-  });
-
-  if (!isMounted) {
-    return null;
-  }
-
   return <DayjsProviderInner>{children}</DayjsProviderInner>;
 };
