@@ -6,7 +6,6 @@ import posthog from "posthog-js";
 import React from "react";
 import { useSessionStorage } from "react-use";
 
-import StandardLayout from "./layouts/standard-layout";
 import { encodeDateOption } from "../utils/date-time-utils";
 import { trpc } from "../utils/trpc";
 import { Button } from "./button";
@@ -19,6 +18,7 @@ import {
   UserDetailsData,
   UserDetailsForm,
 } from "./forms";
+import StandardLayout from "./layouts/standard-layout";
 import Steps from "./steps";
 import { useUser } from "./user-provider";
 
