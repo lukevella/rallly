@@ -61,7 +61,7 @@ test.describe.serial(() => {
     });
 
     expect(email.headers.subject).toBe(
-      "Rallly: Monthly Meetup - Verify your email address",
+      "Your poll for Monthly Meetup has been created",
     );
 
     const $ = load(email.html);

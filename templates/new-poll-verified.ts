@@ -104,6 +104,14 @@ const template = `<!DOCTYPE html>
                           </span> <!--[if mso]><i style="letter-spacing: 27px; mso-font-width: -100%;">&nbsp;</i><![endif]-->
                         </a>
                       </div>
+                      <p style="margin-bottom: 8px;">
+                        You can use the <em>admin link</em> below to manage your poll.
+                      </p>
+                      <p style="font-weight: 500;">
+                        <a id="pollUrl" href="<%= it.pollUrl %>" style="display: inline-block; background-color: #eef2ff; padding: 8px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 20px; color: #6366f1; text-decoration: none;">
+                          <%= it.pollUrl %>
+                        </a>
+                      </p>
                       <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
                         <tr>
                           <td style="padding-top: 32px; padding-bottom: 32px;">

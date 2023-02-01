@@ -154,7 +154,7 @@ export const legacyPolls = createRouter()
           await sendEmailTemplate({
             templateString: newVerfiedPollTemplate,
             to: input.user.email,
-            subject: `Rallly: ${poll.title}`,
+            subject: `Your poll for ${poll.title} has been created`,
             templateVars: {
               title: poll.title,
               name: input.user.name,
@@ -172,7 +172,7 @@ export const legacyPolls = createRouter()
           await sendEmailTemplate({
             templateString: newPollTemplate,
             to: input.user.email,
-            subject: `Rallly: ${poll.title} - Verify your email address`,
+            subject: `Your poll for ${poll.title} has been created`,
             templateVars: {
               title: poll.title,
               name: input.user.name,
