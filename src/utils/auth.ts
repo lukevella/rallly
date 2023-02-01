@@ -76,8 +76,6 @@ export function withSessionRoute(handler: NextApiHandler) {
   }, sessionOptions);
 }
 
-type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T;
-
 const compose = (...fns: GetServerSideProps[]): GetServerSideProps => {
   return async (ctx) => {
     const res = { props: {} };
