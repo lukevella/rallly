@@ -86,7 +86,7 @@ export const verification = createRouter()
       await sendEmailTemplate({
         templateString: newPollTemplate,
         to: poll.user.email,
-        subject: `Rallly: ${poll.title} - Verify your email address`,
+        subject: "Please verify your email address",
         templateVars: {
           title: poll.title,
           name: poll.user.name,

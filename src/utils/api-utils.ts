@@ -49,7 +49,7 @@ export const sendNotification = async (
           await sendEmailTemplate({
             templateString: newParticipantTemplate,
             to: poll.user.email,
-            subject: `Rallly: ${poll.title} - New Participant`,
+            subject: `Your poll ${poll.title} has a new participant`,
             templateVars: {
               title: poll.title,
               name: poll.authorName,
@@ -65,7 +65,7 @@ export const sendNotification = async (
           await sendEmailTemplate({
             templateString: newCommentTemplate,
             to: poll.user.email,
-            subject: `Rallly: ${poll.title} - New Comment`,
+            subject: `Your poll ${poll.title} has a new comment`,
             templateVars: {
               title: poll.title,
               name: poll.authorName,
