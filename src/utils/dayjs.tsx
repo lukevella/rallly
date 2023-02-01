@@ -10,7 +10,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { useAsync, useLocalStorage, useMount } from "react-use";
+import { useAsync, useLocalStorage } from "react-use";
 
 import { useRequiredContext } from "../components/use-required-context";
 
