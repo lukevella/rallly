@@ -6,7 +6,7 @@ import React from "react";
 import FullPageLoader from "@/components/full-page-loader";
 import StandardLayout from "@/components/layouts/standard-layout";
 import { ParticipantsProvider } from "@/components/participants-provider";
-import PollPage from "@/components/poll";
+import { AdminControls, Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
 import { withSession } from "@/components/user-provider";
 import { withSessionSsr } from "@/utils/auth";
@@ -32,7 +32,9 @@ const PollPageLoader: NextPage = () => {
       <ParticipantsProvider pollId={poll.id}>
         <StandardLayout>
           <PollContextProvider poll={poll} urlId={urlId} admin={true}>
-            <PollPage />
+            <Poll>
+              <AdminControls />
+            </Poll>
           </PollContextProvider>
         </StandardLayout>
       </ParticipantsProvider>
