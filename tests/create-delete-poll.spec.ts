@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { load } from "cheerio";
 import smtpTester from "smtp-tester";
 
 test.describe.serial(() => {
@@ -45,6 +46,16 @@ test.describe.serial(() => {
 
     await page.click('text="Create poll"');
 
+    const title = page.getByTestId("poll-title");
+
+    await title.waitFor();
+
+    await expect(title).toHaveText("Monthly Meetup");
+
+    pollUrl = page.url();
+  });
+
+  test("verify poll", async ({ page, baseURL }) => {
     const { email } = await mailServer.captureOne("john.doe@email.com", {
       wait: 5000,
     });
@@ -53,13 +64,18 @@ test.describe.serial(() => {
       "Rallly: Monthly Meetup - Verify your email address",
     );
 
-    const title = page.getByTestId("poll-title");
+    const $ = load(email.html);
+    const verifyLink = $("#verifyEmailUrl").attr("href");
 
-    await title.waitFor();
+    expect(verifyLink).toContain(baseURL);
 
-    pollUrl = page.url();
+    if (!verifyLink) {
+      throw new Error("Could not get verification link from email");
+    }
 
-    await expect(title).toHaveText("Monthly Meetup");
+    await page.goto(verifyLink);
+
+    await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
   });
 
   // delete the poll we just created
