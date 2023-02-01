@@ -15,7 +15,7 @@ test.describe.serial(() => {
     mailServer.stop();
   });
 
-  test("create a new poll", async ({ page, baseURL }) => {
+  test("create a new poll", async ({ page }) => {
     await page.goto("/new");
     await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
     // click on label to focus on input
