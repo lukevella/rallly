@@ -28,4 +28,5 @@ module.exports = {
   },
   reloadOnPrerender: process.env.NODE_ENV === "development",
   localePath: path.resolve("./public/locales"),
+  returnNull: false,
 };

@@ -5,11 +5,17 @@ import common from "~/public/locales/en/common.json";
 import errors from "~/public/locales/en/errors.json";
 import homepage from "~/public/locales/en/homepage.json";
 
-declare module "next-i18next" {
-  interface Resources {
-    homepage: typeof homepage;
-    app: typeof app;
-    common: typeof common;
-    errors: typeof errors;
+interface I18nNamespaces {
+  homepage: typeof homepage;
+  app: typeof app;
+  common: typeof common;
+  errors: typeof errors;
+}
+
+declare module "i18next" {
+  interface CustomTypeOptions {
+    defaultNS: "common";
+    resources: I18nNamespaces;
+    returnNull: false;
   }
 }

@@ -65,6 +65,7 @@ const VerifyCode: React.VoidFunctionComponent<{
                 b: <strong className="whitespace-nowrap" />,
                 a: (
                   <a
+                    className="text-link"
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
