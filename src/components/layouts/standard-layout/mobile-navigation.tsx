@@ -16,7 +16,7 @@ import Support from "@/components/icons/support.svg";
 import User from "@/components/icons/user.svg";
 import UserCircle from "@/components/icons/user-circle.svg";
 import { useModalContext } from "@/components/modal/modal-provider";
-import Popover from "@/components/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/popover";
 import Preferences from "@/components/preferences";
 import { useUser } from "@/components/user-provider";
 
@@ -54,9 +54,8 @@ export const MobileNavigation = (props: { className?: string }) => {
       )}
     >
       <div>
-        <Popover
-          placement="bottom-end"
-          trigger={
+        <Popover>
+          <PopoverTrigger asChild={true}>
             <button
               type="button"
               className="group flex items-center rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
@@ -64,9 +63,10 @@ export const MobileNavigation = (props: { className?: string }) => {
               <Menu className="w-5 group-hover:text-primary-500" />
               <span className="ml-2 hidden sm:block">{t("app:menu")}</span>
             </button>
-          }
-        >
-          <AppMenu />
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <AppMenu />
+          </PopoverContent>
         </Popover>
       </div>
       <div className="flex items-center">
@@ -107,9 +107,8 @@ export const MobileNavigation = (props: { className?: string }) => {
             />
           ) : null}
         </AnimatePresence>
-        <Popover
-          placement="bottom-end"
-          trigger={
+        <Popover>
+          <PopoverTrigger asChild={true}>
             <button
               type="button"
               className="group flex items-center whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
@@ -119,9 +118,10 @@ export const MobileNavigation = (props: { className?: string }) => {
                 {t("app:preferences")}
               </span>
             </button>
-          }
-        >
-          <Preferences className="p-3" />
+          </PopoverTrigger>
+          <PopoverContent align="end">
+            <Preferences className="p-2" />
+          </PopoverContent>
         </Popover>
       </div>
     </div>
@@ -134,12 +134,7 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   const { t } = useTranslation(["common", "app"]);
   return (
     <div className={clsx("space-y-1", className)}>
-      <Link
-        href="/"
-        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md p-2 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
-      >
-        <HomeLink />
-      </Link>
+      <HomeLink className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md p-2 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300" />
       <Link
         href="/new"
         className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"

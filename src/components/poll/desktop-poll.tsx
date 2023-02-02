@@ -38,13 +38,7 @@ const Poll: React.VoidFunctionComponent = () => {
     React.useState<string | null>(null);
 
   const actionColumnWidth = 100;
-  const columnWidth = Math.min(
-    130,
-    Math.max(
-      90,
-      (width - minSidebarWidth - actionColumnWidth) / options.length,
-    ),
-  );
+  const columnWidth = 90;
 
   const numberOfVisibleColumns = Math.min(
     options.length,

@@ -15,7 +15,7 @@ const Preferences = (props: { className?: string }) => {
 
   return (
     <div className={props.className}>
-      <div className="mb-4 space-y-2">
+      <div className="mb-2 space-y-2">
         <div className="grow text-sm text-slate-500">
           {t("common:language")}
         </div>

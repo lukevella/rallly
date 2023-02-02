@@ -8,13 +8,10 @@ import {
 } from "@floating-ui/react-dom-interactions";
 import { Menu } from "@headlessui/react";
 import clsx from "clsx";
-import { motion } from "framer-motion";
 import * as React from "react";
 
 import { transformOriginByPlacement } from "@/utils/constants";
 import { stopPropagation } from "@/utils/stop-propagation";
-
-const MotionMenuItems = motion(Menu.Items);
 
 export interface DropdownProps {
   trigger?: React.ReactNode;
@@ -55,13 +52,9 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
           </Menu.Button>
           <FloatingPortal>
             {open ? (
-              <MotionMenuItems
-                transition={{ duration: 0.1 }}
-                initial={{ opacity: 0, scale: 0.9, y: -10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: -10 }}
+              <Menu.Items
                 className={clsx(
-                  "z-50 divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+                  "z-50 animate-popIn divide-gray-100 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
                   animationOrigin,
                 )}
                 onMouseDown={stopPropagation}
@@ -73,7 +66,7 @@ const Dropdown: React.VoidFunctionComponent<DropdownProps> = ({
                 }}
               >
                 {children}
-              </MotionMenuItems>
+              </Menu.Items>
             ) : null}
           </FloatingPortal>
         </>
