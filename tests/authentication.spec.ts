@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import { load } from "cheerio";
 import smtpTester from "smtp-tester";
 
@@ -92,7 +92,7 @@ test.describe.serial(() => {
     ).toBeVisible();
   });
 
-  test("user login", async ({ page }) => {
+  const login = async (page: Page) => {
     await page.goto("/login");
 
     await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
@@ -104,7 +104,15 @@ test.describe.serial(() => {
     await page.getByPlaceholder("Enter your 6-digit code").type(code);
 
     await page.getByText("Continue").click();
+  };
 
+  test("user login", async ({ page }) => {
+    await login(page);
     await expect(page.getByText("Your details")).toBeVisible();
+  });
+
+  test("logged in user can't access login page", async ({ page }) => {
+    await login(page);
+    await expect(page).toHaveURL("/profile");
   });
 });
