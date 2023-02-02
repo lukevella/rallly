@@ -124,6 +124,7 @@ export function withSessionSsr(
     const res = await composedHandler(ctx);
     if ("props" in res) {
       return {
+        ...res,
         props: {
           ...res.props,
           trpcState: ssg.dehydrate(),
