@@ -14,7 +14,6 @@ import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import { AdminControls } from "../../components/admin-control";
-import ModalProvider from "../../components/modal/modal-provider";
 
 const PollPageLoader: NextPage = () => {
   const { query } = useRouter();

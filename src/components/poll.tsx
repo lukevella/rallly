@@ -16,6 +16,8 @@ import { UserAvatarProvider } from "./poll/user-avatar";
 import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
 
+const checkIfWideScreen = () => window.innerWidth > 640;
+
 export const Poll = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
   const { poll } = usePoll();
@@ -27,8 +29,6 @@ export const Poll = (props: { children?: React.ReactNode }) => {
     () => participants?.map(({ name }) => name) ?? [],
     [participants],
   );
-
-  const checkIfWideScreen = () => window.innerWidth > 640;
 
   React.useEffect(() => {
     const listener = () => setIsWideScreen(checkIfWideScreen());
@@ -65,7 +65,7 @@ export const Poll = (props: { children?: React.ReactNode }) => {
               <div className="space-y-3">
                 <div>
                   <div
-                    className="mb-1 text-2xl font-bold text-slate-800 md:text-left md:text-3xl"
+                    className="mb-1 text-2xl font-semibold text-slate-800 sm:text-3xl"
                     data-testid="poll-title"
                   >
                     {preventWidows(poll.title)}

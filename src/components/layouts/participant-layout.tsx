@@ -1,5 +1,7 @@
 import { Trans, useTranslation } from "next-i18next";
 
+import { MobileNavigation } from "./standard-layout/mobile-navigation";
+
 const Logo = () => {
   return <span className="font-bold tracking-wider">RALLLY</span>;
 };
@@ -10,8 +12,9 @@ export const ParticipantLayout = ({
 }) => {
   const { t } = useTranslation("app");
   return (
-    <div className="bg-pattern h-full overflow-y-auto p-3 sm:p-6">
-      <div className="mx-auto max-w-3xl space-y-4">
+    <div className="bg-pattern h-full sm:space-y-8">
+      <MobileNavigation />
+      <div className="mx-auto max-w-3xl space-y-4 p-3">
         <div>{children}</div>
         <div className="flex justify-center p-4 text-center">
           <a

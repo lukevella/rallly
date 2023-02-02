@@ -13,7 +13,6 @@ import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import { ParticipantLayout } from "../../components/layouts/participant-layout";
-import ModalProvider from "../../components/modal/modal-provider";
 import { DayjsProvider } from "../../utils/dayjs";
 
 const PollPageLoader: NextPage = () => {
@@ -27,17 +26,15 @@ const PollPageLoader: NextPage = () => {
 
   if (poll) {
     return (
-      <ModalProvider>
-        <DayjsProvider>
-          <ParticipantsProvider pollId={poll.id}>
-            <ParticipantLayout>
-              <PollContextProvider poll={poll} urlId={urlId} admin={false}>
-                <Poll />
-              </PollContextProvider>
-            </ParticipantLayout>
-          </ParticipantsProvider>
-        </DayjsProvider>
-      </ModalProvider>
+      <DayjsProvider>
+        <ParticipantsProvider pollId={poll.id}>
+          <ParticipantLayout>
+            <PollContextProvider poll={poll} urlId={urlId} admin={false}>
+              <Poll />
+            </PollContextProvider>
+          </ParticipantLayout>
+        </ParticipantsProvider>
+      </DayjsProvider>
     );
   }
 

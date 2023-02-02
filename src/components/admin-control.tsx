@@ -100,7 +100,7 @@ export const AdminControls = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex sm:justify-end">
         <div className="flex gap-2">
           <NotificationsToggle />
           <ManagePoll

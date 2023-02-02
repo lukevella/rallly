@@ -49,7 +49,7 @@ const Popover: React.VoidFunctionComponent<PopoverProps> = ({
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: -10 }}
                 className={clsx(
-                  "z-30 max-w-full translate-x-4 rounded-lg border bg-white p-4 shadow-md",
+                  "z-30 max-w-full translate-x-4 rounded-lg border bg-white p-1 shadow-md",
                   origin,
                 )}
                 style={{

@@ -42,6 +42,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
+        role="button"
         type={htmlType}
         className={clsx(
           {

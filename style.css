@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply h-full overflow-auto bg-slate-50 font-sans text-base text-slate-600;
+    @apply h-full bg-slate-50 font-sans text-base text-slate-600;
   }
   body,
   #__next {
@@ -50,7 +50,7 @@
     @apply mb-4;
   }
   .input {
-    @apply appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500;
+    @apply appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500;
   }
   input.input {
     @apply h-9;
@@ -98,15 +98,15 @@
   }
 
   .segment-button {
-    @apply flex h-9 text-center shadow-sm;
+    @apply flex h-9 text-center;
   }
 
   .segment-button button {
-    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-white px-4 font-medium transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus-visible:ring-2 focus-visible:ring-offset-0 active:bg-slate-100;
+    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-gray-50 px-4 transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus-visible:ring-2 focus-visible:ring-offset-0 active:bg-slate-100;
   }
 
   .segment-button .segment-button-active {
-    @apply text-primary-500;
+    @apply pointer-events-none bg-white text-slate-800;
   }
 
   .menu {
