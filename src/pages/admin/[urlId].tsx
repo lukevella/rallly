@@ -6,12 +6,15 @@ import React from "react";
 import FullPageLoader from "@/components/full-page-loader";
 import StandardLayout from "@/components/layouts/standard-layout";
 import { ParticipantsProvider } from "@/components/participants-provider";
-import { AdminControls, Poll } from "@/components/poll";
+import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
 import { withSession } from "@/components/user-provider";
 import { withSessionSsr } from "@/utils/auth";
 import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
+
+import { AdminControls } from "../../components/admin-control";
+import ModalProvider from "../../components/modal/modal-provider";
 
 const PollPageLoader: NextPage = () => {
   const { query } = useRouter();
@@ -32,9 +35,10 @@ const PollPageLoader: NextPage = () => {
       <ParticipantsProvider pollId={poll.id}>
         <StandardLayout>
           <PollContextProvider poll={poll} urlId={urlId} admin={true}>
-            <Poll>
+            <div className="flex flex-col space-y-3 p-3 sm:space-y-4 sm:p-4">
               <AdminControls />
-            </Poll>
+              <Poll />
+            </div>
           </PollContextProvider>
         </StandardLayout>
       </ParticipantsProvider>

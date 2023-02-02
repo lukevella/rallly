@@ -12,7 +12,7 @@ import { withSessionSsr } from "@/utils/auth";
 import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
-import StandardLayout from "../../components/layouts/standard-layout";
+import { ParticipantLayout } from "../../components/layouts/participant-layout";
 import ModalProvider from "../../components/modal/modal-provider";
 import { DayjsProvider } from "../../utils/dayjs";
 
@@ -30,11 +30,11 @@ const PollPageLoader: NextPage = () => {
       <ModalProvider>
         <DayjsProvider>
           <ParticipantsProvider pollId={poll.id}>
-            <StandardLayout>
+            <ParticipantLayout>
               <PollContextProvider poll={poll} urlId={urlId} admin={false}>
                 <Poll />
               </PollContextProvider>
-            </StandardLayout>
+            </ParticipantLayout>
           </ParticipantsProvider>
         </DayjsProvider>
       </ModalProvider>

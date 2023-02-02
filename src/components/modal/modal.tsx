@@ -37,7 +37,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
 }) => {
   const initialFocusRef = React.useRef<HTMLButtonElement>(null);
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {visible ? (
         <Dialog
           open={visible}
@@ -66,7 +66,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               exit={{ opacity: 0, scale: 0.9 }}
               className="relative z-50 my-8 inline-block max-w-full transform text-left align-middle"
             >
-              <div className="mx-4 max-w-full overflow-hidden rounded-xl bg-white shadow-xl xs:rounded-xl">
+              <div className="mx-4 max-w-full overflow-hidden rounded-md bg-white shadow-xl xs:rounded-xl">
                 {showClose ? (
                   <button
                     className="absolute right-5 top-1 z-10 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"

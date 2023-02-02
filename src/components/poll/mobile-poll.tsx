@@ -98,7 +98,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     <FormProvider {...form}>
       <form
         ref={formRef}
-        className="border-t border-b bg-white shadow-sm"
         onSubmit={handleSubmit(async ({ name, votes }) => {
           if (selectedParticipant) {
             await updateParticipant.mutateAsync({
@@ -119,7 +118,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
           }
         })}
       >
-        <div className="sticky top-[47px] z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
+        <div className="flex flex-col space-y-2 border-b bg-gray-50 p-3">
           <div className="flex space-x-3">
             {!isEditing ? (
               <Listbox
@@ -189,6 +188,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   rules={{ validate: requiredString }}
                   render={({ field }) => (
                     <NameInput
+                      autoFocus={true}
                       disabled={formState.isSubmitting}
                       className={clsx("input w-full", {
                         "input-error": formState.errors.name,
@@ -284,9 +284,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
           selectedParticipantId={selectedParticipantId}
           options={pollContext.options}
           editable={isEditing}
-          groupClassName={
-            pollContext.pollType === "timeSlot" ? "top-[151px]" : "top-[108px]"
-          }
           group={(option) => {
             if (option.type === "timeSlot") {
               return `${option.dow} ${option.day} ${option.month}`;
