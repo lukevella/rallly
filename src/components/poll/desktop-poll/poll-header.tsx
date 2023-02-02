@@ -38,7 +38,7 @@ const PollHeader: React.VoidFunctionComponent = () => {
         return (
           <div
             key={optionId}
-            className="shrink-0 space-y-3 py-3 text-center"
+            className="shrink-0 space-y-3 text-center"
             style={{ width: columnWidth }}
             onMouseOver={() => setActiveOptionId(optionId)}
             onMouseOut={() => setActiveOptionId(null)}

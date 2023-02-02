@@ -127,9 +127,9 @@ const Poll: React.VoidFunctionComponent = () => {
             </div>
           ) : null}
           <div>
-            <div className="flex border-b py-2">
+            <div className="flex py-3">
               <div
-                className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
+                className="flex shrink-0 items-center pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
               >
                 <div className="flex h-full grow items-end">

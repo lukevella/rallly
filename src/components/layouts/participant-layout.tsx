@@ -19,7 +19,7 @@ export const ParticipantLayout = ({
         <div className="flex justify-center p-4 text-center">
           <a
             href="https://rallly.co"
-            className="rounded-full border bg-white px-4 py-1 text-slate-400 shadow-sm transition-colors hover:border-primary-500 hover:bg-primary-50 hover:text-primary-500 active:bg-primary-100"
+            className="rounded-md bg-primary-500 px-4 py-2 text-sm text-white shadow-sm transition-colors hover:border-primary-500 hover:bg-primary-50 hover:text-primary-500 active:bg-primary-100"
           >
             <Trans
               t={t}
