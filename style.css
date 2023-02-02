@@ -34,7 +34,7 @@
     @apply mb-1 block text-sm text-slate-800;
   }
   button {
-    @apply cursor-default outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
+    @apply outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
   }
 
   #floating-ui-root {
@@ -65,7 +65,7 @@
     @apply h-4 w-4 rounded border-slate-300 text-primary-500 shadow-sm focus:ring-primary-500;
   }
   .btn {
-    @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all;
+    @apply inline-flex h-9 select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all;
   }
   a.btn {
     @apply cursor-pointer hover:no-underline;
@@ -118,7 +118,7 @@
   }
 
   .menu-item {
-    @apply block w-full cursor-default select-none truncate px-4 py-2 text-left;
+    @apply block w-full select-none truncate px-4 py-2 text-left;
   }
 
   button[disabled] {

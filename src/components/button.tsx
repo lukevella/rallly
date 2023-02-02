@@ -42,7 +42,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        role="button"
         type={htmlType}
         className={clsx(
           {
@@ -57,6 +56,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className,
         )}
         {...passThroughProps}
+        role="button"
         disabled={disabled || loading}
       >
         {loading ? (
