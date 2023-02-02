@@ -294,6 +294,7 @@ export const LoginForm: React.VoidFunctionComponent<{
               email: res.user.email,
               name: res.user.name,
             });
+            posthog.capture("login");
           }
         }}
         onResend={async () => {
