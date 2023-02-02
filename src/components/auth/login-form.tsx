@@ -355,7 +355,7 @@ export const LoginForm: React.VoidFunctionComponent<{
           </div>
         ) : null}
       </fieldset>
-      <div className="mb-4 space-y-3">
+      <div className="space-y-3">
         <Button
           loading={formState.isSubmitting}
           htmlType="submit"
