@@ -20,12 +20,7 @@ const PollPageLoader: NextPage = () => {
   const { t } = useTranslation("app");
   const urlId = query.urlId as string;
 
-  const pollQuery = trpcNext.poll.getByAdminUrlId.useQuery(
-    { urlId },
-    {
-      retry: false,
-    },
-  );
+  const pollQuery = trpcNext.poll.getByAdminUrlId.useQuery({ urlId });
 
   const poll = pollQuery.data;
 

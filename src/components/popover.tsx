@@ -18,7 +18,7 @@ const PopoverContent = React.forwardRef<
       align={align}
       sideOffset={sideOffset}
       className={clsx(
-        "z-50 animate-popIn rounded-md border border-slate-100 bg-white p-1 shadow-md outline-none dark:border-slate-800 dark:bg-slate-800",
+        "z-50 animate-popIn rounded-md border bg-white p-1 shadow-md outline-none",
         className,
       )}
       {...props}

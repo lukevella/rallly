@@ -52,11 +52,15 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
 
   const queryClient = trpcNext.useContext();
-  const { data: user, isFetching } = trpcNext.whoami.get.useQuery();
+  const { data: user } = trpcNext.whoami.get.useQuery();
+
+  const [isUpdating, setIsUpdating] = React.useState(false);
 
   const logout = trpcNext.whoami.destroy.useMutation({
-    onSuccess: () => {
-      queryClient.whoami.invalidate();
+    onSuccess: async () => {
+      setIsUpdating(true);
+      await queryClient.whoami.invalidate();
+      setIsUpdating(false);
     },
   });
 
@@ -96,7 +100,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   return (
     <UserContext.Provider
       value={{
-        isUpdating: isFetching,
+        isUpdating,
         user: { ...user, shortName },
         refresh: () => {
           return queryClient.whoami.invalidate();

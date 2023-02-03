@@ -202,7 +202,10 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
       <div className="flex select-none transition duration-75">
         <div className="flex grow space-x-8">
           <div>{children}</div>
-          <div className="flex grow items-center justify-end">
+          <div className="flex grow items-center justify-end gap-3">
+            {participants.length > 0 ? (
+              <SummarizedParticipantList participants={participants} />
+            ) : null}
             <button
               type="button"
               onTouchStart={(e) => e.stopPropagation()}
@@ -249,9 +252,6 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
       <AnimatePresence initial={false}>
         {expanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
       </AnimatePresence>
-      {!expanded && participants.length > 0 ? (
-        <SummarizedParticipantList participants={participants} />
-      ) : null}
     </div>
   );
 };

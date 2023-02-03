@@ -61,7 +61,7 @@ export const Poll = (props: { children?: React.ReactNode }) => {
             </div>
           ) : null}
           <div className="rounded-md border bg-white shadow-sm md:overflow-hidden">
-            <div className="p-4">
+            <div className="p-4 sm:p-6">
               <div className="space-y-3">
                 <div>
                   <div

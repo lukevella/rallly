@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import DateCard from "../../date-card";
 import PollOption, { PollOptionProps } from "./poll-option";
 
 export interface DateOptionProps extends PollOptionProps {
@@ -14,11 +15,11 @@ const DateOption: React.VoidFunctionComponent<DateOptionProps> = ({
 }) => {
   return (
     <PollOption {...rest}>
-      <div className="font-semibold leading-9">
-        <span className="text-2xl">{day}</span>
-        &nbsp;
-        <span className="text-sm uppercase text-slate-400">{dow}</span>
-      </div>
+      {/**
+       * Intentionally using the month prop for the day of week here as a temporary measure
+       * until we update this component.
+       */}
+      <DateCard day={day} month={dow} />
     </PollOption>
   );
 };

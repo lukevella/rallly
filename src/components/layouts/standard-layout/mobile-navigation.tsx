@@ -26,7 +26,7 @@ export const MobileNavigation = (props: { className?: string }) => {
 
   React.useEffect(() => {
     const scrollHandler = () => {
-      if (window.scrollY > 32) {
+      if (window.scrollY > 0) {
         setIsPinned(true);
       } else {
         setIsPinned(false);

@@ -43,7 +43,9 @@ const PollHeader: React.VoidFunctionComponent = () => {
             onMouseOver={() => setActiveOptionId(optionId)}
             onMouseOut={() => setActiveOptionId(null)}
           >
-            <DateCard day={option.day} dow={option.dow} month={option.month} />
+            <div>
+              <DateCard day={option.day} month={option.month} />
+            </div>
             {option.type === "timeSlot" ? (
               <TimeRange
                 className="mt-3"

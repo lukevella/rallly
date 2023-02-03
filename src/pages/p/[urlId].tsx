@@ -15,9 +15,8 @@ import { withPageTranslations } from "@/utils/with-page-translations";
 import { ParticipantLayout } from "../../components/layouts/participant-layout";
 import { DayjsProvider } from "../../utils/dayjs";
 
-const PollPageLoader: NextPage = () => {
+const Page: NextPage = () => {
   const { query } = useRouter();
-  const { t } = useTranslation("app");
   const urlId = query.urlId as string;
 
   const pollQuery = trpcNext.poll.getByParticipantUrlId.useQuery({ urlId });
@@ -38,7 +37,7 @@ const PollPageLoader: NextPage = () => {
     );
   }
 
-  return <FullPageLoader>{t("loading")}</FullPageLoader>;
+  return null;
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
@@ -52,4 +51,4 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   },
 );
 
-export default withSession(PollPageLoader);
+export default withSession(Page);
