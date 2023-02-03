@@ -1,9 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
-import React from "react";
 
-import FullPageLoader from "@/components/full-page-loader";
 import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";

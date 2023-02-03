@@ -8,14 +8,10 @@ import { Button } from "./button";
 import { usePoll } from "./poll-context";
 
 export interface SharingProps {
-  onHide: () => void;
   className?: string;
 }
 
-const Sharing: React.VoidFunctionComponent<SharingProps> = ({
-  onHide,
-  className,
-}) => {
+const Sharing: React.VoidFunctionComponent<SharingProps> = ({ className }) => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
   const [state, copyToClipboard] = useCopyToClipboard();

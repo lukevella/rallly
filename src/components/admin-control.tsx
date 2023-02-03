@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
@@ -123,14 +122,7 @@ export const AdminControls = () => {
         onCancel={() => setSharingVisible(false)}
         showClose={true}
         footer={null}
-        content={
-          <Sharing
-            className="p-4"
-            onHide={() => {
-              setSharingVisible(false);
-            }}
-          />
-        }
+        content={<Sharing className="p-4" />}
       />
       {poll.verified === false ? (
         <div className="overflow-hidden rounded-md border border-gray-200 bg-white p-4 text-gray-700 shadow-sm md:mx-0 md:mt-0">
