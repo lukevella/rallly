@@ -100,7 +100,7 @@ const Page: NextPage<CreatePollPageProps> = ({
         optionsView: formData?.options?.view,
       });
       setPersistedFormData(initialNewEventData);
-      router.replace(`/admin/${res.urlId}?sharing=true`);
+      router.replace(`/admin/${res.urlId}`);
     },
   });
 

@@ -17,17 +17,17 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
   return (
     <div
       className={clsx(
-        "relative inline-block rounded-md border border-slate-200 px-4 py-1 text-center",
+        "relative inline-block rounded-md border border-slate-200 px-3 py-2 text-center",
         className,
       )}
     >
       {annotation ? (
         <div className="absolute -top-3 -right-3 z-20">{annotation}</div>
       ) : null}
-      <div className="text-center text-lg font-bold">{day}</div>
-      <div className="text-center text-xs font-semibold uppercase text-slate-500">
+      <div className="text-center text-xs font-semibold uppercase leading-normal text-slate-500">
         {month}
       </div>
+      <div className="text-center text-xl font-bold leading-none">{day}</div>
     </div>
   );
 };

@@ -111,7 +111,7 @@ const Poll: React.VoidFunctionComponent = () => {
         style={{ width: pollWidth }}
         ref={ref}
       >
-        <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden">
+        <div className="flex flex-col overflow-hidden">
           {poll.timeZone ? (
             <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
               <div className="flex grow items-center">
