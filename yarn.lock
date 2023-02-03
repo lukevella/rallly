@@ -1659,10 +1659,10 @@
     "@tanstack/query-core" "4.15.1"
     use-sync-external-store "^1.2.0"
 
-"@trpc/client@^10.0.0-rc.8":
-  version "10.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.0.0-rc.8.tgz#2b6b0db8ec41e4403b72d25d37a2cd9d6c6c1257"
-  integrity sha512-NuQl7g1tkfFYn6P6dZJJkVsxnxutYpaxmpG/w5ZKW3QVu6cY1joUOrWakunKrghh3HS+svgLaPz0Xl0PlmdSlw==
+"@trpc/client@^10.9.0":
+  version "10.9.1"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.9.1.tgz#324298dc8f7140d841ed5c54e1da3c0c4dc5fd95"
+  integrity sha512-9ma44dFU40KHIEaMdyjRJd9LloFyZZXeAbZJTi2+XK/5sj64FRqqef3fWTj2dBc7A09pk8gls4Tqa3tNC98jSg==
 
 "@trpc/next@^10.0.0-rc.8":
   version "10.0.0-rc.8"
