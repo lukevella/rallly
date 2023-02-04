@@ -9,9 +9,13 @@ import { usePoll } from "./poll-context";
 
 export interface SharingProps {
   className?: string;
+  onClose?: () => void;
 }
 
-const Sharing: React.VoidFunctionComponent<SharingProps> = ({ className }) => {
+const Sharing: React.VoidFunctionComponent<SharingProps> = ({
+  className,
+  onClose,
+}) => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
   const [state, copyToClipboard] = useCopyToClipboard();
@@ -41,29 +45,28 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({ className }) => {
       <div className="relative">
         <input
           readOnly={true}
-          className={clsx(
-            "mb-4 w-full rounded-md border p-2 transition-all md:mb-0 md:p-3 md:text-lg",
-            {
-              "bg-gray-100/50": !didCopy,
-              "bg-gray-100": didCopy,
-            },
-          )}
+          className={clsx("mb-4 w-full rounded-md border p-2 transition-all", {
+            "bg-gray-100/50": !didCopy,
+            "bg-gray-100": didCopy,
+          })}
           value={participantUrl}
         />
-        <Button
-          disabled={didCopy}
-          type="primary"
-          onClick={() => {
-            copyToClipboard(participantUrl);
-            setDidCopy(true);
-            setTimeout(() => {
-              setDidCopy(false);
-            }, 1000);
-          }}
-          className="md:absolute md:top-1/2 md:right-2 md:-translate-y-1/2"
-        >
-          {didCopy ? t("copied") : t("copyLink")}
-        </Button>
+        <div className="flex justify-between gap-3">
+          <Button onClick={onClose}>{t("close")}</Button>
+          <Button
+            disabled={didCopy}
+            type="primary"
+            onClick={() => {
+              copyToClipboard(participantUrl);
+              setDidCopy(true);
+              setTimeout(() => {
+                setDidCopy(false);
+              }, 1000);
+            }}
+          >
+            {didCopy ? t("copied") : t("copyLink")}
+          </Button>
+        </div>
       </div>
     </div>
   );

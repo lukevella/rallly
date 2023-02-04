@@ -43,12 +43,8 @@ export const AdminControls = () => {
 
   const isWideScreen = useWideScreen();
 
-  const { participants } = useParticipants();
-
   const router = useRouter();
-  const [isSharingVisible, setSharingVisible] = React.useState(
-    participants.length === 0,
-  );
+  const [isSharingVisible, setSharingVisible] = React.useState(false);
 
   const queryClient = trpcNext.useContext();
 
@@ -122,7 +118,12 @@ export const AdminControls = () => {
         onCancel={() => setSharingVisible(false)}
         showClose={true}
         footer={null}
-        content={<Sharing className="p-4" />}
+        content={
+          <Sharing
+            className="max-w-md p-4"
+            onClose={() => setSharingVisible(false)}
+          />
+        }
       />
       {poll.verified === false ? (
         <div className="overflow-hidden rounded-md border border-gray-200 bg-white p-4 text-gray-700 shadow-sm md:mx-0 md:mt-0">
