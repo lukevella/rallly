@@ -17,7 +17,7 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
   return (
     <div
       className={clsx(
-        "relative inline-block rounded-md border border-slate-200 px-3 py-2 text-center",
+        "relative inline-block rounded-md border border-slate-200 px-4 py-2 text-center",
         className,
       )}
     >

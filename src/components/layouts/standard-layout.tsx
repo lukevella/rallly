@@ -9,7 +9,7 @@ const StandardLayout: React.VoidFunctionComponent<{
 }> = ({ children, ...rest }) => {
   return (
     <DayjsProvider>
-      <div className="relative min-h-full bg-gray-50" {...rest}>
+      <div className="bg-pattern relative min-h-full" {...rest}>
         <MobileNavigation />
         <div className="mx-auto max-w-4xl">{children}</div>
       </div>

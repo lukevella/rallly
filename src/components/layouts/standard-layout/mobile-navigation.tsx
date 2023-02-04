@@ -6,6 +6,7 @@ import React from "react";
 
 import { LoginLink } from "@/components/auth/login-modal";
 import Adjustments from "@/components/icons/adjustments.svg";
+import Home from "@/components/icons/home.svg";
 import Login from "@/components/icons/login.svg";
 import Menu from "@/components/icons/menu.svg";
 import Pencil from "@/components/icons/pencil.svg";
@@ -15,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/popover";
 import Preferences from "@/components/preferences";
 import { useUser } from "@/components/user-provider";
 
-import { HomeLink } from "./home-link";
+import { Logo } from "../../logo";
 import { UserDropdown } from "./user-dropdown";
 
 export const MobileNavigation = (props: { className?: string }) => {
@@ -57,8 +58,8 @@ export const MobileNavigation = (props: { className?: string }) => {
               type="button"
               className="group flex items-center rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
-              <Menu className="w-5 group-hover:text-primary-500" />
-              <span className="ml-2 hidden sm:block">{t("app:menu")}</span>
+              <Menu className="mr-2 w-5 group-hover:text-primary-500" />
+              <Logo />
             </button>
           </PopoverTrigger>
           <PopoverContent align="start">
@@ -127,13 +128,19 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
   const { t } = useTranslation(["common", "app"]);
   return (
     <div className={clsx("space-y-1", className)}>
-      <HomeLink className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md p-2 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300" />
+      <Link
+        href="/"
+        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+      >
+        <Home className="h-5 opacity-75 " />
+        <span className="inline-block">{t("app:home")}</span>
+      </Link>
       <Link
         href="/new"
         className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
       >
         <Pencil className="h-5 opacity-75 " />
-        <span className="inline-block">{t("app:newPoll")}</span>
+        <span className="inline-block">{t("app:createNew")}</span>
       </Link>
       <a
         target="_blank"

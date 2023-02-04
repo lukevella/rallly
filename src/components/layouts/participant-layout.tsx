@@ -12,7 +12,7 @@ export const ParticipantLayout = ({
 }) => {
   const { t } = useTranslation("app");
   return (
-    <div className="bg-pattern h-full sm:space-y-8">
+    <div className="bg-pattern min-h-full sm:space-y-8">
       <MobileNavigation />
       <div className="mx-auto max-w-3xl space-y-4 px-3 pb-8">
         <div>{children}</div>
