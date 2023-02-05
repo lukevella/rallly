@@ -162,7 +162,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                         "text-primary-500": day.today && !day.selected,
                         "border-r": (i + 1) % 7 !== 0,
                         "border-b": i < datepicker.days.length - 7,
-                        "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:animate-popIn after:rounded-full after:bg-green-500 after:content-['']":
+                        "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-500 after:content-['']":
                           day.selected,
                       },
                     )}

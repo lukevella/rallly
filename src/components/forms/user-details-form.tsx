@@ -32,12 +32,7 @@ export const UserDetailsForm: React.VoidFunctionComponent<
   }, [watch, onChange]);
 
   return (
-    <form
-      id={name}
-      className={className}
-      style={{ width: 400 }}
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form id={name} className={className} onSubmit={handleSubmit(onSubmit)}>
       <h2>{t("yourDetails")}</h2>
       <div className="formField">
         <label className="text-slate-500" htmlFor="name">

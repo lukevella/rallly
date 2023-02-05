@@ -36,7 +36,6 @@ export const PollDetailsForm: React.VoidFunctionComponent<
     <form
       id={name}
       className={clsx("max-w-full", className)}
-      style={{ width: 500 }}
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="formField">

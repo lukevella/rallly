@@ -93,7 +93,7 @@ export const MobileNavigation = (props: { className?: string }) => {
                     <UserCircle className="w-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
                   </div>
                   <div className="max-w-[120px] truncate font-medium xs:block">
-                    {user.shortName}
+                    {user.isGuest ? t("app:guest") : user.shortName}
                   </div>
                 </button>
               }
