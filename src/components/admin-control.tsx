@@ -1,4 +1,3 @@
-import { PopoverTrigger } from "@radix-ui/react-popover";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
@@ -11,34 +10,14 @@ import { Button } from "@/components/button";
 import Share from "@/components/icons/share.svg";
 
 import { trpc, trpcNext } from "../utils/trpc";
-import Modal from "./modal/modal";
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
 import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
 import { UnverifiedPollNotice } from "./poll/unverified-poll-notice";
 import { usePoll } from "./poll-context";
-import { Popover, PopoverContent } from "./popover";
 import Sharing from "./sharing";
 import { useUser } from "./user-provider";
-
-const checkIfWideScreen = () => window.innerWidth > 640;
-
-const useWideScreen = () => {
-  const [isWideScreen, setIsWideScreen] = React.useState(checkIfWideScreen);
-
-  React.useEffect(() => {
-    const listener = () => setIsWideScreen(checkIfWideScreen());
-
-    window.addEventListener("resize", listener);
-
-    return () => {
-      window.removeEventListener("resize", listener);
-    };
-  }, []);
-
-  return isWideScreen;
-};
 
 export const AdminControls = (props: { children?: React.ReactNode }) => {
   const { poll, urlId } = usePoll();
