@@ -52,6 +52,7 @@ export const UserDropdown: React.VoidFunctionComponent<DropdownProps> = ({
                       href="https://support.rallly.co/guest-sessions"
                       target="_blank"
                       rel="noreferrer"
+                      className="text-link"
                     >
                       {t("app:guestSessionReadMore")}
                     </a>
