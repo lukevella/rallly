@@ -1,3 +1,5 @@
+import { PopoverTrigger } from "@radix-ui/react-popover";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
@@ -16,6 +18,7 @@ import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
 import { UnverifiedPollNotice } from "./poll/unverified-poll-notice";
 import { usePoll } from "./poll-context";
+import { Popover, PopoverContent } from "./popover";
 import Sharing from "./sharing";
 import { useUser } from "./user-provider";
 
@@ -37,14 +40,11 @@ const useWideScreen = () => {
   return isWideScreen;
 };
 
-export const AdminControls = () => {
+export const AdminControls = (props: { children?: React.ReactNode }) => {
   const { poll, urlId } = usePoll();
   const { t } = useTranslation("app");
 
-  const isWideScreen = useWideScreen();
-
   const router = useRouter();
-  const [isSharingVisible, setSharingVisible] = React.useState(false);
 
   const queryClient = trpcNext.useContext();
 
@@ -86,6 +86,12 @@ export const AdminControls = () => {
     },
   });
 
+  const { participants } = useParticipants();
+
+  const [isSharingVisible, setIsSharingVisible] = React.useState(
+    participants.length === 0,
+  );
+
   useMount(() => {
     const { code } = router.query;
     if (typeof code === "string" && !poll.verified) {
@@ -94,42 +100,56 @@ export const AdminControls = () => {
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex sm:justify-end">
+    <div className="">
+      <div className="mb-4 flex justify-end">
         <div className="flex gap-2">
           <NotificationsToggle />
-          <ManagePoll
-            placement={isWideScreen ? "bottom-end" : "bottom-start"}
-          />
+          <ManagePoll placement="bottom-end" />
           <Button
             type="primary"
             icon={<Share />}
             onClick={() => {
-              setSharingVisible((value) => !value);
+              setIsSharingVisible(!isSharingVisible);
             }}
           >
             {t("share")}
           </Button>
         </div>
       </div>
-      <Modal
-        visible={isSharingVisible}
-        overlayClosable={true}
-        onCancel={() => setSharingVisible(false)}
-        showClose={true}
-        footer={null}
-        content={
-          <Sharing
-            className="max-w-md p-4"
-            onClose={() => setSharingVisible(false)}
-          />
-        }
-      />
-      {poll.verified === false ? (
-        <div className="overflow-hidden rounded-md border border-gray-200 bg-white p-4 text-gray-700 shadow-sm md:mx-0 md:mt-0">
-          <UnverifiedPollNotice />
-        </div>
-      ) : null}
+      <AnimatePresence initial={false}>
+        {isSharingVisible ? (
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.8,
+              marginBottom: 0,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              marginBottom: 16,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.8,
+              height: 0,
+              marginBottom: 0,
+            }}
+            className="rounded-md border bg-white shadow-sm"
+          >
+            <Sharing
+              className="p-4"
+              onHide={() => {
+                setIsSharingVisible(false);
+              }}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <motion.div className="relative z-10 space-y-4" layout="position">
+        {poll.verified === false ? <UnverifiedPollNotice /> : null}
+        {props.children}
+      </motion.div>
     </div>
   );
 };

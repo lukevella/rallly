@@ -8,13 +8,13 @@ import { Button } from "./button";
 import { usePoll } from "./poll-context";
 
 export interface SharingProps {
+  onHide: () => void;
   className?: string;
-  onClose?: () => void;
 }
 
 const Sharing: React.VoidFunctionComponent<SharingProps> = ({
+  onHide,
   className,
-  onClose,
 }) => {
   const { poll } = usePoll();
   const { t } = useTranslation("app");
@@ -31,9 +31,15 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
   return (
     <div className={className}>
       <div className="mb-1 flex items-center justify-between">
-        <div className="text-lg font-semibold text-slate-800">
+        <div className="text-lg font-semibold text-slate-700">
           {t("shareLink")}
         </div>
+        <button
+          onClick={onHide}
+          className="h-8 items-center justify-center rounded-md px-3 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
+        >
+          {t("hide")}
+        </button>
       </div>
       <div className="mb-4 text-slate-600">
         <Trans
@@ -45,28 +51,28 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
       <div className="relative">
         <input
           readOnly={true}
-          className={clsx("mb-4 w-full rounded-md border p-2 transition-all", {
-            "bg-gray-100/50": !didCopy,
-            "bg-gray-100": didCopy,
-          })}
+          className={clsx(
+            "mb-4 w-full rounded-md bg-gray-100 p-2 text-slate-600 transition-colors md:mb-0 md:p-3 md:text-lg",
+            {
+              "bg-slate-50 opacity-75": didCopy,
+            },
+          )}
           value={participantUrl}
         />
-        <div className="flex justify-between gap-3">
-          <Button onClick={onClose}>{t("close")}</Button>
-          <Button
-            disabled={didCopy}
-            type="primary"
-            onClick={() => {
-              copyToClipboard(participantUrl);
-              setDidCopy(true);
-              setTimeout(() => {
-                setDidCopy(false);
-              }, 1000);
-            }}
-          >
-            {didCopy ? t("copied") : t("copyLink")}
-          </Button>
-        </div>
+        <Button
+          disabled={didCopy}
+          type="primary"
+          onClick={() => {
+            copyToClipboard(participantUrl);
+            setDidCopy(true);
+            setTimeout(() => {
+              setDidCopy(false);
+            }, 1000);
+          }}
+          className="md:absolute md:top-1/2 md:right-3 md:-translate-y-1/2"
+        >
+          {didCopy ? t("copied") : t("copyLink")}
+        </Button>
       </div>
     </div>
   );

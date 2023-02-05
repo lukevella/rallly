@@ -12,20 +12,18 @@ export const UnverifiedPollNotice = () => {
   );
 
   return (
-    <div>
-      <div className="md:flex md:justify-between md:space-x-4">
-        <div className="mb-4 md:mb-0 md:w-2/3">
-          <Trans
-            t={t}
-            i18nKey="unverifiedMessage"
-            values={{ email: poll.user.email }}
-            components={{
-              b: (
-                <span className="whitespace-nowrap font-medium text-slate-700" />
-              ),
-            }}
-          />
-        </div>
+    <div className="space-y-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-gray-700 shadow-sm">
+      <div className="p-1">
+        <Trans
+          t={t}
+          i18nKey="unverifiedMessage"
+          values={{ email: poll.user.email }}
+          components={{
+            b: <span className="whitespace-nowrap font-bold text-slate-700" />,
+          }}
+        />
+      </div>
+      <div>
         <Button
           onClick={() => {
             requestVerificationEmail.mutate({
@@ -33,8 +31,9 @@ export const UnverifiedPollNotice = () => {
               adminUrlId: poll.adminUrlId,
             });
           }}
-          disabled={requestVerificationEmail.isSuccess}
           loading={requestVerificationEmail.isLoading}
+          className="rounded px-3 py-2 font-semibold shadow-sm"
+          disabled={requestVerificationEmail.isSuccess}
         >
           {requestVerificationEmail.isSuccess
             ? "Vertification email sent"

@@ -30,8 +30,9 @@ const PollPageLoader: NextPage = () => {
         <StandardLayout>
           <PollContextProvider poll={poll} urlId={urlId} admin={true}>
             <div className="flex flex-col space-y-3 p-3 sm:space-y-4 sm:p-4">
-              <AdminControls />
-              <Poll />
+              <AdminControls>
+                <Poll />
+              </AdminControls>
             </div>
           </PollContextProvider>
         </StandardLayout>
