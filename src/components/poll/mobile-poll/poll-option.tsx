@@ -202,28 +202,34 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
       <div className="flex select-none transition duration-75">
         <div className="flex grow gap-3">
           <div className="shrink-0">{children}</div>
-          <div className="flex min-w-0 grow items-center justify-end gap-3 overflow-hidden">
-            <button
-              type="button"
-              onTouchStart={(e) => e.stopPropagation()}
-              className="flex justify-end rounded-lg p-2 active:bg-slate-500/10"
-              onClick={(e) => {
-                e.stopPropagation();
-                setExpanded((value) => !value);
-              }}
-            >
-              {participants.length > 0 ? (
-                <SummarizedParticipantList participants={participants} />
-              ) : (
-                <ScoreSummary yesScore={yesScore} />
-              )}
-              <ChevronDown
-                className={clsx("h-5 text-slate-400 transition-transform", {
-                  "-rotate-180": expanded,
-                })}
-              />
-            </button>
-          </div>
+          <AnimatePresence initial={false}>
+            {showVotes ? null : (
+              <motion.div
+                exit={{ opacity: 0 }}
+                className="flex min-w-0 grow items-center justify-end gap-2 overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onTouchStart={(e) => e.stopPropagation()}
+                  className="flex justify-end gap-2 rounded-lg p-2 active:bg-slate-500/10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setExpanded((value) => !value);
+                  }}
+                >
+                  {participants.length > 0 ? (
+                    <SummarizedParticipantList participants={participants} />
+                  ) : null}
+                  <ScoreSummary yesScore={yesScore} />
+                  <ChevronDown
+                    className={clsx("h-5 text-slate-400 transition-transform", {
+                      "-rotate-180": expanded,
+                    })}
+                  />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
         <CollapsibleContainer
           expanded={showVotes}
@@ -251,7 +257,9 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
         </CollapsibleContainer>
       </div>
       <AnimatePresence initial={false}>
-        {expanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
+        {expanded && !editable ? (
+          <PollOptionVoteSummary optionId={optionId} />
+        ) : null}
       </AnimatePresence>
     </div>
   );
