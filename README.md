@@ -86,9 +86,8 @@ Rallly is open-source under the GNU Affero General Public License Version 3 (AGP
 Big thanks to these folks for sponsoring the project!
 
 <a href="https://github.com/cpnielsen" target="_blank"><img src="https://avatars.githubusercontent.com/u/1258576?v=4" width="32" height="32" /></a>&nbsp;
-<a href="https://github.com/Daedalus3" target="_blank"><img src="https://avatars.githubusercontent.com/u/5649239?v=4" width="32" height="32" /></a>&nbsp;
 <a href="https://github.com/iamericfletcher" target="_blank"><img src="https://avatars.githubusercontent.com/u/64165327?v=4" width="32" height="32" /></a>&nbsp;
-<a href="https://github.com/richb-hanover" target="_blank"><img src="https://avatars.githubusercontent.com/u/1094930?v=4" width="32" height="32" /></a>&nbsp;
+<a href="https://github.com/arcticFox-git" target="_blank"><img src="https://avatars.githubusercontent.com/u/86988982?v=4" width="32" height="32" /></a>&nbsp;
 
 And thanks to these companies for providing their services to host and run [rallly.co](https://rallly.co).
 
