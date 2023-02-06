@@ -1,10 +1,12 @@
 import { GetServerSideProps, NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-import { withSession } from "@/components/user-provider";
+import { useUser, withSession } from "@/components/user-provider";
 import { withSessionSsr } from "@/utils/auth";
 import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
@@ -18,15 +20,27 @@ const Page: NextPage = () => {
 
   const pollQuery = trpcNext.poll.getByParticipantUrlId.useQuery({ urlId });
 
+  const { user } = useUser();
   const poll = pollQuery.data;
 
+  const { t } = useTranslation("app");
   if (poll) {
     return (
       <DayjsProvider>
         <ParticipantsProvider pollId={poll.id}>
           <ParticipantLayout>
             <PollContextProvider poll={poll} urlId={urlId} admin={false}>
-              <Poll />
+              <div className="space-y-3 sm:space-y-4">
+                {user.id === poll.user.id ? (
+                  <Link
+                    className="btn-default"
+                    href={`/admin/${poll.adminUrlId}`}
+                  >
+                    &larr; {t("goToAdmin")}
+                  </Link>
+                ) : null}
+                <Poll />
+              </div>
             </PollContextProvider>
           </ParticipantLayout>
         </ParticipantsProvider>
