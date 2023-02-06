@@ -1085,22 +1085,15 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@floating-ui/core@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.6.2.tgz#f2813f0e5f3d5ed7af5029e1a082203dadf02b7d"
-  integrity sha512-jktYRmZwmau63adUG3GKOAVCofBXkk55S/zQ94XOorAHhwqFIOFAy1rSp2N0Wp6/tGbe9V3u/ExlGZypyY17rg==
-
 "@floating-ui/core@^0.7.3":
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.7.3.tgz#d274116678ffae87f6b60e90f88cc4083eefab86"
   integrity sha512-buc8BXHmG9l82+OQXOFU3Kr2XQx9ys01U/Q9HMIrZ300iLc8HLMgh7dcCqgYzAzf4BkoQvDcXf5Y+CuEZ5JBYg==
 
-"@floating-ui/dom@^0.4.5":
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.4.5.tgz#2e88d16646119cc67d44683f75ee99840475bbfa"
-  integrity sha512-b+prvQgJt8pieaKYMSJBXHxX/DYwdLsAWxKYqnO5dO2V4oo/TYBZJAUQCVNjTWWsrs6o4VDrNcP9+E70HAhJdw==
-  dependencies:
-    "@floating-ui/core" "^0.6.2"
+"@floating-ui/core@^1.1.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.1.1.tgz#cf8b4cdd8987c687329a6099561764d8a16f2f22"
+  integrity sha512-PL7g3dhA4dHgZfujkuD8Q+tfJJynEtnNQSPzmucCnxMvkxf4cLBJw/ZYqZUn4HCh33U3WHrAfv2R2tbi9UCSmw==
 
 "@floating-ui/dom@^0.5.3":
   version "0.5.4"
@@ -1109,14 +1102,21 @@
   dependencies:
     "@floating-ui/core" "^0.7.3"
 
-"@floating-ui/react-dom-interactions@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom-interactions/-/react-dom-interactions-0.4.0.tgz#b4d951aaa3b0a66cd0b2787a7bf9d5d7b2f12021"
-  integrity sha512-pcXxg2QVrQmlo54v39fIfPNda3bkFibuQVji0b4I9PLXOTV+KI5phc8ANnKLdfttfsYap/0bAknS9dQW97KShw==
+"@floating-ui/dom@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.1.1.tgz#66aa747e15894910869bf9144fc54fc7d6e9f975"
+  integrity sha512-TpIO93+DIujg3g7SykEAGZMDtbJRrmnYRCNYSjJlvIbGhBjRSNTLVbNeDQBrzy9qDgUbiWdc7KA0uZHZ2tJmiw==
   dependencies:
-    "@floating-ui/react-dom" "^0.6.3"
+    "@floating-ui/core" "^1.1.0"
+
+"@floating-ui/react-dom-interactions@^0.13.3":
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom-interactions/-/react-dom-interactions-0.13.3.tgz#6c49dda9e16fff64d188603c1efc139588ce925d"
+  integrity sha512-AnCW06eIZxzD/Hl1Qbi2JkQRU5KpY7Dn81k3xRfbvs+HylhB+t3x88/GNKLK39mMTlJ/ylxm5prUpiLrTWvifQ==
+  dependencies:
+    "@floating-ui/react-dom" "^1.0.1"
     aria-hidden "^1.1.3"
-    use-isomorphic-layout-effect "^1.1.1"
+    tabbable "^6.0.1"
 
 "@floating-ui/react-dom@0.7.2":
   version "0.7.2"
@@ -1126,13 +1126,12 @@
     "@floating-ui/dom" "^0.5.3"
     use-isomorphic-layout-effect "^1.1.1"
 
-"@floating-ui/react-dom@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-0.6.3.tgz#7b64cfd4fd12e4a0515dbf1b2be16e48c9a06c5a"
-  integrity sha512-hC+pS5D6AgS2wWjbmSQ6UR6Kpy+drvWGJIri6e1EDGADTPsCaa4KzCgmCczHrQeInx9tqs81EyDmbKJYY2swKg==
+"@floating-ui/react-dom@^1.0.1":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-1.2.2.tgz#ed256992fd44fcfcddc96da68b4b92f123d61871"
+  integrity sha512-DbmFBLwFrZhtXgCI2ra7wXYT8L2BN4/4AMQKyu05qzsVji51tXOfF36VE2gpMB6nhJGHa85PdEg75FB4+vnLFQ==
   dependencies:
-    "@floating-ui/dom" "^0.4.5"
-    use-isomorphic-layout-effect "^1.1.1"
+    "@floating-ui/dom" "^1.1.1"
 
 "@hapi/b64@5.x.x":
   version "5.0.0"
@@ -6067,6 +6066,11 @@ svgo@^2.5.0:
     csso "^4.2.0"
     picocolors "^1.0.0"
     stable "^0.1.8"
+
+tabbable@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.0.1.tgz#427a09b13c83ae41eed3e88abb76a4af28bde1a6"
+  integrity sha512-SYJSIgeyXW7EuX1ytdneO5e8jip42oHWg9xl/o3oTYhmXusZVgiA+VlPvjIN+kHii9v90AmzTZEBcsEvuAY+TA==
 
 table@^6.0.4:
   version "6.7.0"

@@ -15,7 +15,7 @@
     "test:codegen": "playwright codegen http://localhost:3000"
   },
   "dependencies": {
-    "@floating-ui/react-dom-interactions": "^0.4.0",
+    "@floating-ui/react-dom-interactions": "^0.13.3",
     "@headlessui/react": "^1.6.6",
     "@next/bundle-analyzer": "^12.3.4",
     "@next/font": "^13.1.3",

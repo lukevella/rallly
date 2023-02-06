@@ -132,10 +132,10 @@ const TimeZonePicker: React.VoidFunctionComponent<{
       offset(5),
       flip(),
       size({
-        apply: ({ reference }) => {
+        apply: ({ rects }) => {
           if (refs.floating.current) {
             Object.assign(refs.floating.current.style, {
-              width: `${reference.width}px`,
+              width: `${rects.reference.width}px`,
             });
           }
         },
