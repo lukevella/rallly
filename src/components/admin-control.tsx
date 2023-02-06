@@ -114,7 +114,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
               height: 0,
               marginBottom: 0,
             }}
-            className="rounded-md border bg-white shadow-sm"
+            className="overflow-hidden rounded-md border bg-white shadow-sm"
           >
             <Sharing
               className="p-4"

@@ -2,6 +2,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import Discussion from "@/components/discussion";
+import Exclamation from "@/components/icons/exclamation.svg";
 import LockClosed from "@/components/icons/lock-closed.svg";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
@@ -47,10 +48,18 @@ export const Poll = (props: { children?: React.ReactNode }) => {
       <div>
         <div className="mx-auto max-w-full space-y-3 sm:space-y-4 lg:mx-0">
           {props.children}
-          {poll.closed ? (
-            <div className="flex items-center gap-3 border border-pink-200 bg-pink-100 p-3 text-pink-600 md:mb-4 md:rounded-md md:shadow-sm">
+          {poll.demo ? (
+            <div className="flex items-start gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
               <div className="rounded-md">
-                <LockClosed className="w-5" />
+                <Exclamation className="w-7" />
+              </div>
+              <div>{t("demoPollNotice")}</div>
+            </div>
+          ) : null}
+          {poll.closed ? (
+            <div className="flex items-center gap-3 rounded-md border border-pink-200 bg-pink-100 p-3 text-pink-600 shadow-sm">
+              <div className="rounded-md">
+                <LockClosed className="w-7" />
               </div>
               <div>{t("pollHasBeenLocked")}</div>
             </div>
