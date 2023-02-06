@@ -1,5 +1,5 @@
 {
-  "name": "rallly2",
+  "name": "rallly",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,7 +12,9 @@
     "lint:tsc": "tsc --noEmit",
     "lint:i18n": "i18n-unused remove-unused",
     "test": "PORT=3001 playwright test",
-    "test:codegen": "playwright codegen http://localhost:3000"
+    "test:codegen": "playwright codegen http://localhost:3000",
+    "release": "./scripts/create-release.sh",
+    "changelog:update": "gitmoji-changelog"
   },
   "dependencies": {
     "@floating-ui/react-dom-interactions": "^0.13.3",
@@ -86,6 +88,7 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "gitmoji-changelog": "^2.3.0",
     "i18n-unused": "^0.12.0",
     "prettier": "^2.3.0",
     "prettier-plugin-tailwindcss": "^0.1.8",
