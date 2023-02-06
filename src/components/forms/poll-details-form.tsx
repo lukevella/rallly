@@ -35,7 +35,7 @@ export const PollDetailsForm: React.VoidFunctionComponent<
   return (
     <form
       id={name}
-      className={clsx("max-w-full", className)}
+      className={clsx("w-[500px] max-w-full", className)}
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="formField">
@@ -60,7 +60,7 @@ export const PollDetailsForm: React.VoidFunctionComponent<
           {...register("location")}
         />
       </div>
-      <div className="formField">
+      <div>
         <label htmlFor="description">{t("description")}</label>
         <textarea
           id="description"

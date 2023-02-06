@@ -154,9 +154,9 @@ const Page: NextPage<CreatePollPageProps> = ({
         <div className="max-w-full">
           <div className="max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
             <div className="flex justify-between border-b p-4">
-              <div className="text-xl font-semibold text-slate-800">
+              <h1 className="m-0 text-xl font-semibold text-slate-800">
                 {t("createNew")}
-              </div>
+              </h1>
               <Steps current={currentStepIndex} total={steps.length} />
             </div>
             <div className="">
@@ -165,7 +165,7 @@ const Page: NextPage<CreatePollPageProps> = ({
                   case "eventDetails":
                     return (
                       <PollDetailsForm
-                        className="max-w-full px-4 pt-4"
+                        className="max-w-full p-3 sm:p-4"
                         name={currentStepName}
                         defaultValues={formData?.eventDetails}
                         onSubmit={handleSubmit}
