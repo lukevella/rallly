@@ -1,4 +1,5 @@
 import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
@@ -26,25 +27,31 @@ const Page: NextPage = () => {
   const { t } = useTranslation("app");
   if (poll) {
     return (
-      <DayjsProvider>
-        <ParticipantsProvider pollId={poll.id}>
-          <ParticipantLayout>
-            <PollContextProvider poll={poll} urlId={urlId} admin={false}>
-              <div className="space-y-3 sm:space-y-4">
-                {user.id === poll.user.id ? (
-                  <Link
-                    className="btn-default"
-                    href={`/admin/${poll.adminUrlId}`}
-                  >
-                    &larr; {t("goToAdmin")}
-                  </Link>
-                ) : null}
-                <Poll />
-              </div>
-            </PollContextProvider>
-          </ParticipantLayout>
-        </ParticipantsProvider>
-      </DayjsProvider>
+      <>
+        <Head>
+          <title>{poll.title}</title>
+          <meta name="robots" content="noindex,nofollow" />
+        </Head>
+        <DayjsProvider>
+          <ParticipantsProvider pollId={poll.id}>
+            <ParticipantLayout>
+              <PollContextProvider poll={poll} urlId={urlId} admin={false}>
+                <div className="space-y-3 sm:space-y-4">
+                  {user.id === poll.user.id ? (
+                    <Link
+                      className="btn-default"
+                      href={`/admin/${poll.adminUrlId}`}
+                    >
+                      &larr; {t("goToAdmin")}
+                    </Link>
+                  ) : null}
+                  <Poll />
+                </div>
+              </PollContextProvider>
+            </ParticipantLayout>
+          </ParticipantsProvider>
+        </DayjsProvider>
+      </>
     );
   }
 

@@ -146,10 +146,6 @@ const Page: NextPage<CreatePollPageProps> = ({
 
   return (
     <StandardLayout>
-      <Head>
-        <title>{formData?.eventDetails?.title ?? t("newPoll")}</title>
-        <meta name="robots" content="noindex,nofollow" />
-      </Head>
       <div className="max-w-full px-3 pb-3 sm:p-4">
         <div className="max-w-full">
           <div className="max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">

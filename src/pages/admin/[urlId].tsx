@@ -1,4 +1,5 @@
 import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
@@ -26,17 +27,23 @@ const PollPageLoader: NextPage = () => {
 
   if (poll) {
     return (
-      <ParticipantsProvider pollId={poll.id}>
-        <StandardLayout>
-          <PollContextProvider poll={poll} urlId={urlId} admin={true}>
-            <div className="flex flex-col space-y-3 p-3 sm:space-y-4 sm:p-4">
-              <AdminControls>
-                <Poll />
-              </AdminControls>
-            </div>
-          </PollContextProvider>
-        </StandardLayout>
-      </ParticipantsProvider>
+      <>
+        <Head>
+          <title>{t("adminPollTitle", { title: poll.title })}</title>
+          <meta name="robots" content="noindex,nofollow" />
+        </Head>
+        <ParticipantsProvider pollId={poll.id}>
+          <StandardLayout>
+            <PollContextProvider poll={poll} urlId={urlId} admin={true}>
+              <div className="flex flex-col space-y-3 p-3 sm:space-y-4 sm:p-4">
+                <AdminControls>
+                  <Poll />
+                </AdminControls>
+              </div>
+            </PollContextProvider>
+          </StandardLayout>
+        </ParticipantsProvider>
+      </>
     );
   }
 

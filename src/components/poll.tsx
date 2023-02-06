@@ -46,10 +46,6 @@ export const Poll = (props: { children?: React.ReactNode }) => {
   return (
     <UserAvatarProvider seed={poll.id} names={names}>
       <div>
-        <Head>
-          <title>{poll.title}</title>
-          <meta name="robots" content="noindex,nofollow" />
-        </Head>
         <div className="mx-auto max-w-full space-y-3 sm:space-y-4 lg:mx-0">
           {props.children}
           {poll.closed ? (
