@@ -49,10 +49,9 @@ export const UserDetails: React.VoidFunctionComponent<UserDetailsProps> = ({
         }
         reset(data);
       })}
-      className="card mb-4 p-0"
     >
-      <div className="flex items-center justify-between border-b p-4 shadow-sm">
-        <div className="text-lg text-slate-700 ">{t("yourDetails")}</div>
+      <div className="flex items-center justify-between border-b px-3 py-2 shadow-sm">
+        <div className="font-semibold text-slate-700 ">{t("yourDetails")}</div>
         <MotionButton
           variants={{
             hidden: { opacity: 0, x: 10 },
