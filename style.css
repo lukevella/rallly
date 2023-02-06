@@ -207,3 +207,7 @@
 .rbc-header.rbc-today {
   @apply bg-white text-rose-600;
 }
+
+.rbc-button-link {
+  @apply m-1 w-full;
+}
