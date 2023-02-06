@@ -5,7 +5,7 @@ export const Logo = (props: { className?: string; color?: boolean }) => {
   return (
     <span
       className={clsx(
-        "font-bold uppercase tracking-widest",
+        "font-semibold uppercase tracking-widest",
         {
           "text-primary-500": color,
         },

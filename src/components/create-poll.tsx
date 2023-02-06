@@ -150,11 +150,11 @@ const Page: NextPage<CreatePollPageProps> = ({
         <title>{formData?.eventDetails?.title ?? t("newPoll")}</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
-      <div className="max-w-full p-3 sm:p-4">
+      <div className="max-w-full px-3 pb-3 sm:p-4">
         <div className="max-w-full">
           <div className="max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-            <div className="flex justify-between border-b border-t-primary-500 p-4">
-              <div className="m-0 font-semibold text-slate-800">
+            <div className="flex justify-between border-b p-4">
+              <div className="text-xl font-semibold text-slate-800">
                 {t("createNew")}
               </div>
               <Steps current={currentStepIndex} total={steps.length} />
