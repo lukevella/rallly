@@ -160,7 +160,7 @@ const ManagePoll: React.VoidFunctionComponent<{
           location: poll.location ?? "",
           description: poll.description ?? "",
         }}
-        className="p-4"
+        className="w-[500px] p-3 sm:p-4"
         onSubmit={(data) => {
           //submit
           updatePollMutation(

@@ -38,13 +38,7 @@ const Poll: React.VoidFunctionComponent = () => {
     React.useState<string | null>(null);
 
   const actionColumnWidth = 100;
-  const columnWidth = Math.min(
-    130,
-    Math.max(
-      90,
-      (width - minSidebarWidth - actionColumnWidth) / options.length,
-    ),
-  );
+  const columnWidth = 90;
 
   const numberOfVisibleColumns = Math.min(
     options.length,
@@ -117,7 +111,7 @@ const Poll: React.VoidFunctionComponent = () => {
         style={{ width: pollWidth }}
         ref={ref}
       >
-        <div className="flex max-h-[calc(100vh-70px)] flex-col overflow-hidden bg-white">
+        <div className="flex flex-col overflow-hidden">
           {poll.timeZone ? (
             <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
               <div className="flex grow items-center">
@@ -133,9 +127,9 @@ const Poll: React.VoidFunctionComponent = () => {
             </div>
           ) : null}
           <div>
-            <div className="flex border-b py-2">
+            <div className="flex py-3">
               <div
-                className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
+                className="flex shrink-0 items-center pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
               >
                 <div className="flex h-full grow items-end">

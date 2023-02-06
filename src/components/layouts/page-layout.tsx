@@ -8,7 +8,7 @@ import DotsVertical from "@/components/icons/dots-vertical.svg";
 import Github from "@/components/icons/github.svg";
 import Logo from "~/public/logo.svg";
 
-import Popover from "../popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import Footer from "./page-layout/footer";
 
 export interface PageLayoutProps {
@@ -75,15 +75,15 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
           </div>
         </div>
         <Menu className="hidden items-center space-x-8 md:flex" />
-        <Popover
-          placement="left-start"
-          trigger={
+        <Popover>
+          <PopoverTrigger asChild={true}>
             <button className="text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2 sm:hidden">
               <DotsVertical className="w-5" />
             </button>
-          }
-        >
-          <Menu className="flex flex-col space-y-2" />
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <Menu className="flex flex-col space-y-2" />
+          </PopoverContent>
         </Popover>
       </div>
       <div className="md:min-h-[calc(100vh-460px)]">{children}</div>

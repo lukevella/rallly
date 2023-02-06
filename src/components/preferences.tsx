@@ -6,7 +6,7 @@ import React from "react";
 import { useDayjs } from "../utils/dayjs";
 import { LanguageSelect } from "./poll/language-selector";
 
-const Preferences: React.VoidFunctionComponent = () => {
+const Preferences = (props: { className?: string }) => {
   const { t } = useTranslation(["app", "common"]);
 
   const { weekStartsOn, setWeekStartsOn, timeFormat, setTimeFormat } =
@@ -14,8 +14,8 @@ const Preferences: React.VoidFunctionComponent = () => {
   const router = useRouter();
 
   return (
-    <div>
-      <div className="mb-4 space-y-2">
+    <div className={props.className}>
+      <div className="mb-2 space-y-2">
         <div className="grow text-sm text-slate-500">
           {t("common:language")}
         </div>

@@ -81,7 +81,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
 
   return (
     <div className="overflow-hidden lg:flex">
-      <div className="border-b p-4 lg:w-[440px] lg:border-r lg:border-b-0">
+      <div className="border-b p-3 sm:p-4 lg:w-[440px] lg:border-r lg:border-b-0">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -162,7 +162,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                         "text-primary-500": day.today && !day.selected,
                         "border-r": (i + 1) % 7 !== 0,
                         "border-b": i < datepicker.days.length - 7,
-                        "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:animate-popIn after:rounded-full after:bg-green-500 after:content-['']":
+                        "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-500 after:content-['']":
                           day.selected,
                       },
                     )}
@@ -184,7 +184,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             hidden: datepicker.selection.length === 0,
           })}
         >
-          <div className="flex items-center space-x-3 p-4">
+          <div className="flex items-center space-x-3 p-3 sm:p-4">
             <div className="grow">
               <div className="font-medium">{t("specifyTimes")}</div>
               <div className="text-sm text-slate-400">
@@ -229,7 +229,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
             </div>
           </div>
         </div>
-        <div className="grow px-4">
+        <div className="grow">
           {isTimedEvent ? (
             <div className="divide-y">
               {Object.keys(optionsByDay)
@@ -239,7 +239,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                   return (
                     <div
                       key={dateString}
-                      className="space-y-3 py-4 sm:flex sm:space-y-0 sm:space-x-4"
+                      className="space-y-3 p-3 sm:flex sm:space-y-0 sm:space-x-4 sm:p-4"
                     >
                       <div>
                         <DateCard
@@ -405,7 +405,7 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 })}
             </div>
           ) : datepicker.selection.length ? (
-            <div className="grid grid-cols-[repeat(auto-fill,60px)] gap-5 py-4">
+            <div className="grid grid-cols-[repeat(auto-fill,54px)] gap-3 p-3 sm:gap-4 sm:p-4">
               {datepicker.selection
                 .sort((a, b) => a.getTime() - b.getTime())
                 .map((selectedDate, i) => {

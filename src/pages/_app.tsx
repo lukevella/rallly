@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
 import Maintenance from "@/components/maintenance";
 
 import { useCrispChat } from "../components/crisp-chat";
+import ModalProvider from "../components/modal/modal-provider";
 import { absoluteUrl } from "../utils/absolute-url";
 import { trpcNext } from "../utils/trpc";
 
@@ -76,7 +77,9 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
           --font-noto: ${noto.style.fontFamily};
         }
       `}</style>
-      <Component {...pageProps} />
+      <ModalProvider>
+        <Component {...pageProps} />
+      </ModalProvider>
     </>
   );
 };

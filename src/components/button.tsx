@@ -56,6 +56,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className,
         )}
         {...passThroughProps}
+        role="button"
         disabled={disabled || loading}
       >
         {loading ? (

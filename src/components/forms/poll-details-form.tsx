@@ -36,7 +36,6 @@ export const PollDetailsForm: React.VoidFunctionComponent<
     <form
       id={name}
       className={clsx("max-w-full", className)}
-      style={{ width: 500 }}
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="formField">
@@ -61,7 +60,7 @@ export const PollDetailsForm: React.VoidFunctionComponent<
           {...register("location")}
         />
       </div>
-      <div className="formField">
+      <div>
         <label htmlFor="description">{t("description")}</label>
         <textarea
           id="description"

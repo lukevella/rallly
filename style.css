@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply h-full overflow-auto bg-slate-50 font-sans text-base text-slate-600;
+    @apply h-full bg-slate-50 font-sans text-base text-slate-600;
   }
   body,
   #__next {
@@ -34,7 +34,7 @@
     @apply mb-1 block text-sm text-slate-800;
   }
   button {
-    @apply cursor-default outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
+    @apply outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
   }
 
   #floating-ui-root {
@@ -50,7 +50,7 @@
     @apply mb-4;
   }
   .input {
-    @apply appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500;
+    @apply appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500;
   }
   input.input {
     @apply h-9;
@@ -65,14 +65,14 @@
     @apply h-4 w-4 rounded border-slate-300 text-primary-500 shadow-sm focus:ring-primary-500;
   }
   .btn {
-    @apply inline-flex h-9 cursor-default select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all;
+    @apply inline-flex h-9 select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all;
   }
   a.btn {
     @apply cursor-pointer hover:no-underline;
   }
 
   .btn-default {
-    @apply btn bg-white text-slate-700 hover:bg-slate-100/10 active:bg-slate-500/10;
+    @apply btn bg-white text-slate-700 hover:bg-gray-50 active:bg-slate-100;
   }
 
   a.btn-default {
@@ -98,15 +98,15 @@
   }
 
   .segment-button {
-    @apply flex h-9 text-center shadow-sm;
+    @apply flex h-9 text-center;
   }
 
   .segment-button button {
-    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-white px-4 font-medium transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus-visible:ring-2 focus-visible:ring-offset-0 active:bg-slate-100;
+    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-gray-50 px-4 transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus-visible:ring-2 focus-visible:ring-offset-0 active:bg-slate-100;
   }
 
   .segment-button .segment-button-active {
-    @apply text-primary-500;
+    @apply pointer-events-none bg-white text-slate-800;
   }
 
   .menu {
@@ -118,7 +118,7 @@
   }
 
   .menu-item {
-    @apply block w-full cursor-default select-none truncate px-4 py-2 text-left;
+    @apply block w-full select-none truncate px-4 py-2 text-left;
   }
 
   button[disabled] {
@@ -206,4 +206,8 @@
 
 .rbc-header.rbc-today {
   @apply bg-white text-rose-600;
+}
+
+.rbc-button-link {
+  @apply m-1 w-full;
 }

@@ -61,21 +61,8 @@ const MobilePoll: React.VoidFunctionComponent = () => {
   });
 
   const { reset, handleSubmit, control, formState } = form;
-  const [selectedParticipantId, setSelectedParticipantId] = React.useState<
-    string | undefined
-  >(() => {
-    if (admin) {
-      // don't select a particpant if admin
-      return;
-    }
-    const { user } = session;
-    if (user) {
-      const userParticipant = participants.find(
-        (participant) => participant.userId === user.id,
-      );
-      return userParticipant?.id;
-    }
-  });
+  const [selectedParticipantId, setSelectedParticipantId] =
+    React.useState<string | undefined>();
 
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
@@ -98,7 +85,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
     <FormProvider {...form}>
       <form
         ref={formRef}
-        className="border-t border-b bg-white shadow-sm"
         onSubmit={handleSubmit(async ({ name, votes }) => {
           if (selectedParticipant) {
             await updateParticipant.mutateAsync({
@@ -119,8 +105,8 @@ const MobilePoll: React.VoidFunctionComponent = () => {
           }
         })}
       >
-        <div className="sticky top-[47px] z-30 flex flex-col space-y-2 border-b bg-gray-50 p-3">
-          <div className="flex space-x-3">
+        <div className="flex flex-col space-y-2 border-b bg-gray-50 p-2">
+          <div className="flex space-x-2">
             {!isEditing ? (
               <Listbox
                 value={selectedParticipantId}
@@ -189,6 +175,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   rules={{ validate: requiredString }}
                   render={({ field }) => (
                     <NameInput
+                      autoFocus={true}
                       disabled={formState.isSubmitting}
                       className={clsx("input w-full", {
                         "input-error": formState.errors.name,
@@ -209,7 +196,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                 {t("cancel")}
               </Button>
             ) : selectedParticipant ? (
-              <div className="flex space-x-3">
+              <div className="flex space-x-2">
                 <Button
                   icon={<Pencil />}
                   disabled={
@@ -284,9 +271,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
           selectedParticipantId={selectedParticipantId}
           options={pollContext.options}
           editable={isEditing}
-          groupClassName={
-            pollContext.pollType === "timeSlot" ? "top-[151px]" : "top-[108px]"
-          }
           group={(option) => {
             if (option.type === "timeSlot") {
               return `${option.dow} ${option.day} ${option.month}`;

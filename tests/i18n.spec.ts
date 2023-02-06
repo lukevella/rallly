@@ -11,5 +11,5 @@ test("should default to english", async ({ browser }) => {
   const context = await browser.newContext({ locale: "mt" });
   const page = await context.newPage();
   await page.goto("/new");
-  await expect(page.locator("h1", { hasText: "New poll" })).toBeVisible();
+  await expect(page.locator("h1", { hasText: "Create new" })).toBeVisible();
 });

@@ -154,7 +154,7 @@ const SummarizedParticipantList: React.VoidFunctionComponent<{
   return (
     <div className="flex -space-x-1">
       {participants
-        .slice(0, participants.length <= 8 ? 8 : 7)
+        .slice(0, participants.length <= 6 ? 6 : 5)
         .map((participant, i) => {
           return (
             <UserAvatar
@@ -164,9 +164,9 @@ const SummarizedParticipantList: React.VoidFunctionComponent<{
             />
           );
         })}
-      {participants.length > 8 ? (
+      {participants.length > 6 ? (
         <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
-          +{participants.length - 7}
+          +{participants.length - 5}
         </span>
       ) : null}
     </div>
@@ -189,7 +189,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
   const [active, setActive] = React.useState(false);
   return (
     <div
-      className={clsx("space-y-4 overflow-hidden p-4", {
+      className={clsx("space-y-4 overflow-hidden p-3", {
         "bg-slate-400/5": editable && active,
       })}
       onTouchStart={() => setActive(editable)}
@@ -200,33 +200,43 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
       }}
     >
       <div className="flex select-none transition duration-75">
-        <div className="flex grow space-x-8">
-          <div>{children}</div>
-          <div className="flex grow items-center justify-end">
-            <button
-              type="button"
-              onTouchStart={(e) => e.stopPropagation()}
-              className="flex justify-end rounded-lg p-2 active:bg-slate-500/10"
-              onClick={(e) => {
-                e.stopPropagation();
-                setExpanded((value) => !value);
-              }}
-            >
-              <ScoreSummary yesScore={yesScore} />
-              <ChevronDown
-                className={clsx("h-5 text-slate-400 transition-transform", {
-                  "-rotate-180": expanded,
-                })}
-              />
-            </button>
-          </div>
+        <div className="flex grow gap-3">
+          <div className="shrink-0">{children}</div>
+          <AnimatePresence initial={false}>
+            {showVotes ? null : (
+              <motion.div
+                exit={{ opacity: 0 }}
+                className="flex min-w-0 grow items-center justify-end gap-2 overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onTouchStart={(e) => e.stopPropagation()}
+                  className="flex justify-end gap-2 rounded-lg p-2 active:bg-slate-500/10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setExpanded((value) => !value);
+                  }}
+                >
+                  {participants.length > 0 ? (
+                    <SummarizedParticipantList participants={participants} />
+                  ) : null}
+                  <ScoreSummary yesScore={yesScore} />
+                  <ChevronDown
+                    className={clsx("h-5 text-slate-400 transition-transform", {
+                      "-rotate-180": expanded,
+                    })}
+                  />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
         <CollapsibleContainer
           expanded={showVotes}
           className="relative flex justify-center"
         >
           {editable ? (
-            <div className="flex h-full w-14 items-center justify-center">
+            <div className="flex h-full items-center justify-center">
               <VoteSelector
                 ref={selectorRef}
                 value={vote}
@@ -247,11 +257,10 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
         </CollapsibleContainer>
       </div>
       <AnimatePresence initial={false}>
-        {expanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
+        {expanded && !editable ? (
+          <PollOptionVoteSummary optionId={optionId} />
+        ) : null}
       </AnimatePresence>
-      {!expanded && participants.length > 0 ? (
-        <SummarizedParticipantList participants={participants} />
-      ) : null}
     </div>
   );
 };

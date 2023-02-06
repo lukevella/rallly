@@ -3,6 +3,7 @@ import * as React from "react";
 
 import { usePoll } from "@/components/poll-context";
 
+import DateCard from "../../date-card";
 import { ScoreSummary } from "../score-summary";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
@@ -37,21 +38,13 @@ const PollHeader: React.VoidFunctionComponent = () => {
         return (
           <div
             key={optionId}
-            className="shrink-0 space-y-3 py-3 text-center"
+            className="shrink-0 space-y-3 text-center"
             style={{ width: columnWidth }}
             onMouseOver={() => setActiveOptionId(optionId)}
             onMouseOut={() => setActiveOptionId(null)}
           >
             <div>
-              <div className="leading-9">
-                <div className="text-xs font-semibold uppercase text-slate-500/75">
-                  {option.dow}
-                </div>
-                <div className="text-2xl font-semibold">{option.day}</div>
-                <div className="text-xs font-medium uppercase text-slate-500/50">
-                  {option.month}
-                </div>
-              </div>
+              <DateCard day={option.day} month={option.month} />
             </div>
             {option.type === "timeSlot" ? (
               <TimeRange

@@ -33,13 +33,6 @@ const PollSubheader: React.VoidFunctionComponent = () => {
             </Badge>
           </Tooltip>
         ) : null}
-        {poll.demo ? (
-          <Tooltip content={<Trans t={t} i18nKey="demoPollNotice" />}>
-            <Badge color="blue" className="ml-1">
-              Demo
-            </Badge>
-          </Tooltip>
-        ) : null}
       </div>
       <span className="hidden md:inline">&nbsp;&bull;&nbsp;</span>
       <span className="whitespace-nowrap">

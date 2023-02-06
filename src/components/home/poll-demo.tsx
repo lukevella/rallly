@@ -2,6 +2,7 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { useDayjs } from "../../utils/dayjs";
+import DateCard from "../date-card";
 import { ParticipantRowView } from "../poll/desktop-poll/participant-row";
 import { ScoreSummary } from "../poll/score-summary";
 
@@ -30,7 +31,7 @@ const participants = [
   },
 ];
 
-const options = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
+const options = ["2022-03-14", "2022-03-15", "2022-03-16", "2022-03-17"];
 
 const PollDemo: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("homepage");
@@ -65,15 +66,10 @@ const PollDemo: React.VoidFunctionComponent = () => {
               style={{ width: columnWidth }}
             >
               <div>
-                <div className="font-semibold leading-9">
-                  <div className="text-sm uppercase text-slate-400">
-                    {dayjs(d).format("ddd")}
-                  </div>
-                  <div className="text-2xl">{dayjs(d).format("DD")}</div>
-                  <div className="text-xs font-medium uppercase text-slate-400/75">
-                    {dayjs(d).format("MMM")}
-                  </div>
-                </div>
+                <DateCard
+                  day={dayjs(d).format("D")}
+                  month={dayjs(d).format("MMM")}
+                />
               </div>
               <div>
                 <ScoreSummary yesScore={score} />

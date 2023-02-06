@@ -20,13 +20,21 @@ const NameInput: React.ForwardRefRenderFunction<
   const { t } = useTranslation("app");
   return (
     <div className="relative flex items-center">
-      <UserAvatar
-        name={value ?? defaultValue ?? ""}
-        className="absolute left-2"
-      />
+      {value ? (
+        <UserAvatar
+          name={value ?? defaultValue ?? ""}
+          className="absolute left-2"
+        />
+      ) : null}
       <input
         ref={ref}
-        className={clsx("input pl-[35px]", className)}
+        className={clsx(
+          "input",
+          {
+            "pl-9": value || defaultValue,
+          },
+          className,
+        )}
         placeholder={t("yourName")}
         value={value}
         {...forwardProps}

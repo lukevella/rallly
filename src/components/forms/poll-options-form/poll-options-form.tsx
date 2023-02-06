@@ -143,7 +143,7 @@ const PollOptionsForm: React.VoidFunctionComponent<
     >
       {calendarHelpModal}
       {dateOrTimeRangeModal}
-      <div className="w-full items-center space-y-2 border-b bg-slate-50 py-3 px-4 lg:flex lg:space-y-0 lg:space-x-2">
+      <div className="w-full items-center space-y-2 border-b py-3 px-4 lg:flex lg:space-y-0 lg:space-x-2">
         <div className="grow">
           <Controller
             control={control}

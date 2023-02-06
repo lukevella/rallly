@@ -29,7 +29,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
   const participantUrl = `${window.location.origin}/p/${poll.participantUrlId}`;
   const [didCopy, setDidCopy] = React.useState(false);
   return (
-    <div className={clsx("card p-4", className)}>
+    <div className={className}>
       <div className="mb-1 flex items-center justify-between">
         <div className="text-lg font-semibold text-slate-700">
           {t("shareLink")}
@@ -52,7 +52,7 @@ const Sharing: React.VoidFunctionComponent<SharingProps> = ({
         <input
           readOnly={true}
           className={clsx(
-            "mb-4 w-full rounded-md bg-gray-100 p-2 text-slate-600 transition-all md:mb-0 md:p-3 md:text-lg",
+            "mb-4 w-full rounded-md bg-gray-100 p-2 text-slate-600 transition-colors md:mb-0 md:p-3 md:text-lg",
             {
               "bg-slate-50 opacity-75": didCopy,
             },
