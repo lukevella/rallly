@@ -257,7 +257,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
         </CollapsibleContainer>
       </div>
       <AnimatePresence initial={false}>
-        {expanded && !editable ? (
+        {expanded && !showVotes ? (
           <PollOptionVoteSummary optionId={optionId} />
         ) : null}
       </AnimatePresence>
