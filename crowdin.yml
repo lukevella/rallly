@@ -1,3 +1,5 @@
+pull_request_title: "🌐 Update translations",
+commit_message: "🌐 Update {languageName} translations ({fileName})"
 files:
   - source: /public/locales/en/*.json
     translation: /public/locales/%two_letters_code%/%original_file_name%
