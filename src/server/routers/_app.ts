@@ -7,9 +7,6 @@ import { user } from "./user";
 import { whoami } from "./whoami";
 
 const legacyRouter = createRouter()
-  .merge("user.", user)
-  .merge(login)
-  .merge("polls.", legacyPolls);
 
 export const appRouter = mergeRouters(
   legacyRouter.interop(),
@@ -17,6 +14,9 @@ export const appRouter = mergeRouters(
     whoami,
     auth,
     poll,
+    polls: legacyPolls,
+    login,
+    user,
   }),
 );
 

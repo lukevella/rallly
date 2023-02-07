@@ -16,49 +16,46 @@ const requireUser = (user: IronSessionData["user"]) => {
   return user;
 };
 
-export const user = createRouter()
-  .query("getPolls", {
-    resolve: async ({ ctx }) => {
-      const user = requireUser(ctx.session.user);
-      const userPolls = await prisma.user.findUnique({
-        where: {
-          id: user.id,
-        },
-        select: {
-          polls: {
+export const user = t.router({
+    getPolls: t.procedure.query(async ({ ctx }) => {
+          const user = requireUser(ctx.session.user);
+          const userPolls = await prisma.user.findUnique({
             where: {
-              deleted: false,
+              id: user.id,
             },
             select: {
-              title: true,
-              closed: true,
-              verified: true,
-              createdAt: true,
-              adminUrlId: true,
+              polls: {
+                where: {
+                  deleted: false,
+                },
+                select: {
+                  title: true,
+                  closed: true,
+                  verified: true,
+                  createdAt: true,
+                  adminUrlId: true,
+                },
+                take: 10,
+                orderBy: {
+                  createdAt: "desc",
+                },
+              },
             },
-            take: 10,
-            orderBy: {
-              createdAt: "desc",
+          });
+          return userPolls;
+        }),
+    changeName: t.procedure.input(z.object({
+          userId: z.string(),
+          name: z.string().min(1).max(100),
+        })).mutation(async ({ input }) => {
+          await prisma.user.update({
+            where: {
+              id: input.userId,
             },
-          },
-        },
-      });
-      return userPolls;
-    },
-  })
-  .mutation("changeName", {
-    input: z.object({
-      userId: z.string(),
-      name: z.string().min(1).max(100),
-    }),
-    resolve: async ({ input }) => {
-      await prisma.user.update({
-        where: {
-          id: input.userId,
-        },
-        data: {
-          name: input.name,
-        },
-      });
-    },
-  });
+            data: {
+              name: input.name,
+            },
+          });
+        }),
+})
+;
