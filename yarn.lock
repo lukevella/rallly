@@ -1908,27 +1908,27 @@
     "@tanstack/query-core" "4.15.1"
     use-sync-external-store "^1.2.0"
 
-"@trpc/client@^10.0.0-rc.8":
-  version "10.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.0.0-rc.8.tgz#2b6b0db8ec41e4403b72d25d37a2cd9d6c6c1257"
-  integrity sha512-NuQl7g1tkfFYn6P6dZJJkVsxnxutYpaxmpG/w5ZKW3QVu6cY1joUOrWakunKrghh3HS+svgLaPz0Xl0PlmdSlw==
+"@trpc/client@^10.10.0":
+  version "10.10.0"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.10.0.tgz#5abdbf399639f2fdfe605682d2cdf3f9dba87cb1"
+  integrity sha512-HRVGkOsR4FIYpyQILP84HLbj6pRnLKgxy4AIelTf9d9TxD60M5bNhbR2Uz3hqNSb9a2ppaRJBLv7twlV9b4qHQ==
 
-"@trpc/next@^10.0.0-rc.8":
-  version "10.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-10.0.0-rc.8.tgz#78a4acc4404c3a8295f0b0a8da4e2c89b21e1366"
-  integrity sha512-l2TZF22virmC3RROD7qu0dnc3sdYfVvkOhAu1qP5+8fRgs4cgHKBFdalQ+SKBnU0RNuVLYVw0CkyvU+gHo5u2w==
+"@trpc/next@^10.10.0":
+  version "10.10.0"
+  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-10.10.0.tgz#083ff327b68b005d60b19af07008377f830ad73a"
+  integrity sha512-7d84L2OoF0RW06drTbNGOOggwMes8JxI3Ln/VOIaYeERzwOFNCtWPmGjWCdq4l1SKbXC6+baS+b9n5cXc+euwA==
   dependencies:
     react-ssr-prepass "^1.5.0"
 
-"@trpc/react-query@^10.0.0-rc.8":
-  version "10.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-10.0.0-rc.8.tgz#68957743cd99e9c97fb167fb955b00bd1f9010e2"
-  integrity sha512-LKL29llvGtwYmfKGuCYSgNNChOL8/6PInY90i+ZgI8TLO6ZCJaVrPBSvqtxKj3MSezbK3kOxWIviKVFwV35L0A==
+"@trpc/react-query@^10.10.0":
+  version "10.10.0"
+  resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-10.10.0.tgz#1faf32056aa3ee5ecb2ffd0d15e8abbcd7eff911"
+  integrity sha512-Jc/uii1MPevf95/z/W3ufYGHvrFvrtkjxQ8UuXhJCzOgv/FGPqhmA5PH124nLHEgGLBA7zQxHumofhdXosEhUQ==
 
-"@trpc/server@^10.0.0-rc.8":
-  version "10.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.0.0-rc.8.tgz#941cb4b06a2d59419bdbcc61241f1e8946b67a1e"
-  integrity sha512-+NsQqaJGHTiiBcOesH1bIictnnSO+SXaCOy5pM/324QBnJRt9VOO8oYDLcHSwAbJpAbOA+vl6YHs8OoykW6D2g==
+"@trpc/server@^10.10.0":
+  version "10.10.0"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.10.0.tgz#0b494335140d4fd5e1452f7b57dcc9b8886720a4"
+  integrity sha512-tCTqcqBT+3nebYFTHtwM877qo5xQPtVlptxKdUzMVWleWT4lFTL4oddk45qVURToci2iMbVJjd4jQU9y9/XwlQ==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
