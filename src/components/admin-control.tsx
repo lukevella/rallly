@@ -48,7 +48,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
     }
   }, [urlId, router, updatePollMutation, t]);
 
-  const verifyEmail = trpc.useMutation(["polls.verification.verify"], {
+  const verifyEmail = trpc.polls.verification.verify.useMutation({
     onSuccess: () => {
       toast.success(t("pollHasBeenVerified"));
       queryClient.poll.invalidate();

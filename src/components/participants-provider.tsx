@@ -22,10 +22,7 @@ export const ParticipantsProvider: React.VoidFunctionComponent<{
 }> = ({ children, pollId }) => {
   const { t } = useTranslation("app");
 
-  const { data: participants } = trpc.useQuery([
-    "polls.participants.list",
-    { pollId },
-  ]);
+  const { data: participants } = trpc.polls.participants.list.useQuery({ pollId });
 
   const getParticipants = (
     optionId: string,

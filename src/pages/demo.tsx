@@ -15,7 +15,7 @@ const Demo: NextPage = () => {
   const { t } = useTranslation("app");
 
   const router = useRouter();
-  const createDemo = trpc.useMutation(["polls.demo.create"]);
+  const createDemo = trpc.polls.demo.create.useMutation();
 
   useMount(async () => {
     const urlId = await createDemo.mutateAsync();

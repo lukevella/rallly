@@ -16,7 +16,7 @@ export const normalizeVotes = (
 export const useAddParticipantMutation = () => {
   const queryClient = trpc.useContext();
 
-  return trpc.useMutation(["polls.participants.add"], {
+  return trpc.polls.participants.add.useMutation({
     onSuccess: (participant) => {
       posthog.capture("add participant", {
         name: participant.name,
@@ -37,7 +37,7 @@ export const useAddParticipantMutation = () => {
 
 export const useUpdateParticipantMutation = () => {
   const queryClient = trpc.useContext();
-  return trpc.useMutation("polls.participants.update", {
+  return trpc.polls.participants.update.useMutation({
     onSuccess: (participant) => {
       posthog.capture("update participant", {
         name: participant.name,
@@ -64,7 +64,7 @@ export const useUpdateParticipantMutation = () => {
 
 export const useDeleteParticipantMutation = () => {
   const queryClient = trpc.useContext();
-  return trpc.useMutation("polls.participants.delete", {
+  return trpc.polls.participants.delete.useMutation({
     onMutate: ({ participantId, pollId }) => {
       queryClient.setQueryData(
         ["polls.participants.list", { pollId: pollId }],
@@ -83,7 +83,7 @@ export const useDeleteParticipantMutation = () => {
 
 export const useUpdatePollMutation = () => {
   const queryClient = trpcNext.useContext();
-  return trpc.useMutation(["polls.update"], {
+  return trpc.polls.update.useMutation({
     onSuccess: (data) => {
       queryClient.poll.invalidate();
       posthog.capture("updated poll", {

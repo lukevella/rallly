@@ -21,7 +21,7 @@ export const DeletePollForm: React.VoidFunctionComponent<{
 
   const confirmationText = watch("confirmation");
   const canDelete = confirmationText === confirmText;
-  const deletePoll = trpc.useMutation("polls.delete", {
+  const deletePoll = trpc.polls.delete.useMutation({
     onSuccess: () => {
       posthog.capture("deleted poll");
     },
