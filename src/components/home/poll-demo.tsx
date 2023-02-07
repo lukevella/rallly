@@ -71,7 +71,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
                   month={dayjs(d).format("MMM")}
                 />
               </div>
-              <div>
+              <div className="flex justify-center">
                 <ScoreSummary yesScore={score} />
               </div>
             </div>
