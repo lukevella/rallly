@@ -56,7 +56,7 @@ export const MobileNavigation = (props: { className?: string }) => {
             <button
               role="button"
               type="button"
-              className="group flex items-center rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+              className="group flex items-center rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
               <Menu className="mr-2 w-5 group-hover:text-primary-500" />
               <Logo />
@@ -69,7 +69,7 @@ export const MobileNavigation = (props: { className?: string }) => {
       </div>
       <div className="flex items-center">
         {user ? null : (
-          <LoginLink className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
+          <LoginLink className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
             <Login className="h-5 opacity-75" />
             <span className="inline-block">{t("app:login")}</span>
           </LoginLink>
@@ -83,7 +83,7 @@ export const MobileNavigation = (props: { className?: string }) => {
                   role="button"
                   data-testid="user"
                   className={clsx(
-                    "group inline-flex w-full items-center space-x-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20",
+                    "group inline-flex w-full items-center space-x-2 rounded px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20",
                     {
                       "opacity-50": isUpdating,
                     },
@@ -105,7 +105,7 @@ export const MobileNavigation = (props: { className?: string }) => {
             <button
               role="button"
               type="button"
-              className="group flex items-center whitespace-nowrap rounded-md px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+              className="group flex items-center whitespace-nowrap rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
               <Adjustments className="h-5 opacity-75 group-hover:text-primary-500" />
               <span className="ml-2 hidden sm:block">
@@ -130,14 +130,14 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
     <div className={clsx("space-y-1", className)}>
       <Link
         href="/"
-        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
       >
         <Home className="h-5 opacity-75 " />
         <span className="inline-block">{t("app:home")}</span>
       </Link>
       <Link
         href="/new"
-        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
       >
         <Pencil className="h-5 opacity-75 " />
         <span className="inline-block">{t("app:createNew")}</span>
@@ -145,7 +145,7 @@ const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
       <a
         target="_blank"
         href="https://support.rallly.co"
-        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded-md px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
         rel="noreferrer"
       >
         <Support className="h-5 opacity-75" />
