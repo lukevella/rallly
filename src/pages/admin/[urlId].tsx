@@ -15,6 +15,7 @@ import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import { AdminControls } from "../../components/admin-control";
+import ModalProvider from "../../components/modal/modal-provider";
 
 const PollPageLoader: NextPage = () => {
   const { query } = useRouter();
@@ -35,11 +36,13 @@ const PollPageLoader: NextPage = () => {
         <ParticipantsProvider pollId={poll.id}>
           <StandardLayout>
             <PollContextProvider poll={poll} urlId={urlId} admin={true}>
-              <div className="flex flex-col space-y-3 p-3 sm:space-y-4 sm:p-4">
-                <AdminControls>
-                  <Poll />
-                </AdminControls>
-              </div>
+              <ModalProvider>
+                <div className="flex flex-col space-y-3 p-3 sm:space-y-4 sm:p-4">
+                  <AdminControls>
+                    <Poll />
+                  </AdminControls>
+                </div>
+              </ModalProvider>
             </PollContextProvider>
           </StandardLayout>
         </ParticipantsProvider>

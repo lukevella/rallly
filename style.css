@@ -35,7 +35,7 @@
   input,
   select,
   textarea {
-    @apply rounded outline-none focus:border-transparent focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 focus:ring-offset-white;
+    @apply rounded outline-none transition-shadow focus:border-transparent focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 focus:ring-offset-white;
   }
 
   #floating-ui-root {

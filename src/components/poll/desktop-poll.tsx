@@ -6,6 +6,11 @@ import ArrowLeft from "@/components/icons/arrow-left.svg";
 import ArrowRight from "@/components/icons/arrow-right.svg";
 
 import { Button } from "../button";
+import { useModalContext } from "../modal/modal-provider";
+import {
+  NewParticipantModal,
+  useNewParticipantModal,
+} from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
 import TimeZonePicker from "../time-zone-picker";
@@ -80,6 +85,8 @@ const Poll: React.VoidFunctionComponent = () => {
   };
 
   const updateParticipant = useUpdateParticipantMutation();
+
+  const showNewParticipantModal = useNewParticipantModal();
   return (
     <PollContext.Provider
       value={{
@@ -182,13 +189,18 @@ const Poll: React.VoidFunctionComponent = () => {
               <ParticipantRowForm
                 className="shrink-0"
                 onSubmit={async ({ votes }) => {
+                  showNewParticipantModal({
+                    votes,
+                    onSubmit: () => {
+                      setShouldShowNewParticipantForm(false);
+                    },
+                  });
                   // show modal
                   // await addParticipant.mutateAsync({
                   //   name,
                   //   votes,
                   //   pollId: poll.id,
                   // });
-                  setShouldShowNewParticipantForm(false);
                 }}
               />
             ) : null}

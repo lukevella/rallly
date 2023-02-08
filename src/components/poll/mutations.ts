@@ -21,12 +21,6 @@ export const useAddParticipantMutation = () => {
       posthog.capture("add participant", {
         name: participant.name,
       });
-      queryClient.setQueryData(
-        ["polls.participants.list", { pollId: participant.pollId }],
-        (existingParticipants = []) => {
-          return [...existingParticipants, participant];
-        },
-      );
       queryClient.invalidateQueries([
         "polls.participants.list",
         { pollId: participant.pollId },

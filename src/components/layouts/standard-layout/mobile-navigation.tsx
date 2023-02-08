@@ -42,7 +42,7 @@ export const MobileNavigation = (props: { className?: string }) => {
   return (
     <div
       className={clsx(
-        "sticky top-0 z-40 flex h-12 w-full shrink-0 items-center justify-between border-b p-3 transition-all",
+        "sticky top-0 z-40 flex w-full shrink-0 items-center justify-between border-b p-2 transition-all",
         {
           "bg-gray-50/75 shadow-sm backdrop-blur-md ": isPinned,
           "border-transparent bg-gray-50/0 shadow-none": !isPinned,

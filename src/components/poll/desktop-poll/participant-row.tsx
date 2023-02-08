@@ -80,12 +80,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
             >
               <div
                 className={clsx(
-                  "flex h-full w-full items-center justify-center rounded-md",
-                  {
-                    "bg-green-50": vote === "yes",
-                    "bg-amber-50": vote === "ifNeedBe",
-                    "bg-slate-50": vote === "no",
-                  },
+                  "flex h-full w-full items-center justify-center rounded border border-slate-200 bg-slate-50/75",
                 )}
               >
                 <VoteIcon type={vote} />

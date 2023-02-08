@@ -33,7 +33,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
   } = usePollContext();
 
   const { options, optionIds } = usePoll();
-  const { handleSubmit, control, reset } = useForm({
+  const { handleSubmit, control } = useForm({
     defaultValues: {
       votes: [],
       ...defaultValues,
@@ -62,7 +62,6 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
         await onSubmit({
           votes: normalizeVotes(optionIds, votes),
         });
-        reset();
       })}
       className={clsx("flex h-12 shrink-0", className)}
     >
