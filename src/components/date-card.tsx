@@ -4,6 +4,7 @@ import * as React from "react";
 export interface DateCardProps {
   annotation?: React.ReactNode;
   day: string;
+  dow?: string;
   month: string;
   className?: string;
 }
@@ -12,6 +13,7 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
   annotation,
   className,
   day,
+  dow,
   month,
 }) => {
   return (
@@ -25,10 +27,15 @@ const DateCard: React.VoidFunctionComponent<DateCardProps> = ({
         <div className="absolute -top-3 -right-3 z-20">{annotation}</div>
       ) : null}
       <div>
+        {dow ? (
+          <div className="-mt-3 bg-white text-center text-xs text-slate-400">
+            {dow}
+          </div>
+        ) : null}
+        <div className="text-center text-xl font-bold leading-none">{day}</div>
         <div className="text-center text-xs font-semibold uppercase leading-normal text-slate-500">
           {month}
         </div>
-        <div className="text-center text-xl font-bold leading-none">{day}</div>
       </div>
     </div>
   );

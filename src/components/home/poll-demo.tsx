@@ -68,6 +68,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
               <div>
                 <DateCard
                   day={dayjs(d).format("D")}
+                  dow={dayjs(d).format("ddd")}
                   month={dayjs(d).format("MMM")}
                 />
               </div>
