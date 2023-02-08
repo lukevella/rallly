@@ -49,18 +49,14 @@ export const Poll = (props: { children?: React.ReactNode }) => {
         <div className="mx-auto max-w-full space-y-3 sm:space-y-4 lg:mx-0">
           {props.children}
           {poll.demo ? (
-            <div className="flex items-start gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
-              <div className="rounded-md">
-                <Exclamation className="w-7" />
-              </div>
+            <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
+              <Exclamation className="w-6" />
               <div>{t("demoPollNotice")}</div>
             </div>
           ) : null}
           {poll.closed ? (
             <div className="flex items-center gap-3 rounded-md border border-pink-200 bg-pink-100 p-3 text-pink-600 shadow-sm">
-              <div className="rounded-md">
-                <LockClosed className="w-7" />
-              </div>
+              <LockClosed className="w-6" />
               <div>{t("pollHasBeenLocked")}</div>
             </div>
           ) : null}
