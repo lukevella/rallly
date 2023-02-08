@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
-import User from "@/components/icons/user-solid.svg";
+import CheckCircle from "@/components/icons/check-circle.svg";
 
 export interface PopularityScoreProps {
   yesScore: number;
@@ -21,7 +21,7 @@ export const ScoreSummary: React.VoidFunctionComponent<PopularityScoreProps> =
         data-testid="popularity-score"
         className="flex items-center gap-1 text-sm font-bold tabular-nums"
       >
-        <User className="inline-block h-4 text-slate-300 transition-opacity" />
+        <CheckCircle className="inline-block h-4 text-slate-300 transition-opacity" />
         <AnimatePresence initial={false} exitBeforeEnter={true}>
           <motion.span
             transition={{
