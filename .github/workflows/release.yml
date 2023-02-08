@@ -12,11 +12,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Trigger deploy to production
+        run: |
+          curl -X POST -d {} ${{ secrets.DEPLOY_HOOK }}}
+
       - name: Extract body from changelog
         run: |
           NEW_VERSION=$(echo '${{ github.ref }}' | sed 's/refs\/tags\/v//')
           echo $NEW_VERSION
           sed -n -e "/## ${NEW_VERSION}/,/<a/ p" ./CHANGELOG.md | sed -e '1,2d' | sed -e '$d' | sed -e '$d' > extractedBody.md
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
