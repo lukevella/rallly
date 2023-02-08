@@ -34,7 +34,7 @@
     "@trpc/server": "^10.0.0-rc.8",
     "@vercel/analytics": "^0.1.8",
     "accept-language-parser": "^1.5.0",
-    "autoprefixer": "^10.4.2",
+    "autoprefixer": "^10.4.13",
     "clsx": "^1.1.1",
     "dayjs": "^1.11.7",
     "eta": "^2.0.0",
