@@ -8,7 +8,7 @@ export const ParticipantLayout = ({
   return (
     <div className="bg-pattern min-h-full sm:space-y-8">
       <MobileNavigation />
-      <div className="mx-auto max-w-3xl space-y-4 px-3 pb-8">
+      <div className="mx-auto max-w-4xl space-y-4 px-3 pb-8">
         <div>{children}</div>
       </div>
     </div>
