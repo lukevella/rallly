@@ -69,7 +69,7 @@
   "participantCount_other": "{{count}} katılımcı",
   "pollOwnerNotice": "Selam {{name}}, görünüşe göre bu anketin sahibi sensin.",
   "profileUser": "Profil - {{username}}",
-  "saveInstruction": "Uygunluk durumunuzu seçin ve <b>{{save}}</b> düğmesine tıklayın",
+  "saveInstruction": "Uygunluk durumunuzu seçin ve <b>{{action}}</b> düğmesine tıklayın",
   "shareDescription": "Anketinizde oy kullanmalarına izin vermek için bu bağlantıyı <b>katılımcılarınıza</b> verin.",
   "stepSummary": "Aşama: {{current}} / {{total}}",
   "sunday": "Pazar",

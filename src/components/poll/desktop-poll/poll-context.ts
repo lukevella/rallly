@@ -11,7 +11,6 @@ export const PollContext = React.createContext<{
   sidebarWidth: number;
   numberOfColumns: number;
   availableSpace: number | string;
-  actionColumnWidth: number;
   goToNextPage: () => void;
   goToPreviousPage: () => void;
 }>({
@@ -26,7 +25,6 @@ export const PollContext = React.createContext<{
   availableSpace: "auto",
   goToNextPage: noop,
   goToPreviousPage: noop,
-  actionColumnWidth: 0,
 });
 
 export const usePollContext = () => React.useContext(PollContext);

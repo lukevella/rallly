@@ -102,7 +102,7 @@
   "requiredNameError": "Nimi vaaditaan",
   "resendVerificationCode": "Lähetä vahvistuskoodi uudelleen",
   "save": "Tallenna",
-  "saveInstruction": "Valitse sinulle sopivat vaihtoehdot ja napsauta <b>{{save}}</b>",
+  "saveInstruction": "Valitse sinulle sopivat vaihtoehdot ja napsauta <b>{{action}}</b>",
   "share": "Jaa",
   "shareDescription": "Anna tämä linkki <b>osallistujille</b>, jotta he voivat äänestää kyselyssäsi.",
   "shareLink": "Jaa linkin välityksellä",

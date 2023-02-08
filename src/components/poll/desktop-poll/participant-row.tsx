@@ -50,7 +50,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
     <div
       data-testid="participant-row"
       data-participantid={participantId}
-      className="group flex h-14 items-center"
+      className="group flex h-11 items-center"
     >
       <div
         className="flex shrink-0 items-center px-4"
@@ -75,12 +75,14 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
           return (
             <div
               key={i}
-              className="relative flex shrink-0 items-center justify-center px-2 transition-colors"
+              className={clsx(
+                "relative flex shrink-0 items-center justify-center px-1 transition-colors",
+              )}
               style={{ width: columnWidth }}
             >
               <div
                 className={clsx(
-                  "flex h-10 w-full items-center justify-center rounded-md",
+                  "flex h-9 w-full items-center justify-center rounded-md",
                   {
                     "bg-green-50": vote === "yes",
                     "bg-amber-50": vote === "ifNeedBe",
@@ -120,15 +122,15 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   if (editMode) {
     return (
       <ParticipantRowForm
+        name={participant.name}
         defaultValues={{
-          name: participant.name,
           votes: options.map(({ optionId }) => {
             const type = getVote(participant.id, optionId);
             return type ? { optionId, type } : undefined;
           }),
         }}
-        onSubmit={async ({ name, votes }) => {
-          await onSubmit?.({ name, votes });
+        onSubmit={async ({ votes }) => {
+          await onSubmit?.({ votes });
           onChangeEditMode?.(false);
         }}
         onCancel={() => onChangeEditMode?.(false)}

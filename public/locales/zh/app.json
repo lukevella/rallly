@@ -101,7 +101,7 @@
   "requiredNameError": "姓名为必填项",
   "resendVerificationCode": "重新发送验证码",
   "save": "保存",
-  "saveInstruction": "选择你有空的时间并点击 <b>{{save}}</b>",
+  "saveInstruction": "选择你有空的时间并点击 <b>{{action}}</b>",
   "share": "分享",
   "shareDescription": "其他人可以通过此链接成为<b>参与者</b>進行投票",
   "shareLink": "分享链接",

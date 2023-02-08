@@ -102,7 +102,7 @@
   "requiredNameError": "Naam is verplicht",
   "resendVerificationCode": "Verificatiecode opnieuw versturen",
   "save": "Opslaan",
-  "saveInstruction": "Selecteer je beschikbaarheid en klik op <b>{{save}}</b>",
+  "saveInstruction": "Selecteer je beschikbaarheid en klik op <b>{{action}}</b>",
   "share": "Delen",
   "shareDescription": "Geef deze link aan je <b>deelnemers</b> zodat ze op je poll kunnen stemmen.",
   "shareLink": "Deel via link",

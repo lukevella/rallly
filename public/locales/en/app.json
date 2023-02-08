@@ -102,7 +102,7 @@
   "requiredNameError": "Name is required",
   "resendVerificationCode": "Resend verification code",
   "save": "Save",
-  "saveInstruction": "Select your availability and click <b>{{save}}</b>",
+  "saveInstruction": "Select your availability and click <b>{{action}}</b>",
   "share": "Share",
   "shareDescription": "Give this link to your <b>participants</b> to allow them to vote on your poll.",
   "shareLink": "Share via link",

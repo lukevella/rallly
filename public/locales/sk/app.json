@@ -99,7 +99,7 @@
   "requiredNameError": "Požadované je meno",
   "resendVerificationCode": "Znovu odoslať verifikačný kód",
   "save": "Uložiť",
-  "saveInstruction": "Vyberte svoju dostupnosť a kliknite na <b>{{save}}</b>",
+  "saveInstruction": "Vyberte svoju dostupnosť a kliknite na <b>{{action}}</b>",
   "share": "Zdielať",
   "shareDescription": "Tento odkaz zašlite vašim <b>účastníkom</b>, aby mohli v ankete hlasovať.",
   "shareLink": "Zdieľať cez odkaz",

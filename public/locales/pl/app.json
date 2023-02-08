@@ -94,7 +94,7 @@
   "profileUser": "Profil - {{username}}",
   "requiredNameError": "Imię jest wymagane",
   "save": "Zapisz",
-  "saveInstruction": "Wybierz swoją dostępność i kliknij <b>{{save}}</b>",
+  "saveInstruction": "Wybierz swoją dostępność i kliknij <b>{{action}}</b>",
   "share": "Udostępnij",
   "shareDescription": "Przekaż ten link <b>uczestnikom</b>, aby mogli zagłosować na ankietę.",
   "shareLink": "Udostępnij link",

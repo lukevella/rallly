@@ -1,12 +1,9 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
 
 import ArrowLeft from "@/components/icons/arrow-left.svg";
 import ArrowRight from "@/components/icons/arrow-right.svg";
-import Check from "@/components/icons/check.svg";
-import Plus from "@/components/icons/plus-sm.svg";
 
 import { Button } from "../button";
 import { useParticipants } from "../participants-provider";
@@ -20,8 +17,6 @@ import {
   useAddParticipantMutation,
   useUpdateParticipantMutation,
 } from "./mutations";
-
-const MotionButton = motion(Button);
 
 const minSidebarWidth = 200;
 
@@ -37,16 +32,15 @@ const Poll: React.VoidFunctionComponent = () => {
   const [editingParticipantId, setEditingParticipantId] =
     React.useState<string | null>(null);
 
-  const actionColumnWidth = 100;
-  const columnWidth = 90;
+  const columnWidth = 80;
 
   const numberOfVisibleColumns = Math.min(
     options.length,
-    Math.floor((width - (minSidebarWidth + actionColumnWidth)) / columnWidth),
+    Math.floor((width - minSidebarWidth) / columnWidth),
   );
 
   const sidebarWidth = Math.min(
-    width - (numberOfVisibleColumns * columnWidth + actionColumnWidth),
+    width - numberOfVisibleColumns * columnWidth,
     300,
   );
 
@@ -66,8 +60,7 @@ const Poll: React.VoidFunctionComponent = () => {
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
     React.useState(!poll.closed && !userAlreadyVoted);
 
-  const pollWidth =
-    sidebarWidth + options.length * columnWidth + actionColumnWidth;
+  const pollWidth = sidebarWidth + options.length * columnWidth;
 
   const addParticipant = useAddParticipantMutation();
 
@@ -87,8 +80,6 @@ const Poll: React.VoidFunctionComponent = () => {
   };
 
   const updateParticipant = useUpdateParticipantMutation();
-
-  const participantListContainerRef = React.useRef<HTMLDivElement>(null);
   return (
     <PollContext.Provider
       value={{
@@ -102,7 +93,6 @@ const Poll: React.VoidFunctionComponent = () => {
         goToPreviousPage,
         numberOfColumns: numberOfVisibleColumns,
         availableSpace,
-        actionColumnWidth,
         maxScrollPosition,
       }}
     >
@@ -112,6 +102,37 @@ const Poll: React.VoidFunctionComponent = () => {
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
+          <div className="flex shrink-0 items-center justify-between border-b bg-gray-50 p-3">
+            <div className="">
+              <Trans
+                t={t}
+                i18nKey="saveInstruction"
+                values={{
+                  action: t("continue"),
+                }}
+                components={{ b: <strong /> }}
+              />
+            </div>
+            {maxScrollPosition > 0 ? (
+              <div className="flex gap-2">
+                <Button
+                  onClick={goToPreviousPage}
+                  disabled={scrollPosition === 0}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  className="text-xs"
+                  disabled={scrollPosition === maxScrollPosition}
+                  onClick={() => {
+                    goToNextPage();
+                  }}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : null}
+          </div>
           {poll.timeZone ? (
             <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
               <div className="flex grow items-center">
@@ -135,149 +156,75 @@ const Poll: React.VoidFunctionComponent = () => {
                 <div className="flex h-full grow items-end">
                   {t("participantCount", { count: participants.length })}
                 </div>
-                <AnimatePresence initial={false}>
-                  {scrollPosition > 0 ? (
-                    <MotionButton
-                      transition={{ duration: 0.1 }}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      rounded={true}
-                      onClick={goToPreviousPage}
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                    </MotionButton>
-                  ) : null}
-                </AnimatePresence>
               </div>
               <PollHeader />
-              <div
-                className="flex items-center py-3 px-2"
-                style={{ width: actionColumnWidth }}
-              >
-                {maxScrollPosition > 0 ? (
-                  <AnimatePresence initial={false}>
-                    {scrollPosition < maxScrollPosition ? (
-                      <MotionButton
-                        transition={{ duration: 0.1 }}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="text-xs"
-                        rounded={true}
-                        onClick={() => {
-                          goToNextPage();
-                        }}
-                      >
-                        <ArrowRight className="h-4 w-4" />
-                      </MotionButton>
-                    ) : null}
-                  </AnimatePresence>
-                ) : null}
-              </div>
             </div>
           </div>
-          {participants.length > 0 ? (
-            <div
-              className="min-h-0 overflow-y-auto py-2"
-              ref={participantListContainerRef}
-            >
-              {participants.map((participant, i) => {
-                return (
-                  <ParticipantRow
-                    key={i}
-                    participant={participant}
-                    editMode={editingParticipantId === participant.id}
-                    onChangeEditMode={(isEditing) => {
-                      setEditingParticipantId(
-                        isEditing ? participant.id : null,
-                      );
-                    }}
-                    onSubmit={async ({ name, votes }) => {
-                      await updateParticipant.mutateAsync({
-                        participantId: participant.id,
-                        pollId: poll.id,
-                        votes,
-                        name,
-                      });
-                    }}
-                  />
-                );
-              })}
-            </div>
-          ) : null}
-          {shouldShowNewParticipantForm &&
-          !poll.closed &&
-          !editingParticipantId ? (
-            <ParticipantRowForm
-              className="shrink-0 border-t bg-gray-50"
-              onSubmit={async ({ name, votes }) => {
-                await addParticipant.mutateAsync({
-                  name,
-                  votes,
-                  pollId: poll.id,
-                });
-                setShouldShowNewParticipantForm(false);
-              }}
-            />
-          ) : null}
-          {!poll.closed ? (
-            <div className="flex h-14 shrink-0 items-center border-t bg-gray-50 px-3">
-              {shouldShowNewParticipantForm || editingParticipantId ? (
-                <div className="flex items-center space-x-3">
-                  <Button
-                    key="submit"
-                    form="participant-row-form"
-                    htmlType="submit"
-                    type="primary"
-                    icon={<Check />}
-                    loading={
-                      addParticipant.isLoading || updateParticipant.isLoading
+          <div className="pb-2">
+            {shouldShowNewParticipantForm &&
+            !poll.closed &&
+            !editingParticipantId ? (
+              <ParticipantRowForm
+                className="shrink-0"
+                onSubmit={async ({ votes }) => {
+                  // show modal
+                  // await addParticipant.mutateAsync({
+                  //   name,
+                  //   votes,
+                  //   pollId: poll.id,
+                  // });
+                  setShouldShowNewParticipantForm(false);
+                }}
+              />
+            ) : null}
+            {participants.map((participant, i) => {
+              return (
+                <ParticipantRow
+                  key={i}
+                  participant={participant}
+                  editMode={editingParticipantId === participant.id}
+                  onChangeEditMode={(isEditing) => {
+                    setEditingParticipantId(isEditing ? participant.id : null);
+                  }}
+                  onSubmit={async ({ votes }) => {
+                    // Show modal
+                    // await updateParticipant.mutateAsync({
+                    //   participantId: participant.id,
+                    //   pollId: poll.id,
+                    //   votes,
+                    //   name,
+                    // });
+                  }}
+                />
+              );
+            })}
+          </div>
+          {shouldShowNewParticipantForm || editingParticipantId ? (
+            <div className="flex shrink-0 items-center border-t bg-gray-50 p-3">
+              <div className="flex w-full items-center justify-between gap-3">
+                <Button
+                  onClick={() => {
+                    if (editingParticipantId) {
+                      setEditingParticipantId(null);
+                    } else {
+                      setShouldShowNewParticipantForm(false);
                     }
-                  >
-                    {t("save")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      if (editingParticipantId) {
-                        setEditingParticipantId(null);
-                      } else {
-                        setShouldShowNewParticipantForm(false);
-                      }
-                    }}
-                  >
-                    {t("cancel")}
-                  </Button>
-                  <div className="text-sm">
-                    <Trans
-                      t={t}
-                      i18nKey="saveInstruction"
-                      values={{
-                        save: t("save"),
-                      }}
-                      components={{ b: <strong /> }}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="flex w-full items-center space-x-3">
-                  <Button
-                    key="add-participant"
-                    onClick={() => {
-                      setShouldShowNewParticipantForm(true);
-                    }}
-                    icon={<Plus />}
-                  >
-                    {t("addParticipant")}
-                  </Button>
-                  {userAlreadyVoted ? (
-                    <div className="flex items-center text-sm text-gray-400">
-                      <Check className="mr-1 h-5" />
-                      <div>{t("alreadyVoted")}</div>
-                    </div>
-                  ) : null}
-                </div>
-              )}
+                  }}
+                >
+                  {t("cancel")}
+                </Button>
+                <Button
+                  key="submit"
+                  form="participant-row-form"
+                  htmlType="submit"
+                  type="primary"
+                  loading={
+                    addParticipant.isLoading || updateParticipant.isLoading
+                  }
+                >
+                  {t("continue")}
+                </Button>
+              </div>
             </div>
           ) : null}
         </div>

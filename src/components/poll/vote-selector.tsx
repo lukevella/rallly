@@ -37,17 +37,7 @@ export const VoteSelector = React.forwardRef<
       onBlur={onBlur}
       onKeyDown={onKeyDown}
       className={clsx(
-        "group relative inline-flex h-9 w-full items-center justify-center overflow-hidden rounded-md border bg-white transition-all hover:ring-4 focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-primary-500",
-        {
-          "border-green-200 bg-green-50 hover:ring-green-100/50 active:bg-green-100/50":
-            value === "yes",
-          "border-amber-200 bg-amber-50 hover:ring-amber-100/50 active:bg-amber-100/50":
-            value === "ifNeedBe",
-          "border-gray-200 bg-gray-50 hover:ring-gray-100/50 active:bg-gray-100/50":
-            value === "no",
-          "border-gray-200 hover:ring-gray-100/50 active:bg-gray-100/50":
-            value === undefined,
-        },
+        "btn-default relative w-full items-center justify-center overflow-hidden focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-primary-500",
         className,
       )}
       onClick={() => {

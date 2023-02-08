@@ -97,7 +97,7 @@
   "profileUser": "Perfil - {{username}}",
   "requiredNameError": "El nom és obligatori",
   "save": "Desa",
-  "saveInstruction": "Selecciona la teva disponibilitat i prem <b>{{save}}</b>",
+  "saveInstruction": "Selecciona la teva disponibilitat i prem <b>{{action}}</b>",
   "share": "Compartir",
   "shareDescription": "Envia aquest enllaç als <b>participants</b> perquè puguin votar a l'enquesta.",
   "shareLink": "Comparteix via enllaç",

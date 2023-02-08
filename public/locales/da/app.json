@@ -90,7 +90,7 @@
   "profileUser": "Profil - {{username}}",
   "requiredNameError": "Navn er påkrævet",
   "save": "Gem",
-  "saveInstruction": "Vælg din tilgængelighed og klik <b>{{save}}</b>",
+  "saveInstruction": "Vælg din tilgængelighed og klik <b>{{action}}</b>",
   "share": "Del",
   "shareDescription": "Giv dette link til dine <b>deltagere</b> for at give dem mulighed for at stemme på din afstemning.",
   "shareLink": "Del via link",

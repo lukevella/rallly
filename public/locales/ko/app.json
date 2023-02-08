@@ -90,7 +90,7 @@
   "profileUser": "프로필 - {{username}}",
   "requiredNameError": "이름을 입력해주세요.",
   "save": "저장하기",
-  "saveInstruction": "가능여부를 선택한 후 <b>{{save}}</b> 를 클릭하세요",
+  "saveInstruction": "가능여부를 선택한 후 <b>{{action}}</b> 를 클릭하세요",
   "share": "공유하기",
   "shareDescription": "이 링크를 <b>참여자들</b>에게 전달하여 투표하도록 하세요",
   "shareLink": "링크 공유하기",

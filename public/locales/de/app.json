@@ -102,7 +102,7 @@
   "requiredNameError": "Bitte gib einen Namen an",
   "resendVerificationCode": "Bestätigungscode erneut senden",
   "save": "Speichern",
-  "saveInstruction": "Wähle deine Verfügbarkeit und klicke auf <b>{{save}}</b>",
+  "saveInstruction": "Wähle deine Verfügbarkeit und klicke auf <b>{{action}}</b>",
   "share": "Teilen",
   "shareDescription": "Gib diesen Link deinen <b>Teilnehmern</b> damit sie an deiner Umfrage teilnehmen können.",
   "shareLink": "Über Link teilen",
