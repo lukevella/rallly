@@ -35,7 +35,7 @@
   input,
   select,
   textarea {
-    @apply rounded outline-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-gray-50;
+    @apply rounded outline-none focus:border-transparent focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 focus:ring-offset-white;
   }
 
   #floating-ui-root {
@@ -66,14 +66,14 @@
     @apply h-4 w-4 rounded border-slate-300 text-primary-500 shadow-sm focus:ring-primary-500;
   }
   .btn {
-    @apply inline-flex h-9 select-none items-center justify-center whitespace-nowrap border px-3 font-medium shadow-sm transition-colors;
+    @apply inline-flex h-9 select-none items-center justify-center whitespace-nowrap border px-3 font-medium shadow-sm;
   }
   a.btn {
     @apply cursor-pointer hover:no-underline;
   }
 
   .btn-default {
-    @apply btn bg-white text-slate-700 hover:bg-gray-50 active:bg-slate-100;
+    @apply btn bg-white text-slate-700 hover:bg-gray-50 active:bg-gray-100;
   }
 
   a.btn-default {
@@ -91,7 +91,7 @@
   }
   .btn-primary {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
-    @apply btn border-primary-600 bg-primary-500 text-white hover:bg-opacity-90 focus-visible:ring-primary-500 active:bg-primary-600;
+    @apply btn border-primary-600 bg-primary-500 text-white hover:bg-opacity-90 active:bg-primary-600;
   }
 
   a.btn-primary {
@@ -103,7 +103,7 @@
   }
 
   .segment-button button {
-    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-gray-50 px-4 transition-colors first:rounded-r-none first:border-l last:rounded-l-none hover:bg-slate-50 focus:z-10 focus-visible:ring-2 focus-visible:ring-offset-0 active:bg-slate-100;
+    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-gray-50 px-4 transition-colors first:rounded-r-none first:border-l last:rounded-l-none hover:bg-slate-50 focus:z-10 active:bg-slate-100;
   }
 
   .segment-button .segment-button-active {

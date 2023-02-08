@@ -65,11 +65,11 @@ export const Poll = (props: { children?: React.ReactNode }) => {
             </div>
           ) : null}
           <div className="rounded-md border bg-white shadow-sm md:overflow-hidden">
-            <div className="p-4 sm:p-6">
+            <div className="p-4">
               <div className="space-y-3">
                 <div>
                   <div
-                    className="mb-1 text-2xl font-semibold text-slate-800 sm:text-3xl"
+                    className="text-xl font-semibold text-slate-800 sm:text-2xl"
                     data-testid="poll-title"
                   >
                     {preventWidows(poll.title)}
@@ -77,14 +77,14 @@ export const Poll = (props: { children?: React.ReactNode }) => {
                   <PollSubheader />
                 </div>
                 {poll.description ? (
-                  <div className="border-primary whitespace-pre-line lg:text-lg">
+                  <div className="border-primary whitespace-pre-line">
                     <TruncatedLinkify>
                       {preventWidows(poll.description)}
                     </TruncatedLinkify>
                   </div>
                 ) : null}
                 {poll.location ? (
-                  <div className="lg:text-lg">
+                  <div>
                     <div className="text-sm text-slate-500">
                       {t("location")}
                     </div>
