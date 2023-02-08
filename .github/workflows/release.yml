@@ -15,7 +15,7 @@ jobs:
 
       - name: Trigger deploy to production
         run: |
-          curl -X POST -d {} ${{ secrets.DEPLOY_HOOK }}}
+          curl -X POST -d {} ${{ secrets.DEPLOY_HOOK }}
 
       - name: Extract body from changelog
         run: |
