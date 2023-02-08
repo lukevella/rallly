@@ -111,64 +111,69 @@ const MonthCalendar: React.VoidFunctionComponent<DateTimePickerProps> = ({
                 );
               })}
             </div>
-            <div className="grid grow grid-cols-7 overflow-hidden rounded-lg border bg-white shadow-sm">
+            <div className="grid grow grid-cols-7 rounded-lg border bg-white shadow-sm">
               {datepicker.days.map((day, i) => {
                 return (
-                  <button
-                    type="button"
+                  <div
                     key={i}
-                    onClick={() => {
-                      if (
-                        datepicker.selection.some((selectedDate) =>
-                          dayjs(selectedDate).isSame(day.date, "day"),
-                        )
-                      ) {
-                        onChange(removeAllOptionsForDay(options, day.date));
-                      } else {
-                        const selectedDate = dayjs(day.date)
-                          .set("hour", 12)
-                          .toDate();
-                        const newOption: DateTimeOption = !isTimedEvent
-                          ? {
-                              type: "date",
-                              date: formatDateWithoutTime(selectedDate),
-                            }
-                          : {
-                              type: "timeSlot",
-                              start: formatDateWithoutTz(selectedDate),
-                              end: formatDateWithoutTz(
-                                dayjs(selectedDate)
-                                  .add(duration, "minutes")
-                                  .toDate(),
-                              ),
-                            };
-
-                        onChange([...options, newOption]);
-                        onNavigate(selectedDate);
-                      }
-                      if (day.outOfMonth) {
-                        if (i < 6) {
-                          datepicker.prev();
-                        } else {
-                          datepicker.next();
-                        }
-                      }
-                    }}
-                    className={clsx(
-                      "relative flex h-12 items-center justify-center text-sm hover:bg-slate-50 focus:ring-0 focus:ring-offset-0 active:bg-slate-100",
-                      {
-                        "bg-slate-50 text-slate-400": day.outOfMonth,
-                        "font-bold": day.today,
-                        "text-primary-500": day.today && !day.selected,
-                        "border-r": (i + 1) % 7 !== 0,
-                        "border-b": i < datepicker.days.length - 7,
-                        "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-500 after:content-['']":
-                          day.selected,
-                      },
-                    )}
+                    className={clsx("h-12", {
+                      "border-r": (i + 1) % 7 !== 0,
+                      "border-b": i < datepicker.days.length - 7,
+                    })}
                   >
-                    <span className="z-10">{day.day}</span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (
+                          datepicker.selection.some((selectedDate) =>
+                            dayjs(selectedDate).isSame(day.date, "day"),
+                          )
+                        ) {
+                          onChange(removeAllOptionsForDay(options, day.date));
+                        } else {
+                          const selectedDate = dayjs(day.date)
+                            .set("hour", 12)
+                            .toDate();
+                          const newOption: DateTimeOption = !isTimedEvent
+                            ? {
+                                type: "date",
+                                date: formatDateWithoutTime(selectedDate),
+                              }
+                            : {
+                                type: "timeSlot",
+                                start: formatDateWithoutTz(selectedDate),
+                                end: formatDateWithoutTz(
+                                  dayjs(selectedDate)
+                                    .add(duration, "minutes")
+                                    .toDate(),
+                                ),
+                              };
+
+                          onChange([...options, newOption]);
+                          onNavigate(selectedDate);
+                        }
+                        if (day.outOfMonth) {
+                          if (i < 6) {
+                            datepicker.prev();
+                          } else {
+                            datepicker.next();
+                          }
+                        }
+                      }}
+                      className={clsx(
+                        "relative flex h-full w-full items-center justify-center text-sm hover:bg-slate-50 focus:z-10 focus:rounded active:bg-slate-100",
+                        {
+                          "bg-slate-50 text-slate-400": day.outOfMonth,
+                          "font-bold": day.today,
+                          "text-primary-500": day.today && !day.selected,
+                          "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-500 after:content-['']":
+                            day.selected,
+                        },
+                      )}
+                    >
+                      <span className="z-10">{day.day}</span>
+                    </button>
+                  </div>
                 );
               })}
             </div>
