@@ -1,6 +1,5 @@
 import { VoteType } from "@prisma/client";
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 
 import VoteIcon from "./vote-icon";
@@ -37,7 +36,7 @@ export const VoteSelector = React.forwardRef<
       onBlur={onBlur}
       onKeyDown={onKeyDown}
       className={clsx(
-        "btn-default relative w-full items-center justify-center overflow-hidden focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-primary-500",
+        "btn-default relative items-center justify-center overflow-hidden focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-primary-500",
         className,
       )}
       onClick={() => {
@@ -45,18 +44,7 @@ export const VoteSelector = React.forwardRef<
       }}
       ref={ref}
     >
-      <AnimatePresence initial={false}>
-        <motion.span
-          className="absolute flex items-center justify-center"
-          transition={{ duration: 0.2 }}
-          initial={{ opacity: 0, scale: 1.5, y: -45 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.5, y: 45 }}
-          key={value}
-        >
-          <VoteIcon type={value} />
-        </motion.span>
-      </AnimatePresence>
+      <VoteIcon type={value} />
     </button>
   );
 });

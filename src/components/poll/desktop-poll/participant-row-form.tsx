@@ -83,10 +83,11 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                 return (
                   <div
                     key={optionId}
-                    className="flex shrink-0 items-center justify-center px-1"
+                    className="flex shrink-0 items-center justify-center p-1"
                     style={{ width: columnWidth }}
                   >
                     <VoteSelector
+                      className="h-full w-full"
                       value={value?.type}
                       onKeyDown={(e) => {
                         if (

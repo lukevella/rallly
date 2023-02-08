@@ -50,10 +50,10 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
     <div
       data-testid="participant-row"
       data-participantid={participantId}
-      className="group flex h-11 items-center"
+      className="group flex h-12 items-center"
     >
       <div
-        className="flex shrink-0 items-center px-4"
+        className="flex h-full shrink-0 items-center px-4"
         style={{ width: sidebarWidth }}
       >
         <UserAvatar
@@ -70,19 +70,17 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
           </div>
         ) : null}
       </div>
-      <ControlledScrollArea>
+      <ControlledScrollArea className="h-full">
         {votes.map((vote, i) => {
           return (
             <div
               key={i}
-              className={clsx(
-                "relative flex shrink-0 items-center justify-center px-1 transition-colors",
-              )}
+              className={clsx("relative flex h-full shrink-0 p-1")}
               style={{ width: columnWidth }}
             >
               <div
                 className={clsx(
-                  "flex h-9 w-full items-center justify-center rounded-md",
+                  "flex h-full w-full items-center justify-center rounded-md",
                   {
                     "bg-green-50": vote === "yes",
                     "bg-amber-50": vote === "ifNeedBe",

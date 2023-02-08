@@ -41,7 +41,7 @@ const Poll: React.VoidFunctionComponent = () => {
 
   const sidebarWidth = Math.min(
     width - numberOfVisibleColumns * columnWidth,
-    300,
+    275,
   );
 
   const availableSpace = Math.min(
@@ -102,16 +102,32 @@ const Poll: React.VoidFunctionComponent = () => {
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
-          <div className="flex shrink-0 items-center justify-between border-b bg-gray-50 p-3">
-            <div className="">
-              <Trans
-                t={t}
-                i18nKey="saveInstruction"
-                values={{
-                  action: t("continue"),
-                }}
-                components={{ b: <strong /> }}
-              />
+          <div className="flex h-14 shrink-0 items-center justify-between border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
+            <div className="p-1">
+              {shouldShowNewParticipantForm ? (
+                <Trans
+                  t={t}
+                  i18nKey="saveInstruction"
+                  values={{
+                    action: t("continue"),
+                  }}
+                  components={{ b: <strong /> }}
+                />
+              ) : (
+                <div className="flex gap-2">
+                  <div className="font-semibold text-slate-800">
+                    {t("participantCount", { count: participants.length })}
+                  </div>
+                  <button
+                    className="rounded hover:text-primary-500"
+                    onClick={() => {
+                      setShouldShowNewParticipantForm(true);
+                    }}
+                  >
+                    + Add
+                  </button>
+                </div>
+              )}
             </div>
             {maxScrollPosition > 0 ? (
               <div className="flex gap-2">
@@ -134,7 +150,7 @@ const Poll: React.VoidFunctionComponent = () => {
             ) : null}
           </div>
           {poll.timeZone ? (
-            <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gray-50 px-4">
+            <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4">
               <div className="flex grow items-center">
                 <div className="mr-2 text-sm font-medium text-slate-500">
                   {t("timeZone")}
@@ -152,11 +168,7 @@ const Poll: React.VoidFunctionComponent = () => {
               <div
                 className="flex shrink-0 items-center pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
-              >
-                <div className="flex h-full grow items-end">
-                  {t("participantCount", { count: participants.length })}
-                </div>
-              </div>
+              ></div>
               <PollHeader />
             </div>
           </div>
@@ -200,7 +212,7 @@ const Poll: React.VoidFunctionComponent = () => {
             })}
           </div>
           {shouldShowNewParticipantForm || editingParticipantId ? (
-            <div className="flex shrink-0 items-center border-t bg-gray-50 p-3">
+            <div className="flex shrink-0 items-center border-t bg-gray-50 p-2">
               <div className="flex w-full items-center justify-between gap-3">
                 <Button
                   onClick={() => {
