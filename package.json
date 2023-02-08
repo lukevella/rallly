@@ -54,7 +54,7 @@
     "react": "^18.2.0",
     "react-big-calendar": "^1.5.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.39.3",
+    "react-hook-form": "^7.42.1",
     "react-hot-toast": "^2.4.0",
     "react-i18next": "^12.0.0",
     "react-linkify": "^1.0.0-alpha",
