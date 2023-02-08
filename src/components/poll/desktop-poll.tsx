@@ -124,13 +124,16 @@ const Poll: React.VoidFunctionComponent = () => {
                       setShouldShowNewParticipantForm(true);
                     }}
                   >
-                    + Add
+                    + {t("add")}
                   </button>
                 </div>
               )}
             </div>
             {maxScrollPosition > 0 ? (
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <div className="p-1">
+                  {t("optionCount", { count: options.length })}
+                </div>
                 <Button
                   onClick={goToPreviousPage}
                   disabled={scrollPosition === 0}
