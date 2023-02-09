@@ -13,6 +13,7 @@ import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import { ParticipantLayout } from "../../components/layouts/participant-layout";
+import ModalProvider from "../../components/modal/modal-provider";
 import { DayjsProvider } from "../../utils/dayjs";
 
 const Page: NextPage = () => {
@@ -36,17 +37,19 @@ const Page: NextPage = () => {
           <ParticipantsProvider pollId={poll.id}>
             <ParticipantLayout>
               <PollContextProvider poll={poll} urlId={urlId} admin={false}>
-                <div className="space-y-3 sm:space-y-4">
-                  {user.id === poll.user.id ? (
-                    <Link
-                      className="btn-default"
-                      href={`/admin/${poll.adminUrlId}`}
-                    >
-                      &larr; {t("goToAdmin")}
-                    </Link>
-                  ) : null}
-                  <Poll />
-                </div>
+                <ModalProvider>
+                  <div className="space-y-3 sm:space-y-4">
+                    {user.id === poll.user.id ? (
+                      <Link
+                        className="btn-default"
+                        href={`/admin/${poll.adminUrlId}`}
+                      >
+                        &larr; {t("goToAdmin")}
+                      </Link>
+                    ) : null}
+                    <Poll />
+                  </div>
+                </ModalProvider>
               </PollContextProvider>
             </ParticipantLayout>
           </ParticipantsProvider>

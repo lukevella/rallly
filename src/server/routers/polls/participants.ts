@@ -95,9 +95,6 @@ export const participants = createRouter()
     }),
     resolve: async ({ input: { pollId, participantId, votes } }) => {
       const participant = await prisma.participant.update({
-        select: {
-          id: true,
-        },
         where: {
           id: participantId,
         },
@@ -114,6 +111,9 @@ export const participants = createRouter()
               })),
             },
           },
+        },
+        include: {
+          votes: true,
         },
       });
 

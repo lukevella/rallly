@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
@@ -124,6 +125,7 @@ const Poll: React.VoidFunctionComponent = () => {
                   <button
                     className="rounded hover:text-primary-500"
                     onClick={() => {
+                      setEditingParticipantId(null);
                       setShouldShowNewParticipantForm(true);
                     }}
                   >
@@ -132,28 +134,30 @@ const Poll: React.VoidFunctionComponent = () => {
                 </div>
               )}
             </div>
-            {maxScrollPosition > 0 ? (
-              <div className="flex items-center gap-2">
-                <div className="p-1">
-                  {t("optionCount", { count: options.length })}
-                </div>
-                <Button
-                  onClick={goToPreviousPage}
-                  disabled={scrollPosition === 0}
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  className="text-xs"
-                  disabled={scrollPosition === maxScrollPosition}
-                  onClick={() => {
-                    goToNextPage();
-                  }}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+            <div className="flex items-center gap-3">
+              <div className="p-1">
+                {t("optionCount", { count: options.length })}
               </div>
-            ) : null}
+              {maxScrollPosition > 0 ? (
+                <div className="flex gap-2">
+                  <Button
+                    onClick={goToPreviousPage}
+                    disabled={scrollPosition === 0}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    className="text-xs"
+                    disabled={scrollPosition === maxScrollPosition}
+                    onClick={() => {
+                      goToNextPage();
+                    }}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : null}
+            </div>
           </div>
           {poll.timeZone ? (
             <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4">
@@ -179,21 +183,34 @@ const Poll: React.VoidFunctionComponent = () => {
             </div>
           </div>
           <div className="pb-2">
-            {shouldShowNewParticipantForm &&
-            !poll.closed &&
-            !editingParticipantId ? (
-              <ParticipantRowForm
-                className="shrink-0"
-                onSubmit={async ({ votes }) => {
-                  showNewParticipantModal({
-                    votes,
-                    onSubmit: () => {
-                      setShouldShowNewParticipantForm(false);
-                    },
-                  });
-                }}
-              />
-            ) : null}
+            <AnimatePresence initial={false}>
+              {shouldShowNewParticipantForm &&
+              !poll.closed &&
+              !editingParticipantId ? (
+                <motion.div
+                  variants={{
+                    hidden: { height: 0, x: -50, opacity: 0 },
+                    visible: { height: "auto", x: 0, opacity: 1 },
+                    exit: { height: 0, opacity: 0 },
+                  }}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  <ParticipantRowForm
+                    className="shrink-0"
+                    onSubmit={async ({ votes }) => {
+                      showNewParticipantModal({
+                        votes,
+                        onSubmit: () => {
+                          setShouldShowNewParticipantForm(false);
+                        },
+                      });
+                    }}
+                  />
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
             {participants.map((participant, i) => {
               return (
                 <ParticipantRow
@@ -201,49 +218,62 @@ const Poll: React.VoidFunctionComponent = () => {
                   participant={participant}
                   editMode={editingParticipantId === participant.id}
                   onChangeEditMode={(isEditing) => {
-                    setEditingParticipantId(isEditing ? participant.id : null);
+                    if (isEditing) {
+                      setShouldShowNewParticipantForm(false);
+                      setEditingParticipantId(participant.id);
+                    }
                   }}
                   onSubmit={async ({ votes }) => {
-                    // Show modal
-                    // await updateParticipant.mutateAsync({
-                    //   participantId: participant.id,
-                    //   pollId: poll.id,
-                    //   votes,
-                    //   name,
-                    // });
+                    await updateParticipant.mutateAsync({
+                      participantId: participant.id,
+                      pollId: poll.id,
+                      votes,
+                    });
+                    setEditingParticipantId(null);
                   }}
                 />
               );
             })}
           </div>
-          {shouldShowNewParticipantForm || editingParticipantId ? (
-            <div className="flex shrink-0 items-center border-t bg-gray-50 p-3">
-              <div className="flex w-full items-center justify-between gap-3">
-                <Button
-                  onClick={() => {
-                    if (editingParticipantId) {
-                      setEditingParticipantId(null);
-                    } else {
-                      setShouldShowNewParticipantForm(false);
+          <AnimatePresence initial={false}>
+            {shouldShowNewParticipantForm || editingParticipantId ? (
+              <motion.div
+                variants={{
+                  hidden: { height: 0, y: 30, opacity: 0 },
+                  visible: { height: "auto", y: 0, opacity: 1 },
+                }}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="flex shrink-0 items-center border-t bg-gray-50"
+              >
+                <div className="flex w-full items-center justify-between gap-3 p-3">
+                  <Button
+                    onClick={() => {
+                      if (editingParticipantId) {
+                        setEditingParticipantId(null);
+                      } else {
+                        setShouldShowNewParticipantForm(false);
+                      }
+                    }}
+                  >
+                    {t("cancel")}
+                  </Button>
+                  <Button
+                    key="submit"
+                    form="participant-row-form"
+                    htmlType="submit"
+                    type="primary"
+                    loading={
+                      addParticipant.isLoading || updateParticipant.isLoading
                     }
-                  }}
-                >
-                  {t("cancel")}
-                </Button>
-                <Button
-                  key="submit"
-                  form="participant-row-form"
-                  htmlType="submit"
-                  type="primary"
-                  loading={
-                    addParticipant.isLoading || updateParticipant.isLoading
-                  }
-                >
-                  {t("continue")}
-                </Button>
-              </div>
-            </div>
-          ) : null}
+                  >
+                    {shouldShowNewParticipantForm ? t("continue") : t("save")}
+                  </Button>
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
       </div>
     </PollContext.Provider>

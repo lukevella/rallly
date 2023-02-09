@@ -65,10 +65,8 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
       })}
       className={clsx("flex h-12 shrink-0", className)}
     >
-      <div className="flex items-center px-4" style={{ width: sidebarWidth }}>
-        <div className="w-full">
-          <UserAvatar name={name ?? t("you")} showName={true} />
-        </div>
+      <div className="flex items-center px-3" style={{ width: sidebarWidth }}>
+        <UserAvatar name={name ?? t("you")} showName={true} />
       </div>
       <Controller
         control={control}

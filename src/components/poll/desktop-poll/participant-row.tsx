@@ -1,5 +1,6 @@
 import { Participant, Vote, VoteType } from "@prisma/client";
 import clsx from "clsx";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import CompactButton from "@/components/compact-button";
@@ -46,27 +47,23 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   color,
   participantId,
 }) => {
+  const { t } = useTranslation("app");
   return (
     <div
       data-testid="participant-row"
       data-participantid={participantId}
-      className="group flex h-12 items-center"
+      className="flex h-12 items-center"
     >
       <div
-        className="flex h-full shrink-0 items-center px-4"
+        className="flex h-full shrink-0 items-center justify-between gap-2 px-3"
         style={{ width: sidebarWidth }}
       >
-        <UserAvatar
-          className="mr-2"
-          name={name}
-          showName={true}
-          isYou={isYou}
-          color={color}
-        />
+        <UserAvatar name={name} showName={true} color={color} />
         {editable ? (
-          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden group-hover:flex">
-            <CompactButton icon={Pencil} onClick={onEdit} />
-            <CompactButton icon={Trash} onClick={onDelete} />
+          <div className="flex">
+            <button className="text-link" onClick={onEdit}>
+              {t("edit")}
+            </button>
           </div>
         ) : null}
       </div>
