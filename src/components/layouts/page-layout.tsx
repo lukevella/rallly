@@ -74,15 +74,15 @@ const PageLayout: React.VoidFunctionComponent<PageLayoutProps> = ({
             </span>
           </div>
         </div>
-        <Menu className="hidden items-center space-x-8 md:flex" />
+        <Menu className="hidden items-center space-x-8 sm:flex" />
         <Popover>
           <PopoverTrigger asChild={true}>
             <button className="text-gray-400 transition-colors hover:text-primary-500 hover:no-underline hover:underline-offset-2 sm:hidden">
               <DotsVertical className="w-5" />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="start">
-            <Menu className="flex flex-col space-y-2" />
+          <PopoverContent align="end">
+            <Menu className="flex flex-col space-y-2 p-2" />
           </PopoverContent>
         </Popover>
       </div>
