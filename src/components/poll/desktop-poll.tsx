@@ -191,9 +191,9 @@ const Poll: React.VoidFunctionComponent = () => {
               !editingParticipantId ? (
                 <motion.div
                   variants={{
-                    hidden: { height: 0, x: -50, opacity: 0 },
-                    visible: { height: "auto", x: 0, opacity: 1 },
-                    exit: { height: 0, opacity: 0, scale: 0.9 },
+                    hidden: { height: 0, y: -50, opacity: 0 },
+                    visible: { height: "auto", y: 0, opacity: 1 },
+                    exit: { height: 0, opacity: 0, y: -25 },
                   }}
                   initial="hidden"
                   animate="visible"

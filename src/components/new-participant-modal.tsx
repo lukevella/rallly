@@ -1,4 +1,5 @@
 import { VoteType } from "@prisma/client";
+import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
@@ -23,7 +24,9 @@ interface NewParticipantModalProps {
 
 const VoteSummary = ({
   votes,
+  className,
 }: {
+  className: string;
   votes: { optionId: string; type: VoteType }[];
 }) => {
   const { t } = useTranslation("app");
@@ -36,25 +39,25 @@ const VoteSummary = ({
   );
 
   return (
-    <div className="space-y-1">
+    <div className={clsx("space-y-1", className)}>
       <div className="flex items-center gap-2">
         <VoteIcon type="yes" />
         <div>{t("yes")}</div>
-        <div className="h-5 rounded-full bg-gray-100 px-1 text-center text-sm">
+        <div className="rounded bg-white px-1 text-sm shadow-sm">
           {voteByType["yes"]}
         </div>
       </div>
       <div className="flex items-center gap-2">
         <VoteIcon type="ifNeedBe" />
         <div>{t("ifNeedBe")}</div>
-        <div className="h-5 w-5 rounded-full bg-gray-100 px-1 text-center text-sm">
+        <div className="rounded bg-white px-1 text-sm shadow-sm">
           {voteByType["ifNeedBe"]}
         </div>
       </div>
       <div className="flex items-center gap-2">
         <VoteIcon type="no" />
         <div>{t("no")}</div>
-        <div className="h-5 w-5 rounded-full bg-gray-100 px-1 text-center text-sm">
+        <div className="rounded bg-white px-1 text-sm shadow-sm">
           {voteByType["no"]}
         </div>
       </div>
@@ -69,7 +72,6 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const { requiredString, validEmail } = useFormValidation();
   const { poll } = usePoll();
   const addParticipant = useAddParticipantMutation();
-
   return (
     <div className="max-w-full p-4">
       <div className="text-lg font-semibold text-slate-800">
@@ -85,8 +87,9 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           });
           props.onSubmit?.(newParticipant);
         })}
+        className="space-y-4"
       >
-        <fieldset className="mb-4">
+        <fieldset>
           <label htmlFor="name" className="text-slate-500">
             {t("name")}
           </label>
@@ -104,7 +107,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
             </div>
           ) : null}
         </fieldset>
-        <fieldset className="mb-4">
+        <fieldset>
           <label htmlFor="email" className="text-slate-500">
             {t("email")} ({t("optional")})
           </label>
@@ -126,9 +129,12 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
             </div>
           ) : null}
         </fieldset>
-        <fieldset className="mb-4">
+        <fieldset>
           <label className="text-slate-500">{t("response")}</label>
-          <VoteSummary votes={props.votes} />
+          <VoteSummary
+            votes={props.votes}
+            className="rounded border bg-gray-50 py-2 px-3"
+          />
         </fieldset>
         <div className="flex gap-2">
           <Button onClick={props.onCancel}>{t("cancel")}</Button>
