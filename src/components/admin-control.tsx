@@ -80,7 +80,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
 
   return (
     <div className="">
-      <div className="mb-4 flex justify-end">
+      <div className="mb-3 flex justify-end sm:mb-4">
         <div className="flex gap-2">
           <NotificationsToggle />
           <ManagePoll placement="bottom-end" />
