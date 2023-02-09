@@ -6,11 +6,7 @@ import ArrowLeft from "@/components/icons/arrow-left.svg";
 import ArrowRight from "@/components/icons/arrow-right.svg";
 
 import { Button } from "../button";
-import { useModalContext } from "../modal/modal-provider";
-import {
-  NewParticipantModal,
-  useNewParticipantModal,
-} from "../new-participant-modal";
+import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
 import TimeZonePicker from "../time-zone-picker";
@@ -195,12 +191,6 @@ const Poll: React.VoidFunctionComponent = () => {
                       setShouldShowNewParticipantForm(false);
                     },
                   });
-                  // show modal
-                  // await addParticipant.mutateAsync({
-                  //   name,
-                  //   votes,
-                  //   pollId: poll.id,
-                  // });
                 }}
               />
             ) : null}
@@ -227,7 +217,7 @@ const Poll: React.VoidFunctionComponent = () => {
             })}
           </div>
           {shouldShowNewParticipantForm || editingParticipantId ? (
-            <div className="flex shrink-0 items-center border-t bg-gray-50 p-2">
+            <div className="flex shrink-0 items-center border-t bg-gray-50 p-3">
               <div className="flex w-full items-center justify-between gap-3">
                 <Button
                   onClick={() => {

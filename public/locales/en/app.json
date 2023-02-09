@@ -53,6 +53,7 @@
   "loadingParticipants": "Loading participants…",
   "validEmail": "Please enter a valid email",
   "newParticipantFormDescription": "Fill in the form below to submit your votes.",
+  "optional": "optional",
   "location": "Location",
   "locationPlaceholder": "Joe's Coffee Shop",
   "lockPoll": "Lock poll",

@@ -85,7 +85,11 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
         </fieldset>
         <div className="flex gap-2">
           <Button onClick={props.onCancel}>{t("cancel")}</Button>
-          <Button htmlType="submit" type="primary">
+          <Button
+            htmlType="submit"
+            type="primary"
+            loading={formState.isSubmitting}
+          >
             {t("save")}
           </Button>
         </div>
