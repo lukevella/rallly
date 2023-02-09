@@ -43,21 +43,21 @@ const VoteSummary = ({
       <div className="flex items-center gap-2">
         <VoteIcon type="yes" />
         <div>{t("yes")}</div>
-        <div className="rounded bg-white px-1 text-sm shadow-sm">
+        <div className="rounded bg-white px-2 text-sm shadow-sm">
           {voteByType["yes"]}
         </div>
       </div>
       <div className="flex items-center gap-2">
         <VoteIcon type="ifNeedBe" />
         <div>{t("ifNeedBe")}</div>
-        <div className="rounded bg-white px-1 text-sm shadow-sm">
+        <div className="rounded bg-white px-2 text-sm shadow-sm">
           {voteByType["ifNeedBe"]}
         </div>
       </div>
       <div className="flex items-center gap-2">
         <VoteIcon type="no" />
         <div>{t("no")}</div>
-        <div className="rounded bg-white px-1 text-sm shadow-sm">
+        <div className="rounded bg-white px-2 text-sm shadow-sm">
           {voteByType["no"]}
         </div>
       </div>
@@ -69,7 +69,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const { t } = useTranslation("app");
   const { register, formState, handleSubmit } =
     useForm<NewParticipantFormData>();
-  const { requiredString, validEmail } = useFormValidation();
+  const { requiredString } = useFormValidation();
   const { poll } = usePoll();
   const addParticipant = useAddParticipantMutation();
   return (
@@ -107,7 +107,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
             </div>
           ) : null}
         </fieldset>
-        <fieldset>
+        {/* <fieldset>
           <label htmlFor="email" className="text-slate-500">
             {t("email")} ({t("optional")})
           </label>
@@ -128,7 +128,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
               {formState.errors.email.message}
             </div>
           ) : null}
-        </fieldset>
+        </fieldset> */}
         <fieldset>
           <label className="text-slate-500">{t("response")}</label>
           <VoteSummary

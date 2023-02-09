@@ -197,7 +197,6 @@ const Poll: React.VoidFunctionComponent = () => {
                   }}
                   initial="hidden"
                   animate="visible"
-                  exit="exit"
                 >
                   <ParticipantRowForm
                     className="shrink-0"
