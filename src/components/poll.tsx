@@ -94,17 +94,15 @@ export const Poll = (props: { children?: React.ReactNode }) => {
                   <div className="flex items-center space-x-3">
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="yes" />
-                      <span className="text-xs text-slate-500">{t("yes")}</span>
+                      <span>{t("yes")}</span>
                     </span>
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="ifNeedBe" />
-                      <span className="text-xs text-slate-500">
-                        {t("ifNeedBe")}
-                      </span>
+                      <span>{t("ifNeedBe")}</span>
                     </span>
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="no" />
-                      <span className="text-xs text-slate-500">{t("no")}</span>
+                      <span>{t("no")}</span>
                     </span>
                   </div>
                 </div>

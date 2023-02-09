@@ -36,22 +36,7 @@ export const useUpdateParticipantMutation = () => {
       posthog.capture("update participant", {
         name: participant.name,
       });
-      queryClient.setQueryData(
-        ["polls.participants.list", { pollId: participant.pollId }],
-        (existingParticipants = []) => {
-          const newParticipants = [...existingParticipants];
-
-          const index = newParticipants.findIndex(
-            ({ id }) => id === participant.id,
-          );
-
-          if (index !== -1) {
-            newParticipants[index] = participant;
-          }
-
-          return newParticipants;
-        },
-      );
+      queryClient.invalidateQueries(["polls.participants.list"]);
     },
   });
 };

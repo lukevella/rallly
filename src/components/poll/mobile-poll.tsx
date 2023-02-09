@@ -1,31 +1,25 @@
 import { Listbox } from "@headlessui/react";
-import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
-import Check from "@/components/icons/check.svg";
 import ChevronDown from "@/components/icons/chevron-down.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
 import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
+import { You } from "@/components/you";
 
-import { requiredString } from "../../utils/form-validation";
 import { Button } from "../button";
 import { styleMenuItem } from "../menu-styles";
-import NameInput from "../name-input";
+import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
 import TimeZonePicker from "../time-zone-picker";
 import { isUnclaimed, useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
-import {
-  normalizeVotes,
-  useAddParticipantMutation,
-  useUpdateParticipantMutation,
-} from "./mutations";
+import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
 import { ParticipantForm } from "./types";
 import { useDeleteParticipantModal } from "./use-delete-participant-modal";
 import UserAvatar from "./user-avatar";
@@ -55,12 +49,11 @@ const MobilePoll: React.VoidFunctionComponent = () => {
 
   const form = useForm<ParticipantForm>({
     defaultValues: {
-      name: "",
       votes: [],
     },
   });
 
-  const { reset, handleSubmit, control, formState } = form;
+  const { reset, handleSubmit, formState } = form;
   const [selectedParticipantId, setSelectedParticipantId] =
     React.useState<string | undefined>();
 
@@ -78,36 +71,36 @@ const MobilePoll: React.VoidFunctionComponent = () => {
 
   const updateParticipant = useUpdateParticipantMutation();
 
-  const addParticipant = useAddParticipantMutation();
   const confirmDeleteParticipant = useDeleteParticipantModal();
+
+  const showNewParticipantModal = useNewParticipantModal();
 
   return (
     <FormProvider {...form}>
       <form
         ref={formRef}
-        onSubmit={handleSubmit(async ({ name, votes }) => {
+        onSubmit={handleSubmit(async ({ votes }) => {
           if (selectedParticipant) {
             await updateParticipant.mutateAsync({
               pollId: poll.id,
               participantId: selectedParticipant.id,
-              name,
               votes: normalizeVotes(optionIds, votes),
             });
             setIsEditing(false);
           } else {
-            const newParticipant = await addParticipant.mutateAsync({
-              pollId: poll.id,
-              name,
+            showNewParticipantModal({
               votes: normalizeVotes(optionIds, votes),
+              onSubmit: async ({ id }) => {
+                setSelectedParticipantId(id);
+                setIsEditing(false);
+              },
             });
-            setSelectedParticipantId(newParticipant.id);
-            setIsEditing(false);
           }
         })}
       >
         <div className="flex flex-col space-y-2 border-b bg-gray-50 p-2">
           <div className="flex space-x-2">
-            {!isEditing ? (
+            {selectedParticipantId || !isEditing ? (
               <Listbox
                 value={selectedParticipantId}
                 onChange={(participantId) => {
@@ -168,22 +161,8 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                 </div>
               </Listbox>
             ) : (
-              <div className="grow">
-                <Controller
-                  name="name"
-                  control={control}
-                  rules={{ validate: requiredString }}
-                  render={({ field }) => (
-                    <NameInput
-                      autoFocus={true}
-                      disabled={formState.isSubmitting}
-                      className={clsx("input w-full", {
-                        "input-error": formState.errors.name,
-                      })}
-                      {...field}
-                    />
-                  )}
-                />
+              <div className="flex grow items-center px-1">
+                <You />
               </div>
             )}
             {isEditing ? (
@@ -212,7 +191,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   onClick={() => {
                     setIsEditing(true);
                     reset({
-                      name: selectedParticipant.name,
                       votes: optionIds.map((optionId) => ({
                         optionId,
                         type: getVote(selectedParticipant.id, optionId),
@@ -250,7 +228,6 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                 disabled={poll.closed}
                 onClick={() => {
                   reset({
-                    name: "",
                     votes: [],
                   });
                   setIsEditing(true);
@@ -296,13 +273,12 @@ const MobilePoll: React.VoidFunctionComponent = () => {
             >
               <div className="space-y-3 border-t bg-gray-50 p-3">
                 <Button
-                  icon={<Check />}
                   className="w-full"
                   htmlType="submit"
                   type="primary"
                   loading={formState.isSubmitting}
                 >
-                  {t("save")}
+                  {selectedParticipantId ? t("save") : t("continue")}
                 </Button>
               </div>
             </motion.div>

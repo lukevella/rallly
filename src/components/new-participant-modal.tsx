@@ -17,7 +17,7 @@ interface NewParticipantFormData {
 
 interface NewParticipantModalProps {
   votes: { optionId: string; type: VoteType }[];
-  onSubmit?: (data: NewParticipantFormData) => void;
+  onSubmit?: (data: { id: string }) => void;
   onCancel?: () => void;
 }
 
@@ -71,19 +71,19 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const addParticipant = useAddParticipantMutation();
 
   return (
-    <div className="w-96 max-w-full p-4">
+    <div className="max-w-full p-4">
       <div className="text-lg font-semibold text-slate-800">
         {t("newParticipant")}
       </div>
       <div className="mb-4">{t("newParticipantFormDescription")}</div>
       <form
         onSubmit={handleSubmit(async (data) => {
-          await addParticipant.mutateAsync({
+          const newParticipant = await addParticipant.mutateAsync({
             name: data.name,
             votes: props.votes,
             pollId: poll.id,
           });
-          props.onSubmit?.(data);
+          props.onSubmit?.(newParticipant);
         })}
       >
         <fieldset className="mb-4">
