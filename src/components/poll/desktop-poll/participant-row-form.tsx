@@ -16,13 +16,14 @@ export interface ParticipantRowFormProps {
   defaultValues?: Partial<ParticipantForm>;
   onSubmit: (data: ParticipantFormSubmitted) => Promise<void>;
   className?: string;
+  isYou?: boolean;
   onCancel?: () => void;
 }
 
 const ParticipantRowForm: React.ForwardRefRenderFunction<
   HTMLFormElement,
   ParticipantRowFormProps
-> = ({ defaultValues, onSubmit, name, className, onCancel }, ref) => {
+> = ({ defaultValues, onSubmit, name, isYou, className, onCancel }, ref) => {
   const { t } = useTranslation("app");
   const {
     columnWidth,
@@ -66,7 +67,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
       className={clsx("flex h-12 shrink-0", className)}
     >
       <div className="flex items-center px-3" style={{ width: sidebarWidth }}>
-        <UserAvatar name={name ?? t("you")} showName={true} />
+        <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
       </div>
       <Controller
         control={control}

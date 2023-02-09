@@ -108,12 +108,14 @@ const Poll: React.VoidFunctionComponent = () => {
         <div className="flex flex-col overflow-hidden">
           <div className="flex h-14 shrink-0 items-center justify-between border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
             <div className="p-1">
-              {shouldShowNewParticipantForm ? (
+              {shouldShowNewParticipantForm || editingParticipantId ? (
                 <Trans
                   t={t}
                   i18nKey="saveInstruction"
                   values={{
-                    action: t("continue"),
+                    action: shouldShowNewParticipantForm
+                      ? t("continue")
+                      : t("save"),
                   }}
                   components={{ b: <strong /> }}
                 />
@@ -129,7 +131,7 @@ const Poll: React.VoidFunctionComponent = () => {
                       setShouldShowNewParticipantForm(true);
                     }}
                   >
-                    + {t("add")}
+                    + {t("new")}
                   </button>
                 </div>
               )}
@@ -216,6 +218,7 @@ const Poll: React.VoidFunctionComponent = () => {
                 <ParticipantRow
                   key={i}
                   participant={participant}
+                  disableEditing={!!editingParticipantId}
                   editMode={editingParticipantId === participant.id}
                   onChangeEditMode={(isEditing) => {
                     if (isEditing) {

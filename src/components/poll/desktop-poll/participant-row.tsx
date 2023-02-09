@@ -20,6 +20,7 @@ import { usePollContext } from "./poll-context";
 export interface ParticipantRowProps {
   participant: Participant & { votes: Vote[] };
   editMode?: boolean;
+  disableEditing?: boolean;
   onChangeEditMode?: (editMode: boolean) => void;
   onSubmit?: (data: ParticipantFormSubmitted) => Promise<void>;
 }
@@ -58,7 +59,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
         className="flex h-full shrink-0 items-center justify-between gap-2 px-3"
         style={{ width: sidebarWidth }}
       >
-        <UserAvatar name={name} showName={true} color={color} />
+        <UserAvatar name={name} showName={true} isYou={isYou} color={color} />
         {editable ? (
           <div className="flex">
             <button className="text-link" onClick={onEdit}>
@@ -94,6 +95,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   participant,
   editMode,
   onSubmit,
+  disableEditing,
   onChangeEditMode,
 }) => {
   const { columnWidth, sidebarWidth } = usePollContext();
@@ -107,7 +109,8 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
 
   const isUnclaimed = !participant.userId;
 
-  const canEdit = !poll.closed && (admin || isYou || isUnclaimed);
+  const canEdit =
+    !disableEditing && !poll.closed && (admin || isYou || isUnclaimed);
 
   if (editMode) {
     return (
@@ -119,6 +122,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
             return type ? { optionId, type } : undefined;
           }),
         }}
+        isYou={isYou}
         onSubmit={async ({ votes }) => {
           await onSubmit?.({ votes });
           onChangeEditMode?.(false);

@@ -21,10 +21,12 @@ export const useAddParticipantMutation = () => {
       posthog.capture("add participant", {
         name: participant.name,
       });
-      queryClient.invalidateQueries([
-        "polls.participants.list",
-        { pollId: participant.pollId },
-      ]);
+      queryClient.setQueryData(
+        ["polls.participants.list", { pollId: participant.pollId }],
+        (existingParticipants = []) => {
+          return [participant, ...existingParticipants];
+        },
+      );
     },
   });
 };
