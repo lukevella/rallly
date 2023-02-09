@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -131,7 +131,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                     <ChevronDown className="h-5 shrink-0" />
                   </Listbox.Button>
                   <Listbox.Options
-                    as={motion.div}
+                    as={m.div}
                     transition={{
                       duration: 0.1,
                     }}
@@ -257,7 +257,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
         />
         <AnimatePresence>
           {isEditing ? (
-            <motion.div
+            <m.div
               variants={{
                 hidden: { opacity: 0, y: -100, height: 0 },
                 visible: { opacity: 1, y: 0, height: "auto" },
@@ -281,7 +281,7 @@ const MobilePoll: React.VoidFunctionComponent = () => {
                   {selectedParticipantId ? t("save") : t("continue")}
                 </Button>
               </div>
-            </motion.div>
+            </m.div>
           ) : null}
         </AnimatePresence>
       </form>

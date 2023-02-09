@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
@@ -97,7 +97,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
       </div>
       <AnimatePresence initial={false}>
         {isSharingVisible ? (
-          <motion.div
+          <m.div
             initial={{
               opacity: 0,
               scale: 0.8,
@@ -122,13 +122,13 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
                 setIsSharingVisible(false);
               }}
             />
-          </motion.div>
+          </m.div>
         ) : null}
       </AnimatePresence>
-      <motion.div className="relative z-10 space-y-4" layout="position">
+      <m.div className="relative z-10 space-y-4" layout="position">
         {poll.verified === false ? <UnverifiedPollNotice /> : null}
         {props.children}
-      </motion.div>
+      </m.div>
     </div>
   );
 };

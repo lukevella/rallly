@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -46,13 +46,13 @@ const Hero: React.VoidFunctionComponent = () => {
         <UserAvatarProvider seed="mock" names={names}>
           <DayjsProvider>
             <div className="relative inline-block">
-              <motion.div
+              <m.div
                 className="absolute z-20 h-full rounded-2xl border-4 border-primary-500 bg-primary-200/10 shadow-md"
                 initial={{ opacity: 0, width: 100, scale: 1.1, x: 480 }}
                 animate={{ opacity: 1, x: 381 }}
                 transition={{ type: "spring", delay: 1 }}
               />
-              <motion.div
+              <m.div
                 className="absolute z-20 rounded-full bg-primary-500 py-1 px-3 text-sm text-slate-100"
                 initial={{
                   opacity: 0,
@@ -65,15 +65,15 @@ const Hero: React.VoidFunctionComponent = () => {
               >
                 {t("perfect")} 🤩
                 <ScribbleArrow className="absolute -right-8 top-3 text-slate-400" />
-              </motion.div>
-              <motion.div
+              </m.div>
+              <m.div
                 className="rounded-lg"
                 transition={{ type: "spring", delay: 0.5 }}
                 initial={{ opacity: 0, translateY: -100 }}
                 animate={{ opacity: 1, translateY: 0 }}
               >
                 <PollDemo />
-              </motion.div>
+              </m.div>
             </div>
           </DayjsProvider>
         </UserAvatarProvider>

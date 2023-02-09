@@ -12,7 +12,7 @@ import {
   useRole,
 } from "@floating-ui/react-dom-interactions";
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 
 import { preventWidows } from "@/utils/prevent-widows";
@@ -104,7 +104,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
       <FloatingPortal>
         <AnimatePresence>
           {open ? (
-            <motion.div
+            <m.div
               className="z-30 rounded-md bg-slate-700 px-3 py-2 text-slate-200 shadow-md"
               initial="hidden"
               transition={{
@@ -140,7 +140,7 @@ const Tooltip: React.VoidFunctionComponent<TooltipProps> = ({
                 }}
               />
               {typeof content === "string" ? preventWidows(content) : content}
-            </motion.div>
+            </m.div>
           ) : null}
         </AnimatePresence>
       </FloatingPortal>

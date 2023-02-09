@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 
 import X from "@/components/icons/x.svg";
@@ -47,19 +47,19 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
             if (overlayClosable) onCancel?.();
           }}
         >
-          <motion.div
+          <m.div
             transition={{ duration: 0.5 }}
             className="flex min-h-screen items-center justify-center"
           >
             <Dialog.Overlay
-              as={motion.div}
+              as={m.div}
               transition={{ duration: 0.5 }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-0 bg-slate-900/25"
             />
-            <motion.div
+            <m.div
               transition={{ duration: 0.1 }}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -116,8 +116,8 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
                   </div>
                 ) : null}
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         </Dialog>
       ) : null}
     </AnimatePresence>

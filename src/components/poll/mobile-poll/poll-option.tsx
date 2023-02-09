@@ -1,6 +1,6 @@
 import { Participant, VoteType } from "@prisma/client";
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -33,7 +33,7 @@ const CollapsibleContainer: React.VoidFunctionComponent<{
   return (
     <AnimatePresence initial={false}>
       {expanded ? (
-        <motion.div
+        <m.div
           variants={{
             collapsed: {
               width: 0,
@@ -50,7 +50,7 @@ const CollapsibleContainer: React.VoidFunctionComponent<{
           className={className}
         >
           {children}
-        </motion.div>
+        </m.div>
       ) : null}
     </AnimatePresence>
   );
@@ -61,14 +61,14 @@ const PopInOut: React.VoidFunctionComponent<{
   className?: string;
 }> = ({ children, className }) => {
   return (
-    <motion.div
+    <m.div
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
       className={clsx(className)}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 };
 
@@ -83,7 +83,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
       participantsWhoVotedYes.length + participantsWhoVotedIfNeedBe.length ===
       0;
     return (
-      <motion.div
+      <m.div
         transition={{
           duration: 0.1,
         }}
@@ -145,7 +145,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
             </div>
           )}
         </div>
-      </motion.div>
+      </m.div>
     );
   };
 
@@ -228,7 +228,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
         <div className="mr-3 shrink-0 grow">{children}</div>
         <AnimatePresence initial={false}>
           {editable ? null : (
-            <motion.button
+            <m.button
               exit={{ opacity: 0, x: -10 }}
               type="button"
               onTouchStart={(e) => e.stopPropagation()}
@@ -249,7 +249,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
                   },
                 )}
               />
-            </motion.button>
+            </m.button>
           )}
         </AnimatePresence>
         <div className="mx-3">

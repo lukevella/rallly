@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
@@ -23,7 +23,7 @@ export const ScoreSummary: React.VoidFunctionComponent<PopularityScoreProps> =
       >
         <CheckCircle className="inline-block h-4 text-slate-300 transition-opacity" />
         <AnimatePresence initial={false} exitBeforeEnter={true}>
-          <motion.span
+          <m.span
             transition={{
               duration: 0.1,
             }}
@@ -40,7 +40,7 @@ export const ScoreSummary: React.VoidFunctionComponent<PopularityScoreProps> =
             className="relative"
           >
             {score}
-          </motion.span>
+          </m.span>
         </AnimatePresence>
       </div>
     );

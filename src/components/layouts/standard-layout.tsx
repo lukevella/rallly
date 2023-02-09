@@ -1,8 +1,11 @@
+import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
+import { useRouter } from "next/router";
 import React from "react";
 
 import { DayjsProvider } from "@/utils/dayjs";
 
 import { NextPageWithLayout } from "../../types";
+import ModalProvider from "../modal/modal-provider";
 import { UserProvider } from "../user-provider";
 import { MobileNavigation } from "./standard-layout/mobile-navigation";
 
@@ -10,14 +13,30 @@ const StandardLayout: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
   return (
-    <UserProvider>
-      <DayjsProvider>
-        <div className={"bg-pattern relative min-h-full"} {...rest}>
-          <MobileNavigation />
-          <div className="mx-auto max-w-4xl">{children}</div>
-        </div>
-      </DayjsProvider>
-    </UserProvider>
+    <LazyMotion features={domAnimation}>
+      <UserProvider>
+        <DayjsProvider>
+          <ModalProvider>
+            <div className={"bg-pattern relative min-h-full"} {...rest}>
+              <MobileNavigation />
+              <div className="mx-auto max-w-4xl">
+                <AnimatePresence initial={false} exitBeforeEnter={true}>
+                  <m.div
+                    data-test={Date.now()}
+                    key={Date.now()}
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                  >
+                    {children}
+                  </m.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </ModalProvider>
+        </DayjsProvider>
+      </UserProvider>
+    </LazyMotion>
   );
 };
 

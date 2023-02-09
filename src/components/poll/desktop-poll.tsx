@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
@@ -191,7 +191,7 @@ const Poll: React.VoidFunctionComponent = () => {
               {shouldShowNewParticipantForm &&
               !poll.closed &&
               !editingParticipantId ? (
-                <motion.div
+                <m.div
                   variants={{
                     hidden: { height: 0, y: -50, opacity: 0 },
                     visible: { height: "auto", y: 0, opacity: 1 },
@@ -211,7 +211,7 @@ const Poll: React.VoidFunctionComponent = () => {
                       });
                     }}
                   />
-                </motion.div>
+                </m.div>
               ) : null}
             </AnimatePresence>
             {participants.map((participant, i) => {
@@ -247,7 +247,7 @@ const Poll: React.VoidFunctionComponent = () => {
           </div>
           <AnimatePresence initial={false}>
             {shouldShowNewParticipantForm || editingParticipantId ? (
-              <motion.div
+              <m.div
                 variants={{
                   hidden: { height: 0, y: 30, opacity: 0 },
                   visible: { height: "auto", y: 0, opacity: 1 },
@@ -281,7 +281,7 @@ const Poll: React.VoidFunctionComponent = () => {
                     {shouldShowNewParticipantForm ? t("continue") : t("save")}
                   </Button>
                 </div>
-              </motion.div>
+              </m.div>
             ) : null}
           </AnimatePresence>
         </div>
