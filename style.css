@@ -30,12 +30,18 @@
   label {
     @apply mb-1 block text-sm text-slate-800;
   }
+
   a,
   button,
   input,
   select,
   textarea {
-    @apply rounded outline-none transition-shadow focus:border-transparent focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 focus:ring-offset-white;
+    @apply rounded outline-none transition-shadow focus:border-transparent focus:ring-2 focus:ring-slate-300;
+  }
+
+  a,
+  button {
+    @apply focus:ring-offset-2 focus:ring-offset-white;
   }
 
   #floating-ui-root {
