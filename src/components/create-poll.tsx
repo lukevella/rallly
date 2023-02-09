@@ -17,7 +17,6 @@ import {
   UserDetailsData,
   UserDetailsForm,
 } from "./forms";
-import StandardLayout from "./layouts/standard-layout";
 import Steps from "./steps";
 import { useUser } from "./user-provider";
 
@@ -144,82 +143,80 @@ const Page: NextPage<CreatePollPageProps> = ({
   };
 
   return (
-    <StandardLayout>
-      <div className="max-w-full px-3 pb-3 sm:p-4">
-        <div className="max-w-full">
-          <div className="max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-            <div className="flex justify-between border-b p-4">
-              <h1 className="m-0 text-xl font-semibold text-slate-800">
-                {t("createNew")}
-              </h1>
-              <Steps current={currentStepIndex} total={steps.length} />
-            </div>
-            <div className="">
-              {(() => {
-                switch (currentStepName) {
-                  case "eventDetails":
-                    return (
-                      <PollDetailsForm
-                        className="max-w-full p-3 sm:p-4"
-                        name={currentStepName}
-                        defaultValues={formData?.eventDetails}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                      />
-                    );
-                  case "options":
-                    return (
-                      <PollOptionsForm
-                        className="grow"
-                        name={currentStepName}
-                        defaultValues={formData?.options}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                        title={formData.eventDetails?.title}
-                      />
-                    );
-                  case "userDetails":
-                    return (
-                      <UserDetailsForm
-                        className="grow p-4"
-                        name={currentStepName}
-                        defaultValues={formData?.userDetails}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                      />
-                    );
-                }
-              })()}
-              <div className="flex w-full justify-end space-x-3 border-t bg-slate-50 px-4 py-3">
-                {currentStepIndex > 0 ? (
-                  <Button
-                    disabled={isBusy}
-                    onClick={() => {
-                      setFormData({
-                        ...persistedFormData,
-                        currentStep: currentStepIndex - 1,
-                      });
-                    }}
-                  >
-                    {t("back")}
-                  </Button>
-                ) : null}
+    <div className="max-w-full px-3 pb-3 sm:p-4">
+      <div className="max-w-full">
+        <div className="max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
+          <div className="flex justify-between border-b p-4">
+            <h1 className="m-0 text-xl font-semibold text-slate-800">
+              {t("createNew")}
+            </h1>
+            <Steps current={currentStepIndex} total={steps.length} />
+          </div>
+          <div className="">
+            {(() => {
+              switch (currentStepName) {
+                case "eventDetails":
+                  return (
+                    <PollDetailsForm
+                      className="max-w-full p-3 sm:p-4"
+                      name={currentStepName}
+                      defaultValues={formData?.eventDetails}
+                      onSubmit={handleSubmit}
+                      onChange={handleChange}
+                    />
+                  );
+                case "options":
+                  return (
+                    <PollOptionsForm
+                      className="grow"
+                      name={currentStepName}
+                      defaultValues={formData?.options}
+                      onSubmit={handleSubmit}
+                      onChange={handleChange}
+                      title={formData.eventDetails?.title}
+                    />
+                  );
+                case "userDetails":
+                  return (
+                    <UserDetailsForm
+                      className="grow p-4"
+                      name={currentStepName}
+                      defaultValues={formData?.userDetails}
+                      onSubmit={handleSubmit}
+                      onChange={handleChange}
+                    />
+                  );
+              }
+            })()}
+            <div className="flex w-full justify-end space-x-3 border-t bg-slate-50 px-4 py-3">
+              {currentStepIndex > 0 ? (
                 <Button
-                  form={currentStepName}
-                  loading={isBusy}
-                  htmlType="submit"
-                  type="primary"
+                  disabled={isBusy}
+                  onClick={() => {
+                    setFormData({
+                      ...persistedFormData,
+                      currentStep: currentStepIndex - 1,
+                    });
+                  }}
                 >
-                  {currentStepIndex < steps.length - 1
-                    ? t("continue")
-                    : t("createPoll")}
+                  {t("back")}
                 </Button>
-              </div>
+              ) : null}
+              <Button
+                form={currentStepName}
+                loading={isBusy}
+                htmlType="submit"
+                type="primary"
+              >
+                {currentStepIndex < steps.length - 1
+                  ? t("continue")
+                  : t("createPoll")}
+              </Button>
             </div>
           </div>
         </div>
       </div>
-    </StandardLayout>
+    </div>
   );
 };
 

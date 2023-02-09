@@ -16,7 +16,9 @@ import Maintenance from "@/components/maintenance";
 
 import { useCrispChat } from "../components/crisp-chat";
 import ModalProvider from "../components/modal/modal-provider";
+import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
+import { UserSession } from "../utils/auth";
 import { trpcNext } from "../utils/trpc";
 
 const inter = Inter({
@@ -29,7 +31,15 @@ const noto = Noto_Sans_Mono({
   display: "swap",
 });
 
-const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
+type PageProps = {
+  user: UserSession;
+};
+
+type AppPropsWithLayout = AppProps<PageProps> & {
+  Component: NextPageWithLayout<PageProps>;
+};
+
+const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   useCrispChat();
 
   React.useEffect(() => {
@@ -42,6 +52,8 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1") {
     return <Maintenance />;
   }
+
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <>
@@ -77,9 +89,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
           --font-noto: ${noto.style.fontFamily};
         }
       `}</style>
-      <ModalProvider>
-        <Component {...pageProps} />
-      </ModalProvider>
+      <ModalProvider>{getLayout(<Component {...pageProps} />)}</ModalProvider>
     </>
   );
 };

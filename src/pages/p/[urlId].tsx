@@ -1,4 +1,4 @@
-import { GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,16 +7,16 @@ import { useTranslation } from "next-i18next";
 import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-import { useUser, withSession } from "@/components/user-provider";
+import { useUser } from "@/components/user-provider";
 import { withSessionSsr } from "@/utils/auth";
 import { trpcNext } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
-import { ParticipantLayout } from "../../components/layouts/participant-layout";
+import StandardLayout from "../../components/layouts/standard-layout";
 import ModalProvider from "../../components/modal/modal-provider";
-import { DayjsProvider } from "../../utils/dayjs";
+import { NextPageWithLayout } from "../../types";
 
-const Page: NextPage = () => {
+const Page: NextPageWithLayout = () => {
   const { query } = useRouter();
   const urlId = query.urlId as string;
 
@@ -33,32 +33,32 @@ const Page: NextPage = () => {
           <title>{poll.title}</title>
           <meta name="robots" content="noindex,nofollow" />
         </Head>
-        <DayjsProvider>
-          <ParticipantsProvider pollId={poll.id}>
-            <ParticipantLayout>
-              <PollContextProvider poll={poll} urlId={urlId} admin={false}>
-                <ModalProvider>
-                  <div className="space-y-3 sm:space-y-4">
-                    {user.id === poll.user.id ? (
-                      <Link
-                        className="btn-default"
-                        href={`/admin/${poll.adminUrlId}`}
-                      >
-                        &larr; {t("goToAdmin")}
-                      </Link>
-                    ) : null}
-                    <Poll />
-                  </div>
-                </ModalProvider>
-              </PollContextProvider>
-            </ParticipantLayout>
-          </ParticipantsProvider>
-        </DayjsProvider>
+        <ParticipantsProvider pollId={poll.id}>
+          <PollContextProvider poll={poll} urlId={urlId} admin={false}>
+            <ModalProvider>
+              <div className="space-y-3 sm:space-y-4">
+                {user.id === poll.user.id ? (
+                  <Link
+                    className="btn-default"
+                    href={`/admin/${poll.adminUrlId}`}
+                  >
+                    &larr; {t("goToAdmin")}
+                  </Link>
+                ) : null}
+                <Poll />
+              </div>
+            </ModalProvider>
+          </PollContextProvider>
+        </ParticipantsProvider>
       </>
     );
   }
 
   return null;
+};
+
+Page.getLayout = function getLayout(page) {
+  return <StandardLayout>{page}</StandardLayout>;
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
@@ -72,4 +72,4 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   },
 );
 
-export default withSession(Page);
+export default Page;
