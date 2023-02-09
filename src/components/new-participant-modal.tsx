@@ -17,6 +17,7 @@ interface NewParticipantFormData {
 interface NewParticipantModalProps {
   votes: { optionId: string; type: VoteType }[];
   onSubmit?: (data: NewParticipantFormData) => void;
+  onCancel?: () => void;
 }
 export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const { t } = useTranslation("app");
@@ -83,7 +84,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           ) : null}
         </fieldset>
         <div className="flex gap-2">
-          <Button>{t("cancel")}</Button>
+          <Button onClick={props.onCancel}>{t("cancel")}</Button>
           <Button htmlType="submit" type="primary">
             {t("save")}
           </Button>
@@ -106,6 +107,7 @@ export const useNewParticipantModal = () => {
               props.onSubmit?.(data);
               close();
             }}
+            onCancel={close}
           />
         );
       },
