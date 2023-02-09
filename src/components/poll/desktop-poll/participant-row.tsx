@@ -4,11 +4,13 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import CompactButton from "@/components/compact-button";
+import DotsVertical from "@/components/icons/dots-vertical.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 
+import Dropdown, { DropdownItem } from "../../dropdown";
 import { ParticipantFormSubmitted } from "../types";
 import { useDeleteParticipantModal } from "../use-delete-participant-modal";
 import UserAvatar from "../user-avatar";
@@ -19,6 +21,7 @@ import { usePollContext } from "./poll-context";
 
 export interface ParticipantRowProps {
   participant: Participant & { votes: Vote[] };
+  className?: string;
   editMode?: boolean;
   disableEditing?: boolean;
   onChangeEditMode?: (editMode: boolean) => void;
@@ -33,6 +36,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   onEdit?: () => void;
   onDelete?: () => void;
   columnWidth: number;
+  className?: string;
   sidebarWidth: number;
   isYou?: boolean;
   participantId: string;
@@ -41,6 +45,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   editable,
   votes,
   onEdit,
+  className,
   onDelete,
   sidebarWidth,
   columnWidth,
@@ -53,7 +58,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
     <div
       data-testid="participant-row"
       data-participantid={participantId}
-      className="flex h-12 items-center"
+      className={clsx("flex h-12 items-center", className)}
     >
       <div
         className="flex h-full shrink-0 items-center justify-between gap-2 px-3"
@@ -62,9 +67,21 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
         <UserAvatar name={name} showName={true} isYou={isYou} color={color} />
         {editable ? (
           <div className="flex">
-            <button className="text-link" onClick={onEdit}>
-              {t("edit")}
-            </button>
+            <Dropdown
+              placement="bottom-start"
+              trigger={
+                <button className="text-slate-500 hover:text-slate-800">
+                  <DotsVertical className="h-3" />
+                </button>
+              }
+            >
+              <DropdownItem icon={Pencil} onClick={onEdit} label={t("edit")} />
+              <DropdownItem
+                icon={Trash}
+                onClick={onDelete}
+                label={t("delete")}
+              />
+            </Dropdown>
           </div>
         ) : null}
       </div>
@@ -95,6 +112,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   participant,
   editMode,
   onSubmit,
+  className,
   disableEditing,
   onChangeEditMode,
 }) => {
@@ -136,6 +154,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
     <ParticipantRowView
       sidebarWidth={sidebarWidth}
       columnWidth={columnWidth}
+      className={className}
       name={participant.name}
       votes={options.map(({ optionId }) => {
         return getVote(participant.id, optionId);

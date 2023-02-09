@@ -57,7 +57,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-0 bg-slate-900/25 backdrop-blur-sm"
+              className="fixed inset-0 z-0 bg-slate-900/25"
             />
             <motion.div
               transition={{ duration: 0.1 }}

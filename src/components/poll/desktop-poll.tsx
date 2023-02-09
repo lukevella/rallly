@@ -193,7 +193,7 @@ const Poll: React.VoidFunctionComponent = () => {
                   variants={{
                     hidden: { height: 0, x: -50, opacity: 0 },
                     visible: { height: "auto", x: 0, opacity: 1 },
-                    exit: { height: 0, opacity: 0 },
+                    exit: { height: 0, opacity: 0, scale: 0.9 },
                   }}
                   initial="hidden"
                   animate="visible"
@@ -217,6 +217,12 @@ const Poll: React.VoidFunctionComponent = () => {
               return (
                 <ParticipantRow
                   key={i}
+                  className={
+                    editingParticipantId &&
+                    editingParticipantId !== participant.id
+                      ? "opacity-50"
+                      : ""
+                  }
                   participant={participant}
                   disableEditing={!!editingParticipantId}
                   editMode={editingParticipantId === participant.id}
