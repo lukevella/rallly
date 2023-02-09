@@ -57,6 +57,7 @@
   "location": "Location",
   "locationPlaceholder": "Joe's Coffee Shop",
   "lockPoll": "Lock poll",
+  "response": "Response",
   "login": "Login",
   "logout": "Logout",
   "manage": "Manage",

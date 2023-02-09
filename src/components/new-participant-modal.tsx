@@ -6,6 +6,7 @@ import { useFormValidation } from "../utils/form-validation";
 import { Button } from "./button";
 import { useModalContext } from "./modal/modal-provider";
 import { useAddParticipantMutation } from "./poll/mutations";
+import VoteIcon from "./poll/vote-icon";
 import { usePoll } from "./poll-context";
 import { TextInput } from "./text-input";
 
@@ -19,6 +20,48 @@ interface NewParticipantModalProps {
   onSubmit?: (data: NewParticipantFormData) => void;
   onCancel?: () => void;
 }
+
+const VoteSummary = ({
+  votes,
+}: {
+  votes: { optionId: string; type: VoteType }[];
+}) => {
+  const { t } = useTranslation("app");
+  const voteByType = votes.reduce<Record<VoteType, number>>(
+    (acc, vote) => {
+      acc[vote.type] = acc[vote.type] ? acc[vote.type] + 1 : 1;
+      return acc;
+    },
+    { yes: 0, ifNeedBe: 0, no: 0 },
+  );
+
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center gap-2">
+        <VoteIcon type="yes" />
+        <div>{t("yes")}</div>
+        <div className="h-5 rounded-full bg-gray-100 px-1 text-center text-sm">
+          {voteByType["yes"]}
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <VoteIcon type="ifNeedBe" />
+        <div>{t("ifNeedBe")}</div>
+        <div className="h-5 w-5 rounded-full bg-gray-100 px-1 text-center text-sm">
+          {voteByType["ifNeedBe"]}
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <VoteIcon type="no" />
+        <div>{t("no")}</div>
+        <div className="h-5 w-5 rounded-full bg-gray-100 px-1 text-center text-sm">
+          {voteByType["no"]}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const { t } = useTranslation("app");
   const { register, formState, handleSubmit } =
@@ -82,6 +125,10 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
               {formState.errors.email.message}
             </div>
           ) : null}
+        </fieldset>
+        <fieldset className="mb-4">
+          <label className="text-slate-500">{t("response")}</label>
+          <VoteSummary votes={props.votes} />
         </fieldset>
         <div className="flex gap-2">
           <Button onClick={props.onCancel}>{t("cancel")}</Button>
