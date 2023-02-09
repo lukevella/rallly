@@ -1,5 +1,3 @@
-import { remove } from "js-cookie";
-import { noop } from "lodash";
 import * as React from "react";
 import { useList } from "react-use";
 

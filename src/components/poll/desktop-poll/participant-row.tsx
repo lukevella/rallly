@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import CompactButton from "@/components/compact-button";
 import DotsVertical from "@/components/icons/dots-vertical.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Trash from "@/components/icons/trash.svg";
