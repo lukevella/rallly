@@ -13,7 +13,7 @@ export const LoginModal: React.VoidFunctionComponent<{
   const [defaultEmail, setDefaultEmail] = React.useState("");
 
   return (
-    <div className="w-[420px] max-w-full overflow-hidden rounded-lg bg-white shadow-sm">
+    <div className="w-[420px] max-w-full overflow-hidden bg-white shadow-sm">
       <div className="bg-pattern border-b border-t-4 border-t-primary-500 bg-slate-500/5 p-4 text-center sm:p-8">
         <Logo className="text-2xl" />
       </div>

@@ -102,7 +102,7 @@
   "requiredNameError": "Ime je obavezno",
   "resendVerificationCode": "Ponovno pošalji poruku za potvrdu",
   "save": "Pohrani",
-  "saveInstruction": "Odaberite termine koji vam odgovaraju i kliknite na <b>{{save}}</b>",
+  "saveInstruction": "Odaberite termine koji vam odgovaraju i kliknite na <b>{{action}}</b>",
   "share": "Podijeli",
   "shareDescription": "Pošaljite ovu poveznicu <b>sudionicima</b> kako biste im omogućili glasanje u vašoj anketi.",
   "shareLink": "Podijeli putem poveznice",

@@ -57,7 +57,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-0 bg-slate-900 bg-opacity-25"
+              className="fixed inset-0 z-0 bg-slate-900/25"
             />
             <motion.div
               transition={{ duration: 0.1 }}
@@ -66,11 +66,11 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               exit={{ opacity: 0, scale: 0.9 }}
               className="relative z-50 my-8 inline-block max-w-full transform text-left align-middle"
             >
-              <div className="mx-4 max-w-full overflow-hidden rounded-xl bg-white shadow-xl xs:rounded-xl">
+              <div className="max-w-full overflow-hidden rounded-md bg-white shadow-huge">
                 {showClose ? (
                   <button
                     role="button"
-                    className="absolute right-5 top-1 z-10 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
+                    className="absolute top-1 right-1 z-10 rounded p-2 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 focus:ring-0 focus:ring-offset-0 active:bg-slate-500/20"
                     onClick={onCancel}
                   >
                     <X className="h-4" />
@@ -91,7 +91,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
                   </div>
                 )}
                 {footer === undefined ? (
-                  <div className="flex h-14 items-center justify-end space-x-3 rounded-br-lg rounded-bl-lg border-t bg-slate-50 px-4">
+                  <div className="flex h-14 items-center justify-end gap-3 rounded-br-lg border-t bg-slate-50 p-3">
                     {cancelText ? (
                       <Button
                         onClick={() => {

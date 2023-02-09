@@ -26,15 +26,22 @@
   h2 {
     @apply text-xl;
   }
-  input {
-    @apply outline-none;
-  }
 
   label {
     @apply mb-1 block text-sm text-slate-800;
   }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply rounded outline-none transition-shadow focus:border-transparent focus:ring-2 focus:ring-slate-300;
+  }
+
+  a,
   button {
-    @apply outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
+    @apply focus:ring-offset-2 focus:ring-offset-white;
   }
 
   #floating-ui-root {
@@ -44,13 +51,13 @@
 
 @layer components {
   .text-link {
-    @apply rounded-sm font-medium text-primary-500 outline-none hover:text-primary-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
+    @apply rounded font-medium text-primary-500 outline-none hover:text-primary-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
   }
   .formField {
     @apply mb-4;
   }
   .input {
-    @apply appearance-none rounded-md border border-gray-200 px-2 py-1 text-slate-700 placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500;
+    @apply appearance-none border px-2 py-1 text-slate-700 placeholder:text-slate-400;
   }
   input.input {
     @apply h-9;
@@ -59,20 +66,20 @@
     @apply input px-3 py-3;
   }
   .input-error {
-    @apply border-rose-500 ring-1 ring-rose-400 focus:border-rose-400 focus:ring-rose-500;
+    @apply focus:ring-rose-500;
   }
   .checkbox {
     @apply h-4 w-4 rounded border-slate-300 text-primary-500 shadow-sm focus:ring-primary-500;
   }
   .btn {
-    @apply inline-flex h-9 select-none items-center justify-center whitespace-nowrap rounded-md border px-3 font-medium shadow-sm transition-all;
+    @apply inline-flex h-9 select-none items-center justify-center whitespace-nowrap border px-3 font-medium shadow-sm;
   }
   a.btn {
     @apply cursor-pointer hover:no-underline;
   }
 
   .btn-default {
-    @apply btn bg-white text-slate-700 hover:bg-gray-50 active:bg-slate-100;
+    @apply btn bg-white text-slate-700 hover:bg-gray-50 active:bg-gray-100;
   }
 
   a.btn-default {
@@ -90,7 +97,7 @@
   }
   .btn-primary {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
-    @apply btn border-primary-600 bg-primary-500 text-white hover:bg-opacity-90 focus-visible:ring-primary-500 active:bg-primary-600;
+    @apply btn border-primary-600 bg-primary-500 text-white hover:bg-opacity-90 active:bg-primary-600;
   }
 
   a.btn-primary {
@@ -102,7 +109,7 @@
   }
 
   .segment-button button {
-    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-gray-50 px-4 transition-colors first:rounded-l first:border-l last:rounded-r hover:bg-slate-50 focus:z-10 focus-visible:ring-2 focus-visible:ring-offset-0 active:bg-slate-100;
+    @apply inline-flex grow items-center justify-center border-t border-b border-r bg-gray-50 px-4 transition-colors first:rounded-r-none first:border-l last:rounded-l-none hover:bg-slate-50 focus:z-10 active:bg-slate-100;
   }
 
   .segment-button .segment-button-active {

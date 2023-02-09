@@ -3,30 +3,27 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import ArrowLeft from "@/components/icons/arrow-left.svg";
-import ArrowRight from "@/components/icons/arrow-right.svg";
-
-import { requiredString } from "../../../utils/form-validation";
-import { Button } from "../../button";
-import NameInput from "../../name-input";
 import { usePoll } from "../../poll-context";
 import { normalizeVotes } from "../mutations";
 import { ParticipantForm, ParticipantFormSubmitted } from "../types";
+import UserAvatar from "../user-avatar";
 import { VoteSelector } from "../vote-selector";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
 export interface ParticipantRowFormProps {
+  name?: string;
   defaultValues?: Partial<ParticipantForm>;
   onSubmit: (data: ParticipantFormSubmitted) => Promise<void>;
   className?: string;
+  isYou?: boolean;
   onCancel?: () => void;
 }
 
 const ParticipantRowForm: React.ForwardRefRenderFunction<
   HTMLFormElement,
   ParticipantRowFormProps
-> = ({ defaultValues, onSubmit, className, onCancel }, ref) => {
+> = ({ defaultValues, onSubmit, name, isYou, className, onCancel }, ref) => {
   const { t } = useTranslation("app");
   const {
     columnWidth,
@@ -34,20 +31,11 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     sidebarWidth,
     numberOfColumns,
     goToNextPage,
-    goToPreviousPage,
-    maxScrollPosition,
-    setScrollPosition,
   } = usePollContext();
 
   const { options, optionIds } = usePoll();
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, submitCount },
-    reset,
-  } = useForm({
+  const { handleSubmit, control } = useForm({
     defaultValues: {
-      name: "",
       votes: [],
       ...defaultValues,
     },
@@ -71,49 +59,15 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     <form
       id="participant-row-form"
       ref={ref}
-      onSubmit={handleSubmit(async ({ name, votes }) => {
+      onSubmit={handleSubmit(async ({ votes }) => {
         await onSubmit({
-          name,
           votes: normalizeVotes(optionIds, votes),
         });
-        reset();
       })}
-      className={clsx("flex h-14 shrink-0", className)}
+      className={clsx("flex h-12 shrink-0", className)}
     >
-      <div className="flex items-center px-2" style={{ width: sidebarWidth }}>
-        <Controller
-          name="name"
-          rules={{
-            validate: requiredString,
-          }}
-          render={({ field }) => (
-            <div className="w-full">
-              <NameInput
-                className={clsx("w-full", {
-                  "input-error": errors.name && submitCount > 0,
-                })}
-                placeholder={t("yourName")}
-                {...field}
-                onKeyDown={(e) => {
-                  if (e.code === "Tab" && scrollPosition > 0) {
-                    e.preventDefault();
-                    setScrollPosition(0);
-                    setTimeout(() => {
-                      checkboxRefs.current[0]?.focus();
-                    }, 100);
-                  }
-                }}
-                onKeyPress={(e) => {
-                  if (e.code === "Enter") {
-                    e.preventDefault();
-                    checkboxRefs.current[0]?.focus();
-                  }
-                }}
-              />
-            </div>
-          )}
-          control={control}
-        />
+      <div className="flex items-center px-3" style={{ width: sidebarWidth }}>
+        <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
       </div>
       <Controller
         control={control}
@@ -127,10 +81,11 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                 return (
                   <div
                     key={optionId}
-                    className="flex shrink-0 items-center justify-center px-2"
+                    className="flex shrink-0 items-center justify-center p-1"
                     style={{ width: columnWidth }}
                   >
                     <VoteSelector
+                      className="h-full w-full"
                       value={value?.type}
                       onKeyDown={(e) => {
                         if (
@@ -161,30 +116,6 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
           );
         }}
       />
-      {maxScrollPosition > 0 ? (
-        <div className="flex items-center space-x-2 px-2 transition-all">
-          <Button
-            disabled={scrollPosition === 0}
-            className="text-xs"
-            rounded={true}
-            onClick={() => {
-              goToPreviousPage();
-            }}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            disabled={scrollPosition >= maxScrollPosition}
-            className="text-xs"
-            rounded={true}
-            onClick={() => {
-              goToNextPage();
-            }}
-          >
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      ) : null}
     </form>
   );
 };

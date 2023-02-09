@@ -20,7 +20,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         ref={ref}
         type="text"
         className={clsx(
-          "appearance-none rounded-md border border-gray-300 text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500",
+          "appearance-none rounded border border-gray-300 text-slate-700 shadow-sm placeholder:text-slate-400",
           className,
           {
             "px-2 py-1": size === "md",

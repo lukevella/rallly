@@ -102,7 +102,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
               <div className="col-span-1 space-y-2">
                 {participantsWhoVotedYes.map(({ name }, i) => (
                   <div key={i} className="flex">
-                    <div className="relative mr-2 flex h-5 w-5 items-center justify-center">
+                    <div className="relative mr-2 flex items-center justify-center">
                       <UserAvatar name={name} />
                       <VoteIcon
                         type="yes"
@@ -117,7 +117,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
               <div className="col-span-1 space-y-2">
                 {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
                   <div key={i} className="flex">
-                    <div className="relative mr-2 flex h-5 w-5 items-center justify-center">
+                    <div className="relative mr-2 flex items-center justify-center">
                       <UserAvatar name={name} />
                       <VoteIcon
                         type="ifNeedBe"
@@ -130,7 +130,7 @@ const PollOptionVoteSummary: React.VoidFunctionComponent<{ optionId: string }> =
                 ))}
                 {participantsWhoVotedNo.map(({ name }, i) => (
                   <div key={i} className="flex">
-                    <div className="relative mr-2 flex h-5 w-5 items-center justify-center">
+                    <div className="relative mr-2 flex items-center justify-center">
                       <UserAvatar name={name} />
                       <VoteIcon
                         type="no"
@@ -232,7 +232,7 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
               exit={{ opacity: 0, x: -10 }}
               type="button"
               onTouchStart={(e) => e.stopPropagation()}
-              className="flex min-w-0 justify-end gap-1 overflow-hidden rounded-lg p-2 active:bg-slate-500/10"
+              className="flex min-w-0 justify-end gap-1 overflow-hidden p-1 active:bg-slate-500/10"
               onClick={(e) => {
                 e.stopPropagation();
                 setExpanded((value) => !value);
@@ -262,10 +262,10 @@ const PollOption: React.VoidFunctionComponent<PollOptionProps> = ({
           {editable ? (
             <div className="flex h-full items-center justify-center">
               <VoteSelector
+                className="w-9"
                 ref={selectorRef}
                 value={vote}
                 onChange={onChange}
-                className="w-9"
               />
             </div>
           ) : (

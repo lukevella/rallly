@@ -1,13 +1,15 @@
 import { Participant, Vote, VoteType } from "@prisma/client";
 import clsx from "clsx";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import CompactButton from "@/components/compact-button";
+import DotsVertical from "@/components/icons/dots-vertical.svg";
 import Pencil from "@/components/icons/pencil-alt.svg";
 import Trash from "@/components/icons/trash.svg";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 
+import Dropdown, { DropdownItem } from "../../dropdown";
 import { ParticipantFormSubmitted } from "../types";
 import { useDeleteParticipantModal } from "../use-delete-participant-modal";
 import UserAvatar from "../user-avatar";
@@ -18,7 +20,9 @@ import { usePollContext } from "./poll-context";
 
 export interface ParticipantRowProps {
   participant: Participant & { votes: Vote[] };
+  className?: string;
   editMode?: boolean;
+  disableEditing?: boolean;
   onChangeEditMode?: (editMode: boolean) => void;
   onSubmit?: (data: ParticipantFormSubmitted) => Promise<void>;
 }
@@ -31,6 +35,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   onEdit?: () => void;
   onDelete?: () => void;
   columnWidth: number;
+  className?: string;
   sidebarWidth: number;
   isYou?: boolean;
   participantId: string;
@@ -39,6 +44,7 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   editable,
   votes,
   onEdit,
+  className,
   onDelete,
   sidebarWidth,
   columnWidth,
@@ -46,46 +52,49 @@ export const ParticipantRowView: React.VoidFunctionComponent<{
   color,
   participantId,
 }) => {
+  const { t } = useTranslation("app");
   return (
     <div
       data-testid="participant-row"
       data-participantid={participantId}
-      className="group flex h-14 items-center"
+      className={clsx("flex h-12 items-center", className)}
     >
       <div
-        className="flex shrink-0 items-center px-4"
+        className="flex h-full shrink-0 items-center justify-between gap-2 px-3"
         style={{ width: sidebarWidth }}
       >
-        <UserAvatar
-          className="mr-2"
-          name={name}
-          showName={true}
-          isYou={isYou}
-          color={color}
-        />
+        <UserAvatar name={name} showName={true} isYou={isYou} color={color} />
         {editable ? (
-          <div className="hidden shrink-0 items-center space-x-2 overflow-hidden group-hover:flex">
-            <CompactButton icon={Pencil} onClick={onEdit} />
-            <CompactButton icon={Trash} onClick={onDelete} />
+          <div className="flex">
+            <Dropdown
+              placement="bottom-start"
+              trigger={
+                <button className="text-slate-500 hover:text-slate-800">
+                  <DotsVertical className="h-3" />
+                </button>
+              }
+            >
+              <DropdownItem icon={Pencil} onClick={onEdit} label={t("edit")} />
+              <DropdownItem
+                icon={Trash}
+                onClick={onDelete}
+                label={t("delete")}
+              />
+            </Dropdown>
           </div>
         ) : null}
       </div>
-      <ControlledScrollArea>
+      <ControlledScrollArea className="h-full">
         {votes.map((vote, i) => {
           return (
             <div
               key={i}
-              className="relative flex shrink-0 items-center justify-center px-2 transition-colors"
+              className={clsx("relative flex h-full shrink-0 p-1")}
               style={{ width: columnWidth }}
             >
               <div
                 className={clsx(
-                  "flex h-10 w-full items-center justify-center rounded-md",
-                  {
-                    "bg-green-50": vote === "yes",
-                    "bg-amber-50": vote === "ifNeedBe",
-                    "bg-slate-50": vote === "no",
-                  },
+                  "flex h-full w-full items-center justify-center rounded border border-slate-200 bg-slate-50/75",
                 )}
               >
                 <VoteIcon type={vote} />
@@ -102,6 +111,8 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
   participant,
   editMode,
   onSubmit,
+  className,
+  disableEditing,
   onChangeEditMode,
 }) => {
   const { columnWidth, sidebarWidth } = usePollContext();
@@ -115,20 +126,22 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
 
   const isUnclaimed = !participant.userId;
 
-  const canEdit = !poll.closed && (admin || isYou || isUnclaimed);
+  const canEdit =
+    !disableEditing && !poll.closed && (admin || isYou || isUnclaimed);
 
   if (editMode) {
     return (
       <ParticipantRowForm
+        name={participant.name}
         defaultValues={{
-          name: participant.name,
           votes: options.map(({ optionId }) => {
             const type = getVote(participant.id, optionId);
             return type ? { optionId, type } : undefined;
           }),
         }}
-        onSubmit={async ({ name, votes }) => {
-          await onSubmit?.({ name, votes });
+        isYou={isYou}
+        onSubmit={async ({ votes }) => {
+          await onSubmit?.({ votes });
           onChangeEditMode?.(false);
         }}
         onCancel={() => onChangeEditMode?.(false)}
@@ -140,6 +153,7 @@ const ParticipantRow: React.VoidFunctionComponent<ParticipantRowProps> = ({
     <ParticipantRowView
       sidebarWidth={sidebarWidth}
       columnWidth={columnWidth}
+      className={className}
       name={participant.name}
       votes={options.map(({ optionId }) => {
         return getVote(participant.id, optionId);

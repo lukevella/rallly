@@ -39,7 +39,7 @@ const PollDemo: React.VoidFunctionComponent = () => {
   const { dayjs } = useDayjs();
   return (
     <div
-      className="rounded-lg bg-white py-1 shadow-huge"
+      className="rounded-lg bg-white pb-2 shadow-huge"
       style={{ width: 600 }}
     >
       <div className="flex">

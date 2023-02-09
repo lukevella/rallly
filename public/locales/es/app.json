@@ -102,7 +102,7 @@
   "requiredNameError": "El nombre es obligatorio",
   "resendVerificationCode": "Reenviar el código de verificación",
   "save": "Guardar",
-  "saveInstruction": "Selecciona tu disponibilidad y haz clic en <b>{{save}}</b>",
+  "saveInstruction": "Selecciona tu disponibilidad y haz clic en <b>{{action}}</b>",
   "share": "Compartir",
   "shareDescription": "Da este enlace a tus <b>participantes</b> para permitirles votar en tu encuesta.",
   "shareLink": "Compartir con un enlace",

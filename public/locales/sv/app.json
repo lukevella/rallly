@@ -102,7 +102,7 @@
   "requiredNameError": "Namn är obligatoriskt",
   "resendVerificationCode": "Skicka verifieringskoden igen",
   "save": "Spara",
-  "saveInstruction": "Välj din tillgänglighet och klicka på <b>{{save}}</b>",
+  "saveInstruction": "Välj din tillgänglighet och klicka på <b>{{action}}</b>",
   "share": "Dela",
   "shareDescription": "Ge den här länken till dina <b>deltagare</b> så att de kan delta i din förfrågan.",
   "shareLink": "Dela via länk",

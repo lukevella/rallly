@@ -13,7 +13,7 @@ export const UnverifiedPollNotice = () => {
 
   return (
     <div className="space-y-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-gray-700 shadow-sm">
-      <div className="p-1">
+      <div className="px-1">
         <Trans
           t={t}
           i18nKey="unverifiedMessage"

@@ -11,7 +11,7 @@ const PollSubheader: React.VoidFunctionComponent = () => {
   const { t } = useTranslation("app");
   const { dayjs } = useDayjs();
   return (
-    <div className="text-slate-500/75 lg:text-lg">
+    <div className="text-slate-500/75">
       <div className="md:inline">
         <Trans
           i18nKey="createdBy"

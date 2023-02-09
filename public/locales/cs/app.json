@@ -102,7 +102,7 @@
   "requiredNameError": "Jméno je vyžadováno",
   "resendVerificationCode": "Znovu odeslat ověřovací kód",
   "save": "Uložit",
-  "saveInstruction": "Vyberte svou dostupnost a klikněte na <b>{{save}}</b>",
+  "saveInstruction": "Vyberte svou dostupnost a klikněte na <b>{{action}}</b>",
   "share": "Sdílet",
   "shareDescription": "Tento odkaz zašlete vašim <b>účastníkům</b>, aby mohli v anketě hlasovat.",
   "shareLink": "Odkaz ke sdílení",

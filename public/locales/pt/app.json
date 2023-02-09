@@ -90,7 +90,7 @@
   "profileUser": "Perfil - {{username}}",
   "requiredNameError": "O nome é obrigatório",
   "save": "Guardar",
-  "saveInstruction": "Selecione a sua disponibilidade e clique em <b>{{save}}</b>",
+  "saveInstruction": "Selecione a sua disponibilidade e clique em <b>{{action}}</b>",
   "share": "Partilhar",
   "shareDescription": "Dê este link aos seus <b>participantes</b> para permitir que eles votem na sua sondagem.",
   "shareLink": "Partilhar via link",
