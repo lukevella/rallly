@@ -6,13 +6,16 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
 
   await expect(page.locator('text="Lunch Meeting"')).toBeVisible();
 
-  await page.click("text='New'");
+  await page.click('text="New"');
   await page.click("data-testid=poll-option >> nth=0");
   await page.click("data-testid=poll-option >> nth=1");
   await page.click("data-testid=poll-option >> nth=3");
-  await page.type('[placeholder="Your name…"]', "Test user");
 
-  await page.click("text=Save");
+  await page.getByText("Continue").click();
+
+  await page.getByPlaceholder("Jessie Smith").type("Test user");
+  await page.getByText("Save").click();
+
   await expect(page.locator("data-testid=user")).toBeVisible();
   await expect(
     page.locator("data-testid=participant-selector").locator("text=You"),
