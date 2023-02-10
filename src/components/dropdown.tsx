@@ -8,6 +8,7 @@ import {
 } from "@floating-ui/react-dom-interactions";
 import { Menu } from "@headlessui/react";
 import clsx from "clsx";
+import Link from "next/link";
 import * as React from "react";
 
 import { transformOriginByPlacement } from "@/utils/constants";
@@ -82,30 +83,25 @@ export const DropdownItem: React.VoidFunctionComponent<{
   href?: string;
   onClick?: React.MouseEventHandler<HTMLElement>;
 }> = ({ icon: Icon, label, onClick, disabled, href }) => {
-  const Element = href ? "a" : "button";
+  const Element = href ? Link : "button";
   return (
     <Menu.Item disabled={disabled}>
       {({ active }) => (
         <Element
-          href={href}
+          // TODO (Luke Vella) [2023-02-10]: Find a better solution for having a mixture of links and buttons
+          // in a dropdown
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          href={href as any}
           onClick={onClick}
           className={clsx(
-            "group flex w-full items-center rounded py-2 pl-2 pr-4",
+            "relative flex w-full select-none items-center whitespace-nowrap rounded py-1.5 pl-2 pr-4 font-medium text-slate-600",
             {
-              "bg-primary-500 text-white": active,
-              "text-gray-700": !active,
+              "bg-slate-100": active,
               "opacity-50": disabled,
             },
           )}
         >
-          {Icon && (
-            <Icon
-              className={clsx("mr-2 h-5 w-5", {
-                "text-white": active,
-                "text-primary-500": !active,
-              })}
-            />
-          )}
+          {Icon && <Icon className={clsx("mr-2 h-5 shrink-0")} />}
           {label}
         </Element>
       )}

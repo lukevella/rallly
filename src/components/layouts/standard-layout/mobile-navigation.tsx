@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { LoginLink } from "@/components/auth/login-modal";
 import Adjustments from "@/components/icons/adjustments.svg";
+import Beaker from "@/components/icons/beaker.svg";
 import Home from "@/components/icons/home.svg";
 import Login from "@/components/icons/login.svg";
 import Menu from "@/components/icons/menu.svg";
@@ -16,7 +16,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/popover";
 import Preferences from "@/components/preferences";
 import { useUser } from "@/components/user-provider";
 
+import Dropdown, { DropdownItem } from "../../dropdown";
 import { Logo } from "../../logo";
+import { useModalContext } from "../../modal/modal-provider";
+import OpenBeta from "../../open-beta-modal";
 import { UserDropdown } from "./user-dropdown";
 
 export const MobileNavigation = (props: { className?: string }) => {
@@ -24,6 +27,7 @@ export const MobileNavigation = (props: { className?: string }) => {
   const { t } = useTranslation(["common", "app"]);
 
   const [isPinned, setIsPinned] = React.useState(false);
+  const modalContext = useModalContext();
 
   React.useEffect(() => {
     const scrollHandler = () => {
@@ -51,8 +55,9 @@ export const MobileNavigation = (props: { className?: string }) => {
       )}
     >
       <div>
-        <Popover>
-          <PopoverTrigger asChild={true}>
+        <Dropdown
+          placement="bottom-start"
+          trigger={
             <button
               role="button"
               type="button"
@@ -61,11 +66,33 @@ export const MobileNavigation = (props: { className?: string }) => {
               <Menu className="mr-2 w-5 group-hover:text-primary-500" />
               <Logo />
             </button>
-          </PopoverTrigger>
-          <PopoverContent align="start">
-            <AppMenu />
-          </PopoverContent>
-        </Popover>
+          }
+        >
+          <DropdownItem href="/" label={t("home")} icon={Home} />
+          <DropdownItem href="/new" label={t("app:createNew")} icon={Pencil} />
+          <DropdownItem
+            href="https://support.rallly.co"
+            label={t("support")}
+            icon={Support}
+          />
+          {process.env.NEXT_PUBLIC_BETA === "1" ? (
+            <>
+              <DropdownItem
+                onClick={() => {
+                  // open modal
+                  modalContext.render({
+                    content: <OpenBeta />,
+                    footer: null,
+                    showClose: true,
+                    overlayClosable: true,
+                  });
+                }}
+                label="Feedback"
+                icon={Beaker}
+              />
+            </>
+          ) : null}
+        </Dropdown>
       </div>
       <div className="flex items-center">
         {user ? null : (
@@ -118,39 +145,6 @@ export const MobileNavigation = (props: { className?: string }) => {
           </PopoverContent>
         </Popover>
       </div>
-    </div>
-  );
-};
-
-const AppMenu: React.VoidFunctionComponent<{ className?: string }> = ({
-  className,
-}) => {
-  const { t } = useTranslation(["common", "app"]);
-  return (
-    <div className={clsx("space-y-1", className)}>
-      <Link
-        href="/"
-        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
-      >
-        <Home className="h-5 opacity-75 " />
-        <span className="inline-block">{t("app:home")}</span>
-      </Link>
-      <Link
-        href="/new"
-        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
-      >
-        <Pencil className="h-5 opacity-75 " />
-        <span className="inline-block">{t("app:createNew")}</span>
-      </Link>
-      <a
-        target="_blank"
-        href="https://support.rallly.co"
-        className="flex cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 pr-4 font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-600 hover:no-underline active:bg-gray-300"
-        rel="noreferrer"
-      >
-        <Support className="h-5 opacity-75" />
-        <span className="inline-block">{t("common:support")}</span>
-      </a>
     </div>
   );
 };

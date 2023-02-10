@@ -4,7 +4,6 @@ import "~/style.css";
 
 import { Inter, Noto_Sans_Mono } from "@next/font/google";
 import { inject } from "@vercel/analytics";
-import { domAnimation, LazyMotion, m } from "framer-motion";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -89,17 +88,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           --font-noto: ${noto.style.fontFamily};
         }
       `}</style>
-      <LazyMotion features={domAnimation}>
-        {getLayout(
-          <m.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-          >
-            <Component {...pageProps} />
-          </m.div>,
-        )}
-      </LazyMotion>
+      {getLayout(<Component {...pageProps} />)}
     </>
   );
 };

@@ -64,7 +64,7 @@ const Modal: React.VoidFunctionComponent<ModalProps> = ({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="relative z-50 my-8 inline-block max-w-full transform text-left align-middle"
+              className="relative z-50 m-3 inline-block max-w-full transform text-left align-middle sm:m-8"
             >
               <div className="max-w-full overflow-hidden rounded-md bg-white shadow-huge">
                 {showClose ? (
