@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import React from "react";
 
 import { usePollContext } from "./poll-context";
@@ -16,7 +16,7 @@ const ControlledScrollArea: React.VoidFunctionComponent<{
       style={{ width: availableSpace, maxWidth: availableSpace }}
     >
       <AnimatePresence initial={false}>
-        <motion.div
+        <m.div
           className="flex h-full"
           transition={{
             type: "spring",
@@ -26,7 +26,7 @@ const ControlledScrollArea: React.VoidFunctionComponent<{
           animate={{ x: scrollPosition * -1 }}
         >
           {children}
-        </motion.div>
+        </m.div>
       </AnimatePresence>
     </div>
   );

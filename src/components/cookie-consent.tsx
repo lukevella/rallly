@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import * as React from "react";
@@ -14,7 +14,7 @@ const CookieConsentPopover: React.VoidFunctionComponent = () => {
   return ReactDOM.createPortal(
     <AnimatePresence>
       {visible ? (
-        <motion.div
+        <m.div
           variants={{
             enter: {
               opacity: 1,
@@ -54,7 +54,7 @@ const CookieConsentPopover: React.VoidFunctionComponent = () => {
               OK
             </button>
           </div>
-        </motion.div>
+        </m.div>
       ) : null}
     </AnimatePresence>,
     getPortal(),

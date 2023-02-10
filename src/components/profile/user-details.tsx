@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
 import * as React from "react";
@@ -16,7 +16,7 @@ export interface UserDetailsProps {
   email?: string;
 }
 
-const MotionButton = motion(Button);
+const MotionButton = m(Button);
 
 export const UserDetails: React.VoidFunctionComponent<UserDetailsProps> = ({
   userId,

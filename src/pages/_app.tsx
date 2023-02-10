@@ -4,6 +4,7 @@ import "~/style.css";
 
 import { Inter, Noto_Sans_Mono } from "@next/font/google";
 import { inject } from "@vercel/analytics";
+import { domAnimation, LazyMotion, m } from "framer-motion";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -15,7 +16,6 @@ import { Toaster } from "react-hot-toast";
 import Maintenance from "@/components/maintenance";
 
 import { useCrispChat } from "../components/crisp-chat";
-import ModalProvider from "../components/modal/modal-provider";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
 import { UserSession } from "../utils/auth";
@@ -89,7 +89,17 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           --font-noto: ${noto.style.fontFamily};
         }
       `}</style>
-      <ModalProvider>{getLayout(<Component {...pageProps} />)}</ModalProvider>
+      <LazyMotion features={domAnimation}>
+        {getLayout(
+          <m.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+          >
+            <Component {...pageProps} />
+          </m.div>,
+        )}
+      </LazyMotion>
     </>
   );
 };
