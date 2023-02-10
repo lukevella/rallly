@@ -12,6 +12,7 @@ import { MobileNavigation } from "./standard-layout/mobile-navigation";
 const StandardLayout: React.VoidFunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
+  const router = useRouter();
   return (
     <LazyMotion features={domAnimation}>
       <UserProvider>
@@ -22,8 +23,7 @@ const StandardLayout: React.VoidFunctionComponent<{
               <div className="mx-auto max-w-4xl">
                 <AnimatePresence initial={false} exitBeforeEnter={true}>
                   <m.div
-                    data-test={Date.now()}
-                    key={Date.now()}
+                    key={router.asPath}
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -50 }}
