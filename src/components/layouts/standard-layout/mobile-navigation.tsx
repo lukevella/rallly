@@ -5,6 +5,7 @@ import React from "react";
 
 import { LoginLink } from "@/components/auth/login-modal";
 import Adjustments from "@/components/icons/adjustments.svg";
+import Beaker from "@/components/icons/beaker.svg";
 import Home from "@/components/icons/home.svg";
 import Login from "@/components/icons/login.svg";
 import Menu from "@/components/icons/menu.svg";
@@ -17,6 +18,8 @@ import { useUser } from "@/components/user-provider";
 
 import Dropdown, { DropdownItem } from "../../dropdown";
 import { Logo } from "../../logo";
+import { useModalContext } from "../../modal/modal-provider";
+import OpenBeta from "../../open-beta-modal";
 import { UserDropdown } from "./user-dropdown";
 
 export const MobileNavigation = (props: { className?: string }) => {
@@ -24,6 +27,7 @@ export const MobileNavigation = (props: { className?: string }) => {
   const { t } = useTranslation(["common", "app"]);
 
   const [isPinned, setIsPinned] = React.useState(false);
+  const modalContext = useModalContext();
 
   React.useEffect(() => {
     const scrollHandler = () => {
@@ -71,6 +75,23 @@ export const MobileNavigation = (props: { className?: string }) => {
             label={t("support")}
             icon={Support}
           />
+          {process.env.NEXT_PUBLIC_BETA === "1" ? (
+            <>
+              <DropdownItem
+                onClick={() => {
+                  // open modal
+                  modalContext.render({
+                    content: <OpenBeta />,
+                    footer: null,
+                    showClose: true,
+                    overlayClosable: true,
+                  });
+                }}
+                label="Feedback"
+                icon={Beaker}
+              />
+            </>
+          ) : null}
         </Dropdown>
       </div>
       <div className="flex items-center">
