@@ -1281,10 +1281,10 @@
   dependencies:
     glob "7.1.7"
 
-"@next/font@^13.1.3":
-  version "13.1.3"
-  resolved "https://registry.yarnpkg.com/@next/font/-/font-13.1.3.tgz#b8da6898537f341d7e1b35ec8ed686244503c076"
-  integrity sha512-Zh7lU8KlUoeidHPuXt9Xdvu+DFg74JXGaBczBgNwZAqvwT4HquQ1zJVfavXIQhDRPbQlKYI6Z25BFC2PhVHvtA==
+"@next/font@^13.1.4":
+  version "13.1.6"
+  resolved "https://registry.yarnpkg.com/@next/font/-/font-13.1.6.tgz#2bf99e3321ec9b4d65781c0d0ebff072e8752e1a"
+  integrity sha512-AITjmeb1RgX1HKMCiA39ztx2mxeAyxl4ljv2UoSBUGAbFFMg8MO7YAvjHCgFhD39hL7YTbFjol04e/BPBH5RzQ==
 
 "@next/swc-android-arm-eabi@13.0.6":
   version "13.0.6"
