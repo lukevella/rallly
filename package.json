@@ -43,7 +43,7 @@
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
-    "next": "13.0.6",
+    "next": "^13.2.1",
     "next-i18next": "^13.0.3",
     "next-seo": "^5.15.0",
     "nodemailer": "^6.9.0",
