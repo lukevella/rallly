@@ -143,7 +143,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
             type="primary"
             loading={formState.isSubmitting}
           >
-            {t("save")}
+            {t("submit")}
           </Button>
         </div>
       </form>

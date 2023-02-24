@@ -62,6 +62,7 @@
   "logout": "Logout",
   "manage": "Manage",
   "menu": "Menu",
+  "submit": "Submit",
   "mixedOptionsDescription": "You can't have both time and date options in the same poll. Which would you like to keep?",
   "mixedOptionsKeepDates": "Keep date options",
   "mixedOptionsKeepTimes": "Keep time options",
