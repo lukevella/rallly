@@ -1,6 +1,5 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 
 import FullPageLoader from "@/components/full-page-loader";
@@ -16,10 +15,8 @@ import { AdminControls } from "../../components/admin-control";
 import ModalProvider from "../../components/modal/modal-provider";
 import { NextPageWithLayout } from "../../types";
 
-const Page: NextPageWithLayout = () => {
-  const { query } = useRouter();
+const Page: NextPageWithLayout<{ urlId: string }> = ({ urlId }) => {
   const { t } = useTranslation("app");
-  const urlId = query.urlId as string;
 
   const pollQuery = trpcNext.poll.getByAdminUrlId.useQuery({ urlId });
 
@@ -53,7 +50,16 @@ const Page: NextPageWithLayout = () => {
 Page.getLayout = getStandardLayout;
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  withPageTranslations(["common", "app", "errors"]),
+  [
+    withPageTranslations(["common", "app", "errors"]),
+    async (ctx) => {
+      return {
+        props: {
+          urlId: ctx.query.urlId as string,
+        },
+      };
+    },
+  ],
   {
     onPrefetch: async (ssg, ctx) => {
       await ssg.poll.getByAdminUrlId.fetch({
