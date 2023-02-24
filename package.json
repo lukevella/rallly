@@ -24,7 +24,7 @@
     "@prisma/client": "^4.10.0",
     "@radix-ui/react-popover": "^1.0.3",
     "@sentry/nextjs": "^7.33.0",
-    "@svgr/webpack": "^6.2.1",
+    "@svgr/webpack": "^6.5.1",
     "@tailwindcss/typography": "^0.5.9",
     "@tanstack/react-query": "^4.22.0",
     "@trpc/client": "^10.0.0-rc.8",
