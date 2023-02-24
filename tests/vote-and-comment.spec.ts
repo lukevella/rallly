@@ -18,7 +18,7 @@ test("should be able to vote and comment on a poll", async ({ page }) => {
   await page.click("button >> text='Continue'");
 
   await page.type('[placeholder="Jessie Smith"]', "Test user");
-  await page.click("text='Save'");
+  await page.click("text='Submit'");
 
   await expect(page.locator("text='Test user'")).toBeVisible();
   await expect(
