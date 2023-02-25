@@ -29,7 +29,7 @@
     "@tanstack/react-query": "^4.22.0",
     "@trpc/client": "^10.0.0-rc.8",
     "@trpc/next": "^10.0.0-rc.8",
-    "@trpc/react-query": "^10.0.0-rc.8",
+    "@trpc/react-query": "^10.10.0",
     "@trpc/server": "^10.0.0-rc.8",
     "@vercel/analytics": "^0.1.8",
     "accept-language-parser": "^1.5.0",
