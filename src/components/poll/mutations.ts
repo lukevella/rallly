@@ -14,19 +14,11 @@ export const normalizeVotes = (
 };
 
 export const useAddParticipantMutation = () => {
-  const queryClient = trpc.useContext();
-
   return trpc.polls.participants.add.useMutation({
     onSuccess: (participant) => {
       posthog.capture("add participant", {
         name: participant.name,
       });
-      queryClient.polls.participants.list.setData(
-        { pollId: participant.pollId },
-        (existingParticipants = []) => {
-          return [participant, ...existingParticipants];
-        },
-      );
     },
   });
 };
