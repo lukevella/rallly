@@ -17,4 +17,5 @@ export type GetPollApiResponse = {
   demo: boolean;
   notifications: boolean;
   createdAt: Date;
+  deleted: boolean;
 };

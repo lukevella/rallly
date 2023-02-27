@@ -37,6 +37,7 @@ const defaultSelectFields: {
     };
   };
   user: true;
+  deleted: true;
 } = {
   id: true,
   timeZone: true,
@@ -58,6 +59,7 @@ const defaultSelectFields: {
     },
   },
   user: true,
+  deleted: true,
 };
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {

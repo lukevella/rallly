@@ -28,8 +28,6 @@ type PollContextValue = {
   setTargetTimeZone: (timeZone: string) => void;
   pollType: "date" | "timeSlot";
   highScore: number;
-  isDeleted: boolean;
-  setDeleted: React.Dispatch<React.SetStateAction<boolean>>;
   optionIds: string[];
   // TODO (Luke Vella) [2022-05-18]: Move this stuff to participants provider
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
@@ -60,7 +58,6 @@ export const PollContextProvider: React.VoidFunctionComponent<{
 }> = ({ poll, urlId, admin, children }) => {
   const { t } = useTranslation("app");
   const { participants } = useParticipants();
-  const [isDeleted, setDeleted] = React.useState(false);
   const { user } = useUser();
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
@@ -159,13 +156,10 @@ export const PollContextProvider: React.VoidFunctionComponent<{
       ...parsedOptions,
       targetTimeZone,
       setTargetTimeZone,
-      isDeleted,
-      setDeleted,
     };
   }, [
     admin,
     getScore,
-    isDeleted,
     participants,
     poll,
     targetTimeZone,
@@ -174,7 +168,7 @@ export const PollContextProvider: React.VoidFunctionComponent<{
     user,
   ]);
 
-  if (isDeleted) {
+  if (poll.deleted) {
     return (
       <ErrorPage
         icon={Trash}

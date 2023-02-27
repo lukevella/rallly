@@ -23,10 +23,7 @@ export const softDeleteMiddleware = (
           params.args["data"] = { deleted: true, deletedAt: new Date() };
         }
       }
-      if (params.action === "findUnique" || params.action === "findFirst") {
-        // Change to findFirst - you cannot filter
-        // by anything except ID / unique with findUnique
-        params.action = "findFirst";
+      if (params.action === "findFirst") {
         // Add 'deleted' filter
         // ID filter maintained
         params.args.where["deleted"] = params.args.where["deleted"] || false;

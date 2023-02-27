@@ -27,8 +27,7 @@ const ManagePoll: React.VoidFunctionComponent<{
   placement?: Placement;
 }> = ({ placement }) => {
   const { t } = useTranslation("app");
-  const { poll, getParticipantsWhoVotedForOption, setDeleted, urlId } =
-    usePoll();
+  const { poll, getParticipantsWhoVotedForOption, urlId } = usePoll();
 
   const { exportToCsv } = useCsvExporter();
 
@@ -218,7 +217,6 @@ const ManagePoll: React.VoidFunctionComponent<{
                   <DeletePollForm
                     onConfirm={async () => {
                       close();
-                      setDeleted(true);
                     }}
                     onCancel={close}
                     urlId={urlId}
