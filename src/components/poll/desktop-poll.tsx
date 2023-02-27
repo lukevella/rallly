@@ -246,7 +246,8 @@ const Poll: React.VoidFunctionComponent = () => {
             })}
           </div>
           <AnimatePresence initial={false}>
-            {shouldShowNewParticipantForm || editingParticipantId ? (
+            {!poll.closed &&
+            (shouldShowNewParticipantForm || editingParticipantId) ? (
               <m.div
                 variants={{
                   hidden: { height: 0, y: 30, opacity: 0 },
