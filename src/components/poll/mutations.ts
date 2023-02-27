@@ -1,6 +1,6 @@
 import posthog from "posthog-js";
 
-import { trpc, trpcNext } from "../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { ParticipantForm } from "./types";
 
 export const normalizeVotes = (
@@ -14,32 +14,24 @@ export const normalizeVotes = (
 };
 
 export const useAddParticipantMutation = () => {
-  const queryClient = trpc.useContext();
-
-  return trpc.useMutation(["polls.participants.add"], {
+  return trpc.polls.participants.add.useMutation({
     onSuccess: (participant) => {
       posthog.capture("add participant", {
         name: participant.name,
       });
-      queryClient.setQueryData(
-        ["polls.participants.list", { pollId: participant.pollId }],
-        (existingParticipants = []) => {
-          return [participant, ...existingParticipants];
-        },
-      );
     },
   });
 };
 
 export const useUpdateParticipantMutation = () => {
   const queryClient = trpc.useContext();
-  return trpc.useMutation("polls.participants.update", {
+  return trpc.polls.participants.update.useMutation({
     onSuccess: (participant) => {
       posthog.capture("update participant", {
         name: participant.name,
       });
-      queryClient.setQueryData(
-        ["polls.participants.list", { pollId: participant.pollId }],
+      queryClient.polls.participants.list.setData(
+        { pollId: participant.pollId },
         (existingParticipants = []) => {
           const newParticipants = [...existingParticipants];
 
@@ -60,10 +52,10 @@ export const useUpdateParticipantMutation = () => {
 
 export const useDeleteParticipantMutation = () => {
   const queryClient = trpc.useContext();
-  return trpc.useMutation("polls.participants.delete", {
+  return trpc.polls.participants.delete.useMutation({
     onMutate: ({ participantId, pollId }) => {
-      queryClient.setQueryData(
-        ["polls.participants.list", { pollId: pollId }],
+      queryClient.polls.participants.list.setData(
+        { pollId: pollId },
         (existingParticipants = []) => {
           return existingParticipants.filter(({ id }) => id !== participantId);
         },
@@ -78,10 +70,10 @@ export const useDeleteParticipantMutation = () => {
 };
 
 export const useUpdatePollMutation = () => {
-  const queryClient = trpcNext.useContext();
-  return trpc.useMutation(["polls.update"], {
+  const queryClient = trpc.useContext();
+  return trpc.polls.update.useMutation({
     onSuccess: (data) => {
-      queryClient.poll.invalidate();
+      queryClient.polls.invalidate();
       posthog.capture("updated poll", {
         id: data.id,
       });

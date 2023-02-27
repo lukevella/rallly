@@ -10,7 +10,6 @@ import { sendEmailTemplate } from "../../utils/api-utils";
 import { createToken } from "../../utils/auth";
 import { nanoid } from "../../utils/nanoid";
 import { GetPollApiResponse } from "../../utils/trpc/types";
-import { createRouter } from "../createRouter";
 import { publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
@@ -38,6 +37,7 @@ const defaultSelectFields: {
     };
   };
   user: true;
+  deleted: true;
 } = {
   id: true,
   timeZone: true,
@@ -59,6 +59,7 @@ const defaultSelectFields: {
     },
   },
   user: true,
+  deleted: true,
 };
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {
@@ -77,26 +78,25 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
   return res.id;
 };
 
-export const legacyPolls = createRouter()
-  .merge("demo.", demo)
-  .merge("participants.", participants)
-  .merge("comments.", comments)
-  .merge("verification.", verification)
-  .mutation("create", {
-    input: z.object({
-      title: z.string(),
-      type: z.literal("date"),
-      timeZone: z.string().optional(),
-      location: z.string().optional(),
-      description: z.string().optional(),
-      user: z.object({
-        name: z.string(),
-        email: z.string(),
+export const polls = router({
+  // START LEGACY ROUTES
+  create: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        type: z.literal("date"),
+        timeZone: z.string().optional(),
+        location: z.string().optional(),
+        description: z.string().optional(),
+        user: z.object({
+          name: z.string(),
+          email: z.string(),
+        }),
+        options: z.string().array(),
+        demo: z.boolean().optional(),
       }),
-      options: z.string().array(),
-      demo: z.boolean().optional(),
-    }),
-    resolve: async ({ ctx, input }): Promise<{ urlId: string }> => {
+    )
+    .mutation(async ({ ctx, input }): Promise<{ urlId: string }> => {
       const adminUrlId = await nanoid();
 
       let verified = false;
@@ -188,21 +188,22 @@ export const legacyPolls = createRouter()
       }
 
       return { urlId: adminUrlId };
-    },
-  })
-  .mutation("update", {
-    input: z.object({
-      urlId: z.string(),
-      title: z.string().optional(),
-      timeZone: z.string().optional(),
-      location: z.string().optional(),
-      description: z.string().optional(),
-      optionsToDelete: z.string().array().optional(),
-      optionsToAdd: z.string().array().optional(),
-      notifications: z.boolean().optional(),
-      closed: z.boolean().optional(),
     }),
-    resolve: async ({ input }): Promise<GetPollApiResponse> => {
+  update: publicProcedure
+    .input(
+      z.object({
+        urlId: z.string(),
+        title: z.string().optional(),
+        timeZone: z.string().optional(),
+        location: z.string().optional(),
+        description: z.string().optional(),
+        optionsToDelete: z.string().array().optional(),
+        optionsToAdd: z.string().array().optional(),
+        notifications: z.boolean().optional(),
+        closed: z.boolean().optional(),
+      }),
+    )
+    .mutation(async ({ input }): Promise<GetPollApiResponse> => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
@@ -241,22 +242,24 @@ export const legacyPolls = createRouter()
       });
 
       return { ...poll };
-    },
-  })
-  .mutation("delete", {
-    input: z.object({
-      urlId: z.string(),
     }),
-    resolve: async ({ input: { urlId } }) => {
+  delete: publicProcedure
+    .input(
+      z.object({
+        urlId: z.string(),
+      }),
+    )
+    .mutation(async ({ input: { urlId } }) => {
       const pollId = await getPollIdFromAdminUrlId(urlId);
       await prisma.poll.delete({ where: { id: pollId } });
-    },
-  })
-  .mutation("touch", {
-    input: z.object({
-      pollId: z.string(),
     }),
-    resolve: async ({ input: { pollId } }) => {
+  touch: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .mutation(async ({ input: { pollId } }) => {
       await prisma.poll.update({
         where: {
           id: pollId,
@@ -265,10 +268,12 @@ export const legacyPolls = createRouter()
           touchedAt: new Date(),
         },
       });
-    },
-  });
-
-export const poll = router({
+    }),
+  demo,
+  participants,
+  comments,
+  verification,
+  // END LEGACY ROUTES
   getByAdminUrlId: publicProcedure
     .input(
       z.object({

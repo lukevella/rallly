@@ -18,7 +18,7 @@ import { useCrispChat } from "../components/crisp-chat";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
 import { UserSession } from "../utils/auth";
-import { trpcNext } from "../utils/trpc";
+import { trpc } from "../utils/trpc";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -93,4 +93,4 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   );
 };
 
-export default trpcNext.withTRPC(appWithTranslation(MyApp));
+export default trpc.withTRPC(appWithTranslation(MyApp));

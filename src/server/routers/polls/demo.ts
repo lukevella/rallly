@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { prisma } from "~/prisma/db";
 
 import { nanoid } from "../../../utils/nanoid";
-import { createRouter } from "../../createRouter";
+import { publicProcedure, router } from "../../trpc";
 
 const participantData: Array<{ name: string; votes: VoteType[] }> = [
   {
@@ -27,8 +27,8 @@ const participantData: Array<{ name: string; votes: VoteType[] }> = [
 
 const optionValues = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
 
-export const demo = createRouter().mutation("create", {
-  resolve: async () => {
+export const demo = router({
+  create: publicProcedure.mutation(async () => {
     const adminUrlId = await nanoid();
     const demoUser = { name: "John Example", email: "noreply@rallly.co" };
 
@@ -111,5 +111,5 @@ export const demo = createRouter().mutation("create", {
     });
 
     return adminUrlId;
-  },
+  }),
 });
