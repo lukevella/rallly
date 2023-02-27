@@ -31,19 +31,20 @@ const Discussion: React.VoidFunctionComponent = () => {
 
   const pollId = poll.id;
 
-  const { data: comments } = trpc.useQuery(
-    ["polls.comments.list", { pollId }],
+  const { data: comments } = trpc.polls.comments.list.useQuery(
+    { pollId },
     {
       refetchInterval: 10000, // refetch every 10 seconds
+      trpc: {},
     },
   );
 
-  const addComment = trpc.useMutation("polls.comments.add", {
+  const addComment = trpc.polls.comments.add.useMutation({
     onSuccess: (newComment) => {
       posthog.capture("created comment");
 
-      queryClient.setQueryData(
-        ["polls.comments.list", { pollId }],
+      queryClient.polls.comments.list.setData(
+        { pollId },
         (existingComments = []) => {
           return [...existingComments, newComment];
         },
@@ -51,10 +52,10 @@ const Discussion: React.VoidFunctionComponent = () => {
     },
   });
 
-  const deleteComment = trpc.useMutation("polls.comments.delete", {
+  const deleteComment = trpc.polls.comments.delete.useMutation({
     onMutate: ({ commentId }) => {
-      queryClient.setQueryData(
-        ["polls.comments.list", { pollId }],
+      queryClient.polls.comments.list.setData(
+        { pollId },
         (existingComments = []) => {
           return [...existingComments].filter(({ id }) => id !== commentId);
         },

@@ -5,7 +5,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
-import { trpcNext } from "../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { Button } from "../button";
 import { TextInput } from "../text-input";
 
@@ -133,9 +133,9 @@ export const RegisterForm: React.VoidFunctionComponent<{
     useForm<RegisterFormData>({
       defaultValues,
     });
-  const requestRegistration = trpcNext.auth.requestRegistration.useMutation();
+  const requestRegistration = trpc.auth.requestRegistration.useMutation();
   const authenticateRegistration =
-    trpcNext.auth.authenticateRegistration.useMutation();
+    trpc.auth.authenticateRegistration.useMutation();
   const [token, setToken] = React.useState<string>();
 
   if (token) {
@@ -273,8 +273,8 @@ export const LoginForm: React.VoidFunctionComponent<{
   const { t } = useTranslation("app");
   const { register, handleSubmit, getValues, formState, setError } =
     useForm<{ email: string }>();
-  const requestLogin = trpcNext.auth.requestLogin.useMutation();
-  const authenticateLogin = trpcNext.auth.authenticateLogin.useMutation();
+  const requestLogin = trpc.auth.requestLogin.useMutation();
+  const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
 
   const [token, setToken] = React.useState<string>();
 

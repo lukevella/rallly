@@ -3,14 +3,16 @@ import { z } from "zod";
 import { prisma } from "~/prisma/db";
 
 import { sendNotification } from "../../../utils/api-utils";
-import { createRouter } from "../../createRouter";
+import { publicProcedure, router } from "../../trpc";
 
-export const participants = createRouter()
-  .query("list", {
-    input: z.object({
-      pollId: z.string(),
-    }),
-    resolve: async ({ input: { pollId } }) => {
+export const participants = router({
+  list: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .query(async ({ input: { pollId } }) => {
       const participants = await prisma.participant.findMany({
         where: {
           pollId,
@@ -26,33 +28,35 @@ export const participants = createRouter()
         ],
       });
       return participants;
-    },
-  })
-  .mutation("delete", {
-    input: z.object({
-      pollId: z.string(),
-      participantId: z.string(),
     }),
-    resolve: async ({ input: { participantId } }) => {
+  delete: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        participantId: z.string(),
+      }),
+    )
+    .mutation(async ({ input: { participantId } }) => {
       await prisma.participant.delete({
         where: {
           id: participantId,
         },
       });
-    },
-  })
-  .mutation("add", {
-    input: z.object({
-      pollId: z.string(),
-      name: z.string().nonempty("Participant name is required"),
-      votes: z
-        .object({
-          optionId: z.string(),
-          type: z.enum(["yes", "no", "ifNeedBe"]),
-        })
-        .array(),
     }),
-    resolve: async ({ ctx, input: { pollId, votes, name } }) => {
+  add: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        name: z.string().nonempty("Participant name is required"),
+        votes: z
+          .object({
+            optionId: z.string(),
+            type: z.enum(["yes", "no", "ifNeedBe"]),
+          })
+          .array(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { pollId, votes, name } }) => {
       const user = ctx.session.user;
       const participant = await prisma.participant.create({
         data: {
@@ -80,20 +84,21 @@ export const participants = createRouter()
       });
 
       return participant;
-    },
-  })
-  .mutation("update", {
-    input: z.object({
-      pollId: z.string(),
-      participantId: z.string(),
-      votes: z
-        .object({
-          optionId: z.string(),
-          type: z.enum(["yes", "no", "ifNeedBe"]),
-        })
-        .array(),
     }),
-    resolve: async ({ input: { pollId, participantId, votes } }) => {
+  update: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        participantId: z.string(),
+        votes: z
+          .object({
+            optionId: z.string(),
+            type: z.enum(["yes", "no", "ifNeedBe"]),
+          })
+          .array(),
+      }),
+    )
+    .mutation(async ({ input: { pollId, participantId, votes } }) => {
       const participant = await prisma.participant.update({
         where: {
           id: participantId,
@@ -118,5 +123,5 @@ export const participants = createRouter()
       });
 
       return participant;
-    },
-  });
+    }),
+});

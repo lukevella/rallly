@@ -5,7 +5,7 @@ import { useMount } from "react-use";
 
 import { UserSession } from "@/utils/auth";
 
-import { trpcNext } from "../utils/trpc";
+import { trpc } from "../utils/trpc";
 import { useRequiredContext } from "./use-required-context";
 
 export const UserContext =
@@ -51,12 +51,12 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation("app");
 
-  const queryClient = trpcNext.useContext();
-  const { data: user } = trpcNext.whoami.get.useQuery();
+  const queryClient = trpc.useContext();
+  const { data: user } = trpc.whoami.get.useQuery();
 
   const [isUpdating, setIsUpdating] = React.useState(false);
 
-  const logout = trpcNext.whoami.destroy.useMutation({
+  const logout = trpc.whoami.destroy.useMutation({
     onSuccess: async () => {
       setIsUpdating(true);
       await queryClient.whoami.invalidate();

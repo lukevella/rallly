@@ -8,7 +8,7 @@ import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
 import { withSessionSsr } from "@/utils/auth";
-import { trpcNext } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import { AdminControls } from "../../components/admin-control";
@@ -18,7 +18,7 @@ import { NextPageWithLayout } from "../../types";
 const Page: NextPageWithLayout<{ urlId: string }> = ({ urlId }) => {
   const { t } = useTranslation("app");
 
-  const pollQuery = trpcNext.poll.getByAdminUrlId.useQuery({ urlId });
+  const pollQuery = trpc.polls.getByAdminUrlId.useQuery({ urlId });
 
   const poll = pollQuery.data;
 
@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   ],
   {
     onPrefetch: async (ssg, ctx) => {
-      await ssg.poll.getByAdminUrlId.fetch({
+      await ssg.polls.getByAdminUrlId.fetch({
         urlId: ctx.params?.urlId as string,
       });
     },

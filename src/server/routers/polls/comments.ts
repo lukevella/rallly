@@ -3,14 +3,16 @@ import { z } from "zod";
 import { prisma } from "~/prisma/db";
 
 import { sendNotification } from "../../../utils/api-utils";
-import { createRouter } from "../../createRouter";
+import { publicProcedure, router } from "../../trpc";
 
-export const comments = createRouter()
-  .query("list", {
-    input: z.object({
-      pollId: z.string(),
-    }),
-    resolve: async ({ input: { pollId } }) => {
+export const comments = router({
+  list: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .query(async ({ input: { pollId } }) => {
       return await prisma.comment.findMany({
         where: { pollId },
         orderBy: [
@@ -19,15 +21,16 @@ export const comments = createRouter()
           },
         ],
       });
-    },
-  })
-  .mutation("add", {
-    input: z.object({
-      pollId: z.string(),
-      authorName: z.string(),
-      content: z.string(),
     }),
-    resolve: async ({ ctx, input: { pollId, authorName, content } }) => {
+  add: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        authorName: z.string(),
+        content: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { pollId, authorName, content } }) => {
       const user = ctx.session.user;
 
       const newComment = await prisma.comment.create({
@@ -45,14 +48,15 @@ export const comments = createRouter()
       });
 
       return newComment;
-    },
-  })
-  .mutation("delete", {
-    input: z.object({
-      pollId: z.string(),
-      commentId: z.string(),
     }),
-    resolve: async ({ input: { pollId, commentId } }) => {
+  delete: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        commentId: z.string(),
+      }),
+    )
+    .mutation(async ({ input: { pollId, commentId } }) => {
       await prisma.comment.delete({
         where: {
           id_pollId: {
@@ -61,5 +65,5 @@ export const comments = createRouter()
           },
         },
       });
-    },
-  });
+    }),
+});

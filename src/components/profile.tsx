@@ -19,7 +19,7 @@ export const Profile: React.VoidFunctionComponent = () => {
   const { dayjs } = useDayjs();
 
   const { t } = useTranslation("app");
-  const { data: userPolls } = trpc.useQuery(["user.getPolls"]);
+  const { data: userPolls } = trpc.user.getPolls.useQuery();
 
   const createdPolls = userPolls?.polls;
   const router = useRouter();

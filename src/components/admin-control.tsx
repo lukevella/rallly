@@ -9,7 +9,7 @@ import { useMount } from "react-use";
 import { Button } from "@/components/button";
 import Share from "@/components/icons/share.svg";
 
-import { trpc, trpcNext } from "../utils/trpc";
+import { trpc } from "../utils/trpc";
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
 import { useUpdatePollMutation } from "./poll/mutations";
@@ -25,7 +25,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
 
   const router = useRouter();
 
-  const queryClient = trpcNext.useContext();
+  const queryClient = trpc.useContext();
 
   const session = useUser();
 
@@ -48,10 +48,10 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
     }
   }, [urlId, router, updatePollMutation, t]);
 
-  const verifyEmail = trpc.useMutation(["polls.verification.verify"], {
+  const verifyEmail = trpc.polls.verification.verify.useMutation({
     onSuccess: () => {
       toast.success(t("pollHasBeenVerified"));
-      queryClient.poll.invalidate();
+      queryClient.polls.invalidate();
       session.refresh();
       posthog.capture("verified email");
     },

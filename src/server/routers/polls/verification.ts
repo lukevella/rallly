@@ -11,15 +11,17 @@ import {
   decryptToken,
   mergeGuestsIntoUser,
 } from "../../../utils/auth";
-import { createRouter } from "../../createRouter";
+import { publicProcedure, router } from "../../trpc";
 
-export const verification = createRouter()
-  .mutation("verify", {
-    input: z.object({
-      pollId: z.string(),
-      code: z.string(),
-    }),
-    resolve: async ({ ctx, input }) => {
+export const verification = router({
+  verify: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        code: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
       const { pollId } = await decryptToken<{
         pollId: string;
       }>(input.code);
@@ -52,14 +54,15 @@ export const verification = createRouter()
         isGuest: false,
       };
       await ctx.session.save();
-    },
-  })
-  .mutation("request", {
-    input: z.object({
-      pollId: z.string(),
-      adminUrlId: z.string(),
     }),
-    resolve: async ({ input: { pollId, adminUrlId } }) => {
+  request: publicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        adminUrlId: z.string(),
+      }),
+    )
+    .mutation(async ({ input: { pollId, adminUrlId } }) => {
       const poll = await prisma.poll.findUnique({
         where: {
           id: pollId,
@@ -96,5 +99,5 @@ export const verification = createRouter()
           supportEmail: process.env.SUPPORT_EMAIL,
         },
       });
-    },
-  });
+    }),
+});

@@ -33,7 +33,7 @@ export const UserDetails: React.VoidFunctionComponent<UserDetailsProps> = ({
 
   const { refresh } = useUser();
 
-  const changeName = trpc.useMutation("user.changeName", {
+  const changeName = trpc.user.changeName.useMutation({
     onSuccess: (_, { name }) => {
       posthog.people.set({ name });
       refresh();

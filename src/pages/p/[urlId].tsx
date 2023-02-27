@@ -8,7 +8,7 @@ import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 import { withSessionSsr } from "@/utils/auth";
-import { trpcNext } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import StandardLayout from "../../components/layouts/standard-layout";
@@ -16,7 +16,7 @@ import ModalProvider from "../../components/modal/modal-provider";
 import { NextPageWithLayout } from "../../types";
 
 const Page: NextPageWithLayout<{ urlId: string }> = ({ urlId }) => {
-  const pollQuery = trpcNext.poll.getByParticipantUrlId.useQuery({ urlId });
+  const pollQuery = trpc.polls.getByParticipantUrlId.useQuery({ urlId });
 
   const { user } = useUser();
   const poll = pollQuery.data;
@@ -70,7 +70,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   ],
   {
     onPrefetch: async (ssg, ctx) => {
-      await ssg.poll.getByParticipantUrlId.fetch({
+      await ssg.polls.getByParticipantUrlId.fetch({
         urlId: ctx.params?.urlId as string,
       });
     },

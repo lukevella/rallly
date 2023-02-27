@@ -90,7 +90,7 @@ const Page: NextPage<CreatePollPageProps> = ({
 
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
-  const createPoll = trpc.useMutation(["polls.create"], {
+  const createPoll = trpc.polls.create.useMutation({
     onSuccess: (res) => {
       setIsRedirecting(true);
       posthog.capture("created poll", {
