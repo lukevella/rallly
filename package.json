@@ -1,7 +1,13 @@
 {
   "name": "rallly-monorepo",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "build": "turbo build",
+    "db:deploy": "turbo db:deploy",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "lint:tsc": "turbo lint:tsc"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
