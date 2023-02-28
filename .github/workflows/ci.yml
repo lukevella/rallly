@@ -25,10 +25,10 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Check linting rules
-        run: yarn lint
+        run: yarn turbo lint
 
       - name: Check types
-        run: yarn lint:tsc
+        run: yarn turbo lint:tsc
 
   # Label of the container job
   integration-tests:
@@ -66,13 +66,13 @@ jobs:
           yarn wait-on --timeout 60000 tcp:localhost:5432
 
       - name: Deploy migrations
-        run: yarn prisma migrate deploy
+        run: yarn turbo db:deploy
 
       - name: Install playwright dependencies
-        run: yarn playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run tests
-        run: yarn test
+        run: yarn turbo test
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}
