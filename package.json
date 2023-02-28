@@ -1,18 +1,23 @@
 {
-  "name": "rallly-monorepo",
+  "name": "rallly",
   "private": true,
+  "version": "2.1.1",
   "scripts": {
     "build": "turbo build",
     "db:deploy": "turbo db:deploy",
     "test": "turbo test",
     "lint": "turbo lint",
-    "lint:tsc": "turbo lint:tsc"
+    "lint:tsc": "turbo lint:tsc",
+    "changelog:update": "gitmoji-changelog",
+    "release": "./scripts/create-release.sh"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "devDependencies": {
+    "gitmoji-changelog": "^2.3.0",
+    "prettier": "^2.8.4",
     "turbo": "^1.8.3"
   }
 }

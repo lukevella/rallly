@@ -5,8 +5,7 @@
       "outputs": [".next/**"]
     },
     "test": {
-      "dependsOn": ["build"],
-      "inputs": ["src/**/*.tsx", "src/**/*.ts", "tests/**/*.ts"]
+      "outputs": []
     },
     "db:generate": {
       "cache": false
@@ -27,6 +26,7 @@
   "globalEnv": [
     "ANALYZE",
     "API_SECRET",
+    "CI",
     "DATABASE_URL",
     "LANDING_PAGE",
     "MAINTENANCE_MODE",

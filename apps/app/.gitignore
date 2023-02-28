@@ -1,1 +1,8 @@
 node_modules
+
+# Sentry
+.sentryclirc
+
+# playwright
+/playwright-report
+/test-results

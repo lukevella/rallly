@@ -31,16 +31,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# vercel
-.vercel
-
-# Sentry
-.sentryclirc
-
-# playwright
-/playwright-report
-/test-results
-
 # ts
 tsconfig.tsbuildinfo
 

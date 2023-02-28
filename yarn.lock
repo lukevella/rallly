@@ -1385,7 +1385,7 @@
     tiny-glob "^0.2.9"
     tslib "^2.4.0"
 
-"@playwright/test@^1.30.0":
+"@playwright/test@^1.31.1":
   version "1.31.1"
   resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.31.1.tgz#39d6873dc46af135f12451d79707db7d1357455d"
   integrity sha512-IsytVZ+0QLDh1Hj83XatGp/GsI1CDJWbyDaBGbainsh0p2zC7F4toUocqowmjS6sQff2NGT3D9WbDj/3K2CJiA==
@@ -6625,9 +6625,9 @@ postcss@^8.0.9, postcss@^8.4.21:
     source-map-js "^1.0.2"
 
 posthog-js@^1.42.3:
-  version "1.49.0"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.49.0.tgz#39c9a90e4f719af3bee0b7cf3438d1193c220966"
-  integrity sha512-Ap+zNm8wS9On1Z4F6X97CTXpPwuP4Wd9xU61dRTwHc/wfiddHOUaZLSYWHQ71YdSJPfnW8v/y2YzNfZ4SDHPXw==
+  version "1.50.0"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.50.0.tgz#2aeb659803e0519a5399a46465480b45f23f07d1"
+  integrity sha512-zxC+qe37dthOqcGDqP7k2LjJHh88kExuPDLQ9sKV0Y/wBmjXURISQ0YM2NV8ic5gq2pnfxK6GdedT3/RNX+21A==
   dependencies:
     fflate "^0.4.1"
     rrweb-snapshot "^1.1.14"
@@ -6642,7 +6642,7 @@ prettier-plugin-tailwindcss@^0.1.8:
   resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.1.13.tgz#ca1071361dc7e2ed5d95a2ee36825ce45f814942"
   integrity sha512-/EKQURUrxLu66CMUg4+1LwGdxnz8of7IDvrSLqEtDqhLH61SAlNNUSr90UTvZaemujgl3OH/VHg+fyGltrNixw==
 
-prettier@^2.3.0:
+prettier@^2.8.4:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
   integrity sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==
