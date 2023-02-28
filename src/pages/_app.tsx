@@ -2,10 +2,10 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "~/style.css";
 
-import { Inter, Noto_Sans_Mono } from "@next/font/google";
 import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
+import { Inter, Noto_Sans_Mono } from "next/font/google";
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
