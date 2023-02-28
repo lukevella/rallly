@@ -1,0 +1,4 @@
+{
+  "buildCommand": "turbo build && DATABASE_URL=$DIRECT_DATABASE_URL turbo db:deploy",
+  "outputDirectory": "./apps/app/.next"
+}

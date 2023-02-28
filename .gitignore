@@ -43,3 +43,6 @@ yarn-error.log*
 
 # ts
 tsconfig.tsbuildinfo
+
+# Turbo
+.turbo
