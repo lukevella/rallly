@@ -16,6 +16,7 @@ services:
   rallly:
     build:
       context: .
+      dockerfile: ./apps/web/Dockerfile
     restart: always
     depends_on:
       rallly_db:

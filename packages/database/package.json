@@ -1,0 +1,19 @@
+{
+  "name": "@rallly/database",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate",
+    "db:deploy": "prisma migrate deploy"
+  },
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "dependencies": {
+    "@prisma/client": "^4.10.1"
+  },
+  "devDependencies": {
+    "@rallly/tsconfig": "*",
+    "prisma": "^4.10.1"
+  }
+}

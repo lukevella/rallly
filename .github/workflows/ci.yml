@@ -11,6 +11,9 @@ jobs:
   linting:
     name: Linting
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -35,7 +38,9 @@ jobs:
     name: Run tests
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
-
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       # Downloads a copy of the code in your repository before running CI tests
       - name: Check out repository code
@@ -66,7 +71,7 @@ jobs:
           yarn wait-on --timeout 60000 tcp:localhost:5432
 
       - name: Deploy migrations
-        run: yarn prisma migrate deploy
+        run: yarn db:deploy
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium

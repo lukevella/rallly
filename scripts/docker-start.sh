@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
-yarn prisma migrate deploy --schema prisma/schema.prisma
-yarn start
+prisma migrate deploy --schema=./prisma/schema.prisma
+node apps/web/server.js

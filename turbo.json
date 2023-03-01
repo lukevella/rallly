@@ -1,0 +1,56 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**"],
+      "env": [
+        "ANALYZE",
+        "API_SECRET",
+        "CI",
+        "DATABASE_URL",
+        "LANDING_PAGE",
+        "MAINTENANCE_MODE",
+        "NEXT_PUBLIC_BASE_URL",
+        "NEXT_PUBLIC_BETA",
+        "NEXT_PUBLIC_CRISP_WEBSITE_ID",
+        "NEXT_PUBLIC_ENABLE_ANALYTICS",
+        "NEXT_PUBLIC_MAINTENANCE_MODE",
+        "NEXT_PUBLIC_POSTHOG_API_HOST",
+        "NEXT_PUBLIC_POSTHOG_API_KEY",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_VERCEL_URL",
+        "NODE_ENV",
+        "PORT",
+        "SECRET_PASSWORD",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_DSN",
+        "SMTP_HOST",
+        "SMTP_PORT",
+        "SMTP_PWD",
+        "SMTP_SECURE",
+        "SMTP_USER",
+        "SUPPORT_EMAIL"
+      ]
+    },
+    "test": {
+      "outputs": [],
+      "env": ["CI"]
+    },
+    "generate": {
+      "dependsOn": ["^generate"]
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:deploy": {
+      "cache": false
+    },
+    "lint": {
+      "outputs": []
+    },
+    "lint:tsc": {
+      "outputs": []
+    }
+  }
+}

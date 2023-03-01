@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals"],
+  "extends": ["next/core-web-vitals", "turbo"],
   "plugins": ["simple-import-sort", "@typescript-eslint"],
   "overrides": [
     {
