@@ -11,7 +11,8 @@
     "lint:tsc": "tsc --noEmit",
     "lint:i18n": "i18n-unused remove-unused",
     "test": "PORT=3001 playwright test",
-    "test:codegen": "playwright codegen http://localhost:3000"
+    "test:codegen": "playwright codegen http://localhost:3000",
+    "docker:start": "./scripts/docker-start.sh"
   },
   "dependencies": {
     "@floating-ui/react-dom-interactions": "^0.13.3",

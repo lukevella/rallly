@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "db:generate": "prisma generate",
+    "generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
     "db:deploy": "prisma migrate deploy"
   },
