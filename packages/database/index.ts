@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@rallly/database";
 
 import { softDeleteMiddleware } from "./middleware/soft-delete-middleware";
 

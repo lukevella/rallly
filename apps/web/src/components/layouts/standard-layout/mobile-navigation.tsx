@@ -63,7 +63,7 @@ export const MobileNavigation = (props: { className?: string }) => {
               type="button"
               className="group flex items-center rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
-              <Menu className="mr-2 w-5 group-hover:text-primary-500" />
+              <Menu className="group-hover:text-primary-500 mr-2 w-5" />
               <Logo />
             </button>
           }
@@ -117,9 +117,9 @@ export const MobileNavigation = (props: { className?: string }) => {
                   )}
                 >
                   <div className="relative shrink-0">
-                    <UserCircle className="w-5 opacity-75 group-hover:text-primary-500 group-hover:opacity-100" />
+                    <UserCircle className="group-hover:text-primary-500 w-5 opacity-75 group-hover:opacity-100" />
                   </div>
-                  <div className="max-w-[120px] truncate font-medium xs:block">
+                  <div className="xs:block max-w-[120px] truncate font-medium">
                     {user.isGuest ? t("app:guest") : user.shortName}
                   </div>
                 </button>
@@ -134,7 +134,7 @@ export const MobileNavigation = (props: { className?: string }) => {
               type="button"
               className="group flex items-center whitespace-nowrap rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
-              <Adjustments className="h-5 opacity-75 group-hover:text-primary-500" />
+              <Adjustments className="group-hover:text-primary-500 h-5 opacity-75" />
               <span className="ml-2 hidden sm:block">
                 {t("app:preferences")}
               </span>

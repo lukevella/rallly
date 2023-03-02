@@ -1,7 +1,7 @@
+import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@/utils/prisma";
 import newPollTemplate from "~/templates/new-poll";
 
 import { absoluteUrl } from "../../../utils/absolute-url";

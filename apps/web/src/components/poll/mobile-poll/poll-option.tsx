@@ -1,4 +1,4 @@
-import { Participant, VoteType } from "@prisma/client";
+import { Participant, VoteType } from "@rallly/database";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";

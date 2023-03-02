@@ -1,7 +1,5 @@
-import { VoteType } from "@prisma/client";
+import { prisma, VoteType } from "@rallly/database";
 import dayjs from "dayjs";
-
-import { prisma } from "@/utils/prisma";
 
 import { nanoid } from "../../../utils/nanoid";
 import { publicProcedure, router } from "../../trpc";

@@ -1,4 +1,4 @@
-import { VoteType } from "@prisma/client";
+import { VoteType } from "@rallly/database";
 import clsx from "clsx";
 import * as React from "react";
 

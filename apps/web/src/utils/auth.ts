@@ -1,3 +1,4 @@
+import { prisma } from "@rallly/database";
 import {
   IronSession,
   IronSessionOptions,
@@ -10,8 +11,6 @@ import {
   GetServerSidePropsContext,
   NextApiHandler,
 } from "next";
-
-import { prisma } from "@/utils/prisma";
 
 import { createSSGHelperFromContext } from "../server/context";
 import { randomid } from "./nanoid";

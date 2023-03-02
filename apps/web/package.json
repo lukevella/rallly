@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:tsc": "tsc --noEmit",
     "lint:i18n": "i18n-unused remove-unused",
+    "prettier": "prettier --write ./src",
     "test": "PORT=3001 playwright test",
     "test:codegen": "playwright codegen http://localhost:3000",
     "docker:start": "./scripts/docker-start.sh"

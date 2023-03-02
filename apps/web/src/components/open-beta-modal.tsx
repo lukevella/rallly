@@ -21,25 +21,25 @@ const OpenBeta = () => {
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <a
               href="https://github.com/lukevella/rallly/issues/new?assignees=&labels=bug&template=---bug-report.md&title="
-              className="rounded border p-3 hover:text-primary-500"
+              className="hover:text-primary-500 rounded border p-3"
             >
               🐞 Submit a bug report
             </a>
             <a
               href="https://github.com/lukevella/rallly/discussions/new/choose"
-              className="rounded border p-3 hover:text-primary-500"
+              className="hover:text-primary-500 rounded border p-3"
             >
               📢 Open a discussion with the community
             </a>
             <a
               href="https://discord.gg/uzg4ZcHbuM"
-              className="rounded border p-3 hover:text-primary-500"
+              className="hover:text-primary-500 rounded border p-3"
             >
               💬 Chat on Discord
             </a>
             <a
               href="mailto:feedback@rallly.co"
-              className="rounded border p-3 hover:text-primary-500"
+              className="hover:text-primary-500 rounded border p-3"
             >
               ✉️ Send an email
             </a>

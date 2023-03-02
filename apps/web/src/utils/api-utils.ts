@@ -1,6 +1,6 @@
+import { prisma } from "@rallly/database";
 import * as Eta from "eta";
 
-import { prisma } from "@/utils/prisma";
 import newCommentTemplate from "~/templates/new-comment";
 import newParticipantTemplate from "~/templates/new-participant";
 

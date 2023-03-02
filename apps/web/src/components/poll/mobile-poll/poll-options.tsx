@@ -1,4 +1,4 @@
-import { VoteType } from "@prisma/client";
+import { VoteType } from "@rallly/database";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 

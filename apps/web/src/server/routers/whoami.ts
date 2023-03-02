@@ -1,4 +1,4 @@
-import { prisma } from "@/utils/prisma";
+import { prisma } from "@rallly/database";
 
 import { createGuestUser, UserSession } from "../../utils/auth";
 import { publicProcedure, router } from "../trpc";
