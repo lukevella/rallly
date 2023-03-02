@@ -1,3 +1,4 @@
+import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -148,6 +149,12 @@ export const polls = router({
 
       const homePageUrl = absoluteUrl();
       const pollUrl = `${homePageUrl}/admin/${adminUrlId}`;
+
+      await sendEmail(
+        "NotionMagicLinkEmail",
+        { loginCode: "testing" },
+        { to: input.user.email, subject: "Hey this works!" },
+      );
 
       try {
         if (poll.verified) {

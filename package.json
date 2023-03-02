@@ -3,8 +3,10 @@
   "private": true,
   "version": "2.1.1",
   "scripts": {
+    "dev": "turbo dev",
     "build": "turbo build",
     "db:deploy": "turbo db:deploy",
+    "db:generate": "turbo db:generate",
     "test": "turbo test",
     "lint": "turbo lint",
     "lint:tsc": "turbo lint:tsc",

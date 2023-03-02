@@ -1,4 +1,0 @@
-{
-  "extends": "@rallly/tsconfig/base.json",
-  "includes": ["**/*.ts"]
-}
