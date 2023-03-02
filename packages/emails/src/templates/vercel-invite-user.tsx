@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@rallly/utils";
 import {
   Body,
   Button,
@@ -14,7 +15,6 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import * as React from "react";
 
 export interface VercelInviteUserEmailProps {
   username?: string;
@@ -28,17 +28,13 @@ export interface VercelInviteUserEmailProps {
   inviteFromLocation?: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-  ? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
-  : "";
-
 export const VercelInviteUserEmail = ({
   username = "zenorocha",
-  userImage = `${baseUrl}/static/vercel-user.png`,
+  userImage = absoluteUrl("/static/vercel-user.png"),
   invitedByUsername = "bukinoshita",
   invitedByEmail = "bukinoshita@example.com",
   teamName = "My Project",
-  teamImage = `${baseUrl}/static/vercel-team.png`,
+  teamImage = absoluteUrl("/static/vercel-team.png"),
   inviteLink = "https://vercel.com/teams/invite/foo",
   inviteFromIp = "204.13.186.218",
   inviteFromLocation = "São Paulo, Brazil",
@@ -53,7 +49,7 @@ export const VercelInviteUserEmail = ({
         <Container style={container}>
           <Section style={{ marginTop: "32px" }}>
             <Img
-              src={`${baseUrl}/static/vercel-logo.png`}
+              src={absoluteUrl("/static/vercel-logo.png")}
               width="40"
               height="37"
               alt="Vercel"
@@ -79,7 +75,7 @@ export const VercelInviteUserEmail = ({
               </Column>
               <Column align="center">
                 <Img
-                  src={`${baseUrl}/static/vercel-arrow.png`}
+                  src={absoluteUrl("/static/vercel-arrow.png")}
                   width="12"
                   height="9"
                   alt="invited you to"
@@ -119,8 +115,8 @@ export const VercelInviteUserEmail = ({
             <span style={black}>{inviteFromIp}</span> located in{" "}
             <span style={black}>{inviteFromLocation}</span>. If you were not
             expecting this invitation, you can ignore this email. If you are
-            concerned about your account's safety, please reply to this email to
-            get in touch with us.
+            concerned about your account&apos;s safety, please reply to this
+            email to get in touch with us.
           </Text>
         </Container>
       </Body>

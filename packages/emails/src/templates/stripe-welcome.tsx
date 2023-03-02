@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@rallly/utils";
 import {
   Body,
   Button,
@@ -11,29 +12,26 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import * as React from "react";
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-  ? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
-  : "";
 
 export const StripeWelcomeEmail = () => (
   <Html>
     <Head />
-    <Preview>You're now ready to make live transactions with Stripe!</Preview>
+    <Preview>
+      You&apos;re now ready to make live transactions with Stripe!
+    </Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={box}>
           <Img
-            src={`${baseUrl}/static/stripe-logo.png`}
+            src={absoluteUrl("/static/stripe-logo.png")}
             width="49"
             height="21"
             alt="Stripe"
           />
           <Hr style={hr} />
           <Text style={paragraph}>
-            Thanks for submitting your account information. You're now ready to
-            make live transactions with Stripe!
+            Thanks for submitting your account information. You&apos;re now
+            ready to make live transactions with Stripe!
           </Text>
           <Text style={paragraph}>
             You can view your payments and a variety of other information about
@@ -49,15 +47,15 @@ export const StripeWelcomeEmail = () => (
           </Button>
           <Hr style={hr} />
           <Text style={paragraph}>
-            If you haven't finished your integration, you might find our{" "}
+            If you haven&apos;t finished your integration, you might find our{" "}
             <Link style={anchor} href="https://stripe.com/docs">
               docs
             </Link>{" "}
             handy.
           </Text>
           <Text style={paragraph}>
-            Once you're ready to start accepting payments, you'll just need to
-            use your live{" "}
+            Once you&apos;re ready to start accepting payments, you&apos;ll just
+            need to use your live{" "}
             <Link
               style={anchor}
               href="https://dashboard.stripe.com/login?redirect=%2Fapikeys"
@@ -73,7 +71,7 @@ export const StripeWelcomeEmail = () => (
             .
           </Text>
           <Text style={paragraph}>
-            Finally, we've put together a{" "}
+            Finally, we&apos;ve put together a{" "}
             <Link
               style={anchor}
               href="https://stripe.com/docs/checklist/website"
@@ -83,8 +81,8 @@ export const StripeWelcomeEmail = () => (
             to ensure your website conforms to card network standards.
           </Text>
           <Text style={paragraph}>
-            We'll be here to help you with any step along the way. You can find
-            answers to most questions and get in touch with us on our{" "}
+            We&apos;ll be here to help you with any step along the way. You can
+            find answers to most questions and get in touch with us on our{" "}
             <Link style={anchor} href="https://support.stripe.com/">
               support site
             </Link>

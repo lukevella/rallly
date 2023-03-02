@@ -1,0 +1,10 @@
+{
+  "name": "@rallly/tailwind-config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "tailwind.config.js",
+  "types": "tailwind.config.d.ts",
+  "dependencies": {
+    "tailwindcss": "^3.2.7"
+  }
+}

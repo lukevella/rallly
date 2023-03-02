@@ -16,6 +16,7 @@
     "docker:start": "./scripts/docker-start.sh"
   },
   "dependencies": {
+    "@rallly/tailwind-config": "*",
     "@rallly/emails": "*",
     "@floating-ui/react-dom-interactions": "^0.13.3",
     "@headlessui/react": "^1.7.7",

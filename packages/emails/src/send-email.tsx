@@ -35,10 +35,16 @@ const getTransport = () => {
   return transport;
 };
 
+type SendEmailOptions<T extends TemplateName> = {
+  to: string;
+  subject: string;
+  props: TemplateProps<T>;
+  onError?: () => void;
+};
+
 export const sendEmail = async <T extends TemplateName>(
   templateName: T,
-  props: TemplateProps<T>,
-  options: { to: string; subject: string; onError?: () => void },
+  options: SendEmailOptions<T>,
 ) => {
   const transport = getTransport();
   const Template = templates[templateName] as TemplateComponent<T>;
@@ -46,9 +52,10 @@ export const sendEmail = async <T extends TemplateName>(
   try {
     return await transport.sendMail({
       from: process.env.SUPPORT_EMAIL,
-      ...options,
+      to: options.to,
+      subject: options.subject,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      html: render(<Template {...(props as any)} />),
+      html: render(<Template {...(options.props as any)} />),
     });
   } catch (e) {
     console.error("Error sending email", templateName);

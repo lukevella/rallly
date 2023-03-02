@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@rallly/utils";
 import {
   Body,
   Container,
@@ -9,15 +10,10 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
-import * as React from "react";
 
 export interface NotionMagicLinkEmailProps {
   loginCode?: string;
 }
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-  ? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
-  : "";
 
 export const NotionMagicLinkEmail = ({
   loginCode = "sparo-ndigo-amurt-secan",
@@ -65,7 +61,7 @@ export const NotionMagicLinkEmail = ({
           account.
         </Text>
         <Img
-          src={`${baseUrl}/static/notion-logo.png`}
+          src={absoluteUrl("/static/notion-logo.png")}
           width="32"
           height="32"
           alt="Notion's Logo"
