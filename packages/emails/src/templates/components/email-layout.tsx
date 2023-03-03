@@ -115,8 +115,8 @@ export const EmailLayout = (props: {
           },
         }}
       >
-        <Body className="bg-white">
-          <Container className="mx-auto rounded p-6">
+        <Body className="bg-gray-50 p-4">
+          <Container className="mx-auto bg-white p-6">
             <Section className="mb-4">
               <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
             </Section>

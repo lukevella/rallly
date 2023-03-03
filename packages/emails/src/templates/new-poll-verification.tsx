@@ -1,11 +1,9 @@
-import { Button } from "@react-email/components";
-
 import { EmailLayout } from "./components/email-layout";
 import {
   NewPollBaseEmail,
   NewPollBaseEmailProps,
 } from "./components/new-poll-base";
-import { Heading, Section, Text } from "./components/styled-components";
+import { Button, Heading, Section, Text } from "./components/styled-components";
 
 export interface NewPollVerificationEmailProps extends NewPollBaseEmailProps {
   verificationLink: string;
@@ -20,7 +18,7 @@ export const NewPollVerificationEmail = ({
   return (
     <EmailLayout preview="Please verify your email address to turn on notifications">
       <NewPollBaseEmail name={name} title={title} adminLink={adminLink}>
-        <Section className="bg-gray-50 px-4">
+        <Section className="mt-8 bg-gray-100 px-4 text-center">
           <Heading as="h3">
             Want to get notified when participants vote?
           </Heading>
