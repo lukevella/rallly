@@ -28,6 +28,7 @@ export const GuestVerifyEmail = ({
           <Button
             className="bg-primary-500 rounded px-3 py-2 font-sans text-white"
             href={verificationLink}
+            id="verifyEmailUrl"
           >
             Verify your email &rarr;
           </Button>

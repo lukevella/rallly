@@ -16,7 +16,9 @@ export const VerificationCodeEmail = ({
     <EmailLayout preview="Here is your 6-digit code">
       <Text>Hi {name},</Text>
       <Text>Your 6-digit code is:</Text>
-      <Heading className="font-sans tracking-widest">{code}</Heading>
+      <Heading className="font-sans tracking-widest" id="code">
+        {code}
+      </Heading>
       <Text>
         <span className="text-slate-500">
           This code is valid for 10 minutes
