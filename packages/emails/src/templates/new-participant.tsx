@@ -17,9 +17,7 @@ export const NewParticipantEmail = ({
   unsubscribeUrl = "https://rallly.co",
 }: NewParticipantEmailProps) => {
   return (
-    <EmailLayout
-      preview={`${participantName} has shared their availability for ${title}`}
-    >
+    <EmailLayout preview={`${participantName} has responded`}>
       <Text>Hi {name},</Text>
       <Text>
         <strong>{participantName}</strong> has shared their availability for{" "}

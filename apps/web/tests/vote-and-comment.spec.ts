@@ -77,7 +77,7 @@ test.describe.parallel(() => {
     });
 
     expect(email.headers.subject).toBe(
-      "Your submission for Lunch Meeting has been received",
+      "Your response for Lunch Meeting has been received",
     );
 
     const $ = load(email.html);

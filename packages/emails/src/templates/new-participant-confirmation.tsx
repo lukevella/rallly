@@ -12,20 +12,20 @@ export const NewParticipantConfirmationEmail = ({
   editSubmissionUrl = "https://rallly.co",
 }: NewParticipantConfirmationEmailProps) => {
   return (
-    <EmailLayout preview="To edit your submission use the link below">
+    <EmailLayout preview="To edit your response use the link below">
       <Text>Hi {name},</Text>
       <Text>
         Thank you for submitting your availability for <strong>{title}</strong>.
       </Text>
-      <Text>To review your submission, use the link below:</Text>
+      <Text>To review your response, use the link below:</Text>
       <Section>
         <Button id="editSubmissionUrl" href={editSubmissionUrl}>
-          Review submission &rarr;
+          Review response &rarr;
         </Button>
       </Section>
       <Text>
         <em className="text-slate-500">
-          Keep this link safe to avoid others from editing your submission.
+          Keep this link safe and do not share it with others.
         </em>
       </Text>
     </EmailLayout>

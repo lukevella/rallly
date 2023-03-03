@@ -99,7 +99,7 @@ export const participants = router({
 
         await sendEmail("NewParticipantConfirmationEmail", {
           to: email,
-          subject: `Your submission for ${poll.title} has been received`,
+          subject: `Your response for ${poll.title} has been received`,
           props: {
             name,
             title: poll.title,
