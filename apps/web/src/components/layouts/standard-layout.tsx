@@ -1,4 +1,4 @@
-import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
+import { AnimatePresence, domMax, LazyMotion, m } from "framer-motion";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -14,7 +14,7 @@ const StandardLayout: React.FunctionComponent<{
 }> = ({ children, ...rest }) => {
   const router = useRouter();
   return (
-    <LazyMotion features={domAnimation}>
+    <LazyMotion features={domMax}>
       <UserProvider>
         <DayjsProvider>
           <ModalProvider>
