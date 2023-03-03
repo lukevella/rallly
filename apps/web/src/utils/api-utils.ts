@@ -1,8 +1,5 @@
 import { prisma } from "@rallly/database";
 import { sendEmail } from "@rallly/emails";
-import * as Eta from "eta";
-
-import { sendEmail as sendEmailOld } from "@/utils/send-email";
 
 import { absoluteUrl } from "./absolute-url";
 
@@ -86,31 +83,5 @@ export const sendNotification = async (
     }
   } catch (e) {
     console.error(e);
-  }
-};
-
-interface SendEmailTemplateParams {
-  templateString: string;
-  to: string;
-  subject: string;
-  templateVars: Record<string, string | undefined>;
-}
-
-export const sendEmailTemplate = async ({
-  templateString,
-  templateVars,
-  to,
-  subject,
-}: SendEmailTemplateParams) => {
-  const rendered = Eta.render(templateString, templateVars);
-
-  if (rendered) {
-    await sendEmailOld({
-      html: rendered,
-      to,
-      subject,
-    });
-  } else {
-    throw new Error(`Failed to render email template`);
   }
 };
