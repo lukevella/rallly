@@ -1,7 +1,7 @@
 import { Heading } from "@react-email/heading";
 
 import { EmailLayout } from "./components/email-layout";
-import { Section, Text } from "./components/styled-components";
+import { Text } from "./components/styled-components";
 
 interface VerificationCodeEmailProps {
   name: string;
@@ -9,7 +9,7 @@ interface VerificationCodeEmailProps {
 }
 
 export const VerificationCodeEmail = ({
-  name = "User",
+  name = "Guest",
   code = "123456",
 }: VerificationCodeEmailProps) => {
   return (

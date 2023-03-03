@@ -4,7 +4,6 @@ import {
   Body,
   Container,
   Head,
-  Hr,
   Html,
   Img,
   Link,
