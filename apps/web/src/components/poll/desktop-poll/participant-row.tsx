@@ -69,7 +69,10 @@ export const ParticipantRowView: React.FunctionComponent<{
             <Dropdown
               placement="bottom-start"
               trigger={
-                <button className="text-slate-500 hover:text-slate-800">
+                <button
+                  data-testid="participant-menu"
+                  className="text-slate-500 hover:text-slate-800"
+                >
                   <DotsVertical className="h-3" />
                 </button>
               }

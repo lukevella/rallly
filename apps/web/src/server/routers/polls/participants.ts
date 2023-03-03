@@ -1,7 +1,10 @@
 import { prisma } from "@rallly/database";
+import { sendEmail } from "@rallly/emails";
+import { absoluteUrl } from "@rallly/utils";
 import { z } from "zod";
 
 import { sendNotification } from "../../../utils/api-utils";
+import { createToken } from "../../../utils/auth";
 import { publicProcedure, router } from "../../trpc";
 
 export const participants = router({
@@ -46,7 +49,8 @@ export const participants = router({
     .input(
       z.object({
         pollId: z.string(),
-        name: z.string().nonempty("Participant name is required"),
+        name: z.string().min(1, "Participant name is required"),
+        email: z.string().optional(),
         votes: z
           .object({
             optionId: z.string(),
@@ -55,9 +59,9 @@ export const participants = router({
           .array(),
       }),
     )
-    .mutation(async ({ ctx, input: { pollId, votes, name } }) => {
+    .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
       const user = ctx.session.user;
-      const participant = await prisma.participant.create({
+      const res = await prisma.participant.create({
         data: {
           pollId: pollId,
           name: name,
@@ -72,14 +76,43 @@ export const participants = router({
             },
           },
         },
-        include: {
-          votes: true,
+        select: {
+          id: true,
+          poll: {
+            select: {
+              title: true,
+              participantUrlId: true,
+            },
+          },
         },
       });
 
+      const { poll, ...participant } = res;
+
+      if (email) {
+        const token = await createToken(
+          { userId: user.id },
+          {
+            ttl: 0, // basically forever
+          },
+        );
+
+        await sendEmail("NewParticipantConfirmationEmail", {
+          to: email,
+          subject: `Your response for ${poll.title} has been received`,
+          props: {
+            name,
+            title: poll.title,
+            editSubmissionUrl: absoluteUrl(
+              `/p/${poll.participantUrlId}?token=${token}`,
+            ),
+          },
+        });
+      }
+
       await sendNotification(pollId, {
         type: "newParticipant",
-        participantName: participant.name,
+        participantName: name,
       });
 
       return participant;

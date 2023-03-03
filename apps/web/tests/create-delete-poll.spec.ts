@@ -1,12 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { load } from "cheerio";
-import smtpTester from "smtp-tester";
+import smtpTester, { SmtpTester } from "smtp-tester";
 
 test.describe.serial(() => {
-  let mailServer: smtpTester.SmtpTester;
-
   let pollUrl: string;
 
+  let mailServer: SmtpTester;
   test.beforeAll(async () => {
     mailServer = smtpTester.init(4025);
   });

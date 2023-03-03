@@ -62,6 +62,7 @@ model Poll {
 model Participant {
   id        String    @id @default(cuid())
   name      String
+  email     String?   
   userId    String?   @map("user_id")
   poll      Poll      @relation(fields: [pollId], references: [id])
   pollId    String    @map("poll_id")

@@ -47,7 +47,10 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
   return <>{props.children}</>;
 };
 
-export const UserProvider = (props: { children?: React.ReactNode }) => {
+export const UserProvider = (props: {
+  children?: React.ReactNode;
+  forceUserId?: string;
+}) => {
   const { t } = useTranslation("app");
 
   const queryClient = trpc.useContext();
@@ -105,7 +108,10 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           return queryClient.whoami.invalidate();
         },
         ownsObject: ({ userId }) => {
-          if (userId && user.id === userId) {
+          if (
+            (userId && user.id === userId) ||
+            (props.forceUserId && props.forceUserId === userId)
+          ) {
             return true;
           }
           return false;

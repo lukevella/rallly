@@ -1,18 +1,33 @@
 import { expect, Page, Request, test } from "@playwright/test";
+import { load } from "cheerio";
+import smtpTester, { SmtpTester } from "smtp-tester";
 
 test.describe.parallel(() => {
-  let page: Page;
+  let adminPage: Page;
+
   let touchRequest: Promise<Request>;
+  let participantUrl: string;
+  let editSubmissionUrl: string;
+
+  let mailServer: SmtpTester;
+  test.beforeAll(async () => {
+    mailServer = smtpTester.init(4025);
+  });
+
+  test.afterAll(async () => {
+    mailServer.stop();
+  });
+
   test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext();
-    page = await context.newPage();
-    touchRequest = page.waitForRequest(
+    adminPage = await context.newPage();
+    touchRequest = adminPage.waitForRequest(
       (request) =>
         request.method() === "POST" &&
         request.url().includes("/api/trpc/polls.touch"),
     );
-    await page.goto("/demo");
-    await page.waitForSelector('text="Lunch Meeting"');
+    await adminPage.goto("/demo");
+    await adminPage.waitForSelector('text="Lunch Meeting"');
   });
 
   test("should call touch endpoint", async () => {
@@ -21,30 +36,62 @@ test.describe.parallel(() => {
   });
 
   test("should be able to comment", async () => {
-    await page.getByPlaceholder("Your name…").fill("Test user");
-    await page
+    await adminPage.getByPlaceholder("Your name…").fill("Test user");
+    await adminPage
       .getByPlaceholder("Leave a comment on this poll")
       .fill("This is a comment!");
-    await page.click("text='Comment'");
+    await adminPage.click("text='Comment'");
 
-    const comment = page.locator("data-testid=comment");
+    const comment = adminPage.locator("data-testid=comment");
     await expect(comment.locator("text='This is a comment!'")).toBeVisible();
     await expect(comment.locator("text=You")).toBeVisible();
   });
 
-  test("should be able to vote", async () => {
-    // There is a hidden checkbox (nth=0) that exists so that the behaviour of the form is consistent even
-    // when we only have a single option/checkbox.
-    await page.locator("data-testid=vote-selector >> nth=0").click();
-    await page.locator("data-testid=vote-selector >> nth=2").click();
-    await page.click("button >> text='Continue'");
+  test("copy participant link", async () => {
+    await adminPage.click("text='Share'");
+    await adminPage.click("text='Copy link'");
+    participantUrl = await adminPage.evaluate("navigator.clipboard.readText()");
 
-    await page.type('[placeholder="Jessie Smith"]', "Test user");
-    await page.click("text='Submit'");
+    expect(participantUrl).toMatch(/\/p\/[a-zA-Z0-9]+/);
+  });
 
-    await expect(page.locator("text='Test user'")).toBeVisible();
-    await expect(
-      page.locator("data-testid=participant-row >> nth=0").locator("text=You"),
-    ).toBeVisible();
+  test("should be able to vote with an email", async ({
+    page: participantPage,
+  }) => {
+    await participantPage.goto(participantUrl);
+    await participantPage.locator("data-testid=vote-selector >> nth=0").click();
+    await participantPage.locator("data-testid=vote-selector >> nth=2").click();
+    await participantPage.click("button >> text='Continue'");
+
+    await participantPage.type('[placeholder="Jessie Smith"]', "Anne");
+    await participantPage.type(
+      '[placeholder="jessie.smith@email.com"]',
+      "test@email.com",
+    );
+    await participantPage.click("text='Submit'");
+
+    await expect(participantPage.locator("text='Anne'")).toBeVisible();
+
+    const { email } = await mailServer.captureOne("test@email.com", {
+      wait: 5000,
+    });
+
+    expect(email.headers.subject).toBe(
+      "Your response for Lunch Meeting has been received",
+    );
+
+    const $ = load(email.html);
+    const href = $("#editSubmissionUrl").attr("href");
+
+    if (!href) {
+      throw new Error("Could not get edit submission link from email");
+    }
+
+    editSubmissionUrl = href;
+  });
+
+  test("should be able to edit submission", async ({ page: newPage }) => {
+    await newPage.goto(editSubmissionUrl);
+    await expect(newPage.getByTestId("participant-menu")).toBeVisible();
   });
 });

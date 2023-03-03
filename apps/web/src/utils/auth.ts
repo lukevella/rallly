@@ -143,10 +143,13 @@ export const decryptToken = async <P extends Record<string, unknown>>(
 
 export const createToken = async <T extends Record<string, unknown>>(
   payload: T,
+  options?: {
+    ttl?: number;
+  },
 ) => {
   return await sealData(payload, {
     password: sessionOptions.password,
-    ttl: 60 * 15, // 15 minutes
+    ttl: options?.ttl ?? 60 * 15, // 15 minutes
   });
 };
 
