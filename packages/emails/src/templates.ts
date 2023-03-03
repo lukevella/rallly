@@ -3,3 +3,4 @@ export * from "./templates/new-comment";
 export * from "./templates/new-participant";
 export * from "./templates/new-poll";
 export * from "./templates/new-poll-verification";
+export * from "./templates/verification-code";

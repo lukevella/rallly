@@ -143,6 +143,13 @@ export const EmailLayout = (props: {
               &nbsp;&bull;&nbsp;
               <Link
                 className="font-sans text-slate-500"
+                href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
+              >
+                Donate
+              </Link>
+              &nbsp;&bull;&nbsp;
+              <Link
+                className="font-sans text-slate-500"
                 href={`mailto:${process.env.SUPPORT_EMAIL}`}
               >
                 Contact
