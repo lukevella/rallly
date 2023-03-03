@@ -25,7 +25,13 @@ export const Text = (props: TextProps) => {
 
 export const Button = (props: ButtonProps) => {
   return (
-    <UnstyledButton {...props} className={clsx("font-sans", props.className)} />
+    <UnstyledButton
+      {...props}
+      className={clsx(
+        "bg-primary-500 rounded px-3 py-2 font-sans text-white",
+        props.className,
+      )}
+    />
   );
 };
 
