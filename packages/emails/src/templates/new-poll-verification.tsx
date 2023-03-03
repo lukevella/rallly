@@ -1,14 +1,15 @@
-import { Button, Container, Hr } from "@react-email/components";
+import { Button } from "@react-email/components";
 
 import { EmailLayout } from "./components/email-layout";
-import { Heading, Link, Section, Text } from "./components/styled-components";
+import {
+  NewPollBaseEmail,
+  NewPollBaseEmailProps,
+} from "./components/new-poll-base";
+import { Heading, Section, Text } from "./components/styled-components";
 
-type NewPollVerificationEmailProps = {
-  title: string;
-  name: string;
+export interface NewPollVerificationEmailProps extends NewPollBaseEmailProps {
   verificationLink: string;
-  adminLink: string;
-};
+}
 
 export const NewPollVerificationEmail = ({
   title = "Untitled Poll",
@@ -18,22 +19,9 @@ export const NewPollVerificationEmail = ({
 }: NewPollVerificationEmailProps) => {
   return (
     <EmailLayout preview="Please verify your email address to turn on notifications">
-      <Container>
-        <Text>Hi {name},</Text>
-        <Text>
-          Your poll <strong>&quot;{title}&quot;</strong> has been created.
-        </Text>
-        <Text>
-          To manage your poll use the <em>admin link</em> below.
-        </Text>
-        <Text>
-          <Link href={adminLink}>
-            <span className="font-mono">{adminLink}</span> &rarr;
-          </Link>
-        </Text>
-        <Hr />
+      <NewPollBaseEmail name={name} title={title} adminLink={adminLink}>
         <Section className="bg-gray-50 px-4">
-          <Heading as="h4">
+          <Heading as="h3">
             Want to get notified when participants vote?
           </Heading>
           <Text>Verify your email address to turn on notifications.</Text>
@@ -46,7 +34,7 @@ export const NewPollVerificationEmail = ({
             </Button>
           </Section>
         </Section>
-      </Container>
+      </NewPollBaseEmail>
     </EmailLayout>
   );
 };

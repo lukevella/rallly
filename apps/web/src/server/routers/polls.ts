@@ -3,10 +3,7 @@ import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import newVerfiedPollTemplate from "~/templates/new-poll-verified";
-
 import { absoluteUrl } from "../../utils/absolute-url";
-import { sendEmailTemplate } from "../../utils/api-utils";
 import { createToken } from "../../utils/auth";
 import { nanoid } from "../../utils/nanoid";
 import { GetPollApiResponse } from "../../utils/trpc/types";
@@ -147,21 +144,17 @@ export const polls = router({
         },
       });
 
-      const homePageUrl = absoluteUrl();
-      const pollUrl = `${homePageUrl}/admin/${adminUrlId}`;
+      const pollUrl = absoluteUrl(`/admin/${adminUrlId}`);
 
       try {
         if (poll.verified) {
-          await sendEmailTemplate({
-            templateString: newVerfiedPollTemplate,
+          await sendEmail("NewPollEmail", {
             to: input.user.email,
             subject: `Your poll for ${poll.title} has been created`,
-            templateVars: {
+            props: {
               title: poll.title,
               name: input.user.name,
-              pollUrl,
-              homePageUrl,
-              supportEmail: process.env.SUPPORT_EMAIL,
+              adminLink: pollUrl,
             },
           });
         } else {

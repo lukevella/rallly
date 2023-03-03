@@ -118,9 +118,8 @@ export const EmailLayout = (props: {
       >
         <Body className="bg-white">
           <Container className="mx-auto rounded p-6">
-            <Section>
+            <Section className="mb-4">
               <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
-              <Hr className="mt-6 border-slate-200" />
             </Section>
             <Section>{props.children}</Section>
             <Section className="mt-4 text-sm text-slate-500">
