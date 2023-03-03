@@ -26,7 +26,9 @@ export const NewPollVerificationEmail = ({
           </Heading>
           <Text>Verify your email address to turn on notifications.</Text>
           <Section>
-            <Button href={verificationLink}>Verify your email &rarr;</Button>
+            <Button id="verifyEmailUrl" href={verificationLink}>
+              Verify your email &rarr;
+            </Button>
           </Section>
         </Section>
       </NewPollBaseEmail>
