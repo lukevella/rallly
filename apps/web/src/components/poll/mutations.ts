@@ -15,9 +15,9 @@ export const normalizeVotes = (
 
 export const useAddParticipantMutation = () => {
   return trpc.polls.participants.add.useMutation({
-    onSuccess: (participant) => {
+    onSuccess: (_, { name }) => {
       posthog.capture("add participant", {
-        name: participant.name,
+        name,
       });
     },
   });

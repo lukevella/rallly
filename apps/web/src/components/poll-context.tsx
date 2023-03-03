@@ -58,7 +58,7 @@ export const PollContextProvider: React.FunctionComponent<{
 }> = ({ poll, urlId, admin, children }) => {
   const { t } = useTranslation("app");
   const { participants } = useParticipants();
-  const { user } = useUser();
+  const { user, ownsObject } = useUser();
   const [targetTimeZone, setTargetTimeZone] =
     React.useState(getBrowserTimeZone);
 
@@ -108,9 +108,7 @@ export const PollContextProvider: React.FunctionComponent<{
     };
 
     const userAlreadyVoted =
-      user && participants
-        ? participants.some((participant) => participant.userId === user.id)
-        : false;
+      user && participants ? participants.some(ownsObject) : false;
 
     const optionIds = parsedOptions.options.map(({ optionId }) => optionId);
 
@@ -160,6 +158,7 @@ export const PollContextProvider: React.FunctionComponent<{
   }, [
     admin,
     getScore,
+    ownsObject,
     participants,
     poll,
     targetTimeZone,

@@ -69,7 +69,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const { t } = useTranslation("app");
   const { register, formState, handleSubmit } =
     useForm<NewParticipantFormData>();
-  const { requiredString } = useFormValidation();
+  const { requiredString, validEmail } = useFormValidation();
   const { poll } = usePoll();
   const addParticipant = useAddParticipantMutation();
   return (
@@ -83,6 +83,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           const newParticipant = await addParticipant.mutateAsync({
             name: data.name,
             votes: props.votes,
+            email: data.email,
             pollId: poll.id,
           });
           props.onSubmit?.(newParticipant);
@@ -107,7 +108,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
             </div>
           ) : null}
         </fieldset>
-        {/* <fieldset>
+        <fieldset>
           <label htmlFor="email" className="text-slate-500">
             {t("email")} ({t("optional")})
           </label>
@@ -128,7 +129,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
               {formState.errors.email.message}
             </div>
           ) : null}
-        </fieldset> */}
+        </fieldset>
         <fieldset>
           <label className="text-slate-500">{t("response")}</label>
           <VoteSummary

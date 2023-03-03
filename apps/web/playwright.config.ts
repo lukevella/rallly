@@ -16,6 +16,7 @@ const config: PlaywrightTestConfig = {
   use: {
     viewport: { width: 1280, height: 720 },
     baseURL,
+    permissions: ["clipboard-read"],
     trace: "retain-on-failure",
   },
   webServer: {

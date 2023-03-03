@@ -56,7 +56,10 @@ const MobilePoll: React.FunctionComponent = () => {
   const { reset, handleSubmit, formState } = form;
   const [selectedParticipantId, setSelectedParticipantId] = React.useState<
     string | undefined
-  >();
+  >(() => {
+    const participant = participants.find((p) => session.ownsObject(p));
+    return participant?.id;
+  });
 
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
