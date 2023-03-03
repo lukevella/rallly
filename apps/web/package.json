@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "@rallly/web",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:tsc": "tsc --noEmit",
     "lint:i18n": "i18n-unused remove-unused",
+    "prettier": "prettier --write ./src",
     "test": "PORT=3001 playwright test",
     "test:codegen": "playwright codegen http://localhost:3000",
     "docker:start": "./scripts/docker-start.sh"
@@ -20,6 +21,8 @@
     "@next/bundle-analyzer": "^12.3.4",
     "@radix-ui/react-popover": "^1.0.3",
     "@rallly/database": "*",
+    "@rallly/emails": "*",
+    "@rallly/tailwind-config": "*",
     "@sentry/nextjs": "^7.33.0",
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/typography": "^0.5.9",
@@ -33,7 +36,6 @@
     "autoprefixer": "^10.4.13",
     "clsx": "^1.1.1",
     "dayjs": "^1.11.7",
-    "eta": "^2.0.0",
     "framer-motion": "^6.5.1",
     "i18next": "^22.4.9",
     "iron-session": "^6.3.1",
@@ -43,7 +45,6 @@
     "next": "^13.2.1",
     "next-i18next": "^13.0.3",
     "next-seo": "^5.15.0",
-    "nodemailer": "^6.9.0",
     "postcss": "^8.4.21",
     "posthog-js": "^1.42.3",
     "react": "^18.2.0",
@@ -68,7 +69,6 @@
     "@rallly/tsconfig": "*",
     "@types/accept-language-parser": "^1.5.3",
     "@types/lodash": "^4.14.178",
-    "@types/nodemailer": "^6.4.4",
     "@types/react": "^18.0.28",
     "@types/react-big-calendar": "^0.31.0",
     "@types/react-dom": "^18.0.11",

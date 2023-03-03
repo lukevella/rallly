@@ -1,11 +1,7 @@
-import * as Eta from "eta";
-
-import { prisma } from "@/utils/prisma";
-import newCommentTemplate from "~/templates/new-comment";
-import newParticipantTemplate from "~/templates/new-participant";
+import { prisma } from "@rallly/database";
+import { sendEmail } from "@rallly/emails";
 
 import { absoluteUrl } from "./absolute-url";
-import { sendEmail } from "./send-email";
 
 type NotificationAction =
   | {
@@ -24,7 +20,19 @@ export const sendNotification = async (
   try {
     const poll = await prisma.poll.findUnique({
       where: { id: pollId },
-      include: { user: true },
+      select: {
+        verified: true,
+        demo: true,
+        notifications: true,
+        adminUrlId: true,
+        title: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
     /**
      * poll needs to:
@@ -46,34 +54,28 @@ export const sendNotification = async (
 
       switch (action.type) {
         case "newParticipant":
-          await sendEmailTemplate({
-            templateString: newParticipantTemplate,
+          await sendEmail("NewParticipantEmail", {
             to: poll.user.email,
-            subject: `${action.participantName} has shared their availability for ${poll.title}`,
-            templateVars: {
-              title: poll.title,
-              name: poll.authorName,
+            subject: `New participant on ${poll.title}`,
+            props: {
+              name: poll.user.name,
               participantName: action.participantName,
               pollUrl,
-              homePageUrl: absoluteUrl(),
-              supportEmail: process.env.SUPPORT_EMAIL,
               unsubscribeUrl,
+              title: poll.title,
             },
           });
           break;
         case "newComment":
-          await sendEmailTemplate({
-            templateString: newCommentTemplate,
+          await sendEmail("NewCommentEmail", {
             to: poll.user.email,
-            subject: `${action.authorName} has commented on ${poll.title}`,
-            templateVars: {
-              title: poll.title,
-              name: poll.authorName,
-              author: action.authorName,
+            subject: `New comment on ${poll.title}`,
+            props: {
+              name: poll.user.name,
+              authorName: action.authorName,
               pollUrl,
-              homePageUrl: absoluteUrl(),
-              supportEmail: process.env.SUPPORT_EMAIL,
               unsubscribeUrl,
+              title: poll.title,
             },
           });
           break;
@@ -81,31 +83,5 @@ export const sendNotification = async (
     }
   } catch (e) {
     console.error(e);
-  }
-};
-
-interface SendEmailTemplateParams {
-  templateString: string;
-  to: string;
-  subject: string;
-  templateVars: Record<string, string | undefined>;
-}
-
-export const sendEmailTemplate = async ({
-  templateString,
-  templateVars,
-  to,
-  subject,
-}: SendEmailTemplateParams) => {
-  const rendered = Eta.render(templateString, templateVars);
-
-  if (rendered) {
-    await sendEmail({
-      html: rendered,
-      to,
-      subject,
-    });
-  } else {
-    throw new Error(`Failed to render email template`);
   }
 };

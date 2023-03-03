@@ -1,12 +1,9 @@
+import { prisma } from "@rallly/database";
+import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@/utils/prisma";
-import newPollTemplate from "~/templates/new-poll";
-import newVerfiedPollTemplate from "~/templates/new-poll-verified";
-
 import { absoluteUrl } from "../../utils/absolute-url";
-import { sendEmailTemplate } from "../../utils/api-utils";
 import { createToken } from "../../utils/auth";
 import { nanoid } from "../../utils/nanoid";
 import { GetPollApiResponse } from "../../utils/trpc/types";
@@ -123,6 +120,7 @@ export const polls = router({
           authorName: input.user.name,
           demo: input.demo,
           verified: verified,
+          notifications: verified,
           adminUrlId,
           participantUrlId: await nanoid(),
           user: {
@@ -146,21 +144,17 @@ export const polls = router({
         },
       });
 
-      const homePageUrl = absoluteUrl();
-      const pollUrl = `${homePageUrl}/admin/${adminUrlId}`;
+      const pollUrl = absoluteUrl(`/admin/${adminUrlId}`);
 
       try {
         if (poll.verified) {
-          await sendEmailTemplate({
-            templateString: newVerfiedPollTemplate,
+          await sendEmail("NewPollEmail", {
             to: input.user.email,
             subject: `Your poll for ${poll.title} has been created`,
-            templateVars: {
+            props: {
               title: poll.title,
               name: input.user.name,
-              pollUrl,
-              homePageUrl,
-              supportEmail: process.env.SUPPORT_EMAIL,
+              adminLink: pollUrl,
             },
           });
         } else {
@@ -169,17 +163,14 @@ export const polls = router({
           });
           const verifyEmailUrl = `${pollUrl}?code=${verificationCode}`;
 
-          await sendEmailTemplate({
-            templateString: newPollTemplate,
+          await sendEmail("NewPollVerificationEmail", {
             to: input.user.email,
             subject: `Your poll for ${poll.title} has been created`,
-            templateVars: {
+            props: {
               title: poll.title,
               name: input.user.name,
-              pollUrl,
-              verifyEmailUrl,
-              homePageUrl,
-              supportEmail: process.env.SUPPORT_EMAIL,
+              adminLink: pollUrl,
+              verificationLink: verifyEmailUrl,
             },
           });
         }

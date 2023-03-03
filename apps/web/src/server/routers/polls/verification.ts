@@ -1,11 +1,9 @@
+import { prisma } from "@rallly/database";
+import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@/utils/prisma";
-import newPollTemplate from "~/templates/new-poll";
-
 import { absoluteUrl } from "../../../utils/absolute-url";
-import { sendEmailTemplate } from "../../../utils/api-utils";
 import {
   createToken,
   decryptToken,
@@ -39,6 +37,7 @@ export const verification = router({
         },
         data: {
           verified: true,
+          notifications: true,
         },
         include: { user: true },
       });
@@ -79,24 +78,20 @@ export const verification = router({
         });
       }
 
-      const homePageUrl = absoluteUrl();
-      const pollUrl = `${homePageUrl}/admin/${adminUrlId}`;
+      const pollUrl = absoluteUrl(`/admin/${adminUrlId}`);
       const token = await createToken({
         pollId,
       });
       const verifyEmailUrl = `${pollUrl}?code=${token}`;
 
-      await sendEmailTemplate({
-        templateString: newPollTemplate,
+      await sendEmail("GuestVerifyEmail", {
         to: poll.user.email,
         subject: "Please verify your email address",
-        templateVars: {
+        props: {
           title: poll.title,
           name: poll.user.name,
-          pollUrl,
-          verifyEmailUrl,
-          homePageUrl,
-          supportEmail: process.env.SUPPORT_EMAIL,
+          adminLink: pollUrl,
+          verificationLink: verifyEmailUrl,
         },
       });
     }),

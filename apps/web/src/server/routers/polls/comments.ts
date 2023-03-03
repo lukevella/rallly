@@ -1,6 +1,5 @@
+import { prisma } from "@rallly/database";
 import { z } from "zod";
-
-import { prisma } from "@/utils/prisma";
 
 import { sendNotification } from "../../../utils/api-utils";
 import { publicProcedure, router } from "../../trpc";

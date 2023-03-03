@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -7,8 +8,6 @@
       "env": [
         "ANALYZE",
         "API_SECRET",
-        "CI",
-        "DATABASE_URL",
         "LANDING_PAGE",
         "MAINTENANCE_MODE",
         "NEXT_PUBLIC_BASE_URL",
@@ -37,8 +36,8 @@
       "outputs": [],
       "env": ["CI"]
     },
-    "generate": {
-      "dependsOn": ["^generate"]
+    "db:generate": {
+      "dependsOn": ["^db:generate"]
     },
     "db:push": {
       "cache": false
@@ -51,6 +50,10 @@
     },
     "lint:tsc": {
       "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

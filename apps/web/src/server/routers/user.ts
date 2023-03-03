@@ -1,8 +1,7 @@
+import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { IronSessionData } from "iron-session";
 import { z } from "zod";
-
-import { prisma } from "@/utils/prisma";
 
 import { publicProcedure, router } from "../trpc";
 

@@ -1,4 +1,4 @@
-import { VoteType } from "@prisma/client";
+import { VoteType } from "@rallly/database";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";

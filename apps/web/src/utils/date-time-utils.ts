@@ -1,4 +1,4 @@
-import { Option } from "@prisma/client";
+import { Option } from "@rallly/database";
 import dayjs from "dayjs";
 
 import {

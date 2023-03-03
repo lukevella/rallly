@@ -1,11 +1,8 @@
+import { prisma } from "@rallly/database";
+import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@/utils/prisma";
-import emailTemplate from "~/templates/email-verification";
-
-import { absoluteUrl } from "../../utils/absolute-url";
-import { sendEmailTemplate } from "../../utils/api-utils";
 import {
   createToken,
   decryptToken,
@@ -21,12 +18,10 @@ const sendVerificationEmail = async (
   name: string,
   code: string,
 ) => {
-  await sendEmailTemplate({
+  await sendEmail("VerificationCodeEmail", {
     to: email,
     subject: `Your 6-digit code is: ${code}`,
-    templateString: emailTemplate,
-    templateVars: {
-      homePageUrl: absoluteUrl(),
+    props: {
       code,
       name,
     },

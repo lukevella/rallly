@@ -18,7 +18,7 @@ const PopoverContent = React.forwardRef<
       align={align}
       sideOffset={sideOffset}
       className={clsx(
-        "z-50 animate-popIn rounded-md border bg-white p-1 shadow-md outline-none",
+        "animate-popIn z-50 rounded-md border bg-white p-1 shadow-md outline-none",
         {
           "origin-top-left": align === "start",
           "origin-top-right": align === "end",

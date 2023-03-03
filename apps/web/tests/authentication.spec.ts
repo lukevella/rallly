@@ -1,8 +1,7 @@
 import { expect, Page, test } from "@playwright/test";
+import { prisma } from "@rallly/database";
 import { load } from "cheerio";
 import smtpTester from "smtp-tester";
-
-import { prisma } from "@/utils/prisma";
 
 const testUserEmail = "test@example.com";
 

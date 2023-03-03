@@ -7,8 +7,8 @@ import { usePoll } from "../poll-context";
 export const UnverifiedPollNotice = () => {
   const { t } = useTranslation("app");
   const { poll } = usePoll();
-  const requestVerificationEmail = trpc.polls.verification.request.useMutation(
-);
+  const requestVerificationEmail =
+    trpc.polls.verification.request.useMutation();
 
   return (
     <div className="space-y-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-gray-700 shadow-sm">

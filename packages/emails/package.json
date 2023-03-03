@@ -1,0 +1,24 @@
+{
+  "name": "@rallly/emails",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "email dev --port 3333 --dir ./src/templates"
+  },
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "dependencies": {
+    "@react-email/components": "0.0.2",
+    "@react-email/render": "0.0.6",
+    "@react-email/tailwind": "0.0.6",
+    "clsx": "^1.2.1",
+    "nodemailer": "^6.9.1",
+    "react-email": "1.7.15"
+  },
+  "devDependencies": {
+    "@rallly/tailwind-config": "*",
+    "@rallly/tsconfig": "*",
+    "@rallly/utils": "*",
+    "@types/nodemailer": "^6.4.7"
+  }
+}

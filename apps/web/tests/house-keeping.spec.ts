@@ -1,8 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { Prisma } from "@prisma/client";
+import { Prisma, prisma } from "@rallly/database";
 import dayjs from "dayjs";
-
-import { prisma } from "@/utils/prisma";
 
 /**
  * House keeping policy:
