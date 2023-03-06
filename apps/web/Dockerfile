@@ -3,7 +3,7 @@ FROM node:lts AS builder
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope=web --docker
+RUN turbo prune --scope=@rallly/web --docker
 
 FROM node:lts AS installer
 
@@ -16,8 +16,8 @@ RUN yarn --network-timeout 1000000
 # Build the project
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
-RUN yarn turbo run generate
-RUN yarn turbo run build --filter=app...
+RUN yarn db:generate
+RUN yarn turbo run build --filter=@rallly/web...
 
 FROM node:lts AS runner
 
