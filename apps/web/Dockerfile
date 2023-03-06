@@ -3,7 +3,7 @@ FROM node:lts AS builder
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope=app --docker
+RUN turbo prune --scope=web --docker
 
 FROM node:lts AS installer
 
