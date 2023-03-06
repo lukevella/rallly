@@ -20,7 +20,6 @@
   "noLoginRequiredDescription": "Pro vytvoření nebo účast v anketě se nemusíte přihlásit",
   "notifications": "Oznámení",
   "notificationsDescription": "Sledujte kdo odpověděl. Dostávejte upozornění, když účastníci hlasují nebo komentují Vaši anketu.",
-  "openSource": "Open-source",
   "openSourceDescription": "Veškerý kód je plně open-source a <a>k dispozici na GitHub</a>.",
   "participant": "Účastník",
   "participantCount_zero": "{{count}} účastníků",
