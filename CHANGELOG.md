@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="2.2.3"></a>
+
+## 2.2.3 (2023-03-06)
+
+### Added
+
+- 👷‍♂️ Fix Dockerfile build [[76f1a08](https://github.com/lukevella/Rallly/commit/76f1a089f6a27921caa00b2b6bed5377dc4cd1b0)]
+
 <a name="2.2.2"></a>
 
 ## 2.2.2 (2023-03-06)
