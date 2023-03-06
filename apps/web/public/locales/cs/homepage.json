@@ -1,5 +1,5 @@
 {
-  "3Ls": "Ano—se 3 <e>L</e>",
+  "3Ls": "Ano—se třemi <e>L</e>",
   "adFree": "Bez reklam",
   "adFreeDescription": "Nechte svůj blokátor reklam spát = tady nebude potřeba.",
   "comments": "Komentáře",
@@ -7,8 +7,8 @@
   "features": "Funkce",
   "featuresSubheading": "Plánování, chytřeji",
   "getStarted": "Začněme",
-  "heroSubText": "Najděte správné datum bez běhání tam a zpět",
-  "heroText": "Plánujte<br/><s>setkání skupin</s><br />snadno",
+  "heroSubText": "Najděte ideální termín bez překlikávání",
+  "heroText": "Plánujte<br/><s>společná setkání</s><br />snadno a rychle",
   "links": "Odkazy",
   "liveDemo": "Demo",
   "metaDescription": "Vytvořte ankety a hlasujte pro nalezení nejlepšího dne nebo času. Bezplatná alternativa k Doodle.",
