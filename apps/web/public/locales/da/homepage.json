@@ -9,7 +9,6 @@
   "getStarted": "Kom igang",
   "heroSubText": "Find den rigtige dato uden for meget koordinering",
   "heroText": "Planlæg<br/><s>gruppemøder</s><br />med lethed",
-  "links": "Links",
   "liveDemo": "Live Demo",
   "metaDescription": "Opret afstemninger og stemme for at finde den bedste dag eller tid. Et gratis alternativ til Doodle.",
   "metaTitle": "Rallly - Planlæg gruppemøder",
@@ -20,7 +19,6 @@
   "noLoginRequiredDescription": "Du behøver ikke logge ind for at oprette eller deltage i en afstemning",
   "notifications": "Notifikationer",
   "notificationsDescription": "Hold styr på, hvem der er svaret. Få besked, når deltagerne stemmer eller kommenterer på din afstemning.",
-  "openSource": "Open-source",
   "openSourceDescription": "Kodebasen er fuldt open source og <a>tilgængelig på GitHub</a>.",
   "participant": "Deltager",
   "participantCount_one": "{{count}} deltager",
@@ -28,7 +26,6 @@
   "perfect": "Perfekt!",
   "principles": "Principper",
   "principlesSubheading": "Vi er ikke som de andre",
-  "selfHostable": "Self-hostable",
   "selfHostableDescription": "Kør det på din egen server for at få fuld kontrol over dine data",
   "timeSlots": "Tidsinterval",
   "timeSlotsDescription": "Angiv individuelle start- og sluttidspunkter for hver indstilling i din afstemning. Tider kan automatisk justeres til hver deltagers tidszone, eller de kan indstilles til at ignorere tidszoner helt."
