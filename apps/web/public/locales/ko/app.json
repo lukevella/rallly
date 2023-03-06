@@ -35,7 +35,6 @@
   "editDetails": "세부정보 수정하기",
   "editOptions": "옵션 수정하기",
   "email": "이메일",
-  "emailPlaceholder": "jessie.smith@email.com",
   "endingGuestSessionNotice": "비회원 세션이 종료되면 되돌릴 수 없으며 이 세션에서 생성한 투표나 댓글들을 더 이상 수정할 수 없습니다.",
   "endSession": "세션 종료하기",
   "exportToCsv": "CSV로 내보내기",
