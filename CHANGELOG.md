@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="2.2.2"></a>
+
+## 2.2.2 (2023-03-06)
+
+### Fixed
+
+- 🐛 Fix wrong scope used in Dockerfile [[4a4eec1](https://github.com/lukevella/Rallly/commit/4a4eec1a0b8495e58cf855267b71d8b410f607c7)]
+
 <a name="2.2.1"></a>
 
 ## 2.2.1 (2023-03-06)
