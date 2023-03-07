@@ -88,7 +88,7 @@ export const participants = router({
       });
 
       const { poll, ...participant } = res;
-
+      const emailsToSend: Promise<void>[] = [];
       if (email) {
         const token = await createToken(
           { userId: user.id },
@@ -97,23 +97,29 @@ export const participants = router({
           },
         );
 
-        await sendEmail("NewParticipantConfirmationEmail", {
-          to: email,
-          subject: `Your response for ${poll.title} has been received`,
-          props: {
-            name,
-            title: poll.title,
-            editSubmissionUrl: absoluteUrl(
-              `/p/${poll.participantUrlId}?token=${token}`,
-            ),
-          },
-        });
+        emailsToSend.push(
+          sendEmail("NewParticipantConfirmationEmail", {
+            to: email,
+            subject: `Response submitted: ${poll.title}`,
+            props: {
+              name,
+              title: poll.title,
+              editSubmissionUrl: absoluteUrl(
+                `/p/${poll.participantUrlId}?token=${token}`,
+              ),
+            },
+          }),
+        );
       }
 
-      await sendNotification(pollId, {
-        type: "newParticipant",
-        participantName: name,
-      });
+      emailsToSend.push(
+        sendNotification(pollId, {
+          type: "newParticipant",
+          participantName: name,
+        }),
+      );
+
+      await Promise.all(emailsToSend);
 
       return participant;
     }),
