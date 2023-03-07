@@ -59,9 +59,7 @@ test.describe.serial(() => {
       wait: 5000,
     });
 
-    expect(email.headers.subject).toBe(
-      "Your poll for Monthly Meetup has been created",
-    );
+    expect(email.headers.subject).toBe("Monthly Meetup has been created");
 
     const $ = load(email.html);
     const verifyLink = $("#verifyEmailUrl").attr("href");

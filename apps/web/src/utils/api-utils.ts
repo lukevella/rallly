@@ -56,7 +56,7 @@ export const sendNotification = async (
         case "newParticipant":
           await sendEmail("NewParticipantEmail", {
             to: poll.user.email,
-            subject: `New participant on ${poll.title}`,
+            subject: `Response received on ${poll.title}`,
             props: {
               name: poll.user.name,
               participantName: action.participantName,
