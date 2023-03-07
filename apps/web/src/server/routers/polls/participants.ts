@@ -100,7 +100,7 @@ export const participants = router({
         emailsToSend.push(
           sendEmail("NewParticipantConfirmationEmail", {
             to: email,
-            subject: `Response submitted: ${poll.title}`,
+            subject: `Response submitted for ${poll.title}`,
             props: {
               name,
               title: poll.title,
