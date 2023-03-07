@@ -1,7 +1,6 @@
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_PERSONAL_TOKEN
 pull_request_title: "🌐 Update translations"
-commit_message: "🌐 Update {languageName} translations ({fileName})"
 files:
   [
     {
