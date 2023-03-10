@@ -137,6 +137,9 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(duration);
 
+var isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
+dayjs.extend(isSameOrAfter);
+
 const DayjsContext = React.createContext<{
   dayjs: (date?: dayjs.ConfigType) => dayjs.Dayjs;
   weekStartsOn: StartOfWeek;
