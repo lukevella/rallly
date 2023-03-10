@@ -26,7 +26,7 @@ const ShareLink = ({
       href={`mailto:?subject=${encodeURIComponent(
         `Availability for ${title}`,
       )}&body=${encodeURIComponent(
-        `Hi all,\nI'm tyring to find the best date for ${title}.\nCan you please use the link below to choose your preferred dates:\n${participantLink}\nThank you.\n${name}`,
+        `Hi all,\nI'm trying to find the best date for ${title}.\nCan you please use the link below to choose your preferred dates:\n${participantLink}\nThank you.\n${name}`,
       )}`}
     >
       {children}
