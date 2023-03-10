@@ -137,7 +137,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(duration);
 
-var isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
+const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
 dayjs.extend(isSameOrAfter);
 
 const DayjsContext = React.createContext<{
