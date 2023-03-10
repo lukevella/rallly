@@ -126,7 +126,7 @@ export const auth = router({
 
       await sendEmail("LoginEmail", {
         to: input.email,
-        subject: `Your 6-digit code is: ${code}`,
+        subject: "Login",
         props: {
           name: user.name,
           code,

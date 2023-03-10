@@ -55,7 +55,7 @@ test.describe.serial(() => {
       wait: 5000,
     });
 
-    expect(email.headers.subject).toBe("Monthly Meetup");
+    expect(email.headers.subject).toBe("Let's find a date for Monthly Meetup");
 
     pollUrl = page.url();
   });
@@ -68,7 +68,7 @@ test.describe.serial(() => {
       wait: 5000,
     });
 
-    expect(email.headers.subject).toBe("Get notifications for Monthly Meetup");
+    expect(email.headers.subject).toBe("Please verify your email address");
 
     const $ = load(email.html);
     const verifyLink = $("#verifyEmailUrl").attr("href");

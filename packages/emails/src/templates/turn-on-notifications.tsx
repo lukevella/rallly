@@ -23,7 +23,7 @@ export const EnableNotificationsEmail = ({
   return (
     <EmailLayout
       recipientName={name}
-      preview="Click the button to start receiving notifications"
+      preview="Before we can send you notifications we need to verify your email"
       footNote={
         <>
           You are receiving this email because a request was made to enable

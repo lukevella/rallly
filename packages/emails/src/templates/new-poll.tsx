@@ -37,7 +37,9 @@ const ShareLink = ({
 const LinkContainer = (props: { link: string }) => {
   return (
     <Section className="rounded bg-gray-50 p-4">
-      <span className="font-mono">{props.link}</span>
+      <span className="font-mono text-slate-800 no-underline">
+        {props.link}
+      </span>
     </Section>
   );
 };
@@ -61,10 +63,11 @@ export const NewPollEmail = ({
         </>
       }
       recipientName={name}
-      preview="Next, share your participant link to start collecting responses."
+      preview="Share your participant link to start collecting responses."
     >
       <Text>
-        Your poll for <strong>{title}</strong> has been created.
+        Your new poll is ready! Now lets find a date for{" "}
+        <strong>{title}</strong>.
       </Text>
       <Heading>What&apos;s next?</Heading>
       <Text>

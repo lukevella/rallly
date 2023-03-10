@@ -150,7 +150,7 @@ export const polls = router({
 
       await sendEmail("NewPollEmail", {
         to: input.user.email,
-        subject: poll.title,
+        subject: `Let's find a date for ${poll.title}`,
         props: {
           title: poll.title,
           name: input.user.name,
@@ -275,7 +275,7 @@ export const polls = router({
 
       await sendEmail("EnableNotificationsEmail", {
         to: poll.user.email,
-        subject: `Get notifications for ${poll.title}`,
+        subject: "Please verify your email address",
         props: {
           name: poll.user.name,
           title: poll.title,
