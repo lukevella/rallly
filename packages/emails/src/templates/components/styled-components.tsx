@@ -39,7 +39,7 @@ export const Link = (props: LinkProps) => {
   return (
     <UnstyledLink
       {...props}
-      className={clsx("text-primary-500 font-sans", props.className)}
+      className={clsx("text-primary-500", props.className)}
     />
   );
 };

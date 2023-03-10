@@ -37,9 +37,9 @@ const ShareLink = ({
 const LinkContainer = (props: { link: string }) => {
   return (
     <Section className="rounded bg-gray-50 p-4">
-      <span className="font-mono text-slate-800 no-underline">
+      <Link href={props.link} className="font-mono">
         {props.link}
-      </span>
+      </Link>
     </Section>
   );
 };
@@ -69,7 +69,6 @@ export const NewPollEmail = ({
         Your new poll is ready! Now lets find a date for{" "}
         <strong>{title}</strong>.
       </Text>
-      <Heading>What&apos;s next?</Heading>
       <Text>
         Copy this link and share it with your participants to start collecting
         responses.
