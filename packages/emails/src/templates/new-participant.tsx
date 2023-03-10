@@ -1,9 +1,9 @@
 import NotificationEmail, {
-  NotificationEmailProps,
+  NotificationBaseProps,
 } from "./components/notification-email";
 import { Text } from "./components/styled-components";
 
-export interface NewParticipantEmailProps extends NotificationEmailProps {
+export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;
 }
 

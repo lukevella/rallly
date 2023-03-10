@@ -1,5 +1,4 @@
 import { absoluteUrl } from "@rallly/utils";
-import { Hr, Section } from "@react-email/components";
 
 import { EmailLayout } from "./components/email-layout";
 import { Heading, Link, Text } from "./components/styled-components";
@@ -29,7 +28,7 @@ LoginEmailProps) => {
         </>
       }
       recipientName={name}
-      preview={`Your 6-digit code is ${code}`}
+      preview={`Your 6-digit code: ${code}`}
     >
       <Text>Your 6-digit code is:</Text>
       <Heading as="h1" className="font-sans tracking-widest" id="code">

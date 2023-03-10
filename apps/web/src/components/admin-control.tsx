@@ -47,6 +47,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
     }
   }, [urlId, router, updatePollMutation, t]);
 
+  // TODO (Luke Vella) [2023-03-10]: We can delete this after 2.3.0 is released
   const verifyEmail = trpc.polls.verification.verify.useMutation({
     onSuccess: () => {
       toast.success(t("pollHasBeenVerified"));

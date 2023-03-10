@@ -1,11 +1,14 @@
 import { EmailLayout } from "./email-layout";
 import { Link, Section } from "./styled-components";
 
-export interface NotificationEmailProps {
+export interface NotificationBaseProps {
   name: string;
   title: string;
   pollUrl: string;
   unsubscribeUrl: string;
+}
+
+export interface NotificationEmailProps extends NotificationBaseProps {
   preview: string;
 }
 

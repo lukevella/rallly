@@ -1,9 +1,9 @@
 import NotificationEmail, {
-  NotificationEmailProps,
+  NotificationBaseProps,
 } from "./components/notification-email";
 import { Text } from "./components/styled-components";
 
-export interface NewCommentEmailProps extends NotificationEmailProps {
+export interface NewCommentEmailProps extends NotificationBaseProps {
   authorName: string;
 }
 
