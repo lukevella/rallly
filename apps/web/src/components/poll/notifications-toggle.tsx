@@ -66,6 +66,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
       }
     >
       <Button
+        data-testid="notifications-toggle"
         loading={
           isUpdatingNotifications || requestEnableNotifications.isLoading
         }
