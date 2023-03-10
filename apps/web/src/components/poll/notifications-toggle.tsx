@@ -1,6 +1,5 @@
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import toast from "react-hot-toast";
 
 import { Button } from "@/components/button";
 import Bell from "@/components/icons/bell.svg";
@@ -32,36 +31,38 @@ const NotificationsToggle: React.FunctionComponent = () => {
   return (
     <Tooltip
       content={
-        requestEnableNotifications.isSuccess ? (
-          <Trans
-            t={t}
-            i18nKey="verificationEmailSent"
-            values={{
-              email: poll.user.email,
-            }}
-            components={{ b: <Email /> }}
-          />
-        ) : poll.notifications ? (
-          <div>
-            <div className="text-primary-300 font-medium">
-              {t("notificationsOn")}
+        <div className="max-w-md">
+          {requestEnableNotifications.isSuccess ? (
+            <Trans
+              t={t}
+              i18nKey="unverifiedMessage"
+              values={{
+                email: poll.user.email,
+              }}
+              components={{ b: <Email /> }}
+            />
+          ) : poll.notifications ? (
+            <div>
+              <div className="text-primary-300 font-medium">
+                {t("notificationsOn")}
+              </div>
+              <div className="max-w-sm">
+                <Trans
+                  t={t}
+                  i18nKey="notificationsOnDescription"
+                  values={{
+                    email: poll.user.email,
+                  }}
+                  components={{
+                    b: <Email />,
+                  }}
+                />
+              </div>
             </div>
-            <div className="max-w-sm">
-              <Trans
-                t={t}
-                i18nKey="notificationsOnDescription"
-                values={{
-                  email: poll.user.email,
-                }}
-                components={{
-                  b: <Email />,
-                }}
-              />
-            </div>
-          </div>
-        ) : (
-          t("notificationsOff")
-        )
+          ) : (
+            t("notificationsOff")
+          )}
+        </div>
       }
     >
       <Button

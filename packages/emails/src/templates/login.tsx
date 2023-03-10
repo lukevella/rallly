@@ -1,22 +1,21 @@
 import { absoluteUrl } from "@rallly/utils";
-import { Hr } from "@react-email/components";
-import { Heading } from "@react-email/heading";
+import { Hr, Section } from "@react-email/components";
 
 import { EmailLayout } from "./components/email-layout";
-import { Link, Section, SmallText, Text } from "./components/styled-components";
+import { Heading, Link, Text } from "./components/styled-components";
 import { removeProtocalFromUrl } from "./components/utils";
 
 interface LoginEmailProps {
   name: string;
   code: string;
-  magicLink: string;
+  // magicLink: string;
 }
 
 export const LoginEmail = ({
   name = "Guest",
   code = "123456",
-  magicLink = "https://rallly.co",
-}: LoginEmailProps) => {
+}: // magicLink = "https://rallly.co",
+LoginEmailProps) => {
   return (
     <EmailLayout
       footNote={
@@ -33,18 +32,23 @@ export const LoginEmail = ({
       preview={`Your 6-digit code is ${code}`}
     >
       <Text>Your 6-digit code is:</Text>
-      <Heading className="font-sans tracking-widest" id="code">
+      <Heading as="h1" className="font-sans tracking-widest" id="code">
         {code}
       </Heading>
+      <Text>
+        Use this code to complete the verification process on{" "}
+        <Link href={absoluteUrl()}>{removeProtocalFromUrl(absoluteUrl())}</Link>
+      </Text>
       <Text>
         <span className="text-slate-500">
           This code is valid for 15 minutes
         </span>
       </Text>
+      {/* <Heading>Magic link</Heading>
       <Text>
         Alternatively, you can login by using this{" "}
         <Link href={magicLink}>magic link ✨</Link>
-      </Text>
+      </Text> */}
     </EmailLayout>
   );
 };

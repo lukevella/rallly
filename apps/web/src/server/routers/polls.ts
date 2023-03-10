@@ -3,6 +3,8 @@ import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { createToken, EnableNotificationsTokenPayload } from "@/utils/auth";
+
 import { absoluteUrl } from "../../utils/absolute-url";
 import { nanoid } from "../../utils/nanoid";
 import { GetPollApiResponse } from "../../utils/trpc/types";
@@ -249,6 +251,7 @@ export const polls = router({
     .mutation(async ({ input }) => {
       const poll = await prisma.poll.findUnique({
         select: {
+          id: true,
           title: true,
           user: {
             select: {
@@ -266,14 +269,20 @@ export const polls = router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
+      const token = await createToken<EnableNotificationsTokenPayload>({
+        adminUrlId: input.adminUrlId,
+      });
+
       await sendEmail("EnableNotificationsEmail", {
         to: poll.user.email,
-        subject: `Enable notifications for ${poll.title}`,
+        subject: `Get notifications for ${poll.title}`,
         props: {
           name: poll.user.name,
           title: poll.title,
           adminLink: absoluteUrl(`/admin/${input.adminUrlId}`),
-          verificationLink: absoluteUrl(`/admin/${input.adminUrlId}`),
+          verificationLink: absoluteUrl(
+            `/auth/enable-notifications?token=${token}`,
+          ),
         },
       });
     }),

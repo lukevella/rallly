@@ -68,9 +68,13 @@ export const auth = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { name, email, code } =
-        await decryptToken<RegistrationTokenPayload>(input.token);
+      const payload = await decryptToken<RegistrationTokenPayload>(input.token);
 
+      if (!payload) {
+        return { user: null };
+      }
+
+      const { name, email, code } = payload;
       if (input.code !== code) {
         return { ok: false };
       }
@@ -120,7 +124,14 @@ export const auth = router({
         code,
       });
 
-      await sendVerificationEmail(input.email, user.name, code, token);
+      await sendEmail("LoginEmail", {
+        to: input.email,
+        subject: `Your 6-digit code is: ${code}`,
+        props: {
+          name: user.name,
+          code,
+        },
+      });
 
       return { token };
     }),
@@ -132,9 +143,13 @@ export const auth = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { userId, code } = await decryptToken<LoginTokenPayload>(
-        input.token,
-      );
+      const payload = await decryptToken<LoginTokenPayload>(input.token);
+
+      if (!payload) {
+        return { user: null };
+      }
+
+      const { userId, code } = payload;
 
       if (input.code !== code) {
         return { user: null };

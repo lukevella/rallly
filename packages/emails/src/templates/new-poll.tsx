@@ -46,7 +46,7 @@ export const NewPollEmail = ({
   title = "Untitled Poll",
   name = "Guest",
   adminLink = "https://rallly.co/admin/abcdefg123",
-  participantLink = "https://rallly.co/p/abcdefg123",
+  participantLink = "https://rallly.co/p/wxyz9876",
 }: NewPollEmailProps) => {
   return (
     <EmailLayout
@@ -79,8 +79,8 @@ export const NewPollEmail = ({
       </Text>
       <Heading>Your secret link</Heading>
       <Text>
-        This is a different link to access the admin page where you can view and
-        edit your poll.
+        Use this link to access the admin page where you can view and edit your
+        poll.
       </Text>
       <LinkContainer link={adminLink} />
       <Text>
