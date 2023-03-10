@@ -13,21 +13,6 @@ import {
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
 
-const sendVerificationEmail = async (
-  email: string,
-  name: string,
-  code: string,
-) => {
-  await sendEmail("VerificationCodeEmail", {
-    to: email,
-    subject: `Your 6-digit code is: ${code}`,
-    props: {
-      code,
-      name,
-    },
-  });
-};
-
 export const auth = router({
   requestRegistration: publicProcedure
     .input(
@@ -63,7 +48,14 @@ export const auth = router({
           code,
         });
 
-        await sendVerificationEmail(input.email, input.name, code);
+        await sendEmail("RegisterEmail", {
+          to: input.email,
+          subject: "Complete your registration",
+          props: {
+            code,
+            name: input.name,
+          },
+        });
 
         return { ok: true, token };
       },
@@ -128,7 +120,7 @@ export const auth = router({
         code,
       });
 
-      await sendVerificationEmail(input.email, user.name, code);
+      await sendVerificationEmail(input.email, user.name, code, token);
 
       return { token };
     }),

@@ -4,6 +4,7 @@ import {
   Body,
   Container,
   Head,
+  Hr,
   Html,
   Img,
   Link,
@@ -12,14 +13,24 @@ import {
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
 
-export const EmailLayout = (props: {
-  children: React.ReactNode;
+import { SmallText, Text } from "./styled-components";
+
+interface EmailLayoutProps {
   preview: string;
-}) => {
+  recipientName: string;
+  footNote?: React.ReactNode;
+}
+
+export const EmailLayout = ({
+  preview,
+  recipientName = "Guest",
+  children,
+  footNote,
+}: React.PropsWithChildren<EmailLayoutProps>) => {
   return (
     <Html>
       <Head />
-      <Preview>{props.preview}</Preview>
+      <Preview>{preview}</Preview>
       <Tailwind
         config={{
           theme: {
@@ -115,12 +126,21 @@ export const EmailLayout = (props: {
           },
         }}
       >
-        <Body className="bg-gray-50 p-4">
-          <Container className="mx-auto bg-white p-6">
+        <Body className="bg-white px-3 py-6">
+          <Container className="max-w-lg">
             <Section className="mb-4">
               <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
             </Section>
-            <Section>{props.children}</Section>
+            <Section>
+              <Text>Hi {recipientName},</Text>
+              {children}
+              {footNote ? (
+                <>
+                  <Hr />
+                  <SmallText>{footNote}</SmallText>
+                </>
+              ) : null}
+            </Section>
             <Section className="mt-4 text-sm text-slate-500">
               <Link className="font-sans text-slate-500" href={absoluteUrl()}>
                 Home

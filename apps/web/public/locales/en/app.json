@@ -79,6 +79,7 @@
   "next": "Next",
   "nextMonth": "Next month",
   "no": "No",
+  "verificationEmailSent": "An email has been sent to <b>{{email}}</b> with a link to enable notifications.",
   "noDatesSelected": "No dates selected",
   "notificationsDisabled": "Notifications have been disabled",
   "notificationsOff": "Notifications are off",

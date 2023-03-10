@@ -14,7 +14,6 @@ import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
 import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
-import { UnverifiedPollNotice } from "./poll/unverified-poll-notice";
 import { usePoll } from "./poll-context";
 import Sharing from "./sharing";
 import { useUser } from "./user-provider";
@@ -126,7 +125,6 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
         ) : null}
       </AnimatePresence>
       <m.div className="relative z-10 space-y-4" layout="position">
-        {poll.verified === false ? <UnverifiedPollNotice /> : null}
         {props.children}
       </m.div>
     </div>
