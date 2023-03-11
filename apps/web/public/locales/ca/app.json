@@ -81,7 +81,6 @@
   "no": "No",
   "noDatesSelected": "No s'ha seleccionat cap data",
   "notificationsDisabled": "S'han desactivat les notificacions",
-  "notificationsOff": "Notificacions desactivades",
   "notificationsOn": "Notificacions activades",
   "notificationsOnDescription": "S'enviarà un correu electrònic a <b>{{email}}</b> quan hi hagi novetats a l'enquesta.",
   "notificationsVerifyEmail": "Necessites verificar el correu electrònic per activar les notificacions",
