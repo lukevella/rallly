@@ -81,7 +81,6 @@
   "no": "Nem",
   "noDatesSelected": "Nincs dátum kiválasztva",
   "notificationsDisabled": "Értesítések ki lettek kapcsolva",
-  "notificationsOff": "Értesítések kikapcsolva",
   "notificationsOn": "Értesítések bekapcsolva",
   "notificationsOnDescription": "Emailt küldünk <b>{{email}}</b> email címre, ha bármi szavazáshoz kötődő tevékenység történik.",
   "notificationsVerifyEmail": "Hitelesítened kell az email címed az értesítések bekapcsolásához",
