@@ -71,7 +71,6 @@
   "no": "نه",
   "noDatesSelected": "هیچ تاریخی انتخاب نشده است",
   "notificationsDisabled": "اعلان‌ها غیرفعال شدند",
-  "notificationsOff": "اعلان‌ها خاموش هستند",
   "notificationsOn": "اعلان‌ها روشن هستند",
   "notificationsOnDescription": "به محض فعالیت جدید روی این نظرسنجی، یک رایانامه به <b>{{email}}</b> ارسال خواهد شد.",
   "notificationsVerifyEmail": "برای فعال‌سازی اعلان‌ها باید رایانامه خود را تایید کنید",
