@@ -16,7 +16,7 @@ const StandardLayout: React.FunctionComponent<{
       <UserProvider>
         <DayjsProvider>
           <ModalProvider>
-            <div className={"bg-pattern relative min-h-full"} {...rest}>
+            <div className="bg-pattern relative min-h-full" {...rest}>
               <MobileNavigation />
               <div className="mx-auto max-w-4xl">{children}</div>
             </div>
