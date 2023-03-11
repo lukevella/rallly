@@ -74,7 +74,6 @@
   "no": "Não",
   "noDatesSelected": "Nenhuma data selecionada",
   "notificationsDisabled": "As notificações foram desabilitadas",
-  "notificationsOff": "Notificações desativadas",
   "notificationsOn": "Notificações ativadas",
   "notificationsOnDescription": "Um e-mail será enviado para <b>{{email}}</b> quando houver atividade nesta enquete.",
   "notificationsVerifyEmail": "Você precisa confirmar seu e-mail para ativar as notificações",
