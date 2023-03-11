@@ -81,7 +81,6 @@
   "no": "Nee",
   "noDatesSelected": "Geen datums geselecteerd",
   "notificationsDisabled": "Meldingen zijn uitgeschakeld",
-  "notificationsOff": "Meldingen zijn uitgeschakeld",
   "notificationsOn": "Meldingen zijn ingeschakeld",
   "notificationsOnDescription": "Een e-mail wordt verzonden naar <b>{{email}}</b> wanneer er activiteit is in deze poll.",
   "notificationsVerifyEmail": "Je moet je e-mailadres verifiëren om meldingen in te schakelen",
