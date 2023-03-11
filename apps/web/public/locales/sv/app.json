@@ -81,7 +81,6 @@
   "no": "Nej",
   "noDatesSelected": "Inga datum valda",
   "notificationsDisabled": "Aviseringar har inaktiverats",
-  "notificationsOff": "Aviseringar är av",
   "notificationsOn": "Aviseringar är på",
   "notificationsOnDescription": "Ett e-postmeddelande kommer att skickas till <b>{{email}}</b> när det finns aktivitet på denna förfrågan.",
   "notificationsVerifyEmail": "Du måste verifiera din e-post för att aktivera aviseringar",
