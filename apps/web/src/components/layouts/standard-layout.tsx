@@ -1,4 +1,4 @@
-import { domMax, LazyMotion, m } from "framer-motion";
+import { domMax, LazyMotion } from "framer-motion";
 import React from "react";
 
 import { DayjsProvider } from "@/utils/dayjs";
@@ -18,7 +18,7 @@ const StandardLayout: React.FunctionComponent<{
           <ModalProvider>
             <div className="bg-pattern relative min-h-full" {...rest}>
               <MobileNavigation />
-              <div className="mx-auto max-w-4xl">{children}</div>
+              <div className="mx-auto max-w-4xl grow">{children}</div>
             </div>
           </ModalProvider>
         </DayjsProvider>

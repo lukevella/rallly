@@ -60,6 +60,7 @@ jobs:
         run: |
           echo "DATABASE_URL=postgresql://postgres:password@localhost:5432/db" >> $GITHUB_ENV
           echo "SECRET_PASSWORD=abcdefghijklmnopqrstuvwxyz1234567890" >> $GITHUB_ENV
+          echo "SUPPORT_EMAIL=support@rallly.co" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile

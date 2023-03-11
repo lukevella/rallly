@@ -35,6 +35,10 @@ export type LoginTokenPayload = {
   code: string;
 };
 
+export type EnableNotificationsTokenPayload = {
+  adminUrlId: string;
+};
+
 export type RegisteredUserSession = {
   isGuest: false;
   id: string;
@@ -75,7 +79,9 @@ export function withSessionRoute(handler: NextApiHandler) {
   }, sessionOptions);
 }
 
-const compose = (...fns: GetServerSideProps[]): GetServerSideProps => {
+export const composeGetServerSideProps = (
+  ...fns: GetServerSideProps[]
+): GetServerSideProps => {
   return async (ctx) => {
     const res = { props: {} };
     for (const getServerSideProps of fns) {
@@ -87,7 +93,7 @@ const compose = (...fns: GetServerSideProps[]): GetServerSideProps => {
           ...fnRes.props,
         };
       } else {
-        return { notFound: true };
+        return fnRes;
       }
     }
 
@@ -105,7 +111,7 @@ export function withSessionSsr(
   },
 ): GetServerSideProps {
   const composedHandler = Array.isArray(handler)
-    ? compose(...handler)
+    ? composeGetServerSideProps(...handler)
     : handler;
 
   return withIronSessionSsr(async (ctx) => {
@@ -137,8 +143,15 @@ export function withSessionSsr(
 
 export const decryptToken = async <P extends Record<string, unknown>>(
   token: string,
-): Promise<P> => {
-  return await unsealData(token, { password: sessionOptions.password });
+): Promise<P | null> => {
+  const payload = await unsealData(token, {
+    password: sessionOptions.password,
+  });
+  if (Object.keys(payload).length === 0) {
+    return null;
+  }
+
+  return payload as P;
 };
 
 export const createToken = async <T extends Record<string, unknown>>(

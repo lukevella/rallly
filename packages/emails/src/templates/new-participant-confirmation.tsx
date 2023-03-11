@@ -12,8 +12,13 @@ export const NewParticipantConfirmationEmail = ({
   editSubmissionUrl = "https://rallly.co",
 }: NewParticipantConfirmationEmailProps) => {
   return (
-    <EmailLayout preview="To edit your response use the link below">
-      <Text>Hi {name},</Text>
+    <EmailLayout
+      footNote={
+        <>You are receiving this email because a response was submitting </>
+      }
+      recipientName={name}
+      preview="To edit your response use the link below"
+    >
       <Text>
         Thank you for submitting your availability for <strong>{title}</strong>.
       </Text>

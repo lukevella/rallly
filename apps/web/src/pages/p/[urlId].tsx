@@ -71,7 +71,9 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
         const res = await decryptToken<{ userId: string }>(
           ctx.query.token as string,
         );
-        userId = res?.userId;
+        if (res) {
+          userId = res.userId;
+        }
       }
       return {
         props: {
@@ -83,8 +85,12 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   ],
   {
     onPrefetch: async (ssg, ctx) => {
-      await ssg.polls.getByParticipantUrlId.fetch({
+      const poll = await ssg.polls.getByParticipantUrlId.fetch({
         urlId: ctx.params?.urlId as string,
+      });
+
+      await ssg.polls.participants.list.prefetch({
+        pollId: poll.id,
       });
     },
   },

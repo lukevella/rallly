@@ -39,7 +39,7 @@ export const Link = (props: LinkProps) => {
   return (
     <UnstyledLink
       {...props}
-      className={clsx("text-primary-500 font-sans text-base", props.className)}
+      className={clsx("text-primary-500", props.className)}
     />
   );
 };
@@ -59,5 +59,14 @@ export const Heading = (
 export const Section = (props: SectionProps) => {
   return (
     <UnstyledSection {...props} className={clsx("my-4", props.className)} />
+  );
+};
+
+export const SmallText = (props: TextProps) => {
+  return (
+    <UnstyledText
+      {...props}
+      className={clsx("font-sans text-sm text-slate-500", props.className)}
+    />
   );
 };

@@ -1,12 +1,10 @@
-import { EmailLayout } from "./components/email-layout";
-import { Button, Link, Section, Text } from "./components/styled-components";
+import NotificationEmail, {
+  NotificationBaseProps,
+} from "./components/notification-email";
+import { Text } from "./components/styled-components";
 
-export interface NewCommentEmailProps {
-  name: string;
-  title: string;
+export interface NewCommentEmailProps extends NotificationBaseProps {
   authorName: string;
-  pollUrl: string;
-  unsubscribeUrl: string;
 }
 
 export const NewCommentEmail = ({
@@ -17,20 +15,17 @@ export const NewCommentEmail = ({
   unsubscribeUrl = "https://rallly.co",
 }: NewCommentEmailProps) => {
   return (
-    <EmailLayout preview={`${authorName} has commented on ${title}`}>
-      <Text>Hi {name},</Text>
+    <NotificationEmail
+      name={name}
+      title={title}
+      pollUrl={pollUrl}
+      unsubscribeUrl={unsubscribeUrl}
+      preview={`${authorName} has commented on ${title}`}
+    >
       <Text>
         <strong>{authorName}</strong> has commented on <strong>{title}</strong>.
       </Text>
-      <Section>
-        <Button href={pollUrl}>Go to poll &rarr;</Button>
-      </Section>
-      <Text>
-        <Link href={unsubscribeUrl}>
-          Stop receiving notifications for this poll.
-        </Link>
-      </Text>
-    </EmailLayout>
+    </NotificationEmail>
   );
 };
 

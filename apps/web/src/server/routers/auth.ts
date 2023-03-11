@@ -13,21 +13,6 @@ import {
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
 
-const sendVerificationEmail = async (
-  email: string,
-  name: string,
-  code: string,
-) => {
-  await sendEmail("VerificationCodeEmail", {
-    to: email,
-    subject: `Your 6-digit code is: ${code}`,
-    props: {
-      code,
-      name,
-    },
-  });
-};
-
 export const auth = router({
   requestRegistration: publicProcedure
     .input(
@@ -63,7 +48,14 @@ export const auth = router({
           code,
         });
 
-        await sendVerificationEmail(input.email, input.name, code);
+        await sendEmail("RegisterEmail", {
+          to: input.email,
+          subject: "Complete your registration",
+          props: {
+            code,
+            name: input.name,
+          },
+        });
 
         return { ok: true, token };
       },
@@ -76,9 +68,13 @@ export const auth = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { name, email, code } =
-        await decryptToken<RegistrationTokenPayload>(input.token);
+      const payload = await decryptToken<RegistrationTokenPayload>(input.token);
 
+      if (!payload) {
+        return { user: null };
+      }
+
+      const { name, email, code } = payload;
       if (input.code !== code) {
         return { ok: false };
       }
@@ -128,7 +124,14 @@ export const auth = router({
         code,
       });
 
-      await sendVerificationEmail(input.email, user.name, code);
+      await sendEmail("LoginEmail", {
+        to: input.email,
+        subject: "Login",
+        props: {
+          name: user.name,
+          code,
+        },
+      });
 
       return { token };
     }),
@@ -140,9 +143,13 @@ export const auth = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { userId, code } = await decryptToken<LoginTokenPayload>(
-        input.token,
-      );
+      const payload = await decryptToken<LoginTokenPayload>(input.token);
+
+      if (!payload) {
+        return { user: null };
+      }
+
+      const { userId, code } = payload;
 
       if (input.code !== code) {
         return { user: null };

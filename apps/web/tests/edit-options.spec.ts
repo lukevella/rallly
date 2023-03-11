@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("Edit options", () => {
+test.describe("edit options", () => {
   test("should show warning when deleting options with votes in them", async ({
     page,
   }) => {

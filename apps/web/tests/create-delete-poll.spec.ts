@@ -51,15 +51,24 @@ test.describe.serial(() => {
 
     await expect(title).toHaveText("Monthly Meetup");
 
-    pollUrl = page.url();
-  });
-
-  test("verify poll", async ({ page, baseURL }) => {
     const { email } = await mailServer.captureOne("john.doe@email.com", {
       wait: 5000,
     });
 
-    expect(email.headers.subject).toBe("Monthly Meetup has been created");
+    expect(email.headers.subject).toBe("Let's find a date for Monthly Meetup");
+
+    pollUrl = page.url();
+  });
+
+  test("enable notifications", async ({ page, baseURL }) => {
+    await page.goto(pollUrl);
+    await page.getByTestId("notifications-toggle").click();
+
+    const { email } = await mailServer.captureOne("john.doe@email.com", {
+      wait: 5000,
+    });
+
+    expect(email.headers.subject).toBe("Please verify your email address");
 
     const $ = load(email.html);
     const verifyLink = $("#verifyEmailUrl").attr("href");
@@ -71,6 +80,12 @@ test.describe.serial(() => {
     }
 
     await page.goto(verifyLink);
+
+    await expect(
+      page.getByText("Notifications have been enabled for Monthly Meetup"),
+    ).toBeVisible();
+
+    page.getByText("Click here").click();
 
     await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
   });
