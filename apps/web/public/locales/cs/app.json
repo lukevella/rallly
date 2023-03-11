@@ -81,7 +81,6 @@
   "no": "Ne",
   "noDatesSelected": "Nebyl vybrán žádný termín",
   "notificationsDisabled": "Oznámení byla vypnuta",
-  "notificationsOff": "Oznámení jsou vypnuta",
   "notificationsOn": "Oznámení jsou zapnuta",
   "notificationsOnDescription": "Jakmile se v anketě něco změní, dostanete upozornění na adresu <b>{{email}}</b>.",
   "notificationsVerifyEmail": "Pro zapnutí oznámení musíte ověřit svůj e-mail",
