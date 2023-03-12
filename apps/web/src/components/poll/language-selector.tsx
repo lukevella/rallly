@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import Cookies from "js-cookie";
 import { useTranslation } from "next-i18next";
+import DropdownIcon from "@/components/icons/chevron-down.svg";
+
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;
@@ -8,16 +10,17 @@ export const LanguageSelect: React.FunctionComponent<{
 }> = ({ className, onChange }) => {
   const { i18n } = useTranslation("common");
   return (
-    <select
-      className={clsx("input", className)}
-      defaultValue={i18n.language}
-      onChange={(e) => {
-        Cookies.set("NEXT_LOCALE", e.target.value, {
-          expires: 365,
-        });
-        onChange?.(e.target.value);
-      }}
-    >
+    <div className="relative">
+      <select
+        className={clsx("btn-default block appearance-none", className)}
+        defaultValue={i18n.language}
+        onChange={(e) => {
+          Cookies.set("NEXT_LOCALE", e.target.value, {
+            expires: 365,
+          });
+          onChange?.(e.target.value);
+        }}
+      >
       <option value="en">English</option>
       <option value="ca">Català</option>
       <option value="cs">Česky</option>
@@ -38,6 +41,10 @@ export const LanguageSelect: React.FunctionComponent<{
       <option value="ru">Pусский</option>
       <option value="sk">Slovenčina</option>
       <option value="sv">Svenska</option>
-    </select>
+      </select>
+      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none select-after">
+        <DropdownIcon className="group-hover:text-primary-500 w-5 opacity-75 group-hover:opacity-100"/>
+      </div>
+    </div>
   );
 };
