@@ -1,5 +1,36 @@
 # Changelog
 
+<a name="2.3.0"></a>
+
+## 2.3.0 (2023-03-13)
+
+This update improves the onboarding experience for new users. Users will receive more information over email and there is less emphasis on verifying a user's email which is only required to enable notifications.
+
+### Added
+
+- ✨ Allow users to log in with magic link ([#553](https://github.com/lukevella/Rallly/issues/553)) [[2cf9ad4](https://github.com/lukevella/Rallly/commit/2cf9ad467ca076f2ebbb6ac292a234e15b941815)]
+- ✨ Update notification flow ([#548](https://github.com/lukevella/Rallly/issues/548)) [[39a0755](https://github.com/lukevella/Rallly/commit/39a07558eee7a94d1dcfebaf6e76e1a848fb7ddc)]
+
+### Changed
+
+- 💄 Add dropdown indicator to language selector ([#552](https://github.com/lukevella/Rallly/issues/552)) [[5b78093](https://github.com/lukevella/Rallly/commit/5b78093c6fd1b1c407fb443c69f9154e6843d790)]
+- 🔧 Remove custom Crowdin commit message [[2ebda9f](https://github.com/lukevella/Rallly/commit/2ebda9fd19d67c5081086d38eedb1bf8419ee7c0)]
+- 💬 Update email subject lines [[611d04e](https://github.com/lukevella/Rallly/commit/611d04eaaa7c0a8ab75a91b6e9c4599cb6afd29d)]
+- ⚡ Make submitting a participant a bit faster [[e06c55c](https://github.com/lukevella/Rallly/commit/e06c55c1313bf34d85d69a75736809e7f68d7637)]
+
+### Fixed
+
+- 🐛 Fix crash in week view ([#549](https://github.com/lukevella/Rallly/issues/549)) [[1d31a42](https://github.com/lukevella/Rallly/commit/1d31a42bb9f4b8845d7873ff4d07b23b5fde21b7)]
+- 🐛 Fix crowdin integration [[9fe794a](https://github.com/lukevella/Rallly/commit/9fe794a9e454b64e8edc530103c3995f905d2c98)]
+
+### Miscellaneous
+
+- 🌐 Update translations ([#542](https://github.com/lukevella/Rallly/issues/542)) [[b4ef1ed](https://github.com/lukevella/Rallly/commit/b4ef1eda3a3820ec07a1954e068d2b7d45afbf03)]
+- Fix mobile styles ([#550](https://github.com/lukevella/Rallly/issues/550)) [[cb1fb23](https://github.com/lukevella/Rallly/commit/cb1fb23b194c7f62bbade091249c97c4fcaa7106)]
+- 📝 Update README.md [[58fa0cb](https://github.com/lukevella/Rallly/commit/58fa0cb10db4a91e2d61c441b2eebf3b5f299dc2)]
+- 🌐 Update translations [[a0a84fd](https://github.com/lukevella/Rallly/commit/a0a84fd5b659b3f99a3333a9c4779bf359faf44c)]
+- 🌐 Update translations ([#538](https://github.com/lukevella/Rallly/issues/538)) [[899c890](https://github.com/lukevella/Rallly/commit/899c890b09064132748f489a517b7eb382d2f1b2)]
+
 <a name="2.2.3"></a>
 
 ## 2.2.3 (2023-03-06)
