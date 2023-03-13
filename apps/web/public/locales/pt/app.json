@@ -70,7 +70,6 @@
   "no": "Não",
   "noDatesSelected": "Nenhuma data selecionada",
   "notificationsDisabled": "As notificações foram desativadas",
-  "notificationsOff": "Notificações desativadas",
   "notificationsOn": "Notificações ativadas",
   "notificationsOnDescription": "Um e-mail será enviado para <b>{{email}}</b> quando houver atividade nesta sondagem.",
   "notificationsVerifyEmail": "Precisa verificar o seu e-mail para ativar as notificações",

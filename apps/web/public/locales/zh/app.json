@@ -75,7 +75,6 @@
   "no": "不行",
   "noDatesSelected": "未选定日期",
   "notificationsDisabled": "已禁用通知",
-  "notificationsOff": "通知已关闭",
   "notificationsOn": "通知已启用",
   "notificationsOnDescription": "当本次投票中有活动时，将邮件发送至 <b>{{email}}</b>。",
   "notificationsVerifyEmail": "启用通知需要认证电子邮箱地址",

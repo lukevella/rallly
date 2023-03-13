@@ -81,7 +81,6 @@
   "no": "Ei",
   "noDatesSelected": "Ei valittuja päivämääriä",
   "notificationsDisabled": "Ilmoitukset on poistettu käytöstä",
-  "notificationsOff": "Ilmoitukset ovat pois päältä",
   "notificationsOn": "Ilmoitukset ovat päällä",
   "notificationsOnDescription": "Osoitteeseen <b>{{email}}</b> lähetetään viesti, kun kyselyssä on toimintaa.",
   "notificationsVerifyEmail": "Sinun on vahvistettava sähköpostiosoitteesi ottaaksesi ilmoitukset käyttöön",
