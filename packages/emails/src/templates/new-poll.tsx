@@ -1,8 +1,16 @@
-import { absoluteUrl } from "@rallly/utils";
+import { absoluteUrl, preventWidows } from "@rallly/utils";
 
 import { EmailLayout } from "./components/email-layout";
-import { Heading, Link, Section, Text } from "./components/styled-components";
-import { removeProtocalFromUrl } from "./components/utils";
+import {
+  Button,
+  Card,
+  Heading,
+  Link,
+  Section,
+  SubHeadingText,
+  Text,
+} from "./components/styled-components";
+import { getDomain } from "./components/utils";
 
 export interface NewPollEmailProps {
   title: string;
@@ -22,7 +30,7 @@ const ShareLink = ({
   participantLink: string;
 }>) => {
   return (
-    <Link
+    <Button
       href={`mailto:?subject=${encodeURIComponent(
         `Availability for ${title}`,
       )}&body=${encodeURIComponent(
@@ -30,23 +38,13 @@ const ShareLink = ({
       )}`}
     >
       {children}
-    </Link>
-  );
-};
-
-const LinkContainer = (props: { link: string }) => {
-  return (
-    <Section className="rounded bg-gray-50 p-4">
-      <Link href={props.link} className="font-mono">
-        {props.link}
-      </Link>
-    </Section>
+    </Button>
   );
 };
 
 export const NewPollEmail = ({
   title = "Untitled Poll",
-  name = "Guest",
+  name = "John",
   adminLink = "https://rallly.co/admin/abcdefg123",
   participantLink = "https://rallly.co/p/wxyz9876",
 }: NewPollEmailProps) => {
@@ -55,39 +53,51 @@ export const NewPollEmail = ({
       footNote={
         <>
           You are receiving this email because a new poll was created with this
-          email address on{" "}
-          <Link href={absoluteUrl()}>
-            {removeProtocalFromUrl(absoluteUrl())}
-          </Link>
-          . If this wasn&apos;t you, please ignore this email.
+          email address on <Link href={absoluteUrl()}>{getDomain()}</Link>. If
+          this wasn&apos;t you, please ignore this email.
         </>
       }
       recipientName={name}
       preview="Share your participant link to start collecting responses."
     >
       <Text>
-        Your new poll is ready! Now lets find a date for{" "}
-        <strong>{title}</strong>.
+        Your poll is live! Here are two links you will need to manage your poll.
       </Text>
-      <Text>
-        Copy this link and share it with your participants to start collecting
-        responses.
-      </Text>
-      <LinkContainer link={participantLink} />
-      <Text>
-        <ShareLink title={title} name={name} participantLink={participantLink}>
-          Share via email &rarr;
-        </ShareLink>
-      </Text>
-      <Heading>Your secret link</Heading>
-      <Text>
-        Use this link to access the admin page where you can view and edit your
-        poll.
-      </Text>
-      <LinkContainer link={adminLink} />
-      <Text>
-        <Link href={adminLink}>Go to admin page &rarr;</Link>
-      </Text>
+      <Card>
+        <Heading>Admin link</Heading>
+        <SubHeadingText>
+          Use this link to view results and make changes to your poll.
+        </SubHeadingText>
+        <Text className="rounded bg-white px-4 py-3">
+          <Link href={adminLink} className="font-mono">
+            {adminLink}
+          </Link>
+        </Text>
+        <Text>
+          <Button href={adminLink}>Go to admin page</Button>
+        </Text>
+      </Card>
+      <Card>
+        <Heading>Participant link</Heading>
+        <SubHeadingText>
+          Copy this link and share it with your participants to start collecting
+          responses.
+        </SubHeadingText>
+        <Text className="rounded bg-white px-4 py-3">
+          <Link href={participantLink} className="font-mono">
+            {participantLink}
+          </Link>
+        </Text>
+        <Text>
+          <ShareLink
+            title={title}
+            name={name}
+            participantLink={participantLink}
+          >
+            Share via email
+          </ShareLink>
+        </Text>
+      </Card>
     </EmailLayout>
   );
 };

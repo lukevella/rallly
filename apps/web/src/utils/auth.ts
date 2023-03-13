@@ -33,6 +33,7 @@ export type RegistrationTokenPayload = {
 export type LoginTokenPayload = {
   userId: string;
   code: string;
+  redirect?: string;
 };
 
 export type EnableNotificationsTokenPayload = {

@@ -8,7 +8,7 @@ export interface NewParticipantEmailProps extends NotificationBaseProps {
 }
 
 export const NewParticipantEmail = ({
-  name = "Guest",
+  name = "John",
   title = "Untitled Poll",
   participantName = "Someone",
   pollUrl = "https://rallly.co",

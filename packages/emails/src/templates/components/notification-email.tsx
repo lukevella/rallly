@@ -1,5 +1,6 @@
 import { EmailLayout } from "./email-layout";
-import { Link, Section } from "./styled-components";
+import { Button, Card, Link, Text } from "./styled-components";
+import { getDomain } from "./utils";
 
 export interface NotificationBaseProps {
   name: string;
@@ -14,7 +15,6 @@ export interface NotificationEmailProps extends NotificationBaseProps {
 
 export const NotificationEmail = ({
   name,
-  title,
   pollUrl,
   unsubscribeUrl,
   preview,
@@ -25,21 +25,18 @@ export const NotificationEmail = ({
       recipientName={name}
       footNote={
         <>
-          You&apos;re receiving this email because notifications are enabled for{" "}
-          <strong>{title}</strong>. If you want to stop receiving emails about
-          this event you can{" "}
+          If you would like to stop receiving updates you can{" "}
           <Link className="whitespace-nowrap" href={unsubscribeUrl}>
             turn notifications off
           </Link>
-          .
         </>
       }
       preview={preview}
     >
       {children}
-      <Section>
-        <Link href={pollUrl}>Go to poll &rarr;</Link>
-      </Section>
+      <Text>
+        <Button href={pollUrl}>View on {getDomain()}</Button>
+      </Text>
     </EmailLayout>
   );
 };

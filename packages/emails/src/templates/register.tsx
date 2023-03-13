@@ -1,9 +1,8 @@
 import { absoluteUrl } from "@rallly/utils";
-import { Heading } from "@react-email/heading";
 
 import { EmailLayout } from "./components/email-layout";
-import { Link, Text } from "./components/styled-components";
-import { removeProtocalFromUrl } from "./components/utils";
+import { Domain, Heading, Link, Text } from "./components/styled-components";
+import { getDomain } from "./components/utils";
 
 interface RegisterEmailProps {
   name: string;
@@ -11,7 +10,7 @@ interface RegisterEmailProps {
 }
 
 export const RegisterEmail = ({
-  name = "Guest",
+  name = "John",
   code = "123456",
 }: RegisterEmailProps) => {
   return (
@@ -21,25 +20,22 @@ export const RegisterEmail = ({
           You&apos;re receiving this email because a request was made to
           register an account on{" "}
           <Link className="text-primary-500" href={absoluteUrl()}>
-            {removeProtocalFromUrl(absoluteUrl())}
+            {getDomain()}
           </Link>
-          .
+          . If this wasn&apos;t you, please ignore this email.
         </>
       }
       recipientName={name}
       preview={`Your 6-digit code is: ${code}`}
     >
-      <Text>Your 6-digit code is:</Text>
-      <Heading className="font-sans tracking-widest" id="code">
+      <Text>
+        Use this code to complete the verification process on <Domain />
+      </Text>
+      <Heading>Your 6-digit code is:</Heading>
+      <Heading as="h1" className="font-sans tracking-widest" id="code">
         {code}
       </Heading>
-      <Text>
-        Use this code to complete the verification process on{" "}
-        <Link href={absoluteUrl()}>{removeProtocalFromUrl(absoluteUrl())}</Link>
-      </Text>
-      <Text>
-        <span className="text-gray-500">This code is valid for 15 minutes</span>
-      </Text>
+      <Text light={true}>This code is valid for 15 minutes</Text>
     </EmailLayout>
   );
 };
