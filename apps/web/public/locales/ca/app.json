@@ -125,7 +125,6 @@
   "specifyTimesDescription": "Inclou les hores d'inici i final per a cada opció",
   "stepSummary": "Pas {{current}} de {{total}}",
   "sunday": "Diumenge",
-  "redirect": "<a>Clica aquí</a> si no ets redirigit de forma automàtica…",
   "timeFormat": "Format horari:",
   "timeZone": "Zona horària:",
   "title": "Títol",
