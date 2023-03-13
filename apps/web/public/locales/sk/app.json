@@ -125,7 +125,6 @@
   "specifyTimesDescription": "Zahrnúť počiatočné a koncové časy pre každý termín",
   "stepSummary": "Krok {{current}} z {{total}}",
   "sunday": "Nedeľa",
-  "redirect": "<a>Kliknite tu</a>, ak nechcete byť automaticky presmerovaný…",
   "timeFormat": "Formát času:",
   "timeZone": "Časová zóna:",
   "title": "Názov",
