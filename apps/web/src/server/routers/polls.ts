@@ -94,73 +94,80 @@ export const polls = router({
         demo: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ ctx, input }): Promise<{ urlId: string }> => {
-      const adminUrlId = await nanoid();
-      const participantUrlId = await nanoid();
-      let verified = false;
+    .mutation(
+      async ({ ctx, input }): Promise<{ id: string; urlId: string }> => {
+        const adminUrlId = await nanoid();
+        const participantUrlId = await nanoid();
+        let verified = false;
 
-      if (ctx.session.user.isGuest === false) {
-        const user = await prisma.user.findUnique({
-          where: { id: ctx.session.user.id },
+        if (ctx.session.user.isGuest === false) {
+          const user = await prisma.user.findUnique({
+            where: { id: ctx.session.user.id },
+          });
+
+          // If user is logged in with the same email address
+          if (user?.email === input.user.email) {
+            verified = true;
+          }
+        }
+
+        const poll = await prisma.poll.create({
+          select: {
+            adminUrlId: true,
+            id: true,
+            title: true,
+          },
+          data: {
+            id: await nanoid(),
+            title: input.title,
+            type: input.type,
+            timeZone: input.timeZone,
+            location: input.location,
+            description: input.description,
+            authorName: input.user.name,
+            demo: input.demo,
+            verified: verified,
+            notifications: verified,
+            adminUrlId,
+            participantUrlId,
+            user: {
+              connectOrCreate: {
+                where: {
+                  email: input.user.email,
+                },
+                create: {
+                  id: await nanoid(),
+                  ...input.user,
+                },
+              },
+            },
+            options: {
+              createMany: {
+                data: input.options.map((value) => ({
+                  value,
+                })),
+              },
+            },
+          },
         });
 
-        // If user is logged in with the same email address
-        if (user?.email === input.user.email) {
-          verified = true;
-        }
-      }
+        const adminLink = absoluteUrl(`/admin/${adminUrlId}`);
+        const participantLink = absoluteUrl(`/p/${participantUrlId}`);
 
-      const poll = await prisma.poll.create({
-        data: {
-          id: await nanoid(),
-          title: input.title,
-          type: input.type,
-          timeZone: input.timeZone,
-          location: input.location,
-          description: input.description,
-          authorName: input.user.name,
-          demo: input.demo,
-          verified: verified,
-          notifications: verified,
-          adminUrlId,
-          participantUrlId,
-          user: {
-            connectOrCreate: {
-              where: {
-                email: input.user.email,
-              },
-              create: {
-                id: await nanoid(),
-                ...input.user,
-              },
-            },
+        await sendEmail("NewPollEmail", {
+          to: input.user.email,
+          subject: `Let's find a date for ${poll.title}`,
+          props: {
+            title: poll.title,
+            name: input.user.name,
+            adminLink,
+            participantLink,
           },
-          options: {
-            createMany: {
-              data: input.options.map((value) => ({
-                value,
-              })),
-            },
-          },
-        },
-      });
+        });
 
-      const adminLink = absoluteUrl(`/admin/${adminUrlId}`);
-      const participantLink = absoluteUrl(`/p/${participantUrlId}`);
-
-      await sendEmail("NewPollEmail", {
-        to: input.user.email,
-        subject: `Let's find a date for ${poll.title}`,
-        props: {
-          title: poll.title,
-          name: input.user.name,
-          adminLink,
-          participantLink,
-        },
-      });
-
-      return { urlId: adminUrlId };
-    }),
+        return { id: poll.id, urlId: adminUrlId };
+      },
+    ),
   update: publicProcedure
     .input(
       z.object({
