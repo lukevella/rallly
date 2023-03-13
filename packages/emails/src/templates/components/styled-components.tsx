@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@rallly/utils";
 import {
   Button as UnstyledButton,
   ButtonProps,
@@ -11,16 +12,27 @@ import {
 } from "@react-email/components";
 import clsx from "clsx";
 
-export const Text = (props: TextProps) => {
+import { getDomain } from "./utils";
+
+export const Text = (
+  props: TextProps & { light?: boolean; small?: boolean },
+) => {
+  const { light, small, className, ...forwardProps } = props;
   return (
     <UnstyledText
-      {...props}
+      {...forwardProps}
       className={clsx(
-        "my-4 font-sans text-base text-slate-800",
-        props.className,
+        "my-4 font-sans ",
+        { "text-base": !small, "text-sm": small },
+        { "text-slate-800": !light, "text-slate-500": light },
+        className,
       )}
     />
   );
+};
+
+export const Domain = () => {
+  return <Link href={absoluteUrl()}>{getDomain()}</Link>;
 };
 
 export const Button = (props: ButtonProps) => {
@@ -47,18 +59,36 @@ export const Link = (props: LinkProps) => {
 export const Heading = (
   props: React.ComponentProps<typeof UnstyledHeading>,
 ) => {
+  const { as = "h3" } = props;
   return (
     <UnstyledHeading
       {...props}
-      as={props.as || "h3"}
-      className={clsx("my-4 font-sans text-slate-800", props.className)}
+      as={as}
+      className={clsx(
+        "mt-4 mb-2 font-sans font-semibold text-slate-800",
+        props.className,
+      )}
+    />
+  );
+};
+
+export const SubHeadingText = (props: TextProps) => {
+  const { className, ...forwardProps } = props;
+  return (
+    <UnstyledText
+      {...forwardProps}
+      className={clsx(
+        "mb-4 mt-2 font-sans text-base  text-slate-800",
+        className,
+      )}
     />
   );
 };
 
 export const Section = (props: SectionProps) => {
+  const { className, ...forwardProps } = props;
   return (
-    <UnstyledSection {...props} className={clsx("my-4", props.className)} />
+    <UnstyledSection {...forwardProps} className={clsx("my-4", className)} />
   );
 };
 
@@ -67,6 +97,15 @@ export const SmallText = (props: TextProps) => {
     <UnstyledText
       {...props}
       className={clsx("font-sans text-sm text-slate-500", props.className)}
+    />
+  );
+};
+
+export const Card = (props: SectionProps) => {
+  return (
+    <Section
+      {...props}
+      className={clsx("rounded bg-gray-50 px-4", props.className)}
     />
   );
 };

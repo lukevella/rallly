@@ -27,6 +27,7 @@ export const EmailLayout = ({
   children,
   footNote,
 }: React.PropsWithChildren<EmailLayoutProps>) => {
+  const firstName = recipientName.split(" ")[0];
   return (
     <Html>
       <Head />
@@ -127,12 +128,12 @@ export const EmailLayout = ({
         }}
       >
         <Body className="bg-white px-3 py-6">
-          <Container className="max-w-lg">
-            <Section className="mb-4">
+          <Container className="max-w-xl">
+            <Section className="my-4">
               <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
             </Section>
             <Section>
-              <Text>Hi {recipientName},</Text>
+              <Text>Hi {firstName},</Text>
               {children}
               {footNote ? (
                 <>

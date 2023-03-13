@@ -3,6 +3,8 @@ import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { absoluteUrl } from "@/utils/absolute-url";
+
 import {
   createToken,
   decryptToken,
@@ -130,6 +132,7 @@ export const auth = router({
         props: {
           name: user.name,
           code,
+          magicLink: absoluteUrl(`/auth/login?token=${token}`),
         },
       });
 

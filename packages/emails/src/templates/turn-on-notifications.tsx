@@ -1,6 +1,8 @@
 import { EmailLayout } from "./components/email-layout";
 import {
   Button,
+  Card,
+  Heading,
   Link,
   Section,
   SmallText,
@@ -16,14 +18,14 @@ type EnableNotificationsEmailProps = {
 
 export const EnableNotificationsEmail = ({
   title = "Untitled Poll",
-  name = "Guest",
+  name = "John",
   verificationLink = "https://rallly.co",
   adminLink = "https://rallly.co",
 }: EnableNotificationsEmailProps) => {
   return (
     <EmailLayout
       recipientName={name}
-      preview="Before we can send you notifications we need to verify your email"
+      preview="We need to verify your email address"
       footNote={
         <>
           You are receiving this email because a request was made to enable
@@ -32,18 +34,19 @@ export const EnableNotificationsEmail = ({
       }
     >
       <Text>
-        Before we can send you notifications we need to verify your email.
+        Would you like to get notified when participants respond to{" "}
+        <strong>{title}</strong>?
       </Text>
-      <Text>
-        Click the button below to complete the email verification and enable
-        notifications for <strong>{title}</strong>.
-      </Text>
-      <Section>
-        <Button href={verificationLink} id="verifyEmailUrl">
-          Enable notifications &rarr;
-        </Button>
-      </Section>
-      <SmallText>The link will expire in 15 minutes.</SmallText>
+      <Card>
+        <Heading>Enable notifications</Heading>
+        <Text>You will get an email when someone responds to the poll.</Text>
+        <Section>
+          <Button href={verificationLink} id="verifyEmailUrl">
+            Yes, enable notifications
+          </Button>
+        </Section>
+        <SmallText>The link will expire in 15 minutes.</SmallText>
+      </Card>
     </EmailLayout>
   );
 };

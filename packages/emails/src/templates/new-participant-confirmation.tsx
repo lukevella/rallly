@@ -1,5 +1,13 @@
 import { EmailLayout } from "./components/email-layout";
-import { Button, Section, Text } from "./components/styled-components";
+import {
+  Button,
+  Card,
+  Domain,
+  Heading,
+  Section,
+  Text,
+} from "./components/styled-components";
+import { getDomain } from "./components/utils";
 
 interface NewParticipantConfirmationEmailProps {
   name: string;
@@ -8,31 +16,32 @@ interface NewParticipantConfirmationEmailProps {
 }
 export const NewParticipantConfirmationEmail = ({
   title = "Untitled Poll",
-  name = "Guest",
+  name = "John",
   editSubmissionUrl = "https://rallly.co",
 }: NewParticipantConfirmationEmailProps) => {
   return (
     <EmailLayout
       footNote={
-        <>You are receiving this email because a response was submitting </>
+        <>
+          You are receiving this email because a response was submitted on{" "}
+          <Domain />. If this wasn&apos;t you, please ignore this email.
+        </>
       }
       recipientName={name}
       preview="To edit your response use the link below"
     >
       <Text>
-        Thank you for submitting your availability for <strong>{title}</strong>.
+        Thank you for responding to <strong>{title}</strong>.
       </Text>
-      <Text>To review your response, use the link below:</Text>
+      <Text>
+        While the poll is still open you can change your response using the link
+        below.
+      </Text>
       <Section>
         <Button id="editSubmissionUrl" href={editSubmissionUrl}>
-          Review response &rarr;
+          Review response on {getDomain()}
         </Button>
       </Section>
-      <Text>
-        <em className="text-slate-500">
-          Keep this link safe and do not share it with others.
-        </em>
-      </Text>
     </EmailLayout>
   );
 };
