@@ -22,7 +22,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
 }) => {
   const { t } = useTranslation("errors");
   return (
-    <div className="mx-auto flex h-full max-w-full items-center justify-center px-4 py-8 lg:w-[1024px]">
+    <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
       <Head>
         <title>{title}</title>
         <meta name="robots" content="noindex,nofollow" />

@@ -35,7 +35,7 @@ export const Profile: React.FunctionComponent = () => {
   }
 
   return (
-    <div className="-mt-3 space-y-3 p-3 sm:space-y-4 sm:p-4">
+    <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
       <Head>
         <title>
           {t("profileUser", {

@@ -62,8 +62,12 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   ],
   {
     onPrefetch: async (ssg, ctx) => {
-      await ssg.polls.getByAdminUrlId.fetch({
+      const poll = await ssg.polls.getByAdminUrlId.fetch({
         urlId: ctx.params?.urlId as string,
+      });
+
+      await ssg.polls.participants.list.prefetch({
+        pollId: poll.id,
       });
     },
   },

@@ -1,14 +1,8 @@
 import { prisma } from "@rallly/database";
-import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { absoluteUrl } from "../../../utils/absolute-url";
-import {
-  createToken,
-  decryptToken,
-  mergeGuestsIntoUser,
-} from "../../../utils/auth";
+import { decryptToken, mergeGuestsIntoUser } from "../../../utils/auth";
 import { publicProcedure, router } from "../../trpc";
 
 export const verification = router({
@@ -20,9 +14,18 @@ export const verification = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { pollId } = await decryptToken<{
+      const payload = await decryptToken<{
         pollId: string;
       }>(input.code);
+
+      if (!payload) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid token",
+        });
+      }
+
+      const { pollId } = payload;
 
       if (pollId !== input.pollId) {
         throw new TRPCError({
@@ -53,46 +56,5 @@ export const verification = router({
         isGuest: false,
       };
       await ctx.session.save();
-    }),
-  request: publicProcedure
-    .input(
-      z.object({
-        pollId: z.string(),
-        adminUrlId: z.string(),
-      }),
-    )
-    .mutation(async ({ input: { pollId, adminUrlId } }) => {
-      const poll = await prisma.poll.findUnique({
-        where: {
-          id: pollId,
-        },
-        include: {
-          user: true,
-        },
-      });
-
-      if (!poll) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `Poll with id ${pollId} not found`,
-        });
-      }
-
-      const pollUrl = absoluteUrl(`/admin/${adminUrlId}`);
-      const token = await createToken({
-        pollId,
-      });
-      const verifyEmailUrl = `${pollUrl}?code=${token}`;
-
-      await sendEmail("GuestVerifyEmail", {
-        to: poll.user.email,
-        subject: "Please verify your email address",
-        props: {
-          title: poll.title,
-          name: poll.user.name,
-          adminLink: pollUrl,
-          verificationLink: verifyEmailUrl,
-        },
-      });
     }),
 });

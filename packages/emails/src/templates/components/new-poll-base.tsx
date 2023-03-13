@@ -1,6 +1,9 @@
+import { absoluteUrl } from "@rallly/utils";
+import { Hr } from "@react-email/components";
 import { Container } from "@react-email/container";
 
-import { Link, Text } from "./styled-components";
+import { Link, SmallText, Text } from "./styled-components";
+import { removeProtocalFromUrl } from "./utils";
 
 export interface NewPollBaseEmailProps {
   title: string;
@@ -29,6 +32,12 @@ export const NewPollBaseEmail = ({
         </Link>
       </Text>
       {children}
+      <Hr />
+      <SmallText>
+        You are receiving this email because a new poll was created with this
+        email address on{" "}
+        <Link href={absoluteUrl()}>{removeProtocalFromUrl(absoluteUrl())}</Link>
+      </SmallText>
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { APIRequestContext, expect, test } from "@playwright/test";
 import { Prisma, prisma } from "@rallly/database";
 import dayjs from "dayjs";
 
@@ -8,7 +8,168 @@ import dayjs from "dayjs";
  * * Polls are soft deleted after 30 days of inactivity
  * * Soft deleted polls are hard deleted after 7 days of being soft deleted
  */
-test.beforeAll(async ({ request, baseURL }) => {
+test.describe("house keeping", () => {
+  const callHouseKeeping = async (
+    request: APIRequestContext,
+    baseURL?: string,
+  ) => {
+    const res = await request.post(`${baseURL}/api/house-keeping`, {
+      headers: {
+        Authorization: `Bearer ${process.env.API_SECRET}`,
+      },
+    });
+    return res;
+  };
+  test.beforeAll(async ({ request, baseURL }) => {
+    // call the endpoint to delete any existing data that needs to be removed
+    await callHouseKeeping(request, baseURL);
+    await seedData();
+    const res = await callHouseKeeping(request, baseURL);
+    expect(await res.json()).toMatchObject({
+      softDeleted: 1,
+      deleted: 2,
+    });
+  });
+
+  test("should keep active polls", async () => {
+    const poll = await prisma.poll.findUnique({
+      where: {
+        id: "active-poll",
+      },
+    });
+
+    // expect active poll to not be deleted
+    expect(poll).not.toBeNull();
+    expect(poll?.deleted).toBeFalsy();
+  });
+
+  test("should keep polls that have been soft deleted for less than 7 days", async () => {
+    const deletedPoll6d = await prisma.poll.findFirst({
+      where: {
+        id: "deleted-poll-6d",
+        deleted: true,
+      },
+    });
+
+    // expect a poll that has been deleted for 6 days to
+    expect(deletedPoll6d).not.toBeNull();
+  });
+
+  test("should hard delete polls that have been soft deleted for 7 days", async () => {
+    const deletedPoll7d = await prisma.poll.findFirst({
+      where: {
+        id: "deleted-poll-7d",
+        deleted: true,
+      },
+    });
+
+    expect(deletedPoll7d).toBeNull();
+
+    const participants = await prisma.participant.findMany({
+      where: {
+        pollId: "deleted-poll-7d",
+      },
+    });
+
+    expect(participants.length).toBe(0);
+
+    const votes = await prisma.vote.findMany({
+      where: {
+        pollId: "deleted-poll-7d",
+      },
+    });
+
+    expect(votes.length).toBe(0);
+
+    const options = await prisma.option.findMany({
+      where: {
+        pollId: "deleted-poll-7d",
+      },
+    });
+
+    expect(options.length).toBe(0);
+  });
+
+  test("should keep polls that are still active", async () => {
+    const stillActivePoll = await prisma.poll.findUnique({
+      where: {
+        id: "still-active-poll",
+      },
+    });
+
+    expect(stillActivePoll).not.toBeNull();
+    expect(stillActivePoll?.deleted).toBeFalsy();
+  });
+
+  test("should soft delete polls that are inactive", async () => {
+    const inactivePoll = await prisma.poll.findFirst({
+      where: {
+        id: "inactive-poll",
+        deleted: true,
+      },
+    });
+
+    expect(inactivePoll).not.toBeNull();
+    expect(inactivePoll?.deleted).toBeTruthy();
+    expect(inactivePoll?.deletedAt).toBeTruthy();
+  });
+
+  test("should keep new demo poll", async () => {
+    const demoPoll = await prisma.poll.findFirst({
+      where: {
+        id: "demo-poll-new",
+      },
+    });
+
+    expect(demoPoll).not.toBeNull();
+  });
+
+  test("should delete old demo poll", async () => {
+    const oldDemoPoll = await prisma.poll.findFirst({
+      where: {
+        id: "demo-poll-old",
+      },
+    });
+
+    expect(oldDemoPoll).toBeNull();
+  });
+
+  test("should not delete poll that has options in the future", async () => {
+    const futureOptionPoll = await prisma.poll.findFirst({
+      where: {
+        id: "inactive-poll-future-option",
+      },
+    });
+
+    expect(futureOptionPoll).not.toBeNull();
+  });
+
+  // Teardown
+  test.afterAll(async () => {
+    await prisma.$executeRaw`DELETE FROM polls WHERE id IN (${Prisma.join([
+      "active-poll",
+      "deleted-poll-6d",
+      "deleted-poll-7d",
+      "still-active-poll",
+      "inactive-poll",
+      "inactive-poll-future-option",
+      "demo-poll-new",
+      "demo-poll-old",
+    ])})`;
+    await prisma.$executeRaw`DELETE FROM options WHERE id IN (${Prisma.join([
+      "option-1",
+      "option-2",
+      "option-3",
+      "option-4",
+      "option-5",
+    ])})`;
+    await prisma.$executeRaw`DELETE FROM participants WHERE id IN (${Prisma.join(
+      ["participant-1"],
+    )})`;
+  });
+});
+
+const seedData = async () => {
   await prisma.poll.createMany({
     data: [
       // Active Poll
@@ -156,151 +317,4 @@ test.beforeAll(async ({ request, baseURL }) => {
       },
     ],
   });
-
-  // call house-keeping endpoint
-  const res = await request.post(`${baseURL}/api/house-keeping`, {
-    headers: {
-      Authorization: `Bearer ${process.env.API_SECRET}`,
-    },
-  });
-
-  expect(await res.json()).toMatchObject({
-    softDeleted: 1,
-    deleted: 2,
-  });
-});
-
-test("should keep active polls", async () => {
-  const poll = await prisma.poll.findUnique({
-    where: {
-      id: "active-poll",
-    },
-  });
-
-  // expect active poll to not be deleted
-  expect(poll).not.toBeNull();
-  expect(poll?.deleted).toBeFalsy();
-});
-
-test("should keep polls that have been soft deleted for less than 7 days", async () => {
-  const deletedPoll6d = await prisma.poll.findFirst({
-    where: {
-      id: "deleted-poll-6d",
-      deleted: true,
-    },
-  });
-
-  // expect a poll that has been deleted for 6 days to
-  expect(deletedPoll6d).not.toBeNull();
-});
-
-test("should hard delete polls that have been soft deleted for 7 days", async () => {
-  const deletedPoll7d = await prisma.poll.findFirst({
-    where: {
-      id: "deleted-poll-7d",
-      deleted: true,
-    },
-  });
-
-  expect(deletedPoll7d).toBeNull();
-
-  const participants = await prisma.participant.findMany({
-    where: {
-      pollId: "deleted-poll-7d",
-    },
-  });
-
-  expect(participants.length).toBe(0);
-
-  const votes = await prisma.vote.findMany({
-    where: {
-      pollId: "deleted-poll-7d",
-    },
-  });
-
-  expect(votes.length).toBe(0);
-
-  const options = await prisma.option.findMany({
-    where: {
-      pollId: "deleted-poll-7d",
-    },
-  });
-
-  expect(options.length).toBe(0);
-});
-
-test("should keep polls that are still active", async () => {
-  const stillActivePoll = await prisma.poll.findUnique({
-    where: {
-      id: "still-active-poll",
-    },
-  });
-
-  expect(stillActivePoll).not.toBeNull();
-  expect(stillActivePoll?.deleted).toBeFalsy();
-});
-
-test("should soft delete polls that are inactive", async () => {
-  const inactivePoll = await prisma.poll.findFirst({
-    where: {
-      id: "inactive-poll",
-      deleted: true,
-    },
-  });
-
-  expect(inactivePoll).not.toBeNull();
-  expect(inactivePoll?.deleted).toBeTruthy();
-  expect(inactivePoll?.deletedAt).toBeTruthy();
-});
-
-test("should keep new demo poll", async () => {
-  const demoPoll = await prisma.poll.findFirst({
-    where: {
-      id: "demo-poll-new",
-    },
-  });
-
-  expect(demoPoll).not.toBeNull();
-});
-
-test("should delete old demo poll", async () => {
-  const oldDemoPoll = await prisma.poll.findFirst({
-    where: {
-      id: "demo-poll-old",
-    },
-  });
-
-  expect(oldDemoPoll).toBeNull();
-});
-
-test("should not delete poll that has options in the future", async () => {
-  const futureOptionPoll = await prisma.poll.findFirst({
-    where: {
-      id: "inactive-poll-future-option",
-    },
-  });
-
-  expect(futureOptionPoll).not.toBeNull();
-});
-
-// Teardown
-test.afterAll(async () => {
-  await prisma.$executeRaw`DELETE FROM polls WHERE id IN (${Prisma.join([
-    "active-poll",
-    "deleted-poll-6d",
-    "deleted-poll-7d",
-    "still-active-poll",
-    "inactive-poll",
-    "demo-poll-new",
-    "demo-poll-old",
-  ])})`;
-  await prisma.$executeRaw`DELETE FROM options WHERE id IN (${Prisma.join([
-    "active-poll",
-    "deleted-poll-6d",
-    "deleted-poll-7d",
-    "still-active-poll",
-    "inactive-poll",
-    "demo-poll-new",
-    "demo-poll-old",
-  ])})`;
-});
+};

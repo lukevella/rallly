@@ -46,12 +46,19 @@ export const sendEmail = async <T extends TemplateName>(
   templateName: T,
   options: SendEmailOptions<T>,
 ) => {
+  if (!process.env.SUPPORT_EMAIL) {
+    console.info("SUPPORT_EMAIL not configured - skipping email send");
+    return;
+  }
   const transport = getTransport();
   const Template = templates[templateName] as TemplateComponent<T>;
 
   try {
     return await transport.sendMail({
-      from: process.env.SUPPORT_EMAIL,
+      from: {
+        name: "Rallly",
+        address: process.env.SUPPORT_EMAIL,
+      },
       to: options.to,
       subject: options.subject,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

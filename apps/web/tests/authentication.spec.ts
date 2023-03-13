@@ -1,20 +1,32 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { load } from "cheerio";
 import smtpTester from "smtp-tester";
 
 const testUserEmail = "test@example.com";
+let mailServer: smtpTester.SmtpTester;
+/**
+ * Get the 6-digit code from the email
+ * @returns 6-digit code
+ */
+const getCode = async () => {
+  const { email } = await mailServer.captureOne(testUserEmail, {
+    wait: 5000,
+  });
+
+  const $ = load(email.html);
+
+  return $("#code").text().trim();
+};
 
 test.describe.serial(() => {
-  let mailServer: smtpTester.SmtpTester;
-
   test.beforeAll(() => {
     mailServer = smtpTester.init(4025);
   });
 
   test.afterAll(async () => {
     try {
-      await prisma.user.delete({
+      await prisma.user.deleteMany({
         where: {
           email: testUserEmail,
         },
@@ -25,93 +37,107 @@ test.describe.serial(() => {
     mailServer.stop();
   });
 
-  /**
-   * Get the 6-digit code from the email
-   * @returns 6-digit code
-   */
-  const getCode = async () => {
-    const { email } = await mailServer.captureOne(testUserEmail, {
-      wait: 5000,
+  test.describe("new user", () => {
+    test("shows that user doesn't exist yet", async ({ page }) => {
+      await page.goto("/login");
+
+      // your login page test logic
+      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+
+      await page.getByText("Continue").click();
+
+      // Make sure the user doesn't exist yet and that logging in is not possible
+      await expect(
+        page.getByText("A user with that email doesn't exist"),
+      ).toBeVisible();
     });
 
-    const $ = load(email.html);
+    test("user registration", async ({ page }) => {
+      await page.goto("/register");
 
-    return $("#code").text().trim();
-  };
+      await page.getByText("Create an account").waitFor();
 
-  test("shows that user doesn't exist yet", async ({ page }) => {
-    await page.goto("/login");
+      await page.getByPlaceholder("Jessie Smith").type("Test User");
+      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-    // your login page test logic
-    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      await page.click("text=Continue");
 
-    await page.getByText("Continue").click();
+      const codeInput = page.getByPlaceholder("Enter your 6-digit code");
 
-    // Make sure the user doesn't exist yet and that logging in is not possible
-    await expect(
-      page.getByText("A user with that email doesn't exist"),
-    ).toBeVisible();
+      codeInput.waitFor({ state: "visible" });
+
+      const code = await getCode();
+
+      await codeInput.type(code);
+
+      await page.getByText("Continue").click();
+
+      await expect(page.getByText("Your details")).toBeVisible();
+    });
   });
 
-  test("user registration", async ({ page }) => {
-    await page.goto("/register");
+  test.describe("existing user", () => {
+    test("can't register with the same email", async ({ page }) => {
+      await page.goto("/register");
 
-    await page.getByText("Create an account").waitFor();
+      await page.getByText("Create an account").waitFor();
 
-    await page.getByPlaceholder("Jessie Smith").type("Test User");
-    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      await page.getByPlaceholder("Jessie Smith").type("Test User");
+      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-    await page.click("text=Continue");
+      await page.click("text=Continue");
 
-    const codeInput = page.getByPlaceholder("Enter your 6-digit code");
+      await expect(
+        page.getByText("A user with that email already exists"),
+      ).toBeVisible();
+    });
 
-    codeInput.waitFor({ state: "visible" });
+    test.describe("login", () => {
+      test.afterEach(async ({ page }) => {
+        await page.goto("/logout");
+      });
+    });
 
-    const code = await getCode();
+    test("can login with magic link", async ({ page }) => {
+      await page.goto("/login");
 
-    await codeInput.type(code);
+      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-    await page.getByText("Continue").click();
+      await page.getByText("Continue").click();
 
-    await expect(page.getByText("Your details")).toBeVisible();
-  });
+      const { email } = await mailServer.captureOne(testUserEmail, {
+        wait: 5000,
+      });
 
-  test("can't register with the same email", async ({ page }) => {
-    await page.goto("/register");
+      const $ = load(email.html);
 
-    await page.getByText("Create an account").waitFor();
+      const magicLink = $("#magicLink").attr("href");
 
-    await page.getByPlaceholder("Jessie Smith").type("Test User");
-    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      if (!magicLink) {
+        throw new Error("Magic link not found");
+      }
 
-    await page.click("text=Continue");
+      await page.goto(magicLink);
 
-    await expect(
-      page.getByText("A user with that email already exists"),
-    ).toBeVisible();
-  });
+      page.getByText("Click here").click();
 
-  const login = async (page: Page) => {
-    await page.goto("/login");
+      await expect(page.getByText("Your details")).toBeVisible();
+    });
 
-    await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+    test("can login with verification code", async ({ page }) => {
+      await page.goto("/login");
 
-    await page.getByText("Continue").click();
+      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
 
-    const code = await getCode();
+      await page.getByText("Continue").click();
 
-    await page.getByPlaceholder("Enter your 6-digit code").type(code);
+      const code = await getCode();
 
-    await page.getByText("Continue").click();
-  };
+      await page.getByPlaceholder("Enter your 6-digit code").type(code);
 
-  test("user login", async ({ page }) => {
-    await login(page);
-    await expect(page.getByText("Your details")).toBeVisible();
-  });
+      await page.getByText("Continue").click();
 
-  test("logged in user can't access login page", async ({ page }) => {
-    await login(page);
-    await expect(page).toHaveURL("/profile");
+      await expect(page.getByText("Your details")).toBeVisible();
+    });
   });
 });

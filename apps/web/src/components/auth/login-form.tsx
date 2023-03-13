@@ -276,6 +276,7 @@ export const LoginForm: React.FunctionComponent<{
   const { register, handleSubmit, getValues, formState, setError } = useForm<{
     email: string;
   }>();
+
   const requestLogin = trpc.auth.requestLogin.useMutation();
   const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
 

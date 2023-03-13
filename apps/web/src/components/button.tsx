@@ -52,12 +52,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             "btn-disabled": disabled,
             "h-auto rounded-full p-2": rounded,
             "w-10 p-0": !children,
+            "pointer-events-none": loading,
           },
           className,
         )}
         {...passThroughProps}
         role="button"
-        disabled={disabled || loading}
+        disabled={disabled}
       >
         {loading ? (
           <SpinnerIcon

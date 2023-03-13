@@ -3,8 +3,9 @@ import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { createToken, EnableNotificationsTokenPayload } from "@/utils/auth";
+
 import { absoluteUrl } from "../../utils/absolute-url";
-import { createToken } from "../../utils/auth";
 import { nanoid } from "../../utils/nanoid";
 import { GetPollApiResponse } from "../../utils/trpc/types";
 import { publicProcedure, router } from "../trpc";
@@ -95,7 +96,7 @@ export const polls = router({
     )
     .mutation(async ({ ctx, input }): Promise<{ urlId: string }> => {
       const adminUrlId = await nanoid();
-
+      const participantUrlId = await nanoid();
       let verified = false;
 
       if (ctx.session.user.isGuest === false) {
@@ -122,7 +123,7 @@ export const polls = router({
           verified: verified,
           notifications: verified,
           adminUrlId,
-          participantUrlId: await nanoid(),
+          participantUrlId,
           user: {
             connectOrCreate: {
               where: {
@@ -144,39 +145,19 @@ export const polls = router({
         },
       });
 
-      const pollUrl = absoluteUrl(`/admin/${adminUrlId}`);
+      const adminLink = absoluteUrl(`/admin/${adminUrlId}`);
+      const participantLink = absoluteUrl(`/p/${participantUrlId}`);
 
-      try {
-        if (poll.verified) {
-          await sendEmail("NewPollEmail", {
-            to: input.user.email,
-            subject: `${poll.title} has been created`,
-            props: {
-              title: poll.title,
-              name: input.user.name,
-              adminLink: pollUrl,
-            },
-          });
-        } else {
-          const verificationCode = await createToken({
-            pollId: poll.id,
-          });
-          const verifyEmailUrl = `${pollUrl}?code=${verificationCode}`;
-
-          await sendEmail("NewPollVerificationEmail", {
-            to: input.user.email,
-            subject: `${poll.title} has been created`,
-            props: {
-              title: poll.title,
-              name: input.user.name,
-              adminLink: pollUrl,
-              verificationLink: verifyEmailUrl,
-            },
-          });
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      await sendEmail("NewPollEmail", {
+        to: input.user.email,
+        subject: `Let's find a date for ${poll.title}`,
+        props: {
+          title: poll.title,
+          name: input.user.name,
+          adminLink,
+          participantLink,
+        },
+      });
 
       return { urlId: adminUrlId };
     }),
@@ -265,6 +246,46 @@ export const polls = router({
   comments,
   verification,
   // END LEGACY ROUTES
+  enableNotifications: publicProcedure
+    .input(z.object({ adminUrlId: z.string() }))
+    .mutation(async ({ input }) => {
+      const poll = await prisma.poll.findUnique({
+        select: {
+          id: true,
+          title: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+        where: {
+          adminUrlId: input.adminUrlId,
+        },
+      });
+
+      if (!poll) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      const token = await createToken<EnableNotificationsTokenPayload>({
+        adminUrlId: input.adminUrlId,
+      });
+
+      await sendEmail("EnableNotificationsEmail", {
+        to: poll.user.email,
+        subject: "Please verify your email address",
+        props: {
+          name: poll.user.name,
+          title: poll.title,
+          adminLink: absoluteUrl(`/admin/${input.adminUrlId}`),
+          verificationLink: absoluteUrl(
+            `/auth/enable-notifications?token=${token}`,
+          ),
+        },
+      });
+    }),
   getByAdminUrlId: publicProcedure
     .input(
       z.object({
