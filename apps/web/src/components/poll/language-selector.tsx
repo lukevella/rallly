@@ -2,8 +2,7 @@ import clsx from "clsx";
 import Cookies from "js-cookie";
 import { useTranslation } from "next-i18next";
 
-import DropdownIcon from "@/components/icons/chevron-down.svg";
-
+import ChevronDown from "@/components/icons/chevron-down.svg";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;
@@ -13,7 +12,7 @@ export const LanguageSelect: React.FunctionComponent<{
   return (
     <div className="relative">
       <select
-        className={clsx("btn-default block appearance-none", className)}
+        className={clsx("input block pr-4", className)}
         defaultValue={i18n.language}
         onChange={(e) => {
           Cookies.set("NEXT_LOCALE", e.target.value, {
@@ -43,8 +42,8 @@ export const LanguageSelect: React.FunctionComponent<{
         <option value="sk">Slovenčina</option>
         <option value="sv">Svenska</option>
       </select>
-      <div className="select-after pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-        <DropdownIcon className="w-5" />
+      <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+        <ChevronDown className="w-5" />
       </div>
     </div>
   );
