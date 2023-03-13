@@ -125,7 +125,6 @@
   "specifyTimesDescription": "Indiquez les heures de début et de fin pour chaque option",
   "stepSummary": "Étape {{current}} sur {{total}}",
   "sunday": "Dimanche",
-  "redirect": "<a>Cliquez ici</a> si vous n'êtes pas redirigé automatiquement…",
   "timeFormat": "Format de l'heure :",
   "timeZone": "Fuseau horaire :",
   "title": "Titre",
