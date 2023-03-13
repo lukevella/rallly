@@ -93,6 +93,7 @@ const Page: React.FunctionComponent<CreatePollPageProps> = ({
     onSuccess: (res) => {
       setIsRedirecting(true);
       posthog.capture("created poll", {
+        pollId: res.id,
         numberOfOptions: formData.options?.options?.length,
         optionsView: formData?.options?.view,
       });
