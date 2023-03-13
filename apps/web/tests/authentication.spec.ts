@@ -1,41 +1,41 @@
-import { expect, Page, test } from "@playwright/test";
-import { Prisma, prisma } from "@rallly/database";
+import { expect, test } from "@playwright/test";
+import { prisma } from "@rallly/database";
 import { load } from "cheerio";
 import smtpTester from "smtp-tester";
 
 const testUserEmail = "test@example.com";
+let mailServer: smtpTester.SmtpTester;
+/**
+ * Get the 6-digit code from the email
+ * @returns 6-digit code
+ */
+const getCode = async () => {
+  const { email } = await mailServer.captureOne(testUserEmail, {
+    wait: 5000,
+  });
+
+  const $ = load(email.html);
+
+  return $("#code").text().trim();
+};
 
 test.describe.serial(() => {
-  let mailServer: smtpTester.SmtpTester;
-
   test.beforeAll(() => {
     mailServer = smtpTester.init(4025);
   });
 
   test.afterAll(async () => {
     try {
-      await prisma.$executeRaw`DELETE FROM users WHERE email IN ${Prisma.join([
-        testUserEmail,
-      ])}`;
+      await prisma.user.deleteMany({
+        where: {
+          email: testUserEmail,
+        },
+      });
     } catch {
       // User doesn't exist
     }
     mailServer.stop();
   });
-
-  /**
-   * Get the 6-digit code from the email
-   * @returns 6-digit code
-   */
-  const getCode = async () => {
-    const { email } = await mailServer.captureOne(testUserEmail, {
-      wait: 5000,
-    });
-
-    const $ = load(email.html);
-
-    return $("#code").text().trim();
-  };
 
   test.describe("new user", () => {
     test("shows that user doesn't exist yet", async ({ page }) => {
@@ -98,7 +98,7 @@ test.describe.serial(() => {
       });
     });
 
-    test("can login with verification code", async ({ page }) => {
+    test("can login with magic link", async ({ page }) => {
       await page.goto("/login");
 
       await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
@@ -118,10 +118,13 @@ test.describe.serial(() => {
       }
 
       await page.goto(magicLink);
+
+      page.getByText("Click here").click();
+
       await expect(page.getByText("Your details")).toBeVisible();
     });
 
-    test("can login with magic link", async ({ page }) => {
+    test("can login with verification code", async ({ page }) => {
       await page.goto("/login");
 
       await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
@@ -133,6 +136,7 @@ test.describe.serial(() => {
       await page.getByPlaceholder("Enter your 6-digit code").type(code);
 
       await page.getByText("Continue").click();
+
       await expect(page.getByText("Your details")).toBeVisible();
     });
   });
