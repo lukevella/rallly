@@ -125,7 +125,6 @@
   "specifyTimesDescription": "Adj meg kezdő és záró időpontot minden lehetőséghez",
   "stepSummary": "{{total}}/{{current}}. lépés",
   "sunday": "Vasárnap",
-  "redirect": "<a>Kattints ide</a>, ha automatikusan nem lépsz tovább…",
   "timeFormat": "Időformátum:",
   "timeZone": "Időzóna:",
   "title": "Cím",
