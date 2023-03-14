@@ -12,7 +12,6 @@ import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { participants } from "./polls/participants";
-import { verification } from "./polls/verification";
 
 const defaultSelectFields: {
   id: true;
@@ -251,7 +250,6 @@ export const polls = router({
   demo,
   participants,
   comments,
-  verification,
   // END LEGACY ROUTES
   enableNotifications: possiblyPublicProcedure
     .input(z.object({ adminUrlId: z.string() }))
