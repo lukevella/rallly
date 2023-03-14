@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="2.3.2"></a>
+
+## 2.3.2 (2023-03-14)
+
+### Added
+
+- 👷‍♂️ Update build command ([#560](https://github.com/lukevella/Rallly/issues/560)) [[5c96c0a](https://github.com/lukevella/Rallly/commit/5c96c0a763bd44a33481431e29b40f721eca076d)]
+
+### Miscellaneous
+
+- 🌐 Update translations ([#558](https://github.com/lukevella/Rallly/issues/558)) [[674103b](https://github.com/lukevella/Rallly/commit/674103b0b985e1657bcf5c5b314399713cf897dd)]
+- 💦 Temporarily disable arm64 builds ([#561](https://github.com/lukevella/Rallly/issues/561)) [[087fb8e](https://github.com/lukevella/Rallly/commit/087fb8e19cd012f56de18712ca271fe34e431508)]
+- 🔓 Add config to secure instance from unauth users ([#559](https://github.com/lukevella/Rallly/issues/559)) [[1b38a3c](https://github.com/lukevella/Rallly/commit/1b38a3cf766fbe5355cdfe68aca23a1cf31a9d28)]
+
 <a name="2.3.1"></a>
 
 ## 2.3.1 (2023-03-14)
