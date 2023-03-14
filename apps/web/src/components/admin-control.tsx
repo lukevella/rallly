@@ -47,36 +47,11 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
     }
   }, [urlId, router, updatePollMutation, t]);
 
-  // TODO (Luke Vella) [2023-03-10]: We can delete this after 2.3.0 is released
-  const verifyEmail = trpc.polls.verification.verify.useMutation({
-    onSuccess: () => {
-      toast.success(t("pollHasBeenVerified"));
-      queryClient.polls.invalidate();
-      session.refresh();
-      posthog.capture("verified email");
-    },
-    onError: () => {
-      toast.error(t("linkHasExpired"));
-    },
-    onSettled: () => {
-      router.replace(`/admin/${router.query.urlId}`, undefined, {
-        shallow: true,
-      });
-    },
-  });
-
   const { participants } = useParticipants();
 
   const [isSharingVisible, setIsSharingVisible] = React.useState(
     participants.length === 0,
   );
-
-  useMount(() => {
-    const { code } = router.query;
-    if (typeof code === "string" && !poll.verified) {
-      verifyEmail.mutate({ code, pollId: poll.id });
-    }
-  });
 
   return (
     <div className="">
