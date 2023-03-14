@@ -112,22 +112,23 @@ const Discussion: React.FunctionComponent = () => {
                       {dayjs(new Date(comment.createdAt)).fromNow()}
                     </span>
                   </div>
-                  <Dropdown
-                    placement="bottom-start"
-                    trigger={<CompactButton icon={DotsHorizontal} />}
-                  >
-                    <DropdownItem
-                      icon={Trash}
-                      label={t("deleteComment")}
-                      disabled={!canDelete}
-                      onClick={() => {
-                        deleteComment.mutate({
-                          commentId: comment.id,
-                          pollId,
-                        });
-                      }}
-                    />
-                  </Dropdown>
+                  {canDelete &&
+                    <Dropdown
+                      placement="bottom-start"
+                      trigger={<CompactButton icon={DotsHorizontal} />}
+                    >
+                      <DropdownItem
+                        icon={Trash}
+                        label={t("deleteComment")}
+                        onClick={() => {
+                          deleteComment.mutate({
+                            commentId: comment.id,
+                            pollId,
+                          });
+                        }}
+                      />
+                    </Dropdown>
+                  }
                 </div>
                 <div className="w-fit whitespace-pre-wrap">
                   <TruncatedLinkify>{comment.content}</TruncatedLinkify>
