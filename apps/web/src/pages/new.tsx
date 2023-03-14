@@ -6,7 +6,7 @@ import CreatePoll from "@/components/create-poll";
 
 import StandardLayout from "../components/layouts/standard-layout";
 import { NextPageWithLayout } from "../types";
-import { withSessionSsr } from "../utils/auth";
+import { withAuthIfRequired, withSessionSsr } from "../utils/auth";
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
@@ -28,6 +28,7 @@ Page.getLayout = function getLayout(page) {
 
 export default Page;
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(
+export const getServerSideProps: GetServerSideProps = withSessionSsr([
+  withAuthIfRequired,
   withPageTranslations(["common", "app"]),
-);
+]);

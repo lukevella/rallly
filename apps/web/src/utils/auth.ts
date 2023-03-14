@@ -101,6 +101,34 @@ export const composeGetServerSideProps = (
   };
 };
 
+/**
+ * Require user to be logged in
+ * @returns
+ */
+export const withAuth: GetServerSideProps = async (ctx) => {
+  if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
+};
+
+/**
+ * Require user to be logged in if AUTH_REQUIRED is true
+ * @returns
+ */
+export const withAuthIfRequired: GetServerSideProps = async (ctx) => {
+  if (process.env.AUTH_REQUIRED === "true") {
+    return await withAuth(ctx);
+  }
+  return { props: {} };
+};
+
 export function withSessionSsr(
   handler: GetServerSideProps | GetServerSideProps[],
   options?: {

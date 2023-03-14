@@ -42,6 +42,9 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     return await withPageTranslations(["common", "app"])(ctx);
   },
+  {
+    allowGuest: true,
+  },
 );
 
 export default withSession(Page);

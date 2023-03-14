@@ -182,12 +182,16 @@ export const RegisterForm: React.FunctionComponent<{
         });
 
         if (!res.ok) {
-          switch (res.code) {
+          switch (res.reason) {
             case "userAlreadyExists":
               setError("email", {
                 message: t("userAlreadyExists"),
               });
               break;
+            case "emailNotAllowed":
+              setError("email", {
+                message: t("emailNotAllowed"),
+              });
           }
         } else {
           setToken(res.token);
@@ -308,7 +312,22 @@ export const LoginForm: React.FunctionComponent<{
             email: values.email,
           });
 
-          setToken(res.token);
+          if (res.ok) {
+            setToken(res.token);
+          } else {
+            switch (res.reason) {
+              case "emailNotAllowed":
+                setError("email", {
+                  message: t("emailNotAllowed"),
+                });
+                break;
+              case "userNotFound":
+                setError("email", {
+                  message: t("userNotFound"),
+                });
+                break;
+            }
+          }
         }}
         onChange={() => setToken(undefined)}
         email={getValues("email")}
@@ -323,13 +342,21 @@ export const LoginForm: React.FunctionComponent<{
           email: data.email,
         });
 
-        if (!res.token) {
-          setError("email", {
-            type: "not_found",
-            message: t("userNotFound"),
-          });
-        } else {
+        if (res.ok) {
           setToken(res.token);
+        } else {
+          switch (res.reason) {
+            case "emailNotAllowed":
+              setError("email", {
+                message: t("emailNotAllowed"),
+              });
+              break;
+            case "userNotFound":
+              setError("email", {
+                message: t("userNotFound"),
+              });
+              break;
+          }
         }
       })}
     >

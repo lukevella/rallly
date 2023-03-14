@@ -79,11 +79,11 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
           onClick={openLoginModal}
         />
       ) : null}
-      <DropdownItem
-        icon={Logout}
-        label={user.isGuest ? t("app:forgetMe") : t("app:logout")}
-        onClick={() => {
-          if (user?.isGuest) {
+      {user.isGuest ? (
+        <DropdownItem
+          icon={Logout}
+          label={t("app:forgetMe")}
+          onClick={() => {
             modalContext.render({
               title: t("app:areYouSure"),
               description: t("app:endingGuestSessionNotice"),
@@ -95,11 +95,11 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
               okText: t("app:endSession"),
               cancelText: t("app:cancel"),
             });
-          } else {
-            logout();
-          }
-        }}
-      />
+          }}
+        />
+      ) : (
+        <DropdownItem icon={Logout} href="/logout" label={t("app:logout")} />
+      )}
     </Dropdown>
   );
 };

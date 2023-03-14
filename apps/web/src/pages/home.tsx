@@ -11,14 +11,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   locale = "en",
 }) => {
   if (process.env.LANDING_PAGE) {
-    if (process.env.LANDING_PAGE === "false") {
-      return {
-        redirect: {
-          destination: "/new",
-          permanent: false,
-        },
-      };
-    }
     // if starts with /, it's a relative path
     if (process.env.LANDING_PAGE.startsWith("/")) {
       return {
