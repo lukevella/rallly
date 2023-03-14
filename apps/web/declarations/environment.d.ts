@@ -10,8 +10,7 @@ declare global {
        */
       NODE_ENV: "development" | "production";
       /**
-       * By default users see the landing page when they visit the root URL.
-       * Set to "false" to disable this behavior.
+       * Set to "true" to take users straight to app instead of landing page
        */
       DISABLE_LANDING_PAGE?: string;
       /**
