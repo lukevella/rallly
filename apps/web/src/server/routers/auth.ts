@@ -73,7 +73,7 @@ export const auth = router({
 
         await sendEmail("RegisterEmail", {
           to: input.email,
-          subject: "Verify Your Email Address",
+          subject: "Please verify your email address",
           props: {
             code,
             name: input.name,
