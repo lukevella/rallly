@@ -1,37 +1,20 @@
 import { GetServerSideProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import Home from "@/components/home";
+import { composeGetServerSideProps } from "@/utils/auth";
+import { withPageTranslations } from "@/utils/with-page-translations";
 
 export default function Page() {
   return <Home />;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-  locale = "en",
-}) => {
-  if (process.env.LANDING_PAGE) {
-    if (process.env.LANDING_PAGE === "false") {
-      return {
-        redirect: {
-          destination: "/new",
-          permanent: false,
-        },
-      };
+export const getServerSideProps: GetServerSideProps = composeGetServerSideProps(
+  async () => {
+    // TODO (Luke Vella) [2023-03-14]: Remove this once we split the app from the landing page
+    if (process.env.DISABLE_LANDING_PAGE === "true") {
+      return { notFound: true };
     }
-    // if starts with /, it's a relative path
-    if (process.env.LANDING_PAGE.startsWith("/")) {
-      return {
-        redirect: {
-          destination: process.env.LANDING_PAGE,
-          permanent: false,
-        },
-      };
-    }
-  }
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ["common", "homepage"])),
-    },
-  };
-};
+    return { props: {} };
+  },
+  withPageTranslations(["common", "homepage"]),
+);

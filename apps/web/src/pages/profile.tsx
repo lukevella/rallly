@@ -1,4 +1,4 @@
-import { withSessionSsr } from "@/utils/auth";
+import { withAuth, withSessionSsr } from "@/utils/auth";
 
 import { getStandardLayout } from "../components/layouts/standard-layout";
 import { Profile } from "../components/profile";
@@ -11,16 +11,9 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = getStandardLayout;
 
-export const getServerSideProps = withSessionSsr(async (ctx) => {
-  if (ctx.req.session.user.isGuest !== false) {
-    return {
-      redirect: {
-        destination: "/login",
-      },
-      props: {},
-    };
-  }
-  return withPageTranslations(["common", "app"])(ctx);
-});
+export const getServerSideProps = withSessionSsr([
+  withAuth,
+  withPageTranslations(["common", "app"]),
+]);
 
 export default Page;

@@ -10,9 +10,9 @@ declare global {
        */
       NODE_ENV: "development" | "production";
       /**
-       * Can be "false" or a relative path eg. "/new"
+       * Set to "true" to take users straight to app instead of landing page
        */
-      LANDING_PAGE: string;
+      DISABLE_LANDING_PAGE?: string;
       /**
        * Must be 32 characters long
        */
@@ -57,6 +57,17 @@ declare global {
        * Port number of the SMTP server
        */
       SMTP_PORT: string;
+      /**
+       * Comma separated list of email addresses that are allowed to register and login.
+       * If not set, all emails are allowed. Wildcard characters are supported.
+       *
+       * Example: "user@example.com, *@example.com, *@*.example.com"
+       */
+      ALLOWED_EMAILS?: string;
+      /**
+       * "true" to require authentication for creating new polls and accessing admin pages
+       */
+      AUTH_REQUIRED?: string;
     }
   }
 }

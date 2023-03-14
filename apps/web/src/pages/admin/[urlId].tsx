@@ -7,7 +7,7 @@ import { getStandardLayout } from "@/components/layouts/standard-layout";
 import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-import { withSessionSsr } from "@/utils/auth";
+import { withAuthIfRequired, withSessionSsr } from "@/utils/auth";
 import { trpc } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
@@ -51,6 +51,7 @@ Page.getLayout = getStandardLayout;
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
   [
+    withAuthIfRequired,
     withPageTranslations(["common", "app", "errors"]),
     async (ctx) => {
       return {

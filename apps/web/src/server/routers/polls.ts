@@ -8,7 +8,7 @@ import { createToken, EnableNotificationsTokenPayload } from "@/utils/auth";
 import { absoluteUrl } from "../../utils/absolute-url";
 import { nanoid } from "../../utils/nanoid";
 import { GetPollApiResponse } from "../../utils/trpc/types";
-import { publicProcedure, router } from "../trpc";
+import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { participants } from "./polls/participants";
@@ -78,7 +78,7 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 
 export const polls = router({
   // START LEGACY ROUTES
-  create: publicProcedure
+  create: possiblyPublicProcedure
     .input(
       z.object({
         title: z.string(),
@@ -168,7 +168,7 @@ export const polls = router({
         return { id: poll.id, urlId: adminUrlId };
       },
     ),
-  update: publicProcedure
+  update: possiblyPublicProcedure
     .input(
       z.object({
         urlId: z.string(),
@@ -222,7 +222,7 @@ export const polls = router({
 
       return { ...poll };
     }),
-  delete: publicProcedure
+  delete: possiblyPublicProcedure
     .input(
       z.object({
         urlId: z.string(),
@@ -253,7 +253,7 @@ export const polls = router({
   comments,
   verification,
   // END LEGACY ROUTES
-  enableNotifications: publicProcedure
+  enableNotifications: possiblyPublicProcedure
     .input(z.object({ adminUrlId: z.string() }))
     .mutation(async ({ input }) => {
       const poll = await prisma.poll.findUnique({
@@ -293,7 +293,7 @@ export const polls = router({
         },
       });
     }),
-  getByAdminUrlId: publicProcedure
+  getByAdminUrlId: possiblyPublicProcedure
     .input(
       z.object({
         urlId: z.string(),
