@@ -1,15 +1,12 @@
-import { absoluteUrl } from "@rallly/utils";
-import { Hr } from "@react-email/components";
-
 import { EmailLayout } from "./components/email-layout";
 import {
   Button,
+  Domain,
   Heading,
-  Link,
   Section,
   Text,
 } from "./components/styled-components";
-import { getDomain, removeProtocalFromUrl } from "./components/utils";
+import { getDomain } from "./components/utils";
 
 interface LoginEmailProps {
   name: string;
@@ -27,11 +24,8 @@ export const LoginEmail = ({
       footNote={
         <>
           You&apos;re receiving this email because a request was made to login
-          to{" "}
-          <Link href={absoluteUrl()}>
-            {removeProtocalFromUrl(absoluteUrl())}
-          </Link>
-          . If this wasn&apos;t you, let us know by replying to this email.
+          to <Domain />. If this wasn&apos;t you, let us know by replying to
+          this email.
         </>
       }
       recipientName={name}
@@ -42,14 +36,12 @@ export const LoginEmail = ({
         Log in to {getDomain()}
       </Button>
       <Text light={true}>This link is valid for 15 minutes</Text>
-      <Section>
-        <Text>
-          Alternatively, you can enter this 6-digit verification code directly.
-        </Text>
-        <Heading as="h1" className="tracking-widest" id="code">
-          {code}
-        </Heading>
-      </Section>
+      <Text>
+        Alternatively, you can enter this 6-digit verification code directly.
+      </Text>
+      <Heading as="h1" className="tracking-widest" id="code">
+        {code}
+      </Heading>
     </EmailLayout>
   );
 };

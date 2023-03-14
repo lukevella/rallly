@@ -138,7 +138,7 @@ export const EmailLayout = ({
               {footNote ? (
                 <>
                   <Hr />
-                  <SmallText>{footNote}</SmallText>
+                  <Text light={true}>{footNote}</Text>
                 </>
               ) : null}
             </Section>

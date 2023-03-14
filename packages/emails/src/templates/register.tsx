@@ -1,8 +1,5 @@
-import { absoluteUrl } from "@rallly/utils";
-
 import { EmailLayout } from "./components/email-layout";
-import { Domain, Heading, Link, Text } from "./components/styled-components";
-import { getDomain } from "./components/utils";
+import { Domain, Heading, Text } from "./components/styled-components";
 
 interface RegisterEmailProps {
   name: string;
@@ -18,23 +15,18 @@ export const RegisterEmail = ({
       footNote={
         <>
           You&apos;re receiving this email because a request was made to
-          register an account on{" "}
-          <Link className="text-primary-500" href={absoluteUrl()}>
-            {getDomain()}
-          </Link>
-          . If this wasn&apos;t you, please ignore this email.
+          register an account on <Domain />.
         </>
       }
       recipientName={name}
       preview={`Your 6-digit code is: ${code}`}
     >
-      <Heading>Your 6-digit code is:</Heading>
+      <Text>
+        Please use the following 6-digit verification code to verify your email:
+      </Text>
       <Heading as="h1" className="font-sans tracking-widest" id="code">
         {code}
       </Heading>
-      <Text>
-        Use this code to complete the verification process on <Domain />.
-      </Text>
       <Text light={true}>This code is valid for 15 minutes</Text>
     </EmailLayout>
   );
