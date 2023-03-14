@@ -39,6 +39,7 @@
   "editDetails": "Details bewerken",
   "editOptions": "Opties bewerken",
   "email": "E-mail",
+  "emailNotAllowed": "Dit e-mailadres is niet toegelaten.",
   "emailPlaceholder": "jessie.smith@email.com",
   "endingGuestSessionNotice": "Zodra een gastsessie is beëindigd, kan deze niet worden hervat. Je kan geen stemmen of opmerkingen bewerken die je tijdens deze sessie hebt gemaakt.",
   "endSession": "Sessie beëindigen",
