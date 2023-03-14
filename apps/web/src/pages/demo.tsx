@@ -26,9 +26,9 @@ const Demo: NextPage = () => {
   return <FullPageLoader>{t("creatingDemo")}</FullPageLoader>;
 };
 
-export const getServerSideProps = withSessionSsr(
+export const getServerSideProps = withSessionSsr([
   withAuthIfRequired,
   withPageTranslations(["common", "app"]),
-);
+]);
 
 export default withSession(Demo);
