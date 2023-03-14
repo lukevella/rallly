@@ -1,11 +1,5 @@
 import { EmailLayout } from "./components/email-layout";
-import {
-  Button,
-  Domain,
-  Heading,
-  Section,
-  Text,
-} from "./components/styled-components";
+import { Button, Domain, Heading, Text } from "./components/styled-components";
 import { getDomain } from "./components/utils";
 
 interface LoginEmailProps {
