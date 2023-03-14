@@ -2,7 +2,7 @@ import { prisma, VoteType } from "@rallly/database";
 import dayjs from "dayjs";
 
 import { nanoid } from "../../../utils/nanoid";
-import { publicProcedure, router } from "../../trpc";
+import { possiblyPublicProcedure, router } from "../../trpc";
 
 const participantData: Array<{ name: string; votes: VoteType[] }> = [
   {
@@ -26,7 +26,7 @@ const participantData: Array<{ name: string; votes: VoteType[] }> = [
 const optionValues = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
 
 export const demo = router({
-  create: publicProcedure.mutation(async () => {
+  create: possiblyPublicProcedure.mutation(async () => {
     const adminUrlId = await nanoid();
     const demoUser = { name: "John Example", email: "noreply@rallly.co" };
 
