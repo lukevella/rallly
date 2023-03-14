@@ -109,6 +109,7 @@
   "preferences": "Inställningar",
   "previousMonth": "Föregående månad",
   "profileUser": "Profil - {{username}}",
+  "redirect": "<a>Klicka här</a> om du inte omdirigeras automatiskt…",
   "register": "Registrera",
   "requiredNameError": "Namn är obligatoriskt",
   "requiredString": "“{{name}}” är obligatoriskt",

@@ -39,6 +39,7 @@
   "editDetails": "Editar detalhes",
   "editOptions": "Editar opções",
   "email": "E-mail",
+  "emailNotAllowed": "Este email não é permitido.",
   "emailPlaceholder": "fulano@email.com.br",
   "endingGuestSessionNotice": "Uma vez que uma sessão de convidado termine, ela não poderá ser retomada. Você não poderá editar nenhum voto ou comentário que tenha feito nesta sessão.",
   "endSession": "Encerrar sessão",
