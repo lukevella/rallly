@@ -10,7 +10,7 @@
         "AUTH_REQUIRED",
         "ANALYZE",
         "API_SECRET",
-        "LANDING_PAGE",
+        "DISABLE_LANDING_PAGE",
         "MAINTENANCE_MODE",
         "NEXT_PUBLIC_BASE_URL",
         "NEXT_PUBLIC_BETA",

@@ -11,10 +11,9 @@ declare global {
       NODE_ENV: "development" | "production";
       /**
        * By default users see the landing page when they visit the root URL.
-       * Set to "false" to disable this behavior or set a relative path to redirect to
-       * another page (e.g. "/new", "/profile" etc…)
+       * Set to "false" to disable this behavior.
        */
-      LANDING_PAGE?: string;
+      DISABLE_LANDING_PAGE?: string;
       /**
        * Must be 32 characters long
        */
