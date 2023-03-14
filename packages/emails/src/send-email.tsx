@@ -22,14 +22,17 @@ const getTransport = () => {
   if (env === "test") {
     transport = createTransport({ port: 4025 });
   } else {
+    const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
     transport = createTransport({
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : undefined,
       secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PWD,
-      },
+      auth: hasAuth
+        ? {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PWD,
+          }
+        : undefined,
     });
   }
   return transport;
