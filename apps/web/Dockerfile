@@ -17,7 +17,7 @@ RUN yarn --network-timeout 1000000
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
 RUN yarn db:generate
-RUN yarn turbo run build --filter=@rallly/web...
+RUN yarn build
 
 FROM node:lts AS runner
 

@@ -4,7 +4,7 @@
   "version": "2.3.1",
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build",
+    "build": "turbo run build --filter=@rallly/web...",
     "db:deploy": "turbo db:deploy",
     "db:generate": "turbo db:generate",
     "db:migrate": "yarn workspace @rallly/database prisma migrate dev",
