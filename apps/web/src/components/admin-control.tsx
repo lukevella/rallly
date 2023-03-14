@@ -4,29 +4,22 @@ import { useTranslation } from "next-i18next";
 import posthog from "posthog-js";
 import React from "react";
 import toast from "react-hot-toast";
-import { useMount } from "react-use";
 
 import { Button } from "@/components/button";
 import Share from "@/components/icons/share.svg";
 
-import { trpc } from "../utils/trpc";
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
 import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
 import { usePoll } from "./poll-context";
 import Sharing from "./sharing";
-import { useUser } from "./user-provider";
 
 export const AdminControls = (props: { children?: React.ReactNode }) => {
-  const { poll, urlId } = usePoll();
+  const { urlId } = usePoll();
   const { t } = useTranslation("app");
 
   const router = useRouter();
-
-  const queryClient = trpc.useContext();
-
-  const session = useUser();
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
 
