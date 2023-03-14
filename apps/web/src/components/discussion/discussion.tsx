@@ -120,7 +120,6 @@ const Discussion: React.FunctionComponent = () => {
                       <DropdownItem
                         icon={Trash}
                         label={t("deleteComment")}
-                        disabled={!canDelete}
                         onClick={() => {
                           deleteComment.mutate({
                             commentId: comment.id,
