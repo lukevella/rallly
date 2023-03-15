@@ -43,7 +43,6 @@
   "guest": "Khách",
   "hide": "Ẩn",
   "ifNeedBe": "Nếu cần thiết",
-  "linkHasExpired": "Liên kết của bạn đã hết hạn và không còn hiệu lực",
   "loading": "Đang tải…",
   "loadingParticipants": "Đang tải người tham dự…",
   "location": "Địa điểm",
@@ -73,6 +72,5 @@
   "noVotes": "Chưa ai bầu cho bình chọn này",
   "participant": "Người tham dự",
   "participantCount_other": "{{count}} người tham dự",
-  "pollHasBeenLocked": "Bình chọn này đã bị khóa",
-  "pollHasBeenVerified": "Bình chọn của bạn đã được xác nhận"
+  "pollHasBeenLocked": "Bình chọn này đã bị khóa"
 }
