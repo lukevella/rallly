@@ -39,6 +39,7 @@
   "editDetails": "Modifier les détails",
   "editOptions": "Modifier les options",
   "email": "Email",
+  "emailNotAllowed": "Cet e-mail n'est pas autorisé.",
   "emailPlaceholder": "jessie.smith@email.com",
   "endingGuestSessionNotice": "Une fois que la session d'un invité est terminée, elle ne peut pas être reprise. Vous ne pourrez pas modifier les votes ou les commentaires que vous avez faits lors de cette session.",
   "endSession": "Fin de la session",
