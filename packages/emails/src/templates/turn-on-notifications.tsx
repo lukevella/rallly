@@ -1,13 +1,5 @@
 import { EmailLayout } from "./components/email-layout";
-import {
-  Button,
-  Card,
-  Heading,
-  Link,
-  Section,
-  SmallText,
-  Text,
-} from "./components/styled-components";
+import { Button, Link, Section, Text } from "./components/styled-components";
 
 type EnableNotificationsEmailProps = {
   title: string;
@@ -37,16 +29,12 @@ export const EnableNotificationsEmail = ({
         Would you like to get notified when participants respond to{" "}
         <strong>{title}</strong>?
       </Text>
-      <Card>
-        <Heading>Enable notifications</Heading>
-        <Text>You will get an email when someone responds to the poll.</Text>
-        <Section>
-          <Button href={verificationLink} id="verifyEmailUrl">
-            Yes, enable notifications
-          </Button>
-        </Section>
-        <SmallText>The link will expire in 15 minutes.</SmallText>
-      </Card>
+      <Section>
+        <Button href={verificationLink} id="verifyEmailUrl">
+          Yes, enable notifications
+        </Button>
+      </Section>
+      <Text light={true}>The link will expire in 15 minutes.</Text>
     </EmailLayout>
   );
 };
