@@ -1,5 +1,27 @@
 # Changelog
 
+<a name="2.4.0"></a>
+
+## 2.4.0 (2023-03-15)
+
+### Added
+
+- 👷‍♂️ Update build command ([#560](https://github.com/lukevella/Rallly/issues/560)) [[5c96c0a](https://github.com/lukevella/Rallly/commit/5c96c0a763bd44a33481431e29b40f721eca076d)]
+
+### Changed
+
+- 💬 Update email templates ([#562](https://github.com/lukevella/Rallly/issues/562)) [[8c6c3e4](https://github.com/lukevella/Rallly/commit/8c6c3e4885a9c499535b5a9f9e024ea5f74e159b)]
+- 💄 Hide comment dropdown menu when unavailable to user ([#564](https://github.com/lukevella/Rallly/issues/564)) [[086091b](https://github.com/lukevella/Rallly/commit/086091b67f65b81437ed032eb050adc04e546b78)]
+- 🔧 Remove cache from docker image workflow [[182ff3b](https://github.com/lukevella/Rallly/commit/182ff3b49c9a870b6008ce552aebe0964b1fbf27)]
+
+### Miscellaneous
+
+- 🌐 Update translations ([#565](https://github.com/lukevella/Rallly/issues/565)) [[2e522a3](https://github.com/lukevella/Rallly/commit/2e522a3115cccb6b1215823908dce9c388da8ea7)]
+- ⚰️ Remove dead verification code ([#566](https://github.com/lukevella/Rallly/issues/566)) [[7470cfe](https://github.com/lukevella/Rallly/commit/7470cfecdf78300e39d49a51efb2cc907e3235b7)]
+- 🌐 Update translations ([#558](https://github.com/lukevella/Rallly/issues/558)) [[674103b](https://github.com/lukevella/Rallly/commit/674103b0b985e1657bcf5c5b314399713cf897dd)]
+- 💦 Temporarily disable arm64 builds ([#561](https://github.com/lukevella/Rallly/issues/561)) [[087fb8e](https://github.com/lukevella/Rallly/commit/087fb8e19cd012f56de18712ca271fe34e431508)]
+- 🔓 Add config to secure instance from unauth users ([#559](https://github.com/lukevella/Rallly/issues/559)) [[1b38a3c](https://github.com/lukevella/Rallly/commit/1b38a3cf766fbe5355cdfe68aca23a1cf31a9d28)]
+
 <a name="2.3.1"></a>
 
 ## 2.3.1 (2023-03-14)
