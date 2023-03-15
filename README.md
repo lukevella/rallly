@@ -14,8 +14,6 @@ Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://githu
 
 Check out the [self-hosting repo](https://github.com/lukevella/rallly-selfhosted) for more information on running your own instance of Rallly.
 
-_[2023-01-12]: The docker configuration for self-hosters previously stored in this repo has been moved to the self-hosting repo mentioned above. Please switch to that repo if you are self-hosting._
-
 ## Running locally
 
 Clone this repo and change directory to the root of the repository.
@@ -55,19 +53,22 @@ yarn build
 yarn start
 ```
 
-## Configuration
+## Configuration Options
 
-| Parameter            | Default                                        | Description                                                                                                                         |
-| -------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| NEXT_PUBLIC_BASE_URL | http://localhost:3000                          | The hosting url of the server, used for creating links and making api calls from the client.                                        |
-| DATABASE_URL         | - | A postgres database URL. Leave out if using the docker-compose file since it will spin up and connect to its own database instance. |
-| SECRET_PASSWORD      | -                                              | A long string (minimum 32 characters) that is used to encrypt session data.                                                         |
-| SUPPORT_EMAIL        | -                                              | An email address that will appear as the FROM email for all emails being sent out.                                                  |
-| SMTP_HOST            | -                                              | Host name of your SMTP server                                                                                                       |
-| SMTP_PORT            | -                                              | Port of your SMTP server                                                                                                            |
-| SMTP_SECURE          | false                                          | Set to "true" if SSL is enabled for your SMTP connection                                                                            |
-| SMTP_USER            | -                                              | Username to use for your SMTP connection                                                                                            |
-| SMTP_PWD             | -                                              | Password to use for your SMTP connection                                                                                            |
+The app can be configured with the following environment variables.
+
+| Environment Variable    | Default                | Description                                                                                                                                     |
+| ----------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_REQUIRED`         | `false`                | Set to `true` to require authentication for creating new polls and accessing admin pages                                                        |
+| `ALLOWED_EMAILS`        | `""`                   | Comma separated list of email addresses that are allowed to register and login. Wildcard characters are supported. Example: `*@yourcompany.com` |
+| `DISABLED_LANDING_PAGE` | `false`                | Whether or not to disable the landing page                                                                                                      |
+| `NEXT_PUBLIC_BASE_URL`  | `http://localhost:300` | The base url where this instance is accessible, including the scheme (eg. `http://` or `https://`), the domain name, and optionally a port.     |
+| `SECRET_PASSWORD`       | `""`                   | A random 32-character secret key used to encrypt user sessions                                                                                  |
+| `SMTP_HOST`             | `localhost`            | The host address of your SMTP server                                                                                                            |
+| `SMTP_PORT`             | 25 or 465              | The port of your SMTP server                                                                                                                    |
+| `SMTP_SECURE`           | false                  | Set to "true" if SSL is enabled for your SMTP connection                                                                                        |
+| `SMTP_USER`             | `""`                   | The username (if auth is enabled on your SMTP server)                                                                                           |
+| `SMTP_PWD`              | `""`                   | The password (if auth is enabled on your SMTP server)                                                                                           |
 
 ## Contributors
 
