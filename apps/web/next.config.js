@@ -40,8 +40,7 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination:
-          process.env.DISABLE_LANDING_PAGE === "true" ? "/new" : "/home",
+        destination: "/home",
       },
     ];
   },
