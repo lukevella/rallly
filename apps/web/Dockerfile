@@ -1,11 +1,11 @@
-FROM node:lts AS builder
+FROM node:16 AS builder
 
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
 RUN turbo prune --scope=@rallly/web --docker
 
-FROM node:lts AS installer
+FROM node:16 AS installer
 
 WORKDIR /app
 COPY .gitignore .gitignore
@@ -19,7 +19,7 @@ COPY turbo.json turbo.json
 RUN yarn db:generate
 RUN yarn build
 
-FROM node:lts AS runner
+FROM node:16 AS runner
 
 WORKDIR /app
 
