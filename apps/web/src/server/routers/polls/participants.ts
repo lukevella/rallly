@@ -123,6 +123,19 @@ export const participants = router({
 
       return participant;
     }),
+  rename: publicProcedure
+    .input(z.object({ participantId: z.string(), newName: z.string() }))
+    .mutation(async ({ input: { participantId, newName } }) => {
+      await prisma.participant.update({
+        where: {
+          id: participantId,
+        },
+        data: {
+          name: newName,
+        },
+        select: null,
+      });
+    }),
   update: publicProcedure
     .input(
       z.object({

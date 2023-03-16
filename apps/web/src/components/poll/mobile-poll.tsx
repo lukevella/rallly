@@ -6,9 +6,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
-import Pencil from "@/components/icons/pencil-alt.svg";
 import PlusCircle from "@/components/icons/plus-circle.svg";
-import Trash from "@/components/icons/trash.svg";
+import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { You } from "@/components/you";
 
@@ -178,52 +177,28 @@ const MobilePoll: React.FunctionComponent = () => {
                 {t("cancel")}
               </Button>
             ) : selectedParticipant ? (
-              <div className="flex space-x-2">
-                <Button
-                  icon={<Pencil />}
-                  disabled={
-                    poll.closed ||
-                    // if user is  participant (not admin)
-                    (!admin &&
-                      // and does not own this participant
-                      !session.ownsObject(selectedParticipant) &&
-                      // and the participant has been claimed by a different user
-                      !isUnclaimed(selectedParticipant))
-                    // not allowed to edit
-                  }
-                  onClick={() => {
-                    setIsEditing(true);
-                    reset({
-                      votes: optionIds.map((optionId) => ({
-                        optionId,
-                        type: getVote(selectedParticipant.id, optionId),
-                      })),
-                    });
-                  }}
-                >
-                  {t("edit")}
-                </Button>
-                <Button
-                  icon={<Trash />}
-                  disabled={
-                    poll.closed ||
-                    // if user is  participant (not admin)
-                    (!admin &&
-                      // and does not own this participant
-                      !session.ownsObject(selectedParticipant) &&
-                      // or the participant has been claimed by a different user
-                      !isUnclaimed(selectedParticipant))
-                    // not allowed to edit
-                  }
-                  data-testid="delete-participant-button"
-                  type="danger"
-                  onClick={() => {
-                    if (selectedParticipant) {
-                      confirmDeleteParticipant(selectedParticipant.id);
-                    }
-                  }}
-                />
-              </div>
+              <ParticipantDropdown
+                disabled={
+                  poll.closed ||
+                  // if user is  participant (not admin)
+                  (!admin &&
+                    // and does not own this participant
+                    !session.ownsObject(selectedParticipant) &&
+                    // and the participant has been claimed by a different user
+                    !isUnclaimed(selectedParticipant))
+                  // not allowed to edit
+                }
+                participant={selectedParticipant}
+                onEdit={() => {
+                  setIsEditing(true);
+                  reset({
+                    votes: optionIds.map((optionId) => ({
+                      optionId,
+                      type: getVote(selectedParticipant.id, optionId),
+                    })),
+                  });
+                }}
+              />
             ) : (
               <Button
                 type="primary"
@@ -262,7 +237,7 @@ const MobilePoll: React.FunctionComponent = () => {
           {isEditing ? (
             <m.div
               variants={{
-                hidden: { opacity: 0, y: -100, height: 0 },
+                hidden: { opacity: 0, y: -20, height: 0 },
                 visible: { opacity: 1, y: 0, height: "auto" },
               }}
               initial="hidden"

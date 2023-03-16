@@ -2,6 +2,7 @@ import { VoteType } from "@rallly/database";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
+import { useMount } from "react-use";
 
 import { useFormValidation } from "../utils/form-validation";
 import { Button } from "./button";
@@ -67,13 +68,17 @@ const VoteSummary = ({
 
 export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const { t } = useTranslation("app");
-  const { register, formState, handleSubmit } =
+  const { register, formState, setFocus, handleSubmit } =
     useForm<NewParticipantFormData>();
   const { requiredString, validEmail } = useFormValidation();
   const { poll } = usePoll();
   const addParticipant = useAddParticipantMutation();
+  useMount(() => {
+    setFocus("name");
+  });
+
   return (
-    <div className="max-w-full p-4">
+    <div className="w-96 max-w-full p-4">
       <div className="text-lg font-semibold text-slate-800">
         {t("newParticipant")}
       </div>
@@ -96,7 +101,6 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           </label>
           <TextInput
             className="w-full"
-            autoFocus={true}
             error={!!formState.errors.name}
             disabled={formState.isSubmitting}
             placeholder={t("namePlaceholder")}
@@ -157,6 +161,8 @@ export const useNewParticipantModal = () => {
 
   const showNewParticipantModal = (props: NewParticipantModalProps) => {
     return modalContext.render({
+      showClose: true,
+      overlayClosable: true,
       content: function Content({ close }) {
         return (
           <NewParticipantModal

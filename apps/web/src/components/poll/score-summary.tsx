@@ -28,12 +28,10 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
               duration: 0.1,
             }}
             initial={{
-              opacity: 0,
               y: 10 * direction,
             }}
             animate={{ opacity: 1, y: 0 }}
             exit={{
-              opacity: 0,
               y: 10 * direction,
             }}
             key={score}
