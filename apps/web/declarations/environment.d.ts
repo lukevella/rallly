@@ -68,6 +68,22 @@ declare global {
        * "true" to require authentication for creating new polls and accessing admin pages
        */
       AUTH_REQUIRED?: string;
+      /**
+       * Determines what email provider to use. "smtp" or "ses"
+       */
+      EMAIL_PROVIDER?: "smtp" | "ses";
+      /**
+       * AWS access key ID
+       */
+      AWS_ACCESS_KEY_ID?: string;
+      /**
+       * AWS secret access key
+       */
+      AWS_SECRET_ACCESS_KEY?: string;
+      /**
+       * AWS region
+       */
+      AWS_REGION?: string;
     }
   }
 }
