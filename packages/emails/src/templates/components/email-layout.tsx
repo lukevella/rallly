@@ -127,7 +127,7 @@ export const EmailLayout = ({
           },
         }}
       >
-        <Body className="bg-white px-3 py-6">
+        <Body className="bg-white p-3">
           <Container className="max-w-xl">
             <Section className="my-4">
               <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
