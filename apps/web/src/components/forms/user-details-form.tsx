@@ -19,8 +19,10 @@ export const UserDetailsForm: React.FunctionComponent<
     handleSubmit,
     register,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<UserDetailsData>({ defaultValues });
+
+  const isWorking = isSubmitting || isSubmitSuccessful;
 
   React.useEffect(() => {
     if (onChange) {
@@ -44,6 +46,7 @@ export const UserDetailsForm: React.FunctionComponent<
           className={clsx("input w-full", {
             "input-error": errors.name,
           })}
+          disabled={isWorking}
           placeholder={t("namePlaceholder")}
           {...register("name", { validate: requiredString })}
         />
@@ -58,6 +61,7 @@ export const UserDetailsForm: React.FunctionComponent<
           className={clsx("input w-full", {
             "input-error": errors.contact,
           })}
+          disabled={isWorking}
           placeholder={t("emailPlaceholder")}
           {...register("contact", {
             validate: validEmail,
