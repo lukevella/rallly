@@ -1,5 +1,29 @@
 # Changelog
 
+<a name="2.4.1"></a>
+
+## 2.4.1 (2023-03-16)
+
+### Added
+
+- 📈 Capture participant email in posthog ([#569](https://github.com/lukevella/Rallly/issues/569)) [[62a5c65](https://github.com/lukevella/Rallly/commit/62a5c6580305a1f4c0d8c5e6f17b17194f15b5c2)]
+
+### Changed
+
+- 📌 Pin base image version for Dockerfile [[213badd](https://github.com/lukevella/Rallly/commit/213badde9ba2f3bc0c6f18761202dd80920eb29c)]
+- 🔧 Pin node version [[e85669d](https://github.com/lukevella/Rallly/commit/e85669ddf0170cc9870278192bd3966097d70ab4)]
+
+### Fixed
+
+- 🐛 Fix &#x60;DISABLE_LANDING_PAGE&#x60; not working ([#572](https://github.com/lukevella/Rallly/issues/572)) [[86eaf5d](https://github.com/lukevella/Rallly/commit/86eaf5df10bfaf529afe3e92b4dbbd9ccde18b51)]
+
+### Miscellaneous
+
+- 📝 Update README.md [[5962b6c](https://github.com/lukevella/Rallly/commit/5962b6c8f1a9977f4eeea31c0225729c4a6be5b2)]
+- 📝 Fix typo [[3bb1eb8](https://github.com/lukevella/Rallly/commit/3bb1eb8ac603783ef1e8f04d914cb109adf831e5)]
+- 📝 Update README [[4f98f4b](https://github.com/lukevella/Rallly/commit/4f98f4be6fb7749adad549d8fb23d45ae6b2ffc4)]
+- 🌐 New translations app.json (French) ([#567](https://github.com/lukevella/Rallly/issues/567)) [[ec3d300](https://github.com/lukevella/Rallly/commit/ec3d300736a850669af7948a015be555587ca044)]
+
 <a name="2.4.0"></a>
 
 ## 2.4.0 (2023-03-15)
