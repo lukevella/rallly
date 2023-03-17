@@ -199,23 +199,16 @@ const Poll: React.FunctionComponent = () => {
           </div>
           <div>
             {participants.length === 0 && !shouldShowNewParticipantForm ? (
-              <div className="p-3 text-center text-slate-800">
-                <div className="flex items-center justify-center rounded bg-gray-100 p-4">
-                  <div>
-                    <div className="font-semibold">No participants yet</div>
-                    <div className="text-gray-500">
-                      Share your participant link to start collecting responses
-                    </div>
-                  </div>
-                </div>
+              <div className="border-t bg-gray-50 p-4 text-center text-slate-400">
+                {t("noParticipants")}
               </div>
             ) : (
-              <div className="py-2">
+              <div>
                 {shouldShowNewParticipantForm &&
                 !poll.closed &&
                 !editingParticipantId ? (
                   <ParticipantRowForm
-                    className="shrink-0"
+                    className="mb-2 shrink-0"
                     onSubmit={async ({ votes }) => {
                       showNewParticipantModal({
                         votes,
@@ -226,36 +219,34 @@ const Poll: React.FunctionComponent = () => {
                     }}
                   />
                 ) : null}
-                {participants.map((participant, i) => {
-                  return (
-                    <ParticipantRow
-                      key={i}
-                      className={
-                        editingParticipantId &&
-                        editingParticipantId !== participant.id
-                          ? "opacity-50"
-                          : ""
-                      }
-                      participant={participant}
-                      disableEditing={!!editingParticipantId}
-                      editMode={editingParticipantId === participant.id}
-                      onChangeEditMode={(isEditing) => {
-                        if (isEditing) {
-                          setShouldShowNewParticipantForm(false);
-                          setEditingParticipantId(participant.id);
-                        }
-                      }}
-                      onSubmit={async ({ votes }) => {
-                        await updateParticipant.mutateAsync({
-                          participantId: participant.id,
-                          pollId: poll.id,
-                          votes,
-                        });
-                        setEditingParticipantId(null);
-                      }}
-                    />
-                  );
-                })}
+                {participants.length > 0 ? (
+                  <div className="py-2">
+                    {participants.map((participant, i) => {
+                      return (
+                        <ParticipantRow
+                          key={i}
+                          participant={participant}
+                          disableEditing={!!editingParticipantId}
+                          editMode={editingParticipantId === participant.id}
+                          onChangeEditMode={(isEditing) => {
+                            if (isEditing) {
+                              setShouldShowNewParticipantForm(false);
+                              setEditingParticipantId(participant.id);
+                            }
+                          }}
+                          onSubmit={async ({ votes }) => {
+                            await updateParticipant.mutateAsync({
+                              participantId: participant.id,
+                              pollId: poll.id,
+                              votes,
+                            });
+                            setEditingParticipantId(null);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                ) : null}
               </div>
             )}
           </div>

@@ -2,14 +2,11 @@ import { Participant, Vote, VoteType } from "@rallly/database";
 import clsx from "clsx";
 import * as React from "react";
 
-import { Button } from "@/components/button";
-import DotsVertical from "@/components/icons/dots-horizontal.svg";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 
 import { ParticipantFormSubmitted } from "../types";
-import { useDeleteParticipantModal } from "../use-delete-participant-modal";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
 import ControlledScrollArea from "./controlled-scroll-area";
@@ -69,7 +66,7 @@ export const ParticipantRowView: React.FunctionComponent<{
             >
               <div
                 className={clsx(
-                  "flex h-full w-full items-center justify-center rounded border border-slate-200 bg-slate-50/75",
+                  "flex h-full w-full items-center justify-center rounded border bg-gray-50",
                 )}
               >
                 <VoteIcon type={vote} />
