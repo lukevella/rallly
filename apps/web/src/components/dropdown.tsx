@@ -92,9 +92,10 @@ export const DropdownItem: React.FunctionComponent<{
           // in a dropdown
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           href={href as any}
+          disabled={disabled}
           onClick={onClick}
           className={clsx(
-            "relative flex w-full select-none items-center whitespace-nowrap rounded py-1.5 pl-2 pr-4 font-medium text-slate-600",
+            "flex w-full items-center whitespace-nowrap rounded py-1.5 pl-2 pr-4 font-medium text-slate-600",
             {
               "bg-slate-100": active,
               "opacity-50": disabled,

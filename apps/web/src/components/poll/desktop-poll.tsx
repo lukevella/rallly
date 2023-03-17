@@ -1,4 +1,3 @@
-import { AnimatePresence, m } from "framer-motion";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
@@ -62,7 +61,7 @@ const Poll: React.FunctionComponent = () => {
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
 
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(!poll.closed && !userAlreadyVoted);
+    React.useState(!(poll.closed || userAlreadyVoted));
 
   const pollWidth = sidebarWidth + options.length * columnWidth;
 
@@ -109,18 +108,20 @@ const Poll: React.FunctionComponent = () => {
       >
         <div className="flex flex-col overflow-hidden">
           <div className="flex h-14 shrink-0 items-center justify-between border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
-            <div className="p-1">
+            <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
-                <Trans
-                  t={t}
-                  i18nKey="saveInstruction"
-                  values={{
-                    action: shouldShowNewParticipantForm
-                      ? t("continue")
-                      : t("save"),
-                  }}
-                  components={{ b: <strong /> }}
-                />
+                <div className="px-1">
+                  <Trans
+                    t={t}
+                    i18nKey="saveInstruction"
+                    values={{
+                      action: shouldShowNewParticipantForm
+                        ? t("continue")
+                        : t("save"),
+                    }}
+                    components={{ b: <strong /> }}
+                  />
+                </div>
               ) : (
                 <div className="flex gap-2">
                   <div className="font-semibold text-slate-800">
@@ -141,7 +142,7 @@ const Poll: React.FunctionComponent = () => {
               )}
             </div>
             <div className="flex items-center gap-3">
-              <div className="p-1">
+              <div className="px-3">
                 {t("optionCount", { count: options.length })}
               </div>
               {maxScrollPosition > 0 ? (
@@ -182,111 +183,91 @@ const Poll: React.FunctionComponent = () => {
           <div>
             <div className="flex py-3">
               <div
-                className="flex shrink-0 items-center pl-4 pr-2 font-medium"
+                className="flex shrink-0 items-end pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
-              ></div>
+              >
+                <div className="font-semibold text-slate-800"></div>
+              </div>
               <PollHeader />
             </div>
           </div>
-          <div className="pb-2">
-            <AnimatePresence initial={false}>
+          <div>
+            <div>
               {shouldShowNewParticipantForm &&
               !poll.closed &&
               !editingParticipantId ? (
-                <m.div
-                  variants={{
-                    hidden: { height: 0, y: -50, opacity: 0 },
-                    visible: { height: "auto", y: 0, opacity: 1 },
-                    exit: { height: 0, opacity: 0, y: -25 },
-                  }}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  <ParticipantRowForm
-                    className="shrink-0"
-                    onSubmit={async ({ votes }) => {
-                      showNewParticipantModal({
-                        votes,
-                        onSubmit: () => {
-                          setShouldShowNewParticipantForm(false);
-                        },
-                      });
-                    }}
-                  />
-                </m.div>
-              ) : null}
-            </AnimatePresence>
-            {participants.map((participant, i) => {
-              return (
-                <ParticipantRow
-                  key={i}
-                  className={
-                    editingParticipantId &&
-                    editingParticipantId !== participant.id
-                      ? "opacity-50"
-                      : ""
-                  }
-                  participant={participant}
-                  disableEditing={!!editingParticipantId}
-                  editMode={editingParticipantId === participant.id}
-                  onChangeEditMode={(isEditing) => {
-                    if (isEditing) {
-                      setShouldShowNewParticipantForm(false);
-                      setEditingParticipantId(participant.id);
-                    }
-                  }}
+                <ParticipantRowForm
+                  className="mb-2 shrink-0"
                   onSubmit={async ({ votes }) => {
-                    await updateParticipant.mutateAsync({
-                      participantId: participant.id,
-                      pollId: poll.id,
+                    showNewParticipantModal({
                       votes,
+                      onSubmit: () => {
+                        setShouldShowNewParticipantForm(false);
+                      },
                     });
-                    setEditingParticipantId(null);
                   }}
                 />
-              );
-            })}
-          </div>
-          <AnimatePresence initial={false}>
-            {!poll.closed &&
-            (shouldShowNewParticipantForm || editingParticipantId) ? (
-              <m.div
-                variants={{
-                  hidden: { height: 0, y: 30, opacity: 0 },
-                  visible: { height: "auto", y: 0, opacity: 1 },
-                }}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                className="flex shrink-0 items-center border-t bg-gray-50"
-              >
-                <div className="flex w-full items-center justify-between gap-3 p-3">
-                  <Button
-                    onClick={() => {
-                      if (editingParticipantId) {
-                        setEditingParticipantId(null);
-                      } else {
-                        setShouldShowNewParticipantForm(false);
-                      }
-                    }}
-                  >
-                    {t("cancel")}
-                  </Button>
-                  <Button
-                    key="submit"
-                    form="participant-row-form"
-                    htmlType="submit"
-                    type="primary"
-                    loading={
-                      addParticipant.isLoading || updateParticipant.isLoading
-                    }
-                  >
-                    {shouldShowNewParticipantForm ? t("continue") : t("save")}
-                  </Button>
+              ) : null}
+              {participants.length > 0 ? (
+                <div className="py-2">
+                  {participants.map((participant, i) => {
+                    return (
+                      <ParticipantRow
+                        key={i}
+                        participant={participant}
+                        disableEditing={!!editingParticipantId}
+                        editMode={editingParticipantId === participant.id}
+                        onChangeEditMode={(isEditing) => {
+                          if (isEditing) {
+                            setShouldShowNewParticipantForm(false);
+                            setEditingParticipantId(participant.id);
+                          }
+                        }}
+                        onSubmit={async ({ votes }) => {
+                          await updateParticipant.mutateAsync({
+                            participantId: participant.id,
+                            pollId: poll.id,
+                            votes,
+                          });
+                          setEditingParticipantId(null);
+                        }}
+                      />
+                    );
+                  })}
                 </div>
-              </m.div>
-            ) : null}
-          </AnimatePresence>
+              ) : null}
+            </div>
+          </div>
+
+          {!poll.closed &&
+          (shouldShowNewParticipantForm || editingParticipantId) ? (
+            <div className="flex shrink-0 items-center border-t bg-gray-50">
+              <div className="flex w-full items-center justify-between gap-3 p-3">
+                <Button
+                  onClick={() => {
+                    if (editingParticipantId) {
+                      setEditingParticipantId(null);
+                    } else {
+                      setShouldShowNewParticipantForm(false);
+                    }
+                  }}
+                >
+                  {t("cancel")}
+                </Button>
+                <Button
+                  key="submit"
+                  form="participant-row-form"
+                  htmlType="submit"
+                  type="primary"
+                  loading={
+                    addParticipant.isLoading || updateParticipant.isLoading
+                  }
+                >
+                  {shouldShowNewParticipantForm ? t("continue") : t("save")}
+                </Button>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </PollContext.Provider>

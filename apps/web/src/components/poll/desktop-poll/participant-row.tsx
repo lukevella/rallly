@@ -1,17 +1,12 @@
 import { Participant, Vote, VoteType } from "@rallly/database";
 import clsx from "clsx";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import DotsVertical from "@/components/icons/dots-vertical.svg";
-import Pencil from "@/components/icons/pencil-alt.svg";
-import Trash from "@/components/icons/trash.svg";
+import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 
-import Dropdown, { DropdownItem } from "../../dropdown";
 import { ParticipantFormSubmitted } from "../types";
-import { useDeleteParticipantModal } from "../use-delete-participant-modal";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
 import ControlledScrollArea from "./controlled-scroll-area";
@@ -29,11 +24,9 @@ export interface ParticipantRowProps {
 
 export const ParticipantRowView: React.FunctionComponent<{
   name: string;
-  editable?: boolean;
+  action?: React.ReactNode;
   color?: string;
   votes: Array<VoteType | undefined>;
-  onEdit?: () => void;
-  onDelete?: () => void;
   columnWidth: number;
   className?: string;
   sidebarWidth: number;
@@ -41,18 +34,15 @@ export const ParticipantRowView: React.FunctionComponent<{
   participantId: string;
 }> = ({
   name,
-  editable,
+  action,
   votes,
-  onEdit,
   className,
-  onDelete,
   sidebarWidth,
   columnWidth,
   isYou,
   color,
   participantId,
 }) => {
-  const { t } = useTranslation("app");
   return (
     <div
       data-testid="participant-row"
@@ -64,28 +54,7 @@ export const ParticipantRowView: React.FunctionComponent<{
         style={{ width: sidebarWidth }}
       >
         <UserAvatar name={name} showName={true} isYou={isYou} color={color} />
-        {editable ? (
-          <div className="flex">
-            <Dropdown
-              placement="bottom-start"
-              trigger={
-                <button
-                  data-testid="participant-menu"
-                  className="text-slate-500 hover:text-slate-800"
-                >
-                  <DotsVertical className="h-3" />
-                </button>
-              }
-            >
-              <DropdownItem icon={Pencil} onClick={onEdit} label={t("edit")} />
-              <DropdownItem
-                icon={Trash}
-                onClick={onDelete}
-                label={t("delete")}
-              />
-            </Dropdown>
-          </div>
-        ) : null}
+        {action}
       </div>
       <ControlledScrollArea className="h-full">
         {votes.map((vote, i) => {
@@ -97,7 +66,7 @@ export const ParticipantRowView: React.FunctionComponent<{
             >
               <div
                 className={clsx(
-                  "flex h-full w-full items-center justify-center rounded border border-slate-200 bg-slate-50/75",
+                  "flex h-full w-full items-center justify-center rounded border bg-gray-50",
                 )}
               >
                 <VoteIcon type={vote} />
@@ -119,8 +88,6 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   onChangeEditMode,
 }) => {
   const { columnWidth, sidebarWidth } = usePollContext();
-
-  const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const session = useUser();
   const { poll, getVote, options, admin } = usePoll();
@@ -153,24 +120,27 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   }
 
   return (
-    <ParticipantRowView
-      sidebarWidth={sidebarWidth}
-      columnWidth={columnWidth}
-      className={className}
-      name={participant.name}
-      votes={options.map(({ optionId }) => {
-        return getVote(participant.id, optionId);
-      })}
-      participantId={participant.id}
-      editable={canEdit}
-      isYou={isYou}
-      onEdit={() => {
-        onChangeEditMode?.(true);
-      }}
-      onDelete={() => {
-        confirmDeleteParticipant(participant.id);
-      }}
-    />
+    <>
+      <ParticipantRowView
+        sidebarWidth={sidebarWidth}
+        columnWidth={columnWidth}
+        className={className}
+        name={participant.name}
+        votes={options.map(({ optionId }) => {
+          return getVote(participant.id, optionId);
+        })}
+        participantId={participant.id}
+        action={
+          canEdit ? (
+            <ParticipantDropdown
+              participant={participant}
+              onEdit={() => onChangeEditMode?.(true)}
+            />
+          ) : null
+        }
+        isYou={isYou}
+      />
+    </>
   );
 };
 
