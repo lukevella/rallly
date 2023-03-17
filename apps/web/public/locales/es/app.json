@@ -12,6 +12,8 @@
   "calendarHelp": "No puedes crear una encuesta sin ninguna opción. Añada al menos una opción para continuar.",
   "calendarHelpTitle": "¿Olvidaste algo?",
   "cancel": "Cancelar",
+  "changeName": "Cambiar el nombre",
+  "changeNameDescription": "Ingrese un nuevo nombre para este participante.",
   "comment": "Comentario",
   "commentPlaceholder": "Dejar un comentario en esta encuesta (visible para todos)",
   "comments": "Comentarios",
