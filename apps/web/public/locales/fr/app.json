@@ -109,6 +109,7 @@
   "preferences": "Préférences",
   "previousMonth": "Mois précédent",
   "profileUser": "Profil - {{username}}",
+  "redirect": "<a>Cliquez ici</a> si vous n'êtes pas redirigé automatiquement…",
   "register": "S'inscrire",
   "requiredNameError": "Le nom est obligatoire",
   "requiredString": "«{{name}}» est obligatoire",
