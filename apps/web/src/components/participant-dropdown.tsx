@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import { posthog } from "posthog-js";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";
@@ -91,7 +92,15 @@ const ChangeNameModal = (props: {
   participantId: string;
   onDone: () => void;
 }) => {
-  const changeName = trpc.polls.participants.rename.useMutation();
+  const changeName = trpc.polls.participants.rename.useMutation({
+    onSuccess: (_, { participantId, newName }) => {
+      posthog.capture("changed name", {
+        participantId,
+        oldName: props.oldName,
+        newName,
+      });
+    },
+  });
   const { register, handleSubmit, setFocus, formState } =
     useForm<ChangeNameForm>({
       defaultValues: {
