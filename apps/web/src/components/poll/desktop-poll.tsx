@@ -130,18 +130,21 @@ const Poll: React.FunctionComponent = () => {
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-4">
-                  <Button
-                    type="primary"
-                    icon={<PlusCircle />}
-                    disabled={poll.closed}
-                    onClick={() => {
-                      setEditingParticipantId(null);
-                      setShouldShowNewParticipantForm(true);
-                    }}
-                  >
-                    {t("new")}
-                  </Button>
+                <div className="flex gap-2">
+                  <div className="font-semibold text-slate-800">
+                    {t("participantCount", { count: participants.length })}
+                  </div>
+                  {poll.closed ? null : (
+                    <button
+                      className="hover:text-primary-500 rounded"
+                      onClick={() => {
+                        setEditingParticipantId(null);
+                        setShouldShowNewParticipantForm(true);
+                      }}
+                    >
+                      + {t("new")}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -190,9 +193,7 @@ const Poll: React.FunctionComponent = () => {
                 className="flex shrink-0 items-end pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
               >
-                <div className="font-semibold text-slate-800">
-                  {t("participantCount", { count: participants.length })}
-                </div>
+                <div className="font-semibold text-slate-800"></div>
               </div>
               <PollHeader />
             </div>
