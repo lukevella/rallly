@@ -4,7 +4,6 @@ import { useMeasure } from "react-use";
 
 import ArrowLeft from "@/components/icons/arrow-left.svg";
 import ArrowRight from "@/components/icons/arrow-right.svg";
-import PlusCircle from "@/components/icons/plus-circle.svg";
 
 import { Button } from "../button";
 import { useNewParticipantModal } from "../new-participant-modal";
@@ -25,14 +24,8 @@ const minSidebarWidth = 200;
 const Poll: React.FunctionComponent = () => {
   const { t } = useTranslation("app");
 
-  const {
-    poll,
-    admin,
-    options,
-    targetTimeZone,
-    setTargetTimeZone,
-    userAlreadyVoted,
-  } = usePoll();
+  const { poll, options, targetTimeZone, setTargetTimeZone, userAlreadyVoted } =
+    usePoll();
 
   const { participants } = useParticipants();
 

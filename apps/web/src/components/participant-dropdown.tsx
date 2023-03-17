@@ -39,7 +39,7 @@ export const ParticipantDropdown = ({
       <Dropdown
         placement="bottom-start"
         trigger={
-          <Button>
+          <Button data-testid="participant-menu">
             <DotsHorizontal className="h-4 text-slate-500" />
           </Button>
         }

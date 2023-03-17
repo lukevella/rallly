@@ -4,8 +4,6 @@ import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
 
-import Tooltip from "@/components/tooltip";
-
 import { useFormValidation } from "../utils/form-validation";
 import { Button } from "./button";
 import { useModalContext } from "./modal/modal-provider";

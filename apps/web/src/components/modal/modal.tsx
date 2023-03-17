@@ -66,7 +66,10 @@ const Modal: React.FunctionComponent<ModalProps> = ({
               exit={{ opacity: 0, scale: 0.9 }}
               className="relative z-50 m-3 inline-block max-w-full transform text-left align-middle sm:m-8"
             >
-              <div className="shadow-huge max-w-full overflow-hidden rounded-md bg-white">
+              <div
+                data-testid="modal"
+                className="shadow-huge max-w-full overflow-hidden rounded-md bg-white"
+              >
                 {showClose ? (
                   <button
                     role="button"
