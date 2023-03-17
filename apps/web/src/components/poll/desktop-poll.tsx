@@ -68,7 +68,7 @@ const Poll: React.FunctionComponent = () => {
     columnWidth * options.length - columnWidth * numberOfVisibleColumns;
 
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(!(admin || poll.closed || userAlreadyVoted));
+    React.useState(!(poll.closed || userAlreadyVoted));
 
   const pollWidth = sidebarWidth + options.length * columnWidth;
 
@@ -198,57 +198,51 @@ const Poll: React.FunctionComponent = () => {
             </div>
           </div>
           <div>
-            {participants.length === 0 && !shouldShowNewParticipantForm ? (
-              <div className="border-t bg-gray-50 p-4 text-center text-slate-400">
-                {t("noParticipants")}
-              </div>
-            ) : (
-              <div>
-                {shouldShowNewParticipantForm &&
-                !poll.closed &&
-                !editingParticipantId ? (
-                  <ParticipantRowForm
-                    className="mb-2 shrink-0"
-                    onSubmit={async ({ votes }) => {
-                      showNewParticipantModal({
-                        votes,
-                        onSubmit: () => {
-                          setShouldShowNewParticipantForm(false);
-                        },
-                      });
-                    }}
-                  />
-                ) : null}
-                {participants.length > 0 ? (
-                  <div className="py-2">
-                    {participants.map((participant, i) => {
-                      return (
-                        <ParticipantRow
-                          key={i}
-                          participant={participant}
-                          disableEditing={!!editingParticipantId}
-                          editMode={editingParticipantId === participant.id}
-                          onChangeEditMode={(isEditing) => {
-                            if (isEditing) {
-                              setShouldShowNewParticipantForm(false);
-                              setEditingParticipantId(participant.id);
-                            }
-                          }}
-                          onSubmit={async ({ votes }) => {
-                            await updateParticipant.mutateAsync({
-                              participantId: participant.id,
-                              pollId: poll.id,
-                              votes,
-                            });
-                            setEditingParticipantId(null);
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            )}
+            <div>
+              {shouldShowNewParticipantForm &&
+              !poll.closed &&
+              !editingParticipantId ? (
+                <ParticipantRowForm
+                  className="mb-2 shrink-0"
+                  onSubmit={async ({ votes }) => {
+                    showNewParticipantModal({
+                      votes,
+                      onSubmit: () => {
+                        setShouldShowNewParticipantForm(false);
+                      },
+                    });
+                  }}
+                />
+              ) : null}
+              {participants.length > 0 ? (
+                <div className="py-2">
+                  {participants.map((participant, i) => {
+                    return (
+                      <ParticipantRow
+                        key={i}
+                        participant={participant}
+                        disableEditing={!!editingParticipantId}
+                        editMode={editingParticipantId === participant.id}
+                        onChangeEditMode={(isEditing) => {
+                          if (isEditing) {
+                            setShouldShowNewParticipantForm(false);
+                            setEditingParticipantId(participant.id);
+                          }
+                        }}
+                        onSubmit={async ({ votes }) => {
+                          await updateParticipant.mutateAsync({
+                            participantId: participant.id,
+                            pollId: poll.id,
+                            votes,
+                          });
+                          setEditingParticipantId(null);
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
           </div>
 
           {!poll.closed &&

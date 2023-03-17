@@ -85,7 +85,6 @@
   "nextMonth": "Next month",
   "no": "No",
   "noDatesSelected": "No dates selected",
-  "noParticipants": "No one has responded yet…",
   "notificationsDisabled": "Notifications have been disabled",
   "notificationsEnabled": "Notifications have been enabled for <b>{{title}}</b>",
   "notificationsOff": "Get notified when participants respond to your poll",
