@@ -20,7 +20,6 @@ import { isUnclaimed, useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
 import { ParticipantForm } from "./types";
-import { useDeleteParticipantModal } from "./use-delete-participant-modal";
 import UserAvatar from "./user-avatar";
 
 if (typeof window !== "undefined") {
@@ -56,8 +55,10 @@ const MobilePoll: React.FunctionComponent = () => {
   const [selectedParticipantId, setSelectedParticipantId] = React.useState<
     string | undefined
   >(() => {
-    const participant = participants.find((p) => session.ownsObject(p));
-    return participant?.id;
+    if (!admin) {
+      const participant = participants.find((p) => session.ownsObject(p));
+      return participant?.id;
+    }
   });
 
   const selectedParticipant = selectedParticipantId
@@ -73,8 +74,6 @@ const MobilePoll: React.FunctionComponent = () => {
   const { t } = useTranslation("app");
 
   const updateParticipant = useUpdateParticipantMutation();
-
-  const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const showNewParticipantModal = useNewParticipantModal();
 
