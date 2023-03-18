@@ -51,17 +51,13 @@ export const comments = router({
   delete: publicProcedure
     .input(
       z.object({
-        pollId: z.string(),
         commentId: z.string(),
       }),
     )
-    .mutation(async ({ input: { pollId, commentId } }) => {
+    .mutation(async ({ input: { commentId } }) => {
       await prisma.comment.delete({
         where: {
-          id_pollId: {
-            id: commentId,
-            pollId,
-          },
+          id: commentId,
         },
       });
     }),
