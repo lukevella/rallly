@@ -16,17 +16,11 @@ fi
 # Replace the version in the package.json file
 sed -i "" "s/\"version\": \".*\"/\"version\": \"$new_version\"/g" package.json
 
-# Update the changelog file
-yarn changelog:update
-
-# Run prettier on the changelog file
-yarn prettier --write CHANGELOG.md
-
 # Commit the changes with a message indicating the new version number
-git add package.json CHANGELOG.md
+git add package.json
 git commit -m "🔖 Release $new_version"
 
 # Tag the commit with the new version number (prefixed with "v")
 git tag -a "v$new_version" -m "Tag for version $new_version"
 
-echo "Version in package.json file updated to $new_version, changelog updated, and tagged in Git as v$new_version"
+echo "***v$new_version is ready for release 🚀***"
