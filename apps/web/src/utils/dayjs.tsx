@@ -126,6 +126,11 @@ const dayjsLocales: Record<
     timeFormat: "24h",
     import: () => import("dayjs/locale/zh"),
   },
+  vi: {
+    weekStartsOn: "monday",
+    timeFormat: "24h",
+    import: () => import("dayjs/locale/vi"),
+  },
 };
 
 dayjs.extend(localizedFormat);

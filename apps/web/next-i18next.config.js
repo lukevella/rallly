@@ -23,6 +23,7 @@ module.exports = {
       "ru",
       "sk",
       "sv",
+      "vi",
       "zh",
     ],
   },

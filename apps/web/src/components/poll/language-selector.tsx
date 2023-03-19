@@ -21,26 +21,33 @@ export const LanguageSelect: React.FunctionComponent<{
           onChange?.(e.target.value);
         }}
       >
-        <option value="en">English</option>
-        <option value="ca">Català</option>
-        <option value="cs">Česky</option>
-        <option value="zh">汉语</option>
-        <option value="da">Dansk</option>
-        <option value="de">Deutsch</option>
-        <option value="es">Español</option>
-        <option value="fi">Suomi</option>
-        <option value="fr">Français</option>
-        <option value="hr">Hrvatski</option>
-        <option value="it">Italiano</option>
-        <option value="ko">한국어</option>
-        <option value="hu">Magyar</option>
-        <option value="nl">Nederlands</option>
-        <option value="pl">Polski</option>
-        <option value="pt">Português</option>
-        <option value="pt-BR">Português - Brasil</option>
-        <option value="ru">Pусский</option>
-        <option value="sk">Slovenčina</option>
-        <option value="sv">Svenska</option>
+        {[
+          { code: "en", name: "English" },
+          { code: "ca", name: "Català" },
+          { code: "cs", name: "Česky" },
+          { code: "zh", name: "汉语" },
+          { code: "da", name: "Dansk" },
+          { code: "de", name: "Deutsch" },
+          { code: "es", name: "Español" },
+          { code: "fi", name: "Suomi" },
+          { code: "fr", name: "Français" },
+          { code: "hr", name: "Hrvatski" },
+          { code: "it", name: "Italiano" },
+          { code: "ko", name: "한국어" },
+          { code: "hu", name: "Magyar" },
+          { code: "nl", name: "Nederlands" },
+          { code: "pl", name: "Polski" },
+          { code: "pt", name: "Português" },
+          { code: "pt-BR", name: "Português - Brasil" },
+          { code: "ru", name: "Pусский" },
+          { code: "sk", name: "Slovenčina" },
+          { code: "sv", name: "Svenska" },
+          { code: "vi", name: "Tiếng Việt" },
+        ].map((language) => (
+          <option key={language.code} value={language.code}>
+            {language.name}
+          </option>
+        ))}
       </select>
       <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
         <ChevronDown className="w-5" />
