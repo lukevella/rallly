@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useTranslation } from "next-i18next";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
+import languages from "~/languages.json";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;
@@ -21,31 +22,9 @@ export const LanguageSelect: React.FunctionComponent<{
           onChange?.(e.target.value);
         }}
       >
-        {[
-          { code: "ca", name: "Català" },
-          { code: "cs", name: "Česky" },
-          { code: "da", name: "Dansk" },
-          { code: "de", name: "Deutsch" },
-          { code: "en", name: "English" },
-          { code: "es", name: "Español" },
-          { code: "fi", name: "Suomi" },
-          { code: "fr", name: "Français" },
-          { code: "hr", name: "Hrvatski" },
-          { code: "hu", name: "Magyar" },
-          { code: "it", name: "Italiano" },
-          { code: "ko", name: "한국어" },
-          { code: "nl", name: "Nederlands" },
-          { code: "pl", name: "Polski" },
-          { code: "pt", name: "Português" },
-          { code: "pt-BR", name: "Português - Brasil" },
-          { code: "ru", name: "Pусский" },
-          { code: "sk", name: "Slovenčina" },
-          { code: "sv", name: "Svenska" },
-          { code: "vi", name: "Tiếng Việt" },
-          { code: "zh", name: "汉语" },
-        ].map((language) => (
-          <option key={language.code} value={language.code}>
-            {language.name}
+        {Object.entries(languages).map(([code, name]) => (
+          <option key={code} value={code}>
+            {name}
           </option>
         ))}
       </select>
