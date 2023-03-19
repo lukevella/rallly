@@ -1,4 +1,12 @@
 {
+  "blog": "Blog",
+  "discussions": "Thảo luận",
+  "donate": "Quyên góp",
+  "footerCredit": "Làm bởi <a>imlukevella</a>",
+  "footerSponsor": "Dự án này do người dùng tài trợ. Vui lòng xem xét hỗ trợ nó bằng cách <a>đóng góp</a>.",
+  "home": "Trang chủ",
+  "language": "Ngôn ngữ",
+  "links": "Liên kết",
   "poweredBy": "Chạy trên nền tảng",
   "privacyPolicy": "Chính sách bảo mật",
   "starOnGithub": "Gắn dấu sao trên GitHub",
