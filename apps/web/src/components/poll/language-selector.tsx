@@ -22,19 +22,18 @@ export const LanguageSelect: React.FunctionComponent<{
         }}
       >
         {[
-          { code: "en", name: "English" },
           { code: "ca", name: "Català" },
           { code: "cs", name: "Česky" },
-          { code: "zh", name: "汉语" },
           { code: "da", name: "Dansk" },
           { code: "de", name: "Deutsch" },
+          { code: "en", name: "English" },
           { code: "es", name: "Español" },
           { code: "fi", name: "Suomi" },
           { code: "fr", name: "Français" },
           { code: "hr", name: "Hrvatski" },
+          { code: "hu", name: "Magyar" },
           { code: "it", name: "Italiano" },
           { code: "ko", name: "한국어" },
-          { code: "hu", name: "Magyar" },
           { code: "nl", name: "Nederlands" },
           { code: "pl", name: "Polski" },
           { code: "pt", name: "Português" },
@@ -43,6 +42,7 @@ export const LanguageSelect: React.FunctionComponent<{
           { code: "sk", name: "Slovenčina" },
           { code: "sv", name: "Svenska" },
           { code: "vi", name: "Tiếng Việt" },
+          { code: "zh", name: "汉语" },
         ].map((language) => (
           <option key={language.code} value={language.code}>
             {language.name}
