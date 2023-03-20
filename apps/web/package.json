@@ -46,7 +46,7 @@
     "next-i18next": "^13.0.3",
     "next-seo": "^5.15.0",
     "postcss": "^8.4.21",
-    "posthog-js": "^1.42.3",
+    "posthog-js": "^1.51.3",
     "react": "^18.2.0",
     "react-big-calendar": "^1.5.0",
     "react-dom": "^18.2.0",
