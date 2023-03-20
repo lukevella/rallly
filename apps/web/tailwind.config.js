@@ -8,7 +8,7 @@ module.exports = {
     ...sharedConfig.theme,
     fontFamily: {
       sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
-      mono: ["var(--font-noto)", ...defaultTheme.fontFamily.mono],
+      mono: [...defaultTheme.fontFamily.mono],
     },
   },
   plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],

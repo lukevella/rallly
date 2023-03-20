@@ -5,7 +5,7 @@ import "~/style.css";
 import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
-import { Inter, Noto_Sans_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
@@ -21,11 +21,6 @@ import { UserSession } from "../utils/auth";
 import { trpc } from "../utils/trpc";
 
 const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const noto = Noto_Sans_Mono({
   subsets: ["latin"],
   display: "swap",
 });
@@ -85,7 +80,6 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
       <style jsx global>{`
         html {
           --font-inter: ${inter.style.fontFamily};
-          --font-noto: ${noto.style.fontFamily};
         }
       `}</style>
       {getLayout(<Component {...pageProps} />)}
