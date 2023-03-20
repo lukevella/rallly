@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.5.0",
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "dotenv -- turbo dev",
     "start": "turbo run start --filter=@rallly/web...",
     "build": "turbo run build --filter=@rallly/web...",
     "db:deploy": "turbo db:deploy",
@@ -20,7 +20,8 @@
   ],
   "devDependencies": {
     "prettier": "^2.8.4",
-    "turbo": "^1.8.3"
+    "turbo": "^1.8.3",
+    "dotenv-cli": "^7.1.0"
   },
   "engines": {
     "node": "16.x"

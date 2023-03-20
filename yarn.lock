@@ -4238,6 +4238,26 @@ domutils@^3.0.1:
     domelementtype "^2.3.0"
     domhandler "^5.0.1"
 
+dotenv-cli@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/dotenv-cli/-/dotenv-cli-7.1.0.tgz#9ff360f7d1de72389027d4d9e9deccb0ef151c5e"
+  integrity sha512-motytjZFQB3ZtGTIN4c0vnFgv4kuNZ2WxVnGY6PVFiygCzkm3IFBBguDUzezd9HgNA0OYYd6vNCWlozs0Q1Zxg==
+  dependencies:
+    cross-spawn "^7.0.3"
+    dotenv "^16.0.0"
+    dotenv-expand "^10.0.0"
+    minimist "^1.2.6"
+
+dotenv-expand@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-10.0.0.tgz#12605d00fb0af6d0a592e6558585784032e4ef37"
+  integrity sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==
+
+dotenv@^16.0.0:
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
+
 duplexer2@~0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer2/-/duplexer2-0.1.4.tgz#8b12dab878c0d69e3e7891051662a32fc6bddcc1"
@@ -6655,10 +6675,10 @@ postcss@8.4.21, postcss@^8.0.9, postcss@^8.4.21:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-posthog-js@^1.42.3:
-  version "1.50.0"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.50.0.tgz#2aeb659803e0519a5399a46465480b45f23f07d1"
-  integrity sha512-zxC+qe37dthOqcGDqP7k2LjJHh88kExuPDLQ9sKV0Y/wBmjXURISQ0YM2NV8ic5gq2pnfxK6GdedT3/RNX+21A==
+posthog-js@^1.51.3:
+  version "1.51.3"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.51.3.tgz#255f0061a33aa5b5694d58a62df81c846f7863ab"
+  integrity sha512-Fy3BUHUPRN5wwCFWL+K5T4skA4l8I11tsXvEtSmpoY7fOCuGFQ3eJJxfG1fsllkIrMdlsFCHk++ZYzXjiikPSg==
   dependencies:
     fflate "^0.4.1"
     rrweb-snapshot "^1.1.14"
