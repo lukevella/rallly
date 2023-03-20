@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 import { useSessionStorage } from "react-use";
 
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 
 import { encodeDateOption } from "../utils/date-time-utils";
 import { trpc } from "../utils/trpc";
@@ -90,7 +90,7 @@ const Page: React.FunctionComponent<CreatePollPageProps> = ({
 
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
-  const posthog = useCapture();
+  const posthog = usePostHog();
 
   const createPoll = trpc.polls.create.useMutation({
     onSuccess: (res) => {

@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 import { useMount } from "react-use";
 
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 
 import FullPageLoader from "../components/full-page-loader";
 import { withSession } from "../components/user-provider";
@@ -17,7 +17,7 @@ const Demo: NextPage = () => {
 
   const router = useRouter();
   const createDemo = trpc.polls.demo.create.useMutation();
-  const posthog = useCapture();
+  const posthog = usePostHog();
   useMount(async () => {
     const urlId = await createDemo.mutateAsync();
     posthog?.capture("create demo poll");

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 import { Button } from "@/components/button";
 import Share from "@/components/icons/share.svg";
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
@@ -22,7 +22,8 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
   const router = useRouter();
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
-  const posthog = useCapture();
+  const posthog = usePostHog();
+
   React.useEffect(() => {
     if (router.query.unsubscribe) {
       updatePollMutation(

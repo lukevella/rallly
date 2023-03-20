@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/button";
 import Exclamation from "@/components/icons/exclamation.svg";
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 
 import { trpc } from "../../../utils/trpc";
 
@@ -22,7 +22,7 @@ export const DeletePollForm: React.FunctionComponent<{
 
   const confirmationText = watch("confirmation");
   const canDelete = confirmationText === confirmText;
-  const posthog = useCapture();
+  const posthog = usePostHog();
   const deletePoll = trpc.polls.delete.useMutation({
     onSuccess: () => {
       posthog?.capture("deleted poll");

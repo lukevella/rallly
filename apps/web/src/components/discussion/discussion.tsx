@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 
 import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
@@ -39,7 +39,7 @@ const Discussion: React.FunctionComponent = () => {
       trpc: {},
     },
   );
-  const posthog = useCapture();
+  const posthog = usePostHog();
 
   const addComment = trpc.polls.comments.add.useMutation({
     onSuccess: (newComment) => {

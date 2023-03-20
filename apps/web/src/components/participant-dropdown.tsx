@@ -15,7 +15,7 @@ import { useModalState } from "@/components/modal/use-modal";
 import { useDeleteParticipantModal } from "@/components/poll/use-delete-participant-modal";
 import { TextInput } from "@/components/text-input";
 import { useFormValidation } from "@/utils/form-validation";
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc";
 
 import { Participant } from ".prisma/client";
@@ -93,7 +93,7 @@ const ChangeNameModal = (props: {
   participantId: string;
   onDone: () => void;
 }) => {
-  const posthog = useCapture();
+  const posthog = usePostHog();
   const changeName = trpc.polls.participants.rename.useMutation({
     onSuccess: (_, { participantId, newName }) => {
       posthog?.capture("changed name", {

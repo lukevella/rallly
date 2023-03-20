@@ -3,7 +3,7 @@ import { Trans, useTranslation } from "next-i18next";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
@@ -140,7 +140,7 @@ export const RegisterForm: React.FunctionComponent<{
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();
   const [token, setToken] = React.useState<string>();
-  const posthog = useCapture();
+  const posthog = usePostHog();
   if (token) {
     return (
       <VerifyCode
@@ -286,7 +286,7 @@ export const LoginForm: React.FunctionComponent<{
   const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
 
   const [token, setToken] = React.useState<string>();
-  const posthog = useCapture();
+  const posthog = usePostHog();
   if (token) {
     return (
       <VerifyCode

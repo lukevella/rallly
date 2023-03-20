@@ -2,7 +2,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { UserSession } from "@/utils/auth";
-import { useCapture } from "@/utils/posthog";
+import { usePostHog } from "@/utils/posthog";
 
 import { trpc } from "../utils/trpc";
 import { useRequiredContext } from "./use-required-context";
@@ -65,7 +65,7 @@ export const UserProvider = (props: {
     },
   });
 
-  const posthog = useCapture();
+  const posthog = usePostHog();
 
   React.useEffect(() => {
     if (user && posthog?.__loaded && posthog?.get_distinct_id() !== user.id) {
