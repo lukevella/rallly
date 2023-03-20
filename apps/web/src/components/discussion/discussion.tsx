@@ -1,8 +1,9 @@
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
-import posthog from "posthog-js";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
+
+import { usePostHog } from "@/utils/posthog";
 
 import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
@@ -38,10 +39,11 @@ const Discussion: React.FunctionComponent = () => {
       trpc: {},
     },
   );
+  const posthog = usePostHog();
 
   const addComment = trpc.polls.comments.add.useMutation({
     onSuccess: (newComment) => {
-      posthog.capture("created comment");
+      posthog?.capture("created comment");
 
       queryClient.polls.comments.list.setData(
         { pollId },
@@ -62,7 +64,7 @@ const Discussion: React.FunctionComponent = () => {
       );
     },
     onSuccess: () => {
-      posthog.capture("deleted comment");
+      posthog?.capture("deleted comment");
     },
   });
 

@@ -1,12 +1,12 @@
 import { AnimatePresence, m } from "framer-motion";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import posthog from "posthog-js";
 import React from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/components/button";
 import Share from "@/components/icons/share.svg";
+import { usePostHog } from "@/utils/posthog";
 
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
@@ -22,6 +22,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
   const router = useRouter();
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
+  const posthog = usePostHog();
 
   React.useEffect(() => {
     if (router.query.unsubscribe) {
@@ -30,7 +31,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
         {
           onSuccess: () => {
             toast.success(t("notificationsDisabled"));
-            posthog.capture("unsubscribed from notifications");
+            posthog?.capture("unsubscribed from notifications");
           },
         },
       );
@@ -38,7 +39,7 @@ export const AdminControls = (props: { children?: React.ReactNode }) => {
         shallow: true,
       });
     }
-  }, [urlId, router, updatePollMutation, t]);
+  }, [urlId, router, updatePollMutation, t, posthog]);
 
   const { participants } = useParticipants();
 

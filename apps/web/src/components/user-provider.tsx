@@ -1,9 +1,8 @@
 import { useTranslation } from "next-i18next";
-import posthog from "posthog-js";
 import React from "react";
-import { useMount } from "react-use";
 
 import { UserSession } from "@/utils/auth";
+import { usePostHog } from "@/utils/posthog";
 
 import { trpc } from "../utils/trpc";
 import { useRequiredContext } from "./use-required-context";
@@ -66,28 +65,18 @@ export const UserProvider = (props: {
     },
   });
 
-  useMount(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY ?? "fake token", {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
-      opt_out_capturing_by_default: false,
-      capture_pageview: false,
-      capture_pageleave: false,
-      autocapture: false,
-      loaded: (posthog) => {
-        if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
-          posthog.opt_out_capturing();
-        }
-        if (user && posthog.get_distinct_id() !== user.id) {
-          posthog.identify(
-            user.id,
-            !user.isGuest
-              ? { email: user.email, name: user.name }
-              : { name: user.id },
-          );
-        }
-      },
-    });
-  });
+  const posthog = usePostHog();
+
+  React.useEffect(() => {
+    if (user && posthog?.__loaded && posthog?.get_distinct_id() !== user.id) {
+      posthog?.identify(
+        user.id,
+        !user.isGuest
+          ? { email: user.email, name: user.name }
+          : { name: user.id },
+      );
+    }
+  }, [posthog, user]);
 
   const shortName = user
     ? user.isGuest === false

@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
-import posthog from "posthog-js";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/button";
 import Exclamation from "@/components/icons/exclamation.svg";
+import { usePostHog } from "@/utils/posthog";
 
 import { trpc } from "../../../utils/trpc";
 
@@ -22,9 +22,10 @@ export const DeletePollForm: React.FunctionComponent<{
 
   const confirmationText = watch("confirmation");
   const canDelete = confirmationText === confirmText;
+  const posthog = usePostHog();
   const deletePoll = trpc.polls.delete.useMutation({
     onSuccess: () => {
-      posthog.capture("deleted poll");
+      posthog?.capture("deleted poll");
     },
   });
 

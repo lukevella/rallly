@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
-import posthog from "posthog-js";
 import React from "react";
 import { useForm } from "react-hook-form";
+
+import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
@@ -139,7 +140,7 @@ export const RegisterForm: React.FunctionComponent<{
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();
   const [token, setToken] = React.useState<string>();
-
+  const posthog = usePostHog();
   if (token) {
     return (
       <VerifyCode
@@ -154,11 +155,11 @@ export const RegisterForm: React.FunctionComponent<{
           }
 
           onRegistered();
-          posthog.identify(res.user.id, {
+          posthog?.identify(res.user.id, {
             email: res.user.email,
             name: res.user.name,
           });
-          posthog.capture("register");
+          posthog?.capture("register");
         }}
         onResend={async () => {
           const values = getValues();
@@ -285,7 +286,7 @@ export const LoginForm: React.FunctionComponent<{
   const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
 
   const [token, setToken] = React.useState<string>();
-
+  const posthog = usePostHog();
   if (token) {
     return (
       <VerifyCode
@@ -299,11 +300,11 @@ export const LoginForm: React.FunctionComponent<{
             throw new Error("Failed to authenticate user");
           } else {
             onAuthenticated();
-            posthog.identify(res.user.id, {
+            posthog?.identify(res.user.id, {
               email: res.user.email,
               name: res.user.name,
             });
-            posthog.capture("login");
+            posthog?.capture("login");
           }
         }}
         onResend={async () => {

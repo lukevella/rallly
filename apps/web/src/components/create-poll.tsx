@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import posthog from "posthog-js";
 import React from "react";
 import { useSessionStorage } from "react-use";
+
+import { usePostHog } from "@/utils/posthog";
 
 import { encodeDateOption } from "../utils/date-time-utils";
 import { trpc } from "../utils/trpc";
@@ -89,10 +90,12 @@ const Page: React.FunctionComponent<CreatePollPageProps> = ({
 
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
+  const posthog = usePostHog();
+
   const createPoll = trpc.polls.create.useMutation({
     onSuccess: (res) => {
       setIsRedirecting(true);
-      posthog.capture("created poll", {
+      posthog?.capture("created poll", {
         pollId: res.id,
         numberOfOptions: formData.options?.options?.length,
         optionsView: formData?.options?.view,

@@ -1,4 +1,4 @@
-import posthog from "posthog-js";
+import { usePostHog } from "@/utils/posthog";
 
 import { trpc } from "../../utils/trpc";
 import { ParticipantForm } from "./types";
@@ -14,9 +14,10 @@ export const normalizeVotes = (
 };
 
 export const useAddParticipantMutation = () => {
+  const posthog = usePostHog();
   return trpc.polls.participants.add.useMutation({
     onSuccess: (_, { pollId, name, email }) => {
-      posthog.capture("add participant", {
+      posthog?.capture("add participant", {
         pollId,
         name,
         email,
@@ -27,9 +28,10 @@ export const useAddParticipantMutation = () => {
 
 export const useUpdateParticipantMutation = () => {
   const queryClient = trpc.useContext();
+  const posthog = usePostHog();
   return trpc.polls.participants.update.useMutation({
     onSuccess: (participant) => {
-      posthog.capture("update participant", {
+      posthog?.capture("update participant", {
         name: participant.name,
       });
       queryClient.polls.participants.list.setData(
@@ -54,6 +56,7 @@ export const useUpdateParticipantMutation = () => {
 
 export const useDeleteParticipantMutation = () => {
   const queryClient = trpc.useContext();
+  const posthog = usePostHog();
   return trpc.polls.participants.delete.useMutation({
     onMutate: ({ participantId, pollId }) => {
       queryClient.polls.participants.list.setData(
@@ -64,7 +67,7 @@ export const useDeleteParticipantMutation = () => {
       );
     },
     onSuccess: (_, { pollId, participantId }) => {
-      posthog.capture("remove participant", {
+      posthog?.capture("remove participant", {
         pollId,
         participantId,
       });
@@ -74,10 +77,11 @@ export const useDeleteParticipantMutation = () => {
 
 export const useUpdatePollMutation = () => {
   const queryClient = trpc.useContext();
+  const posthog = usePostHog();
   return trpc.polls.update.useMutation({
     onSuccess: (data) => {
       queryClient.polls.invalidate();
-      posthog.capture("updated poll", {
+      posthog?.capture("updated poll", {
         id: data.id,
       });
     },

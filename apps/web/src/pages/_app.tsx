@@ -9,6 +9,8 @@ import { Inter } from "next/font/google";
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
+import posthog from "posthog-js";
+import { PostHogProvider } from "posthog-js/react";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -33,6 +35,21 @@ type AppPropsWithLayout = AppProps<PageProps> & {
   Component: NextPageWithLayout<PageProps>;
 };
 
+if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+    api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    opt_out_capturing_by_default: false,
+    capture_pageview: false,
+    capture_pageleave: false,
+    autocapture: false,
+    loaded: (posthog) => {
+      if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+        posthog.opt_out_capturing();
+      }
+    },
+  });
+}
+
 const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   useCrispChat();
 
@@ -50,7 +67,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <>
+    <PostHogProvider client={posthog}>
       <DefaultSeo
         openGraph={{
           siteName: "Rallly",
@@ -83,7 +100,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
         }
       `}</style>
       {getLayout(<Component {...pageProps} />)}
-    </>
+    </PostHogProvider>
   );
 };
 
