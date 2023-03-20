@@ -68,7 +68,7 @@ export const UserProvider = (props: {
   const posthog = useCapture();
 
   React.useEffect(() => {
-    if (user && posthog?.get_distinct_id() !== user.id) {
+    if (user && posthog?.__loaded && posthog?.get_distinct_id() !== user.id) {
       posthog?.identify(
         user.id,
         !user.isGuest
