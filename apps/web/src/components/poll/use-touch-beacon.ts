@@ -7,7 +7,9 @@ import { trpc } from "../../utils/trpc";
  * find polls that haven't been accessed for some time so that they can be deleted by house keeping.
  */
 export const useTouchBeacon = (pollId: string) => {
-  const touchMutation = trpc.polls.touch.useMutation();
+  const touchMutation = trpc.polls.touch.useMutation({
+    meta: { doNotInvalidate: true },
+  });
 
   useMount(() => {
     touchMutation.mutate({ pollId });

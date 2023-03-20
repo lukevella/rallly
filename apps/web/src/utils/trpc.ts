@@ -16,7 +16,9 @@ export const trpc = createTRPCNext<AppRouter>({
          * having a flash of content change whilst redirecting.
          **/
         await opts.originalFn();
-        await opts.queryClient.invalidateQueries();
+        if (!opts.meta?.doNotInvalidate) {
+          await opts.queryClient.invalidateQueries();
+        }
       },
     },
   },
