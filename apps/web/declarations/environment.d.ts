@@ -34,6 +34,10 @@ declare global {
        */
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;
       /**
+       * When defined users will be able to send feedback to this email address
+       */
+      NEXT_PUBLIC_FEEDBACK_EMAIL?: string;
+      /**
        * Users of your instance will see this as their support email
        */
       SUPPORT_EMAIL: string;

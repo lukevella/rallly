@@ -1,5 +1,4 @@
 import { useTranslation } from "next-i18next";
-import { posthog } from "posthog-js";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";

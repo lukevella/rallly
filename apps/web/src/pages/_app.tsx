@@ -42,6 +42,7 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
     capture_pageview: false,
     capture_pageleave: false,
     autocapture: false,
+    opt_in_site_apps: true,
     loaded: (posthog) => {
       if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
         posthog.opt_out_capturing();
