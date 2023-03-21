@@ -34,6 +34,10 @@ declare global {
        */
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;
       /**
+       * "true" to enable feedback form
+       */
+      NEXT_PUBLIC_ENABLE_FEEDBACK_FORM?: "true" | "false";
+      /**
        * Users of your instance will see this as their support email
        */
       SUPPORT_EMAIL: string;

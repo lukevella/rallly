@@ -2,6 +2,7 @@ import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { render } from "@react-email/render";
 import { createTransport, Transporter } from "nodemailer";
+import type Mail from "nodemailer/lib/mailer";
 import React from "react";
 
 import * as templates from "./templates";
@@ -81,11 +82,10 @@ export const sendEmail = async <T extends TemplateName>(
     return;
   }
 
-  const transport = getTransport();
   const Template = templates[templateName] as TemplateComponent<T>;
 
   try {
-    await transport.sendMail({
+    await sendRawEmail({
       from: {
         name: "Rallly",
         address: process.env.SUPPORT_EMAIL,
@@ -99,5 +99,15 @@ export const sendEmail = async <T extends TemplateName>(
   } catch (e) {
     console.error("Error sending email", templateName, e);
     options.onError?.();
+  }
+};
+
+export const sendRawEmail = async (options: Mail.Options) => {
+  const transport = getTransport();
+  try {
+    await transport.sendMail(options);
+    return;
+  } catch (e) {
+    console.error("Error sending email");
   }
 };
