@@ -20,9 +20,7 @@ const StandardLayout: React.FunctionComponent<{
         <DayjsProvider>
           <ModalProvider>
             <div className="bg-pattern relative min-h-full" {...rest}>
-              {process.env.NEXT_PUBLIC_ENABLE_FEEDBACK_FORM === "true" ? (
-                <Feedback />
-              ) : null}
+              {process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ? <Feedback /> : null}
               <MobileNavigation />
               <div className="mx-auto max-w-4xl grow">{children}</div>
             </div>

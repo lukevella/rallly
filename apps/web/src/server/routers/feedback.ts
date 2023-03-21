@@ -26,7 +26,7 @@ export const feedback = router({
       }
 
       await sendRawEmail({
-        to: "feedback@rallly.co",
+        to: process.env.NEXT_PUBLIC_FEEDBACK_EMAIL,
         from: {
           name: "Rallly Feedback Form",
           address: process.env.SUPPORT_EMAIL,
