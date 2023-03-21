@@ -2,9 +2,7 @@ import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
 import { z } from "zod";
 
-import { publicProcedure } from "@/server/trpc";
-
-import { router } from "../trpc";
+import { publicProcedure, router } from "@/server/trpc";
 
 export const feedback = router({
   send: publicProcedure
