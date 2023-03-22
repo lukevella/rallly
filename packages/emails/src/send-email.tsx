@@ -41,7 +41,11 @@ const getTransport = () => {
         });
 
         transport = createTransport({
-          SES: { ses, aws },
+          SES: {
+            ses,
+            aws,
+            sendingRate: 10,
+          },
         });
       }
       break;
