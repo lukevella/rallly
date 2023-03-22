@@ -4,7 +4,7 @@ import * as React from "react";
 import { usePoll } from "@/components/poll-context";
 
 import DateCard from "../../date-card";
-import { ScoreSummary } from "../score-summary";
+import { ConnectedScoreSummary } from "../score-summary";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
@@ -27,14 +27,13 @@ const TimeRange: React.FunctionComponent<{
 };
 
 const PollHeader: React.FunctionComponent = () => {
-  const { options, getScore } = usePoll();
+  const { options } = usePoll();
   const { setActiveOptionId, columnWidth } = usePollContext();
 
   return (
     <ControlledScrollArea>
       {options.map((option) => {
         const { optionId } = option;
-        const numVotes = getScore(optionId);
         return (
           <div
             key={optionId}
@@ -58,10 +57,7 @@ const PollHeader: React.FunctionComponent = () => {
               />
             ) : null}
             <div className="flex justify-center">
-              <ScoreSummary
-                yesScore={numVotes.yes}
-                ifNeedBeScore={numVotes.ifNeedBe}
-              />
+              <ConnectedScoreSummary optionId={option.optionId} />
             </div>
           </div>
         );

@@ -73,7 +73,7 @@ const PollDemo: React.FunctionComponent = () => {
                 />
               </div>
               <div className="flex justify-center">
-                <ScoreSummary yesScore={score} />
+                <ScoreSummary yesScore={score} highlight={score === 4} />
               </div>
             </div>
           );

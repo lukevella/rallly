@@ -76,10 +76,13 @@ export const PollContextProvider: React.FunctionComponent<{
             if (vote.type === "ifNeedBe") {
               acc.ifNeedBe += 1;
             }
+            if (vote.type === "no") {
+              acc.no += 1;
+            }
           });
           return acc;
         },
-        { yes: 0, ifNeedBe: 0 },
+        { yes: 0, ifNeedBe: 0, no: 0 },
       );
     },
     [participants],

@@ -7,7 +7,7 @@ import { possiblyPublicProcedure, router } from "../../trpc";
 const participantData: Array<{ name: string; votes: VoteType[] }> = [
   {
     name: "Reed",
-    votes: ["yes", "no", "ifNeedBe", "no"],
+    votes: ["yes", "no", "yes", "no"],
   },
   {
     name: "Susan",
