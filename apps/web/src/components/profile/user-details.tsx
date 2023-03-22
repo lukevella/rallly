@@ -37,11 +37,7 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
   const changeName = trpc.user.changeName.useMutation({
     onSuccess: (_, { name }) => {
       reset({ name, email });
-      try {
-        posthog?.people.set({ name });
-      } catch (error) {
-        // ignore
-      }
+      posthog?.people.set({ name });
     },
   });
 
