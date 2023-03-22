@@ -33,9 +33,9 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
       <div
         data-testid="popularity-score"
         className={clsx(
-          "flex select-none items-center gap-1 text-sm font-bold tabular-nums",
+          "flex select-none items-center gap-1 px-2 text-sm font-bold tabular-nums",
           {
-            "rounded-full bg-green-50 px-2 text-green-400": highlight,
+            "rounded-full bg-green-50 text-green-400": highlight,
           },
           { "text-slate-400": !highlight },
         )}
