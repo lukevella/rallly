@@ -15,15 +15,8 @@ export interface PopularityScoreProps {
 export const ConnectedScoreSummary: React.FunctionComponent<{
   optionId: string;
 }> = ({ optionId }) => {
-  let highScore = 1;
-  const { poll, getScore } = usePoll();
+  const { getScore, highScore } = usePoll();
   const score = getScore(optionId);
-  for (const option of poll.options) {
-    const score = getScore(option.id).yes;
-    if (score > highScore) {
-      highScore = score;
-    }
-  }
 
   return (
     <ScoreSummary yesScore={score.yes} highlight={score.yes === highScore} />
