@@ -8,7 +8,7 @@ import ChevronDown from "@/components/icons/chevron-down.svg";
 
 import { useParticipants } from "../../participants-provider";
 import { usePoll } from "../../poll-context";
-import { ScoreSummary } from "../score-summary";
+import { ConnectedScoreSummary } from "../score-summary";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
 import { VoteSelector } from "../vote-selector";
@@ -253,7 +253,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           )}
         </AnimatePresence>
         <div className="mx-3">
-          <ScoreSummary yesScore={score} />
+          <ConnectedScoreSummary optionId={optionId} />
         </div>
         <CollapsibleContainer
           expanded={showVotes}
