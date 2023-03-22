@@ -1,8 +1,9 @@
 import { m } from "framer-motion";
 import { useTranslation } from "next-i18next";
-import posthog from "posthog-js";
 import * as React from "react";
 import { useForm } from "react-hook-form";
+
+import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
@@ -31,12 +32,12 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
     defaultValues: { name, email },
   });
 
-  const { refresh } = useUser();
+  const posthog = usePostHog();
 
   const changeName = trpc.user.changeName.useMutation({
     onSuccess: (_, { name }) => {
-      posthog.people.set({ name });
-      refresh();
+      reset({ name, email });
+      posthog?.people.set({ name });
     },
   });
 
@@ -47,7 +48,6 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
         if (dirtyFields.name) {
           await changeName.mutateAsync({ userId, name: data.name });
         }
-        reset(data);
       })}
     >
       <div className="flex items-center justify-between border-b px-3 py-2 shadow-sm">
