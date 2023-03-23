@@ -27,13 +27,17 @@ const NotificationsToggle: React.FunctionComponent = () => {
 
   const watch = trpc.polls.watch.useMutation({
     onSuccess: () => {
-      posthog?.capture("turned notifications on");
+      posthog?.capture("turned notifications on", {
+        pollId: poll.id,
+      });
     },
   });
 
   const unwatch = trpc.polls.unwatch.useMutation({
     onSuccess: () => {
-      posthog?.capture("turned notifications off");
+      posthog?.capture("turned notifications off", {
+        pollId: poll.id,
+      });
     },
   });
 
