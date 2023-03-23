@@ -13,7 +13,7 @@ import {
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
 
-import { SmallText, Text } from "./styled-components";
+import { Text } from "./styled-components";
 
 interface EmailLayoutProps {
   preview: string;

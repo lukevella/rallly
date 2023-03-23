@@ -1,12 +1,12 @@
 import { EmailLayout } from "./email-layout";
-import { Button, Card, Link, Text } from "./styled-components";
+import { Button, Link, Text } from "./styled-components";
 import { getDomain } from "./utils";
 
 export interface NotificationBaseProps {
   name: string;
   title: string;
   pollUrl: string;
-  unsubscribeUrl: string;
+  disableNotificationsUrl: string;
 }
 
 export interface NotificationEmailProps extends NotificationBaseProps {
@@ -16,7 +16,7 @@ export interface NotificationEmailProps extends NotificationBaseProps {
 export const NotificationEmail = ({
   name,
   pollUrl,
-  unsubscribeUrl,
+  disableNotificationsUrl,
   preview,
   children,
 }: React.PropsWithChildren<NotificationEmailProps>) => {
@@ -26,7 +26,7 @@ export const NotificationEmail = ({
       footNote={
         <>
           If you would like to stop receiving updates you can{" "}
-          <Link className="whitespace-nowrap" href={unsubscribeUrl}>
+          <Link className="whitespace-nowrap" href={disableNotificationsUrl}>
             turn notifications off
           </Link>
         </>

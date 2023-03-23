@@ -30,7 +30,6 @@ export const user = router({
           select: {
             title: true,
             closed: true,
-            verified: true,
             createdAt: true,
             adminUrlId: true,
           },

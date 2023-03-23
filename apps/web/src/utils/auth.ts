@@ -35,10 +35,6 @@ export type LoginTokenPayload = {
   code: string;
 };
 
-export type EnableNotificationsTokenPayload = {
-  adminUrlId: string;
-};
-
 export type RegisteredUserSession = {
   isGuest: false;
   id: string;
@@ -49,6 +45,11 @@ export type RegisteredUserSession = {
 export type GuestUserSession = {
   isGuest: true;
   id: string;
+};
+
+export type DisableNotificationsPayload = {
+  pollId: string;
+  watcherId: number;
 };
 
 export type UserSession = GuestUserSession | RegisteredUserSession;

@@ -1,45 +1,17 @@
 import { AnimatePresence, m } from "framer-motion";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
-import toast from "react-hot-toast";
 
 import { Button } from "@/components/button";
 import Share from "@/components/icons/share.svg";
-import { usePostHog } from "@/utils/posthog";
 
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";
-import { useUpdatePollMutation } from "./poll/mutations";
 import NotificationsToggle from "./poll/notifications-toggle";
-import { usePoll } from "./poll-context";
 import Sharing from "./sharing";
 
 export const AdminControls = (props: { children?: React.ReactNode }) => {
-  const { urlId } = usePoll();
   const { t } = useTranslation("app");
-
-  const router = useRouter();
-
-  const { mutate: updatePollMutation } = useUpdatePollMutation();
-  const posthog = usePostHog();
-
-  React.useEffect(() => {
-    if (router.query.unsubscribe) {
-      updatePollMutation(
-        { urlId: urlId, notifications: false },
-        {
-          onSuccess: () => {
-            toast.success(t("notificationsDisabled"));
-            posthog?.capture("unsubscribed from notifications");
-          },
-        },
-      );
-      router.replace(`/admin/${router.query.urlId}`, undefined, {
-        shallow: true,
-      });
-    }
-  }, [urlId, router, updatePollMutation, t, posthog]);
 
   const { participants } = useParticipants();
 

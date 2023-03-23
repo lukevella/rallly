@@ -42,15 +42,8 @@ const Discussion: React.FunctionComponent = () => {
   const posthog = usePostHog();
 
   const addComment = trpc.polls.comments.add.useMutation({
-    onSuccess: (newComment) => {
+    onSuccess: () => {
       posthog?.capture("created comment");
-
-      queryClient.polls.comments.list.setData(
-        { pollId },
-        (existingComments = []) => {
-          return [...existingComments, newComment];
-        },
-      );
     },
   });
 

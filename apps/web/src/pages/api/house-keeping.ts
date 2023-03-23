@@ -121,6 +121,15 @@ export default async function handler(
       },
     });
 
+    // Delete watchers
+    await prisma.watcher.deleteMany({
+      where: {
+        pollId: {
+          in: pollIdsToDelete,
+        },
+      },
+    });
+
     // Delete polls
     // Using execute raw to bypass soft delete middelware
     await prisma.$executeRaw`DELETE FROM polls WHERE id IN (${Prisma.join(

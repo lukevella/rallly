@@ -1,12 +1,5 @@
 import { EmailLayout } from "./components/email-layout";
-import {
-  Button,
-  Card,
-  Domain,
-  Heading,
-  Section,
-  Text,
-} from "./components/styled-components";
+import { Button, Domain, Section, Text } from "./components/styled-components";
 import { getDomain } from "./components/utils";
 
 interface NewParticipantConfirmationEmailProps {

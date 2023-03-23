@@ -1,10 +1,10 @@
 import { prisma } from "@rallly/database";
 import { sendEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { sendNotification } from "../../../utils/api-utils";
-import { createToken } from "../../../utils/auth";
+import { createToken, DisableNotificationsPayload } from "../../../utils/auth";
 import { publicProcedure, router } from "../../trpc";
 
 export const participants = router({
@@ -61,7 +61,17 @@ export const participants = router({
     )
     .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
       const user = ctx.session.user;
-      const res = await prisma.participant.create({
+
+      const poll = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: { title: true, adminUrlId: true, participantUrlId: true },
+      });
+
+      if (!poll) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Poll not found" });
+      }
+
+      const participant = await prisma.participant.create({
         data: {
           pollId: pollId,
           name: name,
@@ -76,18 +86,8 @@ export const participants = router({
             },
           },
         },
-        select: {
-          id: true,
-          poll: {
-            select: {
-              title: true,
-              participantUrlId: true,
-            },
-          },
-        },
       });
 
-      const { poll, ...participant } = res;
       const emailsToSend: Promise<void>[] = [];
       if (email) {
         const token = await createToken(
@@ -112,12 +112,44 @@ export const participants = router({
         );
       }
 
-      emailsToSend.push(
-        sendNotification(pollId, {
-          type: "newParticipant",
-          participantName: name,
-        }),
-      );
+      const watchers = await prisma.watcher.findMany({
+        where: {
+          pollId,
+        },
+        select: {
+          id: true,
+          userId: true,
+          user: {
+            select: {
+              email: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      for (const watcher of watchers) {
+        const email = watcher.user.email;
+        const token = await createToken<DisableNotificationsPayload>(
+          { watcherId: watcher.id, pollId },
+          { ttl: 0 },
+        );
+        emailsToSend.push(
+          sendEmail("NewParticipantEmail", {
+            to: email,
+            subject: `New response for ${poll.title}`,
+            props: {
+              name: watcher.user.name,
+              participantName: participant.name,
+              pollUrl: absoluteUrl(`/admin/${poll.adminUrlId}`),
+              disableNotificationsUrl: absoluteUrl(
+                `/auth/disable-notifications?token=${token}`,
+              ),
+              title: poll.title,
+            },
+          }),
+        );
+      }
 
       await Promise.all(emailsToSend);
 

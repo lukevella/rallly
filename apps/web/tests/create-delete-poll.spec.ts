@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { load } from "cheerio";
 import smtpTester, { SmtpTester } from "smtp-tester";
 
 test.describe.serial(() => {
@@ -60,34 +59,11 @@ test.describe.serial(() => {
     pollUrl = page.url();
   });
 
-  test("enable notifications", async ({ page, baseURL }) => {
+  test("notifications", async ({ page }) => {
     await page.goto(pollUrl);
     await page.getByTestId("notifications-toggle").click();
 
-    const { email } = await mailServer.captureOne("john.doe@email.com", {
-      wait: 5000,
-    });
-
-    expect(email.headers.subject).toBe("Please verify your email address");
-
-    const $ = load(email.html);
-    const verifyLink = $("#verifyEmailUrl").attr("href");
-
-    expect(verifyLink).toContain(baseURL);
-
-    if (!verifyLink) {
-      throw new Error("Could not get verification link from email");
-    }
-
-    await page.goto(verifyLink);
-
-    await expect(
-      page.getByText("Notifications have been enabled for Monthly Meetup"),
-    ).toBeVisible();
-
-    page.getByText("Click here").click();
-
-    await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
+    expect(page.getByTestId("login-modal")).toBeVisible();
   });
 
   // delete the poll we just created

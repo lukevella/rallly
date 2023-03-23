@@ -1,7 +1,10 @@
 import { prisma } from "@rallly/database";
+import { sendEmail } from "@rallly/emails";
 import { z } from "zod";
 
-import { sendNotification } from "../../../utils/api-utils";
+import { absoluteUrl } from "@/utils/absolute-url";
+import { createToken, DisableNotificationsPayload } from "@/utils/auth";
+
 import { publicProcedure, router } from "../../trpc";
 
 export const comments = router({
@@ -39,12 +42,62 @@ export const comments = router({
           authorName,
           userId: user.id,
         },
+        select: {
+          id: true,
+          createdAt: true,
+          authorName: true,
+          content: true,
+          poll: {
+            select: {
+              title: true,
+              adminUrlId: true,
+            },
+          },
+        },
       });
 
-      await sendNotification(pollId, {
-        type: "newComment",
-        authorName: newComment.authorName,
+      const watchers = await prisma.watcher.findMany({
+        where: {
+          pollId,
+        },
+        select: {
+          id: true,
+          userId: true,
+          user: {
+            select: {
+              email: true,
+              name: true,
+            },
+          },
+        },
       });
+
+      const poll = newComment.poll;
+
+      const emailsToSend: Promise<void>[] = [];
+
+      for (const watcher of watchers) {
+        const email = watcher.user.email;
+        const token = await createToken<DisableNotificationsPayload>(
+          { watcherId: watcher.id, pollId },
+          { ttl: 0 },
+        );
+        emailsToSend.push(
+          sendEmail("NewCommentEmail", {
+            to: email,
+            subject: `New comment on ${poll.title}`,
+            props: {
+              name: watcher.user.name,
+              authorName,
+              pollUrl: absoluteUrl(`/admin/${poll.adminUrlId}`),
+              disableNotificationsUrl: absoluteUrl(
+                `/auth/disable-notifications?token=${token}`,
+              ),
+              title: poll.title,
+            },
+          }),
+        );
+      }
 
       return newComment;
     }),
