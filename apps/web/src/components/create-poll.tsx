@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
-import { useSessionStorage } from "react-use";
 
 import { usePostHog } from "@/utils/posthog";
 
@@ -30,9 +29,6 @@ const required = <T,>(v: T | undefined): T => {
   return v;
 };
 
-const initialNewEventData: NewEventData = { currentStep: 0 };
-const sessionStorageKey = "newEventFormData";
-
 export interface CreatePollPageProps {
   title?: string;
   location?: string;
@@ -40,51 +36,34 @@ export interface CreatePollPageProps {
   view?: "week" | "month";
 }
 
-const Page: React.FunctionComponent<CreatePollPageProps> = ({
-  title,
-  location,
-  description,
-  view,
-}) => {
+const Page: React.FunctionComponent = () => {
   const { t } = useTranslation("app");
 
   const router = useRouter();
 
   const session = useUser();
 
-  const steps: StepName[] = session.user.isGuest
-    ? ["eventDetails", "options", "userDetails"]
-    : ["eventDetails", "options"];
-
-  const [persistedFormData, setPersistedFormData] =
-    useSessionStorage<NewEventData>(sessionStorageKey, {
-      currentStep: 0,
-      eventDetails: {
-        title,
-        location,
-        description,
-      },
-      options: {
-        view,
-      },
-      userDetails:
-        session.user?.isGuest === false
-          ? {
-              name: session.user.name,
-              contact: session.user.email,
-            }
-          : undefined,
-    });
-
-  const [formData, setTransientFormData] = React.useState(persistedFormData);
-
-  const setFormData = React.useCallback(
-    (newEventData: NewEventData) => {
-      setTransientFormData(newEventData);
-      setPersistedFormData(newEventData);
-    },
-    [setPersistedFormData],
+  const steps: StepName[] = React.useMemo(
+    () =>
+      session.user.isGuest
+        ? ["eventDetails", "options", "userDetails"]
+        : ["eventDetails", "options"],
+    [session.user.isGuest],
   );
+
+  const [formData, setFormData] = React.useState<NewEventData>({
+    currentStep: 0,
+  });
+
+  React.useEffect(() => {
+    const newStep = Math.min(steps.length - 1, formData.currentStep);
+    if (newStep !== formData.currentStep) {
+      setFormData((prevData) => ({
+        ...prevData,
+        currentStep: newStep,
+      }));
+    }
+  }, [formData.currentStep, steps.length]);
 
   const currentStepIndex = formData?.currentStep ?? 0;
 
@@ -102,7 +81,6 @@ const Page: React.FunctionComponent<CreatePollPageProps> = ({
         numberOfOptions: formData.options?.options?.length,
         optionsView: formData?.options?.view,
       });
-      setPersistedFormData(initialNewEventData);
       router.replace(`/admin/${res.urlId}`);
     },
   });
@@ -201,7 +179,7 @@ const Page: React.FunctionComponent<CreatePollPageProps> = ({
                   disabled={isBusy}
                   onClick={() => {
                     setFormData({
-                      ...persistedFormData,
+                      ...formData,
                       currentStep: currentStepIndex - 1,
                     });
                   }}
