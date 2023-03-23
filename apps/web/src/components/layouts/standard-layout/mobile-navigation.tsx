@@ -50,7 +50,7 @@ export const MobileNavigation = (props: { className?: string }) => {
         {
           "bg-gray-50 shadow-sm sm:bg-gray-50/75 sm:backdrop-blur-md ":
             isPinned,
-          "bg-gray-50 shadow-none sm:border-transparent sm:bg-gray-50/0":
+          "shadow-none sm:border-transparent sm:bg-transparent":
             !isPinned,
         },
         props.className,

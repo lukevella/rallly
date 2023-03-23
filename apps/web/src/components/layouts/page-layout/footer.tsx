@@ -13,6 +13,8 @@ import Sentry from "~/public/sentry.svg";
 import Vercel from "~/public/vercel-logotype-dark.svg";
 
 import { LanguageSelect } from "../../poll/language-selector";
+import DarkModeSwitcher from "@/components/darkmode-switcher";
+
 
 const Footer: React.FunctionComponent = () => {
   const { t } = useTranslation("common");
@@ -149,6 +151,10 @@ const Footer: React.FunctionComponent = () => {
             <Translate className="mr-2 h-5 w-5" />
             {t("volunteerTranslator")} &rarr;
           </a>
+          <div className="flex mt-4">
+            <div className="font-medium mr-6">{t("enableDarkmode")}</div>
+            <DarkModeSwitcher/>
+          </div>
         </div>
       </div>
     </div>

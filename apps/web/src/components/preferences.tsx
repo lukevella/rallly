@@ -5,6 +5,8 @@ import React from "react";
 
 import { useDayjs } from "../utils/dayjs";
 import { LanguageSelect } from "./poll/language-selector";
+import DarkModeSwitcher from "@/components/darkmode-switcher"
+
 
 const Preferences = (props: { className?: string }) => {
   const { t } = useTranslation(["app", "common"]);
@@ -82,6 +84,12 @@ const Preferences = (props: { className?: string }) => {
             </button>
           </div>
         </div>
+      </div>
+      <div className="mb-2 mt-3 flex">
+        <div className="mr-6">
+          {t("common:enableDarkmode")}
+        </div>
+        <DarkModeSwitcher/>
       </div>
     </div>
   );

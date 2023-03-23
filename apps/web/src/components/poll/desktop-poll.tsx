@@ -107,7 +107,7 @@ const Poll: React.FunctionComponent = () => {
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
-          <div className="flex h-14 shrink-0 items-center justify-between border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
+          <div className="flex h-14 shrink-0 items-center justify-between border-b bg-gray-50 p-3">
             <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
                 <div className="px-1">

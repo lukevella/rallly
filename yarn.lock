@@ -6231,6 +6231,11 @@ next@^13.2.4:
     "@next/swc-win32-ia32-msvc" "13.2.4"
     "@next/swc-win32-x64-msvc" "13.2.4"
 
+nightwind@^1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/nightwind/-/nightwind-1.1.13.tgz#111fe63546eaf5cadc2efe38372ffd2740302c13"
+  integrity sha512-ipTD+u64LXa03wDf1v0EawdsFC6vtS4xzzXknRd50BBtckDYzZAendkE+4VjSLrwQcTpk0XphWxFk4ORIDdrOg==
+
 node-fetch@^2.6.7:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.9.tgz#7c7f744b5cc6eb5fd404e0c7a9fec630a55657e6"

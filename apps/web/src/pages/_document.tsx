@@ -1,5 +1,7 @@
 import { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
+import nightwind from "nightwind/helper";
+
 
 export default function Document() {
   return (
@@ -25,8 +27,9 @@ export default function Document() {
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#f9fafb" />
+        <script dangerouslySetInnerHTML={{ __html: nightwind.init() }} />
       </Head>
-      <body>
+      <body className="nightwind dark:text-slate-200">
         <Main />
         <NextScript />
         <div id="portal"></div>

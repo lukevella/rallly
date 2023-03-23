@@ -1,5 +1,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 const sharedConfig = require("@rallly/tailwind-config/tailwind.config");
+const nightwind = require("nightwind");
+
 
 module.exports = {
   ...sharedConfig,
@@ -10,6 +12,18 @@ module.exports = {
       sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       mono: [...defaultTheme.fontFamily.mono],
     },
+    nightwind: {
+      colorClasses: ["gradient"],
+    },
   },
-  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("tailwindcss-animate"),
+    require("nightwind"),
+  ],
+  nightwind: {
+    // enable Nightwind mode
+    enabled: true,
+  },
+  darkMode: "class",
 };
