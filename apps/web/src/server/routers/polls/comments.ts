@@ -85,12 +85,12 @@ export const comments = router({
         emailsToSend.push(
           sendEmail("NewCommentEmail", {
             to: email,
-            subject: `New response for ${poll.title}`,
+            subject: `New comment on ${poll.title}`,
             props: {
               name: watcher.user.name,
               authorName,
               pollUrl: absoluteUrl(`/admin/${poll.adminUrlId}`),
-              unsubscribeUrl: absoluteUrl(
+              disableNotificationsUrl: absoluteUrl(
                 `/auth/disable-notifications?token=${token}`,
               ),
               title: poll.title,

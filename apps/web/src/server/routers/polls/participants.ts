@@ -142,7 +142,7 @@ export const participants = router({
               name: watcher.user.name,
               participantName: participant.name,
               pollUrl: absoluteUrl(`/admin/${poll.adminUrlId}`),
-              unsubscribeUrl: absoluteUrl(
+              disableNotificationsUrl: absoluteUrl(
                 `/auth/disable-notifications?token=${token}`,
               ),
               title: poll.title,

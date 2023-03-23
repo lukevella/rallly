@@ -12,14 +12,14 @@ export const NewCommentEmail = ({
   title = "Untitled Poll",
   authorName = "Someone",
   pollUrl = "https://rallly.co",
-  unsubscribeUrl = "https://rallly.co",
+  disableNotificationsUrl = "https://rallly.co",
 }: NewCommentEmailProps) => {
   return (
     <NotificationEmail
       name={name}
       title={title}
       pollUrl={pollUrl}
-      unsubscribeUrl={unsubscribeUrl}
+      disableNotificationsUrl={disableNotificationsUrl}
       preview={`${authorName} has commented on ${title}`}
     >
       <Text>
