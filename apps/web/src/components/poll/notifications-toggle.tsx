@@ -6,6 +6,7 @@ import { Button } from "@/components/button";
 import Bell from "@/components/icons/bell.svg";
 import BellCrossed from "@/components/icons/bell-crossed.svg";
 import { useUser } from "@/components/user-provider";
+import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc";
 import { usePollByAdmin } from "@/utils/trpc/hooks";
 
@@ -22,8 +23,19 @@ const NotificationsToggle: React.FunctionComponent = () => {
   const { user } = useUser();
   const isWatching = watchers.some(({ userId }) => userId === user.id);
 
-  const watch = trpc.polls.watch.useMutation();
-  const unwatch = trpc.polls.unwatch.useMutation();
+  const posthog = usePostHog();
+
+  const watch = trpc.polls.watch.useMutation({
+    onSuccess: () => {
+      posthog?.capture("turned notifications on");
+    },
+  });
+
+  const unwatch = trpc.polls.unwatch.useMutation({
+    onSuccess: () => {
+      posthog?.capture("turned notifications off");
+    },
+  });
 
   const isUpdating = watch.isLoading || unwatch.isLoading;
   const { openLoginModal } = useLoginModal();
