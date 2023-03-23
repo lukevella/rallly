@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
+import { useMount } from "react-use";
 
 import Bell from "@/components/icons/bell-crossed.svg";
 import { AuthLayout } from "@/components/layouts/auth-layout";
@@ -14,13 +15,15 @@ import {
   DisableNotificationsPayload,
   withSessionSsr,
 } from "@/utils/auth";
+import { usePostHog } from "@/utils/posthog";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 const Redirect = (props: React.PropsWithChildren<{ redirect: string }>) => {
   const router = useRouter();
   const [enabled, setEnabled] = React.useState(false);
   const { t } = useTranslation("app");
-  React.useEffect(() => {
+
+  useMount(() => {
     setTimeout(() => {
       setEnabled(true);
     }, 500);
@@ -28,7 +31,7 @@ const Redirect = (props: React.PropsWithChildren<{ redirect: string }>) => {
     setTimeout(() => {
       router.replace(props.redirect);
     }, 3000);
-  }, [router, props.redirect]);
+  });
 
   return (
     <div>
@@ -57,7 +60,7 @@ const Redirect = (props: React.PropsWithChildren<{ redirect: string }>) => {
   );
 };
 
-type Data = { title: undefined; adminUrlId: undefined };
+type Data = { title: string; adminUrlId: string; pollId: string };
 
 type PageProps =
   | {
@@ -68,6 +71,17 @@ type PageProps =
 
 const Page = (props: PageProps) => {
   const { t } = useTranslation("app");
+  const posthog = usePostHog();
+
+  useMount(() => {
+    if (!props.error) {
+      posthog?.capture("turned notifications off", {
+        pollId: props.data.pollId,
+        // where the event was triggered from
+        source: "email",
+      });
+    }
+  });
 
   return (
     <AuthLayout title={t("loading")}>
@@ -135,7 +149,7 @@ export const getServerSideProps = composeGetServerSideProps(
     } else {
       const poll = await prisma.poll.findFirst({
         where: { id: payload.pollId },
-        select: { adminUrlId: true, title: true },
+        select: { adminUrlId: true, title: true, id: true },
       });
 
       if (!poll) {
@@ -148,7 +162,11 @@ export const getServerSideProps = composeGetServerSideProps(
 
       return {
         props: {
-          data: { adminUrlId: poll.adminUrlId, title: poll.title },
+          data: {
+            adminUrlId: poll.adminUrlId,
+            title: poll.title,
+            pollId: poll.id,
+          },
         },
       };
     }

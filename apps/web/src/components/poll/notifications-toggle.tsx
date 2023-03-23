@@ -29,6 +29,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
     onSuccess: () => {
       posthog?.capture("turned notifications on", {
         pollId: poll.id,
+        source: "notifications-toggle",
       });
     },
   });
@@ -37,6 +38,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
     onSuccess: () => {
       posthog?.capture("turned notifications off", {
         pollId: poll.id,
+        source: "notifications-toggle",
       });
     },
   });
