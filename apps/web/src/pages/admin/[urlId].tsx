@@ -8,7 +8,7 @@ import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
 import { withAuthIfRequired, withSessionSsr } from "@/utils/auth";
-import { trpc } from "@/utils/trpc";
+import { usePollByAdmin } from "@/utils/trpc/hooks";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import { AdminControls } from "../../components/admin-control";
@@ -18,7 +18,7 @@ import { NextPageWithLayout } from "../../types";
 const Page: NextPageWithLayout<{ urlId: string }> = ({ urlId }) => {
   const { t } = useTranslation("app");
 
-  const pollQuery = trpc.polls.getByAdminUrlId.useQuery({ urlId });
+  const pollQuery = usePollByAdmin();
 
   const poll = pollQuery.data;
 

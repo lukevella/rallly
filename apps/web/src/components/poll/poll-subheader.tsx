@@ -17,7 +17,7 @@ const PollSubheader: React.FunctionComponent = () => {
           i18nKey="createdBy"
           t={t}
           values={{
-            name: poll.authorName,
+            name: poll.user?.name ?? t("guest"),
           }}
           components={{
             b: <span />,

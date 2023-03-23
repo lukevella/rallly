@@ -145,6 +145,7 @@ export const auth = router({
             email: input.email,
           },
         });
+        console.log(user);
 
         if (!user) {
           return { ok: false, reason: "userNotFound" };

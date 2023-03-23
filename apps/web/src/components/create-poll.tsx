@@ -22,8 +22,6 @@ import { useUser } from "./user-provider";
 
 type StepName = "eventDetails" | "options" | "userDetails";
 
-const steps: StepName[] = ["eventDetails", "options", "userDetails"];
-
 const required = <T,>(v: T | undefined): T => {
   if (!v) {
     throw new Error("Required value is missing");
@@ -53,6 +51,10 @@ const Page: React.FunctionComponent<CreatePollPageProps> = ({
   const router = useRouter();
 
   const session = useUser();
+
+  const steps: StepName[] = session.user.isGuest
+    ? ["eventDetails", "options", "userDetails"]
+    : ["eventDetails", "options"];
 
   const [persistedFormData, setPersistedFormData] =
     useSessionStorage<NewEventData>(sessionStorageKey, {
@@ -125,10 +127,12 @@ const Page: React.FunctionComponent<CreatePollPageProps> = ({
         type: "date",
         location: formData?.eventDetails?.location,
         description: formData?.eventDetails?.description,
-        user: {
-          name: required(formData?.userDetails?.name),
-          email: required(formData?.userDetails?.contact),
-        },
+        user: session.user.isGuest
+          ? {
+              name: required(formData?.userDetails?.name),
+              email: required(formData?.userDetails?.contact),
+            }
+          : undefined,
         timeZone: formData?.options?.timeZone,
         options: required(formData?.options?.options).map(encodeDateOption),
       });

@@ -46,12 +46,6 @@
     "db:generate": {
       "dependsOn": ["^db:generate"]
     },
-    "db:push": {
-      "cache": false
-    },
-    "db:deploy": {
-      "cache": false
-    },
     "lint": {
       "outputs": []
     },

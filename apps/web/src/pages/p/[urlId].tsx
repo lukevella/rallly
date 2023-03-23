@@ -37,7 +37,7 @@ const Page: NextPageWithLayout<{
             <PollContextProvider poll={poll} urlId={urlId} admin={false}>
               <ModalProvider>
                 <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
-                  {user.id === poll.user.id ? (
+                  {user.id === poll.userId ? (
                     <Link
                       className="btn-default"
                       href={`/admin/${poll.adminUrlId}`}

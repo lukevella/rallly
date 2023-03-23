@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime? @updatedAt @map("updated_at")
   comments  Comment[]
   polls     Poll[]
+  Watcher   Watcher[]
 
   @@map("users")
 }
@@ -36,19 +37,18 @@ model Poll {
   type             PollType
   description      String?
   location         String?
-  user             User          @relation(fields: [userId], references: [id])
+  user             User?         @relation(fields: [userId], references: [id])
   userId           String        @map("user_id")
   votes            Vote[]
   timeZone         String?       @map("time_zone")
-  verified         Boolean       @default(false)
   options          Option[]
   participants     Participant[]
-  authorName       String        @default("") @map("author_name")
+  watchers         Watcher[]
+  authorName       String?       @map("author_name")
   demo             Boolean       @default(false)
   comments         Comment[]
   legacy           Boolean       @default(false)
   closed           Boolean       @default(false)
-  notifications    Boolean       @default(false)
   deleted          Boolean       @default(false)
   deletedAt        DateTime?     @map("deleted_at")
   touchedAt        DateTime      @default(now()) @map("touched_at")
@@ -59,10 +59,23 @@ model Poll {
   @@map("polls")
 }
 
+model Watcher {
+  id        Int      @id @default(autoincrement())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  pollId    String   @map("poll_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  poll      Poll     @relation(fields: [pollId], references: [id])
+
+  @@index([userId], type: Hash)
+  @@index([pollId], type: Hash)
+  @@map("watchers")
+}
+
 model Participant {
   id        String    @id @default(cuid())
   name      String
-  email     String?   
+  email     String?
   userId    String?   @map("user_id")
   poll      Poll      @relation(fields: [pollId], references: [id])
   pollId    String    @map("poll_id")
@@ -116,7 +129,7 @@ model Comment {
   poll       Poll      @relation(fields: [pollId], references: [id])
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
-  user       User?     @relation(fields:[userId], references: [id])
+  user       User?     @relation(fields: [userId], references: [id])
   userId     String?   @map("user_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")

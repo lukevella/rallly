@@ -79,10 +79,10 @@ export const useUpdatePollMutation = () => {
   const queryClient = trpc.useContext();
   const posthog = usePostHog();
   return trpc.polls.update.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (_data, { urlId }) => {
       queryClient.polls.invalidate();
       posthog?.capture("updated poll", {
-        id: data.id,
+        id: urlId,
       });
     },
   });

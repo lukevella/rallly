@@ -3,11 +3,8 @@ import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createToken, EnableNotificationsTokenPayload } from "@/utils/auth";
-
 import { absoluteUrl } from "../../utils/absolute-url";
 import { nanoid } from "../../utils/nanoid";
-import { GetPollApiResponse } from "../../utils/trpc/types";
 import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
@@ -17,17 +14,14 @@ const defaultSelectFields: {
   id: true;
   timeZone: true;
   title: true;
-  authorName: true;
   location: true;
   description: true;
   createdAt: true;
   adminUrlId: true;
   participantUrlId: true;
-  verified: true;
   closed: true;
   legacy: true;
   demo: true;
-  notifications: true;
   options: {
     orderBy: {
       value: "asc";
@@ -39,16 +33,13 @@ const defaultSelectFields: {
   id: true,
   timeZone: true,
   title: true,
-  authorName: true,
   location: true,
   description: true,
   createdAt: true,
   adminUrlId: true,
   participantUrlId: true,
-  verified: true,
   closed: true,
   legacy: true,
-  notifications: true,
   demo: true,
   options: {
     orderBy: {
@@ -85,10 +76,12 @@ export const polls = router({
         timeZone: z.string().optional(),
         location: z.string().optional(),
         description: z.string().optional(),
-        user: z.object({
-          name: z.string(),
-          email: z.string(),
-        }),
+        user: z
+          .object({
+            name: z.string(),
+            email: z.string(),
+          })
+          .optional(),
         options: z.string().array(),
         demo: z.boolean().optional(),
       }),
@@ -97,17 +90,25 @@ export const polls = router({
       async ({ ctx, input }): Promise<{ id: string; urlId: string }> => {
         const adminUrlId = await nanoid();
         const participantUrlId = await nanoid();
-        let verified = false;
 
-        if (ctx.session.user.isGuest === false) {
+        let email = input.user?.email;
+        let name = input.user?.name;
+
+        if (!ctx.user.isGuest) {
           const user = await prisma.user.findUnique({
-            where: { id: ctx.session.user.id },
+            select: { email: true, name: true },
+            where: { id: ctx.user.id },
           });
 
-          // If user is logged in with the same email address
-          if (user?.email === input.user.email) {
-            verified = true;
+          if (!user) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "User not found",
+            });
           }
+
+          email = user.email;
+          name = user.name;
         }
 
         const poll = await prisma.poll.create({
@@ -123,23 +124,18 @@ export const polls = router({
             timeZone: input.timeZone,
             location: input.location,
             description: input.description,
-            authorName: input.user.name,
+            authorName: input.user?.name,
             demo: input.demo,
-            verified: verified,
-            notifications: verified,
             adminUrlId,
             participantUrlId,
-            user: {
-              connectOrCreate: {
-                where: {
-                  email: input.user.email,
-                },
-                create: {
-                  id: await nanoid(),
-                  ...input.user,
-                },
-              },
-            },
+            userId: ctx.user.id,
+            watchers: !ctx.user.isGuest
+              ? {
+                  create: {
+                    userId: ctx.user.id,
+                  },
+                }
+              : undefined,
             options: {
               createMany: {
                 data: input.options.map((value) => ({
@@ -153,16 +149,18 @@ export const polls = router({
         const adminLink = absoluteUrl(`/admin/${adminUrlId}`);
         const participantLink = absoluteUrl(`/p/${participantUrlId}`);
 
-        await sendEmail("NewPollEmail", {
-          to: input.user.email,
-          subject: `Let's find a date for ${poll.title}`,
-          props: {
-            title: poll.title,
-            name: input.user.name,
-            adminLink,
-            participantLink,
-          },
-        });
+        if (email && name) {
+          await sendEmail("NewPollEmail", {
+            to: email,
+            subject: `Let's find a date for ${poll.title}`,
+            props: {
+              title: poll.title,
+              name,
+              adminLink,
+              participantLink,
+            },
+          });
+        }
 
         return { id: poll.id, urlId: adminUrlId };
       },
@@ -177,11 +175,10 @@ export const polls = router({
         description: z.string().optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
-        notifications: z.boolean().optional(),
         closed: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ input }): Promise<GetPollApiResponse> => {
+    .mutation(async ({ input }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
@@ -204,7 +201,7 @@ export const polls = router({
         });
       }
 
-      const poll = await prisma.poll.update({
+      await prisma.poll.update({
         select: defaultSelectFields,
         where: {
           id: pollId,
@@ -214,12 +211,9 @@ export const polls = router({
           location: input.location,
           description: input.description,
           timeZone: input.timeZone,
-          notifications: input.notifications,
           closed: input.closed,
         },
       });
-
-      return { ...poll };
     }),
   delete: possiblyPublicProcedure
     .input(
@@ -251,43 +245,53 @@ export const polls = router({
   participants,
   comments,
   // END LEGACY ROUTES
-  enableNotifications: possiblyPublicProcedure
-    .input(z.object({ adminUrlId: z.string() }))
-    .mutation(async ({ input }) => {
-      const poll = await prisma.poll.findUnique({
-        select: {
-          id: true,
-          title: true,
-          user: {
-            select: {
-              name: true,
-              email: true,
-            },
-          },
-        },
-        where: {
-          adminUrlId: input.adminUrlId,
-        },
-      });
-
-      if (!poll) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+  watch: possiblyPublicProcedure
+    .input(z.object({ pollId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.isGuest) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Guests can't watch polls",
+        });
       }
 
-      const token = await createToken<EnableNotificationsTokenPayload>({
-        adminUrlId: input.adminUrlId,
+      await prisma.watcher.create({
+        data: {
+          pollId: input.pollId,
+          userId: ctx.user.id,
+        },
+      });
+    }),
+  unwatch: possiblyPublicProcedure
+    .input(z.object({ pollId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.isGuest) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Guests can't unwatch polls",
+        });
+      }
+
+      const res = await prisma.watcher.findFirst({
+        where: {
+          pollId: input.pollId,
+          userId: ctx.user.id,
+        },
+        select: {
+          id: true,
+        },
       });
 
-      await sendEmail("EnableNotificationsEmail", {
-        to: poll.user.email,
-        subject: "Please verify your email address",
-        props: {
-          name: poll.user.name,
-          title: poll.title,
-          adminLink: absoluteUrl(`/admin/${input.adminUrlId}`),
-          verificationLink: absoluteUrl(
-            `/auth/enable-notifications?token=${token}`,
-          ),
+      if (!res) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Not watching this poll",
+        });
+      }
+
+      await prisma.watcher.delete({
+        where: {
+          id: res.id,
         },
       });
     }),
@@ -299,7 +303,14 @@ export const polls = router({
     )
     .query(async ({ input }) => {
       const res = await prisma.poll.findUnique({
-        select: defaultSelectFields,
+        select: {
+          ...defaultSelectFields,
+          watchers: {
+            select: {
+              userId: true,
+            },
+          },
+        },
         where: {
           adminUrlId: input.urlId,
         },
@@ -323,7 +334,7 @@ export const polls = router({
     )
     .query(async ({ input, ctx }) => {
       const res = await prisma.poll.findUnique({
-        select: defaultSelectFields,
+        select: { userId: true, ...defaultSelectFields },
         where: {
           participantUrlId: input.urlId,
         },
@@ -337,7 +348,7 @@ export const polls = router({
         });
       }
 
-      if (ctx.user.id === res.user.id) {
+      if (ctx.user.id === res.userId) {
         return res;
       } else {
         return { ...res, adminUrlId: "" };
