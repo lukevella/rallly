@@ -1,6 +1,5 @@
 import { prisma } from "@rallly/database";
 import clsx from "clsx";
-import { GetServerSidePropsResult } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";

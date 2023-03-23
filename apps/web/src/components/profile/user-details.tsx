@@ -9,7 +9,6 @@ import { requiredString, validEmail } from "../../utils/form-validation";
 import { trpc } from "../../utils/trpc";
 import { Button } from "../button";
 import { TextInput } from "../text-input";
-import { useUser } from "../user-provider";
 
 export interface UserDetailsProps {
   userId: string;

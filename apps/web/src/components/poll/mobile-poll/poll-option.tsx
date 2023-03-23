@@ -7,7 +7,6 @@ import * as React from "react";
 import ChevronDown from "@/components/icons/chevron-down.svg";
 
 import { useParticipants } from "../../participants-provider";
-import { usePoll } from "../../poll-context";
 import { ConnectedScoreSummary } from "../score-summary";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
@@ -181,36 +180,12 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   onChange,
   participants,
   editable = false,
-  yesScore,
   optionId,
 }) => {
-  const { getVote } = usePoll();
   const showVotes = !!(selectedParticipantId || editable);
   const [expanded, setExpanded] = React.useState(false);
   const selectorRef = React.useRef<HTMLButtonElement>(null);
   const [active, setActive] = React.useState(false);
-
-  const score = React.useMemo(() => {
-    if (!editable) {
-      return yesScore;
-    }
-
-    if (selectedParticipantId) {
-      const currentVote = getVote(selectedParticipantId, optionId);
-      return (
-        yesScore +
-        (currentVote === "yes"
-          ? vote === "yes"
-            ? 0
-            : -1
-          : vote === "yes"
-          ? 1
-          : 0)
-      );
-    }
-
-    return yesScore + (vote === "yes" ? 1 : 0);
-  }, [editable, getVote, optionId, selectedParticipantId, vote, yesScore]);
 
   return (
     <div
