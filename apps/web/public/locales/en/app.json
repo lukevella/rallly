@@ -149,6 +149,7 @@
   "verifyYourEmail": "Verify your email",
   "weekStartsOn": "Week starts on",
   "weekView": "Week view",
+  "newParticipantEmailTooltip": "Enter your email address to receive a link that lets you modify your response at a later time.",
   "whatsThis": "What's this?",
   "wrongVerificationCode": "Your verification code is incorrect or has expired",
   "yes": "Yes",

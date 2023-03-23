@@ -96,7 +96,7 @@ const Tooltip: React.FunctionComponent<TooltipProps> = ({
   return (
     <>
       <span
-        className={clsx("inline-flex", className)}
+        className={clsx("inline-block", className)}
         {...getReferenceProps({ ref: reference })}
       >
         {children}
@@ -105,7 +105,7 @@ const Tooltip: React.FunctionComponent<TooltipProps> = ({
         <AnimatePresence>
           {open ? (
             <m.div
-              className="z-30 rounded-md bg-slate-700 px-2 py-1 text-slate-100 shadow-md"
+              className="z-50 rounded-md bg-slate-700 px-2 py-1 text-slate-100 shadow-md"
               initial="hidden"
               transition={{
                 duration: 0.1,

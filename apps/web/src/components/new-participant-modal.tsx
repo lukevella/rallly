@@ -4,6 +4,10 @@ import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
 
+import InformationCircle from "@/components/icons/information-circle.svg";
+import Tooltip from "@/components/tooltip";
+import { useUser } from "@/components/user-provider";
+
 import { useFormValidation } from "../utils/form-validation";
 import { Button } from "./button";
 import { useModalContext } from "./modal/modal-provider";
@@ -43,7 +47,10 @@ const VoteSummary = ({
 
   return (
     <div
-      className={clsx("flex flex-wrap gap-1.5 rounded border p-1.5", className)}
+      className={clsx(
+        "flex flex-wrap gap-1.5 rounded border bg-gray-50 p-1.5",
+        className,
+      )}
     >
       {voteTypes.map((voteType) => {
         const votes = voteByType[voteType];
@@ -72,13 +79,20 @@ const VoteSummary = ({
 
 export const NewParticipantModal = (props: NewParticipantModalProps) => {
   const { t } = useTranslation("app");
+  const { user } = useUser();
   const { register, formState, setFocus, handleSubmit } =
-    useForm<NewParticipantFormData>();
+    useForm<NewParticipantFormData>({
+      defaultValues: !user.isGuest
+        ? { name: user.name, email: user.email }
+        : { name: "", email: "" },
+    });
+
   const { requiredString, validEmail } = useFormValidation();
   const { poll } = usePoll();
   const addParticipant = useAddParticipantMutation();
+
   useMount(() => {
-    setFocus("name");
+    setFocus("name", { shouldSelect: true });
   });
 
   return (
@@ -97,7 +111,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           });
           props.onSubmit?.(newParticipant);
         })}
-        className="space-y-4"
+        className="space-y-3"
       >
         <fieldset>
           <label htmlFor="name" className="text-slate-500">
@@ -118,7 +132,18 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
         </fieldset>
         <fieldset>
           <label htmlFor="email" className="text-slate-500">
-            {t("email")} ({t("optional")})
+            <span>
+              {t("email")} ({t("optional")})
+            </span>
+            <Tooltip
+              content={
+                <div className="max-w-sm">
+                  {t("newParticipantEmailTooltip")}
+                </div>
+              }
+            >
+              <InformationCircle className="ml-1 inline-block h-5 text-slate-400" />
+            </Tooltip>
           </label>
           <TextInput
             className="w-full"
