@@ -28,7 +28,7 @@ const DateCard: React.FunctionComponent<DateCardProps> = ({
       ) : null}
       <div>
         {dow ? (
-          <div className="-mt-3 bg-white text-center text-xs text-slate-400">
+          <div className="-mt-3 bg-white text-center text-xs text-slate-500">
             {dow}
           </div>
         ) : null}

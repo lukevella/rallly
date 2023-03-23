@@ -73,7 +73,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                 {showClose ? (
                   <button
                     role="button"
-                    className="absolute top-1 right-1 z-10 rounded p-2 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 focus:ring-0 focus:ring-offset-0 active:bg-slate-500/20"
+                    className="absolute top-1 right-1 z-10 rounded p-2 text-slate-500 transition-colors hover:bg-slate-500/10 hover:text-slate-500 focus:ring-0 focus:ring-offset-0 active:bg-slate-500/20"
                     onClick={onCancel}
                   >
                     <X className="h-4" />

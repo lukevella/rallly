@@ -25,7 +25,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
       </Head>
       <div className="flex items-start">
         <div className="text-center">
-          <Icon className="mb-4 inline-block w-24 text-slate-400" />
+          <Icon className="mb-4 inline-block w-24 text-slate-500" />
           <div className="text-primary-500 mb-2 text-3xl font-bold ">
             {title}
           </div>

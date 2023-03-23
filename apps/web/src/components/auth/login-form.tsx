@@ -94,7 +94,7 @@ const VerifyCode: React.FunctionComponent<{
               {formState.errors.code.message}
             </p>
           ) : null}
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-slate-500">
             {t("verificationCodeHelp")}
           </p>
         </fieldset>

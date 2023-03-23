@@ -21,7 +21,7 @@ const TimeRange: React.FunctionComponent<{
       )}
     >
       <div>{startTime}</div>
-      <div className="text-slate-400">{endTime}</div>
+      <div className="text-slate-500">{endTime}</div>
     </div>
   );
 };

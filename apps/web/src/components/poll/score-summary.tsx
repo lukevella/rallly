@@ -37,7 +37,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
           {
             "rounded-full bg-green-50 text-green-400": highlight,
           },
-          { "text-slate-400": !highlight },
+          { "text-slate-500": !highlight },
         )}
       >
         <CheckCircle className="-ml-1 inline-block h-4 transition-opacity" />
