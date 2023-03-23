@@ -3,11 +3,7 @@ import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import { Button } from "@/components/button";
-import Chat from "@/components/icons/chat.svg";
 import EmojiSad from "@/components/icons/emoji-sad.svg";
-
-import { showCrispChat } from "./crisp-chat";
 
 export interface ComponentProps {
   icon?: React.ComponentType<{ className?: string }>;
@@ -20,7 +16,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
   title,
   description,
 }) => {
-  const { t } = useTranslation("errors");
+  const { t } = useTranslation(["common", "errors"]);
   return (
     <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
       <Head>
@@ -35,12 +31,16 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
           </div>
           <p>{description}</p>
           <div className="flex justify-center space-x-3">
-            <Link href="/" passHref={true} className="btn-default">
-              {t("goToHome")}
+            <Link href="/" className="btn-primary">
+              {t("errors:goToHome")}
             </Link>
-            <Button icon={<Chat />} onClick={showCrispChat}>
-              {t("startChat")}
-            </Button>
+            <Link
+              href="https://support.rallly.co"
+              passHref={true}
+              className="btn-default"
+            >
+              {t("support")}
+            </Link>
           </div>
         </div>
       </div>

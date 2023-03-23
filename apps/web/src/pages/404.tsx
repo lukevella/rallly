@@ -1,12 +1,14 @@
-import { GetStaticProps, NextPage } from "next";
+import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import React from "react";
 
 import ErrorPage from "@/components/error-page";
 import DocumentSearch from "@/components/icons/document-search.svg";
+import { getStandardLayout } from "@/components/layouts/standard-layout";
+import { NextPageWithLayout } from "@/types";
 
-const Custom404: NextPage = () => {
+const Custom404: NextPageWithLayout = () => {
   const { t } = useTranslation("errors");
   return (
     <ErrorPage
@@ -17,10 +19,12 @@ const Custom404: NextPage = () => {
   );
 };
 
+Custom404.getLayout = getStandardLayout;
+
 export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["errors"])),
+      ...(await serverSideTranslations(locale, ["common", "errors"])),
     },
   };
 };
