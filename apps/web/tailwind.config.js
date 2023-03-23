@@ -1,7 +1,5 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 const sharedConfig = require("@rallly/tailwind-config/tailwind.config");
-const nightwind = require("nightwind");
-
 
 module.exports = {
   ...sharedConfig,

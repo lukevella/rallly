@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
+import DarkModeSwitcher from "@/components/darkmode-switcher";
 import Discord from "@/components/icons/discord.svg";
 import Star from "@/components/icons/star.svg";
 import Translate from "@/components/icons/translate.svg";
@@ -13,7 +14,6 @@ import Sentry from "~/public/sentry.svg";
 import Vercel from "~/public/vercel-logotype-dark.svg";
 
 import { LanguageSelect } from "../../poll/language-selector";
-import DarkModeSwitcher from "@/components/darkmode-switcher";
 
 
 const Footer: React.FunctionComponent = () => {

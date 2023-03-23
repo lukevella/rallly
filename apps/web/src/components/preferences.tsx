@@ -3,9 +3,10 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import DarkModeSwitcher from "@/components/darkmode-switcher"
+
 import { useDayjs } from "../utils/dayjs";
 import { LanguageSelect } from "./poll/language-selector";
-import DarkModeSwitcher from "@/components/darkmode-switcher"
 
 
 const Preferences = (props: { className?: string }) => {
