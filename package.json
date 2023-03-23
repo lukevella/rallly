@@ -19,9 +19,9 @@
     "packages/*"
   ],
   "devDependencies": {
+    "dotenv-cli": "^7.1.0",
     "prettier": "^2.8.4",
-    "turbo": "^1.8.3",
-    "dotenv-cli": "^7.1.0"
+    "turbo": "^1.8.5"
   },
   "engines": {
     "node": "16.x"
