@@ -36,7 +36,7 @@ const Sharing: React.FunctionComponent<SharingProps> = ({
         </div>
         <button
           onClick={onHide}
-          className="h-8 items-center justify-center rounded-md px-3 text-slate-400 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
+          className="h-8 items-center justify-center rounded-md px-3 text-slate-500 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
         >
           {t("hide")}
         </button>

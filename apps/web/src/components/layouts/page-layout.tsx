@@ -69,7 +69,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
               <Link className="inline-block rounded" href="/">
                 <Logo className="text-primary-500 w-40" alt="Rallly" />
               </Link>
-              <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
+              <span className="absolute -bottom-6 right-0 text-sm text-slate-500 transition-colors">
                 <Trans t={t} i18nKey="3Ls" components={{ e: <em /> }} />
               </span>
             </div>

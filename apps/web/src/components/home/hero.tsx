@@ -64,7 +64,7 @@ const Hero: React.FunctionComponent = () => {
                 transition={{ type: "spring", delay: 2 }}
               >
                 {t("perfect")} 🤩
-                <ScribbleArrow className="absolute -right-8 top-3 text-slate-400" />
+                <ScribbleArrow className="absolute -right-8 top-3 text-slate-500" />
               </m.div>
               <m.div
                 className="rounded-lg"

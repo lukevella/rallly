@@ -57,7 +57,7 @@
     @apply mb-4;
   }
   .input {
-    @apply appearance-none border px-2 py-1 text-slate-700 placeholder:text-slate-400;
+    @apply appearance-none border px-2 py-1 text-slate-700 placeholder:text-slate-500;
   }
   input.input {
     @apply h-9;

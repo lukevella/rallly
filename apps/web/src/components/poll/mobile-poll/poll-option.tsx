@@ -93,7 +93,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
     >
       <div>
         {noVotes ? (
-          <div className="rounded-lg bg-slate-50 p-2 text-center text-slate-400">
+          <div className="rounded-lg bg-slate-50 p-2 text-center text-slate-500">
             {t("noVotes")}
           </div>
         ) : (
@@ -190,7 +190,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   return (
     <div
       className={clsx("space-y-4 overflow-hidden p-3", {
-        "bg-slate-400/5": editable && active,
+        "bg-slate-500/5": editable && active,
       })}
       onTouchStart={() => setActive(editable)}
       onTouchEnd={() => setActive(false)}
@@ -218,7 +218,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
               ) : null}
               <ChevronDown
                 className={clsx(
-                  "h-5 shrink-0 text-slate-400 transition-transform",
+                  "h-5 shrink-0 text-slate-500 transition-transform",
                   {
                     "-rotate-180": expanded,
                   },
