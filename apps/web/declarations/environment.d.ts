@@ -88,6 +88,10 @@ declare global {
        * AWS region
        */
       AWS_REGION?: string;
+      /**
+       * The app version just for reference
+       */
+      NEXT_PUBLIC_APP_VERSION?: string;
     }
   }
 }

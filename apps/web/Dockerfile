@@ -17,6 +17,10 @@ RUN yarn --network-timeout 1000000
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
 RUN yarn db:generate
+
+ARG APP_VERSION
+ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
+
 RUN yarn build
 
 FROM node:16 AS runner
