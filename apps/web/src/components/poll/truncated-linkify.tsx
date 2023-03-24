@@ -1,3 +1,4 @@
+import Link from "next/link";
 import * as React from "react";
 import ReactLinkify from "react-linkify";
 
@@ -13,9 +14,14 @@ export const truncateLink = (href: string, text: string, key: number) => {
 
   if (finalText.length === textWithoutProtocol.length) {
     return (
-      <a key={key} href={href} rel="nofollow noreferrer">
+      <Link
+        className="text-link"
+        key={key}
+        href={href}
+        rel="nofollow noreferrer"
+      >
         {finalText}
-      </a>
+      </Link>
     );
   } else {
     finalText += "…";
@@ -26,9 +32,9 @@ export const truncateLink = (href: string, text: string, key: number) => {
           <div className="max-w-md break-all font-mono text-xs">{href}</div>
         }
       >
-        <a href={href} rel="nofollow noreferrer">
+        <Link className="text-link" href={href} rel="nofollow noreferrer">
           {finalText}
-        </a>
+        </Link>
       </Tooltip>
     );
   }
