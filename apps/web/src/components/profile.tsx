@@ -4,9 +4,12 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
+import Badge from "@/components/badge";
 import Calendar from "@/components/icons/calendar.svg";
+import LockClosed from "@/components/icons/lock-closed.svg";
 import Pencil from "@/components/icons/pencil.svg";
 import User from "@/components/icons/user.svg";
+import Tooltip from "@/components/tooltip";
 
 import { useDayjs } from "../utils/dayjs";
 import { trpc } from "../utils/trpc";
@@ -79,26 +82,37 @@ export const Profile: React.FunctionComponent = () => {
             </Link>
           </div>
           {createdPolls.length > 0 ? (
-            <div className="w-full sm:table sm:border-collapse">
-              <div className="divide-y sm:table-row-group">
+            <div className="w-full sm:border-collapse">
+              <div className="divide-y">
                 {createdPolls.map((poll, i) => (
-                  <div className="p-4 sm:table-row sm:p-0" key={i}>
-                    <div className="sm:table-cell sm:p-4">
-                      <div>
-                        <div className="flex">
-                          <Calendar className="text-primary-500 mr-2 mt-[1px] h-5" />
-                          <Link
-                            href={`/admin/${poll.adminUrlId}`}
-                            className="hover:text-primary-500 text-slate-700 hover:no-underline"
-                          >
-                            <div>{poll.title}</div>
-                          </Link>
-                        </div>
-                        <div className="ml-7 text-sm text-slate-500">
-                          {dayjs(poll.createdAt).fromNow()}
-                        </div>
-                      </div>
-                    </div>
+                  <div key={i}>
+                    <Link
+                      href={`/admin/${poll.adminUrlId}`}
+                      className="block h-full p-3 hover:bg-gray-50 active:bg-gray-100 sm:p-4"
+                    >
+                      <span className="flex gap-4">
+                        <span>
+                          <Calendar className="text-primary-500 w-10" />
+                        </span>
+                        <span>
+                          <span className="flex items-center gap-2">
+                            <span className="font-medium text-slate-800 hover:no-underline">
+                              {poll.title}
+                            </span>
+                            {poll.closed ? (
+                              <Tooltip content={t("pollHasBeenLocked")}>
+                                <Badge color="red">
+                                  <LockClosed className="h-4" />
+                                </Badge>
+                              </Tooltip>
+                            ) : null}
+                          </span>
+                          <span className="text-sm text-slate-500">
+                            {dayjs(poll.createdAt).fromNow()}
+                          </span>
+                        </span>
+                      </span>
+                    </Link>
                   </div>
                 ))}
               </div>

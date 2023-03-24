@@ -33,7 +33,6 @@ export const user = router({
             createdAt: true,
             adminUrlId: true,
           },
-          take: 10,
           orderBy: {
             createdAt: "desc",
           },
