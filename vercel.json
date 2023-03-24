@@ -1,4 +1,4 @@
 {
-  "buildCommand": "yarn build && DATABASE_URL=$DIRECT_DATABASE_URL yarn db:deploy",
+  "buildCommand": "./scripts/vercel.sh",
   "outputDirectory": "./apps/web/.next"
 }

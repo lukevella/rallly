@@ -3,8 +3,6 @@ FROM node:16 AS builder
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN apt-get update && apt-get install -y jq
-RUN echo "NEXT_PUBLIC_APP_VERSION=$(jq -r '.version' package.json)" > apps/web/.env
 RUN turbo prune --scope=@rallly/web --docker
 
 FROM node:16 AS installer
@@ -19,6 +17,10 @@ RUN yarn --network-timeout 1000000
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
 RUN yarn db:generate
+
+ARG APP_VERSION
+ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
+
 RUN yarn build
 
 FROM node:16 AS runner
@@ -33,6 +35,7 @@ USER nextjs
 
 COPY --from=builder --chown=nextjs:nodejs /app/scripts/docker-start.sh ./
 COPY --from=builder --chown=nextjs:nodejs /app/packages/database/prisma ./prisma
+ 
 COPY --from=installer /app/apps/web/next.config.js .
 COPY --from=installer /app/apps/web/package.json .
 
