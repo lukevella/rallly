@@ -30,7 +30,7 @@ const colors = [
   "bg-pink-500",
 ];
 
-const defaultColor = "bg-slate-500";
+const defaultColor = "bg-slate-400";
 
 export const UserAvatarProvider: React.FunctionComponent<{
   children?: React.ReactNode;
