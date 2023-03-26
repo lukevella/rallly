@@ -8,7 +8,7 @@ export const Logo = (props: { className?: string; color?: boolean }) => {
         className={clsx(
           "font-semibold uppercase tracking-widest",
           {
-            "text-primary-500": color,
+            "text-primary-600": color,
           },
           props.className,
         )}

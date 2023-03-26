@@ -16,7 +16,7 @@ const VoteIcon: React.FunctionComponent<{
     case "yes":
       return (
         <CheckCircle
-          className={clsx("text-green-400", className, {
+          className={clsx("text-green-500", className, {
             "h-5": size === "md",
             "h-3": size === "sm",
           })}
@@ -26,7 +26,7 @@ const VoteIcon: React.FunctionComponent<{
     case "ifNeedBe":
       return (
         <IfNeedBe
-          className={clsx("text-amber-300", className, {
+          className={clsx("text-amber-400", className, {
             "h-5": size === "md",
             "h-3": size === "sm",
           })}
@@ -36,7 +36,7 @@ const VoteIcon: React.FunctionComponent<{
     case "no":
       return (
         <X
-          className={clsx("text-slate-300", className, {
+          className={clsx("text-slate-400", className, {
             "h-5": size === "md",
             "h-3": size === "sm",
           })}

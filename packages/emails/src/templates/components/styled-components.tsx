@@ -40,7 +40,7 @@ export const Button = (props: ButtonProps) => {
     <UnstyledButton
       {...props}
       className={clsx(
-        "bg-primary-500 rounded px-3 py-2 font-sans text-white",
+        "bg-primary-600 rounded px-3 py-2 font-sans text-white",
         props.className,
       )}
     />
@@ -51,7 +51,7 @@ export const Link = (props: LinkProps) => {
   return (
     <UnstyledLink
       {...props}
-      className={clsx("text-primary-500", props.className)}
+      className={clsx("text-primary-600", props.className)}
     />
   );
 };

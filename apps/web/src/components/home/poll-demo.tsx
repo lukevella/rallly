@@ -11,22 +11,22 @@ const columnWidth = 100;
 const participants = [
   {
     name: "Reed",
-    color: "bg-sky-400",
+    color: "bg-sky-500",
     votes: [0, 2],
   },
   {
     name: "Susan",
-    color: "bg-blue-400",
+    color: "bg-blue-500",
     votes: [0, 1, 2],
   },
   {
     name: "Johnny",
-    color: "bg-primary-400",
+    color: "bg-primary-500",
     votes: [2, 3],
   },
   {
     name: "Ben",
-    color: "bg-purple-400",
+    color: "bg-purple-500",
     votes: [0, 1, 2, 3],
   },
 ];

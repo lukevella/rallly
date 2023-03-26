@@ -34,7 +34,7 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
               content: (
                 <div className="w-96 max-w-full p-6 pt-28">
                   <div className="absolute left-0 -top-8 w-full text-center">
-                    <div className="to-primary-500 inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400">
+                    <div className="to-primary-600 inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400">
                       <User className="h-7 text-white" />
                     </div>
                     <div className="">
