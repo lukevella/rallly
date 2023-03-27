@@ -124,7 +124,6 @@ export const polls = router({
             timeZone: input.timeZone,
             location: input.location,
             description: input.description,
-            authorName: input.user?.name,
             demo: input.demo,
             adminUrlId,
             participantUrlId,
