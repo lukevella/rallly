@@ -45,7 +45,7 @@ const Redirect = () => {
       <div className="flex h-10 items-center justify-center gap-4">
         {enabled ? (
           <CheckCircle
-            className={clsx("animate-popIn h-10 text-green-400", {
+            className={clsx("animate-popIn h-10 text-green-500", {
               "opacity-0": !enabled,
             })}
           />
