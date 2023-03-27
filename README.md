@@ -1,4 +1,4 @@
-<img src="./apps/web/public/logo.png" alt="Rallly" width="200" />
+<img src="./docs/images/banner-logo.png" alt="Rallly" />
 
 [![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg?branch=main)](https://github.com/lukevella/rallly/actions)
 [![Crowdin](https://badges.crowdin.net/rallly/localized.svg)](https://crowdin.com/project/rallly)
@@ -10,7 +10,7 @@ Schedule group meetings with friends, colleagues and teams. Create meeting polls
 
 Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma), [tRPC](https://github.com/trpc/trpc) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
 
-<img src="./docs/images/hero-image.png" alt="Rallly"  />
+<img src="./docs/images/poll-image.png" alt="Rallly"  />
 
 ## Self-hosting
 
