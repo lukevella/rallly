@@ -77,7 +77,6 @@ export const demo = router({
         type: "date",
         location: "Starbucks, 901 New York Avenue",
         description: `Hey everyone, please choose the dates when you are available to meet for our monthly get together. Looking forward to see you all!`,
-        authorName: "Johnny",
         demo: true,
         adminUrlId,
         participantUrlId: await nanoid(),
