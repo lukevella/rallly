@@ -40,7 +40,7 @@ const CookieConsentPopover: React.FunctionComponent = () => {
           <div className="flex items-center space-x-6">
             <Link
               href="/privacy-policy"
-              className="hover:text-primary-500 text-slate-400"
+              className="hover:text-primary-600 text-slate-500"
             >
               Privacy Policy
             </Link>
@@ -49,7 +49,7 @@ const CookieConsentPopover: React.FunctionComponent = () => {
                 Cookies.set("rallly_cookie_consent", "1", { expires: 365 });
                 setVisible(false);
               }}
-              className="bg-primary-500 hover:bg-primary-500/90 focus:ring-primary-200 active:bg-primary-600/90 grow rounded-md px-5 py-1  font-semibold text-white shadow-sm transition-all focus:ring-2"
+              className="bg-primary-600 hover:bg-primary-600/90 focus:ring-primary-200 active:bg-primary-600/90 grow rounded-md px-5 py-1  font-semibold text-white shadow-sm transition-all focus:ring-2"
             >
               OK
             </button>

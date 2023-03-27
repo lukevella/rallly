@@ -173,7 +173,7 @@ const Page: React.FunctionComponent = () => {
                   );
               }
             })()}
-            <div className="flex w-full justify-end space-x-3 border-t bg-slate-50 px-4 py-3">
+            <div className="flex w-full justify-end space-x-3 border-t bg-gray-50 p-3">
               {currentStepIndex > 0 ? (
                 <Button
                   disabled={isBusy}

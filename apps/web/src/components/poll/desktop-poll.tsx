@@ -129,7 +129,7 @@ const Poll: React.FunctionComponent = () => {
                   </div>
                   {poll.closed ? null : (
                     <button
-                      className="hover:text-primary-500 rounded"
+                      className="hover:text-primary-600 rounded"
                       onClick={() => {
                         setEditingParticipantId(null);
                         setShouldShowNewParticipantForm(true);

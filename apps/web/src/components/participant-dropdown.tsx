@@ -155,7 +155,7 @@ const ChangeNameModal = (props: {
         {errors.name ? (
           <div className="text-sm text-rose-500">{errors.name.message}</div>
         ) : null}
-        <div className="mt-2 text-sm text-slate-400">{t("changeNameInfo")}</div>
+        <div className="mt-2 text-sm text-slate-500">{t("changeNameInfo")}</div>
       </fieldset>
       <div className="flex gap-2 ">
         <Button disabled={formState.isSubmitting} onClick={props.onDone}>

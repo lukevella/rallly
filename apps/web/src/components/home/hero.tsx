@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 import { m } from "framer-motion";
+import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -21,25 +21,25 @@ const Hero: React.FunctionComponent = () => {
             i18nKey="heroText"
             components={{
               br: <br />,
-              s: <span className="text-primary-500 whitespace-nowrap" />,
+              s: <span className="text-primary-600 whitespace-nowrap" />,
             }}
           />
         </h1>
-        <div className="mb-12 text-xl text-gray-400">{t("heroSubText")}</div>
+        <div className="mb-12 text-xl text-slate-500">{t("heroSubText")}</div>
         <div className="space-x-3">
-          <a
+          <Link
             href="/new"
-            className="bg-primary-500 hover:bg-primary-500/90 active:bg-primary-600/90 rounded-lg px-5 py-3 font-semibold  text-white shadow-sm transition-all hover:text-white hover:no-underline hover:shadow-md"
+            className="bg-primary-600 hover:bg-primary-600/90 active:bg-primary-600/90 rounded-md px-5 py-3 font-semibold text-white  shadow-sm transition-all hover:text-white hover:no-underline hover:shadow-md"
           >
             {t("getStarted")}
-          </a>
-          <a
+          </Link>
+          <Link
             href="/demo"
-            className="rounded-lg bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md active:bg-slate-600/90"
+            className="rounded-md bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md active:bg-slate-600/90"
             rel="nofollow"
           >
             {t("liveDemo")}
-          </a>
+          </Link>
         </div>
       </div>
       <div className="pointer-events-none mt-24 hidden h-[380px] select-none items-end justify-center md:flex lg:mt-8 lg:ml-8">
@@ -47,13 +47,13 @@ const Hero: React.FunctionComponent = () => {
           <DayjsProvider>
             <div className="relative inline-block">
               <m.div
-                className="border-primary-500 bg-primary-200/10 absolute z-20 h-full rounded-2xl border-4 shadow-md"
+                className="border-primary-600 bg-primary-200/10 absolute z-20 h-full rounded-2xl border-4 shadow-md"
                 initial={{ opacity: 0, width: 100, scale: 1.1, x: 480 }}
                 animate={{ opacity: 1, x: 381 }}
                 transition={{ type: "spring", delay: 1 }}
               />
               <m.div
-                className="bg-primary-500 absolute z-20 rounded-full py-1 px-3 text-sm text-slate-100"
+                className="bg-primary-600 absolute z-20 rounded-full py-1 px-3 text-sm text-slate-100"
                 initial={{
                   opacity: 0,
                   right: 190,
@@ -64,7 +64,7 @@ const Hero: React.FunctionComponent = () => {
                 transition={{ type: "spring", delay: 2 }}
               >
                 {t("perfect")} 🤩
-                <ScribbleArrow className="absolute -right-8 top-3 text-slate-400" />
+                <ScribbleArrow className="absolute -right-8 top-3 text-slate-500" />
               </m.div>
               <m.div
                 className="rounded-lg"

@@ -26,7 +26,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
       <Link
         href="/"
         className={clsx(
-          "hover:text-primary-500 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2",
+          "hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2",
           {
             "pointer-events-none font-bold text-gray-600": pathname === "/home",
           },
@@ -37,20 +37,20 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
       <Link
         href="https://blog.rallly.co"
         className={clsx(
-          "hover:text-primary-500 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2",
+          "hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2",
         )}
       >
         {t("blog")}
       </Link>
       <a
         href="https://support.rallly.co"
-        className="hover:text-primary-500 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
+        className="hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
       >
         {t("support")}
       </a>
       <Link
         href="https://github.com/lukevella/rallly"
-        className="hover:text-primary-500 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
+        className="hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
       >
         <Github className="w-6" />
       </Link>
@@ -67,7 +67,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           <div className="grow">
             <div className="relative inline-block">
               <Link className="inline-block rounded" href="/">
-                <Logo className="text-primary-500 w-40" alt="Rallly" />
+                <Logo className="text-primary-600 w-40" alt="Rallly" />
               </Link>
               <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
                 <Trans t={t} i18nKey="3Ls" components={{ e: <em /> }} />
@@ -77,7 +77,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           <Menu className="hidden items-center space-x-8 sm:flex" />
           <Popover>
             <PopoverTrigger asChild={true}>
-              <button className="hover:text-primary-500 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2 sm:hidden">
+              <button className="hover:text-primary-600 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2 sm:hidden">
                 <DotsVertical className="w-5" />
               </button>
             </PopoverTrigger>

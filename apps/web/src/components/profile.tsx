@@ -48,7 +48,7 @@ export const Profile: React.FunctionComponent = () => {
       </Head>
       <div className="flex gap-4 rounded-md border bg-white p-3 shadow-sm">
         <div className="border-primary-200/50 bg-primary-50 inline-flex h-12 w-12 items-center justify-center rounded border">
-          <User className="text-primary-500 h-7" />
+          <User className="text-primary-600 h-7" />
         </div>
         <div>
           <div
@@ -92,7 +92,7 @@ export const Profile: React.FunctionComponent = () => {
                     >
                       <span className="flex gap-4">
                         <span>
-                          <Calendar className="text-primary-500 w-10" />
+                          <Calendar className="text-primary-600 w-10" />
                         </span>
                         <span>
                           <span className="flex items-center gap-2">

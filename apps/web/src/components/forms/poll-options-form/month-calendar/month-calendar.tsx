@@ -104,7 +104,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 return (
                   <div
                     key={dayOfWeek}
-                    className="flex items-center justify-center pb-2 text-sm font-medium text-slate-400"
+                    className="flex items-center justify-center pb-2 text-sm font-medium text-slate-500"
                   >
                     {dayOfWeek.substring(0, 2)}
                   </div>
@@ -163,9 +163,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       className={clsx(
                         "relative flex h-full w-full items-center justify-center text-sm hover:bg-slate-50 focus:z-10 focus:rounded active:bg-slate-100",
                         {
-                          "bg-slate-50 text-slate-400": day.outOfMonth,
+                          "bg-slate-50 text-slate-500": day.outOfMonth,
                           "font-bold": day.today,
-                          "text-primary-500": day.today && !day.selected,
+                          "text-primary-600": day.today && !day.selected,
                           "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-500 after:content-['']":
                             day.selected,
                         },
@@ -192,7 +192,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           <div className="flex items-center space-x-3 p-3 sm:p-4">
             <div className="grow">
               <div className="font-medium">{t("specifyTimes")}</div>
-              <div className="text-sm text-slate-400">
+              <div className="text-sm text-slate-500">
                 {t("specifyTimesDescription")}
               </div>
             </div>

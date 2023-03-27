@@ -14,7 +14,7 @@ const Feedback = dynamic(() => import("../feedback"), { ssr: false });
 
 const appVersion = process.env.NEXT_PUBLIC_APP_VERSION
   ? `v${process.env.NEXT_PUBLIC_APP_VERSION}`
-  : null;
+  : "v2.8.0";
 
 const AppVersion = () => {
   if (!appVersion) return null;
@@ -22,7 +22,7 @@ const AppVersion = () => {
   return (
     <Link
       href="https://github.com/lukevella/rallly/releases"
-      className="fixed bottom-0 left-0 hidden rounded-none rounded-tr px-2 py-1 text-xs text-slate-400 lg:block"
+      className="fixed bottom-2 left-2 hidden p-1 text-xs tabular-nums text-slate-400 lg:block"
     >
       {appVersion}
     </Link>

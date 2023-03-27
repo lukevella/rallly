@@ -11,22 +11,22 @@ const columnWidth = 100;
 const participants = [
   {
     name: "Reed",
-    color: "bg-sky-400",
+    color: "bg-sky-500",
     votes: [0, 2],
   },
   {
     name: "Susan",
-    color: "bg-blue-400",
+    color: "bg-blue-500",
     votes: [0, 1, 2],
   },
   {
     name: "Johnny",
-    color: "bg-primary-400",
+    color: "bg-primary-500",
     votes: [2, 3],
   },
   {
     name: "Ben",
-    color: "bg-purple-400",
+    color: "bg-purple-500",
     votes: [0, 1, 2, 3],
   },
 ];
@@ -44,7 +44,7 @@ const PollDemo: React.FunctionComponent = () => {
     >
       <div className="flex">
         <div
-          className="flex shrink-0 items-center py-2 pl-4 pr-2 font-medium"
+          className="flex shrink-0 items-center pt-2 pb-4 pl-4 pr-2 font-medium"
           style={{ width: sidebarWidth }}
         >
           <div className="flex h-full grow items-end">
@@ -62,7 +62,7 @@ const PollDemo: React.FunctionComponent = () => {
           return (
             <div
               key={i}
-              className="shrink-0 space-y-3 py-2 pt-3 text-center transition-colors"
+              className="shrink-0 space-y-3 py-2 pt-3 pb-4 text-center transition-colors"
               style={{ width: columnWidth }}
             >
               <div>

@@ -102,7 +102,7 @@ const Discussion: React.FunctionComponent = () => {
                     isYou={session.ownsObject(comment)}
                   />
                   <div className="mb-1">
-                    <span className="mr-1 text-slate-400">&bull;</span>
+                    <span className="mr-1 text-slate-500">&bull;</span>
                     <span className="text-sm text-slate-500">
                       {dayjs(new Date(comment.createdAt)).fromNow()}
                     </span>

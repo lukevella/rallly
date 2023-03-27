@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply h-full bg-slate-50 font-sans text-base text-slate-600;
+    @apply h-full bg-gray-50 font-sans text-base text-slate-800;
   }
   body,
   #__next {
@@ -18,7 +18,7 @@
   h3,
   h4,
   h5 {
-    @apply mb-4 font-sans font-semibold text-slate-700;
+    @apply mb-4 font-sans font-semibold text-slate-800;
   }
   h1 {
     @apply text-2xl;
@@ -51,13 +51,13 @@
 
 @layer components {
   .text-link {
-    @apply rounded font-medium text-primary-500 outline-none hover:text-primary-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1;
+    @apply text-primary-600 hover:text-primary-600 focus-visible:ring-primary-600 rounded font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }
   .formField {
     @apply mb-4;
   }
   .input {
-    @apply appearance-none border px-2 py-1 text-slate-700 placeholder:text-slate-400;
+    @apply appearance-none border px-2 py-1 text-slate-800 placeholder:text-slate-500;
   }
   input.input {
     @apply h-9;
@@ -69,7 +69,7 @@
     @apply focus:ring-rose-500;
   }
   .checkbox {
-    @apply h-4 w-4 rounded border-slate-300 text-primary-500 shadow-sm focus:ring-primary-500;
+    @apply text-primary-600 focus:ring-primary-600 h-4 w-4 rounded border-slate-300 shadow-sm;
   }
   .btn {
     @apply inline-flex h-9 select-none items-center justify-center whitespace-nowrap border px-3 font-medium shadow-sm;
@@ -79,17 +79,17 @@
   }
 
   .btn-default {
-    @apply btn bg-white text-slate-700 hover:bg-gray-50 active:bg-gray-100;
+    @apply btn bg-white text-slate-800 hover:bg-gray-50 active:bg-gray-100;
   }
 
   a.btn-default {
-    @apply hover:text-primary-500;
+    @apply hover:text-primary-600;
   }
   .btn-danger {
     @apply btn border-rose-600 bg-rose-500 text-white hover:bg-rose-600 focus-visible:ring-rose-500;
   }
   .btn-link {
-    @apply inline-flex items-center text-primary-500 underline;
+    @apply text-primary-600 inline-flex items-center underline;
   }
   .btn.btn-disabled {
     text-shadow: none;
@@ -97,7 +97,7 @@
   }
   .btn-primary {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
-    @apply btn border-primary-600 bg-primary-500 text-white hover:bg-opacity-90 active:bg-primary-600;
+    @apply btn border-primary-600 bg-primary-600 active:bg-primary-600 text-white hover:bg-opacity-90;
   }
 
   a.btn-primary {
@@ -139,13 +139,13 @@
 
 @layer components {
   .heading {
-    @apply text-xl text-primary-500;
+    @apply text-primary-600 text-xl;
   }
   .subheading {
     @apply mb-16 text-4xl font-bold text-slate-800;
   }
   .heading-sm {
-    @apply text-xl font-bold text-slate-700;
+    @apply text-xl font-bold text-slate-800;
   }
   .text {
     @apply text-lg leading-relaxed text-slate-500;
@@ -201,7 +201,7 @@
 }
 
 .rbc-header a {
-  @apply block h-full w-full p-1 no-underline hover:text-gray-700;
+  @apply block h-full w-full p-1 no-underline hover:text-slate-800;
 }
 
 .rbc-day-slot .rbc-events-container {

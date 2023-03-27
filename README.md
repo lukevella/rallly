@@ -1,14 +1,24 @@
+<img src="./docs/images/logo.png" alt="Rallly" />
+
+<div align="center">
+
 [![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg?branch=main)](https://github.com/lukevella/rallly/actions)
 [![Crowdin](https://badges.crowdin.net/rallly/localized.svg)](https://crowdin.com/project/rallly)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-orange.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Discord](https://img.shields.io/badge/-Join%20Chat-7289DA?logo=discord&logoColor=white)](https://discord.gg/uzg4ZcHbuM)
 [![Donate](https://img.shields.io/badge/-Donate%20with%20Paypal-white?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E)
 
-![hero](./docs/images/hero-image.png)
+</div>
 
 Schedule group meetings with friends, colleagues and teams. Create meeting polls to find the best date and time to organize an event based on your participants' availability. Save time and avoid back-and-forth emails.
 
 Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma), [tRPC](https://github.com/trpc/trpc) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
+
+<div align="center">
+
+<img src="./docs/images/poll-image.png" alt="Rallly"  />
+
+</div>
 
 ## Self-hosting
 
@@ -92,8 +102,8 @@ Big thanks to these folks for sponsoring the project!
 
 And thanks to these companies for providing their services to host and run [rallly.co](https://rallly.co).
 
-<a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss"><img src="/apps/web/public/vercel-logotype-dark.svg" alt="Powered by Vercel" height="30" /></a>
+<a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss"><img src="./apps/web/public/vercel-logotype-dark.svg" alt="Powered by Vercel" height="30" /></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://m.do.co/c/f91efc9c9e50"><img src="/apps/web/public/digitalocean.svg" alt="Digital Ocean" height="30" /></a>
+<a href="https://m.do.co/c/f91efc9c9e50"><img src="./apps/web/public/digitalocean.svg" alt="Digital Ocean" height="30" /></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://sentry.io"><img src="/apps/web/public/sentry.svg" alt="Sentry" height="30" /></a>
+<a href="https://sentry.io"><img src="./apps/web/public/sentry.svg" alt="Sentry" height="30" /></a>

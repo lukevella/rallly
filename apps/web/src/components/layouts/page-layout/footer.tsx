@@ -30,7 +30,7 @@ const Footer: React.FunctionComponent = () => {
                 components={{
                   a: (
                     <a
-                      className="font-normal leading-loose text-slate-400 underline hover:text-slate-800 hover:underline"
+                      className="font-normal leading-loose text-slate-500 underline hover:text-slate-800 hover:underline"
                       href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
                     />
                   ),
@@ -44,7 +44,7 @@ const Footer: React.FunctionComponent = () => {
                 components={{
                   a: (
                     <a
-                      className="font-normal leading-loose text-slate-400 underline hover:text-slate-800 hover:underline"
+                      className="font-normal leading-loose text-slate-500 underline hover:text-slate-800 hover:underline"
                       href="https://twitter.com/imlukevella"
                     />
                   ),
@@ -55,19 +55,19 @@ const Footer: React.FunctionComponent = () => {
           <div className="mb-8 flex items-center space-x-6">
             <a
               href="https://twitter.com/ralllyco"
-              className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline"
+              className="hover:text-primary-600 text-sm text-slate-500 transition-colors hover:no-underline"
             >
               <Twitter className="h-5 w-5" />
             </a>
             <a
               href="https://discord.gg/uzg4ZcHbuM"
-              className="hover:text-primary-500 text-sm text-slate-400 transition-colors hover:no-underline"
+              className="hover:text-primary-600 text-sm text-slate-500 transition-colors hover:no-underline"
             >
               <Discord className="h-5 w-5" />
             </a>
             <a
               href="https://github.com/lukevella/rallly"
-              className="hover:bg-primary-500 focus:ring-primary-500 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-400 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
+              className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
             >
               <Star className="mr-2 inline-block w-5" />
               <span>{t("starOnGithub")}</span>
@@ -79,7 +79,7 @@ const Footer: React.FunctionComponent = () => {
           <ul className="space-y-2">
             <li>
               <a
-                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
+                className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
                 {t("discussions")}
@@ -88,7 +88,7 @@ const Footer: React.FunctionComponent = () => {
             <li>
               <Link
                 href="https://blog.rallly.co"
-                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
+                className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
               >
                 {t("blog")}
               </Link>
@@ -96,7 +96,7 @@ const Footer: React.FunctionComponent = () => {
             <li>
               <a
                 href="https://support.rallly.co"
-                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
+                className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
               >
                 {t("support")}
               </a>
@@ -104,7 +104,7 @@ const Footer: React.FunctionComponent = () => {
             <li>
               <Link
                 href="/privacy-policy"
-                className="inline-block font-normal text-slate-400 hover:text-slate-800 hover:no-underline"
+                className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
               >
                 {t("privacyPolicy")}
               </Link>
@@ -144,7 +144,7 @@ const Footer: React.FunctionComponent = () => {
           />
           <a
             href="https://github.com/lukevella/rallly/wiki/Guide-for-translators"
-            className="hover:border-primary-500 hover:text-primary-500 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
+            className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
           >
             <Translate className="mr-2 h-5 w-5" />
             {t("volunteerTranslator")} &rarr;
