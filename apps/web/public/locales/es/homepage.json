@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Funciona muy bien en dispositivos móviles para que los participantes puedan responder a las encuestas dondequiera que estén.",
   "new": "Nuevo",
   "noLoginRequired": "No es necesario iniciar sesión",
-  "noLoginRequiredDescription": "No es necesario iniciar sesión para crear o participar en una encuesta",
+  "noLoginRequiredDescription": "No es necesario iniciar sesión para crear o participar en una encuesta.",
   "notifications": "Notificaciones",
   "notificationsDescription": "Sabe quién ha respondido. Recibe notificaciones cuando los participantes voten o comenten en tu encuesta.",
   "openSource": "Código abierto",
@@ -33,7 +33,7 @@
   "principles": "Principios",
   "principlesSubheading": "No somos como los otros",
   "selfHostable": "Autoalojable",
-  "selfHostableDescription": "Ejecútalo en tu propio servidor para tener el control total de tus datos",
+  "selfHostableDescription": "Ejecútalo en tu propio servidor para tener el control total de tus datos.",
   "timeSlots": "Intervalos de tiempo",
   "timeSlotsDescription": "Establece la hora de inicio y fin individual para cada opción de tu encuesta. Los tiempos se pueden ajustar automáticamente a la zona horaria de cada participante o pueden ser ajustados para ignorar completamente las zonas horarias."
 }

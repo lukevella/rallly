@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Telefonon is jól működik, így a résztvevők bárhonnan kitölthetik a szavazásod.",
   "new": "Új",
   "noLoginRequired": "Bejelentkezés nem szükséges",
-  "noLoginRequiredDescription": "Nem kell bejelentkezz szavazások létrehozásához vagy a részvételéhez",
+  "noLoginRequiredDescription": "Nem kell bejelentkezz szavazások létrehozásához vagy a részvételéhez.",
   "notifications": "Értesítések",
   "notificationsDescription": "Kövesd, hogy ki válaszolt. Értesítéseket kapsz, ha egy résztvevő szavaz vagy hozzászól a szavazásodhoz.",
   "openSource": "Nyílt forráskódú",
@@ -33,7 +33,7 @@
   "principles": "Alapelveink",
   "principlesSubheading": "Mások vagyok, mint a többiek",
   "selfHostable": "Önállóan futtatható",
-  "selfHostableDescription": "Futtathatos a saját szervereden magad kezelve minden adatod",
+  "selfHostableDescription": "Futtathatos a saját szervereden magad kezelve minden adatod.",
   "timeSlots": "Idősávok",
   "timeSlotsDescription": "Állíts be egyedi kezdő és befejező időpontokat minden válaszlehetőséghez. Az időpontok automatikusan igazodnak minden egyes résztvevő időzónájához vagy beállítható, hogy az időzónákat ne vegye figyelembe."
 }

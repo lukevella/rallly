@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Funktioniert hervorragend auf mobilen Geräten, so dass Teilnehmer auf Umfragen antworten können, wo immer sie sich befinden.",
   "new": "Neu",
   "noLoginRequired": "Keine Anmeldung benötigt",
-  "noLoginRequiredDescription": "Du musst dich nicht einloggen, um eine Umfrage zu erstellen oder an ihr teilzunehmen",
+  "noLoginRequiredDescription": "Du musst dich nicht einloggen, um eine Umfrage zu erstellen oder an ihr teilzunehmen.",
   "notifications": "Benachrichtigungen",
   "notificationsDescription": "Behalte den Überblick darüber, wer geantwortet hat. Werde benachrichtigt, wenn Teilnehmer abstimmen oder deine Umfrage kommentieren.",
   "openSource": "Open Source",
@@ -33,7 +33,7 @@
   "principles": "Grundsätze",
   "principlesSubheading": "Wir sind nicht wie die anderen",
   "selfHostable": "Selfhosting möglich",
-  "selfHostableDescription": "Betreibe es auf deinem eigenen Server, um die volle Kontrolle über deine Daten zu haben",
+  "selfHostableDescription": "Betreibe es auf deinem eigenen Server, um die volle Kontrolle über deine Daten zu haben.",
   "timeSlots": "Zeitfenster",
   "timeSlotsDescription": "Wähle individuelle Start- und Endzeiten für jede Option in deiner Umfrage. Die Zeiten können automatisch an die Zeitzone jedes Teilnehmers angepasst werden oder so eingestellt werden, dass Zeitzonen komplett ignoriert werden."
 }

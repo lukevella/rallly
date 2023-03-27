@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Działa świetnie na urządzeniach mobilnych, dzięki czemu uczestnicy mogą odpowiadać na ankiety, gdziekolwiek się znajdują.",
   "new": "Nowość",
   "noLoginRequired": "Nie wymaga logowania",
-  "noLoginRequiredDescription": "Nie musisz się logować, aby utworzyć lub wziąć udział w ankiecie",
+  "noLoginRequiredDescription": "Nie musisz się logować, aby utworzyć lub wziąć udział w ankiecie.",
   "notifications": "Powiadomienia",
   "notificationsDescription": "Śledź, kto odpowiedział. Otrzymuj powiadomienia, gdy uczestnicy zagłosują lub skomentują Twoją ankietę.",
   "openSourceDescription": "Kod jest w pełni open-source i dostępna na <a>GitHub</a>.",
@@ -31,7 +31,7 @@
   "perfect": "Idealne!",
   "principles": "Założenia",
   "principlesSubheading": "Nie jesteśmy jak inni",
-  "selfHostableDescription": "Uruchom go na własnym serwerze, aby mieć pełną kontrolę nad swoimi danymi",
+  "selfHostableDescription": "Uruchom go na własnym serwerze, aby mieć pełną kontrolę nad swoimi danymi.",
   "timeSlots": "Przedziały czasowe",
   "timeSlotsDescription": "Ustaw indywidualne godziny rozpoczęcia i zakończenia dla każdej opcji w swojej ankiecie. Czasy mogą być automatycznie dostosowywane do strefy czasowej każdego uczestnika lub mogą być ustawione tak, aby całkowicie ignorować strefy czasowe."
 }

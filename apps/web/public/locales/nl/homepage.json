@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Werkt geweldig op mobiele apparaten, zodat deelnemers kunnen reageren op polls, waar ze ook zijn.",
   "new": "Nieuw",
   "noLoginRequired": "Inloggen is niet vereist",
-  "noLoginRequiredDescription": "Je hoeft niet in te loggen om een poll aan te maken of deel te nemen",
+  "noLoginRequiredDescription": "Je hoeft niet in te loggen om een poll aan te maken of deel te nemen.",
   "notifications": "Meldingen",
   "notificationsDescription": "Blijf op de hoogte wie er reageert. Krijg een melding wanneer de deelnemers stemmen of reageren op je poll.",
   "openSource": "Open-source",
@@ -33,7 +33,7 @@
   "principles": "Principes",
   "principlesSubheading": "We zijn niet zoals de anderen",
   "selfHostable": "Kan je zelf hosten",
-  "selfHostableDescription": "Host het op je eigen server om de volledige controle over je gegevens te krijgen",
+  "selfHostableDescription": "Host het op je eigen server om de volledige controle over je gegevens te krijgen.",
   "timeSlots": "Tijdsblokken",
   "timeSlotsDescription": "Stel individuele start- en eindtijden in voor elke optie in je poll. Tijden kunnen automatisch worden aangepast aan de tijdzone van elke deelnemer, of ze kunnen worden ingesteld om tijdzones volledig te negeren."
 }

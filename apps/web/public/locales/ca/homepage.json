@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Funciona perfectament en dispositius mòbils, per tant, els participants poden respondre enquestes des d'on siguin.",
   "new": "Nou",
   "noLoginRequired": "No cal iniciar sessió",
-  "noLoginRequiredDescription": "No es necessita iniciar sessió per crear o participar en una enquesta",
+  "noLoginRequiredDescription": "No es necessita iniciar sessió per crear o participar en una enquesta.",
   "notifications": "Notificacions",
   "notificationsDescription": "Fes un seguiment de qui ha respost. Rep notificacions quan els participants votin o comentin a la teva enquesta.",
   "openSource": "Codi obert",
@@ -33,7 +33,7 @@
   "principles": "Principis",
   "principlesSubheading": "No som com la resta",
   "selfHostable": "Autoallotjable",
-  "selfHostableDescription": "Executa-ho al teu servidor per tenir control absolut de totes les dades",
+  "selfHostableDescription": "Executa-ho al teu servidor per tenir control absolut de totes les dades.",
   "timeSlots": "Franges horàries",
   "timeSlotsDescription": "Defineix el temps d'inici i final per a cada opció a l'enquesta. Els temps es poden ajustar automàticament a la zona horària de cada participant o es poden establir per ignorar completament les zones horàries."
 }

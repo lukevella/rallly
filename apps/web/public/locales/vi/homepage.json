@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Hoạt động tốt kể cả trên điện thoại, để người tham dự có thể trả lời bất cứ lúc nào họ muốn.",
   "new": "Thêm",
   "noLoginRequired": "Không cần đăng nhập",
-  "noLoginRequiredDescription": "Bạn không cần đăng nhập để tạo hay bầu bình chọn",
+  "noLoginRequiredDescription": "Bạn không cần đăng nhập để tạo hay bầu bình chọn.",
   "notifications": "Thông báo",
   "notificationsDescription": "Theo dõi xem ai đã trả lời. Nhận thông báo khi người tham gia bỏ phiếu hoặc bình luận về thăm dò của bạn.",
   "openSource": "Mã nguồn mở",
@@ -33,7 +33,7 @@
   "principles": "Triết lý",
   "principlesSubheading": "Vì cộng đồng",
   "selfHostable": "Tự chạy trên máy chủ của riêng bạn",
-  "selfHostableDescription": "Tự chạy Rallly trên máy chủ của riêng bạn để kiểm soát hoàn toàn dữ liệu của bạn",
+  "selfHostableDescription": "Tự chạy Rallly trên máy chủ của riêng bạn để kiểm soát hoàn toàn dữ liệu của bạn.",
   "timeSlots": "Ô thời gian",
   "timeSlotsDescription": "Đặt thời gian bắt đầu và kết thúc cho từng tùy chọn trong thăm dò của bạn. Thời gian có thể được tự động điều chỉnh theo múi giờ của mỗi người tham gia hoặc chúng có thể được đặt để bỏ qua hoàn toàn múi giờ."
 }

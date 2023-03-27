@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Funciona muito bem em dispositivos móveis para que os participantes possam responder a sondagens onde estiverem.",
   "new": "Novo",
   "noLoginRequired": "Não é necessário iniciar sessão",
-  "noLoginRequiredDescription": "Não precisa de iniciar sessão para criar ou participar numa sondagem",
+  "noLoginRequiredDescription": "Não precisa de iniciar sessão para criar ou participar numa sondagem.",
   "notifications": "Notificações",
   "notificationsDescription": "Acompanhe quem respondeu. Seja notificado quando os participantes votarem ou comentarem na sua sondagem.",
   "openSource": "Código aberto",
@@ -33,7 +33,7 @@
   "principles": "Princípios",
   "principlesSubheading": "Não somos como os outros",
   "selfHostable": "Auto-alojável",
-  "selfHostableDescription": "Execute no seu próprio servidor para ter controlo total dos seus dados",
+  "selfHostableDescription": "Corra no seu próprio servidor para ter controlo total dos seus dados.",
   "timeSlots": "Intervalos de tempo",
   "timeSlotsDescription": "Defina os horários de início e fim individuais para cada opção em sua sondagem. Os horários podem ser automaticamente ajustados ao fuso horário de cada participante ou podem ser definidos para ignorar completamente os fusos horários."
 }

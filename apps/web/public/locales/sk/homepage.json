@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Funguje skvele na mobilných zariadeniach, aby účastníci mohli odpovedať na ankety, nech sú kdekoľvek.",
   "new": "Nové",
   "noLoginRequired": "Bez prihlásenia",
-  "noLoginRequiredDescription": "Pre vytvorenie alebo účasť v ankete sa nemusíte prihlásiť",
+  "noLoginRequiredDescription": "Pre vytvorenie alebo účasť v ankete sa nemusíte prihlásiť.",
   "notifications": "Notifikácie",
   "notificationsDescription": "Majte prehľad o tom, kto odpovedal. Dostávajte upozornenia, keď účastníci hlasujú alebo komentujú vašu anketu.",
   "openSource": "Otvorený zdrojový kód",
@@ -33,7 +33,7 @@
   "principles": "Zásady",
   "principlesSubheading": "Nie sme ako ostatní",
   "selfHostable": "Vlastný hosting",
-  "selfHostableDescription": "Rozbehnite si vlastný server a získajte plnú kontrolu nad svojimi dátami",
+  "selfHostableDescription": "Rozbehnite si vlastný server a získajte plnú kontrolu nad svojimi dátami.",
   "timeSlots": "Časové sloty",
   "timeSlotsDescription": "Nastavte čas začiatku a konca pre každú z možností vo vašej ankete. Časy môžu byť automaticky upravené podľa časovej zóny každého účastníka, alebo môžu byť nastavené tak, aby časové zóny úplne ignorovali."
 }

@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Il fonctionne parfaitement sur les appareils mobiles, de sorte que les participants peuvent répondre aux sondages où qu'ils se trouvent.",
   "new": "Nouveau",
   "noLoginRequired": "Pas de connexion requise",
-  "noLoginRequiredDescription": "Vous n'avez pas besoin de vous connecter pour créer ou participer à un sondage",
+  "noLoginRequiredDescription": "Vous n'avez pas besoin de vous connecter pour créer ou participer à un sondage.",
   "notifications": "Notifications",
   "notificationsDescription": "Gardez une trace de ceux qui ont répondu. Recevez une notification lorsque les participants votent ou commentent votre sondage.",
   "openSource": "Open source",
@@ -33,7 +33,7 @@
   "principles": "Principes",
   "principlesSubheading": "Nous ne sommes pas comme les autres",
   "selfHostable": "Auto-hébergable",
-  "selfHostableDescription": "Exécutez-le sur votre propre serveur pour prendre le contrôle total de vos données",
+  "selfHostableDescription": "Exécutez-le sur votre propre serveur pour prendre le contrôle total de vos données.",
   "timeSlots": "Créneaux horaires",
   "timeSlotsDescription": "Définissez des heures de début et de fin individuelles pour chaque option de votre sondage. Les heures peuvent être automatiquement ajustées au fuseau horaire de chaque participant ou peuvent être configurées pour ignorer complètement les fuseaux horaires."
 }

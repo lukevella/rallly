@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "在移动设备上效果很好，可以使参与者可以随时随地响应投票。",
   "new": "新增功能",
   "noLoginRequired": "无需登录",
-  "noLoginRequiredDescription": "无需登录即可创建或参与投票",
+  "noLoginRequiredDescription": "无需登录即可创建或参与投票.",
   "notifications": "通知",
   "notificationsDescription": "随时了解回复。当参与者对你的投票进行表决或评论时，将会收到通知。",
   "openSource": "开源",
@@ -33,7 +33,7 @@
   "principles": "原则",
   "principlesSubheading": "我们不一样",
   "selfHostable": "可自托管",
-  "selfHostableDescription": "在自己的服务器上运行，数据完全掌控",
+  "selfHostableDescription": "在自己的服务器上运行，数据完全掌控.",
   "timeSlots": "时间段",
   "timeSlotsDescription": "单独设置每个选项的起止时间。可根据参与者的时区自动调整，也可忽略时区差异。"
 }
