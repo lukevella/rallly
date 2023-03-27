@@ -17,7 +17,7 @@
   "mobileFriendlyDescription": "Works great on mobile devices so participants can respond to polls wherever they may be.",
   "new": "New",
   "noLoginRequired": "No login required",
-  "noLoginRequiredDescription": "You don't need to login to create or participate in a poll",
+  "noLoginRequiredDescription": "You don't need to login to create or participate in a poll.",
   "notifications": "Notifications",
   "notificationsDescription": "Keep track of who's responded. Get notified when participants vote or comment on your poll.",
   "openSource": "Open-source",
@@ -33,7 +33,7 @@
   "principles": "Principles",
   "principlesSubheading": "We're not like the others",
   "selfHostable": "Self-hostable",
-  "selfHostableDescription": "Run it on your own server to take full control of your data",
+  "selfHostableDescription": "Run it on your own server to take full control of your data.",
   "timeSlots": "Time slots",
   "timeSlotsDescription": "Set individual start and end times for each option in your poll. Times can be automatically adjusted to each participant's timezone or they can be set to ignore timezones completely."
 }
