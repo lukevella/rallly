@@ -1,4 +1,4 @@
-<img src="./docs/images/banner-logo.png" alt="Rallly" />
+<img src="./docs/images/logo.png" alt="Rallly" />
 
 [![Actions Status](https://github.com/lukevella/rallly/workflows/ci/badge.svg?branch=main)](https://github.com/lukevella/rallly/actions)
 [![Crowdin](https://badges.crowdin.net/rallly/localized.svg)](https://crowdin.com/project/rallly)
