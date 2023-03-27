@@ -17,12 +17,7 @@ const Features: React.FunctionComponent = () => {
           <div className="mb-4 inline-block rounded-2xl bg-green-100/50 p-3 text-green-500">
             <Clock className="h-8 w-8" />
           </div>
-          <h3 className="heading-sm flex items-center">
-            {t("timeSlots")}
-            <span className="ml-2 rounded-full bg-green-500 px-2 py-1 text-sm font-normal text-white">
-              {t("new")}
-            </span>
-          </h3>
+          <h3 className="heading-sm flex items-center">{t("timeSlots")}</h3>
           <p className="text">{t("timeSlotsDescription")}</p>
         </div>
         <div className="col-span-2 md:col-span-1">
