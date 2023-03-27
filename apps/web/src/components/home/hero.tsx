@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 import { m } from "framer-motion";
 import { Trans, useTranslation } from "next-i18next";
 import Link from "next/link";
