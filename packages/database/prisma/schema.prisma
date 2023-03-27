@@ -44,7 +44,6 @@ model Poll {
   options          Option[]
   participants     Participant[]
   watchers         Watcher[]
-  authorName       String?       @map("author_name")
   demo             Boolean       @default(false)
   comments         Comment[]
   legacy           Boolean       @default(false)
