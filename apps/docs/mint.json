@@ -1,0 +1,73 @@
+{
+  "name": "Rallly",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#6366F1",
+    "light": "#9C9EFF",
+    "dark": "#334155",
+    "anchors": { "from": "#878AFA", "to": "#4347F1" }
+  },
+  "topbarCtaButton": {
+    "name": "Get started",
+    "url": "https://rallly.co/new"
+  },
+  "topbarLinks": [
+    {
+      "name": "Live demo",
+      "url": "https://rallly.co/demo"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/lukevella/rallly"
+    },
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://blog.rallly.co/"
+    },
+    {
+      "name": "Contact us",
+      "icon": "comments",
+      "url": "https://go.crisp.chat/chat/embed/?website_id=19d601db-af05-4f24-8342-8dd4449aedb8"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Introduction",
+      "pages": ["introduction"]
+    },
+    {
+      "group": "Administrators",
+      "pages": [
+        "administrators/accessing-the-admin-page",
+        "administrators/sharing-a-poll",
+        "administrators/editing-a-poll",
+        "administrators/deleting-a-poll"
+      ]
+    },
+    {
+      "group": "Participants",
+      "pages": [
+        "participants/submitting-a-response",
+        "participants/editing-a-response"
+      ]
+    },
+    {
+      "group": "Other Docs",
+      "pages": ["guest-sessions", "privacy-and-security", "self-hosting"]
+    }
+  ],
+  "footerSocials": {
+    "twitter": "https://twitter.com/ralllyco",
+    "github": "https://github.com/lukevella/rallly",
+    "discord": "https://discord.com/invite/uzg4ZcHbuM",
+    "website": "https://rallly.co/"
+  }
+}
