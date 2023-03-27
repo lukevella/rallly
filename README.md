@@ -10,6 +10,8 @@ Schedule group meetings with friends, colleagues and teams. Create meeting polls
 
 Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma), [tRPC](https://github.com/trpc/trpc) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
 
+<img src="./docs/images/hero-image.png" alt="Rallly"  />
+
 ## Self-hosting
 
 Check out the [self-hosting repo](https://github.com/lukevella/rallly-selfhosted) for more information on running your own instance of Rallly.
