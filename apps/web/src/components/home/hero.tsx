@@ -15,7 +15,7 @@ const Hero: React.FunctionComponent = () => {
   return (
     <div className="mx-auto max-w-7xl items-end p-8 lg:flex lg:justify-between">
       <div className="my-8 text-center lg:text-left">
-        <h1 className="text-4xl font-bold sm:text-5xl">
+        <h1 className="text-4xl font-bold text-slate-800 sm:text-5xl">
           <Trans
             t={t}
             i18nKey="heroText"
@@ -29,7 +29,7 @@ const Hero: React.FunctionComponent = () => {
         <div className="space-x-3">
           <Link
             href="/new"
-            className="bg-primary-600 hover:bg-primary-600/90 active:bg-primary-600/90 rounded-md px-5 py-3 font-semibold text-white  shadow-sm transition-all hover:text-white hover:no-underline hover:shadow-md"
+            className="bg-primary-500 hover:bg-primary-600/90 active:bg-primary-500/90 rounded-md px-5 py-3 font-semibold text-white  shadow-sm transition-all hover:text-white hover:no-underline hover:shadow-md"
           >
             {t("getStarted")}
           </Link>

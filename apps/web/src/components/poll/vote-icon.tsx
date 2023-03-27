@@ -16,7 +16,7 @@ const VoteIcon: React.FunctionComponent<{
     case "yes":
       return (
         <CheckCircle
-          className={clsx("text-green-500", className, {
+          className={clsx("text-green-400", className, {
             "h-5": size === "md",
             "h-3": size === "sm",
           })}
