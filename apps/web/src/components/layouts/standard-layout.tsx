@@ -14,7 +14,7 @@ const Feedback = dynamic(() => import("../feedback"), { ssr: false });
 
 const appVersion = process.env.NEXT_PUBLIC_APP_VERSION
   ? `v${process.env.NEXT_PUBLIC_APP_VERSION}`
-  : "v2.8.0";
+  : null;
 
 const AppVersion = () => {
   if (!appVersion) return null;
