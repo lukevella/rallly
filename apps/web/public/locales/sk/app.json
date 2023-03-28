@@ -10,6 +10,8 @@
   "calendarHelp": "Nie je možné vytvoriť hlasovanie bez možností. Ak chcete pokračovať, pridajte aspoň jednu možnosť.",
   "calendarHelpTitle": "Zabudli ste niečo?",
   "cancel": "Zrušiť",
+  "changeName": "Zmeniť meno",
+  "changeNameDescription": "Zadajte nové meno pre tohto účastníka.",
   "comment": "Komentovať",
   "commentPlaceholder": "Zanechajte komentár k tejto ankete (viditeľný pre všetkých)",
   "comments": "Komentáre",
