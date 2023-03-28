@@ -9,10 +9,14 @@
     "db:deploy": "prisma migrate deploy",
     "db:generate": "turbo db:generate",
     "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset",
     "test": "yarn workspace @rallly/web test",
     "lint": "turbo lint",
     "lint:tsc": "turbo lint:tsc",
     "release": "./scripts/create-release.sh"
+  },
+  "prisma": {
+    "seed": "yarn workspace @rallly/database db:seed"
   },
   "workspaces": [
     "apps/*",

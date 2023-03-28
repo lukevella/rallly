@@ -47,11 +47,17 @@ Install dependencies
 yarn
 ```
 
-Next, run the following to generate the database client and run migrations to create our schema
+Next, run the following command:
 
 ```
-yarn db:generate && yarn db:deploy
+yarn db:generate && yarn db:reset
 ```
+
+This will:
+
+- generate the prisma database client
+- run migrations to create the database schema
+- seed the database with some random data
 
 Start the Next.js server
 
