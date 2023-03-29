@@ -4,6 +4,7 @@ export type GetPollApiResponse = {
   id: string;
   title: string;
   location: string | null;
+  discussion: boolean;
   description: string | null;
   options: Option[];
   user: User | null;

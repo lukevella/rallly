@@ -156,6 +156,7 @@ const ManagePoll: React.FunctionComponent<{
         name="updateDetails"
         defaultValues={{
           title: poll.title,
+          discussion: poll.discussion,
           location: poll.location ?? "",
           description: poll.description ?? "",
         }}

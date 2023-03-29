@@ -33,6 +33,7 @@ export interface CreatePollPageProps {
   title?: string;
   location?: string;
   description?: string;
+  discussion?: boolean;
   view?: "week" | "month";
 }
 
@@ -104,6 +105,7 @@ const Page: React.FunctionComponent = () => {
         title: title,
         type: "date",
         location: formData?.eventDetails?.location,
+        discussion: formData?.eventDetails?.discussion,
         description: formData?.eventDetails?.description,
         user: session.user.isGuest
           ? {

@@ -118,9 +118,11 @@ export const Poll = (props: { children?: React.ReactNode }) => {
             ) : null}
           </React.Suspense>
 
-          <React.Suspense fallback={<div className="p-4">{t("loading")}</div>}>
-            <Discussion />
-          </React.Suspense>
+          {poll.discussion ? (
+            <React.Suspense fallback={<div className="p-4">{t("loading")}</div>}>
+              <Discussion />
+            </React.Suspense>
+          ) : null}
         </div>
       </div>
     </UserAvatarProvider>

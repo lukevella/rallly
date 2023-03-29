@@ -37,6 +37,7 @@ model Poll {
   type             PollType
   description      String?
   location         String?
+  discussion       Boolean       @default(true)
   user             User?         @relation(fields: [userId], references: [id])
   userId           String        @map("user_id")
   votes            Vote[]

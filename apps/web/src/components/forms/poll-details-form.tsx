@@ -9,6 +9,7 @@ import { PollFormProps } from "./types";
 export interface PollDetailsData {
   title: string;
   location: string;
+  discussion: boolean;  
   description: string;
 }
 
@@ -49,6 +50,15 @@ export const PollDetailsForm: React.FunctionComponent<
           placeholder={t("titlePlaceholder")}
           {...register("title", { validate: requiredString })}
         />
+      </div>
+      <div className="formField flex items-center">
+        <input
+          type="checkbox"
+          id="discussion"
+          className="w-4 h-4 text-blue-600 bg-gray-100"
+          {...register("discussion")}
+        />
+        <label htmlFor="discussion" className="ml-2 mb-0">{t("enableDiscussion")}</label>
       </div>
       <div className="formField">
         <label htmlFor="location">{t("location")}</label>

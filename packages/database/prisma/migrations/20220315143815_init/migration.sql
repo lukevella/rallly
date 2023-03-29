@@ -20,6 +20,7 @@ CREATE TABLE "Poll" (
     "type" "PollType" NOT NULL,
     "description" TEXT,
     "location" TEXT,
+    "discussion" BOOLEAN NOT NULL DEFAULT true,
     "userId" TEXT NOT NULL,
     "verificationCode" TEXT NOT NULL,
     "timeZone" TEXT,

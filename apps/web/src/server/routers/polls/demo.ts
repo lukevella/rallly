@@ -76,6 +76,7 @@ export const demo = router({
         title: "Lunch Meeting",
         type: "date",
         location: "Starbucks, 901 New York Avenue",
+        discussion: true,
         description: `Hey everyone, please choose the dates when you are available to meet for our monthly get together. Looking forward to see you all!`,
         demo: true,
         adminUrlId,

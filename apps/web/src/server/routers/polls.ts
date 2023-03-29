@@ -14,6 +14,7 @@ const defaultSelectFields: {
   id: true;
   timeZone: true;
   title: true;
+  discussion: true;
   location: true;
   description: true;
   createdAt: true;
@@ -33,6 +34,7 @@ const defaultSelectFields: {
   id: true,
   timeZone: true,
   title: true,
+  discussion: true,
   location: true,
   description: true,
   createdAt: true,
@@ -74,6 +76,7 @@ export const polls = router({
         title: z.string(),
         type: z.literal("date"),
         timeZone: z.string().optional(),
+        discussion: z.boolean().optional(),
         location: z.string().optional(),
         description: z.string().optional(),
         user: z
@@ -122,6 +125,7 @@ export const polls = router({
             title: input.title,
             type: input.type,
             timeZone: input.timeZone,
+            discussion: input.discussion,
             location: input.location,
             description: input.description,
             demo: input.demo,
@@ -170,6 +174,7 @@ export const polls = router({
         urlId: z.string(),
         title: z.string().optional(),
         timeZone: z.string().optional(),
+        discussion: z.boolean().optional(),
         location: z.string().optional(),
         description: z.string().optional(),
         optionsToDelete: z.string().array().optional(),
@@ -207,6 +212,7 @@ export const polls = router({
         },
         data: {
           title: input.title,
+          discussion: input.discussion,
           location: input.location,
           description: input.description,
           timeZone: input.timeZone,
