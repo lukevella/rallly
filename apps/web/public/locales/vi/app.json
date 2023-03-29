@@ -43,7 +43,7 @@
   "editVotes": "Chỉnh sửa bầu chọn",
   "email": "Địa chỉ email",
   "emailNotAllowed": "Địa chỉ email này không được phép sử dụng.",
-  "emailPlaceholder": "nguyenvana@email.com",
+  "emailPlaceholder": "nguyenvana@example.com",
   "endingGuestSessionNotice": "Một khi phiên tạm thời kết thúc, nó không thể được tiếp tục. Bạn sẽ không thể chỉnh sửa bất kỳ phiếu bầu hoặc nhận xét nào bạn đã thực hiện với phiên này.",
   "endSession": "Kết thúc phiên",
   "expiredOrInvalidLink": "Đường dẫn này đã hết hạn hoặc vô hiệu lực. Hãy yêu cầu đường dẫn mới.",

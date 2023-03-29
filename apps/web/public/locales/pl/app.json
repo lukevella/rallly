@@ -31,7 +31,7 @@
   "edit": "Edytuj",
   "editDetails": "Edytuj szczegóły",
   "editOptions": "Edytuj opcje",
-  "emailPlaceholder": "jan.kowalski@email.com",
+  "emailPlaceholder": "jan.kowalski@example.com",
   "endingGuestSessionNotice": "Po zakończeniu sesji gościa nie można jej wznowić. Nie będzie można edytować żadnych głosów ani komentarzy dodanych podczas tej sesji.",
   "endSession": "Zakończ sesję",
   "exportToCsv": "Eksport do CSV",

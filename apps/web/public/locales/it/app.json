@@ -44,7 +44,7 @@
   "editVotes": "Modifica voti",
   "email": "Email",
   "emailNotAllowed": "Questa email non è consentita.",
-  "emailPlaceholder": "jessie.smith@email.com",
+  "emailPlaceholder": "jessie.smith@example.com",
   "endingGuestSessionNotice": "Una volta terminata la sessione ospite, la sessione non può essere ripresa. Non sarà possibile modificare alcun voto o commento fatto con questa sessione.",
   "endSession": "Termina sessione",
   "expiredOrInvalidLink": "Questo link è scaduto. Richiedine uno nuovo.",

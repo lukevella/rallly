@@ -37,7 +37,7 @@
   "editOptions": "Edita les opcions",
   "email": "Correu electrònic",
   "emailNotAllowed": "Aquest correu no està permès.",
-  "emailPlaceholder": "jessie.smith@email.com",
+  "emailPlaceholder": "jessie.smith@example.com",
   "endingGuestSessionNotice": "Un cop finalitzada una sessió no es pot reprendre. No podràs editar cap vot o comentari que hagis fet en aquesta sessió.",
   "endSession": "Finalitzar sessió",
   "expiredOrInvalidLink": "Aquest enllaç ha expirat o és invàlid. Si us plau, demana'n un de nou.",

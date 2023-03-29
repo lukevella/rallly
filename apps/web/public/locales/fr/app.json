@@ -44,7 +44,7 @@
   "editVotes": "Modifier les votes",
   "email": "Email",
   "emailNotAllowed": "Cet e-mail n'est pas autorisé.",
-  "emailPlaceholder": "jessie.smith@email.com",
+  "emailPlaceholder": "jessie.smith@example.com",
   "endingGuestSessionNotice": "Une fois que la session d'un invité est terminée, elle ne peut pas être reprise. Vous ne pourrez pas modifier les votes ou les commentaires que vous avez faits lors de cette session.",
   "endSession": "Fin de la session",
   "expiredOrInvalidLink": "Ce lien a expiré. Demandez un nouveau lien.",

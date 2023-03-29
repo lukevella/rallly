@@ -35,7 +35,7 @@
   "editDetails": "编辑详细信息",
   "editOptions": "编辑选项",
   "email": "电子邮件",
-  "emailPlaceholder": "jessi.smith@email.com",
+  "emailPlaceholder": "jessi.smith@example.com",
   "endingGuestSessionNotice": "访客会话结束后无法恢复。你将无法编辑你在会话中的任何投票或评论。",
   "endSession": "结束会话",
   "exportToCsv": "导出为 CSV文件",

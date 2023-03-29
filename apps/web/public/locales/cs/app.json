@@ -44,7 +44,7 @@
   "editVotes": "Upravit hlasy",
   "email": "E-mail",
   "emailNotAllowed": "Tento e-mail není povolen.",
-  "emailPlaceholder": "karel.novak@email.com",
+  "emailPlaceholder": "karel.novak@example.com",
   "endingGuestSessionNotice": "Jakmile relace hosta skončí, nelze ji obnovit. Nebudete moci upravovat žádné hlasy nebo komentáře, které jste v rámci relace zapracovali.",
   "endSession": "Ukončit relaci",
   "expiredOrInvalidLink": "Platnost odkazu vypršela nebo je neplatná. Požádejte o nový odkaz.",

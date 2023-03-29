@@ -44,7 +44,7 @@
   "editVotes": "Muokkaa ääniä",
   "email": "Sähköposti",
   "emailNotAllowed": "Tätä sähköpostia ei sallita.",
-  "emailPlaceholder": "maija.meikalainen@email.fi",
+  "emailPlaceholder": "maija.meikalainen@example.com",
   "endingGuestSessionNotice": "Vierasistuntoa ei voi jatkaa sen päätyttyä. Et voi muokata tämän istunnon aikana antamiasi ääniä tai kirjoittamiasi kommentteja.",
   "endSession": "Päätä istunto",
   "expiredOrInvalidLink": "Linkki on vanhentunut tai virheellinen. Pyydä uusi linkki.",
