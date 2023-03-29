@@ -65,14 +65,14 @@ test.describe.parallel(() => {
 
     await participantPage.type('[placeholder="Jessie Smith"]', "Anne");
     await participantPage.type(
-      '[placeholder="jessie.smith@email.com"]',
-      "test@email.com",
+      '[placeholder="jessie.smith@example.com"]',
+      "test@example.com",
     );
     await participantPage.click("text='Submit'");
 
     await expect(participantPage.locator("text='Anne'")).toBeVisible();
 
-    const { email } = await mailServer.captureOne("test@email.com", {
+    const { email } = await mailServer.captureOne("test@example.com", {
       wait: 5000,
     });
 
