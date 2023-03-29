@@ -42,7 +42,7 @@ test.describe.serial(() => {
       await page.goto("/login");
 
       // your login page test logic
-      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      await page.getByPlaceholder("jessie.smith@example.com").type(testUserEmail);
 
       await page.getByText("Continue").click();
 
@@ -58,7 +58,7 @@ test.describe.serial(() => {
       await page.getByText("Create an account").waitFor();
 
       await page.getByPlaceholder("Jessie Smith").type("Test User");
-      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      await page.getByPlaceholder("jessie.smith@example.com").type(testUserEmail);
 
       await page.click("text=Continue");
 
@@ -83,7 +83,7 @@ test.describe.serial(() => {
       await page.getByText("Create an account").waitFor();
 
       await page.getByPlaceholder("Jessie Smith").type("Test User");
-      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      await page.getByPlaceholder("jessie.smith@example.com").type(testUserEmail);
 
       await page.click("text=Continue");
 
@@ -101,7 +101,7 @@ test.describe.serial(() => {
     test("can login with magic link", async ({ page }) => {
       await page.goto("/login");
 
-      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      await page.getByPlaceholder("jessie.smith@example.com").type(testUserEmail);
 
       await page.getByText("Continue").click();
 
@@ -127,7 +127,7 @@ test.describe.serial(() => {
     test("can login with verification code", async ({ page }) => {
       await page.goto("/login");
 
-      await page.getByPlaceholder("jessie.smith@email.com").type(testUserEmail);
+      await page.getByPlaceholder("jessie.smith@example.com").type(testUserEmail);
 
       await page.getByText("Continue").click();
 
