@@ -3,7 +3,7 @@ const languages = require("./languages.json");
 
 module.exports = {
   i18n: {
-    defaultLocale: "en",
+    defaultLocale: process.env.DEFAULT_LANGUAGE ?? 'en',
     locales: Object.keys(languages),
   },
   reloadOnPrerender: process.env.NODE_ENV === "development",
