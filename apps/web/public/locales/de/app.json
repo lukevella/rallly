@@ -44,7 +44,7 @@
   "editVotes": "Stimmen bearbeiten",
   "email": "E-Mail",
   "emailNotAllowed": "Diese E-Mail ist nicht erlaubt.",
-  "emailPlaceholder": "max.mustermann@mail.de",
+  "emailPlaceholder": "max.mustermann@example.com",
   "endingGuestSessionNotice": "Sobald eine Gastsitzung beendet ist, kann sie nicht fortgesetzt werden. Du kannst weder Auswahl noch Kommentare bearbeiten, die Du mit dieser Sitzung gemacht hast.",
   "endSession": "Sitzung beenden",
   "expiredOrInvalidLink": "Dieser Link ist abgelaufen oder ungültig. Bitte fordere einen neuen Link an.",

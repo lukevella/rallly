@@ -44,7 +44,7 @@
   "editVotes": "Ändra röster",
   "email": "E-post",
   "emailNotAllowed": "Den här e-postadressen är inte tillåten.",
-  "emailPlaceholder": "olle.jonsson@email.com",
+  "emailPlaceholder": "olle.jonsson@example.com",
   "endingGuestSessionNotice": "När en gäst session avslutas kan den inte återupptas. Du kommer inte att kunna redigera några röster eller kommentarer som du har gjort med denna session.",
   "endSession": "Avsluta session",
   "expiredOrInvalidLink": "Denna länk är ogiltig eller har löpt ut. Vänligen begär en ny länk.",

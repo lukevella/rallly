@@ -43,7 +43,7 @@
   "editVotes": "Редактировать голоса",
   "email": "Email",
   "emailNotAllowed": "Такой email недопустим.",
-  "emailPlaceholder": "jessie.smith@email.com",
+  "emailPlaceholder": "jessie.smith@example.com",
   "endingGuestSessionNotice": "Как только гостевая сессия завершится, она не сможет быть возобновлена. Вы не сможете исправить ответы или комментарии, сделанные в этой сессии.",
   "endSession": "Завершить сессию",
   "expiredOrInvalidLink": "Эта ссылка устарела или недействительна. Пожалуйста, запросите новую.",

@@ -38,8 +38,8 @@ test.describe.serial(() => {
 
     await page.type('[placeholder="Jessie Smith"]', "John");
     await page.type(
-      '[placeholder="jessie.smith@email.com"]',
-      "john.doe@email.com",
+      '[placeholder="jessie.smith@example.com"]',
+      "john.doe@example.com",
     );
 
     await page.click('text="Create poll"');
@@ -50,7 +50,7 @@ test.describe.serial(() => {
 
     await expect(title).toHaveText("Monthly Meetup");
 
-    const { email } = await mailServer.captureOne("john.doe@email.com", {
+    const { email } = await mailServer.captureOne("john.doe@example.com", {
       wait: 5000,
     });
 

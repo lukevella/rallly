@@ -44,7 +44,7 @@
   "editVotes": "Szavazatok szerkesztése",
   "email": "E-mail",
   "emailNotAllowed": "Ez a email nem engedélyezett.",
-  "emailPlaceholder": "kovacs.anna@email.com",
+  "emailPlaceholder": "kovacs.anna@example.com",
   "endingGuestSessionNotice": "Egy vendég munkamenet befejezése nem visszavonható. Ezután nem tudod szerkeszteni a válaszaid vagy hozzászólásaid, amiket ebben a munkamenetben készítettél.",
   "endSession": "Munkamenet befejezése",
   "expiredOrInvalidLink": "A link érvénytelennek tűnik. Kérjük, igényeljen egy újat.",

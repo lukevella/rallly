@@ -44,7 +44,7 @@
   "editVotes": "Uredi glasove",
   "email": "E-pošta",
   "emailNotAllowed": "Ova adresa pošte nije dozvoljena.",
-  "emailPlaceholder": "ime.prezime@email.com",
+  "emailPlaceholder": "ime.prezime@example.com",
   "endingGuestSessionNotice": "Nakon što vaša sesija kojom pristupate kao gost završi, ne može se nastaviti. Nećete moći uređivati glasove ili komentare koje ste dali tijekom ove sesije.",
   "endSession": "Završi sesiju",
   "expiredOrInvalidLink": "Ova poveznica je istekla ili nije valjana. Molimo zatražite novu poveznicu.",
