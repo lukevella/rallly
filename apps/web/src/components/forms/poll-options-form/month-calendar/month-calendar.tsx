@@ -265,16 +265,11 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                               <TimePicker
                                 value={startDate}
                                 onChange={(newStart) => {
-                                  let newEnd = dayjs(newStart).add(
+                                  const newEnd = dayjs(newStart).add(
                                     duration,
                                     "minutes",
                                   );
 
-                                  if (!newEnd.isSame(newStart, "day")) {
-                                    newEnd = newEnd
-                                      .set("hour", 23)
-                                      .set("minute", 45);
-                                  }
                                   // replace enter with updated start time
                                   onChange([
                                     ...options.slice(0, index),
@@ -293,9 +288,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                               />
                               <TimePicker
                                 value={new Date(option.end)}
-                                startFrom={dayjs(startDate)
-                                  .add(15, "minutes")
-                                  .toDate()}
+                                after={startDate}
                                 onChange={(newEnd) => {
                                   onChange([
                                     ...options.slice(0, index),
@@ -330,7 +323,15 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                               const lastOption = expectTimeOption(
                                 optionsForDay[optionsForDay.length - 1].option,
                               );
-                              const startTime = lastOption.end;
+
+                              const startTime = dayjs(lastOption.end).isSame(
+                                lastOption.start,
+                                "day",
+                              )
+                                ? // if the end time of the previous option is on the same day as the start time, use the end time
+                                  lastOption.end
+                                : // otherwise use the start time
+                                  lastOption.start;
 
                               onChange([
                                 ...options,

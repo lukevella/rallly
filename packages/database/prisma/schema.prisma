@@ -22,19 +22,12 @@ model User {
   @@map("users")
 }
 
-enum PollType {
-  date
-
-  @@map("poll_type")
-}
-
 model Poll {
   id               String        @id @unique @map("id")
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @updatedAt @map("updated_at")
   deadline         DateTime?
   title            String
-  type             PollType
   description      String?
   location         String?
   user             User?         @relation(fields: [userId], references: [id])
@@ -88,11 +81,11 @@ model Participant {
 
 model Option {
   id        String    @id @default(cuid())
-  value     String
+  start     DateTime  @db.Timestamp(0)
+  duration  Int       @default(0) @map("duration_minutes")
   pollId    String    @map("poll_id")
   poll      Poll      @relation(fields: [pollId], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([pollId], type: Hash)
   @@map("options")

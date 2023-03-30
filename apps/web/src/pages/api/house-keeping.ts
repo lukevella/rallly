@@ -2,8 +2,6 @@ import { Prisma, prisma } from "@rallly/database";
 import dayjs from "dayjs";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { parseValue } from "../../utils/date-time-utils";
-
 /**
  * DANGER: This endpoint will permanently delete polls.
  */
@@ -25,32 +23,26 @@ export default async function handler(
   }
 
   // get polls that have not been accessed for over 30 days
-  const inactivePolls = await prisma.$queryRaw<
-    Array<{ id: string; max: string }>
-  >`
-    SELECT polls.id, MAX(options.value) FROM polls
-    JOIN options ON options.poll_id = polls.id
-    WHERE touched_at <= ${dayjs().add(-30, "days").toDate()} AND deleted = false
-    GROUP BY polls.id;
-  `;
+  const thirtyDaysAgo = dayjs().subtract(30, "days").toDate();
 
-  const pollsToSoftDelete: string[] = [];
-
-  // keep polls that have options that are in the future
-  inactivePolls.forEach(({ id, max: value }) => {
-    const parsedValue = parseValue(value);
-    const date =
-      parsedValue.type === "date" ? parsedValue.date : parsedValue.end;
-
-    if (dayjs(date).isBefore(dayjs())) {
-      pollsToSoftDelete.push(id);
-    }
+  const oldPollsWithAllPastOptions = await prisma.poll.findMany({
+    select: {
+      id: true,
+    },
+    where: {
+      touchedAt: { lte: thirtyDaysAgo },
+      options: {
+        every: {
+          start: { lt: new Date() },
+        },
+      },
+    },
   });
 
   const softDeletedPolls = await prisma.poll.deleteMany({
     where: {
       id: {
-        in: pollsToSoftDelete,
+        in: oldPollsWithAllPastOptions.map(({ id }) => id),
       },
     },
   });

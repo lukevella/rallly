@@ -176,7 +176,6 @@ const seedData = async () => {
       {
         title: "Active Poll",
         id: "active-poll",
-        type: "date",
         userId: "user1",
         participantUrlId: "p1",
         adminUrlId: "a1",
@@ -185,7 +184,6 @@ const seedData = async () => {
       {
         title: "Deleted poll",
         id: "deleted-poll-6d",
-        type: "date",
         userId: "user1",
         deleted: true,
         deletedAt: dayjs().add(-6, "days").toDate(),
@@ -196,7 +194,6 @@ const seedData = async () => {
       {
         title: "Deleted poll 7d",
         id: "deleted-poll-7d",
-        type: "date",
         userId: "user1",
         deleted: true,
         deletedAt: dayjs().add(-7, "days").toDate(),
@@ -207,7 +204,6 @@ const seedData = async () => {
       {
         title: "Still active",
         id: "still-active-poll",
-        type: "date",
         userId: "user1",
         touchedAt: dayjs().add(-29, "days").toDate(),
         participantUrlId: "p4",
@@ -217,7 +213,6 @@ const seedData = async () => {
       {
         title: "Inactive poll",
         id: "inactive-poll",
-        type: "date",
         userId: "user1",
         touchedAt: dayjs().add(-30, "days").toDate(),
         participantUrlId: "p5",
@@ -228,7 +223,6 @@ const seedData = async () => {
         demo: true,
         title: "Demo poll",
         id: "demo-poll-new",
-        type: "date",
         userId: "user1",
         createdAt: new Date(),
         participantUrlId: "p6",
@@ -238,7 +232,6 @@ const seedData = async () => {
         demo: true,
         title: "Old demo poll",
         id: "demo-poll-old",
-        type: "date",
         userId: "user1",
         createdAt: dayjs().add(-2, "days").toDate(),
         participantUrlId: "p7",
@@ -247,7 +240,6 @@ const seedData = async () => {
       {
         title: "Inactive poll with future option",
         id: "inactive-poll-future-option",
-        type: "date",
         userId: "user1",
         touchedAt: dayjs().add(-30, "days").toDate(),
         participantUrlId: "p8",
@@ -260,32 +252,27 @@ const seedData = async () => {
     data: [
       {
         id: "option-1",
-        value: "2022-02-22",
+        start: new Date("2022-02-22T00:00:00"),
         pollId: "deleted-poll-7d",
       },
       {
         id: "option-2",
-        value: "2022-02-23",
+        start: new Date("2022-02-23T00:00:00"),
         pollId: "deleted-poll-7d",
       },
       {
         id: "option-3",
-        value: "2022-02-24",
+        start: new Date("2022-02-24T00:00:00"),
         pollId: "deleted-poll-7d",
       },
       {
         id: "option-4",
-        value: `${dayjs()
-          .add(10, "days")
-          .format("YYYY-MM-DDTHH:mm:ss")}/${dayjs()
-          .add(10, "days")
-          .add(1, "hour")
-          .format("YYYY-MM-DDTHH:mm:ss")}`,
+        start: dayjs().add(10, "days").toDate(),
         pollId: "inactive-poll-future-option",
       },
       {
         id: "option-5",
-        value: dayjs().add(-1, "days").format("YYYY-MM-DD"),
+        start: dayjs().add(-1, "days").toDate(),
         pollId: "inactive-poll",
       },
     ],

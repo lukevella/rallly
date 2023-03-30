@@ -30,10 +30,10 @@ export const demo = router({
     const adminUrlId = await nanoid();
     const demoUser = { name: "John Example", email: "noreply@rallly.co" };
 
-    const options: Array<{ value: string; id: string }> = [];
+    const options: Array<{ start: Date; id: string }> = [];
 
     for (let i = 0; i < optionValues.length; i++) {
-      options.push({ id: await nanoid(), value: optionValues[i] });
+      options.push({ id: await nanoid(), start: new Date(optionValues[i]) });
     }
 
     const participants: Array<{
@@ -74,7 +74,6 @@ export const demo = router({
       data: {
         id: await nanoid(),
         title: "Lunch Meeting",
-        type: "date",
         location: "Starbucks, 901 New York Avenue",
         description: `Hey everyone, please choose the dates when you are available to meet for our monthly get together. Looking forward to see you all!`,
         demo: true,

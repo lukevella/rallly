@@ -1,4 +1,5 @@
 import { Placement } from "@floating-ui/react-dom-interactions";
+import dayjs from "dayjs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -22,6 +23,15 @@ import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 import { useUpdatePollMutation } from "./mutations";
 
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
+
+const convertOptionToString = (option: { start: Date; duration: number }) => {
+  const start = dayjs(option.start);
+  return option.duration === 0
+    ? start.format("YYYY-MM-DD")
+    : `${start.format("YYYY-MM-DDTHH:mm:ss")}/${start
+        .add(option.duration, "minute")
+        .format("YYYY-MM-DDTHH:mm:ss")}`;
+};
 
 const ManagePoll: React.FunctionComponent<{
   placement?: Placement;
@@ -67,18 +77,20 @@ const ManagePoll: React.FunctionComponent<{
           name="pollOptions"
           title={poll.title}
           defaultValues={{
-            navigationDate: poll.options[0].value.split("/")[0],
+            navigationDate: poll.options[0].start.toString(),
             options: poll.options.map((option) => {
-              const [start, end] = option.value.split("/");
-              return end
+              const start = dayjs(option.start);
+              return option.duration > 0
                 ? {
                     type: "timeSlot",
-                    start,
-                    end,
+                    start: start.format("YYYY-MM-DDTHH:mm:ss"),
+                    end: start
+                      .add(option.duration, "minute")
+                      .format("YYYY-MM-DDTHH:mm:ss"),
                   }
                 : {
                     type: "date",
-                    date: start,
+                    date: start.format("YYYY-MM-DD"),
                   };
             }),
             timeZone: poll.timeZone ?? "",
@@ -86,12 +98,14 @@ const ManagePoll: React.FunctionComponent<{
           onSubmit={(data) => {
             const encodedOptions = data.options.map(encodeDateOption);
             const optionsToDelete = poll.options.filter((option) => {
-              return !encodedOptions.includes(option.value);
+              return !encodedOptions.includes(convertOptionToString(option));
             });
 
             const optionsToAdd = encodedOptions.filter(
               (encodedOption) =>
-                !poll.options.find((o) => o.value === encodedOption),
+                !poll.options.find(
+                  (o) => convertOptionToString(o) === encodedOption,
+                ),
             );
 
             const onOk = () => {

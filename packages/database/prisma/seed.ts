@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient, VoteType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -11,14 +11,16 @@ async function main() {
   // Create some users
   const user = await prisma.user.create({
     data: {
-      name: faker.name.fullName(),
-      email: faker.internet.email(),
+      name: "Dev User",
+      email: "dev@rallly.co",
     },
   });
 
   // Create some polls
   const polls = await Promise.all(
-    Array.from({ length: 20 }).map(async () => {
+    Array.from({ length: 20 }).map(async (_, i) => {
+      // create some polls with no duration (all day) and some with a random duration.
+      const duration = i % 5 === 0 ? 15 * randInt(8) : 0;
       const poll = await prisma.poll.create({
         include: {
           participants: true,
@@ -30,7 +32,6 @@ async function main() {
           description: faker.lorem.paragraph(),
           location: faker.address.streetAddress(),
           deadline: faker.date.future(),
-          type: "date",
           user: {
             connect: {
               id: user.id,
@@ -46,7 +47,8 @@ async function main() {
               ) //
               .map((date) => {
                 return {
-                  value: date.toISOString().substring(0, 10),
+                  start: date,
+                  duration,
                 };
               }),
           },
@@ -73,7 +75,7 @@ async function main() {
         data: poll.options.map((option) => {
           const randomNumber = randInt(100);
           const vote =
-            randomNumber > 90 ? "ifNeedBe" : randomNumber > 50 ? "yes" : "no";
+            randomNumber > 95 ? "ifNeedBe" : randomNumber > 50 ? "yes" : "no";
           return {
             participantId: participant.id,
             pollId: poll.id,

@@ -4,7 +4,6 @@ import React from "react";
 
 import { usePostHog } from "@/utils/posthog";
 
-import { encodeDateOption } from "../utils/date-time-utils";
 import { trpc } from "../utils/trpc";
 import { Button } from "./button";
 import {
@@ -102,7 +101,6 @@ const Page: React.FunctionComponent = () => {
 
       await createPoll.mutateAsync({
         title: title,
-        type: "date",
         location: formData?.eventDetails?.location,
         description: formData?.eventDetails?.description,
         user: session.user.isGuest
@@ -112,7 +110,10 @@ const Page: React.FunctionComponent = () => {
             }
           : undefined,
         timeZone: formData?.options?.timeZone,
-        options: required(formData?.options?.options).map(encodeDateOption),
+        options: required(formData?.options?.options).map((option) => ({
+          startDate: option.type === "date" ? option.date : option.start,
+          endDate: option.type === "timeSlot" ? option.end : undefined,
+        })),
       });
     }
   };

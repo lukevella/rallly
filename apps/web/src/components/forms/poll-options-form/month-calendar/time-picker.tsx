@@ -9,6 +9,7 @@ import { Listbox } from "@headlessui/react";
 import clsx from "clsx";
 import * as React from "react";
 
+import { getDuration } from "@/utils/date-time-utils";
 import { stopPropagation } from "@/utils/stop-propagation";
 
 import { useDayjs } from "../../../../utils/dayjs";
@@ -17,7 +18,7 @@ import { styleMenuItem } from "../../../menu-styles";
 
 export interface TimePickerProps {
   value: Date;
-  startFrom?: Date;
+  after?: Date;
   className?: string;
   onChange?: (value: Date) => void;
 }
@@ -26,10 +27,11 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   value,
   onChange,
   className,
-  startFrom,
+  after,
 }) => {
   const { dayjs } = useDayjs();
   const { reference, floating, x, y, strategy, refs } = useFloating({
+    placement: "bottom-start",
     strategy: "fixed",
     middleware: [
       offset(5),
@@ -38,7 +40,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
         apply: ({ rects }) => {
           if (refs.floating.current) {
             Object.assign(refs.floating.current.style, {
-              width: `${rects.reference.width}px`,
+              minWidth: `${rects.reference.width}px`,
             });
           }
         },
@@ -47,15 +49,11 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   });
 
   const renderOptions = () => {
-    const startFromDate = startFrom
-      ? dayjs(startFrom)
-      : dayjs(value).startOf("day");
+    const startFromDate = after ? dayjs(after) : dayjs(value).startOf("day");
 
     const options: React.ReactNode[] = [];
-    const startMinute =
-      startFromDate.get("hour") * 60 + startFromDate.get("minute");
-    const intervals = Math.floor((1440 - startMinute) / 15);
-    for (let i = 0; i < intervals; i++) {
+
+    for (let i = 1; i <= 96; i++) {
       const optionValue = startFromDate.add(i * 15, "minutes");
       options.push(
         <Listbox.Option
@@ -63,7 +61,14 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
           className={styleMenuItem}
           value={optionValue.format("YYYY-MM-DDTHH:mm:ss")}
         >
-          {optionValue.format("LT")}
+          <div className="flex items-center gap-2">
+            <span>{optionValue.format("LT")}</span>
+            {after ? (
+              <span className="text-sm text-slate-500">
+                {getDuration(dayjs(after), optionValue)}
+              </span>
+            ) : null}
+          </div>
         </Listbox.Option>,
       );
     }

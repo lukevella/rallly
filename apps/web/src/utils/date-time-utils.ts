@@ -65,7 +65,9 @@ export const decodeOptions = (
 ):
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] } => {
-  const pollType = isTimeSlot(options[0].value) ? "timeSlot" : "date";
+  const pollType = options.some(({ duration }) => duration > 0)
+    ? "timeSlot"
+    : "date";
 
   if (pollType === "timeSlot") {
     return {
@@ -83,12 +85,7 @@ export const decodeOptions = (
 };
 
 const parseDateOption = (option: Option): ParsedDateOption => {
-  const dateString =
-    option.value.indexOf("T") === -1
-      ? // we add the time because otherwise Date will assume UTC time which might change the day for some time zones
-        option.value + "T00:00:00"
-      : option.value;
-  const date = dayjs(dateString);
+  const date = dayjs(option.start);
   return {
     type: "date",
     optionId: option.id,
@@ -104,16 +101,12 @@ const parseTimeSlotOption = (
   timeZone: string | null,
   targetTimeZone: string,
 ): ParsedTimeSlotOption => {
-  const [start, end] = option.value.split("/");
-
   const startDate =
     timeZone && targetTimeZone
-      ? dayjs(start).tz(timeZone, true).tz(targetTimeZone)
-      : dayjs(start);
-  const endDate =
-    timeZone && targetTimeZone
-      ? dayjs(end).tz(timeZone, true).tz(targetTimeZone)
-      : dayjs(end);
+      ? dayjs(option.start).tz(timeZone, true).tz(targetTimeZone)
+      : dayjs(option.start);
+
+  const endDate = startDate.add(option.duration, "minute");
 
   return {
     type: "timeSlot",

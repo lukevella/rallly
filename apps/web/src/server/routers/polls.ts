@@ -1,6 +1,7 @@
 import { prisma } from "@rallly/database";
 import { sendEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
+import dayjs from "dayjs";
 import { z } from "zod";
 
 import { absoluteUrl } from "../../utils/absolute-url";
@@ -9,46 +10,6 @@ import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { participants } from "./polls/participants";
-
-const defaultSelectFields: {
-  id: true;
-  timeZone: true;
-  title: true;
-  location: true;
-  description: true;
-  createdAt: true;
-  adminUrlId: true;
-  participantUrlId: true;
-  closed: true;
-  legacy: true;
-  demo: true;
-  options: {
-    orderBy: {
-      value: "asc";
-    };
-  };
-  user: true;
-  deleted: true;
-} = {
-  id: true,
-  timeZone: true,
-  title: true,
-  location: true,
-  description: true,
-  createdAt: true,
-  adminUrlId: true,
-  participantUrlId: true,
-  closed: true,
-  legacy: true,
-  demo: true,
-  options: {
-    orderBy: {
-      value: "asc",
-    },
-  },
-  user: true,
-  deleted: true,
-};
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {
   const res = await prisma.poll.findUnique({
@@ -72,7 +33,6 @@ export const polls = router({
     .input(
       z.object({
         title: z.string(),
-        type: z.literal("date"),
         timeZone: z.string().optional(),
         location: z.string().optional(),
         description: z.string().optional(),
@@ -82,7 +42,12 @@ export const polls = router({
             email: z.string(),
           })
           .optional(),
-        options: z.string().array(),
+        options: z
+          .object({
+            startDate: z.string(),
+            endDate: z.string().optional(),
+          })
+          .array(),
         demo: z.boolean().optional(),
       }),
     )
@@ -120,7 +85,6 @@ export const polls = router({
           data: {
             id: await nanoid(),
             title: input.title,
-            type: input.type,
             timeZone: input.timeZone,
             location: input.location,
             description: input.description,
@@ -137,8 +101,14 @@ export const polls = router({
               : undefined,
             options: {
               createMany: {
-                data: input.options.map((value) => ({
-                  value,
+                data: input.options.map((option) => ({
+                  start: new Date(option.startDate),
+                  duration: option.endDate
+                    ? dayjs(option.endDate).diff(
+                        dayjs(option.startDate),
+                        "minute",
+                      )
+                    : 0,
                 })),
               },
             },
@@ -193,15 +163,26 @@ export const polls = router({
 
       if (input.optionsToAdd && input.optionsToAdd.length > 0) {
         await prisma.option.createMany({
-          data: input.optionsToAdd.map((optionValue) => ({
-            value: optionValue,
-            pollId,
-          })),
+          data: input.optionsToAdd.map((optionValue) => {
+            const [start, end] = optionValue.split("/");
+            if (end) {
+              return {
+                start: new Date(start),
+                duration: dayjs(end).diff(dayjs(start), "minute"),
+                pollId,
+              };
+            } else {
+              return {
+                start: new Date(start.substring(0, 10) + "T00:00:00"),
+                pollId,
+              };
+            }
+          }),
         });
       }
 
       await prisma.poll.update({
-        select: defaultSelectFields,
+        select: { id: true },
         where: {
           id: pollId,
         },
@@ -303,7 +284,24 @@ export const polls = router({
     .query(async ({ input }) => {
       const res = await prisma.poll.findUnique({
         select: {
-          ...defaultSelectFields,
+          id: true,
+          timeZone: true,
+          title: true,
+          location: true,
+          description: true,
+          createdAt: true,
+          adminUrlId: true,
+          participantUrlId: true,
+          closed: true,
+          legacy: true,
+          demo: true,
+          options: {
+            orderBy: {
+              start: "asc",
+            },
+          },
+          user: true,
+          deleted: true,
           watchers: {
             select: {
               userId: true,
@@ -333,7 +331,32 @@ export const polls = router({
     )
     .query(async ({ input, ctx }) => {
       const res = await prisma.poll.findUnique({
-        select: { userId: true, ...defaultSelectFields },
+        select: {
+          id: true,
+          timeZone: true,
+          title: true,
+          location: true,
+          description: true,
+          createdAt: true,
+          adminUrlId: true,
+          participantUrlId: true,
+          closed: true,
+          legacy: true,
+          demo: true,
+          options: {
+            orderBy: {
+              start: "asc",
+            },
+          },
+          user: true,
+          userId: true,
+          deleted: true,
+          watchers: {
+            select: {
+              userId: true,
+            },
+          },
+        },
         where: {
           participantUrlId: input.urlId,
         },
