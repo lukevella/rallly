@@ -39,7 +39,7 @@ Copy the sample `.env` file then open it and set the variables.
 cp sample.env .env
 ```
 
-_See [configuration](#configuration) to see what parameters are availble._
+_See [configuration](#configuration) to see what parameters are available._
 
 Install dependencies
 
