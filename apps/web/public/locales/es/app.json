@@ -39,7 +39,6 @@
   "editOptions": "Editar opciones",
   "email": "Correo electrónico",
   "emailNotAllowed": "Este correo electrónico no está permitido.",
-  "emailPlaceholder": "jessie.smith@example.com",
   "endingGuestSessionNotice": "Una vez que finalices la sesión de visitante, no se puede reanudar. No podrás editar ningún voto o comentario que hayas hecho con esta sesión.",
   "endSession": "Cerrar Sesión",
   "exportToCsv": "Exportar a CSV",
