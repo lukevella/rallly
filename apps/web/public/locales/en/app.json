@@ -44,7 +44,7 @@
   "editVotes": "Edit votes",
   "email": "Email",
   "emailNotAllowed": "This email is not allowed.",
-  "emailPlaceholder": "jessie.smith@email.com",
+  "emailPlaceholder": "jessie.smith@example.com",
   "endingGuestSessionNotice": "Once a guest session ends it cannot be resumed. You will not be able to edit any votes or comments you've made with this session.",
   "endSession": "End session",
   "expiredOrInvalidLink": "This link is expired or invalid. Please request a new link.",
