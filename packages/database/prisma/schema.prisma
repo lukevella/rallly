@@ -17,7 +17,7 @@ model User {
   updatedAt DateTime? @updatedAt @map("updated_at")
   comments  Comment[]
   polls     Poll[]
-  Watcher   Watcher[]
+  watcher   Watcher[]
 
   @@map("users")
 }
