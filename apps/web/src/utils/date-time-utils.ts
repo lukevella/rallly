@@ -85,7 +85,7 @@ export const decodeOptions = (
 };
 
 const parseDateOption = (option: Option): ParsedDateOption => {
-  const date = dayjs(option.start);
+  const date = dayjs(option.start).utc();
   return {
     type: "date",
     optionId: option.id,
@@ -101,10 +101,11 @@ const parseTimeSlotOption = (
   timeZone: string | null,
   targetTimeZone: string,
 ): ParsedTimeSlotOption => {
+  const start = dayjs(option.start).utc();
   const startDate =
     timeZone && targetTimeZone
-      ? dayjs(option.start).tz(timeZone, true).tz(targetTimeZone)
-      : dayjs(option.start);
+      ? start.tz(timeZone, true).tz(targetTimeZone)
+      : start;
 
   const endDate = startDate.add(option.duration, "minute");
 

@@ -102,7 +102,7 @@ export const polls = router({
             options: {
               createMany: {
                 data: input.options.map((option) => ({
-                  start: new Date(option.startDate),
+                  start: new Date(`${option.startDate}Z`),
                   duration: option.endDate
                     ? dayjs(option.endDate).diff(
                         dayjs(option.startDate),
@@ -167,13 +167,13 @@ export const polls = router({
             const [start, end] = optionValue.split("/");
             if (end) {
               return {
-                start: new Date(start),
+                start: new Date(`${start}Z`),
                 duration: dayjs(end).diff(dayjs(start), "minute"),
                 pollId,
               };
             } else {
               return {
-                start: new Date(start.substring(0, 10) + "T00:00:00"),
+                start: new Date(start.substring(0, 10) + "T00:00:00Z"),
                 pollId,
               };
             }

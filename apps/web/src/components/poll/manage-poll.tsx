@@ -77,9 +77,11 @@ const ManagePoll: React.FunctionComponent<{
           name="pollOptions"
           title={poll.title}
           defaultValues={{
-            navigationDate: poll.options[0].start.toString(),
+            navigationDate: dayjs(poll.options[0].start)
+              .utc()
+              .format("YYYY-MM-DD"),
             options: poll.options.map((option) => {
-              const start = dayjs(option.start);
+              const start = dayjs(option.start).utc();
               return option.duration > 0
                 ? {
                     type: "timeSlot",
