@@ -25,7 +25,7 @@ import { useUpdatePollMutation } from "./mutations";
 const PollOptionsForm = React.lazy(() => import("../forms/poll-options-form"));
 
 const convertOptionToString = (option: { start: Date; duration: number }) => {
-  const start = dayjs(option.start);
+  const start = dayjs(option.start).utc();
   return option.duration === 0
     ? start.format("YYYY-MM-DD")
     : `${start.format("YYYY-MM-DDTHH:mm:ss")}/${start
