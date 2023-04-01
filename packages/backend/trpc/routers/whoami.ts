@@ -1,9 +1,10 @@
 import { prisma } from "@rallly/database";
 
 import { publicProcedure, router } from "..";
+import { UserSession } from "../types";
 
 export const whoami = router({
-  get: publicProcedure.query(async ({ ctx }) => {
+  get: publicProcedure.query(async ({ ctx }): Promise<UserSession> => {
     if (ctx.user.isGuest) {
       return { isGuest: true, id: ctx.user.id };
     }

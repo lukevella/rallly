@@ -1,6 +1,6 @@
 import { sealData, unsealData } from "iron-session";
 
-import { sessionConfig } from "../session";
+import { sessionConfig } from "./config";
 
 export const decryptToken = async <P extends Record<string, unknown>>(
   token: string,

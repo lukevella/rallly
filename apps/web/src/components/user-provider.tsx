@@ -1,10 +1,10 @@
+import { trpc } from "@rallly/backend/next";
+import { UserSession } from "@rallly/backend/trpc";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import { UserSession } from "@/utils/auth";
 import { usePostHog } from "@/utils/posthog";
 
-import { trpc } from "../utils/trpc";
 import { useRequiredContext } from "./use-required-context";
 
 export const UserContext = React.createContext<{

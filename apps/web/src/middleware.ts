@@ -1,8 +1,7 @@
+import { sessionConfig } from "@rallly/backend/session";
 import languageParser from "accept-language-parser";
 import { getIronSession } from "iron-session/edge";
 import { NextRequest, NextResponse } from "next/server";
-
-import { sessionOptions } from "~/../../packages/backend";
 
 // Generate a unique ID with the specified number of bytes
 function generateUniqueId() {
@@ -38,7 +37,7 @@ export async function middleware(req: NextRequest) {
   const newUrl = nextUrl.clone();
   const res = NextResponse.next();
 
-  const session = await getIronSession(req, res, sessionOptions);
+  const session = await getIronSession(req, res, sessionConfig);
 
   if (!session.user) {
     session.user = {

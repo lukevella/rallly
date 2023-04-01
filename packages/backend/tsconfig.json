@@ -1,10 +1,6 @@
 {
   "extends": "@rallly/tsconfig/react-library.json",
   "include": ["**/*.ts", "**/*.tsx"],
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./*"]
-    }
-  },
+
   "exclude": ["node_modules"]
 }

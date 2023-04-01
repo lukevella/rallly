@@ -2,6 +2,8 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "~/style.css";
 
+import { trpc } from "@rallly/backend/next";
+import { UserSession } from "@rallly/backend/trpc";
 import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -19,8 +21,6 @@ import Maintenance from "@/components/maintenance";
 import { useCrispChat } from "../components/crisp-chat";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
-import { UserSession } from "../utils/auth";
-import { trpc } from "../utils/trpc";
 
 const inter = Inter({
   subsets: ["latin"],
