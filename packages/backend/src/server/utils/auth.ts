@@ -1,10 +1,4 @@
-import { prisma } from "@rallly/database";
-import {
-  IronSession,
-  IronSessionOptions,
-  sealData,
-  unsealData,
-} from "iron-session";
+import { IronSessionOptions, sealData, unsealData } from "iron-session";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import {
   GetServerSideProps,
@@ -13,15 +7,14 @@ import {
 } from "next";
 
 import { createSSGHelperFromContext } from "../server/context";
-import { randomid } from "./nanoid";
 
-const sessionOptions: IronSessionOptions = {
-  password: process.env.SECRET_PASSWORD,
+export const sessionOptions: IronSessionOptions = {
+  password: process.env.SECRET_PASSWORD ?? "",
   cookieName: "rallly-session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",
   },
-  ttl: 0, // basically forever
+  ttl: 60 * 24 * 30, // 30 days
 };
 
 export type RegistrationTokenPayload = {
@@ -54,30 +47,8 @@ export type DisableNotificationsPayload = {
 
 export type UserSession = GuestUserSession | RegisteredUserSession;
 
-const setUser = async (session: IronSession) => {
-  if (!session.user) {
-    session.user = await createGuestUser();
-    await session.save();
-  }
-
-  if (!session.user.isGuest) {
-    // Check registered user still exists
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-    });
-
-    if (!user) {
-      session.user = await createGuestUser();
-      await session.save();
-    }
-  }
-};
-
 export function withSessionRoute(handler: NextApiHandler) {
-  return withIronSessionApiRoute(async (req, res) => {
-    await setUser(req.session);
-    return await handler(req, res);
-  }, sessionOptions);
+  return withIronSessionApiRoute(handler, sessionOptions);
 }
 
 export const composeGetServerSideProps = (
@@ -103,29 +74,19 @@ export const composeGetServerSideProps = (
 };
 
 /**
- * Require user to be logged in
- * @returns
- */
-export const withAuth: GetServerSideProps = async (ctx) => {
-  if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};
-
-/**
  * Require user to be logged in if AUTH_REQUIRED is true
  * @returns
  */
 export const withAuthIfRequired: GetServerSideProps = async (ctx) => {
   if (process.env.AUTH_REQUIRED === "true") {
-    return await withAuth(ctx);
+    if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
   }
   return { props: {} };
 };
@@ -193,52 +154,4 @@ export const createToken = async <T extends Record<string, unknown>>(
     password: sessionOptions.password,
     ttl: options?.ttl ?? 60 * 15, // 15 minutes
   });
-};
-
-export const createGuestUser = async (): Promise<{
-  isGuest: true;
-  id: string;
-}> => {
-  return {
-    id: `user-${await randomid()}`,
-    isGuest: true,
-  };
-};
-
-// assigns participants and comments created by guests to a user
-// we could have multiple guests because a login might be triggered from one device
-// and opened in another one.
-export const mergeGuestsIntoUser = async (
-  userId: string,
-  guestIds: string[],
-) => {
-  await prisma.participant.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-
-  await prisma.comment.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-};
-
-export const getCurrentUser = async (
-  session: IronSession,
-): Promise<{ isGuest: boolean; id: string }> => {
-  await setUser(session);
-
-  return session.user;
 };

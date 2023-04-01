@@ -1,5 +1,13 @@
 import languageParser from "accept-language-parser";
+import { getIronSession } from "iron-session/edge";
 import { NextRequest, NextResponse } from "next/server";
+
+import { sessionOptions } from "~/../../packages/backend";
+
+// Generate a unique ID with the specified number of bytes
+function generateUniqueId() {
+  return crypto.randomUUID();
+}
 
 const supportedLocales = [
   "ca",
@@ -25,8 +33,20 @@ const supportedLocales = [
   "zh",
 ];
 
-export function middleware({ headers, cookies, nextUrl }: NextRequest) {
+export async function middleware(req: NextRequest) {
+  const { headers, cookies, nextUrl } = req;
   const newUrl = nextUrl.clone();
+  const res = NextResponse.next();
+
+  const session = await getIronSession(req, res, sessionOptions);
+
+  if (!session.user) {
+    session.user = {
+      id: `user-${generateUniqueId()}`,
+      isGuest: true,
+    };
+    await session.save();
+  }
 
   // Check if locale is specified in cookie
   const localeCookie = cookies.get("NEXT_LOCALE");
@@ -50,7 +70,7 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return res;
 }
 
 export const config = {

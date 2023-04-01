@@ -1,0 +1,16 @@
+{
+  "name": "@rallly/backend",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@rallly/utils": "*",
+    "@rallly/database": "*",
+    "@tanstack/react-query": "^4.22.0",
+    "@trpc/client": "^10.13.0",
+    "@trpc/next": "^10.13.0",
+    "@trpc/react-query": "^10.13.0",
+    "@trpc/server": "^10.13.0"
+  }
+}
