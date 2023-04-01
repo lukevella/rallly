@@ -29,7 +29,7 @@
   "deleteComment": "Slet kommentar",
   "deleteDate": "Slet dato",
   "deletedPoll": "Slettet afstemning",
-  "deletedPollInfo": "Denne afstemning eksistere ikke længere.",
+  "deletedPollInfo": "Denne afstemning eksisterer ikke længere.",
   "deleteParticipant": "Slet {{name}}?",
   "deleteParticipantDescription": "Er du sikker på, at du vil slette denne deltager? Denne handling kan ikke fortrydes.",
   "deletePoll": "Slet afstemning",
