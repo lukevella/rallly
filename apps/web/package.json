@@ -16,7 +16,7 @@
     "docker:start": "./scripts/docker-start.sh"
   },
   "dependencies": {
-    "@rallly/rpc": "*",
+    "@rallly/backend": "*",
     "@floating-ui/react-dom-interactions": "^0.13.3",
     "@headlessui/react": "^1.7.7",
     "@next/bundle-analyzer": "^12.3.4",

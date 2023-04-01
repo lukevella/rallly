@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createToken, DisableNotificationsPayload } from "../../../utils/types";
-import { publicProcedure, router } from "../../trpc";
+import { publicProcedure, router } from "../..";
 
 export const participants = router({
   list: publicProcedure

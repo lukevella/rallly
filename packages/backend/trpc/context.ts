@@ -4,7 +4,7 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import { GetServerSidePropsContext } from "next";
 import superjson from "superjson";
 
-import { appRouter } from "./routers/_app";
+import { appRouter } from "./routers";
 
 export async function createContext(
   opts: trpcNext.CreateNextContextOptions | GetServerSidePropsContext,

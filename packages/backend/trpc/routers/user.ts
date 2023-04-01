@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { IronSessionData } from "iron-session";
 import { z } from "zod";
 
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "..";
 
 const requireUser = (user: IronSessionData["user"]) => {
   if (!user) {

@@ -4,7 +4,7 @@ import { absoluteUrl } from "@rallly/utils";
 import { z } from "zod";
 
 import { createToken, DisableNotificationsPayload } from "../../../index";
-import { publicProcedure, router } from "../../trpc";
+import { publicProcedure, router } from "../..";
 
 export const comments = router({
   list: publicProcedure

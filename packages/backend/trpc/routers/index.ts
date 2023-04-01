@@ -1,4 +1,4 @@
-import { mergeRouters, router } from "../trpc";
+import { mergeRouters, router } from "..";
 import { auth } from "./auth";
 import { feedback } from "./feedback";
 import { polls } from "./polls";

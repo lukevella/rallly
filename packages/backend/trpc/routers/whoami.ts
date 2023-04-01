@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "..";
 
 export const whoami = router({
   get: publicProcedure.query(async ({ ctx }) => {
