@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/next";
+import { trpc } from "@rallly/backend/next/trpc";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";

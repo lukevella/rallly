@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/next";
+import { trpc } from "@rallly/backend/next/trpc";
 import { useRouter } from "next/router";
 
 export const usePollByAdmin = () => {

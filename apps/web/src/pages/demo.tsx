@@ -1,4 +1,5 @@
-import { trpc, withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
+import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
+import { trpc } from "@rallly/backend/next/trpc";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";

@@ -1,4 +1,4 @@
-import { sessionConfig } from "@rallly/backend/session";
+import { sessionConfig } from "@rallly/backend/session/config";
 import languageParser from "accept-language-parser";
 import { getIronSession } from "iron-session/edge";
 import { NextRequest, NextResponse } from "next/server";

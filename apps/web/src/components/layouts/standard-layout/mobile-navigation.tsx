@@ -23,7 +23,7 @@ import OpenBeta from "../../open-beta-modal";
 import { UserDropdown } from "./user-dropdown";
 
 export const MobileNavigation = (props: { className?: string }) => {
-  const { user, isUpdating } = useUser();
+  const { user } = useUser();
   const { t } = useTranslation(["common", "app"]);
 
   const [isPinned, setIsPinned] = React.useState(false);
@@ -113,9 +113,6 @@ export const MobileNavigation = (props: { className?: string }) => {
                   data-testid="user"
                   className={clsx(
                     "group inline-flex w-full items-center space-x-2 rounded px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20",
-                    {
-                      "opacity-50": isUpdating,
-                    },
                   )}
                 >
                   <div className="relative shrink-0">
