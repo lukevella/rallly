@@ -1,6 +1,5 @@
-import { withSessionSsr } from "@rallly/backend/next";
-import { trpc } from "@rallly/backend/next/trpc";
-import { decryptToken } from "@rallly/backend/session";
+import { trpc } from "@rallly/backend/client/trpc";
+import { decryptToken, withSessionSsr } from "@rallly/backend/server/session";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";

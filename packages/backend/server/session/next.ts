@@ -2,10 +2,10 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
-import { sessionConfig } from "../session";
+import { composeGetServerSideProps } from "../../utils/next";
 import { createContext, createSSGHelperFromContext } from "../trpc/context";
 import { appRouter } from "../trpc/routers";
-import { composeGetServerSideProps } from "./utils";
+import { sessionConfig } from "./session";
 
 export const withSessionRoute = withIronSessionApiRoute(
   trpcNext.createNextApiHandler({
@@ -14,41 +14,6 @@ export const withSessionRoute = withIronSessionApiRoute(
   }),
   sessionConfig,
 );
-
-/**
- * Require user to be logged in
- * @returns
- */
-export const withAuth: GetServerSideProps = async (ctx) => {
-  if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};
-
-/**
- * Require user to be logged in if AUTH_REQUIRED is true
- * @returns
- */
-export const withAuthIfRequired: GetServerSideProps = async (ctx) => {
-  if (process.env.AUTH_REQUIRED === "true") {
-    if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      };
-    }
-  }
-  return { props: {} };
-};
 
 export function withSessionSsr(
   handler: GetServerSideProps | GetServerSideProps[],
@@ -89,3 +54,38 @@ export function withSessionSsr(
     return res;
   }, sessionConfig);
 }
+
+/**
+ * Require user to be logged in
+ * @returns
+ */
+export const withAuth: GetServerSideProps = async (ctx) => {
+  if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
+};
+
+/**
+ * Require user to be logged in if AUTH_REQUIRED is true
+ * @returns
+ */
+export const withAuthIfRequired: GetServerSideProps = async (ctx) => {
+  if (process.env.AUTH_REQUIRED === "true") {
+    if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
+  }
+  return { props: {} };
+};

@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 
+import { UserSession } from "../../../types";
 import { publicProcedure, router } from "..";
-import { UserSession } from "../types";
 
 export const whoami = router({
   get: publicProcedure.query(async ({ ctx }): Promise<UserSession> => {

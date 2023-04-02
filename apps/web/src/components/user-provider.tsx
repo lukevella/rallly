@@ -1,5 +1,5 @@
-import { trpc } from "@rallly/backend/next/trpc";
-import { UserSession } from "@rallly/backend/trpc";
+import { UserSession } from "@rallly/backend";
+import { trpc } from "@rallly/backend/client/trpc";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";

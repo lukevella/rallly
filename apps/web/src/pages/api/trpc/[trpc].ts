@@ -1,4 +1,4 @@
-import { withSessionRoute } from "@rallly/backend/next";
+import { withSessionRoute } from "@rallly/backend/server/session";
 
 export const config = {
   api: {

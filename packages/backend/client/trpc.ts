@@ -4,7 +4,7 @@ import { createTRPCNext } from "@trpc/next";
 import toast from "react-hot-toast";
 import superjson from "superjson";
 
-import { AppRouter } from "../trpc/routers";
+import { AppRouter } from "../server/trpc/routers";
 
 export const trpc = createTRPCNext<AppRouter>({
   unstable_overrides: {

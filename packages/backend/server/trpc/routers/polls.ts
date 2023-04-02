@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import { z } from "zod";
 
-import { nanoid } from "../../utils/nanoid";
+import { nanoid } from "../../../utils/nanoid";
 import { possiblyPublicProcedure, publicProcedure, router } from "..";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";

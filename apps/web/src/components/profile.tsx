@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/next/trpc";
+import { trpc } from "@rallly/backend/client/trpc";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";

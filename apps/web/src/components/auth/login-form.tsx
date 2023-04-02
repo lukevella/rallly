@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/next/trpc";
+import { trpc } from "@rallly/backend/client/trpc";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";

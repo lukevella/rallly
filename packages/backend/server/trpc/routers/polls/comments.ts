@@ -3,7 +3,8 @@ import { sendEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
 import { z } from "zod";
 
-import { createToken, DisableNotificationsPayload } from "../../../index";
+import { DisableNotificationsPayload } from "../../../../types";
+import { createToken } from "../../../session";
 import { publicProcedure, router } from "../..";
 
 export const comments = router({

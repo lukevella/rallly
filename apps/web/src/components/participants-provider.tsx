@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/next/trpc";
+import { trpc } from "@rallly/backend/client/trpc";
 import { Participant, Vote, VoteType } from "@rallly/database";
 import { useTranslation } from "next-i18next";
 import * as React from "react";

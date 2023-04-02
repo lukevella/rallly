@@ -4,13 +4,9 @@ import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import {
-  createToken,
-  decryptToken,
-  LoginTokenPayload,
-  RegistrationTokenPayload,
-} from "../../session";
-import { generateOtp } from "../../utils/nanoid";
+import { LoginTokenPayload, RegistrationTokenPayload } from "../../../types";
+import { generateOtp } from "../../../utils/nanoid";
+import { createToken, decryptToken } from "../../session";
 import { publicProcedure, router } from "..";
 
 // assigns participants and comments created by guests to a user

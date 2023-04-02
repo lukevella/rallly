@@ -1,4 +1,4 @@
-import { withAuth, withSessionSsr } from "@rallly/backend/next";
+import { withAuth, withSessionSsr } from "@rallly/backend/server/session";
 
 import { getStandardLayout } from "../components/layouts/standard-layout";
 import { Profile } from "../components/profile";

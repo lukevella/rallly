@@ -1,4 +1,4 @@
-import { composeGetServerSideProps } from "@rallly/backend/next";
+import { composeGetServerSideProps } from "@rallly/backend/utils/next";
 import { GetServerSideProps } from "next";
 
 import Home from "@/components/home";

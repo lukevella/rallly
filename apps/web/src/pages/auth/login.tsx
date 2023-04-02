@@ -1,8 +1,6 @@
-import {
-  composeGetServerSideProps,
-  withSessionSsr,
-} from "@rallly/backend/next";
-import { decryptToken, LoginTokenPayload } from "@rallly/backend/session";
+import { LoginTokenPayload } from "@rallly/backend";
+import { decryptToken, withSessionSsr } from "@rallly/backend/server/session";
+import { composeGetServerSideProps } from "@rallly/backend/utils/next";
 import { prisma } from "@rallly/database";
 import clsx from "clsx";
 import { GetServerSideProps } from "next";

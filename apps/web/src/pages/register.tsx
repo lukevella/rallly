@@ -1,4 +1,4 @@
-import { withSessionSsr } from "@rallly/backend/next";
+import { withSessionSsr } from "@rallly/backend/server/session";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";

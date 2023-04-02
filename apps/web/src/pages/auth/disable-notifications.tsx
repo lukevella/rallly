@@ -1,11 +1,5 @@
-import {
-  composeGetServerSideProps,
-  withSessionSsr,
-} from "@rallly/backend/next";
-import {
-  decryptToken,
-  DisableNotificationsPayload,
-} from "@rallly/backend/session";
+import { decryptToken, withSessionSsr } from "@rallly/backend/server/session";
+import { composeGetServerSideProps } from "@rallly/backend/utils/next";
 import { prisma } from "@rallly/database";
 import clsx from "clsx";
 import Link from "next/link";
@@ -19,6 +13,7 @@ import { AuthLayout } from "@/components/layouts/auth-layout";
 import { Spinner } from "@/components/spinner";
 import { usePostHog } from "@/utils/posthog";
 import { withPageTranslations } from "@/utils/with-page-translations";
+import { DisableNotificationsPayload } from "~/../../packages/backend/types";
 
 const Redirect = (props: React.PropsWithChildren<{ redirect: string }>) => {
   const router = useRouter();
