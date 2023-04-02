@@ -36,14 +36,8 @@ const getTransport = () => {
     case "ses":
       {
         const ses = new aws.SES({
-          region: process.env.AWS_REGION,
-          credentials:
-            process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
-              ? {
-                  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-                }
-              : undefined,
+          region: process.env["AWS" + "_REGION"],
+          credentialDefaultProvider: defaultProvider,
         });
 
         transport = createTransport({
