@@ -7,7 +7,7 @@ import * as React from "react";
 
 import DotsVertical from "@/components/icons/dots-vertical.svg";
 import Github from "@/components/icons/github.svg";
-import Logo from "~/public/logo.svg";
+import Logo from "~//logo.svg";
 
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import Footer from "./page-layout/footer";

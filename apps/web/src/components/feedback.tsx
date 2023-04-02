@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/client/trpc";
+import { trpc } from "@rallly/backend";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";

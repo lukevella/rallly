@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/client/trpc";
+import { trpc } from "@rallly/backend";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";

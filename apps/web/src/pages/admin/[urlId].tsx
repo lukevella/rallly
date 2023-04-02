@@ -1,7 +1,4 @@
-import {
-  withAuthIfRequired,
-  withSessionSsr,
-} from "@rallly/backend/server/session";
+import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";

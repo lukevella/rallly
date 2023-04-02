@@ -1,4 +1,4 @@
-import { withSessionRoute } from "@rallly/backend/server/session";
+import { trpcNextApiHandler } from "@rallly/backend/next/trpc/server";
 
 export const config = {
   api: {
@@ -6,4 +6,4 @@ export const config = {
   },
 };
 // export API handler
-export default withSessionRoute;
+export default trpcNextApiHandler;

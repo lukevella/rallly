@@ -1,8 +1,8 @@
 import { prisma, VoteType } from "@rallly/database";
 import dayjs from "dayjs";
 
-import { nanoid } from "../../../../utils/nanoid";
-import { possiblyPublicProcedure, router } from "../..";
+import { nanoid } from "../../../utils/nanoid";
+import { possiblyPublicProcedure, router } from "../../trpc";
 
 const participantData: Array<{ name: string; votes: VoteType[] }> = [
   {

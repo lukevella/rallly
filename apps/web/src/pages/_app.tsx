@@ -1,9 +1,8 @@
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
-import "~/style.css";
+import "../style.css";
 
-import { UserSession } from "@rallly/backend";
-import { trpc } from "@rallly/backend/client/trpc";
+import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
 import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";

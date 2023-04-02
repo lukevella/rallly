@@ -1,19 +1,17 @@
-import * as trpcNext from "@trpc/server/adapters/next";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextApiHandler,
+} from "next";
 
-import { composeGetServerSideProps } from "../../utils/next";
-import { createContext, createSSGHelperFromContext } from "../trpc/context";
-import { appRouter } from "../trpc/routers";
-import { sessionConfig } from "./session";
+import { sessionConfig } from "../session-config";
+import { createSSGHelperFromContext } from "../trpc/context";
+import { composeGetServerSideProps } from "./utils";
 
-export const withSessionRoute = withIronSessionApiRoute(
-  trpcNext.createNextApiHandler({
-    router: appRouter,
-    createContext,
-  }),
-  sessionConfig,
-);
+export function withSessionRoute(handler: NextApiHandler) {
+  return withIronSessionApiRoute(handler, sessionConfig);
+}
 
 export function withSessionSsr(
   handler: GetServerSideProps | GetServerSideProps[],

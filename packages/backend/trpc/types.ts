@@ -1,12 +1,3 @@
-declare module "iron-session" {
-  export interface IronSessionData {
-    user: {
-      id: string;
-      isGuest: boolean;
-    };
-  }
-}
-
 export type RegistrationTokenPayload = {
   name: string;
   email: string;

@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend/client/trpc";
+import { trpc } from "@rallly/backend";
 
 import { usePostHog } from "@/utils/posthog";
 

@@ -18,7 +18,6 @@
   "dependencies": {
     "@rallly/backend": "*",
     "@rallly/database": "*",
-    "@rallly/emails": "*",
     "@rallly/tailwind-config": "*",
     "@floating-ui/react-dom-interactions": "^0.13.3",
     "@headlessui/react": "^1.7.7",
@@ -38,7 +37,6 @@
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
-    "next": "^13.2.4",
     "next-i18next": "^13.0.3",
     "next-seo": "^5.15.0",
     "postcss": "^8.4.21",

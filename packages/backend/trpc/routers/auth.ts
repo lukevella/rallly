@@ -4,10 +4,10 @@ import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { LoginTokenPayload, RegistrationTokenPayload } from "../../../types";
-import { generateOtp } from "../../../utils/nanoid";
 import { createToken, decryptToken } from "../../session";
-import { publicProcedure, router } from "..";
+import { generateOtp } from "../../utils/nanoid";
+import { publicProcedure, router } from "../trpc";
+import { LoginTokenPayload, RegistrationTokenPayload } from "../types";
 
 // assigns participants and comments created by guests to a user
 // we could have multiple guests because a login might be triggered from one device

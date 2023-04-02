@@ -6,6 +6,7 @@
   "types": "src/index.ts",
   "dependencies": {
     "@rallly/database": "*",
+    "@rallly/emails": "*",
     "@rallly/utils": "*",
     "@tanstack/react-query": "^4.22.0",
     "@trpc/client": "^10.13.0",
@@ -13,6 +14,7 @@
     "@trpc/react-query": "^10.13.0",
     "@trpc/server": "^10.13.0",
     "iron-session": "^6.3.1",
+    "next": "^13.2.4",
     "superjson": "^1.12.2"
   }
 }

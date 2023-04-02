@@ -4,9 +4,9 @@ import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { DisableNotificationsPayload } from "../../../../types";
 import { createToken } from "../../../session";
-import { publicProcedure, router } from "../..";
+import { publicProcedure, router } from "../../trpc";
+import { DisableNotificationsPayload } from "../../types";
 
 export const participants = router({
   list: publicProcedure
