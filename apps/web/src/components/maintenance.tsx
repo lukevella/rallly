@@ -1,6 +1,5 @@
-import Head from "next/head";
-
 import Clock from "@rallly/icons/clock.svg";
+import Head from "next/head";
 
 import Logo from "../../public/logo.svg";
 

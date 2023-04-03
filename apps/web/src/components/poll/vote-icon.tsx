@@ -1,11 +1,10 @@
 import { VoteType } from "@rallly/database";
-import clsx from "clsx";
-import * as React from "react";
-
 import CheckCircle from "@rallly/icons/check-circle.svg";
 import IfNeedBe from "@rallly/icons/if-need-be.svg";
 import QuestionMark from "@rallly/icons/question-mark.svg";
 import X from "@rallly/icons/x-circle.svg";
+import clsx from "clsx";
+import * as React from "react";
 
 const VoteIcon: React.FunctionComponent<{
   type?: VoteType;

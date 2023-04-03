@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import Clock from "@rallly/icons/clock.svg";
+import * as React from "react";
 
 import PollOption, { PollOptionProps } from "./poll-option";
 

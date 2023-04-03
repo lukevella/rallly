@@ -1,9 +1,3 @@
-import clsx from "clsx";
-import { AnimatePresence } from "framer-motion";
-import { useTranslation } from "next-i18next";
-import React from "react";
-
-import { LoginLink } from "@/components/auth/login-modal";
 import Adjustments from "@rallly/icons/adjustments.svg";
 import Beaker from "@rallly/icons/beaker.svg";
 import Home from "@rallly/icons/home.svg";
@@ -12,6 +6,12 @@ import Menu from "@rallly/icons/menu.svg";
 import Pencil from "@rallly/icons/pencil.svg";
 import Support from "@rallly/icons/support.svg";
 import UserCircle from "@rallly/icons/user-circle.svg";
+import clsx from "clsx";
+import { AnimatePresence } from "framer-motion";
+import { useTranslation } from "next-i18next";
+import React from "react";
+
+import { LoginLink } from "@/components/auth/login-modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/popover";
 import Preferences from "@/components/preferences";
 import { useUser } from "@/components/user-provider";
