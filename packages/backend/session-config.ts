@@ -1,6 +1,4 @@
-import { IronSessionOptions } from "iron-session/edge";
-
-export const sessionConfig: IronSessionOptions = {
+export const sessionConfig = {
   password: process.env.SECRET_PASSWORD ?? "",
   cookieName: "rallly-session",
   cookieOptions: {
