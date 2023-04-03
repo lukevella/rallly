@@ -1,8 +1,10 @@
 import { trpc } from "@rallly/backend";
-import Calendar from "@rallly/icons/calendar.svg";
-import LockClosed from "@rallly/icons/lock-closed.svg";
-import Pencil from "@rallly/icons/pencil.svg";
-import User from "@rallly/icons/user.svg";
+import {
+  CalendarIcon,
+  LockClosedIcon,
+  PencilIcon,
+  UserIcon,
+} from "@rallly/icons";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -48,7 +50,7 @@ export const Profile: React.FunctionComponent = () => {
       </Head>
       <div className="flex gap-4 rounded-md border bg-white p-3 shadow-sm">
         <div className="border-primary-200/50 bg-primary-50 inline-flex h-12 w-12 items-center justify-center rounded border">
-          <User className="text-primary-600 h-7" />
+          <UserIcon className="text-primary-600 h-7" />
         </div>
         <div>
           <div
@@ -77,7 +79,7 @@ export const Profile: React.FunctionComponent = () => {
               {t("yourPolls")}
             </div>
             <Link href="/new" className="btn-default">
-              <Pencil className="mr-1 h-5" />
+              <PencilIcon className="mr-1 h-5" />
               {t("newPoll")}
             </Link>
           </div>
@@ -92,7 +94,7 @@ export const Profile: React.FunctionComponent = () => {
                     >
                       <span className="flex gap-4">
                         <span>
-                          <Calendar className="text-primary-600 w-10" />
+                          <CalendarIcon className="text-primary-600 w-10" />
                         </span>
                         <span>
                           <span className="flex items-center gap-2">
@@ -102,7 +104,7 @@ export const Profile: React.FunctionComponent = () => {
                             {poll.closed ? (
                               <Tooltip content={t("pollHasBeenLocked")}>
                                 <Badge color="red">
-                                  <LockClosed className="h-4" />
+                                  <LockClosedIcon className="h-4" />
                                 </Badge>
                               </Tooltip>
                             ) : null}
@@ -118,7 +120,7 @@ export const Profile: React.FunctionComponent = () => {
               </div>
             </div>
           ) : (
-            <EmptyState icon={Pencil} text={t("pollsEmpty")} />
+            <EmptyState icon={PencilIcon} text={t("pollsEmpty")} />
           )}
         </div>
       ) : null}

@@ -1,5 +1,5 @@
 import { Participant, VoteType } from "@rallly/database";
-import ChevronDown from "@rallly/icons/chevron-down.svg";
+import { ChevronDownIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
@@ -215,7 +215,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
               {participants.length > 0 ? (
                 <SummarizedParticipantList participants={participants} />
               ) : null}
-              <ChevronDown
+              <ChevronDownIcon
                 className={clsx(
                   "h-5 shrink-0 text-slate-500 transition-transform",
                   {

@@ -1,4 +1,4 @@
-import Chat from "@rallly/icons/chat.svg";
+import { ChatIcon } from "@rallly/icons";
 import * as React from "react";
 
 import { Button } from "./button";
@@ -21,7 +21,7 @@ export const ChatButton: React.FunctionComponent<{ text?: string }> = ({
   text,
 }) => {
   return (
-    <Button icon={<Chat />} onClick={showCrispChat}>
+    <Button icon={<ChatIcon />} onClick={showCrispChat}>
       {text}
     </Button>
   );

@@ -1,5 +1,4 @@
-import Exclamation from "@rallly/icons/exclamation.svg";
-import LockClosed from "@rallly/icons/lock-closed.svg";
+import { ExclamationIcon, LockClosedIcon } from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
@@ -50,13 +49,13 @@ export const Poll = (props: { children?: React.ReactNode }) => {
           {props.children}
           {poll.demo ? (
             <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
-              <Exclamation className="w-6" />
+              <ExclamationIcon className="w-6" />
               <div>{t("demoPollNotice")}</div>
             </div>
           ) : null}
           {poll.closed ? (
             <div className="flex items-center gap-3 rounded-md border border-pink-200 bg-pink-100 p-3 text-pink-600 shadow-sm">
-              <LockClosed className="w-6" />
+              <LockClosedIcon className="w-6" />
               <div>{t("pollHasBeenLocked")}</div>
             </div>
           ) : null}

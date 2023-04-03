@@ -5,7 +5,7 @@ import {
 } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
 import { prisma } from "@rallly/database";
-import Bell from "@rallly/icons/bell-crossed.svg";
+import { BellIcon } from "@rallly/icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -37,7 +37,7 @@ const Redirect = (props: React.PropsWithChildren<{ redirect: string }>) => {
     <div>
       <div className="flex h-8 items-center justify-center gap-4">
         {enabled ? (
-          <Bell
+          <BellIcon
             className={clsx("animate-popIn h-5", {
               "opacity-0": !enabled,
             })}

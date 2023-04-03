@@ -1,4 +1,4 @@
-import CheckCircle from "@rallly/icons/check-circle.svg";
+import { YesIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
@@ -40,7 +40,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
           { "text-slate-400": !highlight },
         )}
       >
-        <CheckCircle className="-ml-1 inline-block h-4 transition-opacity" />
+        <YesIcon className="-ml-1 inline-block h-4 transition-opacity" />
         <AnimatePresence initial={false} exitBeforeEnter={true}>
           <m.span
             transition={{

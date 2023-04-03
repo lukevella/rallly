@@ -1,4 +1,4 @@
-import Clock from "@rallly/icons/clock.svg";
+import { ClockIcon } from "@rallly/icons";
 import Head from "next/head";
 
 import Logo from "../../public/logo.svg";
@@ -11,7 +11,7 @@ const Maintenance: React.FunctionComponent = () => {
       </Head>
       <div className="w-96 rounded-lg border bg-white p-8 text-center shadow-sm">
         <div className="mb-4">
-          <Clock className="text-primary-600 inline-block h-20" />
+          <ClockIcon className="text-primary-600 inline-block h-20" />
         </div>
         <div className="">
           The site is currently down for some maintenance and will be back

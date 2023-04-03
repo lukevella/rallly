@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react";
-import X from "@rallly/icons/x.svg";
+import { XIcon } from "@rallly/icons";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 
@@ -75,7 +75,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                     className="absolute top-1 right-1 z-10 rounded p-2 text-slate-500 transition-colors hover:bg-slate-500/10 hover:text-slate-500 focus:ring-0 focus:ring-offset-0 active:bg-slate-500/20"
                     onClick={onCancel}
                   >
-                    <X className="h-4" />
+                    <XIcon className="h-4" />
                   </button>
                 ) : null}
                 {content ?? (

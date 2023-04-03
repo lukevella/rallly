@@ -1,5 +1,4 @@
-import ArrowLeft from "@rallly/icons/arrow-left.svg";
-import ArrowRight from "@rallly/icons/arrow-right.svg";
+import { ArrowLeftIcon, ArrowRightIcon } from "@rallly/icons";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
@@ -150,7 +149,7 @@ const Poll: React.FunctionComponent = () => {
                     onClick={goToPreviousPage}
                     disabled={scrollPosition === 0}
                   >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeftIcon className="h-4 w-4" />
                   </Button>
                   <Button
                     className="text-xs"
@@ -159,7 +158,7 @@ const Poll: React.FunctionComponent = () => {
                       goToNextPage();
                     }}
                   >
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRightIcon className="h-4 w-4" />
                   </Button>
                 </div>
               ) : null}

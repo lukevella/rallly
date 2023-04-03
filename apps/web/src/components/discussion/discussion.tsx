@@ -1,6 +1,5 @@
 import { trpc } from "@rallly/backend";
-import DotsHorizontal from "@rallly/icons/dots-horizontal.svg";
-import Trash from "@rallly/icons/trash.svg";
+import { DotsHorizontalIcon, TrashIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -110,10 +109,10 @@ const Discussion: React.FunctionComponent = () => {
                   {canDelete && (
                     <Dropdown
                       placement="bottom-start"
-                      trigger={<CompactButton icon={DotsHorizontal} />}
+                      trigger={<CompactButton icon={DotsHorizontalIcon} />}
                     >
                       <DropdownItem
-                        icon={Trash}
+                        icon={TrashIcon}
                         label={t("deleteComment")}
                         onClick={() => {
                           deleteComment.mutate({
