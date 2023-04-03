@@ -7,6 +7,7 @@ import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
 import posthog from "posthog-js";
@@ -85,6 +86,12 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           appId: "920386682263077",
         }}
       />
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=yes"
+        />
+      </Head>
       <style jsx global>{`
         html {
           --font-inter: ${inter.style.fontFamily};

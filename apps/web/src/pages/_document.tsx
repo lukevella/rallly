@@ -91,10 +91,6 @@ export default function Document() {
           name="msapplication-square310x310logo"
           content="mstile-310x310.png"
         />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=yes"
-        />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#f9fafb" />
