@@ -1,0 +1,5 @@
+{
+  "extends": "@rallly/tsconfig/package.json",
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

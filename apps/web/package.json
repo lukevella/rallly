@@ -18,6 +18,7 @@
   "dependencies": {
     "@rallly/backend": "*",
     "@rallly/database": "*",
+    "@rallly/languages":"*",
     "@rallly/tailwind-config": "*",
     "@floating-ui/react-dom-interactions": "^0.13.3",
     "@headlessui/react": "^1.7.7",
