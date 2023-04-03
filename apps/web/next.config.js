@@ -13,7 +13,7 @@ const nextConfig = {
   i18n: i18n,
   productionBrowserSourceMaps: true,
   output: "standalone",
-  transpilePackages: ["@rallly/backend"],
+  transpilePackages: ["@rallly/backend", "@rallly/icons"],
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
