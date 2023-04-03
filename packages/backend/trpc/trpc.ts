@@ -17,7 +17,7 @@ export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
 
 const checkAuthIfRequired = middleware(async ({ ctx, next }) => {
-  if (process.env.AUTH_REQUIRED === "true" && ctx.session) {
+  if (process.env.AUTH_REQUIRED === "true" && ctx.session.user.isGuest) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "Login is required" });
   }
   return next();
