@@ -61,7 +61,7 @@ export const participants = router({
       }),
     )
     .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
-      const user = ctx.session.user;
+      const { user } = ctx;
 
       const poll = await prisma.poll.findUnique({
         where: { id: pollId },

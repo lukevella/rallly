@@ -27,7 +27,7 @@ const optionValues = ["2022-12-14", "2022-12-15", "2022-12-16", "2022-12-17"];
 
 export const demo = router({
   create: possiblyPublicProcedure.mutation(async () => {
-    const adminUrlId = await nanoid();
+    const adminUrlId = nanoid();
     const demoUser = { name: "John Example", email: "noreply@rallly.co" };
 
     const options: Array<{ start: Date; id: string }> = [];
@@ -72,13 +72,13 @@ export const demo = router({
 
     await prisma.poll.create({
       data: {
-        id: await nanoid(),
+        id: nanoid(),
         title: "Lunch Meeting",
         location: "Starbucks, 901 New York Avenue",
         description: `Hey everyone, please choose the dates when you are available to meet for our monthly get together. Looking forward to see you all!`,
         demo: true,
         adminUrlId,
-        participantUrlId: await nanoid(),
+        participantUrlId: nanoid(),
         user: {
           connectOrCreate: {
             where: {

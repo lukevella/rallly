@@ -6,7 +6,7 @@ type UserSessionData = { id: string; isGuest: boolean };
 
 declare module "iron-session" {
   export interface IronSessionData {
-    user: UserSessionData;
+    user?: UserSessionData;
   }
 }
 

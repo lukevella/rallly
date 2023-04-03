@@ -17,7 +17,7 @@ export async function createContext(
       isGuest: true,
     };
     opts.req.session.user = user;
-    await opts.req.session.save();
+    opts.req.session.save();
   }
   return { user, session: opts.req.session };
 }
