@@ -1,4 +1,4 @@
-import { sealData, unsealData } from "iron-session";
+import { sealData, unsealData } from "iron-session/edge";
 
 import { sessionConfig } from "./session-config";
 
