@@ -53,8 +53,8 @@ export const polls = router({
     )
     .mutation(
       async ({ ctx, input }): Promise<{ id: string; urlId: string }> => {
-        const adminUrlId = await nanoid();
-        const participantUrlId = await nanoid();
+        const adminUrlId = nanoid();
+        const participantUrlId = nanoid();
 
         let email = input.user?.email;
         let name = input.user?.name;
@@ -83,7 +83,7 @@ export const polls = router({
             title: true,
           },
           data: {
-            id: await nanoid(),
+            id: nanoid(),
             title: input.title,
             timeZone: input.timeZone,
             location: input.location,
