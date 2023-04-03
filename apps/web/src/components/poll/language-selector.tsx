@@ -1,9 +1,8 @@
+import ChevronDown from "@rallly/icons/chevron-down.svg";
 import languages from "@rallly/languages";
 import clsx from "clsx";
 import Cookies from "js-cookie";
 import { useTranslation } from "next-i18next";
-
-import ChevronDown from "@/components/icons/chevron-down.svg";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;

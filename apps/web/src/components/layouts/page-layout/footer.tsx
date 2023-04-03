@@ -1,12 +1,12 @@
+import Discord from "@rallly/icons/discord.svg";
+import Star from "@rallly/icons/star.svg";
+import Translate from "@rallly/icons/translate.svg";
+import Twitter from "@rallly/icons/twitter.svg";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
-import Discord from "@/components/icons/discord.svg";
-import Star from "@/components/icons/star.svg";
-import Translate from "@/components/icons/translate.svg";
-import Twitter from "@/components/icons/twitter.svg";
 import DigitalOcean from "~//digitalocean.svg";
 import Logo from "~//logo.svg";
 import Sentry from "~//sentry.svg";

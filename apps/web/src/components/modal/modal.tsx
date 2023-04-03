@@ -1,8 +1,7 @@
 import { Dialog } from "@headlessui/react";
+import X from "@rallly/icons/x.svg";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
-
-import X from "@/components/icons/x.svg";
 
 import { Button, ButtonProps } from "../button";
 

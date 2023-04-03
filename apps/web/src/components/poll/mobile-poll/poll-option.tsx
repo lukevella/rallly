@@ -1,10 +1,9 @@
 import { Participant, VoteType } from "@rallly/database";
+import ChevronDown from "@rallly/icons/chevron-down.svg";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-
-import ChevronDown from "@/components/icons/chevron-down.svg";
 
 import { useParticipants } from "../../participants-provider";
 import { ConnectedScoreSummary } from "../score-summary";

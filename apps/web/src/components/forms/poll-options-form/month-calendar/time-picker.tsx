@@ -6,6 +6,7 @@ import {
   useFloating,
 } from "@floating-ui/react-dom-interactions";
 import { Listbox } from "@headlessui/react";
+import ChevronDown from "@rallly/icons/chevron-down.svg";
 import clsx from "clsx";
 import * as React from "react";
 
@@ -13,7 +14,6 @@ import { getDuration } from "@/utils/date-time-utils";
 import { stopPropagation } from "@/utils/stop-propagation";
 
 import { useDayjs } from "../../../../utils/dayjs";
-import ChevronDown from "../../../icons/chevron-down.svg";
 import { styleMenuItem } from "../../../menu-styles";
 
 export interface TimePickerProps {

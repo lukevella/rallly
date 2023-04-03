@@ -1,9 +1,8 @@
+import Code from "@rallly/icons/code.svg";
+import CursorClick from "@rallly/icons/cursor-click.svg";
+import Server from "@rallly/icons/server.svg";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-
-import Code from "@/components/icons/code.svg";
-import CursorClick from "@/components/icons/cursor-click.svg";
-import Server from "@/components/icons/server.svg";
 
 import Ban from "./ban-ads.svg";
 

@@ -1,9 +1,9 @@
+import Exclamation from "@rallly/icons/exclamation.svg";
+import LockClosed from "@rallly/icons/lock-closed.svg";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import Discussion from "@/components/discussion";
-import Exclamation from "@/components/icons/exclamation.svg";
-import LockClosed from "@/components/icons/lock-closed.svg";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { preventWidows } from "@/utils/prevent-widows";

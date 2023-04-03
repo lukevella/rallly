@@ -1,6 +1,5 @@
+import SpinnerSvg from "@rallly/icons/spinner.svg";
 import clsx from "clsx";
-
-import SpinnerSvg from "@/components/icons/spinner.svg";
 
 export const Spinner = (props: { className?: string }) => {
   return (

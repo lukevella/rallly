@@ -1,9 +1,9 @@
+import Share from "@rallly/icons/share.svg";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Button } from "@/components/button";
-import Share from "@/components/icons/share.svg";
 
 import { useParticipants } from "./participants-provider";
 import ManagePoll from "./poll/manage-poll";

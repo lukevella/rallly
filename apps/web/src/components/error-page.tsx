@@ -1,9 +1,8 @@
+import EmojiSad from "@rallly/icons/emoji-sad.svg";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-
-import EmojiSad from "@/components/icons/emoji-sad.svg";
 
 export interface ComponentProps {
   icon?: React.ComponentType<{ className?: string }>;

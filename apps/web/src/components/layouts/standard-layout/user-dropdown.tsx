@@ -1,12 +1,12 @@
+import Login from "@rallly/icons/login.svg";
+import Logout from "@rallly/icons/logout.svg";
+import Question from "@rallly/icons/question-mark-circle.svg";
+import User from "@rallly/icons/user.svg";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { useLoginModal } from "@/components/auth/login-modal";
 import Dropdown, { DropdownItem, DropdownProps } from "@/components/dropdown";
-import Login from "@/components/icons/login.svg";
-import Logout from "@/components/icons/logout.svg";
-import Question from "@/components/icons/question-mark-circle.svg";
-import User from "@/components/icons/user.svg";
 import { useModalContext } from "@/components/modal/modal-provider";
 import { useUser } from "@/components/user-provider";
 

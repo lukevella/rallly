@@ -1,4 +1,8 @@
 import { trpc } from "@rallly/backend";
+import DotsHorizontal from "@rallly/icons/dots-horizontal.svg";
+import Pencil from "@rallly/icons/pencil-alt.svg";
+import Tag from "@rallly/icons/tag.svg";
+import Trash from "@rallly/icons/trash.svg";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -6,10 +10,6 @@ import { useMount } from "react-use";
 
 import { Button } from "@/components/button";
 import Dropdown, { DropdownItem } from "@/components/dropdown";
-import DotsHorizontal from "@/components/icons/dots-horizontal.svg";
-import Pencil from "@/components/icons/pencil-alt.svg";
-import Tag from "@/components/icons/tag.svg";
-import Trash from "@/components/icons/trash.svg";
 import Modal from "@/components/modal/modal";
 import { useModalState } from "@/components/modal/use-modal";
 import { useDeleteParticipantModal } from "@/components/poll/use-delete-participant-modal";

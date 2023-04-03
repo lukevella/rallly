@@ -1,7 +1,6 @@
+import SpinnerIcon from "@rallly/icons/spinner.svg";
 import clsx from "clsx";
 import * as React from "react";
-
-import SpinnerIcon from "@/components/icons/spinner.svg";
 
 export interface ButtonProps
   extends Omit<

@@ -1,11 +1,11 @@
 import { trpc } from "@rallly/backend";
+import CheckCircle from "@rallly/icons/check-circle.svg";
+import Speakerphone from "@rallly/icons/speakerphone.svg";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/button";
-import CheckCircle from "@/components/icons/check-circle.svg";
-import Speakerphone from "@/components/icons/speakerphone.svg";
 import { Logo } from "@/components/logo";
 import { useModalState } from "@/components/modal/use-modal";
 import Tooltip from "@/components/tooltip";

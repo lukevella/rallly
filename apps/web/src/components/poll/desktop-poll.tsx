@@ -1,9 +1,8 @@
+import ArrowLeft from "@rallly/icons/arrow-left.svg";
+import ArrowRight from "@rallly/icons/arrow-right.svg";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
-
-import ArrowLeft from "@/components/icons/arrow-left.svg";
-import ArrowRight from "@/components/icons/arrow-right.svg";
 
 import { Button } from "../button";
 import { useNewParticipantModal } from "../new-participant-modal";

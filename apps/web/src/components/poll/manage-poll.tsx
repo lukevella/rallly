@@ -1,16 +1,16 @@
 import { Placement } from "@floating-ui/react-dom-interactions";
+import Cog from "@rallly/icons/cog.svg";
+import LockClosed from "@rallly/icons/lock-closed.svg";
+import LockOpen from "@rallly/icons/lock-open.svg";
+import Pencil from "@rallly/icons/pencil-alt.svg";
+import Save from "@rallly/icons/save.svg";
+import Table from "@rallly/icons/table.svg";
+import Trash from "@rallly/icons/trash.svg";
 import dayjs from "dayjs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { Button } from "@/components/button";
-import Cog from "@/components/icons/cog.svg";
-import LockClosed from "@/components/icons/lock-closed.svg";
-import LockOpen from "@/components/icons/lock-open.svg";
-import Pencil from "@/components/icons/pencil-alt.svg";
-import Save from "@/components/icons/save.svg";
-import Table from "@/components/icons/table.svg";
-import Trash from "@/components/icons/trash.svg";
 import { encodeDateOption } from "@/utils/date-time-utils";
 
 import Dropdown, { DropdownItem } from "../dropdown";

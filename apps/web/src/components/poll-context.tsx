@@ -1,9 +1,9 @@
 import { Participant, Vote, VoteType } from "@rallly/database";
+import Trash from "@rallly/icons/trash.svg";
 import { keyBy } from "lodash";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import Trash from "@/components/icons/trash.svg";
 import {
   decodeOptions,
   getBrowserTimeZone,

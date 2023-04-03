@@ -1,17 +1,17 @@
+import Adjustments from "@rallly/icons/adjustments.svg";
+import Beaker from "@rallly/icons/beaker.svg";
+import Home from "@rallly/icons/home.svg";
+import Login from "@rallly/icons/login.svg";
+import Menu from "@rallly/icons/menu.svg";
+import Pencil from "@rallly/icons/pencil.svg";
+import Support from "@rallly/icons/support.svg";
+import UserCircle from "@rallly/icons/user-circle.svg";
 import clsx from "clsx";
 import { AnimatePresence } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { LoginLink } from "@/components/auth/login-modal";
-import Adjustments from "@/components/icons/adjustments.svg";
-import Beaker from "@/components/icons/beaker.svg";
-import Home from "@/components/icons/home.svg";
-import Login from "@/components/icons/login.svg";
-import Menu from "@/components/icons/menu.svg";
-import Pencil from "@/components/icons/pencil.svg";
-import Support from "@/components/icons/support.svg";
-import UserCircle from "@/components/icons/user-circle.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/popover";
 import Preferences from "@/components/preferences";
 import { useUser } from "@/components/user-provider";
