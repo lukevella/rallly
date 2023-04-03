@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
-import DotsVertical from "@/components/icons/dots-vertical.svg";
-import Github from "@/components/icons/github.svg";
+import DotsVertical from "@rallly/icons/dots-vertical.svg";
+import Github from "@rallly/icons/github.svg";
 import Logo from "~//logo.svg";
 
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";

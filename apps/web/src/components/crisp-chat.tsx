@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import Chat from "@/components/icons/chat.svg";
+import Chat from "@rallly/icons/chat.svg";
 
 import { Button } from "./button";
 

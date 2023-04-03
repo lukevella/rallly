@@ -5,8 +5,8 @@ import * as React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
-import ChevronDown from "@/components/icons/chevron-down.svg";
-import PlusCircle from "@/components/icons/plus-circle.svg";
+import ChevronDown from "@rallly/icons/chevron-down.svg";
+import PlusCircle from "@rallly/icons/plus-circle.svg";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { You } from "@/components/you";

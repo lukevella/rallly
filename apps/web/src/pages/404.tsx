@@ -4,7 +4,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import React from "react";
 
 import ErrorPage from "@/components/error-page";
-import DocumentSearch from "@/components/icons/document-search.svg";
+import DocumentSearch from "@rallly/icons/document-search.svg";
 import { getStandardLayout } from "@/components/layouts/standard-layout";
 import { NextPageWithLayout } from "@/types";
 

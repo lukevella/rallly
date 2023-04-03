@@ -6,12 +6,12 @@ import {
   useFloating,
 } from "@floating-ui/react-dom-interactions";
 import { Combobox } from "@headlessui/react";
+import ChevronDown from "@rallly/icons/chevron-down.svg";
 import clsx from "clsx";
 import React from "react";
 import spacetime from "spacetime";
 import soft from "timezone-soft";
 
-import ChevronDown from "../../components/icons/chevron-down.svg";
 import { styleMenuItem } from "../menu-styles";
 import timeZones from "./time-zones.json";
 

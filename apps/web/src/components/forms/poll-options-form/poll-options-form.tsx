@@ -1,3 +1,5 @@
+import Calendar from "@rallly/icons/calendar.svg";
+import Table from "@rallly/icons/table.svg";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -5,8 +7,6 @@ import { Controller, useForm } from "react-hook-form";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import FullPageLoader from "../../full-page-loader";
-import Calendar from "../../icons/calendar.svg";
-import Table from "../../icons/table.svg";
 import { useModal } from "../../modal";
 import TimeZonePicker from "../../time-zone-picker";
 import { PollFormProps } from "../types";

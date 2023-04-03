@@ -12,7 +12,7 @@ import { Trans, useTranslation } from "next-i18next";
 import React from "react";
 import { useMount } from "react-use";
 
-import Bell from "@/components/icons/bell-crossed.svg";
+import Bell from "@rallly/icons/bell-crossed.svg";
 import { AuthLayout } from "@/components/layouts/auth-layout";
 import { Spinner } from "@/components/spinner";
 import { usePostHog } from "@/utils/posthog";

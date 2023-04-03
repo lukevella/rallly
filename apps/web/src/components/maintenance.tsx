@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import Clock from "@/components/icons/clock.svg";
+import Clock from "@rallly/icons/clock.svg";
 
 import Logo from "../../public/logo.svg";
 

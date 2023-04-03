@@ -6,10 +6,10 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import Badge from "@/components/badge";
-import Calendar from "@/components/icons/calendar.svg";
-import LockClosed from "@/components/icons/lock-closed.svg";
-import Pencil from "@/components/icons/pencil.svg";
-import User from "@/components/icons/user.svg";
+import Calendar from "@rallly/icons/calendar.svg";
+import LockClosed from "@rallly/icons/lock-closed.svg";
+import Pencil from "@rallly/icons/pencil.svg";
+import User from "@rallly/icons/user.svg";
 import Tooltip from "@/components/tooltip";
 
 import { useDayjs } from "../utils/dayjs";

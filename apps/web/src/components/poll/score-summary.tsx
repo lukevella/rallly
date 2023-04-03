@@ -3,7 +3,7 @@ import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
-import CheckCircle from "@/components/icons/check-circle.svg";
+import CheckCircle from "@rallly/icons/check-circle.svg";
 import { usePoll } from "@/components/poll-context";
 
 export interface PopularityScoreProps {
