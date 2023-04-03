@@ -54,8 +54,7 @@
       "outputs": []
     },
     "dev": {
-      "cache": false,
-      "persistent": true
+      "cache": false
     },
     "start": {
       "cache": false,
