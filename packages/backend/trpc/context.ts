@@ -4,14 +4,21 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import { GetServerSidePropsContext } from "next";
 import superjson from "superjson";
 
-import { getCurrentUser } from "../utils/auth";
-import { appRouter } from "./routers/_app";
+import { randomid } from "../utils/nanoid";
+import { appRouter } from "./routers";
 
 export async function createContext(
   opts: trpcNext.CreateNextContextOptions | GetServerSidePropsContext,
 ) {
-  const user = await getCurrentUser(opts.req.session);
-
+  let user = opts.req.session.user;
+  if (!user) {
+    user = {
+      id: `user-${randomid()}`,
+      isGuest: true,
+    };
+    opts.req.session.user = user;
+    await opts.req.session.save();
+  }
   return { user, session: opts.req.session };
 }
 

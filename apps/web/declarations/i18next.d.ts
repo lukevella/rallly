@@ -1,9 +1,9 @@
 import "react-i18next";
 
-import app from "~/public/locales/en/app.json";
-import common from "~/public/locales/en/common.json";
-import errors from "~/public/locales/en/errors.json";
-import homepage from "~/public/locales/en/homepage.json";
+import app from "../public/locales/en/app.json";
+import common from "../public/locales/en/common.json";
+import errors from "../public/locales/en/errors.json";
+import homepage from "../public/locales/en/homepage.json";
 
 interface I18nNamespaces {
   homepage: typeof homepage;

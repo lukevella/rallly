@@ -1,10 +1,10 @@
+import { trpc } from "@rallly/backend";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { usePostHog } from "@/utils/posthog";
 
-import { trpc } from "../utils/trpc";
 import { Button } from "./button";
 import {
   NewEventData,

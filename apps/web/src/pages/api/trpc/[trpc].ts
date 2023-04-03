@@ -1,8 +1,4 @@
-import * as trpcNext from "@trpc/server/adapters/next";
-
-import { createContext } from "../../../server/context";
-import { appRouter } from "../../../server/routers/_app";
-import { withSessionRoute } from "../../../utils/auth";
+import { trpcNextApiHandler } from "@rallly/backend/next/trpc/server";
 
 export const config = {
   api: {
@@ -10,9 +6,4 @@ export const config = {
   },
 };
 // export API handler
-export default withSessionRoute(
-  trpcNext.createNextApiHandler({
-    router: appRouter,
-    createContext,
-  }),
-);
+export default trpcNextApiHandler;

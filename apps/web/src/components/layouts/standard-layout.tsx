@@ -2,6 +2,7 @@ import { domMax, LazyMotion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import React from "react";
+import { Toaster } from "react-hot-toast";
 
 import { DayjsProvider } from "@/utils/dayjs";
 
@@ -34,6 +35,7 @@ const StandardLayout: React.FunctionComponent<{
 }> = ({ children, ...rest }) => {
   return (
     <LazyMotion features={domMax}>
+      <Toaster />
       <UserProvider>
         <DayjsProvider>
           <ModalProvider>

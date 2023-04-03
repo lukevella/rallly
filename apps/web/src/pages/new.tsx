@@ -1,3 +1,4 @@
+import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useTranslation } from "react-i18next";
@@ -6,7 +7,6 @@ import CreatePoll from "@/components/create-poll";
 
 import StandardLayout from "../components/layouts/standard-layout";
 import { NextPageWithLayout } from "../types";
-import { withAuthIfRequired, withSessionSsr } from "../utils/auth";
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {

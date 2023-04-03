@@ -1,10 +1,10 @@
 import { prisma } from "@rallly/database";
 import { sendEmail } from "@rallly/emails";
+import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import { z } from "zod";
 
-import { absoluteUrl } from "../../utils/absolute-url";
 import { nanoid } from "../../utils/nanoid";
 import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";

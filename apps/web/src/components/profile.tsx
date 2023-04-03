@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,7 +13,6 @@ import User from "@/components/icons/user.svg";
 import Tooltip from "@/components/tooltip";
 
 import { useDayjs } from "../utils/dayjs";
-import { trpc } from "../utils/trpc";
 import { EmptyState } from "./empty-state";
 import { UserDetails } from "./profile/user-details";
 import { useUser } from "./user-provider";

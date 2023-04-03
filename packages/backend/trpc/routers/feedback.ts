@@ -2,7 +2,7 @@ import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
 import { z } from "zod";
 
-import { publicProcedure, router } from "@/server/trpc";
+import { publicProcedure, router } from "../trpc";
 
 export const feedback = router({
   send: publicProcedure
@@ -27,7 +27,7 @@ export const feedback = router({
         to: process.env.NEXT_PUBLIC_FEEDBACK_EMAIL,
         from: {
           name: "Rallly Feedback Form",
-          address: process.env.SUPPORT_EMAIL,
+          address: process.env.SUPPORT_EMAIL ?? "",
         },
         subject: "Feedback",
         replyTo,

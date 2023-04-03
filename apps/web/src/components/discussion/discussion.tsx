@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -7,7 +8,6 @@ import { usePostHog } from "@/utils/posthog";
 
 import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
-import { trpc } from "../../utils/trpc";
 import { Button } from "../button";
 import CompactButton from "../compact-button";
 import Dropdown, { DropdownItem } from "../dropdown";

@@ -1,0 +1,6 @@
+{
+  "extends": "@rallly/tsconfig/react-library.json",
+  "include": ["**/*.ts", "**/*.tsx", "iron-session.d.t.s"],
+
+  "exclude": ["node_modules"]
+}

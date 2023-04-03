@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
@@ -6,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
-import { trpc } from "../../utils/trpc";
 import { Button } from "../button";
 import { TextInput } from "../text-input";
 

@@ -1,7 +1,8 @@
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
-import "~/style.css";
+import "../style.css";
 
+import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
 import { inject } from "@vercel/analytics";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -12,15 +13,12 @@ import { DefaultSeo } from "next-seo";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import React from "react";
-import { Toaster } from "react-hot-toast";
 
 import Maintenance from "@/components/maintenance";
 
 import { useCrispChat } from "../components/crisp-chat";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
-import { UserSession } from "../utils/auth";
-import { trpc } from "../utils/trpc";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -94,7 +92,6 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=yes"
         />
       </Head>
-      <Toaster />
       <style jsx global>{`
         html {
           --font-inter: ${inter.style.fontFamily};

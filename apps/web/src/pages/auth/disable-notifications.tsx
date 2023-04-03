@@ -1,3 +1,9 @@
+import { DisableNotificationsPayload } from "@rallly/backend";
+import {
+  composeGetServerSideProps,
+  withSessionSsr,
+} from "@rallly/backend/next";
+import { decryptToken } from "@rallly/backend/session";
 import { prisma } from "@rallly/database";
 import clsx from "clsx";
 import Link from "next/link";
@@ -9,12 +15,6 @@ import { useMount } from "react-use";
 import Bell from "@/components/icons/bell-crossed.svg";
 import { AuthLayout } from "@/components/layouts/auth-layout";
 import { Spinner } from "@/components/spinner";
-import {
-  composeGetServerSideProps,
-  decryptToken,
-  DisableNotificationsPayload,
-  withSessionSsr,
-} from "@/utils/auth";
 import { usePostHog } from "@/utils/posthog";
 import { withPageTranslations } from "@/utils/with-page-translations";
 

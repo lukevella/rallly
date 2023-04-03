@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 
-import { createGuestUser, UserSession } from "../../utils/auth";
 import { publicProcedure, router } from "../trpc";
+import { UserSession } from "../types";
 
 export const whoami = router({
   get: publicProcedure.query(async ({ ctx }): Promise<UserSession> => {
@@ -15,11 +15,8 @@ export const whoami = router({
     });
 
     if (user === null) {
-      const guestUser = await createGuestUser();
-      ctx.session.user = guestUser;
-      await ctx.session.save();
-
-      return guestUser;
+      ctx.session.destroy();
+      throw new Error("User not found");
     }
 
     return { isGuest: false, ...user };

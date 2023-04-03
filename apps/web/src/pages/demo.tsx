@@ -1,3 +1,5 @@
+import { trpc } from "@rallly/backend";
+import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
@@ -8,8 +10,6 @@ import { usePostHog } from "@/utils/posthog";
 
 import FullPageLoader from "../components/full-page-loader";
 import { withSession } from "../components/user-provider";
-import { withAuthIfRequired, withSessionSsr } from "../utils/auth";
-import { trpc } from "../utils/trpc";
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Demo: NextPage = () => {

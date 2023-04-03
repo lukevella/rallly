@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -15,7 +16,6 @@ import { useDeleteParticipantModal } from "@/components/poll/use-delete-particip
 import { TextInput } from "@/components/text-input";
 import { useFormValidation } from "@/utils/form-validation";
 import { usePostHog } from "@/utils/posthog";
-import { trpc } from "@/utils/trpc";
 
 import { Participant } from ".prisma/client";
 

@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
@@ -8,7 +9,6 @@ import Speakerphone from "@/components/icons/speakerphone.svg";
 import { Logo } from "@/components/logo";
 import { useModalState } from "@/components/modal/use-modal";
 import Tooltip from "@/components/tooltip";
-import { trpc } from "@/utils/trpc";
 
 const FeedbackForm = (props: { onClose: () => void }) => {
   const { t } = useTranslation("app");

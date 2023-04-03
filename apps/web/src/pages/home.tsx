@@ -1,7 +1,7 @@
+import { composeGetServerSideProps } from "@rallly/backend/next";
 import { GetServerSideProps } from "next";
 
 import Home from "@/components/home";
-import { composeGetServerSideProps } from "@/utils/auth";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 export default function Page() {

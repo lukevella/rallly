@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import Logo from "~/public/logo.svg";
+import Logo from "~//logo.svg";
 
 export const HomeLink = (props: { className?: string }) => {
   return (

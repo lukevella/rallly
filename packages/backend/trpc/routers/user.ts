@@ -1,26 +1,13 @@
 import { prisma } from "@rallly/database";
-import { TRPCError } from "@trpc/server";
-import { IronSessionData } from "iron-session";
 import { z } from "zod";
 
 import { publicProcedure, router } from "../trpc";
 
-const requireUser = (user: IronSessionData["user"]) => {
-  if (!user) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Tried to access user route without a session",
-    });
-  }
-  return user;
-};
-
 export const user = router({
   getPolls: publicProcedure.query(async ({ ctx }) => {
-    const user = requireUser(ctx.session.user);
     const userPolls = await prisma.user.findUnique({
       where: {
-        id: user.id,
+        id: ctx.user.id,
       },
       select: {
         polls: {

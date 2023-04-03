@@ -1,6 +1,7 @@
+import { trpc } from "@rallly/backend";
+
 import { usePostHog } from "@/utils/posthog";
 
-import { trpc } from "../../utils/trpc";
 import { ParticipantForm } from "./types";
 
 export const normalizeVotes = (

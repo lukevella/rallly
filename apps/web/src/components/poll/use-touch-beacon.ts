@@ -1,6 +1,5 @@
+import { trpc } from "@rallly/backend";
 import { useMount } from "react-use";
-
-import { trpc } from "../../utils/trpc";
 
 /**
  * Touching a poll updates a column with the current date. This information is used to

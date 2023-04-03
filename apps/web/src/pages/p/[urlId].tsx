@@ -1,3 +1,6 @@
+import { trpc } from "@rallly/backend";
+import { withSessionSsr } from "@rallly/backend/next";
+import { decryptToken } from "@rallly/backend/session";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -7,8 +10,6 @@ import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
 import { UserProvider, useUser } from "@/components/user-provider";
-import { decryptToken, withSessionSsr } from "@/utils/auth";
-import { trpc } from "@/utils/trpc";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 import StandardLayout from "../../components/layouts/standard-layout";

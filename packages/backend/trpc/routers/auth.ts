@@ -1,19 +1,40 @@
 import { prisma } from "@rallly/database";
 import { sendEmail } from "@rallly/emails";
+import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { absoluteUrl } from "@/utils/absolute-url";
-
-import {
-  createToken,
-  decryptToken,
-  LoginTokenPayload,
-  mergeGuestsIntoUser,
-  RegistrationTokenPayload,
-} from "../../utils/auth";
+import { createToken, decryptToken } from "../../session";
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
+import { LoginTokenPayload, RegistrationTokenPayload } from "../types";
+
+// assigns participants and comments created by guests to a user
+// we could have multiple guests because a login might be triggered from one device
+// and opened in another one.
+const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
+  await prisma.participant.updateMany({
+    where: {
+      userId: {
+        in: guestIds,
+      },
+    },
+    data: {
+      userId: userId,
+    },
+  });
+
+  await prisma.comment.updateMany({
+    where: {
+      userId: {
+        in: guestIds,
+      },
+    },
+    data: {
+      userId: userId,
+    },
+  });
+};
 
 const isEmailBlocked = (email: string) => {
   if (process.env.ALLOWED_EMAILS) {

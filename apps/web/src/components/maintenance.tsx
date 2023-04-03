@@ -1,7 +1,8 @@
 import Head from "next/head";
 
 import Clock from "@/components/icons/clock.svg";
-import Logo from "~/public/logo.svg";
+
+import Logo from "../../public/logo.svg";
 
 const Maintenance: React.FunctionComponent = () => {
   return (

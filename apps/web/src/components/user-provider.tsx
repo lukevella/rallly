@@ -1,16 +1,15 @@
+import { trpc, UserSession } from "@rallly/backend";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import { UserSession } from "@/utils/auth";
 import { usePostHog } from "@/utils/posthog";
 
-import { trpc } from "../utils/trpc";
 import { useRequiredContext } from "./use-required-context";
 
 export const UserContext = React.createContext<{
   user: UserSession & { shortName: string };
   refresh: () => void;
-  isUpdating: boolean;
   logout: () => void;
   ownsObject: (obj: { userId: string | null }) => boolean;
 } | null>(null);
@@ -55,13 +54,10 @@ export const UserProvider = (props: {
   const queryClient = trpc.useContext();
   const { data: user } = trpc.whoami.get.useQuery();
 
-  const [isUpdating, setIsUpdating] = React.useState(false);
-
+  const router = useRouter();
   const logout = trpc.whoami.destroy.useMutation({
     onSuccess: async () => {
-      setIsUpdating(true);
-      await queryClient.whoami.invalidate();
-      setIsUpdating(false);
+      router.push("/logout");
     },
   });
 
@@ -91,7 +87,6 @@ export const UserProvider = (props: {
   return (
     <UserContext.Provider
       value={{
-        isUpdating,
         user: { ...user, shortName },
         refresh: () => {
           return queryClient.whoami.invalidate();

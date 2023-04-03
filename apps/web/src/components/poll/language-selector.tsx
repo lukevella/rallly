@@ -3,7 +3,8 @@ import Cookies from "js-cookie";
 import { useTranslation } from "next-i18next";
 
 import ChevronDown from "@/components/icons/chevron-down.svg";
-import languages from "~/languages.json";
+
+import languages from "../../../languages.json";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;

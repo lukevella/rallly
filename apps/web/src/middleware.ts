@@ -25,8 +25,10 @@ const supportedLocales = [
   "zh",
 ];
 
-export function middleware({ headers, cookies, nextUrl }: NextRequest) {
+export async function middleware(req: NextRequest) {
+  const { headers, cookies, nextUrl } = req;
   const newUrl = nextUrl.clone();
+  const res = NextResponse.next();
 
   // Check if locale is specified in cookie
   const localeCookie = cookies.get("NEXT_LOCALE");
@@ -50,7 +52,7 @@ export function middleware({ headers, cookies, nextUrl }: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return res;
 }
 
 export const config = {

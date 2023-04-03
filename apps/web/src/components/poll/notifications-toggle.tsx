@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -7,7 +8,6 @@ import Bell from "@/components/icons/bell.svg";
 import BellCrossed from "@/components/icons/bell-crossed.svg";
 import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
-import { trpc } from "@/utils/trpc";
 import { usePollByAdmin } from "@/utils/trpc/hooks";
 
 import { usePoll } from "../poll-context";

@@ -1,3 +1,4 @@
+import { withSessionSsr } from "@rallly/backend/next";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -8,7 +9,6 @@ import { AuthLayout } from "@/components/auth/auth-layout";
 import { LoginForm } from "@/components/auth/login-form";
 import { useUser, withSession } from "@/components/user-provider";
 
-import { withSessionSsr } from "../utils/auth";
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Page: NextPage<{ referer: string | null }> = () => {
