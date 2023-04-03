@@ -16,7 +16,6 @@ import React from "react";
 
 import Maintenance from "@/components/maintenance";
 
-import { useCrispChat } from "../components/crisp-chat";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
 
@@ -50,8 +49,6 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
 }
 
 const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
-  useCrispChat();
-
   React.useEffect(() => {
     if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
       // calling inject directly to avoid having this run for self-hosted instances
