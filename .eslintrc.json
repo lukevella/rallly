@@ -1,6 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "turbo"],
   "plugins": ["simple-import-sort", "@typescript-eslint"],
+  "ignorePatterns": ["**/playwright-report/*.js"],
   "overrides": [
     {
       "files": ["**/*.ts", "**/*.tsx"],
