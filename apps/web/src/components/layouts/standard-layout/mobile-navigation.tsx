@@ -137,7 +137,7 @@ export const MobileNavigation = (props: { className?: string }) => {
             <button
               role="button"
               type="button"
-              className="group flex items-center whitespace-nowrap rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+              className="group flex items-center whitespace-nowrap rounded px-2 py-1 font-medium transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
               <AdjustmentsIcon className="group-hover:text-primary-600 h-5 opacity-75" />
               <span className="ml-2 hidden sm:block">
