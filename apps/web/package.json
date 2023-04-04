@@ -25,7 +25,7 @@
     "@rallly/icons": "*",
     "@rallly/languages": "*",
     "@rallly/tailwind-config": "*",
-    "@sentry/nextjs": "^7.33.0",
+    "@sentry/nextjs": "^7.46.0",
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/typography": "^0.5.9",
     "@vercel/analytics": "^0.1.8",
