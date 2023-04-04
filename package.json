@@ -22,6 +22,11 @@
     "apps/*",
     "packages/*"
   ],
+  "dependencies": {
+    "next": "^13.2.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
   "devDependencies": {
     "dotenv-cli": "^7.1.0",
     "prettier": "^2.8.4",

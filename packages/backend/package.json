@@ -18,7 +18,6 @@
     "@trpc/react-query": "^10.13.0",
     "@trpc/server": "^10.13.0",
     "iron-session": "^6.3.1",
-    "next": "^13.2.4",
     "superjson": "^1.12.2"
   }
 }
