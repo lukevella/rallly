@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "email dev --port 3333 --dir ./src/templates",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "lint:tsc": "tsc --noEmit"
   },
   "main": "./src/index.tsx",
   "types": "./src/index.tsx",
