@@ -76,7 +76,9 @@ test.describe.parallel(() => {
       wait: 5000,
     });
 
-    expect(email.headers.subject).toBe("Response submitted for Lunch Meeting");
+    expect(email.headers.subject).toBe(
+      "Thanks for responding to Lunch Meeting",
+    );
 
     const $ = load(email.html);
     const href = $("#editSubmissionUrl").attr("href");

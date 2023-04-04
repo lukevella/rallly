@@ -84,7 +84,7 @@ export const auth = router({
           return { ok: false, reason: "userAlreadyExists" };
         }
 
-        const code = await generateOtp();
+        const code = generateOtp();
 
         const token = await createToken<RegistrationTokenPayload>({
           name: input.name,
@@ -94,7 +94,7 @@ export const auth = router({
 
         await sendEmail("RegisterEmail", {
           to: input.email,
-          subject: "Please verify your email address",
+          subject: `${input.name}, please verify your email address`,
           props: {
             code,
             name: input.name,
@@ -171,7 +171,7 @@ export const auth = router({
           return { ok: false, reason: "userNotFound" };
         }
 
-        const code = await generateOtp();
+        const code = generateOtp();
 
         const token = await createToken<LoginTokenPayload>({
           userId: user.id,
@@ -180,7 +180,7 @@ export const auth = router({
 
         await sendEmail("LoginEmail", {
           to: input.email,
-          subject: "Login",
+          subject: `${code} is your 6-digit code`,
           props: {
             name: user.name,
             code,
