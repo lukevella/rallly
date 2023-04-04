@@ -44,8 +44,10 @@ async function main() {
                 Date.now(),
                 Date.now() + 1000 * 60 * 60 * 24 * 30,
                 randInt(16, 1),
-              ) //
+              )
               .map((date) => {
+                // rounded to nearest 15 minutes
+                date.setMinutes(Math.round(date.getMinutes() / 15) * 15);
                 return {
                   start: date,
                   duration,
