@@ -1,29 +1,8 @@
+import languages from "@rallly/languages";
 import languageParser from "accept-language-parser";
 import { NextRequest, NextResponse } from "next/server";
 
-const supportedLocales = [
-  "ca",
-  "cs",
-  "da",
-  "de",
-  "en",
-  "es",
-  "fi",
-  "fr",
-  "hu",
-  "hr",
-  "it",
-  "ko",
-  "nl",
-  "pl",
-  "pt",
-  "pt-BR",
-  "ru",
-  "sk",
-  "sv",
-  "vi",
-  "zh",
-];
+const supportedLocales = Object.keys(languages);
 
 export async function middleware(req: NextRequest) {
   const { headers, cookies, nextUrl } = req;
