@@ -1,8 +1,10 @@
 import { trpc } from "@rallly/backend";
-import DotsHorizontal from "@rallly/icons/dots-horizontal.svg";
-import Pencil from "@rallly/icons/pencil-alt.svg";
-import Tag from "@rallly/icons/tag.svg";
-import Trash from "@rallly/icons/trash.svg";
+import {
+  DotsHorizontalIcon,
+  PencilIcon,
+  TagIcon,
+  TrashIcon,
+} from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -40,25 +42,25 @@ export const ParticipantDropdown = ({
         placement="bottom-start"
         trigger={
           <Button data-testid="participant-menu">
-            <DotsHorizontal className="h-4 text-slate-500" />
+            <DotsHorizontalIcon className="h-4 text-slate-500" />
           </Button>
         }
       >
         <DropdownItem
           disabled={disabled}
-          icon={Pencil}
+          icon={PencilIcon}
           onClick={onEdit}
           label={t("editVotes")}
         />
         <DropdownItem
           disabled={disabled}
-          icon={Tag}
+          icon={TagIcon}
           onClick={showChangeNameModal}
           label={t("changeName")}
         />
         <DropdownItem
           disabled={disabled}
-          icon={Trash}
+          icon={TrashIcon}
           onClick={() =>
             confirmDeleteParticipant(participant.id, participant.name)
           }

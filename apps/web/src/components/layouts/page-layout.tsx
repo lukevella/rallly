@@ -1,5 +1,4 @@
-import DotsVertical from "@rallly/icons/dots-vertical.svg";
-import Github from "@rallly/icons/github.svg";
+import { DotsVerticalIcon, GithubIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { domAnimation, LazyMotion } from "framer-motion";
 import Link from "next/link";
@@ -52,7 +51,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
         href="https://github.com/lukevella/rallly"
         className="hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
       >
-        <Github className="w-6" />
+        <GithubIcon className="w-6" />
       </Link>
     </nav>
   );
@@ -78,7 +77,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           <Popover>
             <PopoverTrigger asChild={true}>
               <button className="hover:text-primary-600 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2 sm:hidden">
-                <DotsVertical className="w-5" />
+                <DotsVerticalIcon className="w-5" />
               </button>
             </PopoverTrigger>
             <PopoverContent align="end">

@@ -6,7 +6,7 @@ import {
   useFloating,
 } from "@floating-ui/react-dom-interactions";
 import { Combobox } from "@headlessui/react";
-import ChevronDown from "@rallly/icons/chevron-down.svg";
+import { ChevronDownIcon } from "@rallly/icons";
 import clsx from "clsx";
 import React from "react";
 import spacetime from "spacetime";
@@ -207,7 +207,7 @@ const TimeZonePicker: React.FunctionComponent<{
             {!query ? selectedTimeZone.label : null}
           </span>
           <span className="pointer-events-none flex">
-            <ChevronDown className="h-5 w-5" />
+            <ChevronDownIcon className="h-5 w-5" />
           </span>
         </Combobox.Button>
         <FloatingPortal>

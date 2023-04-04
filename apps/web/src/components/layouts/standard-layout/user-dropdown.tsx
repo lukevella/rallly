@@ -1,7 +1,9 @@
-import Login from "@rallly/icons/login.svg";
-import Logout from "@rallly/icons/logout.svg";
-import Question from "@rallly/icons/question-mark-circle.svg";
-import User from "@rallly/icons/user.svg";
+import {
+  LoginIcon,
+  LogoutIcon,
+  QuestionMarkCircleIcon,
+  UserIcon,
+} from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
@@ -26,7 +28,7 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
       {children}
       {user.isGuest ? (
         <DropdownItem
-          icon={Question}
+          icon={QuestionMarkCircleIcon}
           label={t("app:whatsThis")}
           onClick={() => {
             modalContext.render({
@@ -35,11 +37,11 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
                 <div className="w-96 max-w-full p-6 pt-28">
                   <div className="absolute left-0 -top-8 w-full text-center">
                     <div className="to-primary-600 inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400">
-                      <User className="h-7 text-white" />
+                      <UserIcon className="h-7 text-white" />
                     </div>
                     <div className="">
                       <div className="text-lg font-medium leading-snug">
-                        Guest
+                        {t("app:guest")}
                       </div>
                       <div className="text-sm text-slate-500">
                         {user.shortName}
@@ -68,20 +70,20 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
       {!user.isGuest ? (
         <DropdownItem
           href="/profile"
-          icon={User}
+          icon={UserIcon}
           label={t("app:yourProfile")}
         />
       ) : null}
       {user.isGuest ? (
         <DropdownItem
-          icon={Login}
+          icon={LoginIcon}
           label={t("app:login")}
           onClick={openLoginModal}
         />
       ) : null}
       {user.isGuest ? (
         <DropdownItem
-          icon={Logout}
+          icon={LogoutIcon}
           label={t("app:forgetMe")}
           onClick={() => {
             modalContext.render({
@@ -98,7 +100,11 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
           }}
         />
       ) : (
-        <DropdownItem icon={Logout} href="/logout" label={t("app:logout")} />
+        <DropdownItem
+          icon={LogoutIcon}
+          href="/logout"
+          label={t("app:logout")}
+        />
       )}
     </Dropdown>
   );

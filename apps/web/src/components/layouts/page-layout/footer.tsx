@@ -1,7 +1,9 @@
-import Discord from "@rallly/icons/discord.svg";
-import Star from "@rallly/icons/star.svg";
-import Translate from "@rallly/icons/translate.svg";
-import Twitter from "@rallly/icons/twitter.svg";
+import {
+  DiscordIcon,
+  StarIcon,
+  TranslateIcon,
+  TwitterIcon,
+} from "@rallly/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
@@ -57,19 +59,19 @@ const Footer: React.FunctionComponent = () => {
               href="https://twitter.com/ralllyco"
               className="hover:text-primary-600 text-sm text-slate-500 transition-colors hover:no-underline"
             >
-              <Twitter className="h-5 w-5" />
+              <TwitterIcon className="h-5 w-5" />
             </a>
             <a
               href="https://discord.gg/uzg4ZcHbuM"
               className="hover:text-primary-600 text-sm text-slate-500 transition-colors hover:no-underline"
             >
-              <Discord className="h-5 w-5" />
+              <DiscordIcon className="h-5 w-5" />
             </a>
             <a
               href="https://github.com/lukevella/rallly"
               className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
             >
-              <Star className="mr-2 inline-block w-5" />
+              <StarIcon className="mr-2 inline-block w-5" />
               <span>{t("starOnGithub")}</span>
             </a>
           </div>
@@ -146,7 +148,7 @@ const Footer: React.FunctionComponent = () => {
             href="https://github.com/lukevella/rallly/wiki/Guide-for-translators"
             className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
           >
-            <Translate className="mr-2 h-5 w-5" />
+            <TranslateIcon className="mr-2 h-5 w-5" />
             {t("volunteerTranslator")} &rarr;
           </a>
         </div>

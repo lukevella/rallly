@@ -1,6 +1,4 @@
-import Code from "@rallly/icons/code.svg";
-import CursorClick from "@rallly/icons/cursor-click.svg";
-import Server from "@rallly/icons/server.svg";
+import { CodeIcon, CursorClickIcon, ServerIcon } from "@rallly/icons";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -15,7 +13,7 @@ const Bonus: React.FunctionComponent = () => {
       <div className="grid grid-cols-4 gap-16">
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
-            <CursorClick className="w-16" />
+            <CursorClickIcon className="w-16" />
           </div>
           <h3 className="heading-sm">{t("noLoginRequired")}</h3>
           <div className="text text-base leading-relaxed">
@@ -24,7 +22,7 @@ const Bonus: React.FunctionComponent = () => {
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
-            <Code className="w-16" />
+            <CodeIcon className="w-16" />
           </div>
           <h3 className="heading-sm">{t("openSource")}</h3>
           <div className="text text-base leading-relaxed">
@@ -44,7 +42,7 @@ const Bonus: React.FunctionComponent = () => {
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
-            <Server className="w-16" />
+            <ServerIcon className="w-16" />
           </div>
           <h3 className="heading-sm">{t("selfHostable")}</h3>
           <div className="text text-base leading-relaxed">

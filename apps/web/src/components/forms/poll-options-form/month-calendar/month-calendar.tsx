@@ -1,11 +1,13 @@
-import Calendar from "@rallly/icons/calendar.svg";
-import ChevronLeft from "@rallly/icons/chevron-left.svg";
-import ChevronRight from "@rallly/icons/chevron-right.svg";
-import DotsHorizontal from "@rallly/icons/dots-horizontal.svg";
-import Magic from "@rallly/icons/magic.svg";
-import PlusSm from "@rallly/icons/plus-sm.svg";
-import Trash from "@rallly/icons/trash.svg";
-import X from "@rallly/icons/x.svg";
+import {
+  CalendarIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  DotsHorizontalIcon,
+  PlusSmIcon,
+  SparklesIcon,
+  TrashIcon,
+  XIcon,
+} from "@rallly/icons";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -86,7 +88,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
               <Button
-                icon={<ChevronLeft />}
+                icon={<ChevronLeftIcon />}
                 title={t("previousMonth")}
                 onClick={datepicker.prev}
               />
@@ -95,7 +97,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               </div>
               <Button
                 title={t("nextMonth")}
-                icon={<ChevronRight />}
+                icon={<ChevronRightIcon />}
                 onClick={datepicker.next}
               />
             </div>
@@ -305,7 +307,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                 }}
                               />
                               <CompactButton
-                                icon={X}
+                                icon={XIcon}
                                 onClick={() => {
                                   onChange([
                                     ...options.slice(0, index),
@@ -318,7 +320,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         })}
                         <div className="flex items-center space-x-3">
                           <Button
-                            icon={<PlusSm />}
+                            icon={<PlusSmIcon />}
                             onClick={() => {
                               const lastOption = expectTimeOption(
                                 optionsForDay[optionsForDay.length - 1].option,
@@ -350,11 +352,13 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             {t("addTimeOption")}
                           </Button>
                           <Dropdown
-                            trigger={<CompactButton icon={DotsHorizontal} />}
+                            trigger={
+                              <CompactButton icon={DotsHorizontalIcon} />
+                            }
                             placement="bottom-start"
                           >
                             <DropdownItem
-                              icon={Magic}
+                              icon={SparklesIcon}
                               disabled={datepicker.selection.length < 2}
                               label={t("applyToAllDates")}
                               onClick={() => {
@@ -393,7 +397,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             />
                             <DropdownItem
                               label={t("deleteDate")}
-                              icon={Trash}
+                              icon={TrashIcon}
                               onClick={() => {
                                 onChange(
                                   removeAllOptionsForDay(
@@ -421,7 +425,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       {...getDateProps(selectedDate)}
                       annotation={
                         <CompactButton
-                          icon={X}
+                          icon={XIcon}
                           onClick={() => {
                             // TODO (Luke Vella) [2022-03-19]: Find cleaner way to manage this state
                             // Quite tedious right now to remove a single element
@@ -438,7 +442,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           ) : (
             <div className="flex h-full items-center justify-center py-12">
               <div className="text-center font-medium text-gray-400">
-                <Calendar className="mb-2 inline-block h-12 w-12" />
+                <CalendarIcon className="mb-2 inline-block h-12 w-12" />
                 <div>{t("noDatesSelected")}</div>
               </div>
             </div>

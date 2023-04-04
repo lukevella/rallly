@@ -1,6 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import ChevronDown from "@rallly/icons/chevron-down.svg";
-import PlusCircle from "@rallly/icons/plus-circle.svg";
+import { ChevronDownIcon, PlusCircleIcon } from "@rallly/icons";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -129,7 +128,7 @@ const MobilePoll: React.FunctionComponent = () => {
                         t("participantCount", { count: participants.length })
                       )}
                     </div>
-                    <ChevronDown className="h-5 shrink-0" />
+                    <ChevronDownIcon className="h-5 shrink-0" />
                   </Listbox.Button>
                   <Listbox.Options
                     as={m.div}
@@ -201,7 +200,7 @@ const MobilePoll: React.FunctionComponent = () => {
             ) : (
               <Button
                 type="primary"
-                icon={<PlusCircle />}
+                icon={<PlusCircleIcon />}
                 disabled={poll.closed}
                 onClick={() => {
                   reset({

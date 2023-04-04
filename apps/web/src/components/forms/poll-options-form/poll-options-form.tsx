@@ -1,5 +1,4 @@
-import Calendar from "@rallly/icons/calendar.svg";
-import Table from "@rallly/icons/table.svg";
+import { CalendarIcon, TableIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -171,7 +170,7 @@ const PollOptionsForm: React.FunctionComponent<
               }}
               type="button"
             >
-              <Calendar className="mr-2 h-5 w-5" /> {t("monthView")}
+              <CalendarIcon className="mr-2 h-5 w-5" /> {t("monthView")}
             </button>
             <button
               className={clsx({
@@ -182,7 +181,7 @@ const PollOptionsForm: React.FunctionComponent<
                 setValue("view", "week");
               }}
             >
-              <Table className="mr-2 h-5 w-5" /> {t("weekView")}
+              <TableIcon className="mr-2 h-5 w-5" /> {t("weekView")}
             </button>
           </div>
         </div>

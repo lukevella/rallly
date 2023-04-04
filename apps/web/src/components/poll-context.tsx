@@ -1,5 +1,5 @@
 import { Participant, Vote, VoteType } from "@rallly/database";
-import Trash from "@rallly/icons/trash.svg";
+import { TrashIcon } from "@rallly/icons";
 import { keyBy } from "lodash";
 import { useTranslation } from "next-i18next";
 import React from "react";
@@ -173,7 +173,7 @@ export const PollContextProvider: React.FunctionComponent<{
   if (poll.deleted) {
     return (
       <ErrorPage
-        icon={Trash}
+        icon={TrashIcon}
         title={t("deletedPoll")}
         description={t("deletedPollInfo")}
       />

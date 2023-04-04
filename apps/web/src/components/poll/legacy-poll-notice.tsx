@@ -1,4 +1,4 @@
-import Speakerphone from "@rallly/icons/speakerphone.svg";
+import { SpeakerphoneIcon } from "@rallly/icons";
 import Cookies from "js-cookie";
 import * as React from "react";
 
@@ -30,7 +30,7 @@ const LegacyPollNotice: React.FunctionComponent<{ show?: boolean }> = ({
     <div className="mb-4 space-y-3 rounded-lg border bg-yellow-200 p-2 text-sm text-yellow-700 shadow-sm md:flex md:items-center md:space-y-0 md:space-x-4">
       <div className="flex space-x-3 md:grow md:items-center">
         <div className="h-9 w-9 rounded-lg bg-yellow-400 p-2">
-          <Speakerphone className="w-5" />
+          <SpeakerphoneIcon className="w-5" />
         </div>
         <div className="grow">
           Notice anything different? We&apos;ve announced a new version release.

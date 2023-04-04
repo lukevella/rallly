@@ -1,5 +1,4 @@
-import ChevronLeft from "@rallly/icons/chevron-left.svg";
-import ChevronRight from "@rallly/icons/chevron-right.svg";
+import { ChevronLeftIcon, ChevronRightIcon } from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -24,13 +23,13 @@ const DateNavigationToolbar: React.FunctionComponent<
       <div className="flex items-center space-x-2">
         <div className="segment-button">
           <button type="button" onClick={onPrevious}>
-            <ChevronLeft className="h-5" />
+            <ChevronLeftIcon className="h-5" />
           </button>
           <button type="button" onClick={onToday}>
             {t("today")}
           </button>
           <button type="button" onClick={onNext}>
-            <ChevronRight className="h-5" />
+            <ChevronRightIcon className="h-5" />
           </button>
         </div>
       </div>

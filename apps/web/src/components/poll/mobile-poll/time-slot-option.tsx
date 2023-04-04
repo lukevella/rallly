@@ -1,4 +1,4 @@
-import Clock from "@rallly/icons/clock.svg";
+import { ClockIcon } from "@rallly/icons";
 import * as React from "react";
 
 import PollOption, { PollOptionProps } from "./poll-option";
@@ -19,7 +19,7 @@ const TimeSlotOption: React.FunctionComponent<TimeSlotOptionProps> = ({
       <div className="grow">
         <div className="h-7">{`${startTime}`}</div>
         <div className="flex grow items-center text-sm text-slate-500">
-          <Clock className="leading- mr-1 inline w-4" />
+          <ClockIcon className="leading- mr-1 inline w-4" />
           {duration}
         </div>
       </div>

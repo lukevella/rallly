@@ -1,4 +1,4 @@
-import SpinnerIcon from "@rallly/icons/spinner.svg";
+import { SpinnerIcon } from "@rallly/icons";
 import clsx from "clsx";
 import * as React from "react";
 
