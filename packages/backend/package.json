@@ -2,6 +2,9 @@
   "name": "@rallly/backend",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "lint:tsc": "tsc --noEmit"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {

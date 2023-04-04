@@ -10,7 +10,7 @@ declare module "iron-session" {
   }
 }
 
-export const decryptToken = async <P = UserSessionData>(
+export const decryptToken = async <P extends Record<string, unknown>>(
   token: string,
 ): Promise<P | null> => {
   const payload = await unsealData(token, {
@@ -23,7 +23,7 @@ export const decryptToken = async <P = UserSessionData>(
   return payload as P;
 };
 
-export const createToken = async <T = UserSessionData>(
+export const createToken = async <T extends Record<string, unknown>>(
   payload: T,
   options?: {
     ttl?: number;
