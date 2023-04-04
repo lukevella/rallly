@@ -20,7 +20,7 @@ export const NewParticipantEmail = ({
       title={title}
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
-      preview={`${participantName} has responded`}
+      preview="Go to your poll to see the new response."
     >
       <Text>
         <strong>{participantName}</strong> has responded to{" "}

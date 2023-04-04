@@ -15,7 +15,8 @@ export const RegisterEmail = ({
       footNote={
         <>
           You&apos;re receiving this email because a request was made to
-          register an account on <Domain />.
+          register an account on <Domain />. If this wasn&apos;t you, please
+          ignore this email.
         </>
       }
       recipientName={name}
@@ -27,7 +28,7 @@ export const RegisterEmail = ({
       <Heading as="h1" className="font-sans tracking-widest" id="code">
         {code}
       </Heading>
-      <Text light={true}>This code is valid for 15 minutes</Text>
+      <Text>This code is valid for 15 minutes</Text>
     </EmailLayout>
   );
 };

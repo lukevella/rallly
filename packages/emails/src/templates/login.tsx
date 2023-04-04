@@ -1,5 +1,11 @@
 import { EmailLayout } from "./components/email-layout";
-import { Button, Domain, Heading, Text } from "./components/styled-components";
+import {
+  Button,
+  Card,
+  Domain,
+  Heading,
+  Text,
+} from "./components/styled-components";
 import { getDomain } from "./components/utils";
 
 interface LoginEmailProps {
@@ -23,19 +29,27 @@ export const LoginEmail = ({
         </>
       }
       recipientName={name}
-      preview={`Your 6-digit code: ${code}`}
+      preview="Use this link to log in on this device."
     >
-      <Text>Use this link to log in on this device.</Text>
-      <Button href={magicLink} id="magicLink">
-        Log in to {getDomain()}
-      </Button>
-      <Text light={true}>This link is valid for 15 minutes</Text>
       <Text>
-        Alternatively, you can enter this 6-digit verification code directly.
+        To log in to your account, please choose one of the following options:
       </Text>
-      <Heading as="h1" className="tracking-widest" id="code">
-        {code}
-      </Heading>
+      <Card>
+        <Heading>Option 1: Magic Link</Heading>
+        <Text>Click this magic link to log in on this device.</Text>
+        <Button href={magicLink} id="magicLink">
+          Log in to {getDomain()}
+        </Button>
+        <Text light={true}>This link will expire in 15 minutes.</Text>
+      </Card>
+      <Card>
+        <Heading>Option 2: Verification Code</Heading>
+        <Text>Enter this one-time 6-digit verification code.</Text>
+        <Heading as="h1" className="tracking-widest" id="code">
+          {code}
+        </Heading>
+        <Text light={true}>This code will expire in 15 minutes.</Text>
+      </Card>
     </EmailLayout>
   );
 };

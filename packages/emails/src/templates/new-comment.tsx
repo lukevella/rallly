@@ -20,7 +20,7 @@ export const NewCommentEmail = ({
       title={title}
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
-      preview={`${authorName} has commented on ${title}`}
+      preview="Go to your poll to see what they said."
     >
       <Text>
         <strong>{authorName}</strong> has commented on <strong>{title}</strong>.

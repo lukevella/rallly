@@ -29,6 +29,7 @@ export const NotificationEmail = ({
           <Link className="whitespace-nowrap" href={disableNotificationsUrl}>
             turn notifications off
           </Link>
+          .
         </>
       }
       preview={preview}
