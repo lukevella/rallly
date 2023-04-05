@@ -24,6 +24,10 @@
   ],
   "dependencies": {
     "next": "^13.2.4",
+    "nodemailer-mailgun-transport": "^2.1.5",
+    "nodemailer-mailjet-transport": "^1.0.4",
+    "nodemailer-mandrill-transport": "^1.2.0",
+    "nodemailer-sendinblue-transport": "^2.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

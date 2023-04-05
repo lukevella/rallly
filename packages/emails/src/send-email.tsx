@@ -49,6 +49,75 @@ const getTransport = () => {
         });
       }
       break;
+    case "sendgrid":
+      {
+        const nodemailerTransport = require('nodemailer-sendgrid-transport');
+        const options = {
+            auth: {
+                api_key: process.env.API_KEY
+            }
+        }
+
+        transport =  nodemailer.createTransport(nodemailerTransport(options));
+      }
+      break;
+    case "mandrill":
+      {
+       const mandrillTransport = require('nodemailer-mandrill-transport');
+       const options = {
+                        auth: {
+                          apiKey: process.env.API_KEY
+                        }
+                      }
+       transport = nodemailer.createTransport(mandrillTransport(options));
+      }
+      break;
+    case "mailgun":
+          {
+           const mailgunTransport = require('nodemailer-mailgun-transport');
+
+           // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
+           const options = {
+                             auth: {
+                               api_key: process.env.API_KEY,
+                               domain: process.env.DOMAIN
+                             }
+                           }
+
+           transport = nodemailer.createTransport(mailgunTransport(options));
+          }
+          break;
+    case "sendinblue":
+          {
+           const sendinblueTransport = require("nodemailer-sendinblue-transport");
+
+           // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
+           const options = {
+                            {
+                             apiKey: process.env.API_KEY
+                            }
+                           }
+
+           transporter = nodemailer.createTransport(
+               new sendinblueTransport(options)
+           );
+          }
+          break;
+    case "mailjet":
+          {
+           const mailjetTransport = require('nodemailer-mailjet-transport');
+           const options = {
+                            auth: {
+                              apiKey: process.env.API_KEY,
+                              apiSecret: process.env.API_SECRET
+                            }
+                          }
+
+           transporter = nodemailer.createTransport(
+               new mailjetTransport(options)
+           );
+          }
+          break;
     default: {
       const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
       transport = createTransport({
