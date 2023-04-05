@@ -92,6 +92,30 @@ declare global {
        * The app version just for reference
        */
       NEXT_PUBLIC_APP_VERSION?: string;
+      /**
+      * Sendgrid API Key
+      */
+      SENDGRID_API_KEY?: string;
+      /**
+      * Send In Blue API Key
+      */
+      SENDINBLUE_API_KEY?: string;
+      /**
+      * Mailjet API Key
+      */
+      MAILJET_API_KEY?: string;
+      /**
+      * Mailjet API Key
+      */
+      MAILJET_API_SECRET?: string;
+      /**
+      * Mailgun API Key
+      */
+      MAILGUN_API_KEY?: string;
+      /**
+      * Mailgun API Key
+      */
+      MAILGUN_DOMAIN?: string;
     }
   }
 }

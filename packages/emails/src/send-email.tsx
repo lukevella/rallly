@@ -5,6 +5,12 @@ import { createTransport, Transporter } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 import React from "react";
 
+import { sendgridTransport } from "nodemailer-sendgrid-transport";
+import { mandrillTransport } from "nodemailer-mandrill-transport";
+import { mailgunTransport } from "nodemailer-mailgun-transport";
+import { sendinblueTransport } from "nodemailer-sendinblue-transport";
+import { mailjetTransport } from "nodemailer-mailjet-transport";
+
 import * as templates from "./templates";
 
 type Templates = typeof templates;
@@ -51,22 +57,20 @@ const getTransport = () => {
       break;
     case "sendgrid":
       {
-        const nodemailerTransport = require('nodemailer-sendgrid-transport');
         const options = {
             auth: {
-                api_key: process.env.API_KEY
+                api_key: process.env.SENDGRID_API_KEY
             }
         }
 
-        transport =  nodemailer.createTransport(nodemailerTransport(options));
+        transport =  nodemailer.createTransport(sendgridTransport(options));
       }
       break;
     case "mandrill":
       {
-       const mandrillTransport = require('nodemailer-mandrill-transport');
        const options = {
                         auth: {
-                          apiKey: process.env.API_KEY
+                          apiKey: process.env.MANDRILL_API_KEY
                         }
                       }
        transport = nodemailer.createTransport(mandrillTransport(options));
@@ -74,13 +78,10 @@ const getTransport = () => {
       break;
     case "mailgun":
       {
-       const mailgunTransport = require('nodemailer-mailgun-transport');
-
-       // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
        const options = {
                          auth: {
-                           api_key: process.env.API_KEY,
-                           domain: process.env.DOMAIN
+                           api_key: process.env.MAILGUN_API_KEY,
+                           domain: process.env.MAILGUN_DOMAIN
                          }
                        }
 
@@ -89,12 +90,9 @@ const getTransport = () => {
       break;
     case "sendinblue":
       {
-       const sendinblueTransport = require("nodemailer-sendinblue-transport");
-
-       // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
        const options = {
                         {
-                         apiKey: process.env.API_KEY
+                         apiKey: process.env.SENDINBLUE_API_KEY
                         }
                        }
 
@@ -105,11 +103,10 @@ const getTransport = () => {
       break;
     case "mailjet":
       {
-       const mailjetTransport = require('nodemailer-mailjet-transport');
        const options = {
                         auth: {
-                          apiKey: process.env.API_KEY,
-                          apiSecret: process.env.API_SECRET
+                          apiKey: process.env.MAILJET_API_KEY,
+                          apiSecret: process.env.MAILJET_API_SECRET
                         }
                       }
 
