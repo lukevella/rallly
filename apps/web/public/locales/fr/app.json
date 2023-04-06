@@ -1,5 +1,5 @@
 {
-  "12h": "12h",
+  "12h": "12 heures",
   "24h": "24h",
   "addTimeOption": "Ajouter une option de temps",
   "adminPollTitle": "{{title}}: Admin",
@@ -87,6 +87,9 @@
   "nextMonth": "Mois suivant",
   "no": "Non",
   "noDatesSelected": "Aucune date sélectionnée",
+  "notificationsDisabled": "Les notifications ont été désactivées pour <b>{{title}}</b>",
+  "notificationsGuest": "Se connecter pour activer les notifications",
+  "notificationsOff": "Les notifications sont désactivées",
   "notificationsOn": "Les notifications sont activées",
   "notRegistered": "Créer un compte →",
   "noVotes": "Personne n'a voté pour cette option",
