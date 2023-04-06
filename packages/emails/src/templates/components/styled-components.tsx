@@ -10,23 +10,24 @@ import {
   Text as UnstyledText,
   TextProps,
 } from "@react-email/components";
-import clsx from "clsx";
 
 import { getDomain } from "./utils";
 
 export const Text = (
   props: TextProps & { light?: boolean; small?: boolean },
 ) => {
-  const { light, small, className, ...forwardProps } = props;
+  const { light, small, ...forwardProps } = props;
   return (
     <UnstyledText
       {...forwardProps}
-      className={clsx(
-        "my-4 font-sans ",
-        { "text-base": !small, "text-sm": small },
-        { "text-slate-800": !light, "text-slate-500": light },
-        className,
-      )}
+      style={{
+        margin: "16px 0",
+        fontFamily,
+        fontSize: small ? "14px" : "16px",
+        color: light ? "#64748B" : "#374151",
+        lineHeight: "1.5",
+        ...props.style,
+      }}
     />
   );
 };
@@ -39,10 +40,15 @@ export const Button = (props: ButtonProps) => {
   return (
     <UnstyledButton
       {...props}
-      className={clsx(
-        "bg-primary-600 rounded px-3 py-2 font-sans text-white",
-        props.className,
-      )}
+      className={props.className}
+      style={{
+        backgroundColor: "#4F46E5",
+        borderRadius: "4px",
+        padding: "8px 12px",
+        fontFamily,
+        fontSize: "16px",
+        color: "white",
+      }}
     />
   );
 };
@@ -51,7 +57,7 @@ export const Link = (props: LinkProps) => {
   return (
     <UnstyledLink
       {...props}
-      className={clsx("text-primary-600", props.className)}
+      style={{ color: "#4F46E5", fontFamily, ...props.style }}
     />
   );
 };
@@ -60,35 +66,53 @@ export const Heading = (
   props: React.ComponentProps<typeof UnstyledHeading>,
 ) => {
   const { as = "h3" } = props;
+  const fontSize = {
+    h1: "32px",
+    h2: "24px",
+    h3: "20px",
+    h4: "16px",
+    h5: "14px",
+    h6: "12px",
+  };
   return (
     <UnstyledHeading
       {...props}
       as={as}
-      className={clsx(
-        "mt-4 mb-2 font-sans font-semibold text-slate-800",
-        props.className,
-      )}
+      style={{
+        marginTop: "16px",
+        marginBottom: "8px",
+        fontFamily: "sans-serif",
+        fontWeight: "bold",
+        fontSize: fontSize[as],
+        color: "#1E293B",
+        ...props.style,
+      }}
     />
   );
 };
 
 export const SubHeadingText = (props: TextProps) => {
-  const { className, ...forwardProps } = props;
   return (
     <UnstyledText
-      {...forwardProps}
-      className={clsx(
-        "mb-4 mt-2 font-sans text-base  text-slate-800",
-        className,
-      )}
+      {...props}
+      style={{
+        marginBottom: "16px",
+        marginTop: "8px",
+        fontSize: 16,
+        color: "#374151",
+        fontFamily,
+        ...props.style,
+      }}
     />
   );
 };
 
 export const Section = (props: SectionProps) => {
-  const { className, ...forwardProps } = props;
   return (
-    <UnstyledSection {...forwardProps} className={clsx("my-4", className)} />
+    <UnstyledSection
+      {...props}
+      style={{ marginTop: "16px", marginBottom: "16px", ...props.style }}
+    />
   );
 };
 
@@ -96,7 +120,11 @@ export const SmallText = (props: TextProps) => {
   return (
     <UnstyledText
       {...props}
-      className={clsx("font-sans text-sm text-slate-500", props.className)}
+      style={{
+        fontSize: "14px",
+        color: "#6B7280",
+        ...props.style,
+      }}
     />
   );
 };
@@ -105,7 +133,20 @@ export const Card = (props: SectionProps) => {
   return (
     <Section
       {...props}
-      className={clsx("rounded bg-gray-50 px-4", props.className)}
+      style={{
+        borderRadius: "4px",
+        backgroundColor: "#F1F5F9",
+        paddingRight: "16px",
+        paddingLeft: "16px",
+        border: "1px solid #E2E8F0",
+      }}
     />
   );
 };
+
+export const trackingWide = {
+  letterSpacing: 2,
+};
+
+export const fontFamily =
+  "'Inter UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;";

@@ -1,5 +1,10 @@
 import { EmailLayout } from "./components/email-layout";
-import { Domain, Heading, Text } from "./components/styled-components";
+import {
+  Domain,
+  Heading,
+  Text,
+  trackingWide,
+} from "./components/styled-components";
 
 interface RegisterEmailProps {
   name: string;
@@ -25,7 +30,7 @@ export const RegisterEmail = ({
       <Text>
         Please use the following 6-digit verification code to verify your email:
       </Text>
-      <Heading as="h1" className="font-sans tracking-widest" id="code">
+      <Heading as="h1" style={{ ...trackingWide }} id="code">
         {code}
       </Heading>
       <Text>This code is valid for 15 minutes</Text>

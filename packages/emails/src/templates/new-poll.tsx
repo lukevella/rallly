@@ -41,6 +41,23 @@ const ShareLink = ({
   );
 };
 
+const LinkContainer = (props: { href: string }) => {
+  return (
+    <Text
+      style={{
+        borderRadius: "4px",
+        backgroundColor: "white",
+        padding: "12px",
+        border: "1px solid #E2E8F0",
+      }}
+    >
+      <Link href={props.href} style={{ letterSpacing: 1 }}>
+        {props.href}
+      </Link>
+    </Text>
+  );
+};
+
 export const NewPollEmail = ({
   title = "Untitled Poll",
   name = "John",
@@ -60,18 +77,15 @@ export const NewPollEmail = ({
       preview="Share your participant link to start collecting responses."
     >
       <Text>
-        Your poll is live! Here are two links you will need to manage your poll.
+        Your poll for <strong>{title}</strong> is live! Here are two links you
+        will need to manage your poll.
       </Text>
       <Card>
         <Heading>Admin link</Heading>
         <SubHeadingText>
           Use this link to view results and make changes to your poll.
         </SubHeadingText>
-        <Text className="rounded bg-white px-4 py-3">
-          <Link href={adminLink} className="font-mono">
-            {adminLink}
-          </Link>
-        </Text>
+        <LinkContainer href={adminLink} />
         <Text>
           <Button href={adminLink}>Go to admin page</Button>
         </Text>
@@ -82,11 +96,7 @@ export const NewPollEmail = ({
           Copy this link and share it with your participants to start collecting
           responses.
         </SubHeadingText>
-        <Text className="rounded bg-white px-4 py-3">
-          <Link href={participantLink} className="font-mono">
-            {participantLink}
-          </Link>
-        </Text>
+        <LinkContainer href={participantLink} />
         <Text>
           <ShareLink
             title={title}
