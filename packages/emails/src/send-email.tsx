@@ -87,6 +87,7 @@ export const sendEmail = async <T extends TemplateName>(
   }
 
   const Template = templates[templateName] as TemplateComponent<T>;
+  const html = render(<Template {...(options.props as any)} />);
 
   try {
     await sendRawEmail({
@@ -97,7 +98,7 @@ export const sendEmail = async <T extends TemplateName>(
       to: options.to,
       subject: options.subject,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      html: render(<Template {...(options.props as any)} />),
+      html,
     });
     return;
   } catch (e) {

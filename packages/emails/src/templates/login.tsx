@@ -5,6 +5,7 @@ import {
   Domain,
   Heading,
   Text,
+  trackingWide,
 } from "./components/styled-components";
 import { getDomain } from "./components/utils";
 
@@ -45,7 +46,7 @@ export const LoginEmail = ({
       <Card>
         <Heading>Option 2: Verification Code</Heading>
         <Text>Enter this one-time 6-digit verification code.</Text>
-        <Heading as="h1" className="tracking-widest" id="code">
+        <Heading as="h1" style={trackingWide} id="code">
           {code}
         </Heading>
         <Text light={true}>This code will expire in 15 minutes.</Text>
