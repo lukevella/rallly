@@ -29,12 +29,14 @@ const Hero: React.FunctionComponent = () => {
         <div className="space-x-3">
           <Link
             href="/new"
+            locale={false}
             className="bg-primary-500 hover:bg-primary-600/90 active:bg-primary-500/90 rounded-md px-5 py-3 font-semibold text-white  shadow-sm transition-all hover:text-white hover:no-underline hover:shadow-md"
           >
             {t("getStarted")}
           </Link>
           <Link
             href="/demo"
+            locale={false}
             className="rounded-md bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md active:bg-slate-600/90"
             rel="nofollow"
           >
