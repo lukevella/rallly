@@ -20,12 +20,18 @@ const NotificationsToggle: React.FunctionComponent = () => {
   const watchers = data.watchers ?? [];
 
   const { user } = useUser();
-  const isWatching = watchers.some(({ userId }) => userId === user.id);
+  const [isWatching, setIsWatching] = React.useState(() =>
+    watchers.some(({ userId }) => userId === user.id),
+  );
 
   const posthog = usePostHog();
 
   const watch = trpc.polls.watch.useMutation({
+    onMutate: () => {
+      setIsWatching(true);
+    },
     onSuccess: () => {
+      // TODO (Luke Vella) [2023-04-08]: We should have a separate query for getting watchers
       posthog?.capture("turned notifications on", {
         pollId: poll.id,
         source: "notifications-toggle",
@@ -34,6 +40,9 @@ const NotificationsToggle: React.FunctionComponent = () => {
   });
 
   const unwatch = trpc.polls.unwatch.useMutation({
+    onMutate: () => {
+      setIsWatching(false);
+    },
     onSuccess: () => {
       posthog?.capture("turned notifications off", {
         pollId: poll.id,
@@ -42,7 +51,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
     },
   });
 
-  const isUpdating = watch.isLoading || unwatch.isLoading;
   const { openLoginModal } = useLoginModal();
 
   return (
@@ -59,7 +67,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
     >
       <Button
         data-testid="notifications-toggle"
-        loading={isUpdating}
         disabled={poll.demo}
         icon={isWatching ? <BellIcon /> : <BellCrossedIcon />}
         onClick={async () => {
