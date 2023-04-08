@@ -22,8 +22,10 @@ export const DeletePollForm: React.FunctionComponent<{
   const confirmationText = watch("confirmation");
   const canDelete = confirmationText === confirmText;
   const posthog = usePostHog();
+  const queryClient = trpc.useContext();
   const deletePoll = trpc.polls.delete.useMutation({
     onSuccess: () => {
+      queryClient.polls.invalidate();
       posthog?.capture("deleted poll");
     },
   });

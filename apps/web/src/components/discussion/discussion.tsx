@@ -25,23 +25,19 @@ interface CommentForm {
 
 const Discussion: React.FunctionComponent = () => {
   const { dayjs } = useDayjs();
-  const queryClient = trpc.useContext();
   const { t } = useTranslation("app");
   const { poll, admin } = usePoll();
 
   const pollId = poll.id;
 
-  const { data: comments } = trpc.polls.comments.list.useQuery(
-    { pollId },
-    {
-      refetchInterval: 10000, // refetch every 10 seconds
-      trpc: {},
-    },
-  );
+  const { data: comments } = trpc.polls.comments.list.useQuery({ pollId });
   const posthog = usePostHog();
+
+  const queryClient = trpc.useContext();
 
   const addComment = trpc.polls.comments.add.useMutation({
     onSuccess: () => {
+      queryClient.polls.comments.invalidate();
       posthog?.capture("created comment");
     },
   });

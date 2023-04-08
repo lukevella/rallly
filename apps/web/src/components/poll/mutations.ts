@@ -16,8 +16,11 @@ export const normalizeVotes = (
 
 export const useAddParticipantMutation = () => {
   const posthog = usePostHog();
+  const queryClient = trpc.useContext();
+
   return trpc.polls.participants.add.useMutation({
     onSuccess: (_, { pollId, name, email }) => {
+      queryClient.polls.participants.list.invalidate({ pollId });
       posthog?.capture("add participant", {
         pollId,
         name,
