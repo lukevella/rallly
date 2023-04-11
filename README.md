@@ -80,6 +80,7 @@ The app can be configured with the following environment variables.
 | `DISABLE_LANDING_PAGE` | false                 | Whether or not to disable the landing page                                                                                                      |
 | `NEXT_PUBLIC_BASE_URL` | http://localhost:3000 | The base url where this instance is accessible, including the scheme (eg. `http://` or `https://`), the domain name, and optionally a port.     |
 | `SECRET_PASSWORD`      |                       | A random 32-character secret key used to encrypt user sessions                                                                                  |
+| `SUPPORT_EMAIL`        |                       | All outgoing emails will show this email as the sender's email address, which also serves as the support email.                                 |
 | `SMTP_HOST`            | localhost             | The host address of your SMTP server                                                                                                            |
 | `SMTP_PORT`            | 25 or 465             | The port of your SMTP server                                                                                                                    |
 | `SMTP_SECURE`          | false                 | Set to "true" if SSL is enabled for your SMTP connection                                                                                        |
