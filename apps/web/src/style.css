@@ -10,15 +10,12 @@
   #__next {
     @apply h-full;
   }
-  p {
-    @apply mb-4;
-  }
   h1,
   h2,
   h3,
   h4,
   h5 {
-    @apply mb-4 font-sans font-semibold text-slate-800;
+    @apply font-sans font-semibold text-slate-800;
   }
   h1 {
     @apply text-2xl;
@@ -28,7 +25,7 @@
   }
 
   label {
-    @apply mb-1 block text-sm text-slate-800;
+    @apply block text-sm text-slate-800;
   }
 
   a,
@@ -139,13 +136,13 @@
 
 @layer components {
   .heading {
-    @apply text-primary-600 text-xl;
+    @apply text-primary-600 mb-4 text-xl;
   }
   .subheading {
     @apply mb-16 text-4xl font-bold text-slate-800;
   }
   .heading-sm {
-    @apply text-xl font-bold text-slate-800;
+    @apply mb-4 text-xl font-bold text-slate-800;
   }
   .text {
     @apply text-lg leading-relaxed text-slate-500;

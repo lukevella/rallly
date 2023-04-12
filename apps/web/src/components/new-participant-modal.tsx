@@ -100,7 +100,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
         className="space-y-4"
       >
         <fieldset>
-          <label htmlFor="name" className="text-slate-500">
+          <label htmlFor="name" className="mb-1 text-slate-500">
             {t("name")}
           </label>
           <TextInput
@@ -117,7 +117,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           ) : null}
         </fieldset>
         <fieldset>
-          <label htmlFor="email" className="text-slate-500">
+          <label htmlFor="email" className="mb-1 text-slate-500">
             {t("email")} ({t("optional")})
           </label>
           <TextInput
@@ -139,7 +139,7 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           ) : null}
         </fieldset>
         <fieldset>
-          <label className="text-slate-500">{t("response")}</label>
+          <label className="mb-1 text-slate-500">{t("response")}</label>
           <VoteSummary votes={props.votes} />
         </fieldset>
         <div className="flex gap-2">

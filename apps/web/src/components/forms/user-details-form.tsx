@@ -37,7 +37,7 @@ export const UserDetailsForm: React.FunctionComponent<
     <form id={name} className={className} onSubmit={handleSubmit(onSubmit)}>
       <h2>{t("yourDetails")}</h2>
       <div className="formField">
-        <label className="text-slate-500" htmlFor="name">
+        <label className="mb-1 text-slate-500" htmlFor="name">
           {t("name")}
         </label>
         <input
@@ -53,7 +53,7 @@ export const UserDetailsForm: React.FunctionComponent<
       </div>
 
       <div className="formField">
-        <label className="text-slate-500" htmlFor="contact">
+        <label className="mb-1 text-slate-500" htmlFor="contact">
           {t("email")}
         </label>
         <input

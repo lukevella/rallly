@@ -15,7 +15,7 @@ const Hero: React.FunctionComponent = () => {
   return (
     <div className="mx-auto max-w-7xl items-end p-8 lg:flex lg:justify-between">
       <div className="my-8 text-center lg:text-left">
-        <h1 className="text-4xl font-bold text-slate-800 sm:text-5xl">
+        <h1 className="mb-4 text-4xl font-bold text-slate-800 sm:text-5xl">
           <Trans
             t={t}
             i18nKey="heroText"

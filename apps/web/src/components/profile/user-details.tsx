@@ -68,7 +68,7 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
       </div>
       <div className="divide-y">
         <div className="flex p-4 pr-8">
-          <label htmlFor="name" className="w-1/3 text-slate-500">
+          <label htmlFor="name" className="mb-1 w-1/3 text-slate-500">
             {t("name")}
           </label>
           <div className="w-2/3">
@@ -90,7 +90,7 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
           </div>
         </div>
         <div className="flex p-4 pr-8">
-          <label htmlFor="random-8904" className="w-1/3 text-slate-500">
+          <label htmlFor="random-8904" className="mb-1 w-1/3 text-slate-500">
             {t("email")}
           </label>
           <div className="w-2/3">

@@ -39,7 +39,9 @@ export const PollDetailsForm: React.FunctionComponent<
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="formField">
-        <label htmlFor="title">{t("title")}</label>
+        <label htmlFor="title" className="mb-1">
+          {t("title")}
+        </label>
         <input
           type="text"
           id="title"
@@ -51,7 +53,9 @@ export const PollDetailsForm: React.FunctionComponent<
         />
       </div>
       <div className="formField">
-        <label htmlFor="location">{t("location")}</label>
+        <label htmlFor="location" className="mb-1">
+          {t("location")}
+        </label>
         <input
           type="text"
           id="location"
@@ -61,7 +65,9 @@ export const PollDetailsForm: React.FunctionComponent<
         />
       </div>
       <div>
-        <label htmlFor="description">{t("description")}</label>
+        <label htmlFor="description" className="mb-1">
+          {t("description")}
+        </label>
         <textarea
           id="description"
           className="input w-full"

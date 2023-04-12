@@ -147,7 +147,7 @@ const ChangeNameModal = (props: {
         <div>{t("changeNameDescription")}</div>
       </div>
       <fieldset>
-        <label className="text-slate-500">{t("name")}</label>
+        <label className="mb-1 text-slate-500">{t("name")}</label>
         <TextInput
           className="w-full"
           error={!!errors.name}

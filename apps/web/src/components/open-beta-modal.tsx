@@ -8,7 +8,7 @@ const OpenBeta = () => {
       </div>
       <div className="max-w-3xl p-3 sm:p-6">
         <div>
-          <p>
+          <p className="mb-4">
             The open beta allows you to test out new features before they are
             officially released to the general public. By participating you,
             will have the opportunity to provide feedback and help shape the
@@ -16,8 +16,7 @@ const OpenBeta = () => {
           </p>
         </div>
         <div>
-          <h2>Feedback</h2>
-          <p></p>
+          <h2 className="mb-4">Feedback</h2>
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <a
               href="https://github.com/lukevella/rallly/issues/new?assignees=&labels=bug&template=---bug-report.md&title="
@@ -44,15 +43,15 @@ const OpenBeta = () => {
               ✉️ Send an email
             </a>
           </ul>
-          <div className="bg-patte mt-4 rounded border bg-slate-50 p-4">
-            <h2 className="text-slate-800">Important</h2>
-            <p>
+          <div className="mt-4 rounded border bg-slate-50 p-4">
+            <h2 className="mb-4 text-slate-800">Important</h2>
+            <p className="mb-4">
               <strong>
                 You should not rely on the beta for any important data or
                 information.
               </strong>
             </p>
-            <p>
+            <p className="mb-4">
               The beta should be used exclusively for testing purposes.
               Features, polls, accounts, or data may be removed at any time
               without prior notice.

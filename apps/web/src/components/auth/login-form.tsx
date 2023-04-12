@@ -53,13 +53,13 @@ const VerifyCode: React.FunctionComponent<{
       >
         <fieldset>
           <div className="mb-1 text-2xl font-bold">{t("verifyYourEmail")}</div>
-          <p className="text-slate-500">
+          <div className="mb-4 text-slate-500">
             {t("stepSummary", {
               current: 2,
               total: 2,
             })}
-          </p>
-          <p>
+          </div>
+          <p className="mb-4">
             <Trans
               t={t}
               i18nKey="verificationCodeSent"
@@ -90,7 +90,7 @@ const VerifyCode: React.FunctionComponent<{
             })}
           />
           {formState.errors.code?.message ? (
-            <p className="mt-2 text-sm text-rose-500">
+            <p className="mb-4 mt-2 text-sm text-rose-500">
               {formState.errors.code.message}
             </p>
           ) : null}
@@ -200,14 +200,14 @@ export const RegisterForm: React.FunctionComponent<{
       })}
     >
       <div className="mb-1 text-2xl font-bold">{t("createAnAccount")}</div>
-      <p className="text-slate-500">
+      <p className="mb-4 text-slate-500">
         {t("stepSummary", {
           current: 1,
           total: 2,
         })}
       </p>
       <fieldset className="mb-4">
-        <label htmlFor="name" className="text-slate-500">
+        <label htmlFor="name" className="mb-1 text-slate-500">
           {t("name")}
         </label>
         <TextInput
@@ -226,7 +226,7 @@ export const RegisterForm: React.FunctionComponent<{
         ) : null}
       </fieldset>
       <fieldset className="mb-4">
-        <label htmlFor="email" className="text-slate-500">
+        <label htmlFor="email" className="mb-1 text-slate-500">
           {t("email")}
         </label>
         <TextInput
@@ -362,14 +362,14 @@ export const LoginForm: React.FunctionComponent<{
       })}
     >
       <div className="mb-1 text-2xl font-bold">{t("login")}</div>
-      <p className="text-slate-500">
+      <p className="mb-4 text-slate-500">
         {t("stepSummary", {
           current: 1,
           total: 2,
         })}
       </p>
       <fieldset className="mb-4">
-        <label htmlFor="email" className="text-slate-500">
+        <label htmlFor="email" className="mb-1 text-slate-500">
           {t("email")}
         </label>
         <TextInput
