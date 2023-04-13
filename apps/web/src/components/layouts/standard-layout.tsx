@@ -14,7 +14,7 @@ import { MobileNavigation } from "./standard-layout/mobile-navigation";
 const Feedback = dynamic(() => import("../feedback"), { ssr: false });
 
 const appVersion = process.env.NEXT_PUBLIC_APP_VERSION
-  ? `v${process.env.NEXT_PUBLIC_APP_VERSION}`
+  ? process.env.NEXT_PUBLIC_APP_VERSION
   : null;
 
 const AppVersion = () => {
