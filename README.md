@@ -77,6 +77,7 @@ The app can be configured with the following environment variables.
 | ---------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AUTH_REQUIRED`        | false                 | Set to `true` to require authentication for creating new polls and accessing admin pages                                                        |
 | `ALLOWED_EMAILS`       |                       | Comma separated list of email addresses that are allowed to register and login. Wildcard characters are supported. Example: `*@yourcompany.com` |
+| `DATABASE_URL`         |                       | Postgres database connection string                                                                                                             |
 | `DISABLE_LANDING_PAGE` | false                 | Whether or not to disable the landing page                                                                                                      |
 | `NEXT_PUBLIC_BASE_URL` | http://localhost:3000 | The base url where this instance is accessible, including the scheme (eg. `http://` or `https://`), the domain name, and optionally a port.     |
 | `SECRET_PASSWORD`      |                       | A random 32-character secret key used to encrypt user sessions                                                                                  |
