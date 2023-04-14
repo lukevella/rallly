@@ -52,7 +52,7 @@ const VerifyCode: React.FunctionComponent<{
         })}
       >
         <fieldset>
-          <div className="mb-1 text-2xl font-bold">{t("verifyYourEmail")}</div>
+          <h1 className="mb-1">{t("verifyYourEmail")}</h1>
           <div className="mb-4 text-slate-500">
             {t("stepSummary", {
               current: 2,
@@ -98,7 +98,7 @@ const VerifyCode: React.FunctionComponent<{
             {t("verificationCodeHelp")}
           </p>
         </fieldset>
-        <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-3">
+        <div className="mt-6 space-y-4 sm:flex sm:space-y-0 sm:space-x-3">
           <Button
             loading={formState.isSubmitting || formState.isSubmitSuccessful}
             htmlType="submit"
