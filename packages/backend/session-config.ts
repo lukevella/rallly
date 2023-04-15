@@ -1,5 +1,7 @@
+import { readFile } from '../utils';
+
 export const sessionConfig = {
-  password: process.env.SECRET_PASSWORD ?? "",
+  password: readFile(process.env.SECRET_PASSWORD_FILE) ?? process.env.SECRET_PASSWORD ?? "",
   cookieName: "rallly-session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",

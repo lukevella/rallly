@@ -30,13 +30,16 @@
         "NODE_ENV",
         "PORT",
         "SECRET_PASSWORD",
+        "SECRET_PASSWORD_FILE",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_DSN",
         "SMTP_HOST",
         "SMTP_PORT",
         "SMTP_PWD",
+        "SMTP_PWD_FILE",
         "SMTP_SECURE",
         "SMTP_USER",
+        "SMTP_USER_FILE",
         "SUPPORT_EMAIL"
       ]
     },

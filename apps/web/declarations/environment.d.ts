@@ -50,9 +50,17 @@ declare global {
        */
       SMTP_USER: string;
       /**
+       * The path to the "SMTP_USER" docker secret if authentication is required
+       */
+      SMTP_USER_FILE?: string;
+      /**
        * Password if authentication is required
        */
       SMTP_PWD: string;
+      /**
+       * The path to the "SMTP_PWD" docker secret if authentication is required
+       */
+      SMTP_PWD_FILE?: string;
       /**
        * "true" to use SSL
        */

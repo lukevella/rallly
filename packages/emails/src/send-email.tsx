@@ -1,5 +1,6 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
+import { readFile } from "@rallly/utils";
 import { render } from "@react-email/render";
 import { createTransport, Transporter } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
@@ -59,8 +60,8 @@ const getTransport = () => {
         secure: process.env.SMTP_SECURE === "true",
         auth: hasAuth
           ? {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PWD,
+              user: readFile(process.env.SMTP_USER_FILE) ?? process.env.SMTP_USER,
+              pass: readFile(process.env.SMTP_PWD_FILE) ?? process.env.SMTP_PWD,
             }
           : undefined,
       });
