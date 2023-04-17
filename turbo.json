@@ -36,6 +36,7 @@
         "SMTP_PORT",
         "SMTP_PWD",
         "SMTP_SECURE",
+        "SMTP_TLS_ENABLED",
         "SMTP_USER",
         "SUPPORT_EMAIL"
       ]
