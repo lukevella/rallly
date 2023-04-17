@@ -1,4 +1,4 @@
-name: Build and publish Docker image
+name: Version Release Docker Image
 on:
   push:
     tags:
