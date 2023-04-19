@@ -29,9 +29,6 @@ const PrivacyPolicy = () => {
           of the website.
         </p>
 
-        <h2>Third-party cookies</h2>
-        <p>We do not use any third-party cookies on our website.</p>
-
         <h2>Your options</h2>
         <p>
           Most web browsers allow you to control cookies through their settings
