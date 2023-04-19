@@ -74,7 +74,6 @@ export const UserProvider = (props: {
       capture_pageview: false,
       capture_pageleave: false,
       autocapture: false,
-      opt_in_site_apps: true,
       persistence: "memory",
       bootstrap: {
         distinctID: user.id,
