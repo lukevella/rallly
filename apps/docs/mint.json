@@ -12,12 +12,12 @@
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
   },
   "topbarCtaButton": {
-    "name": "Get started",
+    "name": "Create a meeting poll",
     "url": "https://rallly.co/new"
   },
   "topbarLinks": [
     {
-      "name": "Live demo",
+      "name": "Live chat",
       "url": "https://rallly.co/demo"
     }
   ],
@@ -41,27 +41,31 @@
   "navigation": [
     {
       "group": "Introduction",
-      "pages": ["introduction"]
+      "pages": ["get-started"]
     },
     {
-      "group": "Administrators",
+      "group": "For Administrators",
       "pages": [
-        "administrators/accessing-the-admin-page",
+        "administrators/creating-a-poll",
         "administrators/sharing-a-poll",
         "administrators/editing-a-poll",
         "administrators/deleting-a-poll"
       ]
     },
     {
-      "group": "Participants",
+      "group": "For Participants",
       "pages": [
         "participants/submitting-a-response",
         "participants/editing-a-response"
       ]
     },
     {
-      "group": "Other Docs",
-      "pages": ["guest-sessions", "privacy-and-security", "self-hosting"]
+      "group": "Self-Hosting",
+      "pages": [
+        "self-hosting/getting-started",
+        "self-hosting/managed-hosting",
+        "self-hosting/configuration-options"
+      ]
     }
   ],
   "footerSocials": {
