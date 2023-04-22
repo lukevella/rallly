@@ -12,7 +12,7 @@
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
   },
   "topbarCtaButton": {
-    "name": "Create a meeting poll",
+    "name": "Get Started",
     "url": "https://rallly.co/new"
   },
   "topbarLinks": [
