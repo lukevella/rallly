@@ -40,20 +40,16 @@
   ],
   "navigation": [
     {
-      "group": "Introduction",
-      "pages": ["get-started"]
-    },
-    {
-      "group": "For Administrators",
+      "group": "Guides for Administrators",
       "pages": [
-        "administrators/creating-a-poll",
-        "administrators/sharing-a-poll",
-        "administrators/editing-a-poll",
-        "administrators/deleting-a-poll"
+        "administrators/creating-a-meeting-poll",
+        "administrators/sharing-a-meeting-poll",
+        "administrators/editing-a-meeting-poll",
+        "administrators/deleting-a-meeting-poll"
       ]
     },
     {
-      "group": "For Participants",
+      "group": "Guides for Participants",
       "pages": [
         "participants/submitting-a-response",
         "participants/editing-a-response"
@@ -62,7 +58,7 @@
     {
       "group": "Self-Hosting",
       "pages": [
-        "self-hosting/getting-started",
+        "self-hosting/introduction",
         "self-hosting/managed-hosting",
         "self-hosting/configuration-options"
       ]
