@@ -1,11 +1,23 @@
 import { trpc, UserSession } from "@rallly/backend";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import posthog, { PostHog } from "posthog-js";
+import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import React from "react";
 
 import { useRequiredContext } from "./use-required-context";
+
+if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+    api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    opt_out_capturing_by_default: false,
+    capture_pageview: false,
+    persistence: "memory",
+    capture_pageleave: false,
+    autocapture: false,
+    opt_in_site_apps: true,
+  });
+}
 
 export const UserContext = React.createContext<{
   user: UserSession & { shortName: string };
@@ -61,33 +73,17 @@ export const UserProvider = (props: {
     },
   });
 
-  const [posthogClient, setPostHogClient] = React.useState<PostHog>();
-
   React.useEffect(() => {
     if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY || !user) {
       return;
     }
 
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
-      opt_out_capturing_by_default: false,
-      capture_pageview: false,
-      capture_pageleave: false,
-      autocapture: false,
-      persistence: "memory",
-      bootstrap: {
-        distinctID: user.id,
-      },
-      loaded: (posthog) => {
-        posthog.identify(
-          user.id,
-          !user.isGuest
-            ? { email: user.email, name: user.name }
-            : { name: user.id },
-        );
-        setPostHogClient(posthog);
-      },
-    });
+    posthog.identify(
+      user.id,
+      !user.isGuest
+        ? { email: user.email, name: user.name }
+        : { name: user.id },
+    );
   }, [user]);
 
   const shortName = user
@@ -101,7 +97,7 @@ export const UserProvider = (props: {
   }
 
   return (
-    <PostHogProvider client={posthogClient}>
+    <PostHogProvider client={posthog}>
       <UserContext.Provider
         value={{
           user: { ...user, shortName },
