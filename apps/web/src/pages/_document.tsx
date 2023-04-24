@@ -72,7 +72,7 @@ export default function Document() {
         <link
           rel="icon"
           type="image/png"
-          href="/favicon-128.png"
+          href="/favicon-128x128.png"
           sizes="128x128"
         />
         <meta name="application-name" content="Rallly" />
