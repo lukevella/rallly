@@ -61,7 +61,7 @@ export const UserProvider = (props: {
   children?: React.ReactNode;
   forceUserId?: string;
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const queryClient = trpc.useContext();
   const { data: user } = trpc.whoami.get.useQuery();

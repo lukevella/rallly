@@ -10,7 +10,7 @@ import { NextPageWithLayout } from "../types";
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   return (
     <>
       <Head>
@@ -30,5 +30,5 @@ export default Page;
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr([
   withAuthIfRequired,
-  withPageTranslations(["common", "app"]),
+  withPageTranslations(),
 ]);

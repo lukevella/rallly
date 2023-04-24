@@ -25,7 +25,7 @@ interface CommentForm {
 
 const Discussion: React.FunctionComponent = () => {
   const { dayjs } = useDayjs();
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { poll, admin } = usePoll();
 
   const pollId = poll.id;

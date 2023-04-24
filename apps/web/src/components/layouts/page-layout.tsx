@@ -19,7 +19,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
   className,
 }) => {
   const { pathname } = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation();
   return (
     <nav className={className}>
       <Link
@@ -31,7 +31,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
           },
         )}
       >
-        {t("home")}
+        {t("common.home")}
       </Link>
       <Link
         href="https://blog.rallly.co"
@@ -39,13 +39,13 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
           "hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2",
         )}
       >
-        {t("blog")}
+        {t("common.blog")}
       </Link>
       <a
         href="https://support.rallly.co"
         className="hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
       >
-        {t("support")}
+        {t("common.support")}
       </a>
       <Link
         href="https://github.com/lukevella/rallly"
@@ -58,7 +58,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
 };
 
 const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
-  const { t } = useTranslation("homepage");
+  const { t } = useTranslation();
   return (
     <LazyMotion features={domAnimation}>
       <div className="bg-pattern min-h-full overflow-x-hidden">
@@ -69,7 +69,11 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                 <Logo className="text-primary-600 w-40" alt="Rallly" />
               </Link>
               <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
-                <Trans t={t} i18nKey="3Ls" components={{ e: <em /> }} />
+                <Trans
+                  t={t}
+                  i18nKey="homepage.3Ls"
+                  components={{ e: <em /> }}
+                />
               </span>
             </div>
           </div>

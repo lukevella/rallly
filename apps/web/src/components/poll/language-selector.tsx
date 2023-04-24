@@ -8,7 +8,7 @@ export const LanguageSelect: React.FunctionComponent<{
   className?: string;
   onChange?: (language: string) => void;
 }> = ({ className, onChange }) => {
-  const { i18n } = useTranslation("common");
+  const { i18n } = useTranslation();
   return (
     <div className="relative">
       <select

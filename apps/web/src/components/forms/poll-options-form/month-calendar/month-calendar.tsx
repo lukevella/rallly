@@ -38,7 +38,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const { dayjs, weekStartsOn } = useDayjs();
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const isTimedEvent = options.some((option) => option.type === "timeSlot");
 
   const optionsByDay = React.useMemo(() => {

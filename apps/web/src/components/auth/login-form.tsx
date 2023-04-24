@@ -19,7 +19,7 @@ const VerifyCode: React.FunctionComponent<{
   const { register, handleSubmit, setError, formState } = useForm<{
     code: string;
   }>();
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const [resendStatus, setResendStatus] = React.useState<
     "ok" | "busy" | "disabled"
   >("ok");
@@ -131,7 +131,7 @@ export const RegisterForm: React.FunctionComponent<{
   onRegistered: () => void;
   defaultValues?: Partial<RegisterFormData>;
 }> = ({ onClickLogin, onRegistered, defaultValues }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { register, handleSubmit, getValues, setError, formState } =
     useForm<RegisterFormData>({
       defaultValues,
@@ -277,7 +277,7 @@ export const LoginForm: React.FunctionComponent<{
   ) => void;
   onAuthenticated: () => void;
 }> = ({ onAuthenticated, onClickRegister }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { register, handleSubmit, getValues, formState, setError } = useForm<{
     email: string;
   }>();

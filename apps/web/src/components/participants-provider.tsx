@@ -19,7 +19,7 @@ export const ParticipantsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
   pollId: string;
 }> = ({ children, pollId }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const { data: participants } = trpc.polls.participants.list.useQuery({
     pollId,

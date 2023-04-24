@@ -11,7 +11,7 @@ import NotificationsToggle from "./poll/notifications-toggle";
 import Sharing from "./sharing";
 
 export const AdminControls = (props: { children?: React.ReactNode }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const { participants } = useParticipants();
 

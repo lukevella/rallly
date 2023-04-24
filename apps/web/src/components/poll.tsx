@@ -18,7 +18,7 @@ import { usePoll } from "./poll-context";
 const checkIfWideScreen = () => window.innerWidth > 640;
 
 export const Poll = (props: { children?: React.ReactNode }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { poll } = usePoll();
 
   useTouchBeacon(poll.id);

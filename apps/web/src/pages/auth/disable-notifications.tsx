@@ -21,7 +21,7 @@ import { withPageTranslations } from "@/utils/with-page-translations";
 const Redirect = (props: React.PropsWithChildren<{ redirect: string }>) => {
   const router = useRouter();
   const [enabled, setEnabled] = React.useState(false);
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   useMount(() => {
     setTimeout(() => {
@@ -70,7 +70,7 @@ type PageProps =
   | { error: undefined; data: Data };
 
 const Page = (props: PageProps) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const posthog = usePostHog();
 
   useMount(() => {
@@ -102,7 +102,7 @@ const Page = (props: PageProps) => {
 };
 
 export const getServerSideProps = composeGetServerSideProps(
-  withPageTranslations(["app"]),
+  withPageTranslations(),
   withSessionSsr(async (ctx) => {
     const token = ctx.query.token as string;
 

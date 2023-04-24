@@ -10,7 +10,7 @@ export const useDeleteParticipantModal = () => {
   const deleteParticipant = useDeleteParticipantMutation();
   const { poll } = usePoll();
 
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   return (participantId: string, participantName: string) => {
     return render({

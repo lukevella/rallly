@@ -8,12 +8,12 @@ import Hero from "./home/hero";
 import PageLayout from "./layouts/page-layout";
 
 const Home: React.FunctionComponent = () => {
-  const { t } = useTranslation("homepage");
+  const { t } = useTranslation();
   return (
     <PageLayout>
       <NextSeo
-        title={t("metaTitle")}
-        description={t("metaDescription")}
+        title={t("homepage.metaTitle")}
+        description={t("homepage.metaDescription")}
         twitter={{
           handle: "@imlukevella",
           site: "@ralllyco",

@@ -14,7 +14,7 @@ import Tooltip from "../tooltip";
 
 const NotificationsToggle: React.FunctionComponent = () => {
   const { poll } = usePoll();
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const { data } = usePollByAdmin();
   const watchers = data.watchers ?? [];

@@ -10,7 +10,7 @@ import { useModalState } from "@/components/modal/use-modal";
 import Tooltip from "@/components/tooltip";
 
 const FeedbackForm = (props: { onClose: () => void }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const sendFeedback = trpc.feedback.send.useMutation();
   const { handleSubmit, register, formState } = useForm<{ content: string }>();
 
@@ -82,7 +82,7 @@ const FeedbackForm = (props: { onClose: () => void }) => {
 };
 
 const FeedbackButton = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const [isVisible, show, close] = useModalState();
   if (isVisible) {
     return <FeedbackForm onClose={close} />;

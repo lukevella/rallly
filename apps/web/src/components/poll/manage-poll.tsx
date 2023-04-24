@@ -38,7 +38,7 @@ const convertOptionToString = (option: { start: Date; duration: number }) => {
 const ManagePoll: React.FunctionComponent<{
   placement?: Placement;
 }> = ({ placement }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { poll, getParticipantsWhoVotedForOption, urlId } = usePoll();
 
   const { exportToCsv } = useCsvExporter();

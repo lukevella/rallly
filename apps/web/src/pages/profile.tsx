@@ -13,7 +13,7 @@ Page.getLayout = getStandardLayout;
 
 export const getServerSideProps = withSessionSsr([
   withAuth,
-  withPageTranslations(["common", "app"]),
+  withPageTranslations(),
 ]);
 
 export default Page;

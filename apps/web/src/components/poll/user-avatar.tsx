@@ -107,7 +107,7 @@ const UserAvatar: React.FunctionComponent<UserAvaterProps> = ({
   className,
   ...forwardedProps
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   if (!showName) {
     return <UserAvatarInner className={className} {...forwardedProps} />;
   }

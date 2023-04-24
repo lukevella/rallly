@@ -30,7 +30,7 @@ export const ParticipantDropdown = ({
   participant: Participant;
   onEdit: () => void;
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const [isChangeNameModalVisible, showChangeNameModal, hideChangeNameModal] =
@@ -137,7 +137,7 @@ const ChangeNameModal = (props: {
 
   const { requiredString } = useFormValidation();
 
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   return (
     <form onSubmit={handleSubmit(handler)} className="max-w-sm space-y-3 p-4">
       <div>

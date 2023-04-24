@@ -70,7 +70,7 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const formRef = React.useRef<HTMLFormElement>(null);
 
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const updateParticipant = useUpdateParticipantMutation();
 

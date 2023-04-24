@@ -15,7 +15,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
   title,
   description,
 }) => {
-  const { t } = useTranslation(["common", "errors"]);
+  const { t } = useTranslation();
   return (
     <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
       <Head>
@@ -31,14 +31,14 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
           <p>{description}</p>
           <div className="flex justify-center space-x-3">
             <Link href="/" className="btn-primary">
-              {t("errors:goToHome")}
+              {t("errors.goToHome")}
             </Link>
             <Link
               href="https://support.rallly.co"
               passHref={true}
               className="btn-default"
             >
-              {t("support")}
+              {t("common.support")}
             </Link>
           </div>
         </div>

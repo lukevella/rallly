@@ -17,7 +17,7 @@ const NameInput: React.ForwardRefRenderFunction<
   HTMLInputElement,
   NameInputProps
 > = ({ value, defaultValue, className, ...forwardProps }, ref) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   return (
     <div className="relative flex items-center">
       {value ? (

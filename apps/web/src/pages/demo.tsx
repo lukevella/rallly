@@ -13,7 +13,7 @@ import { withSession } from "../components/user-provider";
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Demo: NextPage = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const router = useRouter();
   const createDemo = trpc.polls.demo.create.useMutation();
@@ -29,7 +29,7 @@ const Demo: NextPage = () => {
 
 export const getServerSideProps = withSessionSsr([
   withAuthIfRequired,
-  withPageTranslations(["common", "app"]),
+  withPageTranslations(),
 ]);
 
 export default withSession(Demo);

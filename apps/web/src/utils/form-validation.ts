@@ -12,7 +12,7 @@ export const validEmail = (value: string) =>
   /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
 
 export const useFormValidation = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   return {
     requiredString: (name?: string) => (value: string) => {

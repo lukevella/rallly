@@ -25,7 +25,7 @@ export type PollOptionsData = {
 const PollOptionsForm: React.FunctionComponent<
   PollFormProps<PollOptionsData> & { title?: string }
 > = ({ name, defaultValues, onSubmit, onChange, title, className }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { control, handleSubmit, watch, setValue, formState } =
     useForm<PollOptionsData>({
       defaultValues: {

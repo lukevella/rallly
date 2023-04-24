@@ -30,7 +30,7 @@ const VoteSummary = ({
   className?: string;
   votes: { optionId: string; type: VoteType }[];
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const voteByType = votes.reduce<Record<VoteType, string[]>>(
     (acc, vote) => {
       acc[vote.type] = [...acc[vote.type], vote.optionId];
@@ -71,7 +71,7 @@ const VoteSummary = ({
 };
 
 export const NewParticipantModal = (props: NewParticipantModalProps) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { register, formState, setFocus, handleSubmit } =
     useForm<NewParticipantFormData>();
   const { requiredString, validEmail } = useFormValidation();

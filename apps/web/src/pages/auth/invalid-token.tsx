@@ -5,7 +5,7 @@ import { AuthLayout } from "@/components/layouts/auth-layout";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 const Page = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   return (
     <AuthLayout title={t("expiredOrInvalidLink")}>
       <NextSeo
@@ -18,6 +18,6 @@ const Page = () => {
   );
 };
 
-export const getStaticProps = withPageTranslations(["app"]);
+export const getStaticProps = withPageTranslations();
 
 export default Page;
