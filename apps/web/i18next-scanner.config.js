@@ -7,7 +7,7 @@ module.exports = {
     defaultNs: "app",
     defaultValue: "__STRING_NOT_TRANSLATED__",
     lngs: ["en"],
-    ns: ["app", "common", "homepage", "errors"],
+    ns: ["app"],
     func: {
       list: ["t"],
       extensions: [".ts", ".tsx"],
