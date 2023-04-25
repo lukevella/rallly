@@ -22,9 +22,9 @@ Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://githu
 
 ## Self-hosting
 
-Check out the [self-hosting repo](https://github.com/lukevella/rallly-selfhosted) for more information on running your own instance of Rallly.
+Check out the [self-hosting docs](https://support.rallly.co/self-hosting) for more information on running your own instance of Rallly.
 
-## Running locally
+## Development
 
 Clone this repo and change directory to the root of the repository.
 
@@ -33,18 +33,16 @@ git clone https://github.com/lukevella/rallly.git
 cd rallly
 ```
 
-Copy the sample `.env` file then open it and set the variables.
-
-```bash
-cp sample.env .env
-```
-
-_See [configuration](#configuration) to see what parameters are available._
-
 Install dependencies
 
 ```
 yarn
+```
+
+Copy the sample `.env` file then open it and set the required [configuration options](https://support.rallly.co/self-hosting/configuration-options).
+
+```bash
+cp sample.env .env
 ```
 
 Next, run the following command:
@@ -64,29 +62,7 @@ Start the Next.js server
 ```
 # For development
 yarn dev
-# For production
-yarn build
-yarn start
 ```
-
-## Configuration Options
-
-The app can be configured with the following environment variables.
-
-| Environment Variable   | Default               | Description                                                                                                                                     |
-| ---------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_REQUIRED`        | false                 | Set to `true` to require authentication for creating new polls and accessing admin pages                                                        |
-| `ALLOWED_EMAILS`       |                       | Comma separated list of email addresses that are allowed to register and login. Wildcard characters are supported. Example: `*@yourcompany.com` |
-| `DATABASE_URL`         |                       | Postgres database connection string                                                                                                             |
-| `DISABLE_LANDING_PAGE` | false                 | Whether or not to disable the landing page                                                                                                      |
-| `NEXT_PUBLIC_BASE_URL` | http://localhost:3000 | The base url where this instance is accessible, including the scheme (eg. `http://` or `https://`), the domain name, and optionally a port.     |
-| `SECRET_PASSWORD`      |                       | A random 32-character secret key used to encrypt user sessions                                                                                  |
-| `SUPPORT_EMAIL`        |                       | All outgoing emails will show this email as the sender's email address, which also serves as the support email.                                 |
-| `SMTP_HOST`            | localhost             | The host address of your SMTP server                                                                                                            |
-| `SMTP_PORT`            | 25 or 465             | The port of your SMTP server                                                                                                                    |
-| `SMTP_SECURE`          | false                 | Set to "true" if SSL is enabled for your SMTP connection                                                                                        |
-| `SMTP_USER`            |                       | The username (if auth is enabled on your SMTP server)                                                                                           |
-| `SMTP_PWD`             |                       | The password (if auth is enabled on your SMTP server)                                                                                           |
 
 ## Contributors
 
