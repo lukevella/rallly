@@ -19,7 +19,7 @@ In order to maintain a high standard of code quality, please ensure that you are
 
 ## Translations 🌐
 
-To contribute translations, please check out our [Guide for Translators](https://github.com/lukevella/rallly/wiki/Guide-for-translators) which contains all the information you need to get started.
+To contribute translations, please check out our [guide for translators](https://support.rallly.co/become-a-translator) which contains all the information you need to get started.
 
 ## Becoming a Sponsor 💰
 
