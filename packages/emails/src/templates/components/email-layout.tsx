@@ -20,7 +20,10 @@ interface EmailLayoutProps {
 const containerStyles = {
   maxWidth: "600px",
   margin: "0 auto",
+  background: "white",
   fontFamily,
+  padding: 16,
+  borderRadius: 5,
 };
 
 const sectionStyles = {
@@ -44,17 +47,27 @@ export const EmailLayout = ({
     <Html>
       <Head />
       <Preview>{preview}</Preview>
-      <Body style={{ backgroundColor: "white", padding: "16px" }}>
+      <Body style={{ backgroundColor: "#e5e7eb", padding: "16px" }}>
         <Container style={containerStyles}>
           <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
           <Section style={sectionStyles}>
             <Text>Hi {firstName},</Text>
             {children}
             {footNote ? (
-              <Text style={{ color: "#64748B", fontFamily }}>{footNote}</Text>
+              <Text
+                style={{
+                  color: "#64748B",
+                  fontFamily,
+                  paddingTop: 16,
+                  marginTop: 32,
+                  borderTop: "1px solid #e2e8f0",
+                }}
+              >
+                {footNote}
+              </Text>
             ) : null}
           </Section>
-          <Section style={{ ...sectionStyles, fontSize: 14 }}>
+          <Section style={{ ...sectionStyles, fontSize: 14, marginBottom: 0 }}>
             <Link style={linkStyles} href={absoluteUrl()}>
               Home
             </Link>

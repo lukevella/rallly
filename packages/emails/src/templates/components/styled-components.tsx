@@ -81,6 +81,7 @@ export const Heading = (
       style={{
         marginTop: "16px",
         marginBottom: "8px",
+        letterSpacing: "-0.75px",
         fontFamily: "sans-serif",
         fontWeight: "bold",
         fontSize: fontSize[as],
@@ -135,7 +136,7 @@ export const Card = (props: SectionProps) => {
       {...props}
       style={{
         borderRadius: "4px",
-        backgroundColor: "#F1F5F9",
+        backgroundColor: "#f3f4f6",
         paddingRight: "16px",
         paddingLeft: "16px",
         border: "1px solid #E2E8F0",
