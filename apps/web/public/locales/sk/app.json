@@ -95,19 +95,7 @@
   "noVotes": "Nikto pre túto možnosť nehlasoval",
   "ok": "OK",
   "optional": "voliteľné",
-  "optionCount_few": "{{count}} možností",
-  "optionCount_many": "{{count}} možností",
-  "optionCount_one": "{{count}} možnosť",
-  "optionCount_other": "{{count}} možností",
-  "optionCount_two": "{{count}} možností",
-  "optionCount_zero": "{{count}} možností",
   "participant": "Účastník",
-  "participantCount_few": "{{count}} účastníkov",
-  "participantCount_many": "{{count}} účastníkov",
-  "participantCount_one": "{{count}} účastník",
-  "participantCount_other": "{{count}} účastníkov",
-  "participantCount_two": "{{count}} účastníkov",
-  "participantCount_zero": "{{count}} účastníkov",
   "pollHasBeenLocked": "Anketa bola uzamknutá",
   "pollsEmpty": "Neboli vytvorené žiadne ankety",
   "possibleAnswers": "Možné odpovede",
@@ -217,5 +205,7 @@
     "notFoundDescription": "Nemohli sme nájsť stránku, ktorú hľadáte.",
     "goToHome": "Prejsť na Domovskú stránku",
     "startChat": "Spustiť chat"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} možnosť} other {{count} možností}}",
+  "participantCount": "{count, plural, one {{count} účastník} other {{count} účastníkov}}"
 }

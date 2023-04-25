@@ -94,19 +94,7 @@
   "noVotes": "Ingen har röstat för detta alternativ",
   "ok": "Ok",
   "optional": "frivilligt",
-  "optionCount_few": "{{count}} val",
-  "optionCount_many": "{{count}} val",
-  "optionCount_one": "{{count}} val",
-  "optionCount_other": "{{count}} val",
-  "optionCount_two": "{{count}} val",
-  "optionCount_zero": "{{count}} val",
   "participant": "Deltagare",
-  "participantCount_few": "{{count}} deltagare",
-  "participantCount_many": "{{count}} deltagare",
-  "participantCount_one": "{{count}} deltagare",
-  "participantCount_other": "{{count}} deltagare",
-  "participantCount_two": "{{count}} deltagare",
-  "participantCount_zero": "{{count}} deltagare",
   "pollHasBeenLocked": "Denna förfrågan har låsts",
   "pollsEmpty": "Inga förfrågningar har skapats",
   "possibleAnswers": "Möjliga svar",
@@ -215,5 +203,7 @@
     "notFoundDescription": "Vi kunde inte hitta sidan du försökte nå.",
     "goToHome": "Gå till hem",
     "startChat": "Starta chatt"
-  }
+  },
+  "optionCount": "{count, plural, other {{count} val}}",
+  "participantCount": "{count, plural, other {{count} deltagare}}"
 }

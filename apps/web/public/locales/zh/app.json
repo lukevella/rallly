@@ -95,19 +95,7 @@
   "noVotes": "没有人对此选项投票",
   "ok": "确定",
   "optional": "可选",
-  "optionCount_few": "{{count}} 个选项",
-  "optionCount_many": "{{count}} 个选项",
-  "optionCount_one": "{{count}} 个选项",
-  "optionCount_other": "{{count}} 个选项",
-  "optionCount_two": "{{count}} 个选项",
-  "optionCount_zero": "{{count}} 个选项",
   "participant": "参与者",
-  "participantCount_few": "{{count}} 位参与者",
-  "participantCount_many": "{{count}} 位参与者",
-  "participantCount_one": "{{count}} 位参与者",
-  "participantCount_other": "{{count}} 位参与者",
-  "participantCount_two": "{{count}} 位参与者",
-  "participantCount_zero": "{{count}} 位参与者",
   "pollHasBeenLocked": "此投票已锁定",
   "pollsEmpty": "未创建投票",
   "possibleAnswers": "可用的投票选项",
@@ -215,5 +203,7 @@
     "notFoundDescription": "我们无法找到你想要的网页。",
     "goToHome": "回到主页",
     "startChat": "开始聊天"
-  }
+  },
+  "optionCount": "{count, plural, other {{count} 个选项}}",
+  "participantCount": "{count, plural, other {{count} 位参与者}}"
 }

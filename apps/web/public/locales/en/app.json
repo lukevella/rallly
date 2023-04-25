@@ -95,19 +95,7 @@
   "noVotes": "No one has voted for this option",
   "ok": "Ok",
   "optional": "optional",
-  "optionCount_few": "{{count}} options",
-  "optionCount_many": "{{count}} options",
-  "optionCount_one": "{{count}} option",
-  "optionCount_other": "{{count}} options",
-  "optionCount_two": "{{count}} options",
-  "optionCount_zero": "{{count}} options",
   "participant": "Participant",
-  "participantCount_few": "{{count}} participants",
-  "participantCount_many": "{{count}} participants",
-  "participantCount_one": "{{count}} participant",
-  "participantCount_other": "{{count}} participants",
-  "participantCount_two": "{{count}} participants",
-  "participantCount_zero": "{{count}} participants",
   "pollHasBeenLocked": "This poll has been locked",
   "pollsEmpty": "No polls created",
   "possibleAnswers": "Possible answers",
@@ -217,5 +205,7 @@
     "notFoundDescription": "We couldn't find the page you're looking for.",
     "goToHome": "Go to home",
     "startChat": "Start chat"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} option} other {{count} options}}",
+  "participantCount": "{count, plural, one {{count} participant} other {{count} participants}}"
 }

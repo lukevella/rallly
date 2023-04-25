@@ -67,12 +67,6 @@
   "notificationsOn": "Powiadomienia są włączone",
   "noVotes": "Nikt nie głosował na tę opcję",
   "participant": "Uczestnik",
-  "participantCount_few": "{{count}} uczestników",
-  "participantCount_many": "{{count}} uczestników",
-  "participantCount_one": "{{count}} uczestnik",
-  "participantCount_other": "{{count}} uczestników",
-  "participantCount_two": "{{count}} uczestników",
-  "participantCount_zero": "{{count}} uczestników",
   "pollHasBeenLocked": "Ta ankieta została zablokowana",
   "pollsEmpty": "Nie utworzono ankiet",
   "possibleAnswers": "Możliwe opcje",
@@ -160,5 +154,6 @@
     "notFoundDescription": "Nie mogliśmy znaleźć strony, której szukasz.",
     "goToHome": "Przejdź do strony głównej",
     "startChat": "Rozpocznij czat"
-  }
+  },
+  "participantCount": "{count, plural, one {{count} uczestnik} other {{count} uczestników}}"
 }

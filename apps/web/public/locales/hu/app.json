@@ -95,19 +95,7 @@
   "noVotes": "Senki sem szavazott erre a lehetőségre",
   "ok": "Ok",
   "optional": "opcionális",
-  "optionCount_few": "{{count}} lehetőség",
-  "optionCount_many": "{{count}} lehetőség",
-  "optionCount_one": "{{count}} lehetőség",
-  "optionCount_other": "{{count}} lehetőség",
-  "optionCount_two": "{{count}} lehetőség",
-  "optionCount_zero": "{{count}} lehetőség",
   "participant": "Résztvevő",
-  "participantCount_few": "{{count}} résztvevő",
-  "participantCount_many": "{{count}} résztvevő",
-  "participantCount_one": "{{count}} résztvevő",
-  "participantCount_other": "{{count}} résztvevő",
-  "participantCount_two": "{{count}} résztvevő",
-  "participantCount_zero": "{{count}} résztvevő",
   "pollHasBeenLocked": "A szavazás le lett zárva",
   "pollsEmpty": "Nincs létrehozott szavazás",
   "possibleAnswers": "Lehetséges válaszok",
@@ -217,5 +205,7 @@
     "notFoundDescription": "Nem található az oldal, amit keresel.",
     "goToHome": "Irány a főoldal",
     "startChat": "Csevegés indítása"
-  }
+  },
+  "optionCount": "{count, plural, other {{count} lehetőség}}",
+  "participantCount": "{count, plural, other {{count} résztvevő}}"
 }

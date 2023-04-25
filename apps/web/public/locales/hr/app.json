@@ -95,19 +95,7 @@
   "noVotes": "Nitko nije glasao za ovu opciju",
   "ok": "U redu",
   "optional": "opcionalno",
-  "optionCount_few": "{{count}} opcije",
-  "optionCount_many": "{{count}} opcije",
-  "optionCount_one": "{{count}} opcija",
-  "optionCount_other": "{{count}} opcije",
-  "optionCount_two": "{{count}} opcije",
-  "optionCount_zero": "{{count}} opcije",
   "participant": "Sudionik",
-  "participantCount_few": "Broj sudionika: {{count}}",
-  "participantCount_many": "Broj sudionika: {{count}}",
-  "participantCount_one": "Broj sudionika: {{count}}",
-  "participantCount_other": "Broj sudionika: {{count}}",
-  "participantCount_two": "Broj sudionika: {{count}}",
-  "participantCount_zero": "Broj sudionika: {{count}}",
   "pollHasBeenLocked": "Ova anketa je zaključana",
   "pollsEmpty": "Nema stvorenih anketa",
   "possibleAnswers": "Mogući odgovori",
@@ -215,5 +203,7 @@
     "notFoundDescription": "Nije bilo moguće pronaći stranicu koju želite otvoriti.",
     "goToHome": "Idi na naslovnicu",
     "startChat": "Pokrenite chat"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} opcija} other {{count} opcije}}",
+  "participantCount": "{count, plural, other {Broj sudionika: {count}}}"
 }

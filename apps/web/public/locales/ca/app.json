@@ -79,19 +79,7 @@
   "noVotes": "Ningú ha votat aquesta opció",
   "ok": "D'acord",
   "optional": "opcional",
-  "optionCount_few": "{{count}} opcions",
-  "optionCount_many": "{{count}} opcions",
-  "optionCount_one": "{{count}} opció",
-  "optionCount_other": "{{count}} opcions",
-  "optionCount_two": "{{count}} opcions",
-  "optionCount_zero": "{{count}} opcions",
   "participant": "Participant",
-  "participantCount_few": "{{count}} participants",
-  "participantCount_many": "{{count}} participants",
-  "participantCount_one": "{{count}} participant",
-  "participantCount_other": "{{count}} participants",
-  "participantCount_two": "{{count}} participants",
-  "participantCount_zero": "{{count}} participants",
   "pollHasBeenLocked": "Aquesta enquesta ha estat bloquejada",
   "pollsEmpty": "No s'ha creat cap enquesta",
   "possibleAnswers": "Possibles respostes",
@@ -197,5 +185,7 @@
     "notFoundDescription": "No s'ha pogut trobar la pàgina que estaves buscant.",
     "goToHome": "Anar a l'Inici",
     "startChat": "Inicia un xat"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} opció} other {{count} opcions}}",
+  "participantCount": "{count, plural, one {{count} participant} other {{count} participants}}"
 }

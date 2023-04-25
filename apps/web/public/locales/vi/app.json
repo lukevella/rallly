@@ -86,19 +86,7 @@
   "noVotes": "Chưa ai bầu cho bình chọn này",
   "ok": "Ok",
   "optional": "tuỳ chọn",
-  "optionCount_few": "{{count}} tuỳ chọn",
-  "optionCount_many": "{{count}} tuỳ chọn",
-  "optionCount_one": "{{count}} tuỳ chọn",
-  "optionCount_other": "{{count}} tuỳ chọn",
-  "optionCount_two": "{{count}} tuỳ chọn",
-  "optionCount_zero": "{{count}} tuỳ chọn",
   "participant": "Người tham dự",
-  "participantCount_few": "{{count}} người tham dự",
-  "participantCount_many": "{{count}} người tham dự",
-  "participantCount_one": "{{count}} người tham dự",
-  "participantCount_other": "{{count}} người tham dự",
-  "participantCount_two": "{{count}} người tham dự",
-  "participantCount_zero": "{{count}} người tham dự",
   "pollHasBeenLocked": "Bình chọn này đã bị khóa",
   "pollsEmpty": "Không có bình chọn nào được tạo",
   "possibleAnswers": "Những câu trả lời bạn có thể bầu chọn",
@@ -204,5 +192,7 @@
     "notFoundDescription": "Chúng tôi không thấy trang bạn đang tìm.",
     "goToHome": "Về trang chủ",
     "startChat": "Bắt đầu trò chuyện"
-  }
+  },
+  "optionCount": "{count, plural, other {{count} tuỳ chọn}}",
+  "participantCount": "{count, plural, other {{count} người tham dự}}"
 }

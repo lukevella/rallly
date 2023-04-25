@@ -88,19 +88,7 @@
   "noVotes": "Никто не проголосовал за этот вариант",
   "ok": "OK",
   "optional": "опционально",
-  "optionCount_few": "{{count}} опции",
-  "optionCount_many": "{{count}} опций",
-  "optionCount_one": "{{count}} опция",
-  "optionCount_other": "{{count}} опций",
-  "optionCount_two": "{{count}} опции",
-  "optionCount_zero": "{{count}} опций",
   "participant": "Участник",
-  "participantCount_few": "{{count}} участников",
-  "participantCount_many": "{{count}} участников",
-  "participantCount_one": "{{count}} участник",
-  "participantCount_other": "{{count}} участников",
-  "participantCount_two": "{{count}} участников",
-  "participantCount_zero": "{{count}} участников",
   "pollHasBeenLocked": "Этот опрос заблокирован",
   "pollsEmpty": "Опросы отсутствуют",
   "possibleAnswers": "Возможные ответы",
@@ -208,5 +196,7 @@
     "notFoundDescription": "Мы не можем найти страницу, которую вы искали.",
     "goToHome": "Вернуться на главную",
     "startChat": "Начать чат"
-  }
+  },
+  "optionCount": "{count, plural, few {{count} опции} one {{count} опция} other {{count} опций} two {{count} опции}}",
+  "participantCount": "{count, plural, one {{count} участник} other {{count} участников}}"
 }

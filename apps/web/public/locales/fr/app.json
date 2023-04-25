@@ -95,19 +95,7 @@
   "noVotes": "Personne n'a voté pour cette option",
   "ok": "Ok",
   "optional": "facultatif",
-  "optionCount_few": "{{count}} options",
-  "optionCount_many": "{{count}} options",
-  "optionCount_one": "{{count}} option",
-  "optionCount_other": "{{count}} options",
-  "optionCount_two": "{{count}} options",
-  "optionCount_zero": "{{count}} options",
   "participant": "Participant",
-  "participantCount_few": "{{count}} participants",
-  "participantCount_many": "{{count}} participants",
-  "participantCount_one": "{{count}} participant",
-  "participantCount_other": "{{count}} participants",
-  "participantCount_two": "{{count}} participants",
-  "participantCount_zero": "{{count}} participants",
   "pollHasBeenLocked": "Ce sondage a été verrouillé",
   "pollsEmpty": "Aucun sondage n'a été créé",
   "possibleAnswers": "Réponses possibles",
@@ -217,5 +205,7 @@
     "notFoundDescription": "Nous n'avons pas trouvé la page que vous recherchez.",
     "goToHome": "Retourner à la page d'accueil",
     "startChat": "Démarrer la discussion"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} option} other {{count} options}}",
+  "participantCount": "{count, plural, one {{count} participant} other {{count} participants}}"
 }

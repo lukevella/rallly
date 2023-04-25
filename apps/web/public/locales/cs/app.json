@@ -95,19 +95,7 @@
   "noVotes": "Nikdo pro tuto možnost nehlasoval",
   "ok": "Ok",
   "optional": "volitelné",
-  "optionCount_few": "{{count}} možností",
-  "optionCount_many": "{{count}} možností",
-  "optionCount_one": "{{count}} možnost",
-  "optionCount_other": "{{count}} možností",
-  "optionCount_two": "{{count}} možností",
-  "optionCount_zero": "{{count}} možností",
   "participant": "Účastník",
-  "participantCount_few": "{{count}} účastníků",
-  "participantCount_many": "{{count}} účastníků",
-  "participantCount_one": "{{count}} účastník",
-  "participantCount_other": "{{count}} účastníků",
-  "participantCount_two": "{{count}} účastníků",
-  "participantCount_zero": "{{count}} účastníků",
   "pollHasBeenLocked": "Anketa byla uzamčena",
   "pollsEmpty": "Nebyly vytvořeny žádné ankety",
   "possibleAnswers": "Možné odpovědi",
@@ -217,5 +205,7 @@
     "notFoundDescription": "Nemohli jsme najít stránku, kterou hledáte.",
     "goToHome": "Přejít domů",
     "startChat": "Zahájit chat"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} možnost} other {{count} možností}}",
+  "participantCount": "{count, plural, one {{count} účastník} other {{count} účastníků}}"
 }

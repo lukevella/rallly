@@ -95,19 +95,7 @@
   "noVotes": "Ninguém votou nesta opção",
   "ok": "Ok",
   "optional": "opcional",
-  "optionCount_few": "{{count}} opções",
-  "optionCount_many": "{{count}} opções",
-  "optionCount_one": "{{count}} opção",
-  "optionCount_other": "{{count}} opções",
-  "optionCount_two": "{{count}} opções",
-  "optionCount_zero": "{{count}} opções",
   "participant": "Participante",
-  "participantCount_few": "{{count}} participantes",
-  "participantCount_many": "{{count}} participantes",
-  "participantCount_one": "{{count}} participante",
-  "participantCount_other": "{{count}} participantes",
-  "participantCount_two": "{{count}} participantes",
-  "participantCount_zero": "{{count}} participantes",
   "pollHasBeenLocked": "Esta enquete foi bloqueada",
   "pollsEmpty": "Nenhuma enquete criada",
   "possibleAnswers": "Possíveis respostas",
@@ -217,5 +205,7 @@
     "notFoundDescription": "Não conseguimos encontrar a página que você está procurando.",
     "goToHome": "Ir para o início",
     "startChat": "Iniciar chat"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} opção} other {{count} opções}}",
+  "participantCount": "{count, plural, one {{count} participante} other {{count} participantes}}"
 }

@@ -95,19 +95,7 @@
   "noVotes": "Ingen har stemt for denne mulighed",
   "ok": "OK",
   "optional": "valgfri",
-  "optionCount_few": "{{count}} stemmer",
-  "optionCount_many": "{{count}} stemmer",
-  "optionCount_one": "{{count}} stemme",
-  "optionCount_other": "{{count}} stemmer",
-  "optionCount_two": "{{count}} stemmer",
-  "optionCount_zero": "{{count}} stemmer",
   "participant": "Deltager",
-  "participantCount_few": "{{count}} deltagere",
-  "participantCount_many": "{{count}} deltagere",
-  "participantCount_one": "{{count}} deltager",
-  "participantCount_other": "{{count}} deltagere",
-  "participantCount_two": "{{count}} deltagere",
-  "participantCount_zero": "{{count}} deltagere",
   "pollHasBeenLocked": "Denne afstemning er blevet låst",
   "pollsEmpty": "Ingen afstemninger oprettet",
   "possibleAnswers": "Mulige svar",
@@ -215,5 +203,7 @@
     "notFoundDescription": "Kunne ikke finde den side, du ledte efter.",
     "goToHome": "Gå til startside",
     "startChat": "Start chat"
-  }
+  },
+  "optionCount": "{count, plural, one {{count} stemme} other {{count} stemmer}}",
+  "participantCount": "{count, plural, one {{count} deltager} other {{count} deltagere}}"
 }
