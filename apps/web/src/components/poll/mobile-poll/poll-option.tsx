@@ -73,7 +73,7 @@ const PopInOut: React.FunctionComponent<{
 const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   optionId,
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { getParticipants } = useParticipants();
   const participantsWhoVotedYes = getParticipants(optionId, "yes");
   const participantsWhoVotedIfNeedBe = getParticipants(optionId, "ifNeedBe");

@@ -16,5 +16,5 @@ export const getServerSideProps: GetServerSideProps = composeGetServerSideProps(
     }
     return { props: {} };
   },
-  withPageTranslations(["common", "homepage"]),
+  withPageTranslations(),
 );

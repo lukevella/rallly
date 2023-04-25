@@ -30,7 +30,7 @@ export const DeletePollForm: React.FunctionComponent<{
     },
   });
 
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   return (
     <div className="flex max-w-lg space-x-6 p-5">

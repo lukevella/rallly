@@ -14,6 +14,7 @@ import React from "react";
 
 import Maintenance from "@/components/maintenance";
 
+import * as nextI18nNextConfig from "../../next-i18next.config.js";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
 
@@ -81,4 +82,4 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   );
 };
 
-export default trpc.withTRPC(appWithTranslation(MyApp));
+export default trpc.withTRPC(appWithTranslation(MyApp, nextI18nNextConfig));

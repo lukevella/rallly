@@ -17,7 +17,7 @@ const Sharing: React.FunctionComponent<SharingProps> = ({
   className,
 }) => {
   const { poll } = usePoll();
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const [state, copyToClipboard] = useCopyToClipboard();
 
   React.useEffect(() => {

@@ -23,7 +23,7 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
   name,
   email,
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { register, formState, handleSubmit, reset } = useForm<{
     name: string;
     email: string;

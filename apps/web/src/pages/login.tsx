@@ -1,4 +1,7 @@
-import { withSessionSsr } from "@rallly/backend/next";
+import {
+  composeGetServerSideProps,
+  withSessionSsr,
+} from "@rallly/backend/next";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -12,7 +15,7 @@ import { useUser, withSession } from "@/components/user-provider";
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Page: NextPage<{ referer: string | null }> = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const router = useRouter();
   const { refresh } = useUser();
 
@@ -32,16 +35,15 @@ const Page: NextPage<{ referer: string | null }> = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  async (ctx) => {
+  composeGetServerSideProps(async (ctx) => {
     if (ctx.req.session.user?.isGuest === false) {
       return {
         redirect: { destination: "/profile" },
         props: {},
       };
     }
-
-    return await withPageTranslations(["common", "app"])(ctx);
-  },
+    return { props: {} };
+  }, withPageTranslations()),
 );
 
 export default withSession(Page);

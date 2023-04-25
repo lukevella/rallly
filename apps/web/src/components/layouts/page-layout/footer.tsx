@@ -17,7 +17,7 @@ import Vercel from "~/vercel-logotype-dark.svg";
 import { LanguageSelect } from "../../poll/language-selector";
 
 const Footer: React.FunctionComponent = () => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation();
   const router = useRouter();
   return (
     <div className="mt-16 bg-gradient-to-b from-gray-50/0 via-gray-50 to-gray-50 ">
@@ -29,7 +29,7 @@ const Footer: React.FunctionComponent = () => {
               <p>
                 <Trans
                   t={t}
-                  i18nKey="footerSponsor"
+                  i18nKey="common.footerSponsor"
                   components={{
                     a: (
                       <a
@@ -43,7 +43,7 @@ const Footer: React.FunctionComponent = () => {
               <div>
                 <Trans
                   t={t}
-                  i18nKey="footerCredit"
+                  i18nKey="common.footerCredit"
                   components={{
                     a: (
                       <a
@@ -73,19 +73,19 @@ const Footer: React.FunctionComponent = () => {
                 className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
               >
                 <StarIcon className="mr-2 inline-block w-5" />
-                <span>{t("starOnGithub")}</span>
+                <span>{t("common.starOnGithub")}</span>
               </a>
             </div>
           </div>
           <div className="lg:w-1/6">
-            <div className="mb-4 font-medium">{t("links")}</div>
+            <div className="mb-4 font-medium">{t("homepage.links")}</div>
             <ul className="space-y-2">
               <li>
                 <a
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                   href="https://github.com/lukevella/rallly/discussions"
                 >
-                  {t("discussions")}
+                  {t("common.discussions")}
                 </a>
               </li>
               <li>
@@ -93,7 +93,7 @@ const Footer: React.FunctionComponent = () => {
                   href="https://blog.rallly.co"
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                 >
-                  {t("blog")}
+                  {t("common.blog")}
                 </Link>
               </li>
               <li>
@@ -101,13 +101,13 @@ const Footer: React.FunctionComponent = () => {
                   href="https://support.rallly.co"
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                 >
-                  {t("support")}
+                  {t("common.support")}
                 </a>
               </li>
             </ul>
           </div>
           <div className="lg:w-1/6">
-            <div className="mb-4 font-medium">{t("poweredBy")}</div>
+            <div className="mb-4 font-medium">{t("common.poweredBy")}</div>
             <div className="block space-y-4">
               <div>
                 <a
@@ -133,7 +133,7 @@ const Footer: React.FunctionComponent = () => {
             </div>
           </div>
           <div className="lg:w-2/6">
-            <div className="mb-4 font-medium">{t("language")}</div>
+            <div className="mb-4 font-medium">{t("common.language")}</div>
             <LanguageSelect
               className="mb-4 w-full"
               onChange={(locale) => {
@@ -141,11 +141,11 @@ const Footer: React.FunctionComponent = () => {
               }}
             />
             <a
-              href="https://github.com/lukevella/rallly/wiki/Guide-for-translators"
+              href="https://support.rallly.co/become-a-translator"
               className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
             >
               <TranslateIcon className="mr-2 h-5 w-5" />
-              {t("volunteerTranslator")} &rarr;
+              {t("common.volunteerTranslator")} &rarr;
             </a>
           </div>
         </div>
@@ -155,7 +155,7 @@ const Footer: React.FunctionComponent = () => {
               href="/privacy-policy"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              {t("privacyPolicy")}
+              {t("common.privacyPolicy")}
             </Link>
           </li>
           <li>
@@ -163,7 +163,7 @@ const Footer: React.FunctionComponent = () => {
               href="/cookie-policy"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              {t("cookiePolicy")}
+              {t("common.cookiePolicy")}
             </Link>
           </li>
           <li>
@@ -171,7 +171,7 @@ const Footer: React.FunctionComponent = () => {
               href="/terms-of-use"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              {t("termsOfUse")}
+              {t("common.termsOfUse")}
             </Link>
           </li>
         </ul>

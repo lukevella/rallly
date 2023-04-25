@@ -20,7 +20,7 @@ import {
 const minSidebarWidth = 200;
 
 const Poll: React.FunctionComponent = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const { poll, options, targetTimeZone, setTargetTimeZone, userAlreadyVoted } =
     usePoll();

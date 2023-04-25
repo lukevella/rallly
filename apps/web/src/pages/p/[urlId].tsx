@@ -25,7 +25,7 @@ const Page: NextPageWithLayout<{
   const { user } = useUser();
   const poll = pollQuery.data;
 
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   if (poll) {
     return (
       <>
@@ -65,7 +65,7 @@ Page.getLayout = function getLayout(page) {
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
   [
-    withPageTranslations(["common", "app", "errors"]),
+    withPageTranslations(),
     async (ctx) => {
       let userId: string | null = null;
       if (ctx.query.token) {

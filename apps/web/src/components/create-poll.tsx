@@ -36,7 +36,7 @@ export interface CreatePollPageProps {
 }
 
 const Page: React.FunctionComponent = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const router = useRouter();
 

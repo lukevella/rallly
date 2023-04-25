@@ -16,7 +16,7 @@ import ModalProvider from "../../components/modal/modal-provider";
 import { NextPageWithLayout } from "../../types";
 
 const Page: NextPageWithLayout<{ urlId: string }> = ({ urlId }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const pollQuery = usePollByAdmin();
 
@@ -52,7 +52,7 @@ Page.getLayout = getStandardLayout;
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
   [
     withAuthIfRequired,
-    withPageTranslations(["common", "app", "errors"]),
+    withPageTranslations(),
     async (ctx) => {
       return {
         props: {

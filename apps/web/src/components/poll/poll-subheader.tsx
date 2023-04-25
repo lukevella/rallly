@@ -8,7 +8,7 @@ import Tooltip from "../tooltip";
 
 const PollSubheader: React.FunctionComponent = () => {
   const { poll, admin } = usePoll();
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { dayjs } = useDayjs();
   return (
     <div className="text-slate-500/75">

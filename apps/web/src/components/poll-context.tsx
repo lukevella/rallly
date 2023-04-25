@@ -56,7 +56,7 @@ export const PollContextProvider: React.FunctionComponent<{
   admin: boolean;
   children?: React.ReactNode;
 }> = ({ poll, urlId, admin, children }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { participants } = useParticipants();
   const { user, ownsObject } = useUser();
   const [targetTimeZone, setTargetTimeZone] =

@@ -8,7 +8,7 @@ import { useParticipants } from "../../participants-provider";
 export const useCsvExporter = () => {
   const { dayjs } = useDayjs();
   const { poll, options } = usePoll();
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { participants } = useParticipants();
   return {
     exportToCsv: () => {

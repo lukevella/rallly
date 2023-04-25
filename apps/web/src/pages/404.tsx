@@ -9,12 +9,12 @@ import { getStandardLayout } from "@/components/layouts/standard-layout";
 import { NextPageWithLayout } from "@/types";
 
 const Custom404: NextPageWithLayout = () => {
-  const { t } = useTranslation("errors");
+  const { t } = useTranslation();
   return (
     <ErrorPage
       icon={DocumentSearchIcon}
-      title={t("notFoundTitle")}
-      description={t("notFoundDescription")}
+      title={t("errors.notFoundTitle")}
+      description={t("errors.notFoundDescription")}
     />
   );
 };
@@ -24,7 +24,7 @@ Custom404.getLayout = getStandardLayout;
 export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common", "errors"])),
+      ...(await serverSideTranslations(locale)),
     },
   };
 };

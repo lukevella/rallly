@@ -23,7 +23,7 @@ export const Profile: React.FunctionComponent = () => {
   const { user } = useUser();
   const { dayjs } = useDayjs();
 
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const { data: userPolls } = trpc.user.getPolls.useQuery();
 
   const createdPolls = userPolls?.polls;

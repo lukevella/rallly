@@ -17,7 +17,7 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
   ...forwardProps
 }) => {
   const { logout, user } = useUser();
-  const { t } = useTranslation(["common", "app"]);
+  const { t } = useTranslation();
   const { openLoginModal } = useLoginModal();
   const modalContext = useModalContext();
   if (!user) {
@@ -29,7 +29,7 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
       {user.isGuest ? (
         <DropdownItem
           icon={QuestionMarkCircleIcon}
-          label={t("app:whatsThis")}
+          label={t("whatsThis")}
           onClick={() => {
             modalContext.render({
               showClose: true,
@@ -41,14 +41,14 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
                     </div>
                     <div className="">
                       <div className="text-lg font-medium leading-snug">
-                        {t("app:guest")}
+                        {t("guest")}
                       </div>
                       <div className="text-sm text-slate-500">
                         {user.shortName}
                       </div>
                     </div>
                   </div>
-                  <p>{t("app:guestSessionNotice")}</p>
+                  <p>{t("guestSessionNotice")}</p>
                   <div>
                     <a
                       href="https://support.rallly.co/guest-sessions"
@@ -56,7 +56,7 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
                       rel="noreferrer"
                       className="text-link"
                     >
-                      {t("app:guestSessionReadMore")}
+                      {t("guestSessionReadMore")}
                     </a>
                   </div>
                 </div>
@@ -71,40 +71,36 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
         <DropdownItem
           href="/profile"
           icon={UserIcon}
-          label={t("app:yourProfile")}
+          label={t("yourProfile")}
         />
       ) : null}
       {user.isGuest ? (
         <DropdownItem
           icon={LoginIcon}
-          label={t("app:login")}
+          label={t("login")}
           onClick={openLoginModal}
         />
       ) : null}
       {user.isGuest ? (
         <DropdownItem
           icon={LogoutIcon}
-          label={t("app:forgetMe")}
+          label={t("forgetMe")}
           onClick={() => {
             modalContext.render({
-              title: t("app:areYouSure"),
-              description: t("app:endingGuestSessionNotice"),
+              title: t("areYouSure"),
+              description: t("endingGuestSessionNotice"),
 
               onOk: logout,
               okButtonProps: {
                 type: "danger",
               },
-              okText: t("app:endSession"),
-              cancelText: t("app:cancel"),
+              okText: t("endSession"),
+              cancelText: t("cancel"),
             });
           }}
         />
       ) : (
-        <DropdownItem
-          icon={LogoutIcon}
-          href="/logout"
-          label={t("app:logout")}
-        />
+        <DropdownItem icon={LogoutIcon} href="/logout" label={t("logout")} />
       )}
     </Dropdown>
   );

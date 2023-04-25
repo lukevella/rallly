@@ -13,7 +13,7 @@ const Steps: React.FunctionComponent<StepsProps> = ({
   total,
   className,
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   return (
     <div className={clsx("inline-flex items-center", className)}>

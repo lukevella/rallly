@@ -26,7 +26,7 @@ import { UserDropdown } from "./user-dropdown";
 
 export const MobileNavigation = (props: { className?: string }) => {
   const { user } = useUser();
-  const { t } = useTranslation(["common", "app"]);
+  const { t } = useTranslation();
 
   const [isPinned, setIsPinned] = React.useState(false);
   const modalContext = useModalContext();
@@ -73,14 +73,10 @@ export const MobileNavigation = (props: { className?: string }) => {
           }
         >
           <DropdownItem href="/" label={t("home")} icon={HomeIcon} />
-          <DropdownItem
-            href="/new"
-            label={t("app:createNew")}
-            icon={PencilIcon}
-          />
+          <DropdownItem href="/new" label={t("createNew")} icon={PencilIcon} />
           <DropdownItem
             href="https://support.rallly.co"
-            label={t("support")}
+            label={t("common.support")}
             icon={SupportIcon}
           />
           {process.env.NEXT_PUBLIC_BETA === "1" ? (
@@ -106,7 +102,7 @@ export const MobileNavigation = (props: { className?: string }) => {
         {user ? null : (
           <LoginLink className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
             <LoginIcon className="h-5 opacity-75" />
-            <span className="inline-block">{t("app:login")}</span>
+            <span className="inline-block">{t("login")}</span>
           </LoginLink>
         )}
         <AnimatePresence initial={false}>
@@ -125,7 +121,7 @@ export const MobileNavigation = (props: { className?: string }) => {
                     <UserCircleIcon className="group-hover:text-primary-600 w-5 opacity-75 group-hover:opacity-100" />
                   </div>
                   <div className="xs:block max-w-[120px] truncate font-medium">
-                    {user.isGuest ? t("app:guest") : user.shortName}
+                    {user.isGuest ? t("guest") : user.shortName}
                   </div>
                 </button>
               }
@@ -140,9 +136,7 @@ export const MobileNavigation = (props: { className?: string }) => {
               className="group flex items-center whitespace-nowrap rounded px-2 py-1 font-medium transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
             >
               <AdjustmentsIcon className="group-hover:text-primary-600 h-5 opacity-75" />
-              <span className="ml-2 hidden sm:block">
-                {t("app:preferences")}
-              </span>
+              <span className="ml-2 hidden sm:block">{t("preferences")}</span>
             </button>
           </PopoverTrigger>
           <PopoverContent align="end">

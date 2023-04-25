@@ -27,7 +27,7 @@ const redirectToInvalidToken = {
 };
 
 const Redirect = () => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const [enabled, setEnabled] = React.useState(false);
   const router = useRouter();
 
@@ -77,7 +77,7 @@ export const Page = (
         errorCode: "userNotFound";
       },
 ) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   return (
     <AuthLayout title={t("login")}>
       {props.success ? (
@@ -92,7 +92,7 @@ export const Page = (
 export default Page;
 
 export const getServerSideProps: GetServerSideProps = composeGetServerSideProps(
-  withPageTranslations(["app"]),
+  withPageTranslations(),
   withSessionSsr(async (ctx) => {
     const token = ctx.query.token as string;
 

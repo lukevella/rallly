@@ -12,6 +12,7 @@
     "db:reset": "prisma migrate reset",
     "test": "yarn workspace @rallly/web test",
     "lint": "turbo lint",
+    "i18n:scan": "turbo i18n:scan",
     "lint:tsc": "turbo lint:tsc",
     "release": "./scripts/create-release.sh"
   },

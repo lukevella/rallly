@@ -15,7 +15,7 @@ export interface PollDetailsData {
 export const PollDetailsForm: React.FunctionComponent<
   PollFormProps<PollDetailsData>
 > = ({ name, defaultValues, onSubmit, onChange, className }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const {
     handleSubmit,
     register,

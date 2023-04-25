@@ -34,7 +34,7 @@ const participants = [
 const options = ["2022-03-14", "2022-03-15", "2022-03-16", "2022-03-17"];
 
 const PollDemo: React.FunctionComponent = () => {
-  const { t } = useTranslation("homepage");
+  const { t } = useTranslation();
 
   const { dayjs } = useDayjs();
   return (

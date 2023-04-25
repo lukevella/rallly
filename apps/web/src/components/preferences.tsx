@@ -7,7 +7,7 @@ import { useDayjs } from "../utils/dayjs";
 import { LanguageSelect } from "./poll/language-selector";
 
 const Preferences = (props: { className?: string }) => {
-  const { t } = useTranslation(["app", "common"]);
+  const { t } = useTranslation();
 
   const { weekStartsOn, setWeekStartsOn, timeFormat, setTimeFormat } =
     useDayjs();
@@ -17,14 +17,14 @@ const Preferences = (props: { className?: string }) => {
     <div className={props.className}>
       <div className="mb-2 space-y-2">
         <div className="grow text-sm text-slate-500">
-          {t("common:language")}
+          {t("common.language")}
         </div>
         <LanguageSelect className="w-full" onChange={() => router.reload()} />
       </div>
       <div className="grow space-y-2">
         <div>
           <div className="mb-2 grow text-sm text-slate-500">
-            {t("app:weekStartsOn")}
+            {t("weekStartsOn")}
           </div>
           <div>
             <div className="segment-button inline-flex">
@@ -37,7 +37,7 @@ const Preferences = (props: { className?: string }) => {
                 }}
                 type="button"
               >
-                {t("app:monday")}
+                {t("monday")}
               </button>
               <button
                 className={clsx({
@@ -48,14 +48,14 @@ const Preferences = (props: { className?: string }) => {
                 }}
                 type="button"
               >
-                {t("app:sunday")}
+                {t("sunday")}
               </button>
             </div>
           </div>
         </div>
         <div className="">
           <div className="mb-2 grow text-sm text-slate-500">
-            {t("app:timeFormat")}
+            {t("timeFormat")}
           </div>
           <div className="segment-button inline-flex">
             <button
@@ -67,7 +67,7 @@ const Preferences = (props: { className?: string }) => {
               }}
               type="button"
             >
-              {t("app:12h")}
+              {t("12h")}
             </button>
             <button
               className={clsx({
@@ -78,7 +78,7 @@ const Preferences = (props: { className?: string }) => {
               }}
               type="button"
             >
-              {t("app:24h")}
+              {t("24h")}
             </button>
           </div>
         </div>

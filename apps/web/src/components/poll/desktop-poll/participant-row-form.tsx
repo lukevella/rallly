@@ -24,7 +24,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
   HTMLFormElement,
   ParticipantRowFormProps
 > = ({ defaultValues, onSubmit, name, isYou, className, onCancel }, ref) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const {
     columnWidth,
     scrollPosition,

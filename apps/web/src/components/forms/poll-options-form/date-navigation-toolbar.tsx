@@ -13,7 +13,7 @@ export interface DateNavigationToolbarProps {
 const DateNavigationToolbar: React.FunctionComponent<
   DateNavigationToolbarProps
 > = ({ year, label, onPrevious, onToday, onNext }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   return (
     <div className="flex h-14 w-full shrink-0 items-center border-b px-4">
       <div className="grow">

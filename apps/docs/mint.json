@@ -62,6 +62,10 @@
         "self-hosting/managed-hosting",
         "self-hosting/configuration-options"
       ]
+    },
+    {
+      "group": "Contribute",
+      "pages": ["become-a-translator"]
     }
   ],
   "footerSocials": {
