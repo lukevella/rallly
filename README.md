@@ -70,7 +70,7 @@ Please read our [contributing guide](CONTRIBUTING.md) to learn about how to cont
 
 ### Translators 🌐
 
-You can help translate Rallly to another language by following our [guide for translators](https://github.com/lukevella/rallly/wiki/Guide-for-translators).
+You can help translate Rallly to another language by following our [guide for translators](https://support.rallly.co/become-a-translator).
 
 ## License
 
