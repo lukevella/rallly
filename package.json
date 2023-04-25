@@ -34,7 +34,7 @@
     "turbo": "^1.8.8"
   },
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "packageManager": "yarn@1.22.19"
 }
