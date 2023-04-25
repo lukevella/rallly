@@ -84,6 +84,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "i18n-unused": "^0.12.0",
+    "i18next-scanner-typescript": "^1.1.1",
     "prettier-plugin-tailwindcss": "^0.1.8",
     "smtp-tester": "^2.0.1",
     "wait-on": "^6.0.1"

@@ -5704,6 +5704,13 @@ i18next-icu@^2.3.0:
   resolved "https://registry.yarnpkg.com/i18next-icu/-/i18next-icu-2.3.0.tgz#eee6a15ef4c0639d5878aec4db6ec692eaed32bd"
   integrity sha512-x+j7kd5nDJCfbU53uwsMfXD7ALPu5uv0bqjAMQ5nVvXRoj1L7gkmswKtM3XDWYo4YUHf1jznlhSdPyy0xEwU+Q==
 
+i18next-scanner-typescript@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/i18next-scanner-typescript/-/i18next-scanner-typescript-1.1.1.tgz#47a6eaa09ce1c2d375bc2c76ca101b1ce9cfb6cc"
+  integrity sha512-b2vDA1X5yAwcAJPN3W5nfl4ILAdRbeuC0fqOsS6TCS58YjEsYMLWOpB55YznWMcTUQY7mQ/ZGiNpuckTe1fEYQ==
+  dependencies:
+    typescript "^3.0.0"
+
 i18next-scanner@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/i18next-scanner/-/i18next-scanner-4.2.0.tgz#f9abaecacdb55cf9f231930f8d7763293417c36d"
@@ -8490,6 +8497,11 @@ typed-array-length@^1.0.4:
     call-bind "^1.0.2"
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
+
+typescript@^3.0.0:
+  version "3.9.10"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
+  integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
 typescript@^4.9.4:
   version "4.9.5"
