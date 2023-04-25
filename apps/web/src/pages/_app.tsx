@@ -4,6 +4,7 @@ import "../style.css";
 
 import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
 import { inject } from "@vercel/analytics";
+import ICU from "i18next-icu";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
@@ -14,6 +15,7 @@ import React from "react";
 
 import Maintenance from "@/components/maintenance";
 
+import * as nextI18NextConfig from "../../next-i18next.config.js";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
 
@@ -81,4 +83,6 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   );
 };
 
-export default trpc.withTRPC(appWithTranslation(MyApp));
+export default trpc.withTRPC(
+  appWithTranslation(MyApp, { ...nextI18NextConfig, use: [new ICU()] }),
+);
