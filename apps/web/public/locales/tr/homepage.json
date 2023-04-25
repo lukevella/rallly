@@ -5,5 +5,5 @@
   "links": "Bağlantılar",
   "new": "Yeni",
   "openSourceDescription": "Kodlar tamamen açık kaynaklıdır ve <a>GitHub'da erişilebilir</a>.",
-  "participantCount_other": "{{count}} katılımcı"
+  "participantCount_other": "{count} katılımcı"
 }
