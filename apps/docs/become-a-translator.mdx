@@ -1,0 +1,135 @@
+---
+title: Become a Translator
+description: Help translate Rallly into your language
+---
+
+Rallly is made available in different languages by volunteer translators.
+Translations can be submitted through [Crowdin](https://crwd.in/rallly).
+Submitting translations is super easy and doesn't require any coding skills.
+
+## Sign Up to Crowdin
+
+The first thing you need to do is [create a Crowdin account](https://accounts.crowdin.com/register). Crowdin offers a user-friendly interface to submit translations.
+You can then join the project using this link: https://crwd.in/rallly
+
+Once you've joined the project:
+
+1. Pick the language you'd like to translate
+2. Select a file (each file contains text for different parts of the site)
+3. Start translating!
+
+<Frame>
+  ![Crowdin
+  Project](https://user-images.githubusercontent.com/676849/180199933-4e507c8e-0e9a-498a-99c8-a7ad44cb7ded.png)
+</Frame>
+
+## Tips for Translators
+
+Here are a few things to keep in mind when translating.
+
+### Punctuation
+
+Pay close attention to how phrases are punctuated.
+
+```
+Name:
+```
+
+If a sentence ends with a period (.) or a colon (:), you will want to include that in your translation.
+
+```
+❌ Nombre
+✅ Nombre:
+```
+
+### Variables
+
+Variables are placeholders for content which can change. They look like this:
+
+```
+Hi {name}, welcome back!
+```
+
+`{name}` is a variable which will be replaced with the user's name. Please make sure variables remain unchanged when translating.
+
+```
+❌ Salut {nom}, bienvenue!
+✅ Salut {name}, bienvenue!
+```
+
+### Tags
+
+Tags can be used to create a hyperlink or change the appearance of some text (ex. bold, italics etc…). They look like this:
+
+```
+Go to <a>page</a>
+```
+
+The tags should remain wrapped around the same content and should not be translated. The contents between the tags should be translated (unless they are a [variable](#variables)).
+
+```
+❌ Gehen Sie zur Seite
+❌ <a>Gehen Sie zur Seite</a>
+❌ Gehen Sie zur <a>page</a>
+✅ Gehen Sie zur <a>Seite</a>
+```
+
+### Plurals
+
+<Note>
+  We use [ICU message format](https://crowdin.com/blog/2022/04/13/icu-guide) to
+  format our plurals
+</Note>
+
+Plurals are like special rules that help make sure a message is written correctly when you're using different values.
+
+For example, the following message will display **1 option** if count is `1` or **2 options** if count is anything else.
+
+```
+{count, plural, one {# option} other {# options}}
+```
+
+Note that `#` is a placeholder for the value of `count`.
+
+If your language requires more than one plural form, you can add additional rules.
+
+```
+{count, plural, one {# опция} two {# опции} few {# опции} other {# опций}}
+```
+
+### Register
+
+For languages that have different registers (informal vs. formal), the general advise is to use an **informal** register. However, there may be exceptions for certain languages so if you are not sure please [reach out](#contact).
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="What if my language is already translated?">
+    You should still join the Crowdin project. When new translations are added
+    you will be notified to help translate them.
+  </Accordion>
+  <Accordion title="What if I don't see my language on Crowdin?">
+    New languages need to be manually added by us. If you'd like us to add your
+    language please [contact us](#contact).
+  </Accordion>
+  <Accordion title="How quickly will my translations get released?">
+    Translations are manually approved before being released. This can take
+    anywhere form a few hours to a few days.
+  </Accordion>
+</AccordionGroup>
+
+## Contact
+
+If you have an questions you can reach out using one of the following methods:
+
+<CardGroup cols={3}>
+
+<Card title="Email" icon="envelope" href="mailto:support@rallly.co" />
+<Card title="Discord" icon="discord" href="https://discord.gg/uzg4ZcHbuM" />
+<Card
+  title="Support chat"
+  icon="comments"
+  href="https://go.crisp.chat/chat/embed/?website%5Fid=19d601db-af05-4f24-8342-8dd4449aedb8"
+/>
+
+</CardGroup>

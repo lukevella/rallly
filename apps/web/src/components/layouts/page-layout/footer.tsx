@@ -141,7 +141,7 @@ const Footer: React.FunctionComponent = () => {
               }}
             />
             <a
-              href="https://github.com/lukevella/rallly/wiki/Guide-for-translators"
+              href="https://support.rallly.co/become-a-translator"
               className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
             >
               <TranslateIcon className="mr-2 h-5 w-5" />
