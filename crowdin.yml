@@ -6,5 +6,6 @@ files:
     {
       source: "/apps/web/public/locales/en/*.json",
       translation: "/apps/web/public/locales/%two_letters_code%/%original_file_name%",
+      skip_untranslated_strings: true,
     },
   ]
