@@ -161,7 +161,7 @@
     "openSource": "Открытый код",
     "openSourceDescription": "Код полностью открыт и <a>доступен на GitHub</a>.",
     "participant": "Участник",
-    "participantCount": "{count, plural, one {{count} участник} other {{count} участников}}",
+    "participantCount": "{count, plural, one {# участник} other {# участников}}",
     "perfect": "Превосходно!",
     "principles": "Принципиальные отличия",
     "principlesSubheading": "Мы не такие, как все",
@@ -192,6 +192,6 @@
     "goToHome": "Вернуться на главную",
     "startChat": "Начать чат"
   },
-  "optionCount": "{count, plural, few {{count} опции} one {{count} опция} other {{count} опций} two {{count} опции}}",
-  "participantCount": "{count, plural, one {{count} участник} other {{count} участников}}"
+  "optionCount": "{count, plural, few {# опции} one {# опция} other {# опций} two {# опции}}",
+  "participantCount": "{count, plural, one {# участник} other {# участников}}"
 }

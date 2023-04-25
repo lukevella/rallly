@@ -170,7 +170,7 @@
     "openSource": "Nyílt forráskódú",
     "openSourceDescription": "A forráskód teljesen nyílt forráskódú és <a>elérhető GitHub-on</a>.",
     "participant": "Résztvevő",
-    "participantCount": "{count, plural, other {{count} résztvevő}}",
+    "participantCount": "{count, plural, other {# résztvevő}}",
     "perfect": "Tökéletes!",
     "principles": "Alapelveink",
     "principlesSubheading": "Mások vagyok, mint a többiek",
@@ -201,6 +201,6 @@
     "goToHome": "Irány a főoldal",
     "startChat": "Csevegés indítása"
   },
-  "optionCount": "{count, plural, other {{count} lehetőség}}",
-  "participantCount": "{count, plural, other {{count} résztvevő}}"
+  "optionCount": "{count, plural, other {# lehetőség}}",
+  "participantCount": "{count, plural, other {# résztvevő}}"
 }

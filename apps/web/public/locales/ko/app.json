@@ -170,7 +170,7 @@
     "openSource": "오픈 소스",
     "openSourceDescription": "소스코드는 완전히 오픈소스이며. <a>Github</a> 에서 이용 가능합니다.",
     "participant": "참여자",
-    "participantCount": "{count, plural, zero {{count} 명의 참여자} two {{count} 명의 참여자} few {{count} 명의 참여자} many {{count} 명의 참여자} other {{count} 명}}",
+    "participantCount": "{count, plural, zero {# 명의 참여자} two {# 명의 참여자} few {# 명의 참여자} many {# 명의 참여자} other {# 명}}",
     "perfect": "완벽해요!",
     "principles": "원칙",
     "principlesSubheading": "우리는 다릅니다",
@@ -199,6 +199,6 @@
     "goToHome": "홈으로 돌아가기",
     "startChat": "채팅 시작하기"
   },
-  "optionCount": "{count, plural, other {{count} 표}}",
-  "participantCount": "{count, plural, other {{count} 명의 참여자}}"
+  "optionCount": "{count, plural, other {# 표}}",
+  "participantCount": "{count, plural, other {# 명의 참여자}}"
 }

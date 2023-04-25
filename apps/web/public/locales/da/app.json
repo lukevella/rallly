@@ -170,7 +170,7 @@
     "openSource": "Open-source",
     "openSourceDescription": "Kodebasen er fuldt open source og <a>tilgængelig på GitHub</a>.",
     "participant": "Deltager",
-    "participantCount": "{count, plural, one {{count} deltager} other {{count} deltagere}}",
+    "participantCount": "{count, plural, one {# deltager} other {# deltagere}}",
     "perfect": "Perfekt!",
     "principles": "Principper",
     "principlesSubheading": "Vi er ikke som de andre",
@@ -199,6 +199,6 @@
     "goToHome": "Gå til startside",
     "startChat": "Start chat"
   },
-  "optionCount": "{count, plural, one {{count} stemme} other {{count} stemmer}}",
-  "participantCount": "{count, plural, one {{count} deltager} other {{count} deltagere}}"
+  "optionCount": "{count, plural, one {# stemme} other {# stemmer}}",
+  "participantCount": "{count, plural, one {# deltager} other {# deltagere}}"
 }

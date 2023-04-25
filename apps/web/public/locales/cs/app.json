@@ -170,7 +170,7 @@
     "openSource": "Open-source",
     "openSourceDescription": "Veškerý kód je plně open-source a <a>k dispozici na GitHub</a>.",
     "participant": "Účastník",
-    "participantCount": "{count, plural, one {{count} účastník} other {{count} účastníků}}",
+    "participantCount": "{count, plural, one {# účastník} other {# účastníků}}",
     "perfect": "Skvěle!",
     "principles": "Zásady",
     "principlesSubheading": "Nejsme jako ostatní",
@@ -201,6 +201,6 @@
     "goToHome": "Přejít domů",
     "startChat": "Zahájit chat"
   },
-  "optionCount": "{count, plural, one {{count} možnost} other {{count} možností}}",
-  "participantCount": "{count, plural, one {{count} účastník} other {{count} účastníků}}"
+  "optionCount": "{count, plural, one {# možnost} other {# možností}}",
+  "participantCount": "{count, plural, one {# účastník} other {# účastníků}}"
 }

@@ -168,7 +168,7 @@
     "openSource": "Öppen källkod",
     "openSourceDescription": "Kodbasen är helt öppen källkod och är <a>tillgänglig på GitHub</a>.",
     "participant": "Deltagare",
-    "participantCount": "{count, plural, other {{count} deltagare}}",
+    "participantCount": "{count, plural, other {# deltagare}}",
     "perfect": "Perfekt!",
     "principles": "Principer",
     "principlesSubheading": "Vi är inte som de andra",
@@ -199,6 +199,6 @@
     "goToHome": "Gå till hem",
     "startChat": "Starta chatt"
   },
-  "optionCount": "{count, plural, other {{count} val}}",
-  "participantCount": "{count, plural, other {{count} deltagare}}"
+  "optionCount": "{count, plural, other {# val}}",
+  "participantCount": "{count, plural, other {# deltagare}}"
 }

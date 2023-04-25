@@ -170,7 +170,7 @@
     "openSource": "Avoin lähdekoodi",
     "openSourceDescription": "Sovelluksen koodi on täysin avointa ja <a>löytyy GitHubista</a>.",
     "participant": "Osallistuja",
-    "participantCount": "{count, plural, one {{count} osallistuja} other {{count} osallistujaa}}",
+    "participantCount": "{count, plural, one {# osallistuja} other {# osallistujaa}}",
     "perfect": "Täydellinen!",
     "principles": "Periaatteet",
     "principlesSubheading": "Emme ole niin kuin muut",
@@ -199,6 +199,6 @@
     "goToHome": "Siirry etusivulle",
     "startChat": "Aloita keskustelu"
   },
-  "optionCount": "{count, plural, one {{count} vaihtoehto} other {{count} vaihtoehtoa}}",
-  "participantCount": "{count, plural, one {{count} osallistuja} other {{count} osallistujaa}}"
+  "optionCount": "{count, plural, one {# vaihtoehto} other {# vaihtoehtoa}}",
+  "participantCount": "{count, plural, one {# osallistuja} other {# osallistujaa}}"
 }

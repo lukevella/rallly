@@ -150,7 +150,7 @@
     "openSource": "Código abierto",
     "openSourceDescription": "Ese proyecto es completamente de código abierto y <a>disponible en GitHub</a>.",
     "participant": "Participante",
-    "participantCount": "{count, plural, one {{count} participante} other {{count} participantes}}",
+    "participantCount": "{count, plural, one {# participante} other {# participantes}}",
     "perfect": "¡Perfecto!",
     "principles": "Principios",
     "principlesSubheading": "No somos como los otros",
@@ -179,6 +179,6 @@
     "goToHome": "Ir al inicio",
     "startChat": "Iniciar chat"
   },
-  "optionCount": "{count, plural, other {{count} opciones}}",
-  "participantCount": "{count, plural, one {{count} participante} other {{count} participantes}}"
+  "optionCount": "{count, plural, other {# opciones}}",
+  "participantCount": "{count, plural, one {# participante} other {# participantes}}"
 }

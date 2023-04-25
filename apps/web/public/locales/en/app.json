@@ -193,6 +193,6 @@
     "notFoundDescription": "We couldn't find the page you're looking for.",
     "goToHome": "Go to home"
   },
-  "optionCount": "{count, plural, one {{count} option} other {{count} options}}",
-  "participantCount": "{count, plural, one {{count} participant} other {{count} participants}}"
+  "optionCount": "{count, plural, one {# option} other {# options}}",
+  "participantCount": "{count, plural, one {# participant} other {# participants}}"
 }

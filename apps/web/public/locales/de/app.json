@@ -170,7 +170,7 @@
     "openSource": "Open Source",
     "openSourceDescription": "Die Codebase ist vollständig Open-Source und <a>auf GitHub</a> verfügbar.",
     "participant": "Teilnehmer",
-    "participantCount": "{count, plural, other {{count} Teilnehmer}}",
+    "participantCount": "{count, plural, other {# Teilnehmer}}",
     "perfect": "Perfekt!",
     "principles": "Grundsätze",
     "principlesSubheading": "Wir sind nicht wie die anderen",
@@ -201,6 +201,6 @@
     "goToHome": "Zur Startseite",
     "startChat": "Starte Chat"
   },
-  "optionCount": "{count, plural, one {{count} Option} other {{count} Optionen}}",
-  "participantCount": "{count, plural, other {{count} Teilnehmer}}"
+  "optionCount": "{count, plural, one {# Option} other {# Optionen}}",
+  "participantCount": "{count, plural, other {# Teilnehmer}}"
 }

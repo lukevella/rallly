@@ -170,7 +170,7 @@
     "openSource": "Otvoreni kôd",
     "openSourceDescription": "Ovo je rješenje zasnovano na otvorenom kôdu i <a>dostupno je na GitHub-u</a>.",
     "participant": "Sudionik",
-    "participantCount": "{count, plural, other {Broj sudionika: {count}}}",
+    "participantCount": "{count, plural, other {Broj sudionika: #}}",
     "perfect": "Savršeno!",
     "principles": "Principi",
     "principlesSubheading": "Nismo kao drugi",
@@ -199,6 +199,6 @@
     "goToHome": "Idi na naslovnicu",
     "startChat": "Pokrenite chat"
   },
-  "optionCount": "{count, plural, one {{count} opcija} other {{count} opcije}}",
-  "participantCount": "{count, plural, other {Broj sudionika: {count}}}"
+  "optionCount": "{count, plural, one {# opcija} other {# opcije}}",
+  "participantCount": "{count, plural, other {Broj sudionika: #}}"
 }

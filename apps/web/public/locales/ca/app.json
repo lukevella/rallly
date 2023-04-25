@@ -152,7 +152,7 @@
     "openSource": "Codi obert",
     "openSourceDescription": "El codi font és completament obert i <a>disponible a GitHub</a>.",
     "participant": "Participant",
-    "participantCount": "{count, plural, one {{count} participant} other {{count} participants}}",
+    "participantCount": "{count, plural, one {# participant} other {# participants}}",
     "perfect": "Perfecte!",
     "principles": "Principis",
     "principlesSubheading": "No som com la resta",
@@ -181,6 +181,6 @@
     "goToHome": "Anar a l'Inici",
     "startChat": "Inicia un xat"
   },
-  "optionCount": "{count, plural, one {{count} opció} other {{count} opcions}}",
-  "participantCount": "{count, plural, one {{count} participant} other {{count} participants}}"
+  "optionCount": "{count, plural, one {# opció} other {# opcions}}",
+  "participantCount": "{count, plural, one {# participant} other {# participants}}"
 }
