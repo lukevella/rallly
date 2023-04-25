@@ -28,6 +28,7 @@
         "NEXT_PUBLIC_VERCEL_URL",
         "NEXT_PUBLIC_FEEDBACK_EMAIL",
         "NODE_ENV",
+        "NOREPLY_EMAIL",
         "PORT",
         "SECRET_PASSWORD",
         "SENTRY_AUTH_TOKEN",

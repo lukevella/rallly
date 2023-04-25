@@ -100,7 +100,7 @@ export const sendEmail = async <T extends TemplateName>(
     await sendRawEmail({
       from: {
         name: "Rallly",
-        address: process.env.SUPPORT_EMAIL,
+        address: process.env.NOREPLY_EMAIL || process.env.SUPPORT_EMAIL,
       },
       to: options.to,
       subject: options.subject,
