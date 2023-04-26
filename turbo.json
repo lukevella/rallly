@@ -63,6 +63,7 @@
       "persistent": true
     },
     "i18n:scan": {
+      "inputs": ["src/**"],
       "outputs": ["public/locales/**"]
     }
   }
