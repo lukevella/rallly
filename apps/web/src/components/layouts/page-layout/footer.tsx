@@ -6,9 +6,9 @@ import {
 } from "@rallly/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { Trans } from "@/components/trans";
 import DigitalOcean from "~/digitalocean.svg";
 import Logo from "~/logo.svg";
 import Sentry from "~/sentry.svg";
@@ -17,7 +17,6 @@ import Vercel from "~/vercel-logotype-dark.svg";
 import { LanguageSelect } from "../../poll/language-selector";
 
 const Footer: React.FunctionComponent = () => {
-  const { t } = useTranslation();
   const router = useRouter();
   return (
     <div className="mt-16 bg-gradient-to-b from-gray-50/0 via-gray-50 to-gray-50 ">
@@ -28,7 +27,6 @@ const Footer: React.FunctionComponent = () => {
             <div className="mb-8 mt-4 text-slate-400">
               <p>
                 <Trans
-                  t={t}
                   i18nKey="common.footerSponsor"
                   components={{
                     a: (
@@ -42,7 +40,6 @@ const Footer: React.FunctionComponent = () => {
               </p>
               <div>
                 <Trans
-                  t={t}
                   i18nKey="common.footerCredit"
                   components={{
                     a: (
@@ -73,19 +70,26 @@ const Footer: React.FunctionComponent = () => {
                 className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
               >
                 <StarIcon className="mr-2 inline-block w-5" />
-                <span>{t("common.starOnGithub")}</span>
+                <span>
+                  <Trans
+                    i18nKey="common.starOnGithub"
+                    defaults="Star us on Github"
+                  />
+                </span>
               </a>
             </div>
           </div>
           <div className="lg:w-1/6">
-            <div className="mb-4 font-medium">{t("homepage.links")}</div>
+            <div className="mb-4 font-medium">
+              <Trans i18nKey="homepage.links" defaults="Links" />
+            </div>
             <ul className="space-y-2">
               <li>
                 <a
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                   href="https://github.com/lukevella/rallly/discussions"
                 >
-                  {t("common.discussions")}
+                  <Trans i18nKey="common.discussions" defaults="Discussions" />
                 </a>
               </li>
               <li>
@@ -93,7 +97,7 @@ const Footer: React.FunctionComponent = () => {
                   href="https://blog.rallly.co"
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                 >
-                  {t("common.blog")}
+                  <Trans i18nKey="common.blog" defaults="Blog" />
                 </Link>
               </li>
               <li>
@@ -101,13 +105,15 @@ const Footer: React.FunctionComponent = () => {
                   href="https://support.rallly.co"
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                 >
-                  {t("common.support")}
+                  <Trans i18nKey="common.support" defaults="Support" />
                 </a>
               </li>
             </ul>
           </div>
           <div className="lg:w-1/6">
-            <div className="mb-4 font-medium">{t("common.poweredBy")}</div>
+            <div className="mb-4 font-medium">
+              <Trans i18nKey="common.poweredBy" defaults="Powered by" />
+            </div>
             <div className="block space-y-4">
               <div>
                 <a
@@ -133,7 +139,9 @@ const Footer: React.FunctionComponent = () => {
             </div>
           </div>
           <div className="lg:w-2/6">
-            <div className="mb-4 font-medium">{t("common.language")}</div>
+            <div className="mb-4 font-medium">
+              <Trans i18nKey="common.language" defaults="Language" />
+            </div>
             <LanguageSelect
               className="mb-4 w-full"
               onChange={(locale) => {
@@ -145,7 +153,7 @@ const Footer: React.FunctionComponent = () => {
               className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
             >
               <TranslateIcon className="mr-2 h-5 w-5" />
-              {t("common.volunteerTranslator")} &rarr;
+              <Trans i18nKey="common.volunteerTranslator" /> &rarr;
             </a>
           </div>
         </div>
@@ -155,7 +163,7 @@ const Footer: React.FunctionComponent = () => {
               href="/privacy-policy"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              {t("common.privacyPolicy")}
+              <Trans i18nKey="common.privacyPolicy" />
             </Link>
           </li>
           <li>
@@ -163,7 +171,7 @@ const Footer: React.FunctionComponent = () => {
               href="/cookie-policy"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              {t("common.cookiePolicy")}
+              <Trans i18nKey="common.cookiePolicy" />
             </Link>
           </li>
           <li>
@@ -171,7 +179,7 @@ const Footer: React.FunctionComponent = () => {
               href="/terms-of-use"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              {t("common.termsOfUse")}
+              <Trans i18nKey="common.termsOfUse" />
             </Link>
           </li>
         </ul>

@@ -6,12 +6,7 @@ module.exports = {
     keySeparator: ".",
     nsSeparator: false,
     defaultNs: "app",
-    defaultValue: function (lng) {
-      if (lng === "en") {
-        return "__STRING_NOT_TRANSLATED__";
-      }
-      return "";
-    },
+    defaultValue: "__STRING_NOT_TRANSLATED__",
     lngs: ["en"],
     ns: ["app"],
     plural: false,

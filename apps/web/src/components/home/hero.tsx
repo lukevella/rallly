@@ -1,7 +1,8 @@
 import { m } from "framer-motion";
 import Link from "next/link";
-import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
+
+import { Trans } from "@/components/trans";
 
 import { DayjsProvider } from "../../utils/dayjs";
 import { UserAvatarProvider } from "../poll/user-avatar";
@@ -9,7 +10,6 @@ import PollDemo from "./poll-demo";
 import ScribbleArrow from "./scribble-arrow.svg";
 
 const Hero: React.FunctionComponent = () => {
-  const { t } = useTranslation();
   const names = ["Peter", "Christine", "Samantha", "Joseph"];
 
   return (
@@ -17,7 +17,6 @@ const Hero: React.FunctionComponent = () => {
       <div className="my-8 text-center lg:text-left">
         <h1 className="mb-4 text-4xl font-bold text-slate-800 sm:text-5xl">
           <Trans
-            t={t}
             i18nKey="homepage.heroText"
             components={{
               br: <br />,
@@ -26,7 +25,7 @@ const Hero: React.FunctionComponent = () => {
           />
         </h1>
         <div className="mb-12 text-xl text-slate-500">
-          {t("homepage.heroSubText")}
+          <Trans i18nKey="homepage.heroSubText" />
         </div>
         <div className="space-x-3">
           <Link
@@ -34,7 +33,7 @@ const Hero: React.FunctionComponent = () => {
             locale={false}
             className="bg-primary-500 hover:bg-primary-600/90 active:bg-primary-500/90 rounded-md px-5 py-3 font-semibold text-white  shadow-sm transition-all hover:text-white hover:no-underline hover:shadow-md"
           >
-            {t("homepage.getStarted")}
+            <Trans i18nKey="homepage.getStarted" defaults="Get started" />
           </Link>
           <Link
             href="/demo"
@@ -42,7 +41,7 @@ const Hero: React.FunctionComponent = () => {
             className="rounded-md bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md active:bg-slate-600/90"
             rel="nofollow"
           >
-            {t("homepage.liveDemo")}
+            <Trans i18nKey="homepage.liveDemo" defaults="Live demo" />
           </Link>
         </div>
       </div>
@@ -67,7 +66,8 @@ const Hero: React.FunctionComponent = () => {
                 animate={{ opacity: 1, translateY: 0 }}
                 transition={{ type: "spring", delay: 2 }}
               >
-                {t("homepage.perfect")} 🤩
+                <Trans i18nKey="homepage.perfect" defaults="Perfect!" />
+                <span className="ml-2">🤩</span>
                 <ScribbleArrow className="absolute -right-8 top-3 text-slate-500" />
               </m.div>
               <m.div
