@@ -193,6 +193,6 @@
     "notFoundDescription": "Мы не можем найти страницу, которую вы искали.",
     "goToHome": "Вернуться на главную"
   },
-  "optionCount": "{count, plural, one {# опция} few {# опции} other {# опций}}",
+  "optionCount": "{count, plural, few {# опции} one {# опция} other {# опций} two {# опции}}",
   "participantCount": "{count, plural, one {# участник} other {# участников}}"
 }
