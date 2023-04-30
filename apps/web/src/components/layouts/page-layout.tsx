@@ -31,7 +31,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
           },
         )}
       >
-        {t("common.home")}
+        {t("common_home")}
       </Link>
       <Link
         href="https://blog.rallly.co"
@@ -39,13 +39,13 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
           "hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2",
         )}
       >
-        {t("common.blog")}
+        {t("common_blog")}
       </Link>
       <a
         href="https://support.rallly.co"
         className="hover:text-primary-600 rounded text-gray-400 transition-colors hover:no-underline hover:underline-offset-2"
       >
-        {t("common.support")}
+        {t("common_support")}
       </a>
       <Link
         href="https://github.com/lukevella/rallly"
@@ -71,7 +71,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
               <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
                 <Trans
                   t={t}
-                  i18nKey="homepage.3Ls"
+                  i18nKey="homepage_3Ls"
                   components={{ e: <em /> }}
                 />
               </span>

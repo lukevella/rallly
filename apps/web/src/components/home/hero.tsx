@@ -17,7 +17,7 @@ const Hero: React.FunctionComponent = () => {
       <div className="my-8 text-center lg:text-left">
         <h1 className="mb-4 text-4xl font-bold text-slate-800 sm:text-5xl">
           <Trans
-            i18nKey="homepage.heroText"
+            i18nKey="homepage_heroText"
             components={{
               br: <br />,
               s: <span className="text-primary-600 whitespace-nowrap" />,
@@ -25,7 +25,7 @@ const Hero: React.FunctionComponent = () => {
           />
         </h1>
         <div className="mb-12 text-xl text-slate-500">
-          <Trans i18nKey="homepage.heroSubText" />
+          <Trans i18nKey="homepage_heroSubText" />
         </div>
         <div className="space-x-3">
           <Link
@@ -33,7 +33,7 @@ const Hero: React.FunctionComponent = () => {
             locale={false}
             className="bg-primary-500 hover:bg-primary-600/90 active:bg-primary-500/90 rounded-md px-5 py-3 font-semibold text-white  shadow-sm transition-all hover:text-white hover:no-underline hover:shadow-md"
           >
-            <Trans i18nKey="homepage.getStarted" defaults="Get started" />
+            <Trans i18nKey="homepage_getStarted" defaults="Get started" />
           </Link>
           <Link
             href="/demo"
@@ -41,7 +41,7 @@ const Hero: React.FunctionComponent = () => {
             className="rounded-md bg-slate-500 px-5 py-3 font-semibold text-white shadow-sm  transition-all hover:bg-slate-500/90 hover:text-white hover:no-underline hover:shadow-md active:bg-slate-600/90"
             rel="nofollow"
           >
-            <Trans i18nKey="homepage.liveDemo" defaults="Live demo" />
+            <Trans i18nKey="homepage_liveDemo" defaults="Live demo" />
           </Link>
         </div>
       </div>
@@ -66,7 +66,7 @@ const Hero: React.FunctionComponent = () => {
                 animate={{ opacity: 1, translateY: 0 }}
                 transition={{ type: "spring", delay: 2 }}
               >
-                <Trans i18nKey="homepage.perfect" defaults="Perfect!" />
+                <Trans i18nKey="homepage_perfect" defaults="Perfect!" />
                 <span className="ml-2">🤩</span>
                 <ScribbleArrow className="absolute -right-8 top-3 text-slate-500" />
               </m.div>
