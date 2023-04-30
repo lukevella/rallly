@@ -151,6 +151,7 @@
   "homepage_selfHostableDescription": "Ejecútalo en tu propio servidor para tener el control total de tus datos.",
   "homepage_timeSlots": "Intervalos de tiempo",
   "homepage_timeSlotsDescription": "Establece la hora de inicio y fin individual para cada opción de tu encuesta. Los tiempos se pueden ajustar automáticamente a la zona horaria de cada participante o pueden ser ajustados para ignorar completamente las zonas horarias.",
+  "common_blog": "Blog",
   "common_discussions": "Discusiones",
   "common_footerCredit": "Creado por <a>@imlukevella</a>",
   "common_footerSponsor": "Este proyecto está financiado por los usuarios. Por favor, considera apoyarlo <a>donando</a>.",
