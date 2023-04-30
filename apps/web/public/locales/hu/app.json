@@ -171,6 +171,7 @@
   "homepage_selfHostableDescription": "Futtathatod a saját szervereden, magad kezelve minden adatot.",
   "homepage_timeSlots": "Idősávok",
   "homepage_timeSlotsDescription": "Állíts be egyedi kezdő és befejező időpontokat minden válaszlehetőséghez. Az időpontok automatikusan igazodnak minden egyes résztvevő időzónájához vagy beállítható, hogy az időzónákat ne vegye figyelembe.",
+  "common_blog": "Blog",
   "common_discussions": "Beszélgetések",
   "common_footerCredit": "Készítette <a>@imlukevella</a>",
   "common_footerSponsor": "Ezt a projektet a felhasználók finanszírozzák. Kérlek gondold meg, hogy <a>adományoddal</a> támogatsz minket.",
