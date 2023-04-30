@@ -13,8 +13,8 @@ const Custom404: NextPageWithLayout = () => {
   return (
     <ErrorPage
       icon={DocumentSearchIcon}
-      title={t("errors.notFoundTitle")}
-      description={t("errors.notFoundDescription")}
+      title={t("errors_notFoundTitle")}
+      description={t("errors_notFoundDescription")}
     />
   );
 };

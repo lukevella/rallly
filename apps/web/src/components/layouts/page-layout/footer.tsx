@@ -27,7 +27,7 @@ const Footer: React.FunctionComponent = () => {
             <div className="mb-8 mt-4 text-slate-400">
               <p>
                 <Trans
-                  i18nKey="common.footerSponsor"
+                  i18nKey="common_footerSponsor"
                   components={{
                     a: (
                       <a
@@ -40,7 +40,7 @@ const Footer: React.FunctionComponent = () => {
               </p>
               <div>
                 <Trans
-                  i18nKey="common.footerCredit"
+                  i18nKey="common_footerCredit"
                   components={{
                     a: (
                       <a
@@ -72,7 +72,7 @@ const Footer: React.FunctionComponent = () => {
                 <StarIcon className="mr-2 inline-block w-5" />
                 <span>
                   <Trans
-                    i18nKey="common.starOnGithub"
+                    i18nKey="common_starOnGithub"
                     defaults="Star us on Github"
                   />
                 </span>
@@ -81,7 +81,7 @@ const Footer: React.FunctionComponent = () => {
           </div>
           <div className="lg:w-1/6">
             <div className="mb-4 font-medium">
-              <Trans i18nKey="homepage.links" defaults="Links" />
+              <Trans i18nKey="homepage_links" defaults="Links" />
             </div>
             <ul className="space-y-2">
               <li>
@@ -89,7 +89,7 @@ const Footer: React.FunctionComponent = () => {
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                   href="https://github.com/lukevella/rallly/discussions"
                 >
-                  <Trans i18nKey="common.discussions" defaults="Discussions" />
+                  <Trans i18nKey="common_discussions" defaults="Discussions" />
                 </a>
               </li>
               <li>
@@ -97,7 +97,7 @@ const Footer: React.FunctionComponent = () => {
                   href="https://blog.rallly.co"
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                 >
-                  <Trans i18nKey="common.blog" defaults="Blog" />
+                  <Trans i18nKey="common_blog" defaults="Blog" />
                 </Link>
               </li>
               <li>
@@ -105,14 +105,14 @@ const Footer: React.FunctionComponent = () => {
                   href="https://support.rallly.co"
                   className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
                 >
-                  <Trans i18nKey="common.support" defaults="Support" />
+                  <Trans i18nKey="common_support" defaults="Support" />
                 </a>
               </li>
             </ul>
           </div>
           <div className="lg:w-1/6">
             <div className="mb-4 font-medium">
-              <Trans i18nKey="common.poweredBy" defaults="Powered by" />
+              <Trans i18nKey="common_poweredBy" defaults="Powered by" />
             </div>
             <div className="block space-y-4">
               <div>
@@ -140,7 +140,7 @@ const Footer: React.FunctionComponent = () => {
           </div>
           <div className="lg:w-2/6">
             <div className="mb-4 font-medium">
-              <Trans i18nKey="common.language" defaults="Language" />
+              <Trans i18nKey="common_language" defaults="Language" />
             </div>
             <LanguageSelect
               className="mb-4 w-full"
@@ -153,7 +153,7 @@ const Footer: React.FunctionComponent = () => {
               className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
             >
               <TranslateIcon className="mr-2 h-5 w-5" />
-              <Trans i18nKey="common.volunteerTranslator" /> &rarr;
+              <Trans i18nKey="common_volunteerTranslator" /> &rarr;
             </a>
           </div>
         </div>
@@ -163,7 +163,7 @@ const Footer: React.FunctionComponent = () => {
               href="/privacy-policy"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              <Trans i18nKey="common.privacyPolicy" />
+              <Trans i18nKey="common_privacyPolicy" />
             </Link>
           </li>
           <li>
@@ -171,7 +171,7 @@ const Footer: React.FunctionComponent = () => {
               href="/cookie-policy"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              <Trans i18nKey="common.cookiePolicy" />
+              <Trans i18nKey="common_cookiePolicy" />
             </Link>
           </li>
           <li>
@@ -179,7 +179,7 @@ const Footer: React.FunctionComponent = () => {
               href="/terms-of-use"
               className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
             >
-              <Trans i18nKey="common.termsOfUse" />
+              <Trans i18nKey="common_termsOfUse" />
             </Link>
           </li>
         </ul>

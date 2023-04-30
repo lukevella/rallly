@@ -8,27 +8,27 @@ const Bonus: React.FunctionComponent = () => {
   const { t } = useTranslation();
   return (
     <div className="mx-auto max-w-7xl px-8 py-8">
-      <h2 className="heading">{t("homepage.principles")}</h2>
-      <p className="subheading">{t("homepage.principlesSubheading")}</p>
+      <h2 className="heading">{t("homepage_principles")}</h2>
+      <p className="subheading">{t("homepage_principlesSubheading")}</p>
       <div className="grid grid-cols-4 gap-16">
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
             <CursorClickIcon className="w-16" />
           </div>
-          <h3 className="heading-sm">{t("homepage.noLoginRequired")}</h3>
+          <h3 className="heading-sm">{t("homepage_noLoginRequired")}</h3>
           <div className="text text-base leading-relaxed">
-            {t("homepage.noLoginRequiredDescription")}
+            {t("homepage_noLoginRequiredDescription")}
           </div>
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
             <CodeIcon className="w-16" />
           </div>
-          <h3 className="heading-sm">{t("homepage.openSource")}</h3>
+          <h3 className="heading-sm">{t("homepage_openSource")}</h3>
           <div className="text text-base leading-relaxed">
             <Trans
               t={t}
-              i18nKey="homepage.openSourceDescription"
+              i18nKey="homepage_openSourceDescription"
               components={{
                 a: (
                   <a
@@ -44,18 +44,18 @@ const Bonus: React.FunctionComponent = () => {
           <div className="mb-4 text-gray-400">
             <ServerIcon className="w-16" />
           </div>
-          <h3 className="heading-sm">{t("homepage.selfHostable")}</h3>
+          <h3 className="heading-sm">{t("homepage_selfHostable")}</h3>
           <div className="text text-base leading-relaxed">
-            {t("homepage.selfHostableDescription")}
+            {t("homepage_selfHostableDescription")}
           </div>
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
             <Ban className="w-16" />
           </div>
-          <h3 className="heading-sm">{t("homepage.adFree")}</h3>
+          <h3 className="heading-sm">{t("homepage_adFree")}</h3>
           <div className="text text-base leading-relaxed">
-            {t("homepage.adFreeDescription")}
+            {t("homepage_adFreeDescription")}
           </div>
         </div>
       </div>

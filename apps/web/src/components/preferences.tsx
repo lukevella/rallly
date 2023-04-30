@@ -17,7 +17,7 @@ const Preferences = (props: { className?: string }) => {
     <div className={props.className}>
       <div className="mb-2 space-y-2">
         <div className="grow text-sm text-slate-500">
-          {t("common.language")}
+          {t("common_language")}
         </div>
         <LanguageSelect className="w-full" onChange={() => router.reload()} />
       </div>

@@ -12,8 +12,8 @@ const Home: React.FunctionComponent = () => {
   return (
     <PageLayout>
       <NextSeo
-        title={t("homepage.metaTitle")}
-        description={t("homepage.metaDescription")}
+        title={t("homepage_metaTitle")}
+        description={t("homepage_metaDescription")}
         twitter={{
           handle: "@imlukevella",
           site: "@ralllyco",
