@@ -73,5 +73,9 @@
     "github": "https://github.com/lukevella/rallly",
     "discord": "https://discord.com/invite/uzg4ZcHbuM",
     "website": "https://rallly.co/"
+  },
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": true
   }
 }
