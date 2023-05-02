@@ -1,6 +1,6 @@
 import React from "react";
 
-import Logo from "~//logo.svg";
+import Logo from "~/logo.svg";
 
 export const AuthLayout = ({ children }: { children?: React.ReactNode }) => {
   return (
