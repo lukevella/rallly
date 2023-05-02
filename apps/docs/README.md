@@ -1,6 +1,6 @@
 # Support Docs
 
-Live: [https://support.rallly.co](https://support.rallly.co)
+Live site: [https://support.rallly.co](https://support.rallly.co)
 
 This site is kindly built and hosted by [Mintlify](https://mintlify.com).
 
