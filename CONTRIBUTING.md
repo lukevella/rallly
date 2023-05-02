@@ -21,6 +21,10 @@ In order to maintain a high standard of code quality, please ensure that you are
 
 To contribute translations, please check out our [guide for translators](https://support.rallly.co/become-a-translator) which contains all the information you need to get started.
 
+## Documentation
+
+To contribute to the documentation, please modify the [dedicated files inside the repository](https://github.com/lukevella/rallly/tree/main/apps/docs). Please mention \[Documentatation\] in your PR order to simplify maintaining process.
+
 ## Becoming a Sponsor 💰
 
 If you find this project useful and would like to contribute financially on an ongoing basis, please consider becoming a sponsor. Sponsors help us cover the costs of hosting, development, and maintenance, and enable us to continue working on the project.
