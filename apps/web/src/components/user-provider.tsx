@@ -1,23 +1,11 @@
 import { trpc, UserSession } from "@rallly/backend";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import posthog from "posthog-js";
-import { PostHogProvider } from "posthog-js/react";
 import React from "react";
 
-import { useRequiredContext } from "./use-required-context";
+import { PostHogProvider } from "@/contexts/posthog";
 
-if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
-    opt_out_capturing_by_default: false,
-    capture_pageview: false,
-    persistence: "memory",
-    capture_pageleave: false,
-    autocapture: false,
-    opt_in_site_apps: true,
-  });
-}
+import { useRequiredContext } from "./use-required-context";
 
 export const UserContext = React.createContext<{
   user: UserSession & { shortName: string };
@@ -73,19 +61,6 @@ export const UserProvider = (props: {
     },
   });
 
-  React.useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY || !user) {
-      return;
-    }
-
-    posthog.identify(
-      user.id,
-      !user.isGuest
-        ? { email: user.email, name: user.name }
-        : { name: user.id },
-    );
-  }, [user]);
-
   const shortName = user
     ? user.isGuest === false
       ? user.name
@@ -97,30 +72,28 @@ export const UserProvider = (props: {
   }
 
   return (
-    <PostHogProvider client={posthog}>
-      <UserContext.Provider
-        value={{
-          user: { ...user, shortName },
-          refresh: () => {
-            return queryClient.whoami.invalidate();
-          },
-          ownsObject: ({ userId }) => {
-            if (
-              (userId && user.id === userId) ||
-              (props.forceUserId && props.forceUserId === userId)
-            ) {
-              return true;
-            }
-            return false;
-          },
-          logout: () => {
-            logout.mutate();
-          },
-        }}
-      >
-        {props.children}
-      </UserContext.Provider>
-    </PostHogProvider>
+    <UserContext.Provider
+      value={{
+        user: { ...user, shortName },
+        refresh: () => {
+          return queryClient.whoami.invalidate();
+        },
+        ownsObject: ({ userId }) => {
+          if (
+            (userId && user.id === userId) ||
+            (props.forceUserId && props.forceUserId === userId)
+          ) {
+            return true;
+          }
+          return false;
+        },
+        logout: () => {
+          logout.mutate();
+        },
+      }}
+    >
+      <PostHogProvider>{props.children}</PostHogProvider>
+    </UserContext.Provider>
   );
 };
 

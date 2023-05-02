@@ -1,138 +1,81 @@
-import { LoginTokenPayload } from "@rallly/backend";
-import {
-  composeGetServerSideProps,
-  withSessionSsr,
-} from "@rallly/backend/next";
-import { decryptToken } from "@rallly/backend/session";
-import { prisma } from "@rallly/database";
+import { trpc } from "@rallly/backend";
+import { withSessionSsr } from "@rallly/backend/next";
 import { CheckCircleIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
-import React from "react";
+import { useMount } from "react-use";
 
 import { AuthLayout } from "@/components/layouts/auth-layout";
 import { Spinner } from "@/components/spinner";
+import { withSession } from "@/components/user-provider";
+import { usePostHog } from "@/utils/posthog";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 const defaultRedirectPath = "/profile";
 
-const redirectToInvalidToken = {
-  redirect: {
-    destination: "/auth/invalid-token",
-    permanent: false,
-  },
-};
-
-const Redirect = () => {
+export const Page = () => {
   const { t } = useTranslation();
-  const [enabled, setEnabled] = React.useState(false);
+
   const router = useRouter();
+  const { token } = router.query;
+  const posthog = usePostHog();
+  const authenticate = trpc.whoami.authenticate.useMutation();
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setEnabled(true);
-    }, 500);
-    setTimeout(() => {
-      router.replace(defaultRedirectPath);
-    }, 3000);
-  }, [router]);
+  useMount(() => {
+    authenticate.mutate(
+      { token: token as string },
+      {
+        onSuccess: (user) => {
+          posthog?.identify(user.id, {
+            name: user.name,
+            email: user.email,
+          });
 
-  return (
-    <div className="space-y-2">
-      <div className="flex h-10 items-center justify-center gap-4">
-        {enabled ? (
-          <CheckCircleIcon
-            className={clsx("animate-popIn h-8 text-green-500", {
-              "opacity-0": !enabled,
-            })}
-          />
-        ) : (
-          <Spinner />
-        )}
-      </div>
-      <div className="text-slate-800">{t("loginSuccessful")}</div>
-      <div className="text-sm text-slate-500">
-        <Trans
-          t={t}
-          i18nKey="redirect"
-          components={{
-            a: <Link className="underline" href={defaultRedirectPath} />,
-          }}
-        />
-      </div>
-    </div>
-  );
-};
-export const Page = (
-  props:
-    | {
-        success: true;
-        name: string;
-      }
-    | {
-        success: false;
-        errorCode: "userNotFound";
+          setTimeout(() => {
+            router.replace(defaultRedirectPath);
+          }, 1000);
+        },
       },
-) => {
-  const { t } = useTranslation();
+    );
+  });
+
   return (
     <AuthLayout title={t("login")}>
-      {props.success ? (
-        <Redirect />
+      {authenticate.isLoading ? (
+        <div className="flex items-center gap-4">
+          <Spinner />
+          <Trans i18nKey="loading" />
+        </div>
+      ) : authenticate.isSuccess ? (
+        <div className="space-y-2">
+          <div className="flex h-10 items-center justify-center gap-4">
+            <CheckCircleIcon className={clsx("h-8 text-green-500")} />
+          </div>
+          <div className="text-slate-800">{t("loginSuccessful")}</div>
+          <div className="text-sm text-slate-500">
+            <Trans
+              t={t}
+              i18nKey="redirect"
+              components={{
+                a: <Link className="underline" href={defaultRedirectPath} />,
+              }}
+            />
+          </div>
+        </div>
       ) : (
-        <Trans t={t} i18nKey="userDoesNotExist" />
+        <div>
+          <Trans i18nKey="expiredOrInvalidLink" />
+        </div>
       )}
     </AuthLayout>
   );
 };
 
-export default Page;
+export default withSession(Page);
 
-export const getServerSideProps: GetServerSideProps = composeGetServerSideProps(
+export const getServerSideProps: GetServerSideProps = withSessionSsr(
   withPageTranslations(),
-  withSessionSsr(async (ctx) => {
-    const token = ctx.query.token as string;
-
-    if (!token) {
-      // token is missing
-      return redirectToInvalidToken;
-    }
-
-    const payload = await decryptToken<LoginTokenPayload>(token);
-
-    if (!payload) {
-      // token is invalid or expired
-      return redirectToInvalidToken;
-    }
-
-    const user = await prisma.user.findFirst({
-      select: {
-        id: true,
-      },
-      where: { id: payload.userId },
-    });
-
-    if (!user) {
-      // user does not exist
-      return {
-        props: {
-          success: false,
-          errorCode: "userNotFound",
-        },
-      };
-    }
-
-    ctx.req.session.user = { id: user.id, isGuest: false };
-
-    await ctx.req.session.save();
-
-    return {
-      props: {
-        success: true,
-      },
-    };
-  }),
 );
