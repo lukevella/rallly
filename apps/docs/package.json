@@ -1,0 +1,12 @@
+{
+  "name": "@rallly/docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "mintlify dev --port 4000",
+    "postinstall": "mintlify install"
+  },
+  "dependencies": {
+    "mintlify": "^3.0.29"
+  }
+}

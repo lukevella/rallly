@@ -29,6 +29,10 @@ To become a sponsor, visit our [sponsor page](https://github.com/sponsors/lukeve
 
 Donations are also accepted through [PayPal](http://paypal.me/ralllyco).
 
+## Documentation
+
+To contribute documentation please check out our [contributing guide](https://github.com/lukevella/rallly/tree/main/apps/docs) for the docs project inside this repository.
+
 ## Code of Conduct 👮‍♀️
 
 Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
