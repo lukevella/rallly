@@ -32,7 +32,7 @@ const Footer: React.FunctionComponent = () => {
                     a: (
                       <a
                         className="font-normal leading-loose text-slate-500 underline hover:text-slate-800 hover:underline"
-                        href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
+                        href="https://support.rallly.co/contribute/donations"
                       />
                     ),
                   }}
