@@ -31,7 +31,7 @@ Donations are also accepted through [PayPal](http://paypal.me/ralllyco).
 
 ## Documentation
 
-To contribute documentation please check this [contributing guide](https://support.rallly.co/contribute/documentation) which contains all the information you need to get started.
+To contribute documentation please check out the [contributing guide](https://support.rallly.co/contribute/documentation) which contains all the information you need to get started.
 
 ## Code of Conduct 👮‍♀️
 
