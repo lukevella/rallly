@@ -3,9 +3,10 @@
   "private": true,
   "version": "2.11.0",
   "scripts": {
-    "dev": "dotenv -- turbo dev",
+    "dev": "dotenv -- turbo dev --filter=@rallly/web...",
     "start": "turbo run start --filter=@rallly/web...",
     "build": "turbo run build --filter=@rallly/web...",
+    "docs:dev": "turbo dev --filter=@rallly/docs...",
     "db:deploy": "prisma migrate deploy",
     "db:generate": "turbo db:generate",
     "db:migrate": "prisma migrate dev",

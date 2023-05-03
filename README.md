@@ -1,4 +1,4 @@
-<img src="./docs/images/logo.png" alt="Rallly" />
+<img src="./assets/images/logo.png" alt="Rallly" />
 
 <div align="center">
 
@@ -16,7 +16,7 @@ Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://githu
 
 <div align="center">
 
-<img src="./docs/images/poll-image.png" alt="Rallly"  />
+<img src="./assets/images/poll-image.png" alt="Rallly"  />
 
 </div>
 
@@ -70,7 +70,7 @@ Please read our [contributing guide](CONTRIBUTING.md) to learn about how to cont
 
 ### Translators 🌐
 
-You can help translate Rallly to another language by following our [guide for translators](https://support.rallly.co/become-a-translator).
+You can help translate Rallly to another language by following our [guide for translators](https://support.rallly.co/contribute/translations).
 
 ## License
 

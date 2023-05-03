@@ -32,7 +32,7 @@ const Footer: React.FunctionComponent = () => {
                     a: (
                       <a
                         className="font-normal leading-loose text-slate-500 underline hover:text-slate-800 hover:underline"
-                        href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
+                        href="https://support.rallly.co/contribute/donations"
                       />
                     ),
                   }}
@@ -149,7 +149,7 @@ const Footer: React.FunctionComponent = () => {
               }}
             />
             <a
-              href="https://support.rallly.co/become-a-translator"
+              href="https://support.rallly.co/contribute/translations"
               className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
             >
               <TranslateIcon className="mr-2 h-5 w-5" />

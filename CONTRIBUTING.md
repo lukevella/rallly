@@ -19,7 +19,7 @@ In order to maintain a high standard of code quality, please ensure that you are
 
 ## Translations 🌐
 
-To contribute translations, please check out our [guide for translators](https://support.rallly.co/become-a-translator) which contains all the information you need to get started.
+To contribute translations, please check out our [guide for translators](https://support.rallly.co/contribute/translations) which contains all the information you need to get started.
 
 ## Becoming a Sponsor 💰
 
@@ -28,6 +28,10 @@ If you find this project useful and would like to contribute financially on an o
 To become a sponsor, visit our [sponsor page](https://github.com/sponsors/lukevella) and select the sponsorship level that works for you.
 
 Donations are also accepted through [PayPal](http://paypal.me/ralllyco).
+
+## Documentation
+
+To contribute documentation please check out the [contributing guide](https://support.rallly.co/contribute/documentation) which contains all the information you need to get started.
 
 ## Code of Conduct 👮‍♀️
 

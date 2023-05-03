@@ -6,9 +6,9 @@
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#4F46E5",
-    "light": "#9C9EFF",
-    "dark": "#6366F1",
+    "primary": "#4f46e5",
+    "light": "#6366f1",
+    "dark": "#1f2937",
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
   },
   "topbarCtaButton": {
@@ -23,22 +23,26 @@
   ],
   "anchors": [
     {
-      "name": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/lukevella/rallly"
+      "name": "Self-Hosting",
+      "icon": "server",
+      "url": "self-hosting"
     },
     {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://blog.rallly.co/"
+      "name": "Contributing Guide",
+      "icon": "hand-holding-heart",
+      "url": "contribute"
     },
     {
-      "name": "Contact us",
-      "icon": "comments",
-      "url": "https://go.crisp.chat/chat/embed/?website_id=19d601db-af05-4f24-8342-8dd4449aedb8"
+      "name": "Contact",
+      "icon": "messages",
+      "url": "contact"
     }
   ],
   "navigation": [
+    {
+      "group": "Documentation",
+      "pages": ["introduction"]
+    },
     {
       "group": "Guides for Administrators",
       "pages": [
@@ -64,8 +68,20 @@
       ]
     },
     {
-      "group": "Contribute",
-      "pages": ["become-a-translator"]
+      "group": "Contributing Guide",
+      "pages": ["contribute/introduction"]
+    },
+    {
+      "group": "How to Contribute",
+      "pages": [
+        "contribute/donations",
+        "contribute/translations",
+        "contribute/documentation"
+      ]
+    },
+    {
+      "group": "Contact",
+      "pages": ["contact/support"]
     }
   ],
   "footerSocials": {
