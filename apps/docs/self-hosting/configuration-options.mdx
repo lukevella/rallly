@@ -5,21 +5,78 @@ description: Using environment variable to configure a self-hosted instance of R
 
 ## Environment variables
 
-Rallly can be configured with the following environment variables.
+An environment variable is a dynamic value that can be set outside of an application and is used to configure or customize the behavior of an application.
+This page lists all environment variables supported by Rallly.
 
-| Environment Variable   | Default               | Description                                                                                                                                                        |
-| ---------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ALLOWED_EMAILS`       |                       | Comma separated list of email addresses that are allowed to register and login. Wildcard characters are supported. Example: `*@yourcompany.com`                    |
-| `AUTH_REQUIRED`        | false                 | Set to `true` to require authentication for creating new polls and accessing admin pages                                                                           |
-| `DATABASE_URL`         |                       | Postgres database connection string                                                                                                                                |
-| `DISABLE_LANDING_PAGE` | false                 | Whether or not to disable the landing page                                                                                                                         |
-| `NEXT_PUBLIC_BASE_URL` | http://localhost:3000 | The base url where this instance is accessible, including the scheme (eg. `http://` or `https://`), the domain name, and optionally a port.                        |
-| `SECRET_PASSWORD`      |                       | A random 32-character secret key used to encrypt user sessions                                                                                                     |
-| `SMTP_HOST`            | localhost             | The host address of your SMTP server                                                                                                                               |
-| `SMTP_PORT`            | 25 or 465             | The port of your SMTP server                                                                                                                                       |
-| `SMTP_SECURE`          | false                 | Set to "true" if SSL is enabled for your SMTP connection                                                                                                           |
-| `SMTP_USER`            |                       | The username (if auth is enabled on your SMTP server)                                                                                                              |
-| `SMTP_PWD`             |                       | The password (if auth is enabled on your SMTP server)                                                                                                              |
-| `SMTP_TLS_ENABLED`     | false                 | Enable TLS for your SMTP connection                                                                                                                                |
-| `NOREPLY_EMAIL`        |                       | This email is used as the sender for all transactional emails.                                                                                                     |
-| `SUPPORT_EMAIL`        |                       | This email will be shown as the contact email for support queries. If `NOREPLY_EMAIL` is not set, it will also be used as the sender for all transactional emails. |
+### Base Configuration
+
+These variables need to be configured for Rallly to run and function properly.
+
+<ParamField path="DATABASE_URL" default="">
+  Postgres database connection string
+</ParamField>
+
+<ParamField path="NEXT_PUBLIC_BASE_URL" default="http://localhost:3000">
+  The base url where this instance is accessible, including the scheme (eg.
+  `http://` or `https://`), the domain name, and optionally a port.
+</ParamField>
+
+<ParamField path="SECRET_PASSWORD">
+  A random 32-character secret key used to encrypt user sessions
+</ParamField>
+
+### Email Configuration
+
+These variables need to be configured to let Rallly send out transaction emails.
+
+<ParamField path="NOREPLY_EMAIL" default="">
+  This email is used as the sender for all transactional emails.
+</ParamField>
+
+<ParamField path="SUPPORT_EMAIL" default="">
+  This email will be shown as the contact email for support queries. If
+  `NOREPLY_EMAIL` is not set, it will also be used as the sender for all
+  transactional emails.
+</ParamField>
+
+<ParamField path="SMTP_HOST" default="localhost">
+  The host address of your SMTP server
+</ParamField>
+
+<ParamField path="SMTP_PORT" default="25 or 465">
+  The port of your SMTP server
+</ParamField>
+
+<ParamField path="SMTP_SECURE" default={"false"}>
+  Set to "true" if SSL is enabled for your SMTP connection
+</ParamField>
+
+<ParamField path="SMTP_USER" default="">
+  The username (if auth is enabled on your SMTP server)
+</ParamField>
+
+<ParamField path="SMTP_PWD" default="">
+  The password (if auth is enabled on your SMTP server)
+</ParamField>
+
+<ParamField path="SMTP_TLS_ENABLED" default={"false"}>
+  Enable TLS for your SMTP connection
+</ParamField>
+
+### Custom Configuration
+
+These variables allow you to change Rallly's default behavior.
+
+<ParamField path="ALLOWED_EMAILS" default="">
+  Comma separated list of email addresses that are allowed to register and
+  login. Wildcard characters are supported. Example: `*@yourcompany.com`
+</ParamField>
+
+<ParamField path="AUTH_REQUIRED" default={"false"}>
+  Set to `true` to require authentication for creating new polls and accessing
+  admin pages
+</ParamField>
+
+<ParamField path="DISABLE_LANDING_PAGE" default={"false"}>
+  Whether or not to disable the landing page
+</ParamField>
