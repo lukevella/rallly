@@ -17,8 +17,8 @@
   },
   "topbarLinks": [
     {
-      "name": "Live chat",
-      "url": "https://go.crisp.chat/chat/embed/?website_id=19d601db-af05-4f24-8342-8dd4449aedb8"
+      "name": "Contact",
+      "url": "/contact/support"
     }
   ],
   "anchors": [
