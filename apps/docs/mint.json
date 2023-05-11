@@ -41,7 +41,7 @@
   "navigation": [
     {
       "group": "Documentation",
-      "pages": ["introduction"]
+      "pages": ["introduction", "faq"]
     },
     {
       "group": "Guides for Administrators",
