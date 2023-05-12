@@ -1,7 +1,10 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@rallly/icons";
+import { ArrowLeftIcon, ArrowRightIcon, PlusSmIcon } from "@rallly/icons";
+import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
+
+import { useRole } from "@/contexts/role";
 
 import { Button } from "../button";
 import { useNewParticipantModal } from "../new-participant-modal";
@@ -28,6 +31,7 @@ const Poll: React.FunctionComponent = () => {
   const { participants } = useParticipants();
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
+
   const [editingParticipantId, setEditingParticipantId] = React.useState<
     string | null
   >(null);
@@ -62,7 +66,6 @@ const Poll: React.FunctionComponent = () => {
     React.useState(!(poll.closed || userAlreadyVoted));
 
   const pollWidth = sidebarWidth + options.length * columnWidth;
-
   const addParticipant = useAddParticipantMutation();
 
   const goToNextPage = () => {
@@ -81,8 +84,8 @@ const Poll: React.FunctionComponent = () => {
   };
 
   const updateParticipant = useUpdateParticipantMutation();
-
   const showNewParticipantModal = useNewParticipantModal();
+  const role = useRole();
   return (
     <PollContext.Provider
       value={{
@@ -100,12 +103,15 @@ const Poll: React.FunctionComponent = () => {
       }}
     >
       <div
-        className="relative min-w-full max-w-full" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
+        className={clsx(
+          "relative min-w-full max-w-full duration-300",
+          width === 0 ? "invisible" : "visible",
+        )} // Don't add styles like border, margin, padding – that can mess up the sizing calculations
         style={{ width: pollWidth }}
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
-          <div className="flex h-14 shrink-0 items-center justify-between border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
+          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
             <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
                 <div className="px-1">
@@ -121,26 +127,25 @@ const Poll: React.FunctionComponent = () => {
                   />
                 </div>
               ) : (
-                <div className="flex gap-2">
-                  <div className="font-semibold text-slate-800">
+                <div className="flex items-center gap-2">
+                  <div className="px-1 font-medium">
                     {t("participantCount", { count: participants.length })}
                   </div>
-                  {poll.closed ? null : (
-                    <button
-                      className="hover:text-primary-600 rounded"
+                  {role === "admin" || !poll.closed ? (
+                    <Button
+                      icon={<PlusSmIcon />}
+                      className="h-7 w-7"
                       onClick={() => {
                         setEditingParticipantId(null);
                         setShouldShowNewParticipantForm(true);
                       }}
-                    >
-                      + {t("new")}
-                    </button>
-                  )}
+                    />
+                  ) : null}
                 </div>
               )}
             </div>
             <div className="flex items-center gap-3">
-              <div className="px-3">
+              <div className="px-3 font-medium">
                 {t("optionCount", { count: options.length })}
               </div>
               {maxScrollPosition > 0 ? (
@@ -165,11 +170,9 @@ const Poll: React.FunctionComponent = () => {
             </div>
           </div>
           {poll.timeZone ? (
-            <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4">
+            <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-white px-4">
               <div className="flex grow items-center">
-                <div className="mr-2 text-sm font-medium text-slate-500">
-                  {t("timeZone")}
-                </div>
+                <div className="mr-2 text-sm font-medium">{t("timeZone")}</div>
                 <TimeZonePicker
                   value={targetTimeZone}
                   onChange={setTargetTimeZone}
@@ -184,16 +187,14 @@ const Poll: React.FunctionComponent = () => {
                 className="flex shrink-0 items-end pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
               >
-                <div className="font-semibold text-slate-800"></div>
+                <div className="font-semibold text-gray-800"></div>
               </div>
               <PollHeader />
             </div>
           </div>
           <div>
             <div>
-              {shouldShowNewParticipantForm &&
-              !poll.closed &&
-              !editingParticipantId ? (
+              {shouldShowNewParticipantForm && !editingParticipantId ? (
                 <ParticipantRowForm
                   className="mb-2 shrink-0"
                   onSubmit={async ({ votes }) => {
@@ -213,7 +214,6 @@ const Poll: React.FunctionComponent = () => {
                       <ParticipantRow
                         key={i}
                         participant={participant}
-                        disableEditing={!!editingParticipantId}
                         editMode={editingParticipantId === participant.id}
                         onChangeEditMode={(isEditing) => {
                           if (isEditing) {
@@ -237,8 +237,7 @@ const Poll: React.FunctionComponent = () => {
             </div>
           </div>
 
-          {!poll.closed &&
-          (shouldShowNewParticipantForm || editingParticipantId) ? (
+          {shouldShowNewParticipantForm || editingParticipantId ? (
             <div className="flex shrink-0 items-center border-t bg-gray-50">
               <div className="flex w-full items-center justify-between gap-3 p-3">
                 <Button

@@ -40,7 +40,7 @@ const CookieConsentPopover: React.FunctionComponent = () => {
           <div className="flex items-center space-x-6">
             <Link
               href="/privacy-policy"
-              className="hover:text-primary-600 text-slate-500"
+              className="hover:text-primary-600 text-gray-500"
             >
               Privacy Policy
             </Link>

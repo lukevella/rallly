@@ -1,10 +1,21 @@
-import { ExclamationIcon, LockClosedIcon } from "@rallly/icons";
+import {
+  ChartSquareBarIcon,
+  CursorClickIcon,
+  ExclamationIcon,
+  LocationMarkerIcon,
+  LockClosedIcon,
+  MenuAlt1Icon,
+} from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { Card } from "@/components/card";
 import Discussion from "@/components/discussion";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
+import { TextSummary } from "@/components/text-summary";
+import { Trans } from "@/components/trans";
+import { generateGradient } from "@/utils/color-hash";
 import { preventWidows } from "@/utils/prevent-widows";
 
 import { useParticipants } from "./participants-provider";
@@ -17,7 +28,7 @@ import { usePoll } from "./poll-context";
 
 const checkIfWideScreen = () => window.innerWidth > 640;
 
-export const Poll = (props: { children?: React.ReactNode }) => {
+export const Poll = () => {
   const { t } = useTranslation();
   const { poll } = usePoll();
 
@@ -44,83 +55,95 @@ export const Poll = (props: { children?: React.ReactNode }) => {
 
   return (
     <UserAvatarProvider seed={poll.id} names={names}>
-      <div>
-        <div className="mx-auto max-w-full space-y-3 sm:space-y-4 lg:mx-0">
-          {props.children}
-          {poll.demo ? (
-            <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
-              <ExclamationIcon className="w-6" />
-              <div>{t("demoPollNotice")}</div>
-            </div>
-          ) : null}
-          {poll.closed ? (
-            <div className="flex items-center gap-3 rounded-md border border-pink-200 bg-pink-100 p-3 text-pink-600 shadow-sm">
-              <LockClosedIcon className="w-6" />
-              <div>{t("pollHasBeenLocked")}</div>
-            </div>
-          ) : null}
-          <div className="rounded-md border bg-white shadow-sm md:overflow-hidden">
-            <div className="p-4">
-              <div className="space-y-3">
+      <div className="space-y-3 p-2 sm:space-y-4 sm:p-4 md:p-8">
+        {poll.demo ? (
+          <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
+            <ExclamationIcon className="w-6" />
+            <div>{t("demoPollNotice")}</div>
+          </div>
+        ) : null}
+        {poll.closed ? (
+          <div className="flex items-center gap-3 rounded-md border border-pink-200 bg-pink-100 p-3 text-pink-600 shadow-sm">
+            <LockClosedIcon className="w-6" />
+            <div>{t("pollHasBeenLocked")}</div>
+          </div>
+        ) : null}
+
+        <Card fullWidthOnMobile={false}>
+          <div className="divide-y text-gray-600">
+            <div
+              className="h-2"
+              style={{ background: generateGradient(poll.id) }}
+            ></div>
+            <div className="bg-gray-50 p-4">
+              <div className="flex items-start gap-3">
+                <ChartSquareBarIcon className="text-primary-600 -ml-1 h-7 translate-y-0.5" />
                 <div>
-                  <div
-                    className="text-xl font-semibold text-slate-800 sm:text-2xl"
+                  <h1
+                    className="text-xl font-bold tracking-tight sm:text-2xl"
                     data-testid="poll-title"
                   >
                     {preventWidows(poll.title)}
-                  </div>
+                  </h1>
                   <PollSubheader />
                 </div>
-                {poll.description ? (
-                  <div className="border-primary whitespace-pre-line">
+              </div>
+            </div>
+            <div className="space-y-4 p-4">
+              {poll.description ? (
+                <div className="flex gap-4">
+                  <MenuAlt1Icon className="h-5 shrink-0 translate-y-0.5" />
+                  <div className="border-primary whitespace-pre-line leading-relaxed">
                     <TruncatedLinkify>
-                      {preventWidows(poll.description)}
+                      <TextSummary
+                        text={preventWidows(poll.description)}
+                        max={200}
+                      />
                     </TruncatedLinkify>
                   </div>
-                ) : null}
-                {poll.location ? (
-                  <div>
-                    <div className="text-sm text-slate-500">
-                      {t("location")}
-                    </div>
-                    <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-                  </div>
-                ) : null}
+                </div>
+              ) : null}
+              {poll.location ? (
+                <div className="flex gap-4">
+                  <LocationMarkerIcon className="h-5 translate-y-0.5" />
+                  <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+                </div>
+              ) : null}
+              <div className="flex gap-4">
+                <CursorClickIcon className="h-5 shrink-0" />
                 <div>
-                  <div className="mb-2 text-sm text-slate-500">
-                    {t("possibleAnswers")}
+                  <div className="mb-2">
+                    <Trans i18nKey="possibleAnswers" />
                   </div>
-                  <div className="flex items-center space-x-3">
+                  <div className="flex gap-2">
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="yes" />
-                      <span>{t("yes")}</span>
+                      <span className="text-sm">{t("yes")}</span>
                     </span>
+                    <span className="text-gray-400">/</span>
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="ifNeedBe" />
-                      <span>{t("ifNeedBe")}</span>
+                      <span className="text-sm">{t("ifNeedBe")}</span>
                     </span>
+                    <span className="text-gray-400">/</span>
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="no" />
-                      <span>{t("no")}</span>
+                      <span className="text-sm">{t("no")}</span>
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </Card>
 
-          <React.Suspense fallback={null}>
-            {participants ? (
-              <div className="overflow-hidden rounded-md border bg-white shadow-sm">
-                <PollComponent />
-              </div>
-            ) : null}
-          </React.Suspense>
-
-          <React.Suspense fallback={<div className="p-4">{t("loading")}</div>}>
-            <Discussion />
-          </React.Suspense>
-        </div>
+        <Card fullWidthOnMobile={false}>
+          <PollComponent />
+        </Card>
+        <hr className="my-4" />
+        <Card fullWidthOnMobile={false}>
+          <Discussion />
+        </Card>
       </div>
     </UserAvatarProvider>
   );

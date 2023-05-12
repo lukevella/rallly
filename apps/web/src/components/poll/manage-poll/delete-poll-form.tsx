@@ -1,6 +1,7 @@
 import { trpc } from "@rallly/backend";
 import { ExclamationIcon } from "@rallly/icons";
 import clsx from "clsx";
+import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -30,6 +31,8 @@ export const DeletePollForm: React.FunctionComponent<{
     },
   });
 
+  const router = useRouter();
+
   const { t } = useTranslation();
 
   return (
@@ -43,13 +46,13 @@ export const DeletePollForm: React.FunctionComponent<{
         data-testid="delete-poll-form"
         onSubmit={handleSubmit(async () => {
           await deletePoll.mutateAsync({ urlId });
-          onConfirm();
+          router.push("/polls");
         })}
       >
-        <div className="mb-3 text-xl font-medium text-slate-800">
+        <div className="mb-3 text-xl font-medium text-gray-800">
           {t("areYouSure")}
         </div>
-        <p className="text-slate-500">
+        <p className="text-gray-500">
           <Trans
             t={t}
             i18nKey="deletePollDescription"

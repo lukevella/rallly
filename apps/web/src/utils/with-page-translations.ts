@@ -1,4 +1,8 @@
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  GetStaticProps,
+} from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export const withPageTranslations = (): GetServerSideProps => {
@@ -10,5 +14,14 @@ export const withPageTranslations = (): GetServerSideProps => {
         ...translations,
       },
     };
+  };
+};
+
+export const getStaticTranslations: GetStaticProps = async (ctx) => {
+  const locale = ctx.locale ?? "en";
+  return {
+    props: {
+      ...(await serverSideTranslations(locale)),
+    },
   };
 };

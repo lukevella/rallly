@@ -95,9 +95,9 @@ export const DropdownItem: React.FunctionComponent<{
           disabled={disabled}
           onClick={onClick}
           className={clsx(
-            "flex w-full items-center whitespace-nowrap rounded py-1.5 pl-2 pr-4 font-medium text-slate-600",
+            "flex w-full items-center whitespace-nowrap rounded py-1.5 pl-2 pr-4 font-medium",
             {
-              "bg-slate-100": active,
+              "bg-gray-100": active,
               "opacity-50": disabled,
             },
           )}

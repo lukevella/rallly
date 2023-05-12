@@ -92,7 +92,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
     >
       <div>
         {noVotes ? (
-          <div className="rounded-lg bg-slate-50 p-2 text-center text-slate-500">
+          <div className="rounded-lg bg-gray-50 p-2 text-center text-gray-500">
             {t("noVotes")}
           </div>
         ) : (
@@ -108,7 +108,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                       className="absolute -right-1 -top-1 rounded-full bg-white"
                     />
                   </div>
-                  <div className="text-slate-500">{name}</div>
+                  <div className="text-gray-500">{name}</div>
                 </div>
               ))}
             </div>
@@ -123,7 +123,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                       className="absolute -right-1 -top-1 rounded-full bg-white"
                     />
                   </div>
-                  <div className="text-slate-500"> {name}</div>
+                  <div className="text-gray-500"> {name}</div>
                 </div>
               ))}
               {participantsWhoVotedNo.map(({ name }, i) => (
@@ -136,7 +136,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                       className="absolute -right-1 -top-1 rounded-full bg-white"
                     />
                   </div>
-                  <div className="text-slate-500"> {name}</div>
+                  <div className="text-gray-500"> {name}</div>
                 </div>
               ))}
             </div>
@@ -164,7 +164,7 @@ const SummarizedParticipantList: React.FunctionComponent<{
           );
         })}
       {participants.length > 6 ? (
-        <span className="inline-flex h-5 items-center justify-center rounded-full bg-slate-100 px-1 text-xs font-medium ring-1 ring-white">
+        <span className="inline-flex h-5 items-center justify-center rounded-full bg-gray-100 px-1 text-xs font-medium ring-1 ring-white">
           +{participants.length - 5}
         </span>
       ) : null}
@@ -189,7 +189,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   return (
     <div
       className={clsx("space-y-4 overflow-hidden p-3", {
-        "bg-slate-500/5": editable && active,
+        "bg-gray-500/5": editable && active,
       })}
       onTouchStart={() => setActive(editable)}
       onTouchEnd={() => setActive(false)}
@@ -206,7 +206,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
               exit={{ opacity: 0, x: -10 }}
               type="button"
               onTouchStart={(e) => e.stopPropagation()}
-              className="flex min-w-0 justify-end gap-1 overflow-hidden p-1 active:bg-slate-500/10"
+              className="flex min-w-0 justify-end gap-1 overflow-hidden p-1 active:bg-gray-500/10"
               onClick={(e) => {
                 e.stopPropagation();
                 setExpanded((value) => !value);
@@ -217,7 +217,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
               ) : null}
               <ChevronDownIcon
                 className={clsx(
-                  "h-5 shrink-0 text-slate-500 transition-transform",
+                  "h-5 shrink-0 text-gray-500 transition-transform",
                   {
                     "-rotate-180": expanded,
                   },

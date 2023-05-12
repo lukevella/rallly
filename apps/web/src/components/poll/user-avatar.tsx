@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { ColoredAvatar } from "@/components/poll/participant-avatar";
 import { stringToValue } from "@/utils/string-to-value";
 
 import Badge from "../badge";
@@ -30,7 +31,7 @@ const colors = [
   "bg-pink-500",
 ];
 
-const defaultColor = "bg-slate-400";
+const defaultColor = "bg-gray-400";
 
 export const UserAvatarProvider: React.FunctionComponent<{
   children?: React.ReactNode;
@@ -72,33 +73,8 @@ export const UserAvatarProvider: React.FunctionComponent<{
 const UserAvatarInner: React.FunctionComponent<UserAvaterProps> = ({
   name,
   className,
-  color: colorOverride,
-  size = "default",
 }) => {
-  const trimmedName = name.trim();
-
-  const getColor = React.useContext(UserAvatarContext);
-
-  if (!getColor) {
-    throw new Error("Forgot to wrap UserAvatarProvider");
-  }
-
-  const color = colorOverride ?? getColor(trimmedName);
-  return (
-    <span
-      className={clsx(
-        "inline-block shrink-0 rounded-full text-center text-white",
-        color,
-        {
-          "h-6 w-6 text-xs leading-6": size === "default",
-          "h-10 w-10 leading-10": size === "large",
-        },
-        className,
-      )}
-    >
-      {trimmedName[0]?.toUpperCase()}
-    </span>
-  );
+  return <ColoredAvatar name={name} className={className} />;
 };
 
 const UserAvatar: React.FunctionComponent<UserAvaterProps> = ({
@@ -115,15 +91,28 @@ const UserAvatar: React.FunctionComponent<UserAvaterProps> = ({
   return (
     <div
       className={clsx(
-        "inline-flex items-center space-x-2 overflow-hidden",
+        "inline-flex items-center gap-x-2.5 overflow-hidden",
         className,
       )}
     >
       <UserAvatarInner {...forwardedProps} />
-      <div className="min-w-0 truncate">{forwardedProps.name}</div>
+      <div className="min-w-0 truncate font-medium">{forwardedProps.name}</div>
       {isYou ? <Badge>{t("you")}</Badge> : null}
     </div>
   );
 };
 
 export default UserAvatar;
+
+export const YouAvatar = () => {
+  const { t } = useTranslation();
+  const you = t("you");
+  return (
+    <span className="inline-flex items-center gap-x-2.5">
+      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold uppercase outline-dashed outline-2 outline-gray-200">
+        {you[0]}
+      </span>
+      {t("you")}
+    </span>
+  );
+};

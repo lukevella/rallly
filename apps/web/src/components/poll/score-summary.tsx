@@ -35,9 +35,9 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
         className={clsx(
           "flex select-none items-center gap-1 px-2 text-sm font-bold tabular-nums",
           {
-            "rounded-full bg-green-50 text-green-400": highlight,
+            "rounded-full bg-green-50 text-green-500": highlight,
           },
-          { "text-slate-400": !highlight },
+          { "text-gray-400": !highlight },
         )}
       >
         <YesIcon className="-ml-1 inline-block h-4 transition-opacity" />

@@ -83,7 +83,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <div className="overflow-hidden lg:flex">
-      <div className="border-b p-3 sm:p-4 lg:w-[440px] lg:border-r lg:border-b-0">
+      <div className="border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -106,7 +106,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 return (
                   <div
                     key={dayOfWeek}
-                    className="flex items-center justify-center pb-2 text-sm font-medium text-slate-500"
+                    className="flex items-center justify-center pb-2 text-sm font-medium text-gray-500"
                   >
                     {dayOfWeek.substring(0, 2)}
                   </div>
@@ -163,9 +163,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         }
                       }}
                       className={clsx(
-                        "relative flex h-full w-full items-center justify-center text-sm hover:bg-slate-50 focus:z-10 focus:rounded active:bg-slate-100",
+                        "relative flex h-full w-full items-center justify-center text-sm hover:bg-gray-50 focus:z-10 focus:rounded active:bg-gray-100",
                         {
-                          "bg-slate-50 text-slate-500": day.outOfMonth,
+                          "bg-gray-50 text-gray-500": day.outOfMonth,
                           "font-bold": day.today,
                           "text-primary-600": day.today && !day.selected,
                           "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-500 after:content-['']":
@@ -194,7 +194,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           <div className="flex items-center space-x-3 p-3 sm:p-4">
             <div className="grow">
               <div className="font-medium">{t("specifyTimes")}</div>
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-gray-500">
                 {t("specifyTimesDescription")}
               </div>
             </div>
@@ -236,7 +236,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             </div>
           </div>
         </div>
-        <div className="grow">
+        <div className="max-h-[calc(100vh-400px)] min-h-0 grow overflow-auto">
           {isTimedEvent ? (
             <div className="divide-y">
               {Object.keys(optionsByDay)
@@ -246,7 +246,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   return (
                     <div
                       key={dateString}
-                      className="space-y-3 p-3 sm:flex sm:space-y-0 sm:space-x-4 sm:p-4"
+                      className="space-y-3 p-3 sm:flex sm:space-x-4 sm:space-y-0 sm:p-4"
                     >
                       <div>
                         <DateCard

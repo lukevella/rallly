@@ -65,7 +65,7 @@ export const MobileNavigation = (props: { className?: string }) => {
             <button
               role="button"
               type="button"
-              className="group flex items-center rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+              className="group flex items-center rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-600 hover:no-underline active:bg-gray-300"
             >
               <MenuIcon className="group-hover:text-primary-600 mr-2 w-5" />
               <Logo />
@@ -100,7 +100,7 @@ export const MobileNavigation = (props: { className?: string }) => {
       </div>
       <div className="flex items-center">
         {user ? null : (
-          <LoginLink className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300">
+          <LoginLink className="flex w-full cursor-pointer items-center space-x-2 whitespace-nowrap rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-600 hover:no-underline active:bg-gray-300">
             <LoginIcon className="h-5 opacity-75" />
             <span className="inline-block">{t("login")}</span>
           </LoginLink>
@@ -114,7 +114,7 @@ export const MobileNavigation = (props: { className?: string }) => {
                   role="button"
                   data-testid="user"
                   className={clsx(
-                    "group inline-flex w-full items-center space-x-2 rounded px-2 py-1 text-left transition-colors hover:bg-slate-500/10 active:bg-slate-500/20",
+                    "group inline-flex w-full items-center space-x-2 rounded px-2 py-1 text-left transition-colors hover:bg-gray-500/10 active:bg-gray-500/20",
                   )}
                 >
                   <div className="relative shrink-0">
@@ -133,7 +133,7 @@ export const MobileNavigation = (props: { className?: string }) => {
             <button
               role="button"
               type="button"
-              className="group flex items-center whitespace-nowrap rounded px-2 py-1 font-medium transition-colors hover:bg-gray-200 hover:text-slate-600 hover:no-underline active:bg-gray-300"
+              className="group flex items-center whitespace-nowrap rounded px-2 py-1 font-medium transition-colors hover:bg-gray-200 hover:text-gray-600 hover:no-underline active:bg-gray-300"
             >
               <AdjustmentsIcon className="group-hover:text-primary-600 h-5 opacity-75" />
               <span className="ml-2 hidden sm:block">{t("preferences")}</span>

@@ -46,8 +46,8 @@ const Redirect = (props: React.PropsWithChildren<{ redirect: string }>) => {
           <Spinner />
         )}
       </div>
-      <div className="text-slate-800">{props.children}</div>
-      <div className="text-sm text-slate-500">
+      <div className="text-gray-800">{props.children}</div>
+      <div className="text-sm text-gray-500">
         <Trans
           t={t}
           i18nKey="redirect"

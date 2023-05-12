@@ -5,6 +5,7 @@ import * as React from "react";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
+import { useRole } from "@/contexts/role";
 
 import { ParticipantFormSubmitted } from "../types";
 import UserAvatar from "../user-avatar";
@@ -17,7 +18,6 @@ export interface ParticipantRowProps {
   participant: Participant & { votes: Vote[] };
   className?: string;
   editMode?: boolean;
-  disableEditing?: boolean;
   onChangeEditMode?: (editMode: boolean) => void;
   onSubmit?: (data: ParticipantFormSubmitted) => Promise<void>;
 }
@@ -25,7 +25,6 @@ export interface ParticipantRowProps {
 export const ParticipantRowView: React.FunctionComponent<{
   name: string;
   action?: React.ReactNode;
-  color?: string;
   votes: Array<VoteType | undefined>;
   columnWidth: number;
   className?: string;
@@ -40,7 +39,6 @@ export const ParticipantRowView: React.FunctionComponent<{
   sidebarWidth,
   columnWidth,
   isYou,
-  color,
   participantId,
 }) => {
   return (
@@ -53,7 +51,7 @@ export const ParticipantRowView: React.FunctionComponent<{
         className="flex h-full shrink-0 items-center justify-between gap-2 px-3"
         style={{ width: sidebarWidth }}
       >
-        <UserAvatar name={name} showName={true} isYou={isYou} color={color} />
+        <UserAvatar name={name} showName={true} isYou={isYou} />
         {action}
       </div>
       <ControlledScrollArea className="h-full">
@@ -84,20 +82,20 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   editMode,
   onSubmit,
   className,
-  disableEditing,
   onChangeEditMode,
 }) => {
   const { columnWidth, sidebarWidth } = usePollContext();
 
-  const session = useUser();
-  const { poll, getVote, options, admin } = usePoll();
+  const { user, ownsObject } = useUser();
+  const { poll, getVote, options } = usePoll();
 
-  const isYou = session.user && session.ownsObject(participant) ? true : false;
+  const isYou = user && ownsObject(participant) ? true : false;
 
-  const isUnclaimed = !participant.userId;
-
+  const isAdmin = !!poll.adminUrlId;
+  const role = useRole();
   const canEdit =
-    !disableEditing && !poll.closed && (admin || isYou || isUnclaimed);
+    (role === "admin" && isAdmin) ||
+    (!poll.closed && participant.userId === user?.id);
 
   if (editMode) {
     return (

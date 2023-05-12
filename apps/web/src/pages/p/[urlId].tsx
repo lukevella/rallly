@@ -1,66 +1,68 @@
-import { trpc } from "@rallly/backend";
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
+import { ExternalLinkIcon } from "@rallly/icons";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
 
-import { ParticipantsProvider } from "@/components/participants-provider";
-import { Poll } from "@/components/poll";
-import { PollContextProvider } from "@/components/poll-context";
-import { UserProvider, useUser } from "@/components/user-provider";
+import ParticipantPage from "@/components/poll/participant-page/participant-page";
+import { Trans } from "@/components/trans";
+import { useUser } from "@/components/user-provider";
+import { usePoll } from "@/contexts/poll";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
-import StandardLayout from "../../components/layouts/standard-layout";
-import ModalProvider from "../../components/modal/modal-provider";
-import { NextPageWithLayout } from "../../types";
-
-const Page: NextPageWithLayout<{
-  urlId: string;
-  forceUserId: string | null;
-}> = ({ urlId, forceUserId }) => {
-  const pollQuery = trpc.polls.getByParticipantUrlId.useQuery({ urlId });
-
+const GoToApp = () => {
+  const poll = usePoll();
   const { user } = useUser();
-  const poll = pollQuery.data;
 
-  const { t } = useTranslation();
-  if (poll) {
-    return (
-      <>
-        <Head>
-          <title>{poll.title}</title>
-          <meta name="robots" content="noindex,nofollow" />
-        </Head>
-        <UserProvider forceUserId={forceUserId ?? undefined}>
-          <ParticipantsProvider pollId={poll.id}>
-            <PollContextProvider poll={poll} urlId={urlId} admin={false}>
-              <ModalProvider>
-                <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
-                  {user.id === poll.userId ? (
-                    <Link
-                      className="btn-default"
-                      href={`/admin/${poll.adminUrlId}`}
-                    >
-                      &larr; {t("goToAdmin")}
-                    </Link>
-                  ) : null}
-                  <Poll />
-                </div>
-              </ModalProvider>
-            </PollContextProvider>
-          </ParticipantsProvider>
-        </UserProvider>
-      </>
-    );
+  if (poll?.userId !== user.id) {
+    return null;
   }
 
-  return null;
+  return (
+    <div className="pt-8 text-center">
+      <span className="group inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-medium tracking-tight">
+        <Trans
+          defaults="<a>Manage</a>"
+          target="_blank"
+          i18nKey="goToApp"
+          components={{
+            a: (
+              <Link
+                className="text-link"
+                href={`/poll/${poll.participantUrlId}`}
+              />
+            ),
+          }}
+        />
+        <ExternalLinkIcon className="h-5" />
+      </span>
+    </div>
+  );
 };
 
-Page.getLayout = function getLayout(page) {
-  return <StandardLayout>{page}</StandardLayout>;
+const Page = () => {
+  return (
+    <div>
+      <ParticipantPage>
+        <GoToApp />
+      </ParticipantPage>
+      <div className="pb-16 text-center text-gray-500">
+        <Trans
+          defaults="Powered by <a>{name}</a>"
+          i18nKey="poweredByRallly"
+          values={{ name: "rallly.co" }}
+          components={{
+            a: (
+              <Link
+                className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
+                href="https://rallly.co"
+              />
+            ),
+          }}
+        />
+      </div>
+    </div>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
@@ -78,7 +80,6 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
       }
       return {
         props: {
-          urlId: ctx.query.urlId as string,
           forceUserId: userId,
         },
       };
@@ -86,7 +87,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   ],
   {
     onPrefetch: async (ssg, ctx) => {
-      const poll = await ssg.polls.getByParticipantUrlId.fetch({
+      const poll = await ssg.polls.get.fetch({
         urlId: ctx.params?.urlId as string,
       });
 

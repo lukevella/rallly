@@ -21,6 +21,7 @@ export const trpc = createTRPCNext<AppRouter>({
         defaultOptions: {
           queries: {
             cacheTime: Infinity,
+            staleTime: 1000 * 60,
           },
         },
         mutationCache: new MutationCache({

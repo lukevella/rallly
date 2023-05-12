@@ -23,15 +23,15 @@ const Footer: React.FunctionComponent = () => {
       <div className="mx-auto max-w-7xl space-y-8 p-8">
         <div className="space-y-8 lg:flex lg:space-x-16 lg:space-y-0">
           <div className=" lg:w-2/6">
-            <Logo className="w-32 text-slate-400" />
-            <div className="mb-8 mt-4 text-slate-400">
-              <p>
+            <Logo className="w-32 text-gray-500" />
+            <div className="mb-8 mt-4 text-gray-500">
+              <p className="mb-4 leading-relaxed">
                 <Trans
                   i18nKey="common_footerSponsor"
                   components={{
                     a: (
                       <a
-                        className="font-normal leading-loose text-slate-500 underline hover:text-slate-800 hover:underline"
+                        className="font-normal leading-loose text-gray-500 underline hover:text-gray-800 hover:underline"
                         href="https://support.rallly.co/contribute/donations"
                       />
                     ),
@@ -44,7 +44,7 @@ const Footer: React.FunctionComponent = () => {
                   components={{
                     a: (
                       <a
-                        className="font-normal leading-loose text-slate-500 underline hover:text-slate-800 hover:underline"
+                        className="font-normal leading-loose text-gray-500 underline hover:text-gray-800 hover:underline"
                         href="https://twitter.com/imlukevella"
                       />
                     ),
@@ -55,19 +55,19 @@ const Footer: React.FunctionComponent = () => {
             <div className="flex items-center space-x-6">
               <a
                 href="https://twitter.com/ralllyco"
-                className="hover:text-primary-600 text-sm text-slate-500 transition-colors hover:no-underline"
+                className="hover:text-primary-600 text-sm text-gray-500 transition-colors hover:no-underline"
               >
                 <TwitterIcon className="h-5 w-5" />
               </a>
               <a
                 href="https://discord.gg/uzg4ZcHbuM"
-                className="hover:text-primary-600 text-sm text-slate-500 transition-colors hover:no-underline"
+                className="hover:text-primary-600 text-sm text-gray-500 transition-colors hover:no-underline"
               >
                 <DiscordIcon className="h-5 w-5" />
               </a>
               <a
                 href="https://github.com/lukevella/rallly"
-                className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-slate-100 pl-2 pr-3 text-sm text-slate-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
+                className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-gray-100 pl-2 pr-3 text-sm text-gray-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
               >
                 <StarIcon className="mr-2 inline-block w-5" />
                 <span>
@@ -86,7 +86,7 @@ const Footer: React.FunctionComponent = () => {
             <ul className="space-y-2">
               <li>
                 <a
-                  className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
+                  className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                   href="https://github.com/lukevella/rallly/discussions"
                 >
                   <Trans i18nKey="common_discussions" defaults="Discussions" />
@@ -95,7 +95,7 @@ const Footer: React.FunctionComponent = () => {
               <li>
                 <Link
                   href="https://blog.rallly.co"
-                  className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
+                  className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 >
                   <Trans i18nKey="common_blog" defaults="Blog" />
                 </Link>
@@ -103,7 +103,7 @@ const Footer: React.FunctionComponent = () => {
               <li>
                 <a
                   href="https://support.rallly.co"
-                  className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
+                  className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 >
                   <Trans i18nKey="common_support" defaults="Support" />
                 </a>
@@ -150,7 +150,7 @@ const Footer: React.FunctionComponent = () => {
             />
             <a
               href="https://support.rallly.co/contribute/translations"
-              className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-slate-500"
+              className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
             >
               <TranslateIcon className="mr-2 h-5 w-5" />
               <Trans i18nKey="common_volunteerTranslator" /> &rarr;
@@ -161,7 +161,7 @@ const Footer: React.FunctionComponent = () => {
           <li>
             <Link
               href="/privacy-policy"
-              className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
+              className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
             >
               <Trans i18nKey="common_privacyPolicy" />
             </Link>
@@ -169,7 +169,7 @@ const Footer: React.FunctionComponent = () => {
           <li>
             <Link
               href="/cookie-policy"
-              className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
+              className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
             >
               <Trans i18nKey="common_cookiePolicy" />
             </Link>
@@ -177,7 +177,7 @@ const Footer: React.FunctionComponent = () => {
           <li>
             <Link
               href="/terms-of-use"
-              className="inline-block font-normal text-slate-500 hover:text-slate-800 hover:no-underline"
+              className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
             >
               <Trans i18nKey="common_termsOfUse" />
             </Link>

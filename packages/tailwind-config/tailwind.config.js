@@ -8,6 +8,7 @@ module.exports = {
       },
       colors: {
         primary: colors.indigo,
+        gray: colors.slate,
       },
       keyframes: {
         wiggle: {

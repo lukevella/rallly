@@ -22,25 +22,25 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
         <title>{title}</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
-      <div className="flex items-start">
-        <div className="text-center">
-          <Icon className="mb-4 inline-block w-24 text-slate-500" />
+      <div className="space-y-8">
+        <div className="space-y-4 text-center">
+          <Icon className="mb-4 inline-block w-24 text-gray-400" />
           <div className="text-primary-600 mb-2 text-3xl font-bold ">
             {title}
           </div>
-          <p>{description}</p>
-          <div className="flex justify-center space-x-3">
-            <Link href="/" className="btn-primary">
-              {t("errors_goToHome")}
-            </Link>
-            <Link
-              href="https://support.rallly.co"
-              passHref={true}
-              className="btn-default"
-            >
-              {t("common_support")}
-            </Link>
-          </div>
+          <p className="text-gray-600">{description}</p>
+        </div>
+        <div className="flex justify-center space-x-3">
+          <Link href="/" className="btn-primary">
+            {t("errors_goToHome")}
+          </Link>
+          <Link
+            href="https://support.rallly.co"
+            passHref={true}
+            className="btn-default"
+          >
+            {t("common_support")}
+          </Link>
         </div>
       </div>
     </div>

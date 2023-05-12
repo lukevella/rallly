@@ -105,7 +105,7 @@ const Tooltip: React.FunctionComponent<TooltipProps> = ({
         <AnimatePresence>
           {open ? (
             <m.div
-              className="z-30 rounded-md bg-slate-700 px-2 py-1 text-slate-100 shadow-md"
+              className="z-30 max-w-sm rounded-md bg-gray-700 px-2 py-1 text-gray-100 shadow-md"
               initial="hidden"
               transition={{
                 duration: 0.1,
@@ -130,7 +130,7 @@ const Tooltip: React.FunctionComponent<TooltipProps> = ({
             >
               <div
                 ref={arrowRef}
-                className="absolute rotate-45 bg-slate-700"
+                className="absolute rotate-45 bg-gray-700"
                 style={{
                   width: 8,
                   height: 8,

@@ -44,7 +44,7 @@ const PollDemo: React.FunctionComponent = () => {
     >
       <div className="flex">
         <div
-          className="flex shrink-0 items-center pt-2 pb-4 pl-4 pr-2 font-medium"
+          className="flex shrink-0 items-center pb-4 pl-4 pr-2 pt-2 font-medium"
           style={{ width: sidebarWidth }}
         >
           <div className="flex h-full grow items-end">
@@ -62,7 +62,7 @@ const PollDemo: React.FunctionComponent = () => {
           return (
             <div
               key={i}
-              className="shrink-0 space-y-3 py-2 pt-3 pb-4 text-center transition-colors"
+              className="shrink-0 space-y-3 py-2 pb-4 pt-3 text-center transition-colors"
               style={{ width: columnWidth }}
             >
               <div>
@@ -82,7 +82,6 @@ const PollDemo: React.FunctionComponent = () => {
       {participants.map((participant, i) => (
         <ParticipantRowView
           key={i}
-          color={participant.color}
           sidebarWidth={sidebarWidth}
           columnWidth={columnWidth}
           participantId={`participant${i}`}

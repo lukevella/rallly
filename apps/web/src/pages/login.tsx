@@ -27,7 +27,7 @@ const Page: NextPage<{ referer: string | null }> = () => {
       <LoginForm
         onAuthenticated={async () => {
           refresh();
-          router.replace("/profile");
+          router.replace("/polls");
         }}
       />
     </AuthLayout>
@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   composeGetServerSideProps(async (ctx) => {
     if (ctx.req.session.user?.isGuest === false) {
       return {
-        redirect: { destination: "/profile" },
+        redirect: { destination: "/polls" },
         props: {},
       };
     }

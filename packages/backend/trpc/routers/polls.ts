@@ -16,7 +16,7 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
     select: {
       id: true,
     },
-    where: { adminUrlId: urlId },
+    where: { participantUrlId: urlId },
   });
 
   if (!res) {
@@ -131,7 +131,7 @@ export const polls = router({
           });
         }
 
-        return { id: poll.id, urlId: adminUrlId };
+        return { id: poll.id, urlId: participantUrlId };
       },
     ),
   update: possiblyPublicProcedure
@@ -225,6 +225,22 @@ export const polls = router({
   participants,
   comments,
   // END LEGACY ROUTES
+  getWatchers: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .query(async ({ input: { pollId } }) => {
+      return await prisma.watcher.findMany({
+        where: {
+          pollId,
+        },
+        select: {
+          userId: true,
+        },
+      });
+    }),
   watch: possiblyPublicProcedure
     .input(z.object({ pollId: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -323,10 +339,11 @@ export const polls = router({
 
       return res;
     }),
-  getByParticipantUrlId: publicProcedure
+  get: publicProcedure
     .input(
       z.object({
         urlId: z.string(),
+        adminToken: z.string().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
@@ -370,10 +387,56 @@ export const polls = router({
         });
       }
 
-      if (ctx.user.id === res.userId) {
+      if (ctx.user.id === res.userId || res.adminUrlId === input.adminToken) {
         return res;
       } else {
         return { ...res, adminUrlId: "" };
       }
     }),
+  transfer: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      await prisma.poll.update({
+        where: {
+          id: input.pollId,
+        },
+        data: {
+          userId: ctx.user.id,
+        },
+      });
+    }),
+  list: possiblyPublicProcedure.query(async ({ ctx }) => {
+    const polls = await prisma.poll.findMany({
+      where: {
+        userId: ctx.user.id,
+        deleted: false,
+      },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        adminUrlId: true,
+        participantUrlId: true,
+        closed: true,
+        participants: {
+          select: {
+            id: true,
+            name: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return polls;
+  }),
 });

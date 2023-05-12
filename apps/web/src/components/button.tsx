@@ -61,13 +61,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading ? (
           <SpinnerIcon
-            className={clsx("inline-block w-5 animate-spin", {
-              "mr-2": !!children,
-            })}
+            className={clsx("-ml-0.5 inline-block h-5 w-5 animate-spin")}
           />
         ) : icon ? (
           React.cloneElement(icon, {
-            className: clsx("w-5 h-5", { "-ml-1 mr-2": !!children }),
+            className: clsx("w-5 h-5", { "-ml-0.5": !!children }),
           })
         ) : null}
         {children}

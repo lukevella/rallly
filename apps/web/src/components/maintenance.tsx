@@ -14,7 +14,7 @@ const Maintenance: React.FunctionComponent = () => {
           shortly…
         </div>
       </div>
-      <Logo className="mt-8 inline-block h-8 text-slate-300" />
+      <Logo className="mt-8 inline-block h-8 text-gray-300" />
     </div>
   );
 };

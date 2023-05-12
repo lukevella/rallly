@@ -96,7 +96,7 @@ export default function Document() {
         />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#f9fafb" />
+        <meta name="theme-color" content="#F3F4F6" />
       </Head>
       <body>
         <Main />

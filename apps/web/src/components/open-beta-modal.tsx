@@ -43,8 +43,8 @@ const OpenBeta = () => {
               ✉️ Send an email
             </a>
           </ul>
-          <div className="mt-4 rounded border bg-slate-50 p-4">
-            <h2 className="mb-4 text-slate-800">Important</h2>
+          <div className="mt-4 rounded border bg-gray-50 p-4">
+            <h2 className="mb-4 text-gray-800">Important</h2>
             <p className="mb-4">
               <strong>
                 You should not rely on the beta for any important data or

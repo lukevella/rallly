@@ -42,7 +42,7 @@ export const ParticipantsProvider: React.FunctionComponent<{
   // TODO (Luke Vella) [2022-05-18]: Add mutations here
 
   if (!participants) {
-    return <FullPageLoader>{t("loadingParticipants")}</FullPageLoader>;
+    return null;
   }
 
   return (

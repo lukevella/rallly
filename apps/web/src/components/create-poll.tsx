@@ -1,8 +1,20 @@
 import { trpc } from "@rallly/backend";
+import {
+  ChartSquareBarIcon,
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@rallly/icons";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { Card } from "@/components/card";
+import {
+  TopBar,
+  TopBarTitle,
+} from "@/components/layouts/standard-layout/top-bar";
+import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
 
 import { Button } from "./button";
@@ -80,7 +92,7 @@ const Page: React.FunctionComponent = () => {
         numberOfOptions: formData.options?.options?.length,
         optionsView: formData?.options?.view,
       });
-      router.replace(`/admin/${res.urlId}`);
+      router.replace(`/poll/${res.urlId}`);
     },
   });
 
@@ -129,77 +141,87 @@ const Page: React.FunctionComponent = () => {
   };
 
   return (
-    <div className="max-w-full p-3 sm:p-4">
-      <div className="max-w-full">
-        <div className="max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-          <div className="flex justify-between border-b p-4">
-            <h1 className="m-0 text-xl font-semibold text-slate-800">
-              {t("createNew")}
-            </h1>
-            <Steps current={currentStepIndex} total={steps.length} />
-          </div>
-          <div className="">
-            {(() => {
-              switch (currentStepName) {
-                case "eventDetails":
-                  return (
-                    <PollDetailsForm
-                      className="max-w-full p-3 sm:p-4"
-                      name={currentStepName}
-                      defaultValues={formData?.eventDetails}
-                      onSubmit={handleSubmit}
-                      onChange={handleChange}
-                    />
-                  );
-                case "options":
-                  return (
-                    <PollOptionsForm
-                      className="grow"
-                      name={currentStepName}
-                      defaultValues={formData?.options}
-                      onSubmit={handleSubmit}
-                      onChange={handleChange}
-                      title={formData.eventDetails?.title}
-                    />
-                  );
-                case "userDetails":
-                  return (
-                    <UserDetailsForm
-                      className="grow p-4"
-                      name={currentStepName}
-                      defaultValues={formData?.userDetails}
-                      onSubmit={handleSubmit}
-                      onChange={handleChange}
-                    />
-                  );
-              }
-            })()}
-            <div className="flex w-full justify-end space-x-3 border-t bg-gray-50 p-3">
-              {currentStepIndex > 0 ? (
-                <Button
-                  disabled={isBusy}
-                  onClick={() => {
-                    setFormData({
-                      ...formData,
-                      currentStep: currentStepIndex - 1,
-                    });
-                  }}
-                >
-                  {t("back")}
-                </Button>
-              ) : null}
-              <Button
-                form={currentStepName}
-                loading={isBusy}
-                htmlType="submit"
-                type="primary"
-              >
-                {currentStepIndex < steps.length - 1
-                  ? t("continue")
-                  : t("createPoll")}
-              </Button>
+    <div>
+      <TopBar className="flex justify-between p-3">
+        <div className="hidden sm:block">
+          <TopBarTitle
+            icon={ChartSquareBarIcon}
+            title={<Trans i18nKey="newPoll" />}
+          />
+        </div>
+        <Steps current={currentStepIndex} total={steps.length} />
+        <div className="flex justify-end gap-x-2">
+          {currentStepIndex > 0 ? (
+            <Button
+              icon={<ChevronLeftIcon />}
+              disabled={isBusy}
+              onClick={() => {
+                setFormData({
+                  ...formData,
+                  currentStep: currentStepIndex - 1,
+                });
+              }}
+            ></Button>
+          ) : null}
+
+          {currentStepIndex < steps.length - 1 ? (
+            <Button form={currentStepName} loading={isBusy} htmlType="submit">
+              {t("continue")}
+            </Button>
+          ) : (
+            <Button
+              form={currentStepName}
+              type="primary"
+              icon={<CheckIcon />}
+              loading={isBusy}
+              htmlType="submit"
+            >
+              {t("createPoll")}
+            </Button>
+          )}
+        </div>
+      </TopBar>
+      <div className="mx-auto max-w-4xl py-4 sm:p-4 lg:p-8">
+        <div className="max-w-full">
+          <Card fullWidthOnMobile={true}>
+            <div className="">
+              {(() => {
+                switch (currentStepName) {
+                  case "eventDetails":
+                    return (
+                      <PollDetailsForm
+                        className="max-w-full p-3 sm:p-4"
+                        name={currentStepName}
+                        defaultValues={formData?.eventDetails}
+                        onSubmit={handleSubmit}
+                        onChange={handleChange}
+                      />
+                    );
+                  case "options":
+                    return (
+                      <PollOptionsForm
+                        className="grow"
+                        name={currentStepName}
+                        defaultValues={formData?.options}
+                        onSubmit={handleSubmit}
+                        onChange={handleChange}
+                        title={formData.eventDetails?.title}
+                      />
+                    );
+                  case "userDetails":
+                    return (
+                      <UserDetailsForm
+                        className="grow p-4"
+                        name={currentStepName}
+                        defaultValues={formData?.userDetails}
+                        onSubmit={handleSubmit}
+                        onChange={handleChange}
+                      />
+                    );
+                }
+              })()}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

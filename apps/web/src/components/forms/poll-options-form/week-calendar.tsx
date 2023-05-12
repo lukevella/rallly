@@ -126,7 +126,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   }
                 }}
                 className={clsx(
-                  "inline-flex w-full items-center justify-center rounded-md py-2 text-sm hover:bg-slate-50 hover:text-gray-700",
+                  "inline-flex w-full items-center justify-center rounded-md py-2 text-sm hover:bg-gray-50 hover:text-gray-700",
                   {
                     "bg-green-50 text-green-600 hover:bg-green-50 hover:bg-opacity-75 hover:text-green-600":
                       !!selectedOption,

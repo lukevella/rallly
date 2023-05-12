@@ -35,7 +35,7 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
               showClose: true,
               content: (
                 <div className="w-96 max-w-full p-6 pt-28">
-                  <div className="absolute left-0 -top-8 w-full text-center">
+                  <div className="absolute -top-8 left-0 w-full text-center">
                     <div className="to-primary-600 inline-flex h-20 w-20 items-center justify-center rounded-full border-8 border-white bg-gradient-to-b from-purple-400">
                       <UserIcon className="h-7 text-white" />
                     </div>
@@ -43,7 +43,7 @@ export const UserDropdown: React.FunctionComponent<DropdownProps> = ({
                       <div className="text-lg font-medium leading-snug">
                         {t("guest")}
                       </div>
-                      <div className="text-sm text-slate-500">
+                      <div className="text-sm text-gray-500">
                         {user.shortName}
                       </div>
                     </div>

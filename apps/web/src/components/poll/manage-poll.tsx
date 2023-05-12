@@ -1,5 +1,6 @@
 import { Placement } from "@floating-ui/react-dom-interactions";
 import {
+  ChevronDownIcon,
   CogIcon,
   LockClosedIcon,
   LockOpenIcon,
@@ -37,7 +38,8 @@ const convertOptionToString = (option: { start: Date; duration: number }) => {
 
 const ManagePoll: React.FunctionComponent<{
   placement?: Placement;
-}> = ({ placement }) => {
+  disabled?: boolean;
+}> = ({ placement, disabled }) => {
   const { t } = useTranslation();
   const { poll, getParticipantsWhoVotedForOption, urlId } = usePoll();
 
@@ -194,57 +196,66 @@ const ManagePoll: React.FunctionComponent<{
       {changePollDetailsModalContextHolder}
       <Dropdown
         placement={placement}
-        trigger={<Button icon={<CogIcon />}>{t("manage")}</Button>}
+        trigger={
+          <Button icon={<CogIcon />} disabled={disabled}>
+            <span className="hidden sm:inline">{t("manage")}</span>
+            <ChevronDownIcon className="h-3" />
+          </Button>
+        }
       >
-        <DropdownItem
-          icon={PencilIcon}
-          label={t("editDetails")}
-          onClick={openChangePollDetailsModa}
-        />
-        <DropdownItem
-          icon={TableIcon}
-          label={t("editOptions")}
-          onClick={handleChangeOptions}
-        />
-        <DropdownItem
-          icon={SaveIcon}
-          label={t("exportToCsv")}
-          onClick={exportToCsv}
-        />
-        {poll.closed ? (
-          <DropdownItem
-            icon={LockOpenIcon}
-            label={t("unlockPoll")}
-            onClick={() => updatePollMutation({ urlId, closed: false })}
-          />
-        ) : (
-          <DropdownItem
-            icon={LockClosedIcon}
-            label={t("lockPoll")}
-            onClick={() => updatePollMutation({ urlId, closed: true })}
-          />
-        )}
-        <DropdownItem
-          icon={TrashIcon}
-          label={t("deletePoll")}
-          onClick={() => {
-            modalContext.render({
-              overlayClosable: true,
-              content: function Content({ close }) {
-                return (
-                  <DeletePollForm
-                    onConfirm={async () => {
-                      close();
-                    }}
-                    onCancel={close}
-                    urlId={urlId}
-                  />
-                );
-              },
-              footer: null,
-            });
-          }}
-        />
+        {!disabled ? (
+          <>
+            <DropdownItem
+              icon={PencilIcon}
+              label={t("editDetails")}
+              onClick={openChangePollDetailsModa}
+            />
+            <DropdownItem
+              icon={TableIcon}
+              label={t("editOptions")}
+              onClick={handleChangeOptions}
+            />
+            <DropdownItem
+              icon={SaveIcon}
+              label={t("exportToCsv")}
+              onClick={exportToCsv}
+            />
+            {poll.closed ? (
+              <DropdownItem
+                icon={LockOpenIcon}
+                label={t("unlockPoll")}
+                onClick={() => updatePollMutation({ urlId, closed: false })}
+              />
+            ) : (
+              <DropdownItem
+                icon={LockClosedIcon}
+                label={t("lockPoll")}
+                onClick={() => updatePollMutation({ urlId, closed: true })}
+              />
+            )}
+            <DropdownItem
+              icon={TrashIcon}
+              label={t("deletePoll")}
+              onClick={() => {
+                modalContext.render({
+                  overlayClosable: true,
+                  content: function Content({ close }) {
+                    return (
+                      <DeletePollForm
+                        onConfirm={async () => {
+                          close();
+                        }}
+                        onCancel={close}
+                        urlId={urlId}
+                      />
+                    );
+                  },
+                  footer: null,
+                });
+              }}
+            />
+          </>
+        ) : null}
       </Dropdown>
     </div>
   );

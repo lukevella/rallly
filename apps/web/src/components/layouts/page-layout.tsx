@@ -60,39 +60,33 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
 const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
   const { t } = useTranslation();
   return (
-    <LazyMotion features={domAnimation}>
-      <div className="bg-pattern min-h-full overflow-x-hidden">
-        <div className="mx-auto flex max-w-7xl items-center py-8 px-8">
-          <div className="grow">
-            <div className="relative inline-block">
-              <Link className="inline-block rounded" href="/">
-                <Logo className="text-primary-600 w-40" alt="Rallly" />
-              </Link>
-              <span className="absolute -bottom-6 right-0 text-sm text-slate-400 transition-colors">
-                <Trans
-                  t={t}
-                  i18nKey="homepage_3Ls"
-                  components={{ e: <em /> }}
-                />
-              </span>
-            </div>
+    <div className="bg-pattern min-h-full overflow-x-hidden">
+      <div className="mx-auto flex max-w-7xl items-center px-8 py-8">
+        <div className="grow">
+          <div className="relative inline-block">
+            <Link className="inline-block rounded" href="/">
+              <Logo className="text-primary-600 w-40" alt="Rallly" />
+            </Link>
+            <span className="absolute -bottom-6 right-0 text-sm text-gray-400 transition-colors">
+              <Trans t={t} i18nKey="homepage_3Ls" components={{ e: <em /> }} />
+            </span>
           </div>
-          <Menu className="hidden items-center space-x-8 sm:flex" />
-          <Popover>
-            <PopoverTrigger asChild={true}>
-              <button className="hover:text-primary-600 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2 sm:hidden">
-                <DotsVerticalIcon className="w-5" />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="end">
-              <Menu className="flex flex-col space-y-2 p-2" />
-            </PopoverContent>
-          </Popover>
         </div>
-        <div className="md:min-h-[calc(100vh-460px)]">{children}</div>
-        <Footer />
+        <Menu className="hidden items-center space-x-8 sm:flex" />
+        <Popover>
+          <PopoverTrigger asChild={true}>
+            <button className="hover:text-primary-600 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2 sm:hidden">
+              <DotsVerticalIcon className="w-5" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="end">
+            <Menu className="flex flex-col space-y-2 p-2" />
+          </PopoverContent>
+        </Popover>
       </div>
-    </LazyMotion>
+      <div className="md:min-h-[calc(100vh-460px)]">{children}</div>
+      <Footer />
+    </div>
   );
 };
 

@@ -15,17 +15,15 @@ const Preferences = (props: { className?: string }) => {
 
   return (
     <div className={props.className}>
-      <div className="mb-2 space-y-2">
-        <div className="grow text-sm text-slate-500">
-          {t("common_language")}
-        </div>
+      <div className="mb-4 space-y-2">
+        <label className="text-sm font-medium">{t("common_language")}</label>
         <LanguageSelect className="w-full" onChange={() => router.reload()} />
       </div>
-      <div className="grow space-y-2">
+      <div className="grow space-y-4">
         <div>
-          <div className="mb-2 grow text-sm text-slate-500">
+          <label className="mb-2 text-sm font-medium">
             {t("weekStartsOn")}
-          </div>
+          </label>
           <div>
             <div className="segment-button inline-flex">
               <button
@@ -54,9 +52,7 @@ const Preferences = (props: { className?: string }) => {
           </div>
         </div>
         <div className="">
-          <div className="mb-2 grow text-sm text-slate-500">
-            {t("timeFormat")}
-          </div>
+          <label className="mb-2 text-sm font-medium">{t("timeFormat")}</label>
           <div className="segment-button inline-flex">
             <button
               className={clsx({

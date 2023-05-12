@@ -1,9 +1,10 @@
 import { trpc } from "@rallly/backend";
-import { m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
+import { CurrentUserAvatar } from "@/components/user";
+import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
@@ -15,8 +16,6 @@ export interface UserDetailsProps {
   name?: string;
   email?: string;
 }
-
-const MotionButton = m(Button);
 
 export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
   userId,
@@ -32,9 +31,11 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
   });
 
   const posthog = usePostHog();
-
+  const { user } = useUser();
+  const queryClient = trpc.useContext();
   const changeName = trpc.user.changeName.useMutation({
     onSuccess: (_, { name }) => {
+      queryClient.whoami.invalidate();
       reset({ name, email });
       posthog?.people.set({ name });
     },
@@ -49,26 +50,13 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
         }
       })}
     >
-      <div className="flex items-center justify-between border-b px-3 py-2 shadow-sm">
-        <div className="font-semibold text-slate-700 ">{t("yourDetails")}</div>
-        <MotionButton
-          variants={{
-            hidden: { opacity: 0, x: 10 },
-            visible: { opacity: 1, x: 0 },
-          }}
-          transition={{ duration: 0.1 }}
-          initial="hidden"
-          animate={formState.isDirty ? "visible" : "hidden"}
-          htmlType="submit"
-          loading={formState.isSubmitting}
-          type="primary"
-        >
-          {t("save")}
-        </MotionButton>
+      <div className="flex items-center gap-4 border-b p-4">
+        <CurrentUserAvatar />
+        <div className="font-semibold text-gray-700 ">{user.name}</div>
       </div>
       <div className="divide-y">
         <div className="flex p-4 pr-8">
-          <label htmlFor="name" className="mb-1 w-1/3 text-slate-500">
+          <label htmlFor="name" className="mb-1 w-1/3 text-gray-500">
             {t("name")}
           </label>
           <div className="w-2/3">
@@ -90,7 +78,7 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
           </div>
         </div>
         <div className="flex p-4 pr-8">
-          <label htmlFor="random-8904" className="mb-1 w-1/3 text-slate-500">
+          <label htmlFor="random-8904" className="mb-1 w-1/3 text-gray-500">
             {t("email")}
           </label>
           <div className="w-2/3">
@@ -103,6 +91,16 @@ export const UserDetails: React.FunctionComponent<UserDetailsProps> = ({
             />
           </div>
         </div>
+      </div>
+      <div className="flex justify-end border-t p-3">
+        <Button
+          disabled={!formState.isDirty}
+          htmlType="submit"
+          loading={formState.isSubmitting}
+          type="primary"
+        >
+          {t("save")}
+        </Button>
       </div>
     </form>
   );

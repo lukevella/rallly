@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { ChevronDownIcon, PlusCircleIcon } from "@rallly/icons";
+import { ChevronDownIcon, PlusSmIcon } from "@rallly/icons";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -8,6 +8,7 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
+import Tooltip from "@/components/tooltip";
 import { You } from "@/components/you";
 
 import { Button } from "../button";
@@ -19,7 +20,7 @@ import { isUnclaimed, useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
 import { ParticipantForm } from "./types";
-import UserAvatar from "./user-avatar";
+import UserAvatar, { YouAvatar } from "./user-avatar";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -112,7 +113,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 <div className="menu min-w-0 grow">
                   <Listbox.Button
                     as={Button}
-                    className="w-full"
+                    className="w-full shadow-none"
                     data-testid="participant-selector"
                   >
                     <div className="min-w-0 grow text-left">
@@ -162,7 +163,7 @@ const MobilePoll: React.FunctionComponent = () => {
               </Listbox>
             ) : (
               <div className="flex grow items-center px-1">
-                <You />
+                <YouAvatar />
               </div>
             )}
             {isEditing ? (
@@ -198,19 +199,18 @@ const MobilePoll: React.FunctionComponent = () => {
                 }}
               />
             ) : (
-              <Button
-                type="primary"
-                icon={<PlusCircleIcon />}
-                disabled={poll.closed}
-                onClick={() => {
-                  reset({
-                    votes: [],
-                  });
-                  setIsEditing(true);
-                }}
-              >
-                {t("new")}
-              </Button>
+              <Tooltip content={t("newParticipant")}>
+                <Button
+                  icon={<PlusSmIcon />}
+                  disabled={poll.closed}
+                  onClick={() => {
+                    reset({
+                      votes: [],
+                    });
+                    setIsEditing(true);
+                  }}
+                ></Button>
+              </Tooltip>
             )}
           </div>
           {timeZone ? (

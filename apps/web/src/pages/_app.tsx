@@ -4,6 +4,7 @@ import "../style.css";
 
 import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
 import { inject } from "@vercel/analytics";
+import { domMax, LazyMotion } from "framer-motion";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
@@ -13,6 +14,7 @@ import { DefaultSeo } from "next-seo";
 import React from "react";
 
 import Maintenance from "@/components/maintenance";
+import { DayjsProvider } from "@/utils/dayjs";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
 import { NextPageWithLayout } from "../types";
@@ -46,7 +48,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <>
+    <LazyMotion features={domMax}>
       <DefaultSeo
         openGraph={{
           siteName: "Rallly",
@@ -77,8 +79,8 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           --font-inter: ${inter.style.fontFamily};
         }
       `}</style>
-      {getLayout(<Component {...pageProps} />)}
-    </>
+      <DayjsProvider>{getLayout(<Component {...pageProps} />)}</DayjsProvider>
+    </LazyMotion>
   );
 };
 

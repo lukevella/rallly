@@ -1,21 +1,16 @@
 import clsx from "clsx";
-import { Trans, useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useCopyToClipboard } from "react-use";
 
+import ManagePoll from "@/components/poll/manage-poll";
+import NotificationsToggle from "@/components/poll/notifications-toggle";
+
 import { Button } from "./button";
 import { usePoll } from "./poll-context";
 
-export interface SharingProps {
-  onHide: () => void;
-  className?: string;
-}
-
-const Sharing: React.FunctionComponent<SharingProps> = ({
-  onHide,
-  className,
-}) => {
+const Sharing: React.FunctionComponent = () => {
   const { poll } = usePoll();
   const { t } = useTranslation();
   const [state, copyToClipboard] = useCopyToClipboard();
@@ -29,39 +24,27 @@ const Sharing: React.FunctionComponent<SharingProps> = ({
   const participantUrl = `${window.location.origin}/p/${poll.participantUrlId}`;
   const [didCopy, setDidCopy] = React.useState(false);
   return (
-    <div className={className}>
-      <div className="mb-1 flex items-center justify-between">
-        <div className="text-lg font-semibold text-slate-700">
+    <div className="flex flex-col gap-3 md:flex-row">
+      <div className="flex items-center justify-between">
+        <div className="px-2 font-semibold tracking-tight">
           {t("shareLink")}
         </div>
-        <button
-          onClick={onHide}
-          className="h-8 items-center justify-center rounded-md px-3 text-slate-500 transition-colors hover:bg-slate-500/10 hover:text-slate-500 active:bg-slate-500/20"
-        >
-          {t("hide")}
-        </button>
       </div>
-      <div className="mb-4 text-slate-600">
-        <Trans
-          t={t}
-          i18nKey="shareDescription"
-          components={{ b: <strong /> }}
-        />
-      </div>
-      <div className="relative">
+      <div className="grow">
         <input
           readOnly={true}
           className={clsx(
-            "mb-4 w-full rounded-md bg-gray-100 p-2 text-slate-600 transition-colors md:mb-0 md:p-3 md:text-lg",
+            "w-full rounded bg-gray-100 p-2 tracking-tight text-gray-600 transition-colors md:mb-0",
             {
-              "bg-slate-50 opacity-75": didCopy,
+              "bg-gray-100 opacity-75": didCopy,
             },
           )}
           value={participantUrl}
         />
+      </div>
+      <div className="flex gap-2">
         <Button
           disabled={didCopy}
-          type="primary"
           onClick={() => {
             copyToClipboard(participantUrl);
             setDidCopy(true);
@@ -69,10 +52,12 @@ const Sharing: React.FunctionComponent<SharingProps> = ({
               setDidCopy(false);
             }, 1000);
           }}
-          className="md:absolute md:top-1/2 md:right-3 md:-translate-y-1/2"
+          className=""
         >
           {didCopy ? t("copied") : t("copyLink")}
         </Button>
+        <NotificationsToggle />
+        <ManagePoll placement="bottom-end" />
       </div>
     </div>
   );

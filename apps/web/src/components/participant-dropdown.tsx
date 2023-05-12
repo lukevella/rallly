@@ -41,9 +41,10 @@ export const ParticipantDropdown = ({
       <Dropdown
         placement="bottom-start"
         trigger={
-          <Button data-testid="participant-menu">
-            <DotsHorizontalIcon className="h-4 text-slate-500" />
-          </Button>
+          <Button
+            icon={<DotsHorizontalIcon />}
+            data-testid="participant-menu"
+          />
         }
       >
         <DropdownItem
@@ -141,13 +142,13 @@ const ChangeNameModal = (props: {
   return (
     <form onSubmit={handleSubmit(handler)} className="max-w-sm space-y-3 p-4">
       <div>
-        <div className="text-lg font-semibold text-slate-800">
+        <div className="text-lg font-semibold text-gray-800">
           {t("changeName")}
         </div>
         <div>{t("changeNameDescription")}</div>
       </div>
       <fieldset>
-        <label className="mb-1 text-slate-500">{t("name")}</label>
+        <label className="mb-1 text-gray-500">{t("name")}</label>
         <TextInput
           className="w-full"
           error={!!errors.name}
@@ -159,7 +160,7 @@ const ChangeNameModal = (props: {
         {errors.name ? (
           <div className="text-sm text-rose-500">{errors.name.message}</div>
         ) : null}
-        <div className="mt-2 text-sm text-slate-500">{t("changeNameInfo")}</div>
+        <div className="mt-2 text-sm text-gray-500">{t("changeNameInfo")}</div>
       </fieldset>
       <div className="flex gap-2 ">
         <Button disabled={formState.isSubmitting} onClick={props.onDone}>

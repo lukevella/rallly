@@ -4,8 +4,8 @@ import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
 import CreatePoll from "@/components/create-poll";
+import { getStandardLayout } from "@/components/layouts/standard-layout";
 
-import StandardLayout from "../components/layouts/standard-layout";
 import { NextPageWithLayout } from "../types";
 import { withPageTranslations } from "../utils/with-page-translations";
 
@@ -14,7 +14,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>{t("createNew")}</title>
+        <title>{t("newPoll")}</title>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <CreatePoll />
@@ -22,9 +22,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-Page.getLayout = function getLayout(page) {
-  return <StandardLayout>{page}</StandardLayout>;
-};
+Page.getLayout = getStandardLayout;
 
 export default Page;
 

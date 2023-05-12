@@ -16,12 +16,12 @@ const TimeRange: React.FunctionComponent<{
   return (
     <div
       className={clsx(
-        "relative -mr-2 inline-block pr-2 text-right text-xs font-semibold after:absolute after:top-2 after:right-0 after:h-4 after:w-1 after:border-t after:border-r after:border-b after:border-slate-300 after:content-['']",
+        "relative -mr-2 inline-block pr-2 text-right text-xs font-semibold after:absolute after:right-0 after:top-2 after:h-4 after:w-1 after:border-b after:border-r after:border-t after:border-gray-300 after:content-['']",
         className,
       )}
     >
       <div>{startTime}</div>
-      <div className="text-slate-500">{endTime}</div>
+      <div className="text-gray-500">{endTime}</div>
     </div>
   );
 };

@@ -11,3 +11,11 @@ export type PropsOf<TTag extends ReactTag> = TTag extends React.ElementType
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type PropsWithClassName<TProps extends Record<string, unknown> = {}> =
+  React.PropsWithChildren<TProps> & {
+    className?: string;
+  };
+
+export type IconComponent = React.ComponentType<PropsWithClassName>;

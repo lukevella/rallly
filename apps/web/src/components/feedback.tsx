@@ -34,7 +34,7 @@ const FeedbackForm = (props: { onClose: () => void }) => {
           </div>
         </div>
       ) : null}
-      <div className="font-semibold text-slate-800">
+      <div className="font-semibold text-gray-800">
         {t("feedbackFormTitle")}
       </div>
       <fieldset>
@@ -50,7 +50,7 @@ const FeedbackForm = (props: { onClose: () => void }) => {
           autoFocus={true}
           placeholder={t("feedbackFormPlaceholder")}
           rows={4}
-          className="w-full border bg-gray-50 p-2 text-slate-800"
+          className="w-full border bg-gray-50 p-2 text-gray-800"
           {...register("content", { required: true })}
         />
       </fieldset>
@@ -96,7 +96,7 @@ const FeedbackButton = () => {
     >
       <button
         onClick={show}
-        className="shadow-huge inline-flex h-14 w-14 items-center justify-center rounded-full bg-slate-800"
+        className="shadow-huge inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-800"
       >
         <SpeakerphoneIcon className="h-7 text-white" />
       </button>
