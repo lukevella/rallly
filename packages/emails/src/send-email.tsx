@@ -81,7 +81,6 @@ type SendEmailOptions<T extends TemplateName> = {
   to: string;
   subject: string;
   props: TemplateProps<T>;
-  onError?: () => void;
 };
 
 export const sendEmail = async <T extends TemplateName>(
@@ -107,10 +106,8 @@ export const sendEmail = async <T extends TemplateName>(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       html,
     });
-    return;
   } catch (e) {
     console.error("Error sending email", templateName, e);
-    options.onError?.();
   }
 };
 
@@ -120,6 +117,6 @@ export const sendRawEmail = async (options: Mail.Options) => {
     await transport.sendMail(options);
     return;
   } catch (e) {
-    console.error("Error sending email");
+    console.error("Error sending email", e);
   }
 };
