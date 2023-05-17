@@ -1,5 +1,5 @@
 {
-  "12h": "12-hodinový",
+  "12h": "12hodinový",
   "24h": "24hodinový",
   "addTimeOption": "Vybrat konkrétní čas",
   "adminPollTitle": "{title}: Administrátor",
@@ -128,7 +128,7 @@
   "userDoesNotExist": "Zadaný uživatel nebyl nalezen",
   "userNotFound": "Uživatel s tímto e-mailem neexistuje",
   "validEmail": "Zadejte, prosím, platnou e-mailovou adresu",
-  "verificationCodeHelp": "Nedostali jste e-mail? Zkontrolujte spam/junk.",
+  "verificationCodeHelp": "Nedostali jste e-mail? Zkontrolujte spam/nevyžádanou poštu.",
   "verificationCodePlaceholder": "Zadejte 6místný kód",
   "verificationCodeSent": "Ověřovací kód byl odeslán na adresu <b>{email}</b> <a>Změnit</a>",
   "verifyYourEmail": "Ověřte e-mailovou adresu",
