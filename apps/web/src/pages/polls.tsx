@@ -97,7 +97,7 @@ const Page: NextPageWithLayout = () => {
                 size: 300,
                 cell: (info) => (
                   <Link
-                    href={`/poll/${info.row.original.participantUrlId}`}
+                    href={`/poll/${info.row.original.id}`}
                     className="group flex gap-4 p-1"
                   >
                     <ChartSquareBarIcon className="text-primary-600 mt-0.5 h-8 shrink-0" />

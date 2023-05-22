@@ -23,6 +23,7 @@ const containerStyles = {
   background: "white",
   fontFamily,
   padding: 16,
+  border: "1px solid #E2E8F0",
   borderRadius: 5,
 };
 
@@ -47,7 +48,7 @@ export const EmailLayout = ({
     <Html>
       <Head />
       <Preview>{preview}</Preview>
-      <Body style={{ backgroundColor: "#e5e7eb", padding: "16px" }}>
+      <Body style={{ backgroundColor: "#F1F5F9", padding: "16px" }}>
         <Container style={containerStyles}>
           <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
           <Section style={sectionStyles}>

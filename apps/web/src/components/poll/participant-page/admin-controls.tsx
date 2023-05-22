@@ -34,7 +34,7 @@ const CopyLinkButton = () => {
     }
   }, [state]);
 
-  const inviteLink = `${window.location.origin}/p/${poll?.participantUrlId}`;
+  const inviteLink = `${window.location.origin}/invite/${poll?.id}`;
   const [didCopy, setDidCopy] = React.useState(false);
 
   return (

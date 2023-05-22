@@ -53,9 +53,9 @@ export const polls = router({
     )
     .mutation(
       async ({ ctx, input }): Promise<{ id: string; urlId: string }> => {
-        const adminUrlId = nanoid();
+        const adminToken = nanoid();
         const participantUrlId = nanoid();
-
+        const pollId = nanoid();
         let email = input.user?.email;
         let name = input.user?.name;
 
@@ -83,13 +83,13 @@ export const polls = router({
             title: true,
           },
           data: {
-            id: nanoid(),
+            id: pollId,
             title: input.title,
             timeZone: input.timeZone,
             location: input.location,
             description: input.description,
             demo: input.demo,
-            adminUrlId,
+            adminUrlId: adminToken,
             participantUrlId,
             userId: ctx.user.id,
             watchers: !ctx.user.isGuest
@@ -115,8 +115,14 @@ export const polls = router({
           },
         });
 
-        const adminLink = absoluteUrl(`/admin/${adminUrlId}`);
-        const participantLink = absoluteUrl(`/p/${participantUrlId}`);
+        let pollLink = absoluteUrl(`/poll/${participantUrlId}`);
+
+        if (ctx.user.isGuest) {
+          // Add admin token to link if creating as a guest
+          pollLink += `?adminToken=${adminToken}`;
+        }
+
+        const participantLink = absoluteUrl(`/invite/${pollId}`);
 
         if (email && name) {
           await sendEmail("NewPollEmail", {
@@ -125,7 +131,7 @@ export const polls = router({
             props: {
               title: poll.title,
               name,
-              adminLink,
+              adminLink: pollLink,
               participantLink,
             },
           });
@@ -375,7 +381,7 @@ export const polls = router({
           },
         },
         where: {
-          participantUrlId: input.urlId,
+          id: input.urlId,
         },
         rejectOnNotFound: false,
       });
