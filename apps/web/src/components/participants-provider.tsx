@@ -21,9 +21,14 @@ export const ParticipantsProvider: React.FunctionComponent<{
 }> = ({ children, pollId }) => {
   const { t } = useTranslation();
 
-  const { data: participants } = trpc.polls.participants.list.useQuery({
-    pollId,
-  });
+  const { data: participants } = trpc.polls.participants.list.useQuery(
+    {
+      pollId,
+    },
+    {
+      staleTime: 1000 * 10,
+    },
+  );
 
   const getParticipants = (
     optionId: string,

@@ -15,7 +15,7 @@ import React from "react";
 
 import { LoginLink } from "@/components/auth/login-modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/popover";
-import Preferences from "@/components/preferences";
+import DateTimePreferences from "@/components/settings/date-time-preferences";
 import { useUser } from "@/components/user-provider";
 
 import Dropdown, { DropdownItem } from "../../dropdown";
@@ -140,7 +140,7 @@ export const MobileNavigation = (props: { className?: string }) => {
             </button>
           </PopoverTrigger>
           <PopoverContent align="end">
-            <Preferences className="p-2" />
+            <DateTimePreferences className="p-2" />
           </PopoverContent>
         </Popover>
       </div>

@@ -8,7 +8,12 @@ export const usePoll = () => {
   const [urlId] = React.useState(router.query.urlId as string);
   const [adminToken] = React.useState(router.query.adminToken as string);
 
-  const pollQuery = trpc.polls.get.useQuery({ urlId, adminToken });
+  const pollQuery = trpc.polls.get.useQuery(
+    { urlId, adminToken },
+    {
+      staleTime: Infinity,
+    },
+  );
 
   return pollQuery.data;
 };

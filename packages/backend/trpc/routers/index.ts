@@ -3,6 +3,7 @@ import { auth } from "./auth";
 import { feedback } from "./feedback";
 import { polls } from "./polls";
 import { user } from "./user";
+import { userPreferences } from "./user-preferences";
 import { whoami } from "./whoami";
 
 export const appRouter = mergeRouters(
@@ -12,6 +13,7 @@ export const appRouter = mergeRouters(
     polls,
     user,
     feedback,
+    userPreferences,
   }),
 );
 

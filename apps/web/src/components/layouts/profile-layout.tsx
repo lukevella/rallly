@@ -1,4 +1,9 @@
-import { AdjustmentsIcon, CogIcon,UserIcon } from "@rallly/icons";
+import {
+  AdjustmentsIcon,
+  CogIcon,
+  CreditCardIcon,
+  UserIcon,
+} from "@rallly/icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,7 +17,7 @@ import {
 } from "@/components/layouts/standard-layout/top-bar";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
-import { UserProvider } from "../user-provider";
+import { IfAuthenticated, UserProvider } from "../user-provider";
 
 const MenuItem = (props: {
   icon: IconComponent;
@@ -49,10 +54,12 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
         <hr />
         <div className="flex justify-between">
           <div className="flex gap-6">
-            <MenuItem href="/profile" icon={UserIcon}>
-              <Trans i18nKey="profile" defaults="Profile" />
-            </MenuItem>
-            <MenuItem href="/preferences" icon={AdjustmentsIcon}>
+            <IfAuthenticated>
+              <MenuItem href="/settings/profile" icon={UserIcon}>
+                <Trans i18nKey="profile" defaults="Profile" />
+              </MenuItem>
+            </IfAuthenticated>
+            <MenuItem href="/settings/preferences" icon={AdjustmentsIcon}>
               <Trans i18nKey="preferences" defaults="Preferences" />
             </MenuItem>
           </div>

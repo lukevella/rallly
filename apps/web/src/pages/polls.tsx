@@ -22,7 +22,11 @@ import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Table } from "@/components/table";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
-import { getStaticTranslations } from "@/utils/with-page-translations";
+import {
+  getStaticTranslations,
+  withPageTranslations,
+} from "@/utils/with-page-translations";
+import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 
 type PollTableRow = {
   id: string;
@@ -61,11 +65,9 @@ const EmptyState = () => {
 };
 
 const Page: NextPageWithLayout = () => {
-  const { data = [], isFetched } = trpc.polls.list.useQuery();
+  const { data = [] } = trpc.polls.list.useQuery();
   const { t } = useTranslation();
-  if (!isFetched) {
-    return null;
-  }
+
   return (
     <div>
       <Head>
@@ -74,7 +76,7 @@ const Page: NextPageWithLayout = () => {
       <TopBar className="flex items-center justify-between gap-4 p-3">
         <TopBarTitle
           title={<Trans i18nKey="myPolls" defaults="My Polls" />}
-          icon={FolderIcon}
+          icon={ChartSquareBarIcon}
         />
         <div>
           {data.length > 0 ? (
@@ -172,4 +174,7 @@ Page.getLayout = getStandardLayout;
 
 export default Page;
 
-export const getStaticProps = getStaticTranslations;
+export const getServerSideProps = withSessionSsr([
+  withAuthIfRequired,
+  withPageTranslations(),
+]);

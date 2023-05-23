@@ -1,11 +1,5 @@
 import { trpc } from "@rallly/backend";
-import {
-  ChatIcon,
-  DotsHorizontalIcon,
-  PlusSmIcon,
-  TrashIcon,
-} from "@rallly/icons";
-import clsx from "clsx";
+import { ChatIcon, DotsHorizontalIcon, TrashIcon } from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -19,9 +13,9 @@ import { Button } from "../button";
 import CompactButton from "../compact-button";
 import Dropdown, { DropdownItem } from "../dropdown";
 import NameInput from "../name-input";
+import { usePoll } from "../poll-context";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
-import { usePoll } from "../poll-context";
 import { isUnclaimed, useUser } from "../user-provider";
 
 interface CommentForm {
@@ -36,7 +30,12 @@ const Discussion: React.FunctionComponent = () => {
 
   const pollId = poll.id;
 
-  const { data: comments } = trpc.polls.comments.list.useQuery({ pollId });
+  const { data: comments } = trpc.polls.comments.list.useQuery(
+    { pollId },
+    {
+      staleTime: 1000 * 5,
+    },
+  );
   const posthog = usePostHog();
 
   const queryClient = trpc.useContext();

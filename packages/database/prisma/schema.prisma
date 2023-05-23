@@ -9,6 +9,13 @@ generator client {
   binaryTargets = ["native"]
 }
 
+enum TimeFormat {
+  hours12
+  hours24
+
+  @@map("time_format")
+}
+
 model User {
   id        String    @id @default(cuid())
   name      String
@@ -20,6 +27,16 @@ model User {
   watcher   Watcher[]
 
   @@map("users")
+}
+
+model UserPreferences {
+  userId     String      @id @map("user_id")
+  language   String?
+  timeZone   String?     @map("time_zone")
+  weekStart  Int?        @map("week_start")
+  timeFormat TimeFormat? @map("time_format")
+
+  @@map("user_preferences")
 }
 
 model Poll {
@@ -80,12 +97,12 @@ model Participant {
 }
 
 model Option {
-  id        String    @id @default(cuid())
-  start     DateTime  @db.Timestamp(0)
-  duration  Int       @default(0) @map("duration_minutes")
-  pollId    String    @map("poll_id")
-  poll      Poll      @relation(fields: [pollId], references: [id])
-  createdAt DateTime  @default(now()) @map("created_at")
+  id        String   @id @default(cuid())
+  start     DateTime @db.Timestamp(0)
+  duration  Int      @default(0) @map("duration_minutes")
+  pollId    String   @map("poll_id")
+  poll      Poll     @relation(fields: [pollId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@index([pollId], type: Hash)
   @@map("options")

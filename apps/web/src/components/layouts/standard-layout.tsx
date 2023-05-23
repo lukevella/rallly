@@ -1,4 +1,12 @@
-import { FolderIcon, LoginIcon, SupportIcon } from "@rallly/icons";
+import {
+  ChartSquareBarIcon,
+  CogIcon,
+  DotsVerticalIcon,
+  FolderIcon,
+  LoginIcon,
+  LogoutIcon,
+  SupportIcon,
+} from "@rallly/icons";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,6 +22,7 @@ import { CurrentUserAvatar } from "@/components/user";
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
 import { UserProvider, useUser } from "../user-provider";
+import Dropdown, { DropdownItem } from "@/components/dropdown";
 
 // const appVersion = process.env.NEXT_PUBLIC_APP_VERSION
 //   ? process.env.NEXT_PUBLIC_APP_VERSION
@@ -35,19 +44,30 @@ import { UserProvider, useUser } from "../user-provider";
 const MenuItem = ({
   href,
   icon: Icon,
+  target,
   label,
 }: {
   href: string;
   icon: IconComponent;
+  target?: string;
   label: React.ReactNode;
 }) => {
   return (
     <Link
+      target={target}
       href={href}
-      className="active:text-primary-600 flex flex-col items-center gap-0.5 p-2 hover:text-slate-600"
+      className="group flex flex-col items-center gap-0.5 p-2 hover:text-slate-600"
     >
-      <Icon className="h-6" />
-      <span className="text-xs">{label}</span>
+      <span
+        className={clsx(
+          "mb-1 inline-block",
+          "md:rounded-lg md:border md:bg-gray-100 md:p-2 md:text-gray-500",
+          "md:group-hover:bg-primary-50 md:group-hover:border-primary-200 md:group-hover:text-primary-600 md:group-active:bg-primary-100 md:rounded-lg",
+        )}
+      >
+        <Icon className="h-6" />
+      </span>
+      <span className="text-xs group-active:text-gray-900">{label}</span>
     </Link>
   );
 };
@@ -75,7 +95,7 @@ export const StandardLayout: React.FunctionComponent<{
       <Toaster />
       <ModalProvider>
         <div className="flex min-h-full flex-col md:flex-row" {...rest}>
-          <div className="min-h-full shrink-0 border-b bg-gray-50 text-slate-500 md:w-24 md:border-b-0 md:border-r lg:block">
+          <div className="min-h-full shrink-0 border-b bg-gray-50 text-slate-500 md:w-20 md:border-b-0 md:border-r lg:block">
             <div className="sticky top-0 flex h-full max-h-[calc(100vh)] gap-4 md:flex-col md:py-3">
               <div className="flex grow items-center gap-6 md:flex-col">
                 <div className="m-1 flex h-8 w-8 items-center justify-center">
@@ -99,19 +119,17 @@ export const StandardLayout: React.FunctionComponent<{
                 </div>
                 <MenuItem
                   href="/polls"
-                  icon={FolderIcon}
-                  label={<Trans i18nKey="myPolls" defaults="My Polls" />}
+                  icon={ChartSquareBarIcon}
+                  label={<Trans i18nKey="polls" defaults="Polls" />}
                 />
               </div>
               <div className="flex items-center gap-4 md:flex-col">
-                <Link
+                <MenuItem
+                  icon={SupportIcon}
+                  label={<Trans i18nKey="common_support" />}
                   target="_blank"
                   href="https://support.rallly.co"
-                  className="active:text-primary-600 flex flex-col items-center gap-0.5 p-2 text-xs hover:text-slate-600"
-                >
-                  <SupportIcon className="h-6" />
-                  <Trans i18nKey="common_support" />
-                </Link>
+                />
                 {user.isGuest ? (
                   <MenuItem
                     href="/login"
@@ -120,13 +138,10 @@ export const StandardLayout: React.FunctionComponent<{
                   />
                 ) : null}
                 <Link
-                  href="/profile"
-                  className="active:text-primary-600 flex flex-col items-center gap-0.5 p-2 hover:text-slate-600"
+                  href="/settings/profile"
+                  className="active:text-primary-600 flex items-center p-2 hover:text-slate-600"
                 >
                   <CurrentUserAvatar />
-                  <div className="mx-auto w-14 truncate text-center text-sm">
-                    {user.isGuest ? <Trans i18nKey="guest" /> : user.shortName}
-                  </div>
                 </Link>
               </div>
             </div>
