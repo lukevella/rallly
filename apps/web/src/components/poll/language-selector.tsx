@@ -1,8 +1,8 @@
-import { ChevronDownIcon } from "@rallly/icons";
 import languages from "@rallly/languages";
-import clsx from "clsx";
 import Cookies from "js-cookie";
 import { useTranslation } from "next-i18next";
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;
@@ -10,26 +10,27 @@ export const LanguageSelect: React.FunctionComponent<{
 }> = ({ className, onChange }) => {
   const { i18n } = useTranslation();
   return (
-    <div className="relative">
-      <select
-        className={clsx("input block pr-4", className)}
+      <Select
         defaultValue={i18n.language}
-        onChange={(e) => {
-          Cookies.set("NEXT_LOCALE", e.target.value, {
+        onValueChange={(value) => {
+          Cookies.set("NEXT_LOCALE", value, {
             expires: 365,
           });
-          onChange?.(e.target.value);
+          onChange?.(value);
         }}
       >
+        <SelectTrigger className={className}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
         {Object.entries(languages).map(([code, name]) => (
-          <option key={code} value={code}>
+          <SelectItem key={code} value={code}>
             {name}
-          </option>
+          </SelectItem>
         ))}
-      </select>
-      <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
-        <ChevronDownIcon className="w-5" />
-      </div>
-    </div>
+        </SelectContent>
+        
+      </Select>
+      
   );
 };

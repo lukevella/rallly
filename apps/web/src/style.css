@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
   html {
-    @apply h-full overflow-y-scroll overscroll-none bg-gray-200/50 font-sans text-base text-gray-700;
+    @apply h-full bg-gray-200/50 font-sans text-base text-gray-700;
+  }
+  body {
+    @apply overflow-y-scroll overscroll-none;
   }
   body,
   #__next {
@@ -49,7 +53,7 @@
     @apply mb-4;
   }
   .input {
-    @apply appearance-none border px-2 py-1 text-gray-800 placeholder:text-gray-500;
+    @apply appearance-none border h-9 px-2 text-gray-800 placeholder:text-gray-500;
   }
   input.input {
     @apply h-9;

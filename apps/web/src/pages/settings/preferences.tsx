@@ -1,21 +1,19 @@
 import {
-  withAuth,
   withAuthIfRequired,
-  withSessionSsr,
+  withSessionSsr
 } from "@rallly/backend/next";
+import Head from "next/head";
+import { useTranslation } from "next-i18next";
 
 import { getProfileLayout } from "@/components/layouts/profile-layout";
+import { LanguageSelect } from "@/components/poll/language-selector";
 import DateTimePreferences from "@/components/settings/date-time-preferences";
+import { SettingsSection } from "@/components/settings/settings-section";
 import { Trans } from "@/components/trans";
+import { useUser } from "@/components/user-provider";
 
 import { NextPageWithLayout } from "../../types";
 import { withPageTranslations } from "../../utils/with-page-translations";
-import { Button } from "@/components/button";
-import Head from "next/head";
-import { useTranslation } from "next-i18next";
-import { useUser } from "@/components/user-provider";
-import { ProfileSettings } from "@/components/settings/profile-settings";
-import { SettingsSection } from "@/components/settings/settings-section";
 
 const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
@@ -25,6 +23,20 @@ const Page: NextPageWithLayout = () => {
       <Head>
         <title>{t("settings")}</title>
       </Head>
+      <SettingsSection
+        title={<Trans i18nKey="language" defaults="Language" />}
+        description={
+          <Trans
+            i18nKey="languageDescription"
+            defaults="Change your preferred language"
+          />
+        }
+      >
+        <div>
+          <LanguageSelect />
+        </div>
+      </SettingsSection>
+
       <SettingsSection
         title={<Trans i18nKey="dateAndTime" defaults="Date & Time" />}
         description={

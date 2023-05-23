@@ -1,14 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
-
-import { useDayjs } from "../../utils/dayjs";
-import { useUserPreferences } from "@/contexts/user-preferences";
-import { Skeleton } from "@/components/skeleton";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from "@/components/button";
 import {
   Form,
   FormControl,
@@ -16,9 +15,21 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/form";
-import { Trans } from "@/components/trans";
+import { Skeleton } from "@/components/skeleton";
 import TimeZonePicker from "@/components/time-zone-picker";
+import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import { Trans } from "@/components/trans";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useUserPreferences } from "@/contexts/user-preferences";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
+
+import { useDayjs } from "../../utils/dayjs";
 
 const formSchema = z.object({
   timeFormat: z.enum(["hours12", "hours24"]),
@@ -36,7 +47,7 @@ const DateTimePreferences = (props: { className?: string }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       timeFormat: timeFormat === "12h" ? "hours12" : "hours24",
-      timeZone: getBrowserTimeZone(),
+      timeZone: "",
       weekStart: weekStartsOn === "monday" ? 1 : 0,
     },
   });
@@ -54,7 +65,7 @@ const DateTimePreferences = (props: { className?: string }) => {
                   <Trans i18nKey="timeZone" />
                 </FormLabel>
                 <FormControl>
-                  <TimeZonePicker
+                  <TimeZoneSelect
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -73,7 +84,19 @@ const DateTimePreferences = (props: { className?: string }) => {
                   <Trans i18nKey="timeFormat" />
                 </FormLabel>
                 <FormControl>
-                  <div>time format picker</div>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hours12">
+                        <Trans i18nKey="12h" />
+                      </SelectItem>
+                      <SelectItem value="hours24">
+                        <Trans i18nKey="24h" />
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
               </FormItem>
             );
@@ -86,16 +109,35 @@ const DateTimePreferences = (props: { className?: string }) => {
             return (
               <FormItem>
                 <FormLabel>
-                  <Trans i18nKey="timeZone" />
+                  <Trans i18nKey="startOfWeek" />
                 </FormLabel>
                 <FormControl>
-                  <div>Week start picker</div>
+                  <Select
+                    value={field.value.toString()}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {dayjs.weekdays().map((day, index) => (
+                        <SelectItem key={index} value={index.toString()}>
+                          {day}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
               </FormItem>
             );
           }}
         />
       </form>
+      <div className="mt-6 flex">
+        <Button type="primary">
+          <Trans i18nKey="save" />
+        </Button>
+      </div>
     </Form>
   );
 };

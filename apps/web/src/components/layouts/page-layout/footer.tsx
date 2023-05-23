@@ -145,7 +145,7 @@ const Footer: React.FunctionComponent = () => {
             <LanguageSelect
               className="mb-4 w-full"
               onChange={(locale) => {
-                router.push(router.asPath, router.asPath, { locale });
+                router.push(router.asPath, router.asPath, { locale, scroll: false });
               }}
             />
             <a
