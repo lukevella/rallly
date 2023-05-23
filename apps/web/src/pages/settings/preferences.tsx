@@ -1,7 +1,4 @@
-import {
-  withAuthIfRequired,
-  withSessionSsr
-} from "@rallly/backend/next";
+import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
@@ -56,7 +53,7 @@ Page.getLayout = getProfileLayout;
 
 export const getServerSideProps = withSessionSsr([
   withAuthIfRequired,
-  withPageTranslations(),
+  withPageTranslations(["app", "timeZones"]),
 ]);
 
 export default Page;

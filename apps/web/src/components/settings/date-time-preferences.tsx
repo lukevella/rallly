@@ -16,7 +16,6 @@ import {
   FormLabel,
 } from "@/components/form";
 import { Skeleton } from "@/components/skeleton";
-import TimeZonePicker from "@/components/time-zone-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
 import {

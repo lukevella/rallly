@@ -32,11 +32,7 @@ export function Combobox({ value, onChange, options }: ComboboxProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
-        <Button
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px]"
-        >
+        <Button role="combobox" aria-expanded={open} className="w-[200px]">
           {value ? (
             options.find((option) => option.value === value)?.label
           ) : (
@@ -46,10 +42,12 @@ export function Combobox({ value, onChange, options }: ComboboxProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full bg-white p-0">
-        {/* <Command>
-          <CommandInput placeholder={t("combobox_inputPlaceholder", {
-            defaultValue: "Search…",
-          })} />
+        <Command>
+          <CommandInput
+            placeholder={t("combobox_inputPlaceholder", {
+              defaultValue: "Search…",
+            })}
+          />
           <CommandEmpty>
             <Trans i18nKey="combobox_noOption" defaults="No option found" />
           </CommandEmpty>
@@ -72,7 +70,7 @@ export function Combobox({ value, onChange, options }: ComboboxProps) {
               </CommandItem>
             ))}
           </CommandGroup>
-        </Command> */}
+        </Command>
       </PopoverContent>
     </Popover>
   );
