@@ -2,13 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-  html {
-    @apply h-full bg-gray-200/50 font-sans text-base text-gray-700;
+  * {
+    @apply border-border;
   }
   body {
-    @apply overflow-y-scroll overscroll-none;
+    @apply bg-background text-foreground overflow-y-scroll overscroll-none;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html {
+    @apply h-full bg-gray-200/50 font-sans text-base text-gray-700;
   }
   body,
   #__next {
@@ -53,7 +56,7 @@
     @apply mb-4;
   }
   .input {
-    @apply appearance-none border h-9 px-2 text-gray-800 placeholder:text-gray-500;
+    @apply h-9 appearance-none border px-2 text-gray-800 placeholder:text-gray-500;
   }
   input.input {
     @apply h-9;

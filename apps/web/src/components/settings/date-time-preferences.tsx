@@ -1,23 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import clsx from "clsx";
+import { trpc } from "@rallly/backend";
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/form";
-import { Skeleton } from "@/components/skeleton";
+import { Form, FormField, FormItem, FormLabel } from "@/components/form";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -25,65 +17,103 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUserPreferences } from "@/contexts/user-preferences";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
-
-import { useDayjs } from "../../utils/dayjs";
+import {
+  useSystemPreferences,
+  useUserPreferences,
+} from "@/contexts/preferences";
 
 const formSchema = z.object({
+  automatic: z.boolean(),
   timeFormat: z.enum(["hours12", "hours24"]),
   timeZone: z.string(),
   weekStart: z.number().min(0).max(6),
 });
 
-const DateTimePreferences = (props: { className?: string }) => {
-  const { t } = useTranslation();
-  const preferences = useUserPreferences();
-  const router = useRouter();
+type FormData = z.infer<typeof formSchema>;
 
-  const { timeFormat, weekStartsOn } = useDayjs();
-  const form = useForm<z.infer<typeof formSchema>>({
+const DateTimePreferencesForm = (props: {
+  defaultValues: FormData;
+  className?: string;
+}) => {
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      timeFormat: timeFormat === "12h" ? "hours12" : "hours24",
-      timeZone: "",
-      weekStart: weekStartsOn === "monday" ? 1 : 0,
-    },
+    defaultValues: props.defaultValues,
   });
+
+  const { handleSubmit, formState } = form;
+
+  const watchAutomatic = form.watch("automatic");
+
+  const update = trpc.userPreferences.update.useMutation();
+  const deleteUserPreferences = trpc.userPreferences.delete.useMutation();
+
+  const systemPreferences = useSystemPreferences();
 
   return (
     <Form {...form}>
-      <form className="space-y-4">
-        <FormField
-          control={form.control}
-          name="timeZone"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>
-                  <Trans i18nKey="timeZone" />
+      <form
+        onSubmit={handleSubmit(async (data) => {
+          if (data.automatic) {
+            await deleteUserPreferences.mutateAsync();
+            form.reset({ automatic: true, ...systemPreferences });
+          } else {
+            await update.mutateAsync(data);
+            form.reset(data);
+          }
+        })}
+      >
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="automatic"
+            render={({ field }) => (
+              <div className="flex items-center gap-x-2">
+                <Checkbox
+                  id="automatic"
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+                <FormLabel htmlFor="automatic">
+                  <Trans i18nKey="automatic" defaults="Use system defaults" />
                 </FormLabel>
-                <FormControl>
+              </div>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="timeZone"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>
+                    <Trans i18nKey="timeZone" />
+                  </FormLabel>
                   <TimeZoneSelect
+                    disabled={watchAutomatic}
                     value={field.value}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
-                </FormControl>
-              </FormItem>
-            );
-          }}
-        />
-        <FormField
-          control={form.control}
-          name="timeFormat"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>
-                  <Trans i18nKey="timeFormat" />
-                </FormLabel>
-                <FormControl>
-                  <Select value={field.value} onValueChange={field.onChange}>
+                </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="timeFormat"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>
+                    <Trans i18nKey="timeFormat" />
+                  </FormLabel>
+                  <Select
+                    disabled={watchAutomatic}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -96,24 +126,25 @@ const DateTimePreferences = (props: { className?: string }) => {
                       </SelectItem>
                     </SelectContent>
                   </Select>
-                </FormControl>
-              </FormItem>
-            );
-          }}
-        />
-        <FormField
-          control={form.control}
-          name="weekStart"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>
-                  <Trans i18nKey="startOfWeek" />
-                </FormLabel>
-                <FormControl>
+                </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="weekStart"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>
+                    <Trans i18nKey="startOfWeek" />
+                  </FormLabel>
                   <Select
+                    disabled={watchAutomatic}
                     value={field.value.toString()}
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      field.onChange(parseInt(value));
+                    }}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -126,19 +157,33 @@ const DateTimePreferences = (props: { className?: string }) => {
                       ))}
                     </SelectContent>
                   </Select>
-                </FormControl>
-              </FormItem>
-            );
-          }}
-        />
+                </FormItem>
+              );
+            }}
+          />
+        </div>
+        <div className="mt-6 flex">
+          <Button
+            loading={formState.isSubmitting}
+            htmlType="submit"
+            type="primary"
+            disabled={!formState.isDirty}
+          >
+            <Trans i18nKey="save" />
+          </Button>
+        </div>
       </form>
-      <div className="mt-6 flex">
-        <Button type="primary">
-          <Trans i18nKey="save" />
-        </Button>
-      </div>
     </Form>
   );
 };
 
-export default DateTimePreferences;
+export const DateTimePreferences = () => {
+  const preferences = useUserPreferences();
+
+  if (!preferences) {
+    // TODO (Luke Vella) [2023-05-24]: build skeleton
+    return null;
+  }
+
+  return <DateTimePreferencesForm defaultValues={preferences} />;
+};

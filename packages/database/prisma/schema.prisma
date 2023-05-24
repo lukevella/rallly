@@ -31,10 +31,10 @@ model User {
 
 model UserPreferences {
   userId     String      @id @map("user_id")
-  language   String?
   timeZone   String?     @map("time_zone")
   weekStart  Int?        @map("week_start")
   timeFormat TimeFormat? @map("time_format")
+  createdAt  DateTime    @default(now()) @map("created_at")
 
   @@map("user_preferences")
 }

@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import * as React from "react";
 
 import { Trans } from "@/components/trans";
+import { updateLanguage } from "@/contexts/preferences";
 import DigitalOcean from "~/digitalocean.svg";
 import Logo from "~/logo.svg";
 import Sentry from "~/sentry.svg";
@@ -144,8 +145,13 @@ const Footer: React.FunctionComponent = () => {
             </div>
             <LanguageSelect
               className="mb-4 w-full"
+              value={router.locale}
               onChange={(locale) => {
-                router.push(router.asPath, router.asPath, { locale, scroll: false });
+                updateLanguage(locale);
+                router.push(router.asPath, router.asPath, {
+                  locale,
+                  scroll: false,
+                });
               }}
             />
             <a

@@ -1,36 +1,30 @@
 import languages from "@rallly/languages";
-import Cookies from "js-cookie";
-import { useTranslation } from "next-i18next";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;
+  value?: string;
   onChange?: (language: string) => void;
-}> = ({ className, onChange }) => {
-  const { i18n } = useTranslation();
+}> = ({ className, value, onChange }) => {
   return (
-      <Select
-        defaultValue={i18n.language}
-        onValueChange={(value) => {
-          Cookies.set("NEXT_LOCALE", value, {
-            expires: 365,
-          });
-          onChange?.(value);
-        }}
-      >
-        <SelectTrigger className={className}>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger className={className}>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
         {Object.entries(languages).map(([code, name]) => (
           <SelectItem key={code} value={code}>
             {name}
           </SelectItem>
         ))}
-        </SelectContent>
-        
-      </Select>
-      
+      </SelectContent>
+    </Select>
   );
 };

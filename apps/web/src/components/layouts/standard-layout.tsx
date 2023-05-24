@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 
+import Dropdown, { DropdownItem } from "@/components/dropdown";
 import Feedback from "@/components/feedback";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
@@ -22,7 +23,6 @@ import { CurrentUserAvatar } from "@/components/user";
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
 import { UserProvider, useUser } from "../user-provider";
-import Dropdown, { DropdownItem } from "@/components/dropdown";
 
 // const appVersion = process.env.NEXT_PUBLIC_APP_VERSION
 //   ? process.env.NEXT_PUBLIC_APP_VERSION

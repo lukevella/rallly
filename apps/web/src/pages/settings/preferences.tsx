@@ -1,20 +1,21 @@
 import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 
 import { getProfileLayout } from "@/components/layouts/profile-layout";
 import { LanguageSelect } from "@/components/poll/language-selector";
-import DateTimePreferences from "@/components/settings/date-time-preferences";
+import { DateTimePreferences } from "@/components/settings/date-time-preferences";
+import { LanguagePreference } from "@/components/settings/language-preference";
 import { SettingsSection } from "@/components/settings/settings-section";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
 
 import { NextPageWithLayout } from "../../types";
 import { withPageTranslations } from "../../utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
-  const { user } = useUser();
+  const router = useRouter();
   return (
     <div className="divide-y">
       <Head>
@@ -29,11 +30,8 @@ const Page: NextPageWithLayout = () => {
           />
         }
       >
-        <div>
-          <LanguageSelect />
-        </div>
+        <LanguagePreference />
       </SettingsSection>
-
       <SettingsSection
         title={<Trans i18nKey="dateAndTime" defaults="Date & Time" />}
         description={
