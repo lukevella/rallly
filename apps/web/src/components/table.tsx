@@ -3,7 +3,6 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
@@ -20,18 +19,13 @@ export const Table = <
   data: T[];
   footer?: React.ReactNode;
   enableTableFooter?: boolean;
-  pageSize?: number;
   layout?: "fixed" | "auto";
   className?: string;
 }) => {
-  const { pageSize = props.data.length } = props;
   const table = useReactTable<T>({
     data: props.data,
     columns: props.columns,
     getCoreRowModel: getCoreRowModel(),
-    // pagination
-    initialState: { pagination: { pageSize } },
-    getPaginationRowModel: getPaginationRowModel(),
   });
   return (
     <div className={clsx(props.className, "max-w-full overflow-x-auto")}>

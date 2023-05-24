@@ -35,7 +35,7 @@ const ParticipantPage = (props: React.PropsWithChildren) => {
             <ModalProvider>
               <div>
                 {props.children}
-                <div className="mx-auto w-full max-w-4xl space-y-3 overflow-hidden sm:space-y-4">
+                <div className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4">
                   <Poll />
                 </div>
               </div>

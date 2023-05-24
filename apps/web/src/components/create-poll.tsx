@@ -83,7 +83,7 @@ const Page: React.FunctionComponent = () => {
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   const posthog = usePostHog();
-
+  const queryClient = trpc.useContext();
   const createPoll = trpc.polls.create.useMutation({
     onSuccess: (res) => {
       setIsRedirecting(true);
@@ -92,7 +92,8 @@ const Page: React.FunctionComponent = () => {
         numberOfOptions: formData.options?.options?.length,
         optionsView: formData?.options?.view,
       });
-      router.replace(`/poll/${res.urlId}`);
+      router.replace(`/poll/${res.id}`);
+      queryClient.polls.list.invalidate();
     },
   });
 

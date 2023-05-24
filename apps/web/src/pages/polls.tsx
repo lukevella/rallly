@@ -1,4 +1,5 @@
 import { trpc } from "@rallly/backend";
+import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import {
   ArrowRightIcon,
   ChartSquareBarIcon,
@@ -22,11 +23,7 @@ import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Table } from "@/components/table";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
-import {
-  getStaticTranslations,
-  withPageTranslations,
-} from "@/utils/with-page-translations";
-import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
+import { withPageTranslations } from "@/utils/with-page-translations";
 
 type PollTableRow = {
   id: string;

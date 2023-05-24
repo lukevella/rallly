@@ -23,9 +23,16 @@ module.exports = {
         gray: colors.slate,
         border: colors.slate["200"],
         input: colors.white,
-        ring: colors.slate["300"],
-        background: colors.slate["50"],
+        background: colors.slate["100"],
         foreground: colors.slate["800"],
+        accent: {
+          DEFAULT: colors.slate["100"],
+        },
+        muted: colors.slate["200"],
+        popover: {
+          DEFAULT: colors.white,
+          foreground: colors.slate["800"],
+        },
       },
       keyframes: {
         wiggle: {

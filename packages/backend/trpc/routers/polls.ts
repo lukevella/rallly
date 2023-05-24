@@ -51,95 +51,93 @@ export const polls = router({
         demo: z.boolean().optional(),
       }),
     )
-    .mutation(
-      async ({ ctx, input }): Promise<{ id: string; urlId: string }> => {
-        const adminToken = nanoid();
-        const participantUrlId = nanoid();
-        const pollId = nanoid();
-        let email = input.user?.email;
-        let name = input.user?.name;
+    .mutation(async ({ ctx, input }) => {
+      const adminToken = nanoid();
+      const participantUrlId = nanoid();
+      const pollId = nanoid();
+      let email = input.user?.email;
+      let name = input.user?.name;
 
-        if (!ctx.user.isGuest) {
-          const user = await prisma.user.findUnique({
-            select: { email: true, name: true },
-            where: { id: ctx.user.id },
-          });
-
-          if (!user) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "User not found",
-            });
-          }
-
-          email = user.email;
-          name = user.name;
-        }
-
-        const poll = await prisma.poll.create({
-          select: {
-            adminUrlId: true,
-            id: true,
-            title: true,
-          },
-          data: {
-            id: pollId,
-            title: input.title,
-            timeZone: input.timeZone,
-            location: input.location,
-            description: input.description,
-            demo: input.demo,
-            adminUrlId: adminToken,
-            participantUrlId,
-            userId: ctx.user.id,
-            watchers: !ctx.user.isGuest
-              ? {
-                  create: {
-                    userId: ctx.user.id,
-                  },
-                }
-              : undefined,
-            options: {
-              createMany: {
-                data: input.options.map((option) => ({
-                  start: new Date(`${option.startDate}Z`),
-                  duration: option.endDate
-                    ? dayjs(option.endDate).diff(
-                        dayjs(option.startDate),
-                        "minute",
-                      )
-                    : 0,
-                })),
-              },
-            },
-          },
+      if (!ctx.user.isGuest) {
+        const user = await prisma.user.findUnique({
+          select: { email: true, name: true },
+          where: { id: ctx.user.id },
         });
 
-        let pollLink = absoluteUrl(`/poll/${participantUrlId}`);
-
-        if (ctx.user.isGuest) {
-          // Add admin token to link if creating as a guest
-          pollLink += `?adminToken=${adminToken}`;
-        }
-
-        const participantLink = absoluteUrl(`/invite/${pollId}`);
-
-        if (email && name) {
-          await sendEmail("NewPollEmail", {
-            to: email,
-            subject: `Let's find a date for ${poll.title}`,
-            props: {
-              title: poll.title,
-              name,
-              adminLink: pollLink,
-              participantLink,
-            },
+        if (!user) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "User not found",
           });
         }
 
-        return { id: poll.id, urlId: participantUrlId };
-      },
-    ),
+        email = user.email;
+        name = user.name;
+      }
+
+      const poll = await prisma.poll.create({
+        select: {
+          adminUrlId: true,
+          id: true,
+          title: true,
+        },
+        data: {
+          id: pollId,
+          title: input.title,
+          timeZone: input.timeZone,
+          location: input.location,
+          description: input.description,
+          demo: input.demo,
+          adminUrlId: adminToken,
+          participantUrlId,
+          userId: ctx.user.id,
+          watchers: !ctx.user.isGuest
+            ? {
+                create: {
+                  userId: ctx.user.id,
+                },
+              }
+            : undefined,
+          options: {
+            createMany: {
+              data: input.options.map((option) => ({
+                start: new Date(`${option.startDate}Z`),
+                duration: option.endDate
+                  ? dayjs(option.endDate).diff(
+                      dayjs(option.startDate),
+                      "minute",
+                    )
+                  : 0,
+              })),
+            },
+          },
+        },
+      });
+
+      let pollLink = absoluteUrl(`/poll/${pollId}`);
+
+      if (ctx.user.isGuest) {
+        // Add admin token to link if creating as a guest
+        pollLink += `?adminToken=${adminToken}`;
+      }
+
+      const participantLink = absoluteUrl(`/invite/${pollId}`);
+
+      if (email && name) {
+        await sendEmail("NewPollEmail", {
+          to: email,
+          subject: `Let's find a date for ${poll.title}`,
+          props: {
+            title: poll.title,
+            name,
+            adminLink: pollLink,
+            participantLink,
+          },
+        });
+      }
+
+      return { id: poll.id };
+    }),
   update: possiblyPublicProcedure
     .input(
       z.object({
