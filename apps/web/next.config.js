@@ -37,6 +37,11 @@ const nextConfig = {
         destination: "https://support.rallly.co",
         permanent: true,
       },
+      {
+        source: "/profile",
+        destination: "/settings/profile",
+        permanent: true,
+      },
     ];
   },
 
