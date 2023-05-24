@@ -1,8 +1,8 @@
+import { UserIcon } from "@rallly/icons";
 import clsx from "clsx";
 
 import { useUser } from "@/components/user-provider";
 import { getRandomAvatarColor } from "@/utils/color-hash";
-import { UserIcon } from "@rallly/icons";
 
 export const CurrentUserAvatar = ({
   size = "md",

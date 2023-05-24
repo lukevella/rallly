@@ -1,9 +1,7 @@
 import { trpc } from "@rallly/backend";
 import { Participant, Vote, VoteType } from "@rallly/database";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import FullPageLoader from "./full-page-loader";
 import { useRequiredContext } from "./use-required-context";
 
 const ParticipantsContext = React.createContext<{
@@ -19,8 +17,6 @@ export const ParticipantsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
   pollId: string;
 }> = ({ children, pollId }) => {
-  const { t } = useTranslation();
-
   const { data: participants } = trpc.polls.participants.list.useQuery(
     {
       pollId,

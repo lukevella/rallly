@@ -9,7 +9,6 @@ import smoothscroll from "smoothscroll-polyfill";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import Tooltip from "@/components/tooltip";
-import { You } from "@/components/you";
 
 import { Button } from "../button";
 import { styleMenuItem } from "../menu-styles";

@@ -1,6 +1,5 @@
 import { DotsVerticalIcon, GithubIcon } from "@rallly/icons";
 import clsx from "clsx";
-import { domAnimation, LazyMotion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";

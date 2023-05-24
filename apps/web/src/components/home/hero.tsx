@@ -4,14 +4,10 @@ import * as React from "react";
 
 import { Trans } from "@/components/trans";
 
-import { DayjsProvider } from "../../utils/dayjs";
-import { UserAvatarProvider } from "../poll/user-avatar";
 import PollDemo from "./poll-demo";
 import ScribbleArrow from "./scribble-arrow.svg";
 
 const Hero: React.FunctionComponent = () => {
-  const names = ["Peter", "Christine", "Samantha", "Joseph"];
-
   return (
     <div className="mx-auto flex max-w-7xl flex-col items-center p-8 sm:gap-24">
       <div className="my-8 text-center">

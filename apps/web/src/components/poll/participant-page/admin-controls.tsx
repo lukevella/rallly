@@ -1,5 +1,4 @@
 import { trpc } from "@rallly/backend";
-import { user } from "@rallly/backend/trpc/routers/user";
 import {
   ChartSquareBarIcon,
   ExclamationCircleIcon,

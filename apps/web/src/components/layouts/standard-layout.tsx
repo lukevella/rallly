@@ -6,7 +6,6 @@ import {
   PlusCircleIcon,
   RefreshIcon,
   SupportIcon,
-  UserAddIcon,
   UserIcon,
 } from "@rallly/icons";
 import clsx from "clsx";
@@ -30,12 +29,7 @@ import { CurrentUserAvatar } from "@/components/user";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
-import {
-  IfAuthenticated,
-  IfGuest,
-  UserProvider,
-  useUser,
-} from "../user-provider";
+import { IfAuthenticated, IfGuest, UserProvider } from "../user-provider";
 
 const MenuItem = ({
   href,
@@ -70,7 +64,6 @@ const MenuItem = ({
 export const StandardLayout: React.FunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children, ...rest }) => {
-  const { user } = useUser();
   const router = useRouter();
   const [isBusy, setIsBusy] = React.useState(false);
 

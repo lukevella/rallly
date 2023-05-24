@@ -3,7 +3,6 @@ import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import {
   ArrowRightIcon,
   ChartSquareBarIcon,
-  FolderIcon,
   InboxIcon,
   PlusSmIcon,
 } from "@rallly/icons";

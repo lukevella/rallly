@@ -2,12 +2,10 @@ import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { useDayjs } from "../../utils/dayjs";
-import Badge from "../badge";
 import { usePoll } from "../poll-context";
-import Tooltip from "../tooltip";
 
 const PollSubheader: React.FunctionComponent = () => {
-  const { poll, admin } = usePoll();
+  const { poll } = usePoll();
   const { t } = useTranslation();
   const { dayjs } = useDayjs();
   return (

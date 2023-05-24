@@ -13,9 +13,9 @@ import { Button } from "../button";
 import CompactButton from "../compact-button";
 import Dropdown, { DropdownItem } from "../dropdown";
 import NameInput from "../name-input";
-import { usePoll } from "../poll-context";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
+import { usePoll } from "../poll-context";
 import { isUnclaimed, useUser } from "../user-provider";
 
 interface CommentForm {

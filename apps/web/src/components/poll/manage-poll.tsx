@@ -240,15 +240,7 @@ const ManagePoll: React.FunctionComponent<{
                 modalContext.render({
                   overlayClosable: true,
                   content: function Content({ close }) {
-                    return (
-                      <DeletePollForm
-                        onConfirm={async () => {
-                          close();
-                        }}
-                        onCancel={close}
-                        urlId={urlId}
-                      />
-                    );
+                    return <DeletePollForm onCancel={close} urlId={urlId} />;
                   },
                   footer: null,
                 });

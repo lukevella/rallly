@@ -13,9 +13,8 @@ const confirmText = "delete-me";
 
 export const DeletePollForm: React.FunctionComponent<{
   onCancel: () => void;
-  onConfirm: () => void;
   urlId: string;
-}> = ({ onCancel, onConfirm, urlId }) => {
+}> = ({ onCancel, urlId }) => {
   const { register, handleSubmit, formState, watch } = useForm<{
     confirmation: string;
   }>();

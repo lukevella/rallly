@@ -1,9 +1,4 @@
-import {
-  AdjustmentsIcon,
-  CogIcon,
-  CreditCardIcon,
-  UserIcon,
-} from "@rallly/icons";
+import { AdjustmentsIcon, CogIcon, UserIcon } from "@rallly/icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";

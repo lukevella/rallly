@@ -1,11 +1,9 @@
 import Head from "next/head";
-import Link from "next/link";
 import React from "react";
 
 import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-import { Trans } from "@/components/trans";
 import { withSession } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { DayjsProvider } from "@/utils/dayjs";

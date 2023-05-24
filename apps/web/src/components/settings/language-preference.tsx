@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";

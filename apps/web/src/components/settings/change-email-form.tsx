@@ -1,4 +1,5 @@
-import { Button } from "@/components/button";
+import { useForm } from "react-hook-form";
+
 import {
   Form,
   FormControl,
@@ -9,7 +10,6 @@ import {
 import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { useForm } from "react-hook-form";
 
 export const ChangeEmailForm = () => {
   const { user } = useUser();

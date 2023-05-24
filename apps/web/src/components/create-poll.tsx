@@ -1,10 +1,5 @@
 import { trpc } from "@rallly/backend";
-import {
-  ChartSquareBarIcon,
-  CheckIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@rallly/icons";
+import { ChartSquareBarIcon, CheckIcon, ChevronLeftIcon } from "@rallly/icons";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";

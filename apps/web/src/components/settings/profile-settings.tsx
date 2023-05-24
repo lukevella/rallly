@@ -1,3 +1,6 @@
+import { trpc } from "@rallly/backend";
+import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/button";
 import {
   Form,
@@ -10,8 +13,6 @@ import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
 import { useUser } from "@/components/user-provider";
-import { trpc } from "@rallly/backend";
-import { useForm } from "react-hook-form";
 
 export const ProfileSettings = () => {
   const { user } = useUser();

@@ -1,5 +1,4 @@
 import { trpc } from "@rallly/backend";
-import { BellCrossedIcon, BellIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
