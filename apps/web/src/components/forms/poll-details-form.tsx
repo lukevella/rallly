@@ -58,7 +58,7 @@ export const PollDetailsForm: React.FunctionComponent<
           </p>
         </div>
         <FormItem>
-          <label htmlFor="title">{t("title")}</label>
+          <FormLabel htmlFor="title">{t("title")}</FormLabel>
           <Input
             type="text"
             id="title"

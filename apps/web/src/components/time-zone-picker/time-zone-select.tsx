@@ -43,7 +43,7 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
             role="combobox"
             aria-expanded={open}
             aria-controls={popoverContentId}
-            className="flex h-10 w-full items-center justify-between rounded border bg-white px-3 py-2 hover:bg-gray-50 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-input-background flex h-10 w-full items-center justify-between rounded border px-3 py-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             {value ? (
               options.find((option) => option.value === value)?.label
