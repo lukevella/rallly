@@ -10,14 +10,12 @@ import React from "react";
 
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { LoginForm } from "@/components/auth/login-form";
-import { useUser, withSession } from "@/components/user-provider";
 
 import { withPageTranslations } from "../utils/with-page-translations";
 
 const Page: NextPage<{ referer: string | null }> = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { refresh } = useUser();
 
   return (
     <AuthLayout>
@@ -26,7 +24,6 @@ const Page: NextPage<{ referer: string | null }> = () => {
       </Head>
       <LoginForm
         onAuthenticated={async () => {
-          refresh();
           router.replace("/polls");
         }}
       />
@@ -46,4 +43,4 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   }, withPageTranslations()),
 );
 
-export default withSession(Page);
+export default Page;

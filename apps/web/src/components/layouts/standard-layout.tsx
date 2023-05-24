@@ -1,6 +1,9 @@
+import { user } from "@rallly/backend/trpc/routers/user";
 import {
   AdjustmentsIcon,
   ChartSquareBarIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
   LoginIcon,
   LogoutIcon,
   PlusCircleIcon,
@@ -29,7 +32,12 @@ import { CurrentUserAvatar } from "@/components/user";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
-import { IfAuthenticated, IfGuest, UserProvider } from "../user-provider";
+import {
+  IfAuthenticated,
+  IfGuest,
+  UserProvider,
+  useUser,
+} from "../user-provider";
 
 const MenuItem = ({
   href,
@@ -66,7 +74,7 @@ export const StandardLayout: React.FunctionComponent<{
 }> = ({ children, ...rest }) => {
   const router = useRouter();
   const [isBusy, setIsBusy] = React.useState(false);
-
+  const { user } = useUser();
   React.useEffect(() => {
     const setBusy = () => setIsBusy(true);
     const setNotBusy = () => setIsBusy(false);
@@ -84,112 +92,113 @@ export const StandardLayout: React.FunctionComponent<{
       <ModalProvider>
         <div className="flex min-h-full flex-col md:flex-row" {...rest}>
           <div className="min-h-full shrink-0 border-b bg-gray-50 text-slate-500 md:w-24 md:border-b-0 md:border-r lg:block">
-            <div className="sticky top-0 flex h-full max-h-[calc(100vh)] gap-4 md:flex-col md:pt-3 md:pb-6">
-              <div className="flex grow items-center gap-6 md:flex-col">
-                <div className="m-1 flex h-8 w-8 items-center justify-center">
-                  {isBusy ? (
-                    <Spinner className="text-gray-500" />
-                  ) : (
-                    <Link
-                      href="/polls"
-                      className={clsx(
-                        "inline-block transition-all hover:opacity-75 active:translate-y-1",
-                      )}
-                    >
-                      <Image
-                        src="/favicon-32x32.png"
-                        width={32}
-                        height={32}
-                        alt="Rallly"
-                      />
-                    </Link>
-                  )}
-                </div>
+            <div className="sticky top-0 flex h-full max-h-[calc(100vh)] items-center justify-between gap-8 p-3 md:flex-col md:pt-3 md:pb-6">
+              <div className="m-1 flex h-8 w-8 items-center justify-center">
+                {isBusy ? (
+                  <Spinner className="text-gray-500" />
+                ) : (
+                  <Link
+                    href="/polls"
+                    className={clsx(
+                      "inline-block transition-all hover:opacity-75 active:translate-y-1",
+                    )}
+                  >
+                    <Image
+                      src="/favicon-32x32.png"
+                      width={32}
+                      height={32}
+                      alt="Rallly"
+                    />
+                  </Link>
+                )}
+              </div>
+              <div className="flex items-center gap-6 md:grow md:flex-col">
                 <MenuItem
                   href="/polls"
                   icon={ChartSquareBarIcon}
                   label={<Trans i18nKey="polls" defaults="Polls" />}
                 />
               </div>
-              <div className="flex items-center gap-8 md:flex-col">
+              <MenuItem
+                icon={SupportIcon}
+                label={<Trans i18nKey="common_support" />}
+                target="_blank"
+                href="https://support.rallly.co"
+              />
+              <MenuItem
+                href="/settings/preferences"
+                icon={AdjustmentsIcon}
+                label={<Trans i18nKey="preferences" />}
+              />
+              <IfGuest>
                 <MenuItem
-                  icon={SupportIcon}
-                  label={<Trans i18nKey="common_support" />}
-                  target="_blank"
-                  href="https://support.rallly.co"
+                  href="/login"
+                  icon={LoginIcon}
+                  label={<Trans i18nKey="login" />}
                 />
-                <MenuItem
-                  href="/settings/preferences"
-                  icon={AdjustmentsIcon}
-                  label={<Trans i18nKey="preferences" />}
-                />
-                <IfGuest>
-                  <MenuItem
-                    href="/login"
-                    icon={LoginIcon}
-                    label={<Trans i18nKey="login" />}
-                  />
-                </IfGuest>
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <CurrentUserAvatar />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start">
-                    <IfAuthenticated>
-                      <DropdownMenuLabel>
-                        <Trans i18nKey="myAccount" defaults="My Account" />
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                    </IfAuthenticated>
+              </IfGuest>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="group flex flex-col items-center gap-y-2">
+                  <CurrentUserAvatar />
+                  <span className="text-xs font-semibold group-active:text-gray-900">
+                    {user.isGuest ? <Trans i18nKey="guest" /> : user.shortName}
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <IfAuthenticated>
+                    <DropdownMenuLabel>
+                      <Trans i18nKey="myAccount" defaults="My Account" />
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                  </IfAuthenticated>
 
-                    <IfAuthenticated>
-                      <DropdownMenuItem asChild={true}>
-                        <Link
-                          href="/settings/profile"
-                          className="flex items-center gap-x-2"
-                        >
-                          <UserIcon className="h-4 w-4" />
-                          <Trans i18nKey="profile" defaults="Profile" />
-                        </Link>
-                      </DropdownMenuItem>
-                    </IfAuthenticated>
-                    <IfGuest>
-                      <DropdownMenuItem asChild={true}>
-                        <Link
-                          href="/register"
-                          className="flex items-center gap-x-2"
-                        >
-                          <PlusCircleIcon className="h-4 w-4" />
-                          <Trans
-                            i18nKey="createAnAccount"
-                            defaults="Create an Account"
-                          />
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild={true}>
-                        <Link
-                          href="/logout"
-                          className="flex items-center gap-x-2"
-                        >
-                          <RefreshIcon className="h-4 w-4" />
-                          <Trans i18nKey="forgetMe" />
-                        </Link>
-                      </DropdownMenuItem>
-                    </IfGuest>
-                    <IfAuthenticated>
-                      <DropdownMenuItem asChild={true}>
-                        <Link
-                          href="/logout"
-                          className="flex items-center gap-x-2"
-                        >
-                          <LogoutIcon className="h-4 w-4" />
-                          <Trans i18nKey="logout" />
-                        </Link>
-                      </DropdownMenuItem>
-                    </IfAuthenticated>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+                  <IfAuthenticated>
+                    <DropdownMenuItem asChild={true}>
+                      <Link
+                        href="/settings/profile"
+                        className="flex items-center gap-x-2"
+                      >
+                        <UserIcon className="h-4 w-4" />
+                        <Trans i18nKey="profile" defaults="Profile" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </IfAuthenticated>
+                  <IfGuest>
+                    <DropdownMenuItem asChild={true}>
+                      <Link
+                        href="/register"
+                        className="flex items-center gap-x-2"
+                      >
+                        <PlusCircleIcon className="h-4 w-4" />
+                        <Trans
+                          i18nKey="createAnAccount"
+                          defaults="Create an Account"
+                        />
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild={true}>
+                      <Link
+                        href="/logout"
+                        className="flex items-center gap-x-2"
+                      >
+                        <RefreshIcon className="h-4 w-4" />
+                        <Trans i18nKey="forgetMe" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </IfGuest>
+                  <IfAuthenticated>
+                    <DropdownMenuItem asChild={true}>
+                      <Link
+                        href="/logout"
+                        className="flex items-center gap-x-2"
+                      >
+                        <LogoutIcon className="h-4 w-4" />
+                        <Trans i18nKey="logout" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </IfAuthenticated>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           <div className="flex min-w-0 max-w-full grow flex-col">

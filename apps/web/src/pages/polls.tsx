@@ -61,8 +61,12 @@ const EmptyState = () => {
 };
 
 const Page: NextPageWithLayout = () => {
-  const { data = [] } = trpc.polls.list.useQuery();
+  const { data } = trpc.polls.list.useQuery();
   const { t } = useTranslation();
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <div>

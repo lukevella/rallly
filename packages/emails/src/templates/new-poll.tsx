@@ -63,13 +63,19 @@ export const NewPollEmail = ({
           <Link href={participantLink}>{participantLink}</Link>
         </Text>
         <Text>
-          <ShareLink>Share via email</ShareLink>
+          <ShareLink
+            title={title}
+            name={name}
+            participantLink={participantLink}
+          >
+            Share via email
+          </ShareLink>
         </Text>
       </Card>
       <Text>
         To invite participants to your poll, simply share the{" "}
-        <strong>Invite Link</strong> above with them. They'll be able to vote on
-        their preferred meeting times and dates.
+        <strong>Invite Link</strong> above with them. They&apos;ll be able to
+        vote on their preferred meeting times and dates.
       </Text>
       <Text>
         If you need to make any changes to your poll, or if you want to see the

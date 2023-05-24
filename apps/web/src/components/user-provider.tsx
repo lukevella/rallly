@@ -4,7 +4,6 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { PostHogProvider } from "@/contexts/posthog";
-import { useUserPreferences } from "@/contexts/preferences";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -54,7 +53,6 @@ export const UserProvider = (props: {
 
   const queryClient = trpc.useContext();
   const { data: user } = trpc.whoami.get.useQuery();
-  const preferences = useUserPreferences();
   const router = useRouter();
   const logout = trpc.whoami.destroy.useMutation({
     onSuccess: async () => {
@@ -68,14 +66,13 @@ export const UserProvider = (props: {
       : user.id.substring(0, 10)
     : t("guest");
 
-  if (!user || !preferences) {
+  if (!user) {
     return null;
   }
 
   return (
     <UserContext.Provider
       value={{
-        preferences,
         user: { ...user, shortName },
         refresh: () => {
           return queryClient.whoami.invalidate();
