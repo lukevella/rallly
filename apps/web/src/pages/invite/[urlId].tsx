@@ -23,7 +23,6 @@ const GoToApp = () => {
       <span className="group inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-medium tracking-tight">
         <Trans
           defaults="<a>Manage</a>"
-          target="_blank"
           i18nKey="goToApp"
           components={{
             a: <Link className="text-link" href={`/poll/${poll.id}`} />,

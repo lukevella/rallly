@@ -100,22 +100,20 @@ type ParticipantOrComment = {
   userId: string | null;
 };
 
-export const withSession = <
-  C extends React.ComponentType,
-  // eslint-disable-next-line @typescript-eslint/ban-types
->(
-  component: C,
-): C => {
-  const ComposedComponent: React.FunctionComponent = (props: P) => {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const withSession = <P extends {} = {}>(
+  component: React.ComponentType<P>,
+) => {
+  const ComposedComponent: React.FunctionComponent<P> = (props: P) => {
     const Component = component;
     return (
-      <UserProvider forceUserId={props.forceUserId}>
+      <UserProvider>
         <Component {...props} />
       </UserProvider>
     );
   };
   ComposedComponent.displayName = `withUser(${component.displayName})`;
-  return ComposedComponent as C;
+  return ComposedComponent;
 };
 
 /**
