@@ -7,11 +7,11 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground overflow-y-scroll overscroll-none;
+    @apply text-foreground overflow-y-scroll overscroll-none bg-gray-200/50;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   html {
-    @apply h-full bg-gray-200/50 font-sans text-base text-gray-700;
+    @apply h-full font-sans text-base text-gray-700;
   }
   body,
   #__next {
