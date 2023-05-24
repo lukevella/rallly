@@ -4,6 +4,10 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import { Card } from "@/components/card";
+import { Form, FormItem, FormLabel } from "@/components/form";
+import { Trans } from "@/components/trans";
+
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import FullPageLoader from "../../full-page-loader";
 import { useModal } from "../../modal";
@@ -26,27 +30,28 @@ const PollOptionsForm: React.FunctionComponent<
   PollFormProps<PollOptionsData> & { title?: string }
 > = ({ name, defaultValues, onSubmit, onChange, title, className }) => {
   const { t } = useTranslation();
-  const { control, handleSubmit, watch, setValue, formState } =
-    useForm<PollOptionsData>({
-      defaultValues: {
-        options: [],
-        duration: 30,
-        timeZone: "",
-        navigationDate: new Date().toISOString(),
-        ...defaultValues,
-      },
-      resolver: (values) => {
-        return {
-          values,
-          errors:
-            values.options.length === 0
-              ? {
-                  options: true,
-                }
-              : {},
-        };
-      },
-    });
+  const form = useForm<PollOptionsData>({
+    defaultValues: {
+      options: [],
+      duration: 30,
+      timeZone: "",
+      navigationDate: new Date().toISOString(),
+      ...defaultValues,
+    },
+    resolver: (values) => {
+      return {
+        values,
+        errors:
+          values.options.length === 0
+            ? {
+                options: true,
+              }
+            : {},
+      };
+    },
+  });
+
+  const { control, handleSubmit, watch, setValue, formState } = form;
 
   const views = React.useMemo(() => {
     const res = [
@@ -134,99 +139,102 @@ const PollOptionsForm: React.FunctionComponent<
   });
 
   return (
-    <form
-      id={name}
-      className={clsx("max-w-full", className)}
-      style={{ width: 1024 }}
-      onSubmit={handleSubmit(onSubmit, openHelpModal)}
-    >
-      {calendarHelpModal}
-      {dateOrTimeRangeModal}
-      <div className="w-full items-center space-y-2 border-b py-3 px-4 lg:flex lg:space-y-0 lg:space-x-2">
-        <div className="grow">
-          <Controller
-            control={control}
-            name="timeZone"
-            render={({ field }) => (
-              <TimeZonePicker
-                value={field.value}
-                onBlur={field.onBlur}
-                onChange={(timeZone) => {
-                  setValue("timeZone", timeZone, { shouldTouch: true });
-                }}
-                disabled={datesOnly}
+    <Form {...form}>
+      <form
+        id={name}
+        className={clsx("w-full", className)}
+        onSubmit={handleSubmit(onSubmit, openHelpModal)}
+      >
+        {calendarHelpModal}
+        {dateOrTimeRangeModal}
+        <FormItem>
+          <div className="w-full items-center space-y-2 border-b py-3 px-4 lg:flex lg:space-y-0 lg:space-x-2">
+            <div className="grow">
+              <Controller
+                control={control}
+                name="timeZone"
+                render={({ field }) => (
+                  <TimeZonePicker
+                    value={field.value}
+                    onBlur={field.onBlur}
+                    onChange={(timeZone) => {
+                      setValue("timeZone", timeZone, { shouldTouch: true });
+                    }}
+                    disabled={datesOnly}
+                  />
+                )}
               />
-            )}
-          />
-        </div>
-        <div className="flex space-x-3">
-          <div className="segment-button w-full">
-            <button
-              className={clsx({
-                "segment-button-active": selectedView.value === "month",
-              })}
-              onClick={() => {
-                setValue("view", "month");
-              }}
-              type="button"
-            >
-              <CalendarIcon className="mr-2 h-5 w-5" /> {t("monthView")}
-            </button>
-            <button
-              className={clsx({
-                "segment-button-active": selectedView.value === "week",
-              })}
-              type="button"
-              onClick={() => {
-                setValue("view", "week");
-              }}
-            >
-              <TableIcon className="mr-2 h-5 w-5" /> {t("weekView")}
-            </button>
+            </div>
+            <div className="flex space-x-3">
+              <div className="segment-button w-full">
+                <button
+                  className={clsx({
+                    "segment-button-active": selectedView.value === "month",
+                  })}
+                  onClick={() => {
+                    setValue("view", "month");
+                  }}
+                  type="button"
+                >
+                  <CalendarIcon className="mr-2 h-5 w-5" /> {t("monthView")}
+                </button>
+                <button
+                  className={clsx({
+                    "segment-button-active": selectedView.value === "week",
+                  })}
+                  type="button"
+                  onClick={() => {
+                    setValue("view", "week");
+                  }}
+                >
+                  <TableIcon className="mr-2 h-5 w-5" /> {t("weekView")}
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="relative w-full">
-        <React.Suspense
-          fallback={
-            <FullPageLoader className="h-[400px]">
-              {t("loading")}
-            </FullPageLoader>
-          }
-        >
-          <selectedView.Component
-            title={title}
-            options={watchOptions}
-            date={navigationDate}
-            onNavigate={(date) => {
-              setValue("navigationDate", date.toISOString());
-            }}
-            onChange={(options) => {
-              setValue("options", options);
-              if (
-                options.length === 0 ||
-                options.every((option) => option.type === "date")
-              ) {
-                // unset the timeZone if we only have date option
-                setValue("timeZone", "");
+          <div className="relative w-full">
+            <React.Suspense
+              fallback={
+                <FullPageLoader className="h-[400px]">
+                  {t("loading")}
+                </FullPageLoader>
               }
-              if (
-                options.length > 0 &&
-                !formState.touchedFields.timeZone &&
-                options.every((option) => option.type === "timeSlot")
-              ) {
-                // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-                setValue("timeZone", getBrowserTimeZone());
-              }
-            }}
-            duration={watchDuration}
-            onChangeDuration={(duration) => {
-              setValue("duration", duration);
-            }}
-          />
-        </React.Suspense>
-      </div>
-    </form>
+            >
+              <selectedView.Component
+                title={title}
+                options={watchOptions}
+                date={navigationDate}
+                onNavigate={(date) => {
+                  setValue("navigationDate", date.toISOString());
+                }}
+                onChange={(options) => {
+                  setValue("options", options);
+                  if (
+                    options.length === 0 ||
+                    options.every((option) => option.type === "date")
+                  ) {
+                    // unset the timeZone if we only have date option
+                    setValue("timeZone", "");
+                  }
+                  if (
+                    options.length > 0 &&
+                    !formState.touchedFields.timeZone &&
+                    options.every((option) => option.type === "timeSlot")
+                  ) {
+                    // set timeZone if we are adding time ranges and we haven't touched the timeZone field
+                    setValue("timeZone", getBrowserTimeZone());
+                  }
+                }}
+                duration={watchDuration}
+                onChangeDuration={(duration) => {
+                  setValue("duration", duration);
+                }}
+              />
+            </React.Suspense>
+          </div>
+        </FormItem>
+      </form>
+    </Form>
   );
 };
 

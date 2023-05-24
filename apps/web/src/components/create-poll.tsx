@@ -1,15 +1,12 @@
 import { trpc } from "@rallly/backend";
-import { ChartSquareBarIcon, CheckIcon, ChevronLeftIcon } from "@rallly/icons";
+import { ArrowLeftIcon, CheckIcon, ChevronLeftIcon } from "@rallly/icons";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Card } from "@/components/card";
-import {
-  TopBar,
-  TopBarTitle,
-} from "@/components/layouts/standard-layout/top-bar";
 import { Trans } from "@/components/trans";
+import { cn } from "@/lib/utils";
 import { usePostHog } from "@/utils/posthog";
 
 import { Button } from "./button";
@@ -42,7 +39,7 @@ export interface CreatePollPageProps {
   view?: "week" | "month";
 }
 
-const Page: React.FunctionComponent = () => {
+export const CreatePoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   const router = useRouter();
@@ -137,38 +134,95 @@ const Page: React.FunctionComponent = () => {
   };
 
   return (
-    <div>
-      <TopBar className="flex justify-between p-3">
-        <div className="hidden sm:block">
-          <TopBarTitle
-            icon={ChartSquareBarIcon}
-            title={<Trans i18nKey="newPoll" />}
-          />
+    <div className="mx-auto flex max-w-4xl flex-col gap-8">
+      <div className="flex justify-between">
+        <Button
+          icon={<ArrowLeftIcon />}
+          disabled={isBusy}
+          onClick={() => {
+            if (currentStepIndex > 0) {
+              setFormData({
+                ...formData,
+                currentStep: currentStepIndex - 1,
+              });
+            }
+          }}
+        >
+          <Trans i18nKey="back" defaults="Back" />
+        </Button>
+      </div>
+      <div className="grow">
+        <Steps
+          className="mb-8"
+          current={currentStepIndex}
+          total={steps.length}
+        />
+        <div className="">
+          {(() => {
+            switch (currentStepName) {
+              case "eventDetails":
+                return (
+                  <PollDetailsForm
+                    className="max-w-3xl"
+                    name={currentStepName}
+                    defaultValues={formData?.eventDetails}
+                    onSubmit={handleSubmit}
+                    onChange={handleChange}
+                  />
+                );
+              case "options":
+                return (
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="">
+                        <Trans i18nKey="dates" defaults="Dates" />
+                      </h2>
+                      <p className="leading-6 text-gray-500">
+                        <Trans
+                          i18nKey="datesDescription"
+                          defaults="Select a few dates for your participants to choose from"
+                        />
+                      </p>
+                    </div>
+                    <Card>
+                      <PollOptionsForm
+                        className="max-w-4xl"
+                        name={currentStepName}
+                        defaultValues={formData?.options}
+                        onSubmit={handleSubmit}
+                        onChange={handleChange}
+                        title={formData.eventDetails?.title}
+                      />
+                    </Card>
+                  </div>
+                );
+              case "userDetails":
+                return (
+                  <UserDetailsForm
+                    className="max-w-lg"
+                    name={currentStepName}
+                    defaultValues={formData?.userDetails}
+                    onSubmit={handleSubmit}
+                    onChange={handleChange}
+                  />
+                );
+            }
+          })()}
         </div>
-        <Steps current={currentStepIndex} total={steps.length} />
-        <div className="flex justify-end gap-x-2">
-          {currentStepIndex > 0 ? (
-            <Button
-              icon={<ChevronLeftIcon />}
-              disabled={isBusy}
-              onClick={() => {
-                setFormData({
-                  ...formData,
-                  currentStep: currentStepIndex - 1,
-                });
-              }}
-            ></Button>
-          ) : null}
-
+        <div className="mt-8 flex gap-x-2">
           {currentStepIndex < steps.length - 1 ? (
-            <Button form={currentStepName} loading={isBusy} htmlType="submit">
+            <Button
+              type="primary"
+              form={currentStepName}
+              loading={isBusy}
+              htmlType="submit"
+            >
               {t("continue")}
             </Button>
           ) : (
             <Button
               form={currentStepName}
               type="primary"
-              icon={<CheckIcon />}
               loading={isBusy}
               htmlType="submit"
             >
@@ -176,52 +230,7 @@ const Page: React.FunctionComponent = () => {
             </Button>
           )}
         </div>
-      </TopBar>
-      <div className="mx-auto max-w-4xl py-4 sm:p-4 lg:p-8">
-        <div className="max-w-full">
-          <Card fullWidthOnMobile={true}>
-            <div className="">
-              {(() => {
-                switch (currentStepName) {
-                  case "eventDetails":
-                    return (
-                      <PollDetailsForm
-                        className="max-w-full p-3 sm:p-4"
-                        name={currentStepName}
-                        defaultValues={formData?.eventDetails}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                      />
-                    );
-                  case "options":
-                    return (
-                      <PollOptionsForm
-                        className="grow"
-                        name={currentStepName}
-                        defaultValues={formData?.options}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                        title={formData.eventDetails?.title}
-                      />
-                    );
-                  case "userDetails":
-                    return (
-                      <UserDetailsForm
-                        className="grow p-4"
-                        name={currentStepName}
-                        defaultValues={formData?.userDetails}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                      />
-                    );
-                }
-              })()}
-            </div>
-          </Card>
-        </div>
       </div>
     </div>
   );
 };
-
-export default Page;

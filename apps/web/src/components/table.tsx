@@ -1,4 +1,3 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@rallly/icons";
 import {
   ColumnDef,
   flexRender,
@@ -7,8 +6,6 @@ import {
 } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
-
-import { Button } from "@/components/button";
 
 export const Table = <
   T extends Record<string, unknown>,
@@ -97,26 +94,6 @@ export const Table = <
           </tfoot>
         ) : null}
       </table>
-      {table.getState().pagination.pageSize < props.data.length ? (
-        <div className="flex justify-end border-t bg-gray-100 px-3 py-2.5">
-          <Button
-            icon={<ArrowLeftIcon />}
-            disabled={table.getState().pagination.pageIndex === 0}
-            onClick={() => {
-              table.setPageIndex(table.getState().pagination.pageIndex - 1);
-            }}
-          />
-          <Button
-            icon={<ArrowRightIcon />}
-            disabled={
-              table.getState().pagination.pageIndex === table.getPageCount() - 1
-            }
-            onClick={() => {
-              table.setPageIndex(table.getState().pagination.pageIndex + 1);
-            }}
-          />
-        </div>
-      ) : null}
     </div>
   );
 };

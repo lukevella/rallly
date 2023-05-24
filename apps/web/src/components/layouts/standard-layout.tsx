@@ -36,6 +36,60 @@ import {
   useUser,
 } from "../user-provider";
 
+const UserDropdown = () => {
+  const { user } = useUser();
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="group flex flex-col items-center gap-y-2">
+        <CurrentUserAvatar />
+        <span className="hidden text-xs font-semibold group-active:text-gray-900 md:block">
+          {user.isGuest ? <Trans i18nKey="guest" /> : user.shortName}
+        </span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <IfAuthenticated>
+          <DropdownMenuLabel>
+            <Trans i18nKey="myAccount" defaults="My Account" />
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+        </IfAuthenticated>
+        <IfAuthenticated>
+          <DropdownMenuItem asChild={true}>
+            <Link
+              href="/settings/profile"
+              className="flex items-center gap-x-2"
+            >
+              <UserIcon className="h-4 w-4" />
+              <Trans i18nKey="profile" defaults="Profile" />
+            </Link>
+          </DropdownMenuItem>
+        </IfAuthenticated>
+        <IfGuest>
+          <DropdownMenuItem asChild={true}>
+            <Link href="/register" className="flex items-center gap-x-2">
+              <PlusCircleIcon className="h-4 w-4" />
+              <Trans i18nKey="createAnAccount" defaults="Create an Account" />
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild={true}>
+            <Link href="/logout" className="flex items-center gap-x-2">
+              <RefreshIcon className="h-4 w-4" />
+              <Trans i18nKey="forgetMe" />
+            </Link>
+          </DropdownMenuItem>
+        </IfGuest>
+        <IfAuthenticated>
+          <DropdownMenuItem asChild={true}>
+            <Link href="/logout" className="flex items-center gap-x-2">
+              <LogoutIcon className="h-4 w-4" />
+              <Trans i18nKey="logout" />
+            </Link>
+          </DropdownMenuItem>
+        </IfAuthenticated>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 const MenuItem = ({
   href,
   icon: Icon,
@@ -73,7 +127,6 @@ export const StandardLayout: React.FunctionComponent<{
 }> = ({ children, ...rest }) => {
   const router = useRouter();
   const [isBusy, setIsBusy] = React.useState(false);
-  const { user } = useUser();
   React.useEffect(() => {
     const setBusy = () => setIsBusy(true);
     const setNotBusy = () => setIsBusy(false);
@@ -86,7 +139,7 @@ export const StandardLayout: React.FunctionComponent<{
   }, [router.events]);
 
   return (
-    <>
+    <UserProvider>
       <Toaster />
       <ModalProvider>
         <div className="flex min-h-full flex-col md:flex-row" {...rest}>
@@ -136,67 +189,7 @@ export const StandardLayout: React.FunctionComponent<{
                   label={<Trans i18nKey="login" />}
                 />
               </IfGuest>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="group flex flex-col items-center gap-y-2">
-                  <CurrentUserAvatar />
-                  <span className="hidden text-xs font-semibold group-active:text-gray-900 md:block">
-                    {user.isGuest ? <Trans i18nKey="guest" /> : user.shortName}
-                  </span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <IfAuthenticated>
-                    <DropdownMenuLabel>
-                      <Trans i18nKey="myAccount" defaults="My Account" />
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                  </IfAuthenticated>
-                  <IfAuthenticated>
-                    <DropdownMenuItem asChild={true}>
-                      <Link
-                        href="/settings/profile"
-                        className="flex items-center gap-x-2"
-                      >
-                        <UserIcon className="h-4 w-4" />
-                        <Trans i18nKey="profile" defaults="Profile" />
-                      </Link>
-                    </DropdownMenuItem>
-                  </IfAuthenticated>
-                  <IfGuest>
-                    <DropdownMenuItem asChild={true}>
-                      <Link
-                        href="/register"
-                        className="flex items-center gap-x-2"
-                      >
-                        <PlusCircleIcon className="h-4 w-4" />
-                        <Trans
-                          i18nKey="createAnAccount"
-                          defaults="Create an Account"
-                        />
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild={true}>
-                      <Link
-                        href="/logout"
-                        className="flex items-center gap-x-2"
-                      >
-                        <RefreshIcon className="h-4 w-4" />
-                        <Trans i18nKey="forgetMe" />
-                      </Link>
-                    </DropdownMenuItem>
-                  </IfGuest>
-                  <IfAuthenticated>
-                    <DropdownMenuItem asChild={true}>
-                      <Link
-                        href="/logout"
-                        className="flex items-center gap-x-2"
-                      >
-                        <LogoutIcon className="h-4 w-4" />
-                        <Trans i18nKey="logout" />
-                      </Link>
-                    </DropdownMenuItem>
-                  </IfAuthenticated>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <UserDropdown />
             </div>
           </div>
           <div className="flex min-w-0 max-w-full grow flex-col">
@@ -204,15 +197,11 @@ export const StandardLayout: React.FunctionComponent<{
           </div>
         </div>
       </ModalProvider>
-    </>
+    </UserProvider>
   );
 };
 
 export const getStandardLayout: NextPageWithLayout["getLayout"] =
   function getLayout(page) {
-    return (
-      <UserProvider>
-        <StandardLayout>{page}</StandardLayout>
-      </UserProvider>
-    );
+    return <StandardLayout>{page}</StandardLayout>;
   };

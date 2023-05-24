@@ -3,6 +3,10 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
+import { Form, FormItem, FormLabel } from "@/components/form";
+import { Trans } from "@/components/trans";
+import { Input } from "@/components/ui/input";
+
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { PollFormProps } from "./types";
 
@@ -15,13 +19,13 @@ export const UserDetailsForm: React.FunctionComponent<
   PollFormProps<UserDetailsData>
 > = ({ name, defaultValues, onSubmit, onChange, className }) => {
   const { t } = useTranslation();
+  const form = useForm<UserDetailsData>({ defaultValues });
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<UserDetailsData>({ defaultValues });
-
+  } = form;
   const isWorking = isSubmitting || isSubmitSuccessful;
 
   React.useEffect(() => {
@@ -34,40 +38,49 @@ export const UserDetailsForm: React.FunctionComponent<
   }, [watch, onChange]);
 
   return (
-    <form id={name} className={className} onSubmit={handleSubmit(onSubmit)}>
-      <h2>{t("yourDetails")}</h2>
-      <div className="formField">
-        <label className="mb-1 text-gray-500" htmlFor="name">
-          {t("name")}
-        </label>
-        <input
-          type="text"
-          id="name"
-          className={clsx("input w-full", {
-            "input-error": errors.name,
-          })}
-          disabled={isWorking}
-          placeholder={t("namePlaceholder")}
-          {...register("name", { validate: requiredString })}
-        />
-      </div>
-
-      <div className="formField">
-        <label className="mb-1 text-gray-500" htmlFor="contact">
-          {t("email")}
-        </label>
-        <input
-          id="contact"
-          className={clsx("input w-full", {
-            "input-error": errors.contact,
-          })}
-          disabled={isWorking}
-          placeholder={t("emailPlaceholder")}
-          {...register("contact", {
-            validate: validEmail,
-          })}
-        />
-      </div>
-    </form>
+    <Form {...form}>
+      <form id={name} className={className} onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-8">
+          <h2 className="">
+            <Trans i18nKey="hostDetails" defaults="Host Details" />
+          </h2>
+          <p className="leading-6 text-gray-500">
+            <Trans
+              i18nKey="hostDetailsDescription"
+              defaults="Enter your details so we can send you a link to your poll"
+            />
+          </p>
+        </div>
+        <div className="space-y-6">
+          <FormItem>
+            <FormLabel htmlFor="name">{t("name")}</FormLabel>
+            <Input
+              type="text"
+              id="name"
+              className={clsx("input w-full", {
+                "input-error": errors.name,
+              })}
+              disabled={isWorking}
+              placeholder={t("namePlaceholder")}
+              {...register("name", { validate: requiredString })}
+            />
+          </FormItem>
+          <FormItem>
+            <FormLabel htmlFor="contact">{t("email")}</FormLabel>
+            <Input
+              id="contact"
+              className={clsx("input w-full", {
+                "input-error": errors.contact,
+              })}
+              disabled={isWorking}
+              placeholder={t("emailPlaceholder")}
+              {...register("contact", {
+                validate: validEmail,
+              })}
+            />
+          </FormItem>
+        </div>
+      </form>
+    </Form>
   );
 };

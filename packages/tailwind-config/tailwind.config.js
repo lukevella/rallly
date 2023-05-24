@@ -22,13 +22,21 @@ module.exports = {
         },
         gray: colors.slate,
         border: colors.slate["200"],
-        input: colors.white,
+        input: {
+          DEFAULT: colors.slate["200"],
+          background: colors.white,
+          foreground: colors.slate["800"],
+        },
         background: colors.slate["100"],
         foreground: colors.slate["800"],
         accent: {
           DEFAULT: colors.slate["100"],
         },
-        muted: colors.slate["200"],
+        muted: {
+          DEFAULT: colors.slate["200"],
+          background: colors.slate["50"],
+          foreground: colors.slate["500"],
+        },
         popover: {
           DEFAULT: colors.white,
           foreground: colors.slate["800"],

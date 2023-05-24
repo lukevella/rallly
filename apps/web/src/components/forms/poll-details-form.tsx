@@ -3,6 +3,11 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
+import { Form, FormItem, FormLabel } from "@/components/form";
+import { Trans } from "@/components/trans";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
 import { requiredString } from "../../utils/form-validation";
 import { PollFormProps } from "./types";
 
@@ -16,12 +21,14 @@ export const PollDetailsForm: React.FunctionComponent<
   PollFormProps<PollDetailsData>
 > = ({ name, defaultValues, onSubmit, onChange, className }) => {
   const { t } = useTranslation();
+  const form = useForm<PollDetailsData>({ defaultValues });
+
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors },
-  } = useForm<PollDetailsData>({ defaultValues });
+  } = form;
 
   React.useEffect(() => {
     if (onChange) {
@@ -33,49 +40,54 @@ export const PollDetailsForm: React.FunctionComponent<
   }, [onChange, watch]);
 
   return (
-    <form
-      id={name}
-      className={clsx("max-w-full", className)}
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div className="formField">
-        <label htmlFor="title" className="mb-1">
-          {t("title")}
-        </label>
-        <input
-          type="text"
-          id="title"
-          className={clsx("input w-full", {
-            "input-error": errors.title,
-          })}
-          placeholder={t("titlePlaceholder")}
-          {...register("title", { validate: requiredString })}
-        />
-      </div>
-      <div className="formField">
-        <label htmlFor="location" className="mb-1">
-          {t("location")}
-        </label>
-        <input
-          type="text"
-          id="location"
-          className="input w-full"
-          placeholder={t("locationPlaceholder")}
-          {...register("location")}
-        />
-      </div>
-      <div>
-        <label htmlFor="description" className="mb-1">
-          {t("description")}
-        </label>
-        <textarea
-          id="description"
-          className="input w-full"
-          placeholder={t("descriptionPlaceholder")}
-          rows={5}
-          {...register("description")}
-        />
-      </div>
-    </form>
+    <Form {...form}>
+      <form
+        id={name}
+        className={clsx("space-y-6", className)}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="mb-8">
+          <h2 className="">
+            <Trans i18nKey="eventDetails" defaults="Event Details" />
+          </h2>
+          <p className="leading-6 text-gray-500">
+            <Trans
+              i18nKey="eventDetailsDescription"
+              defaults="What are you organzing?"
+            />
+          </p>
+        </div>
+        <FormItem>
+          <label htmlFor="title">{t("title")}</label>
+          <Input
+            type="text"
+            id="title"
+            className={clsx("w-full", {
+              "input-error": errors.title,
+            })}
+            placeholder={t("titlePlaceholder")}
+            {...register("title", { validate: requiredString })}
+          />
+        </FormItem>
+        <FormItem>
+          <FormLabel>{t("location")}</FormLabel>
+          <Input
+            type="text"
+            id="location"
+            placeholder={t("locationPlaceholder")}
+            {...register("location")}
+          />
+        </FormItem>
+        <FormItem>
+          <FormLabel htmlFor="description">{t("description")}</FormLabel>
+          <Textarea
+            id="description"
+            placeholder={t("descriptionPlaceholder")}
+            rows={5}
+            {...register("description")}
+          />
+        </FormItem>
+      </form>
+    </Form>
   );
 };

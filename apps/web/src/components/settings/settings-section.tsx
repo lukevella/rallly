@@ -4,7 +4,7 @@ export const SettingsSection = (props: {
   children: React.ReactNode;
 }) => {
   return (
-    <div className="sm-p-6 grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 p-4 md:grid-cols-3 lg:p-8">
+    <div className="sm-p-6 grid max-w-7xl grid-cols-1 gap-x-8 gap-y-8 p-4 md:grid-cols-3 lg:p-8">
       <div>
         <h2 className="text-base">{props.title}</h2>
         <p className="mt-1 text-sm leading-6 text-gray-500">

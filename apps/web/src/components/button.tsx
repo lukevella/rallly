@@ -65,7 +65,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           />
         ) : icon ? (
           React.cloneElement(icon, {
-            className: clsx("w-5 h-5", { "-ml-0.5": !!children }),
+            className: clsx("w-4 h-4", { "-ml-0.5": !!children }),
           })
         ) : null}
         {children}
