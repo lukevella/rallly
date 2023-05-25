@@ -6,7 +6,7 @@ import { useMeasure } from "react-use";
 
 import { useRole } from "@/contexts/role";
 
-import { Button } from "../button";
+import { LegacyButton } from "../button";
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
@@ -132,7 +132,7 @@ const Poll: React.FunctionComponent = () => {
                     {t("participantCount", { count: participants.length })}
                   </div>
                   {role === "admin" || !poll.closed ? (
-                    <Button
+                    <LegacyButton
                       icon={<PlusSmIcon />}
                       className="h-7 w-7"
                       onClick={() => {
@@ -150,13 +150,13 @@ const Poll: React.FunctionComponent = () => {
               </div>
               {maxScrollPosition > 0 ? (
                 <div className="flex gap-2">
-                  <Button
+                  <LegacyButton
                     onClick={goToPreviousPage}
                     disabled={scrollPosition === 0}
                   >
                     <ArrowLeftIcon className="h-4 w-4" />
-                  </Button>
-                  <Button
+                  </LegacyButton>
+                  <LegacyButton
                     className="text-xs"
                     disabled={scrollPosition === maxScrollPosition}
                     onClick={() => {
@@ -164,7 +164,7 @@ const Poll: React.FunctionComponent = () => {
                     }}
                   >
                     <ArrowRightIcon className="h-4 w-4" />
-                  </Button>
+                  </LegacyButton>
                 </div>
               ) : null}
             </div>
@@ -240,7 +240,7 @@ const Poll: React.FunctionComponent = () => {
           {shouldShowNewParticipantForm || editingParticipantId ? (
             <div className="flex shrink-0 items-center border-t bg-gray-50">
               <div className="flex w-full items-center justify-between gap-3 p-3">
-                <Button
+                <LegacyButton
                   onClick={() => {
                     if (editingParticipantId) {
                       setEditingParticipantId(null);
@@ -250,8 +250,8 @@ const Poll: React.FunctionComponent = () => {
                   }}
                 >
                   {t("cancel")}
-                </Button>
-                <Button
+                </LegacyButton>
+                <LegacyButton
                   key="submit"
                   form="participant-row-form"
                   htmlType="submit"
@@ -261,7 +261,7 @@ const Poll: React.FunctionComponent = () => {
                   }
                 >
                   {shouldShowNewParticipantForm ? t("continue") : t("save")}
-                </Button>
+                </LegacyButton>
               </div>
             </div>
           ) : null}

@@ -3,7 +3,7 @@ import { XIcon } from "@rallly/icons";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 
-import { Button, ButtonProps } from "../button";
+import { ButtonProps, LegacyButton } from "../button";
 
 export interface ModalProps {
   description?: React.ReactNode;
@@ -95,16 +95,16 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                 {footer === undefined ? (
                   <div className="flex h-14 items-center justify-end gap-3 rounded-br-lg border-t bg-gray-50 p-3">
                     {cancelText ? (
-                      <Button
+                      <LegacyButton
                         onClick={() => {
                           onCancel?.();
                         }}
                       >
                         {cancelText}
-                      </Button>
+                      </LegacyButton>
                     ) : null}
                     {okText ? (
-                      <Button
+                      <LegacyButton
                         ref={initialFocusRef}
                         type="primary"
                         onClick={() => {
@@ -113,7 +113,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                         {...okButtonProps}
                       >
                         {okText}
-                      </Button>
+                      </LegacyButton>
                     ) : null}
                   </div>
                 ) : null}

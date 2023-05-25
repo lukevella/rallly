@@ -18,7 +18,7 @@ import { usePostHog } from "@/utils/posthog";
 
 import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
-import { Button } from "../button";
+import { LegacyButton } from "../button";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
@@ -172,21 +172,21 @@ const Discussion: React.FunctionComponent = () => {
               />
             </div>
             <div className="flex justify-between gap-2">
-              <Button
+              <LegacyButton
                 onClick={() => {
                   reset();
                   setIsWriting(false);
                 }}
               >
                 {t("cancel")}
-              </Button>
-              <Button
+              </LegacyButton>
+              <LegacyButton
                 htmlType="submit"
                 type="primary"
                 loading={formState.isSubmitting}
               >
                 <Trans defaults="Add Comment" i18nKey="addComment" />
-              </Button>
+              </LegacyButton>
             </div>
           </form>
         ) : (

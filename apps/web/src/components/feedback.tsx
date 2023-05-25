@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/button";
+import { LegacyButton } from "@/components/button";
 import { Logo } from "@/components/logo";
 import { useModalState } from "@/components/modal/use-modal";
 import Tooltip from "@/components/tooltip";
@@ -56,14 +56,14 @@ const FeedbackForm = (props: { onClose: () => void }) => {
       </fieldset>
       <div className="flex items-center justify-between gap-4">
         <div className="flex gap-2">
-          <Button onClick={props.onClose}>{t("cancel")}</Button>
-          <Button
+          <LegacyButton onClick={props.onClose}>{t("cancel")}</LegacyButton>
+          <LegacyButton
             loading={formState.isSubmitting}
             htmlType="submit"
             type="primary"
           >
             {t("send")}
-          </Button>
+          </LegacyButton>
         </div>
         <div className="text-sm">
           <Trans

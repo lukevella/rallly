@@ -6,7 +6,7 @@ import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/button";
+import { LegacyButton } from "@/components/button";
 import { usePostHog } from "@/utils/posthog";
 
 const confirmText = "delete-me";
@@ -75,15 +75,15 @@ export const DeletePollForm: React.FunctionComponent<{
           />
         </div>
         <div className="flex space-x-3">
-          <Button onClick={onCancel}>{t("cancel")}</Button>
-          <Button
+          <LegacyButton onClick={onCancel}>{t("cancel")}</LegacyButton>
+          <LegacyButton
             disabled={!canDelete}
             htmlType="submit"
             type="danger"
             loading={formState.isSubmitting}
           >
             {t("deletePoll")}
-          </Button>
+          </LegacyButton>
         </div>
       </form>
     </div>

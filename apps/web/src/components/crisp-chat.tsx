@@ -1,7 +1,7 @@
 import { ChatIcon } from "@rallly/icons";
 import * as React from "react";
 
-import { Button } from "./button";
+import { LegacyButton } from "./button";
 
 const crispWebsiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
 
@@ -21,9 +21,9 @@ export const ChatButton: React.FunctionComponent<{ text?: string }> = ({
   text,
 }) => {
   return (
-    <Button icon={<ChatIcon />} onClick={showCrispChat}>
+    <LegacyButton icon={<ChatIcon />} onClick={showCrispChat}>
       {text}
-    </Button>
+    </LegacyButton>
   );
 };
 

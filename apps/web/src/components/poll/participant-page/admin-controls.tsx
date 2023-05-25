@@ -10,7 +10,7 @@ import React from "react";
 import { useCopyToClipboard } from "react-use";
 
 import { useLoginModal } from "@/components/auth/login-modal";
-import { Button } from "@/components/button";
+import { LegacyButton } from "@/components/button";
 import {
   TopBar,
   TopBarTitle,
@@ -42,7 +42,7 @@ const CopyLinkButton = () => {
         didCopy ? <Trans i18nKey="copied" /> : <Trans i18nKey="copyLink" />
       }
     >
-      <Button
+      <LegacyButton
         disabled={!poll}
         icon={<LinkIcon />}
         onClick={() => {
@@ -56,7 +56,7 @@ const CopyLinkButton = () => {
         <span className="hidden sm:inline">
           <Trans i18nKey="copyInviteLink" defaults="Copy Invite Link" />
         </span>
-      </Button>
+      </LegacyButton>
     </Tooltip>
   );
 };
@@ -91,9 +91,9 @@ export const AdminControls = () => {
           </Tooltip>
         ) : null}
         {user.isGuest ? (
-          <Button icon={<LoginIcon />} onClick={openLoginModal}>
+          <LegacyButton icon={<LoginIcon />} onClick={openLoginModal}>
             <Trans i18nKey="login" />
-          </Button>
+          </LegacyButton>
         ) : null}
         <CopyLinkButton />
         <NotificationsToggle />
@@ -107,7 +107,7 @@ export const AdminControls = () => {
               />
             }
           >
-            <Button
+            <LegacyButton
               loading={transfer.isLoading}
               icon={<SwitchHorizontalIcon />}
               onClick={() => {
@@ -117,7 +117,7 @@ export const AdminControls = () => {
               }}
             >
               <Trans defaults="Transfer" i18nKey="addToMyPolls" />
-            </Button>
+            </LegacyButton>
           </Tooltip>
         ) : null}
       </div>

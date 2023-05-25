@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/button";
+import { LegacyButton } from "@/components/button";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
 import {
@@ -162,14 +162,14 @@ const DateTimePreferencesForm = (props: {
           />
         </div>
         <div className="mt-6 flex">
-          <Button
+          <LegacyButton
             loading={formState.isSubmitting}
             htmlType="submit"
             type="primary"
             disabled={!formState.isDirty}
           >
             <Trans i18nKey="save" />
-          </Button>
+          </LegacyButton>
         </div>
       </form>
     </Form>

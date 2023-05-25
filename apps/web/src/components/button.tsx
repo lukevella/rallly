@@ -21,7 +21,7 @@ export interface ButtonProps
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const LegacyButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(
     {
       children,

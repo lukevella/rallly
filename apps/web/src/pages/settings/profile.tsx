@@ -2,7 +2,7 @@ import { withAuth, withSessionSsr } from "@rallly/backend/next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
-import { Button } from "@/components/button";
+import { LegacyButton } from "@/components/button";
 import { getProfileLayout } from "@/components/layouts/profile-layout";
 import { ChangeEmailForm } from "@/components/settings/change-email-form";
 import { ProfileSettings } from "@/components/settings/profile-settings";
@@ -58,9 +58,9 @@ const Page: NextPageWithLayout = () => {
           />
         }
       >
-        <Button htmlType="submit" type="danger">
+        <LegacyButton htmlType="submit" type="danger">
           <Trans i18nKey="deleteMyAccount" defaults="Yes, delete my account" />
-        </Button>
+        </LegacyButton>
       </SettingsSection>
     </div>
   );

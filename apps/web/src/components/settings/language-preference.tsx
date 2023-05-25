@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/button";
+import { LegacyButton } from "@/components/button";
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
 import { updateLanguage } from "@/contexts/preferences";
@@ -45,14 +45,14 @@ export const LanguagePreference = () => {
           )}
         />
         <div className="mt-6">
-          <Button
+          <LegacyButton
             type="primary"
             disabled={!form.formState.isDirty}
             loading={form.formState.isSubmitting}
             htmlType="submit"
           >
             <Trans i18nKey="save" />
-          </Button>
+          </LegacyButton>
         </div>
       </form>
     </Form>

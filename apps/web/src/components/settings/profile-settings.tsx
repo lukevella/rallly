@@ -8,7 +8,7 @@ import {
 } from "@rallly/ui/form";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/button";
+import { LegacyButton } from "@/components/button";
 import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
@@ -63,14 +63,14 @@ export const ProfileSettings = () => {
               )}
             />
             <div className="mt-4 flex">
-              <Button
+              <LegacyButton
                 loading={formState.isSubmitting}
                 type="primary"
                 htmlType="submit"
                 disabled={!formState.isDirty}
               >
                 <Trans i18nKey="save" />
-              </Button>
+              </LegacyButton>
             </div>
           </div>
         </form>
