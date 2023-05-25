@@ -2596,18 +2596,18 @@
     "aria-hidden" "^1.1.1"
     "react-remove-scroll" "2.5.5"
 
-"@radix-ui/react-slot@1.0.0":
-  "integrity" "sha512-3mrKauI/tWXo1Ll+gN5dHcxDPdm/Df1ufcDLCecn+pnCIVcdWE7CujXo8QaXOWRJyZyQWWbpB8eFwHzWXlv5mQ=="
-  "resolved" "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.0.0.tgz"
-  "version" "1.0.0"
+"@radix-ui/react-slot@^1.0.1", "@radix-ui/react-slot@1.0.1":
+  "integrity" "sha512-avutXAFL1ehGvAXtPquu0YK5oz6ctS474iM3vNGQIkswrVhdrS52e3uoMQBzZhNRAIE0jBnUyXWNmSjGHhCFcw=="
+  "resolved" "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.0.1.tgz"
+  "version" "1.0.1"
   dependencies:
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-compose-refs" "1.0.0"
 
-"@radix-ui/react-slot@1.0.1":
-  "integrity" "sha512-avutXAFL1ehGvAXtPquu0YK5oz6ctS474iM3vNGQIkswrVhdrS52e3uoMQBzZhNRAIE0jBnUyXWNmSjGHhCFcw=="
-  "resolved" "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.0.1.tgz"
-  "version" "1.0.1"
+"@radix-ui/react-slot@1.0.0":
+  "integrity" "sha512-3mrKauI/tWXo1Ll+gN5dHcxDPdm/Df1ufcDLCecn+pnCIVcdWE7CujXo8QaXOWRJyZyQWWbpB8eFwHzWXlv5mQ=="
+  "resolved" "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.0.0.tgz"
+  "version" "1.0.0"
   dependencies:
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-compose-refs" "1.0.0"
@@ -2779,6 +2779,7 @@
     "@next/bundle-analyzer" "^12.3.4"
     "@radix-ui/react-checkbox" "^1.0.3"
     "@radix-ui/react-dialog" "^1.0.3"
+    "@radix-ui/react-dropdown-menu" "^2.0.4"
     "@radix-ui/react-label" "^2.0.1"
     "@radix-ui/react-popover" "^1.0.5"
     "@radix-ui/react-radio-group" "^1.1.2"

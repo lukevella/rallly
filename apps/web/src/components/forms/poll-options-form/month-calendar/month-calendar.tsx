@@ -5,12 +5,21 @@ import {
   DotsHorizontalIcon,
   PlusSmIcon,
   SparklesIcon,
-  TrashIcon,
   XIcon,
 } from "@rallly/icons";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
+
+import { Trans } from "@/components/trans";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   expectTimeOption,
@@ -21,7 +30,6 @@ import { useDayjs } from "../../../../utils/dayjs";
 import { Button } from "../../../button";
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
-import Dropdown, { DropdownItem } from "../../../dropdown";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
 import Switch from "../../../switch";
 import { DateTimeOption } from "..";
@@ -351,63 +359,70 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           >
                             {t("addTimeOption")}
                           </Button>
-                          <Dropdown
-                            trigger={
-                              <CompactButton icon={DotsHorizontalIcon} />
-                            }
-                            placement="bottom-start"
-                          >
-                            <DropdownItem
-                              icon={SparklesIcon}
-                              disabled={datepicker.selection.length < 2}
-                              label={t("applyToAllDates")}
-                              onClick={() => {
-                                const times = optionsForDay.map(
-                                  ({ option }) => {
-                                    if (option.type === "date") {
-                                      throw new Error(
-                                        "Expected timeSlot but got date",
-                                      );
-                                    }
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild={true}>
+                              <button className="text-gray-500 hover:text-gray-800">
+                                <DotsHorizontalIcon className="h4 w-4" />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start">
+                              <DropdownMenuLabel>
+                                <Trans i18nKey="menu" defaults="Menu" />
+                              </DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  const times = optionsForDay.map(
+                                    ({ option }) => {
+                                      if (option.type === "date") {
+                                        throw new Error(
+                                          "Expected timeSlot but got date",
+                                        );
+                                      }
 
-                                    return {
-                                      startTime: option.start.substring(
-                                        option.start.indexOf("T"),
-                                      ),
-                                      endTime: option.end.substring(
-                                        option.end.indexOf("T"),
-                                      ),
-                                    };
-                                  },
-                                );
-                                const newOptions: DateTimeOption[] = [];
-                                Object.keys(optionsByDay).forEach(
-                                  (dateString) => {
-                                    times.forEach((time) => {
-                                      newOptions.push({
-                                        type: "timeSlot",
-                                        start: dateString + time.startTime,
-                                        end: dateString + time.endTime,
+                                      return {
+                                        startTime: option.start.substring(
+                                          option.start.indexOf("T"),
+                                        ),
+                                        endTime: option.end.substring(
+                                          option.end.indexOf("T"),
+                                        ),
+                                      };
+                                    },
+                                  );
+                                  const newOptions: DateTimeOption[] = [];
+                                  Object.keys(optionsByDay).forEach(
+                                    (dateString) => {
+                                      times.forEach((time) => {
+                                        newOptions.push({
+                                          type: "timeSlot",
+                                          start: dateString + time.startTime,
+                                          end: dateString + time.endTime,
+                                        });
                                       });
-                                    });
-                                  },
-                                );
-                                onChange(newOptions);
-                              }}
-                            />
-                            <DropdownItem
-                              label={t("deleteDate")}
-                              icon={TrashIcon}
-                              onClick={() => {
-                                onChange(
-                                  removeAllOptionsForDay(
-                                    options,
-                                    new Date(dateString),
-                                  ),
-                                );
-                              }}
-                            />
-                          </Dropdown>
+                                    },
+                                  );
+                                  onChange(newOptions);
+                                }}
+                              >
+                                <SparklesIcon className="mr-2 h-4 w-4" />
+                                <Trans i18nKey="applyToAllDates" />
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  onChange(
+                                    removeAllOptionsForDay(
+                                      options,
+                                      new Date(dateString),
+                                    ),
+                                  );
+                                }}
+                              >
+                                <XIcon className="mr-2 h-4 w-4" />
+                                <Trans i18nKey="deleteDate" />
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     </div>

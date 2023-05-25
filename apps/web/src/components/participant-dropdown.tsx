@@ -10,12 +10,19 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";
 
-import { Button } from "@/components/button";
-import Dropdown, { DropdownItem } from "@/components/dropdown";
 import Modal from "@/components/modal/modal";
 import { useModalState } from "@/components/modal/use-modal";
 import { useDeleteParticipantModal } from "@/components/poll/use-delete-participant-modal";
 import { TextInput } from "@/components/text-input";
+import { Trans } from "@/components/trans";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItemIconLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useFormValidation } from "@/utils/form-validation";
 import { usePostHog } from "@/utils/posthog";
 
@@ -38,36 +45,32 @@ export const ParticipantDropdown = ({
 
   return (
     <>
-      <Dropdown
-        placement="bottom-start"
-        trigger={
-          <Button
-            icon={<DotsHorizontalIcon />}
-            data-testid="participant-menu"
-          />
-        }
-      >
-        <DropdownItem
-          disabled={disabled}
-          icon={PencilIcon}
-          onClick={onEdit}
-          label={t("editVotes")}
-        />
-        <DropdownItem
-          disabled={disabled}
-          icon={TagIcon}
-          onClick={showChangeNameModal}
-          label={t("changeName")}
-        />
-        <DropdownItem
-          disabled={disabled}
-          icon={TrashIcon}
-          onClick={() =>
-            confirmDeleteParticipant(participant.id, participant.name)
-          }
-          label={t("delete")}
-        />
-      </Dropdown>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button icon={DotsHorizontalIcon} data-testid="participant-menu" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem onClick={onEdit}>
+            <DropdownMenuItemIconLabel icon={PencilIcon}>
+              <Trans i18nKey="editVotes" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={showChangeNameModal}>
+            <DropdownMenuItemIconLabel icon={TagIcon}>
+              <Trans i18nKey="changeName" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              confirmDeleteParticipant(participant.id, participant.name)
+            }
+          >
+            <DropdownMenuItemIconLabel icon={TrashIcon}>
+              <Trans i18nKey="delete" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <Modal
         showClose={true}
         overlayClosable={true}

@@ -13,10 +13,16 @@ import dayjs from "dayjs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItemIconLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { encodeDateOption } from "@/utils/date-time-utils";
 
-import Dropdown, { DropdownItem } from "../dropdown";
 import { PollDetailsForm } from "../forms";
 import { useModal } from "../modal";
 import { useModalContext } from "../modal/modal-provider";
@@ -39,7 +45,7 @@ const convertOptionToString = (option: { start: Date; duration: number }) => {
 const ManagePoll: React.FunctionComponent<{
   placement?: Placement;
   disabled?: boolean;
-}> = ({ placement, disabled }) => {
+}> = ({ disabled }) => {
   const { t } = useTranslation();
   const { poll, getParticipantsWhoVotedForOption, urlId } = usePoll();
 
@@ -191,65 +197,68 @@ const ManagePoll: React.FunctionComponent<{
     ),
   });
   return (
-    <div>
+    <>
       {changeOptionsModalContextHolder}
       {changePollDetailsModalContextHolder}
-      <Dropdown
-        placement={placement}
-        trigger={
-          <Button icon={<CogIcon />} disabled={disabled}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild={true}>
+          <Button icon={CogIcon} variant="outline" disabled={disabled}>
             <span className="hidden sm:inline">{t("manage")}</span>
             <ChevronDownIcon className="h-3" />
           </Button>
-        }
-      >
-        {!disabled ? (
-          <>
-            <DropdownItem
-              icon={PencilIcon}
-              label={t("editDetails")}
-              onClick={openChangePollDetailsModa}
-            />
-            <DropdownItem
-              icon={TableIcon}
-              label={t("editOptions")}
-              onClick={handleChangeOptions}
-            />
-            <DropdownItem
-              icon={SaveIcon}
-              label={t("exportToCsv")}
-              onClick={exportToCsv}
-            />
-            {poll.closed ? (
-              <DropdownItem
-                icon={LockOpenIcon}
-                label={t("unlockPoll")}
-                onClick={() => updatePollMutation({ urlId, closed: false })}
-              />
-            ) : (
-              <DropdownItem
-                icon={LockClosedIcon}
-                label={t("lockPoll")}
-                onClick={() => updatePollMutation({ urlId, closed: true })}
-              />
-            )}
-            <DropdownItem
-              icon={TrashIcon}
-              label={t("deletePoll")}
-              onClick={() => {
-                modalContext.render({
-                  overlayClosable: true,
-                  content: function Content({ close }) {
-                    return <DeletePollForm onCancel={close} urlId={urlId} />;
-                  },
-                  footer: null,
-                });
-              }}
-            />
-          </>
-        ) : null}
-      </Dropdown>
-    </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={openChangePollDetailsModa}>
+            <DropdownMenuItemIconLabel icon={PencilIcon}>
+              <Trans i18nKey="editDetails" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleChangeOptions}>
+            <DropdownMenuItemIconLabel icon={TableIcon}>
+              <Trans i18nKey="editOptions" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={exportToCsv}>
+            <DropdownMenuItemIconLabel icon={SaveIcon}>
+              <Trans i18nKey="exportToCsv" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+
+          {poll.closed ? (
+            <DropdownMenuItem
+              onClick={() => updatePollMutation({ urlId, closed: false })}
+            >
+              <DropdownMenuItemIconLabel icon={LockOpenIcon}>
+                <Trans i18nKey="unlockPoll" />
+              </DropdownMenuItemIconLabel>
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem
+              onClick={() => updatePollMutation({ urlId, closed: true })}
+            >
+              <DropdownMenuItemIconLabel icon={LockClosedIcon}>
+                <Trans i18nKey="lockPoll" />
+              </DropdownMenuItemIconLabel>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem
+            onClick={() => {
+              modalContext.render({
+                overlayClosable: true,
+                content: function Content({ close }) {
+                  return <DeletePollForm onCancel={close} urlId={urlId} />;
+                },
+                footer: null,
+              });
+            }}
+          >
+            <DropdownMenuItemIconLabel icon={TrashIcon}>
+              <Trans i18nKey="deletePoll" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import { CheckIcon, ChevronRightIcon, PlusCircleIcon } from "@rallly/icons";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { IconComponent } from "@/types";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -83,7 +84,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className,
     )}
@@ -99,7 +100,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     checked={checked}
@@ -197,4 +198,19 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+};
+
+export const DropdownMenuItemIconLabel = ({
+  icon: Icon,
+  children,
+}: {
+  icon: IconComponent;
+  children: React.ReactNode;
+}) => {
+  return (
+    <>
+      <Icon className="mr-2 h-4 w-4" />
+      {children}
+    </>
+  );
 };
