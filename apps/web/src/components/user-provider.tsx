@@ -78,13 +78,7 @@ export const UserProvider = (props: {
           return queryClient.whoami.invalidate();
         },
         ownsObject: ({ userId }) => {
-          if (
-            (userId && user.id === userId) ||
-            (props.forceUserId && props.forceUserId === userId)
-          ) {
-            return true;
-          }
-          return false;
+          return userId ? [user.id, props.forceUserId].includes(userId) : false;
         },
         logout: () => {
           logout.mutate();

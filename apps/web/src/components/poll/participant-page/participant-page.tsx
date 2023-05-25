@@ -4,7 +4,6 @@ import React from "react";
 import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
 import { PollContextProvider } from "@/components/poll-context";
-import { withSession } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { DayjsProvider } from "@/utils/dayjs";
 
@@ -45,4 +44,4 @@ const ParticipantPage = (props: React.PropsWithChildren) => {
   );
 };
 
-export default withSession(ParticipantPage);
+export default ParticipantPage;

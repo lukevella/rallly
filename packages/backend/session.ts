@@ -16,6 +16,7 @@ export const decryptToken = async <P extends Record<string, unknown>>(
   const payload = await unsealData(token, {
     password: sessionConfig.password,
   });
+
   if (Object.keys(payload).length === 0) {
     return null;
   }

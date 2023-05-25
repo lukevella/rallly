@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import ParticipantPage from "@/components/poll/participant-page/participant-page";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { UserProvider, useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
@@ -34,28 +34,30 @@ const GoToApp = () => {
   );
 };
 
-const Page = () => {
+const Page = ({ forceUserId }: { forceUserId: string }) => {
   return (
-    <div>
-      <ParticipantPage>
-        <GoToApp />
-      </ParticipantPage>
-      <div className="pb-16 text-center text-gray-500">
-        <Trans
-          defaults="Powered by <a>{name}</a>"
-          i18nKey="poweredByRallly"
-          values={{ name: "rallly.co" }}
-          components={{
-            a: (
-              <Link
-                className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                href="https://rallly.co"
-              />
-            ),
-          }}
-        />
+    <UserProvider forceUserId={forceUserId}>
+      <div>
+        <ParticipantPage>
+          <GoToApp />
+        </ParticipantPage>
+        <div className="pb-16 text-center text-gray-500">
+          <Trans
+            defaults="Powered by <a>{name}</a>"
+            i18nKey="poweredByRallly"
+            values={{ name: "rallly.co" }}
+            components={{
+              a: (
+                <Link
+                  className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
+                  href="https://rallly.co"
+                />
+              ),
+            }}
+          />
+        </div>
       </div>
-    </div>
+    </UserProvider>
   );
 };
 
@@ -63,20 +65,21 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
   [
     withPageTranslations(),
     async (ctx) => {
-      let userId: string | null = null;
       if (ctx.query.token) {
         const res = await decryptToken<{ userId: string }>(
           ctx.query.token as string,
         );
+
         if (res) {
-          userId = res.userId;
+          return {
+            props: {
+              forceUserId: res.userId,
+            },
+          };
         }
       }
-      return {
-        props: {
-          forceUserId: userId,
-        },
-      };
+
+      return { props: {} };
     },
   ],
   {

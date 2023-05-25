@@ -3,8 +3,8 @@ import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import { Button } from "@/components/button";
 import { Trans } from "@/components/trans";
+import { Button } from "@/components/ui/button";
 import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
 

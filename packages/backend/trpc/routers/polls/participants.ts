@@ -65,7 +65,10 @@ export const participants = router({
 
       const poll = await prisma.poll.findUnique({
         where: { id: pollId },
-        select: { title: true, adminUrlId: true, participantUrlId: true },
+        select: {
+          id: true,
+          title: true,
+        },
       });
 
       if (!poll) {
@@ -106,7 +109,7 @@ export const participants = router({
               name,
               title: poll.title,
               editSubmissionUrl: absoluteUrl(
-                `/p/${poll.participantUrlId}?token=${token}`,
+                `/invite/${poll.id}?token=${token}`,
               ),
             },
           }),
@@ -142,7 +145,7 @@ export const participants = router({
             props: {
               name: watcher.user.name,
               participantName: participant.name,
-              pollUrl: absoluteUrl(`/admin/${poll.adminUrlId}`),
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
               disableNotificationsUrl: absoluteUrl(
                 `/auth/disable-notifications?token=${token}`,
               ),

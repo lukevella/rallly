@@ -96,8 +96,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const isAdmin = !!poll.adminUrlId;
   const role = useRole();
   const canEdit =
-    (role === "admin" && isAdmin) ||
-    (!poll.closed && participant.userId === user?.id);
+    (role === "admin" && isAdmin) || (!poll.closed && ownsObject(participant));
 
   if (editMode) {
     return (

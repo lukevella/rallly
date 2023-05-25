@@ -9,6 +9,7 @@ const Page = () => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const participantUrlId = ctx.query.urlId as string;
+  const token = ctx.query.token as string;
   const res = await prisma?.poll.findUnique({
     where: {
       participantUrlId: participantUrlId,
@@ -21,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     redirect: {
-      destination: `/invite/${res.id}`,
+      destination: `/invite/${res.id}${token ? `?token=${token}` : ""}}`,
       permanent: true,
     },
   };
