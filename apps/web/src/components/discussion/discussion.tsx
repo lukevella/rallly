@@ -5,13 +5,20 @@ import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Textarea } from "@/components/ui/textarea";
 import { usePostHog } from "@/utils/posthog";
 
 import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
 import { Button } from "../button";
-import CompactButton from "../compact-button";
-import Dropdown, { DropdownItem } from "../dropdown";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
@@ -102,27 +109,29 @@ const Discussion: React.FunctionComponent = () => {
                         {dayjs(comment.createdAt).fromNow()}
                       </div>
                       {canDelete && (
-                        <Dropdown
-                          placement="bottom-start"
-                          trigger={
-                            <CompactButton
-                              icon={DotsHorizontalIcon}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild={true}>
+                            <button className="hover:text-foreground text-gray-500">
+                              <DotsHorizontalIcon className="h-4 w-4" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start">
+                            <DropdownMenuLabel>
+                              <Trans defaults="Menu" i18nKey="menu" />
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
                               onClick={() => {
-                                // confirm delete
+                                deleteComment.mutate({
+                                  commentId: comment.id,
+                                });
                               }}
-                            />
-                          }
-                        >
-                          <DropdownItem
-                            icon={TrashIcon}
-                            label={<Trans i18nKey="delete" />}
-                            onClick={() => {
-                              deleteComment.mutate({
-                                commentId: comment.id,
-                              });
-                            }}
-                          />
-                        </Dropdown>
+                            >
+                              <TrashIcon className="mr-2 h-4 w-4" />
+                              <Trans i18nKey="delete" />
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       )}
                     </div>
                   </div>
@@ -138,7 +147,7 @@ const Discussion: React.FunctionComponent = () => {
       <div className="p-3">
         {isWriting ? (
           <form
-            className=""
+            className="space-y-2.5"
             onSubmit={handleSubmit(async ({ authorName, content }) => {
               await addComment.mutateAsync({ authorName, content, pollId });
               reset({ authorName, content: "" });
@@ -146,11 +155,10 @@ const Discussion: React.FunctionComponent = () => {
             })}
           >
             <div>
-              <textarea
+              <Textarea
                 id="comment"
                 autoFocus={true}
                 placeholder={t("commentPlaceholder")}
-                className="input m-0 mb-1 w-full py-2 pl-3 pr-4 leading-relaxed"
                 {...register("content", { validate: requiredString })}
               />
             </div>
@@ -183,7 +191,7 @@ const Discussion: React.FunctionComponent = () => {
           </form>
         ) : (
           <button
-            className="input w-full rounded border bg-white px-3 py-2.5 text-left text-gray-500 hover:cursor-text"
+            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
             onClick={() => setIsWriting(true)}
           >
             <Trans i18nKey="commentPlaceholder" />
