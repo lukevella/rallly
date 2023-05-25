@@ -1,10 +1,10 @@
 import { trpc } from "@rallly/backend";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { Trans } from "@/components/trans";
-import { Button } from "@/components/ui/button";
 import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
 

@@ -7,11 +7,6 @@ import {
   SparklesIcon,
   XIcon,
 } from "@rallly/icons";
-import clsx from "clsx";
-import { useTranslation } from "next-i18next";
-import * as React from "react";
-
-import { Trans } from "@/components/trans";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +14,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@rallly/ui/dropdown-menu";
+import clsx from "clsx";
+import { useTranslation } from "next-i18next";
+import * as React from "react";
+
+import { Trans } from "@/components/trans";
 
 import {
   expectTimeOption,

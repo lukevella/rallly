@@ -6,6 +6,7 @@ module.exports = {
     "./src/pages/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
     "../../packages/tailwind-config/tailwind.config.js",
+    "../../packages/ui/**/*.{ts,tsx}",
   ],
   plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
   theme: {

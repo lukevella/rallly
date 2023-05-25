@@ -3,11 +3,10 @@ import { SpinnerIcon } from "@rallly/icons";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-import { IconComponent } from "@/types";
+import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex disabled:opacity-50 disabled:pointer-events-none select-none items-center justify-center gap-x-1.5 whitespace-nowrap text-sm rounded-md border font-medium",
+  "inline-flex disabled:opacity-50 disabled:pointer-events-none select-none items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md border font-medium",
   {
     variants: {
       variant: {
@@ -39,7 +38,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  icon?: IconComponent;
+  icon?: React.ComponentType<{ className?: string }>;
   loading?: boolean;
 }
 
@@ -67,9 +66,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {loading ? (
-          <SpinnerIcon className="h-4 w-4 animate-spin" />
+          <SpinnerIcon className="h-5 w-5 animate-spin" />
         ) : Icon ? (
-          <Icon className="h-4 w-4" />
+          <Icon className="h-5 w-5" />
         ) : null}
         {children}
       </Comp>

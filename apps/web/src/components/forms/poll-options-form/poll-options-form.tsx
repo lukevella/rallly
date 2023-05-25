@@ -1,12 +1,9 @@
 import { CalendarIcon, TableIcon } from "@rallly/icons";
+import { Form, FormItem } from "@rallly/ui/form";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
-
-import { Card } from "@/components/card";
-import { Form, FormItem, FormLabel } from "@/components/form";
-import { Trans } from "@/components/trans";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import FullPageLoader from "../../full-page-loader";

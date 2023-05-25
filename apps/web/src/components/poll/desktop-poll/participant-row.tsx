@@ -1,11 +1,11 @@
 import { Participant, Vote, VoteType } from "@rallly/database";
 import { DotsHorizontalIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import * as React from "react";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
-import { Button } from "@/components/ui/button";
 import { useUser } from "@/components/user-provider";
 import { useRole } from "@/contexts/role";
 

@@ -1,5 +1,6 @@
 import { Listbox } from "@headlessui/react";
 import { ChevronDownIcon, DotsHorizontalIcon, PlusSmIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -9,7 +10,6 @@ import smoothscroll from "smoothscroll-polyfill";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import Tooltip from "@/components/tooltip";
-import { Button } from "@/components/ui/button";
 
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";

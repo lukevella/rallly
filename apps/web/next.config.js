@@ -16,6 +16,7 @@ const nextConfig = {
   transpilePackages: [
     "@rallly/backend",
     "@rallly/icons",
+    "@rallly/ui",
     "@rallly/tailwind-config",
   ],
   webpack(config) {

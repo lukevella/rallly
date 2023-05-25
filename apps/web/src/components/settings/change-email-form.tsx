@@ -1,12 +1,12 @@
-import { useForm } from "react-hook-form";
-
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/form";
+} from "@rallly/ui/form";
+import { useForm } from "react-hook-form";
+
 import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";

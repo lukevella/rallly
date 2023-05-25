@@ -1,5 +1,4 @@
-import { SpinnerIcon } from "@rallly/icons";
-import clsx from "clsx";
+import { Button as NewButton } from "@rallly/ui/button";
 import * as React from "react";
 
 export interface ButtonProps
@@ -16,9 +15,8 @@ export interface ButtonProps
   loading?: boolean;
   icon?: React.ReactElement;
   htmlType?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
-  type?: "default" | "primary" | "danger" | "link";
+  type?: "default" | "primary" | "danger";
   form?: string;
-  rounded?: boolean;
   title?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
@@ -30,46 +28,27 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading,
       type = "default",
       htmlType = "button",
-      className,
       icon,
       disabled,
-      rounded,
       ...passThroughProps
     },
     ref,
   ) {
     return (
-      <button
+      <NewButton
         ref={ref}
         type={htmlType}
-        className={clsx(
-          {
-            "btn-default": type === "default",
-            "btn-primary": type === "primary",
-            "btn-danger": type === "danger",
-            "btn-link": type === "link",
-            "btn-disabled": disabled,
-            "h-auto rounded-full p-2": rounded,
-            "w-10 p-0": !children,
-            "pointer-events-none": loading,
-          },
-          className,
-        )}
+        loading={loading}
+        variant={type === "danger" ? "destructive" : type}
         {...passThroughProps}
         role="button"
         disabled={disabled}
       >
-        {loading ? (
-          <SpinnerIcon
-            className={clsx("-ml-0.5 inline-block h-5 w-5 animate-spin")}
-          />
-        ) : icon ? (
-          React.cloneElement(icon, {
-            className: clsx("w-5 h-5", { "-ml-0.5": !!children }),
-          })
-        ) : null}
+        {icon
+          ? React.cloneElement(icon, { className: "h-5 w-5 mr-1.5" })
+          : null}
         {children}
-      </button>
+      </NewButton>
     );
   },
 );

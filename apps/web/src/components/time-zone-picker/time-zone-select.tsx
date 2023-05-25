@@ -1,24 +1,20 @@
 import { SelectProps } from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon } from "@rallly/icons";
-import { CommandList } from "cmdk";
-import dayjs from "dayjs";
-import { useTranslation } from "next-i18next";
-import React from "react";
-
-import { Trans } from "@/components/trans";
+import { cn } from "@rallly/ui";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+} from "@rallly/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
+import { CommandList } from "cmdk";
+import dayjs from "dayjs";
+import { useTranslation } from "next-i18next";
+import React from "react";
+
+import { Trans } from "@/components/trans";
 
 import timeZones from "./time-zones.json";
 

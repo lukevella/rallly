@@ -9,18 +9,18 @@ import {
   TableIcon,
   TrashIcon,
 } from "@rallly/icons";
-import dayjs from "dayjs";
-import { Trans, useTranslation } from "next-i18next";
-import * as React from "react";
-
-import { Button } from "@/components/ui/button";
+import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuItemIconLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@rallly/ui/dropdown-menu";
+import dayjs from "dayjs";
+import { Trans, useTranslation } from "next-i18next";
+import * as React from "react";
+
 import { encodeDateOption } from "@/utils/date-time-utils";
 
 import { PollDetailsForm } from "../forms";

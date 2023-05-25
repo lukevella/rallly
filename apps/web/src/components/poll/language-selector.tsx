@@ -1,12 +1,11 @@
 import languages from "@rallly/languages";
-
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@rallly/ui/select";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;

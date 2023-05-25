@@ -8,6 +8,14 @@ import {
   SupportIcon,
   UserIcon,
 } from "@rallly/icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,14 +25,6 @@ import { Toaster } from "react-hot-toast";
 
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { CurrentUserAvatar } from "@/components/user";
 
 import { IconComponent, NextPageWithLayout } from "../../types";

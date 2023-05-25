@@ -1,10 +1,5 @@
 import { trpc } from "@rallly/backend";
 import { ChatIcon, DotsHorizontalIcon, TrashIcon } from "@rallly/icons";
-import { useTranslation } from "next-i18next";
-import * as React from "react";
-import { Controller, useForm } from "react-hook-form";
-
-import { Trans } from "@/components/trans";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +7,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Textarea } from "@/components/ui/textarea";
+} from "@rallly/ui/dropdown-menu";
+import { Textarea } from "@rallly/ui/textarea";
+import { useTranslation } from "next-i18next";
+import * as React from "react";
+import { Controller, useForm } from "react-hook-form";
+
+import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
 
 import { useDayjs } from "../../utils/dayjs";

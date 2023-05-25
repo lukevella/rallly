@@ -1,14 +1,14 @@
 import { trpc } from "@rallly/backend";
-import { useForm } from "react-hook-form";
-
-import { Button } from "@/components/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/form";
+} from "@rallly/ui/form";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/button";
 import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";

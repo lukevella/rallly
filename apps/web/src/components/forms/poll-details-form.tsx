@@ -1,12 +1,12 @@
+import { Form, FormItem, FormLabel } from "@rallly/ui/form";
+import { Input } from "@rallly/ui/input";
+import { Textarea } from "@rallly/ui/textarea";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
-import { Form, FormItem, FormLabel } from "@/components/form";
 import { Trans } from "@/components/trans";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 import { requiredString } from "../../utils/form-validation";
 import { PollFormProps } from "./types";

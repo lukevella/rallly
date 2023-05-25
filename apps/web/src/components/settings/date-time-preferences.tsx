@@ -1,21 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@rallly/backend";
-import dayjs from "dayjs";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@/components/button";
-import { Form, FormField, FormItem, FormLabel } from "@/components/form";
-import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
-import { Trans } from "@/components/trans";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@rallly/ui/checkbox";
+import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@rallly/ui/select";
+import dayjs from "dayjs";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/button";
+import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import { Trans } from "@/components/trans";
 import {
   useSystemPreferences,
   useUserPreferences,

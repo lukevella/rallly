@@ -1,10 +1,10 @@
+import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/button";
-import { Form, FormField, FormItem, FormLabel } from "@/components/form";
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
 import { updateLanguage } from "@/contexts/preferences";
