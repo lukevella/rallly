@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { ChevronDownIcon, PlusSmIcon } from "@rallly/icons";
+import { ChevronDownIcon, DotsHorizontalIcon, PlusSmIcon } from "@rallly/icons";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -9,8 +9,8 @@ import smoothscroll from "smoothscroll-polyfill";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import Tooltip from "@/components/tooltip";
+import { Button } from "@/components/ui/button";
 
-import { Button } from "../button";
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
@@ -176,6 +176,7 @@ const MobilePoll: React.FunctionComponent = () => {
               </Button>
             ) : selectedParticipant ? (
               <ParticipantDropdown
+                align="end"
                 disabled={
                   poll.closed ||
                   // if user is  participant (not admin)
@@ -196,11 +197,13 @@ const MobilePoll: React.FunctionComponent = () => {
                     })),
                   });
                 }}
-              />
+              >
+                <Button icon={DotsHorizontalIcon} />
+              </ParticipantDropdown>
             ) : (
               <Tooltip content={t("newParticipant")}>
                 <Button
-                  icon={<PlusSmIcon />}
+                  icon={PlusSmIcon}
                   disabled={poll.closed}
                   onClick={() => {
                     reset({
@@ -249,8 +252,8 @@ const MobilePoll: React.FunctionComponent = () => {
               <div className="space-y-3 border-t bg-gray-50 p-3">
                 <Button
                   className="w-full"
-                  htmlType="submit"
-                  type="primary"
+                  type="submit"
+                  variant="primary"
                   loading={formState.isSubmitting}
                 >
                   {selectedParticipantId ? t("save") : t("continue")}

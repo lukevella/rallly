@@ -1,10 +1,5 @@
 import { trpc } from "@rallly/backend";
-import {
-  DotsHorizontalIcon,
-  PencilIcon,
-  TagIcon,
-  TrashIcon,
-} from "@rallly/icons";
+import { PencilIcon, TagIcon, TrashIcon } from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -31,13 +26,16 @@ import { Participant } from ".prisma/client";
 export const ParticipantDropdown = ({
   participant,
   onEdit,
+  children,
   disabled,
+  align,
 }: {
   disabled?: boolean;
   participant: Participant;
+  align?: "start" | "end";
   onEdit: () => void;
+  children: React.ReactNode;
 }) => {
-  const { t } = useTranslation();
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
   const [isChangeNameModalVisible, showChangeNameModal, hideChangeNameModal] =
@@ -46,10 +44,14 @@ export const ParticipantDropdown = ({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button icon={DotsHorizontalIcon} data-testid="participant-menu" />
+        <DropdownMenuTrigger
+          disabled={disabled}
+          asChild={true}
+          data-testid="participant-menu"
+        >
+          {children}
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
+        <DropdownMenuContent align={align}>
           <DropdownMenuItem onClick={onEdit}>
             <DropdownMenuItemIconLabel icon={PencilIcon}>
               <Trans i18nKey="editVotes" />
@@ -171,8 +173,8 @@ const ChangeNameModal = (props: {
         </Button>
         <Button
           loading={formState.isSubmitting}
-          htmlType="submit"
-          type="primary"
+          type="submit"
+          variant="primary"
         >
           {t("save")}
         </Button>

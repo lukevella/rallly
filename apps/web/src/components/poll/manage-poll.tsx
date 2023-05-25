@@ -202,7 +202,7 @@ const ManagePoll: React.FunctionComponent<{
       {changePollDetailsModalContextHolder}
       <DropdownMenu>
         <DropdownMenuTrigger asChild={true}>
-          <Button icon={CogIcon} variant="outline" disabled={disabled}>
+          <Button icon={CogIcon} disabled={disabled}>
             <span className="hidden sm:inline">{t("manage")}</span>
             <ChevronDownIcon className="h-3" />
           </Button>

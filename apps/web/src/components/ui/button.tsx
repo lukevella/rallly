@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { IconComponent } from "@/types";
 
 const buttonVariants = cva(
-  "inline-flex select-none items-center justify-center gap-x-1.5 whitespace-nowrap text-sm rounded-md border font-medium",
+  "inline-flex disabled:opacity-50 disabled:pointer-events-none select-none items-center justify-center gap-x-1.5 whitespace-nowrap text-sm rounded-md border font-medium",
   {
     variants: {
       variant: {
@@ -51,6 +51,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading,
       children,
       variant,
+      type = "button",
       size,
       asChild = false,
       ...props
@@ -62,6 +63,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        type={type}
         {...props}
       >
         {loading ? (
