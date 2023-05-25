@@ -4,7 +4,7 @@ import z from "zod";
 
 import { decryptToken } from "../../session";
 import { publicProcedure, router } from "../trpc";
-import { LoginTokenPayload, UserSession } from "../types";
+import { LoginTokenPayload } from "../types";
 
 export const whoami = router({
   get: publicProcedure.query(async ({ ctx }) => {

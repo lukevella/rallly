@@ -93,6 +93,7 @@ export const sendEmail = async <T extends TemplateName>(
   }
 
   const Template = templates[templateName] as TemplateComponent<T>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const html = render(<Template {...(options.props as any)} />);
 
   try {
