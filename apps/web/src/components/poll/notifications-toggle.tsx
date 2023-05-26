@@ -1,10 +1,9 @@
 import { trpc } from "@rallly/backend";
-import { Button } from "@rallly/ui/button";
-import clsx from "clsx";
+import { BellIcon } from "@rallly/icons";
+import { Switch } from "@rallly/ui/switch";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
 
@@ -63,9 +62,11 @@ const NotificationsToggle: React.FunctionComponent = () => {
         </div>
       }
     >
-      <Button
-        data-testid="notifications-toggle"
+      <Switch
         disabled={poll.demo || user.isGuest}
+        data-testid="notifications-toggle"
+        checked={isWatching}
+        icon={<BellIcon className="h-4 w-4" />}
         onClick={async () => {
           // toggle
           if (isWatching) {
@@ -74,19 +75,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
             await watch.mutateAsync({ pollId: poll.id });
           }
         }}
-      >
-        <span
-          className={clsx(
-            "m-1 h-2 w-2 rounded-full",
-            isWatching
-              ? "bg-green-600 ring-2 ring-green-100/50"
-              : "bg-gray-400",
-          )}
-        />
-        <span className="hidden sm:inline-block">
-          <Trans defaults="Notifications" i18nKey="notifications" />
-        </span>
-      </Button>
+      />
     </Tooltip>
   );
 };

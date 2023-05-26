@@ -44,6 +44,7 @@ const CopyLinkButton = () => {
       }
     >
       <Button
+        variant="primary"
         disabled={!poll}
         icon={LinkIcon}
         onClick={() => {
@@ -75,9 +76,11 @@ export const AdminControls = () => {
   });
 
   return (
-    <TopBar className="flex justify-between p-3">
+    <TopBar className="flex items-center justify-between gap-x-4">
       <TopBarTitle title={poll?.title} icon={ChartSquareBarIcon} />
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-x-4">
+        <ManagePoll disabled={!hasAdminPermission} />
+
         {user.id !== poll?.userId ? (
           <Tooltip
             className="p-2 text-slate-500"
@@ -96,9 +99,7 @@ export const AdminControls = () => {
             <Trans i18nKey="login" />
           </LegacyButton>
         ) : null}
-        <CopyLinkButton />
         <NotificationsToggle />
-        <ManagePoll placement="bottom-end" disabled={!hasAdminPermission} />
         {hasAdminPermission && user.id !== poll.userId && !poll.demo ? (
           <Tooltip
             content={
@@ -121,6 +122,7 @@ export const AdminControls = () => {
             </LegacyButton>
           </Tooltip>
         ) : null}
+        <CopyLinkButton />
       </div>
     </TopBar>
   );

@@ -1,4 +1,3 @@
-import { Placement } from "@floating-ui/react-dom-interactions";
 import {
   ChevronDownIcon,
   CogIcon,
@@ -43,7 +42,6 @@ const convertOptionToString = (option: { start: Date; duration: number }) => {
 };
 
 const ManagePoll: React.FunctionComponent<{
-  placement?: Placement;
   disabled?: boolean;
 }> = ({ disabled }) => {
   const { t } = useTranslation();
@@ -202,9 +200,9 @@ const ManagePoll: React.FunctionComponent<{
       {changePollDetailsModalContextHolder}
       <DropdownMenu>
         <DropdownMenuTrigger asChild={true}>
-          <Button icon={CogIcon} disabled={disabled}>
-            <span className="hidden sm:inline">{t("manage")}</span>
-            <ChevronDownIcon className="h-3" />
+          <Button icon={CogIcon} variant="ghost" disabled={disabled}>
+            <Trans i18nKey="manage" />
+            <ChevronDownIcon className="h-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -223,7 +221,6 @@ const ManagePoll: React.FunctionComponent<{
               <Trans i18nKey="exportToCsv" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
-
           {poll.closed ? (
             <DropdownMenuItem
               onClick={() => updatePollMutation({ urlId, closed: false })}
