@@ -104,7 +104,7 @@ const Page: NextPageWithLayout = () => {
                   >
                     <ChartSquareBarIcon className="text-primary-600 mt-0.5 h-8 shrink-0" />
                     <div>
-                      <div className="group-hover:text-primary-600 group inline-flex min-w-0 items-center gap-2 pr-4 font-medium">
+                      <div className="group inline-flex min-w-0 items-center gap-2 pr-4 font-medium">
                         <span className="truncate">{info.getValue()}</span>
                         <ArrowRightIcon
                           className={clsx(
