@@ -91,10 +91,7 @@ export const Poll = () => {
                   <MenuAlt1Icon className="h-5 shrink-0 translate-y-0.5" />
                   <div className="border-primary whitespace-pre-line leading-relaxed">
                     <TruncatedLinkify>
-                      <TextSummary
-                        text={preventWidows(poll.description)}
-                        max={200}
-                      />
+                      <TextSummary text={preventWidows(poll.description)} />
                     </TruncatedLinkify>
                   </div>
                 </div>

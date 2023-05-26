@@ -2,17 +2,22 @@ import React from "react";
 
 import { Trans } from "@/components/trans";
 
-export const TextSummary = (props: { text: string; max: number }) => {
+export const TextSummary = ({
+  max = Infinity,
+  text,
+}: {
+  text: string;
+  max?: number;
+}) => {
   const [isExpanded, setExpanded] = React.useState(false);
-  if (props.text.length <= props.max) {
-    return <p>{props.text}</p>;
+  if (text.length <= max) {
+    return <p>{text}</p>;
   }
-  const summary =
-    props.text.substring(0, props.text.lastIndexOf(" ", props.max)) + "…";
+  const summary = text.substring(0, text.lastIndexOf(" ", max)) + "…";
   return (
     <>
       <p className="leading-relaxed text-gray-600">
-        {isExpanded ? <>{props.text}</> : <>{summary}</>}{" "}
+        {isExpanded ? <>{text}</> : <>{summary}</>}
       </p>
       {isExpanded ? (
         <button
