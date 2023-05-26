@@ -88,12 +88,12 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
     <UserProvider forceUserId={forceUserId}>
       <div>
         <ParticipantPage>
-          <div className="mt-3 grid gap-4 sm:mt-8">
+          <div className="my-4 grid gap-4">
             <GoToApp />
             <Preferences />
           </div>
         </ParticipantPage>
-        <div className="pb-16 text-center text-gray-500">
+        <div className="mt-4 pb-16 text-center text-gray-500">
           <Trans
             defaults="Powered by <a>{name}</a>"
             i18nKey="poweredByRallly"

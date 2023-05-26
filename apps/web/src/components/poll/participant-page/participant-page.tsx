@@ -1,3 +1,4 @@
+import { cn } from "@rallly/ui";
 import Head from "next/head";
 import React from "react";
 
@@ -9,7 +10,9 @@ import { DayjsProvider } from "@/utils/dayjs";
 
 import ModalProvider from "../../modal/modal-provider";
 
-const ParticipantPage = (props: React.PropsWithChildren) => {
+const ParticipantPage = (
+  props: React.PropsWithChildren<{ className?: string }>,
+) => {
   const poll = usePoll();
 
   if (!poll) {
@@ -32,7 +35,12 @@ const ParticipantPage = (props: React.PropsWithChildren) => {
             <ModalProvider>
               <div>
                 {props.children}
-                <div className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4">
+                <div
+                  className={cn(
+                    "mx-auto w-full max-w-4xl space-y-3 sm:space-y-4",
+                    props.className,
+                  )}
+                >
                   <Poll />
                 </div>
               </div>

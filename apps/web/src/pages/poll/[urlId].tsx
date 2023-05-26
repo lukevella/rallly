@@ -11,7 +11,7 @@ import { withPageTranslations } from "@/utils/with-page-translations";
 const Page: NextPageWithLayout = () => {
   return (
     <div>
-      <ParticipantPage>
+      <ParticipantPage className="lg:py-8">
         <AdminControls />
       </ParticipantPage>
     </div>

@@ -53,7 +53,7 @@ export const Poll = () => {
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
   return (
     <UserAvatarProvider seed={poll.id} names={names}>
-      <div className="space-y-3 p-2 sm:space-y-4 sm:p-4 md:p-8">
+      <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
         {poll.demo ? (
           <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
             <ExclamationIcon className="w-6" />
