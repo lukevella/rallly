@@ -3,6 +3,7 @@ import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import {
   ArrowRightIcon,
   ChartSquareBarIcon,
+  FolderIcon,
   InboxIcon,
   PlusSmIcon,
 } from "@rallly/icons";
@@ -71,13 +72,10 @@ const Page: NextPageWithLayout = () => {
   return (
     <div>
       <Head>
-        <title>{t("myPolls")}</title>
+        <title>{t("polls")}</title>
       </Head>
       <TopBar className="flex items-center justify-between gap-4 p-3">
-        <TopBarTitle
-          title={<Trans i18nKey="myPolls" defaults="My Polls" />}
-          icon={ChartSquareBarIcon}
-        />
+        <TopBarTitle title={<Trans i18nKey="polls" />} icon={FolderIcon} />
         <div>
           {data.length > 0 ? (
             <Link className="btn-primary" href="/new">

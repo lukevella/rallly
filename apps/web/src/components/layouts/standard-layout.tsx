@@ -1,6 +1,7 @@
 import {
   AdjustmentsIcon,
   ChartSquareBarIcon,
+  FolderIcon,
   LoginIcon,
   LogoutIcon,
   PlusCircleIcon,
@@ -167,7 +168,7 @@ export const StandardLayout: React.FunctionComponent<{
               <div className="flex items-center gap-6 md:grow md:flex-col">
                 <MenuItem
                   href="/polls"
-                  icon={ChartSquareBarIcon}
+                  icon={FolderIcon}
                   label={<Trans i18nKey="polls" defaults="Polls" />}
                 />
               </div>

@@ -1,5 +1,4 @@
 import {
-  ChartSquareBarIcon,
   CursorClickIcon,
   ExclamationIcon,
   LocationMarkerIcon,
@@ -75,7 +74,6 @@ export const Poll = () => {
             ></div>
             <div className="bg-gray-50 p-4">
               <div className="flex items-start gap-3">
-                <ChartSquareBarIcon className="text-primary-600 -ml-1 h-7 translate-y-0.5" />
                 <div>
                   <h1
                     className="text-xl font-bold tracking-tight sm:text-2xl"
