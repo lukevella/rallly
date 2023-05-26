@@ -431,14 +431,20 @@ export const polls = router({
             id: true,
             name: true,
           },
-          orderBy: {
-            createdAt: "desc",
-          },
+          orderBy: [
+            {
+              createdAt: "desc",
+            },
+            { name: "desc" },
+          ],
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        {
+          createdAt: "desc",
+        },
+        { title: "asc" },
+      ],
     });
 
     return polls;
