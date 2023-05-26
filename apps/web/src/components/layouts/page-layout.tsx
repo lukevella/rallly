@@ -1,13 +1,13 @@
 import { DotsVerticalIcon, GithubIcon } from "@rallly/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
-import Logo from "~//logo.svg";
+import Logo from "~/logo.svg";
 
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import Footer from "./page-layout/footer";
 
 export interface PageLayoutProps {
@@ -78,7 +78,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
               <DotsVerticalIcon className="w-5" />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="end">
+          <PopoverContent align="end" className="p-2">
             <Menu className="flex flex-col space-y-2 p-2" />
           </PopoverContent>
         </Popover>
