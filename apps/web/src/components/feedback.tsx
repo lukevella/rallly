@@ -1,10 +1,10 @@
 import { trpc } from "@rallly/backend";
 import { CheckCircleIcon, SpeakerphoneIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
-import { LegacyButton } from "@/components/button";
 import { Logo } from "@/components/logo";
 import { useModalState } from "@/components/modal/use-modal";
 import Tooltip from "@/components/tooltip";
@@ -56,14 +56,14 @@ const FeedbackForm = (props: { onClose: () => void }) => {
       </fieldset>
       <div className="flex items-center justify-between gap-4">
         <div className="flex gap-2">
-          <LegacyButton onClick={props.onClose}>{t("cancel")}</LegacyButton>
-          <LegacyButton
+          <Button onClick={props.onClose}>{t("cancel")}</Button>
+          <Button
             loading={formState.isSubmitting}
-            htmlType="submit"
-            type="primary"
+            type="submit"
+            variant="primary"
           >
             {t("send")}
-          </LegacyButton>
+          </Button>
         </div>
         <div className="text-sm">
           <Trans
