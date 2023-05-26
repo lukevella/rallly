@@ -1,3 +1,4 @@
+import { cn } from "@rallly/ui";
 import clsx from "clsx";
 
 import { ColoredAvatar } from "@/components/poll/participant-avatar";
@@ -20,7 +21,9 @@ export const ParticipantAvatarBar = ({
         .map((participant, index) => (
           <Tooltip key={index} content={participant.name}>
             <ColoredAvatar
-              className="-mr-1 select-none ring-2 ring-white"
+              className={cn("select-none ring-2 ring-white", {
+                "-mr-1": index !== max - 1 || index !== participants.length - 1,
+              })}
               name={participant.name}
             />
           </Tooltip>
@@ -37,7 +40,7 @@ export const ParticipantAvatarBar = ({
         >
           <div
             className={clsx(
-              "-mr-1 select-none ring-2 ring-white",
+              "select-none ring-2 ring-white",
               "rounded-full bg-gray-200 px-1.5 text-xs font-semibold",
               "inline-flex h-6 min-w-[24px] items-center justify-center",
             )}
