@@ -14,7 +14,6 @@ import Discussion from "@/components/discussion";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { TextSummary } from "@/components/text-summary";
-import { Trans } from "@/components/trans";
 import { generateGradient } from "@/utils/color-hash";
 import { preventWidows } from "@/utils/prevent-widows";
 
@@ -52,7 +51,6 @@ export const Poll = () => {
 
   const [isWideScreen, setIsWideScreen] = React.useState(checkIfWideScreen);
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
-
   return (
     <UserAvatarProvider seed={poll.id} names={names}>
       <div className="space-y-3 p-2 sm:space-y-4 sm:p-4 md:p-8">
@@ -112,20 +110,15 @@ export const Poll = () => {
               <div className="flex gap-4">
                 <CursorClickIcon className="h-5 shrink-0" />
                 <div>
-                  <div className="mb-2">
-                    <Trans i18nKey="possibleAnswers" />
-                  </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2.5">
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="yes" />
                       <span className="text-sm">{t("yes")}</span>
                     </span>
-                    <span className="text-gray-400">/</span>
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="ifNeedBe" />
                       <span className="text-sm">{t("ifNeedBe")}</span>
                     </span>
-                    <span className="text-gray-400">/</span>
                     <span className="inline-flex items-center space-x-1">
                       <VoteIcon type="no" />
                       <span className="text-sm">{t("no")}</span>

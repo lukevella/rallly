@@ -1,4 +1,5 @@
 import { ArrowLeftIcon, ArrowRightIcon, PlusSmIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
@@ -6,11 +7,9 @@ import { useMeasure } from "react-use";
 
 import { useRole } from "@/contexts/role";
 
-import { LegacyButton } from "../button";
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
-import TimeZonePicker from "../time-zone-picker";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import { PollContext } from "./desktop-poll/poll-context";
@@ -25,8 +24,7 @@ const minSidebarWidth = 200;
 const Poll: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const { poll, options, targetTimeZone, setTargetTimeZone, userAlreadyVoted } =
-    usePoll();
+  const { poll, options, userAlreadyVoted } = usePoll();
 
   const { participants } = useParticipants();
 
@@ -132,14 +130,15 @@ const Poll: React.FunctionComponent = () => {
                     {t("participantCount", { count: participants.length })}
                   </div>
                   {role === "admin" || !poll.closed ? (
-                    <LegacyButton
-                      icon={<PlusSmIcon />}
+                    <Button
                       className="h-7 w-7"
                       onClick={() => {
                         setEditingParticipantId(null);
                         setShouldShowNewParticipantForm(true);
                       }}
-                    />
+                    >
+                      <PlusSmIcon className="h-5 w-5 shrink-0" />
+                    </Button>
                   ) : null}
                 </div>
               )}
@@ -150,13 +149,13 @@ const Poll: React.FunctionComponent = () => {
               </div>
               {maxScrollPosition > 0 ? (
                 <div className="flex gap-2">
-                  <LegacyButton
+                  <Button
                     onClick={goToPreviousPage}
                     disabled={scrollPosition === 0}
                   >
                     <ArrowLeftIcon className="h-4 w-4" />
-                  </LegacyButton>
-                  <LegacyButton
+                  </Button>
+                  <Button
                     className="text-xs"
                     disabled={scrollPosition === maxScrollPosition}
                     onClick={() => {
@@ -164,23 +163,11 @@ const Poll: React.FunctionComponent = () => {
                     }}
                   >
                     <ArrowRightIcon className="h-4 w-4" />
-                  </LegacyButton>
+                  </Button>
                 </div>
               ) : null}
             </div>
           </div>
-          {poll.timeZone ? (
-            <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-white px-4">
-              <div className="flex grow items-center">
-                <div className="mr-2 text-sm font-medium">{t("timeZone")}</div>
-                <TimeZonePicker
-                  value={targetTimeZone}
-                  onChange={setTargetTimeZone}
-                  className="grow"
-                />
-              </div>
-            </div>
-          ) : null}
           <div>
             <div className="flex py-3">
               <div
@@ -240,7 +227,7 @@ const Poll: React.FunctionComponent = () => {
           {shouldShowNewParticipantForm || editingParticipantId ? (
             <div className="flex shrink-0 items-center border-t bg-gray-50">
               <div className="flex w-full items-center justify-between gap-3 p-3">
-                <LegacyButton
+                <Button
                   onClick={() => {
                     if (editingParticipantId) {
                       setEditingParticipantId(null);
@@ -250,18 +237,18 @@ const Poll: React.FunctionComponent = () => {
                   }}
                 >
                   {t("cancel")}
-                </LegacyButton>
-                <LegacyButton
+                </Button>
+                <Button
                   key="submit"
                   form="participant-row-form"
-                  htmlType="submit"
-                  type="primary"
+                  type="submit"
+                  variant="primary"
                   loading={
                     addParticipant.isLoading || updateParticipant.isLoading
                   }
                 >
                   {shouldShowNewParticipantForm ? t("continue") : t("save")}
-                </LegacyButton>
+                </Button>
               </div>
             </div>
           ) : null}

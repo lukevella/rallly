@@ -90,7 +90,7 @@ const Discussion: React.FunctionComponent = () => {
         <ChatIcon className="h-5" /> {t("comments")} ({comments.length})
       </div>
       {comments.length ? (
-        <div className="space-y-4 p-3">
+        <div className="space-y-4 p-4">
           {comments.map((comment) => {
             const canDelete =
               admin || session.ownsObject(comment) || isUnclaimed(comment);

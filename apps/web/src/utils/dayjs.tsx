@@ -1,3 +1,4 @@
+import { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
@@ -11,11 +12,10 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { useAsync, useLocalStorage } from "react-use";
+import { useAsync } from "react-use";
 
 import { useRequiredContext } from "../components/use-required-context";
 
-export type TimeFormat = "12h" | "24h";
 export type StartOfWeek = "monday" | "sunday";
 
 const dayjsLocales: Record<
@@ -28,107 +28,107 @@ const dayjsLocales: Record<
 > = {
   en: {
     weekStartsOn: "monday",
-    timeFormat: "12h",
+    timeFormat: "hours12",
     import: () => import("dayjs/locale/en"),
   },
   es: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/es"),
   },
   ca: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/ca"),
   },
   da: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/da"),
   },
   de: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/de"),
   },
   fi: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/fi"),
   },
   fr: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/fr"),
   },
   hr: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/hr"),
   },
   it: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/it"),
   },
   sv: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/sv"),
   },
   sk: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/sk"),
   },
   cs: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/cs"),
   },
   pl: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/pl"),
   },
   pt: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/pt"),
   },
   "pt-BR": {
     weekStartsOn: "sunday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/pt-br"),
   },
   ru: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/ru"),
   },
   ko: {
     weekStartsOn: "sunday",
-    timeFormat: "12h",
+    timeFormat: "hours12",
     import: () => import("dayjs/locale/ko"),
   },
   nl: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/nl"),
   },
   hu: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/hu"),
   },
   zh: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/zh"),
   },
   vi: {
     weekStartsOn: "monday",
-    timeFormat: "24h",
+    timeFormat: "hours24",
     import: () => import("dayjs/locale/vi"),
   },
 };
@@ -148,10 +148,6 @@ const DayjsContext = React.createContext<{
   dayjs: (date?: dayjs.ConfigType) => dayjs.Dayjs;
   weekStartsOn: StartOfWeek;
   timeFormat: TimeFormat;
-  setWeekStartsOn: React.Dispatch<
-    React.SetStateAction<StartOfWeek | undefined>
-  >;
-  setTimeFormat: React.Dispatch<React.SetStateAction<TimeFormat | undefined>>;
 } | null>(null);
 
 export const useDayjs = () => {
@@ -167,12 +163,6 @@ const DayjsProviderInner: React.FunctionComponent<{
   // the app via <Link locale={false}> it will be set to "en" instead of the current locale.
   const localeConfig = dayjsLocales[i18n.language];
 
-  const [weekStartsOn = localeConfig.weekStartsOn, setWeekStartsOn] =
-    useLocalStorage<StartOfWeek>("rallly-week-starts-on");
-
-  const [timeFormat = localeConfig.timeFormat, setTimeFormat] =
-    useLocalStorage<TimeFormat>("rallly-time-format");
-
   const { value: dayjsLocale } = useAsync(async () => {
     return await localeConfig.import();
   }, [localeConfig]);
@@ -182,30 +172,14 @@ const DayjsProviderInner: React.FunctionComponent<{
     return null;
   }
 
-  dayjs.locale({
-    ...dayjsLocale,
-    weekStart: weekStartsOn
-      ? weekStartsOn === "monday"
-        ? 1
-        : 0
-      : dayjsLocale.weekStart,
-    formats:
-      localeConfig.timeFormat !== timeFormat
-        ? {
-            ...dayjsLocale.formats,
-            LT: timeFormat === "12h" ? "h:mm A" : "HH:mm",
-          }
-        : dayjsLocale.formats,
-  });
+  dayjs.locale(dayjsLocale);
 
   return (
     <DayjsContext.Provider
       value={{
         dayjs,
-        weekStartsOn: weekStartsOn ?? localeConfig.weekStartsOn,
-        timeFormat: timeFormat ?? localeConfig.timeFormat,
-        setWeekStartsOn,
-        setTimeFormat,
+        weekStartsOn: localeConfig.weekStartsOn,
+        timeFormat: localeConfig.timeFormat,
       }}
     >
       {children}

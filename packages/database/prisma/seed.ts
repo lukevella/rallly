@@ -37,7 +37,7 @@ async function main() {
               id: user.id,
             },
           },
-          timeZone: "America/New_York",
+          timeZone: duration !== 0 ? "America/New_York" : undefined,
           options: {
             create: faker.date
               .betweens(

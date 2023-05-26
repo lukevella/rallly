@@ -6,6 +6,7 @@ import {
   LoginIcon,
   SwitchHorizontalIcon,
 } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
@@ -42,9 +43,9 @@ const CopyLinkButton = () => {
         didCopy ? <Trans i18nKey="copied" /> : <Trans i18nKey="copyLink" />
       }
     >
-      <LegacyButton
+      <Button
         disabled={!poll}
-        icon={<LinkIcon />}
+        icon={LinkIcon}
         onClick={() => {
           copyToClipboard(inviteLink);
           setDidCopy(true);
@@ -56,7 +57,7 @@ const CopyLinkButton = () => {
         <span className="hidden sm:inline">
           <Trans i18nKey="copyInviteLink" defaults="Copy Invite Link" />
         </span>
-      </LegacyButton>
+      </Button>
     </Tooltip>
   );
 };

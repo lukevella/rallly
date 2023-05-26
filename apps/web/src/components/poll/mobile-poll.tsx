@@ -14,7 +14,6 @@ import Tooltip from "@/components/tooltip";
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
-import TimeZonePicker from "../time-zone-picker";
 import { isUnclaimed, useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
@@ -31,8 +30,6 @@ const MobilePoll: React.FunctionComponent = () => {
   const {
     poll,
     admin,
-    targetTimeZone,
-    setTargetTimeZone,
     getParticipantById,
     optionIds,
     getVote,
@@ -40,7 +37,6 @@ const MobilePoll: React.FunctionComponent = () => {
   } = pollContext;
 
   const { participants } = useParticipants();
-  const { timeZone } = poll;
 
   const session = useUser();
 
@@ -215,12 +211,6 @@ const MobilePoll: React.FunctionComponent = () => {
               </Tooltip>
             )}
           </div>
-          {timeZone ? (
-            <TimeZonePicker
-              value={targetTimeZone}
-              onChange={setTargetTimeZone}
-            />
-          ) : null}
         </div>
         <GroupedOptions
           selectedParticipantId={selectedParticipantId}

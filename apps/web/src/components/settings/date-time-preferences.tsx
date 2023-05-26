@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@rallly/backend";
-import { Checkbox } from "@rallly/ui/checkbox";
+import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import {
   Select,
@@ -13,16 +13,14 @@ import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { LegacyButton } from "@/components/button";
+import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
-import {
-  useSystemPreferences,
-  useUserPreferences,
-} from "@/contexts/preferences";
+import { useSystemPreferences } from "@/contexts/preferences";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
+import { useDayjs } from "@/utils/dayjs";
 
 const formSchema = z.object({
-  automatic: z.boolean(),
   timeFormat: z.enum(["hours12", "hours24"]),
   timeZone: z.string(),
   weekStart: z.number().min(0).max(6),
@@ -30,60 +28,49 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const DateTimePreferencesForm = (props: {
-  defaultValues: FormData;
-  className?: string;
-}) => {
+const DateTimePreferencesForm = () => {
+  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: props.defaultValues,
   });
 
   const { handleSubmit, formState } = form;
 
-  const watchAutomatic = form.watch("automatic");
+  const queryClient = trpc.useContext();
+  const update = trpc.userPreferences.update.useMutation({
+    onSuccess: () => {
+      queryClient.userPreferences.get.invalidate();
+    },
+  });
+  const deleteUserPreferences = trpc.userPreferences.delete.useMutation({
+    onSuccess: () => {
+      queryClient.userPreferences.get.invalidate();
+    },
+  });
 
-  const update = trpc.userPreferences.update.useMutation();
-  const deleteUserPreferences = trpc.userPreferences.delete.useMutation();
+  const { timeFormat: localeTimeFormat, weekStartsOn } = useDayjs();
+
+  const localeWeekStart = weekStartsOn === "monday" ? 1 : 0;
 
   const systemPreferences = useSystemPreferences();
 
+  if (userPreferences === undefined) {
+    return null;
+  }
   return (
     <Form {...form}>
       <form
         onSubmit={handleSubmit(async (data) => {
-          if (data.automatic) {
-            await deleteUserPreferences.mutateAsync();
-            form.reset({ automatic: true, ...systemPreferences });
-          } else {
-            await update.mutateAsync(data);
-            form.reset(data);
-          }
+          await update.mutateAsync(data);
+          form.reset(data);
         })}
       >
         <div className="space-y-4">
           <FormField
             control={form.control}
-            name="automatic"
-            render={({ field }) => (
-              <div className="flex items-center gap-x-2">
-                <Checkbox
-                  id="automatic"
-                  checked={field.value}
-                  onCheckedChange={(checked) => {
-                    field.onChange(checked);
-                  }}
-                />
-                <FormLabel htmlFor="automatic">
-                  <Trans i18nKey="automatic" defaults="Use system defaults" />
-                </FormLabel>
-              </div>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="timeZone"
+            defaultValue={userPreferences?.timeZone ?? getBrowserTimeZone()}
             render={({ field }) => {
               return (
                 <FormItem>
@@ -91,7 +78,6 @@ const DateTimePreferencesForm = (props: {
                     <Trans i18nKey="timeZone" />
                   </FormLabel>
                   <TimeZoneSelect
-                    disabled={watchAutomatic}
                     value={field.value}
                     onValueChange={field.onChange}
                   />
@@ -102,29 +88,17 @@ const DateTimePreferencesForm = (props: {
           <FormField
             control={form.control}
             name="timeFormat"
+            defaultValue={userPreferences?.timeFormat ?? localeTimeFormat}
             render={({ field }) => {
               return (
                 <FormItem>
                   <FormLabel>
                     <Trans i18nKey="timeFormat" />
                   </FormLabel>
-                  <Select
-                    disabled={watchAutomatic}
+                  <TimeFormatPicker
                     value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="hours12">
-                        <Trans i18nKey="12h" />
-                      </SelectItem>
-                      <SelectItem value="hours24">
-                        <Trans i18nKey="24h" />
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                    onChange={field.onChange}
+                  />
                 </FormItem>
               );
             }}
@@ -132,6 +106,7 @@ const DateTimePreferencesForm = (props: {
           <FormField
             control={form.control}
             name="weekStart"
+            defaultValue={userPreferences?.weekStart ?? localeWeekStart}
             render={({ field }) => {
               return (
                 <FormItem>
@@ -139,7 +114,6 @@ const DateTimePreferencesForm = (props: {
                     <Trans i18nKey="startOfWeek" />
                   </FormLabel>
                   <Select
-                    disabled={watchAutomatic}
                     value={field.value.toString()}
                     onValueChange={(value) => {
                       field.onChange(parseInt(value));
@@ -161,15 +135,29 @@ const DateTimePreferencesForm = (props: {
             }}
           />
         </div>
-        <div className="mt-6 flex">
-          <LegacyButton
+        <div className="mt-6 flex gap-x-2">
+          <Button
             loading={formState.isSubmitting}
-            htmlType="submit"
-            type="primary"
+            type="submit"
+            variant="primary"
             disabled={!formState.isDirty}
           >
             <Trans i18nKey="save" />
-          </LegacyButton>
+          </Button>
+          {userPreferences !== null ? (
+            <Button
+              loading={deleteUserPreferences.isLoading}
+              onClick={async () => {
+                await deleteUserPreferences.mutateAsync();
+                form.reset(systemPreferences);
+              }}
+            >
+              <Trans
+                defaults="Use locale defaults"
+                i18nKey="useLocaleDefaults"
+              />
+            </Button>
+          ) : null}
         </div>
       </form>
     </Form>
@@ -177,12 +165,5 @@ const DateTimePreferencesForm = (props: {
 };
 
 export const DateTimePreferences = () => {
-  const preferences = useUserPreferences();
-
-  if (!preferences) {
-    // TODO (Luke Vella) [2023-05-24]: build skeleton
-    return null;
-  }
-
-  return <DateTimePreferencesForm defaultValues={preferences} />;
+  return <DateTimePreferencesForm />;
 };

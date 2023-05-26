@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { TimeFormatPicker } from "@/components/time-format-picker";
 import { PostHogProvider } from "@/contexts/posthog";
+import { useUserPreferences } from "@/contexts/preferences";
+import { useDayjs } from "@/utils/dayjs";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -52,7 +55,11 @@ export const UserProvider = (props: {
   const { t } = useTranslation();
 
   const queryClient = trpc.useContext();
-  const { data: user } = trpc.whoami.get.useQuery();
+  const { data: user } = trpc.whoami.get.useQuery(undefined, {
+    cacheTime: Infinity,
+    staleTime: Infinity,
+  });
+
   const router = useRouter();
   const logout = trpc.whoami.destroy.useMutation({
     onSuccess: async () => {
@@ -60,13 +67,15 @@ export const UserProvider = (props: {
     },
   });
 
+  const preferences = useUserPreferences();
+
   const shortName = user
     ? user.isGuest === false
       ? user.name.split(" ")[0]
       : user.id.substring(0, 10)
     : t("guest");
 
-  if (!user) {
+  if (!user || preferences === undefined) {
     return null;
   }
 
@@ -114,3 +123,34 @@ export const withSession = <P extends {} = {}>(
  * @deprecated Stop using this function. All object
  */
 export const isUnclaimed = (obj: ParticipantOrComment) => !obj.userId;
+
+export const UserPreferredTimeFormatPicker = () => {
+  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+  const { timeFormat: localeTimeFormat } = useDayjs();
+  const update = trpc.userPreferences.update.useMutation({
+    onMutate: (newPreferences) => {
+      queryClient.userPreferences.get.setData(undefined, (existingData) =>
+        existingData
+          ? {
+              ...existingData,
+              timeFormat: newPreferences.timeFormat ?? null,
+            }
+          : null,
+      );
+    },
+  });
+
+  const queryClient = trpc.useContext();
+
+  const timeFormat = userPreferences?.timeFormat ?? localeTimeFormat;
+  return (
+    <TimeFormatPicker
+      value={timeFormat}
+      onChange={(timeFormat) => {
+        update.mutate({
+          timeFormat,
+        });
+      }}
+    />
+  );
+};

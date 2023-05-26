@@ -6,16 +6,16 @@ import * as React from "react";
 import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex disabled:opacity-50 disabled:pointer-events-none select-none items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md border font-medium",
+  "inline-flex disabled:opacity-50 border text-sm font-medium disabled:text-muted-foreground disabled:bg-muted-background disabled:pointer-events-none select-none items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md border",
   {
     variants: {
       variant: {
         primary:
-          "border-gray-900 bg-gray-800 text-white shadow-sm ring-1 ring-inset ring-white/10 hover:bg-gray-700 active:bg-gray-900",
+          "border-transparent bg-gray-800 text-white shadow-sm hover:bg-gray-700 ",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         default:
-          "bg-white/50 text-gray-700 hover:bg-gray-50 hover:shadow-sm active:bg-gray-200 active:shadow-none",
+          "rounded-md px-3.5 py-2.5 hover:bg-gray-100 active:bg-gray-200 active:border-gray-300",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
@@ -65,12 +65,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         {...props}
       >
-        {loading ? (
-          <SpinnerIcon className="h-5 w-5 animate-spin" />
-        ) : Icon ? (
-          <Icon className="h-5 w-5" />
-        ) : null}
-        {children}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {loading ? (
+              <SpinnerIcon className="h-5 w-5 animate-spin" />
+            ) : Icon ? (
+              <Icon className="h-4 w-4" />
+            ) : null}
+            {children}
+          </>
+        )}
       </Comp>
     );
   },

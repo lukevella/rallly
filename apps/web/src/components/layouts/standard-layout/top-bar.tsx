@@ -12,7 +12,7 @@ export const TopBar = (
   return (
     <div
       className={clsx(
-        "show-sm sticky top-0 z-20 border-b bg-gray-50/75 p-3 backdrop-blur-lg",
+        "sticky top-0 z-20 border-b bg-gray-50/75 p-3 backdrop-blur-lg",
         props.className,
       )}
     >

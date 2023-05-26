@@ -1,5 +1,5 @@
 import { SelectProps } from "@radix-ui/react-select";
-import { CheckIcon, ChevronDownIcon } from "@rallly/icons";
+import { CheckIcon, ChevronDownIcon, GlobeIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
   Command,
@@ -23,10 +23,56 @@ const options = Object.entries(timeZones).map(([value, label]) => ({
   label,
 }));
 
+interface TimeZoneCommandProps {
+  value?: string;
+  onSelect?: (value: string) => void;
+}
+
+export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <Command>
+      <CommandInput
+        placeholder={t("timeZoneSelect__inputPlaceholder", {
+          defaultValue: "Search…",
+        })}
+      />
+      <CommandList className="max-h-[300px] overflow-y-auto">
+        <CommandEmpty>
+          <Trans
+            i18nKey="timeZoneSelect__noOption"
+            defaults="No option found"
+          />
+        </CommandEmpty>
+        <CommandGroup>
+          {options.map((option) => (
+            <CommandItem
+              key={option.value}
+              onSelect={() => onSelect?.(option.value)}
+              className="flex"
+            >
+              <CheckIcon
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  value === option.value ? "opacity-100" : "opacity-0",
+                )}
+              />
+              <span className="grow">{option.label}</span>
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+                {dayjs().tz(option.value).format("LT")}
+              </span>
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+};
+
 export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
   ({ value, onValueChange, disabled }, ref) => {
     const [open, setOpen] = React.useState(false);
-    const { t } = useTranslation();
     const popoverContentId = "timeZoneSelect__popoverContent";
 
     return (
@@ -39,16 +85,19 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
             role="combobox"
             aria-expanded={open}
             aria-controls={popoverContentId}
-            className="bg-input-background flex h-10 w-full items-center justify-between rounded border px-3 py-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-input-background flex h-9 w-full items-center gap-x-1.5 rounded-md border px-1.5 py-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {value ? (
-              options.find((option) => option.value === value)?.label
-            ) : (
-              <Trans
-                i18nKey="timeZoneSelect__defaultValue"
-                defaults="Select time zone…"
-              />
-            )}
+            <GlobeIcon className="h-5 w-5" />
+            <span className="grow text-left">
+              {value ? (
+                options.find((option) => option.value === value)?.label
+              ) : (
+                <Trans
+                  i18nKey="timeZoneSelect__defaultValue"
+                  defaults="Select time zone…"
+                />
+              )}
+            </span>
             <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </button>
         </PopoverTrigger>
@@ -57,44 +106,13 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
           align="start"
           className="w-[var(--radix-popover-trigger-width)] bg-white p-0"
         >
-          <Command>
-            <CommandInput
-              placeholder={t("timeZoneSelect__inputPlaceholder", {
-                defaultValue: "Search…",
-              })}
-            />
-            <CommandList className="max-h-[300px] overflow-y-auto">
-              <CommandEmpty>
-                <Trans
-                  i18nKey="timeZoneSelect__noOption"
-                  defaults="No option found"
-                />
-              </CommandEmpty>
-              <CommandGroup>
-                {options.map((option) => (
-                  <CommandItem
-                    key={option.value}
-                    onSelect={() => {
-                      onValueChange?.(option.value);
-                      setOpen(false);
-                    }}
-                    className="flex"
-                  >
-                    <CheckIcon
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === option.value ? "opacity-100" : "opacity-0",
-                      )}
-                    />
-                    <span className="grow">{option.label}</span>
-                    <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-                      {dayjs().tz(option.value).format("LT")}
-                    </span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
+          <TimeZoneCommand
+            value={value}
+            onSelect={(newValue) => {
+              onValueChange?.(newValue);
+              setOpen(false);
+            }}
+          />
         </PopoverContent>
       </Popover>
     );
