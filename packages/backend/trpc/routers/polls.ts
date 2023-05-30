@@ -9,6 +9,7 @@ import { nanoid } from "../../utils/nanoid";
 import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
+import { options } from "./polls/options";
 import { participants } from "./polls/participants";
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {
@@ -28,6 +29,10 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 };
 
 export const polls = router({
+  demo,
+  participants,
+  comments,
+  options,
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
     .input(
@@ -225,9 +230,6 @@ export const polls = router({
         },
       });
     }),
-  demo,
-  participants,
-  comments,
   // END LEGACY ROUTES
   getWatchers: possiblyPublicProcedure
     .input(
