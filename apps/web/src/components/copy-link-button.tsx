@@ -1,9 +1,7 @@
-import { LinkIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import Tooltip from "@/components/tooltip";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
@@ -23,6 +21,7 @@ export const CopyLinkButton = () => {
 
   return (
     <Button
+      variant="ghost"
       disabled={didCopy}
       onClick={() => {
         copyToClipboard(inviteLink);

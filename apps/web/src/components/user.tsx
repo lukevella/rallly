@@ -24,7 +24,7 @@ export const UserAvatar = ({ size = "md", name }: UserAvatarProps) => {
       className={clsx(
         "inline-flex items-center justify-center overflow-hidden rounded-full font-semibold",
         {
-          "h-6 w-6": size === "sm",
+          "h-6 w-6 text-sm": size === "sm",
           "h-8 w-8 text-base": size === "md",
           "h-14 w-14 text-2xl": size === "lg",
         },

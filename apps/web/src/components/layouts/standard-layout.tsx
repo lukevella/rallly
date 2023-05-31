@@ -8,6 +8,7 @@ import {
   SupportIcon,
   UserIcon,
 } from "@rallly/icons";
+import { cn } from "@rallly/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,7 +42,7 @@ const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex flex-col items-center gap-y-2">
-        <CurrentUserAvatar />
+        <CurrentUserAvatar size="sm" />
         <span className="hidden text-xs font-semibold group-active:text-gray-900 md:block">
           {user.isGuest ? <Trans i18nKey="guest" /> : user.shortName}
         </span>
@@ -101,23 +102,22 @@ const MenuItem = ({
   target?: string;
   label: React.ReactNode;
 }) => {
+  const router = useRouter();
   return (
     <Link
       target={target}
       href={href}
-      className="group flex flex-col items-center gap-0.5 p-2 hover:text-slate-600"
+      className={cn(
+        "flex flex-col items-center gap-0.5 p-2",
+        router.asPath === href
+          ? "text-primary bg-primary-100/75"
+          : "text-gray-500 hover:bg-gray-200 hover:text-gray-800 active:bg-gray-300",
+      )}
     >
-      <span
-        className={clsx(
-          "mb-1 inline-block",
-          "md:group-hover:bg-primary-50 md:group-hover:border-primary-200 md:group-hover:text-primary-600 md:group-active:bg-primary-100 md:rounded-lg",
-        )}
-      >
+      <span>
         <Icon className="h-6" />
       </span>
-      <span className="hidden text-xs group-active:text-gray-900 md:block">
-        {label}
-      </span>
+      <span className="hidden text-xs group-active:text-gray-900">{label}</span>
     </Link>
   );
 };
@@ -143,8 +143,8 @@ export const StandardLayout: React.FunctionComponent<{
       <Toaster />
       <ModalProvider>
         <div className="flex min-h-full flex-col md:flex-row" {...rest}>
-          <div className="min-h-full shrink-0 border-b bg-gray-50 text-slate-500 md:w-24 md:border-b-0 md:border-r lg:block">
-            <div className="sticky top-0 flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-8 gap-x-3 p-3 md:flex-col md:pt-3 md:pb-6">
+          <div className="min-h-full shrink-0 border-b bg-gray-50 text-slate-500 md:w-20 md:border-b-0 md:border-r lg:block">
+            <div className="sticky top-0 flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-6 gap-x-3 p-3 md:flex-col md:pt-3 md:pb-6">
               <div className="m-1 flex h-8 w-8 shrink-0 items-center justify-center">
                 {isBusy ? (
                   <Spinner className="text-gray-500" />
