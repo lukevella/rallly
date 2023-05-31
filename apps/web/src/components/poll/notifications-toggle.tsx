@@ -53,7 +53,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
   }
 
   return (
-    <div className="inline-flex items-center gap-4">
+    <div className="inline-flex items-center gap-2">
       <label htmlFor="notifications-toggle">
         <Trans i18nKey="notifications" />
       </label>

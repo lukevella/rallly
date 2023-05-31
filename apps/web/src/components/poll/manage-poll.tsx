@@ -200,7 +200,7 @@ const ManagePoll: React.FunctionComponent<{
       {changePollDetailsModalContextHolder}
       <DropdownMenu>
         <DropdownMenuTrigger asChild={true}>
-          <Button icon={CogIcon} variant="ghost" disabled={disabled}>
+          <Button icon={CogIcon} disabled={disabled}>
             <Trans i18nKey="manage" />
             <ChevronDownIcon className="h-4" />
           </Button>

@@ -1,4 +1,9 @@
-import { DownloadIcon, PencilIcon, TableIcon } from "@rallly/icons";
+import {
+  DownloadIcon,
+  LockClosedIcon,
+  PencilIcon,
+  TableIcon,
+} from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Switch } from "@rallly/ui/switch";
 import dayjs from "dayjs";
@@ -77,10 +82,13 @@ const StatusSection = () => {
           defaults="Prevent participants from adding or changing the results of this poll."
         />
       </SidebarSectionDescription>
-      <div className="flex items-center space-x-4">
-        <label htmlFor="lock-toggle">
-          <Trans i18nKey="lock" defaults="Lock" />
-        </label>
+      <div className="flex items-center justify-between space-x-2">
+        <div className="flex items-center gap-2">
+          <LockClosedIcon className="h-4 w-4" />
+          <label htmlFor="lock-toggle">
+            <Trans i18nKey="lock" defaults="Lock" />
+          </label>
+        </div>
         <Switch
           id="lock-toggle"
           checked={poll.closed}
@@ -260,9 +268,9 @@ export const ManageSidebar = () => {
     <div className="w-80 shrink-0 bg-white">
       <div className="flex flex-col">
         <div className="min-h-0 grow divide-y overflow-auto">
-          <EditPollSection />
-          <ExportToCsvSection />
           <StatusSection />
+          <ExportToCsvSection />
+          <EditPollSection />
         </div>
       </div>
     </div>
