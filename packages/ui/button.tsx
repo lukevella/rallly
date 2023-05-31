@@ -6,12 +6,12 @@ import * as React from "react";
 import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex disabled:opacity-50 border text-sm font-medium disabled:text-muted-foreground disabled:bg-muted-background disabled:pointer-events-none select-none items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md border",
+  "inline-flex disabled:opacity-50 border tracking-tight text-sm font-semibold disabled:text-muted-foreground disabled:bg-muted-background disabled:pointer-events-none select-none items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md border",
   {
     variants: {
       variant: {
         primary:
-          "border-transparent bg-gray-800 text-white shadow-sm hover:bg-gray-700  active:bg-gray-900",
+          "border-transparent bg-primary text-white shadow-sm hover:bg-primary-500 active:bg-primary-700",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         default:
@@ -70,9 +70,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {loading ? (
-              <SpinnerIcon className="h-5 w-5 animate-spin" />
+              <SpinnerIcon className="h-5 w-5 scale-90 animate-spin" />
             ) : Icon ? (
-              <Icon className="h-4 w-4" />
+              <Icon className="h-5 w-5 scale-90" />
             ) : null}
             {children}
           </>

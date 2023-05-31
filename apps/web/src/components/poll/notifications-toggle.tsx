@@ -1,20 +1,18 @@
 import { trpc } from "@rallly/backend";
-import { BellIcon } from "@rallly/icons";
 import { Switch } from "@rallly/ui/switch";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { Skeleton } from "@/components/skeleton";
+import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
 
 import { usePoll } from "../poll-context";
-import Tooltip from "../tooltip";
 
 const NotificationsToggle: React.FunctionComponent = () => {
   const { poll } = usePoll();
-  const { t } = useTranslation();
 
-  const { data: watchers = [], refetch } = trpc.polls.getWatchers.useQuery(
+  const { data: watchers, refetch } = trpc.polls.getWatchers.useQuery(
     {
       pollId: poll.id,
     },
@@ -25,7 +23,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
 
   const { user } = useUser();
 
-  const isWatching = watchers.some(({ userId }) => userId === user.id);
+  const isWatching = watchers?.some(({ userId }) => userId === user.id);
 
   const posthog = usePostHog();
 
@@ -50,23 +48,20 @@ const NotificationsToggle: React.FunctionComponent = () => {
     },
   });
 
+  if (!watchers) {
+    return <Skeleton className="h-9 w-32" />;
+  }
+
   return (
-    <Tooltip
-      content={
-        <div className="max-w-md">
-          {user.isGuest
-            ? t("notificationsGuest")
-            : isWatching
-            ? t("notificationsOn")
-            : t("notificationsOff")}
-        </div>
-      }
-    >
+    <div className="inline-flex items-center gap-4">
+      <label htmlFor="notifications-toggle">
+        <Trans i18nKey="notifications" />
+      </label>
       <Switch
+        id="notifications-toggle"
         disabled={poll.demo || user.isGuest}
         data-testid="notifications-toggle"
         checked={isWatching}
-        icon={<BellIcon className="h-4 w-4" />}
         onClick={async () => {
           // toggle
           if (isWatching) {
@@ -76,7 +71,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
           }
         }}
       />
-    </Tooltip>
+    </div>
   );
 };
 

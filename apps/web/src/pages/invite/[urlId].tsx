@@ -7,6 +7,7 @@ import Link from "next/link";
 import React from "react";
 
 import ParticipantPage from "@/components/poll/participant-page/participant-page";
+import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
 import { usePoll } from "@/components/poll-context";
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
 import Tooltip from "@/components/tooltip";
@@ -86,29 +87,31 @@ const Preferences = () => {
 const Page = ({ forceUserId }: { forceUserId: string }) => {
   return (
     <UserProvider forceUserId={forceUserId}>
-      <div>
-        <ParticipantPage>
-          <div className="my-4 grid gap-4">
-            <GoToApp />
-            <Preferences />
+      <LegacyPollContextProvider>
+        <div>
+          <ParticipantPage>
+            <div className="my-4 grid gap-4">
+              <GoToApp />
+              <Preferences />
+            </div>
+          </ParticipantPage>
+          <div className="mt-4 pb-16 text-center text-gray-500">
+            <Trans
+              defaults="Powered by <a>{name}</a>"
+              i18nKey="poweredByRallly"
+              values={{ name: "rallly.co" }}
+              components={{
+                a: (
+                  <Link
+                    className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
+                    href="https://rallly.co"
+                  />
+                ),
+              }}
+            />
           </div>
-        </ParticipantPage>
-        <div className="mt-4 pb-16 text-center text-gray-500">
-          <Trans
-            defaults="Powered by <a>{name}</a>"
-            i18nKey="poweredByRallly"
-            values={{ name: "rallly.co" }}
-            components={{
-              a: (
-                <Link
-                  className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                  href="https://rallly.co"
-                />
-              ),
-            }}
-          />
         </div>
-      </div>
+      </LegacyPollContextProvider>
     </UserProvider>
   );
 };

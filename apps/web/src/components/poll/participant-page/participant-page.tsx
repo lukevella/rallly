@@ -2,9 +2,7 @@ import { cn } from "@rallly/ui";
 import Head from "next/head";
 import React from "react";
 
-import { ParticipantsProvider } from "@/components/participants-provider";
 import { Poll } from "@/components/poll";
-import { PollContextProvider } from "@/components/poll-context";
 import { usePoll } from "@/contexts/poll";
 import { DayjsProvider } from "@/utils/dayjs";
 
@@ -26,27 +24,19 @@ const ParticipantPage = (
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <DayjsProvider>
-        <ParticipantsProvider pollId={poll.id}>
-          <PollContextProvider
-            poll={poll}
-            urlId={poll.participantUrlId}
-            admin={false}
-          >
-            <ModalProvider>
-              <div>
-                {props.children}
-                <div
-                  className={cn(
-                    "mx-auto w-full max-w-4xl space-y-3 sm:space-y-4",
-                    props.className,
-                  )}
-                >
-                  <Poll />
-                </div>
-              </div>
-            </ModalProvider>
-          </PollContextProvider>
-        </ParticipantsProvider>
+        <ModalProvider>
+          <div>
+            {props.children}
+            <div
+              className={cn(
+                "mx-auto w-full max-w-4xl space-y-3 sm:space-y-4",
+                props.className,
+              )}
+            >
+              <Poll />
+            </div>
+          </div>
+        </ModalProvider>
       </DayjsProvider>
     </>
   );
