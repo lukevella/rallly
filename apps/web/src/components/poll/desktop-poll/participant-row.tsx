@@ -136,7 +136,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
               align="start"
               onEdit={() => onChangeEditMode?.(true)}
             >
-              <Button icon={DotsHorizontalIcon} />
+              <Button size="sm" icon={DotsHorizontalIcon} />
             </ParticipantDropdown>
           ) : null
         }

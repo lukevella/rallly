@@ -1,6 +1,5 @@
 import {
   AdjustmentsIcon,
-  ChartSquareBarIcon,
   FolderIcon,
   LoginIcon,
   LogoutIcon,
@@ -145,7 +144,7 @@ export const StandardLayout: React.FunctionComponent<{
       <ModalProvider>
         <div className="flex min-h-full flex-col md:flex-row" {...rest}>
           <div className="min-h-full shrink-0 border-b bg-gray-50 text-slate-500 md:w-24 md:border-b-0 md:border-r lg:block">
-            <div className="sticky top-0 flex h-full max-h-[calc(100vh)] items-center justify-between gap-y-8 gap-x-3 p-3 md:flex-col md:pt-3 md:pb-6">
+            <div className="sticky top-0 flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-8 gap-x-3 p-3 md:flex-col md:pt-3 md:pb-6">
               <div className="m-1 flex h-8 w-8 shrink-0 items-center justify-center">
                 {isBusy ? (
                   <Spinner className="text-gray-500" />

@@ -131,7 +131,7 @@ const Poll: React.FunctionComponent = () => {
                   </div>
                   {role === "admin" || !poll.closed ? (
                     <Button
-                      className="h-7 w-7"
+                      size="sm"
                       onClick={() => {
                         setEditingParticipantId(null);
                         setShouldShowNewParticipantForm(true);
