@@ -28,6 +28,9 @@ module.exports = {
           background: colors.white,
           foreground: colors.slate["800"],
         },
+        ring: {
+          DEFAULT: colors.slate["300"],
+        },
         background: colors.slate["100"],
         foreground: colors.slate["800"],
         accent: {

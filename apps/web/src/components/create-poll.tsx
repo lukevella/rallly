@@ -84,8 +84,8 @@ export const CreatePoll: React.FunctionComponent = () => {
         numberOfOptions: formData.options?.options?.length,
         optionsView: formData?.options?.view,
       });
-      router.replace(`/poll/${res.id}`);
       queryClient.polls.list.invalidate();
+      router.replace(`/poll/${res.id}`);
     },
   });
 

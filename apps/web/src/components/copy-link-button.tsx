@@ -22,22 +22,21 @@ export const CopyLinkButton = () => {
   const [didCopy, setDidCopy] = React.useState(false);
 
   return (
-    <Tooltip content={didCopy ? <Trans i18nKey="copied" /> : inviteLink}>
-      <Button
-        disabled={!poll}
-        icon={LinkIcon}
-        onClick={() => {
-          copyToClipboard(inviteLink);
-          setDidCopy(true);
-          setTimeout(() => {
-            setDidCopy(false);
-          }, 1000);
-        }}
-      >
-        <span className="hidden sm:inline">
-          <Trans i18nKey="copyInviteLink" defaults="Copy Invite Link" />
-        </span>
-      </Button>
-    </Tooltip>
+    <Button
+      disabled={didCopy}
+      onClick={() => {
+        copyToClipboard(inviteLink);
+        setDidCopy(true);
+        setTimeout(() => {
+          setDidCopy(false);
+        }, 1000);
+      }}
+    >
+      {didCopy ? (
+        <Trans i18nKey="copied" />
+      ) : (
+        <Trans i18nKey="copyLink" defaults="Copy Link" />
+      )}
+    </Button>
   );
 };
