@@ -38,9 +38,12 @@ const InviteDialog = () => {
           <Trans i18nKey="inviteParticipants" defaults="Invite Participants" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="bg-gradient-to-b from-gray-200 via-white to-white sm:max-w-md">
+        <div className="flex">
+          <ShareIcon className="text-primary h-7" />
+        </div>
+        <DialogHeader className="mb-4">
+          <DialogTitle className="">
             <Trans
               i18nKey="inviteParticipants"
               defaults="Invite Participants"
@@ -48,17 +51,17 @@ const InviteDialog = () => {
           </DialogTitle>
           <DialogDescription>
             <Trans
-              i18nKey={"inviteParticipantsDescription"}
-              defaults="Gather responses from participants by copying and sharing the invite link below."
+              i18nKey="inviteParticipantsDescription"
+              defaults="Copy and share the invite link below to start gathering responses from your participants."
             />
           </DialogDescription>
         </DialogHeader>
-        <div>
+        <div className="overflow-hidden">
           <label className="mb-2">
             <Trans i18nKey="inviteLink" defaults="Invite Link" />
           </label>
-          <div className="flex items-center justify-between gap-4 rounded-md border bg-gray-50 p-1">
-            <div className="min-w-0 truncate px-1">{inviteLink}</div>
+          <div className="flex items-center justify-between rounded-md border bg-gray-50 p-1.5">
+            <div className="truncate px-1">{inviteLink}</div>
             <div className="shrink-0">
               <CopyLinkButton />
             </div>
