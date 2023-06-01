@@ -283,6 +283,7 @@ export const LoginForm: React.FunctionComponent<{
   const requestLogin = trpc.auth.requestLogin.useMutation();
   const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
 
+  const queryClient = trpc.useContext();
   const [token, setToken] = React.useState<string>();
   const posthog = usePostHog();
   if (token) {
@@ -298,6 +299,7 @@ export const LoginForm: React.FunctionComponent<{
             throw new Error("Failed to authenticate user");
           } else {
             onAuthenticated();
+            queryClient.invalidate();
             posthog?.identify(res.user.id, {
               email: res.user.email,
               name: res.user.name,
