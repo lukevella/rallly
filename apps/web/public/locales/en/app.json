@@ -63,7 +63,6 @@
   "mixedOptionsKeepTimes": "Keep time options",
   "mixedOptionsTitle": "Wait a minute… 🤔",
   "monthView": "Month view",
-  "myPolls": "My Polls",
   "name": "Name",
   "namePlaceholder": "Jessie Smith",
   "newParticipant": "New participant",
@@ -73,9 +72,6 @@
   "no": "No",
   "noDatesSelected": "No dates selected",
   "notificationsDisabled": "Notifications have been disabled for <b>{title}</b>",
-  "notificationsGuest": "Log in to turn on notifications",
-  "notificationsOff": "Notifications are off",
-  "notificationsOn": "Notifications are on",
   "notRegistered": "Create a new account →",
   "noVotes": "No one has voted for this option",
   "ok": "Ok",
@@ -200,5 +196,13 @@
   "hostDetailsDescription": "Enter your details so we can send you a link to your poll",
   "useLocaleDefaults": "Use locale defaults",
   "mangeLinkTooltip": "You created this poll, so you have exclusive access to its management page",
-  "showTimesIn": "Show times in {targetTimeZone}"
+  "showTimesIn": "Show times in {targetTimeZone}",
+  "export": "Export",
+  "exportCsvDescription": "View your results in Excel.",
+  "lockPollDescription": "Prevent participants from adding or changing the results of this poll.",
+  "lock": "Lock",
+  "editPollDescription": "Make changes to your poll.",
+  "inviteParticipants": "Invite Participants",
+  "inviteParticipantsDescription": "Copy and share the invite link below to start gathering responses from your participants.",
+  "inviteLink": "Invite Link"
 }
