@@ -122,7 +122,7 @@ const Page: NextPageWithLayout = () => {
               }),
               columnHelper.accessor("participants", {
                 header: () => (
-                  <Trans i18nKey="participants" defaults="Particpants" />
+                  <Trans i18nKey="participants" defaults="Participants" />
                 ),
                 size: 160,
                 cell: (info) => (
