@@ -10,7 +10,7 @@ import ParticipantPage from "@/components/poll/participant-page/participant-page
 import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
 import { usePoll } from "@/components/poll-context";
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
-import Tooltip from "@/components/tooltip";
+import LegacyTooltip from "@/components/tooltip";
 import { Trans } from "@/components/trans";
 import { UserProvider, useUser } from "@/components/user-provider";
 import { withPageTranslations } from "@/utils/with-page-translations";
@@ -29,7 +29,7 @@ const GoToApp = () => {
         <Link className="text-link text-sm" href={`/poll/${poll.id}`}>
           <Trans i18nKey="manage" />
         </Link>
-        <Tooltip
+        <LegacyTooltip
           content={
             <Trans
               i18nKey="mangeLinkTooltip"
@@ -38,7 +38,7 @@ const GoToApp = () => {
           }
         >
           <InformationCircleIcon className="h-4" />
-        </Tooltip>
+        </LegacyTooltip>
       </span>
     </div>
   );
@@ -63,7 +63,7 @@ const Preferences = () => {
               }}
             >
               <Trans
-                defaults="Show times in {targetTimeZone}"
+                defaults="Times shown in {targetTimeZone}"
                 i18nKey="showTimesIn"
                 values={{ targetTimeZone }}
               />
@@ -88,27 +88,26 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
   return (
     <UserProvider forceUserId={forceUserId}>
       <LegacyPollContextProvider>
-        <div>
-          <ParticipantPage>
-            <div className="my-4 grid gap-4">
-              <GoToApp />
-              <Preferences />
+        <div className="space-y-4 py-8">
+          <GoToApp />
+          <ParticipantPage />
+          <div className="mt-4 space-y-4 text-center text-gray-500">
+            <Preferences />
+            <div>
+              <Trans
+                defaults="Powered by <a>{name}</a>"
+                i18nKey="poweredByRallly"
+                values={{ name: "rallly.co" }}
+                components={{
+                  a: (
+                    <Link
+                      className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
+                      href="https://rallly.co"
+                    />
+                  ),
+                }}
+              />
             </div>
-          </ParticipantPage>
-          <div className="mt-4 pb-16 text-center text-gray-500">
-            <Trans
-              defaults="Powered by <a>{name}</a>"
-              i18nKey="poweredByRallly"
-              values={{ name: "rallly.co" }}
-              components={{
-                a: (
-                  <Link
-                    className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                    href="https://rallly.co"
-                  />
-                ),
-              }}
-            />
           </div>
         </div>
       </LegacyPollContextProvider>

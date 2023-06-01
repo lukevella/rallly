@@ -1,13 +1,13 @@
 import { trpc } from "@rallly/backend";
 import { CheckCircleIcon, SpeakerphoneIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
 import { Logo } from "@/components/logo";
 import { useModalState } from "@/components/modal/use-modal";
-import Tooltip from "@/components/tooltip";
 
 const FeedbackForm = (props: { onClose: () => void }) => {
   const { t } = useTranslation();
@@ -89,17 +89,18 @@ const FeedbackButton = () => {
   }
 
   return (
-    <Tooltip
-      className="fixed bottom-8 right-8 z-20 hidden sm:block"
-      content={t("sendFeedback")}
-      placement="left"
-    >
-      <button
-        onClick={show}
-        className="shadow-huge inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-800"
-      >
-        <SpeakerphoneIcon className="h-7 text-white" />
-      </button>
+    <Tooltip>
+      <TooltipTrigger>
+        <button
+          onClick={show}
+          className="shadow-huge inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-800"
+        >
+          <SpeakerphoneIcon className="h-7 text-white" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="left">
+        <p>{t("sendFeedback")}</p>
+      </TooltipContent>
     </Tooltip>
   );
 };

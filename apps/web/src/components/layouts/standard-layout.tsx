@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -104,21 +105,25 @@ const MenuItem = ({
 }) => {
   const router = useRouter();
   return (
-    <Link
-      target={target}
-      href={href}
-      className={cn(
-        "flex flex-col items-center gap-0.5 p-2",
-        router.asPath === href
-          ? "text-primary bg-primary-100/75"
-          : "text-gray-500 hover:bg-gray-200 hover:text-gray-800 active:bg-gray-300",
-      )}
-    >
-      <span>
-        <Icon className="h-6" />
-      </span>
-      <span className="hidden text-xs group-active:text-gray-900">{label}</span>
-    </Link>
+    <Tooltip>
+      <TooltipTrigger asChild={true}>
+        <Link
+          target={target}
+          href={href}
+          className={cn(
+            "flex flex-col items-center gap-0.5 p-2",
+            router.asPath === href
+              ? "bg-gray-200 text-gray-600"
+              : "text-gray-500 hover:bg-gray-200 hover:text-gray-800 active:bg-gray-300",
+          )}
+        >
+          <Icon className="h-6" />
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent side="right">
+        <p>{label}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
@@ -142,9 +147,9 @@ export const StandardLayout: React.FunctionComponent<{
     <UserProvider>
       <Toaster />
       <ModalProvider>
-        <div className="flex min-h-full flex-col md:flex-row" {...rest}>
-          <div className="min-h-full shrink-0 border-b bg-gray-50 text-slate-500 md:w-20 md:border-b-0 md:border-r lg:block">
-            <div className="sticky top-0 flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-6 gap-x-3 p-3 md:flex-col md:pt-3 md:pb-6">
+        <div className="flex min-h-screen flex-col md:flex-row" {...rest}>
+          <div className="min-h-full shrink-0 border-b bg-gray-50 md:w-20 md:border-b-0 md:border-r lg:block">
+            <div className="sticky top-0 z-50 flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-6 gap-x-3 p-3 md:flex-col md:pt-3 md:pb-6">
               <div className="m-1 flex h-8 w-8 shrink-0 items-center justify-center">
                 {isBusy ? (
                   <Spinner className="text-gray-500" />

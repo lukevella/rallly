@@ -43,7 +43,7 @@ const InviteDialog = () => {
           <ShareIcon className="text-primary h-7" />
         </div>
         <DialogHeader className="mb-4">
-          <DialogTitle className="">
+          <DialogTitle className="mb-2">
             <Trans
               i18nKey="inviteParticipants"
               defaults="Invite Participants"

@@ -9,7 +9,7 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
-import Tooltip from "@/components/tooltip";
+import LegacyTooltip from "@/components/tooltip";
 
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
@@ -197,7 +197,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 <Button icon={DotsHorizontalIcon} />
               </ParticipantDropdown>
             ) : (
-              <Tooltip content={t("newParticipant")}>
+              <LegacyTooltip content={t("newParticipant")}>
                 <Button
                   icon={PlusSmIcon}
                   disabled={poll.closed}
@@ -208,7 +208,7 @@ const MobilePoll: React.FunctionComponent = () => {
                     setIsEditing(true);
                   }}
                 ></Button>
-              </Tooltip>
+              </LegacyTooltip>
             )}
           </div>
         </div>

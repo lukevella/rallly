@@ -3,6 +3,7 @@ import "tailwindcss/tailwind.css";
 import "../style.css";
 
 import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
+import { TooltipProvider } from "@rallly/ui/tooltip";
 import { inject } from "@vercel/analytics";
 import { domMax, LazyMotion } from "framer-motion";
 import { NextPage } from "next";
@@ -79,7 +80,11 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           --font-inter: ${inter.style.fontFamily};
         }
       `}</style>
-      <DayjsProvider>{getLayout(<Component {...pageProps} />)}</DayjsProvider>
+      <DayjsProvider>
+        <TooltipProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </TooltipProvider>
+      </DayjsProvider>
     </LazyMotion>
   );
 };

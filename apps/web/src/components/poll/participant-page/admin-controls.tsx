@@ -18,7 +18,7 @@ import {
 } from "@/components/layouts/standard-layout/top-bar";
 import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
-import Tooltip from "@/components/tooltip";
+import LegacyTooltip from "@/components/tooltip";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
@@ -38,7 +38,7 @@ const CopyLinkButton = () => {
   const [didCopy, setDidCopy] = React.useState(false);
 
   return (
-    <Tooltip
+    <LegacyTooltip
       content={
         didCopy ? <Trans i18nKey="copied" /> : <Trans i18nKey="copyLink" />
       }
@@ -59,7 +59,7 @@ const CopyLinkButton = () => {
           <Trans i18nKey="copyInviteLink" defaults="Copy Invite Link" />
         </span>
       </Button>
-    </Tooltip>
+    </LegacyTooltip>
   );
 };
 
@@ -82,7 +82,7 @@ export const AdminControls = () => {
         <ManagePoll disabled={!hasAdminPermission} />
 
         {user.id !== poll?.userId ? (
-          <Tooltip
+          <LegacyTooltip
             className="p-2 text-slate-500"
             content={
               <Trans
@@ -92,7 +92,7 @@ export const AdminControls = () => {
             }
           >
             <ExclamationCircleIcon className="h-5" />
-          </Tooltip>
+          </LegacyTooltip>
         ) : null}
         {user.isGuest ? (
           <LegacyButton icon={<LoginIcon />} onClick={openLoginModal}>
@@ -101,7 +101,7 @@ export const AdminControls = () => {
         ) : null}
         <NotificationsToggle />
         {hasAdminPermission && user.id !== poll.userId && !poll.demo ? (
-          <Tooltip
+          <LegacyTooltip
             content={
               <Trans
                 i18nKey="transferTooltip"
@@ -120,7 +120,7 @@ export const AdminControls = () => {
             >
               <Trans defaults="Transfer" i18nKey="addToMyPolls" />
             </LegacyButton>
-          </Tooltip>
+          </LegacyTooltip>
         ) : null}
         <CopyLinkButton />
       </div>
