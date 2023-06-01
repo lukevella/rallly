@@ -29,7 +29,7 @@ export const TopBarTitle = ({
   title: React.ReactNode;
 }) => {
   return (
-    <div className="flex h-9 min-w-0 items-center gap-2">
+    <div className="flex h-9 min-w-0 items-center gap-2.5">
       <div>
         <Icon className="text-primary-600 h-6 w-6" />
       </div>

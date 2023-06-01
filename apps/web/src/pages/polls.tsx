@@ -2,11 +2,12 @@ import { trpc } from "@rallly/backend";
 import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import {
   ArrowRightIcon,
+  FileBarChartIcon,
   FolderIcon,
   InboxIcon,
   PlusIcon,
-  VoteIcon,
 } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -42,7 +43,7 @@ const EmptyState = () => {
     <div className="p-8 lg:p-36">
       <div className="mx-auto max-w-lg rounded-md border-2 border-dashed border-gray-300 p-8 text-center text-gray-600">
         <div className="mb-4">
-          <InboxIcon className="inline-block h-10 text-gray-500" />
+          <InboxIcon className="inline-block h-10 w-10 text-gray-500" />
         </div>
         <h3>
           <Trans defaults="No polls" />
@@ -78,10 +79,12 @@ const Page: NextPageWithLayout = () => {
         <TopBarTitle title={<Trans i18nKey="polls" />} icon={FolderIcon} />
         <div>
           {data.length > 0 ? (
-            <Link className="btn-primary" href="/new">
-              <PlusIcon className="-ml-0.5 h-5" />
-              <Trans defaults="New Poll" i18nKey="newPoll" />
-            </Link>
+            <Button variant="primary" asChild={true}>
+              <Link href="/new">
+                <PlusIcon className="-ml-0.5 h-5 w-5" />
+                <Trans defaults="New Poll" i18nKey="newPoll" />
+              </Link>
+            </Button>
           ) : null}
         </div>
       </TopBar>
@@ -100,7 +103,7 @@ const Page: NextPageWithLayout = () => {
                     href={`/poll/${info.row.original.id}`}
                     className="group flex gap-4 p-1"
                   >
-                    <VoteIcon className="text-primary-600 mt-0.5 h-8 shrink-0" />
+                    <FileBarChartIcon className="text-primary-600 mt-0.5 h-8 shrink-0" />
                     <div>
                       <div className="group inline-flex min-w-0 items-center gap-2 pr-4 font-medium">
                         <span className="truncate">{info.getValue()}</span>

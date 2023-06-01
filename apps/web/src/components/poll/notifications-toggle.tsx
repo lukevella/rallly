@@ -1,7 +1,9 @@
 import { trpc } from "@rallly/backend";
+import { BellIcon } from "@rallly/icons";
 import { Switch } from "@rallly/ui/switch";
 import * as React from "react";
 
+import { useLoginModal } from "@/components/auth/login-modal";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
@@ -26,6 +28,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
   const isWatching = watchers?.some(({ userId }) => userId === user.id);
 
   const posthog = usePostHog();
+  const { openLoginModal } = useLoginModal();
 
   const watch = trpc.polls.watch.useMutation({
     onSuccess: () => {
@@ -53,8 +56,12 @@ const NotificationsToggle: React.FunctionComponent = () => {
   }
 
   return (
-    <div className="inline-flex items-center gap-2">
-      <label htmlFor="notifications-toggle" className="font-medium">
+    <div className="flex items-center gap-2 px-2.5">
+      <BellIcon className="h-4 w-4" />
+      <label
+        htmlFor="notifications-toggle"
+        className="hidden font-medium sm:block"
+      >
         <Trans i18nKey="notifications" />
       </label>
       <Switch
@@ -63,6 +70,10 @@ const NotificationsToggle: React.FunctionComponent = () => {
         data-testid="notifications-toggle"
         checked={isWatching}
         onClick={async () => {
+          if (user.isGuest) {
+            openLoginModal();
+            return;
+          }
           // toggle
           if (isWatching) {
             await unwatch.mutateAsync({ pollId: poll.id });

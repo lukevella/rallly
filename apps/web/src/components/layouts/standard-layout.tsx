@@ -147,9 +147,9 @@ export const StandardLayout: React.FunctionComponent<{
     <UserProvider>
       <Toaster />
       <ModalProvider>
-        <div className="flex min-h-screen flex-col md:flex-row" {...rest}>
-          <div className="min-h-full shrink-0 border-b bg-gray-50 md:w-20 md:border-b-0 md:border-r lg:block">
-            <div className="sticky top-0 z-50 flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-6 gap-x-3 p-3 md:flex-col md:pt-3 md:pb-6">
+        <div className="flex h-screen flex-col-reverse md:flex-row" {...rest}>
+          <div className="shrink-0 border-t bg-gray-50 md:min-h-full md:w-20 md:border-b-0 md:border-r lg:block">
+            <div className="flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-6 gap-x-3 p-3 md:sticky md:top-0 md:z-50 md:flex-col md:pt-3 md:pb-6">
               <div className="m-1 flex h-8 w-8 shrink-0 items-center justify-center">
                 {isBusy ? (
                   <Spinner className="text-gray-500" />
@@ -197,7 +197,7 @@ export const StandardLayout: React.FunctionComponent<{
               <UserDropdown />
             </div>
           </div>
-          <div className="flex min-w-0 max-w-full grow flex-col">
+          <div className="flex min-h-0 min-w-0 max-w-full grow flex-col overflow-auto">
             {children}
           </div>
         </div>

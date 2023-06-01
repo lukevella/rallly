@@ -70,9 +70,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {loading ? (
-              <SpinnerIcon className="h-5 w-5 scale-90 animate-spin" />
+              <SpinnerIcon className="inline-block h-4 w-4 animate-spin" />
             ) : Icon ? (
-              <Icon className="h-5 w-5 scale-90" />
+              <Icon className="h-4 w-4" />
             ) : null}
             {children}
           </>

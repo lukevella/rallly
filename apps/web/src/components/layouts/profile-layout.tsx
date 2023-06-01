@@ -1,4 +1,4 @@
-import { CogIcon, Settings2Icon, UserIcon } from "@rallly/icons";
+import { Settings2Icon, SettingsIcon, UserIcon } from "@rallly/icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -42,7 +42,7 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
       <TopBar className="space-y-3">
         <div className="">
           <TopBarTitle
-            icon={CogIcon}
+            icon={SettingsIcon}
             title={<Trans defaults="Settings" i18nKey="settings" />}
           />
         </div>
