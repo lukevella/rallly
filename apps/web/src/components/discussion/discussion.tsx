@@ -91,8 +91,8 @@ const Discussion: React.FunctionComponent = () => {
   return (
     <div className="divide-y">
       <div className="flex items-center gap-2 bg-gray-50 p-3 font-semibold tracking-tight">
-        <MessageCircleIcon className="h-5" /> {t("comments")} ({comments.length}
-        )
+        <MessageCircleIcon className="h-5 w-5" /> {t("comments")} (
+        {comments.length})
       </div>
       {comments.length ? (
         <div className="space-y-4 p-4">
@@ -196,7 +196,7 @@ const Discussion: React.FunctionComponent = () => {
           </form>
         ) : (
           <button
-            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
             onClick={() => setIsWriting(true)}
           >
             <Trans i18nKey="commentPlaceholder" />
