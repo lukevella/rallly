@@ -1,5 +1,9 @@
 import { trpc } from "@rallly/backend";
-import { ChatIcon, DotsHorizontalIcon, TrashIcon } from "@rallly/icons";
+import {
+  MessageCircleIcon,
+  MoreHorizontalIcon,
+  TrashIcon,
+} from "@rallly/icons";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -87,7 +91,8 @@ const Discussion: React.FunctionComponent = () => {
   return (
     <div className="divide-y">
       <div className="flex items-center gap-2 bg-gray-50 p-3 font-semibold tracking-tight">
-        <ChatIcon className="h-5" /> {t("comments")} ({comments.length})
+        <MessageCircleIcon className="h-5" /> {t("comments")} ({comments.length}
+        )
       </div>
       {comments.length ? (
         <div className="space-y-4 p-4">
@@ -112,7 +117,7 @@ const Discussion: React.FunctionComponent = () => {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild={true}>
                             <button className="hover:text-foreground text-gray-500">
-                              <DotsHorizontalIcon className="h-4 w-4" />
+                              <MoreHorizontalIcon className="h-4 w-4" />
                             </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="start">

@@ -1,7 +1,7 @@
 import {
   DiscordIcon,
+  LanguagesIcon,
   StarIcon,
-  TranslateIcon,
   TwitterIcon,
 } from "@rallly/icons";
 import Link from "next/link";
@@ -158,7 +158,7 @@ const Footer: React.FunctionComponent = () => {
               href="https://support.rallly.co/contribute/translations"
               className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
             >
-              <TranslateIcon className="mr-2 h-5 w-5" />
+              <LanguagesIcon className="mr-2 h-5 w-5" />
               <Trans i18nKey="common_volunteerTranslator" /> &rarr;
             </a>
           </div>

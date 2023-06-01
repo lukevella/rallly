@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { ChevronDownIcon, DotsHorizontalIcon, PlusSmIcon } from "@rallly/icons";
+import { ChevronDownIcon, MoreHorizontalIcon, PlusIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
@@ -194,12 +194,12 @@ const MobilePoll: React.FunctionComponent = () => {
                   });
                 }}
               >
-                <Button icon={DotsHorizontalIcon} />
+                <Button icon={MoreHorizontalIcon} />
               </ParticipantDropdown>
             ) : (
               <LegacyTooltip content={t("newParticipant")}>
                 <Button
-                  icon={PlusSmIcon}
+                  icon={PlusIcon}
                   disabled={poll.closed}
                   onClick={() => {
                     reset({

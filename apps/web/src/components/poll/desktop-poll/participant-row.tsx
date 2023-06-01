@@ -1,5 +1,5 @@
 import { Participant, Vote, VoteType } from "@rallly/database";
-import { DotsHorizontalIcon } from "@rallly/icons";
+import { MoreHorizontalIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import * as React from "react";
@@ -136,7 +136,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
               align="start"
               onEdit={() => onChangeEditMode?.(true)}
             >
-              <Button size="sm" icon={DotsHorizontalIcon} />
+              <Button size="sm" icon={MoreHorizontalIcon} />
             </ParticipantDropdown>
           ) : null
         }

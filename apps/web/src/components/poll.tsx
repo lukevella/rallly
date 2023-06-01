@@ -1,9 +1,9 @@
 import {
-  CursorClickIcon,
-  ExclamationIcon,
-  LocationMarkerIcon,
-  LockClosedIcon,
-  MenuAlt1Icon,
+  AlertCircleIcon,
+  LockIcon,
+  MapPinIcon,
+  MenuIcon,
+  MousePointerClickIcon,
 } from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 import React from "react";
@@ -55,13 +55,13 @@ export const Poll = () => {
       <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
         {poll.demo ? (
           <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
-            <ExclamationIcon className="w-6" />
+            <AlertCircleIcon className="w-6" />
             <div>{t("demoPollNotice")}</div>
           </div>
         ) : null}
         {poll.closed ? (
           <div className="flex items-center gap-3 rounded-md border border-pink-200 bg-pink-100 p-3 text-pink-600 shadow-sm">
-            <LockClosedIcon className="w-6" />
+            <LockIcon className="w-6" />
             <div>{t("pollHasBeenLocked")}</div>
           </div>
         ) : null}
@@ -88,7 +88,7 @@ export const Poll = () => {
             <div className="space-y-4 p-4">
               {poll.description ? (
                 <div className="flex gap-4">
-                  <MenuAlt1Icon className="h-5 shrink-0 translate-y-0.5" />
+                  <MenuIcon className="h-5 shrink-0 translate-y-0.5" />
                   <div className="border-primary whitespace-pre-line leading-relaxed">
                     <TruncatedLinkify>
                       <TextSummary text={preventWidows(poll.description)} />
@@ -98,12 +98,12 @@ export const Poll = () => {
               ) : null}
               {poll.location ? (
                 <div className="flex gap-4">
-                  <LocationMarkerIcon className="h-5 translate-y-0.5" />
+                  <MapPinIcon className="h-5 translate-y-0.5" />
                   <TruncatedLinkify>{poll.location}</TruncatedLinkify>
                 </div>
               ) : null}
               <div className="flex gap-4">
-                <CursorClickIcon className="h-5 shrink-0" />
+                <MousePointerClickIcon className="h-5 shrink-0" />
                 <div>
                   <div className="flex gap-2.5">
                     <span className="inline-flex items-center space-x-1">

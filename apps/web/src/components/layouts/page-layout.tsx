@@ -1,4 +1,4 @@
-import { DotsVerticalIcon, GithubIcon } from "@rallly/icons";
+import { GithubIcon, MoreVerticalIcon } from "@rallly/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import clsx from "clsx";
 import Link from "next/link";
@@ -75,7 +75,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
         <Popover>
           <PopoverTrigger asChild={true}>
             <button className="hover:text-primary-600 text-gray-400 transition-colors hover:no-underline hover:underline-offset-2 sm:hidden">
-              <DotsVerticalIcon className="w-5" />
+              <MoreVerticalIcon className="w-5" />
             </button>
           </PopoverTrigger>
           <PopoverContent align="end" className="p-2">

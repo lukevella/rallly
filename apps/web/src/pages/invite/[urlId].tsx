@@ -1,6 +1,6 @@
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
-import { InformationCircleIcon } from "@rallly/icons";
+import { InfoIcon } from "@rallly/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -37,7 +37,7 @@ const GoToApp = () => {
             />
           }
         >
-          <InformationCircleIcon className="h-4" />
+          <InfoIcon className="h-4" />
         </LegacyTooltip>
       </span>
     </div>

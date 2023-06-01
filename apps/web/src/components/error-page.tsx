@@ -1,4 +1,4 @@
-import { EmojiSadIcon } from "@rallly/icons";
+import { FrownIcon } from "@rallly/icons";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -11,7 +11,7 @@ export interface ComponentProps {
 }
 
 const ErrorPage: React.FunctionComponent<ComponentProps> = ({
-  icon: Icon = EmojiSadIcon,
+  icon: Icon = FrownIcon,
   title,
   description,
 }) => {

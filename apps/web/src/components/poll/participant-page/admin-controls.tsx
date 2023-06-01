@@ -1,10 +1,10 @@
 import { trpc } from "@rallly/backend";
 import {
-  ChartSquareBarIcon,
-  ExclamationCircleIcon,
+  AlertCircleIcon,
+  ArrowLeftRightIcon,
   LinkIcon,
-  LoginIcon,
-  SwitchHorizontalIcon,
+  LogInIcon,
+  VoteIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import React from "react";
@@ -77,7 +77,7 @@ export const AdminControls = () => {
 
   return (
     <TopBar className="flex items-center justify-between gap-x-4">
-      <TopBarTitle title={poll?.title} icon={ChartSquareBarIcon} />
+      <TopBarTitle title={poll?.title} icon={VoteIcon} />
       <div className="flex items-center gap-x-4">
         <ManagePoll disabled={!hasAdminPermission} />
 
@@ -91,11 +91,11 @@ export const AdminControls = () => {
               />
             }
           >
-            <ExclamationCircleIcon className="h-5" />
+            <AlertCircleIcon className="h-5" />
           </LegacyTooltip>
         ) : null}
         {user.isGuest ? (
-          <LegacyButton icon={<LoginIcon />} onClick={openLoginModal}>
+          <LegacyButton icon={<LogInIcon />} onClick={openLoginModal}>
             <Trans i18nKey="login" />
           </LegacyButton>
         ) : null}
@@ -111,7 +111,7 @@ export const AdminControls = () => {
           >
             <LegacyButton
               loading={transfer.isLoading}
-              icon={<SwitchHorizontalIcon />}
+              icon={<ArrowLeftRightIcon />}
               onClick={() => {
                 transfer.mutate({
                   pollId: poll.id,

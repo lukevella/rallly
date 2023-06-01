@@ -2,10 +2,10 @@ import { trpc } from "@rallly/backend";
 import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import {
   ArrowRightIcon,
-  ChartSquareBarIcon,
   FolderIcon,
   InboxIcon,
-  PlusSmIcon,
+  PlusIcon,
+  VoteIcon,
 } from "@rallly/icons";
 import { createColumnHelper } from "@tanstack/react-table";
 import clsx from "clsx";
@@ -52,7 +52,7 @@ const EmptyState = () => {
         </p>
         <div className="mt-6">
           <Link href="/new" className="btn-primary">
-            <PlusSmIcon className="-ml-0.5 h-5" />
+            <PlusIcon className="-ml-0.5 h-5" />
             <Trans defaults="New Poll" i18nKey="newPoll" />
           </Link>
         </div>
@@ -79,7 +79,7 @@ const Page: NextPageWithLayout = () => {
         <div>
           {data.length > 0 ? (
             <Link className="btn-primary" href="/new">
-              <PlusSmIcon className="-ml-0.5 h-5" />
+              <PlusIcon className="-ml-0.5 h-5" />
               <Trans defaults="New Poll" i18nKey="newPoll" />
             </Link>
           ) : null}
@@ -100,7 +100,7 @@ const Page: NextPageWithLayout = () => {
                     href={`/poll/${info.row.original.id}`}
                     className="group flex gap-4 p-1"
                   >
-                    <ChartSquareBarIcon className="text-primary-600 mt-0.5 h-8 shrink-0" />
+                    <VoteIcon className="text-primary-600 mt-0.5 h-8 shrink-0" />
                     <div>
                       <div className="group inline-flex min-w-0 items-center gap-2 pr-4 font-medium">
                         <span className="truncate">{info.getValue()}</span>
@@ -154,7 +154,7 @@ const Page: NextPageWithLayout = () => {
               //   size: 70,
               //   cell: () => (
               //     <div className="text-right">
-              //       <Button icon={<DotsHorizontalIcon />} />
+              //       <Button icon={<MoreHorizontalIcon />} />
               //     </div>
               //   ),
               // }),

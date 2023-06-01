@@ -1,4 +1,4 @@
-import { CodeIcon, CursorClickIcon, ServerIcon } from "@rallly/icons";
+import { CodeIcon, MousePointerClickIcon, ServerIcon } from "@rallly/icons";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -13,7 +13,7 @@ const Bonus: React.FunctionComponent = () => {
       <div className="grid grid-cols-4 gap-16">
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
-            <CursorClickIcon className="w-16" />
+            <MousePointerClickIcon className="h-16 w-16" />
           </div>
           <h3 className="heading-sm">{t("homepage_noLoginRequired")}</h3>
           <div className="text text-base leading-relaxed">
@@ -22,7 +22,7 @@ const Bonus: React.FunctionComponent = () => {
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
-            <CodeIcon className="w-16" />
+            <CodeIcon className="h-16 w-16" />
           </div>
           <h3 className="heading-sm">{t("homepage_openSource")}</h3>
           <div className="text text-base leading-relaxed">
@@ -42,7 +42,7 @@ const Bonus: React.FunctionComponent = () => {
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
-            <ServerIcon className="w-16" />
+            <ServerIcon className="h-16 w-16" />
           </div>
           <h3 className="heading-sm">{t("homepage_selfHostable")}</h3>
           <div className="text text-base leading-relaxed">
@@ -51,7 +51,7 @@ const Bonus: React.FunctionComponent = () => {
         </div>
         <div className="col-span-4 md:col-span-2 lg:col-span-1">
           <div className="mb-4 text-gray-400">
-            <Ban className="w-16" />
+            <Ban className="h-16 w-16" />
           </div>
           <h3 className="heading-sm">{t("homepage_adFree")}</h3>
           <div className="text text-base leading-relaxed">

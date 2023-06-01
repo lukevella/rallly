@@ -1,4 +1,4 @@
-import { DocumentSearchIcon } from "@rallly/icons";
+import { FileSearchIcon } from "@rallly/icons";
 import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -12,7 +12,7 @@ const Custom404: NextPageWithLayout = () => {
   const { t } = useTranslation();
   return (
     <ErrorPage
-      icon={DocumentSearchIcon}
+      icon={FileSearchIcon}
       title={t("errors_notFoundTitle")}
       description={t("errors_notFoundDescription")}
     />

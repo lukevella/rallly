@@ -7013,6 +7013,11 @@ lru_map@^0.3.3:
   resolved "https://registry.npmjs.org/lru_map/-/lru_map-0.3.3.tgz"
   integrity sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==
 
+lucide-react@^0.233.0:
+  version "0.233.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.233.0.tgz#c490f2e8f248b885323f7583d17fff42ee0bf5c5"
+  integrity sha512-r0jMHF0vPDq2wBbZ0B3rtIcBjDyWDKpHu+vAjD2OHn2WLUr3HN5IHovtO0EMgQXuSI7YrMZbjsEZWC2uBHr8nQ==
+
 luxon@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/luxon/-/luxon-3.2.1.tgz"

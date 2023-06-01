@@ -1,5 +1,5 @@
 import { trpc } from "@rallly/backend";
-import { ExclamationIcon } from "@rallly/icons";
+import { AlertCircleIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
@@ -38,7 +38,7 @@ export const DeletePollForm: React.FunctionComponent<{
     <div className="flex max-w-lg space-x-6 p-5">
       <div className="">
         <div className="rounded-full bg-rose-100 p-3">
-          <ExclamationIcon className="w-8 text-rose-500" />
+          <AlertCircleIcon className="w-8 text-rose-500" />
         </div>
       </div>
       <form

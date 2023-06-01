@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, ArrowRightIcon, PlusSmIcon } from "@rallly/icons";
+import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
@@ -137,7 +137,7 @@ const Poll: React.FunctionComponent = () => {
                         setShouldShowNewParticipantForm(true);
                       }}
                     >
-                      <PlusSmIcon className="h-5 w-5 shrink-0" />
+                      <PlusIcon className="h-5 w-5 shrink-0" />
                     </Button>
                   ) : null}
                 </div>

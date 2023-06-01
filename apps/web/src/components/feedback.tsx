@@ -1,5 +1,5 @@
 import { trpc } from "@rallly/backend";
-import { CheckCircleIcon, SpeakerphoneIcon } from "@rallly/icons";
+import { CheckCircleIcon, MegaphoneIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import Link from "next/link";
@@ -95,7 +95,7 @@ const FeedbackButton = () => {
           onClick={show}
           className="shadow-huge inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-800"
         >
-          <SpeakerphoneIcon className="h-7 text-white" />
+          <MegaphoneIcon className="h-7 text-white" />
         </button>
       </TooltipTrigger>
       <TooltipContent side="left">

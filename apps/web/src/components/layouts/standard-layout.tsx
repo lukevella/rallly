@@ -1,11 +1,11 @@
 import {
-  AdjustmentsIcon,
   FolderIcon,
-  LoginIcon,
-  LogoutIcon,
+  LifeBuoyIcon,
+  LogInIcon,
+  LogOutIcon,
   PlusCircleIcon,
-  RefreshIcon,
-  SupportIcon,
+  RefreshCcwIcon,
+  Settings2Icon,
   UserIcon,
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
@@ -75,7 +75,7 @@ const UserDropdown = () => {
           </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
             <Link href="/logout" className="flex items-center gap-x-2">
-              <RefreshIcon className="h-4 w-4" />
+              <RefreshCcwIcon className="h-4 w-4" />
               <Trans i18nKey="forgetMe" />
             </Link>
           </DropdownMenuItem>
@@ -83,7 +83,7 @@ const UserDropdown = () => {
         <IfAuthenticated>
           <DropdownMenuItem asChild={true}>
             <Link href="/logout" className="flex items-center gap-x-2">
-              <LogoutIcon className="h-4 w-4" />
+              <LogOutIcon className="h-4 w-4" />
               <Trans i18nKey="logout" />
             </Link>
           </DropdownMenuItem>
@@ -177,20 +177,20 @@ export const StandardLayout: React.FunctionComponent<{
                 />
               </div>
               <MenuItem
-                icon={SupportIcon}
+                icon={LifeBuoyIcon}
                 label={<Trans i18nKey="common_support" />}
                 target="_blank"
                 href="https://support.rallly.co"
               />
               <MenuItem
                 href="/settings/preferences"
-                icon={AdjustmentsIcon}
+                icon={Settings2Icon}
                 label={<Trans i18nKey="preferences" />}
               />
               <IfGuest>
                 <MenuItem
                   href="/login"
-                  icon={LoginIcon}
+                  icon={LogInIcon}
                   label={<Trans i18nKey="login" />}
                 />
               </IfGuest>

@@ -1,9 +1,4 @@
-import {
-  DownloadIcon,
-  LockClosedIcon,
-  PencilIcon,
-  TableIcon,
-} from "@rallly/icons";
+import { DownloadIcon, LockIcon, PencilIcon, TableIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Switch } from "@rallly/ui/switch";
 import dayjs from "dayjs";
@@ -84,7 +79,7 @@ const StatusSection = () => {
       </SidebarSectionDescription>
       <div className="flex items-center justify-between space-x-2">
         <div className="flex items-center gap-2">
-          <LockClosedIcon className="h-4 w-4" />
+          <LockIcon className="h-4 w-4" />
           <label htmlFor="lock-toggle">
             <Trans i18nKey="lock" defaults="Lock" />
           </label>

@@ -1,12 +1,12 @@
 import {
   ChevronDownIcon,
-  CogIcon,
-  LockClosedIcon,
-  LockOpenIcon,
+  LockIcon,
   PencilIcon,
   SaveIcon,
+  SettingsIcon,
   TableIcon,
   TrashIcon,
+  UnlockIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
@@ -200,7 +200,7 @@ const ManagePoll: React.FunctionComponent<{
       {changePollDetailsModalContextHolder}
       <DropdownMenu>
         <DropdownMenuTrigger asChild={true}>
-          <Button icon={CogIcon} disabled={disabled}>
+          <Button icon={SettingsIcon} disabled={disabled}>
             <Trans i18nKey="manage" />
             <ChevronDownIcon className="h-4" />
           </Button>
@@ -225,7 +225,7 @@ const ManagePoll: React.FunctionComponent<{
             <DropdownMenuItem
               onClick={() => updatePollMutation({ urlId, closed: false })}
             >
-              <DropdownMenuItemIconLabel icon={LockOpenIcon}>
+              <DropdownMenuItemIconLabel icon={UnlockIcon}>
                 <Trans i18nKey="unlockPoll" />
               </DropdownMenuItemIconLabel>
             </DropdownMenuItem>
@@ -233,7 +233,7 @@ const ManagePoll: React.FunctionComponent<{
             <DropdownMenuItem
               onClick={() => updatePollMutation({ urlId, closed: true })}
             >
-              <DropdownMenuItemIconLabel icon={LockClosedIcon}>
+              <DropdownMenuItemIconLabel icon={LockIcon}>
                 <Trans i18nKey="lockPoll" />
               </DropdownMenuItemIconLabel>
             </DropdownMenuItem>

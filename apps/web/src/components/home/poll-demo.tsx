@@ -10,7 +10,7 @@ const sidebarWidth = 180;
 const columnWidth = 100;
 const participants = [
   {
-    name: "Reed",
+    name: "Luke",
     color: "bg-sky-500",
     votes: [0, 2],
   },
@@ -20,12 +20,12 @@ const participants = [
     votes: [0, 1, 2],
   },
   {
-    name: "Johnny",
+    name: "Ben",
     color: "bg-primary-500",
     votes: [2, 3],
   },
   {
-    name: "Ben",
+    name: "Olivia",
     color: "bg-purple-500",
     votes: [0, 1, 2, 3],
   },

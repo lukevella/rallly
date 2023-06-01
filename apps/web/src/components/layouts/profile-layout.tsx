@@ -1,4 +1,4 @@
-import { AdjustmentsIcon, CogIcon, UserIcon } from "@rallly/icons";
+import { CogIcon, Settings2Icon, UserIcon } from "@rallly/icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -54,7 +54,7 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
                 <Trans i18nKey="profile" defaults="Profile" />
               </MenuItem>
             </IfAuthenticated>
-            <MenuItem href="/settings/preferences" icon={AdjustmentsIcon}>
+            <MenuItem href="/settings/preferences" icon={Settings2Icon}>
               <Trans i18nKey="preferences" defaults="Preferences" />
             </MenuItem>
           </div>

@@ -2,8 +2,8 @@ import {
   CalendarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  DotsHorizontalIcon,
-  PlusSmIcon,
+  MoreHorizontalIcon,
+  PlusIcon,
   SparklesIcon,
   XIcon,
 } from "@rallly/icons";
@@ -328,7 +328,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         })}
                         <div className="flex items-center space-x-3">
                           <LegacyButton
-                            icon={<PlusSmIcon />}
+                            icon={<PlusIcon />}
                             onClick={() => {
                               const lastOption = expectTimeOption(
                                 optionsForDay[optionsForDay.length - 1].option,
@@ -362,7 +362,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild={true}>
                               <button className="text-gray-500 hover:text-gray-800">
-                                <DotsHorizontalIcon className="h4 w-4" />
+                                <MoreHorizontalIcon className="h4 w-4" />
                               </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">

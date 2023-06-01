@@ -1,6 +1,6 @@
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
-import { ShareIcon } from "@rallly/icons";
+import { Share2Icon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -34,13 +34,13 @@ const InviteDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
-        <Button icon={ShareIcon}>
+        <Button variant="primary" icon={Share2Icon}>
           <Trans i18nKey="inviteParticipants" defaults="Invite Participants" />
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-gradient-to-b from-gray-200 via-white to-white sm:max-w-md">
         <div className="flex">
-          <ShareIcon className="text-primary h-7" />
+          <Share2Icon className="text-primary h-7" />
         </div>
         <DialogHeader className="mb-4">
           <DialogTitle className="mb-2">
