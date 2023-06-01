@@ -24,7 +24,7 @@ const minSidebarWidth = 200;
 const Poll: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const { poll, options, userAlreadyVoted } = usePoll();
+  const { poll, userAlreadyVoted } = usePoll();
 
   const { participants } = useParticipants();
 
@@ -37,7 +37,7 @@ const Poll: React.FunctionComponent = () => {
   const columnWidth = 80;
 
   const numberOfVisibleColumns = Math.min(
-    options.length,
+    poll.options.length,
     Math.floor((width - minSidebarWidth) / columnWidth),
   );
 
@@ -48,7 +48,7 @@ const Poll: React.FunctionComponent = () => {
 
   const availableSpace = Math.min(
     numberOfVisibleColumns * columnWidth,
-    options.length * columnWidth,
+    poll.options.length * columnWidth,
   );
 
   const [activeOptionId, setActiveOptionId] = React.useState<string | null>(
@@ -58,12 +58,12 @@ const Poll: React.FunctionComponent = () => {
   const [scrollPosition, setScrollPosition] = React.useState(0);
 
   const maxScrollPosition =
-    columnWidth * options.length - columnWidth * numberOfVisibleColumns;
+    columnWidth * poll.options.length - columnWidth * numberOfVisibleColumns;
 
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
     React.useState(!(poll.closed || userAlreadyVoted));
 
-  const pollWidth = sidebarWidth + options.length * columnWidth;
+  const pollWidth = sidebarWidth + poll.options.length * columnWidth;
   const addParticipant = useAddParticipantMutation();
 
   const goToNextPage = () => {
@@ -145,7 +145,7 @@ const Poll: React.FunctionComponent = () => {
             </div>
             <div className="flex items-center gap-3">
               <div className="px-3 font-medium">
-                {t("optionCount", { count: options.length })}
+                {t("optionCount", { count: poll.options.length })}
               </div>
               {maxScrollPosition > 0 ? (
                 <div className="flex gap-2">

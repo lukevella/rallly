@@ -1,18 +1,23 @@
 import clsx from "clsx";
+import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 
-import { usePoll } from "@/components/poll-context";
+import { DateIcon } from "@/components/date-icon";
+import {
+  TimeFormatter,
+  useAdjustTimeZone,
+  usePoll,
+} from "@/components/poll-context";
 
-import DateCard from "../../date-card";
 import { ConnectedScoreSummary } from "../score-summary";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
 const TimeRange: React.FunctionComponent<{
-  startTime: string;
-  endTime: string;
+  start: Dayjs;
+  duration: number;
   className?: string;
-}> = ({ startTime, endTime, className }) => {
+}> = ({ start, duration, className }) => {
   return (
     <div
       className={clsx(
@@ -20,44 +25,38 @@ const TimeRange: React.FunctionComponent<{
         className,
       )}
     >
-      <div>{startTime}</div>
-      <div className="text-gray-500">{endTime}</div>
+      <div>
+        <TimeFormatter date={start} />
+      </div>
+      <div className="text-gray-500">
+        <TimeFormatter date={dayjs(start).add(duration, "minutes").toDate()} />
+      </div>
     </div>
   );
 };
 
 const PollHeader: React.FunctionComponent = () => {
-  const { options } = usePoll();
+  const { poll } = usePoll();
   const { setActiveOptionId, columnWidth } = usePollContext();
-
+  const tz = useAdjustTimeZone();
   return (
     <ControlledScrollArea>
-      {options.map((option) => {
-        const { optionId } = option;
+      {poll.options.map((option) => {
+        const date = tz(option.start);
         return (
           <div
-            key={optionId}
-            className="shrink-0 space-y-3 text-center"
+            key={option.id}
+            className="flex shrink-0 flex-col items-center gap-y-3"
             style={{ width: columnWidth }}
-            onMouseOver={() => setActiveOptionId(optionId)}
+            onMouseOver={() => setActiveOptionId(option.id)}
             onMouseOut={() => setActiveOptionId(null)}
           >
-            <div>
-              <DateCard
-                day={option.day}
-                dow={option.dow}
-                month={option.month}
-              />
-            </div>
-            {option.type === "timeSlot" ? (
-              <TimeRange
-                className="mt-3"
-                startTime={option.startTime}
-                endTime={option.endTime}
-              />
+            <DateIcon date={date} />
+            {option.duration > 0 ? (
+              <TimeRange start={date} duration={option.duration} />
             ) : null}
             <div className="flex justify-center">
-              <ConnectedScoreSummary optionId={option.optionId} />
+              <ConnectedScoreSummary optionId={option.id} />
             </div>
           </div>
         );

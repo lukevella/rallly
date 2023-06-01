@@ -22,7 +22,6 @@ const GroupedOptions: React.FunctionComponent<GroupedOptionsProps> = ({
   groupClassName,
 }) => {
   const grouped = groupBy(options, group);
-
   return (
     <div className="select-none divide-y">
       {Object.entries(grouped).map(([day, options]) => {

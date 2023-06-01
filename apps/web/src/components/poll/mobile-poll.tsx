@@ -8,8 +8,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import smoothscroll from "smoothscroll-polyfill";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
-import { usePoll } from "@/components/poll-context";
-import LegacyTooltip from "@/components/tooltip";
+import { useOptions, usePoll } from "@/components/poll-context";
 
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
@@ -36,6 +35,7 @@ const MobilePoll: React.FunctionComponent = () => {
     userAlreadyVoted,
   } = pollContext;
 
+  const { options } = useOptions();
   const { participants } = useParticipants();
 
   const session = useUser();
@@ -197,24 +197,22 @@ const MobilePoll: React.FunctionComponent = () => {
                 <Button icon={MoreHorizontalIcon} />
               </ParticipantDropdown>
             ) : (
-              <LegacyTooltip content={t("newParticipant")}>
-                <Button
-                  icon={PlusIcon}
-                  disabled={poll.closed}
-                  onClick={() => {
-                    reset({
-                      votes: [],
-                    });
-                    setIsEditing(true);
-                  }}
-                ></Button>
-              </LegacyTooltip>
+              <Button
+                icon={PlusIcon}
+                disabled={poll.closed}
+                onClick={() => {
+                  reset({
+                    votes: [],
+                  });
+                  setIsEditing(true);
+                }}
+              />
             )}
           </div>
         </div>
         <GroupedOptions
           selectedParticipantId={selectedParticipantId}
-          options={pollContext.options}
+          options={options}
           editable={isEditing}
           group={(option) => {
             if (option.type === "timeSlot") {

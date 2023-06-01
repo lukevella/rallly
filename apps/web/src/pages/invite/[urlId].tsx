@@ -1,16 +1,13 @@
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
 import { InfoIcon } from "@rallly/icons";
-import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import React from "react";
 
 import ParticipantPage from "@/components/poll/participant-page/participant-page";
 import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
 import { usePoll } from "@/components/poll-context";
-import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
-import LegacyTooltip from "@/components/tooltip";
 import { Trans } from "@/components/trans";
 import { UserProvider, useUser } from "@/components/user-provider";
 import { withPageTranslations } from "@/utils/with-page-translations";
@@ -29,57 +26,18 @@ const GoToApp = () => {
         <Link className="text-link text-sm" href={`/poll/${poll.id}`}>
           <Trans i18nKey="manage" />
         </Link>
-        <LegacyTooltip
-          content={
+        <Tooltip>
+          <TooltipTrigger>
+            <InfoIcon className="h-4" />
+          </TooltipTrigger>
+          <TooltipContent>
             <Trans
               i18nKey="mangeLinkTooltip"
               defaults="You created this poll, so you have exclusive access to its management page"
             />
-          }
-        >
-          <InfoIcon className="h-4" />
-        </LegacyTooltip>
+          </TooltipContent>
+        </Tooltip>
       </span>
-    </div>
-  );
-};
-
-const Preferences = () => {
-  const [isTimeZoneDialogOpen, setIsTimeZoneDialogOpen] = React.useState(false);
-  const { targetTimeZone, setTargetTimeZone } = usePoll();
-  return (
-    <div className="mx-auto w-full max-w-4xl px-3 sm:px-8">
-      <div className="flex items-center justify-center">
-        <Popover
-          open={isTimeZoneDialogOpen}
-          onOpenChange={setIsTimeZoneDialogOpen}
-        >
-          <PopoverTrigger asChild={true}>
-            <button
-              type="button"
-              className="text-muted-foreground text-sm hover:underline"
-              onClick={() => {
-                setIsTimeZoneDialogOpen(true);
-              }}
-            >
-              <Trans
-                defaults="Times shown in {targetTimeZone}"
-                i18nKey="showTimesIn"
-                values={{ targetTimeZone }}
-              />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent align="center" className="p-0">
-            <TimeZoneCommand
-              value={targetTimeZone}
-              onSelect={(newTimeZone) => {
-                setTargetTimeZone(newTimeZone);
-                setIsTimeZoneDialogOpen(false);
-              }}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
     </div>
   );
 };
@@ -92,7 +50,6 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
           <GoToApp />
           <ParticipantPage />
           <div className="mt-4 space-y-4 text-center text-gray-500">
-            <Preferences />
             <div>
               <Trans
                 defaults="Powered by <a>{name}</a>"

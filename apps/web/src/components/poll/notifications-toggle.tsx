@@ -1,6 +1,6 @@
 import { trpc } from "@rallly/backend";
-import { BellIcon } from "@rallly/icons";
-import { Switch } from "@rallly/ui/switch";
+import { BellOffIcon, BellRingIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import * as React from "react";
 
 import { useLoginModal } from "@/components/auth/login-modal";
@@ -56,33 +56,28 @@ const NotificationsToggle: React.FunctionComponent = () => {
   }
 
   return (
-    <div className="flex items-center gap-2 px-2.5">
-      <BellIcon className="h-4 w-4" />
-      <label
-        htmlFor="notifications-toggle"
-        className="hidden font-medium sm:block"
-      >
+    <Button
+      icon={isWatching ? BellRingIcon : BellOffIcon}
+      data-testid="notifications-toggle"
+      disabled={poll.demo || user.isGuest}
+      className="flex items-center gap-2 px-2.5"
+      onClick={async () => {
+        if (user.isGuest) {
+          openLoginModal();
+          return;
+        }
+        // toggle
+        if (isWatching) {
+          await unwatch.mutateAsync({ pollId: poll.id });
+        } else {
+          await watch.mutateAsync({ pollId: poll.id });
+        }
+      }}
+    >
+      <span className="hidden font-medium sm:block">
         <Trans i18nKey="notifications" />
-      </label>
-      <Switch
-        id="notifications-toggle"
-        disabled={poll.demo || user.isGuest}
-        data-testid="notifications-toggle"
-        checked={isWatching}
-        onClick={async () => {
-          if (user.isGuest) {
-            openLoginModal();
-            return;
-          }
-          // toggle
-          if (isWatching) {
-            await unwatch.mutateAsync({ pollId: poll.id });
-          } else {
-            await watch.mutateAsync({ pollId: poll.id });
-          }
-        }}
-      />
-    </div>
+      </span>
+    </Button>
   );
 };
 

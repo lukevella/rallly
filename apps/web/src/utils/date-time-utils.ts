@@ -1,4 +1,4 @@
-import { Option } from "@rallly/database";
+import { Option, TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
 
 import {
@@ -60,8 +60,7 @@ export const decodeOptions = (
   options: Option[],
   timeZone: string | null,
   targetTimeZone: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _timeFormat: string, // TODO (Luke Vella) [2022-06-28]: Need to pass timeFormat so that we recalculate the options when timeFormat changes. There is definitely a better way to do this
+  timeFormat: TimeFormat, // TODO (Luke Vella) [2022-06-28]: Need to pass timeFormat so that we recalculate the options when timeFormat changes. There is definitely a better way to do this
 ):
   | { pollType: "date"; options: ParsedDateOption[] }
   | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] } => {
@@ -73,7 +72,7 @@ export const decodeOptions = (
     return {
       pollType,
       options: options.map((option) =>
-        parseTimeSlotOption(option, timeZone, targetTimeZone),
+        parseTimeSlotOption(option, timeZone, targetTimeZone, timeFormat),
       ),
     };
   } else {
@@ -84,7 +83,7 @@ export const decodeOptions = (
   }
 };
 
-const parseDateOption = (option: Option): ParsedDateOption => {
+export const parseDateOption = (option: Option): ParsedDateOption => {
   const date = dayjs(option.start).utc();
   return {
     type: "date",
@@ -96,10 +95,11 @@ const parseDateOption = (option: Option): ParsedDateOption => {
   };
 };
 
-const parseTimeSlotOption = (
+export const parseTimeSlotOption = (
   option: Option,
   timeZone: string | null,
   targetTimeZone: string,
+  timeFormat: TimeFormat,
 ): ParsedTimeSlotOption => {
   const adjustTimeZone = (date: Date | dayjs.Dayjs) => {
     return timeZone && targetTimeZone
@@ -115,8 +115,8 @@ const parseTimeSlotOption = (
   return {
     type: "timeSlot",
     optionId: option.id,
-    startTime: startDate.format("LT"),
-    endTime: endDate.format("LT"),
+    startTime: startDate.format(timeFormat === "hours12" ? "h:mm A" : "HH:mm"),
+    endTime: endDate.format(timeFormat === "hours12" ? "h:mm A" : "HH:mm"),
     day: startDate.format("D"),
     dow: startDate.format("ddd"),
     month: startDate.format("MMM"),

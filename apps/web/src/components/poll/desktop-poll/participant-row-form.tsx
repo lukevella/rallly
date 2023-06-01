@@ -33,7 +33,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     goToNextPage,
   } = usePollContext();
 
-  const { options, optionIds } = usePoll();
+  const { optionIds } = usePoll();
   const { handleSubmit, control } = useForm({
     defaultValues: {
       votes: [],
@@ -79,7 +79,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
         render={({ field }) => {
           return (
             <ControlledScrollArea>
-              {options.map(({ optionId }, index) => {
+              {optionIds.map((optionId, index) => {
                 const value = field.value[index];
 
                 return (
@@ -94,7 +94,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                       onKeyDown={(e) => {
                         if (
                           e.code === "Tab" &&
-                          index < options.length - 1 &&
+                          index < optionIds.length - 1 &&
                           !isColumnVisible(index + 1)
                         ) {
                           e.preventDefault();

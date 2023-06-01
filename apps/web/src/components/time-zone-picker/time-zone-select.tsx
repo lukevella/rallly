@@ -15,6 +15,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Trans } from "@/components/trans";
+import { useTimeFormat } from "@/contexts/time-preferences";
 
 import timeZones from "./time-zones.json";
 
@@ -30,7 +31,7 @@ interface TimeZoneCommandProps {
 
 export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
   const { t } = useTranslation();
-
+  const [timeFormat] = useTimeFormat();
   return (
     <Command>
       <CommandInput
@@ -38,7 +39,7 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
           defaultValue: "Search…",
         })}
       />
-      <CommandList className="max-h-[300px] overflow-y-auto">
+      <CommandList className="max-h-[300px] max-w-[var(--radix-popover-content-available-width)] overflow-y-auto">
         <CommandEmpty>
           <Trans
             i18nKey="timeZoneSelect__noOption"
@@ -50,7 +51,7 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
             <CommandItem
               key={option.value}
               onSelect={() => onSelect?.(option.value)}
-              className="flex"
+              className="flex min-w-0 gap-x-4"
             >
               <CheckIcon
                 className={cn(
@@ -58,9 +59,11 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
                   value === option.value ? "opacity-100" : "opacity-0",
                 )}
               />
-              <span className="grow">{option.label}</span>
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-                {dayjs().tz(option.value).format("LT")}
+              <span className="min-w-0 grow truncate">{option.label}</span>
+              <span className="whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+                {dayjs()
+                  .tz(option.value)
+                  .format(timeFormat === "hours24" ? "HH:mm" : "h:mm A")}
               </span>
             </CommandItem>
           ))}

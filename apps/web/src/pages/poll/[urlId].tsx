@@ -14,7 +14,7 @@ const Page: NextPageWithLayout = () => {
     <LegacyPollContextProvider>
       <div className="flex min-w-0 grow flex-col">
         <AdminControls />
-        <ParticipantPage />
+        <ParticipantPage className="xl:py-8" />
       </div>
     </LegacyPollContextProvider>
   );

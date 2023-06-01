@@ -18,7 +18,7 @@ const RadioButton = (
       role="radio"
       type="button"
       aria-checked={props.checked}
-      className="hover:bg-accent aria-checked:border-border border border-transparent px-1.5 aria-checked:bg-white aria-checked:shadow-sm"
+      className="hover:bg-accent text-muted-foreground aria-checked:text-foreground aria-checked:border-border grow border border-transparent px-1.5 font-medium aria-checked:bg-white aria-checked:shadow-sm"
     />
   );
 };
@@ -32,7 +32,7 @@ const TimeFormatPicker = ({
     <div
       aria-disabled={disabled}
       role="radiogroup"
-      className="bg-accent inline-flex h-9 gap-x-1 rounded-md border p-0.5 text-sm aria-disabled:pointer-events-none aria-disabled:opacity-50"
+      className="inline-flex h-9 gap-x-1 whitespace-nowrap rounded-md border bg-gray-200/50 p-0.5 text-sm aria-disabled:pointer-events-none aria-disabled:opacity-50"
     >
       <RadioButton
         onClick={() => {

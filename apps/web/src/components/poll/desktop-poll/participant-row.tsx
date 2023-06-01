@@ -89,7 +89,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { columnWidth, sidebarWidth } = usePollContext();
 
   const { user, ownsObject } = useUser();
-  const { poll, getVote, options } = usePoll();
+  const { poll, getVote, optionIds } = usePoll();
 
   const isYou = user && ownsObject(participant) ? true : false;
 
@@ -103,7 +103,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
       <ParticipantRowForm
         name={participant.name}
         defaultValues={{
-          votes: options.map(({ optionId }) => {
+          votes: optionIds.map((optionId) => {
             const type = getVote(participant.id, optionId);
             return type ? { optionId, type } : undefined;
           }),
@@ -125,7 +125,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
         columnWidth={columnWidth}
         className={className}
         name={participant.name}
-        votes={options.map(({ optionId }) => {
+        votes={optionIds.map((optionId) => {
           return getVote(participant.id, optionId);
         })}
         participantId={participant.id}

@@ -3,8 +3,8 @@ import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import {
   ArrowRightIcon,
   FileBarChartIcon,
-  FolderIcon,
   InboxIcon,
+  ListIcon,
   PlusIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
@@ -76,7 +76,7 @@ const Page: NextPageWithLayout = () => {
         <title>{t("polls")}</title>
       </Head>
       <TopBar className="flex items-center justify-between gap-4 p-3">
-        <TopBarTitle title={<Trans i18nKey="polls" />} icon={FolderIcon} />
+        <TopBarTitle title={<Trans i18nKey="polls" />} icon={ListIcon} />
         <div>
           {data.length > 0 ? (
             <Button variant="primary" asChild={true}>
