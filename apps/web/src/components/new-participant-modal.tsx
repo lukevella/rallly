@@ -1,11 +1,11 @@
 import { VoteType } from "@rallly/database";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
 
 import { useFormValidation } from "../utils/form-validation";
-import { LegacyButton } from "./button";
 import { useModalContext } from "./modal/modal-provider";
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
@@ -144,14 +144,14 @@ export const NewParticipantModal = (props: NewParticipantModalProps) => {
           <VoteSummary votes={props.votes} />
         </fieldset>
         <div className="flex gap-2">
-          <LegacyButton onClick={props.onCancel}>{t("cancel")}</LegacyButton>
-          <LegacyButton
-            htmlType="submit"
-            type="primary"
+          <Button onClick={props.onCancel}>{t("cancel")}</Button>
+          <Button
+            type="submit"
+            variant="primary"
             loading={formState.isSubmitting}
           >
             {t("submit")}
-          </LegacyButton>
+          </Button>
         </div>
       </form>
     </div>

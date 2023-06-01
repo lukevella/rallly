@@ -4,6 +4,7 @@ import {
   MoreHorizontalIcon,
   TrashIcon,
 } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +23,6 @@ import { usePostHog } from "@/utils/posthog";
 
 import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
-import { LegacyButton } from "../button";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
@@ -177,21 +177,21 @@ const Discussion: React.FunctionComponent = () => {
               />
             </div>
             <div className="flex justify-between gap-2">
-              <LegacyButton
+              <Button
                 onClick={() => {
                   reset();
                   setIsWriting(false);
                 }}
               >
                 {t("cancel")}
-              </LegacyButton>
-              <LegacyButton
-                htmlType="submit"
-                type="primary"
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
                 loading={formState.isSubmitting}
               >
                 <Trans defaults="Add Comment" i18nKey="addComment" />
-              </LegacyButton>
+              </Button>
             </div>
           </form>
         ) : (

@@ -7,6 +7,7 @@ import {
   SparklesIcon,
   XIcon,
 } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +28,6 @@ import {
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
 import { useDayjs } from "../../../../utils/dayjs";
-import { LegacyButton } from "../../../button";
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
@@ -95,17 +95,17 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
-              <LegacyButton
-                icon={<ChevronLeftIcon />}
+              <Button
+                icon={ChevronLeftIcon}
                 title={t("previousMonth")}
                 onClick={datepicker.prev}
               />
               <div className="grow text-center text-lg font-medium">
                 {datepicker.label}
               </div>
-              <LegacyButton
+              <Button
                 title={t("nextMonth")}
-                icon={<ChevronRightIcon />}
+                icon={ChevronRightIcon}
                 onClick={datepicker.next}
               />
             </div>
@@ -187,9 +187,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 );
               })}
             </div>
-            <LegacyButton className="mt-3" onClick={datepicker.today}>
+            <Button className="mt-3" onClick={datepicker.today}>
               {t("today")}
-            </LegacyButton>
+            </Button>
           </div>
         </div>
       </div>
@@ -327,8 +327,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           );
                         })}
                         <div className="flex items-center space-x-3">
-                          <LegacyButton
-                            icon={<PlusIcon />}
+                          <Button
+                            icon={PlusIcon}
                             onClick={() => {
                               const lastOption = expectTimeOption(
                                 optionsForDay[optionsForDay.length - 1].option,
@@ -358,7 +358,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             }}
                           >
                             {t("addTimeOption")}
-                          </LegacyButton>
+                          </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild={true}>
                               <button className="text-gray-500 hover:text-gray-800">

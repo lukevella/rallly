@@ -1,4 +1,5 @@
 import { trpc } from "@rallly/backend";
+import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
@@ -7,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
-import { LegacyButton } from "../button";
 import { TextInput } from "../text-input";
 
 const VerifyCode: React.FunctionComponent<{
@@ -99,22 +99,20 @@ const VerifyCode: React.FunctionComponent<{
           </p>
         </fieldset>
         <div className="mt-6 space-y-4 sm:flex sm:space-x-3 sm:space-y-0">
-          <LegacyButton
+          <Button
             loading={formState.isSubmitting || formState.isSubmitSuccessful}
-            htmlType="submit"
-            type="primary"
-            className="h-12 w-full px-6 sm:w-auto"
+            type="submit"
+            variant="primary"
           >
             {t("continue")}
-          </LegacyButton>
-          <LegacyButton
+          </Button>
+          <Button
             onClick={handleResend}
             loading={resendStatus === "busy"}
             disabled={resendStatus === "disabled"}
-            className="h-12 w-full rounded-lg px-4 text-gray-500 transition-colors hover:bg-gray-500/10 active:bg-gray-500/20 sm:w-auto"
           >
             {t("resendVerificationCode")}
-          </LegacyButton>
+          </Button>
         </div>
       </form>
     </div>
@@ -243,14 +241,14 @@ export const RegisterForm: React.FunctionComponent<{
           </div>
         ) : null}
       </fieldset>
-      <LegacyButton
+      <Button
         loading={formState.isSubmitting}
-        htmlType="submit"
-        type="primary"
+        type="submit"
+        variant="primary"
         className="h-12 px-6"
       >
         {t("continue")}
-      </LegacyButton>
+      </Button>
       <div className="mt-4 border-t pt-4 text-gray-500 sm:text-base">
         <Trans
           t={t}
@@ -388,14 +386,14 @@ export const LoginForm: React.FunctionComponent<{
         ) : null}
       </fieldset>
       <div className="space-y-3">
-        <LegacyButton
+        <Button
           loading={formState.isSubmitting}
-          htmlType="submit"
-          type="primary"
+          type="submit"
+          variant="primary"
           className="h-12 w-full px-6"
         >
           {t("continue")}
-        </LegacyButton>
+        </Button>
         <Link
           href="/register"
           className="btn-default h-12 w-full px-6"

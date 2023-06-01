@@ -1,8 +1,8 @@
 import {
   ChevronDownIcon,
+  DownloadIcon,
   LockIcon,
   PencilIcon,
-  SaveIcon,
   SettingsIcon,
   TableIcon,
   TrashIcon,
@@ -217,7 +217,7 @@ const ManagePoll: React.FunctionComponent<{
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={exportToCsv}>
-            <DropdownMenuItemIconLabel icon={SaveIcon}>
+            <DropdownMenuItemIconLabel icon={DownloadIcon}>
               <Trans i18nKey="exportToCsv" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>

@@ -1,12 +1,12 @@
 import { trpc } from "@rallly/backend";
 import { AlertCircleIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
-import { LegacyButton } from "@/components/button";
 import { usePostHog } from "@/utils/posthog";
 
 const confirmText = "delete-me";
@@ -75,15 +75,15 @@ export const DeletePollForm: React.FunctionComponent<{
           />
         </div>
         <div className="flex space-x-3">
-          <LegacyButton onClick={onCancel}>{t("cancel")}</LegacyButton>
-          <LegacyButton
+          <Button onClick={onCancel}>{t("cancel")}</Button>
+          <Button
             disabled={!canDelete}
-            htmlType="submit"
-            type="danger"
+            type="submit"
+            variant="destructive"
             loading={formState.isSubmitting}
           >
             {t("deletePoll")}
-          </LegacyButton>
+          </Button>
         </div>
       </form>
     </div>
