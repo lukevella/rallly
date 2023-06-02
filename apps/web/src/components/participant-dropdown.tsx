@@ -13,15 +13,30 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";
 
-import Modal from "@/components/modal/modal";
-import { useModalState } from "@/components/modal/use-modal";
 import { useDeleteParticipantModal } from "@/components/poll/use-delete-participant-modal";
-import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { useFormValidation } from "@/utils/form-validation";
 import { usePostHog } from "@/utils/posthog";
 
 import { Participant } from ".prisma/client";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@rallly/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@rallly/ui/form";
+import { Input } from "@rallly/ui/input";
 
 export const ParticipantDropdown = ({
   participant,
@@ -38,12 +53,12 @@ export const ParticipantDropdown = ({
 }) => {
   const confirmDeleteParticipant = useDeleteParticipantModal();
 
-  const [isChangeNameModalVisible, showChangeNameModal, hideChangeNameModal] =
-    useModalState();
+  const [isChangeNameModalVisible, setIsChangeNameModalVisible] =
+    React.useState(false);
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger
           disabled={disabled}
           asChild={true}
@@ -57,7 +72,7 @@ export const ParticipantDropdown = ({
               <Trans i18nKey="editVotes" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={showChangeNameModal}>
+          <DropdownMenuItem onClick={() => setIsChangeNameModalVisible(true)}>
             <DropdownMenuItemIconLabel icon={TagIcon}>
               <Trans i18nKey="changeName" />
             </DropdownMenuItemIconLabel>
@@ -73,19 +88,12 @@ export const ParticipantDropdown = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Modal
-        showClose={true}
-        overlayClosable={true}
-        visible={isChangeNameModalVisible}
-        onCancel={hideChangeNameModal}
-        footer={null}
-        content={
-          <ChangeNameModal
-            oldName={participant.name}
-            onDone={hideChangeNameModal}
-            participantId={participant.id}
-          />
-        }
+
+      <ChangeNameModal
+        open={isChangeNameModalVisible}
+        onOpenChange={setIsChangeNameModalVisible}
+        oldName={participant.name}
+        participantId={participant.id}
       />
     </>
   );
@@ -98,7 +106,8 @@ type ChangeNameForm = {
 const ChangeNameModal = (props: {
   oldName: string;
   participantId: string;
-  onDone: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) => {
   const posthog = usePostHog();
   const queryClient = trpc.useContext();
@@ -112,14 +121,13 @@ const ChangeNameModal = (props: {
       });
     },
   });
-  const { register, handleSubmit, setFocus, formState } =
-    useForm<ChangeNameForm>({
-      defaultValues: {
-        name: props.oldName,
-      },
-    });
+  const form = useForm<ChangeNameForm>({
+    defaultValues: {
+      name: props.oldName,
+    },
+  });
 
-  const { errors } = formState;
+  const { control, reset, handleSubmit, setFocus, formState } = form;
 
   useMount(() => {
     setFocus("name", {
@@ -136,49 +144,66 @@ const ChangeNameModal = (props: {
           newName: name,
         });
       }
-      props.onDone();
+      props.onOpenChange(false);
     },
     [changeName, formState.isDirty, props],
   );
 
   const { requiredString } = useFormValidation();
-
+  const formName = `change-name-${props.participantId}`;
   const { t } = useTranslation();
   return (
-    <form onSubmit={handleSubmit(handler)} className="max-w-sm space-y-3 p-4">
-      <div>
-        <div className="text-lg font-semibold text-gray-800">
-          {t("changeName")}
-        </div>
-        <div>{t("changeNameDescription")}</div>
-      </div>
-      <fieldset>
-        <label className="mb-1 text-gray-500">{t("name")}</label>
-        <TextInput
-          className="w-full"
-          error={!!errors.name}
-          disabled={formState.isSubmitting}
-          {...register("name", {
-            validate: requiredString(t("name")),
-          })}
-        />
-        {errors.name ? (
-          <div className="text-sm text-rose-500">{errors.name.message}</div>
-        ) : null}
-        <div className="mt-2 text-sm text-gray-500">{t("changeNameInfo")}</div>
-      </fieldset>
-      <div className="flex gap-2 ">
-        <Button disabled={formState.isSubmitting} onClick={props.onDone}>
-          {t("cancel")}
-        </Button>
-        <Button
-          loading={formState.isSubmitting}
-          type="submit"
-          variant="primary"
-        >
-          {t("save")}
-        </Button>
-      </div>
-    </form>
+    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t("changeName")}</DialogTitle>
+          <DialogDescription>{t("changeNameDescription")}</DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form id={formName} onSubmit={handleSubmit(handler)}>
+            <FormField
+              control={control}
+              name="name"
+              rules={{
+                validate: requiredString(t("name")),
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("name")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="w-full"
+                      {...field}
+                      disabled={formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormDescription>{t("changeNameInfo")}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
+        <DialogFooter>
+          <Button
+            disabled={formState.isSubmitting}
+            onClick={() => {
+              reset();
+              props.onOpenChange(false);
+            }}
+          >
+            {t("cancel")}
+          </Button>
+          <Button
+            form={formName}
+            loading={formState.isSubmitting}
+            type="submit"
+            variant="primary"
+          >
+            {t("save")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

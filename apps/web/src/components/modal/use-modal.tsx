@@ -26,7 +26,7 @@ export const useModal = (
   return [modal, () => setVisible(true), () => setVisible(false)];
 };
 
-export const useModalState = (): [boolean, () => void, () => void] => {
+export const useModalState = (): [boolean, OpenModalFn, CloseModalFn] => {
   const [visible, setVisible] = React.useState(false);
 
   const hide = React.useCallback(() => setVisible(false), []);
