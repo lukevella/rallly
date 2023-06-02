@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 
-import { Logo } from "../logo";
 import { useModalContext } from "../modal/modal-provider";
 import { useUser } from "../user-provider";
 import { LoginForm, RegisterForm } from "./login-form";
@@ -15,11 +14,8 @@ export const LoginModal: React.FunctionComponent<{
   return (
     <div
       data-testid="login-modal"
-      className="w-[420px] max-w-full overflow-hidden bg-white shadow-sm"
+      className="border-t-primary w-[420px] max-w-full overflow-hidden border-t-4 shadow-sm"
     >
-      <div className="bg-pattern border-t-primary-600 border-b border-t-4 bg-gray-500/5 p-4 text-center sm:p-8">
-        <Logo className="text-2xl" />
-      </div>
       <div className="p-4 sm:p-6">
         {hasAccount ? (
           <RegisterForm
