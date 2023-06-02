@@ -102,11 +102,13 @@ const VerifyCode: React.FunctionComponent<{
           <Button
             loading={formState.isSubmitting || formState.isSubmitSuccessful}
             type="submit"
+            size="lg"
             variant="primary"
           >
             {t("continue")}
           </Button>
           <Button
+            size="lg"
             onClick={handleResend}
             loading={resendStatus === "busy"}
             disabled={resendStatus === "disabled"}
@@ -391,6 +393,7 @@ export const LoginForm: React.FunctionComponent<{
         <Button
           loading={formState.isSubmitting}
           type="submit"
+          size="lg"
           variant="primary"
           className="h-12 w-full px-6"
         >
