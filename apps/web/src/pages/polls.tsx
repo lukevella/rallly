@@ -52,10 +52,12 @@ const EmptyState = () => {
           <Trans defaults="Get started by creating a new poll." />
         </p>
         <div className="mt-6">
-          <Link href="/new" className="btn-primary">
-            <PlusIcon className="-ml-0.5 h-5" />
-            <Trans defaults="New Poll" i18nKey="newPoll" />
-          </Link>
+          <Button variant="primary" asChild={true}>
+            <Link href="/new">
+              <PlusIcon className="h-5 w-5" />
+              <Trans defaults="New Poll" i18nKey="newPoll" />
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
