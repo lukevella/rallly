@@ -30,9 +30,8 @@ const Poll: React.FunctionComponent = () => {
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
 
-  const [editingParticipantId, setEditingParticipantId] = React.useState<
-    string | null
-  >(null);
+  const [editingParticipantId, setEditingParticipantId] =
+    React.useState<string | null>(null);
 
   const columnWidth = 80;
 
@@ -51,9 +50,8 @@ const Poll: React.FunctionComponent = () => {
     poll.options.length * columnWidth,
   );
 
-  const [activeOptionId, setActiveOptionId] = React.useState<string | null>(
-    null,
-  );
+  const [activeOptionId, setActiveOptionId] =
+    React.useState<string | null>(null);
 
   const [scrollPosition, setScrollPosition] = React.useState(0);
 
@@ -109,7 +107,7 @@ const Poll: React.FunctionComponent = () => {
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
-          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
+          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3 text-sm">
             <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
                 <div className="px-1">
@@ -125,7 +123,7 @@ const Poll: React.FunctionComponent = () => {
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <div className="px-1 font-medium">
                     {t("participantCount", { count: participants.length })}
                   </div>
@@ -144,7 +142,7 @@ const Poll: React.FunctionComponent = () => {
               )}
             </div>
             <div className="flex items-center gap-3">
-              <div className="px-3 font-medium">
+              <div className="font-medium">
                 {t("optionCount", { count: poll.options.length })}
               </div>
               {maxScrollPosition > 0 ? (
@@ -156,7 +154,6 @@ const Poll: React.FunctionComponent = () => {
                     <ArrowLeftIcon className="h-4 w-4" />
                   </Button>
                   <Button
-                    className="text-xs"
                     disabled={scrollPosition === maxScrollPosition}
                     onClick={() => {
                       goToNextPage();
