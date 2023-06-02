@@ -29,7 +29,7 @@
   "deleteParticipant": "Delete {name}?",
   "deleteParticipantDescription": "Are you sure you want to delete this participant? This action cannot be undone.",
   "deletePoll": "Delete poll",
-  "deletePollDescription": "All data related to this poll will be deleted. To confirm, please type <s>“{confirmText}”</s> in to the input below:",
+  "deletePollDescription": "All data related to this poll will be deleted. This action cannot be undone.",
   "deletingOptionsWarning": "You are deleting options that participants have voted for. Their votes will also be deleted.",
   "demoPollNotice": "Demo polls are automatically deleted after 1 day",
   "description": "Description",

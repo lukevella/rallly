@@ -40,14 +40,21 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    size?: "sm" | "md" | "lg";
+  }
+>(({ className, children, size = "md", ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in data-[state=open]:fade-in-90 sm:zoom-in-90 fixed z-50 grid w-full gap-4 rounded-b-lg border bg-white p-5 shadow-lg sm:max-w-lg sm:rounded-lg",
+        "animate-in data-[state=open]:fade-in-90 sm:zoom-in-90 shadow-huge fixed z-50 grid w-full gap-4 border bg-white p-5 sm:rounded-md",
+        {
+          "sm:max-w-sm": size === "sm",
+          "sm:max-w-md": size === "md",
+          "sm:max-w-lg": size === "lg",
+        },
         className,
       )}
       {...props}
@@ -82,7 +89,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "bg-muted-background -mx-5 -mb-5 flex flex-col-reverse gap-2 px-5 py-2.5 sm:flex-row sm:justify-end sm:rounded-b-md",
       className,
     )}
     {...props}
@@ -96,10 +103,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className,
-    )}
+    className={cn("mb-2 text-base font-semibold leading-none", className)}
     {...props}
   />
 ));
@@ -111,7 +115,10 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-muted-foreground text-sm leading-relaxed", className)}
+    className={cn(
+      "text-muted-foreground text-sm leading-relaxed tracking-wide",
+      className,
+    )}
     {...props}
   />
 ));

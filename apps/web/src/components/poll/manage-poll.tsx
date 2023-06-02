@@ -26,7 +26,7 @@ import { PollDetailsForm } from "../forms";
 import { useModal } from "../modal";
 import { useModalContext } from "../modal/modal-provider";
 import { usePoll } from "../poll-context";
-import { DeletePollForm } from "./manage-poll/delete-poll-form";
+import { DeletePollDialog } from "./manage-poll/delete-poll-form";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 import { useUpdatePollMutation } from "./mutations";
 
@@ -46,6 +46,8 @@ const ManagePoll: React.FunctionComponent<{
 }> = ({ disabled }) => {
   const { t } = useTranslation();
   const { poll, getParticipantsWhoVotedForOption, urlId } = usePoll();
+
+  const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
 
   const { exportToCsv } = useCsvExporter();
 
@@ -198,7 +200,7 @@ const ManagePoll: React.FunctionComponent<{
     <>
       {changeOptionsModalContextHolder}
       {changePollDetailsModalContextHolder}
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
           <Button icon={SettingsIcon} disabled={disabled}>
             <Trans i18nKey="manage" />
@@ -240,13 +242,7 @@ const ManagePoll: React.FunctionComponent<{
           )}
           <DropdownMenuItem
             onClick={() => {
-              modalContext.render({
-                overlayClosable: true,
-                content: function Content({ close }) {
-                  return <DeletePollForm onCancel={close} urlId={urlId} />;
-                },
-                footer: null,
-              });
+              setShowDeletePollDialog(true);
             }}
           >
             <DropdownMenuItemIconLabel icon={TrashIcon}>
@@ -255,6 +251,11 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <DeletePollDialog
+        urlId={urlId}
+        open={showDeletePollDialog}
+        onOpenChange={setShowDeletePollDialog}
+      />
     </>
   );
 };

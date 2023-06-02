@@ -1,91 +1,66 @@
 import { trpc } from "@rallly/backend";
-import { AlertCircleIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import clsx from "clsx";
 import { useRouter } from "next/router";
-import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useForm } from "react-hook-form";
 
 import { usePostHog } from "@/utils/posthog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@rallly/ui/dialog";
+import { Trans } from "@/components/trans";
 
-const confirmText = "delete-me";
-
-export const DeletePollForm: React.FunctionComponent<{
-  onCancel: () => void;
+export const DeletePollDialog: React.FunctionComponent<{
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   urlId: string;
-}> = ({ onCancel, urlId }) => {
-  const { register, handleSubmit, formState, watch } = useForm<{
-    confirmation: string;
-  }>();
-
-  const confirmationText = watch("confirmation");
-  const canDelete = confirmationText === confirmText;
+}> = ({ open, onOpenChange, urlId }) => {
   const posthog = usePostHog();
   const queryClient = trpc.useContext();
+  const router = useRouter();
   const deletePoll = trpc.polls.delete.useMutation({
     onSuccess: () => {
       queryClient.polls.invalidate();
       posthog?.capture("deleted poll");
+      onOpenChange(false);
+      router.replace("/polls");
     },
   });
 
-  const router = useRouter();
-
-  const { t } = useTranslation();
-
   return (
-    <div className="flex max-w-lg space-x-6 p-5">
-      <div className="">
-        <div className="rounded-full bg-rose-100 p-3">
-          <AlertCircleIcon className="w-8 text-rose-500" />
-        </div>
-      </div>
-      <form
-        data-testid="delete-poll-form"
-        onSubmit={handleSubmit(async () => {
-          await deletePoll.mutateAsync({ urlId });
-          router.push("/polls");
-        })}
-      >
-        <div className="mb-3 text-xl font-medium text-gray-800">
-          {t("areYouSure")}
-        </div>
-        <p className="text-gray-500">
-          <Trans
-            t={t}
-            i18nKey="deletePollDescription"
-            values={{ confirmText }}
-            components={{
-              s: <span className="whitespace-nowrap font-mono" />,
-            }}
-          />
-        </p>
-        <div className="mb-6">
-          <input
-            type="text"
-            className={clsx("input w-full", {
-              "input-error": formState.errors.confirmation,
-            })}
-            placeholder={confirmText}
-            {...register("confirmation", {
-              validate: (value) => value === confirmText,
-            })}
-            readOnly={formState.isSubmitting}
-          />
-        </div>
-        <div className="flex space-x-3">
-          <Button onClick={onCancel}>{t("cancel")}</Button>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            <Trans i18nKey="deletePoll" />
+          </DialogTitle>
+          <DialogDescription>
+            <Trans i18nKey="deletePollDescription" />
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
           <Button
-            disabled={!canDelete}
-            type="submit"
-            variant="destructive"
-            loading={formState.isSubmitting}
+            onClick={() => {
+              onOpenChange(false);
+            }}
           >
-            {t("deletePoll")}
+            <Trans i18nKey="cancel" />
           </Button>
-        </div>
-      </form>
-    </div>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              deletePoll.mutate({ urlId });
+            }}
+            loading={deletePoll.isLoading}
+          >
+            <Trans i18nKey="delete" />
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
