@@ -21,8 +21,7 @@ export const CopyLinkButton = () => {
 
   return (
     <Button
-      className="w-full"
-      disabled={didCopy}
+      className="w-full bg-gray-50"
       onClick={() => {
         copyToClipboard(inviteLink);
         setDidCopy(true);

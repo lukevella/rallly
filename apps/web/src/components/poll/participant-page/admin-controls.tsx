@@ -10,7 +10,6 @@ import { Button } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -33,10 +32,8 @@ import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 const InviteDialog = () => {
-  const poll = usePoll();
   const { participants } = useParticipants();
   const [isOpen, setIsOpen] = React.useState(participants.length === 0);
-  const inviteLink = `${window.location.origin}/invite/${poll?.id}`;
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
@@ -49,23 +46,17 @@ const InviteDialog = () => {
           </span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gradient-to-b from-gray-200 via-white to-white sm:max-w-md">
+      <DialogContent className="bg-pattern from-gray-100 via-white to-white sm:max-w-md">
         <div className="flex">
           <Share2Icon className="text-primary h-7" />
         </div>
-        <DialogHeader className="mb-4">
-          <DialogTitle className="mb-2">
+        <DialogHeader>
+          <DialogTitle>
             <Trans
               i18nKey="inviteParticipants"
               defaults="Invite Participants"
             />
           </DialogTitle>
-          <DialogDescription>
-            <Trans
-              i18nKey="inviteParticipantsDescription"
-              defaults="Copy and share the invite link below to start gathering responses from your participants."
-            />
-          </DialogDescription>
         </DialogHeader>
         <div className="overflow-hidden">
           <label className="mb-2">
@@ -73,6 +64,12 @@ const InviteDialog = () => {
           </label>
           <CopyLinkButton />
         </div>
+        <p className="text-muted-foreground mb-2 text-sm">
+          <Trans
+            i18nKey="inviteParticipantsDescription"
+            defaults="Copy and share the invite link to start gathering responses from your participants."
+          />
+        </p>
       </DialogContent>
     </Dialog>
   );
