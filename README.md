@@ -89,10 +89,11 @@ Thank you to our sponsors for making this project possible.
 
 [Become a sponsor &rarr;](https://github.com/sponsors/lukevella)
 
-And thanks to these companies for providing their services to host and run [rallly.co](https://rallly.co).
+This project is also supported by the following companies through their open-source sponsorships.
 
 <a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss"><img src="./apps/web/public/vercel-logotype-dark.svg" alt="Powered by Vercel" height="30" /></a>
 &nbsp;&nbsp;&nbsp;
 <a href="https://m.do.co/c/f91efc9c9e50"><img src="./apps/web/public/digitalocean.svg" alt="Digital Ocean" height="30" /></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://sentry.io"><img src="./apps/web/public/sentry.svg" alt="Sentry" height="30" /></a>
+<a href="https://sentry.io"><img src="./apps/web/public/sentry.svg" alt="Sentry" height="30" /></a>&nbsp;&nbsp;&nbsp;
+<a href="https://cloudron.io"><img src="./assets/images/cloudron-logo.svg" alt="Cloudron" height="30"></a>
