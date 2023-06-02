@@ -21,7 +21,7 @@ export const CopyLinkButton = () => {
 
   return (
     <Button
-      variant="ghost"
+      className="w-full"
       disabled={didCopy}
       onClick={() => {
         copyToClipboard(inviteLink);
@@ -34,7 +34,7 @@ export const CopyLinkButton = () => {
       {didCopy ? (
         <Trans i18nKey="copied" />
       ) : (
-        <Trans i18nKey="copyLink" defaults="Copy Link" />
+        <span className="min-w-0 truncate">{inviteLink}</span>
       )}
     </Button>
   );
