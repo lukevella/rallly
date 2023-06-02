@@ -9,11 +9,12 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useOptions, usePoll } from "@/components/poll-context";
+import { useRole } from "@/contexts/role";
 
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
-import { isUnclaimed, useUser } from "../user-provider";
+import { useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
 import { ParticipantForm } from "./types";
@@ -40,6 +41,8 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const session = useUser();
 
+  const { ownsObject } = session;
+
   const form = useForm<ParticipantForm>({
     defaultValues: {
       votes: [],
@@ -56,9 +59,16 @@ const MobilePoll: React.FunctionComponent = () => {
     }
   });
 
+  const role = useRole();
+  const isAdmin = !!poll.adminUrlId;
+
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
+
+  const canEdit =
+    (role === "admin" && isAdmin) ||
+    (!poll.closed && selectedParticipant && ownsObject(selectedParticipant));
 
   const [isEditing, setIsEditing] = React.useState(
     !userAlreadyVoted && !poll.closed && !admin,
@@ -173,16 +183,7 @@ const MobilePoll: React.FunctionComponent = () => {
             ) : selectedParticipant ? (
               <ParticipantDropdown
                 align="end"
-                disabled={
-                  poll.closed ||
-                  // if user is  participant (not admin)
-                  (!admin &&
-                    // and does not own this participant
-                    !session.ownsObject(selectedParticipant) &&
-                    // and the participant has been claimed by a different user
-                    !isUnclaimed(selectedParticipant))
-                  // not allowed to edit
-                }
+                disabled={!canEdit}
                 participant={selectedParticipant}
                 onEdit={() => {
                   setIsEditing(true);
@@ -199,7 +200,7 @@ const MobilePoll: React.FunctionComponent = () => {
             ) : (
               <Button
                 icon={PlusIcon}
-                disabled={poll.closed}
+                disabled={poll.closed && !isAdmin}
                 onClick={() => {
                   reset({
                     votes: [],

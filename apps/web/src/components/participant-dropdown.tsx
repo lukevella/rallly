@@ -2,24 +2,6 @@ import { trpc } from "@rallly/backend";
 import { PencilIcon, TagIcon, TrashIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuItemIconLabel,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
-import { useTranslation } from "next-i18next";
-import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useMount } from "react-use";
-
-import { Trans } from "@/components/trans";
-import { useFormValidation } from "@/utils/form-validation";
-import { usePostHog } from "@/utils/posthog";
-
-import { Participant } from ".prisma/client";
-import { useDeleteParticipantMutation } from "@/components/poll/mutations";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -27,6 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItemIconLabel,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -37,6 +26,17 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useTranslation } from "next-i18next";
+import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useMount } from "react-use";
+
+import { useDeleteParticipantMutation } from "@/components/poll/mutations";
+import { Trans } from "@/components/trans";
+import { useFormValidation } from "@/utils/form-validation";
+import { usePostHog } from "@/utils/posthog";
+
+import { Participant } from ".prisma/client";
 
 export const ParticipantDropdown = ({
   participant,
