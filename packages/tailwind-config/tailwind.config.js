@@ -18,7 +18,7 @@ module.exports = {
         primary: {
           ...colors.indigo,
           DEFAULT: colors.indigo["600"],
-          foreground: colors.white,
+          foreground: colors.indigo["600"],
           background: colors.indigo["50"],
         },
         gray: colors.slate,
@@ -30,6 +30,11 @@ module.exports = {
         },
         ring: {
           DEFAULT: colors.slate["300"],
+        },
+        destructive: {
+          DEFAULT: colors.rose["600"],
+          background: colors.rose["50"],
+          foreground: colors.rose["50"],
         },
         background: colors.slate["100"],
         foreground: colors.slate["800"],
