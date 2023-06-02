@@ -17,7 +17,6 @@
   "comments": "Comments",
   "continue": "Continue",
   "copied": "Copied",
-  "copyLink": "Copy link",
   "createAnAccount": "Create an account",
   "createdBy": "by <b>{name}</b>",
   "createPoll": "Create poll",
@@ -203,5 +202,6 @@
   "inviteParticipants": "Invite Participants",
   "inviteParticipantsDescription": "Copy and share this invite link to start gathering responses from your participants.",
   "inviteLink": "Invite Link",
-  "showTimesIn": "Show times in {timeZone}"
+  "showTimesIn": "Show times in {timeZone}",
+  "inviteParticipantLinkInfo": "Anyone with this link will be able to vote on your poll."
 }
