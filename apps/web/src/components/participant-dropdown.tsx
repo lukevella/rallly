@@ -13,12 +13,12 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";
 
-import { useDeleteParticipantModal } from "@/components/poll/use-delete-participant-modal";
 import { Trans } from "@/components/trans";
 import { useFormValidation } from "@/utils/form-validation";
 import { usePostHog } from "@/utils/posthog";
 
 import { Participant } from ".prisma/client";
+import { useDeleteParticipantMutation } from "@/components/poll/mutations";
 import {
   Dialog,
   DialogContent,
@@ -51,9 +51,9 @@ export const ParticipantDropdown = ({
   onEdit: () => void;
   children: React.ReactNode;
 }) => {
-  const confirmDeleteParticipant = useDeleteParticipantModal();
-
   const [isChangeNameModalVisible, setIsChangeNameModalVisible] =
+    React.useState(false);
+  const [isDeleteParticipantModalVisible, setIsDeleteParticipantModalVisible] =
     React.useState(false);
 
   return (
@@ -78,9 +78,7 @@ export const ParticipantDropdown = ({
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() =>
-              confirmDeleteParticipant(participant.id, participant.name)
-            }
+            onClick={() => setIsDeleteParticipantModalVisible(true)}
           >
             <DropdownMenuItemIconLabel icon={TrashIcon}>
               <Trans i18nKey="delete" />
@@ -95,7 +93,65 @@ export const ParticipantDropdown = ({
         oldName={participant.name}
         participantId={participant.id}
       />
+      <DeleteParticipantModal
+        open={isDeleteParticipantModalVisible}
+        onOpenChange={setIsDeleteParticipantModalVisible}
+        participantId={participant.id}
+        participantName={participant.name}
+      />
     </>
+  );
+};
+
+const DeleteParticipantModal = ({
+  open,
+  onOpenChange,
+  participantId,
+  participantName,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  participantId: string;
+  participantName: string;
+}) => {
+  const deleteParticipant = useDeleteParticipantMutation();
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            <Trans
+              i18nKey="deleteParticipant"
+              values={{ name: participantName }}
+            />
+          </DialogTitle>
+          <DialogDescription>
+            <Trans i18nKey="deleteParticipantDescription" />
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button
+            onClick={() => {
+              onOpenChange(false);
+            }}
+          >
+            <Trans i18nKey="cancel" />
+          </Button>
+          <Button
+            loading={deleteParticipant.isLoading}
+            variant="destructive"
+            onClick={async () => {
+              deleteParticipant.mutate({
+                participantId,
+              });
+              onOpenChange(false);
+            }}
+          >
+            <Trans i18nKey="delete" />
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

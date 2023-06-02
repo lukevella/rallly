@@ -35,7 +35,6 @@ export const participants = router({
   delete: publicProcedure
     .input(
       z.object({
-        pollId: z.string(),
         participantId: z.string(),
       }),
     )
