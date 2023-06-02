@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import dayjs, { Dayjs } from "dayjs";
 
-export const DateCardInner = (props: {
+export const DateIconInner = (props: {
   dow?: React.ReactNode;
   day?: React.ReactNode;
   month?: React.ReactNode;
@@ -31,7 +31,7 @@ export const DateCardInner = (props: {
 
 export const DateIcon = (props: { date: Dayjs; className?: string }) => {
   return (
-    <DateCardInner
+    <DateIconInner
       className={props.className}
       dow={dayjs(props.date).format("ddd")}
       day={dayjs(props.date).format("DD")}
