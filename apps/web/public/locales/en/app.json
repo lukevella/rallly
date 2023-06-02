@@ -201,7 +201,7 @@
   "lock": "Lock",
   "editPollDescription": "Make changes to your poll.",
   "inviteParticipants": "Invite Participants",
-  "inviteParticipantsDescription": "Copy and share the invite link to start gathering responses from your participants.",
+  "inviteParticipantsDescription": "Copy and share this invite link to start gathering responses from your participants.",
   "inviteLink": "Invite Link",
   "showTimesIn": "Show times in {timeZone}"
 }

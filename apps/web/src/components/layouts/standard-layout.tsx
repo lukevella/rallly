@@ -149,7 +149,7 @@ export const StandardLayout: React.FunctionComponent<{
       <ModalProvider>
         <div className="flex h-screen flex-col-reverse md:flex-row" {...rest}>
           <div className="shrink-0 border-t bg-gray-50 md:min-h-full md:w-20 md:border-b-0 md:border-r lg:block">
-            <div className="flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-6 gap-x-3 p-3 md:sticky md:top-0 md:z-50 md:flex-col md:pt-3 md:pb-6">
+            <div className="flex h-full max-h-[calc(100vh)] items-center justify-around gap-y-6 gap-x-3 p-3 md:sticky md:top-0 md:flex-col md:pt-3 md:pb-6">
               <div className="m-1 flex h-8 w-8 shrink-0 items-center justify-center">
                 {isBusy ? (
                   <Spinner className="text-gray-500" />

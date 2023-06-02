@@ -10,6 +10,7 @@ import { Button } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -57,17 +58,23 @@ const InviteDialog = () => {
               defaults="Invite Participants"
             />
           </DialogTitle>
+          <DialogDescription>
+            <Trans
+              i18nKey="inviteParticipantsDescription"
+              defaults="Copy and share the invite link to start gathering responses from your participants."
+            />
+          </DialogDescription>
         </DialogHeader>
-        <div className="overflow-hidden">
+        <div>
           <label className="mb-2">
             <Trans i18nKey="inviteLink" defaults="Invite Link" />
           </label>
           <CopyLinkButton />
         </div>
-        <p className="text-muted-foreground mb-2 text-sm">
+        <p className="text-muted-foreground text-sm">
           <Trans
-            i18nKey="inviteParticipantsDescription"
-            defaults="Copy and share the invite link to start gathering responses from your participants."
+            i18nKey="inviteParticipantLinkInfo"
+            defaults="Anyone with this link will be able to vote on your poll."
           />
         </p>
       </DialogContent>

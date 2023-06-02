@@ -30,8 +30,9 @@ const Poll: React.FunctionComponent = () => {
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
 
-  const [editingParticipantId, setEditingParticipantId] =
-    React.useState<string | null>(null);
+  const [editingParticipantId, setEditingParticipantId] = React.useState<
+    string | null
+  >(null);
 
   const columnWidth = 80;
 
@@ -50,8 +51,9 @@ const Poll: React.FunctionComponent = () => {
     poll.options.length * columnWidth,
   );
 
-  const [activeOptionId, setActiveOptionId] =
-    React.useState<string | null>(null);
+  const [activeOptionId, setActiveOptionId] = React.useState<string | null>(
+    null,
+  );
 
   const [scrollPosition, setScrollPosition] = React.useState(0);
 
