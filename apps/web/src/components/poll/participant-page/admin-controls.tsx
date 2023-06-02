@@ -71,12 +71,7 @@ const InviteDialog = () => {
           <label className="mb-2">
             <Trans i18nKey="inviteLink" defaults="Invite Link" />
           </label>
-          <div className="flex items-center justify-between rounded-md border bg-gray-50 p-1.5">
-            <div className="truncate px-1">{inviteLink}</div>
-            <div className="shrink-0">
-              <CopyLinkButton />
-            </div>
-          </div>
+          <CopyLinkButton />
         </div>
       </DialogContent>
     </Dialog>
