@@ -8,7 +8,6 @@ import React from "react";
 import { useTimeFormat, useTimeZone } from "@/contexts/time-preferences";
 import {
   decodeOptions,
-  parseDateOption,
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";

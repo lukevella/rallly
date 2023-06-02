@@ -1,4 +1,5 @@
 import {
+  CheckIcon,
   ChevronDownIcon,
   DownloadIcon,
   LockIcon,
@@ -20,6 +21,7 @@ import dayjs from "dayjs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { encodeDateOption } from "@/utils/date-time-utils";
 
 import { PollDetailsForm } from "../forms";
@@ -48,6 +50,8 @@ const ManagePoll: React.FunctionComponent<{
   const { poll, getParticipantsWhoVotedForOption, urlId } = usePoll();
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
+  const [isFinalizeDialogVisible, setIsFinalizeDialogVisible] =
+    React.useState(false);
 
   const { exportToCsv } = useCsvExporter();
 
@@ -242,6 +246,15 @@ const ManagePoll: React.FunctionComponent<{
           )}
           <DropdownMenuItem
             onClick={() => {
+              setIsFinalizeDialogVisible(true);
+            }}
+          >
+            <DropdownMenuItemIconLabel icon={CheckIcon}>
+              <Trans i18nKey="finalize" defaults="Finalize" />
+            </DropdownMenuItemIconLabel>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
               setShowDeletePollDialog(true);
             }}
           >
@@ -251,6 +264,10 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <FinalizePollDialog
+        open={isFinalizeDialogVisible}
+        onOpenChange={setIsFinalizeDialogVisible}
+      />
       <DeletePollDialog
         urlId={urlId}
         open={showDeletePollDialog}
