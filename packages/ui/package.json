@@ -15,6 +15,7 @@
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-switch": "^1.0.2",
     "@rallly/icons": "*",
+    "@rallly/languages": "*",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "tailwind-merge": "^1.12.0"

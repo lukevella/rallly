@@ -43,14 +43,10 @@ const nextConfig = {
         destination: "/settings/profile",
         permanent: true,
       },
-    ];
-  },
-
-  async rewrites() {
-    return [
       {
         source: "/",
-        destination: "/home",
+        destination: "/polls",
+        permanent: false,
       },
     ];
   },
