@@ -6,7 +6,6 @@ import {
   RefreshCcwIcon,
   Settings2Icon,
   UserIcon,
-  VoteIcon,
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
@@ -30,7 +29,7 @@ import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
 
-import { IconComponent, NextPageWithLayout } from "../../types";
+import { NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
 import {
   IfAuthenticated,
