@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Trans } from "react-i18next";
 
+import { Card } from "@/components/card";
+import { Container } from "@/components/container";
 import { StandardLayout } from "@/components/layouts/standard-layout";
 import {
   TopBar,
@@ -30,7 +32,7 @@ const MenuItem = (props: {
       )}
       href={props.href}
     >
-      <props.icon className="h-4" />
+      <props.icon className="h-4 w-4" />
       {props.children}
     </Link>
   );
@@ -39,28 +41,29 @@ const MenuItem = (props: {
 export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="flex h-full grow flex-col">
-      <TopBar className="space-y-3">
-        <div className="">
-          <TopBarTitle
-            icon={SettingsIcon}
-            title={<Trans defaults="Settings" i18nKey="settings" />}
-          />
-        </div>
-        <hr />
-        <div className="flex justify-between">
-          <div className="flex gap-6">
-            <IfAuthenticated>
-              <MenuItem href="/settings/profile" icon={UserIcon}>
-                <Trans i18nKey="profile" defaults="Profile" />
-              </MenuItem>
-            </IfAuthenticated>
-            <MenuItem href="/settings/preferences" icon={Settings2Icon}>
-              <Trans i18nKey="preferences" defaults="Preferences" />
-            </MenuItem>
-          </div>
-        </div>
+      <TopBar className="flex justify-between gap-8">
+        <TopBarTitle
+          icon={SettingsIcon}
+          title={<Trans defaults="Settings" i18nKey="settings" />}
+        />
       </TopBar>
-      <div className="grow bg-white">{children}</div>
+      <div>
+        <Container className="px-0 py-4 sm:py-8">
+          <Card fullWidthOnMobile={true}>
+            <div className="flex gap-4 border-b bg-gray-50 p-3">
+              <IfAuthenticated>
+                <MenuItem href="/settings/profile" icon={UserIcon}>
+                  <Trans i18nKey="profile" defaults="Profile" />
+                </MenuItem>
+              </IfAuthenticated>
+              <MenuItem href="/settings/preferences" icon={Settings2Icon}>
+                <Trans i18nKey="preferences" defaults="Preferences" />
+              </MenuItem>
+            </div>
+            {children}
+          </Card>
+        </Container>
+      </div>
     </div>
   );
 };

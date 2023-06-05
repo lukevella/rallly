@@ -1,6 +1,7 @@
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import React from "react";
 
+import { Container } from "@/components/container";
 import { IconComponent } from "@/types";
 
 export const TopBar = (
@@ -11,12 +12,11 @@ export const TopBar = (
 ) => {
   return (
     <div
-      className={clsx(
-        "sticky top-0 z-20 border-b bg-gray-50/75 p-3 backdrop-blur-lg",
-        props.className,
+      className={cn(
+        "sticky top-0 z-20 border-b bg-gray-50/75 py-3 backdrop-blur-md",
       )}
     >
-      {props.children}
+      <Container className={cn(props.className)}>{props.children}</Container>
     </div>
   );
 };
@@ -30,10 +30,8 @@ export const TopBarTitle = ({
 }) => {
   return (
     <div className="flex h-9 min-w-0 items-center gap-2.5">
-      <div>
-        <Icon className="text-primary-600 h-6 w-6" />
-      </div>
-      <div className="truncate font-semibold">{title}</div>
+      <Icon className="-ml-0.5 h-6 w-6 shrink-0" />
+      <div className="truncate font-medium">{title}</div>
     </div>
   );
 };

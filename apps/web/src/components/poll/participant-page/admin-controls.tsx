@@ -3,7 +3,6 @@ import {
   AlertCircleIcon,
   ArrowLeftRightIcon,
   FileBarChart,
-  LogInIcon,
   Share2Icon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
@@ -17,7 +16,6 @@ import {
 } from "@rallly/ui/dialog";
 import React from "react";
 
-import { useLoginModal } from "@/components/auth/login-modal";
 import { LegacyButton } from "@/components/button";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import {
@@ -87,7 +85,6 @@ export const AdminControls = () => {
   const hasAdminPermission = poll?.adminUrlId;
   const { user } = useUser();
   const queryClient = trpc.useContext();
-  const { openLoginModal } = useLoginModal();
   const transfer = trpc.polls.transfer.useMutation({
     onSuccess: () => {
       queryClient.polls.get.invalidate();
@@ -113,11 +110,7 @@ export const AdminControls = () => {
         ) : null}
 
         <NotificationsToggle />
-        {user.isGuest && poll?.userId !== user.id ? (
-          <LegacyButton icon={<LogInIcon />} onClick={openLoginModal}>
-            <Trans i18nKey="login" />
-          </LegacyButton>
-        ) : (
+        {user.isGuest && poll?.userId !== user.id ? null : (
           <ManagePoll disabled={!hasAdminPermission} />
         )}
         {hasAdminPermission && user.id !== poll.userId && !poll.demo ? (

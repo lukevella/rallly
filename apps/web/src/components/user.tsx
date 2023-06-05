@@ -29,7 +29,7 @@ export const UserAvatar = ({ size = "md", name }: UserAvatarProps) => {
           "h-14 w-14 text-2xl": size === "lg",
         },
         !name
-          ? "outline-dashed outline-2 outline-gray-200"
+          ? "bg-gray-200"
           : colors?.requiresDarkText
           ? "text-gray-800"
           : "text-white",

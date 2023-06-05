@@ -11,7 +11,7 @@ export const Card = (
       className={clsx(
         "max-w-full overflow-hidden bg-white shadow-sm",
         props.fullWidthOnMobile
-          ? "border-y sm:rounded-md sm:border-x"
+          ? "sm:rounded-md sm:border-y sm:border-x"
           : "rounded-md border shadow-sm",
         props.className,
       )}

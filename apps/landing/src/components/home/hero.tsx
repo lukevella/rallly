@@ -181,7 +181,7 @@ const Hero: React.FunctionComponent = () => {
         <div className="mb-8">
           <Link
             href="https://github.com/lukevella/rallly"
-            className="hover:text-primary hover:border-primary-200 hover:bg-primary-50 active:bg-primary-100 inline-flex gap-2.5 rounded-full border bg-gray-50 bg-gray-100 px-3 py-2 text-sm font-medium transition-all active:translate-y-1"
+            className="hover:text-primary hover:border-primary-200 hover:bg-primary-50 active:bg-primary-100 inline-flex gap-2.5 rounded-full border bg-gray-100 px-3 py-2 text-sm font-medium transition-all active:translate-y-1"
           >
             <span className="border-r pl-2 pr-4">
               <Trans i18nKey="opensource" defaults="We're Open Source!" />
