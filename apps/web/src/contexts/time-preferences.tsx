@@ -21,7 +21,7 @@ export const TimePreferences = () => {
   const [timeZone, setTimeZone] = useTimeZone();
   const [timeFormat, setTimeFormat] = useTimeFormat();
   return (
-    <div className="flex max-w-full flex-col justify-between gap-2 md:flex-row">
+    <div className="flex max-w-full flex-col justify-between gap-2 sm:flex-row">
       <Popover
         open={isTimeZoneDialogOpen}
         onOpenChange={setIsTimeZoneDialogOpen}

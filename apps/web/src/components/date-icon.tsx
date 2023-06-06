@@ -22,7 +22,9 @@ export const DateIconInner = (props: {
           <div className="my-px text-lg font-bold leading-none">
             {props.day}
           </div>
-          <div className="text-xs font-bold uppercase">{props.month}</div>
+          <div className="text-xs font-bold uppercase tracking-wider">
+            {props.month}
+          </div>
         </div>
       </div>
     </div>

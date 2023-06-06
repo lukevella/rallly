@@ -1,18 +1,30 @@
 import {
   AlertCircleIcon,
+  CalendarPlusIcon,
+  CheckCircleIcon,
+  CheckIcon,
   LockIcon,
+  MailPlusIcon,
   MapPinIcon,
   MenuIcon,
   MousePointerClickIcon,
 } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Card } from "@/components/card";
+import { DateIconInner } from "@/components/date-icon";
 import Discussion from "@/components/discussion";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
+import { useParticipants } from "@/components/participants-provider";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
+import { useOptions } from "@/components/poll-context";
 import { TextSummary } from "@/components/text-summary";
+import { Trans } from "@/components/trans";
+import { usePoll } from "@/contexts/poll";
 import { useUserPreferences } from "@/contexts/preferences";
 import { TimePreferences } from "@/contexts/time-preferences";
 import { generateGradient } from "@/utils/color-hash";
@@ -22,13 +34,84 @@ import PollSubheader from "./poll/poll-subheader";
 import TruncatedLinkify from "./poll/truncated-linkify";
 import { useTouchBeacon } from "./poll/use-touch-beacon";
 import VoteIcon from "./poll/vote-icon";
-import { usePoll } from "./poll-context";
 
 const checkIfWideScreen = () => window.innerWidth > 640;
 
+const FinalDate = () => {
+  const poll = usePoll();
+  const { options } = useOptions();
+
+  const selectedOptionIndex = options.findIndex(
+    (option) => option.optionId === poll.selectedOptionId,
+  );
+
+  const selectedOption = options[selectedOptionIndex];
+  const { participants } = useParticipants();
+  if (!selectedOption) {
+    return null;
+  }
+  return (
+    <>
+      <div className="flex items-center justify-between rounded-md border-b bg-green-500 p-2  text-sm font-semibold text-green-50">
+        <span className="inline-flex items-center gap-x-2 ">
+          <CheckCircleIcon className="h-5 w-5" />
+          <div className="font-medium">
+            <Trans i18nKey="dateSelectedMessage" defaults="You did it!" />
+          </div>
+        </span>
+      </div>
+      <Card>
+        <div
+          className="h-2"
+          style={{ background: generateGradient(poll.id) }}
+        ></div>
+        <div className="bg-pattern px-3 pb-5 pt-3">
+          <div className="flex gap-x-4">
+            <div>
+              <DateIconInner
+                dow={selectedOption.dow}
+                month={selectedOption.month}
+                day={selectedOption.day}
+              />
+            </div>
+            <div>
+              <div className="font-semibold">{poll.title}</div>
+              <div className="text-muted-foreground text-sm">
+                {dayjs(selectedOption.date).format(
+                  selectedOption.type === "date" ? "LL" : "LLL",
+                )}
+              </div>
+              <div className="mt-4">
+                <div className="text-muted-foreground mb-1 text-xs">
+                  <Trans
+                    i18nKey="participantCount"
+                    values={{ count: participants.length }}
+                  />
+                </div>
+                <ParticipantAvatarBar participants={participants} max={8} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-x-2 border-t bg-gray-50 p-3">
+          <Button icon={MailPlusIcon} className="">
+            <Trans
+              i18nKey="sendCalendarInvite"
+              defaults="Send Calender Invite"
+            />
+          </Button>
+          <Button icon={CalendarPlusIcon}>
+            <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
+          </Button>
+        </div>
+      </Card>
+    </>
+  );
+};
+
 export const Poll = () => {
   const { t } = useTranslation();
-  const { poll } = usePoll();
+  const poll = usePoll();
 
   useTouchBeacon(poll.id);
 
@@ -50,6 +133,7 @@ export const Poll = () => {
   if (!userPreferences) {
     return null;
   }
+
   return (
     <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
       {poll.demo ? (
@@ -64,6 +148,13 @@ export const Poll = () => {
           <div>{t("pollHasBeenLocked")}</div>
         </div>
       ) : null}
+      {poll.selectedOptionId ? (
+        <>
+          <FinalDate />
+
+          <hr />
+        </>
+      ) : null}
 
       <Card fullWidthOnMobile={false}>
         <div className="divide-y text-gray-600">
@@ -71,7 +162,7 @@ export const Poll = () => {
             className="h-2"
             style={{ background: generateGradient(poll.id) }}
           ></div>
-          <div className="bg-gray-50 p-4">
+          <div className="bg-pattern p-4">
             <div className="flex items-start gap-3">
               <div>
                 <h1

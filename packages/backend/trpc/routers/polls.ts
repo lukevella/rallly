@@ -366,6 +366,7 @@ export const polls = router({
           closed: true,
           legacy: true,
           demo: true,
+          selectedOptionId: true,
           options: {
             orderBy: {
               start: "asc",
@@ -451,4 +452,37 @@ export const polls = router({
 
     return polls;
   }),
+  book: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        optionId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await prisma.poll.update({
+        where: {
+          id: input.pollId,
+        },
+        data: {
+          selectedOptionId: input.optionId,
+        },
+      });
+    }),
+  undoBookDate: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await prisma.poll.update({
+        where: {
+          id: input.pollId,
+        },
+        data: {
+          selectedOptionId: null,
+        },
+      });
+    }),
 });

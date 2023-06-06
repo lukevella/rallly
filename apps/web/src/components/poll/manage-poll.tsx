@@ -1,21 +1,21 @@
 import {
-  CheckIcon,
   ChevronDownIcon,
   DownloadIcon,
   LockIcon,
   PencilIcon,
   SettingsIcon,
+  StarIcon,
   TableIcon,
   TrashIcon,
   UnlockIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuItemIconLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import Link from "next/link";
@@ -24,7 +24,6 @@ import * as React from "react";
 
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 
-import { PollDetailsForm } from "../forms";
 import { usePoll } from "../poll-context";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
@@ -67,11 +66,13 @@ const ManagePoll: React.FunctionComponent<{
               </DropdownMenuItemIconLabel>
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DropdownMenuItemIconLabel icon={DownloadIcon}>
               <Trans i18nKey="exportToCsv" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           {poll.closed ? (
             <DropdownMenuItem
               onClick={() => updatePollMutation({ urlId, closed: false })}
@@ -94,8 +95,8 @@ const ManagePoll: React.FunctionComponent<{
               setIsFinalizeDialogVisible(true);
             }}
           >
-            <DropdownMenuItemIconLabel icon={CheckIcon}>
-              <Trans i18nKey="finalize" defaults="Finalize" />
+            <DropdownMenuItemIconLabel icon={StarIcon}>
+              <Trans i18nKey="pickADate" defaults="Pick a date" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuItem

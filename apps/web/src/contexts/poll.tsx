@@ -15,5 +15,9 @@ export const usePoll = () => {
     },
   );
 
+  if (!pollQuery.data) {
+    throw new Error("Expected poll to be prefetched");
+  }
+
   return pollQuery.data;
 };

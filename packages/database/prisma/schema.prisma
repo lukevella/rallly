@@ -59,6 +59,7 @@ model Poll {
   legacy           Boolean       @default(false)
   closed           Boolean       @default(false)
   deleted          Boolean       @default(false)
+  selectedOptionId String?       @map("selected_option_id")
   deletedAt        DateTime?     @map("deleted_at")
   touchedAt        DateTime      @default(now()) @map("touched_at")
   participantUrlId String        @unique @map("participant_url_id")
