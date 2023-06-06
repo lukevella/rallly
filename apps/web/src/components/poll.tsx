@@ -14,11 +14,7 @@ import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { TextSummary } from "@/components/text-summary";
 import { useUserPreferences } from "@/contexts/preferences";
-import {
-  TimeFormatProvider,
-  TimePreferences,
-  TimeZoneProvider,
-} from "@/contexts/time-preferences";
+import { TimePreferences } from "@/contexts/time-preferences";
 import { generateGradient } from "@/utils/color-hash";
 import { preventWidows } from "@/utils/prevent-widows";
 
@@ -26,7 +22,7 @@ import PollSubheader from "./poll/poll-subheader";
 import TruncatedLinkify from "./poll/truncated-linkify";
 import { useTouchBeacon } from "./poll/use-touch-beacon";
 import VoteIcon from "./poll/vote-icon";
-import { OptionsProvider, usePoll } from "./poll-context";
+import { usePoll } from "./poll-context";
 
 const checkIfWideScreen = () => window.innerWidth > 640;
 
