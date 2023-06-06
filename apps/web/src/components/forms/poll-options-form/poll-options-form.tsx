@@ -5,6 +5,8 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import { Card } from "@/components/card";
+
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import FullPageLoader from "../../full-page-loader";
 import { useModal } from "../../modal";
@@ -12,8 +14,7 @@ import TimeZonePicker from "../../time-zone-picker";
 import { PollFormProps } from "../types";
 import MonthCalendar from "./month-calendar";
 import { DateTimeOption } from "./types";
-
-const WeekCalendar = React.lazy(() => import("./week-calendar"));
+import WeekCalendar from "./week-calendar";
 
 export type PollOptionsData = {
   navigationDate: string; // used to navigate to the right part of the calendar
@@ -145,7 +146,7 @@ const PollOptionsForm: React.FunctionComponent<
         {calendarHelpModal}
         {dateOrTimeRangeModal}
         <FormItem>
-          <div className="w-full items-center space-y-2 border-b py-3 px-4 lg:flex lg:space-y-0 lg:space-x-2">
+          <div className="mb-4 flex gap-4">
             <div className="grow">
               <Controller
                 control={control}
@@ -163,7 +164,7 @@ const PollOptionsForm: React.FunctionComponent<
               />
             </div>
             <div className="flex space-x-3">
-              <div className="segment-button w-full">
+              <div className="segment-button">
                 <button
                   className={clsx({
                     "segment-button-active": selectedView.value === "month",
@@ -173,7 +174,7 @@ const PollOptionsForm: React.FunctionComponent<
                   }}
                   type="button"
                 >
-                  <CalendarIcon className="mr-2 h-5 w-5" /> {t("monthView")}
+                  <CalendarIcon className="mr-2 h-4 w-4" /> {t("monthView")}
                 </button>
                 <button
                   className={clsx({
@@ -184,51 +185,43 @@ const PollOptionsForm: React.FunctionComponent<
                     setValue("view", "week");
                   }}
                 >
-                  <TableIcon className="mr-2 h-5 w-5" /> {t("weekView")}
+                  <TableIcon className="mr-2 h-4 w-4" /> {t("weekView")}
                 </button>
               </div>
             </div>
           </div>
-          <div className="relative w-full">
-            <React.Suspense
-              fallback={
-                <FullPageLoader className="h-[400px]">
-                  {t("loading")}
-                </FullPageLoader>
-              }
-            >
-              <selectedView.Component
-                title={title}
-                options={watchOptions}
-                date={navigationDate}
-                onNavigate={(date) => {
-                  setValue("navigationDate", date.toISOString());
-                }}
-                onChange={(options) => {
-                  setValue("options", options);
-                  if (
-                    options.length === 0 ||
-                    options.every((option) => option.type === "date")
-                  ) {
-                    // unset the timeZone if we only have date option
-                    setValue("timeZone", "");
-                  }
-                  if (
-                    options.length > 0 &&
-                    !formState.touchedFields.timeZone &&
-                    options.every((option) => option.type === "timeSlot")
-                  ) {
-                    // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-                    setValue("timeZone", getBrowserTimeZone());
-                  }
-                }}
-                duration={watchDuration}
-                onChangeDuration={(duration) => {
-                  setValue("duration", duration);
-                }}
-              />
-            </React.Suspense>
-          </div>
+          <Card className="shadow-none">
+            <selectedView.Component
+              title={title}
+              options={watchOptions}
+              date={navigationDate}
+              onNavigate={(date) => {
+                setValue("navigationDate", date.toISOString());
+              }}
+              onChange={(options) => {
+                setValue("options", options);
+                if (
+                  options.length === 0 ||
+                  options.every((option) => option.type === "date")
+                ) {
+                  // unset the timeZone if we only have date option
+                  setValue("timeZone", "");
+                }
+                if (
+                  options.length > 0 &&
+                  !formState.touchedFields.timeZone &&
+                  options.every((option) => option.type === "timeSlot")
+                ) {
+                  // set timeZone if we are adding time ranges and we haven't touched the timeZone field
+                  setValue("timeZone", getBrowserTimeZone());
+                }
+              }}
+              duration={watchDuration}
+              onChangeDuration={(duration) => {
+                setValue("duration", duration);
+              }}
+            />
+          </Card>
         </FormItem>
       </form>
     </Form>

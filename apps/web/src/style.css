@@ -104,7 +104,7 @@
   }
 
   .segment-button button {
-    @apply inline-flex grow items-center justify-center border-b border-r border-t bg-gray-50 px-4 transition-colors first:rounded-r-none first:border-l last:rounded-l-none hover:bg-gray-50 focus:z-10 active:bg-gray-100;
+    @apply inline-flex grow items-center justify-center border-b border-r border-t bg-gray-50 px-4 text-sm font-medium transition-colors first:rounded-r-none first:border-l last:rounded-l-none hover:bg-gray-50 focus:z-10 active:bg-gray-100;
   }
 
   .segment-button .segment-button-active {
