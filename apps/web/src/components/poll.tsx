@@ -127,16 +127,10 @@ export const Poll = () => {
           </div>
         </div>
       </Card>
-      <TimeZoneProvider initialValue={userPreferences.timeZone}>
-        <TimeFormatProvider initialValue={userPreferences.timeFormat}>
-          <OptionsProvider>
-            {poll.timeZone ? <TimePreferences /> : null}
-            <Card fullWidthOnMobile={false}>
-              <PollComponent />
-            </Card>
-          </OptionsProvider>
-        </TimeFormatProvider>
-      </TimeZoneProvider>
+      {poll.timeZone ? <TimePreferences /> : null}
+      <Card fullWidthOnMobile={false}>
+        <PollComponent />
+      </Card>
       <hr className="my-4" />
       <Card fullWidthOnMobile={false}>
         <Discussion />

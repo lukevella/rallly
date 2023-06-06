@@ -211,6 +211,7 @@ export const RegisterForm: React.FunctionComponent<{
           {t("name")}
         </label>
         <TextInput
+          id="name"
           className="w-full"
           proportions="lg"
           autoFocus={true}
@@ -231,6 +232,7 @@ export const RegisterForm: React.FunctionComponent<{
         </label>
         <TextInput
           className="w-full"
+          id="email"
           proportions="lg"
           error={!!formState.errors.email}
           disabled={formState.isSubmitting}
@@ -376,6 +378,7 @@ export const LoginForm: React.FunctionComponent<{
         </label>
         <TextInput
           className="w-full"
+          id="email"
           proportions="lg"
           autoFocus={true}
           error={!!formState.errors.email}

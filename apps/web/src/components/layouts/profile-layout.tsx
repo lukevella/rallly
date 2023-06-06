@@ -14,7 +14,7 @@ import {
 } from "@/components/layouts/standard-layout/top-bar";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
-import { IfAuthenticated, UserProvider } from "../user-provider";
+import { IfAuthenticated } from "../user-provider";
 
 const MenuItem = (props: {
   icon: IconComponent;
@@ -71,10 +71,8 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
 export const getProfileLayout: NextPageWithLayout["getLayout"] =
   function getLayout(page) {
     return (
-      <UserProvider>
-        <StandardLayout>
-          <ProfileLayout>{page}</ProfileLayout>
-        </StandardLayout>
-      </UserProvider>
+      <StandardLayout>
+        <ProfileLayout>{page}</ProfileLayout>
+      </StandardLayout>
     );
   };

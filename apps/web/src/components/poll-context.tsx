@@ -23,7 +23,6 @@ type PollContextValue = {
   poll: GetPollApiResponse;
   urlId: string;
   admin: boolean;
-  pollType: "date" | "timeSlot";
   highScore: number;
   optionIds: string[];
   // TODO (Luke Vella) [2022-05-18]: Move this stuff to participants provider

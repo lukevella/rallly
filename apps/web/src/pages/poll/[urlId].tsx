@@ -2,25 +2,16 @@ import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
 import { GetServerSideProps } from "next";
 
-import { getStandardLayout } from "@/components/layouts/standard-layout";
-import { AdminControls } from "@/components/poll/participant-page/admin-controls";
+import { getPollLayout } from "@/components/layouts/poll-layout";
 import ParticipantPage from "@/components/poll/participant-page/participant-page";
-import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
 import { NextPageWithLayout } from "@/types";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
-  return (
-    <LegacyPollContextProvider>
-      <div className="flex min-w-0 grow flex-col">
-        <AdminControls />
-        <ParticipantPage className="xl:py-8" />
-      </div>
-    </LegacyPollContextProvider>
-  );
+  return <ParticipantPage className="xl:py-8" />;
 };
 
-Page.getLayout = getStandardLayout;
+Page.getLayout = getPollLayout;
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
   [

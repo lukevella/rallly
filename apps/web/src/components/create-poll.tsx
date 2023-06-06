@@ -1,5 +1,5 @@
 import { trpc } from "@rallly/backend";
-import { ArrowLeftIcon, VoteIcon, XIcon } from "@rallly/icons";
+import { ArrowLeftIcon, XIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -164,26 +164,13 @@ export const CreatePoll: React.FunctionComponent = () => {
                     );
                   case "options":
                     return (
-                      <div>
-                        <div className="mb-8">
-                          <h2 className="">
-                            <Trans i18nKey="dates" defaults="Dates" />
-                          </h2>
-                          <p className="leading-6 text-gray-500">
-                            <Trans
-                              i18nKey="datesDescription"
-                              defaults="Select a few dates for your participants to choose from"
-                            />
-                          </p>
-                        </div>
-                        <PollOptionsForm
-                          name={currentStepName}
-                          defaultValues={formData?.options}
-                          onSubmit={handleSubmit}
-                          onChange={handleChange}
-                          title={formData.eventDetails?.title}
-                        />
-                      </div>
+                      <PollOptionsForm
+                        name={currentStepName}
+                        defaultValues={formData?.options}
+                        onSubmit={handleSubmit}
+                        onChange={handleChange}
+                        title={formData.eventDetails?.title}
+                      />
                     );
                   case "userDetails":
                     return (

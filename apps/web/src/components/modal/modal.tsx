@@ -40,7 +40,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
       {visible ? (
         <Dialog
           open={visible}
-          className="fixed inset-0 z-40 overflow-y-auto"
+          className="fixed inset-0 z-50 overflow-y-auto"
           initialFocus={initialFocusRef}
           onClose={() => {
             if (overlayClosable) onCancel?.();
