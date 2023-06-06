@@ -6,18 +6,30 @@ import { getRandomAvatarColor } from "@/utils/color-hash";
 
 export const CurrentUserAvatar = ({
   size = "md",
+  className,
 }: Omit<UserAvatarProps, "name">) => {
   const { user } = useUser();
 
-  return <UserAvatar name={user.isGuest ? undefined : user.name} size={size} />;
+  return (
+    <UserAvatar
+      className={className}
+      name={user.isGuest ? undefined : user.name}
+      size={size}
+    />
+  );
 };
 
 interface UserAvatarProps {
   name?: string;
   size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
-export const UserAvatar = ({ size = "md", name }: UserAvatarProps) => {
+export const UserAvatar = ({
+  size = "md",
+  name,
+  className,
+}: UserAvatarProps) => {
   const colors = name ? getRandomAvatarColor(name) : null;
   return (
     <span
@@ -33,6 +45,7 @@ export const UserAvatar = ({ size = "md", name }: UserAvatarProps) => {
           : colors?.requiresDarkText
           ? "text-gray-800"
           : "text-white",
+        className,
       )}
       style={{
         backgroundColor: colors?.color,

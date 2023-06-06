@@ -49,7 +49,7 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
       </TopBar>
       <div>
         <Container className="px-0 py-4 sm:py-8">
-          <Card fullWidthOnMobile={true}>
+          <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
             <div className="flex gap-4 border-b bg-gray-50 p-3">
               <IfAuthenticated>
                 <MenuItem href="/settings/profile" icon={UserIcon}>

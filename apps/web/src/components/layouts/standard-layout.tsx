@@ -1,11 +1,13 @@
 import {
+  ChevronDown,
   LifeBuoyIcon,
   LogInIcon,
   LogOutIcon,
-  PlusCircleIcon,
   RefreshCcwIcon,
+  ScrollTextIcon,
   Settings2Icon,
   UserIcon,
+  UserPlusIcon,
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
@@ -17,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Popover, PopoverTrigger } from "@rallly/ui/popover";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,6 +27,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 
+import { LoginModalProvider } from "@/components/auth/login-modal";
 import { Container } from "@/components/container";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
@@ -42,11 +46,14 @@ const UserDropdown = () => {
   const { user } = useUser();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="group flex h-9 items-center gap-x-3 px-2.5">
-        <CurrentUserAvatar size="sm" />
-        <span className="text-sm font-medium">
-          {user.isGuest ? <Trans i18nKey="guest" /> : user.name}
-        </span>
+      <DropdownMenuTrigger asChild className="group">
+        <Button className="rounded-full">
+          <CurrentUserAvatar size="sm" className="-ml-1" />
+          <span className="text-sm font-medium">
+            {user.isGuest ? <Trans i18nKey="guest" /> : user.name}
+          </span>
+          <ChevronDown className="h-4 w-4" />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>
@@ -76,6 +83,17 @@ const UserDropdown = () => {
         </DropdownMenuItem>
         <DropdownMenuItem asChild={true}>
           <Link
+            target="_blank"
+            href="https://github.com/lukevella/rallly/releases"
+            className="flex items-center gap-x-2"
+          >
+            <ScrollTextIcon className="h-4 w-4" />
+            <Trans i18nKey="changelog" defaults="Change log" />
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild={true}>
+          <Link
             href="/settings/preferences"
             className="flex items-center gap-x-2"
           >
@@ -86,8 +104,8 @@ const UserDropdown = () => {
         <IfGuest>
           <DropdownMenuItem asChild={true}>
             <Link href="/register" className="flex items-center gap-x-2">
-              <PlusCircleIcon className="h-4 w-4" />
-              <Trans i18nKey="createAnAccount" defaults="Create an Account" />
+              <UserPlusIcon className="h-4 w-4" />
+              <Trans i18nKey="createAnAccount" defaults="Register" />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
@@ -180,15 +198,19 @@ const MainNav = () => {
             label={<Trans i18nKey="preferences" defaults="Preferences" />}
           />
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-2">
           <UserDropdown />
           <IfGuest>
-            <Button asChild>
-              <Link href="/login">
-                <LogInIcon className="h-4 w-4" />
-                <Trans i18nKey="login" />
-              </Link>
-            </Button>
+            <Popover>
+              <PopoverTrigger>
+                <Button asChild>
+                  <Link href="/login">
+                    <LogInIcon className="-ml-0.5 h-4 w-4" />
+                    <Trans i18nKey="login" />
+                  </Link>
+                </Button>
+              </PopoverTrigger>
+            </Popover>
           </IfGuest>
         </div>
       </Container>
@@ -203,10 +225,12 @@ export const StandardLayout: React.FunctionComponent<{
     <UserProvider>
       <Toaster />
       <ModalProvider>
-        <div className="flex min-h-screen flex-col" {...rest}>
-          <MainNav />
-          <div>{children}</div>
-        </div>
+        <LoginModalProvider>
+          <div className="flex min-h-screen flex-col" {...rest}>
+            <MainNav />
+            <div>{children}</div>
+          </div>
+        </LoginModalProvider>
       </ModalProvider>
     </UserProvider>
   );

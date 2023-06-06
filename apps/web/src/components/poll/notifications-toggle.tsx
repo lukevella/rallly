@@ -1,9 +1,9 @@
 import { trpc } from "@rallly/backend";
 import { BellOffIcon, BellRingIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import { useRouter } from "next/router";
 import * as React from "react";
 
-import { useLoginModal } from "@/components/auth/login-modal";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
@@ -28,8 +28,8 @@ const NotificationsToggle: React.FunctionComponent = () => {
   const isWatching = watchers?.some(({ userId }) => userId === user.id);
 
   const posthog = usePostHog();
-  const { openLoginModal } = useLoginModal();
 
+  const router = useRouter();
   const watch = trpc.polls.watch.useMutation({
     onSuccess: () => {
       // TODO (Luke Vella) [2023-04-08]: We should have a separate query for getting watchers
@@ -63,7 +63,8 @@ const NotificationsToggle: React.FunctionComponent = () => {
       className="flex items-center gap-2 px-2.5"
       onClick={async () => {
         if (user.isGuest) {
-          openLoginModal();
+          // TODO (Luke Vella) [2023-06-06]: Open Login Modal
+          router.push("/login");
           return;
         }
         // toggle

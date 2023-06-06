@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 
 export const Card = (
   props: React.PropsWithChildren<{
@@ -8,7 +8,7 @@ export const Card = (
 ) => {
   return (
     <div
-      className={clsx(
+      className={cn(
         "max-w-full overflow-hidden bg-white shadow-sm",
         props.fullWidthOnMobile
           ? "sm:rounded-md sm:border-y sm:border-x"
