@@ -48,7 +48,7 @@ const UserDropdown = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="group">
         <Button className="rounded-full">
-          <CurrentUserAvatar size="sm" className="-ml-1" />
+          <CurrentUserAvatar size="sm" className="-ml-1 -translate-x-px" />
           <span className="text-sm font-medium">
             {user.isGuest ? <Trans i18nKey="guest" /> : user.name}
           </span>

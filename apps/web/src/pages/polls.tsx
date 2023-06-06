@@ -114,7 +114,7 @@ const Page: NextPageWithLayout = () => {
                             <span className="truncate">{info.getValue()}</span>
                             <ArrowRightIcon
                               className={clsx(
-                                "h-4 transition-all",
+                                "h-4 w-4 transition-all",
                                 "opacity-0 group-hover:opacity-100",
                                 "-translate-x-4 group-hover:translate-x-0",
                                 "group-focus:translate-x-1",

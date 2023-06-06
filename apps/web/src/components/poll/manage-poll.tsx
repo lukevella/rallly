@@ -49,7 +49,7 @@ const ManagePoll: React.FunctionComponent<{
         <DropdownMenuTrigger asChild={true}>
           <Button icon={SettingsIcon} disabled={disabled}>
             <Trans i18nKey="manage" />
-            <ChevronDownIcon className="h-4" />
+            <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

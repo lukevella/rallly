@@ -154,11 +154,6 @@
   "hostDetailsDescription": "Enter your details so we can send you a link to your poll",
   "useLocaleDefaults": "Use locale defaults",
   "mangeLinkTooltip": "You created this poll, so you have exclusive access to its management page",
-  "export": "Export",
-  "exportCsvDescription": "View your results in Excel.",
-  "lockPollDescription": "Prevent participants from adding or changing the results of this poll.",
-  "lock": "Lock",
-  "editPollDescription": "Make changes to your poll.",
   "inviteParticipants": "Invite Participants",
   "inviteParticipantsDescription": "Copy and share this invite link to start gathering responses from your participants.",
   "inviteLink": "Invite Link",
@@ -168,5 +163,6 @@
   "selectOption": "Select Option",
   "finalizePollTitle": "Finalize Poll",
   "book": "Book",
-  "support": "Support"
+  "support": "Support",
+  "changelog": "Change log"
 }
