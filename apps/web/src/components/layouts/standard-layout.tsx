@@ -19,7 +19,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Popover, PopoverTrigger } from "@rallly/ui/popover";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,8 +46,8 @@ const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="group">
-        <Button className="rounded-full">
-          <CurrentUserAvatar size="sm" className="-ml-1 -translate-x-px" />
+        <Button className="rounded-full shadow-none">
+          <CurrentUserAvatar size="sm" className="-ml-1" />
           <span className="text-sm font-medium">
             {user.isGuest ? <Trans i18nKey="guest" /> : user.name}
           </span>
@@ -199,19 +198,15 @@ const MainNav = () => {
           />
         </div>
         <div className="flex gap-2">
-          <UserDropdown />
           <IfGuest>
-            <Popover>
-              <PopoverTrigger>
-                <Button asChild>
-                  <Link href="/login">
-                    <LogInIcon className="-ml-0.5 h-4 w-4" />
-                    <Trans i18nKey="login" />
-                  </Link>
-                </Button>
-              </PopoverTrigger>
-            </Popover>
+            <Button asChild>
+              <Link href="/login">
+                <LogInIcon className="-ml-0.5 h-4 w-4" />
+                <Trans i18nKey="login" />
+              </Link>
+            </Button>
           </IfGuest>
+          <UserDropdown />
         </div>
       </Container>
     </div>

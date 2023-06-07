@@ -15,7 +15,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hozer:bg-destructive/90",
         default:
-          "rounded-md px-3.5 py-2.5 shadow-sm active:shadow-none data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-50 hover:bg-white/50 bg-gray-50",
+          "rounded-md px-3.5 py-2.5 hover:shadow-sm active:shadow-none data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-50 hover:bg-white/50 bg-gray-50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "border-transparent hover:bg-gray-100 active:bg-gray-200",
