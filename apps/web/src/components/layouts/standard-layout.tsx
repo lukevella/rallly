@@ -177,7 +177,7 @@ const Logo = () => {
           className="hidden sm:block"
           src="/logo.svg"
           width={120}
-          height={30}
+          height={22}
           alt="Rallly"
         />
         <Image
