@@ -5,9 +5,12 @@ import { LoginForm, RegisterForm } from "./login-form";
 
 export const LoginModal: React.FunctionComponent<{
   open: boolean;
+  defaultView?: "login" | "register";
   onOpenChange: (open: boolean) => void;
-}> = ({ open, onOpenChange }) => {
-  const [hasAccount, setHasAccount] = React.useState(false);
+}> = ({ open, onOpenChange, defaultView = "login" }) => {
+  const [newAccount, setNewAccount] = React.useState(
+    defaultView === "register",
+  );
   const [defaultEmail, setDefaultEmail] = React.useState("");
 
   return (
@@ -18,13 +21,13 @@ export const LoginModal: React.FunctionComponent<{
           className="border-t-primary max-w-full overflow-hidden border-t-4 shadow-sm"
         >
           <div className="p-4 sm:p-6">
-            {hasAccount ? (
+            {newAccount ? (
               <RegisterForm
                 defaultValues={{ email: defaultEmail }}
                 onRegistered={() => onOpenChange(false)}
                 onClickLogin={(e) => {
                   e.preventDefault();
-                  setHasAccount(false);
+                  setNewAccount(false);
                 }}
               />
             ) : (
@@ -33,7 +36,7 @@ export const LoginModal: React.FunctionComponent<{
                 onClickRegister={(e, email) => {
                   e.preventDefault();
                   setDefaultEmail(email);
-                  setHasAccount(true);
+                  setNewAccount(true);
                 }}
               />
             )}
@@ -46,12 +49,18 @@ export const LoginModal: React.FunctionComponent<{
 
 export const LoginModalProvider = ({ children }: React.PropsWithChildren) => {
   const [open, setOpen] = React.useState(false);
+  const [view, setView] = React.useState<"login" | "register">("login");
   React.useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (target.tagName === "A" && target.getAttribute("href") === "/login") {
+      const href = target.getAttribute("href");
+      if (
+        target.tagName === "A" &&
+        (href === "/login" || href === "/register")
+      ) {
         // Handle the click event here
         event.preventDefault();
+        setView(href === "/login" ? "login" : "register");
         setOpen(true);
       }
     };
@@ -64,7 +73,9 @@ export const LoginModalProvider = ({ children }: React.PropsWithChildren) => {
   }, []);
   return (
     <>
-      <LoginModal open={open} onOpenChange={setOpen} />
+      {open ? (
+        <LoginModal open={open} defaultView={view} onOpenChange={setOpen} />
+      ) : null}
       {children}
     </>
   );

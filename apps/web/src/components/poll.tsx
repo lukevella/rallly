@@ -135,7 +135,7 @@ export const Poll = () => {
   }
 
   return (
-    <div className=" p-3 sm:space-y-4 sm:p-4">
+    <div className="space-y-3 sm:space-y-4">
       {poll.selectedOptionId ? (
         <>
           <FinalDate />

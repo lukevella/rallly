@@ -1,10 +1,4 @@
-import { trpc } from "@rallly/backend";
-import {
-  AlertCircleIcon,
-  ArrowLeftRightIcon,
-  FileBarChart,
-  Share2Icon,
-} from "@rallly/icons";
+import { AlertCircleIcon, FileBarChart, Share2Icon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -16,7 +10,6 @@ import {
 } from "@rallly/ui/dialog";
 import React from "react";
 
-import { LegacyButton } from "@/components/button";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import {
   TopBar,
@@ -84,12 +77,6 @@ export const AdminControls = () => {
   const poll = usePoll();
   const hasAdminPermission = poll?.adminUrlId;
   const { user } = useUser();
-  const queryClient = trpc.useContext();
-  const transfer = trpc.polls.transfer.useMutation({
-    onSuccess: () => {
-      queryClient.polls.get.invalidate();
-    },
-  });
 
   return (
     <TopBar className="flex flex-col gap-y-3 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4">
@@ -113,28 +100,6 @@ export const AdminControls = () => {
         {user.isGuest && poll?.userId !== user.id ? null : (
           <ManagePoll disabled={!hasAdminPermission} />
         )}
-        {hasAdminPermission && user.id !== poll.userId && !poll.demo ? (
-          <LegacyTooltip
-            content={
-              <Trans
-                i18nKey="transferTooltip"
-                defaults="Transfer this poll to yourself"
-              />
-            }
-          >
-            <LegacyButton
-              loading={transfer.isLoading}
-              icon={<ArrowLeftRightIcon />}
-              onClick={() => {
-                transfer.mutate({
-                  pollId: poll.id,
-                });
-              }}
-            >
-              <Trans defaults="Transfer" i18nKey="addToMyPolls" />
-            </LegacyButton>
-          </LegacyTooltip>
-        ) : null}
         <InviteDialog />
       </div>
     </TopBar>

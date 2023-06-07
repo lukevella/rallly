@@ -27,12 +27,7 @@ const ParticipantPage = (
         <ModalProvider>
           <div>
             {props.children}
-            <div
-              className={cn(
-                "mx-auto w-full max-w-4xl space-y-3 sm:space-y-4",
-                props.className,
-              )}
-            >
+            <div className={cn(props.className)}>
               <Poll />
             </div>
           </div>
