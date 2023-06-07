@@ -79,7 +79,7 @@ export const AdminControls = () => {
   const { user } = useUser();
 
   return (
-    <TopBar className="flex flex-col gap-y-3 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4">
+    <TopBar className="flex items-center justify-between sm:gap-x-4">
       <TopBarTitle title={poll?.title} icon={FileBarChart} />
       <div className="flex items-center gap-x-2.5">
         {user.id !== poll?.userId ? (

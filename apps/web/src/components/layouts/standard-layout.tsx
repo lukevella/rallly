@@ -126,7 +126,7 @@ const UserDropdown = () => {
     </DropdownMenu>
   );
 };
-const MenuItem = ({
+const NavMenuItem = ({
   href,
   target,
   label,
@@ -141,7 +141,7 @@ const MenuItem = ({
       target={target}
       href={href}
       className={cn(
-        "flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium",
+        "flex items-center gap-2 rounded-none px-4 py-1.5 text-sm font-medium",
         router.asPath === href
           ? "text-foreground"
           : "text-muted-foreground hover:text-foreground active:bg-gray-200",
@@ -173,7 +173,20 @@ const Logo = () => {
           "inline-block transition-all hover:opacity-75 active:translate-y-1",
         )}
       >
-        <Image src="/logo.svg" width={120} height={30} alt="Rallly" />
+        <Image
+          className="hidden sm:block"
+          src="/logo.svg"
+          width={120}
+          height={30}
+          alt="Rallly"
+        />
+        <Image
+          className="sm:hidden"
+          src="/logo-mark.svg"
+          width={30}
+          height={30}
+          alt="Rallly"
+        />
       </Link>
       <div className="flex h-9 w-9 items-center justify-center">
         {isBusy ? <Spinner className="text-gray-500" /> : null}
@@ -184,18 +197,22 @@ const Logo = () => {
 
 const MainNav = () => {
   return (
-    <div className="border-b bg-gray-50 py-3">
-      <Container className="flex items-center justify-between ">
-        <div className="flex gap-2">
+    <div className="border-b bg-gray-50">
+      <Container className="flex h-14 items-center justify-between sm:justify-start">
+        <div className="flex shrink-0 gap-4">
           <Logo />
-          <MenuItem
-            href="/polls"
-            label={<Trans i18nKey="polls" defaults="Polls" />}
-          />
-          <MenuItem
-            href="/settings/preferences"
-            label={<Trans i18nKey="preferences" defaults="Preferences" />}
-          />
+        </div>
+        <div className="hidden h-full grow sm:flex">
+          <nav className="flex">
+            <NavMenuItem
+              href="/polls"
+              label={<Trans i18nKey="polls" defaults="Polls" />}
+            />
+            <NavMenuItem
+              href="/settings/preferences"
+              label={<Trans i18nKey="preferences" defaults="Preferences" />}
+            />
+          </nav>
         </div>
         <div className="flex gap-2">
           <IfGuest>

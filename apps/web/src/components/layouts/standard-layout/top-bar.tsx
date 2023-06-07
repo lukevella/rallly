@@ -22,15 +22,15 @@ export const TopBar = (
 };
 
 export const TopBarTitle = ({
-  icon: Icon,
+  // icon: Icon,
   title,
 }: {
-  icon: IconComponent;
+  icon?: IconComponent;
   title: React.ReactNode;
 }) => {
   return (
     <div className="flex h-9 min-w-0 items-center gap-2.5">
-      <Icon className="-ml-0.5 h-6 w-6 shrink-0" />
+      {/* <Icon className="-ml-0.5 h-6 w-6 shrink-0" /> */}
       <div className="truncate font-medium">{title}</div>
     </div>
   );
