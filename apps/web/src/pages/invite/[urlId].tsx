@@ -46,7 +46,7 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
   return (
     <UserProvider forceUserId={forceUserId}>
       <LegacyPollContextProvider>
-        <div className="space-y-4 py-8">
+        <div className="mx-auto max-w-4xl space-y-4 p-3 sm:p-8">
           <GoToApp />
           <ParticipantPage />
           <div className="mt-4 space-y-4 text-center text-gray-500">

@@ -8,6 +8,7 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { Trans } from "next-i18next";
 
+import { EventCard } from "@/components/event-card";
 import { getPollLayout } from "@/components/layouts/poll-layout";
 import ParticipantPage from "@/components/poll/participant-page/participant-page";
 import { useUser } from "@/components/user-provider";
@@ -100,6 +101,8 @@ const Page: NextPageWithLayout = () => {
   return (
     <div className="mx-auto w-full max-w-4xl space-y-3 p-3 sm:space-y-4 sm:p-8">
       <GuestPollAlert />
+      <EventCard />
+      <hr />
       <ParticipantPage />
     </div>
   );
