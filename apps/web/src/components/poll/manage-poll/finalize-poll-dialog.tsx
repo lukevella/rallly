@@ -1,5 +1,5 @@
 import { trpc } from "@rallly/backend";
-import { LoaderIcon, RotateCcwIcon, Users2Icon } from "@rallly/icons";
+import { RotateCcwIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -9,25 +9,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@rallly/ui/form";
-import { Label } from "@rallly/ui/label";
+import { Form, FormControl, FormField, FormItem } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import dayjs from "dayjs";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { DateIcon } from "@/components/date-icon";
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
-import VoteIcon from "@/components/poll/vote-icon";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
@@ -46,7 +36,7 @@ export const VoteSummaryProgressBar = (props: {
   no: string[];
 }) => {
   return (
-    <div className="flex h-2 grow overflow-hidden rounded bg-slate-100">
+    <div className="flex h-1.5 grow overflow-hidden rounded bg-slate-100">
       <div
         className="h-full bg-green-500"
         style={{
@@ -106,39 +96,6 @@ const useScoreByOptionId = () => {
     }
     return res;
   }, [responses, options]);
-};
-
-const VoteSummary = (props: {
-  total: number;
-  yes: string[];
-  ifNeedBe: string[];
-  no: string[];
-}) => {
-  const pending =
-    props.total - props.yes.length - props.ifNeedBe.length - props.no.length;
-  return (
-    <span className="inline-flex gap-3 text-xs font-semibold tabular-nums">
-      <span className="flex items-center gap-1.5">
-        <Users2Icon className="h-5 w-5" />
-        <span>
-          {props.yes.length + props.ifNeedBe.length}
-          <span className="text-gray-400">{`/${props.total}`}</span>
-        </span>
-      </span>
-      {props.ifNeedBe.length ? (
-        <span className="flex items-center gap-1.5">
-          <VoteIcon type="ifNeedBe" />
-          {props.ifNeedBe.length}
-        </span>
-      ) : null}
-      {pending ? (
-        <span className="flex items-center gap-1.5">
-          <LoaderIcon className="h-4 w-4" />
-          {pending}
-        </span>
-      ) : null}
-    </span>
-  );
 };
 
 export const FinalizePollDialog = ({
@@ -209,7 +166,7 @@ export const FinalizePollDialog = ({
                       <RadioGroup
                         onValueChange={field.onChange}
                         value={field.value}
-                        className="grid gap-4"
+                        className="grid gap-2"
                       >
                         {options.map((option) => {
                           const attendees = participants.filter((participant) =>
@@ -226,34 +183,29 @@ export const FinalizePollDialog = ({
                               key={option.id}
                               htmlFor={option.id}
                               className={cn(
-                                "flex cursor-pointer items-center gap-4 rounded-md border bg-white p-3 text-base ",
-                                field.value === option.id
-                                  ? "border-primary bg-primary-50"
-                                  : "hover:bg-gray-50 active:bg-gray-100",
+                                "flex cursor-pointer items-center gap-4 rounded-md border bg-white p-3 text-base hover:bg-gray-50 active:bg-gray-100",
+                                field.value === option.id ? "" : "",
                               )}
                             >
                               <RadioGroupItem
-                                className="hidden"
                                 id={option.id}
                                 value={option.id}
                               />
-                              <div className="flex grow items-center gap-4">
-                                <div className="grow space-y-2">
-                                  <div className="font-semibold">
-                                    {option.duration > 0
-                                      ? date.format("LLL")
-                                      : date.format("LL")}
-                                  </div>
+                              <div className="grow space-y-2">
+                                <div className="text-sm font-semibold">
+                                  {option.duration > 0
+                                    ? date.format("LLL")
+                                    : date.format("LL")}
                                 </div>
-                                <div className="w-48">
-                                  <VoteSummaryProgressBar
-                                    {...scoreByOptionId[option.id]}
-                                    total={participants.length}
-                                  />
-                                </div>
-                                <div>
-                                  <ConnectedScoreSummary optionId={option.id} />
-                                </div>
+                              </div>
+                              <div className="w-48">
+                                <VoteSummaryProgressBar
+                                  {...scoreByOptionId[option.id]}
+                                  total={participants.length}
+                                />
+                              </div>
+                              <div>
+                                <ConnectedScoreSummary optionId={option.id} />
                               </div>
                             </label>
                           );
