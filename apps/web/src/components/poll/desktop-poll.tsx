@@ -3,7 +3,7 @@ import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useMeasure } from "react-use";
+import { useMeasure, useUpdateEffect } from "react-use";
 
 import { usePermissions } from "@/contexts/permissions";
 
@@ -67,6 +67,12 @@ const Poll: React.FunctionComponent = () => {
 
   const pollWidth = sidebarWidth + poll.options.length * columnWidth;
   const addParticipant = useAddParticipantMutation();
+
+  useUpdateEffect(() => {
+    if (!canAddNewParticipant) {
+      setShouldShowNewParticipantForm(false);
+    }
+  }, [canAddNewParticipant]);
 
   const goToNextPage = () => {
     setScrollPosition(

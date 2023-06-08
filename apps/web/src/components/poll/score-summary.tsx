@@ -1,15 +1,18 @@
 import { Users2Icon } from "@rallly/icons";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
+import VoteIcon from "@/components/poll/vote-icon";
 import { usePoll } from "@/components/poll-context";
 
 export interface PopularityScoreProps {
   yesScore: number;
   ifNeedBeScore?: number;
   highlight?: boolean;
+  highScore: number;
 }
 
 export const ConnectedScoreSummary: React.FunctionComponent<{
@@ -22,6 +25,7 @@ export const ConnectedScoreSummary: React.FunctionComponent<{
     <ScoreSummary
       yesScore={yes}
       ifNeedBeScore={ifNeedBe}
+      highScore={highScore}
       highlight={score === highScore}
     />
   );
@@ -31,6 +35,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
   React.memo(function PopularityScore({
     yesScore,
     ifNeedBeScore = 0,
+    highScore,
     highlight,
   }) {
     const score = yesScore + ifNeedBeScore;
@@ -42,15 +47,19 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
       <div
         data-testid="popularity-score"
         className={clsx(
-          "flex select-none items-center gap-1 rounded-full py-1 px-2 text-xs font-semibold tabular-nums",
+          "relative flex select-none items-center gap-1 rounded-full py-0.5 px-2 text-xs font-semibold tabular-nums",
           {
-            "bg-green-50 text-green-500": highlight && ifNeedBeScore === 0,
-            "bg-amber-50 text-amber-400": highlight && ifNeedBeScore !== 0,
+            "bg-muted text-muted-foreground": highlight,
           },
-          { "text-muted-foreground": !highlight },
+          { "bg-muted text-muted-foreground": !highlight },
         )}
+        style={{
+          opacity: score / highScore,
+        }}
       >
-        <Users2Icon className="-ml-0.5 inline-block h-4 w-4 transition-opacity" />
+        {highScore === score && ifNeedBeScore > 0 ? (
+          <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-amber-400 ring-2 ring-white" />
+        ) : null}
         <AnimatePresence initial={false} exitBeforeEnter={true}>
           <m.span
             transition={{

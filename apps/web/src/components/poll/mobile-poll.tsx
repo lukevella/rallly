@@ -5,6 +5,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useUpdateEffect } from "react-use";
 import smoothscroll from "smoothscroll-polyfill";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
@@ -66,6 +67,12 @@ const MobilePoll: React.FunctionComponent = () => {
   const [isEditing, setIsEditing] = React.useState(
     canAddNewParticipant && !userAlreadyVoted,
   );
+
+  useUpdateEffect(() => {
+    if (!canAddNewParticipant) {
+      setIsEditing(false);
+    }
+  }, [canAddNewParticipant]);
 
   const formRef = React.useRef<HTMLFormElement>(null);
 

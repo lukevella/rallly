@@ -182,7 +182,7 @@ export const FinalizePollDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle>
             <Trans i18nKey="selectOption" defaults="Select Option" />
@@ -244,6 +244,12 @@ export const FinalizePollDialog = ({
                                       ? date.format("LLL")
                                       : date.format("LL")}
                                   </div>
+                                </div>
+                                <div className="w-48">
+                                  <VoteSummaryProgressBar
+                                    {...scoreByOptionId[option.id]}
+                                    total={participants.length}
+                                  />
                                 </div>
                                 <div>
                                   <ConnectedScoreSummary optionId={option.id} />

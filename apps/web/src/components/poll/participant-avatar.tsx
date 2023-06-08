@@ -62,7 +62,7 @@ export const ColoredAvatar = (props: {
     props.seed ?? props.name,
   );
   return (
-    <span
+    <div
       className={clsx(
         "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold uppercase",
         requiresDarkText ? "text-gray-800" : "text-white",
@@ -73,6 +73,6 @@ export const ColoredAvatar = (props: {
       }}
     >
       {props.name[0]}
-    </span>
+    </div>
   );
 };

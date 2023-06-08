@@ -2,6 +2,7 @@ import { trpc } from "@rallly/backend";
 import { BellOffIcon, BellRingIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { Skeleton } from "@/components/skeleton";
@@ -51,6 +52,8 @@ const NotificationsToggle: React.FunctionComponent = () => {
     },
   });
 
+  const { t } = useTranslation();
+
   if (!watchers) {
     return <Skeleton className="h-9 w-32" />;
   }
@@ -76,7 +79,22 @@ const NotificationsToggle: React.FunctionComponent = () => {
       }}
     >
       <span className="hidden font-medium sm:block">
-        <Trans i18nKey="notifications" />
+        <Trans
+          i18nKey="notificationsValue"
+          defaults="Notifications: <b>{value}</b>"
+          components={{
+            b: <span className="font-semibold" />,
+          }}
+          values={{
+            value: isWatching
+              ? t("notificationsOn", {
+                  defaultValue: "On",
+                })
+              : t("notificationsOff", {
+                  defaultValue: "Off",
+                }),
+          }}
+        />
       </span>
     </Button>
   );

@@ -21,14 +21,18 @@ export const ParticipantAvatarBar = ({
         .slice(0, hiddenCount === 1 ? max + 1 : max)
         .map((participant, index) => (
           <Tooltip delayDuration={0} key={index}>
-            <TooltipTrigger type="button">
-              <ColoredAvatar
-                className={cn("select-none ring-2 ring-white", {
+            <TooltipTrigger asChild>
+              <div
+                className={cn({
                   "-mr-1":
                     index !== max - 1 || index !== participants.length - 1,
                 })}
-                name={participant.name}
-              />
+              >
+                <ColoredAvatar
+                  className="select-none ring-2 ring-white"
+                  name={participant.name}
+                />
+              </div>
             </TooltipTrigger>
             <TooltipContent>{participant.name}</TooltipContent>
           </Tooltip>
