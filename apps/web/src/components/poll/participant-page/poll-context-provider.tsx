@@ -1,3 +1,4 @@
+import ModalProvider from "@/components/modal/modal-provider";
 import { ParticipantsProvider } from "@/components/participants-provider";
 import {
   OptionsProvider,
@@ -25,11 +26,13 @@ export const LegacyPollContextProvider = (props: React.PropsWithChildren) => {
         urlId={poll.participantUrlId}
         admin={false}
       >
-        <TimeZoneProvider initialValue={userPreferences.timeZone}>
-          <TimeFormatProvider initialValue={userPreferences.timeFormat}>
-            <OptionsProvider>{props.children}</OptionsProvider>
-          </TimeFormatProvider>
-        </TimeZoneProvider>
+        <ModalProvider>
+          <TimeZoneProvider initialValue={userPreferences.timeZone}>
+            <TimeFormatProvider initialValue={userPreferences.timeFormat}>
+              <OptionsProvider>{props.children}</OptionsProvider>
+            </TimeFormatProvider>
+          </TimeZoneProvider>
+        </ModalProvider>
       </PollContextProvider>
     </ParticipantsProvider>
   );

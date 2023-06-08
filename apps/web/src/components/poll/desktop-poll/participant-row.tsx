@@ -7,7 +7,7 @@ import * as React from "react";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
-import { useRole } from "@/contexts/role";
+import { usePermissions } from "@/contexts/permissions";
 
 import { ParticipantFormSubmitted } from "../types";
 import UserAvatar from "../user-avatar";
@@ -89,14 +89,12 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { columnWidth, sidebarWidth } = usePollContext();
 
   const { user, ownsObject } = useUser();
-  const { poll, getVote, optionIds } = usePoll();
+  const { getVote, optionIds } = usePoll();
 
   const isYou = user && ownsObject(participant) ? true : false;
 
-  const isAdmin = !!poll.adminUrlId;
-  const role = useRole();
-  const canEdit =
-    (role === "admin" && isAdmin) || (!poll.closed && ownsObject(participant));
+  const { canEditParticipant } = usePermissions();
+  const canEdit = canEditParticipant(participant.id);
 
   if (editMode) {
     return (

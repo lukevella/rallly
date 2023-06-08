@@ -5,7 +5,7 @@ import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure } from "react-use";
 
-import { useRole } from "@/contexts/role";
+import { usePermissions } from "@/contexts/permissions";
 
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
@@ -60,8 +60,10 @@ const Poll: React.FunctionComponent = () => {
   const maxScrollPosition =
     columnWidth * poll.options.length - columnWidth * numberOfVisibleColumns;
 
+  const { canAddNewParticipant } = usePermissions();
+
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(!(poll.closed || userAlreadyVoted));
+    React.useState(canAddNewParticipant && !userAlreadyVoted);
 
   const pollWidth = sidebarWidth + poll.options.length * columnWidth;
   const addParticipant = useAddParticipantMutation();
@@ -83,7 +85,6 @@ const Poll: React.FunctionComponent = () => {
 
   const updateParticipant = useUpdateParticipantMutation();
   const showNewParticipantModal = useNewParticipantModal();
-  const role = useRole();
   return (
     <PollContext.Provider
       value={{
@@ -129,7 +130,7 @@ const Poll: React.FunctionComponent = () => {
                   <div className="px-1 font-medium">
                     {t("participantCount", { count: participants.length })}
                   </div>
-                  {role === "admin" || !poll.closed ? (
+                  {canAddNewParticipant ? (
                     <Button
                       size="sm"
                       onClick={() => {

@@ -1,4 +1,5 @@
 import { cn } from "@rallly/ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import clsx from "clsx";
 
 import { ColoredAvatar } from "@/components/poll/participant-avatar";
@@ -19,14 +20,18 @@ export const ParticipantAvatarBar = ({
       {participants
         .slice(0, hiddenCount === 1 ? max + 1 : max)
         .map((participant, index) => (
-          <LegacyTooltip key={index} content={participant.name}>
-            <ColoredAvatar
-              className={cn("select-none ring-2 ring-white", {
-                "-mr-1": index !== max - 1 || index !== participants.length - 1,
-              })}
-              name={participant.name}
-            />
-          </LegacyTooltip>
+          <Tooltip delayDuration={0} key={index}>
+            <TooltipTrigger>
+              <ColoredAvatar
+                className={cn("select-none ring-2 ring-white", {
+                  "-mr-1":
+                    index !== max - 1 || index !== participants.length - 1,
+                })}
+                name={participant.name}
+              />
+            </TooltipTrigger>
+            <TooltipContent>{participant.name}</TooltipContent>
+          </Tooltip>
         ))}
       {hiddenCount > 1 ? (
         <LegacyTooltip

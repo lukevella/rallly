@@ -9,7 +9,7 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useOptions, usePoll } from "@/components/poll-context";
-import { useRole } from "@/contexts/role";
+import { usePermissions } from "@/contexts/permissions";
 
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
@@ -41,8 +41,6 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const session = useUser();
 
-  const { ownsObject } = session;
-
   const form = useForm<ParticipantForm>({
     defaultValues: {
       votes: [],
@@ -59,19 +57,14 @@ const MobilePoll: React.FunctionComponent = () => {
     }
   });
 
-  const role = useRole();
-  const isAdmin = !!poll.adminUrlId;
-
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
-  const canEdit =
-    (role === "admin" && isAdmin) ||
-    (!poll.closed && selectedParticipant && ownsObject(selectedParticipant));
+  const { canEditParticipant, canAddNewParticipant } = usePermissions();
 
   const [isEditing, setIsEditing] = React.useState(
-    !userAlreadyVoted && !poll.closed && !admin,
+    canAddNewParticipant && !userAlreadyVoted,
   );
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -183,7 +176,7 @@ const MobilePoll: React.FunctionComponent = () => {
             ) : selectedParticipant ? (
               <ParticipantDropdown
                 align="end"
-                disabled={!canEdit}
+                disabled={!canEditParticipant(selectedParticipant.id)}
                 participant={selectedParticipant}
                 onEdit={() => {
                   setIsEditing(true);
@@ -200,7 +193,7 @@ const MobilePoll: React.FunctionComponent = () => {
             ) : (
               <Button
                 icon={PlusIcon}
-                disabled={poll.closed && !isAdmin}
+                disabled={!canAddNewParticipant}
                 onClick={() => {
                   reset({
                     votes: [],

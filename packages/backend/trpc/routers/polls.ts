@@ -368,6 +368,7 @@ export const polls = router({
           title: true,
           location: true,
           description: true,
+          selectedOptionId: true,
           createdAt: true,
           adminUrlId: true,
           participantUrlId: true,
@@ -467,9 +468,12 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input }) => {
-      const poll = await prisma.poll.findUnique({
+      const poll = await prisma.poll.update({
         where: {
           id: input.pollId,
+        },
+        data: {
+          selectedOptionId: input.optionId,
         },
         select: {
           id: true,

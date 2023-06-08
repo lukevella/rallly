@@ -44,10 +44,10 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
         className={clsx(
           "flex select-none items-center gap-1 rounded-full py-1 px-2 text-xs font-semibold tabular-nums",
           {
-            "bg-green-500 text-green-50": highlight && ifNeedBeScore === 0,
-            "bg-amber-400 text-white": highlight && ifNeedBeScore !== 0,
+            "bg-green-50 text-green-500": highlight && ifNeedBeScore === 0,
+            "bg-amber-50 text-amber-400": highlight && ifNeedBeScore !== 0,
           },
-          { "text-gray-400": !highlight },
+          { "text-muted-foreground": !highlight },
         )}
       >
         <Users2Icon className="-ml-0.5 inline-block h-4 w-4 transition-opacity" />

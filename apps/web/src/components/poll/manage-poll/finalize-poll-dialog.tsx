@@ -1,14 +1,7 @@
 import { trpc } from "@rallly/backend";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@rallly/ui/dialog";
+import { Dialog, DialogContent, DialogFooter } from "@rallly/ui/dialog";
 import {
   Form,
   FormControl,
@@ -41,10 +34,9 @@ export const FinalizePollDialog = ({
   onOpenChange: (open: boolean) => void;
 }) => {
   const poll = usePoll();
-  const { options } = poll;
   const form = useForm<FinalizeFormData>({
     defaultValues: {
-      selectedOptionId: poll.selectedOptionId ?? options[0].id,
+      selectedOptionId: poll.selectedOptionId ?? poll.options[0].id,
     },
   });
   const queryClient = trpc.useContext();
@@ -54,26 +46,9 @@ export const FinalizePollDialog = ({
     },
   });
 
-  const undoBookDate = trpc.polls.undoBookDate.useMutation({
-    onSuccess: () => {
-      queryClient.polls.get.invalidate();
-    },
-  });
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            <Trans i18nKey="finalizePollTitle" defaults="Finalize Poll" />
-          </DialogTitle>
-          <DialogDescription>
-            <Trans
-              i18nKey="finalizePollTitle"
-              defaults="Pick a date from the list to book a date for your event."
-            />
-          </DialogDescription>
-        </DialogHeader>
         <Form {...form}>
           <form
             id={formName}
@@ -99,7 +74,7 @@ export const FinalizePollDialog = ({
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        {options.map((option) => {
+                        {poll.options.map((option) => {
                           return (
                             <Label
                               key={option.id}
@@ -115,7 +90,11 @@ export const FinalizePollDialog = ({
                                 id={option.id}
                                 value={option.id}
                               />
-                              <div>{dayjs(option.start).format("LLL")}</div>
+                              <div>
+                                {option.duration > 0
+                                  ? dayjs(option.start).utc().format("LLL")
+                                  : dayjs(option.start).utc().format("LL")}
+                              </div>
                             </Label>
                           );
                         })}
@@ -128,20 +107,6 @@ export const FinalizePollDialog = ({
           </form>
         </Form>
         <DialogFooter className="sm:justify-between">
-          <div>
-            {poll.selectedOptionId ? (
-              <Button
-                onClick={async () => {
-                  await undoBookDate.mutateAsync({
-                    pollId: poll.id,
-                  });
-                  onOpenChange(false);
-                }}
-              >
-                <Trans i18nKey="undo" defaults="Undo" />
-              </Button>
-            ) : null}
-          </div>
           <div className="flex gap-x-2">
             <Button
               onClick={() => {
