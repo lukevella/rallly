@@ -42,6 +42,7 @@
     "framer-motion": "^6.5.1",
     "i18next": "^22.4.9",
     "i18next-icu": "^2.3.0",
+    "ics": "^3.1.0",
     "intl-messageformat": "^10.3.4",
     "iron-session": "^6.3.1",
     "js-cookie": "^3.0.1",

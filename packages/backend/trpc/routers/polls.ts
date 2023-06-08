@@ -1,8 +1,12 @@
 import { prisma } from "@rallly/database";
-import { sendEmail } from "@rallly/emails";
+import { sendEmail, sendRawEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import toArray from "dayjs/plugin/toArray";
+import utc from "dayjs/plugin/utc";
+import * as ics from "ics";
 import { z } from "zod";
 
 import { nanoid } from "../../utils/nanoid";
@@ -11,6 +15,10 @@ import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { options } from "./polls/options";
 import { participants } from "./polls/participants";
+
+dayjs.extend(toArray);
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {
   const res = await prisma.poll.findUnique({
@@ -366,7 +374,6 @@ export const polls = router({
           closed: true,
           legacy: true,
           demo: true,
-          selectedOptionId: true,
           options: {
             orderBy: {
               start: "asc",
@@ -460,29 +467,101 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input }) => {
-      await prisma.poll.update({
+      const poll = await prisma.poll.findUnique({
         where: {
           id: input.pollId,
         },
-        data: {
-          selectedOptionId: input.optionId,
+        select: {
+          id: true,
+          timeZone: true,
+          title: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
         },
       });
-    }),
-  undoBookDate: possiblyPublicProcedure
-    .input(
-      z.object({
-        pollId: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      await prisma.poll.update({
+
+      if (!poll) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Poll not found",
+        });
+      }
+
+      if (!poll.user) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Poll has no user",
+        });
+      }
+
+      // create event in database
+      const option = await prisma.option.findUnique({
         where: {
-          id: input.pollId,
-        },
-        data: {
-          selectedOptionId: null,
+          id: input.optionId,
         },
       });
+
+      if (!option) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Option not found",
+        });
+      }
+      let event: ics.ReturnObject;
+      if (option.duration > 0) {
+        // we need to remember to call .utc() on the dayjs() object
+        // to make sure we get the correct time  because dayjs() will
+        // use the local timezone
+        const start = poll.timeZone
+          ? dayjs(option.start).utc().tz(poll.timeZone, true).utc()
+          : dayjs(option.start).utc();
+
+        event = ics.createEvent({
+          title: poll.title,
+          start: [
+            start.year(),
+            start.month() + 1,
+            start.date(),
+            start.hour(),
+            start.minute(),
+          ],
+          startInputType: poll.timeZone ? "utc" : "local",
+          duration: { minutes: option.duration },
+        });
+      } else {
+        const start = dayjs(option.start);
+        const end = start.add(1, "day");
+        event = ics.createEvent({
+          title: poll.title,
+          start: [start.year(), start.month() + 1, start.date()],
+          end: [end.year(), end.month() + 1, end.date()],
+        });
+      }
+
+      if (event.error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: event.error.message,
+        });
+      }
+
+      if (!event.value) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate ics",
+        });
+      } else {
+        await sendRawEmail({
+          subject: `Booking for ${poll.title}`,
+          to: poll.user.email,
+          html: `<p>Date booked for ${poll.title} <a href="${absoluteUrl(
+            `/poll/${poll.id}`,
+          )}">${poll.title}</a>.</p>`,
+          attachments: [{ filename: "event.ics", content: event.value }],
+        });
+      }
     }),
 });

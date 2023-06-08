@@ -14,13 +14,8 @@ export const EventCard = () => {
   const poll = usePoll();
   const { options } = useOptions();
 
-  const selectedOptionIndex = options.findIndex(
-    (option) => option.optionId === poll.selectedOptionId,
-  );
-
-  const selectedOption = options[selectedOptionIndex];
   const { participants } = useParticipants();
-  if (!selectedOption) {
+  if (!poll.eventId) {
     return null;
   }
   return (

@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
 import { CreatePoll } from "@/components/create-poll";
-import { getNewPolLayout } from "@/components/layouts/new-poll-layout";
+import { getStandardLayout } from "@/components/layouts/standard-layout";
 
 import { NextPageWithLayout } from "../types";
 import { withPageTranslations } from "../utils/with-page-translations";
@@ -97,7 +97,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-Page.getLayout = getNewPolLayout;
+Page.getLayout = getStandardLayout;
 
 export default Page;
 

@@ -48,6 +48,7 @@ async function main() {
               .map((date) => {
                 // rounded to nearest 15 minutes
                 date.setMinutes(Math.round(date.getMinutes() / 15) * 15);
+                date.setSeconds(0);
                 return {
                   start: date,
                   duration,

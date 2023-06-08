@@ -144,7 +144,7 @@ const NavMenuItem = ({
         "flex items-center gap-2 rounded-none px-4 py-1.5 text-sm font-medium",
         router.asPath === href
           ? "text-foreground"
-          : "text-muted-foreground hover:text-foreground active:bg-gray-200",
+          : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
       )}
     >
       {label}
