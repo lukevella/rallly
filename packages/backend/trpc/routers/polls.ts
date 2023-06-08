@@ -568,4 +568,20 @@ export const polls = router({
         });
       }
     }),
+  reopen: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await prisma.poll.update({
+        where: {
+          id: input.pollId,
+        },
+        data: {
+          selectedOptionId: null,
+        },
+      });
+    }),
 });

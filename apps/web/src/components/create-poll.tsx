@@ -1,13 +1,11 @@
 import { trpc } from "@rallly/backend";
-import { ArrowLeftIcon, XIcon } from "@rallly/icons";
+import { ArrowLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Card } from "@/components/card";
-import { TopBar } from "@/components/layouts/standard-layout/top-bar";
 import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
 

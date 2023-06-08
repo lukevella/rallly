@@ -1,5 +1,11 @@
 import { VoteType } from "@rallly/database";
-import { ArrowRightIcon, GithubIcon, YesIcon, ZapIcon } from "@rallly/icons";
+import {
+  ArrowRightIcon,
+  GithubIcon,
+  Users2Icon,
+  YesIcon,
+  ZapIcon,
+} from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { cn } from "@rallly/ui/lib/utils";
 import { absoluteUrl } from "@rallly/utils";
@@ -80,11 +86,11 @@ const options = [
   },
   {
     date: new Date("2023-05-13"),
-    score: 2,
+    score: 3,
   },
   {
     date: new Date("2023-05-14"),
-    score: 2,
+    score: 3,
   },
   {
     date: new Date("2023-05-15"),
@@ -132,13 +138,13 @@ const Demo = () => {
                     <div>
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-semibold",
+                          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
                           option.highScore
                             ? "bg-green-50 text-green-500"
                             : "text-gray-400",
                         )}
                       >
-                        <YesIcon className="-ml-1 h-4 w-4" />
+                        <Users2Icon className="-ml-1 h-4 w-4" />
                         {option.score}
                       </span>
                     </div>
