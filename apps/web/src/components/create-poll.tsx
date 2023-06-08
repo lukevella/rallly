@@ -136,18 +136,10 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   return (
     <div>
-      <TopBar className="">
-        <div className="flex justify-between">
-          <Button asChild>
-            <Link href="/polls">
-              <XIcon className="-ml-0.5 h-4 w-4" />
-              <Trans i18nKey="cancel" defaults="Cancel" />
-            </Link>
-          </Button>
+      <div className="py-8">
+        <div className="flex justify-center py-8">
           <Steps current={currentStepIndex} total={steps.length} />
         </div>
-      </TopBar>
-      <div className="py-8">
         <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
           <div className="grow">
             <div className="py-5 px-6">
