@@ -2,7 +2,13 @@ import { trpc } from "@rallly/backend";
 import { LoaderIcon, RotateCcwIcon, Users2Icon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@rallly/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@rallly/ui/dialog";
 import {
   Form,
   FormControl,
@@ -18,7 +24,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { DateIcon } from "@/components/date-icon";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
+import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import VoteIcon from "@/components/poll/vote-icon";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
@@ -109,7 +117,7 @@ const VoteSummary = (props: {
   const pending =
     props.total - props.yes.length - props.ifNeedBe.length - props.no.length;
   return (
-    <span className="inline-flex gap-3 text-sm font-semibold tabular-nums">
+    <span className="inline-flex gap-3 text-xs font-semibold tabular-nums">
       <span className="flex items-center gap-1.5">
         <Users2Icon className="h-5 w-5" />
         <span>
@@ -174,7 +182,12 @@ export const FinalizePollDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent size="lg">
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            <Trans i18nKey="selectOption" defaults="Select Option" />
+          </DialogTitle>
+        </DialogHeader>
         <Form {...form}>
           <form
             id={formName}
@@ -192,55 +205,51 @@ export const FinalizePollDialog = ({
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>
-                      <Trans i18nKey="selectOption" defaults="Select Option" />
-                    </FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
                         value={field.value}
-                        className="bg-pattern max-h-[500px] overflow-y-auto rounded-md border p-3"
+                        className="grid gap-4"
                       >
                         {options.map((option) => {
+                          const attendees = participants.filter((participant) =>
+                            participant.votes.some(
+                              (vote) =>
+                                vote.optionId === option.id &&
+                                (vote.type === "yes" ||
+                                  vote.type === "ifNeedBe"),
+                            ),
+                          );
                           const date = dayjs(option.start).utc();
                           return (
-                            <Label
+                            <label
                               key={option.id}
                               htmlFor={option.id}
                               className={cn(
-                                "flex cursor-pointer items-center gap-3 rounded-md border bg-white p-4 pl-3 hover:bg-gray-50 active:bg-gray-100",
-                                field.value === option.id ? "" : "",
+                                "flex cursor-pointer items-center gap-4 rounded-md border bg-white p-3 text-base ",
+                                field.value === option.id
+                                  ? "border-primary bg-primary-50"
+                                  : "hover:bg-gray-50 active:bg-gray-100",
                               )}
                             >
                               <RadioGroupItem
+                                className="hidden"
                                 id={option.id}
                                 value={option.id}
                               />
-                              <div className="flex grow gap-4">
-                                <div>
-                                  <DateIcon date={date} />
-                                </div>
-                                <div className="grow space-y-4">
-                                  <div className="text-muted-foreground font-normal">
+                              <div className="flex grow items-center gap-4">
+                                <div className="grow space-y-2">
+                                  <div className="font-semibold">
                                     {option.duration > 0
                                       ? date.format("LLL")
                                       : date.format("LL")}
                                   </div>
-                                  <div className="flex items-center gap-4">
-                                    <VoteSummaryProgressBar
-                                      {...scoreByOptionId[option.id]}
-                                      total={participants.length}
-                                    />
-                                  </div>
-                                  <div>
-                                    <VoteSummary
-                                      {...scoreByOptionId[option.id]}
-                                      total={participants.length}
-                                    />
-                                  </div>
+                                </div>
+                                <div>
+                                  <ConnectedScoreSummary optionId={option.id} />
                                 </div>
                               </div>
-                            </Label>
+                            </label>
                           );
                         })}
                       </RadioGroup>
@@ -251,9 +260,10 @@ export const FinalizePollDialog = ({
             />
           </form>
         </Form>
-        <DialogFooter className="sm:justify-between">
-          <div>
+        <DialogFooter className="flex-col gap-y-2 sm:justify-between">
+          <div className="flex">
             <Button
+              className="w-full"
               loading={reopen.isLoading}
               icon={RotateCcwIcon}
               onClick={async () => {
@@ -264,7 +274,7 @@ export const FinalizePollDialog = ({
               <Trans i18nKey="reopen" defaults="Reopen" />
             </Button>
           </div>
-          <div className="flex gap-x-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <Button
               onClick={() => {
                 onOpenChange(false);

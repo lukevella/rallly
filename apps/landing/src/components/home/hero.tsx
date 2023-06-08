@@ -1,11 +1,5 @@
 import { VoteType } from "@rallly/database";
-import {
-  ArrowRightIcon,
-  GithubIcon,
-  Users2Icon,
-  YesIcon,
-  ZapIcon,
-} from "@rallly/icons";
+import { ArrowRightIcon, GithubIcon, Users2Icon, ZapIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { cn } from "@rallly/ui/lib/utils";
 import { absoluteUrl } from "@rallly/utils";
