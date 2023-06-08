@@ -16,7 +16,6 @@ import MobilePoll from "@/components/poll/mobile-poll";
 import { TextSummary } from "@/components/text-summary";
 import { usePoll } from "@/contexts/poll";
 import { useUserPreferences } from "@/contexts/preferences";
-import { TimePreferences } from "@/contexts/time-preferences";
 import { generateGradient } from "@/utils/color-hash";
 import { preventWidows } from "@/utils/prevent-widows";
 
@@ -53,11 +52,7 @@ export const Poll = () => {
   }
 
   return (
-    <div
-      className={cn("space-y-3 sm:space-y-4", {
-        "transition-opacity hover:opacity-100": poll.selectedOptionId,
-      })}
-    >
+    <div className={cn("space-y-3 sm:space-y-4")}>
       {poll.demo ? (
         <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-100 p-3 text-amber-600 shadow-sm">
           <AlertCircleIcon className="w-6" />
@@ -93,7 +88,7 @@ export const Poll = () => {
           <div className="space-y-4 p-4">
             {poll.description ? (
               <div className="flex gap-4">
-                <MenuIcon className="h-5 shrink-0 translate-y-0.5" />
+                <MenuIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
                 <div className="border-primary whitespace-pre-line leading-relaxed">
                   <TruncatedLinkify>
                     <TextSummary text={preventWidows(poll.description)} />
@@ -103,12 +98,12 @@ export const Poll = () => {
             ) : null}
             {poll.location ? (
               <div className="flex gap-4">
-                <MapPinIcon className="h-5 translate-y-0.5" />
+                <MapPinIcon className="h-5 w-5 translate-y-0.5" />
                 <TruncatedLinkify>{poll.location}</TruncatedLinkify>
               </div>
             ) : null}
             <div className="flex gap-4">
-              <MousePointerClickIcon className="h-5 shrink-0" />
+              <MousePointerClickIcon className="h-5 w-5 shrink-0" />
               <div>
                 <div className="flex gap-2.5">
                   <span className="inline-flex items-center space-x-1">
@@ -129,7 +124,6 @@ export const Poll = () => {
           </div>
         </div>
       </Card>
-      {poll.timeZone ? <TimePreferences /> : null}
       <Card fullWidthOnMobile={false}>
         <PollComponent />
       </Card>

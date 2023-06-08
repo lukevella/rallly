@@ -1,4 +1,4 @@
-import { YesIcon } from "@rallly/icons";
+import { Users2Icon } from "@rallly/icons";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
@@ -16,15 +16,24 @@ export const ConnectedScoreSummary: React.FunctionComponent<{
   optionId: string;
 }> = ({ optionId }) => {
   const { getScore, highScore } = usePoll();
-  const score = getScore(optionId);
-
+  const { yes, ifNeedBe } = getScore(optionId);
+  const score = yes + ifNeedBe;
   return (
-    <ScoreSummary yesScore={score.yes} highlight={score.yes === highScore} />
+    <ScoreSummary
+      yesScore={yes}
+      ifNeedBeScore={ifNeedBe}
+      highlight={score === highScore}
+    />
   );
 };
 
 export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
-  React.memo(function PopularityScore({ yesScore: score, highlight }) {
+  React.memo(function PopularityScore({
+    yesScore,
+    ifNeedBeScore = 0,
+    highlight,
+  }) {
+    const score = yesScore + ifNeedBeScore;
     const prevScore = usePrevious(score);
 
     const direction = prevScore !== undefined ? score - prevScore : 0;
@@ -33,14 +42,15 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
       <div
         data-testid="popularity-score"
         className={clsx(
-          "flex select-none items-center gap-1 px-2 text-sm font-bold tabular-nums",
+          "flex select-none items-center gap-1 rounded-full py-1 px-2 text-xs font-semibold tabular-nums",
           {
-            "rounded-full bg-green-50 text-green-500": highlight,
+            "bg-green-500 text-green-50": highlight && ifNeedBeScore === 0,
+            "bg-amber-400 text-white": highlight && ifNeedBeScore !== 0,
           },
           { "text-gray-400": !highlight },
         )}
       >
-        <YesIcon className="-ml-1 inline-block h-4 transition-opacity" />
+        <Users2Icon className="-ml-0.5 inline-block h-4 w-4 transition-opacity" />
         <AnimatePresence initial={false} exitBeforeEnter={true}>
           <m.span
             transition={{

@@ -81,8 +81,8 @@ export const PollContextProvider: React.FunctionComponent<{
 
   const contextValue = React.useMemo<PollContextValue>(() => {
     const highScore = poll.options.reduce((acc, curr) => {
-      const score = getScore(curr.id).yes;
-
+      const { yes, ifNeedBe } = getScore(curr.id);
+      const score = yes + ifNeedBe;
       return score > acc ? score : acc;
     }, 1);
 

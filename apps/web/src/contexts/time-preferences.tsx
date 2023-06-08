@@ -1,12 +1,12 @@
 import { TimeFormat } from "@rallly/database";
+import { Settings2Icon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
-import React from "react";
 import { createStateContext } from "react-use";
 
 import { TimeFormatPicker } from "@/components/time-format-picker";
-import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
-import { Trans } from "@/components/trans";
+import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import { usePoll } from "@/contexts/poll";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
 export const [useTimeZone, TimeZoneProvider] = createStateContext<string>(
@@ -17,43 +17,27 @@ export const [useTimeFormat, TimeFormatProvider] =
   createStateContext<TimeFormat>("hours24");
 
 export const TimePreferences = () => {
-  const [isTimeZoneDialogOpen, setIsTimeZoneDialogOpen] = React.useState(false);
+  const poll = usePoll();
+
   const [timeZone, setTimeZone] = useTimeZone();
   const [timeFormat, setTimeFormat] = useTimeFormat();
   return (
-    <div className="flex max-w-full flex-col justify-between gap-2 sm:flex-row">
-      <Popover
-        open={isTimeZoneDialogOpen}
-        onOpenChange={setIsTimeZoneDialogOpen}
-      >
-        <PopoverTrigger asChild={true}>
-          <Button
-            type="button"
-            className="min-w-0"
-            onClick={() => {
-              setIsTimeZoneDialogOpen(true);
-            }}
-          >
-            <span className="min-w-0 truncate">
-              <Trans
-                defaults="Show times in {timeZone}"
-                i18nKey="showTimesIn"
-                values={{ timeZone }}
-              />
-            </span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start" className="p-0">
-          <TimeZoneCommand
-            value={timeZone}
-            onSelect={(newTimeZone) => {
-              setTimeZone(newTimeZone);
-              setIsTimeZoneDialogOpen(false);
-            }}
-          />
-        </PopoverContent>
-      </Popover>
-      <TimeFormatPicker value={timeFormat} onChange={setTimeFormat} />
-    </div>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button icon={Settings2Icon}></Button>
+      </PopoverTrigger>
+      <PopoverContent align="end">
+        <div className="space-y-2">
+          {poll.timeZone ? (
+            <div>
+              <TimeZoneSelect value={timeZone} onValueChange={setTimeZone} />
+            </div>
+          ) : null}
+          <div>
+            <TimeFormatPicker value={timeFormat} onChange={setTimeFormat} />
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };

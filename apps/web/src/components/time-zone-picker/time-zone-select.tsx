@@ -15,7 +15,6 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Trans } from "@/components/trans";
-import { useTimeFormat } from "@/contexts/time-preferences";
 
 import timeZones from "./time-zones.json";
 
@@ -24,6 +23,8 @@ const options = Object.entries(timeZones).map(([value, label]) => ({
   label,
 }));
 
+export { timeZones };
+
 interface TimeZoneCommandProps {
   value?: string;
   onSelect?: (value: string) => void;
@@ -31,7 +32,6 @@ interface TimeZoneCommandProps {
 
 export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
   const { t } = useTranslation();
-  const [timeFormat] = useTimeFormat();
   return (
     <Command>
       <CommandInput
@@ -47,26 +47,31 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
           />
         </CommandEmpty>
         <CommandGroup>
-          {options.map((option) => (
-            <CommandItem
-              key={option.value}
-              onSelect={() => onSelect?.(option.value)}
-              className="flex min-w-0 gap-x-4"
-            >
-              <CheckIcon
-                className={cn(
-                  "mr-2 h-4 w-4",
-                  value === option.value ? "opacity-100" : "opacity-0",
-                )}
-              />
-              <span className="min-w-0 grow truncate">{option.label}</span>
-              <span className="whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-                {dayjs()
-                  .tz(option.value)
-                  .format(timeFormat === "hours24" ? "HH:mm" : "h:mm A")}
-              </span>
-            </CommandItem>
-          ))}
+          {options.map((option) => {
+            const min = dayjs().tz(option.value).utcOffset();
+            const hr =
+              `${(min / 60) ^ 0}:` +
+              (min % 60 === 0 ? "00" : Math.abs(min % 60));
+            const offset = `GMT${hr.includes("-") ? hr : `+${hr}`}`;
+            return (
+              <CommandItem
+                key={option.value}
+                onSelect={() => onSelect?.(option.value)}
+                className="flex min-w-0 gap-x-4"
+              >
+                <CheckIcon
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    value === option.value ? "opacity-100" : "opacity-0",
+                  )}
+                />
+                <span className="min-w-0 grow truncate">{option.label}</span>
+                <span className="whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+                  {offset}
+                </span>
+              </CommandItem>
+            );
+          })}
         </CommandGroup>
       </CommandList>
     </Command>
@@ -88,7 +93,7 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
             role="combobox"
             aria-expanded={open}
             aria-controls={popoverContentId}
-            className="bg-input-background flex h-9 w-full items-center gap-x-1.5 rounded-md border px-1.5 py-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-input-background flex h-9 w-full items-center gap-x-1.5 rounded-md border px-1.5 py-2 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             <GlobeIcon className="h-5 w-5" />
             <span className="grow text-left">
@@ -107,7 +112,7 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
         <PopoverContent
           id={popoverContentId}
           align="start"
-          className="w-[var(--radix-popover-trigger-width)] bg-white p-0"
+          className="min-w-[var(--radix-popover-trigger-width)] bg-white p-0"
         >
           <TimeZoneCommand
             value={value}
