@@ -34,104 +34,101 @@ const Page: NextPageWithLayout = () => {
   const modalContext = useModalContext();
   const router = useRouter();
   const redirectBackToPoll = () => {
-    router.push(`/poll/${poll.id}`);
+    router.replace(`/poll/${poll.id}`);
   };
   return (
-    <div className="sm:p-8">
-      <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
-        <PollOptionsForm
-          className="p-3 sm:py-5 sm:px-6"
-          name="pollOptions"
-          title={poll.title}
-          defaultValues={{
-            navigationDate: dayjs(poll.options[0].start)
-              .utc()
-              .format("YYYY-MM-DD"),
-            options: poll.options.map((option) => {
-              const start = dayjs(option.start).utc();
-              return option.duration > 0
-                ? {
-                    type: "timeSlot",
-                    start: start.format("YYYY-MM-DDTHH:mm:ss"),
-                    end: start
-                      .add(option.duration, "minute")
-                      .format("YYYY-MM-DDTHH:mm:ss"),
-                  }
-                : {
-                    type: "date",
-                    date: start.format("YYYY-MM-DD"),
-                  };
-            }),
-            timeZone: poll.timeZone ?? "",
-          }}
-          onSubmit={(data) => {
-            const encodedOptions = data.options.map(encodeDateOption);
-            const optionsToDelete = poll.options.filter((option) => {
-              return !encodedOptions.includes(convertOptionToString(option));
+    <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
+      <PollOptionsForm
+        className="p-3 sm:py-5 sm:px-6"
+        name="pollOptions"
+        title={poll.title}
+        defaultValues={{
+          navigationDate: dayjs(poll.options[0].start)
+            .utc()
+            .format("YYYY-MM-DD"),
+          options: poll.options.map((option) => {
+            const start = dayjs(option.start).utc();
+            return option.duration > 0
+              ? {
+                  type: "timeSlot",
+                  start: start.format("YYYY-MM-DDTHH:mm:ss"),
+                  end: start
+                    .add(option.duration, "minute")
+                    .format("YYYY-MM-DDTHH:mm:ss"),
+                }
+              : {
+                  type: "date",
+                  date: start.format("YYYY-MM-DD"),
+                };
+          }),
+          timeZone: poll.timeZone ?? "",
+        }}
+        onSubmit={(data) => {
+          const encodedOptions = data.options.map(encodeDateOption);
+          const optionsToDelete = poll.options.filter((option) => {
+            return !encodedOptions.includes(convertOptionToString(option));
+          });
+
+          const optionsToAdd = encodedOptions.filter(
+            (encodedOption) =>
+              !poll.options.find(
+                (o) => convertOptionToString(o) === encodedOption,
+              ),
+          );
+
+          const onOk = () => {
+            updatePollMutation(
+              {
+                urlId: urlId,
+                timeZone: data.timeZone,
+                optionsToDelete: optionsToDelete.map(({ id }) => id),
+                optionsToAdd,
+              },
+              {
+                onSuccess: redirectBackToPoll,
+              },
+            );
+          };
+
+          const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
+            (option) => getParticipantsWhoVotedForOption(option.id).length > 0,
+          );
+
+          if (optionsToDeleteThatHaveVotes.length > 0) {
+            modalContext.render({
+              title: t("areYouSure"),
+              description: (
+                <Trans
+                  i18nKey="deletingOptionsWarning"
+                  components={{ b: <strong /> }}
+                />
+              ),
+              onOk,
+              okButtonProps: {
+                type: "danger",
+              },
+              okText: t("delete"),
+              cancelText: t("cancel"),
             });
-
-            const optionsToAdd = encodedOptions.filter(
-              (encodedOption) =>
-                !poll.options.find(
-                  (o) => convertOptionToString(o) === encodedOption,
-                ),
-            );
-
-            const onOk = () => {
-              updatePollMutation(
-                {
-                  urlId: urlId,
-                  timeZone: data.timeZone,
-                  optionsToDelete: optionsToDelete.map(({ id }) => id),
-                  optionsToAdd,
-                },
-                {
-                  onSuccess: redirectBackToPoll,
-                },
-              );
-            };
-
-            const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
-              (option) =>
-                getParticipantsWhoVotedForOption(option.id).length > 0,
-            );
-
-            if (optionsToDeleteThatHaveVotes.length > 0) {
-              modalContext.render({
-                title: t("areYouSure"),
-                description: (
-                  <Trans
-                    i18nKey="deletingOptionsWarning"
-                    components={{ b: <strong /> }}
-                  />
-                ),
-                onOk,
-                okButtonProps: {
-                  type: "danger",
-                },
-                okText: t("delete"),
-                cancelText: t("cancel"),
-              });
-            } else {
-              onOk();
-            }
-          }}
-        />
-        <div className="flex justify-end gap-2 bg-gray-50 p-3">
-          <Button onClick={redirectBackToPoll}>
-            <Trans i18nKey="cancel" />
-          </Button>
-          <Button
-            type="submit"
-            loading={isUpdating}
-            form="pollOptions"
-            variant="primary"
-          >
-            <Trans i18nKey="save" />
-          </Button>
-        </div>
-      </Card>
-    </div>
+          } else {
+            onOk();
+          }
+        }}
+      />
+      <div className="flex justify-end gap-2 bg-gray-50 p-3">
+        <Button onClick={redirectBackToPoll}>
+          <Trans i18nKey="cancel" />
+        </Button>
+        <Button
+          type="submit"
+          loading={isUpdating}
+          form="pollOptions"
+          variant="primary"
+        >
+          <Trans i18nKey="save" />
+        </Button>
+      </div>
+    </Card>
   );
 };
 

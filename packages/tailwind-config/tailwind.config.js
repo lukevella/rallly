@@ -50,6 +50,11 @@ module.exports = {
           DEFAULT: colors.white,
           foreground: colors.slate["800"],
         },
+        card: {
+          DEFAULT: colors.white,
+          background: colors.white,
+          foreground: colors.slate["800"],
+        },
       },
       keyframes: {
         wiggle: {

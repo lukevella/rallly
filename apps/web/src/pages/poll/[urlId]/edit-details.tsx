@@ -19,43 +19,41 @@ const Page: NextPageWithLayout = () => {
     useUpdatePollMutation();
   const router = useRouter();
   const redirectBackToPoll = () => {
-    router.push(`/poll/${poll.id}`);
+    router.replace(`/poll/${poll.id}`);
   };
   return (
-    <div className="sm:p-8">
-      <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
-        <PollDetailsForm
-          name="updateDetails"
-          className="p-3 sm:py-5 sm:px-6"
-          defaultValues={{
-            title: poll.title,
-            location: poll.location ?? "",
-            description: poll.description ?? "",
-          }}
-          onSubmit={(data) => {
-            //submit
-            updatePollMutation(
-              { urlId, ...data },
-              { onSuccess: redirectBackToPoll },
-            );
-          }}
-        />
+    <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
+      <PollDetailsForm
+        name="updateDetails"
+        className="p-3 sm:py-5 sm:px-6"
+        defaultValues={{
+          title: poll.title,
+          location: poll.location ?? "",
+          description: poll.description ?? "",
+        }}
+        onSubmit={(data) => {
+          //submit
+          updatePollMutation(
+            { urlId, ...data },
+            { onSuccess: redirectBackToPoll },
+          );
+        }}
+      />
 
-        <div className="flex justify-end gap-2 bg-gray-50 p-3">
-          <Button onClick={redirectBackToPoll}>
-            <Trans i18nKey="cancel" />
-          </Button>
-          <Button
-            type="submit"
-            loading={isUpdating}
-            form="updateDetails"
-            variant="primary"
-          >
-            <Trans i18nKey="save" />
-          </Button>
-        </div>
-      </Card>
-    </div>
+      <div className="flex justify-end gap-2 bg-gray-50 p-3">
+        <Button onClick={redirectBackToPoll}>
+          <Trans i18nKey="cancel" />
+        </Button>
+        <Button
+          type="submit"
+          loading={isUpdating}
+          form="updateDetails"
+          variant="primary"
+        >
+          <Trans i18nKey="save" />
+        </Button>
+      </div>
+    </Card>
   );
 };
 

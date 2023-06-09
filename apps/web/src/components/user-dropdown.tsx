@@ -29,7 +29,7 @@ export const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="group">
-        <Button className="hover:border-border rounded-full border-transparent shadow-none">
+        <Button className="rounded-full">
           <CurrentUserAvatar size="sm" className="-ml-1" />
           <span className="text-sm font-medium">
             {user.isGuest ? <Trans i18nKey="guest" /> : user.name}

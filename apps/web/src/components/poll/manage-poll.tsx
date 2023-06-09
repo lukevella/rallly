@@ -1,8 +1,10 @@
+import { trpc } from "@rallly/backend";
 import {
   ChevronDownIcon,
   DownloadIcon,
   LockIcon,
   PencilIcon,
+  RotateCcw,
   SettingsIcon,
   StarIcon,
   TableIcon,
@@ -22,9 +24,8 @@ import Link from "next/link";
 import { Trans } from "next-i18next";
 import * as React from "react";
 
-import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
+import { usePoll } from "@/contexts/poll";
 
-import { usePoll } from "../poll-context";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 import { useUpdatePollMutation } from "./mutations";
@@ -32,15 +33,19 @@ import { useUpdatePollMutation } from "./mutations";
 const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
 }> = ({ disabled }) => {
-  const { poll, urlId } = usePoll();
+  const poll = usePoll();
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
-  const [isFinalizeDialogVisible, setIsFinalizeDialogVisible] =
-    React.useState(false);
 
   const { exportToCsv } = useCsvExporter();
 
   const { mutate: updatePollMutation } = useUpdatePollMutation();
+  const queryClient = trpc.useContext();
+  const reopen = trpc.polls.reopen.useMutation({
+    onSuccess: () => {
+      queryClient.polls.invalidate();
+    },
+  });
 
   return (
     <>
@@ -77,7 +82,9 @@ const ManagePoll: React.FunctionComponent<{
           <DropdownMenuSeparator />
           {poll.closed ? (
             <DropdownMenuItem
-              onClick={() => updatePollMutation({ urlId, closed: false })}
+              onClick={() =>
+                updatePollMutation({ urlId: poll.adminUrlId, closed: false })
+              }
             >
               <DropdownMenuItemIconLabel icon={UnlockIcon}>
                 <Trans i18nKey="unlockPoll" />
@@ -85,22 +92,34 @@ const ManagePoll: React.FunctionComponent<{
             </DropdownMenuItem>
           ) : (
             <DropdownMenuItem
-              onClick={() => updatePollMutation({ urlId, closed: true })}
+              onClick={() =>
+                updatePollMutation({ urlId: poll.adminUrlId, closed: true })
+              }
             >
               <DropdownMenuItemIconLabel icon={LockIcon}>
                 <Trans i18nKey="lockPoll" />
               </DropdownMenuItemIconLabel>
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem
-            onClick={() => {
-              setIsFinalizeDialogVisible(true);
-            }}
-          >
-            <DropdownMenuItemIconLabel icon={StarIcon}>
-              <Trans i18nKey="pickADate" defaults="Pick a date" />
-            </DropdownMenuItemIconLabel>
-          </DropdownMenuItem>
+          {poll.selectedOptionId ? (
+            <DropdownMenuItem
+              onClick={() => {
+                reopen.mutate({ pollId: poll.id });
+              }}
+            >
+              <DropdownMenuItemIconLabel icon={RotateCcw}>
+                <Trans i18nKey="reopenPoll" defaults="Reopen Poll" />
+              </DropdownMenuItemIconLabel>
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem asChild={true}>
+              <Link href={`/poll/${poll.id}/pick-a-date`}>
+                <DropdownMenuItemIconLabel icon={StarIcon}>
+                  <Trans i18nKey="pickADate" defaults="Pick a date" />
+                </DropdownMenuItemIconLabel>
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setShowDeletePollDialog(true);
@@ -112,12 +131,8 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <FinalizePollDialog
-        open={isFinalizeDialogVisible}
-        onOpenChange={setIsFinalizeDialogVisible}
-      />
       <DeletePollDialog
-        urlId={urlId}
+        urlId={poll.adminUrlId}
         open={showDeletePollDialog}
         onOpenChange={setShowDeletePollDialog}
       />

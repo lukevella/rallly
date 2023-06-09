@@ -49,12 +49,12 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
         className={clsx(
           "relative flex select-none items-center gap-1 rounded-full py-0.5 px-2 text-xs font-semibold tabular-nums",
           {
-            "bg-muted text-muted-foreground": highlight,
+            "text-foreground bg-gray-300": highlight,
           },
           { "bg-muted text-muted-foreground": !highlight },
         )}
         style={{
-          opacity: score / highScore,
+          opacity: Math.max(score / highScore, 0.2),
         }}
       >
         {highScore === score && ifNeedBeScore > 0 ? (

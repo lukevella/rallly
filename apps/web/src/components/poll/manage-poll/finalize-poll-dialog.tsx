@@ -1,24 +1,17 @@
 import { trpc } from "@rallly/backend";
-import { RotateCcwIcon } from "@rallly/icons";
+import { ArrowRightIcon, HashIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@rallly/ui/dialog";
 import { Form, FormControl, FormField, FormItem } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import dayjs from "dayjs";
+import { Trans } from "next-i18next";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { DateIcon } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
-import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
 const formName = "finalize-form";
@@ -98,13 +91,7 @@ const useScoreByOptionId = () => {
   }, [responses, options]);
 };
 
-export const FinalizePollDialog = ({
-  open,
-  onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) => {
+export const FinalizePollDialog = () => {
   const poll = usePoll();
   const form = useForm<FinalizeFormData>({
     defaultValues: {
@@ -138,119 +125,94 @@ export const FinalizePollDialog = ({
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="">
-        <DialogHeader>
-          <DialogTitle>
-            <Trans i18nKey="selectOption" defaults="Select Option" />
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            id={formName}
-            onSubmit={form.handleSubmit(async (data) => {
-              await bookDate.mutateAsync({
-                pollId: poll.id,
-                optionId: data.selectedOptionId,
-              });
-              onOpenChange(false);
-            })}
-          >
-            <FormField
-              control={form.control}
-              name="selectedOptionId"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className="grid gap-2"
-                      >
-                        {options.map((option) => {
-                          const attendees = participants.filter((participant) =>
-                            participant.votes.some(
-                              (vote) =>
-                                vote.optionId === option.id &&
-                                (vote.type === "yes" ||
-                                  vote.type === "ifNeedBe"),
-                            ),
-                          );
-                          const date = dayjs(option.start).utc();
-                          return (
-                            <label
-                              key={option.id}
-                              htmlFor={option.id}
-                              className={cn(
-                                "flex cursor-pointer items-center gap-4 rounded-md border bg-white p-3 text-base hover:bg-gray-50 active:bg-gray-100",
-                                field.value === option.id ? "" : "",
+    <Form {...form}>
+      <form
+        id={formName}
+        onSubmit={form.handleSubmit(async (data) => {
+          await bookDate.mutateAsync({
+            pollId: poll.id,
+            optionId: data.selectedOptionId,
+          });
+        })}
+      >
+        <FormField
+          control={form.control}
+          name="selectedOptionId"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    className="grid gap-2"
+                  >
+                    {options.map((option, index) => {
+                      const attendees = participants.filter((participant) =>
+                        participant.votes.some(
+                          (vote) =>
+                            vote.optionId === option.id &&
+                            (vote.type === "yes" || vote.type === "ifNeedBe"),
+                        ),
+                      );
+                      const date = dayjs(option.start).utc();
+                      return (
+                        <label
+                          key={option.id}
+                          htmlFor={option.id}
+                          className={cn(
+                            "group flex cursor-pointer items-center gap-4 rounded-md border bg-white p-3 pr-8 text-base hover:bg-gray-50 active:bg-gray-100",
+                            field.value === option.id ? "" : "",
+                          )}
+                        >
+                          <RadioGroupItem
+                            className="hidden"
+                            id={option.id}
+                            value={option.id}
+                          />
+                          <div className="text-muted-foreground flex items-center gap-0.5 text-xs">
+                            <HashIcon className="h-3 w-3" />
+                            {`${index + 1}`}
+                          </div>
+                          <div>
+                            <DateIcon date={date} />
+                          </div>
+                          <div className="grow">
+                            <div className="text-sm font-semibold">
+                              {option.duration > 0
+                                ? date.format("LL")
+                                : date.format("LL")}
+                            </div>
+                            <div className="text-muted-foreground">
+                              {option.duration > 0 ? (
+                                date.format("LT")
+                              ) : (
+                                <Trans i18nKey="allDay" defaults="All day" />
                               )}
-                            >
-                              <RadioGroupItem
-                                id={option.id}
-                                value={option.id}
-                              />
-                              <div className="grow space-y-2">
-                                <div className="text-sm font-semibold">
-                                  {option.duration > 0
-                                    ? date.format("LLL")
-                                    : date.format("LL")}
-                                </div>
-                              </div>
-                              <div className="w-48">
-                                <VoteSummaryProgressBar
-                                  {...scoreByOptionId[option.id]}
-                                  total={participants.length}
-                                />
-                              </div>
-                              <div>
-                                <ConnectedScoreSummary optionId={option.id} />
-                              </div>
-                            </label>
-                          );
-                        })}
-                      </RadioGroup>
-                    </FormControl>
-                  </FormItem>
-                );
-              }}
-            />
-          </form>
-        </Form>
-        <DialogFooter className="flex-col gap-y-2 sm:justify-between">
-          <div className="flex">
-            <Button
-              className="w-full"
-              loading={reopen.isLoading}
-              icon={RotateCcwIcon}
-              onClick={async () => {
-                await reopen.mutateAsync({ pollId: poll.id });
-                onOpenChange(false);
-              }}
-            >
-              <Trans i18nKey="reopen" defaults="Reopen" />
-            </Button>
-          </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Button
-              onClick={() => {
-                onOpenChange(false);
-              }}
-            >
-              <Trans i18nKey="cancel" />
-            </Button>
-            <Button
-              type="submit"
-              loading={form.formState.isSubmitting}
-              form={formName}
-              variant="primary"
-            >
-              <Trans i18nKey="book" defaults="Book" />
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+                            </div>
+                          </div>
+                          <div className="w-48">
+                            <VoteSummaryProgressBar
+                              {...scoreByOptionId[option.id]}
+                              total={participants.length}
+                            />
+                          </div>
+                          <div>
+                            <ConnectedScoreSummary optionId={option.id} />
+                          </div>
+                          <div className="transition-transform group-hover:translate-x-1 group-active:translate-x-2">
+                            <ArrowRightIcon className="text-muted-foreground inline-block h-4 w-4 " />
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+              </FormItem>
+            );
+          }}
+        />
+      </form>
+    </Form>
   );
 };

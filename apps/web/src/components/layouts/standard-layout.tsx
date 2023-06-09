@@ -58,11 +58,12 @@ const Logo = () => {
     };
   }, [router.events]);
   return (
-    <div className="flex items-center justify-center gap-4">
+    <div className="relative flex items-center justify-center gap-4 pr-8">
       <Link
         href="/polls"
         className={clsx(
-          "inline-block transition-all hover:opacity-75 active:translate-y-1",
+          "inline-block transition-all delay-200 active:translate-y-1",
+          isBusy ? "translate-x-8" : "opacity-100",
         )}
       >
         <Image
@@ -80,8 +81,13 @@ const Logo = () => {
           alt="Rallly"
         />
       </Link>
-      <div className="flex h-9 w-9 items-center justify-center">
-        {isBusy ? <Spinner className="text-gray-500" /> : null}
+      <div
+        className={cn(
+          "pointer-events-none absolute left-0 flex items-center justify-center text-gray-500 transition-opacity delay-200",
+          isBusy ? "opacity-100" : "opacity-0",
+        )}
+      >
+        {isBusy ? <Spinner /> : null}
       </div>
     </div>
   );
@@ -90,7 +96,7 @@ const Logo = () => {
 const MainNav = () => {
   return (
     <div className="border-b bg-gray-50">
-      <Container className="flex h-14 items-center justify-between sm:justify-start">
+      <Container className="flex h-14 items-center justify-between gap-4 sm:justify-start">
         <div className="flex shrink-0 gap-4">
           <Logo />
         </div>
