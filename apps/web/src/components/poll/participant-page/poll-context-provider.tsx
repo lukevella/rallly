@@ -21,11 +21,7 @@ export const LegacyPollContextProvider = (props: React.PropsWithChildren) => {
 
   return (
     <ParticipantsProvider pollId={poll.id}>
-      <PollContextProvider
-        poll={poll}
-        urlId={poll.participantUrlId}
-        admin={false}
-      >
+      <PollContextProvider poll={poll} urlId={poll.id} admin={false}>
         <ModalProvider>
           <TimeZoneProvider initialValue={userPreferences.timeZone}>
             <TimeFormatProvider initialValue={userPreferences.timeFormat}>

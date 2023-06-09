@@ -1,9 +1,13 @@
 import { trpc } from "@rallly/backend";
 import {
+  CheckSquare,
+  CheckSquareIcon,
   ChevronDownIcon,
   DownloadIcon,
   LockIcon,
+  PauseIcon,
   PencilIcon,
+  PlayIcon,
   RotateCcw,
   SettingsIcon,
   StarIcon,
@@ -39,9 +43,20 @@ const ManagePoll: React.FunctionComponent<{
 
   const { exportToCsv } = useCsvExporter();
 
-  const { mutate: updatePollMutation } = useUpdatePollMutation();
   const queryClient = trpc.useContext();
+
   const reopen = trpc.polls.reopen.useMutation({
+    onSuccess: () => {
+      queryClient.polls.invalidate();
+    },
+  });
+  const pause = trpc.polls.pause.useMutation({
+    onSuccess: () => {
+      queryClient.polls.invalidate();
+    },
+  });
+
+  const resume = trpc.polls.resume.useMutation({
     onSuccess: () => {
       queryClient.polls.invalidate();
     },
@@ -79,47 +94,6 @@ const ManagePoll: React.FunctionComponent<{
               <Trans i18nKey="exportToCsv" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          {poll.closed ? (
-            <DropdownMenuItem
-              onClick={() =>
-                updatePollMutation({ urlId: poll.adminUrlId, closed: false })
-              }
-            >
-              <DropdownMenuItemIconLabel icon={UnlockIcon}>
-                <Trans i18nKey="unlockPoll" />
-              </DropdownMenuItemIconLabel>
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem
-              onClick={() =>
-                updatePollMutation({ urlId: poll.adminUrlId, closed: true })
-              }
-            >
-              <DropdownMenuItemIconLabel icon={LockIcon}>
-                <Trans i18nKey="lockPoll" />
-              </DropdownMenuItemIconLabel>
-            </DropdownMenuItem>
-          )}
-          {poll.selectedOptionId ? (
-            <DropdownMenuItem
-              onClick={() => {
-                reopen.mutate({ pollId: poll.id });
-              }}
-            >
-              <DropdownMenuItemIconLabel icon={RotateCcw}>
-                <Trans i18nKey="reopenPoll" defaults="Reopen Poll" />
-              </DropdownMenuItemIconLabel>
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem asChild={true}>
-              <Link href={`/poll/${poll.id}/pick-a-date`}>
-                <DropdownMenuItemIconLabel icon={StarIcon}>
-                  <Trans i18nKey="pickADate" defaults="Pick a date" />
-                </DropdownMenuItemIconLabel>
-              </Link>
-            </DropdownMenuItem>
-          )}
           <DropdownMenuItem
             onClick={() => {
               setShowDeletePollDialog(true);

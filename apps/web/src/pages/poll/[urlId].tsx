@@ -2,6 +2,7 @@ import { trpc } from "@rallly/backend";
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
 import { InfoIcon } from "@rallly/icons";
+import { cn } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { GetServerSideProps } from "next";
@@ -98,8 +99,15 @@ const GuestPollAlert = () => {
   }
 };
 const Page: NextPageWithLayout = () => {
+  const { options } = usePoll();
+  const optionCount = options.length;
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4">
+    <div
+      className={cn("mx-auto w-full space-y-3 sm:space-y-4", {
+        "max-w-3xl": optionCount <= 7,
+        "max-w-4xl": optionCount > 7,
+      })}
+    >
       <GuestPollAlert />
       <ParticipantPage />
     </div>

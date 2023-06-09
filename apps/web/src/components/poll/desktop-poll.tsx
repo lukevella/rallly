@@ -1,4 +1,9 @@
-import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from "@rallly/icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  PlusIcon,
+  Users2Icon,
+} from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
@@ -116,7 +121,7 @@ const Poll: React.FunctionComponent = () => {
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
-          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
+          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3 sm:px-4">
             <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
                 <div className="px-1">
@@ -132,26 +137,28 @@ const Poll: React.FunctionComponent = () => {
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-1">
-                  <div className="px-1 font-medium">
-                    {t("participantCount", { count: participants.length })}
+                <div className="flex items-center gap-2">
+                  <Users2Icon className="h-5 w-5 shrink-0" />
+                  <div className="font-semibold tracking-tight">
+                    {t("participants", { count: participants.length })} (
+                    {participants.length})
                   </div>
                   {canAddNewParticipant ? (
                     <Button
+                      className="ml-2"
                       size="sm"
+                      icon={PlusIcon}
                       onClick={() => {
                         setEditingParticipantId(null);
                         setShouldShowNewParticipantForm(true);
                       }}
-                    >
-                      <PlusIcon className="h-5 w-5 shrink-0" />
-                    </Button>
+                    />
                   ) : null}
                 </div>
               )}
             </div>
             <div className="flex items-center gap-3">
-              <div className="font-medium">
+              <div className="font-semibold">
                 {t("optionCount", { count: poll.options.length })}
               </div>
               {maxScrollPosition > 0 ? (

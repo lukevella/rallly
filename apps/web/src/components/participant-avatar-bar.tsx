@@ -3,7 +3,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import clsx from "clsx";
 
 import { ColoredAvatar } from "@/components/poll/participant-avatar";
-import LegacyTooltip from "@/components/tooltip";
 
 interface ParticipantAvatarBarProps {
   participants: { id: string; name: string }[];
@@ -38,25 +37,26 @@ export const ParticipantAvatarBar = ({
           </Tooltip>
         ))}
       {hiddenCount > 1 ? (
-        <LegacyTooltip
-          content={
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className={clsx(
+                "select-none ring-2 ring-white",
+                "rounded-full bg-gray-200 px-1.5 text-xs font-semibold",
+                "inline-flex h-6 min-w-[24px] items-center justify-center",
+              )}
+            >
+              <div>+{hiddenCount}</div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
             <ul>
               {participants.slice(max, 10).map((participant, index) => (
                 <li key={index}>{participant.name}</li>
               ))}
             </ul>
-          }
-        >
-          <div
-            className={clsx(
-              "select-none ring-2 ring-white",
-              "rounded-full bg-gray-200 px-1.5 text-xs font-semibold",
-              "inline-flex h-6 min-w-[24px] items-center justify-center",
-            )}
-          >
-            <div>+{hiddenCount}</div>
-          </div>
-        </LegacyTooltip>
+          </TooltipContent>
+        </Tooltip>
       ) : null}
     </div>
   );

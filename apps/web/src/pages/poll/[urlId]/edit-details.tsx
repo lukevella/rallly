@@ -14,7 +14,8 @@ import { NextPageWithLayout } from "@/types";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
-  const { poll, urlId } = usePoll();
+  const { poll } = usePoll();
+  const urlId = poll.adminUrlId;
   const { mutate: updatePollMutation, isLoading: isUpdating } =
     useUpdatePollMutation();
   const router = useRouter();

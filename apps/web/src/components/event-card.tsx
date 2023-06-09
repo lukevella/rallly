@@ -60,7 +60,7 @@ export const EventCard = () => {
             style={{ background: generateGradient(poll.id) }}
           />
         )}
-        <div className="bg-pattern p-4 sm:px-6">
+        <div className="bg-pattern p-4">
           <div className="flex items-start gap-4 sm:gap-6">
             {selectedOption ? (
               <div>
@@ -102,7 +102,7 @@ export const EventCard = () => {
             </div>
           </div>
         </div>
-        <div className="space-y-4 p-4 sm:px-6">
+        <div className="space-y-4 p-4">
           {poll.description ? (
             <div className="flex gap-4">
               <MenuIcon className="h-5 w-5 shrink-0 translate-y-0.5" />

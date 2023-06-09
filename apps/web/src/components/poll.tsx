@@ -1,5 +1,6 @@
-import { LockIcon } from "@rallly/icons";
+import { LockIcon, PauseCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
+import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
@@ -8,6 +9,7 @@ import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
+import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useUserPreferences } from "@/contexts/preferences";
 
@@ -42,12 +44,6 @@ export const Poll = () => {
 
   return (
     <div className={cn("space-y-3 sm:space-y-4")}>
-      {poll.closed ? (
-        <div className="flex items-center gap-3 rounded-md border border-pink-200 bg-pink-100 p-3 text-pink-600 shadow-sm">
-          <LockIcon className="w-6" />
-          <div>{t("pollHasBeenLocked")}</div>
-        </div>
-      ) : null}
       <EventCard />
       <Card fullWidthOnMobile={false}>
         <PollComponent />

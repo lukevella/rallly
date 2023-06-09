@@ -1,6 +1,7 @@
 import { trpc } from "@rallly/backend";
 import { BellOffIcon, BellRingIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -59,26 +60,29 @@ const NotificationsToggle: React.FunctionComponent = () => {
   }
 
   return (
-    <Button
-      icon={isWatching ? BellRingIcon : BellOffIcon}
-      data-testid="notifications-toggle"
-      disabled={poll.demo || user.isGuest}
-      className="flex items-center gap-2 px-2.5"
-      onClick={async () => {
-        if (user.isGuest) {
-          // TODO (Luke Vella) [2023-06-06]: Open Login Modal
-          router.push("/login");
-          return;
-        }
-        // toggle
-        if (isWatching) {
-          await unwatch.mutateAsync({ pollId: poll.id });
-        } else {
-          await watch.mutateAsync({ pollId: poll.id });
-        }
-      }}
-    >
-      <span className="hidden font-medium sm:block">
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          icon={isWatching ? BellRingIcon : BellOffIcon}
+          data-testid="notifications-toggle"
+          disabled={poll.demo || user.isGuest}
+          className="flex items-center gap-2 px-2.5"
+          onClick={async () => {
+            if (user.isGuest) {
+              // TODO (Luke Vella) [2023-06-06]: Open Login Modal
+              router.push("/login");
+              return;
+            }
+            // toggle
+            if (isWatching) {
+              await unwatch.mutateAsync({ pollId: poll.id });
+            } else {
+              await watch.mutateAsync({ pollId: poll.id });
+            }
+          }}
+        />
+      </TooltipTrigger>
+      <TooltipContent side="bottom">
         <Trans
           i18nKey="notificationsValue"
           defaults="Notifications: <b>{value}</b>"
@@ -95,8 +99,8 @@ const NotificationsToggle: React.FunctionComponent = () => {
                 }),
           }}
         />
-      </span>
-    </Button>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 

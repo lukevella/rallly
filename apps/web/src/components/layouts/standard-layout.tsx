@@ -58,12 +58,11 @@ const Logo = () => {
     };
   }, [router.events]);
   return (
-    <div className="relative flex items-center justify-center gap-4 pr-8">
+    <div className="relative flex items-center justify-center gap-4 pr-10">
       <Link
         href="/polls"
         className={clsx(
-          "inline-block transition-all delay-200 active:translate-y-1",
-          isBusy ? "translate-x-8" : "opacity-100",
+          "inline-block transition-transform active:translate-y-1",
         )}
       >
         <Image
@@ -83,7 +82,7 @@ const Logo = () => {
       </Link>
       <div
         className={cn(
-          "pointer-events-none absolute left-0 flex items-center justify-center text-gray-500 transition-opacity delay-200",
+          "pointer-events-none absolute -right-0 flex items-center justify-center text-gray-500 transition-opacity delay-500",
           isBusy ? "opacity-100" : "opacity-0",
         )}
       >

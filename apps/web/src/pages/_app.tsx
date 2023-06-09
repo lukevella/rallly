@@ -81,7 +81,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
         }
       `}</style>
       <DayjsProvider>
-        <TooltipProvider>
+        <TooltipProvider delayDuration={200}>
           {getLayout(<Component {...pageProps} />)}
         </TooltipProvider>
       </DayjsProvider>

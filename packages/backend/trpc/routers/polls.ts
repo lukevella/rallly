@@ -25,12 +25,13 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
     select: {
       id: true,
     },
-    where: { participantUrlId: urlId },
+    where: { adminUrlId: urlId },
   });
 
   if (!res) {
     throw new TRPCError({
       code: "NOT_FOUND",
+      message: "Poll not found",
     });
   }
   return res.id;
@@ -68,10 +69,12 @@ export const polls = router({
       const adminToken = nanoid();
       const participantUrlId = nanoid();
       const pollId = nanoid();
-      let email = input.user?.email;
-      let name = input.user?.name;
-
-      if (!ctx.user.isGuest) {
+      let email: string;
+      let name: string;
+      if (input.user && ctx.user.isGuest) {
+        email = input.user.email;
+        name = input.user.name;
+      } else {
         const user = await prisma.user.findUnique({
           select: { email: true, name: true },
           where: { id: ctx.user.id },
@@ -93,6 +96,11 @@ export const polls = router({
           adminUrlId: true,
           id: true,
           title: true,
+          options: {
+            select: {
+              id: true,
+            },
+          },
         },
         data: {
           id: pollId,
@@ -121,6 +129,23 @@ export const polls = router({
                       "minute",
                     )
                   : 0,
+              })),
+            },
+          },
+        },
+      });
+
+      await prisma.participant.create({
+        data: {
+          pollId,
+          name,
+          email,
+          votes: {
+            createMany: {
+              data: poll.options.map(({ id }) => ({
+                optionId: id,
+                pollId,
+                type: "yes",
               })),
             },
           },
@@ -581,6 +606,38 @@ export const polls = router({
         },
         data: {
           selectedOptionId: null,
+        },
+      });
+    }),
+  pause: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await prisma.poll.update({
+        where: {
+          id: input.pollId,
+        },
+        data: {
+          closed: true,
+        },
+      });
+    }),
+  resume: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await prisma.poll.update({
+        where: {
+          id: input.pollId,
+        },
+        data: {
+          closed: false,
         },
       });
     }),

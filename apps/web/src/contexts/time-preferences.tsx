@@ -2,6 +2,7 @@ import { TimeFormat } from "@rallly/database";
 import { Settings2Icon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
+import dayjs from "dayjs";
 import { createStateContext } from "react-use";
 
 import { TimeFormatPicker } from "@/components/time-format-picker";
@@ -40,4 +41,17 @@ export const TimePreferences = () => {
       </PopoverContent>
     </Popover>
   );
+};
+
+export const useDateFormatter = () => {
+  const { timeZone } = usePoll();
+  const [preferredTimeZone] = useTimeZone();
+
+  return (date: Date) => {
+    if (timeZone) {
+      return dayjs(date).utc().tz(timeZone, true).tz(preferredTimeZone);
+    }
+
+    return dayjs(date).utc();
+  };
 };

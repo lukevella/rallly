@@ -27,7 +27,7 @@ const convertOptionToString = (option: { start: Date; duration: number }) => {
 };
 
 const Page: NextPageWithLayout = () => {
-  const { poll, urlId, getParticipantsWhoVotedForOption } = usePoll();
+  const { poll, getParticipantsWhoVotedForOption } = usePoll();
   const { mutate: updatePollMutation, isLoading: isUpdating } =
     useUpdatePollMutation();
   const { t } = useTranslation();
@@ -79,7 +79,7 @@ const Page: NextPageWithLayout = () => {
           const onOk = () => {
             updatePollMutation(
               {
-                urlId: urlId,
+                urlId: poll.adminUrlId,
                 timeZone: data.timeZone,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),
                 optionsToAdd,

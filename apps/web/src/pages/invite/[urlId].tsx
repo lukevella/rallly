@@ -1,6 +1,6 @@
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
-import { ArrowLeftIcon } from "@rallly/icons";
+import { ArrowLeftIcon, ArrowUpLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -25,7 +25,7 @@ const GoToApp = () => {
     <div className="flex items-center gap-2">
       <Button asChild>
         <Link href={`/poll/${poll.id}`}>
-          <ArrowLeftIcon className="h-4 w-4" />
+          <ArrowUpLeftIcon className="h-4 w-4" />
           <Trans i18nKey="manage" />
         </Link>
       </Button>
@@ -61,7 +61,7 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
               fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
             />
           </svg>
-          <div className="mx-auto max-w-4xl space-y-4 p-3 sm:p-8">
+          <div className="mx-auto max-w-4xl space-y-4 p-3 sm:py-8">
             <div className="mx-auto flex max-w-4xl items-start gap-x-4">
               <div className="grow">
                 <GoToApp />
