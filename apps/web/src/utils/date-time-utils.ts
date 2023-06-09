@@ -101,13 +101,16 @@ const parseTimeSlotOption = (
   timeZone: string | null,
   targetTimeZone: string,
 ): ParsedTimeSlotOption => {
-  const start = dayjs(option.start).utc();
-  const startDate =
-    timeZone && targetTimeZone
-      ? start.tz(timeZone, true).tz(targetTimeZone)
-      : start;
+  const adjustTimeZone = (date: Date | dayjs.Dayjs) => {
+    return timeZone && targetTimeZone
+      ? dayjs(date).utc().tz(timeZone, true).tz(targetTimeZone)
+      : dayjs(date).utc();
+  };
+  const startDate = adjustTimeZone(option.start);
 
-  const endDate = startDate.add(option.duration, "minute");
+  const endDate = adjustTimeZone(
+    dayjs(option.start).add(option.duration, "minute"),
+  );
 
   return {
     type: "timeSlot",
