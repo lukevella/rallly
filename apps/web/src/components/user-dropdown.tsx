@@ -27,7 +27,7 @@ import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 export const UserDropdown = () => {
   const { user } = useUser();
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className="group">
         <Button className="rounded-full">
           <CurrentUserAvatar size="sm" className="-ml-1" />
