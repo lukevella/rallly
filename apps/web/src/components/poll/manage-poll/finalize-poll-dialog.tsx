@@ -74,13 +74,17 @@ export const FinalizePollForm = ({
 
   const options = [...poll.options]
     .sort((a, b) => {
-      const aScore =
-        scoreByOptionId[a.id].yes.length +
-        scoreByOptionId[a.id].ifNeedBe.length;
-      const bScore =
-        scoreByOptionId[b.id].yes.length +
-        scoreByOptionId[b.id].ifNeedBe.length;
-      return bScore - aScore;
+      const aYes = scoreByOptionId[a.id].yes.length;
+      const bYes = scoreByOptionId[b.id].yes.length;
+
+      if (aYes !== bYes) {
+        return bYes - aYes;
+      }
+
+      const aIfNeedBe = scoreByOptionId[a.id].ifNeedBe.length;
+      const bIfNeedBe = scoreByOptionId[b.id].ifNeedBe.length;
+
+      return bIfNeedBe - aIfNeedBe;
     })
     .map((option) => {
       return { ...option, votes: scoreByOptionId[option.id] };
@@ -107,7 +111,7 @@ export const FinalizePollForm = ({
                     value={field.value}
                     className="grid gap-2"
                   >
-                    {options.slice(0, max).map((option, index) => {
+                    {options.slice(0, max).map((option) => {
                       const attendees = participants.filter((participant) =>
                         participant.votes.some(
                           (vote) =>
@@ -129,6 +133,9 @@ export const FinalizePollForm = ({
                         >
                           <div className="hidden">
                             <RadioGroupItem id={option.id} value={option.id} />
+                          </div>
+                          <div>
+                            <DateIcon date={dayjs(option.start)} />
                           </div>
                           <div className="grow">
                             <div className="flex">

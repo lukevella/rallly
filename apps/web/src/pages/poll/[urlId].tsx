@@ -10,7 +10,6 @@ import Link from "next/link";
 import { Trans } from "next-i18next";
 
 import { getPollLayout } from "@/components/layouts/poll-layout";
-import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import ParticipantPage from "@/components/poll/participant-page/participant-page";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
@@ -98,16 +97,10 @@ const GuestPollAlert = () => {
     );
   }
 };
+
 const Page: NextPageWithLayout = () => {
-  const { options } = usePoll();
-  const optionCount = options.length;
   return (
-    <div
-      className={cn("mx-auto w-full space-y-3 sm:space-y-4", {
-        "max-w-3xl": optionCount <= 7,
-        "max-w-4xl": optionCount > 7,
-      })}
-    >
+    <div className={cn("mx-auto w-full max-w-4xl space-y-3 sm:space-y-4")}>
       <GuestPollAlert />
       <ParticipantPage />
     </div>
