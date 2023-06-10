@@ -1,6 +1,7 @@
 import {
   ChevronDown,
   LifeBuoyIcon,
+  LogInIcon,
   LogOutIcon,
   RefreshCcwIcon,
   ScrollTextIcon,
@@ -41,6 +42,15 @@ export const UserDropdown = () => {
         <DropdownMenuLabel>
           <Trans i18nKey="myAccount" defaults="My Account" />
         </DropdownMenuLabel>
+        <DropdownMenuItem asChild={true}>
+          <Link
+            href="/settings/preferences"
+            className="flex items-center gap-x-2"
+          >
+            <Settings2Icon className="h-4 w-4" />
+            <Trans i18nKey="preferences" defaults="Preferences" />
+          </Link>
+        </DropdownMenuItem>
         <IfAuthenticated>
           <DropdownMenuItem asChild={true}>
             <Link
@@ -74,16 +84,13 @@ export const UserDropdown = () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild={true}>
-          <Link
-            href="/settings/preferences"
-            className="flex items-center gap-x-2"
-          >
-            <Settings2Icon className="h-4 w-4" />
-            <Trans i18nKey="preferences" defaults="Preferences" />
-          </Link>
-        </DropdownMenuItem>
         <IfGuest>
+          <DropdownMenuItem asChild={true}>
+            <Link href="/login" className="flex items-center gap-x-2">
+              <LogInIcon className="h-4 w-4" />
+              <Trans i18nKey="login" defaults="login" />
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
             <Link href="/register" className="flex items-center gap-x-2">
               <UserPlusIcon className="h-4 w-4" />

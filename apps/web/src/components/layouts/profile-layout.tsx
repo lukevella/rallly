@@ -1,9 +1,4 @@
-import {
-  CreditCardIcon,
-  Settings2Icon,
-  SettingsIcon,
-  UserIcon,
-} from "@rallly/icons";
+import { CreditCardIcon, Settings2Icon, UserIcon } from "@rallly/icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,10 +8,6 @@ import { Trans } from "react-i18next";
 import { Card } from "@/components/card";
 import { Container } from "@/components/container";
 import { StandardLayout } from "@/components/layouts/standard-layout";
-import {
-  TopBar,
-  TopBarTitle,
-} from "@/components/layouts/standard-layout/top-bar";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import { IfAuthenticated } from "../user-provider";
@@ -57,9 +48,11 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
             <MenuItem href="/settings/preferences" icon={Settings2Icon}>
               <Trans i18nKey="preferences" defaults="Preferences" />
             </MenuItem>
-            <MenuItem href="/settings/billing" icon={CreditCardIcon}>
-              <Trans i18nKey="billing" defaults="Billing" />
-            </MenuItem>
+            <IfAuthenticated>
+              <MenuItem href="/settings/billing" icon={CreditCardIcon}>
+                <Trans i18nKey="billing" defaults="Billing" />
+              </MenuItem>
+            </IfAuthenticated>
           </div>
           {children}
         </Card>

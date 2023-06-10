@@ -16,7 +16,7 @@ export const usePermissions = () => {
         return false;
       }
 
-      if (role === "admin") {
+      if (role === "admin" && user.id === poll.userId) {
         return true;
       }
 

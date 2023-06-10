@@ -11,6 +11,7 @@ import * as React from "react";
 import { useMeasure, useUpdateEffect } from "react-use";
 
 import { usePermissions } from "@/contexts/permissions";
+import { useRole } from "@/contexts/role";
 
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
@@ -67,8 +68,11 @@ const Poll: React.FunctionComponent = () => {
 
   const { canAddNewParticipant } = usePermissions();
 
+  const role = useRole();
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(canAddNewParticipant && !userAlreadyVoted);
+    React.useState(
+      canAddNewParticipant && !userAlreadyVoted && role === "participant",
+    );
 
   const pollWidth = sidebarWidth + poll.options.length * columnWidth;
   const addParticipant = useAddParticipantMutation();

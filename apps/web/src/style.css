@@ -21,7 +21,7 @@
   h3,
   h4,
   h5 {
-    @apply font-sans font-semibold text-gray-800;
+    @apply font-sans font-bold tracking-tight text-gray-800;
   }
   h1 {
     @apply text-2xl;

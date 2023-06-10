@@ -1,4 +1,4 @@
-import { LogInIcon } from "@rallly/icons";
+import { ListIcon, LogInIcon, Settings2Icon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
@@ -14,7 +14,7 @@ import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 
-import { NextPageWithLayout } from "../../types";
+import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
 import { IfGuest, UserProvider } from "../user-provider";
 
@@ -22,7 +22,9 @@ const NavMenuItem = ({
   href,
   target,
   label,
+  icon: Icon,
 }: {
+  icon: IconComponent;
   href: string;
   target?: string;
   label: React.ReactNode;
@@ -33,12 +35,13 @@ const NavMenuItem = ({
       target={target}
       href={href}
       className={cn(
-        "flex items-center gap-2 rounded-none px-4 py-1.5 text-sm font-medium",
+        "flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-medium",
         router.asPath === href
           ? "text-foreground"
           : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
       )}
     >
+      <Icon className="h-4 w-4" />
       {label}
     </Link>
   );
@@ -95,31 +98,30 @@ const Logo = () => {
 const MainNav = () => {
   return (
     <div className="border-b bg-gray-50">
-      <Container className="flex h-14 items-center justify-between gap-4 sm:justify-start">
+      <Container className="flex h-14 items-center justify-between gap-4">
         <div className="flex shrink-0 gap-4">
           <Logo />
         </div>
-        <div className="hidden h-full grow sm:flex">
-          <nav className="flex">
+        <div className="flex gap-x-4">
+          <nav className="hidden gap-x-2 sm:flex">
             <NavMenuItem
+              icon={ListIcon}
               href="/polls"
               label={<Trans i18nKey="polls" defaults="Polls" />}
             />
             <NavMenuItem
+              icon={Settings2Icon}
               href="/settings/preferences"
               label={<Trans i18nKey="preferences" defaults="Preferences" />}
             />
+            <IfGuest>
+              <NavMenuItem
+                icon={LogInIcon}
+                href="/login"
+                label={<Trans i18nKey="login" defaults="Login" />}
+              />
+            </IfGuest>
           </nav>
-        </div>
-        <div className="flex gap-2">
-          <IfGuest>
-            <Button asChild>
-              <Link href="/login">
-                <LogInIcon className="-ml-0.5 h-4 w-4" />
-                <Trans i18nKey="login" />
-              </Link>
-            </Button>
-          </IfGuest>
           <UserDropdown />
         </div>
       </Container>

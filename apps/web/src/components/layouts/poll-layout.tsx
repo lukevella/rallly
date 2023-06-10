@@ -6,6 +6,8 @@ import {
   CalendarCheckIcon,
   ChevronDownIcon,
   FileBarChart,
+  LifeBuoyIcon,
+  LockIcon,
   PauseCircleIcon,
   PlayCircleIcon,
   RadioTowerIcon,
@@ -270,43 +272,17 @@ const InviteDialog = () => {
 const AdminControls = () => {
   const poll = usePoll();
   const hasAdminPermission = poll?.adminUrlId;
-  const { user } = useUser();
-  const router = useRouter();
 
-  const pollHome = `/poll/${poll.id}`;
   return (
     <TopBar>
       <div className="flex items-center justify-between gap-x-4">
         <div className="flex min-w-0 gap-2">
-          {router.asPath !== pollHome ? (
-            <Button asChild variant="ghost">
-              <Link href={`/poll/${poll.id}`}>
-                <ArrowLeftIcon className="-ml-0.5 h-4 w-4" />
-              </Link>
-            </Button>
-          ) : null}
           <TopBarTitle title={poll?.title} icon={FileBarChart} />
         </div>
         <div className="flex items-center gap-x-2.5">
-          {user.id !== poll?.userId ? (
-            <LegacyTooltip
-              className="p-2 text-slate-500"
-              content={
-                <Trans
-                  i18nKey="differentOwnerTooltip"
-                  defaults="This poll was created by a different user"
-                />
-              }
-            >
-              <AlertCircleIcon className="h-5" />
-            </LegacyTooltip>
-          ) : null}
           <NotificationsToggle />
-
           <StatusControl />
-          {user.isGuest && poll?.userId !== user.id ? null : (
-            <ManagePoll disabled={!hasAdminPermission} />
-          )}
+          <ManagePoll disabled={!hasAdminPermission} />
           <InviteDialog />
         </div>
       </div>
@@ -315,15 +291,48 @@ const AdminControls = () => {
 };
 
 export const PollLayout = ({ children }: React.PropsWithChildren) => {
-  return (
-    <LegacyPollContextProvider>
-      <div className="flex min-w-0 grow flex-col">
-        <AdminControls />
-        <div>
-          <Container className="py-3 sm:py-8">{children}</Container>
+  const poll = usePoll();
+  if (!poll.adminUrlId) {
+    return (
+      <Container className="flex h-[calc(75vh)] items-center justify-center">
+        <div className="text-center">
+          <p className="text-primary text-base font-semibold">
+            <LockIcon className="inline-block h-14 w-14" />
+          </p>
+          <h1 className="mt-4 text-3xl">
+            <Trans i18nKey="permissionDenied" defaults="Unauthorized" />
+          </h1>
+          <p className="mt-2 text-base leading-7 text-gray-600">
+            <Trans
+              i18nKey="permissionDeniedDescription"
+              defaults="You don't have permission to access this poll."
+            />
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-x-4">
+            <Button asChild variant="primary" size="lg">
+              <Link href="/polls">
+                <Trans i18nKey="goToHome" defaults="Go to polls" />
+              </Link>
+            </Button>
+            <Button asChild size="lg">
+              <Link href="https://support.rallly.co">
+                <LifeBuoyIcon className="-ml-0.5 h-5 w-5" />
+                <Trans i18nKey="support" />
+              </Link>
+            </Button>
+          </div>
         </div>
+      </Container>
+    );
+  }
+
+  return (
+    <div className="flex min-w-0 grow flex-col">
+      <AdminControls />
+      <div>
+        <Container className="py-3 sm:py-8">{children}</Container>
       </div>
-    </LegacyPollContextProvider>
+    </div>
   );
 };
 
@@ -331,7 +340,9 @@ export const getPollLayout: NextPageWithLayout["getLayout"] =
   function getLayout(page) {
     return (
       <StandardLayout>
-        <PollLayout>{page}</PollLayout>
+        <LegacyPollContextProvider>
+          <PollLayout>{page}</PollLayout>
+        </LegacyPollContextProvider>
       </StandardLayout>
     );
   };
