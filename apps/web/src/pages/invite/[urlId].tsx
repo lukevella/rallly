@@ -40,7 +40,6 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
     <UserProvider forceUserId={forceUserId}>
       <Head>
         <title>{poll.title}</title>
-        <meta name="robots" content="noindex,nofollow" />
       </Head>
       <LegacyPollContextProvider>
         <div className="">

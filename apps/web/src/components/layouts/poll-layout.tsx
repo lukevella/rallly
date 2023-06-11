@@ -4,13 +4,14 @@ import {
   CalendarCheckIcon,
   ChevronDownIcon,
   FileBarChart,
-  LifeBuoyIcon,
-  LockIcon,
+  LogInIcon,
+  LogOutIcon,
   PauseCircleIcon,
   PlayCircleIcon,
   RadioTowerIcon,
   RotateCcw,
   Share2Icon,
+  ShieldCloseIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
@@ -42,12 +43,20 @@ import {
   TopBar,
   TopBarTitle,
 } from "@/components/layouts/standard-layout/top-bar";
+import {
+  PageDialog,
+  PageDialogDescription,
+  PageDialogFooter,
+  PageDialogHeader,
+  PageDialogTitle,
+} from "@/components/page-dialog";
 import { useParticipants } from "@/components/participants-provider";
 import ManagePoll from "@/components/poll/manage-poll";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
 import { Trans } from "@/components/trans";
+import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 import { NextPageWithLayout } from "../../types";
@@ -299,38 +308,44 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
 export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
-
+  const { user } = useUser();
   if (!poll.adminUrlId) {
     return (
-      <Container className="flex h-[calc(75vh)] items-center justify-center">
-        <div className="text-center">
-          <p className="text-primary text-base font-semibold">
-            <LockIcon className="inline-block h-14 w-14" />
-          </p>
-          <h1 className="mt-4 text-3xl">
+      <PageDialog icon={ShieldCloseIcon}>
+        <PageDialogHeader>
+          <PageDialogTitle>
             <Trans i18nKey="permissionDenied" defaults="Unauthorized" />
-          </h1>
-          <p className="mt-2 text-base leading-7 text-gray-600">
+          </PageDialogTitle>
+          <PageDialogDescription>
             <Trans
               i18nKey="permissionDeniedDescription"
-              defaults="You don't have permission to access this poll."
+              defaults="This poll belongs to a different user."
             />
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-x-4">
+          </PageDialogDescription>
+        </PageDialogHeader>
+        <PageDialogFooter>
+          {user.isGuest ? (
             <Button asChild variant="primary" size="lg">
-              <Link href="/polls">
-                <Trans i18nKey="goToHome" defaults="Go to polls" />
+              <Link href="/login">
+                <LogInIcon className="-ml-1 h-5 w-5" />
+                <Trans i18nKey="login" defaults="Login" />
               </Link>
             </Button>
-            <Button asChild size="lg">
-              <Link href="https://support.rallly.co">
-                <LifeBuoyIcon className="-ml-0.5 h-5 w-5" />
-                <Trans i18nKey="support" />
+          ) : (
+            <Button asChild variant="primary" size="lg">
+              <Link href="/logout">
+                <LogOutIcon className="-ml-1 h-5 w-5" />
+                <Trans i18nKey="loginDifferent" defaults="Switch user" />
               </Link>
             </Button>
-          </div>
-        </div>
-      </Container>
+          )}
+          <Button asChild size="lg">
+            <Link href="/polls">
+              <Trans i18nKey="goToHome" defaults="Go to polls" />
+            </Link>
+          </Button>
+        </PageDialogFooter>
+      </PageDialog>
     );
   }
 

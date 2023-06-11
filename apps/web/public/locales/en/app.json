@@ -154,9 +154,6 @@
   "pickADate": "Pick a date",
   "guestPollAlertTitle": "<0>Create an account</0> or <1>login</1> to claim this poll",
   "guestPollAlertDescription": "Your administrator rights can be lost if you clear your cookies.",
-  "claimPollAlertTitle": "Would you like to claim this poll?",
-  "claimPollAlertDescription": "This poll is not claimed by a registered user. You can claim it by clicking the button below.",
-  "claim": "Make me the owner of this poll",
   "attendeeCount": "{count, plural, one {# attendee} other {# attendees}}",
   "notificationsValue": "Notifications: <b>{value}</b>",
   "notificationsOn": "On",
@@ -176,6 +173,11 @@
   "duration": "Duration",
   "popularity": "Popularity",
   "permissionDenied": "Unauthorized",
-  "permissionDeniedDescription": "You don't have permission to access this poll.",
-  "goToHome": "Go to polls"
+  "permissionDeniedDescription": "This poll belongs to a different user.",
+  "goToHome": "Go to polls",
+  "loginDifferent": "Switch user",
+  "differentOwner": "Different Owner",
+  "differentOwnerDescription": "This poll was created by a different user. Would you like to transfer ownership to the current user?",
+  "yesTransfer": "Yes, transfer to current user",
+  "noTransfer": "No, take me home"
 }

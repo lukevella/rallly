@@ -5,8 +5,8 @@ export const AuthLayout = (
 ) => {
   return (
     <>
-      <NextSeo nofollow={true} noindex={true} title={props.title} />
-      <div className="bg-pattern flex h-full items-center justify-center p-4">
+      <NextSeo nofollow={true} title={props.title} />
+      <div className="flex h-screen items-center justify-center p-4">
         <div className="animate-popIn space-y-2 rounded-md border bg-white p-6 text-center shadow-sm">
           {props.children}
         </div>

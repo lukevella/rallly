@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const supportedLocales = Object.keys(languages);
 
-const publicPaths = ["/login", "/register", "/invite"];
+const publicPaths = ["/login", "/register", "/invite", "/auth"];
 
 export async function middleware(req: NextRequest) {
   const { headers, cookies, nextUrl } = req;

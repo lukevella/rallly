@@ -152,12 +152,9 @@ export const polls = router({
         },
       });
 
-      let pollLink = absoluteUrl(`/poll/${pollId}`);
-
-      if (ctx.user.isGuest) {
-        // Add admin token to link if creating as a guest
-        pollLink += `?adminToken=${adminToken}`;
-      }
+      const pollLink = ctx.user.isGuest
+        ? absoluteUrl(`/admin/${adminToken}`)
+        : absoluteUrl(`/poll/${pollId}`);
 
       const participantLink = absoluteUrl(`/invite/${pollId}`);
 

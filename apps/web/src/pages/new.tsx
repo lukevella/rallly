@@ -88,7 +88,6 @@ const Page: NextPageWithLayout = () => {
     <>
       <Head>
         <title>{t("newPoll")}</title>
-        <meta name="robots" content="noindex,nofollow" />
       </Head>
       <CreatePoll />
     </>
