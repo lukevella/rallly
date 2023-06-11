@@ -46,7 +46,9 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
         data-testid="popularity-score"
         className={clsx(
           "relative flex select-none items-center gap-1 rounded-full py-0.5 px-2 text-xs font-semibold tabular-nums",
-          highlight ? "bg-green-500 text-green-50" : " text-gray-600",
+          highlight && score > 1
+            ? "bg-green-500 text-green-50"
+            : " text-gray-600",
         )}
         style={{
           opacity: Math.max(score / highScore, 0.2),
