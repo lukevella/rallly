@@ -20,7 +20,6 @@
   "createAnAccount": "Create an account",
   "createdBy": "by <b>{name}</b>",
   "createPoll": "Create poll",
-  "creatingDemo": "Creating demo poll…",
   "delete": "Delete",
   "deleteDate": "Delete date",
   "deletedPoll": "Deleted poll",
@@ -116,8 +115,6 @@
   "addComment": "Add Comment",
   "profile": "Profile",
   "polls": "Polls",
-  "myAccount": "My Account",
-  "differentOwnerTooltip": "This poll was created by a different user",
   "showLess": "Show less…",
   "showMore": "Show more…",
   "timeZoneSelect__defaultValue": "Select time zone…",
@@ -172,5 +169,13 @@
   "pausePoll": "Pause",
   "finishPoll": "Finalize",
   "finalize": "Finalize",
-  "allDay": "All day"
+  "allDay": "All day",
+  "poll": {
+    "date": "Date"
+  },
+  "duration": "Duration",
+  "popularity": "Popularity",
+  "permissionDenied": "Unauthorized",
+  "permissionDeniedDescription": "You don't have permission to access this poll.",
+  "goToHome": "Go to polls"
 }
