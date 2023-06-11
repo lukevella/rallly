@@ -37,6 +37,31 @@ const nextConfig = {
         destination: "https://support.rallly.co",
         permanent: true,
       },
+      {
+        source: "/p/:path*",
+        destination: "http://app.rallly.co/p/:path*",
+        permanent: true,
+      },
+      {
+        source: "/admin/:path*",
+        destination: "http://app.rallly.co/p/:path*",
+        permanent: true,
+      },
+      {
+        source: "/profile",
+        destination: "http://app.rallly.co",
+        permanent: true,
+      },
+      {
+        source: "/login",
+        destination: "http://app.rallly.co/login",
+        permanent: true,
+      },
+      {
+        source: "/register",
+        destination: "http://app.rallly.co/register",
+        permanent: true,
+      },
     ];
   },
 };
