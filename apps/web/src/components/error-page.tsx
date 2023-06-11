@@ -1,4 +1,5 @@
 import { FrownIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -30,16 +31,18 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
           <p className="text-gray-600">{description}</p>
         </div>
         <div className="flex justify-center space-x-3">
-          <Link href="/" className="btn-primary">
-            {t("errors_goToHome")}
-          </Link>
-          <Link
-            href="https://support.rallly.co"
-            passHref={true}
-            className="btn-default"
-          >
-            {t("common_support")}
-          </Link>
+          <Button variant="primary" asChild>
+            <Link href="/">{t("errors_goToHome")}</Link>
+          </Button>
+          <Button asChild>
+            <Link
+              href="https://support.rallly.co"
+              passHref={true}
+              className="btn-default"
+            >
+              {t("common_support")}
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

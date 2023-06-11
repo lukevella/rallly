@@ -9,8 +9,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Textarea } from "@rallly/ui/textarea";
@@ -121,10 +119,6 @@ const Discussion: React.FunctionComponent = () => {
                             </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="start">
-                            <DropdownMenuLabel>
-                              <Trans defaults="Menu" i18nKey="menu" />
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
                             <DropdownMenuItem
                               onClick={() => {
                                 deleteComment.mutate({

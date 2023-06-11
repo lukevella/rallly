@@ -9,10 +9,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { DateIcon } from "@/components/date-icon";
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
+import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
 import { usePoll } from "@/contexts/poll";
+import { useDateFormatter } from "@/contexts/time-preferences";
 
 const formSchema = z.object({
   selectedOptionId: z.string(),
@@ -90,6 +91,7 @@ export const FinalizePollForm = ({
       return { ...option, votes: scoreByOptionId[option.id] };
     });
 
+  const dateFormatter = useDateFormatter();
   const form = useForm<FinalizeFormData>({
     defaultValues: {
       selectedOptionId: options[0].id,
@@ -119,7 +121,10 @@ export const FinalizePollForm = ({
                             (vote.type === "yes" || vote.type === "ifNeedBe"),
                         ),
                       );
-                      const date = dayjs(option.start).utc();
+                      const start = dateFormatter(option.start);
+                      const end = dateFormatter(
+                        dayjs(option.start).add(option.duration, "minute"),
+                      );
                       return (
                         <label
                           key={option.id}
@@ -127,27 +132,29 @@ export const FinalizePollForm = ({
                           className={cn(
                             "group flex select-none items-center gap-4 rounded-md border bg-white p-3 text-base",
                             field.value === option.id
-                              ? "bg-gray-50"
-                              : "hover:bg-gray-50 active:bg-gray-100",
+                              ? "bg-primary-50 border-primary ring-primary ring-1"
+                              : "hover:bg-gray-50",
                           )}
                         >
                           <div className="hidden">
                             <RadioGroupItem id={option.id} value={option.id} />
                           </div>
                           <div>
-                            <DateIcon date={dayjs(option.start)} />
+                            <DateIcon date={start} />
                           </div>
                           <div className="grow">
                             <div className="flex">
                               <div className="grow whitespace-nowrap">
                                 <div className="text-sm font-semibold">
                                   {option.duration > 0
-                                    ? date.format("LL")
-                                    : date.format("LL")}
+                                    ? start.format("LL")
+                                    : start.format("LL")}
                                 </div>
                                 <div className="text-muted-foreground text-sm">
                                   {option.duration > 0 ? (
-                                    date.format("LT")
+                                    `${start.format("LT")} - ${end.format(
+                                      "LT",
+                                    )}`
                                   ) : (
                                     <Trans
                                       i18nKey="allDay"
@@ -157,10 +164,7 @@ export const FinalizePollForm = ({
                                 </div>
                               </div>
                               <div>
-                                <ParticipantAvatarBar
-                                  participants={attendees}
-                                  max={5}
-                                />
+                                <ConnectedScoreSummary optionId={option.id} />
                               </div>
                             </div>
                             <div className="mt-2">
@@ -182,7 +186,8 @@ export const FinalizePollForm = ({
         {max < options.length ? (
           <div className="mt-4">
             <Button
-              className="mt-full w-full"
+              variant="ghost"
+              className="w-full"
               onClick={() => {
                 setMax((oldMax) => oldMax + 3);
               }}
