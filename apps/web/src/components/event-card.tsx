@@ -3,18 +3,19 @@ import {
   MapPinIcon,
   MenuIcon,
   MousePointerClickIcon,
+  PauseCircleIcon,
+  RadioIcon,
 } from "@rallly/icons";
-import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 
 import { Card } from "@/components/card";
-import { DateIconInner } from "@/components/date-icon";
+import { DateIcon } from "@/components/date-icon";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
-import { useOptions } from "@/components/poll-context";
 import { TextSummary } from "@/components/text-summary";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { useDateFormatter } from "@/contexts/time-preferences";
 import { generateGradient } from "@/utils/color-hash";
 import { preventWidows } from "@/utils/prevent-widows";
 
@@ -26,15 +27,16 @@ export const EventCard = () => {
   const { t } = useTranslation();
   const poll = usePoll();
 
-  const { options } = useOptions();
+  const { options } = poll;
 
   const selectedOptionIndex = options.findIndex(
-    (o) => o.optionId === poll.selectedOptionId,
+    (o) => o.id === poll.selectedOptionId,
   );
   const selectedOption = options[selectedOptionIndex];
 
   const { participants } = useParticipants();
 
+  const dateFormatter = useDateFormatter();
   const attendees = participants.filter((participant) =>
     participant.votes.some(
       (vote) =>
@@ -46,7 +48,7 @@ export const EventCard = () => {
     <Card fullWidthOnMobile={false}>
       <div className="divide-y text-gray-600">
         {selectedOption ? (
-          <div className="flex items-center justify-between bg-green-500 p-2 pr-4 text-sm  font-semibold text-green-50 shadow-sm">
+          <div className="flex items-center justify-between bg-green-500 p-2 px-4 text-sm  font-semibold text-green-50 shadow-sm">
             <span className="inline-flex items-center gap-x-2 ">
               <CheckCircleIcon className="h-5 w-5" />
               <div className="font-medium">
@@ -54,29 +56,38 @@ export const EventCard = () => {
               </div>
             </span>
           </div>
+        ) : poll.closed ? (
+          <div className="flex items-center justify-between bg-gray-400 p-2 px-4 text-sm  font-semibold text-gray-50 shadow-sm">
+            <span className="inline-flex items-center gap-x-2 ">
+              <PauseCircleIcon className="h-5 w-5" />
+              <div className="font-medium">
+                <Trans i18nKey="pollStatusPaused" />
+              </div>
+            </span>
+          </div>
         ) : (
-          <div
-            className="h-2"
-            style={{ background: generateGradient(poll.id) }}
-          />
+          <div className="flex items-center justify-between bg-gradient-to-r from-blue-500 to-indigo-500 p-2 px-4 text-sm  font-semibold text-white shadow-sm">
+            <span className="inline-flex animate-pulse items-center gap-x-2 ">
+              <RadioIcon className="h-5 w-5" />
+              <div className="font-medium">
+                <Trans i18nKey="pollStatusOpen" defaults="Live" />
+              </div>
+            </span>
+          </div>
         )}
-        <div className="bg-pattern p-4 sm:px-5">
+        <div className="bg-pattern p-4">
           <div className="flex items-start gap-4 sm:gap-6">
             {selectedOption ? (
               <div>
-                <DateIconInner
-                  dow={selectedOption.dow}
-                  month={selectedOption.month}
-                  day={selectedOption.day}
-                />
+                <DateIcon date={dateFormatter(selectedOption.start)} />
               </div>
             ) : null}
             <div>
               {selectedOption ? (
                 <div className="text-muted-foreground text-sm">
-                  {dayjs(selectedOption.date)
-                    .utc()
-                    .format(selectedOption.type === "date" ? "LL" : "LLL")}
+                  {dateFormatter(selectedOption.start).format(
+                    selectedOption.duration === 0 ? "LL" : "LLL",
+                  )}
                 </div>
               ) : null}
               <h1

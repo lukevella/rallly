@@ -1,27 +1,25 @@
 import { trpc } from "@rallly/backend";
 import {
-  ArrowUpRightIcon,
   CalendarCheckIcon,
+  CheckCircle2Icon,
+  CheckCircleIcon,
   ChevronDownIcon,
   FileBarChart,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
   PlayCircleIcon,
-  RadioTowerIcon,
+  RadioIcon,
   RotateCcw,
-  Share2Icon,
   ShieldCloseIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
@@ -37,7 +35,6 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { Container } from "@/components/container";
-import { CopyLinkButton } from "@/components/copy-link-button";
 import { InviteDialog } from "@/components/invite-dialog";
 import { StandardLayout } from "@/components/layouts/standard-layout";
 import {
@@ -51,7 +48,6 @@ import {
   PageDialogHeader,
   PageDialogTitle,
 } from "@/components/page-dialog";
-import { useParticipants } from "@/components/participants-provider";
 import ManagePoll from "@/components/poll/manage-poll";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
@@ -120,11 +116,11 @@ const StatusControl = () => {
         <DropdownMenuTrigger asChild>
           <Button>
             {state === "live" ? (
-              <RadioTowerIcon className="text-primary h-4 w-4 animate-pulse" />
+              <RadioIcon className="h-4 w-4" />
             ) : state === "paused" ? (
               <PauseCircleIcon className="h-4 w-4" />
             ) : (
-              <CalendarCheckIcon className="h-4 w-4" />
+              <CheckCircleIcon className="h-4 w-4" />
             )}
             <StatusLabel status={state} />
             <ChevronDownIcon className="h-4 w-4" />
@@ -166,7 +162,7 @@ const StatusControl = () => {
                   setIsFinalizing(true);
                 }}
               >
-                <DropdownMenuItemIconLabel icon={CalendarCheckIcon}>
+                <DropdownMenuItemIconLabel icon={CheckCircleIcon}>
                   <Trans i18nKey="finishPoll" defaults="Finalize" />
                 </DropdownMenuItemIconLabel>
               </DropdownMenuItem>
@@ -227,8 +223,8 @@ const AdminControls = () => {
         </div>
         <div className="flex items-center gap-x-2.5">
           <NotificationsToggle />
-          <ManagePoll />
           <StatusControl />
+          <ManagePoll />
           <InviteDialog />
         </div>
       </div>

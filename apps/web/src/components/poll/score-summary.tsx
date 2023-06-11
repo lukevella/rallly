@@ -24,7 +24,7 @@ export const ConnectedScoreSummary: React.FunctionComponent<{
       yesScore={yes}
       ifNeedBeScore={ifNeedBe}
       highScore={highScore}
-      highlight={score === highScore}
+      highlight={score === highScore && score > 1}
     />
   );
 };
@@ -46,9 +46,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
         data-testid="popularity-score"
         className={clsx(
           "relative flex select-none items-center gap-1 rounded-full py-0.5 px-2 text-xs font-semibold tabular-nums",
-          highlight && score > 1
-            ? "bg-green-500 text-green-50"
-            : " text-gray-600",
+          highlight ? "bg-green-500 text-green-50" : " text-gray-600",
         )}
         style={{
           opacity: Math.max(score / highScore, 0.2),
@@ -73,7 +71,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
             {score}
           </m.span>
         </AnimatePresence>
-        {highScore === score && ifNeedBeScore > 0 ? (
+        {highlight && ifNeedBeScore > 0 ? (
           <span className="absolute -top-0.5 -right-1 h-2 w-2 rounded-full bg-amber-400 ring-2 ring-white" />
         ) : null}
       </div>
