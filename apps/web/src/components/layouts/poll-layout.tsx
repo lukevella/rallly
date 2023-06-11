@@ -30,7 +30,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 import { Container } from "@/components/container";
@@ -284,8 +286,20 @@ const AdminControls = () => {
   );
 };
 
-export const PollLayout = ({ children }: React.PropsWithChildren) => {
+const Layout = ({ children }: React.PropsWithChildren) => {
+  return (
+    <div className="flex min-w-0 grow flex-col">
+      <AdminControls />
+      <div>
+        <Container className="py-3 sm:py-8">{children}</Container>
+      </div>
+    </div>
+  );
+};
+
+export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
+
   if (!poll.adminUrlId) {
     return (
       <Container className="flex h-[calc(75vh)] items-center justify-center">
@@ -320,13 +334,42 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
     );
   }
 
+  return <>{children}</>;
+};
+
+const Title = () => {
+  const poll = usePoll();
   return (
-    <div className="flex min-w-0 grow flex-col">
-      <AdminControls />
-      <div>
-        <Container className="py-3 sm:py-8">{children}</Container>
-      </div>
-    </div>
+    <Head>
+      <title>{poll.title}</title>
+    </Head>
+  );
+};
+
+const Prefetch = ({ children }: React.PropsWithChildren) => {
+  const router = useRouter();
+  const [urlId] = React.useState(router.query.urlId as string);
+
+  const poll = trpc.polls.get.useQuery({ urlId });
+  const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
+
+  if (!poll.isFetched || !watchers.isFetched) {
+    return null;
+  }
+
+  return <>{children}</>;
+};
+
+const PollLayout = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Prefetch>
+      <LegacyPollContextProvider>
+        <Title />
+        <PermissionGuard>
+          <Layout>{children}</Layout>
+        </PermissionGuard>
+      </LegacyPollContextProvider>
+    </Prefetch>
   );
 };
 
@@ -334,9 +377,7 @@ export const getPollLayout: NextPageWithLayout["getLayout"] =
   function getLayout(page) {
     return (
       <StandardLayout>
-        <LegacyPollContextProvider>
-          <PollLayout>{page}</PollLayout>
-        </LegacyPollContextProvider>
+        <PollLayout>{page}</PollLayout>
       </StandardLayout>
     );
   };

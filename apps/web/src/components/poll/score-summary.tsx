@@ -1,11 +1,9 @@
-import { User2Icon, Users2Icon } from "@rallly/icons";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { User2Icon } from "@rallly/icons";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
-import VoteIcon from "@/components/poll/vote-icon";
 import { usePoll } from "@/components/poll-context";
 
 export interface PopularityScoreProps {
@@ -48,7 +46,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
         data-testid="popularity-score"
         className={clsx(
           "relative flex select-none items-center gap-1 rounded-full py-0.5 px-2 text-xs font-semibold tabular-nums",
-          highlight ? "bg-green-50 text-green-500" : " text-gray-600",
+          highlight ? "bg-green-500 text-green-50" : " text-gray-600",
         )}
         style={{
           opacity: Math.max(score / highScore, 0.2),

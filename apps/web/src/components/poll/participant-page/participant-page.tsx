@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import Head from "next/head";
 import React from "react";
 
 import { Poll } from "@/components/poll";
@@ -16,10 +15,6 @@ const ParticipantPage = (
 
   return (
     <>
-      <Head>
-        <title>{poll.title}</title>
-        <meta name="robots" content="noindex,nofollow" />
-      </Head>
       <div>
         {props.children}
         <div className={cn(props.className)}>

@@ -3,18 +3,19 @@ import { decryptToken } from "@rallly/backend/session";
 import { ArrowUpLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import Link from "next/link";
 
 import ParticipantPage from "@/components/poll/participant-page/participant-page";
 import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
-import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { UserProvider, useUser } from "@/components/user-provider";
+import { usePoll } from "@/contexts/poll";
 import { TimePreferences } from "@/contexts/time-preferences";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 const GoToApp = () => {
-  const { poll } = usePoll();
+  const poll = usePoll();
   const { user } = useUser();
 
   if (poll.user?.id !== user.id) {
@@ -34,8 +35,13 @@ const GoToApp = () => {
 };
 
 const Page = ({ forceUserId }: { forceUserId: string }) => {
+  const poll = usePoll();
   return (
     <UserProvider forceUserId={forceUserId}>
+      <Head>
+        <title>{poll.title}</title>
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
       <LegacyPollContextProvider>
         <div className="">
           <svg

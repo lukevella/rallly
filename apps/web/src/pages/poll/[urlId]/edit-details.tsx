@@ -1,7 +1,4 @@
-import { withSessionSsr } from "@rallly/backend/next";
-import { decryptToken } from "@rallly/backend/session";
 import { Button } from "@rallly/ui/button";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 
 import { Card } from "@/components/card";
@@ -11,7 +8,7 @@ import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
-import { withPageTranslations } from "@/utils/with-page-translations";
+import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
   const { poll } = usePoll();
@@ -60,33 +57,13 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = getPollLayout;
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  [
-    withPageTranslations(),
-    async (ctx) => {
-      let userId: string | null = null;
-      if (ctx.query.token) {
-        const res = await decryptToken<{ userId: string }>(
-          ctx.query.token as string,
-        );
-        if (res) {
-          userId = res.userId;
-        }
-      }
-      return {
-        props: {
-          forceUserId: userId,
-        },
-      };
-    },
-  ],
-  {
-    onPrefetch: async (ssg, ctx) => {
-      await ssg.polls.get.fetch({
-        urlId: ctx.params?.urlId as string,
-      });
-    },
-  },
-);
+export const getStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps = getStaticTranslations;
 
 export default Page;

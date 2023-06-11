@@ -1,5 +1,4 @@
 import { trpc } from "@rallly/backend";
-import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
 import {
   ArrowRightIcon,
   FileBarChartIcon,
@@ -26,7 +25,7 @@ import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Table } from "@/components/table";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
-import { withPageTranslations } from "@/utils/with-page-translations";
+import { getStaticTranslations } from "@/utils/with-page-translations";
 
 type PollTableRow = {
   id: string;
@@ -182,7 +181,4 @@ Page.getLayout = getStandardLayout;
 
 export default Page;
 
-export const getServerSideProps = withSessionSsr([
-  withAuthIfRequired,
-  withPageTranslations(),
-]);
+export const getStaticProps = getStaticTranslations;

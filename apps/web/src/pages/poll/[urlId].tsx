@@ -1,12 +1,8 @@
 import { trpc } from "@rallly/backend";
-import { withSessionSsr } from "@rallly/backend/next";
-import { decryptToken } from "@rallly/backend/session";
-import { prisma } from "@rallly/database";
 import { InfoIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
-import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { Trans } from "next-i18next";
 
@@ -15,7 +11,7 @@ import ParticipantPage from "@/components/poll/participant-page/participant-page
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { NextPageWithLayout } from "@/types";
-import { withPageTranslations } from "@/utils/with-page-translations";
+import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const GuestPollAlert = () => {
   const poll = usePoll();
@@ -110,63 +106,13 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = getPollLayout;
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  [
-    withPageTranslations(),
-    async (ctx) => {
-      let userId: string | null = null;
-      if (ctx.query.token) {
-        const res = await decryptToken<{ userId: string }>(
-          ctx.query.token as string,
-        );
-        if (res) {
-          userId = res.userId;
-        }
-      }
+export const getStaticPaths = async () => {
+  return {
+    paths: [], //indicates that no page needs be created at build time
+    fallback: "blocking", //indicates the type of fallback
+  };
+};
 
-      if (ctx.query.adminToken) {
-        const res = await prisma.poll.findUnique({
-          where: {
-            adminUrlId: ctx.query.adminToken as string,
-          },
-          select: {
-            id: true,
-          },
-        });
-
-        if (!res) {
-          return {
-            notFound: true,
-          };
-        }
-        if (ctx.req.session.user) {
-          const { pollIds } = ctx.req.session.user;
-          ctx.req.session.user.pollIds = pollIds
-            ? pollIds.includes(res.id)
-              ? pollIds
-              : [...pollIds, res.id]
-            : [res.id];
-          await ctx.req.session.save();
-        }
-      }
-      return {
-        props: {
-          forceUserId: userId,
-        },
-      };
-    },
-  ],
-  {
-    onPrefetch: async (ssg, ctx) => {
-      const poll = await ssg.polls.get.fetch({
-        urlId: ctx.params?.urlId as string,
-      });
-
-      await ssg.polls.participants.list.prefetch({
-        pollId: poll.id,
-      });
-    },
-  },
-);
+export const getStaticProps = getStaticTranslations;
 
 export default Page;

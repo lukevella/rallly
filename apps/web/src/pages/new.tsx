@@ -1,5 +1,3 @@
-import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
-import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
@@ -7,7 +5,7 @@ import { CreatePoll } from "@/components/create-poll";
 import { getStandardLayout } from "@/components/layouts/standard-layout";
 
 import { NextPageWithLayout } from "../types";
-import { withPageTranslations } from "../utils/with-page-translations";
+import { getStaticTranslations } from "../utils/with-page-translations";
 
 // const eventDetilsFormSchema = z.object({
 //   title: z.string(),
@@ -101,7 +99,4 @@ Page.getLayout = getStandardLayout;
 
 export default Page;
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr([
-  withAuthIfRequired,
-  withPageTranslations(),
-]);
+export const getStaticProps = getStaticTranslations;

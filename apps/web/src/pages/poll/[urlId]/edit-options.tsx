@@ -1,8 +1,5 @@
-import { withSessionSsr } from "@rallly/backend/next";
-import { decryptToken } from "@rallly/backend/session";
 import { Button } from "@rallly/ui/button";
 import dayjs from "dayjs";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 
@@ -15,7 +12,7 @@ import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
 import { encodeDateOption } from "@/utils/date-time-utils";
-import { withPageTranslations } from "@/utils/with-page-translations";
+import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const convertOptionToString = (option: { start: Date; duration: number }) => {
   const start = dayjs(option.start).utc();
@@ -134,37 +131,13 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = getPollLayout;
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  [
-    withPageTranslations(),
-    async (ctx) => {
-      let userId: string | null = null;
-      if (ctx.query.token) {
-        const res = await decryptToken<{ userId: string }>(
-          ctx.query.token as string,
-        );
-        if (res) {
-          userId = res.userId;
-        }
-      }
-      return {
-        props: {
-          forceUserId: userId,
-        },
-      };
-    },
-  ],
-  {
-    onPrefetch: async (ssg, ctx) => {
-      const poll = await ssg.polls.get.fetch({
-        urlId: ctx.params?.urlId as string,
-      });
+export const getStaticPaths = async () => {
+  return {
+    paths: [], //indicates that no page needs be created at build time
+    fallback: "blocking", //indicates the type of fallback
+  };
+};
 
-      await ssg.polls.participants.list.prefetch({
-        pollId: poll.id,
-      });
-    },
-  },
-);
+export const getStaticProps = getStaticTranslations;
 
 export default Page;
