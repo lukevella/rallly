@@ -91,7 +91,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <div className="overflow-hidden lg:flex">
-      <div className="border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
+      <div className="shrink-0 border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">

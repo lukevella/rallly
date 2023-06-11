@@ -50,7 +50,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       className={clsx("flex h-12 items-center", className)}
     >
       <div
-        className="flex h-full shrink-0 items-center justify-between gap-2 px-4"
+        className="flex h-full shrink-0 items-center justify-between gap-2 px-3 sm:pl-5"
         style={{ width: sidebarWidth }}
       >
         <UserAvatar name={name} showName={true} isYou={isYou} />

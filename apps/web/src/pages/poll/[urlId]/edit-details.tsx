@@ -23,7 +23,7 @@ const Page: NextPageWithLayout = () => {
     router.replace(`/poll/${poll.id}`);
   };
   return (
-    <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
+    <Card className="mx-auto max-w-4xl">
       <PollDetailsForm
         name="updateDetails"
         className="p-3 sm:py-5 sm:px-6"

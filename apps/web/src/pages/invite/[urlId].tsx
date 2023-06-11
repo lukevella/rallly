@@ -1,6 +1,6 @@
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
-import { ArrowLeftIcon, ArrowUpLeftIcon } from "@rallly/icons";
+import { ArrowUpLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -39,19 +39,19 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
       <LegacyPollContextProvider>
         <div className="">
           <svg
-            className="absolute inset-x-0 top-0 -z-10 h-[64rem] w-full stroke-gray-200 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)]"
+            className="absolute inset-x-0 top-0 -z-10 h-[64rem] w-full stroke-gray-300/75 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)]"
             aria-hidden="true"
           >
             <defs>
               <pattern
                 id="1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84"
-                width={220}
-                height={220}
+                width={240}
+                height={240}
                 x="50%"
                 y={-1}
                 patternUnits="userSpaceOnUse"
               >
-                <path d="M.5 220V.5H220" fill="none" />
+                <path d="M.5 240V.5H240" fill="none" />
               </pattern>
             </defs>
             <rect

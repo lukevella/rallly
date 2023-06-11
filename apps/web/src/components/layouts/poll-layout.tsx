@@ -1,7 +1,5 @@
 import { trpc } from "@rallly/backend";
 import {
-  AlertCircleIcon,
-  ArrowLeftIcon,
   ArrowUpRightIcon,
   CalendarCheckIcon,
   ChevronDownIcon,
@@ -33,7 +31,6 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 
 import { Container } from "@/components/container";
@@ -48,9 +45,7 @@ import ManagePoll from "@/components/poll/manage-poll";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
-import LegacyTooltip from "@/components/tooltip";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 import { NextPageWithLayout } from "../../types";
@@ -271,7 +266,6 @@ const InviteDialog = () => {
 
 const AdminControls = () => {
   const poll = usePoll();
-  const hasAdminPermission = poll?.adminUrlId;
 
   return (
     <TopBar>
@@ -281,8 +275,8 @@ const AdminControls = () => {
         </div>
         <div className="flex items-center gap-x-2.5">
           <NotificationsToggle />
+          <ManagePoll />
           <StatusControl />
-          <ManagePoll disabled={!hasAdminPermission} />
           <InviteDialog />
         </div>
       </div>

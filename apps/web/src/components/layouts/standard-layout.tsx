@@ -1,6 +1,5 @@
 import { ListIcon, LogInIcon, Settings2Icon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -70,7 +69,7 @@ const Logo = () => {
       >
         <Image
           className="hidden sm:block"
-          src="/logo.svg"
+          src="/static/logo.svg"
           width={120}
           height={22}
           alt="Rallly"

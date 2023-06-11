@@ -1,7 +1,4 @@
-import { LockIcon, PauseCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Card } from "@/components/card";
@@ -9,7 +6,6 @@ import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
-import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useUserPreferences } from "@/contexts/preferences";
 
@@ -18,7 +14,6 @@ import { useTouchBeacon } from "./poll/use-touch-beacon";
 const checkIfWideScreen = () => window.innerWidth > 640;
 
 export const Poll = () => {
-  const { t } = useTranslation();
   const poll = usePoll();
 
   useTouchBeacon(poll.id);

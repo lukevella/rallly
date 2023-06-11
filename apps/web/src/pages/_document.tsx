@@ -95,7 +95,6 @@ export default function Document() {
           content="/mstile-310x310.png"
         />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#F3F4F6" />
       </Head>
       <body>

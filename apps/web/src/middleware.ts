@@ -35,13 +35,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/admin/:id*",
-    "/demo",
-    "/p/:id*",
-    "/profile",
-    "/new",
-    "/login",
-    "/settings/:any*",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|static|favicon.ico).*)"],
 };

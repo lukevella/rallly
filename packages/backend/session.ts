@@ -2,7 +2,7 @@ import { sealData, unsealData } from "iron-session";
 
 import { sessionConfig } from "./session-config";
 
-type UserSessionData = { id: string; isGuest: boolean };
+type UserSessionData = { id: string; isGuest: boolean; pollIds?: string[] };
 
 declare module "iron-session" {
   export interface IronSessionData {

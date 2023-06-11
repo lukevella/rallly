@@ -1,6 +1,7 @@
 import {
   ChevronDown,
   LifeBuoyIcon,
+  ListIcon,
   LogInIcon,
   LogOutIcon,
   RefreshCcwIcon,
@@ -40,17 +41,8 @@ export const UserDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>
-          <Trans i18nKey="myAccount" defaults="My Account" />
+          <Trans i18nKey="menu" defaults="Menu" />
         </DropdownMenuLabel>
-        <DropdownMenuItem asChild={true}>
-          <Link
-            href="/settings/preferences"
-            className="flex items-center gap-x-2"
-          >
-            <Settings2Icon className="h-4 w-4" />
-            <Trans i18nKey="preferences" defaults="Preferences" />
-          </Link>
-        </DropdownMenuItem>
         <IfAuthenticated>
           <DropdownMenuItem asChild={true}>
             <Link
@@ -62,6 +54,21 @@ export const UserDropdown = () => {
             </Link>
           </DropdownMenuItem>
         </IfAuthenticated>
+        <DropdownMenuItem asChild={true}>
+          <Link
+            href="/settings/preferences"
+            className="flex items-center gap-x-2 sm:hidden"
+          >
+            <Settings2Icon className="h-4 w-4" />
+            <Trans i18nKey="preferences" defaults="Preferences" />
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild={true}>
+          <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
+            <ListIcon className="h-4 w-4" />
+            <Trans i18nKey="polls" defaults="Polls" />
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild={true}>
           <Link

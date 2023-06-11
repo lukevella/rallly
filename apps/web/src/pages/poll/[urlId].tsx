@@ -1,6 +1,7 @@
 import { trpc } from "@rallly/backend";
 import { withSessionSsr } from "@rallly/backend/next";
 import { decryptToken } from "@rallly/backend/session";
+import { prisma } from "@rallly/database";
 import { InfoIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
@@ -122,6 +123,32 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
           userId = res.userId;
         }
       }
+
+      if (ctx.query.adminToken) {
+        const res = await prisma.poll.findUnique({
+          where: {
+            adminUrlId: ctx.query.adminToken as string,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!res) {
+          return {
+            notFound: true,
+          };
+        }
+        if (ctx.req.session.user) {
+          const { pollIds } = ctx.req.session.user;
+          ctx.req.session.user.pollIds = pollIds
+            ? pollIds.includes(res.id)
+              ? pollIds
+              : [...pollIds, res.id]
+            : [res.id];
+          await ctx.req.session.save();
+        }
+      }
       return {
         props: {
           forceUserId: userId,
@@ -133,7 +160,6 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(
     onPrefetch: async (ssg, ctx) => {
       const poll = await ssg.polls.get.fetch({
         urlId: ctx.params?.urlId as string,
-        adminToken: ctx.query?.adminToken as string,
       });
 
       await ssg.polls.participants.list.prefetch({

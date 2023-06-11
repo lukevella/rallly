@@ -606,6 +606,7 @@ export const polls = router({
         },
         data: {
           selectedOptionId: null,
+          closed: false,
         },
       });
     }),
