@@ -96,7 +96,7 @@ const Logo = () => {
 
 const MainNav = () => {
   return (
-    <div className="border-b bg-gray-50">
+    <div className="border-b bg-gray-50/50">
       <Container className="flex h-14 items-center justify-between gap-4">
         <div className="flex shrink-0 gap-4">
           <Logo />
