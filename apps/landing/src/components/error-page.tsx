@@ -20,7 +20,6 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
     <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
       <Head>
         <title>{title}</title>
-        <meta name="robots" content="noindex,nofollow" />
       </Head>
       <div className="space-y-8">
         <div className="space-y-4 text-center">
