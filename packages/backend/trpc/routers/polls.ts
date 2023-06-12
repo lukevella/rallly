@@ -457,8 +457,16 @@ export const polls = router({
         title: true,
         location: true,
         createdAt: true,
+        timeZone: true,
         adminUrlId: true,
         participantUrlId: true,
+        selectedOptionId: true,
+        options: {
+          select: {
+            id: true,
+            start: true,
+          },
+        },
         closed: true,
         participants: {
           select: {

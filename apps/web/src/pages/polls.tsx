@@ -1,28 +1,26 @@
 import { trpc } from "@rallly/backend";
 import {
-  ArrowRightIcon,
-  FileBarChartIcon,
   InboxIcon,
+  PauseCircleIcon,
   PlusIcon,
+  RadioIcon,
   VoteIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
-import clsx from "clsx";
 import dayjs from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 
-import { Card } from "@/components/card";
 import { Container } from "@/components/container";
+import { DateIcon } from "@/components/date-icon";
 import { getStandardLayout } from "@/components/layouts/standard-layout";
 import {
   TopBar,
   TopBarTitle,
 } from "@/components/layouts/standard-layout/top-bar";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
-import { Table } from "@/components/table";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/with-page-translations";
@@ -31,13 +29,13 @@ type PollTableRow = {
   id: string;
   title: string;
   createdAt: Date;
+  selectedOptionId: string | null;
   closed: boolean;
   adminUrlId: string;
   participantUrlId: string;
   participants: { id: string; name: string }[];
+  options: { id: string; start: Date }[];
 };
-
-const columnHelper = createColumnHelper<PollTableRow>();
 
 const EmptyState = () => {
   return (
@@ -65,6 +63,79 @@ const EmptyState = () => {
   );
 };
 
+const PollCard = ({
+  date,
+  paused,
+  createdAt,
+  pollId,
+  title,
+  participants,
+}: {
+  date?: Date;
+  createdAt: Date;
+  paused: boolean;
+  pollId: string;
+  title: string;
+  participants: { name: string }[];
+}) => {
+  return (
+    <div className="flex flex-col justify-between gap-y-4 gap-x-4 rounded-md border bg-white p-4 sm:flex-row sm:items-start">
+      <div className="flex gap-x-4">
+        <div>
+          {date ? (
+            <DateIcon date={dayjs(date)} />
+          ) : paused ? (
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
+              <PauseCircleIcon className="h-5 w-5 text-gray-500" />
+            </div>
+          ) : (
+            <div className="bg-primary-50 border-primary-100 inline-flex h-14 w-14 items-center justify-center rounded-md border">
+              <RadioIcon className="text-primary-500 h-5 w-5" />
+            </div>
+          )}
+        </div>
+        <div className="pt-0.5">
+          <Link
+            href={`/poll/${pollId}`}
+            className="font-semibold hover:underline"
+          >
+            {title}
+          </Link>
+          <div className="text-muted-foreground text-sm">
+            {dayjs(createdAt).fromNow()}
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <ParticipantAvatarBar participants={participants} max={5} />
+      </div>
+    </div>
+  );
+};
+
+const PollList = ({ data }: { data: PollTableRow[] }) => {
+  return (
+    <div className="grid gap-4">
+      {data.map((poll) => {
+        const selectedOption = poll.options.find(
+          (option) => option.id === poll.selectedOptionId,
+        );
+        return (
+          <PollCard
+            key={poll.id}
+            date={selectedOption?.start}
+            createdAt={poll.createdAt}
+            paused={poll.closed}
+            pollId={poll.id}
+            title={poll.title}
+            participants={poll.participants}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 const Page: NextPageWithLayout = () => {
   const { data } = trpc.polls.list.useQuery();
   const { t } = useTranslation();
@@ -72,6 +143,9 @@ const Page: NextPageWithLayout = () => {
   if (!data) {
     return null;
   }
+
+  const pending = data.filter((poll) => !poll.selectedOptionId);
+  const closed = data.filter((poll) => !!poll.selectedOptionId);
 
   return (
     <div>
@@ -92,82 +166,26 @@ const Page: NextPageWithLayout = () => {
         </div>
       </TopBar>
       <div>
-        <Container className="px-0 sm:py-8">
+        <Container className="mx-auto px-0 sm:py-8">
           {data.length > 0 ? (
-            <Card fullWidthOnMobile={true}>
-              <Table
-                layout="auto"
-                data={data}
-                columns={[
-                  columnHelper.accessor("title", {
-                    header: () => <Trans i18nKey="title" />,
-                    size: 300,
-                    cell: (info) => (
-                      <Link
-                        href={`/poll/${info.row.original.id}`}
-                        className="group flex gap-4 p-1"
-                      >
-                        <FileBarChartIcon className="text-primary-600 mt-0.5 h-8 shrink-0" />
-                        <div>
-                          <div className="group inline-flex min-w-0 items-center gap-2 pr-4 font-medium">
-                            <span className="truncate">{info.getValue()}</span>
-                            <ArrowRightIcon
-                              className={clsx(
-                                "h-4 w-4 transition-all",
-                                "opacity-0 group-hover:opacity-100",
-                                "-translate-x-4 group-hover:translate-x-0",
-                                "group-focus:translate-x-1",
-                              )}
-                            />
-                          </div>
-                          <div className="text-gray-500">
-                            {dayjs(info.row.original.createdAt).fromNow()}
-                          </div>
-                        </div>
-                      </Link>
-                    ),
-                  }),
-                  columnHelper.accessor("participants", {
-                    header: () => (
-                      <Trans i18nKey="participants" defaults="Participants" />
-                    ),
-                    size: 160,
-                    cell: (info) => (
-                      <ParticipantAvatarBar
-                        participants={info.getValue()}
-                        max={5}
-                      />
-                    ),
-                  }),
-
-                  columnHelper.accessor("closed", {
-                    header: () => <Trans i18nKey="status" defaults="Status" />,
-                    size: 70,
-                    cell: (info) =>
-                      info.getValue() ? (
-                        <span className="inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200">
-                          <span className="inline-block h-2 w-2 rounded-full bg-rose-600" />
-                          <Trans i18nKey="closed" defaults="Closed" />
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200">
-                          <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-green-600 ring-2 ring-green-50" />
-                          <Trans i18nKey="open" defaults="Open" />
-                        </span>
-                      ),
-                  }),
-                  // columnHelper.display({
-                  //   id: "actions",
-                  //   size: 70,
-                  //   cell: () => (
-                  //     <div className="text-right">
-                  //       <Button icon={<MoreHorizontalIcon />} />
-                  //     </div>
-                  //   ),
-                  // }),
-                ]}
-              />
-            </Card>
+            <div className="mx-auto grid max-w-4xl gap-4">
+              {data.map((poll) => {
+                const selectedOption = poll.options.find(
+                  (option) => option.id === poll.selectedOptionId,
+                );
+                return (
+                  <PollCard
+                    key={poll.id}
+                    date={selectedOption?.start}
+                    createdAt={poll.createdAt}
+                    paused={poll.closed}
+                    pollId={poll.id}
+                    title={poll.title}
+                    participants={poll.participants}
+                  />
+                );
+              })}
+            </div>
           ) : (
             <EmptyState />
           )}

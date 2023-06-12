@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { ColoredAvatar } from "@/components/poll/participant-avatar";
 
 interface ParticipantAvatarBarProps {
-  participants: { id: string; name: string }[];
+  participants: { name: string }[];
   max: number;
 }
 

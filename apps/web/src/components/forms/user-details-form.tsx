@@ -1,4 +1,4 @@
-import { Form, FormItem, FormLabel } from "@rallly/ui/form";
+import { Form, FormDescription, FormItem, FormLabel } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
@@ -40,17 +40,6 @@ export const UserDetailsForm: React.FunctionComponent<
   return (
     <Form {...form}>
       <form id={name} className={className} onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-8">
-          <h2 className="">
-            <Trans i18nKey="hostDetails" defaults="Host Details" />
-          </h2>
-          <p className="leading-6 text-gray-500">
-            <Trans
-              i18nKey="hostDetailsDescription"
-              defaults="Enter your details so we can send you a link to your poll"
-            />
-          </p>
-        </div>
         <div className="space-y-6">
           <FormItem>
             <FormLabel htmlFor="name">{t("name")}</FormLabel>
@@ -61,7 +50,9 @@ export const UserDetailsForm: React.FunctionComponent<
                 "input-error": errors.name,
               })}
               disabled={isWorking}
-              placeholder={t("namePlaceholder")}
+              placeholder={t("yourNamePlaceholder", {
+                defaultValue: "Your name",
+              })}
               {...register("name", { validate: requiredString })}
             />
           </FormItem>
@@ -73,7 +64,9 @@ export const UserDetailsForm: React.FunctionComponent<
                 "input-error": errors.contact,
               })}
               disabled={isWorking}
-              placeholder={t("emailPlaceholder")}
+              placeholder={t("yourEmailPlaceholder", {
+                defaultValue: "Your email",
+              })}
               {...register("contact", {
                 validate: validEmail,
               })}
