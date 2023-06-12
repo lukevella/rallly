@@ -11,7 +11,7 @@ import {
 
 import { fontFamily, Section, Text } from "./styled-components";
 
-interface EmailLayoutProps {
+export interface EmailLayoutProps {
   preview: string;
   recipientName: string;
   footNote?: React.ReactNode;

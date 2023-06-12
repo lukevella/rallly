@@ -1,6 +1,5 @@
 import ModalProvider from "@/components/modal/modal-provider";
 import { ParticipantsProvider } from "@/components/participants-provider";
-import ControlledScrollArea from "@/components/poll/desktop-poll/controlled-scroll-area";
 import {
   OptionsProvider,
   PollContextProvider,

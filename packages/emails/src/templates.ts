@@ -1,3 +1,4 @@
+export * from "./templates/finalized-host";
 export * from "./templates/login";
 export * from "./templates/new-comment";
 export * from "./templates/new-participant";

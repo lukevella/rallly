@@ -6,10 +6,11 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
-import ParticipantPage from "@/components/poll/participant-page/participant-page";
-import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
+import { Poll } from "@/components/poll";
+import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
-import { UserProvider, useUser } from "@/components/user-provider";
+import { useUser } from "@/components/user-provider";
+import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { TimePreferences } from "@/contexts/time-preferences";
 import { withPageTranslations } from "@/utils/with-page-translations";
@@ -37,7 +38,7 @@ const GoToApp = () => {
 const Page = ({ forceUserId }: { forceUserId: string }) => {
   const poll = usePoll();
   return (
-    <UserProvider forceUserId={forceUserId}>
+    <PermissionsContext.Provider value={{ userId: forceUserId }}>
       <Head>
         <title>{poll.title}</title>
       </Head>
@@ -76,7 +77,7 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
               </div>
             </div>
             <hr />
-            <ParticipantPage />
+            <Poll />
             <div className="mt-4 space-y-4 text-center text-gray-500">
               <div className="py-8">
                 <Trans
@@ -97,7 +98,7 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
           </div>
         </div>
       </LegacyPollContextProvider>
-    </UserProvider>
+    </PermissionsContext.Provider>
   );
 };
 

@@ -72,10 +72,7 @@ export const InviteDialog = () => {
       <DialogTrigger asChild={true}>
         <Button variant="primary" icon={Share2Icon}>
           <span className="hidden sm:block">
-            <Trans
-              i18nKey="inviteParticipants"
-              defaults="Invite Participants"
-            />
+            <Trans i18nKey="share" defaults="Share" />
           </span>
         </Button>
       </DialogTrigger>
@@ -85,10 +82,7 @@ export const InviteDialog = () => {
         </div>
         <DialogHeader className="">
           <DialogTitle>
-            <Trans
-              i18nKey="inviteParticipants"
-              defaults="Invite Participants"
-            />
+            <Trans i18nKey="share" defaults="Share" />
           </DialogTitle>
           <DialogDescription>
             <Trans

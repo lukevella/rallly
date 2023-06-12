@@ -1,17 +1,11 @@
-import {
-  CheckCircleIcon,
-  MapPinIcon,
-  MenuIcon,
-  MousePointerClickIcon,
-  PauseCircleIcon,
-  RadioIcon,
-} from "@rallly/icons";
+import { MapPinIcon, MenuIcon, MousePointerClickIcon } from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 
 import { Card } from "@/components/card";
 import { DateIcon } from "@/components/date-icon";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
+import { PollStatusBadge } from "@/components/poll-status";
 import { TextSummary } from "@/components/text-summary";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
@@ -40,77 +34,59 @@ export const EventCard = () => {
   const attendees = participants.filter((participant) =>
     participant.votes.some(
       (vote) =>
-        (vote.optionId === poll.selectedOptionId && vote.type === "yes") ||
-        vote.type === "ifNeedBe",
+        vote.optionId === poll.selectedOptionId &&
+        (vote.type === "yes" || vote.type === "ifNeedBe"),
     ),
   );
+
+  const status = selectedOption ? "closed" : poll.closed ? "paused" : "live";
+
   return (
     <Card fullWidthOnMobile={false}>
       <div className="divide-y text-gray-600">
-        {selectedOption ? (
-          <div className="flex items-center justify-between bg-green-500 p-2 px-4 text-sm  font-semibold text-green-50 shadow-sm">
-            <span className="inline-flex items-center gap-x-2 ">
-              <CheckCircleIcon className="h-5 w-5" />
-              <div className="font-medium">
-                <Trans i18nKey="dateSelectedMessage" defaults="Booked!" />
-              </div>
-            </span>
-          </div>
-        ) : poll.closed ? (
-          <div className="flex items-center justify-between bg-gray-400 p-2 px-4 text-sm  font-semibold text-gray-50 shadow-sm">
-            <span className="inline-flex items-center gap-x-2 ">
-              <PauseCircleIcon className="h-5 w-5" />
-              <div className="font-medium">
-                <Trans i18nKey="pollStatusPaused" />
-              </div>
-            </span>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between bg-gradient-to-r from-blue-500 to-indigo-500 p-2 px-4 text-sm  font-semibold text-white shadow-sm">
-            <span className="inline-flex animate-pulse items-center gap-x-2 ">
-              <RadioIcon className="h-5 w-5" />
-              <div className="font-medium">
-                <Trans i18nKey="pollStatusOpen" defaults="Live" />
-              </div>
-            </span>
-          </div>
-        )}
+        <div
+          className="h-2"
+          style={{ background: generateGradient(poll.id) }}
+        />
         <div className="bg-pattern p-4">
-          <div className="flex items-start gap-4 sm:gap-6">
-            {selectedOption ? (
-              <div>
-                <DateIcon date={dateFormatter(selectedOption.start)} />
-              </div>
-            ) : null}
-            <div>
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4 sm:gap-6">
               {selectedOption ? (
-                <div className="text-muted-foreground text-sm">
-                  {dateFormatter(selectedOption.start).format(
-                    selectedOption.duration === 0 ? "LL" : "LLL",
-                  )}
+                <div>
+                  <DateIcon date={dateFormatter(selectedOption.start)} />
                 </div>
               ) : null}
-              <h1
-                className="text-xl font-bold tracking-tight sm:text-2xl"
-                data-testid="poll-title"
-              >
-                {preventWidows(poll.title)}
-              </h1>
-              {!selectedOption ? (
-                <PollSubheader />
-              ) : (
-                <div className="mt-4">
-                  <div className="text-muted-foreground mb-2 text-sm">
-                    <Trans
-                      i18nKey="attendeeCount"
-                      defaults="{count, plural, one {# attendee} other {# attendees}}"
-                      values={{ count: attendees.length }}
-                    />
+              <div>
+                {selectedOption ? (
+                  <div className="text-muted-foreground text-sm">
+                    {dateFormatter(selectedOption.start).format(
+                      selectedOption.duration === 0 ? "LL" : "LLL",
+                    )}
                   </div>
-                  <ParticipantAvatarBar participants={attendees} max={10} />
-                </div>
-              )}
+                ) : null}
+                <h1
+                  className="text-xl font-bold tracking-tight sm:text-2xl"
+                  data-testid="poll-title"
+                >
+                  {preventWidows(poll.title)}
+                </h1>
+                {!selectedOption ? (
+                  <PollSubheader />
+                ) : (
+                  <div className="mt-4">
+                    <div className="text-muted-foreground mb-2 text-sm">
+                      <Trans
+                        i18nKey="attendeeCount"
+                        defaults="{count, plural, one {# attendee} other {# attendees}}"
+                        values={{ count: attendees.length }}
+                      />
+                    </div>
+                    <ParticipantAvatarBar participants={attendees} max={10} />
+                  </div>
+                )}
+              </div>
             </div>
+            <PollStatusBadge status={status} />
           </div>
         </div>
         <div className="space-y-4 p-4 sm:px-5">

@@ -197,10 +197,9 @@ const MobilePoll: React.FunctionComponent = () => {
               >
                 <Button icon={MoreHorizontalIcon} />
               </ParticipantDropdown>
-            ) : (
+            ) : canAddNewParticipant ? (
               <Button
                 icon={PlusIcon}
-                disabled={!canAddNewParticipant}
                 onClick={() => {
                   reset({
                     votes: [],
@@ -208,7 +207,7 @@ const MobilePoll: React.FunctionComponent = () => {
                   setIsEditing(true);
                 }}
               />
-            )}
+            ) : null}
           </div>
         </div>
         <GroupedOptions

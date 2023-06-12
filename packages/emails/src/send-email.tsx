@@ -81,6 +81,7 @@ type SendEmailOptions<T extends TemplateName> = {
   to: string;
   subject: string;
   props: TemplateProps<T>;
+  attachments?: Mail.Options["attachments"];
 };
 
 export const sendEmail = async <T extends TemplateName>(
@@ -106,6 +107,7 @@ export const sendEmail = async <T extends TemplateName>(
       subject: options.subject,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       html,
+      attachments: options.attachments,
     });
   } catch (e) {
     console.error("Error sending email", templateName, e);

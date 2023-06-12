@@ -15,6 +15,7 @@ import { DefaultSeo } from "next-seo";
 import React from "react";
 
 import Maintenance from "@/components/maintenance";
+import { UserProvider } from "@/components/user-provider";
 import { DayjsProvider } from "@/utils/dayjs";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
@@ -80,11 +81,13 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           --font-inter: ${inter.style.fontFamily};
         }
       `}</style>
-      <DayjsProvider>
-        <TooltipProvider delayDuration={200}>
-          {getLayout(<Component {...pageProps} />)}
-        </TooltipProvider>
-      </DayjsProvider>
+      <UserProvider>
+        <DayjsProvider>
+          <TooltipProvider delayDuration={200}>
+            {getLayout(<Component {...pageProps} />)}
+          </TooltipProvider>
+        </DayjsProvider>
+      </UserProvider>
     </LazyMotion>
   );
 };

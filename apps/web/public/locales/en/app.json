@@ -179,5 +179,6 @@
   "differentOwner": "Different Owner",
   "differentOwnerDescription": "This poll was created by a different user. Would you like to transfer ownership to the current user?",
   "yesTransfer": "Yes, transfer to current user",
-  "noTransfer": "No, take me home"
+  "noTransfer": "No, take me home",
+  "pollStatusPausedDescription": "Voting is not allowed while the poll is paused."
 }

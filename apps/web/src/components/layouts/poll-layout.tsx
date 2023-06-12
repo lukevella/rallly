@@ -1,7 +1,5 @@
 import { trpc } from "@rallly/backend";
 import {
-  CalendarCheckIcon,
-  CheckCircle2Icon,
   CheckCircleIcon,
   ChevronDownIcon,
   FileBarChart,
@@ -9,7 +7,6 @@ import {
   LogOutIcon,
   PauseCircleIcon,
   PlayCircleIcon,
-  RadioIcon,
   RotateCcw,
   ShieldCloseIcon,
 } from "@rallly/icons";
@@ -51,7 +48,8 @@ import {
 import ManagePoll from "@/components/poll/manage-poll";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
-import { LegacyPollContextProvider } from "@/components/poll/participant-page/poll-context-provider";
+import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
+import { PollStatus } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
@@ -115,14 +113,7 @@ const StatusControl = () => {
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button>
-            {state === "live" ? (
-              <RadioIcon className="h-4 w-4" />
-            ) : state === "paused" ? (
-              <PauseCircleIcon className="h-4 w-4" />
-            ) : (
-              <CheckCircleIcon className="h-4 w-4" />
-            )}
-            <StatusLabel status={state} />
+            <PollStatus status={state} />
             <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -222,8 +213,8 @@ const AdminControls = () => {
           <TopBarTitle title={poll?.title} icon={FileBarChart} />
         </div>
         <div className="flex items-center gap-x-2.5">
-          <NotificationsToggle />
           <StatusControl />
+          <NotificationsToggle />
           <ManagePoll />
           <InviteDialog />
         </div>

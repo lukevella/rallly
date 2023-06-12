@@ -1,5 +1,5 @@
 import { prisma } from "@rallly/database";
-import { sendEmail, sendRawEmail } from "@rallly/emails";
+import { sendEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
@@ -455,6 +455,7 @@ export const polls = router({
       select: {
         id: true,
         title: true,
+        location: true,
         createdAt: true,
         adminUrlId: true,
         participantUrlId: true,
@@ -503,7 +504,20 @@ export const polls = router({
           title: true,
           user: {
             select: {
+              name: true,
               email: true,
+            },
+          },
+          participants: {
+            select: {
+              name: true,
+              email: true,
+              votes: {
+                select: {
+                  optionId: true,
+                  type: true,
+                },
+              },
             },
           },
         },
@@ -580,12 +594,40 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        await sendRawEmail({
-          subject: `Booking for ${poll.title}`,
+        const formatDate = (
+          date: Date,
+          duration: number,
+          timeZone?: string | null,
+        ) => {
+          if (duration > 0) {
+            if (timeZone) {
+              return `${dayjs(date)
+                .utc()
+                .format("dddd, MMMM D, YYYY, HH:mm")} (${timeZone})`;
+            } else {
+              return dayjs(date).utc().format("dddd, MMMM D, YYYY, HH:mm");
+            }
+          } else {
+            return dayjs(date).format("dddd, MMMM D, YYYY");
+          }
+        };
+        await sendEmail("FinalizeHostEmail", {
+          subject: `Date booked for ${poll.title}`,
           to: poll.user.email,
-          html: `<p>Date booked for ${poll.title} <a href="${absoluteUrl(
-            `/poll/${poll.id}`,
-          )}">${poll.title}</a>.</p>`,
+          props: {
+            name: poll.user.name,
+            pollUrl: absoluteUrl(`/poll/${poll.id}`),
+            location: poll.location,
+            title: poll.title,
+            attendees: poll.participants
+              .filter((p) =>
+                p.votes.some(
+                  (v) => v.optionId === input.optionId && v.type !== "no",
+                ),
+              )
+              .map((p) => p.name),
+            date: formatDate(option.start, option.duration, poll.timeZone),
+          },
           attachments: [{ filename: "event.ics", content: event.value }],
         });
       }

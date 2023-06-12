@@ -45,10 +45,7 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
   return <>{props.children}</>;
 };
 
-export const UserProvider = (props: {
-  children?: React.ReactNode;
-  forceUserId?: string;
-}) => {
+export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation();
 
   const queryClient = trpc.useContext();

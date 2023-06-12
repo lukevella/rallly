@@ -5,6 +5,7 @@ import { keyBy } from "lodash";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { usePermissions } from "@/contexts/permissions";
 import { useTimeFormat, useTimeZone } from "@/contexts/time-preferences";
 import {
   decodeOptions,
@@ -51,7 +52,9 @@ export const PollContextProvider: React.FunctionComponent<{
 }> = ({ poll, urlId, admin, children }) => {
   const { t } = useTranslation();
   const { participants } = useParticipants();
-  const { user, ownsObject } = useUser();
+  const { user } = useUser();
+
+  const { canEditParticipant } = usePermissions();
 
   const getScore = React.useCallback(
     (optionId: string) => {
@@ -94,7 +97,9 @@ export const PollContextProvider: React.FunctionComponent<{
     };
 
     const userAlreadyVoted =
-      user && participants ? participants.some(ownsObject) : false;
+      user && participants
+        ? participants.some((participant) => canEditParticipant(participant.id))
+        : false;
 
     const optionIds = poll.options.map(({ id }) => id);
 
@@ -133,7 +138,7 @@ export const PollContextProvider: React.FunctionComponent<{
       },
       getScore,
     };
-  }, [admin, getScore, ownsObject, participants, poll, urlId, user]);
+  }, [admin, getScore, participants, poll, urlId, user]);
 
   if (poll.deleted) {
     return (

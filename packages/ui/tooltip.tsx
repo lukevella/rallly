@@ -24,7 +24,6 @@ const TooltipContent = React.forwardRef<
     )}
     {...props}
   >
-    <TooltipPrimitive.Arrow />
     {props.children}
   </TooltipPrimitive.Content>
 ));
