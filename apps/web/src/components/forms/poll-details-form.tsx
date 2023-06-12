@@ -6,8 +6,6 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
-import { Trans } from "@/components/trans";
-
 import { requiredString } from "../../utils/form-validation";
 import { PollFormProps } from "./types";
 
@@ -46,7 +44,7 @@ export const PollDetailsForm: React.FunctionComponent<
         className={clsx("space-y-6", className)}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <h2 className="">
             <Trans i18nKey="eventDetails" defaults="Event Details" />
           </h2>
@@ -56,7 +54,7 @@ export const PollDetailsForm: React.FunctionComponent<
               defaults="What are you organzing?"
             />
           </p>
-        </div>
+        </div> */}
         <FormItem>
           <FormLabel htmlFor="title">{t("title")}</FormLabel>
           <Input

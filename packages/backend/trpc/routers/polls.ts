@@ -488,6 +488,7 @@ export const polls = router({
       z.object({
         pollId: z.string(),
         optionId: z.string(),
+        notify: z.enum(["none", "all", "attendees"]),
       }),
     )
     .mutation(async ({ input }) => {
@@ -502,6 +503,7 @@ export const polls = router({
           id: true,
           timeZone: true,
           title: true,
+          location: true,
           user: {
             select: {
               name: true,
@@ -611,7 +613,36 @@ export const polls = router({
             return dayjs(date).format("dddd, MMMM D, YYYY");
           }
         };
-        await sendEmail("FinalizeHostEmail", {
+
+        const participantsToEmail: Array<{ name: string; email: string }> = [];
+
+        const attendees = poll.participants.filter((p) =>
+          p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
+        );
+
+        if (input.notify === "all") {
+          poll.participants.forEach((p) => {
+            if (p.email) {
+              participantsToEmail.push({
+                name: p.name,
+                email: p.email,
+              });
+            }
+          });
+        }
+
+        if (input.notify === "attendees") {
+          attendees.forEach((p) => {
+            if (p.email) {
+              participantsToEmail.push({
+                name: p.name,
+                email: p.email,
+              });
+            }
+          });
+        }
+
+        const emailToHost = sendEmail("FinalizeHostEmail", {
           subject: `Date booked for ${poll.title}`,
           to: poll.user.email,
           props: {
@@ -630,6 +661,30 @@ export const polls = router({
           },
           attachments: [{ filename: "event.ics", content: event.value }],
         });
+
+        const emailsToParticipants = participantsToEmail.map((p) => {
+          return sendEmail("FinalizeHostEmail", {
+            subject: `Date booked for ${poll.title}`,
+            to: p.email,
+            props: {
+              name: p.name,
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
+              location: poll.location,
+              title: poll.title,
+              attendees: poll.participants
+                .filter((p) =>
+                  p.votes.some(
+                    (v) => v.optionId === input.optionId && v.type !== "no",
+                  ),
+                )
+                .map((p) => p.name),
+              date: formatDate(option.start, option.duration, poll.timeZone),
+            },
+            attachments: [{ filename: "event.ics", content: event.value }],
+          });
+        });
+
+        await Promise.all([emailToHost, ...emailsToParticipants]);
       }
     }),
   reopen: possiblyPublicProcedure

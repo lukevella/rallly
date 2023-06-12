@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Trans } from "next-i18next";
 
 import { getPollLayout } from "@/components/layouts/poll-layout";
-import ParticipantPage from "@/components/poll/participant-page/participant-page";
+import { Poll } from "@/components/poll";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { NextPageWithLayout } from "@/types";
@@ -57,7 +57,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <div className={cn("mx-auto w-full max-w-4xl space-y-3 sm:space-y-4")}>
       <GuestPollAlert />
-      <ParticipantPage />
+      <Poll />
     </div>
   );
 };

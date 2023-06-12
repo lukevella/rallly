@@ -1,16 +1,12 @@
-import { AlertCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
 } from "@rallly/ui/form";
-import { Label } from "@rallly/ui/label";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import dayjs from "dayjs";
 import { Trans } from "next-i18next";
@@ -27,7 +23,7 @@ import { useDateFormatter } from "@/contexts/time-preferences";
 
 const formSchema = z.object({
   selectedOptionId: z.string(),
-  notify: z.enum(["none", "all", "attendees"]),
+  notify: z.enum(["everyone", "available", "noone"]),
 });
 
 type FinalizeFormData = z.infer<typeof formSchema>;
@@ -71,8 +67,6 @@ const useScoreByOptionId = () => {
   }, [responses, options]);
 };
 
-const pageSize = 5;
-
 export const FinalizePollForm = ({
   name,
   onSubmit,
@@ -81,7 +75,7 @@ export const FinalizePollForm = ({
   onSubmit: (data: FinalizeFormData) => void;
 }) => {
   const poll = usePoll();
-  const [max, setMax] = React.useState(pageSize);
+  const [max, setMax] = React.useState(5);
 
   const scoreByOptionId = useScoreByOptionId();
   const { participants } = useParticipants();
@@ -108,33 +102,9 @@ export const FinalizePollForm = ({
   const form = useForm<FinalizeFormData>({
     defaultValues: {
       selectedOptionId: options[0].id,
-      notify: "all",
+      notify: "everyone",
     },
   });
-
-  const watchSelectedOptionId = form.watch("selectedOptionId");
-  const watchNotify = form.watch("notify");
-
-  const attendees = watchSelectedOptionId
-    ? participants.filter((participant) =>
-        participant.votes.some(
-          (vote) =>
-            vote.optionId === watchSelectedOptionId &&
-            (vote.type === "yes" || vote.type === "ifNeedBe"),
-        ),
-      )
-    : [];
-
-  const participantsToNotify =
-    watchNotify === "all"
-      ? participants
-      : watchNotify === "attendees"
-      ? attendees
-      : [];
-
-  const participantsWithoutEmails = participantsToNotify.filter(
-    (p) => !p.email,
-  );
 
   return (
     <Form {...form}>
@@ -159,6 +129,13 @@ export const FinalizePollForm = ({
                     className="grid gap-2"
                   >
                     {options.slice(0, max).map((option) => {
+                      const attendees = participants.filter((participant) =>
+                        participant.votes.some(
+                          (vote) =>
+                            vote.optionId === option.id &&
+                            (vote.type === "yes" || vote.type === "ifNeedBe"),
+                        ),
+                      );
                       const start = dateFormatter(option.start);
                       const end = dateFormatter(
                         dayjs(option.start).add(option.duration, "minute"),
@@ -170,7 +147,7 @@ export const FinalizePollForm = ({
                           className={cn(
                             "group flex select-none items-center gap-4 rounded-md border bg-white p-3 text-base",
                             field.value === option.id
-                              ? "bg-primary-50 border-primary"
+                              ? "bg-primary-50 border-primary ring-primary ring-1"
                               : "hover:bg-gray-50",
                           )}
                         >
@@ -223,7 +200,7 @@ export const FinalizePollForm = ({
                       variant="ghost"
                       className="w-full"
                       onClick={() => {
-                        setMax((oldMax) => oldMax + pageSize);
+                        setMax((oldMax) => oldMax + 5);
                       }}
                     >
                       <Trans i18nKey="showMore" />
@@ -233,61 +210,6 @@ export const FinalizePollForm = ({
               </FormItem>
             );
           }}
-        />
-        <FormField
-          control={form.control}
-          name="notify"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="notify" className="mb-4">
-                <Trans i18nKey="notify" defaults="Send a calendar invite to" />
-              </FormLabel>
-              <FormControl>
-                <RadioGroup onValueChange={field.onChange} value={field.value}>
-                  <Label className="flex items-center gap-4 font-normal">
-                    <RadioGroupItem value="all" />
-                    <Trans
-                      i18nKey="notifyAllParticipants"
-                      defaults="Everyone"
-                    />
-                  </Label>
-                  <Label className="flex items-center gap-4 font-normal">
-                    <RadioGroupItem value="attendees" />
-                    <Trans
-                      i18nKey="notifyAvailableParticipants"
-                      defaults="Attendees"
-                    />
-                  </Label>
-                  <Label className="flex items-center gap-4 font-normal">
-                    <RadioGroupItem value="none" />
-                    <Trans i18nKey="notifyNo" defaults="None" />
-                  </Label>
-                </RadioGroup>
-              </FormControl>
-              <FormDescription>
-                <Trans
-                  i18nKey="notifyDescription"
-                  defaults="Choose which participants should receive a calendar invite"
-                />
-              </FormDescription>
-              {participantsWithoutEmails.length ? (
-                <Alert>
-                  <AlertCircleIcon className="h-4 w-4" />
-                  <AlertDescription>
-                    <Trans
-                      i18nKey="missingEmailsAlert"
-                      defaults="The following participants have not provided an email address."
-                    />
-                  </AlertDescription>
-                  <AlertDescription>
-                    {participantsWithoutEmails.map((participant) => (
-                      <div key={participant.id}>{participant.name}</div>
-                    ))}
-                  </AlertDescription>
-                </Alert>
-              ) : null}
-            </FormItem>
-          )}
         />
       </form>
     </Form>

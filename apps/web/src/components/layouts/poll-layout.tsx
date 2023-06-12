@@ -1,5 +1,6 @@
 import { trpc } from "@rallly/backend";
 import {
+  ArrowLeftIcon,
   CheckCircleIcon,
   ChevronDownIcon,
   FileBarChart,
@@ -55,25 +56,6 @@ import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 import { NextPageWithLayout } from "../../types";
-
-type PollState = "live" | "paused" | "closed";
-
-const StatusLabel = ({ status }: { status: PollState }) => {
-  return (
-    <span>
-      {(() => {
-        switch (status) {
-          case "live":
-            return <Trans i18nKey="pollStatusOpen" defaults="Live" />;
-          case "paused":
-            return <Trans i18nKey="pollStatusPaused" defaults="Paused" />;
-          case "closed":
-            return <Trans i18nKey="pollStatusClosed" defaults="Finalized" />;
-        }
-      })()}
-    </span>
-  );
-};
 
 const StatusControl = () => {
   const poll = usePoll();
@@ -148,14 +130,12 @@ const StatusControl = () => {
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  setIsFinalizing(true);
-                }}
-              >
-                <DropdownMenuItemIconLabel icon={CheckCircleIcon}>
-                  <Trans i18nKey="finishPoll" defaults="Finalize" />
-                </DropdownMenuItemIconLabel>
+              <DropdownMenuItem asChild>
+                <Link href={`/poll/${poll.id}/finalize`}>
+                  <DropdownMenuItemIconLabel icon={CheckCircleIcon}>
+                    <Trans i18nKey="finishPoll" defaults="Finalize" />
+                  </DropdownMenuItemIconLabel>
+                </Link>
               </DropdownMenuItem>
             </>
           )}
@@ -205,11 +185,19 @@ const StatusControl = () => {
 
 const AdminControls = () => {
   const poll = usePoll();
-
+  const pollLink = `/poll/${poll.id}`;
+  const router = useRouter();
   return (
     <TopBar>
       <div className="flex items-center justify-between gap-x-4">
         <div className="flex min-w-0 gap-2">
+          {router.asPath !== pollLink ? (
+            <Button variant="ghost" asChild>
+              <Link href={pollLink}>
+                <ArrowLeftIcon className="h-4 w-4" />
+              </Link>
+            </Button>
+          ) : null}
           <TopBarTitle title={poll?.title} icon={FileBarChart} />
         </div>
         <div className="flex items-center gap-x-2.5">

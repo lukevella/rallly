@@ -56,34 +56,20 @@ model Poll {
   watchers         Watcher[]
   demo             Boolean       @default(false)
   comments         Comment[]
-  legacy           Boolean       @default(false)
-  closed           Boolean       @default(false)
+  legacy           Boolean       @default(false) // @deprecated
+  closed           Boolean       @default(false) // we use this to indicate whether a poll is paused
   selectedOptionId String?       @map("selected_option_id")
   deleted          Boolean       @default(false)
   deletedAt        DateTime?     @map("deleted_at")
   touchedAt        DateTime      @default(now()) @map("touched_at")
   participantUrlId String        @unique @map("participant_url_id")
   adminUrlId       String        @unique @map("admin_url_id")
-  eventId          String?       @map("event_id")
+  eventId          String?       @unique @map("event_id")
 
   @@index([userId], type: Hash)
   @@map("polls")
 }
 
-
-model Attendee {
-  id        String   @id @default(cuid())
-  name      String
-  email     String?
-  userId    String?  @map("user_id")
-  eventId   String   @map("event_id")
-  status    String   @default("pending")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-
-  @@index([eventId], type: Hash)
-  @@map("attendees")
-}
 
 model Watcher {
   id        Int      @id @default(autoincrement())

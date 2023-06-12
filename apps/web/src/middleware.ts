@@ -11,7 +11,6 @@ export async function middleware(req: NextRequest) {
   const { headers, cookies, nextUrl } = req;
   const newUrl = nextUrl.clone();
   const res = NextResponse.next();
-
   const session = await getSession(req, res);
 
   if (
@@ -51,5 +50,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|static|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|static|.*\\.).*)"],
 };

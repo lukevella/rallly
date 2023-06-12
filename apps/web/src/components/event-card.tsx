@@ -1,4 +1,4 @@
-import { MapPinIcon, MenuIcon, MousePointerClickIcon } from "@rallly/icons";
+import { MapPinIcon, MousePointerClickIcon, TextIcon } from "@rallly/icons";
 import { useTranslation } from "next-i18next";
 
 import { Card } from "@/components/card";
@@ -48,7 +48,7 @@ export const EventCard = () => {
           className="h-2"
           style={{ background: generateGradient(poll.id) }}
         />
-        <div className="bg-pattern p-4">
+        <div className="bg-pattern p-4 sm:px-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4 sm:gap-6">
               {selectedOption ? (
@@ -89,10 +89,10 @@ export const EventCard = () => {
             <PollStatusBadge status={status} />
           </div>
         </div>
-        <div className="space-y-4 p-4 sm:px-5">
+        <div className="space-y-4 p-4 sm:px-6">
           {poll.description ? (
             <div className="flex gap-4">
-              <MenuIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
+              <TextIcon className="h-4 w-4 shrink-0 translate-y-1" />
               <div className="border-primary whitespace-pre-line leading-relaxed">
                 <TruncatedLinkify>
                   <TextSummary text={preventWidows(poll.description)} />
@@ -102,12 +102,12 @@ export const EventCard = () => {
           ) : null}
           {poll.location ? (
             <div className="flex gap-4">
-              <MapPinIcon className="h-5 w-5 translate-y-0.5" />
+              <MapPinIcon className="h-4 w-4 translate-y-1" />
               <TruncatedLinkify>{poll.location}</TruncatedLinkify>
             </div>
           ) : null}
           <div className="flex gap-4">
-            <MousePointerClickIcon className="h-5 w-5 shrink-0" />
+            <MousePointerClickIcon className="h-4 w-4 shrink-0 translate-y-0.5" />
             <div>
               <div className="flex gap-2.5">
                 <span className="inline-flex items-center space-x-1">

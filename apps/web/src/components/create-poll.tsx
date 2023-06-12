@@ -1,11 +1,18 @@
 import { trpc } from "@rallly/backend";
 import { ArrowLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@rallly/ui/card";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import { Card } from "@/components/card";
 import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
 
@@ -138,43 +145,54 @@ export const CreatePoll: React.FunctionComponent = () => {
         <div className="flex justify-center py-8">
           <Steps current={currentStepIndex} total={steps.length} />
         </div>
-        <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
-          <div className="grow">
-            <div className="py-5 px-6">
-              {(() => {
-                switch (currentStepName) {
-                  case "eventDetails":
-                    return (
-                      <PollDetailsForm
-                        name={currentStepName}
-                        defaultValues={formData?.eventDetails}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                      />
-                    );
-                  case "options":
-                    return (
-                      <PollOptionsForm
-                        name={currentStepName}
-                        defaultValues={formData?.options}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                        title={formData.eventDetails?.title}
-                      />
-                    );
-                  case "userDetails":
-                    return (
-                      <UserDetailsForm
-                        name={currentStepName}
-                        defaultValues={formData?.userDetails}
-                        onSubmit={handleSubmit}
-                        onChange={handleChange}
-                      />
-                    );
-                }
-              })()}
-            </div>
-            <div className="mt-4 flex justify-end gap-x-2 border-t bg-gray-50 p-3">
+        <Card className="mx-auto max-w-4xl">
+          <CardHeader>
+            <CardTitle>
+              <Trans i18nKey="newPoll" />
+            </CardTitle>
+            <CardDescription>
+              <Trans
+                i18nKey="createPollDescription"
+                defaults="Create an event and invite participants to vote on the best time to meet."
+              />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {(() => {
+              switch (currentStepName) {
+                case "eventDetails":
+                  return (
+                    <PollDetailsForm
+                      name={currentStepName}
+                      defaultValues={formData?.eventDetails}
+                      onSubmit={handleSubmit}
+                      onChange={handleChange}
+                    />
+                  );
+                case "options":
+                  return (
+                    <PollOptionsForm
+                      name={currentStepName}
+                      defaultValues={formData?.options}
+                      onSubmit={handleSubmit}
+                      onChange={handleChange}
+                      title={formData.eventDetails?.title}
+                    />
+                  );
+                case "userDetails":
+                  return (
+                    <UserDetailsForm
+                      name={currentStepName}
+                      defaultValues={formData?.userDetails}
+                      onSubmit={handleSubmit}
+                      onChange={handleChange}
+                    />
+                  );
+              }
+            })()}
+          </CardContent>
+          <CardFooter className="justify-between">
+            <div>
               {currentStepIndex > 0 ? (
                 <Button
                   icon={ArrowLeftIcon}
@@ -191,27 +209,27 @@ export const CreatePoll: React.FunctionComponent = () => {
                   <Trans i18nKey="back" />
                 </Button>
               ) : null}
-              {currentStepIndex < steps.length - 1 ? (
-                <Button
-                  variant="primary"
-                  form={currentStepName}
-                  loading={isBusy}
-                  type="submit"
-                >
-                  {t("continue")}
-                </Button>
-              ) : (
-                <Button
-                  form={currentStepName}
-                  variant="primary"
-                  loading={isBusy}
-                  type="submit"
-                >
-                  {t("createPoll")}
-                </Button>
-              )}
             </div>
-          </div>
+            {currentStepIndex < steps.length - 1 ? (
+              <Button
+                variant="primary"
+                form={currentStepName}
+                loading={isBusy}
+                type="submit"
+              >
+                {t("continue")}
+              </Button>
+            ) : (
+              <Button
+                form={currentStepName}
+                variant="primary"
+                loading={isBusy}
+                type="submit"
+              >
+                {t("createPoll")}
+              </Button>
+            )}
+          </CardFooter>
         </Card>
       </div>
     </div>
