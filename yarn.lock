@@ -4822,6 +4822,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+crypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
+  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
+
 css-in-js-utils@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/css-in-js-utils/-/css-in-js-utils-3.1.0.tgz"
@@ -7672,6 +7677,11 @@ peberminta@^0.8.0:
   version "0.8.0"
   resolved "https://registry.npmjs.org/peberminta/-/peberminta-0.8.0.tgz"
   integrity sha512-YYEs+eauIjDH5nUEGi18EohWE0nV2QbGTqmxQcqgZ/0g+laPCQmuIqq7EBLVi9uim9zMgfJv0QBZEnQ3uHw/Tw==
+
+php-serialize@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/php-serialize/-/php-serialize-4.1.1.tgz#1a614fde3da42361af05afffbaf967fb6556591e"
+  integrity sha512-7drCrSZdJ05UdG3hyYEIRW0XyKyUFkxa5A3dpIp3NTjUHpI080pkdBAvqaBtkA+kBkMeXX3XnaSnaLGJRz071A==
 
 picocolors@^1.0.0:
   version "1.0.0"
