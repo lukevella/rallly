@@ -7,7 +7,6 @@ import {
   VoteIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
@@ -24,18 +23,6 @@ import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/with-page-translations";
-
-type PollTableRow = {
-  id: string;
-  title: string;
-  createdAt: Date;
-  selectedOptionId: string | null;
-  closed: boolean;
-  adminUrlId: string;
-  participantUrlId: string;
-  participants: { id: string; name: string }[];
-  options: { id: string; start: Date }[];
-};
 
 const EmptyState = () => {
   return (
@@ -89,8 +76,8 @@ const PollCard = ({
               <PauseCircleIcon className="h-5 w-5 text-gray-500" />
             </div>
           ) : (
-            <div className="bg-primary-50 border-primary-100 inline-flex h-14 w-14 items-center justify-center rounded-md border">
-              <RadioIcon className="text-primary-500 h-5 w-5" />
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
+              <RadioIcon className="h-5 w-5 animate-pulse text-blue-500" />
             </div>
           )}
         </div>
@@ -113,29 +100,6 @@ const PollCard = ({
   );
 };
 
-const PollList = ({ data }: { data: PollTableRow[] }) => {
-  return (
-    <div className="grid gap-4">
-      {data.map((poll) => {
-        const selectedOption = poll.options.find(
-          (option) => option.id === poll.selectedOptionId,
-        );
-        return (
-          <PollCard
-            key={poll.id}
-            date={selectedOption?.start}
-            createdAt={poll.createdAt}
-            paused={poll.closed}
-            pollId={poll.id}
-            title={poll.title}
-            participants={poll.participants}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
 const Page: NextPageWithLayout = () => {
   const { data } = trpc.polls.list.useQuery();
   const { t } = useTranslation();
@@ -143,9 +107,6 @@ const Page: NextPageWithLayout = () => {
   if (!data) {
     return null;
   }
-
-  const pending = data.filter((poll) => !poll.selectedOptionId);
-  const closed = data.filter((poll) => !!poll.selectedOptionId);
 
   return (
     <div>

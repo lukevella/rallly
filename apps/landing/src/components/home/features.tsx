@@ -10,9 +10,11 @@ import * as React from "react";
 const Features: React.FunctionComponent = () => {
   const { t } = useTranslation();
   return (
-    <div className="mx-auto max-w-7xl px-8 py-16">
-      <h2 className="heading">{t("homepage_features")}</h2>
-      <p className="subheading">{t("homepage_featuresSubheading")}</p>
+    <div className="mx-auto max-w-7xl px-8 py-24">
+      <h2 className="heading text-center">{t("homepage_features")}</h2>
+      <p className="subheading text-center">
+        {t("homepage_featuresSubheading")}
+      </p>
       <div className="grid grid-cols-2 gap-12">
         <div className="col-span-2 md:col-span-1">
           <div className="bg-primary-500 mb-4 inline-block rounded-md p-3 text-slate-50">

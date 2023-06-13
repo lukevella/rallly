@@ -1,5 +1,6 @@
 import {
   ChevronDown,
+  CreditCardIcon,
   LifeBuoyIcon,
   ListIcon,
   LogInIcon,
@@ -11,6 +12,7 @@ import {
   UserPlusIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import { Card } from "@rallly/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,16 +35,25 @@ export const UserDropdown = () => {
       <DropdownMenuTrigger asChild className="group">
         <Button className="rounded-full">
           <CurrentUserAvatar size="sm" className="-ml-1" />
-          <span className="text-sm font-medium">
-            {user.isGuest ? <Trans i18nKey="guest" /> : user.name}
-          </span>
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>
-          <Trans i18nKey="menu" defaults="Menu" />
+        <DropdownMenuLabel className="flex items-center gap-2">
+          <CurrentUserAvatar />
+          <div>
+            <div>{user.isGuest ? <Trans i18nKey="guest" /> : user.name}</div>
+            <div className="text-muted-foreground text-xs font-normal">
+              {!user.isGuest ? user.email : ""}
+            </div>
+          </div>
+          <div className="ml-4">
+            <span className="bg-foreground rounded-full px-1.5 py-0.5 text-xs text-white">
+              Free
+            </span>
+          </div>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
         <IfAuthenticated>
           <DropdownMenuItem asChild={true}>
             <Link
@@ -57,10 +68,16 @@ export const UserDropdown = () => {
         <DropdownMenuItem asChild={true}>
           <Link
             href="/settings/preferences"
-            className="flex items-center gap-x-2 sm:hidden"
+            className="flex items-center gap-x-2"
           >
             <Settings2Icon className="h-4 w-4" />
             <Trans i18nKey="preferences" defaults="Preferences" />
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild={true}>
+          <Link href="/settings/billing" className="flex items-center gap-x-2">
+            <CreditCardIcon className="h-4 w-4" />
+            <Trans i18nKey="Billing" defaults="Billing" />
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild={true}>
