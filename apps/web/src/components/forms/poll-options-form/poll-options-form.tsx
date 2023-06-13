@@ -6,7 +6,6 @@ import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Card } from "@/components/card";
-import { Trans } from "@/components/trans";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { useModal } from "../../modal";

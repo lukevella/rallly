@@ -465,6 +465,7 @@ export const polls = router({
           select: {
             id: true,
             start: true,
+            duration: true,
           },
         },
         closed: true,

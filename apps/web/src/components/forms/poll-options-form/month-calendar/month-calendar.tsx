@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -27,7 +28,6 @@ import {
   getDateProps,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
-import { useDayjs } from "../../../../utils/dayjs";
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
@@ -45,7 +45,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration,
   onChangeDuration,
 }) => {
-  const { dayjs, weekStartsOn } = useDayjs();
   const { t } = useTranslation();
   const isTimedEvent = options.some((option) => option.type === "timeSlot");
 
@@ -85,7 +84,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   const datepicker = useHeadlessDatePicker({
     selection: datepickerSelection,
     onNavigationChange: onNavigate,
-    weekStartsOn,
     date,
   });
 

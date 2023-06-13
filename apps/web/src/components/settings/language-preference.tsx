@@ -1,10 +1,10 @@
+import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { LegacyButton } from "@/components/button";
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
 import { updateLanguage } from "@/contexts/preferences";
@@ -45,14 +45,14 @@ export const LanguagePreference = () => {
           )}
         />
         <div className="mt-6">
-          <LegacyButton
-            type="primary"
+          <Button
+            variant="primary"
             disabled={!form.formState.isDirty}
             loading={form.formState.isSubmitting}
-            htmlType="submit"
+            type="submit"
           >
             <Trans i18nKey="save" />
-          </LegacyButton>
+          </Button>
         </div>
       </form>
     </Form>

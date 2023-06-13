@@ -26,8 +26,9 @@ export async function middleware(req: NextRequest) {
 
   // Check if locale is specified in cookie
   const localeCookie = cookies.get("NEXT_LOCALE");
-  if (localeCookie && supportedLocales.includes(localeCookie.value)) {
-    newUrl.pathname = `/${localeCookie.value}${newUrl.pathname}`;
+  const preferredLocale = localeCookie && localeCookie.value;
+  if (preferredLocale && supportedLocales.includes(preferredLocale)) {
+    newUrl.pathname = `/${preferredLocale}${newUrl.pathname}`;
     return NextResponse.rewrite(newUrl);
   } else {
     // Check if locale is specified in header

@@ -58,6 +58,7 @@ const DateTimePreferencesForm = () => {
   if (userPreferences === undefined) {
     return null;
   }
+
   return (
     <Form {...form}>
       <form

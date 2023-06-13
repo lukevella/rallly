@@ -1,10 +1,10 @@
 import clsx from "clsx";
+import dayjs from "dayjs";
 import React from "react";
 import { Calendar } from "react-big-calendar";
 import { useMount } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
-import { useDayjs } from "../../../utils/dayjs";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
 import { DateTimeOption, DateTimePickerProps } from "./types";
@@ -20,7 +20,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const [scrollToTime, setScrollToTime] = React.useState<Date>();
-  const { dayjs, timeFormat } = useDayjs();
   const localizer = React.useMemo(() => dayjsLocalizer(dayjs), [dayjs]);
 
   useMount(() => {
@@ -30,7 +29,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <Calendar
-      key={timeFormat}
       events={options.map((option) => {
         if (option.type === "date") {
           return { title, start: new Date(option.date) };

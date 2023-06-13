@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Textarea } from "@rallly/ui/textarea";
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -19,7 +20,6 @@ import { Controller, useForm } from "react-hook-form";
 import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
 
-import { useDayjs } from "../../utils/dayjs";
 import { requiredString } from "../../utils/form-validation";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
@@ -33,7 +33,6 @@ interface CommentForm {
 }
 
 const Discussion: React.FunctionComponent = () => {
-  const { dayjs } = useDayjs();
   const { t } = useTranslation();
   const { poll, admin } = usePoll();
 

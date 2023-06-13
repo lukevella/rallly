@@ -1,5 +1,4 @@
 import { trpc, UserSession } from "@rallly/backend";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
@@ -10,7 +9,6 @@ import { useRequiredContext } from "./use-required-context";
 export const UserContext = React.createContext<{
   user: UserSession & { shortName: string };
   refresh: () => void;
-  logout: () => void;
   ownsObject: (obj: { userId: string | null }) => boolean;
 } | null>(null);
 
@@ -50,14 +48,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
 
   const queryClient = trpc.useContext();
 
-  const { data: user } = trpc.whoami.get.useQuery(undefined);
-
-  const router = useRouter();
-  const logout = trpc.whoami.destroy.useMutation({
-    onSuccess: async () => {
-      router.push("/logout");
-    },
-  });
+  const { data: user } = trpc.whoami.get.useQuery();
 
   const shortName = user
     ? user.isGuest === false
@@ -77,10 +68,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           return queryClient.whoami.invalidate();
         },
         ownsObject: ({ userId }) => {
-          return userId ? [user.id, props.forceUserId].includes(userId) : false;
-        },
-        logout: () => {
-          logout.mutate();
+          return userId ? [user.id].includes(userId) : false;
         },
       }}
     >

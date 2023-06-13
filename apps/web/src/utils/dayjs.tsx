@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -9,8 +10,9 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
+import updateLocale from "dayjs/plugin/updateLocale";
 import utc from "dayjs/plugin/utc";
-import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import * as React from "react";
 import { useAsync } from "react-use";
 
@@ -143,6 +145,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(duration);
 dayjs.extend(isSameOrAfter);
+dayjs.extend(updateLocale);
 
 const DayjsContext = React.createContext<{
   dayjs: (date?: dayjs.ConfigType) => dayjs.Dayjs;
@@ -154,41 +157,41 @@ export const useDayjs = () => {
   return useRequiredContext(DayjsContext);
 };
 
-const DayjsProviderInner: React.FunctionComponent<{
+export const DayjsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
 }> = ({ children }) => {
-  const { i18n } = useTranslation();
+  const router = useRouter();
 
-  // Using language instead of router.locale because when transitioning from homepage to
-  // the app via <Link locale={false}> it will be set to "en" instead of the current locale.
-  const localeConfig = dayjsLocales[i18n.language];
+  const localeConfig = dayjsLocales[router.locale ?? "en"];
+  const { data } = trpc.userPreferences.get.useQuery();
 
-  const { value: dayjsLocale } = useAsync(async () => {
-    return await localeConfig.import();
-  }, [localeConfig]);
+  useAsync(async () => {
+    const locale = await localeConfig.import();
+    const localeTimeFormat = localeConfig.timeFormat;
 
-  if (!dayjsLocale) {
-    // wait for locale to load before rendering content
-    return null;
-  }
-
-  dayjs.locale(dayjsLocale);
+    dayjs.locale("custom", {
+      ...locale,
+      weekStart: data?.weekStart ?? locale.weekStart,
+      formats:
+        localeTimeFormat === data?.timeFormat
+          ? locale.formats
+          : {
+              ...locale.formats,
+              LT: data?.timeFormat === "hours12" ? "h:mm A" : "HH:mm",
+            },
+    });
+  }, [localeConfig, data]);
 
   return (
     <DayjsContext.Provider
       value={{
         dayjs,
-        weekStartsOn: localeConfig.weekStartsOn,
-        timeFormat: localeConfig.timeFormat,
+        weekStartsOn:
+          dayjs.localeData().firstDayOfWeek() === 0 ? "sunday" : "monday",
+        timeFormat: data?.timeFormat ?? localeConfig.timeFormat,
       }}
     >
       {children}
     </DayjsContext.Provider>
   );
-};
-
-export const DayjsProvider: React.FunctionComponent<{
-  children?: React.ReactNode;
-}> = ({ children }) => {
-  return <DayjsProviderInner>{children}</DayjsProviderInner>;
 };
