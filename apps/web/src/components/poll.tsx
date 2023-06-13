@@ -7,7 +7,6 @@ import { EventCard } from "@/components/event-card";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { usePoll } from "@/contexts/poll";
-import { useUserPreferences } from "@/contexts/preferences";
 
 import { useTouchBeacon } from "./poll/use-touch-beacon";
 
@@ -28,14 +27,8 @@ export const Poll = () => {
     };
   }, []);
 
-  const userPreferences = useUserPreferences();
-
   const [isWideScreen, setIsWideScreen] = React.useState(checkIfWideScreen);
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
-
-  if (!userPreferences) {
-    return null;
-  }
 
   return (
     <div className={cn("space-y-3 sm:space-y-4")}>

@@ -20,7 +20,6 @@ import {
   TopBarTitle,
 } from "@/components/layouts/standard-layout/top-bar";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
-import { PollStatus } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/with-page-translations";
@@ -46,58 +45,6 @@ const EmptyState = () => {
             </Link>
           </Button>
         </div>
-      </div>
-    </div>
-  );
-};
-
-const PollCard = ({
-  date,
-  duration,
-  paused,
-  createdAt,
-  pollId,
-  title,
-  participants,
-}: {
-  date?: Date;
-  duration: number;
-  createdAt: Date;
-  paused: boolean;
-  pollId: string;
-  title: string;
-  participants: { name: string }[];
-}) => {
-  return (
-    <div className="flex flex-col justify-between gap-y-4 gap-x-4 rounded-md border bg-white p-4 sm:flex-row sm:items-start">
-      <div className="flex gap-x-4">
-        <div>
-          {date ? (
-            <DateIcon date={dayjs(date)} />
-          ) : paused ? (
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
-              <PauseCircleIcon className="h-5 w-5 text-gray-500" />
-            </div>
-          ) : (
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
-              <RadioIcon className="h-5 w-5 animate-pulse text-blue-500" />
-            </div>
-          )}
-        </div>
-        <div className="pt-0.5">
-          <Link
-            href={`/poll/${pollId}`}
-            className="font-semibold hover:underline"
-          >
-            {title}
-          </Link>
-          <div className="text-muted-foreground text-sm">
-            {dayjs(createdAt).fromNow()}
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-end">
-        <ParticipantAvatarBar participants={participants} max={5} />
       </div>
     </div>
   );
@@ -137,6 +84,7 @@ const Page: NextPageWithLayout = () => {
                 const selectedOption = poll.options.find(
                   (option) => option.id === poll.selectedOptionId,
                 );
+
                 const {
                   title,
                   id: pollId,
@@ -159,7 +107,7 @@ const Page: NextPageWithLayout = () => {
                           </div>
                         ) : (
                           <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
-                            <RadioIcon className="h-5 w-5 animate-pulse text-blue-500" />
+                            <RadioIcon className="h-5 w-5 text-gray-500" />
                           </div>
                         )}
                       </div>

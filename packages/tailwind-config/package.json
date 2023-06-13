@@ -6,5 +6,8 @@
   "types": "tailwind.config.d.ts",
   "dependencies": {
     "tailwindcss": "^3.2.7"
+  },
+  "devDependencies": {
+    "tailwind-scrollbar": "^3.0.4"
   }
 }

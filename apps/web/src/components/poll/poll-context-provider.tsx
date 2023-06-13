@@ -5,18 +5,11 @@ import {
   PollContextProvider,
 } from "@/components/poll-context";
 import { usePoll } from "@/contexts/poll";
-import { useUserPreferences } from "@/contexts/preferences";
-import {
-  TimeFormatProvider,
-  TimeZoneProvider,
-} from "@/contexts/time-preferences";
 
 export const LegacyPollContextProvider = (props: React.PropsWithChildren) => {
   const poll = usePoll();
 
-  const userPreferences = useUserPreferences();
-
-  if (!poll || !userPreferences) {
+  if (!poll) {
     return null;
   }
 
@@ -24,11 +17,7 @@ export const LegacyPollContextProvider = (props: React.PropsWithChildren) => {
     <ParticipantsProvider pollId={poll.id}>
       <PollContextProvider poll={poll} urlId={poll.id} admin={false}>
         <ModalProvider>
-          <TimeZoneProvider initialValue={userPreferences.timeZone}>
-            <TimeFormatProvider initialValue={userPreferences.timeFormat}>
-              <OptionsProvider>{props.children}</OptionsProvider>
-            </TimeFormatProvider>
-          </TimeZoneProvider>
+          <OptionsProvider>{props.children}</OptionsProvider>
         </ModalProvider>
       </PollContextProvider>
     </ParticipantsProvider>

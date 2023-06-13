@@ -16,41 +16,6 @@ import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
-const CopyLinkButton = () => {
-  const poll = usePoll();
-
-  const [state, copyToClipboard] = useCopyToClipboard();
-
-  React.useEffect(() => {
-    if (state.error) {
-      console.error(`Unable to copy value: ${state.error.message}`);
-    }
-  }, [state]);
-
-  const inviteLink = `${window.location.origin}/invite/${poll?.id}`;
-  const [didCopy, setDidCopy] = React.useState(false);
-
-  return (
-    <Button
-      className="bg-gray-50 px-2.5"
-      size="lg"
-      onClick={() => {
-        copyToClipboard(inviteLink);
-        setDidCopy(true);
-        setTimeout(() => {
-          setDidCopy(false);
-        }, 1000);
-      }}
-    >
-      {didCopy ? (
-        <Trans i18nKey="copied" />
-      ) : (
-        <span className="min-w-0 truncate">{inviteLink}</span>
-      )}
-    </Button>
-  );
-};
-
 export const InviteDialog = () => {
   const { participants } = useParticipants();
   const [isOpen, setIsOpen] = React.useState(participants.length === 0);

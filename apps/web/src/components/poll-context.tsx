@@ -1,17 +1,16 @@
 import { Participant, Vote, VoteType } from "@rallly/database";
 import { TrashIcon } from "@rallly/icons";
-import dayjs, { Dayjs } from "dayjs";
 import { keyBy } from "lodash";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { usePermissions } from "@/contexts/permissions";
-import { useTimeFormat, useTimeZone } from "@/contexts/time-preferences";
 import {
   decodeOptions,
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";
+import { useDayjs } from "@/utils/dayjs";
 import { GetPollApiResponse } from "@/utils/trpc/types";
 
 import ErrorPage from "./error-page";
@@ -138,7 +137,7 @@ export const PollContextProvider: React.FunctionComponent<{
       },
       getScore,
     };
-  }, [admin, getScore, participants, poll, urlId, user]);
+  }, [admin, canEditParticipant, getScore, participants, poll, urlId, user]);
 
   if (poll.deleted) {
     return (
@@ -151,27 +150,6 @@ export const PollContextProvider: React.FunctionComponent<{
   }
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
-  );
-};
-
-export const useAdjustTimeZone = () => {
-  const { poll } = usePoll();
-  const [targetTimeZone] = useTimeZone();
-  return (date: Date) => {
-    const d = dayjs(date).utc();
-    if (poll.timeZone) {
-      return d.tz(poll.timeZone, true).tz(targetTimeZone);
-    } else {
-      return d;
-    }
-  };
-};
-
-export const TimeFormatter = ({ date }: { date: Dayjs }) => {
-  const [timeFormat] = useTimeFormat();
-
-  return (
-    <>{dayjs(date).format(timeFormat === "hours12" ? "h:mm A" : "HH:mm")}</>
   );
 };
 
@@ -196,8 +174,7 @@ export const useOptions = () => {
 
 export const OptionsProvider = (props: React.PropsWithChildren) => {
   const { poll } = usePoll();
-  const [targetTimeZone] = useTimeZone();
-  const [timeFormat] = useTimeFormat();
+  const { timeZone: targetTimeZone, timeFormat } = useDayjs();
   const parsedDateOptions = decodeOptions(
     poll.options,
     poll.timeZone,

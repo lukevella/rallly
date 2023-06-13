@@ -1,4 +1,5 @@
 import { TimeFormat } from "@rallly/database";
+import { cn } from "@rallly/ui";
 import React from "react";
 
 import { Trans } from "@/components/trans";
@@ -18,7 +19,10 @@ const RadioButton = (
       role="radio"
       type="button"
       aria-checked={props.checked}
-      className="hover:bg-accent text-muted-foreground aria-checked:text-foreground aria-checked:border-border grow border border-transparent px-1.5 font-medium aria-checked:bg-white aria-checked:shadow-sm"
+      className={cn(
+        props.checked ? "" : "hover:bg-accent",
+        "text-muted-foreground aria-checked:text-foreground grow rounded-none px-2 font-medium aria-checked:bg-white",
+      )}
     />
   );
 };
@@ -32,7 +36,7 @@ const TimeFormatPicker = ({
     <div
       aria-disabled={disabled}
       role="radiogroup"
-      className="inline-flex h-9 gap-x-1 whitespace-nowrap rounded-md border bg-gray-200/50 p-0.5 text-sm aria-disabled:pointer-events-none aria-disabled:opacity-50"
+      className="inline-flex h-9 divide-x overflow-hidden whitespace-nowrap rounded-md border bg-gray-50 text-sm aria-disabled:pointer-events-none aria-disabled:opacity-50"
     >
       <RadioButton
         onClick={() => {

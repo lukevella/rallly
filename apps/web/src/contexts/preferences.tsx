@@ -7,8 +7,8 @@ import { useDayjs } from "@/utils/dayjs";
 
 export const useSystemPreferences = () => {
   const { i18n } = useTranslation();
-  const { timeFormat: localeTimeFormat, weekStartsOn } = useDayjs();
-  const localeTimeFormatWeekStart = weekStartsOn === "monday" ? 1 : 0;
+  const { timeFormat: localeTimeFormat, weekStart: localeTimeFormatWeekStart } =
+    useDayjs();
 
   return {
     language: i18n.language, // this should be the value detected in

@@ -49,6 +49,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const queryClient = trpc.useContext();
 
   const { data: user } = trpc.whoami.get.useQuery();
+  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
 
   const shortName = user
     ? user.isGuest === false
@@ -56,7 +57,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
       : user.id.substring(0, 10)
     : t("guest");
 
-  if (!user) {
+  if (!user || userPreferences === undefined) {
     return null;
   }
 

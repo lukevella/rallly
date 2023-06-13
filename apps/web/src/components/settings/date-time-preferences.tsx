@@ -16,8 +16,6 @@ import { z } from "zod";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
-import { useSystemPreferences } from "@/contexts/preferences";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { useDayjs } from "@/utils/dayjs";
 
 const formSchema = z.object({
@@ -49,11 +47,12 @@ const DateTimePreferencesForm = () => {
     },
   });
 
-  const { timeFormat: localeTimeFormat, weekStartsOn } = useDayjs();
-
-  const localeWeekStart = weekStartsOn === "monday" ? 1 : 0;
-
-  const systemPreferences = useSystemPreferences();
+  const {
+    timeFormat: localeTimeFormat,
+    weekStart: localeWeekStart,
+    timeZone,
+    locale,
+  } = useDayjs();
 
   if (userPreferences === undefined) {
     return null;
@@ -71,7 +70,7 @@ const DateTimePreferencesForm = () => {
           <FormField
             control={form.control}
             name="timeZone"
-            defaultValue={userPreferences?.timeZone ?? getBrowserTimeZone()}
+            defaultValue={userPreferences?.timeZone ?? timeZone}
             render={({ field }) => {
               return (
                 <FormItem>
@@ -150,7 +149,7 @@ const DateTimePreferencesForm = () => {
               loading={deleteUserPreferences.isLoading}
               onClick={async () => {
                 await deleteUserPreferences.mutateAsync();
-                form.reset(systemPreferences);
+                form.reset(locale);
               }}
             >
               <Trans

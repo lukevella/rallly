@@ -11,6 +11,7 @@ import smoothscroll from "smoothscroll-polyfill";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useOptions, usePoll } from "@/components/poll-context";
 import { usePermissions } from "@/contexts/permissions";
+import { TimePreferences } from "@/contexts/time-preferences";
 
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
@@ -210,6 +211,11 @@ const MobilePoll: React.FunctionComponent = () => {
             ) : null}
           </div>
         </div>
+        {poll.options[0].duration !== 0 ? (
+          <div className="overflow-x-auto border-b bg-gray-50 p-3">
+            <TimePreferences />
+          </div>
+        ) : null}
         <GroupedOptions
           selectedParticipantId={selectedParticipantId}
           options={options}

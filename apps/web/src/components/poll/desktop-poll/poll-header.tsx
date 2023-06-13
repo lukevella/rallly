@@ -1,14 +1,8 @@
 import clsx from "clsx";
-import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 
-import { DateIcon, DateIconInner } from "@/components/date-icon";
-import {
-  TimeFormatter,
-  useAdjustTimeZone,
-  useOptions,
-  usePoll,
-} from "@/components/poll-context";
+import { DateIconInner } from "@/components/date-icon";
+import { useOptions } from "@/components/poll-context";
 
 import { ConnectedScoreSummary } from "../score-summary";
 import ControlledScrollArea from "./controlled-scroll-area";

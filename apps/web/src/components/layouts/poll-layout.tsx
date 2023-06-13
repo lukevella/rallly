@@ -13,13 +13,6 @@ import {
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@rallly/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -47,7 +40,6 @@ import {
   PageDialogTitle,
 } from "@/components/page-dialog";
 import ManagePoll from "@/components/poll/manage-poll";
-import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { PollStatus } from "@/components/poll-status";
@@ -81,14 +73,6 @@ const StatusControl = () => {
       queryClient.polls.invalidate();
     },
   });
-
-  const bookDate = trpc.polls.book.useMutation({
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
-  const [isFinalizing, setIsFinalizing] = React.useState(false);
 
   return (
     <>
@@ -141,44 +125,6 @@ const StatusControl = () => {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog open={isFinalizing} onOpenChange={setIsFinalizing}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              <Trans i18nKey="pickADate" />
-            </DialogTitle>
-          </DialogHeader>
-          <FinalizePollForm
-            name="finalize-poll"
-            onSubmit={(data) => {
-              bookDate.mutate(
-                {
-                  pollId: poll.id,
-                  optionId: data.selectedOptionId,
-                },
-                {
-                  onSuccess: () => {
-                    setIsFinalizing(false);
-                  },
-                },
-              );
-            }}
-          />
-          <DialogFooter>
-            <Button onClick={() => setIsFinalizing(false)}>
-              <Trans i18nKey="cancel" defaults="Cancel" />
-            </Button>
-            <Button
-              variant="primary"
-              loading={bookDate.isLoading}
-              form="finalize-poll"
-              type="submit"
-            >
-              <Trans i18nKey="finalize" defaults="Finalize" />
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
@@ -189,7 +135,7 @@ const AdminControls = () => {
   const router = useRouter();
   return (
     <TopBar>
-      <div className="flex items-center justify-between gap-x-4">
+      <div className="flex flex-col items-start justify-between gap-y-2 gap-x-4 sm:flex-row">
         <div className="flex min-w-0 gap-2">
           {router.asPath !== pollLink ? (
             <Button variant="ghost" asChild>
@@ -200,9 +146,9 @@ const AdminControls = () => {
           ) : null}
           <TopBarTitle title={poll?.title} icon={FileBarChart} />
         </div>
-        <div className="flex items-center gap-x-2.5">
-          <StatusControl />
+        <div className="flex items-center gap-x-2 overflow-x-auto">
           <NotificationsToggle />
+          <StatusControl />
           <ManagePoll />
           <InviteDialog />
         </div>

@@ -67,20 +67,7 @@ const Logo = () => {
           "inline-block transition-transform active:translate-y-1",
         )}
       >
-        <Image
-          className="hidden sm:block"
-          src="/static/logo.svg"
-          width={120}
-          height={22}
-          alt="Rallly"
-        />
-        <Image
-          className="sm:hidden"
-          src="/logo-mark.svg"
-          width={30}
-          height={30}
-          alt="Rallly"
-        />
+        <Image src="/static/logo.svg" width={120} height={22} alt="Rallly" />
       </Link>
       <div
         className={cn(
@@ -89,6 +76,9 @@ const Logo = () => {
         )}
       >
         {isBusy ? <Spinner /> : null}
+      </div>
+      <div className="rounded-full border px-2 py-0.5 text-xs text-gray-400">
+        Beta
       </div>
     </div>
   );

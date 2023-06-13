@@ -87,7 +87,7 @@ const Discussion: React.FunctionComponent = () => {
 
   return (
     <div className="divide-y">
-      <div className="flex items-center gap-2 bg-gray-50 p-3 font-semibold tracking-tight sm:px-5">
+      <div className="flex items-center gap-2 bg-gray-50 px-4 py-3 font-semibold">
         <MessageCircleIcon className="h-5 w-5" /> {t("comments")} (
         {comments.length})
       </div>

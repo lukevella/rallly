@@ -8,7 +8,11 @@ module.exports = {
     "../../packages/tailwind-config/tailwind.config.js",
     "../../packages/ui/**/*.{ts,tsx}",
   ],
-  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("tailwindcss-animate"),
+    require("tailwind-scrollbar"),
+  ],
   theme: {
     extend: {
       boxShadow: {

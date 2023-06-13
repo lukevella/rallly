@@ -1,19 +1,10 @@
-import { trpc } from "@rallly/backend";
 import {
-  CheckSquare,
-  CheckSquareIcon,
   ChevronDownIcon,
   DownloadIcon,
-  LockIcon,
-  PauseIcon,
   PencilIcon,
-  PlayIcon,
-  RotateCcw,
   SettingsIcon,
-  StarIcon,
   TableIcon,
   TrashIcon,
-  UnlockIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
@@ -32,7 +23,6 @@ import { usePoll } from "@/contexts/poll";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
-import { useUpdatePollMutation } from "./mutations";
 
 const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
@@ -43,33 +33,12 @@ const ManagePoll: React.FunctionComponent<{
 
   const { exportToCsv } = useCsvExporter();
 
-  const queryClient = trpc.useContext();
-
-  const reopen = trpc.polls.reopen.useMutation({
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-  const pause = trpc.polls.pause.useMutation({
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
-  const resume = trpc.polls.resume.useMutation({
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
   return (
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
           <Button icon={SettingsIcon} disabled={disabled}>
-            <span className="hidden sm:block">
-              <Trans i18nKey="manage" />
-            </span>
+            <Trans i18nKey="manage" />
             <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>

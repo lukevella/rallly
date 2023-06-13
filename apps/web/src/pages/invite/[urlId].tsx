@@ -72,9 +72,6 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
               <div className="grow">
                 <GoToApp />
               </div>
-              <div>
-                <TimePreferences />
-              </div>
             </div>
             <hr />
             <Poll />

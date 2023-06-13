@@ -1,51 +1,98 @@
-import { TimeFormat } from "@rallly/database";
-import { Settings2Icon } from "@rallly/icons";
+import { trpc } from "@rallly/backend";
+import { GlobeIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
+import { Dialog, DialogContent, DialogTrigger } from "@rallly/ui/dialog";
 import dayjs, { Dayjs } from "dayjs";
-import { createStateContext } from "react-use";
+import React from "react";
 
 import { TimeFormatPicker } from "@/components/time-format-picker";
-import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import {
+  TimeZoneCommand,
+  timeZones,
+} from "@/components/time-zone-picker/time-zone-select";
+import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
-
-export const [useTimeZone, TimeZoneProvider] = createStateContext<string>(
-  getBrowserTimeZone(),
-);
-
-export const [useTimeFormat, TimeFormatProvider] =
-  createStateContext<TimeFormat>("hours24");
+import { useDayjs } from "@/utils/dayjs";
 
 export const TimePreferences = () => {
   const poll = usePoll();
 
-  const [timeZone, setTimeZone] = useTimeZone();
-  const [timeFormat, setTimeFormat] = useTimeFormat();
+  const { timeZone, timeFormat } = useDayjs();
+  const queryClient = trpc.useContext();
+
+  const [open, setIsOpen] = React.useState(false);
+  const { data } = trpc.userPreferences.get.useQuery();
+
+  const updatePreferences = trpc.userPreferences.update.useMutation({
+    onMutate: (newPreferences) => {
+      queryClient.userPreferences.get.setData(undefined, (oldPreferences) => {
+        if (!oldPreferences) {
+          return null;
+        }
+        return {
+          ...oldPreferences,
+          timeFormat: newPreferences.timeFormat ?? oldPreferences?.timeFormat,
+          timeZone: newPreferences.timeZone ?? oldPreferences?.timeZone ?? null,
+          weekStart: newPreferences.weekStart ?? oldPreferences?.weekStart,
+        };
+      });
+    },
+  });
+
+  if (data === undefined) {
+    return null;
+  }
+
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button icon={Settings2Icon}></Button>
-      </PopoverTrigger>
-      <PopoverContent align="end">
-        <div className="space-y-2">
-          {poll.timeZone ? (
-            <div>
-              <TimeZoneSelect value={timeZone} onValueChange={setTimeZone} />
-            </div>
-          ) : null}
-          <div>
-            <TimeFormatPicker value={timeFormat} onChange={setTimeFormat} />
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+    <div className="flex justify-between gap-x-4 overflow-x-auto  sm:overflow-x-visible">
+      <Dialog open={open} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          <Button icon={GlobeIcon} disabled={!poll.timeZone}>
+            {poll.timeZone ? (
+              <Trans
+                i18nKey="timeShownIn"
+                defaults="Times shown in {timeZone}"
+                values={{
+                  timeZone: timeZones[timeZone as keyof typeof timeZones],
+                }}
+              />
+            ) : (
+              <Trans
+                i18nKey="timeShownInLocalTime"
+                defaults="Times shown in local time"
+              />
+            )}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="p-0">
+          <TimeZoneCommand
+            value={timeZone}
+            onSelect={(value) => {
+              updatePreferences.mutate({
+                timeZone: value,
+              });
+              setIsOpen(false);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <div>
+        <TimeFormatPicker
+          value={timeFormat}
+          onChange={(newTimeFormat) => {
+            updatePreferences.mutate({
+              timeFormat: newTimeFormat,
+            });
+          }}
+        />
+      </div>
+    </div>
   );
 };
-
 export const useDateFormatter = () => {
   const { timeZone } = usePoll();
-  const [preferredTimeZone] = useTimeZone();
+  const { timeZone: preferredTimeZone } = useDayjs();
 
   return (date: Date | Dayjs) => {
     if (timeZone) {

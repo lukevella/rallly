@@ -12,6 +12,7 @@ import { useMeasure, useUpdateEffect } from "react-use";
 
 import { usePermissions } from "@/contexts/permissions";
 import { useRole } from "@/contexts/role";
+import { TimePreferences } from "@/contexts/time-preferences";
 
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
@@ -125,7 +126,7 @@ const Poll: React.FunctionComponent = () => {
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
-          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3 sm:px-5">
+          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 py-3 px-4">
             <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
                 <div className="px-1">
@@ -143,7 +144,7 @@ const Poll: React.FunctionComponent = () => {
               ) : (
                 <div className="flex items-center gap-2">
                   <Users2Icon className="h-5 w-5 shrink-0" />
-                  <div className="font-semibold tracking-tight">
+                  <div className="font-semibold">
                     {t("participants", { count: participants.length })} (
                     {participants.length})
                   </div>
@@ -185,6 +186,11 @@ const Poll: React.FunctionComponent = () => {
               ) : null}
             </div>
           </div>
+          {poll.options[0].duration !== 0 ? (
+            <div className="border-b p-3">
+              <TimePreferences />
+            </div>
+          ) : null}
           <div>
             <div className="flex py-3">
               <div
