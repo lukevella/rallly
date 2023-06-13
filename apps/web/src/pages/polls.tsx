@@ -7,7 +7,7 @@ import {
   VoteIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -22,6 +22,7 @@ import {
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
+import { useDayjs } from "@/utils/dayjs";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const EmptyState = () => {
@@ -53,7 +54,7 @@ const EmptyState = () => {
 const Page: NextPageWithLayout = () => {
   const { data } = trpc.polls.list.useQuery();
   const { t } = useTranslation();
-
+  const { timeZone: targetTimeZone } = useDayjs();
   if (!data) {
     return null;
   }
@@ -85,6 +86,15 @@ const Page: NextPageWithLayout = () => {
                   (option) => option.id === poll.selectedOptionId,
                 );
 
+                const adjustTimeZone = (date: Date | dayjs.Dayjs) => {
+                  return poll.timeZone && targetTimeZone
+                    ? dayjs(date)
+                        .utc()
+                        .tz(poll.timeZone, true)
+                        .tz(targetTimeZone)
+                    : dayjs(date).utc();
+                };
+
                 const {
                   title,
                   id: pollId,
@@ -100,7 +110,9 @@ const Page: NextPageWithLayout = () => {
                     <div className="flex gap-x-4">
                       <div>
                         {selectedOption ? (
-                          <DateIcon date={dayjs(selectedOption.start)} />
+                          <DateIcon
+                            date={adjustTimeZone(selectedOption.start)}
+                          />
                         ) : paused ? (
                           <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
                             <PauseCircleIcon className="h-5 w-5 text-gray-500" />
@@ -115,12 +127,17 @@ const Page: NextPageWithLayout = () => {
                         <div className="text-muted-foreground text-sm">
                           {selectedOption
                             ? selectedOption.duration > 0
-                              ? `${dayjs(selectedOption.start).format(
+                              ? `${adjustTimeZone(selectedOption.start).format(
                                   "LLL",
-                                )} - ${dayjs(selectedOption.start)
-                                  .add(selectedOption.duration, "minutes")
-                                  .format("LT")}`
-                              : dayjs(selectedOption.start).format("LL")
+                                )} - ${adjustTimeZone(
+                                  dayjs(selectedOption.start).add(
+                                    selectedOption.duration,
+                                    "minutes",
+                                  ),
+                                ).format("LT")}`
+                              : adjustTimeZone(selectedOption.start).format(
+                                  "LL",
+                                )
                             : null}
                         </div>
                         <div>

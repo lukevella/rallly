@@ -13,7 +13,7 @@ const buttonVariants = cva(
         primary:
           "border-transparent bg-primary text-white shadow-sm hover:bg-primary-500 active:bg-primary-700",
         destructive:
-          "bg-destructive text-destructive-foreground hozer:bg-destructive/90",
+          "bg-destructive text-destructive-foreground active:bg-destructive hover:bg-destructive/90",
         default:
           "rounded-md px-3.5 py-2.5 hover:shadow-sm active:shadow-none data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-100 hover:bg-white/50 bg-gray-50",
         secondary:

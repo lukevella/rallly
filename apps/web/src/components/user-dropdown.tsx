@@ -40,7 +40,6 @@ export const UserDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="flex items-center gap-2">
-          <CurrentUserAvatar />
           <div>
             <div>{user.isGuest ? <Trans i18nKey="guest" /> : user.name}</div>
             <div className="text-muted-foreground text-xs font-normal">
