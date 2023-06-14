@@ -180,6 +180,7 @@ const Hero: React.FunctionComponent = () => {
       <div className="mt-8 text-center sm:mt-16">
         <div className="mb-6 sm:mb-8">
           <Link
+            target="_blank"
             href="https://github.com/lukevella/rallly"
             className="hover:text-primary hover:border-primary-200 hover:bg-primary-50 active:bg-primary-100 inline-flex items-center gap-2.5 rounded-full border bg-gray-50/75 px-3 py-2 text-xs font-medium transition-transform active:translate-y-1 sm:text-sm"
           >

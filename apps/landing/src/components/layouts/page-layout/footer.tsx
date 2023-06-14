@@ -62,7 +62,7 @@ const Footer: React.FunctionComponent = () => {
                   i18nKey="common_footerSponsor"
                   components={{
                     a: (
-                      <a
+                      <Link
                         className="font-normal leading-loose text-gray-500 underline hover:text-gray-800 hover:underline"
                         href="https://support.rallly.co/contribute/donations"
                       />
@@ -75,7 +75,7 @@ const Footer: React.FunctionComponent = () => {
                   i18nKey="common_footerCredit"
                   components={{
                     a: (
-                      <a
+                      <Link
                         className="font-normal leading-loose text-gray-500 underline hover:text-gray-800 hover:underline"
                         href="https://twitter.com/imlukevella"
                       />
@@ -85,19 +85,22 @@ const Footer: React.FunctionComponent = () => {
               </div>
             </div>
             <div className="flex items-center space-x-6">
-              <a
+              <Link
+                target="_blank"
                 href="https://twitter.com/ralllyco"
                 className="hover:text-primary-600 text-sm text-gray-500 transition-colors hover:no-underline"
               >
                 <TwitterIcon className="h-5 w-5" />
-              </a>
-              <a
+              </Link>
+              <Link
+                target="_blank"
                 href="https://discord.gg/uzg4ZcHbuM"
                 className="hover:text-primary-600 text-sm text-gray-500 transition-colors hover:no-underline"
               >
                 <DiscordIcon className="h-5 w-5" />
-              </a>
-              <a
+              </Link>
+              <Link
+                target="_blank"
                 href="https://github.com/lukevella/rallly"
                 className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-gray-100 pl-2 pr-3 text-sm text-gray-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
               >
@@ -108,7 +111,7 @@ const Footer: React.FunctionComponent = () => {
                     defaults="Star us on Github"
                   />
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
           <div className="lg:w-1/6">
@@ -117,12 +120,13 @@ const Footer: React.FunctionComponent = () => {
             </div>
             <ul className="space-y-2">
               <li>
-                <a
+                <Link
+                  target="_blank"
                   className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                   href="https://github.com/lukevella/rallly/discussions"
                 >
                   <Trans i18nKey="common_discussions" defaults="Discussions" />
-                </a>
+                </Link>
               </li>
               <li>
                 <Link
@@ -133,12 +137,12 @@ const Footer: React.FunctionComponent = () => {
                 </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="https://support.rallly.co"
                   className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 >
                   <Trans i18nKey="common_support" defaults="Support" />
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -148,25 +152,31 @@ const Footer: React.FunctionComponent = () => {
             </div>
             <div className="block space-y-4">
               <div>
-                <a
+                <Link
+                  target="_blank"
                   href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
                   className="inline-block text-white"
                 >
                   <Vercel className="h-5" />
-                </a>
+                </Link>
               </div>
               <div>
-                <a
+                <Link
+                  target="_blank"
                   className="inline-block"
                   href="https://m.do.co/c/f91efc9c9e50"
                 >
                   <DigitalOcean className="h-7" />
-                </a>
+                </Link>
               </div>
               <div>
-                <a className="inline-block" href="https://sentry.io">
+                <Link
+                  target="_blank"
+                  className="inline-block"
+                  href="https://sentry.io"
+                >
                   <Sentry className="h-6" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -177,13 +187,13 @@ const Footer: React.FunctionComponent = () => {
             <div className="mb-4">
               <LanguageSelect />
             </div>
-            <a
+            <Link
               href="https://support.rallly.co/contribute/translations"
               className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
             >
               <LanguagesIcon className="mr-2 h-5 w-5" />
               <Trans i18nKey="common_volunteerTranslator" /> &rarr;
-            </a>
+            </Link>
           </div>
         </div>
         <ul className="flex gap-4 text-sm leading-loose">

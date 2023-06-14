@@ -7,7 +7,6 @@ import {
 } from "@rallly/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { absoluteUrl } from "@rallly/utils";
-import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
@@ -27,15 +26,13 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
     <nav className={className}>
       <Link
         href="https://blog.rallly.co"
-        className={clsx(
-          "hover:text-primary text-muted-foreground rounded text-sm font-medium hover:no-underline hover:underline-offset-2",
-        )}
+        className="hover:text-primary text-muted-foreground rounded text-sm font-medium"
       >
         {t("common_blog")}
       </Link>
       <Link
         href="https://support.rallly.co"
-        className="hover:text-primary hover:bg-primary text-muted-foreground rounded text-sm font-medium hover:no-underline hover:underline-offset-2"
+        className="hover:text-primary text-muted-foreground rounded text-sm font-medium"
       >
         {t("common_support")}
       </Link>
