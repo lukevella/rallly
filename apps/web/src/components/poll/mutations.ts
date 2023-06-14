@@ -1,9 +1,9 @@
 import { trpc } from "@rallly/backend";
 
+import { usePoll } from "@/components/poll-context";
 import { usePostHog } from "@/utils/posthog";
 
 import { ParticipantForm } from "./types";
-import { usePoll } from "@/components/poll-context";
 
 export const normalizeVotes = (
   optionIds: string[],

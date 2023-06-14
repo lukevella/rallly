@@ -72,7 +72,13 @@ const Logo = () => {
           "inline-block transition-transform active:translate-y-1",
         )}
       >
-        <Image src="/static/logo.svg" width={120} height={22} alt="Rallly" />
+        <Image
+          priority={true}
+          src="/static/logo.svg"
+          width={120}
+          height={22}
+          alt="Rallly"
+        />
       </Link>
       <div
         className={cn(

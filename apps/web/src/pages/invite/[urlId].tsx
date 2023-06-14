@@ -12,7 +12,6 @@ import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
-import { TimePreferences } from "@/contexts/time-preferences";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
 const GoToApp = () => {
@@ -24,14 +23,17 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <Button asChild>
-        <Link href={`/poll/${poll.id}`}>
-          <ArrowUpLeftIcon className="h-4 w-4" />
-          <Trans i18nKey="manage" />
-        </Link>
-      </Button>
-    </div>
+    <>
+      <div className="flex items-center gap-2">
+        <Button asChild>
+          <Link href={`/poll/${poll.id}`}>
+            <ArrowUpLeftIcon className="h-4 w-4" />
+            <Trans i18nKey="manage" />
+          </Link>
+        </Button>
+      </div>
+      <hr />
+    </>
   );
 };
 
@@ -68,12 +70,7 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
             />
           </svg>
           <div className="mx-auto max-w-4xl space-y-4 p-3 sm:py-8">
-            <div className="mx-auto flex max-w-4xl items-start gap-x-4">
-              <div className="grow">
-                <GoToApp />
-              </div>
-            </div>
-            <hr />
+            <GoToApp />
             <Poll />
             <div className="mt-4 space-y-4 text-center text-gray-500">
               <div className="py-8">

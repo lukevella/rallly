@@ -129,13 +129,6 @@ export const FinalizePollForm = ({
                     className="grid gap-2"
                   >
                     {options.slice(0, max).map((option) => {
-                      const attendees = participants.filter((participant) =>
-                        participant.votes.some(
-                          (vote) =>
-                            vote.optionId === option.id &&
-                            (vote.type === "yes" || vote.type === "ifNeedBe"),
-                        ),
-                      );
                       const start = dateFormatter(option.start);
                       const end = dateFormatter(
                         dayjs(option.start).add(option.duration, "minute"),

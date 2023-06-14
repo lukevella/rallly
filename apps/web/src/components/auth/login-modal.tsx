@@ -1,5 +1,4 @@
 import { Dialog, DialogContent } from "@rallly/ui/dialog";
-import { useRouter } from "next/router";
 import React from "react";
 
 import { LoginForm, RegisterForm } from "./login-form";
@@ -51,8 +50,28 @@ export const LoginModal: React.FunctionComponent<{
 export const LoginModalProvider = ({ children }: React.PropsWithChildren) => {
   const [open, setOpen] = React.useState(false);
   const [view, setView] = React.useState<"login" | "register">("login");
-  const router = useRouter();
 
+  React.useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const href = target.getAttribute("href");
+      if (
+        target.tagName === "A" &&
+        (href === "/login" || href === "/register")
+      ) {
+        // Handle the click event here
+        event.preventDefault();
+        setView(href === "/login" ? "login" : "register");
+        setOpen(true);
+      }
+    };
+
+    document.addEventListener("click", handleClick, { capture: true });
+
+    return () => {
+      document.removeEventListener("click", handleClick, { capture: true });
+    };
+  }, []);
   return (
     <>
       {open ? (

@@ -25,20 +25,20 @@ model User {
   comments  Comment[]
   polls     Poll[]
   watcher   Watcher[]
+  Event     Event[]
 
   @@map("users")
 }
 
-model UserPaymentData {
-  userId                String   @id @map("user_id")
-  subscriptionId        String   @map("subscription_id")
-  subscriptionPlanId    String   @map("subscription_plan_id")
-  subscriptionEndDate   DateTime @map("subscription_end_date")
-  subscriptionStatus    String   @map("subscription_status")
-  subscriptionUpdateUrl String   @map("subscription_update_url")
-  subscriptionCancelUrl String   @map("subscription_cancel_url")
-}
-
+// model UserPaymentData {
+//   userId                String   @id @map("user_id")
+//   subscriptionId        String   @map("subscription_id")
+//   subscriptionPlanId    String   @map("subscription_plan_id")
+//   subscriptionEndDate   DateTime @map("subscription_end_date")
+//   subscriptionStatus    String   @map("subscription_status")
+//   subscriptionUpdateUrl String   @map("subscription_update_url")
+//   subscriptionCancelUrl String   @map("subscription_cancel_url")
+// }
 
 model UserPreferences {
   userId     String      @id @map("user_id")
@@ -75,10 +75,27 @@ model Poll {
   touchedAt        DateTime      @default(now()) @map("touched_at")
   participantUrlId String        @unique @map("participant_url_id")
   adminUrlId       String        @unique @map("admin_url_id")
-  eventId          String?       @unique @map("event_id")
+  eventId          String?       @map("event_id")
+  event            Event?
 
   @@index([userId], type: Hash)
   @@map("polls")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  pollId    String   @unique @map("poll_id")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  poll      Poll     @relation(fields: [pollId], references: [id])
+  title     String
+  start     DateTime @db.Timestamp(0)
+  duration  Int      @default(0) @map("duration_minutes")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([pollId], type: Hash)
+  @@index([userId], type: Hash)
+  @@map("events")
 }
 
 model Watcher {

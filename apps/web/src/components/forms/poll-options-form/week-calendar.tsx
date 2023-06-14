@@ -10,6 +10,8 @@ import dayjsLocalizer from "./dayjs-localizer";
 import { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "./utils";
 
+const localizer = dayjsLocalizer(dayjs);
+
 const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   title,
   options,
@@ -20,7 +22,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const [scrollToTime, setScrollToTime] = React.useState<Date>();
-  const localizer = React.useMemo(() => dayjsLocalizer(dayjs), [dayjs]);
 
   useMount(() => {
     // Bit of a hack to force rbc to scroll to the right time when we close/open a modal
