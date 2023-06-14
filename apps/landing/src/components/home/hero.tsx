@@ -2,7 +2,6 @@ import { VoteType } from "@rallly/database";
 import { ArrowRightIcon, GithubIcon, User2Icon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { cn } from "@rallly/ui/lib/utils";
-import { absoluteUrl } from "@rallly/utils";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
