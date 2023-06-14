@@ -5,8 +5,6 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { Card } from "@/components/card";
-
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { useModal } from "../../modal";
 import TimeZonePicker from "../../time-zone-picker";
@@ -200,7 +198,7 @@ const PollOptionsForm: React.FunctionComponent<
               </div>
             </div>
           </div>
-          <Card className="shadow-none">
+          <div className="rounded-md border">
             <selectedView.Component
               title={title}
               options={watchOptions}
@@ -231,7 +229,7 @@ const PollOptionsForm: React.FunctionComponent<
                 setValue("duration", duration);
               }}
             />
-          </Card>
+          </div>
         </FormItem>
       </form>
     </Form>

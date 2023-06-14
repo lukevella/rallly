@@ -39,10 +39,10 @@ export const UserDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="flex items-center gap-2">
-          <div>
+          <div className="grow">
             <div>{user.isGuest ? <Trans i18nKey="guest" /> : user.name}</div>
             <div className="text-muted-foreground text-xs font-normal">
-              {!user.isGuest ? user.email : ""}
+              {!user.isGuest ? user.email : user.id.substring(0, 10)}
             </div>
           </div>
           <div className="ml-4">

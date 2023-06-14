@@ -141,11 +141,11 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   return (
     <div>
-      <div className="py-8">
-        <div className="flex justify-center py-8">
+      <div className="sm:p-8">
+        <div className="my-4 flex justify-center">
           <Steps current={currentStepIndex} total={steps.length} />
         </div>
-        <Card className="mx-auto max-w-4xl">
+        <Card className="mx-auto max-w-4xl rounded-none border-x-0 sm:rounded-md sm:border-x">
           <CardHeader>
             <CardTitle>
               <Trans i18nKey="newPoll" />

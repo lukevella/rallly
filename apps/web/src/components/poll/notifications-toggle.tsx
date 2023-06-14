@@ -56,7 +56,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   if (!watchers) {
-    return <Skeleton className="h-9 w-32" />;
+    return <Skeleton className="h-9 w-9" />;
   }
 
   return (
@@ -83,22 +83,29 @@ const NotificationsToggle: React.FunctionComponent = () => {
         />
       </TooltipTrigger>
       <TooltipContent side="bottom">
-        <Trans
-          i18nKey="notificationsValue"
-          defaults="Notifications: <b>{value}</b>"
-          components={{
-            b: <span className="font-semibold" />,
-          }}
-          values={{
-            value: isWatching
-              ? t("notificationsOn", {
-                  defaultValue: "On",
-                })
-              : t("notificationsOff", {
-                  defaultValue: "Off",
-                }),
-          }}
-        />
+        {user.isGuest ? (
+          <Trans
+            i18nKey="notificationsGuestTooltip"
+            defaults="Create an account or login to turn get notifications"
+          />
+        ) : (
+          <Trans
+            i18nKey="notificationsValue"
+            defaults="Notifications: <b>{value}</b>"
+            components={{
+              b: <span className="font-semibold" />,
+            }}
+            values={{
+              value: isWatching
+                ? t("notificationsOn", {
+                    defaultValue: "On",
+                  })
+                : t("notificationsOff", {
+                    defaultValue: "Off",
+                  }),
+            }}
+          />
+        )}
       </TooltipContent>
     </Tooltip>
   );

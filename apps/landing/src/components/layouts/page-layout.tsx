@@ -10,7 +10,6 @@ import { absoluteUrl } from "@rallly/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -23,21 +22,9 @@ export interface PageLayoutProps {
 const Menu: React.FunctionComponent<{ className: string }> = ({
   className,
 }) => {
-  const { pathname } = useRouter();
   const { t } = useTranslation();
   return (
     <nav className={className}>
-      <Link
-        href="/"
-        className={clsx(
-          "hover:text-primary text-muted-foreground rounded text-sm font-medium hover:no-underline hover:underline-offset-2",
-          {
-            "pointer-events-none font-bold text-gray-600": pathname === "/home",
-          },
-        )}
-      >
-        <Trans i18nKey="pricing" defaults="Pricing" />
-      </Link>
       <Link
         href="https://blog.rallly.co"
         className={clsx(
