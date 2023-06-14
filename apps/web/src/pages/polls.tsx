@@ -7,7 +7,7 @@ import {
   VoteIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -78,9 +78,9 @@ const Page: NextPageWithLayout = () => {
         </div>
       </TopBar>
       <div>
-        <Container className="mx-auto px-0 sm:py-8">
+        <Container className="mx-auto p-3 sm:p-8">
           {data.length > 0 ? (
-            <div className="mx-auto grid max-w-4xl gap-4">
+            <div className="mx-auto grid max-w-4xl gap-3 sm:gap-4">
               {data.map((poll) => {
                 const selectedOption = poll.options.find(
                   (option) => option.id === poll.selectedOptionId,
@@ -153,7 +153,7 @@ const Page: NextPageWithLayout = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <ParticipantAvatarBar
                         participants={participants}
                         max={5}

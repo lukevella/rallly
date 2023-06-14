@@ -12,7 +12,6 @@ import {
   UserPlusIcon,
 } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import { Card } from "@rallly/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,

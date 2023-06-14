@@ -1,5 +1,5 @@
 import { User2Icon } from "@rallly/icons";
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
@@ -44,7 +44,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
     return (
       <div
         data-testid="popularity-score"
-        className={clsx(
+        className={cn(
           "relative flex select-none items-center gap-1 rounded-full border py-0.5 px-2 text-xs tabular-nums",
           highlight
             ? "border-green-500 text-green-500"

@@ -1,4 +1,11 @@
-import { ArrowRightIcon } from "@rallly/icons";
+import {
+  ArrowRightIcon,
+  LifeBuoyIcon,
+  LogInIcon,
+  MenuIcon,
+  NewspaperIcon,
+} from "@rallly/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { absoluteUrl } from "@rallly/utils";
 import clsx from "clsx";
 import Image from "next/image";
@@ -23,7 +30,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
       <Link
         href="/"
         className={clsx(
-          "hover:text-primary text-muted-foreground rounded text-sm font-medium transition-colors hover:no-underline hover:underline-offset-2",
+          "hover:text-primary text-muted-foreground rounded text-sm font-medium hover:no-underline hover:underline-offset-2",
           {
             "pointer-events-none font-bold text-gray-600": pathname === "/home",
           },
@@ -34,14 +41,14 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
       <Link
         href="https://blog.rallly.co"
         className={clsx(
-          "hover:text-primary text-muted-foreground rounded text-sm font-medium transition-colors hover:no-underline hover:underline-offset-2",
+          "hover:text-primary text-muted-foreground rounded text-sm font-medium hover:no-underline hover:underline-offset-2",
         )}
       >
         {t("common_blog")}
       </Link>
       <Link
         href="https://support.rallly.co"
-        className="hover:text-primary text-muted-foreground rounded text-sm font-medium transition-colors hover:no-underline hover:underline-offset-2"
+        className="hover:text-primary hover:bg-primary text-muted-foreground rounded text-sm font-medium hover:no-underline hover:underline-offset-2"
       >
         {t("common_support")}
       </Link>
@@ -75,32 +82,75 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
         />
       </svg>
-      <div className="mx-auto flex max-w-7xl items-center px-8 py-8">
+      <div className="mx-auto flex max-w-7xl items-center p-6 sm:p-8">
         <div className="flex grow items-center gap-x-12">
           <Link className="inline-block rounded" href="https://app.rallly.co">
             <Image src="/logo.svg" width={130} height={30} alt="rallly.co" />
           </Link>
           <Menu className="hidden items-center space-x-8 sm:flex" />
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 sm:gap-8">
           <Link
             href={absoluteUrl("/login")}
-            className="hover:text-primary text-muted-foreground rounded text-sm font-medium transition-colors hover:no-underline hover:underline-offset-2"
+            className="hover:text-primary text-muted-foreground hidden rounded text-sm font-medium hover:no-underline hover:underline-offset-2 sm:inline-flex"
           >
             <Trans i18nKey="login" defaults="Login" />
           </Link>
           <Link
             href={absoluteUrl()}
-            className="bg-primary border-primary-800 group inline-flex items-center gap-2 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white transition-all"
+            className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-3 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
           >
             <span>
               <Trans i18nKey="goToApp" defaults="Go to app" />
             </span>
             <ArrowRightIcon className="inline-block h-4 w-4 -translate-x-1 transition-all group-hover:translate-x-0 group-active:translate-x-1" />
           </Link>
+          <div className="flex items-center justify-center sm:hidden">
+            <Popover>
+              <PopoverTrigger>
+                <MenuIcon className="h-6 w-6" />
+              </PopoverTrigger>
+              <PopoverContent
+                sideOffset={20}
+                collisionPadding={16}
+                align="end"
+                className="w-[var(--radix-popover-content-available-width)] bg-white/90 p-4 backdrop-blur-md"
+              >
+                <Link
+                  className="flex items-center gap-3 p-2 text-lg"
+                  href="https://blog.rallly.co"
+                >
+                  <NewspaperIcon className="h-5 w-5" />
+                  <Trans i18nKey="common_blog" />
+                </Link>
+                <Link
+                  className="flex items-center gap-3 p-2 text-lg"
+                  href="https://support.rallly.co"
+                >
+                  <LifeBuoyIcon className="h-5 w-5" />
+                  <Trans i18nKey="common_support" />
+                </Link>
+                <hr className="my-2" />
+                <Link
+                  className="flex items-center gap-3 p-2 text-lg"
+                  href="https://app.rallly.co/login"
+                >
+                  <LogInIcon className="h-5 w-5" />
+                  <Trans i18nKey="login" defaults="Login" />
+                </Link>
+                <Link
+                  className="flex items-center gap-3 p-2 text-lg"
+                  href="https://app.rallly.co"
+                >
+                  <ArrowRightIcon className="h-5 w-5" />
+                  <Trans i18nKey="goToApp" defaults="Go to app" />
+                </Link>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </div>
-      <div className="md:min-h-[calc(100vh-460px)]">{children}</div>
+      <div>{children}</div>
       <Footer />
     </div>
   );

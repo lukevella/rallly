@@ -1,5 +1,5 @@
 import { VoteType } from "@rallly/database";
-import { ArrowRightIcon, GithubIcon, Users2Icon, ZapIcon } from "@rallly/icons";
+import { ArrowRightIcon, GithubIcon, User2Icon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { cn } from "@rallly/ui/lib/utils";
 import { absoluteUrl } from "@rallly/utils";
@@ -37,7 +37,7 @@ const Participant = ({ name }: { name: string }) => {
       >
         {name[0]}
       </span>
-      <span className="font-semibold">{name}</span>
+      <span className="whitespace-nowrap font-semibold">{name}</span>
     </div>
   );
 };
@@ -84,7 +84,7 @@ const options = [
   },
   {
     date: new Date("2023-05-14"),
-    score: 3,
+    score: 4,
   },
   {
     date: new Date("2023-05-15"),
@@ -98,19 +98,19 @@ const options = [
 ];
 
 const participants: Array<{ name: string; votes: VoteType[] }> = [
-  { name: "Sarah Johnson", votes: ["yes", "no", "ifNeedBe", "yes", "no"] },
+  { name: "Sarah Johnson", votes: ["yes", "no", "yes", "yes", "no"] },
   { name: "Michael Lee", votes: ["yes", "yes", "yes", "yes", "no"] },
   {
     name: "Leslie Bradtke",
-    votes: ["no", "ifNeedBe", "ifNeedBe", "yes", "yes"],
+    votes: ["no", "yes", "yes", "yes", "yes"],
   },
-  { name: "Edward Marvin", votes: ["yes", "no", "yes", "yes", "no"] },
+  { name: "Edward Marvin", votes: ["yes", "no", "ifNeedBe", "yes", "no"] },
   { name: "Samantha Patel", votes: ["yes", "yes", "no", "yes", "no"] },
 ];
 const Demo = () => {
   return (
-    <div className="shadow-huge select-none overflow-hidden rounded-md border border-gray-300/75 bg-white pb-1">
-      <div className="flex h-14 items-center justify-between border-b bg-gray-50 px-4 py-3 font-semibold">
+    <div className="sm:shadow-huge min-w-0 max-w-full select-none overflow-x-auto rounded-md border border-gray-300/75 bg-white pb-1">
+      <div className="sticky left-0 flex h-14 items-center justify-between border-b bg-gray-50 px-4 py-3 font-semibold">
         <div>
           <Trans i18nKey="participantCount" values={{ count: 5 }} />
         </div>
@@ -125,21 +125,21 @@ const Demo = () => {
             {options.map((option, i) => {
               return (
                 <th key={i} className="p-3 font-normal">
-                  <div className="grid gap-2">
+                  <div className="grid gap-1">
                     <div>
                       <DateIcon date={option.date} />
                     </div>
                     <div>
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
+                          "relative inline-flex select-none items-center gap-1 rounded-full border py-0.5 px-2 text-xs tabular-nums",
                           option.highScore
-                            ? "bg-green-50 text-green-500"
-                            : "text-gray-400",
+                            ? "border-green-500 text-green-500"
+                            : "border-transparent text-gray-500",
                         )}
                       >
-                        <Users2Icon className="-ml-1 h-4 w-4" />
-                        {option.score}
+                        <User2Icon className="h-3 w-3 shrink-0" />
+                        <span>{option.score}</span>
                       </span>
                     </div>
                   </div>
@@ -176,18 +176,18 @@ const Demo = () => {
 
 const Hero: React.FunctionComponent = () => {
   return (
-    <div className="mx-auto max-w-7xl px-8">
-      <div className="mt-16 text-center">
-        <div className="mb-8">
+    <div className="mx-auto max-w-7xl px-4 sm:px-8">
+      <div className="mt-8 text-center sm:mt-16">
+        <div className="mb-6 sm:mb-8">
           <Link
             href="https://github.com/lukevella/rallly"
-            className="hover:text-primary hover:border-primary-200 hover:bg-primary-50 active:bg-primary-100 inline-flex gap-2.5 rounded-full border bg-gray-50/75 bg-gray-100 px-3 py-2 text-sm font-medium transition-all active:translate-y-1"
+            className="hover:text-primary hover:border-primary-200 hover:bg-primary-50 active:bg-primary-100 inline-flex items-center gap-2.5 rounded-full border bg-gray-50/75 px-3 py-2 text-xs font-medium transition-transform active:translate-y-1 sm:text-sm"
           >
-            <span className="border-r pl-2 pr-4">
+            <span className="pl-2 sm:pr-4">
               <Trans i18nKey="opensource" defaults="We're Open Source!" />
             </span>
-            <span className="inline-flex items-center gap-2 px-2">
-              <GithubIcon className="h-5 w-5" />
+            <span className="inline-flex items-center gap-2 border-l pl-2">
+              <GithubIcon className="h-4 w-4" />
               <Trans i18nKey="startUsOnGithub" defaults="Star us on Github" />
               <ArrowRightIcon className="inline-block h-4 w-4" />
             </span>
@@ -209,16 +209,9 @@ const Hero: React.FunctionComponent = () => {
           <div className="relative">
             <Button size="lg" className="shadow-sm" variant="primary" asChild>
               <Link href={absoluteUrl("/new")}>
-                <ZapIcon className="-ml-1 h-5 w-5" />
                 <Trans i18nKey="homepage_getStarted" />
               </Link>
             </Button>
-            <p className="text-muted-foreground absolute -bottom-8 flex min-w-full whitespace-nowrap text-center text-xs">
-              <Trans
-                i18nKey="getStartedHint"
-                defaults="It's free. No login required."
-              />
-            </p>
           </div>
           <Button size="lg" className="shadow-sm" asChild>
             <Link href="https://support.rallly.co">
@@ -227,9 +220,31 @@ const Hero: React.FunctionComponent = () => {
             </Link>
           </Button>
         </div>
-        <div className="mt-16">
-          <div className="mx-auto w-[700px]">
+        <div className="mt-8">
+          <p className="text-muted-foreground mb-8 whitespace-nowrap text-center text-sm">
+            <Trans
+              i18nKey="getStartedHint"
+              defaults="Create a poll. It's free. No login required."
+            />
+          </p>
+          <div className="mx-auto max-w-[700px]">
             <Demo />
+          </div>
+          <div className="mt-8 flex justify-center">
+            <div className="flex items-center gap-2 rounded-full border bg-gray-50/75 px-3 py-1 font-medium shadow-sm">
+              <div className="-ml-1.5 flex items-center gap-1.5 text-sm">
+                <VoteIcon variant="yes" />
+                <Trans i18nKey="yes" defaults="Yes" />
+              </div>
+              <div className="flex items-center gap-1.5 text-sm">
+                <VoteIcon variant="ifNeedBe" />
+                <Trans i18nKey="ifNeedBe" defaults="If need be" />
+              </div>
+              <div className="flex items-center gap-1.5 text-sm">
+                <VoteIcon variant="no" />
+                <Trans i18nKey="no" defaults="No" />
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -134,16 +134,16 @@
 
 @layer components {
   .heading {
-    @apply text-primary-600 mb-4 text-center text-xl;
+    @apply text-primary-600 mb-2 text-center text-lg sm:mb-4 sm:text-xl;
   }
   .subheading {
-    @apply mb-16 text-center text-4xl font-bold text-gray-800;
+    @apply mb-8 text-center text-2xl font-bold text-gray-800 sm:mb-16 sm:text-4xl;
   }
   .heading-sm {
     @apply mb-4 text-xl font-bold text-gray-800;
   }
   .text {
-    @apply text-lg leading-relaxed text-gray-500;
+    @apply leading-relaxed text-gray-500 sm:text-lg;
   }
 }
 
