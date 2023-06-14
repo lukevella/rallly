@@ -209,7 +209,7 @@ const Hero: React.FunctionComponent = () => {
         <div className="mt-8 flex justify-center gap-3">
           <div className="relative">
             <Button size="lg" className="shadow-sm" variant="primary" asChild>
-              <Link href={absoluteUrl("/new")}>
+              <Link href="https://app.rallly.co/new">
                 <Trans i18nKey="homepage_getStarted" />
               </Link>
             </Button>
