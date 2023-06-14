@@ -21,7 +21,7 @@ const MenuItem = (props: {
   return (
     <Link
       className={clsx(
-        "flex flex-col items-center gap-2 px-3 pt-1 text-sm font-medium",
+        "flex items-center gap-x-2.5 text-sm font-medium",
         router.asPath === props.href
           ? "text-primary-600"
           : "text-gray-500 hover:text-gray-800",

@@ -125,12 +125,7 @@
   "language": "Language",
   "languageDescription": "Change your preferred language",
   "dateAndTime": "Date & Time",
-  "profileDescription": "Change your preferred date and time settings",
-  "settings_profile_email": "Email",
-  "settings_profile_emailDescription": "Change your email address",
-  "deleteAccount": "Delete Account",
-  "deleteAccountDescription": "Delete your account here.\n            This action is not reversible. All information related to this\n            account will be deleted permanently.",
-  "deleteMyAccount": "Yes, delete my account",
+  "profileDescription": "Change your profile settings",
   "back": "Back",
   "dates": "Dates",
   "menu": "Menu",
@@ -187,5 +182,6 @@
   "plan": "Plan",
   "planDescription": "Choose your plan",
   "notificationsGuestTooltip": "Create an account or login to turn get notifications",
-  "planFree": "Free"
+  "planFree": "Free",
+  "dateAndTimeDescription": "Change your preferred date and time settings"
 }

@@ -16,7 +16,6 @@ import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-di
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
-import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
   const { poll } = usePoll();
@@ -84,6 +83,11 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = getStaticTranslations;
+// export const getStaticProps = getStaticTranslations;
+export const getStaticProps = async () => {
+  return {
+    notFound: true,
+  };
+};
 
 export default Page;

@@ -33,7 +33,7 @@ const Page: NextPageWithLayout = () => {
         title={<Trans i18nKey="dateAndTime" defaults="Date & Time" />}
         description={
           <Trans
-            i18nKey="profileDescription"
+            i18nKey="dateAndTimeDescription"
             defaults="Change your preferred date and time settings"
           />
         }

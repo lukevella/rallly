@@ -1,7 +1,6 @@
 import { trpc } from "@rallly/backend";
 import {
   ArrowLeftIcon,
-  CheckCircleIcon,
   ChevronDownIcon,
   FileBarChart,
   LogInIcon,
@@ -17,7 +16,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuItemIconLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import Head from "next/head";
@@ -113,14 +111,14 @@ const StatusControl = () => {
                   </DropdownMenuItemIconLabel>
                 </DropdownMenuItem>
               )}
-              <DropdownMenuSeparator />
+              {/* <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={`/poll/${poll.id}/finalize`}>
                   <DropdownMenuItemIconLabel icon={CheckCircleIcon}>
                     <Trans i18nKey="finishPoll" defaults="Finalize" />
                   </DropdownMenuItemIconLabel>
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </>
           )}
         </DropdownMenuContent>
@@ -146,7 +144,7 @@ const AdminControls = () => {
           ) : null}
           <TopBarTitle title={poll?.title} icon={FileBarChart} />
         </div>
-        <div className="flex items-center gap-x-2 overflow-x-auto">
+        <div className="flex items-center gap-x-2">
           <NotificationsToggle />
           <StatusControl />
           <ManagePoll />

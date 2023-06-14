@@ -2,9 +2,7 @@ import { withAuth, withSessionSsr } from "@rallly/backend/next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
-import { LegacyButton } from "@/components/button";
 import { getProfileLayout } from "@/components/layouts/profile-layout";
-import { ChangeEmailForm } from "@/components/settings/change-email-form";
 import { ProfileSettings } from "@/components/settings/profile-settings";
 import { SettingsSection } from "@/components/settings/settings-section";
 import { Trans } from "@/components/trans";
@@ -36,7 +34,7 @@ const Page: NextPageWithLayout = () => {
       >
         <ProfileSettings />
       </SettingsSection>
-      <SettingsSection
+      {/* <SettingsSection
         title={<Trans defaults="Email" i18nKey="settings_profile_email" />}
         description={
           <Trans
@@ -46,8 +44,8 @@ const Page: NextPageWithLayout = () => {
         }
       >
         <ChangeEmailForm />
-      </SettingsSection>
-      <SettingsSection
+      </SettingsSection> */}
+      {/* <SettingsSection
         title={<Trans i18nKey="deleteAccount" defaults="Delete Account" />}
         description={
           <Trans
@@ -58,10 +56,10 @@ const Page: NextPageWithLayout = () => {
           />
         }
       >
-        <LegacyButton htmlType="submit" type="danger">
+        <Button htmlType="submit" variant="destructive">
           <Trans i18nKey="deleteMyAccount" defaults="Yes, delete my account" />
-        </LegacyButton>
-      </SettingsSection>
+        </Button>
+      </SettingsSection> */}
     </div>
   );
 };

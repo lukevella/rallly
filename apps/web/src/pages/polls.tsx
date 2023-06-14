@@ -19,7 +19,6 @@ import {
   TopBar,
   TopBarTitle,
 } from "@/components/layouts/standard-layout/top-bar";
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
 import { useDayjs } from "@/utils/dayjs";
@@ -95,36 +94,30 @@ const Page: NextPageWithLayout = () => {
                     : dayjs(date).utc();
                 };
 
-                const {
-                  title,
-                  id: pollId,
-                  createdAt,
-                  participants,
-                  closed: paused,
-                } = poll;
+                const { title, id: pollId, createdAt, closed: paused } = poll;
                 return (
                   <div
                     key={poll.id}
-                    className="flex flex-col justify-between gap-y-4 gap-x-4 rounded-md border bg-white p-4 sm:flex-row sm:items-start"
+                    className="flex flex-col justify-between gap-y-4 gap-x-4 rounded-md border bg-white px-6 py-4 sm:flex-row sm:items-start"
                   >
                     <div className="flex gap-x-4">
-                      <div>
+                      <div className="-ml-2">
                         {selectedOption ? (
                           <DateIcon
                             date={adjustTimeZone(selectedOption.start)}
                           />
                         ) : paused ? (
-                          <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
-                            <PauseCircleIcon className="h-5 w-5 text-gray-500" />
+                          <div className="inline-flex h-14 w-14 items-center justify-center rounded-md bg-gray-400">
+                            <PauseCircleIcon className="h-6 w-6 text-white" />
                           </div>
                         ) : (
-                          <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50">
-                            <RadioIcon className="h-5 w-5 text-gray-500" />
+                          <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-blue-600">
+                            <RadioIcon className="h-6 w-6 text-white" />
                           </div>
                         )}
                       </div>
                       <div>
-                        <div className="text-muted-foreground text-sm">
+                        {/* <div className="text-muted-foreground text-sm">
                           {selectedOption
                             ? selectedOption.duration > 0
                               ? `${adjustTimeZone(selectedOption.start).format(
@@ -139,25 +132,19 @@ const Page: NextPageWithLayout = () => {
                                   "LL",
                                 )
                             : null}
-                        </div>
+                        </div> */}
                         <div>
                           <Link
                             href={`/poll/${pollId}`}
-                            className="font-semibold hover:underline"
+                            className="text-lg font-semibold hover:underline"
                           >
                             {title}
                           </Link>
                         </div>
-                        <div className="text-muted-foreground text-sm">
+                        <div className="text-muted-foreground">
                           {dayjs(createdAt).fromNow()}
                         </div>
                       </div>
-                    </div>
-                    <div className="flex justify-start">
-                      <ParticipantAvatarBar
-                        participants={participants}
-                        max={5}
-                      />
                     </div>
                   </div>
                 );

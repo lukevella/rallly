@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Toaster } from "react-hot-toast";
+import { useInterval } from "react-use";
 import spacetime from "spacetime";
 import soft from "timezone-soft";
 
@@ -88,13 +89,29 @@ const Logo = () => {
   );
 };
 
-const MainNav = () => {
+const Clock = () => {
   const { timeZone } = useDayjs();
   const timeZoneDisplayFormat = soft(timeZone)[0];
   const now = spacetime.now(timeZone);
   const standardAbbrev = timeZoneDisplayFormat.standard.abbr;
   const dstAbbrev = timeZoneDisplayFormat.daylight?.abbr;
   const abbrev = now.isDST() ? dstAbbrev : standardAbbrev;
+  const [time, setTime] = React.useState(new Date());
+
+  useInterval(() => {
+    setTime(new Date());
+  }, 1000);
+
+  return (
+    <NavMenuItem
+      icon={ClockIcon}
+      href="/settings/preferences"
+      label={`${dayjs(time).tz(timeZone).format("LT")} ${abbrev}`}
+    />
+  );
+};
+
+const MainNav = () => {
   return (
     <div className="border-b bg-gray-50/50">
       <Container className="flex h-14 items-center justify-between gap-4">
@@ -117,11 +134,7 @@ const MainNav = () => {
                 label={<Trans i18nKey="login" defaults="Login" />}
               />
             </IfGuest>
-            <NavMenuItem
-              icon={ClockIcon}
-              href="/settings/preferences"
-              label={`${dayjs().tz(timeZone).format("LT")} (${abbrev})`}
-            />
+            <Clock />
           </nav>
           <UserDropdown />
         </div>

@@ -19,9 +19,11 @@ export const ProfileSettings = () => {
 
   const form = useForm<{
     name: string;
+    email: string;
   }>({
     defaultValues: {
       name: user.isGuest ? "" : user.name,
+      email: user.isGuest ? "" : user.email,
     },
   });
 
@@ -58,6 +60,20 @@ export const ProfileSettings = () => {
                   </FormLabel>
                   <FormControl>
                     <TextInput id="name" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans i18nKey="email" />
+                  </FormLabel>
+                  <FormControl>
+                    <TextInput {...field} disabled={true} />
                   </FormControl>
                 </FormItem>
               )}

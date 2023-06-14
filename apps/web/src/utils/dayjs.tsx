@@ -12,7 +12,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import updateLocale from "dayjs/plugin/updateLocale";
 import utc from "dayjs/plugin/utc";
-import defaults from "lodash/defaults";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useAsync } from "react-use";
@@ -175,7 +174,7 @@ export const DayjsProvider: React.FunctionComponent<{
   useAsync(async () => {
     const locale = await localeConfig.import();
     const localeTimeFormat = localeConfig.timeFormat;
-
+    const timeFormat = data?.timeFormat ?? localeConfig.timeFormat;
     dayjs.locale("custom", {
       ...locale,
       weekStart: data?.weekStart ?? locale.weekStart,
@@ -184,7 +183,7 @@ export const DayjsProvider: React.FunctionComponent<{
           ? locale.formats
           : {
               ...locale.formats,
-              LT: data?.timeFormat === "hours12" ? "h:mm A" : "HH:mm",
+              LT: timeFormat === "hours12" ? "h:mm A" : "HH:mm",
             },
     });
   }, [localeConfig, data]);
