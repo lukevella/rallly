@@ -186,5 +186,6 @@
   "editOptionsDescription": "Change the options available in your poll.",
   "finalizeDescription": "Select a final date for your event.",
   "plan": "Plan",
-  "planDescription": "Choose your plan"
+  "planDescription": "Choose your plan",
+  "notificationsGuestTooltip": "Create an account or login to turn get notifications"
 }

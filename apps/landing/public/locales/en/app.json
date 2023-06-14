@@ -47,6 +47,8 @@
   "subheadling": "Streamline your scheduling process and save time",
   "getStartedHint": "Create a poll. It's free. No login required.",
   "homepage_readDocs": "Read the docs",
-  "pricing": "Pricing",
-  "goToApp": "Go to app"
+  "goToApp": "Go to app",
+  "yes": "Yes",
+  "ifNeedBe": "If need be",
+  "no": "No"
 }
