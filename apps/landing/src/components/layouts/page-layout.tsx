@@ -71,7 +71,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
       </svg>
       <div className="mx-auto flex max-w-7xl items-center p-6 sm:p-8">
         <div className="flex grow items-center gap-x-12">
-          <Link className="inline-block rounded" href="https://app.rallly.co">
+          <Link className="inline-block rounded" href="https://rallly.co">
             <Image src="/logo.svg" width={130} height={30} alt="rallly.co" />
           </Link>
           <Menu className="hidden items-center space-x-8 sm:flex" />
