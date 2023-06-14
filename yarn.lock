@@ -8901,7 +8901,7 @@ through2@^4.0.0:
   dependencies:
     readable-stream "3"
 
-timezone-soft@^1.3.1:
+timezone-soft@^1.4.1:
   version "1.4.1"
   resolved "https://registry.npmjs.org/timezone-soft/-/timezone-soft-1.4.1.tgz"
   integrity sha512-AnKhVnQmOjKHhdQXXe7cO7MyRGIHEGzedax4Y2N7nOr9dOYEFEBkWFJJwJTvPQvXsEtbWfa6xJj34iZKdC+W+g==

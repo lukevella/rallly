@@ -1,17 +1,21 @@
-import { ListIcon, LogInIcon, Settings2Icon } from "@rallly/icons";
+import { ClockIcon, ListIcon, LogInIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Toaster } from "react-hot-toast";
+import spacetime from "spacetime";
+import soft from "timezone-soft";
 
 import { LoginModalProvider } from "@/components/auth/login-modal";
 import { Container } from "@/components/container";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
+import { useDayjs } from "@/utils/dayjs";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
@@ -60,7 +64,7 @@ const Logo = () => {
     };
   }, [router.events]);
   return (
-    <div className="relative flex items-center justify-center gap-4 pr-10">
+    <div className="relative flex items-center justify-center gap-4 pr-8">
       <Link
         href="/polls"
         className={clsx(
@@ -85,24 +89,27 @@ const Logo = () => {
 };
 
 const MainNav = () => {
+  const { timeZone } = useDayjs();
+  const timeZoneDisplayFormat = soft(timeZone)[0];
+  const now = spacetime.now(timeZone);
+  const standardAbbrev = timeZoneDisplayFormat.standard.abbr;
+  const dstAbbrev = timeZoneDisplayFormat.daylight?.abbr;
+  const abbrev = now.isDST() ? dstAbbrev : standardAbbrev;
   return (
     <div className="border-b bg-gray-50/50">
       <Container className="flex h-14 items-center justify-between gap-4">
-        <div className="flex shrink-0 gap-4">
+        <div className="flex shrink-0">
           <Logo />
-        </div>
-        <div className="flex gap-x-4">
           <nav className="hidden gap-x-2 sm:flex">
             <NavMenuItem
               icon={ListIcon}
               href="/polls"
               label={<Trans i18nKey="polls" defaults="Polls" />}
             />
-            <NavMenuItem
-              icon={Settings2Icon}
-              href="/settings/preferences"
-              label={<Trans i18nKey="preferences" defaults="Preferences" />}
-            />
+          </nav>
+        </div>
+        <div className="flex items-center gap-x-4">
+          <nav className="hidden gap-x-2 sm:flex">
             <IfGuest>
               <NavMenuItem
                 icon={LogInIcon}
@@ -110,6 +117,11 @@ const MainNav = () => {
                 label={<Trans i18nKey="login" defaults="Login" />}
               />
             </IfGuest>
+            <NavMenuItem
+              icon={ClockIcon}
+              href="/settings/preferences"
+              label={`${dayjs().tz(timeZone).format("LT")} (${abbrev})`}
+            />
           </nav>
           <UserDropdown />
         </div>
