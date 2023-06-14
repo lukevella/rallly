@@ -1,4 +1,4 @@
-import { CreditCardIcon, Settings2Icon, UserIcon } from "@rallly/icons";
+import { Settings2Icon, UserIcon } from "@rallly/icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -48,11 +48,11 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
             <MenuItem href="/settings/preferences" icon={Settings2Icon}>
               <Trans i18nKey="preferences" defaults="Preferences" />
             </MenuItem>
-            <IfAuthenticated>
+            {/* <IfAuthenticated>
               <MenuItem href="/settings/billing" icon={CreditCardIcon}>
                 <Trans i18nKey="billing" defaults="Billing" />
               </MenuItem>
-            </IfAuthenticated>
+            </IfAuthenticated> */}
           </div>
           {children}
         </Card>

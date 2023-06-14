@@ -179,7 +179,6 @@
   "notifyNo": "None",
   "notifyDescription": "Choose which participants should receive a calendar invite",
   "missingEmailsAlert": "The following participants have not provided an email address.",
-  "Billing": "Billing",
   "timeShownIn": "Times shown in {timeZone}",
   "timeShownInLocalTime": "Times shown in local time",
   "editDetailsDescription": "Change the details of your event.",
@@ -187,5 +186,6 @@
   "finalizeDescription": "Select a final date for your event.",
   "plan": "Plan",
   "planDescription": "Choose your plan",
-  "notificationsGuestTooltip": "Create an account or login to turn get notifications"
+  "notificationsGuestTooltip": "Create an account or login to turn get notifications",
+  "planFree": "Free"
 }

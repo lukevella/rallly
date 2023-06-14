@@ -1,6 +1,5 @@
 import {
   ChevronDown,
-  CreditCardIcon,
   LifeBuoyIcon,
   ListIcon,
   LogInIcon,
@@ -47,7 +46,7 @@ export const UserDropdown = () => {
           </div>
           <div className="ml-4">
             <span className="bg-foreground rounded-full px-1.5 py-0.5 text-xs text-white">
-              Free
+              <Trans i18nKey="planFree" defaults="Free" />
             </span>
           </div>
         </DropdownMenuLabel>
@@ -72,12 +71,12 @@ export const UserDropdown = () => {
             <Trans i18nKey="preferences" defaults="Preferences" />
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild={true}>
+        {/* <DropdownMenuItem asChild={true}>
           <Link href="/settings/billing" className="flex items-center gap-x-2">
             <CreditCardIcon className="h-4 w-4" />
             <Trans i18nKey="Billing" defaults="Billing" />
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem asChild={true}>
           <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
             <ListIcon className="h-4 w-4" />
