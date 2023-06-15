@@ -44,7 +44,7 @@ const nextConfig = {
       },
       {
         source: "/admin/:path*",
-        destination: "http://app.rallly.co/p/:path*",
+        destination: "http://app.rallly.co/admin/:path*",
         permanent: true,
       },
       {
