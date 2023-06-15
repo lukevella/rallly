@@ -38,7 +38,6 @@ const NavMenuItem = ({
     <Link
       target={target}
       href={href}
-      scroll={false}
       className={cn(
         "flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-medium",
         router.asPath === href
@@ -68,7 +67,6 @@ const Logo = () => {
   return (
     <div className="relative flex items-center justify-center gap-4 pr-8">
       <Link
-        scroll={false}
         href="/polls"
         className={clsx(
           "inline-block transition-transform active:translate-y-1",
