@@ -136,6 +136,7 @@ export const RegisterForm: React.FunctionComponent<{
     useForm<RegisterFormData>({
       defaultValues,
     });
+  const queryClient = trpc.useContext();
   const requestRegistration = trpc.auth.requestRegistration.useMutation();
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();
@@ -153,6 +154,8 @@ export const RegisterForm: React.FunctionComponent<{
           if (!res.user) {
             throw new Error("Failed to authenticate user");
           }
+
+          queryClient.invalidate();
 
           onRegistered();
           posthog?.identify(res.user.id, {
