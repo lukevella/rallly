@@ -1,4 +1,3 @@
-import { withAuth, withSessionSsr } from "@rallly/backend/next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
@@ -9,7 +8,7 @@ import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
 import { NextPageWithLayout } from "../../types";
-import { withPageTranslations } from "../../utils/with-page-translations";
+import { getStaticTranslations } from "../../utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
@@ -66,9 +65,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = getProfileLayout;
 
-export const getServerSideProps = withSessionSsr([
-  withAuth,
-  withPageTranslations(),
-]);
+export const getServerSideProps = getStaticTranslations;
 
 export default Page;
