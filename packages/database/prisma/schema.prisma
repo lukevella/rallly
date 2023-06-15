@@ -25,7 +25,7 @@ model User {
   comments  Comment[]
   polls     Poll[]
   watcher   Watcher[]
-  Event     Event[]
+  events     Event[]
 
   @@map("users")
 }
@@ -88,6 +88,7 @@ model Event {
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
   poll      Poll     @relation(fields: [pollId], references: [id])
+  optionId  String   @map("option_id")
   title     String
   start     DateTime @db.Timestamp(0)
   duration  Int      @default(0) @map("duration_minutes")
@@ -97,6 +98,7 @@ model Event {
   @@index([userId], type: Hash)
   @@map("events")
 }
+
 
 model Watcher {
   id        Int      @id @default(autoincrement())

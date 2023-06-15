@@ -9,6 +9,7 @@ import utc from "dayjs/plugin/utc";
 import * as ics from "ics";
 import { z } from "zod";
 
+import { printDate } from "../../utils/date";
 import { nanoid } from "../../utils/nanoid";
 import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
@@ -390,7 +391,6 @@ export const polls = router({
           title: true,
           location: true,
           description: true,
-          selectedOptionId: true,
           createdAt: true,
           adminUrlId: true,
           participantUrlId: true,
@@ -405,6 +405,13 @@ export const polls = router({
           user: true,
           userId: true,
           deleted: true,
+          event: {
+            select: {
+              start: true,
+              duration: true,
+              optionId: true,
+            },
+          },
           watchers: {
             select: {
               userId: true,
@@ -460,7 +467,12 @@ export const polls = router({
         timeZone: true,
         adminUrlId: true,
         participantUrlId: true,
-        selectedOptionId: true,
+        event: {
+          select: {
+            start: true,
+            duration: true,
+          },
+        },
         options: {
           select: {
             id: true,
@@ -500,13 +512,10 @@ export const polls = router({
         notify: z.enum(["none", "all", "attendees"]),
       }),
     )
-    .mutation(async ({ input }) => {
-      const poll = await prisma.poll.update({
+    .mutation(async ({ input, ctx }) => {
+      const poll = await prisma.poll.findUnique({
         where: {
           id: input.pollId,
-        },
-        data: {
-          selectedOptionId: input.optionId,
         },
         select: {
           id: true,
@@ -553,6 +562,10 @@ export const polls = router({
         where: {
           id: input.optionId,
         },
+        select: {
+          start: true,
+          duration: true,
+        },
       });
 
       if (!option) {
@@ -561,6 +574,26 @@ export const polls = router({
           message: "Option not found",
         });
       }
+
+      const eventStart = poll.timeZone
+        ? dayjs(option.start).utc().tz(poll.timeZone, true).toDate()
+        : option.start;
+
+      await prisma.event.create({
+        data: {
+          pollId: poll.id,
+          optionId: input.optionId,
+          start: eventStart,
+          duration: option.duration,
+          title: poll.title,
+          userId: ctx.user.id,
+        },
+      });
+
+      const attendees = poll.participants.filter((p) =>
+        p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
+      );
+
       let event: ics.ReturnObject;
       if (option.duration > 0) {
         // we need to remember to call .utc() on the dayjs() object
@@ -579,8 +612,18 @@ export const polls = router({
             start.hour(),
             start.minute(),
           ],
+          organizer: {
+            name: poll.user.name,
+            email: poll.user.email,
+          },
           startInputType: poll.timeZone ? "utc" : "local",
           duration: { minutes: option.duration },
+          attendees: attendees
+            .filter((a) => !!a.email) // remove participants without email
+            .map((a) => ({
+              name: a.name,
+              email: a.email ?? undefined,
+            })),
         });
       } else {
         const start = dayjs(option.start);
@@ -605,29 +648,32 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const formatDate = (
-          date: Date,
-          duration: number,
-          timeZone?: string | null,
-        ) => {
-          if (duration > 0) {
-            if (timeZone) {
-              return `${dayjs(date)
-                .utc()
-                .format("dddd, MMMM D, YYYY, HH:mm")} (${timeZone})`;
-            } else {
-              return dayjs(date).utc().format("dddd, MMMM D, YYYY, HH:mm");
-            }
-          } else {
-            return dayjs(date).format("dddd, MMMM D, YYYY");
-          }
-        };
+        const formattedDate = printDate(
+          eventStart,
+          option.duration,
+          poll.timeZone ?? undefined,
+        );
+        // const formatDate = (
+        //   date: Date,
+        //   duration: number,
+        //   timeZone?: string | null,
+        // ) => {
+        //   if (duration > 0) {
+        //     if (timeZone) {
+        //       return `${dayjs(date)
+        //         .utc()
+        //         .format(
+        //           "dddd, MMMM D, YYYY, HH:mm",
+        //         )} (${getTimeZoneAbbreviation(timeZone)})`;
+        //     } else {
+        //       return dayjs(date).utc().format("dddd, MMMM D, YYYY, HH:mm");
+        //     }
+        //   } else {
+        //     return dayjs(date).format("dddd, MMMM D, YYYY");
+        //   }
+        // };
 
         const participantsToEmail: Array<{ name: string; email: string }> = [];
-
-        const attendees = poll.participants.filter((p) =>
-          p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
-        );
 
         if (input.notify === "all") {
           poll.participants.forEach((p) => {
@@ -666,7 +712,7 @@ export const polls = router({
                 ),
               )
               .map((p) => p.name),
-            date: formatDate(option.start, option.duration, poll.timeZone),
+            date: formattedDate,
           },
           attachments: [{ filename: "event.ics", content: event.value }],
         });
@@ -687,7 +733,7 @@ export const polls = router({
                   ),
                 )
                 .map((p) => p.name),
-              date: formatDate(option.start, option.duration, poll.timeZone),
+              date: formattedDate,
             },
             attachments: [{ filename: "event.ics", content: event.value }],
           });
@@ -703,15 +749,22 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input }) => {
-      await prisma.poll.update({
-        where: {
-          id: input.pollId,
-        },
-        data: {
-          selectedOptionId: null,
-          closed: false,
-        },
-      });
+      await prisma.$transaction([
+        prisma.event.delete({
+          where: {
+            pollId: input.pollId,
+          },
+        }),
+        prisma.poll.update({
+          where: {
+            id: input.pollId,
+          },
+          data: {
+            eventId: null,
+            closed: false,
+          },
+        }),
+      ]);
     }),
   pause: possiblyPublicProcedure
     .input(

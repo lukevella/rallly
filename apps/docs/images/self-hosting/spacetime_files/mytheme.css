@@ -1,0 +1,37 @@
+/*
+  Based on Base16 Default Light by     Chris Kempson (http://chriskempson.com)
+*/
+.cm-s-spencertheme {margin:10px;}
+.cm-s-spencertheme.CodeMirror { background: white; color: grey; font-size:16px;  height: auto; max-width:800px; }
+.cm-s-spencertheme div.CodeMirror-selected { background: powderblue;}
+.cm-s-spencertheme .CodeMirror-line::selection, .cm-s-spencertheme .CodeMirror-line > span::selection, .cm-s-spencertheme .CodeMirror-line > span > span::selection { background: lightsteelblue; }
+.cm-s-spencertheme .CodeMirror-line::-moz-selection, .cm-s-spencertheme .CodeMirror-line > span::-moz-selection, .cm-s-spencertheme .CodeMirror-line > span > span::-moz-selection { background: lightsteelblue; }
+.cm-s-spencertheme .CodeMirror-gutters { background: snow; border-right: 1px solid linen;}
+.cm-s-spencertheme .CodeMirror-guttermarker { color: #ac4142; }
+.cm-s-spencertheme .CodeMirror-guttermarker-subtle { color: #b0b0b0; }
+.cm-s-spencertheme .CodeMirror-linenumber { color: #b0b0b0; }
+.cm-s-spencertheme .CodeMirror-cursor { border-left: 1px solid #505050; }
+
+.cm-s-spencertheme span.cm-comment { color: silver; }
+.cm-s-spencertheme span.cm-atom { color: #aa759f; }
+.cm-s-spencertheme span.cm-number { color: steelblue; }
+
+.cm-s-spencertheme span.cm-property, .cm-s-spencertheme span.cm-attribute { color: #90a959; }
+.cm-s-spencertheme span.cm-keyword { color: #997a9e;  font-size:14px; }
+.cm-s-spencertheme span.cm-string { color: steelblue; }
+
+.cm-s-spencertheme span.cm-variable { color: #c23565; }
+.cm-s-spencertheme span.cm-variable-2 { color: #6a9fb5; }
+.cm-s-spencertheme span.cm-def { color: #d28445; }
+.cm-s-spencertheme span.cm-bracket { color: lightgrey; font-size:12px; }
+.cm-s-spencertheme span.cm-tag { color: #ac4142; }
+.cm-s-spencertheme span.cm-link { color: #aa759f; }
+.cm-s-spencertheme span.cm-error { background: #ac4142; color: #505050; }
+
+.cm-s-spencertheme .CodeMirror-activeline-background { background: lightgrey; }
+.cm-s-spencertheme .CodeMirror-matchingbracket { text-decoration: underline; color: white !important; }
+
+.line-error {
+    background: #FBC2C4 !important;
+    color: #8a1f11 !important;
+}

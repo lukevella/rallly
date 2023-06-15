@@ -1,6 +1,7 @@
 import { trpc } from "@rallly/backend";
 import {
   ArrowLeftIcon,
+  CheckCircleIcon,
   ChevronDownIcon,
   FileBarChart,
   LogInIcon,
@@ -16,6 +17,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuItemIconLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import Head from "next/head";
@@ -49,11 +51,7 @@ import { NextPageWithLayout } from "../../types";
 
 const StatusControl = () => {
   const poll = usePoll();
-  const state = poll.selectedOptionId
-    ? "closed"
-    : poll.closed
-    ? "paused"
-    : "live";
+  const state = poll.event ? "closed" : poll.closed ? "paused" : "live";
   const queryClient = trpc.useContext();
   const reopen = trpc.polls.reopen.useMutation({
     onMutate: () => {
@@ -63,7 +61,7 @@ const StatusControl = () => {
         }
         return {
           ...oldPoll,
-          selectedOptionId: null,
+          event: null,
         };
       });
     },
@@ -115,7 +113,7 @@ const StatusControl = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {poll.selectedOptionId ? (
+          {poll.event ? (
             <DropdownMenuItem
               onClick={() => {
                 reopen.mutate({ pollId: poll.id });
@@ -144,14 +142,14 @@ const StatusControl = () => {
                   </DropdownMenuItemIconLabel>
                 </DropdownMenuItem>
               )}
-              {/* <DropdownMenuSeparator />
+              <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={`/poll/${poll.id}/finalize`}>
                   <DropdownMenuItemIconLabel icon={CheckCircleIcon}>
                     <Trans i18nKey="finishPoll" defaults="Finalize" />
                   </DropdownMenuItemIconLabel>
                 </Link>
-              </DropdownMenuItem> */}
+              </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>

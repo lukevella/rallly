@@ -1,4 +1,5 @@
 import { MapPinIcon, MousePointerClickIcon, TextIcon } from "@rallly/icons";
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 
 import { Card } from "@/components/card";
@@ -9,8 +10,8 @@ import { PollStatusBadge } from "@/components/poll-status";
 import { TextSummary } from "@/components/text-summary";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
-import { useDateFormatter } from "@/contexts/time-preferences";
 import { generateGradient } from "@/utils/color-hash";
+import { useDayjs } from "@/utils/dayjs";
 import { preventWidows } from "@/utils/prevent-widows";
 
 import PollSubheader from "./poll/poll-subheader";
@@ -21,25 +22,19 @@ export const EventCard = () => {
   const { t } = useTranslation();
   const poll = usePoll();
 
-  const { options } = poll;
-
-  const selectedOptionIndex = options.findIndex(
-    (o) => o.id === poll.selectedOptionId,
-  );
-  const selectedOption = options[selectedOptionIndex];
-
   const { participants } = useParticipants();
 
-  const dateFormatter = useDateFormatter();
+  const { adjustTimeZone } = useDayjs();
+
   const attendees = participants.filter((participant) =>
     participant.votes.some(
       (vote) =>
-        vote.optionId === poll.selectedOptionId &&
+        vote.optionId === poll.event?.optionId &&
         (vote.type === "yes" || vote.type === "ifNeedBe"),
     ),
   );
 
-  const status = selectedOption ? "closed" : poll.closed ? "paused" : "live";
+  const status = poll.event ? "closed" : poll.closed ? "paused" : "live";
 
   return (
     <Card fullWidthOnMobile={false}>
@@ -54,17 +49,30 @@ export const EventCard = () => {
           </div>
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4 sm:gap-6">
-              {selectedOption ? (
+              {poll.event ? (
                 <div>
-                  <DateIcon date={dateFormatter(selectedOption.start)} />
+                  <DateIcon
+                    date={adjustTimeZone(poll.event.start, !poll.timeZone)}
+                  />
                 </div>
               ) : null}
               <div>
-                {selectedOption ? (
+                {poll.event ? (
                   <div className="text-muted-foreground text-sm">
-                    {dateFormatter(selectedOption.start).format(
-                      selectedOption.duration === 0 ? "LL" : "LLL",
-                    )}
+                    {poll.event.duration === 0
+                      ? adjustTimeZone(poll.event.start, !poll.timeZone).format(
+                          "LL",
+                        )
+                      : `${adjustTimeZone(
+                          poll.event.start,
+                          !poll.timeZone,
+                        ).format("LLL")} - ${adjustTimeZone(
+                          dayjs(poll.event.start).add(
+                            poll.event.duration,
+                            "minutes",
+                          ),
+                          !poll.timeZone,
+                        ).format("LT")}`}
                   </div>
                 ) : null}
                 <h1
@@ -73,7 +81,7 @@ export const EventCard = () => {
                 >
                   {preventWidows(poll.title)}
                 </h1>
-                {!selectedOption ? (
+                {!poll.event ? (
                   <PollSubheader />
                 ) : (
                   <div className="mt-4">

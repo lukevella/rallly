@@ -148,6 +148,10 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(updateLocale);
 
 const DayjsContext = React.createContext<{
+  adjustTimeZone: (
+    date: dayjs.ConfigType,
+    keepLocalTime?: boolean,
+  ) => dayjs.Dayjs;
   dayjs: (date?: dayjs.ConfigType) => dayjs.Dayjs;
   locale: {
     weekStart: number;
@@ -194,12 +198,18 @@ export const DayjsProvider: React.FunctionComponent<{
     timeFormat: localeConfig.timeFormat,
   };
 
+  const preferredTimeZone = data?.timeZone ?? locale.timeZone;
+
   return (
     <DayjsContext.Provider
       value={{
+        adjustTimeZone: (date, keepLocalTime) =>
+          keepLocalTime
+            ? dayjs(date).tz("GMT")
+            : dayjs(date).tz(preferredTimeZone),
         dayjs,
         locale,
-        timeZone: data?.timeZone ?? locale.timeZone,
+        timeZone: preferredTimeZone,
         weekStart: dayjs.localeData().firstDayOfWeek() === 0 ? 0 : 1,
         timeFormat: data?.timeFormat ?? localeConfig.timeFormat,
       }}

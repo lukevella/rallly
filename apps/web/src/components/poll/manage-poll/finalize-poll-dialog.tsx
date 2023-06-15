@@ -1,16 +1,12 @@
-import { AlertCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
 } from "@rallly/ui/form";
-import { Label } from "@rallly/ui/label";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import dayjs from "dayjs";
 import { Trans } from "next-i18next";
@@ -234,7 +230,7 @@ export const FinalizePollForm = ({
             );
           }}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="notify"
           render={({ field }) => (
@@ -288,7 +284,7 @@ export const FinalizePollForm = ({
               ) : null}
             </FormItem>
           )}
-        />
+        /> */}
       </form>
     </Form>
   );

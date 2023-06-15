@@ -13,21 +13,36 @@ export interface FinalizeHostEmailProps {
 export const FinalizeHostEmail = ({
   name = "Guest",
   title = "Untitled Poll",
+  location,
   pollUrl = "https://rallly.co",
+  attendees = ["Luke", "Leia", "Han"],
   date = "Friday, 12th June 2020 at 12:00pm",
 }: FinalizeHostEmailProps) => {
   return (
     <EmailLayout recipientName={name} preview="Final date booked!">
-      <Text>
-        Well done for finding a date for <strong>{title}</strong>!
-      </Text>
-      <Text>Your date has been booked for:</Text>
+      <Text>You poll has been finalized.</Text>
       <Card>
-        <Text style={{ fontWeight: "bold", textAlign: "center" }}>{date}</Text>
+        <Text>
+          <strong>Title</strong>
+          <br />
+          {title}
+        </Text>
+        <Text>
+          <strong>Date</strong>
+          <br />
+          {date}
+        </Text>
+        <Text>
+          <strong>Location</strong>
+          <br />
+          {location || "No location specified"}
+        </Text>
+        <Text>
+          <strong>{`${attendees.length} attendees`}</strong>
+          <br />
+          {attendees.join(", ")}
+        </Text>
       </Card>
-      <Text>
-        We&apos;ve notified participants and send them calendar invites.
-      </Text>
       <Text>
         <Button href={pollUrl}>View Event</Button>
       </Text>

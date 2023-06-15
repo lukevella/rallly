@@ -17,7 +17,7 @@ export const usePermissions = () => {
   const { user } = useUser();
   const role = useRole();
   const { participants } = useParticipants();
-  const isClosed = poll.closed === true || poll.selectedOptionId !== null;
+  const isClosed = poll.closed === true || poll.event !== null;
   return {
     canAddNewParticipant: !isClosed,
     canEditParticipant: (participantId: string) => {

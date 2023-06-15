@@ -1,7 +1,7 @@
 import ColorHash from "color-hash";
 
 export const colorHash = new ColorHash({
-  hue: [{ min: 185, max: 320 }],
+  hue: [{ min: 220, max: 320 }],
   lightness: [0.65],
   saturation: 0.8,
 });

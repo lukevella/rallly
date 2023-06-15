@@ -8560,6 +8560,11 @@ spacetime@^7.1.4:
   resolved "https://registry.npmjs.org/spacetime/-/spacetime-7.4.1.tgz"
   integrity sha512-khQpvLNMhHFzfFJslMfunqqsjOxdmoDDYX5Wh4qYb8N6f8vBPI6HvbT7Wb2wcMa+oP1Xh1HpEcwfPFrj8UfvHQ==
 
+spacetime@^7.4.4:
+  version "7.4.4"
+  resolved "https://registry.yarnpkg.com/spacetime/-/spacetime-7.4.4.tgz#1f795d755a3493adcd6c10817d512aed26d3fff1"
+  integrity sha512-88oqexyzGTzMCOibaBTE+3HXmaT+mw3EZVMymNTn1Xkg/6bC+nA3ZvsfmFEwxzc0VfG9BYYaXevvLiDRP7RJ6A==
+
 spdx-correct@^3.0.0:
   version "3.1.1"
   resolved "https://registry.npmjs.org/spdx-correct/-/spdx-correct-3.1.1.tgz"
@@ -8903,7 +8908,7 @@ through2@^4.0.0:
 
 timezone-soft@^1.4.1:
   version "1.4.1"
-  resolved "https://registry.npmjs.org/timezone-soft/-/timezone-soft-1.4.1.tgz"
+  resolved "https://registry.yarnpkg.com/timezone-soft/-/timezone-soft-1.4.1.tgz#854eb224545645d9ddad8bcd09144522b0652156"
   integrity sha512-AnKhVnQmOjKHhdQXXe7cO7MyRGIHEGzedax4Y2N7nOr9dOYEFEBkWFJJwJTvPQvXsEtbWfa6xJj34iZKdC+W+g==
 
 tiny-glob@^0.2.9:
