@@ -56,17 +56,50 @@ const StatusControl = () => {
     : "live";
   const queryClient = trpc.useContext();
   const reopen = trpc.polls.reopen.useMutation({
+    onMutate: () => {
+      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
+        if (!oldPoll) {
+          return;
+        }
+        return {
+          ...oldPoll,
+          selectedOptionId: null,
+        };
+      });
+    },
     onSuccess: () => {
       queryClient.polls.invalidate();
     },
   });
   const pause = trpc.polls.pause.useMutation({
+    onMutate: () => {
+      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
+        if (!oldPoll) {
+          return;
+        }
+        return {
+          ...oldPoll,
+          closed: true,
+        };
+      });
+    },
     onSuccess: () => {
       queryClient.polls.invalidate();
     },
   });
 
   const resume = trpc.polls.resume.useMutation({
+    onMutate: () => {
+      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
+        if (!oldPoll) {
+          return;
+        }
+        return {
+          ...oldPoll,
+          closed: false,
+        };
+      });
+    },
     onSuccess: () => {
       queryClient.polls.invalidate();
     },
