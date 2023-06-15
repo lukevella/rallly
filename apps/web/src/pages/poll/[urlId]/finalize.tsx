@@ -9,6 +9,7 @@ import {
 } from "@rallly/ui/card";
 import { useRouter } from "next/router";
 
+import { getPollLayout } from "@/components/layouts/poll-layout";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
@@ -87,6 +88,8 @@ const Page: NextPageWithLayout = () => {
     </div>
   );
 };
+
+Page.getLayout = getPollLayout;
 
 export const getStaticPaths = async () => {
   return {
