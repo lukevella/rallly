@@ -168,12 +168,6 @@
   "yourNamePlaceholder": "Your name",
   "yourEmailPlaceholder": "Your email",
   "share": "Share",
-  "notify": "Send a calendar invite to",
-  "notifyAllParticipants": "Everyone",
-  "notifyAvailableParticipants": "Attendees",
-  "notifyNo": "None",
-  "notifyDescription": "Choose which participants should receive a calendar invite",
-  "missingEmailsAlert": "The following participants have not provided an email address.",
   "timeShownIn": "Times shown in {timeZone}",
   "timeShownInLocalTime": "Times shown in local time",
   "editDetailsDescription": "Change the details of your event.",
@@ -183,5 +177,6 @@
   "planDescription": "Choose your plan",
   "notificationsGuestTooltip": "Create an account or login to turn get notifications",
   "planFree": "Free",
-  "dateAndTimeDescription": "Change your preferred date and time settings"
+  "dateAndTimeDescription": "Change your preferred date and time settings",
+  "createdTime": "Created {relativeTime}"
 }

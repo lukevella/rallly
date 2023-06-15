@@ -108,30 +108,6 @@ export const FinalizePollForm = ({
     },
   });
 
-  const watchSelectedOptionId = form.watch("selectedOptionId");
-  const watchNotify = form.watch("notify");
-
-  const attendees = watchSelectedOptionId
-    ? participants.filter((participant) =>
-        participant.votes.some(
-          (vote) =>
-            vote.optionId === watchSelectedOptionId &&
-            (vote.type === "yes" || vote.type === "ifNeedBe"),
-        ),
-      )
-    : [];
-
-  const participantsToNotify =
-    watchNotify === "all"
-      ? participants
-      : watchNotify === "attendees"
-      ? attendees
-      : [];
-
-  const participantsWithoutEmails = participantsToNotify.filter(
-    (p) => !p.email,
-  );
-
   return (
     <Form {...form}>
       <form

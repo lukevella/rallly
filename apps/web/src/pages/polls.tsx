@@ -1,6 +1,5 @@
 import { trpc } from "@rallly/backend";
 import {
-  CheckCircleIcon,
   InboxIcon,
   PauseCircleIcon,
   PlusIcon,
@@ -23,7 +22,6 @@ import {
 import { PollStatusBadge } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
-import { generateGradient } from "@/utils/color-hash";
 import { useDayjs } from "@/utils/dayjs";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 

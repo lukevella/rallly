@@ -69,7 +69,6 @@ model Poll {
   comments         Comment[]
   legacy           Boolean       @default(false) // @deprecated
   closed           Boolean       @default(false) // we use this to indicate whether a poll is paused
-  selectedOptionId String?       @map("selected_option_id")
   deleted          Boolean       @default(false)
   deletedAt        DateTime?     @map("deleted_at")
   touchedAt        DateTime      @default(now()) @map("touched_at")

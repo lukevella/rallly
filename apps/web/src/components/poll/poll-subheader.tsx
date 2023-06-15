@@ -24,7 +24,10 @@ const PollSubheader: React.FunctionComponent = () => {
         </div>
         <span>&bull;</span>
         <span className="whitespace-nowrap">
-          {dayjs(poll.createdAt).fromNow()}
+          <Trans
+            i18nKey="createdTime"
+            values={{ relativeTime: dayjs(poll.createdAt).fromNow() }}
+          />
         </span>
       </div>
     </div>
