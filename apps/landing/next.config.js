@@ -58,6 +58,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/new",
+        destination: "http://app.rallly.co/new",
+        permanent: true,
+      },
+      {
         source: "/register",
         destination: "http://app.rallly.co/register",
         permanent: true,
