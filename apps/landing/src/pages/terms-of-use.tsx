@@ -6,7 +6,7 @@ const PrivacyPolicy = () => {
     <PageLayout>
       <div className="prose my-16 mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Terms of Use</h1>
-        <p>Last updated: 19 April 2023</p>
+        <p>Last updated: 15 June 2023</p>
         <p>
           Welcome to rallly.co, an open-source project provided under the AGPLv3
           license. By accessing and using this website, you agree to comply with
@@ -30,7 +30,15 @@ const PrivacyPolicy = () => {
           indirect, incidental, consequential, or punitive damages.
         </p>
 
-        <h2>3. Links to Third-Party Websites</h2>
+        <h2>3. No Refund Policy</h2>
+        <p>
+          All purchases and transactions made through this website are final and
+          non-refundable. We do not provide refunds for any reason. By making a
+          purchase or engaging in a transaction on this website, you acknowledge
+          and agree to our no refund policy.
+        </p>
+
+        <h2>4. Links to Third-Party Websites</h2>
         <p>
           This website may contain links to third-party websites that are not
           owned or controlled by rallly.co. We have no control over, and assume
@@ -38,7 +46,7 @@ const PrivacyPolicy = () => {
           any third-party websites.
         </p>
 
-        <h2>4. Modifications to Terms of Use</h2>
+        <h2>5. Modifications to Terms of Use</h2>
         <p>
           We reserve the right to modify these terms of use at any time, without
           prior notice to you. Your continued use of this website after any
