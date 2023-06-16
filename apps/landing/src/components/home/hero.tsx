@@ -181,12 +181,12 @@ const Hero: React.FunctionComponent = () => {
           <Link
             target="_blank"
             href="https://github.com/lukevella/rallly"
-            className="hover:text-primary group inline-flex items-center rounded-full border bg-gray-50/50 py-2 text-xs font-medium sm:text-sm"
+            className="hover:text-primary hover:border-primary active:bg-primary-50 group inline-flex items-center rounded-full border bg-gray-50/50 px-2.5 py-2 text-xs font-medium text-gray-600 transition-colors sm:text-sm"
           >
-            <span className="px-4">
+            <span className="px-2.5">
               <Trans i18nKey="opensource" defaults="We're Open Source!" />
             </span>
-            <span className="inline-flex items-center gap-2 border-l px-4">
+            <span className="inline-flex items-center gap-2 border-l px-2.5">
               <GithubIcon className="h-4 w-4" />
               <Trans i18nKey="startUsOnGithub" defaults="Star us on Github" />
               <ArrowRightIcon className="inline-block h-4 w-4 transition-transform group-hover:translate-x-1 group-active:translate-x-2" />

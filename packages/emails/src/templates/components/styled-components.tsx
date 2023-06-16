@@ -136,7 +136,7 @@ export const Card = (props: SectionProps) => {
       {...props}
       style={{
         borderRadius: "4px",
-        backgroundColor: "#F8FAFC",
+        backgroundColor: "#F9FAFB",
         paddingRight: "16px",
         paddingLeft: "16px",
         border: "1px solid #E2E8F0",

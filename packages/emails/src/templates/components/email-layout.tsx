@@ -47,7 +47,7 @@ export const EmailLayout = ({
     <Html>
       <Head />
       <Preview>{preview}</Preview>
-      <Body style={{ backgroundColor: "#F1F5F9", padding: "16px" }}>
+      <Body style={{ backgroundColor: "#F3F4F6", padding: "16px" }}>
         <Container style={containerStyles}>
           <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
           <Section style={sectionStyles}>
