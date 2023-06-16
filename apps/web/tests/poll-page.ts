@@ -42,7 +42,6 @@ export class PollPage {
   async copyInviteLink() {
     this.openShareDialog();
     await this.page.getByRole("button", { name: "invite/" }).click();
-    this.closeDialog();
     return (await this.page.evaluate(
       "navigator.clipboard.readText()",
     )) as string;

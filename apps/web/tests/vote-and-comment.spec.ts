@@ -5,7 +5,7 @@ import { PollPage } from "tests/poll-page";
 
 import { NewPollPage } from "./new-poll-page";
 
-test.describe.parallel(() => {
+test.describe(() => {
   let page: Page;
   let pollPage: PollPage;
   let touchRequest: Promise<Request>;
@@ -13,6 +13,7 @@ test.describe.parallel(() => {
 
   let mailServer: SmtpTester;
   test.beforeAll(async ({ browser }) => {
+    mailServer = smtpTester.init(4025);
     page = await browser.newPage();
     touchRequest = page.waitForRequest(
       (request) =>
@@ -21,10 +22,7 @@ test.describe.parallel(() => {
     );
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    pollPage = await newPollPage.createPoll();
-    await pollPage.closeDialog();
-
-    mailServer = smtpTester.init(4025);
+    pollPage = await newPollPage.createPollAndCloseDialog();
   });
 
   test.afterAll(async () => {
@@ -45,14 +43,14 @@ test.describe.parallel(() => {
 
   test("copy participant link", async () => {
     const inviteLink = await pollPage.copyInviteLink();
-
+    await pollPage.closeDialog();
     expect(inviteLink).toMatch(/\/invite\/[a-zA-Z0-9]+/);
   });
 
   test("should be able to vote with an email", async () => {
     const invitePage = await pollPage.gotoInvitePage();
 
-    await invitePage.addParticipant("Anne");
+    await invitePage.addParticipant("Anne", "test@example.com");
 
     await expect(page.locator("text='Anne'")).toBeVisible();
 
