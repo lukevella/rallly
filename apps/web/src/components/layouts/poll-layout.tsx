@@ -264,7 +264,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   if (!poll.isFetched || !watchers.isFetched || !participants.isFetched) {
     return (
       <div>
-        <TopBar className="flex justify-between">
+        <TopBar className="flex flex-col items-start justify-between gap-y-2 gap-x-4 sm:flex-row">
           <Skeleton className="my-2 h-5 w-48" />
           <div className="flex gap-x-2">
             <Skeleton className="h-9 w-24" />
