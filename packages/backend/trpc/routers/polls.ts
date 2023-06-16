@@ -136,23 +136,6 @@ export const polls = router({
         },
       });
 
-      await prisma.participant.create({
-        data: {
-          pollId,
-          name,
-          email,
-          votes: {
-            createMany: {
-              data: poll.options.map(({ id }) => ({
-                optionId: id,
-                pollId,
-                type: "yes",
-              })),
-            },
-          },
-        },
-      });
-
       const pollLink = ctx.user.isGuest
         ? absoluteUrl(`/admin/${adminToken}`)
         : absoluteUrl(`/poll/${pollId}`);
