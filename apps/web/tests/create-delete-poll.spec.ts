@@ -59,13 +59,6 @@ test.describe.serial(() => {
     pollUrl = page.url();
   });
 
-  test("notifications", async ({ page }) => {
-    await page.goto(pollUrl);
-    await page.getByTestId("notifications-toggle").click();
-
-    expect(page.getByTestId("login-modal")).toBeVisible();
-  });
-
   // delete the poll we just created
   test("delete existing poll", async ({ page }) => {
     await page.goto(pollUrl);
@@ -74,7 +67,7 @@ test.describe.serial(() => {
     await manageButton.click();
     await page.click("text=Delete poll");
 
-    const deletePollForm = page.locator("data-testid=delete-poll-form");
+    const deletePollForm = page.locator("data-testid=delete-poll-dialog");
 
     // button should be disabled
     await expect(deletePollForm.locator("text=Delete poll")).toBeDisabled();

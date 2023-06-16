@@ -43,6 +43,7 @@ import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { PollStatus } from "@/components/poll-status";
+import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
@@ -257,10 +258,22 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const [urlId] = React.useState(router.query.urlId as string);
 
   const poll = trpc.polls.get.useQuery({ urlId });
+  const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
 
-  if (!poll.isFetched || !watchers.isFetched) {
-    return null;
+  if (!poll.isFetched || !watchers.isFetched || !participants.isFetched) {
+    return (
+      <div>
+        <TopBar className="flex justify-between">
+          <Skeleton className="my-2 h-5 w-48" />
+          <div className="flex gap-x-2">
+            <Skeleton className="h-9 w-24" />
+            <Skeleton className="h-9 w-24" />
+            <Skeleton className="h-9 w-24" />
+          </div>
+        </TopBar>
+      </div>
+    );
   }
 
   return <>{children}</>;

@@ -48,9 +48,7 @@ export const UserDetailsForm: React.FunctionComponent<
                 "input-error": errors.name,
               })}
               disabled={isWorking}
-              placeholder={t("yourNamePlaceholder", {
-                defaultValue: "Your name",
-              })}
+              placeholder={t("namePlaceholder")}
               {...register("name", { validate: requiredString })}
             />
           </FormItem>
@@ -62,9 +60,7 @@ export const UserDetailsForm: React.FunctionComponent<
                 "input-error": errors.contact,
               })}
               disabled={isWorking}
-              placeholder={t("yourEmailPlaceholder", {
-                defaultValue: "Your email",
-              })}
+              placeholder={t("emailPlaceholder")}
               {...register("contact", {
                 validate: validEmail,
               })}

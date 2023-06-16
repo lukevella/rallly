@@ -1,6 +1,10 @@
 import { devices, PlaywrightTestConfig } from "@playwright/test";
+import dotenv from "dotenv";
+import path from "path";
 
 const ci = process.env.CI === "true";
+
+dotenv.config({ path: path.resolve(__dirname, "../../", ".env") });
 
 // Use process.env.PORT by default and fallback to port 3000
 const PORT = process.env.PORT || 3000;

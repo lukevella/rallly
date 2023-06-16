@@ -29,12 +29,16 @@ export const EventCard = () => {
   const attendees = participants.filter((participant) =>
     participant.votes.some(
       (vote) =>
-        vote.optionId === poll.event?.optionId &&
+        vote.optionId === poll?.event?.optionId &&
         (vote.type === "yes" || vote.type === "ifNeedBe"),
     ),
   );
 
-  const status = poll.event ? "closed" : poll.closed ? "paused" : "live";
+  const status = poll?.event ? "closed" : poll?.closed ? "paused" : "live";
+
+  if (!poll) {
+    return null;
+  }
 
   return (
     <Card fullWidthOnMobile={false}>

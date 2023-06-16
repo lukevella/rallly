@@ -165,8 +165,6 @@
   "yesTransfer": "Yes, transfer to current user",
   "noTransfer": "No, take me home",
   "createPollDescription": "Create an event and invite participants to vote on the best time to meet.",
-  "yourNamePlaceholder": "Your name",
-  "yourEmailPlaceholder": "Your email",
   "share": "Share",
   "timeShownIn": "Times shown in {timeZone}",
   "timeShownInLocalTime": "Times shown in local time",
