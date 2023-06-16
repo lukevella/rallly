@@ -103,7 +103,7 @@ const participants: Array<{ name: string; votes: VoteType[] }> = [
     name: "Leslie Bradtke",
     votes: ["no", "yes", "yes", "yes", "yes"],
   },
-  { name: "Edward Marvin", votes: ["yes", "no", "yes", "yes", "no"] },
+  { name: "Edward Marvin", votes: ["yes", "no", "ifNeedBe", "yes", "no"] },
   { name: "Samantha Patel", votes: ["yes", "yes", "no", "yes", "no"] },
 ];
 const Demo = () => {
