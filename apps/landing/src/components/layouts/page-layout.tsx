@@ -82,7 +82,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           </Link>
           <Link
             href="https://app.rallly.co"
-            className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-3 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
+            className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
           >
             <span>
               <Trans i18nKey="goToApp" defaults="Go to app" />
@@ -121,13 +121,6 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                 >
                   <LogInIcon className="h-5 w-5" />
                   <Trans i18nKey="login" defaults="Login" />
-                </Link>
-                <Link
-                  className="flex items-center gap-3 p-2 text-lg"
-                  href="https://app.rallly.co"
-                >
-                  <ArrowRightIcon className="h-5 w-5" />
-                  <Trans i18nKey="goToApp" defaults="Go to app" />
                 </Link>
               </PopoverContent>
             </Popover>
