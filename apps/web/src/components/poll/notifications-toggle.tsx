@@ -63,6 +63,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
+          loading={watch.isLoading || unwatch.isLoading}
           icon={isWatching ? BellRingIcon : BellOffIcon}
           data-testid="notifications-toggle"
           disabled={poll.demo || user.isGuest}
