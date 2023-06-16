@@ -103,22 +103,22 @@ const Page: NextPageWithLayout = () => {
             {`What are the benefits of upgrading to Rallly Pro?`}
           </AccordionTrigger>
           <AccordionContent>
-            {`As a Pro user, you will be able to finalize your polls and send calendar invites to your participants. We plan to deliver many more exclusive features as well and as a Pro user you will have access to all of these features as well. You will also receive priority support and be able to help shape the future of Rallly.`}
+            {`As a Pro user, you will be able to finalize your polls and send calendar invites to your participants. We plan to deliver plenty of new features and as a Pro user you will have access to all new features as well. You will also receive priority support and be able to help shape the future of Rallly.`}
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="3">
+        <AccordionItem value="howMuch">
           <AccordionTrigger>How much does Rallly Pro cost?</AccordionTrigger>
           <AccordionContent>
             {`For early adopters, Rallly Pro will be available for just $4.99 per month or $24.99 if you sign up for a whole year. We will adjust the price as we add more features so you will be getting a significantly reduced rate by signing up early.`}
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="4">
+        <AccordionItem value="freeUse">
           <AccordionTrigger>Can I still use Rallly for free?</AccordionTrigger>
           <AccordionContent>
             {`Yes, the free service remains exactly the same.`}
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="5">
+        <AccordionItem value="howToUpgrade">
           <AccordionTrigger>How can I upgrade to Rallly Pro?</AccordionTrigger>
           <AccordionContent>
             {`We're just setting up a checkout system and once this is ready you will be able to upgrade.`}

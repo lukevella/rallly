@@ -47,7 +47,7 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
       <LegacyPollContextProvider>
         <div className="">
           <svg
-            className="absolute inset-x-0 top-0 -z-10 h-[64rem] w-full stroke-gray-300/75 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)]"
+            className="absolute inset-x-0 top-0 -z-10 hidden h-[64rem] w-full stroke-gray-300/75 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)] sm:block"
             aria-hidden="true"
           >
             <defs>
