@@ -1,4 +1,5 @@
 import { Dialog, DialogContent } from "@rallly/ui/dialog";
+import Image from "next/image";
 import React from "react";
 
 import { LoginForm, RegisterForm } from "./login-form";
@@ -20,6 +21,14 @@ export const LoginModal: React.FunctionComponent<{
           data-testid="login-modal"
           className="border-t-primary max-w-full overflow-hidden border-t-4 shadow-sm"
         >
+          <div className="bg-pattern flex justify-center py-8">
+            <Image
+              src="/static/logo.svg"
+              width={140}
+              height={30}
+              alt="Rallly"
+            />
+          </div>
           <div className="p-4 sm:p-6">
             {newAccount ? (
               <RegisterForm

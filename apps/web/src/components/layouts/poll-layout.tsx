@@ -210,7 +210,7 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
           <PageDialogDescription>
             <Trans
               i18nKey="permissionDeniedDescription"
-              defaults="This poll belongs to a different user."
+              defaults="Log in to view this poll."
             />
           </PageDialogDescription>
         </PageDialogHeader>

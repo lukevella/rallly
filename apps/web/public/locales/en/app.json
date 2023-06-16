@@ -157,7 +157,7 @@
   "duration": "Duration",
   "popularity": "Popularity",
   "permissionDenied": "Unauthorized",
-  "permissionDeniedDescription": "This poll belongs to a different user.",
+  "permissionDeniedDescription": "Log in to view this poll.",
   "goToHome": "Go to polls",
   "loginDifferent": "Switch user",
   "differentOwner": "Different Owner",
