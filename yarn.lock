@@ -2394,13 +2394,13 @@
     tiny-glob "^0.2.9"
     tslib "^2.4.0"
 
-"@playwright/test@^1.31.1":
-  version "1.31.1"
-  resolved "https://registry.npmjs.org/@playwright/test/-/test-1.31.1.tgz"
-  integrity sha512-IsytVZ+0QLDh1Hj83XatGp/GsI1CDJWbyDaBGbainsh0p2zC7F4toUocqowmjS6sQff2NGT3D9WbDj/3K2CJiA==
+"@playwright/test@^1.35.1":
+  version "1.35.1"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.35.1.tgz#a596b61e15b980716696f149cc7a2002f003580c"
+  integrity sha512-b5YoFe6J9exsMYg0pQAobNDR85T1nLumUYgUTtKm4d21iX2L7WqKq9dW8NGJ+2vX0etZd+Y7UeuqsxDXm9+5ZA==
   dependencies:
     "@types/node" "*"
-    playwright-core "1.31.1"
+    playwright-core "1.35.1"
   optionalDependencies:
     fsevents "2.3.2"
 
@@ -7748,10 +7748,10 @@ pify@^4.0.1:
   resolved "https://registry.npmjs.org/pify/-/pify-4.0.1.tgz"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-playwright-core@1.31.1:
-  version "1.31.1"
-  resolved "https://registry.npmjs.org/playwright-core/-/playwright-core-1.31.1.tgz"
-  integrity sha512-JTyX4kV3/LXsvpHkLzL2I36aCdml4zeE35x+G5aPc4bkLsiRiQshU5lWeVpHFAuC8xAcbI6FDcw/8z3q2xtJSQ==
+playwright-core@1.35.1:
+  version "1.35.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.35.1.tgz#52c1e6ffaa6a8c29de1a5bdf8cce0ce290ffb81d"
+  integrity sha512-pNXb6CQ7OqmGDRspEjlxE49w+4YtR6a3X6mT1hZXeJHWmsEz7SunmvZeiG/+y1yyMZdHnnn73WKYdtV1er0Xyg==
 
 popmotion@11.0.3:
   version "11.0.3"

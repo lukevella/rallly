@@ -1,19 +1,26 @@
-import { expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
+import { EditOptionsPage } from "tests/edit-options-page";
+import { NewPollPage } from "tests/new-poll-page";
 
 test.describe("edit options", () => {
-  test("should show warning when deleting options with votes in them", async ({
-    page,
-  }) => {
-    await page.goto("/demo");
+  let page: Page;
+  let editOptionsPage: EditOptionsPage;
 
-    await expect(page.locator('text="Lunch Meeting"')).toBeVisible();
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
+    const newPollPage = new NewPollPage(page);
+    await newPollPage.goto();
+    const pollPage = await newPollPage.createPollAndCloseDialog();
+    await pollPage.addParticipant("Mark");
+    editOptionsPage = await pollPage.editOptions();
+  });
 
-    await page.click("text='Manage'");
-    await page.click("text='Edit options'");
-    await page.click("[data-testid='specify-times-switch']");
+  test("should show warning when deleting options with votes in them", async () => {
+    editOptionsPage.switchToSpecifyTimes();
+
     await page.click("text='12:00 PM'");
     await page.click("text='1:00 PM'");
-    await page.locator("div[role='dialog']").locator("text='Save'").click();
+    await page.getByRole("button", { name: "Save" }).click();
     await expect(page.locator('text="Are you sure?"')).toBeVisible();
     await page.click("text='Delete'");
   });

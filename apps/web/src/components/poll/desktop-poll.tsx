@@ -152,6 +152,7 @@ const Poll: React.FunctionComponent = () => {
                     <Button
                       className="ml-2"
                       size="sm"
+                      data-testid="add-participant-button"
                       icon={PlusIcon}
                       onClick={() => {
                         setEditingParticipantId(null);

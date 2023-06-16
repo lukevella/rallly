@@ -1,5 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import smtpTester, { SmtpTester } from "smtp-tester";
+import { NewPollPage } from "tests/new-poll-page";
 
 test.describe.serial(() => {
   let page: Page;
@@ -11,50 +12,16 @@ test.describe.serial(() => {
   });
 
   test.afterAll(async () => {
-    page.close();
     mailServer.stop();
   });
 
   test("create a new poll", async () => {
-    await page.goto("/new");
-    await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
-    // click on label to focus on input
-    await page.click('text="Location"');
-    await page.keyboard.type("Joe's Coffee Shop");
+    const newPollPage = new NewPollPage(page);
 
-    await page.click('text="Description"');
+    await newPollPage.goto();
+    const pollPage = await newPollPage.createPoll();
 
-    await page.keyboard.type("This is a test description");
-
-    await page.click('text="Continue"');
-
-    await page.click('[title="Next month"]');
-
-    // Select a few days
-    await page.click("text=/^5$/");
-    await page.click("text=/^7$/");
-    await page.click("text=/^10$/");
-    await page.click("text=/^15$/");
-
-    await page.click('text="Continue"');
-
-    await page.type('[placeholder="Jessie Smith"]', "John");
-    await page.type(
-      '[placeholder="jessie.smith@example.com"]',
-      "john.doe@example.com",
-    );
-
-    await page.click('text="Create poll"');
-
-    const dialog = page.getByRole("dialog");
-
-    await dialog.waitFor({ state: "visible" });
-
-    const closeDialogButton = dialog.getByRole("button", { name: "Close" });
-
-    await closeDialogButton.waitFor({ state: "visible" });
-
-    await closeDialogButton.click();
+    await pollPage.closeDialog();
 
     await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
 
