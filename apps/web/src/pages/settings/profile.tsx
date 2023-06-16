@@ -65,6 +65,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = getProfileLayout;
 
-export const getServerSideProps = getStaticTranslations;
+export const getStaticProps = getStaticTranslations;
 
 export default Page;
