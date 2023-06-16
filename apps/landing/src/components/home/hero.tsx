@@ -103,7 +103,7 @@ const participants: Array<{ name: string; votes: VoteType[] }> = [
     name: "Leslie Bradtke",
     votes: ["no", "yes", "yes", "yes", "yes"],
   },
-  { name: "Edward Marvin", votes: ["yes", "no", "ifNeedBe", "yes", "no"] },
+  { name: "Edward Marvin", votes: ["yes", "no", "yes", "yes", "no"] },
   { name: "Samantha Patel", votes: ["yes", "yes", "no", "yes", "no"] },
 ];
 const Demo = () => {
@@ -181,15 +181,15 @@ const Hero: React.FunctionComponent = () => {
           <Link
             target="_blank"
             href="https://github.com/lukevella/rallly"
-            className="hover:text-primary hover:border-primary-200 hover:bg-primary-50 active:bg-primary-100 inline-flex items-center gap-2.5 rounded-full border bg-gray-50/75 px-3 py-2 text-xs font-medium transition-transform active:translate-y-1 sm:text-sm"
+            className="hover:text-primary group inline-flex items-center rounded-full border bg-gray-50/50 py-2 text-xs font-medium sm:text-sm"
           >
-            <span className="pl-2 sm:pr-4">
+            <span className="px-4">
               <Trans i18nKey="opensource" defaults="We're Open Source!" />
             </span>
-            <span className="inline-flex items-center gap-2 border-l pl-2">
+            <span className="inline-flex items-center gap-2 border-l px-4">
               <GithubIcon className="h-4 w-4" />
               <Trans i18nKey="startUsOnGithub" defaults="Star us on Github" />
-              <ArrowRightIcon className="inline-block h-4 w-4" />
+              <ArrowRightIcon className="inline-block h-4 w-4 transition-transform group-hover:translate-x-1 group-active:translate-x-2" />
             </span>
           </Link>
         </div>
@@ -229,22 +229,6 @@ const Hero: React.FunctionComponent = () => {
           </p>
           <div className="mx-auto max-w-[700px]">
             <Demo />
-          </div>
-          <div className="mt-8 flex justify-center">
-            <div className="flex items-center gap-2 rounded-full border bg-gray-50/75 px-3 py-1 font-medium shadow-sm">
-              <div className="-ml-1.5 flex items-center gap-1.5 text-sm">
-                <VoteIcon variant="yes" />
-                <Trans i18nKey="yes" defaults="Yes" />
-              </div>
-              <div className="flex items-center gap-1.5 text-sm">
-                <VoteIcon variant="ifNeedBe" />
-                <Trans i18nKey="ifNeedBe" defaults="If need be" />
-              </div>
-              <div className="flex items-center gap-1.5 text-sm">
-                <VoteIcon variant="no" />
-                <Trans i18nKey="no" defaults="No" />
-              </div>
-            </div>
           </div>
         </div>
       </div>
