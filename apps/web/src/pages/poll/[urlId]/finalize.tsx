@@ -6,7 +6,6 @@ import {
 } from "@rallly/ui/accordion";
 import { Button } from "@rallly/ui/button";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -51,7 +50,7 @@ const Page: NextPageWithLayout = () => {
             {`We're launching a paid tier soon with more features!`}
           </p>
         </div>
-        <Card className="pointer-events-none mx-auto -mb-32 max-w-2xl select-none">
+        <div className="shadow-huge pointer-events-none mx-auto -mb-24 max-w-3xl select-none rounded-md border bg-white">
           <CardHeader>
             <CardTitle>
               <Trans i18nKey="finalize" />
@@ -89,7 +88,7 @@ const Page: NextPageWithLayout = () => {
               <Trans i18nKey="finalize" />
             </Button>
           </CardFooter>
-        </Card>
+        </div>
       </div>
       <Accordion type="single">
         <AccordionItem value="whyNotFree">
