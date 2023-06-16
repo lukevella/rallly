@@ -41,7 +41,10 @@ export const InviteDialog = () => {
           </span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gradient-to-b from-gray-100 via-white to-white sm:max-w-md">
+      <DialogContent
+        data-testid="invite-participant-dialog"
+        className="bg-gradient-to-b from-gray-100 via-white to-white sm:max-w-md"
+      >
         <div className="flex">
           <Share2Icon className="text-primary h-6 w-6" />
         </div>

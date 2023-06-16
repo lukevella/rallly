@@ -1,19 +1,21 @@
-import { expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import smtpTester, { SmtpTester } from "smtp-tester";
 
 test.describe.serial(() => {
-  let pollUrl: string;
+  let page: Page;
 
   let mailServer: SmtpTester;
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
     mailServer = smtpTester.init(4025);
   });
 
   test.afterAll(async () => {
+    page.close();
     mailServer.stop();
   });
 
-  test("create a new poll", async ({ page }) => {
+  test("create a new poll", async () => {
     await page.goto("/new");
     await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
     // click on label to focus on input
@@ -44,41 +46,36 @@ test.describe.serial(() => {
 
     await page.click('text="Create poll"');
 
-    const title = page.getByTestId("poll-title");
+    const dialog = page.getByRole("dialog");
 
-    await title.waitFor();
+    await dialog.waitFor({ state: "visible" });
 
-    await expect(title).toHaveText("Monthly Meetup");
+    const closeDialogButton = dialog.getByRole("button", { name: "Close" });
+
+    await closeDialogButton.waitFor({ state: "visible" });
+
+    await closeDialogButton.click();
+
+    await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
 
     const { email } = await mailServer.captureOne("john.doe@example.com", {
       wait: 5000,
     });
 
     expect(email.headers.subject).toBe("Let's find a date for Monthly Meetup");
-
-    pollUrl = page.url();
   });
 
   // delete the poll we just created
-  test("delete existing poll", async ({ page }) => {
-    await page.goto(pollUrl);
+  test("delete existing poll", async () => {
     const manageButton = page.getByText("Manage");
     await manageButton.waitFor();
     await manageButton.click();
     await page.click("text=Delete poll");
 
-    const deletePollForm = page.locator("data-testid=delete-poll-dialog");
+    const deletePollDialog = page.getByRole("dialog");
 
-    // button should be disabled
-    await expect(deletePollForm.locator("text=Delete poll")).toBeDisabled();
+    deletePollDialog.getByRole("button", { name: "delete" }).click();
 
-    // enter confirmation text
-    await page.type("[placeholder=delete-me]", "delete-me");
-
-    // button should now be enabled
-    await deletePollForm.locator("text=Delete poll").click();
-
-    // expect delete message to appear
-    await expect(page.locator("text=Deleted poll")).toBeVisible();
+    await page.waitForURL("/polls");
   });
 });
