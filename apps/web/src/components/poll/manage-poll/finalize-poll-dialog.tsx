@@ -86,13 +86,19 @@ export const FinalizePollForm = ({
     .sort((a, b) => {
       const aYes = scoreByOptionId[a.id].yes.length;
       const bYes = scoreByOptionId[b.id].yes.length;
+      const aIfNeedBe = scoreByOptionId[a.id].ifNeedBe.length;
+      const bIfNeedBe = scoreByOptionId[b.id].ifNeedBe.length;
+
+      const aTotal = aYes + aIfNeedBe;
+      const bTotal = bYes + bIfNeedBe;
+
+      if (aTotal !== bTotal) {
+        return bTotal - aTotal;
+      }
 
       if (aYes !== bYes) {
         return bYes - aYes;
       }
-
-      const aIfNeedBe = scoreByOptionId[a.id].ifNeedBe.length;
-      const bIfNeedBe = scoreByOptionId[b.id].ifNeedBe.length;
 
       return bIfNeedBe - aIfNeedBe;
     })
