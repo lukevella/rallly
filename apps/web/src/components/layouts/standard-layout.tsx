@@ -13,6 +13,7 @@ import soft from "timezone-soft";
 
 import { LoginModalProvider } from "@/components/auth/login-modal";
 import { Container } from "@/components/container";
+import FeedbackButton from "@/components/feedback";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
@@ -161,6 +162,7 @@ export const StandardLayout: React.FunctionComponent<{
             <MainNav />
             <div>{children}</div>
           </div>
+          {process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ? <FeedbackButton /> : null}
         </LoginModalProvider>
       </ModalProvider>
     </UserProvider>
