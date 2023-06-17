@@ -3,6 +3,5 @@ api_token_env: CROWDIN_PERSONAL_TOKEN
 files:
   - source: /apps/web/public/locales/en/*.json
     translation: /apps/web/public/locales/%two_letters_code%/%original_file_name%
-files:
   - source: /apps/landing/public/locales/en/*.json
     translation: /apps/landing/public/locales/%two_letters_code%/%original_file_name%
