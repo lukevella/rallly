@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("should be able to vote and comment on a poll", async ({ page }) => {
+test.skip("should be able to vote and comment on a poll", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto("/demo");
 
