@@ -42,7 +42,7 @@ export const EventCard = () => {
 
   return (
     <Card fullWidthOnMobile={false}>
-      <div className="divide-y text-gray-600">
+      <div className="divide-y">
         <div
           className="h-2"
           style={{ background: generateGradient(poll.id) }}
