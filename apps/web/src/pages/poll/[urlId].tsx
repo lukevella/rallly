@@ -23,12 +23,17 @@ const GuestPollAlert = () => {
     return null;
   }
   return (
-    <Alert>
-      <InfoIcon className="h-4 w-4" />
-      <AlertTitle>
+    <Alert icon={InfoIcon}>
+      <AlertTitle className="mb-1 text-sm font-medium tracking-normal">
         <Trans
           i18nKey="guestPollAlertTitle"
-          defaults="<0>Create an account</0> or <1>login</1> to claim this poll"
+          defaults="Your administrator rights can be lost if you clear your cookies"
+        />
+      </AlertTitle>
+      <AlertDescription className="text-sm">
+        <Trans
+          i18nKey="guestPollAlertDescription"
+          defaults="<0>Create an account</0> or <1>login</1> to claim this poll."
           components={[
             <Link
               className="hover:text-primary underline"
@@ -41,12 +46,6 @@ const GuestPollAlert = () => {
               href="/login"
             />,
           ]}
-        />
-      </AlertTitle>
-      <AlertDescription>
-        <Trans
-          i18nKey="guestPollAlertDescription"
-          defaults="Your administrator rights can be lost if you clear your cookies."
         />
       </AlertDescription>
     </Alert>

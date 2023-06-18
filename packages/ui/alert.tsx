@@ -4,11 +4,11 @@ import * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "relative w-full rounded-md border p-3 [&>svg]:absolute [&>svg]:text-foreground [&>svg]:left-3 [&>svg]:top-3 [&>svg+div]:translate-y-[-3px] [&:has(svg)]:pl-11",
+  "flex flex-col shadow-sm sm:flex-row gap-x-3 gap-y-2 rounded-md border p-3",
   {
     variants: {
       variant: {
-        default: "bg-muted-background text-foreground",
+        default: "bg-gray-50 text-foreground",
         destructive:
           "text-destructive border-destructive/50 dark:border-destructive [&>svg]:text-destructive text-destructive",
       },
@@ -21,17 +21,24 @@ const alertVariants = cva(
 
 const Alert = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> &
+    VariantProps<typeof alertVariants> & {
+      icon: React.ComponentType<{ className?: string }>;
+    }
+>(({ className, icon: Icon, children, variant, ...props }, ref) => (
   <div
     ref={ref}
     role="alert"
     className={cn(alertVariants({ variant }), className)}
     {...props}
-  />
+  >
+    {Icon ? <Icon className="mt-0.5 h-4 w-4" /> : null}
+    <div>{children}</div>
+  </div>
 ));
 Alert.displayName = "Alert";
 
+Alert.displayName = "Alert";
 const AlertTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
@@ -50,10 +57,7 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "text-muted-foreground text-sm [&_p]:leading-relaxed",
-      className,
-    )}
+    className={cn("text-sm [&_p]:leading-relaxed", className)}
     {...props}
   />
 ));
