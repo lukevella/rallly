@@ -19,6 +19,7 @@ import {
   TopBar,
   TopBarTitle,
 } from "@/components/layouts/standard-layout/top-bar";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusBadge } from "@/components/poll-status";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
@@ -90,9 +91,9 @@ const Page: NextPageWithLayout = () => {
                       key={poll.id}
                       className="flex overflow-hidden rounded-md border shadow-sm"
                     >
-                      <div className="flex grow flex-col justify-between gap-y-4 gap-x-4 bg-white px-6 py-4 sm:flex-row sm:items-start">
+                      <div className="flex grow flex-col-reverse justify-between gap-y-4 gap-x-4 bg-white p-4 sm:flex-row sm:items-start sm:px-6">
                         <div className="flex gap-x-4">
-                          <div className="-ml-2">
+                          <div className="sm:-ml-2">
                             {poll.event ? (
                               <DateIcon
                                 date={adjustTimeZone(
@@ -147,6 +148,14 @@ const Page: NextPageWithLayout = () => {
                                 }}
                               />
                             </div>
+                            {poll.participants.length > 0 ? (
+                              <div className="mt-4">
+                                <ParticipantAvatarBar
+                                  participants={poll.participants}
+                                  max={5}
+                                />
+                              </div>
+                            ) : null}
                           </div>
                         </div>
                         <div>
