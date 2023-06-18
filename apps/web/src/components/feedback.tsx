@@ -90,10 +90,10 @@ const FeedbackButton = () => {
 
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger asChild>
         <button
           onClick={show}
-          className="shadow-huge fixed bottom-8 right-8 inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-800"
+          className="shadow-huge fixed bottom-8 right-8 hidden h-14 w-14 items-center justify-center rounded-full bg-gray-800 sm:inline-flex"
         >
           <MegaphoneIcon className="h-7 text-white" />
         </button>
