@@ -92,6 +92,10 @@ declare global {
        * The app version just for reference
        */
       NEXT_PUBLIC_APP_VERSION?: string;
+      /**
+       * "true" to enable finalization of polls
+       */
+      NEXT_PUBLIC_ENABLE_FINALIZATION?: string;
     }
   }
 }

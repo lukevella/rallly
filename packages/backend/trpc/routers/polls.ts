@@ -496,6 +496,12 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      if (process.env.NEXT_PUBLIC_ENABLE_FINALIZATION !== "true") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "This feature is not enabled",
+        });
+      }
       const poll = await prisma.poll.findUnique({
         where: {
           id: input.pollId,

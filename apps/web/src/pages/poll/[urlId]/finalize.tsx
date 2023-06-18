@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +15,7 @@ import {
 } from "@rallly/ui/card";
 import { useRouter } from "next/router";
 
+import { Card } from "@/components/card";
 import { getPollLayout } from "@/components/layouts/poll-layout";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { usePoll } from "@/components/poll-context";
@@ -21,21 +23,66 @@ import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
-const Page: NextPageWithLayout = () => {
+const FinalizationForm = () => {
   const { poll } = usePoll();
   const router = useRouter();
   const redirectBackToPoll = () => {
     router.replace(`/poll/${poll.id}`);
   };
-  // const queryClient = trpc.useContext();
+  const queryClient = trpc.useContext();
 
-  // const bookDate = trpc.polls.book.useMutation({
-  //   onSuccess: () => {
-  //     queryClient.polls.invalidate();
-  //     redirectBackToPoll();
-  //   },
-  // });
+  const bookDate = trpc.polls.book.useMutation({
+    onSuccess: () => {
+      queryClient.polls.invalidate();
+      redirectBackToPoll();
+    },
+  });
 
+  return (
+    <Card className="mx-auto max-w-3xl">
+      <CardHeader>
+        <CardTitle>
+          <Trans i18nKey="finalize" />
+        </CardTitle>
+        <CardDescription>
+          <Trans
+            i18nKey="finalizeDescription"
+            defaults="Select a final date for your event."
+          />
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <FinalizePollForm
+          name="finalize"
+          onSubmit={(data) => {
+            if (process.env.NEXT_PUBLIC_ENABLE_FINALIZATION === "true") {
+              bookDate.mutateAsync({
+                pollId: poll.id,
+                optionId: data.selectedOptionId,
+                notify: data.notify,
+              });
+            }
+          }}
+        />
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button onClick={redirectBackToPoll}>
+          <Trans i18nKey="cancel" />
+        </Button>
+        <Button
+          type="submit"
+          loading={bookDate.isLoading}
+          form="finalize"
+          variant="primary"
+        >
+          <Trans i18nKey="finalize" />
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+const Teaser = () => {
   return (
     <div className="mx-auto max-w-4xl space-y-4">
       <div className="bg-pattern overflow-hidden rounded-md border p-8 shadow-sm">
@@ -50,44 +97,8 @@ const Page: NextPageWithLayout = () => {
             {`We're launching a paid tier soon with more features!`}
           </p>
         </div>
-        <div className="shadow-huge pointer-events-none mx-auto -mb-24 max-w-3xl select-none rounded-md border bg-white">
-          <CardHeader>
-            <CardTitle>
-              <Trans i18nKey="finalize" />
-            </CardTitle>
-            <CardDescription>
-              <Trans
-                i18nKey="finalizeDescription"
-                defaults="Select a final date for your event."
-              />
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FinalizePollForm
-              name="finalize"
-              onSubmit={() => {
-                // coming soon…
-                // bookDate.mutateAsync({
-                //   pollId: poll.id,
-                //   optionId: data.selectedOptionId,
-                //   notify: data.notify,
-                // });
-              }}
-            />
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button onClick={redirectBackToPoll}>
-              <Trans i18nKey="cancel" />
-            </Button>
-            <Button
-              type="submit"
-              // loading={bookDate.isLoading}
-              form="finalize"
-              variant="primary"
-            >
-              <Trans i18nKey="finalize" />
-            </Button>
-          </CardFooter>
+        <div className="pointer pointer-events-none mx-auto -mb-24 max-w-3xl select-none">
+          <FinalizationForm />
         </div>
       </div>
       <Accordion type="single">
@@ -126,6 +137,14 @@ const Page: NextPageWithLayout = () => {
       </Accordion>
     </div>
   );
+};
+
+const Page: NextPageWithLayout = () => {
+  if (process.env.NEXT_PUBLIC_ENABLE_FINALIZATION === "true") {
+    return <FinalizationForm />;
+  }
+
+  return <Teaser />;
 };
 
 Page.getLayout = getPollLayout;
