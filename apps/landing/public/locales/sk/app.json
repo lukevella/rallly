@@ -41,6 +41,13 @@
   "errors_goToHome": "Prejsť na Domovskú stránku",
   "optionCount": "{count, plural, one {# možnosť} other {# možností}}",
   "participantCount": "{count, plural, one {# účastník} other {# účastníkov}}",
+  "opensource": "My sme Open-Source!",
+  "startUsOnGithub": "Podporte nás na GitHube",
+  "headline": "Zabudnite na nekonečnú výmenu emailov",
+  "subheadling": "Zefektívnite svoje plánovanie a ušetrite čas",
+  "getStartedHint": "Vytvorte anketu. Je to zdarma. Nie je potrebné sa prihlásiť.",
+  "homepage_readDocs": "Prečítajte si dokumentáciu",
+  "goToApp": "Prejsť do aplikácie",
   "yes": "Áno",
   "ifNeedBe": "Pokiaľ je to nutné",
   "no": "Nie"
