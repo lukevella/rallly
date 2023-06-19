@@ -1,77 +1,137 @@
-import { withAuthIfRequired, withSessionSsr } from "@rallly/backend/next";
+import { trpc } from "@rallly/backend";
+import {
+  composeGetServerSideProps,
+  withSessionSsr,
+} from "@rallly/backend/next";
+import { prisma } from "@rallly/database";
+import { ArrowRightIcon, ShieldCloseIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
-import { useTranslation } from "next-i18next";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
-import FullPageLoader from "@/components/full-page-loader";
 import { getStandardLayout } from "@/components/layouts/standard-layout";
-import { ParticipantsProvider } from "@/components/participants-provider";
-import { Poll } from "@/components/poll";
-import { PollContextProvider } from "@/components/poll-context";
-import { usePollByAdmin } from "@/utils/trpc/hooks";
+import {
+  PageDialog,
+  PageDialogContent,
+  PageDialogDescription,
+  PageDialogFooter,
+  PageDialogHeader,
+  PageDialogTitle,
+} from "@/components/page-dialog";
+import { Trans } from "@/components/trans";
+import { CurrentUserAvatar, UserAvatar } from "@/components/user";
+import { useUser } from "@/components/user-provider";
+import { NextPageWithLayout } from "@/types";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
-import { AdminControls } from "../../components/admin-control";
-import ModalProvider from "../../components/modal/modal-provider";
-import { NextPageWithLayout } from "../../types";
+const Page: NextPageWithLayout<{ userId: string; pollId: string }> = ({
+  pollId,
+  userId,
+}) => {
+  const { user } = useUser();
+  const router = useRouter();
+  const transfer = trpc.polls.transfer.useMutation({
+    onSuccess: () => {
+      router.replace(`/poll/${pollId}`);
+    },
+  });
 
-const Page: NextPageWithLayout<{ urlId: string }> = ({ urlId }) => {
-  const { t } = useTranslation();
-
-  const pollQuery = usePollByAdmin();
-
-  const poll = pollQuery.data;
-
-  if (poll) {
-    return (
-      <>
-        <Head>
-          <title>{t("adminPollTitle", { title: poll.title })}</title>
-          <meta name="robots" content="noindex,nofollow" />
-        </Head>
-        <ParticipantsProvider pollId={poll.id}>
-          <PollContextProvider poll={poll} urlId={urlId} admin={true}>
-            <ModalProvider>
-              <div className="flex flex-col space-y-3 p-3 sm:space-y-4 sm:p-4">
-                <AdminControls>
-                  <Poll />
-                </AdminControls>
-              </div>
-            </ModalProvider>
-          </PollContextProvider>
-        </ParticipantsProvider>
-      </>
-    );
-  }
-
-  return <FullPageLoader>{t("loading")}</FullPageLoader>;
+  return (
+    <PageDialog icon={ShieldCloseIcon}>
+      <PageDialogHeader>
+        <PageDialogTitle>
+          <Trans i18nKey="differentOwner" defaults="Different Owner" />
+        </PageDialogTitle>
+        <PageDialogDescription>
+          <Trans
+            i18nKey="differentOwnerDescription"
+            defaults="This poll was created by a different user. Would you like to transfer ownership to the current user?"
+          />
+        </PageDialogDescription>
+      </PageDialogHeader>
+      <PageDialogContent>
+        <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center gap-x-2.5">
+            <UserAvatar />
+            <div>{userId.slice(0, 10)}</div>
+          </div>
+          <ArrowRightIcon className="text-muted-foreground h-4 w-4" />
+          <div className="flex items-center gap-x-2.5">
+            <CurrentUserAvatar />
+            <div>{user.shortName}</div>
+          </div>
+        </div>
+      </PageDialogContent>
+      <PageDialogFooter>
+        <Button
+          size="lg"
+          loading={transfer.isLoading}
+          variant="primary"
+          onClick={() => {
+            transfer.mutate({ pollId });
+          }}
+        >
+          <Trans
+            i18nKey="yesTransfer"
+            defaults="Yes, transfer to current user"
+          />
+        </Button>
+        <Button asChild size="lg">
+          <Link href="/polls">
+            <Trans i18nKey="noTransfer" defaults="No, take me home" />
+          </Link>
+        </Button>
+      </PageDialogFooter>
+    </PageDialog>
+  );
 };
 
 Page.getLayout = getStandardLayout;
 
+export default Page;
+
 export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  [
-    withAuthIfRequired,
-    withPageTranslations(),
-    async (ctx) => {
+  composeGetServerSideProps(async (ctx) => {
+    const res = await prisma.poll.findUnique({
+      where: {
+        adminUrlId: ctx.params?.urlId as string,
+      },
+      select: {
+        id: true,
+        userId: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!res) {
       return {
-        props: {
-          urlId: ctx.query.urlId as string,
+        notFound: true,
+      };
+    }
+
+    // if the poll was created by a registered user or the current user is the creator
+    if (res.user || ctx.req.session.user?.id === res.userId) {
+      // redirect to the poll page
+      return {
+        redirect: {
+          destination: `/poll/${res.id}`,
+          permanent: false,
         },
       };
-    },
-  ],
-  {
-    onPrefetch: async (ssg, ctx) => {
-      const poll = await ssg.polls.getByAdminUrlId.fetch({
-        urlId: ctx.params?.urlId as string,
-      });
+    }
 
-      await ssg.polls.participants.list.prefetch({
-        pollId: poll.id,
-      });
-    },
-  },
+    // otherwise allow the current user to take ownership of the poll
+    return {
+      props: {
+        userId: res.userId,
+        pollId: res.id,
+      },
+    };
+  }, withPageTranslations()),
 );
-
-export default Page;

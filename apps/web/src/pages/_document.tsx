@@ -75,6 +75,7 @@ export default function Document() {
           href="/favicon-128x128.png"
           sizes="128x128"
         />
+        <meta name="robots" content="noindex,nofollow" />
         <meta name="application-name" content="Rallly" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
@@ -95,8 +96,7 @@ export default function Document() {
           content="/mstile-310x310.png"
         />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#f9fafb" />
+        <meta name="theme-color" content="#F3F4F6" />
       </Head>
       <body>
         <Main />

@@ -2,7 +2,7 @@ import Link from "next/link";
 import * as React from "react";
 import ReactLinkify from "react-linkify";
 
-import Tooltip from "../tooltip";
+import LegacyTooltip from "../tooltip";
 
 export const truncateLink = (href: string, text: string, key: number) => {
   const textWithoutProtocol = text.replace(/^https?:\/\//i, "");
@@ -26,7 +26,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
   } else {
     finalText += "…";
     return (
-      <Tooltip
+      <LegacyTooltip
         key={key}
         content={
           <div className="max-w-md break-all font-mono text-xs">{href}</div>
@@ -35,7 +35,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
         <Link className="text-link" href={href} rel="nofollow noreferrer">
           {finalText}
         </Link>
-      </Tooltip>
+      </LegacyTooltip>
     );
   }
 };

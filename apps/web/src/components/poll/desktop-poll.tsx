@@ -1,13 +1,22 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@rallly/icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  PlusIcon,
+  Users2Icon,
+} from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
+import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useMeasure } from "react-use";
+import { useMeasure, useUpdateEffect } from "react-use";
 
-import { Button } from "../button";
+import { usePermissions } from "@/contexts/permissions";
+import { useRole } from "@/contexts/role";
+import { TimePreferences } from "@/contexts/time-preferences";
+
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
 import { usePoll } from "../poll-context";
-import TimeZonePicker from "../time-zone-picker";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import { PollContext } from "./desktop-poll/poll-context";
@@ -22,12 +31,12 @@ const minSidebarWidth = 200;
 const Poll: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const { poll, options, targetTimeZone, setTargetTimeZone, userAlreadyVoted } =
-    usePoll();
+  const { poll, userAlreadyVoted } = usePoll();
 
   const { participants } = useParticipants();
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
+
   const [editingParticipantId, setEditingParticipantId] = React.useState<
     string | null
   >(null);
@@ -35,7 +44,7 @@ const Poll: React.FunctionComponent = () => {
   const columnWidth = 80;
 
   const numberOfVisibleColumns = Math.min(
-    options.length,
+    poll.options.length,
     Math.floor((width - minSidebarWidth) / columnWidth),
   );
 
@@ -46,7 +55,7 @@ const Poll: React.FunctionComponent = () => {
 
   const availableSpace = Math.min(
     numberOfVisibleColumns * columnWidth,
-    options.length * columnWidth,
+    poll.options.length * columnWidth,
   );
 
   const [activeOptionId, setActiveOptionId] = React.useState<string | null>(
@@ -56,14 +65,24 @@ const Poll: React.FunctionComponent = () => {
   const [scrollPosition, setScrollPosition] = React.useState(0);
 
   const maxScrollPosition =
-    columnWidth * options.length - columnWidth * numberOfVisibleColumns;
+    columnWidth * poll.options.length - columnWidth * numberOfVisibleColumns;
 
+  const { canAddNewParticipant } = usePermissions();
+
+  const role = useRole();
   const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(!(poll.closed || userAlreadyVoted));
+    React.useState(
+      canAddNewParticipant && !userAlreadyVoted && role === "participant",
+    );
 
-  const pollWidth = sidebarWidth + options.length * columnWidth;
-
+  const pollWidth = sidebarWidth + poll.options.length * columnWidth;
   const addParticipant = useAddParticipantMutation();
+
+  useUpdateEffect(() => {
+    if (!canAddNewParticipant) {
+      setShouldShowNewParticipantForm(false);
+    }
+  }, [canAddNewParticipant]);
 
   const goToNextPage = () => {
     setScrollPosition(
@@ -81,7 +100,6 @@ const Poll: React.FunctionComponent = () => {
   };
 
   const updateParticipant = useUpdateParticipantMutation();
-
   const showNewParticipantModal = useNewParticipantModal();
   return (
     <PollContext.Provider
@@ -100,12 +118,15 @@ const Poll: React.FunctionComponent = () => {
       }}
     >
       <div
-        className="relative min-w-full max-w-full" // Don't add styles like border, margin, padding – that can mess up the sizing calculations
+        className={clsx(
+          "relative min-w-full max-w-full duration-300",
+          width === 0 ? "invisible" : "visible",
+        )} // Don't add styles like border, margin, padding – that can mess up the sizing calculations
         style={{ width: pollWidth }}
         ref={ref}
       >
         <div className="flex flex-col overflow-hidden">
-          <div className="flex h-14 shrink-0 items-center justify-between border-b bg-gradient-to-b from-gray-50 to-gray-100/50 p-3">
+          <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 py-3 px-4">
             <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
                 <div className="px-1">
@@ -121,27 +142,30 @@ const Poll: React.FunctionComponent = () => {
                   />
                 </div>
               ) : (
-                <div className="flex gap-2">
-                  <div className="font-semibold text-slate-800">
-                    {t("participantCount", { count: participants.length })}
+                <div className="flex items-center gap-2">
+                  <Users2Icon className="h-5 w-5 shrink-0" />
+                  <div className="font-semibold">
+                    {t("participants", { count: participants.length })} (
+                    {participants.length})
                   </div>
-                  {poll.closed ? null : (
-                    <button
-                      className="hover:text-primary-600 rounded"
+                  {canAddNewParticipant ? (
+                    <Button
+                      className="ml-2"
+                      size="sm"
+                      data-testid="add-participant-button"
+                      icon={PlusIcon}
                       onClick={() => {
                         setEditingParticipantId(null);
                         setShouldShowNewParticipantForm(true);
                       }}
-                    >
-                      + {t("new")}
-                    </button>
-                  )}
+                    />
+                  ) : null}
                 </div>
               )}
             </div>
             <div className="flex items-center gap-3">
-              <div className="px-3">
-                {t("optionCount", { count: options.length })}
+              <div className="font-semibold">
+                {t("optionCount", { count: poll.options.length })}
               </div>
               {maxScrollPosition > 0 ? (
                 <div className="flex gap-2">
@@ -152,7 +176,6 @@ const Poll: React.FunctionComponent = () => {
                     <ArrowLeftIcon className="h-4 w-4" />
                   </Button>
                   <Button
-                    className="text-xs"
                     disabled={scrollPosition === maxScrollPosition}
                     onClick={() => {
                       goToNextPage();
@@ -164,18 +187,9 @@ const Poll: React.FunctionComponent = () => {
               ) : null}
             </div>
           </div>
-          {poll.timeZone ? (
-            <div className="flex h-14 shrink-0 items-center justify-end space-x-4 border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4">
-              <div className="flex grow items-center">
-                <div className="mr-2 text-sm font-medium text-slate-500">
-                  {t("timeZone")}
-                </div>
-                <TimeZonePicker
-                  value={targetTimeZone}
-                  onChange={setTargetTimeZone}
-                  className="grow"
-                />
-              </div>
+          {poll.options[0].duration !== 0 ? (
+            <div className="border-b p-3">
+              <TimePreferences />
             </div>
           ) : null}
           <div>
@@ -184,16 +198,14 @@ const Poll: React.FunctionComponent = () => {
                 className="flex shrink-0 items-end pl-4 pr-2 font-medium"
                 style={{ width: sidebarWidth }}
               >
-                <div className="font-semibold text-slate-800"></div>
+                <div className="font-semibold text-gray-800"></div>
               </div>
               <PollHeader />
             </div>
           </div>
           <div>
             <div>
-              {shouldShowNewParticipantForm &&
-              !poll.closed &&
-              !editingParticipantId ? (
+              {shouldShowNewParticipantForm && !editingParticipantId ? (
                 <ParticipantRowForm
                   className="mb-2 shrink-0"
                   onSubmit={async ({ votes }) => {
@@ -213,7 +225,6 @@ const Poll: React.FunctionComponent = () => {
                       <ParticipantRow
                         key={i}
                         participant={participant}
-                        disableEditing={!!editingParticipantId}
                         editMode={editingParticipantId === participant.id}
                         onChangeEditMode={(isEditing) => {
                           if (isEditing) {
@@ -237,8 +248,7 @@ const Poll: React.FunctionComponent = () => {
             </div>
           </div>
 
-          {!poll.closed &&
-          (shouldShowNewParticipantForm || editingParticipantId) ? (
+          {shouldShowNewParticipantForm || editingParticipantId ? (
             <div className="flex shrink-0 items-center border-t bg-gray-50">
               <div className="flex w-full items-center justify-between gap-3 p-3">
                 <Button
@@ -255,8 +265,8 @@ const Poll: React.FunctionComponent = () => {
                 <Button
                   key="submit"
                   form="participant-row-form"
-                  htmlType="submit"
-                  type="primary"
+                  type="submit"
+                  variant="primary"
                   loading={
                     addParticipant.isLoading || updateParticipant.isLoading
                   }

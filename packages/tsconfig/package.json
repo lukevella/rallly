@@ -1,5 +1,6 @@
 {
   "name": "@rallly/tsconfig",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "extends": "./base.json"
 }

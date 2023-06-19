@@ -1,5 +1,5 @@
-import { YesIcon } from "@rallly/icons";
-import clsx from "clsx";
+import { User2Icon } from "@rallly/icons";
+import { cn } from "@rallly/ui";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 import { usePrevious } from "react-use";
@@ -10,21 +10,33 @@ export interface PopularityScoreProps {
   yesScore: number;
   ifNeedBeScore?: number;
   highlight?: boolean;
+  highScore: number;
 }
 
 export const ConnectedScoreSummary: React.FunctionComponent<{
   optionId: string;
 }> = ({ optionId }) => {
   const { getScore, highScore } = usePoll();
-  const score = getScore(optionId);
-
+  const { yes, ifNeedBe } = getScore(optionId);
+  const score = yes + ifNeedBe;
   return (
-    <ScoreSummary yesScore={score.yes} highlight={score.yes === highScore} />
+    <ScoreSummary
+      yesScore={yes}
+      ifNeedBeScore={ifNeedBe}
+      highScore={highScore}
+      highlight={score === highScore && score > 1}
+    />
   );
 };
 
 export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
-  React.memo(function PopularityScore({ yesScore: score, highlight }) {
+  React.memo(function PopularityScore({
+    yesScore,
+    ifNeedBeScore = 0,
+    highScore,
+    highlight,
+  }) {
+    const score = yesScore + ifNeedBeScore;
     const prevScore = usePrevious(score);
 
     const direction = prevScore !== undefined ? score - prevScore : 0;
@@ -32,15 +44,17 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
     return (
       <div
         data-testid="popularity-score"
-        className={clsx(
-          "flex select-none items-center gap-1 px-2 text-sm font-bold tabular-nums",
-          {
-            "rounded-full bg-green-50 text-green-400": highlight,
-          },
-          { "text-slate-400": !highlight },
+        className={cn(
+          "relative flex select-none items-center gap-1 rounded-full border py-0.5 px-2 text-xs tabular-nums",
+          highlight
+            ? "border-green-500 text-green-500"
+            : "border-transparent text-gray-600",
         )}
+        style={{
+          opacity: Math.max(score / highScore, 0.2),
+        }}
       >
-        <YesIcon className="-ml-1 inline-block h-4 transition-opacity" />
+        <User2Icon className="h-3 w-3" />
         <AnimatePresence initial={false} exitBeforeEnter={true}>
           <m.span
             transition={{
@@ -59,6 +73,9 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
             {score}
           </m.span>
         </AnimatePresence>
+        {highlight && ifNeedBeScore > 0 ? (
+          <span className="absolute -top-0.5 -right-1 h-2 w-2 rounded-full bg-amber-400 ring-2 ring-white" />
+        ) : null}
       </div>
     );
   });

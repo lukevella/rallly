@@ -2,26 +2,34 @@ import {
   CalendarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  DotsHorizontalIcon,
-  PlusSmIcon,
+  MoreHorizontalIcon,
+  PlusIcon,
   SparklesIcon,
-  TrashIcon,
   XIcon,
 } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
+
+import { Trans } from "@/components/trans";
 
 import {
   expectTimeOption,
   getDateProps,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
-import { useDayjs } from "../../../../utils/dayjs";
-import { Button } from "../../../button";
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
-import Dropdown, { DropdownItem } from "../../../dropdown";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
 import Switch from "../../../switch";
 import { DateTimeOption } from "..";
@@ -37,7 +45,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration,
   onChangeDuration,
 }) => {
-  const { dayjs, weekStartsOn } = useDayjs();
   const { t } = useTranslation();
   const isTimedEvent = options.some((option) => option.type === "timeSlot");
 
@@ -77,18 +84,17 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   const datepicker = useHeadlessDatePicker({
     selection: datepickerSelection,
     onNavigationChange: onNavigate,
-    weekStartsOn,
     date,
   });
 
   return (
     <div className="overflow-hidden lg:flex">
-      <div className="border-b p-3 sm:p-4 lg:w-[440px] lg:border-r lg:border-b-0">
+      <div className="shrink-0 border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
               <Button
-                icon={<ChevronLeftIcon />}
+                icon={ChevronLeftIcon}
                 title={t("previousMonth")}
                 onClick={datepicker.prev}
               />
@@ -97,7 +103,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               </div>
               <Button
                 title={t("nextMonth")}
-                icon={<ChevronRightIcon />}
+                icon={ChevronRightIcon}
                 onClick={datepicker.next}
               />
             </div>
@@ -106,7 +112,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 return (
                   <div
                     key={dayOfWeek}
-                    className="flex items-center justify-center pb-2 text-sm font-medium text-slate-500"
+                    className="flex items-center justify-center pb-2 text-sm font-medium text-gray-500"
                   >
                     {dayOfWeek.substring(0, 2)}
                   </div>
@@ -163,12 +169,12 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         }
                       }}
                       className={clsx(
-                        "relative flex h-full w-full items-center justify-center text-sm hover:bg-slate-50 focus:z-10 focus:rounded active:bg-slate-100",
+                        "relative flex h-full w-full items-center justify-center text-sm hover:bg-gray-50 focus:z-10 focus:rounded active:bg-gray-100",
                         {
-                          "bg-slate-50 text-slate-500": day.outOfMonth,
+                          "bg-gray-50 text-gray-500": day.outOfMonth,
                           "font-bold": day.today,
                           "text-primary-600": day.today && !day.selected,
-                          "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-500 after:content-['']":
+                          "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-600 after:content-['']":
                             day.selected,
                         },
                       )}
@@ -194,7 +200,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           <div className="flex items-center space-x-3 p-3 sm:p-4">
             <div className="grow">
               <div className="font-medium">{t("specifyTimes")}</div>
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-gray-500">
                 {t("specifyTimesDescription")}
               </div>
             </div>
@@ -236,7 +242,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             </div>
           </div>
         </div>
-        <div className="grow">
+        <div className="max-h-[calc(100vh-400px)] min-h-0 grow overflow-auto">
           {isTimedEvent ? (
             <div className="divide-y">
               {Object.keys(optionsByDay)
@@ -246,7 +252,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   return (
                     <div
                       key={dateString}
-                      className="space-y-3 p-3 sm:flex sm:space-y-0 sm:space-x-4 sm:p-4"
+                      className="space-y-3 p-3 sm:flex sm:space-x-4 sm:space-y-0 sm:p-4"
                     >
                       <div>
                         <DateCard
@@ -320,7 +326,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         })}
                         <div className="flex items-center space-x-3">
                           <Button
-                            icon={<PlusSmIcon />}
+                            icon={PlusIcon}
                             onClick={() => {
                               const lastOption = expectTimeOption(
                                 optionsForDay[optionsForDay.length - 1].option,
@@ -351,63 +357,70 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           >
                             {t("addTimeOption")}
                           </Button>
-                          <Dropdown
-                            trigger={
-                              <CompactButton icon={DotsHorizontalIcon} />
-                            }
-                            placement="bottom-start"
-                          >
-                            <DropdownItem
-                              icon={SparklesIcon}
-                              disabled={datepicker.selection.length < 2}
-                              label={t("applyToAllDates")}
-                              onClick={() => {
-                                const times = optionsForDay.map(
-                                  ({ option }) => {
-                                    if (option.type === "date") {
-                                      throw new Error(
-                                        "Expected timeSlot but got date",
-                                      );
-                                    }
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild={true}>
+                              <button className="text-gray-500 hover:text-gray-800">
+                                <MoreHorizontalIcon className="h4 w-4" />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start">
+                              <DropdownMenuLabel>
+                                <Trans i18nKey="menu" defaults="Menu" />
+                              </DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  const times = optionsForDay.map(
+                                    ({ option }) => {
+                                      if (option.type === "date") {
+                                        throw new Error(
+                                          "Expected timeSlot but got date",
+                                        );
+                                      }
 
-                                    return {
-                                      startTime: option.start.substring(
-                                        option.start.indexOf("T"),
-                                      ),
-                                      endTime: option.end.substring(
-                                        option.end.indexOf("T"),
-                                      ),
-                                    };
-                                  },
-                                );
-                                const newOptions: DateTimeOption[] = [];
-                                Object.keys(optionsByDay).forEach(
-                                  (dateString) => {
-                                    times.forEach((time) => {
-                                      newOptions.push({
-                                        type: "timeSlot",
-                                        start: dateString + time.startTime,
-                                        end: dateString + time.endTime,
+                                      return {
+                                        startTime: option.start.substring(
+                                          option.start.indexOf("T"),
+                                        ),
+                                        endTime: option.end.substring(
+                                          option.end.indexOf("T"),
+                                        ),
+                                      };
+                                    },
+                                  );
+                                  const newOptions: DateTimeOption[] = [];
+                                  Object.keys(optionsByDay).forEach(
+                                    (dateString) => {
+                                      times.forEach((time) => {
+                                        newOptions.push({
+                                          type: "timeSlot",
+                                          start: dateString + time.startTime,
+                                          end: dateString + time.endTime,
+                                        });
                                       });
-                                    });
-                                  },
-                                );
-                                onChange(newOptions);
-                              }}
-                            />
-                            <DropdownItem
-                              label={t("deleteDate")}
-                              icon={TrashIcon}
-                              onClick={() => {
-                                onChange(
-                                  removeAllOptionsForDay(
-                                    options,
-                                    new Date(dateString),
-                                  ),
-                                );
-                              }}
-                            />
-                          </Dropdown>
+                                    },
+                                  );
+                                  onChange(newOptions);
+                                }}
+                              >
+                                <SparklesIcon className="mr-2 h-4 w-4" />
+                                <Trans i18nKey="applyToAllDates" />
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  onChange(
+                                    removeAllOptionsForDay(
+                                      options,
+                                      new Date(dateString),
+                                    ),
+                                  );
+                                }}
+                              >
+                                <XIcon className="mr-2 h-4 w-4" />
+                                <Trans i18nKey="deleteDate" />
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     </div>

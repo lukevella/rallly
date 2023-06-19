@@ -26,7 +26,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
     getParticipantById,
     getScore,
     getVote,
-    options: allOptions,
+    optionIds,
   } = usePoll();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
@@ -37,8 +37,8 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
       {options.map((option) => {
         const participants = getParticipantsWhoVotedForOption(option.optionId);
         const score = getScore(option.optionId);
-        const index = allOptions.findIndex(
-          ({ optionId }) => option.optionId === optionId,
+        const index = optionIds.findIndex(
+          (optionId) => option.optionId === optionId,
         );
         return (
           <Controller
@@ -88,6 +88,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                       vote={vote}
                       dow={option.dow}
                       day={option.day}
+                      month={option.month}
                       editable={editable}
                       selectedParticipantId={selectedParticipant?.id}
                     />

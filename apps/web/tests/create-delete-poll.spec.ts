@@ -1,11 +1,13 @@
-import { expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import smtpTester, { SmtpTester } from "smtp-tester";
+import { NewPollPage } from "tests/new-poll-page";
 
 test.describe.serial(() => {
-  let pollUrl: string;
+  let page: Page;
 
   let mailServer: SmtpTester;
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
     mailServer = smtpTester.init(4025);
   });
 
@@ -13,79 +15,32 @@ test.describe.serial(() => {
     mailServer.stop();
   });
 
-  test("create a new poll", async ({ page }) => {
-    await page.goto("/new");
-    await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
-    // click on label to focus on input
-    await page.click('text="Location"');
-    await page.keyboard.type("Joe's Coffee Shop");
+  test("create a new poll", async () => {
+    const newPollPage = new NewPollPage(page);
 
-    await page.click('text="Description"');
+    await newPollPage.goto();
+    await newPollPage.createPollAndCloseDialog();
 
-    await page.keyboard.type("This is a test description");
-
-    await page.click('text="Continue"');
-
-    await page.click('[title="Next month"]');
-
-    // Select a few days
-    await page.click("text=/^5$/");
-    await page.click("text=/^7$/");
-    await page.click("text=/^10$/");
-    await page.click("text=/^15$/");
-
-    await page.click('text="Continue"');
-
-    await page.type('[placeholder="Jessie Smith"]', "John");
-    await page.type(
-      '[placeholder="jessie.smith@example.com"]',
-      "john.doe@example.com",
-    );
-
-    await page.click('text="Create poll"');
-
-    const title = page.getByTestId("poll-title");
-
-    await title.waitFor();
-
-    await expect(title).toHaveText("Monthly Meetup");
+    await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
 
     const { email } = await mailServer.captureOne("john.doe@example.com", {
       wait: 5000,
     });
 
     expect(email.headers.subject).toBe("Let's find a date for Monthly Meetup");
-
-    pollUrl = page.url();
-  });
-
-  test("notifications", async ({ page }) => {
-    await page.goto(pollUrl);
-    await page.getByTestId("notifications-toggle").click();
-
-    expect(page.getByTestId("login-modal")).toBeVisible();
   });
 
   // delete the poll we just created
-  test("delete existing poll", async ({ page }) => {
-    await page.goto(pollUrl);
+  test("delete existing poll", async () => {
     const manageButton = page.getByText("Manage");
     await manageButton.waitFor();
     await manageButton.click();
     await page.click("text=Delete poll");
 
-    const deletePollForm = page.locator("data-testid=delete-poll-form");
+    const deletePollDialog = page.getByRole("dialog");
 
-    // button should be disabled
-    await expect(deletePollForm.locator("text=Delete poll")).toBeDisabled();
+    deletePollDialog.getByRole("button", { name: "delete" }).click();
 
-    // enter confirmation text
-    await page.type("[placeholder=delete-me]", "delete-me");
-
-    // button should now be enabled
-    await deletePollForm.locator("text=Delete poll").click();
-
-    // expect delete message to appear
-    await expect(page.locator("text=Deleted poll")).toBeVisible();
+    await page.waitForURL("/polls");
   });
 });

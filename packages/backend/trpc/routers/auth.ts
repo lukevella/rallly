@@ -13,6 +13,17 @@ import { LoginTokenPayload, RegistrationTokenPayload } from "../types";
 // we could have multiple guests because a login might be triggered from one device
 // and opened in another one.
 const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
+  await prisma.poll.updateMany({
+    where: {
+      userId: {
+        in: guestIds,
+      },
+    },
+    data: {
+      userId: userId,
+    },
+  });
+
   await prisma.participant.updateMany({
     where: {
       userId: {

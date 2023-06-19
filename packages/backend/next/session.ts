@@ -69,21 +69,3 @@ export const withAuth: GetServerSideProps = async (ctx) => {
 
   return { props: {} };
 };
-
-/**
- * Require user to be logged in if AUTH_REQUIRED is true
- * @returns
- */
-export const withAuthIfRequired: GetServerSideProps = async (ctx) => {
-  if (process.env.AUTH_REQUIRED === "true") {
-    if (!ctx.req.session.user || ctx.req.session.user.isGuest) {
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      };
-    }
-  }
-  return { props: {} };
-};

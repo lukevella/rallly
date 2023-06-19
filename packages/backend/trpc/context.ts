@@ -19,7 +19,7 @@ export async function createContext(
     opts.req.session.user = user;
     await opts.req.session.save();
   }
-  return { user, session: opts.req.session };
+  return { user, session: opts.req.session, req: opts.req, res: opts.res };
 }
 
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;

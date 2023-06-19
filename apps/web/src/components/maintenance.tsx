@@ -1,7 +1,5 @@
 import Head from "next/head";
 
-import Logo from "../../public/logo.svg";
-
 const Maintenance: React.FunctionComponent = () => {
   return (
     <div className="flex h-full flex-col items-center justify-center bg-gray-100">
@@ -14,7 +12,6 @@ const Maintenance: React.FunctionComponent = () => {
           shortly…
         </div>
       </div>
-      <Logo className="mt-8 inline-block h-8 text-slate-300" />
     </div>
   );
 };

@@ -14,7 +14,7 @@ import { withSession } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
-const defaultRedirectPath = "/profile";
+const defaultRedirectPath = "/polls";
 
 export const Page = () => {
   const { t } = useTranslation();
@@ -54,8 +54,8 @@ export const Page = () => {
           <div className="flex h-10 items-center justify-center gap-4">
             <CheckCircleIcon className={clsx("h-8 text-green-500")} />
           </div>
-          <div className="text-slate-800">{t("loginSuccessful")}</div>
-          <div className="text-sm text-slate-500">
+          <div className="text-gray-800">{t("loginSuccessful")}</div>
+          <div className="text-sm text-gray-500">
             <Trans
               t={t}
               i18nKey="redirect"

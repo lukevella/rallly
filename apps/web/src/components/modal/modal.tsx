@@ -3,7 +3,7 @@ import { XIcon } from "@rallly/icons";
 import { AnimatePresence, m } from "framer-motion";
 import * as React from "react";
 
-import { Button, ButtonProps } from "../button";
+import { ButtonProps, LegacyButton } from "../button";
 
 export interface ModalProps {
   description?: React.ReactNode;
@@ -40,7 +40,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
       {visible ? (
         <Dialog
           open={visible}
-          className="fixed inset-0 z-40 overflow-y-auto"
+          className="fixed inset-0 z-50 overflow-y-auto"
           initialFocus={initialFocusRef}
           onClose={() => {
             if (overlayClosable) onCancel?.();
@@ -56,7 +56,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-0 bg-slate-900/25"
+              className="fixed inset-0 z-0 bg-gray-900/25"
             />
             <m.div
               transition={{ duration: 0.1 }}
@@ -72,7 +72,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                 {showClose ? (
                   <button
                     role="button"
-                    className="absolute top-1 right-1 z-10 rounded p-2 text-slate-500 transition-colors hover:bg-slate-500/10 hover:text-slate-500 focus:ring-0 focus:ring-offset-0 active:bg-slate-500/20"
+                    className="absolute right-2 top-2 z-10 inline-flex h-7 w-7 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-500/10 hover:text-gray-500 focus:ring-0 focus:ring-offset-0 active:bg-gray-500/20"
                     onClick={onCancel}
                   >
                     <XIcon className="h-4" />
@@ -93,18 +93,18 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                   </div>
                 )}
                 {footer === undefined ? (
-                  <div className="flex h-14 items-center justify-end gap-3 rounded-br-lg border-t bg-slate-50 p-3">
+                  <div className="flex h-14 items-center justify-end gap-3 rounded-br-lg border-t bg-gray-50 p-3">
                     {cancelText ? (
-                      <Button
+                      <LegacyButton
                         onClick={() => {
                           onCancel?.();
                         }}
                       >
                         {cancelText}
-                      </Button>
+                      </LegacyButton>
                     ) : null}
                     {okText ? (
-                      <Button
+                      <LegacyButton
                         ref={initialFocusRef}
                         type="primary"
                         onClick={() => {
@@ -113,7 +113,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                         {...okButtonProps}
                       >
                         {okText}
-                      </Button>
+                      </LegacyButton>
                     ) : null}
                   </div>
                 ) : null}

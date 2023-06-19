@@ -1,88 +1,113 @@
 import { trpc } from "@rallly/backend";
-import { BellCrossedIcon, BellIcon } from "@rallly/icons";
+import { BellOffIcon, BellRingIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import { useLoginModal } from "@/components/auth/login-modal";
-import { Button } from "@/components/button";
+import { Skeleton } from "@/components/skeleton";
+import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
-import { usePollByAdmin } from "@/utils/trpc/hooks";
 
 import { usePoll } from "../poll-context";
-import Tooltip from "../tooltip";
 
 const NotificationsToggle: React.FunctionComponent = () => {
   const { poll } = usePoll();
-  const { t } = useTranslation();
 
-  const { data } = usePollByAdmin();
-  const watchers = data.watchers ?? [];
+  const { data: watchers, refetch } = trpc.polls.getWatchers.useQuery(
+    {
+      pollId: poll.id,
+    },
+    {
+      staleTime: Infinity,
+    },
+  );
 
   const { user } = useUser();
-  const [isWatching, setIsWatching] = React.useState(() =>
-    watchers.some(({ userId }) => userId === user.id),
-  );
+
+  const isWatching = watchers?.some(({ userId }) => userId === user.id);
 
   const posthog = usePostHog();
 
+  const router = useRouter();
   const watch = trpc.polls.watch.useMutation({
-    onMutate: () => {
-      setIsWatching(true);
-    },
     onSuccess: () => {
       // TODO (Luke Vella) [2023-04-08]: We should have a separate query for getting watchers
       posthog?.capture("turned notifications on", {
         pollId: poll.id,
         source: "notifications-toggle",
       });
+      refetch();
     },
   });
 
   const unwatch = trpc.polls.unwatch.useMutation({
-    onMutate: () => {
-      setIsWatching(false);
-    },
     onSuccess: () => {
       posthog?.capture("turned notifications off", {
         pollId: poll.id,
         source: "notifications-toggle",
       });
+      refetch();
     },
   });
 
-  const { openLoginModal } = useLoginModal();
+  const { t } = useTranslation();
+
+  if (!watchers) {
+    return <Skeleton className="h-9 w-9" />;
+  }
 
   return (
-    <Tooltip
-      content={
-        <div className="max-w-md">
-          {user.isGuest
-            ? t("notificationsGuest")
-            : isWatching
-            ? t("notificationsOn")
-            : t("notificationsOff")}
-        </div>
-      }
-    >
-      <Button
-        data-testid="notifications-toggle"
-        disabled={poll.demo}
-        icon={isWatching ? <BellIcon /> : <BellCrossedIcon />}
-        onClick={async () => {
-          if (user.isGuest) {
-            // ask to log in
-            openLoginModal();
-          } else {
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          loading={watch.isLoading || unwatch.isLoading}
+          icon={isWatching ? BellRingIcon : BellOffIcon}
+          data-testid="notifications-toggle"
+          disabled={poll.demo || user.isGuest}
+          className="flex items-center gap-2 px-2.5"
+          onClick={async () => {
+            if (user.isGuest) {
+              // TODO (Luke Vella) [2023-06-06]: Open Login Modal
+              router.push("/login");
+              return;
+            }
             // toggle
             if (isWatching) {
               await unwatch.mutateAsync({ pollId: poll.id });
             } else {
               await watch.mutateAsync({ pollId: poll.id });
             }
-          }
-        }}
-      />
+          }}
+        />
+      </TooltipTrigger>
+      <TooltipContent side="bottom">
+        {user.isGuest ? (
+          <Trans
+            i18nKey="notificationsGuestTooltip"
+            defaults="Create an account or login to turn get notifications"
+          />
+        ) : (
+          <Trans
+            i18nKey="notificationsValue"
+            defaults="Notifications: <b>{value}</b>"
+            components={{
+              b: <span className="font-semibold" />,
+            }}
+            values={{
+              value: isWatching
+                ? t("notificationsOn", {
+                    defaultValue: "On",
+                  })
+                : t("notificationsOff", {
+                    defaultValue: "Off",
+                  }),
+            }}
+          />
+        )}
+      </TooltipContent>
     </Tooltip>
   );
 };

@@ -4,15 +4,15 @@ import { keyBy } from "lodash";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { usePermissions } from "@/contexts/permissions";
 import {
   decodeOptions,
-  getBrowserTimeZone,
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";
+import { useDayjs } from "@/utils/dayjs";
 import { GetPollApiResponse } from "@/utils/trpc/types";
 
-import { useDayjs } from "../utils/dayjs";
 import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
 import { useRequiredContext } from "./use-required-context";
@@ -23,10 +23,6 @@ type PollContextValue = {
   poll: GetPollApiResponse;
   urlId: string;
   admin: boolean;
-  targetTimeZone: string;
-  participantUrl: string;
-  setTargetTimeZone: (timeZone: string) => void;
-  pollType: "date" | "timeSlot";
   highScore: number;
   optionIds: string[];
   // TODO (Luke Vella) [2022-05-18]: Move this stuff to participants provider
@@ -36,10 +32,7 @@ type PollContextValue = {
     participantId: string,
   ) => (Participant & { votes: Vote[] }) | undefined;
   getVote: (participantId: string, optionId: string) => VoteType | undefined;
-} & (
-  | { pollType: "date"; options: ParsedDateOption[] }
-  | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] }
-);
+};
 
 export const PollContext = React.createContext<PollContextValue | null>(null);
 
@@ -58,9 +51,9 @@ export const PollContextProvider: React.FunctionComponent<{
 }> = ({ poll, urlId, admin, children }) => {
   const { t } = useTranslation();
   const { participants } = useParticipants();
-  const { user, ownsObject } = useUser();
-  const [targetTimeZone, setTargetTimeZone] =
-    React.useState(getBrowserTimeZone);
+  const { user } = useUser();
+
+  const { canEditParticipant } = usePermissions();
 
   const getScore = React.useCallback(
     (optionId: string) => {
@@ -88,21 +81,13 @@ export const PollContextProvider: React.FunctionComponent<{
     [participants],
   );
 
-  const { timeFormat } = useDayjs();
-
   const contextValue = React.useMemo<PollContextValue>(() => {
     const highScore = poll.options.reduce((acc, curr) => {
-      const score = getScore(curr.id).yes;
-
+      const { yes, ifNeedBe } = getScore(curr.id);
+      const score = yes + ifNeedBe;
       return score > acc ? score : acc;
     }, 1);
 
-    const parsedOptions = decodeOptions(
-      poll.options,
-      poll.timeZone,
-      targetTimeZone,
-      timeFormat,
-    );
     const getParticipantById = (participantId: string) => {
       // TODO (Luke Vella) [2022-04-16]: Build an index instead
       const participant = participants?.find(({ id }) => id === participantId);
@@ -111,9 +96,11 @@ export const PollContextProvider: React.FunctionComponent<{
     };
 
     const userAlreadyVoted =
-      user && participants ? participants.some(ownsObject) : false;
+      user && participants
+        ? participants.some((participant) => canEditParticipant(participant.id))
+        : false;
 
-    const optionIds = parsedOptions.options.map(({ optionId }) => optionId);
+    const optionIds = poll.options.map(({ id }) => id);
 
     const participantById = keyBy(
       participants,
@@ -130,17 +117,12 @@ export const PollContextProvider: React.FunctionComponent<{
       );
     });
 
-    const { participantUrlId } = poll;
-
-    const participantUrl = `${window.location.origin}/p/${participantUrlId}`;
-
     return {
       optionIds,
       userAlreadyVoted,
       poll,
       urlId,
       admin,
-      participantUrl,
       getParticipantById: (participantId) => {
         return participantById[participantId];
       },
@@ -154,21 +136,8 @@ export const PollContextProvider: React.FunctionComponent<{
         return vote?.type;
       },
       getScore,
-      ...parsedOptions,
-      targetTimeZone,
-      setTargetTimeZone,
     };
-  }, [
-    admin,
-    getScore,
-    ownsObject,
-    participants,
-    poll,
-    targetTimeZone,
-    timeFormat,
-    urlId,
-    user,
-  ]);
+  }, [admin, canEditParticipant, getScore, participants, poll, urlId, user]);
 
   if (poll.deleted) {
     return (
@@ -181,5 +150,40 @@ export const PollContextProvider: React.FunctionComponent<{
   }
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
+  );
+};
+
+const OptionsContext = React.createContext<
+  | {
+      pollType: "date";
+      options: ParsedDateOption[];
+    }
+  | {
+      pollType: "timeSlot";
+      options: ParsedTimeSlotOption[];
+    }
+>({
+  pollType: "date",
+  options: [],
+});
+
+export const useOptions = () => {
+  const context = React.useContext(OptionsContext);
+  return context;
+};
+
+export const OptionsProvider = (props: React.PropsWithChildren) => {
+  const { poll } = usePoll();
+  const { timeZone: targetTimeZone, timeFormat } = useDayjs();
+  const parsedDateOptions = decodeOptions(
+    poll.options,
+    poll.timeZone,
+    targetTimeZone,
+    timeFormat,
+  );
+  return (
+    <OptionsContext.Provider value={parsedDateOptions}>
+      {props.children}
+    </OptionsContext.Provider>
   );
 };

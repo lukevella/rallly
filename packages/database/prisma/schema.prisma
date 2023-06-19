@@ -9,6 +9,13 @@ generator client {
   binaryTargets = ["native"]
 }
 
+enum TimeFormat {
+  hours12
+  hours24
+
+  @@map("time_format")
+}
+
 model User {
   id        String    @id @default(cuid())
   name      String
@@ -18,8 +25,29 @@ model User {
   comments  Comment[]
   polls     Poll[]
   watcher   Watcher[]
+  events     Event[]
 
   @@map("users")
+}
+
+// model UserPaymentData {
+//   userId                String   @id @map("user_id")
+//   subscriptionId        String   @map("subscription_id")
+//   subscriptionPlanId    String   @map("subscription_plan_id")
+//   subscriptionEndDate   DateTime @map("subscription_end_date")
+//   subscriptionStatus    String   @map("subscription_status")
+//   subscriptionUpdateUrl String   @map("subscription_update_url")
+//   subscriptionCancelUrl String   @map("subscription_cancel_url")
+// }
+
+model UserPreferences {
+  userId     String      @id @map("user_id")
+  timeZone   String?     @map("time_zone")
+  weekStart  Int?        @map("week_start")
+  timeFormat TimeFormat? @map("time_format")
+  createdAt  DateTime    @default(now()) @map("created_at")
+
+  @@map("user_preferences")
 }
 
 model Poll {
@@ -39,17 +67,37 @@ model Poll {
   watchers         Watcher[]
   demo             Boolean       @default(false)
   comments         Comment[]
-  legacy           Boolean       @default(false)
-  closed           Boolean       @default(false)
+  legacy           Boolean       @default(false) // @deprecated
+  closed           Boolean       @default(false) // we use this to indicate whether a poll is paused
   deleted          Boolean       @default(false)
   deletedAt        DateTime?     @map("deleted_at")
   touchedAt        DateTime      @default(now()) @map("touched_at")
   participantUrlId String        @unique @map("participant_url_id")
   adminUrlId       String        @unique @map("admin_url_id")
+  eventId          String?       @map("event_id")
+  event            Event?
 
   @@index([userId], type: Hash)
   @@map("polls")
 }
+
+model Event {
+  id        String   @id @default(cuid())
+  pollId    String   @unique @map("poll_id")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  poll      Poll     @relation(fields: [pollId], references: [id])
+  optionId  String   @map("option_id")
+  title     String
+  start     DateTime @db.Timestamp(0)
+  duration  Int      @default(0) @map("duration_minutes")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([pollId], type: Hash)
+  @@index([userId], type: Hash)
+  @@map("events")
+}
+
 
 model Watcher {
   id        Int      @id @default(autoincrement())
@@ -80,12 +128,12 @@ model Participant {
 }
 
 model Option {
-  id        String    @id @default(cuid())
-  start     DateTime  @db.Timestamp(0)
-  duration  Int       @default(0) @map("duration_minutes")
-  pollId    String    @map("poll_id")
-  poll      Poll      @relation(fields: [pollId], references: [id])
-  createdAt DateTime  @default(now()) @map("created_at")
+  id        String   @id @default(cuid())
+  start     DateTime @db.Timestamp(0)
+  duration  Int      @default(0) @map("duration_minutes")
+  pollId    String   @map("poll_id")
+  poll      Poll     @relation(fields: [pollId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@index([pollId], type: Hash)
   @@map("options")

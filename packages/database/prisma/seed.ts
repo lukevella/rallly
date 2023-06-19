@@ -37,7 +37,7 @@ async function main() {
               id: user.id,
             },
           },
-          timeZone: "America/New_York",
+          timeZone: duration !== 0 ? "America/New_York" : undefined,
           options: {
             create: faker.date
               .betweens(
@@ -48,6 +48,7 @@ async function main() {
               .map((date) => {
                 // rounded to nearest 15 minutes
                 date.setMinutes(Math.round(date.getMinutes() / 15) * 15);
+                date.setSeconds(0);
                 return {
                   start: date,
                   duration,

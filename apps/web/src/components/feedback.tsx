@@ -1,13 +1,13 @@
 import { trpc } from "@rallly/backend";
-import { CheckCircleIcon, SpeakerphoneIcon } from "@rallly/icons";
+import { CheckCircleIcon, MegaphoneIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/button";
 import { Logo } from "@/components/logo";
 import { useModalState } from "@/components/modal/use-modal";
-import Tooltip from "@/components/tooltip";
 
 const FeedbackForm = (props: { onClose: () => void }) => {
   const { t } = useTranslation();
@@ -34,7 +34,7 @@ const FeedbackForm = (props: { onClose: () => void }) => {
           </div>
         </div>
       ) : null}
-      <div className="font-semibold text-slate-800">
+      <div className="font-semibold text-gray-800">
         {t("feedbackFormTitle")}
       </div>
       <fieldset>
@@ -50,7 +50,7 @@ const FeedbackForm = (props: { onClose: () => void }) => {
           autoFocus={true}
           placeholder={t("feedbackFormPlaceholder")}
           rows={4}
-          className="w-full border bg-gray-50 p-2 text-slate-800"
+          className="w-full border bg-gray-50 p-2 text-gray-800"
           {...register("content", { required: true })}
         />
       </fieldset>
@@ -59,8 +59,8 @@ const FeedbackForm = (props: { onClose: () => void }) => {
           <Button onClick={props.onClose}>{t("cancel")}</Button>
           <Button
             loading={formState.isSubmitting}
-            htmlType="submit"
-            type="primary"
+            type="submit"
+            variant="primary"
           >
             {t("send")}
           </Button>
@@ -89,17 +89,18 @@ const FeedbackButton = () => {
   }
 
   return (
-    <Tooltip
-      className="fixed bottom-8 right-8 z-20 hidden sm:block"
-      content={t("sendFeedback")}
-      placement="left"
-    >
-      <button
-        onClick={show}
-        className="shadow-huge inline-flex h-14 w-14 items-center justify-center rounded-full bg-slate-800"
-      >
-        <SpeakerphoneIcon className="h-7 text-white" />
-      </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={show}
+          className="shadow-huge fixed bottom-8 right-8 hidden h-14 w-14 items-center justify-center rounded-full bg-gray-800 sm:inline-flex"
+        >
+          <MegaphoneIcon className="h-7 text-white" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="left">
+        <p>{t("sendFeedback")}</p>
+      </TooltipContent>
     </Tooltip>
   );
 };

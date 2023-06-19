@@ -1,9 +1,7 @@
 import { trpc } from "@rallly/backend";
 import { Participant, Vote, VoteType } from "@rallly/database";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import FullPageLoader from "./full-page-loader";
 import { useRequiredContext } from "./use-required-context";
 
 const ParticipantsContext = React.createContext<{
@@ -19,11 +17,14 @@ export const ParticipantsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
   pollId: string;
 }> = ({ children, pollId }) => {
-  const { t } = useTranslation();
-
-  const { data: participants } = trpc.polls.participants.list.useQuery({
-    pollId,
-  });
+  const { data: participants } = trpc.polls.participants.list.useQuery(
+    {
+      pollId,
+    },
+    {
+      staleTime: 1000 * 10,
+    },
+  );
 
   const getParticipants = (
     optionId: string,
@@ -42,7 +43,7 @@ export const ParticipantsProvider: React.FunctionComponent<{
   // TODO (Luke Vella) [2022-05-18]: Add mutations here
 
   if (!participants) {
-    return <FullPageLoader>{t("loadingParticipants")}</FullPageLoader>;
+    return null;
   }
 
   return (

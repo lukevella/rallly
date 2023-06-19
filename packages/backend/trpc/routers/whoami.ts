@@ -4,16 +4,20 @@ import z from "zod";
 
 import { decryptToken } from "../../session";
 import { publicProcedure, router } from "../trpc";
-import { LoginTokenPayload, UserSession } from "../types";
+import { LoginTokenPayload } from "../types";
 
 export const whoami = router({
-  get: publicProcedure.query(async ({ ctx }): Promise<UserSession> => {
+  get: publicProcedure.query(async ({ ctx }) => {
     if (ctx.user.isGuest) {
-      return { isGuest: true, id: ctx.user.id };
+      return { isGuest: true as const, id: ctx.user.id };
     }
 
     const user = await prisma.user.findUnique({
-      select: { id: true, name: true, email: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
       where: { id: ctx.user.id },
     });
 
@@ -22,7 +26,7 @@ export const whoami = router({
       throw new Error("User not found");
     }
 
-    return { isGuest: false, ...user };
+    return { isGuest: false as const, ...user };
   }),
   destroy: publicProcedure.mutation(async ({ ctx }) => {
     ctx.session.destroy();

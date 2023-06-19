@@ -1,4 +1,5 @@
 import { trpc } from "@rallly/backend";
+import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
@@ -7,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
-import { Button } from "../button";
 import { TextInput } from "../text-input";
 
 const VerifyCode: React.FunctionComponent<{
@@ -53,7 +53,7 @@ const VerifyCode: React.FunctionComponent<{
       >
         <fieldset>
           <h1 className="mb-1">{t("verifyYourEmail")}</h1>
-          <div className="mb-4 text-slate-500">
+          <div className="mb-4 text-gray-500">
             {t("stepSummary", {
               current: 2,
               total: 2,
@@ -94,24 +94,24 @@ const VerifyCode: React.FunctionComponent<{
               {formState.errors.code.message}
             </p>
           ) : null}
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-gray-500">
             {t("verificationCodeHelp")}
           </p>
         </fieldset>
-        <div className="mt-6 space-y-4 sm:flex sm:space-y-0 sm:space-x-3">
+        <div className="mt-6 space-y-4 sm:flex sm:space-x-3 sm:space-y-0">
           <Button
             loading={formState.isSubmitting || formState.isSubmitSuccessful}
-            htmlType="submit"
-            type="primary"
-            className="h-12 w-full px-6 sm:w-auto"
+            type="submit"
+            size="lg"
+            variant="primary"
           >
             {t("continue")}
           </Button>
           <Button
+            size="lg"
             onClick={handleResend}
             loading={resendStatus === "busy"}
             disabled={resendStatus === "disabled"}
-            className="h-12 w-full rounded-lg px-4 text-slate-500 transition-colors hover:bg-slate-500/10 active:bg-slate-500/20 sm:w-auto"
           >
             {t("resendVerificationCode")}
           </Button>
@@ -136,6 +136,7 @@ export const RegisterForm: React.FunctionComponent<{
     useForm<RegisterFormData>({
       defaultValues,
     });
+  const queryClient = trpc.useContext();
   const requestRegistration = trpc.auth.requestRegistration.useMutation();
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();
@@ -153,6 +154,8 @@ export const RegisterForm: React.FunctionComponent<{
           if (!res.user) {
             throw new Error("Failed to authenticate user");
           }
+
+          queryClient.invalidate();
 
           onRegistered();
           posthog?.identify(res.user.id, {
@@ -200,17 +203,18 @@ export const RegisterForm: React.FunctionComponent<{
       })}
     >
       <div className="mb-1 text-2xl font-bold">{t("createAnAccount")}</div>
-      <p className="mb-4 text-slate-500">
+      <p className="mb-4 text-gray-500">
         {t("stepSummary", {
           current: 1,
           total: 2,
         })}
       </p>
       <fieldset className="mb-4">
-        <label htmlFor="name" className="mb-1 text-slate-500">
+        <label htmlFor="name" className="mb-1 text-gray-500">
           {t("name")}
         </label>
         <TextInput
+          id="name"
           className="w-full"
           proportions="lg"
           autoFocus={true}
@@ -226,11 +230,12 @@ export const RegisterForm: React.FunctionComponent<{
         ) : null}
       </fieldset>
       <fieldset className="mb-4">
-        <label htmlFor="email" className="mb-1 text-slate-500">
+        <label htmlFor="email" className="mb-1 text-gray-500">
           {t("email")}
         </label>
         <TextInput
           className="w-full"
+          id="email"
           proportions="lg"
           error={!!formState.errors.email}
           disabled={formState.isSubmitting}
@@ -245,13 +250,13 @@ export const RegisterForm: React.FunctionComponent<{
       </fieldset>
       <Button
         loading={formState.isSubmitting}
-        htmlType="submit"
-        type="primary"
+        type="submit"
+        variant="primary"
         className="h-12 px-6"
       >
         {t("continue")}
       </Button>
-      <div className="mt-4 border-t pt-4 text-slate-500 sm:text-base">
+      <div className="mt-4 border-t pt-4 text-gray-500 sm:text-base">
         <Trans
           t={t}
           i18nKey="alreadyRegistered"
@@ -285,6 +290,7 @@ export const LoginForm: React.FunctionComponent<{
   const requestLogin = trpc.auth.requestLogin.useMutation();
   const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
 
+  const queryClient = trpc.useContext();
   const [token, setToken] = React.useState<string>();
   const posthog = usePostHog();
   if (token) {
@@ -300,6 +306,7 @@ export const LoginForm: React.FunctionComponent<{
             throw new Error("Failed to authenticate user");
           } else {
             onAuthenticated();
+            queryClient.invalidate();
             posthog?.identify(res.user.id, {
               email: res.user.email,
               name: res.user.name,
@@ -362,18 +369,19 @@ export const LoginForm: React.FunctionComponent<{
       })}
     >
       <div className="mb-1 text-2xl font-bold">{t("login")}</div>
-      <p className="mb-4 text-slate-500">
+      <p className="mb-4 text-gray-500">
         {t("stepSummary", {
           current: 1,
           total: 2,
         })}
       </p>
       <fieldset className="mb-4">
-        <label htmlFor="email" className="mb-1 text-slate-500">
+        <label htmlFor="email" className="mb-1 text-gray-500">
           {t("email")}
         </label>
         <TextInput
           className="w-full"
+          id="email"
           proportions="lg"
           autoFocus={true}
           error={!!formState.errors.email}
@@ -390,8 +398,9 @@ export const LoginForm: React.FunctionComponent<{
       <div className="space-y-3">
         <Button
           loading={formState.isSubmitting}
-          htmlType="submit"
-          type="primary"
+          type="submit"
+          size="lg"
+          variant="primary"
           className="h-12 w-full px-6"
         >
           {t("continue")}

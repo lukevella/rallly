@@ -1,14 +1,7 @@
 import { absoluteUrl } from "@rallly/utils";
 
 import { EmailLayout } from "./components/email-layout";
-import {
-  Button,
-  Card,
-  Heading,
-  Link,
-  SubHeadingText,
-  Text,
-} from "./components/styled-components";
+import { Button, Card, Link, Text } from "./components/styled-components";
 import { getDomain } from "./components/utils";
 
 export interface NewPollEmailProps {
@@ -29,7 +22,7 @@ const ShareLink = ({
   participantLink: string;
 }>) => {
   return (
-    <Button
+    <Link
       href={`mailto:?subject=${encodeURIComponent(
         `Availability for ${title}`,
       )}&body=${encodeURIComponent(
@@ -37,24 +30,7 @@ const ShareLink = ({
       )}`}
     >
       {children}
-    </Button>
-  );
-};
-
-const LinkContainer = (props: { href: string }) => {
-  return (
-    <Text
-      style={{
-        borderRadius: "4px",
-        backgroundColor: "white",
-        padding: "12px",
-        border: "1px solid #E2E8F0",
-      }}
-    >
-      <Link href={props.href} style={{ letterSpacing: 1 }}>
-        {props.href}
-      </Link>
-    </Text>
+    </Link>
   );
 };
 
@@ -62,7 +38,7 @@ export const NewPollEmail = ({
   title = "Untitled Poll",
   name = "John",
   adminLink = "https://rallly.co/admin/abcdefg123",
-  participantLink = "https://rallly.co/p/wxyz9876",
+  participantLink = "https://rallly.co/invite/wxyz9876",
 }: NewPollEmailProps) => {
   return (
     <EmailLayout
@@ -77,26 +53,15 @@ export const NewPollEmail = ({
       preview="Share your participant link to start collecting responses."
     >
       <Text>
-        Your poll for <strong>{title}</strong> is live! Here are two links you
-        will need to manage your poll.
+        Your poll has been successfully created! Here are the details:
       </Text>
       <Card>
-        <Heading>Admin link</Heading>
-        <SubHeadingText>
-          Use this link to view results and make changes to your poll.
-        </SubHeadingText>
-        <LinkContainer href={adminLink} />
         <Text>
-          <Button href={adminLink}>Go to admin page</Button>
+          <strong>Title:</strong> {title}
+          <br />
+          <strong>Invite Link:</strong>{" "}
+          <Link href={participantLink}>{participantLink}</Link>
         </Text>
-      </Card>
-      <Card>
-        <Heading>Participant link</Heading>
-        <SubHeadingText>
-          Copy this link and share it with your participants to start collecting
-          responses.
-        </SubHeadingText>
-        <LinkContainer href={participantLink} />
         <Text>
           <ShareLink
             title={title}
@@ -107,6 +72,18 @@ export const NewPollEmail = ({
           </ShareLink>
         </Text>
       </Card>
+      <Text>
+        To invite participants to your poll, simply share the{" "}
+        <strong>Invite Link</strong> above with them. They&apos;ll be able to
+        vote on their preferred meeting times and dates.
+      </Text>
+      <Text>
+        If you need to make any changes to your poll, or if you want to see the
+        results so far, just click on the button below:
+      </Text>
+      <Text>
+        <Button href={adminLink}>Manage Poll &rarr;</Button>
+      </Text>
     </EmailLayout>
   );
 };

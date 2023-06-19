@@ -8,12 +8,12 @@ import {
 import { Listbox } from "@headlessui/react";
 import { ChevronDownIcon } from "@rallly/icons";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import * as React from "react";
 
 import { getDuration } from "@/utils/date-time-utils";
 import { stopPropagation } from "@/utils/stop-propagation";
 
-import { useDayjs } from "../../../../utils/dayjs";
 import { styleMenuItem } from "../../../menu-styles";
 
 export interface TimePickerProps {
@@ -29,7 +29,6 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   className,
   after,
 }) => {
-  const { dayjs } = useDayjs();
   const { reference, floating, x, y, strategy, refs } = useFloating({
     placement: "bottom-start",
     strategy: "fixed",
@@ -64,7 +63,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
           <div className="flex items-center gap-2">
             <span>{optionValue.format("LT")}</span>
             {after ? (
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-gray-500">
                 {getDuration(dayjs(after), optionValue)}
               </span>
             ) : null}

@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-foreground overflow-y-auto overscroll-none bg-gray-200/50;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html {
+    @apply h-full font-sans text-base text-gray-700;
+  }
+  body #__next {
+    @apply min-h-screen;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply font-sans font-semibold text-gray-800;
+  }
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+
+  label {
+    @apply block text-sm;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply rounded outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-gray-300;
+  }
+
+  #floating-ui-root {
+    @apply absolute z-50 w-full;
+  }
+}
+
+@layer components {
+  .text-link {
+    @apply text-primary-600 hover:text-primary-600 focus-visible:ring-primary-600 rounded-md font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+  }
+  .formField {
+    @apply mb-4;
+  }
+  .input {
+    @apply appearance-none border px-2 text-gray-800 placeholder:text-gray-500;
+  }
+  input.input {
+    @apply h-9;
+  }
+  .input-lg {
+    @apply input px-3 py-3;
+  }
+  .input-error {
+    @apply focus:ring-rose-500;
+  }
+  .checkbox {
+    @apply text-primary-600 focus:ring-primary-600 h-4 w-4 rounded border-gray-300 shadow-sm;
+  }
+  .btn {
+    @apply inline-flex h-9 select-none items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md border px-2.5 text-sm font-medium;
+  }
+  a.btn {
+    @apply cursor-pointer hover:no-underline;
+  }
+
+  .btn-default {
+    @apply btn bg-white/50 text-gray-700 hover:bg-gray-50 hover:shadow-sm active:bg-gray-200  active:shadow-none;
+  }
+  .btn-danger {
+    text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
+    @apply btn border-rose-700 bg-rose-600 text-white shadow-sm ring-1 ring-inset ring-white/10 hover:bg-rose-500 active:bg-rose-700;
+  }
+  .btn-link {
+    @apply text-primary-600 inline-flex items-center underline;
+  }
+  .btn.btn-disabled {
+    text-shadow: none;
+    @apply pointer-events-none border-gray-200 bg-gray-500/5 text-gray-400 shadow-none;
+  }
+  .btn-primary {
+    text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;
+    @apply btn border-gray-900 bg-gray-800 text-white shadow-sm ring-1 ring-inset ring-white/10 hover:bg-gray-700 active:bg-gray-900;
+  }
+
+  a.btn-primary {
+    @apply text-white;
+  }
+
+  .segment-button {
+    @apply flex h-9 text-center;
+  }
+
+  .segment-button button {
+    @apply inline-flex grow items-center justify-center border-b border-r border-t bg-gray-50 px-4 transition-colors first:rounded-r-none first:border-l last:rounded-l-none hover:bg-gray-50 focus:z-10 active:bg-gray-100;
+  }
+
+  .segment-button .segment-button-active {
+    @apply pointer-events-none bg-white text-gray-800;
+  }
+
+  .menu {
+    @apply relative;
+  }
+
+  .menu-items {
+    @apply absolute z-30 mt-1 overflow-hidden rounded border bg-white shadow-md focus:outline-none;
+  }
+
+  .menu-item {
+    @apply block w-full select-none truncate px-4 py-2 text-left;
+  }
+
+  button[disabled] {
+    @apply cursor-not-allowed;
+  }
+
+  .card {
+    @apply border-y bg-white p-4 shadow-sm md:rounded-lg md:border;
+  }
+}
+
+@layer components {
+  .heading {
+    @apply text-primary-600 mb-2 text-center text-lg sm:mb-4 sm:text-xl;
+  }
+  .subheading {
+    @apply mb-8 text-center text-2xl font-bold text-gray-800 sm:mb-16 sm:text-4xl;
+  }
+  .heading-sm {
+    @apply mb-4 text-xl font-bold text-gray-800;
+  }
+  .text {
+    @apply leading-relaxed text-gray-500 sm:text-lg;
+  }
+}
+
+@layer utilities {
+  .bg-lines {
+    background-color: #f8fafc;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="grid" width="200" height="200" patternUnits="userSpaceOnUse"><path d="M 200 0 L 0 0 0 200" fill="none" stroke="#ccc" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>');
+  }
+  .bg-pattern {
+    background-color: #f9fafb;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f3f4f6' fill-opacity='0.75' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+.rbc-time-view {
+  @apply border-0 border-b border-t border-gray-100;
+}
+
+.rbc-today {
+  @apply bg-blue-50 bg-opacity-50;
+}
+
+.rbc-day-slot .rbc-time-slot {
+  @apply border-gray-100;
+}
+
+.rbc-time-content > * + * > * {
+  @apply border-gray-200;
+}
+.rbc-time-header.rbc-overflowing,
+.rbc-time-header-content,
+.rbc-header {
+  @apply border-gray-200;
+}
+
+.rbc-time-content {
+  @apply border-t-0;
+}
+
+.rbc-time-view .rbc-allday-cell {
+  @apply hidden;
+}
+
+.rbc-label.rbc-time-header-gutter {
+  @apply border-b;
+}
+
+.rbc-current-time-indicator {
+  @apply bg-rose-400;
+}
+
+.rbc-header + .rbc-header {
+  @apply border-l-0;
+}
+
+.rbc-header a {
+  @apply block h-full w-full p-1 no-underline hover:text-gray-800;
+}
+
+.rbc-day-slot .rbc-events-container {
+  @apply mr-2;
+}
+.rbc-slot-selection {
+  @apply rounded-sm bg-green-50 text-green-500;
+}
+
+.rbc-header.rbc-today {
+  @apply bg-white text-rose-600;
+}
+
+.rbc-button-link {
+  @apply m-1 w-full;
+}

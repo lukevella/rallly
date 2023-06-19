@@ -1,8 +1,17 @@
+import { TimeFormat } from "@rallly/database";
 import { sealData, unsealData } from "iron-session";
 
 import { sessionConfig } from "./session-config";
 
-type UserSessionData = { id: string; isGuest: boolean };
+type UserSessionData = {
+  id: string;
+  isGuest: boolean;
+  preferences?: {
+    timeZone?: string;
+    weekStart?: number;
+    timeFormat?: TimeFormat;
+  };
+};
 
 declare module "iron-session" {
   export interface IronSessionData {
@@ -16,6 +25,7 @@ export const decryptToken = async <P extends Record<string, unknown>>(
   const payload = await unsealData(token, {
     password: sessionConfig.password,
   });
+
   if (Object.keys(payload).length === 0) {
     return null;
   }

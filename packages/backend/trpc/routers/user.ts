@@ -31,14 +31,13 @@ export const user = router({
   changeName: publicProcedure
     .input(
       z.object({
-        userId: z.string(),
         name: z.string().min(1).max(100),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await prisma.user.update({
         where: {
-          id: input.userId,
+          id: ctx.user.id,
         },
         data: {
           name: input.name,

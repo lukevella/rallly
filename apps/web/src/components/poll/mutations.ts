@@ -1,5 +1,6 @@
 import { trpc } from "@rallly/backend";
 
+import { usePoll } from "@/components/poll-context";
 import { usePostHog } from "@/utils/posthog";
 
 import { ParticipantForm } from "./types";
@@ -61,18 +62,20 @@ export const useUpdateParticipantMutation = () => {
 export const useDeleteParticipantMutation = () => {
   const queryClient = trpc.useContext();
   const posthog = usePostHog();
+  const { poll } = usePoll();
   return trpc.polls.participants.delete.useMutation({
-    onMutate: ({ participantId, pollId }) => {
+    onMutate: ({ participantId }) => {
       queryClient.polls.participants.list.setData(
-        { pollId: pollId },
+        { pollId: poll.id },
         (existingParticipants = []) => {
           return existingParticipants.filter(({ id }) => id !== participantId);
         },
       );
     },
-    onSuccess: (_, { pollId, participantId }) => {
+    onSuccess: (_, { participantId }) => {
+      queryClient.polls.participants.list.invalidate({ pollId: poll.id });
       posthog?.capture("remove participant", {
-        pollId,
+        pollId: poll.id,
         participantId,
       });
     },

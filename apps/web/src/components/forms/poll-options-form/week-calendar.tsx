@@ -1,14 +1,16 @@
 import clsx from "clsx";
+import dayjs from "dayjs";
 import React from "react";
 import { Calendar } from "react-big-calendar";
 import { useMount } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
-import { useDayjs } from "../../../utils/dayjs";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
 import { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "./utils";
+
+const localizer = dayjsLocalizer(dayjs);
 
 const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   title,
@@ -20,8 +22,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const [scrollToTime, setScrollToTime] = React.useState<Date>();
-  const { dayjs, timeFormat } = useDayjs();
-  const localizer = React.useMemo(() => dayjsLocalizer(dayjs), [dayjs]);
 
   useMount(() => {
     // Bit of a hack to force rbc to scroll to the right time when we close/open a modal
@@ -30,7 +30,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <Calendar
-      key={timeFormat}
       events={options.map((option) => {
         if (option.type === "date") {
           return { title, start: new Date(option.date) };
@@ -126,7 +125,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   }
                 }}
                 className={clsx(
-                  "inline-flex w-full items-center justify-center rounded-md py-2 text-sm hover:bg-slate-50 hover:text-gray-700",
+                  "inline-flex w-full items-center justify-center rounded-md py-2 text-sm hover:bg-gray-50 hover:text-gray-700",
                   {
                     "bg-green-50 text-green-600 hover:bg-green-50 hover:bg-opacity-75 hover:text-green-600":
                       !!selectedOption,

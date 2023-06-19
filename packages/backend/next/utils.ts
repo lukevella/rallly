@@ -8,13 +8,15 @@ export function composeGetServerSideProps(
     for (const getServerSideProps of fns) {
       const fnRes = await getServerSideProps(ctx);
 
+      if ("redirect" in fnRes) {
+        return fnRes;
+      }
+
       if ("props" in fnRes) {
         res.props = {
           ...res.props,
           ...fnRes.props,
         };
-      } else {
-        return fnRes;
       }
     }
 

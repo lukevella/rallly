@@ -11,7 +11,7 @@ import {
 
 import { fontFamily, Section, Text } from "./styled-components";
 
-interface EmailLayoutProps {
+export interface EmailLayoutProps {
   preview: string;
   recipientName: string;
   footNote?: React.ReactNode;
@@ -23,6 +23,7 @@ const containerStyles = {
   background: "white",
   fontFamily,
   padding: 16,
+  border: "1px solid #E2E8F0",
   borderRadius: 5,
 };
 
@@ -42,16 +43,15 @@ export const EmailLayout = ({
   children,
   footNote,
 }: React.PropsWithChildren<EmailLayoutProps>) => {
-  const firstName = recipientName.split(" ")[0];
   return (
     <Html>
       <Head />
       <Preview>{preview}</Preview>
-      <Body style={{ backgroundColor: "#e5e7eb", padding: "16px" }}>
+      <Body style={{ backgroundColor: "#F3F4F6", padding: "16px" }}>
         <Container style={containerStyles}>
           <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
           <Section style={sectionStyles}>
-            <Text>Hi {firstName},</Text>
+            <Text>Hi {recipientName},</Text>
             {children}
             {footNote ? (
               <Text

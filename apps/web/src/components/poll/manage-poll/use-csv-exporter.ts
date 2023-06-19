@@ -1,15 +1,16 @@
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 
-import { usePoll } from "@/components/poll-context";
+import { useOptions, usePoll } from "@/components/poll-context";
 
-import { useDayjs } from "../../../utils/dayjs";
 import { useParticipants } from "../../participants-provider";
 
 export const useCsvExporter = () => {
-  const { dayjs } = useDayjs();
-  const { poll, options } = usePoll();
+  const { poll } = usePoll();
+  const { options } = useOptions();
   const { t } = useTranslation();
   const { participants } = useParticipants();
+
   return {
     exportToCsv: () => {
       const header = [

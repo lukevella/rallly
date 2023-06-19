@@ -48,7 +48,7 @@ export const comments = router({
           poll: {
             select: {
               title: true,
-              adminUrlId: true,
+              id: true,
             },
           },
         },
@@ -87,7 +87,7 @@ export const comments = router({
             props: {
               name: watcher.user.name,
               authorName,
-              pollUrl: absoluteUrl(`/admin/${poll.adminUrlId}`),
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
               disableNotificationsUrl: absoluteUrl(
                 `/auth/disable-notifications?token=${token}`,
               ),

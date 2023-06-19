@@ -1,25 +1,26 @@
 import { Listbox } from "@headlessui/react";
-import { ChevronDownIcon, PlusCircleIcon } from "@rallly/icons";
+import { ChevronDownIcon, MoreHorizontalIcon, PlusIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useUpdateEffect } from "react-use";
 import smoothscroll from "smoothscroll-polyfill";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
-import { usePoll } from "@/components/poll-context";
-import { You } from "@/components/you";
+import { useOptions, usePoll } from "@/components/poll-context";
+import { usePermissions } from "@/contexts/permissions";
+import { TimePreferences } from "@/contexts/time-preferences";
 
-import { Button } from "../button";
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
 import { useParticipants } from "../participants-provider";
-import TimeZonePicker from "../time-zone-picker";
-import { isUnclaimed, useUser } from "../user-provider";
+import { useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
 import { ParticipantForm } from "./types";
-import UserAvatar from "./user-avatar";
+import UserAvatar, { YouAvatar } from "./user-avatar";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -31,16 +32,14 @@ const MobilePoll: React.FunctionComponent = () => {
   const {
     poll,
     admin,
-    targetTimeZone,
-    setTargetTimeZone,
     getParticipantById,
     optionIds,
     getVote,
     userAlreadyVoted,
   } = pollContext;
 
+  const { options } = useOptions();
   const { participants } = useParticipants();
-  const { timeZone } = poll;
 
   const session = useUser();
 
@@ -64,9 +63,17 @@ const MobilePoll: React.FunctionComponent = () => {
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
+  const { canEditParticipant, canAddNewParticipant } = usePermissions();
+
   const [isEditing, setIsEditing] = React.useState(
-    !userAlreadyVoted && !poll.closed && !admin,
+    canAddNewParticipant && !userAlreadyVoted,
   );
+
+  useUpdateEffect(() => {
+    if (!canAddNewParticipant) {
+      setIsEditing(false);
+    }
+  }, [canAddNewParticipant]);
 
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -112,7 +119,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 <div className="menu min-w-0 grow">
                   <Listbox.Button
                     as={Button}
-                    className="w-full"
+                    className="w-full shadow-none"
                     data-testid="participant-selector"
                   >
                     <div className="min-w-0 grow text-left">
@@ -162,7 +169,7 @@ const MobilePoll: React.FunctionComponent = () => {
               </Listbox>
             ) : (
               <div className="flex grow items-center px-1">
-                <You />
+                <YouAvatar />
               </div>
             )}
             {isEditing ? (
@@ -176,16 +183,8 @@ const MobilePoll: React.FunctionComponent = () => {
               </Button>
             ) : selectedParticipant ? (
               <ParticipantDropdown
-                disabled={
-                  poll.closed ||
-                  // if user is  participant (not admin)
-                  (!admin &&
-                    // and does not own this participant
-                    !session.ownsObject(selectedParticipant) &&
-                    // and the participant has been claimed by a different user
-                    !isUnclaimed(selectedParticipant))
-                  // not allowed to edit
-                }
+                align="end"
+                disabled={!canEditParticipant(selectedParticipant.id)}
                 participant={selectedParticipant}
                 onEdit={() => {
                   setIsEditing(true);
@@ -196,33 +195,30 @@ const MobilePoll: React.FunctionComponent = () => {
                     })),
                   });
                 }}
-              />
-            ) : (
+              >
+                <Button icon={MoreHorizontalIcon} />
+              </ParticipantDropdown>
+            ) : canAddNewParticipant ? (
               <Button
-                type="primary"
-                icon={<PlusCircleIcon />}
-                disabled={poll.closed}
+                icon={PlusIcon}
                 onClick={() => {
                   reset({
                     votes: [],
                   });
                   setIsEditing(true);
                 }}
-              >
-                {t("new")}
-              </Button>
-            )}
+              />
+            ) : null}
           </div>
-          {timeZone ? (
-            <TimeZonePicker
-              value={targetTimeZone}
-              onChange={setTargetTimeZone}
-            />
-          ) : null}
         </div>
+        {poll.options[0].duration !== 0 ? (
+          <div className="overflow-x-auto border-b bg-gray-50 p-3">
+            <TimePreferences />
+          </div>
+        ) : null}
         <GroupedOptions
           selectedParticipantId={selectedParticipantId}
-          options={pollContext.options}
+          options={options}
           editable={isEditing}
           group={(option) => {
             if (option.type === "timeSlot") {
@@ -250,8 +246,8 @@ const MobilePoll: React.FunctionComponent = () => {
               <div className="space-y-3 border-t bg-gray-50 p-3">
                 <Button
                   className="w-full"
-                  htmlType="submit"
-                  type="primary"
+                  type="submit"
+                  variant="primary"
                   loading={formState.isSubmitting}
                 >
                   {selectedParticipantId ? t("save") : t("continue")}

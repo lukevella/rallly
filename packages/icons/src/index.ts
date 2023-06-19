@@ -1,4 +1,4 @@
-export { default as BellIcon } from "./custom-icons/bell.svg";
+export { default as BellOnIcon } from "./custom-icons/bell.svg";
 export { default as BellCrossedIcon } from "./custom-icons/bell-crossed.svg";
 export { default as DiscordIcon } from "./custom-icons/discord.svg";
 export { default as GithubIcon } from "./custom-icons/github.svg";
@@ -8,4 +8,4 @@ export { default as PendingIcon } from "./custom-icons/pending.svg";
 export { default as SpinnerIcon } from "./custom-icons/spinner.svg";
 export { default as TwitterIcon } from "./custom-icons/twitter.svg";
 export { default as YesIcon } from "./custom-icons/yes.svg";
-export * from "@heroicons/react/outline";
+export * from "lucide-react";

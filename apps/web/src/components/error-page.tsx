@@ -1,4 +1,5 @@
-import { EmojiSadIcon } from "@rallly/icons";
+import { FrownIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -11,7 +12,7 @@ export interface ComponentProps {
 }
 
 const ErrorPage: React.FunctionComponent<ComponentProps> = ({
-  icon: Icon = EmojiSadIcon,
+  icon: Icon = FrownIcon,
   title,
   description,
 }) => {
@@ -20,19 +21,20 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
     <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
       <Head>
         <title>{title}</title>
-        <meta name="robots" content="noindex,nofollow" />
       </Head>
-      <div className="flex items-start">
-        <div className="text-center">
-          <Icon className="mb-4 inline-block w-24 text-slate-500" />
+      <div className="space-y-8">
+        <div className="space-y-4 text-center">
+          <Icon className="mb-4 inline-block h-24 w-24 text-gray-400" />
           <div className="text-primary-600 mb-2 text-3xl font-bold ">
             {title}
           </div>
-          <p>{description}</p>
-          <div className="flex justify-center space-x-3">
-            <Link href="/" className="btn-primary">
-              {t("errors_goToHome")}
-            </Link>
+          <p className="text-gray-600">{description}</p>
+        </div>
+        <div className="flex justify-center space-x-3">
+          <Button variant="primary" asChild>
+            <Link href="/">{t("errors_goToHome")}</Link>
+          </Button>
+          <Button asChild>
             <Link
               href="https://support.rallly.co"
               passHref={true}
@@ -40,7 +42,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
             >
               {t("common_support")}
             </Link>
-          </div>
+          </Button>
         </div>
       </div>
     </div>

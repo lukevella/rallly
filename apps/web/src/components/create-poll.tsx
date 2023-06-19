@@ -1,11 +1,21 @@
 import { trpc } from "@rallly/backend";
+import { ArrowLeftIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@rallly/ui/card";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
 
-import { Button } from "./button";
 import {
   NewEventData,
   PollDetailsData,
@@ -35,7 +45,7 @@ export interface CreatePollPageProps {
   view?: "week" | "month";
 }
 
-const Page: React.FunctionComponent = () => {
+export const CreatePoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   const router = useRouter();
@@ -71,7 +81,7 @@ const Page: React.FunctionComponent = () => {
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   const posthog = usePostHog();
-
+  const queryClient = trpc.useContext();
   const createPoll = trpc.polls.create.useMutation({
     onSuccess: (res) => {
       setIsRedirecting(true);
@@ -80,7 +90,8 @@ const Page: React.FunctionComponent = () => {
         numberOfOptions: formData.options?.options?.length,
         optionsView: formData?.options?.view,
       });
-      router.replace(`/admin/${res.urlId}`);
+      queryClient.polls.list.invalidate();
+      router.replace(`/poll/${res.id}`);
     },
   });
 
@@ -129,22 +140,29 @@ const Page: React.FunctionComponent = () => {
   };
 
   return (
-    <div className="max-w-full p-3 sm:p-4">
-      <div className="max-w-full">
-        <div className="max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-          <div className="flex justify-between border-b p-4">
-            <h1 className="m-0 text-xl font-semibold text-slate-800">
-              {t("createNew")}
-            </h1>
-            <Steps current={currentStepIndex} total={steps.length} />
-          </div>
-          <div className="">
+    <div>
+      <div className="sm:p-8">
+        <div className="my-4 flex justify-center">
+          <Steps current={currentStepIndex} total={steps.length} />
+        </div>
+        <Card className="mx-auto max-w-4xl rounded-none border-x-0 sm:rounded-md sm:border-x">
+          <CardHeader>
+            <CardTitle>
+              <Trans i18nKey="newPoll" />
+            </CardTitle>
+            <CardDescription>
+              <Trans
+                i18nKey="createPollDescription"
+                defaults="Create an event and invite participants to vote on the best time to meet."
+              />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             {(() => {
               switch (currentStepName) {
                 case "eventDetails":
                   return (
                     <PollDetailsForm
-                      className="max-w-full p-3 sm:p-4"
                       name={currentStepName}
                       defaultValues={formData?.eventDetails}
                       onSubmit={handleSubmit}
@@ -154,7 +172,6 @@ const Page: React.FunctionComponent = () => {
                 case "options":
                   return (
                     <PollOptionsForm
-                      className="grow"
                       name={currentStepName}
                       defaultValues={formData?.options}
                       onSubmit={handleSubmit}
@@ -165,7 +182,6 @@ const Page: React.FunctionComponent = () => {
                 case "userDetails":
                   return (
                     <UserDetailsForm
-                      className="grow p-4"
                       name={currentStepName}
                       defaultValues={formData?.userDetails}
                       onSubmit={handleSubmit}
@@ -174,36 +190,48 @@ const Page: React.FunctionComponent = () => {
                   );
               }
             })()}
-            <div className="flex w-full justify-end space-x-3 border-t bg-gray-50 p-3">
+          </CardContent>
+          <CardFooter className="justify-between">
+            <div>
               {currentStepIndex > 0 ? (
                 <Button
+                  icon={ArrowLeftIcon}
                   disabled={isBusy}
                   onClick={() => {
-                    setFormData({
-                      ...formData,
-                      currentStep: currentStepIndex - 1,
-                    });
+                    if (currentStepIndex > 0) {
+                      setFormData({
+                        ...formData,
+                        currentStep: currentStepIndex - 1,
+                      });
+                    }
                   }}
                 >
-                  {t("back")}
+                  <Trans i18nKey="back" />
                 </Button>
               ) : null}
+            </div>
+            {currentStepIndex < steps.length - 1 ? (
               <Button
+                variant="primary"
                 form={currentStepName}
                 loading={isBusy}
-                htmlType="submit"
-                type="primary"
+                type="submit"
               >
-                {currentStepIndex < steps.length - 1
-                  ? t("continue")
-                  : t("createPoll")}
+                {t("continue")}
               </Button>
-            </div>
-          </div>
-        </div>
+            ) : (
+              <Button
+                form={currentStepName}
+                variant="primary"
+                loading={isBusy}
+                type="submit"
+              >
+                {t("createPoll")}
+              </Button>
+            )}
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );
 };
-
-export default Page;

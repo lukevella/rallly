@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { usePoll } from "../../poll-context";
 import { normalizeVotes } from "../mutations";
 import { ParticipantForm, ParticipantFormSubmitted } from "../types";
-import UserAvatar from "../user-avatar";
+import UserAvatar, { YouAvatar } from "../user-avatar";
 import { VoteSelector } from "../vote-selector";
 import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
@@ -33,7 +33,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
     goToNextPage,
   } = usePollContext();
 
-  const { options, optionIds } = usePoll();
+  const { optionIds } = usePoll();
   const { handleSubmit, control } = useForm({
     defaultValues: {
       votes: [],
@@ -66,8 +66,12 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
       })}
       className={clsx("flex h-12 shrink-0", className)}
     >
-      <div className="flex items-center px-3" style={{ width: sidebarWidth }}>
-        <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
+      <div className="flex items-center px-5" style={{ width: sidebarWidth }}>
+        {name ? (
+          <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
+        ) : (
+          <YouAvatar />
+        )}
       </div>
       <Controller
         control={control}
@@ -75,7 +79,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
         render={({ field }) => {
           return (
             <ControlledScrollArea>
-              {options.map(({ optionId }, index) => {
+              {optionIds.map((optionId, index) => {
                 const value = field.value[index];
 
                 return (
@@ -90,7 +94,7 @@ const ParticipantRowForm: React.ForwardRefRenderFunction<
                       onKeyDown={(e) => {
                         if (
                           e.code === "Tab" &&
-                          index < options.length - 1 &&
+                          index < optionIds.length - 1 &&
                           !isColumnVisible(index + 1)
                         ) {
                           e.preventDefault();

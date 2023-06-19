@@ -1,10 +1,13 @@
 import { Participant, Vote, VoteType } from "@rallly/database";
+import { MoreHorizontalIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import * as React from "react";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
+import { usePermissions } from "@/contexts/permissions";
 
 import { ParticipantFormSubmitted } from "../types";
 import UserAvatar from "../user-avatar";
@@ -17,7 +20,6 @@ export interface ParticipantRowProps {
   participant: Participant & { votes: Vote[] };
   className?: string;
   editMode?: boolean;
-  disableEditing?: boolean;
   onChangeEditMode?: (editMode: boolean) => void;
   onSubmit?: (data: ParticipantFormSubmitted) => Promise<void>;
 }
@@ -25,7 +27,6 @@ export interface ParticipantRowProps {
 export const ParticipantRowView: React.FunctionComponent<{
   name: string;
   action?: React.ReactNode;
-  color?: string;
   votes: Array<VoteType | undefined>;
   columnWidth: number;
   className?: string;
@@ -40,7 +41,6 @@ export const ParticipantRowView: React.FunctionComponent<{
   sidebarWidth,
   columnWidth,
   isYou,
-  color,
   participantId,
 }) => {
   return (
@@ -50,10 +50,10 @@ export const ParticipantRowView: React.FunctionComponent<{
       className={clsx("flex h-12 items-center", className)}
     >
       <div
-        className="flex h-full shrink-0 items-center justify-between gap-2 px-3"
+        className="flex h-full shrink-0 items-center justify-between gap-2 px-3 sm:pl-5"
         style={{ width: sidebarWidth }}
       >
-        <UserAvatar name={name} showName={true} isYou={isYou} color={color} />
+        <UserAvatar name={name} showName={true} isYou={isYou} />
         {action}
       </div>
       <ControlledScrollArea className="h-full">
@@ -84,27 +84,24 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   editMode,
   onSubmit,
   className,
-  disableEditing,
   onChangeEditMode,
 }) => {
   const { columnWidth, sidebarWidth } = usePollContext();
 
-  const session = useUser();
-  const { poll, getVote, options, admin } = usePoll();
+  const { user, ownsObject } = useUser();
+  const { getVote, optionIds } = usePoll();
 
-  const isYou = session.user && session.ownsObject(participant) ? true : false;
+  const isYou = user && ownsObject(participant) ? true : false;
 
-  const isUnclaimed = !participant.userId;
-
-  const canEdit =
-    !disableEditing && !poll.closed && (admin || isYou || isUnclaimed);
+  const { canEditParticipant } = usePermissions();
+  const canEdit = canEditParticipant(participant.id);
 
   if (editMode) {
     return (
       <ParticipantRowForm
         name={participant.name}
         defaultValues={{
-          votes: options.map(({ optionId }) => {
+          votes: optionIds.map((optionId) => {
             const type = getVote(participant.id, optionId);
             return type ? { optionId, type } : undefined;
           }),
@@ -126,7 +123,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
         columnWidth={columnWidth}
         className={className}
         name={participant.name}
-        votes={options.map(({ optionId }) => {
+        votes={optionIds.map((optionId) => {
           return getVote(participant.id, optionId);
         })}
         participantId={participant.id}
@@ -134,8 +131,11 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
           canEdit ? (
             <ParticipantDropdown
               participant={participant}
+              align="start"
               onEdit={() => onChangeEditMode?.(true)}
-            />
+            >
+              <Button size="sm" icon={MoreHorizontalIcon} />
+            </ParticipantDropdown>
           ) : null
         }
         isYou={isYou}
