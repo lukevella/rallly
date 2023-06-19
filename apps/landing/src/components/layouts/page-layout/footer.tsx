@@ -130,7 +130,7 @@ const Footer: React.FunctionComponent = () => {
               </li>
               <li>
                 <Link
-                  href="https://blog.rallly.co"
+                  href="https://rallly.co/blog"
                   className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 >
                   <Trans i18nKey="common_blog" defaults="Blog" />
