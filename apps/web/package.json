@@ -53,7 +53,7 @@
     "next-seo": "^5.15.0",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.21",
-    "posthog-js": "^1.51.3",
+    "posthog-js": "^1.57.2",
     "react-big-calendar": "^1.5.0",
     "react-hook-form": "^7.42.1",
     "react-hot-toast": "^2.4.0",
