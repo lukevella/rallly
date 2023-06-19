@@ -1,9 +1,12 @@
+import { NextSeo } from "next-seo";
+
 import PageLayout from "@/components/layouts/page-layout";
 import { getStaticTranslations } from "@/utils/page-translations";
 
 const PrivacyPolicy = () => {
   return (
     <PageLayout>
+      <NextSeo title="Terms of Use" />
       <div className="prose my-16 mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Terms of Use</h1>
         <p>Last updated: 15 June 2023</p>

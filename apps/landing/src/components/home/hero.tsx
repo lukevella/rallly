@@ -175,7 +175,7 @@ const Demo = () => {
 
 const Hero: React.FunctionComponent = () => {
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-8">
+    <div className="mx-auto max-w-7xl">
       <div className="mt-8 text-center sm:mt-16">
         <div className="mb-6 sm:mb-8">
           <Link
