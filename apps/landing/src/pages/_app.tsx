@@ -5,6 +5,8 @@ import "../style.css";
 import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
 import { absoluteUrl } from "@rallly/utils";
 import { inject } from "@vercel/analytics";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { domMax, LazyMotion } from "framer-motion";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -16,6 +18,8 @@ import React from "react";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
 import { NextPageWithLayout } from "../types";
+
+dayjs.extend(localizedFormat);
 
 const inter = Inter({
   subsets: ["latin"],

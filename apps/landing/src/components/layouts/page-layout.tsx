@@ -5,10 +5,12 @@ import {
   MenuIcon,
   NewspaperIcon,
 } from "@rallly/icons";
+import { cn } from "@rallly/ui";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { absoluteUrl } from "@rallly/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -18,31 +20,39 @@ export interface PageLayoutProps {
   children?: React.ReactNode;
 }
 
+const NavLink = ({
+  className,
+  ...props
+}: React.ComponentProps<typeof Link>) => {
+  const router = useRouter();
+  const isActive = router.pathname === props.href;
+  return (
+    <Link
+      className={cn(
+        "rounded text-sm font-medium",
+        isActive ? "" : "hover:text-primary text-muted-foreground ",
+        className,
+      )}
+      {...props}
+    />
+  );
+};
+
 const Menu: React.FunctionComponent<{ className: string }> = ({
   className,
 }) => {
   const { t } = useTranslation();
   return (
     <nav className={className}>
-      <Link
-        href="https://blog.rallly.co"
-        className="hover:text-primary text-muted-foreground rounded text-sm font-medium"
-      >
-        {t("common_blog")}
-      </Link>
-      <Link
-        href="https://support.rallly.co"
-        className="hover:text-primary text-muted-foreground rounded text-sm font-medium"
-      >
-        {t("common_support")}
-      </Link>
+      <NavLink href="/blog">{t("common_blog")}</NavLink>
+      <NavLink href="https://support.rallly.co">{t("common_support")}</NavLink>
     </nav>
   );
 };
 
 const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
   return (
-    <div className="isolate min-h-full overflow-x-hidden bg-gray-100">
+    <div className="isolate flex min-h-[100vh] flex-col overflow-x-hidden bg-gray-100">
       <svg
         className="absolute inset-x-0 top-0 -z-10 h-[64rem] w-full stroke-gray-200 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)]"
         aria-hidden="true"
@@ -66,9 +76,9 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
         />
       </svg>
-      <div className="mx-auto flex max-w-7xl items-center p-6 sm:p-8">
+      <div className="mx-auto flex w-full max-w-7xl items-center p-6 sm:p-8">
         <div className="flex grow items-center gap-x-12">
-          <Link className="inline-block rounded" href="https://rallly.co">
+          <Link className="inline-block rounded" href="/">
             <Image src="/logo.svg" width={130} height={30} alt="rallly.co" />
           </Link>
           <Menu className="hidden items-center space-x-8 sm:flex" />
@@ -127,10 +137,14 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           </div>
         </div>
       </div>
-      <div>{children}</div>
+      <div className="mx-auto w-full max-w-7xl grow p-6 sm:p-8">{children}</div>
       <Footer />
     </div>
   );
 };
+
+export const getPageLayout = (page: React.ReactElement) => (
+  <PageLayout>{page}</PageLayout>
+);
 
 export default PageLayout;

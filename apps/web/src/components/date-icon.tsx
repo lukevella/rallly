@@ -36,7 +36,7 @@ export const DateIcon = (props: { date: Dayjs; className?: string }) => {
     <DateIconInner
       className={props.className}
       dow={dayjs(props.date).format("ddd")}
-      day={dayjs(props.date).format("DD")}
+      day={dayjs(props.date).format("D")}
       month={dayjs(props.date).format("MMM")}
     />
   );

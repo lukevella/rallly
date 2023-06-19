@@ -19,3 +19,15 @@ export type PropsWithClassName<TProps extends Record<string, unknown> = {}> =
   };
 
 export type IconComponent = React.ComponentType<PropsWithClassName>;
+
+export type Post = {
+  slug: string;
+  title: string;
+  date: string;
+  coverImage?: string;
+  excerpt?: string;
+  ogImage?: {
+    url: string;
+  };
+  content: string;
+};
