@@ -24,3 +24,7 @@
 .markdown ul {
   @apply list-inside list-disc;
 }
+
+.markdown img {
+  @apply mx-auto my-8 rounded-md;
+}
