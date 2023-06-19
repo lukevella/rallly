@@ -97,7 +97,7 @@ export const UserDropdown = () => {
         <DropdownMenuItem asChild={true}>
           <Link
             target="_blank"
-            href="https://github.com/lukevella/rallly/releases"
+            href="https://rallly.co/blog"
             className="flex items-center gap-x-2"
           >
             <ScrollTextIcon className="h-4 w-4" />

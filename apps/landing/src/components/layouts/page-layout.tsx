@@ -112,7 +112,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
               >
                 <Link
                   className="flex items-center gap-3 p-2 text-lg"
-                  href="https://blog.rallly.co"
+                  href="https://rallly.co/blog"
                 >
                   <NewspaperIcon className="h-5 w-5" />
                   <Trans i18nKey="common_blog" />
