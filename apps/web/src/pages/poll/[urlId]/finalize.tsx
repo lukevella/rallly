@@ -1,4 +1,5 @@
 import { trpc } from "@rallly/backend";
+import { ArrowRightIcon } from "@rallly/icons";
 import {
   Accordion,
   AccordionContent,
@@ -13,7 +14,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 import { Card } from "@/components/card";
 import { getPollLayout } from "@/components/layouts/poll-layout";
@@ -86,7 +89,7 @@ const Teaser = () => {
   return (
     <div className="mx-auto max-w-4xl space-y-4">
       <div className="bg-pattern overflow-hidden rounded-md border p-8 shadow-sm">
-        <div className="mb-8 text-center">
+        <div className="mb-4 text-center">
           <div className="mb-4 flex items-center justify-center gap-4">
             <span className="bg-primary rounded-full px-2.5 py-0.5 text-sm font-semibold text-white">
               Pro
@@ -94,8 +97,31 @@ const Teaser = () => {
           </div>
           <h1 className="mb-1">{`Finalize your Poll`}</h1>
           <p className="text-muted-foreground mx-auto max-w-lg">
-            {`We're launching a paid tier soon with more features!`}
+            {`Subscribe to get notified when it's ready.`}
           </p>
+          <Script
+            id="mailerlite"
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+            .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+            n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+            (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+            ml('account', '99567');`,
+            }}
+          />
+
+          <div
+            className="ml-embedded mx-auto max-w-sm p-0"
+            data-form="h9YecB"
+          />
+          <div className="mb-8 flex justify-center gap-x-2">
+            <Link
+              className="text-primary inline-flex items-center gap-x-2 text-sm"
+              href={`${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/blog/introducing-rallly-pro`}
+            >
+              Learn about Rallly Pro <ArrowRightIcon className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
         <div className="pointer pointer-events-none mx-auto -mb-24 max-w-3xl select-none">
           <FinalizationForm />
@@ -129,7 +155,7 @@ const Teaser = () => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="howToUpgrade">
-          <AccordionTrigger>How can I upgrade to Rallly Pro?</AccordionTrigger>
+          <AccordionTrigger>When can I upgrade to Rallly Pro?</AccordionTrigger>
           <AccordionContent>
             {`We're just setting up a checkout system and once this is ready you will be able to upgrade.`}
           </AccordionContent>
@@ -157,10 +183,5 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = getStaticTranslations;
-// export const getStaticProps = async () => {
-//   return {
-//     notFound: true,
-//   };
-// };
 
 export default Page;
