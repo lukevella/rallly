@@ -37,7 +37,7 @@ The name field and save button were often missed so the animations should help d
 
 Previously, you would need to touch the tiny checkbox on the right to toggle a vote. Quite annoying if
 you're on a tiny screen. Well that's not the case anymore. The entire row is now touchable so you don't
-need to be a marskman to select the right options.
+need to be a marksman to select the right options.
 
 ## In conclusion
 
