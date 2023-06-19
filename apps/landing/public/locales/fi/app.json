@@ -41,6 +41,13 @@
   "errors_goToHome": "Siirry etusivulle",
   "optionCount": "{count, plural, one {# vaihtoehto} other {# vaihtoehtoa}}",
   "participantCount": "{count, plural, one {# osallistuja} other {# osallistujaa}}",
+  "opensource": "Lähdekoodimme on avointa!",
+  "startUsOnGithub": "Anna meille tähti Githubissa",
+  "headline": "Sano hyvästi edestakaisin viestittelylle",
+  "subheadling": "Aikatauluta sujuvasti ja säästä aikaa",
+  "getStartedHint": "Luo kysely. Se ei maksa mitään. Kirjautumista ei tarvita.",
+  "homepage_readDocs": "Lue ohjeet",
+  "goToApp": "Avaa sovellus",
   "yes": "Kyllä",
   "ifNeedBe": "Tarvittaessa",
   "no": "Ei"
