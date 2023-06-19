@@ -2,6 +2,7 @@ import { ArrowLeftIcon } from "@rallly/icons";
 import { GetStaticPropsContext } from "next";
 import ErrorPage from "next/error";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -42,6 +43,26 @@ const Page: NextPageWithLayout<Props> = ({ post }) => {
         </Head>
         <PostHeader title={post.title} date={post.date} />
         <PostBody content={post.content} />
+        <div className="mt-8 flex items-center gap-x-4">
+          <Image
+            src="/static/images/luke-vella.jpg"
+            width={48}
+            height={48}
+            className="rounded-full"
+            alt="Luke Vella"
+          />
+          <div>
+            <div className="font-medium leading-none">Luke Vella</div>
+            <div>
+              <Link
+                className="text-muted-foreground hover:text-primary text-sm"
+                href="https://twitter.com/imlukevella"
+              >
+                @imlukevella
+              </Link>
+            </div>
+          </div>
+        </div>
       </article>
     </div>
   );
