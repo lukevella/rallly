@@ -151,11 +151,6 @@
   "finishPoll": "最终决定",
   "finalize": "最终决定",
   "allDay": "全天",
-  "poll": {
-    "date": "日期"
-  },
-  "duration": "期间",
-  "popularity": "人气",
   "permissionDenied": "未授权",
   "permissionDeniedDescription": "登录以查看此投票。",
   "goToHome": "转到投票",
