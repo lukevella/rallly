@@ -151,11 +151,6 @@
   "finishPoll": "Dokončiť",
   "finalize": "Dokončiť",
   "allDay": "Celý deň",
-  "poll": {
-    "date": "Dátum"
-  },
-  "duration": "Trvanie",
-  "popularity": "Popularita",
   "permissionDenied": "Neautorizované",
   "permissionDeniedDescription": "Ak chcete zobraziť túto anketu, prihláste sa.",
   "goToHome": "Prejsť na ankety",

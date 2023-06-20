@@ -151,11 +151,6 @@
   "finishPoll": "Sulje",
   "finalize": "Sulje",
   "allDay": "Koko päivän",
-  "poll": {
-    "date": "Päivämäärä"
-  },
-  "duration": "Kesto",
-  "popularity": "Suosittuus",
   "permissionDenied": "Ei sallittu",
   "permissionDeniedDescription": "Kirjaudu sisään nähdäksesi kyselyn.",
   "goToHome": "Siirry kyselyihin",
