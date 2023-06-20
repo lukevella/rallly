@@ -151,11 +151,6 @@
   "finishPoll": "Finalize",
   "finalize": "Finalize",
   "allDay": "All day",
-  "poll": {
-    "date": "Date"
-  },
-  "duration": "Duration",
-  "popularity": "Popularity",
   "permissionDenied": "Unauthorized",
   "permissionDeniedDescription": "Log in to view this poll.",
   "goToHome": "Go to polls",
