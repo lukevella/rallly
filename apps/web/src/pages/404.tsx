@@ -1,12 +1,11 @@
 import { FileSearchIcon } from "@rallly/icons";
-import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import React from "react";
 
 import ErrorPage from "@/components/error-page";
 import { getStandardLayout } from "@/components/layouts/standard-layout";
 import { NextPageWithLayout } from "@/types";
+import { withPageTranslations } from "@/utils/with-page-translations";
 
 const Custom404: NextPageWithLayout = () => {
   const { t } = useTranslation();
@@ -21,12 +20,6 @@ const Custom404: NextPageWithLayout = () => {
 
 Custom404.getLayout = getStandardLayout;
 
-export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale)),
-    },
-  };
-};
+export const getStaticProps = withPageTranslations();
 
 export default Custom404;

@@ -47,6 +47,7 @@ import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
+import Error404 from "@/pages/404";
 
 import { NextPageWithLayout } from "../../types";
 
@@ -260,6 +261,10 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const poll = trpc.polls.get.useQuery({ urlId });
   const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
+
+  if (poll.error?.data?.code === "NOT_FOUND") {
+    return <Error404 />;
+  }
 
   if (!poll.isFetched || !watchers.isFetched || !participants.isFetched) {
     return (

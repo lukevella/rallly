@@ -247,4 +247,15 @@ export const auth = router({
 
       return { user };
     }),
+  getUserPermission: publicProcedure
+    .input(z.object({ token: z.string() }))
+    .query(async ({ input }) => {
+      const res = await decryptToken<{ userId: string }>(input.token);
+
+      if (!res) {
+        return null;
+      }
+
+      return res;
+    }),
 });

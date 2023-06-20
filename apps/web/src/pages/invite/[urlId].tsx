@@ -1,10 +1,10 @@
-import { withSessionSsr } from "@rallly/backend/next";
-import { decryptToken } from "@rallly/backend/session";
+import { trpc } from "@rallly/backend";
 import { ArrowUpLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
 
 import { Poll } from "@/components/poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
@@ -12,7 +12,48 @@ import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
-import { withPageTranslations } from "@/utils/with-page-translations";
+import { getStaticTranslations } from "@/utils/with-page-translations";
+
+import Error404 from "../404";
+
+const Prefetch = ({ children }: React.PropsWithChildren) => {
+  const router = useRouter();
+  const [urlId] = React.useState(router.query.urlId as string);
+
+  const { data: permission } = trpc.auth.getUserPermission.useQuery(
+    { token: router.query.token as string },
+    {
+      enabled: !!router.query.token,
+    },
+  );
+
+  const { data: poll, error } = trpc.polls.get.useQuery(
+    { urlId },
+    {
+      retry: false,
+    },
+  );
+
+  const { data: participants } = trpc.polls.participants.list.useQuery({
+    pollId: urlId,
+  });
+
+  if (error?.data?.code === "NOT_FOUND") {
+    return <Error404 />;
+  }
+  if (!poll || !participants) {
+    return null;
+  }
+
+  return (
+    <PermissionsContext.Provider value={{ userId: permission?.userId ?? null }}>
+      <Head>
+        <title>{poll.title}</title>
+      </Head>
+      {children}
+    </PermissionsContext.Provider>
+  );
+};
 
 const GoToApp = () => {
   const poll = usePoll();
@@ -37,13 +78,9 @@ const GoToApp = () => {
   );
 };
 
-const Page = ({ forceUserId }: { forceUserId: string }) => {
-  const poll = usePoll();
+const Page = () => {
   return (
-    <PermissionsContext.Provider value={{ userId: forceUserId }}>
-      <Head>
-        <title>{poll.title}</title>
-      </Head>
+    <Prefetch>
       <LegacyPollContextProvider>
         <div className="">
           <svg
@@ -92,42 +129,17 @@ const Page = ({ forceUserId }: { forceUserId: string }) => {
           </div>
         </div>
       </LegacyPollContextProvider>
-    </PermissionsContext.Provider>
+    </Prefetch>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  [
-    withPageTranslations(),
-    async (ctx) => {
-      if (ctx.query.token) {
-        const res = await decryptToken<{ userId: string }>(
-          ctx.query.token as string,
-        );
+export const getStaticPaths = async () => {
+  return {
+    paths: [], //indicates that no page needs be created at build time
+    fallback: "blocking", //indicates the type of fallback
+  };
+};
 
-        if (res) {
-          return {
-            props: {
-              forceUserId: res.userId,
-            },
-          };
-        }
-      }
-
-      return { props: {} };
-    },
-  ],
-  {
-    onPrefetch: async (ssg, ctx) => {
-      const poll = await ssg.polls.get.fetch({
-        urlId: ctx.params?.urlId as string,
-      });
-
-      await ssg.polls.participants.list.prefetch({
-        pollId: poll.id,
-      });
-    },
-  },
-);
+export const getStaticProps = getStaticTranslations;
 
 export default Page;
