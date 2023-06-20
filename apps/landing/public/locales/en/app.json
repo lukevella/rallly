@@ -48,7 +48,6 @@
   "getStartedHint": "Create a poll. It's free. No login required.",
   "homepage_readDocs": "Read the docs",
   "goToApp": "Go to app",
-  "yes": "Yes",
-  "ifNeedBe": "If need be",
-  "no": "No"
+  "blogTitle": "Rallly - Blog",
+  "blogDescription": "News, updates and announcement about Rallly."
 }
