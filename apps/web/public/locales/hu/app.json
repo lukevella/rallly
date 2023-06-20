@@ -151,11 +151,6 @@
   "finishPoll": "Véglegesítés",
   "finalize": "Véglegesítés",
   "allDay": "Egész nap",
-  "poll": {
-    "date": "Dátum"
-  },
-  "duration": "Időtartam",
-  "popularity": "Népszerűség",
   "permissionDenied": "Nincs megfelelő jogosultságod",
   "permissionDeniedDescription": "Jelentkezz be, hogy megnézhesd a szavazást.",
   "goToHome": "Irány a szavazások",
