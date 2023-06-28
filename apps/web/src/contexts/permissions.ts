@@ -19,6 +19,7 @@ export const usePermissions = () => {
   const { participants } = useParticipants();
   const isClosed = poll.closed === true || poll.event !== null;
   return {
+    isUser: (userId: string) => userId === user.id || userId === context.userId,
     canAddNewParticipant: !isClosed,
     canEditParticipant: (participantId: string) => {
       if (isClosed) {
