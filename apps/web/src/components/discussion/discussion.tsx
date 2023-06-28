@@ -18,6 +18,8 @@ import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
+import { usePermissions } from "@/contexts/permissions";
+import { useRole } from "@/contexts/role";
 import { usePostHog } from "@/utils/posthog";
 
 import { requiredString } from "../../utils/form-validation";
@@ -25,7 +27,7 @@ import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
 import { usePoll } from "../poll-context";
-import { isUnclaimed, useUser } from "../user-provider";
+import { useUser } from "../user-provider";
 
 interface CommentForm {
   authorName: string;
@@ -34,7 +36,7 @@ interface CommentForm {
 
 const Discussion: React.FunctionComponent = () => {
   const { t } = useTranslation();
-  const { poll, admin } = usePoll();
+  const { poll } = usePoll();
 
   const pollId = poll.id;
 
@@ -80,6 +82,8 @@ const Discussion: React.FunctionComponent = () => {
     });
 
   const [isWriting, setIsWriting] = React.useState(false);
+  const role = useRole();
+  const { isUser } = usePermissions();
 
   if (!comments) {
     return null;
@@ -95,7 +99,7 @@ const Discussion: React.FunctionComponent = () => {
         <div className="space-y-4 p-4">
           {comments.map((comment) => {
             const canDelete =
-              admin || session.ownsObject(comment) || isUnclaimed(comment);
+              role === "admin" || (comment.userId && isUser(comment.userId));
 
             return (
               <div className="" key={comment.id}>
