@@ -152,8 +152,7 @@
   "finalize": "Finalize",
   "allDay": "All day",
   "permissionDenied": "Unauthorized",
-  "permissionDeniedDescription": "Log in to view this poll.",
-  "goToHome": "Go to polls",
+  "permissionDeniedDescription": "If you are the poll creator, please login to access your poll",
   "loginDifferent": "Switch user",
   "differentOwner": "Different Owner",
   "differentOwnerDescription": "This poll was created by a different user. Would you like to transfer ownership to the current user?",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "Create an account or login to turn get notifications",
   "planFree": "Free",
   "dateAndTimeDescription": "Change your preferred date and time settings",
-  "createdTime": "Created {relativeTime}"
+  "createdTime": "Created {relativeTime}",
+  "permissionDeniedParticipant": "If you are not the poll creator, you should go to the Invite Page.",
+  "goToInvite": "Go to Invite Page"
 }

@@ -1,6 +1,7 @@
 import { trpc } from "@rallly/backend";
 import {
   ArrowLeftIcon,
+  ArrowUpRight,
   CheckCircleIcon,
   ChevronDownIcon,
   FileBarChart,
@@ -212,7 +213,16 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
           <PageDialogDescription>
             <Trans
               i18nKey="permissionDeniedDescription"
-              defaults="Log in to view this poll."
+              defaults="If you are the poll creator, please login to administor your poll."
+            />
+          </PageDialogDescription>
+          <PageDialogDescription>
+            <Trans
+              i18nKey="permissionDeniedParticipant"
+              defaults="If you are not the poll creator, you should go to the Invite Page."
+              components={{
+                a: <Link className="text-link" href={`/invite/${poll.id}`} />,
+              }}
             />
           </PageDialogDescription>
         </PageDialogHeader>
@@ -233,8 +243,9 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
             </Button>
           )}
           <Button asChild size="lg">
-            <Link href="/polls">
-              <Trans i18nKey="goToHome" defaults="Go to polls" />
+            <Link href={`/invite/${poll.id}`}>
+              <Trans i18nKey="goToInvite" defaults="Go to Invite Page" />
+              <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>
         </PageDialogFooter>
