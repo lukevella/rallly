@@ -152,8 +152,7 @@
   "finalize": "Voltooien",
   "allDay": "Hele dag",
   "permissionDenied": "Niet-geautoriseerd",
-  "permissionDeniedDescription": "Log in om deze poll te bekijken.",
-  "goToHome": "Ga naar polls",
+  "permissionDeniedDescription": "Als je de poll maker bent, log dan in om toegang te krijgen tot je poll",
   "loginDifferent": "Gebruiker wisselen",
   "differentOwner": "Andere eigenaar",
   "differentOwnerDescription": "Deze poll is gemaakt door een andere gebruiker. Wil je het eigendom overdragen naar de huidige gebruiker?",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "Maak een account aan of log in om meldingen te krijgen",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Wijzig jouw gewenste datum- en tijdinstellingen",
-  "createdTime": "Aangemaakt op {relativeTime}"
+  "createdTime": "Aangemaakt op {relativeTime}",
+  "permissionDeniedParticipant": "Als je niet de poll maker bent, moet je naar de uitnodigingspagina gaan.",
+  "goToInvite": "Ga naar de uitnodigingspagina"
 }

@@ -152,8 +152,7 @@
   "finalize": "Sulje",
   "allDay": "Koko päivän",
   "permissionDenied": "Ei sallittu",
-  "permissionDeniedDescription": "Kirjaudu sisään nähdäksesi kyselyn.",
-  "goToHome": "Siirry kyselyihin",
+  "permissionDeniedDescription": "Jos olet kyselyn luoja, kirjaudu sisään päästäksesi kyselyyn",
   "loginDifferent": "Vaihda käyttäjää",
   "differentOwner": "Eri omistaja",
   "differentOwnerDescription": "Kyselyn on luonut toinen käyttäjä. Haluatko siirtää omistajuuden nykyiselle käyttäjälle?",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "Luo tili tai kirjaudu sisään saadaksesi ilmoituksia",
   "planFree": "Ilmainen",
   "dateAndTimeDescription": "Muuta ensisijaisia päivämäärä- ja aika-asetuksiasi",
-  "createdTime": "luotu {relativeTime}"
+  "createdTime": "luotu {relativeTime}",
+  "permissionDeniedParticipant": "Jos et ole kyselyn luoja, sinun kannattaa siirtyä kutsusivulle.",
+  "goToInvite": "Siirry kutsusivulle"
 }

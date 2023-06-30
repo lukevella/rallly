@@ -152,8 +152,7 @@
   "finalize": "Véglegesítés",
   "allDay": "Egész nap",
   "permissionDenied": "Nincs megfelelő jogosultságod",
-  "permissionDeniedDescription": "Jelentkezz be, hogy megnézhesd a szavazást.",
-  "goToHome": "Irány a szavazások",
+  "permissionDeniedDescription": "Ha te vagy a szavazás létrehozója, kérlek lépj be, hogy elérd a szavazást",
   "loginDifferent": "Felhasználóváltás",
   "differentOwner": "Más tulajdonos",
   "differentOwnerDescription": "Ez a szavazást egy másik felhasználó hozta létre. Szeretnéd a tulajdonosát megváltoztatni a jelenlegi felhasználóra?",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "Hozz létre felhasználót vagy lépj be, hogy bekapcsolhasd az értesítéseket",
   "planFree": "Ingyen",
   "dateAndTimeDescription": "Módosítsd a preferált dátum és idő beállításaid",
-  "createdTime": "Létrehozva {relativeTime}"
+  "createdTime": "Létrehozva {relativeTime}",
+  "permissionDeniedParticipant": "Ha nem te vagy a szavazás létrehozója, akkor a meghívás oldalra kell lépj.",
+  "goToInvite": "Irány a meghívás oldal"
 }
