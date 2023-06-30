@@ -172,5 +172,16 @@
   "dateAndTimeDescription": "Change your preferred date and time settings",
   "createdTime": "Created {relativeTime}",
   "permissionDeniedParticipant": "If you are not the poll creator, you should go to the Invite Page.",
-  "goToInvite": "Go to Invite Page"
+  "goToInvite": "Go to Invite Page",
+  "planPro": "Pro",
+  "Billing": "Billing",
+  "planActive": "Active",
+  "annualBilling": "Annual billing (Save {discount}%)",
+  "planUpgrade": "Upgrade",
+  "subscriptionActive": "Your subscription is <b>active</b> and will automatically renew on <b>{date}</b>.",
+  "subscriptionUpdatePayment": "Update Payment Details",
+  "subscriptionCancel": "Cancel",
+  "subscriptionCancelled": "Your current subscription will end on <b>{date}</b>. You won't be charged again.",
+  "billingStatus": "Status",
+  "billingStatusDescription": "Your current billing status"
 }

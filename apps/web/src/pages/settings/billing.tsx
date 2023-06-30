@@ -103,7 +103,6 @@ const SubscriptionStatus = () => {
             <ul className="text-muted-foreground grow text-sm">
               <li>Unlimited polls</li>
               <li>Unlimited participants</li>
-              <li>Unlimited participants</li>
             </ul>
           </div>
         </Card>
