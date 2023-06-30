@@ -2,6 +2,7 @@ import { trpc } from "@rallly/backend";
 import { CreditCardIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Label } from "@rallly/ui/label";
+import { Switch } from "@rallly/ui/switch";
 import dayjs from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
@@ -12,7 +13,6 @@ import React from "react";
 import { Card } from "@/components/card";
 import { getProfileLayout } from "@/components/layouts/profile-layout";
 import { SettingsSection } from "@/components/settings/settings-section";
-import Switch from "@/components/switch";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
@@ -32,10 +32,10 @@ declare global {
 const monthlyPriceUsd = 5;
 const annualPriceUsd = 30;
 
-export const plusPlanIdMonthly = process.env
+export const plusMonthlyPlanId = process.env
   .NEXT_PUBLIC_PLUS_PLAN_ID_MONTHLY as string;
 
-export const plusPlanIdYearly = process.env
+export const plusYearlyPlanId = process.env
   .NEXT_PUBLIC_PLUS_PLAN_ID_MONTHLY as string;
 
 const Active = () => {
@@ -69,14 +69,15 @@ const SubscriptionStatus = () => {
         Please consider subscribing to help support the continued development of
         Rallly.
       </p>
-      <div className="mb-6 flex items-center gap-4">
+      <div className="mb-6 flex items-center gap-2.5">
         <Switch
+          id="annual-switch"
           checked={isBilledAnnually}
-          onChange={(checked) => {
+          onCheckedChange={(checked) => {
             setBilledAnnually(checked);
           }}
         />
-        <Label>
+        <Label htmlFor="annual-switch">
           <Trans
             i18nKey="annualBilling"
             defaults="Annual billing (Save {discount}%)"
@@ -101,6 +102,7 @@ const SubscriptionStatus = () => {
           <div className="flex grow flex-col p-4">
             <ul className="text-muted-foreground grow text-sm">
               <li>Unlimited polls</li>
+              <li>Unlimited participants</li>
               <li>Unlimited participants</li>
             </ul>
           </div>
@@ -133,7 +135,7 @@ const SubscriptionStatus = () => {
           </div>
           <div className="p-4">
             <p className="text-muted-foreground mb-6 text-sm">
-              By subscribing, you not only gain access to extra features but you
+              By subscribing, you not only gain access to all features but you
               are also directly supporting further development of Rallly.
             </p>
             <ul className="text-muted-foreground text-sm">
@@ -150,7 +152,11 @@ const SubscriptionStatus = () => {
                   className="w-full"
                   variant="primary"
                   onClick={() => {
-                    window.LemonSqueezy.Url.Open();
+                    window.LemonSqueezy.Url.Open(
+                      `https://rallly.lemonsqueezy.com/checkout/buy/${
+                        isBilledAnnually ? plusYearlyPlanId : plusMonthlyPlanId
+                      }?checkout[email]=${user.email}&logo=0`,
+                    );
                     // window.Paddle.Checkout.open({
                     //   allowQuantity: false,
                     //   product: isBilledAnnually
@@ -281,7 +287,13 @@ const Page: NextPageWithLayout = () => {
       <Head>
         <title>{t("billing")}</title>
       </Head>
-      <Script src="https://app.lemonsqueezy.com/js/lemon.js" defer />
+      <Script
+        src="https://app.lemonsqueezy.com/js/lemon.js"
+        defer
+        onLoad={() => {
+          window.createLemonSqueezy();
+        }}
+      />
       <Script
         src="https://cdn.paddle.com/paddle/paddle.js"
         onLoad={() => {
