@@ -152,8 +152,7 @@
   "finalize": "Finalitza-la",
   "allDay": "Tot el dia",
   "permissionDenied": "No autoritzat",
-  "permissionDeniedDescription": "Inicia sessió per veure aquesta enquesta.",
-  "goToHome": "Ves a la llista d'enquestes",
+  "permissionDeniedDescription": "Si sou el creador de l'enquesta, si us plau inicieu sessió per accedir la vostra l'enquesta",
   "loginDifferent": "Canvia d'usuari",
   "differentOwner": "Propietari diferent",
   "differentOwnerDescription": "Aquesta enquesta es va crear per un usuari diferent. T'agradaria transferir la propietat a l'usuari actual?",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "Crea un compte o inicia sessió per rebre notificacions",
   "planFree": "Gratuït",
   "dateAndTimeDescription": "Canvia la configuració preferida de data i hora",
-  "createdTime": "Creada {relativeTime}"
+  "createdTime": "Creada {relativeTime}",
+  "permissionDeniedParticipant": "Si no sou el creador de l'enquesta, hauríeu d'anar a la pàgina d'invitació.",
+  "goToInvite": "Anar a la pàgina d'invitació"
 }

@@ -152,8 +152,7 @@
   "finalize": "Finaliser",
   "allDay": "Toute la journée",
   "permissionDenied": "Non autorisé",
-  "permissionDeniedDescription": "Connectez-vous pour voir ce sondage.",
-  "goToHome": "Aller aux sondages",
+  "permissionDeniedDescription": "Si vous êtes le créateur du sondage, veuillez vous connecter pour accéder à votre sondage",
   "loginDifferent": "Changer d'utilisateur",
   "differentOwner": "Propriétaire différent",
   "differentOwnerDescription": "Ce sondage a été créé par un autre utilisateur. Voulez-vous transférer la propriété à l'utilisateur actuel ?",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "Créez un compte ou connectez-vous pour acheter un abonnement",
   "planFree": "Gratuit",
   "dateAndTimeDescription": "Changez vos paramètres de date et d'heure préférés",
-  "createdTime": "Créé le {relativeTime}"
+  "createdTime": "Créé le {relativeTime}",
+  "permissionDeniedParticipant": "Si vous n'êtes pas le créateur du sondage, vous devriez aller à la page d'invitation.",
+  "goToInvite": "Accéder à la page d'invitation"
 }
