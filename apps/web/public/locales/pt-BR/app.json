@@ -152,8 +152,7 @@
   "finalize": "Finalizar",
   "allDay": "Dia inteiro",
   "permissionDenied": "Não autorizado",
-  "permissionDeniedDescription": "Faça o login para ver esta enquete.",
-  "goToHome": "Ir para enquetes",
+  "permissionDeniedDescription": "Se você é o criador da enquete, faça login para acessar sua enquete",
   "loginDifferent": "Trocar usuário",
   "differentOwner": "Proprietário diferente",
   "differentOwnerDescription": "Esta enquete foi criada por um usuário diferente. Gostaria de transferir a propriedade para o usuário atual?",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "Crie uma conta ou faça o login para ativar as notificações",
   "planFree": "Grátis",
   "dateAndTimeDescription": "Altere suas configurações preferidas de data e hora",
-  "createdTime": "Criado {relativeTime}"
+  "createdTime": "Criado {relativeTime}",
+  "permissionDeniedParticipant": "Se você não é o criador da enquete, você deve ir à Página de Convite.",
+  "goToInvite": "Ir para Página de Convite"
 }
