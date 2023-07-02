@@ -152,8 +152,7 @@
   "finalize": "最终决定",
   "allDay": "全天",
   "permissionDenied": "未授权",
-  "permissionDeniedDescription": "登录以查看此投票。",
-  "goToHome": "转到投票",
+  "permissionDeniedDescription": "如果您是投票创建者，请登录以访问您的投票",
   "loginDifferent": "切换用户",
   "differentOwner": "其他所有者",
   "differentOwnerDescription": "此投票是由其他用户创建的。您想要将所有权转移到当前用户吗？",
@@ -171,5 +170,7 @@
   "notificationsGuestTooltip": "创建一个帐户或登录以获取通知",
   "planFree": "免费",
   "dateAndTimeDescription": "更改您的首选日期/时间设置",
-  "createdTime": "创建于 {relativeTime}"
+  "createdTime": "创建于 {relativeTime}",
+  "permissionDeniedParticipant": "如果你不是投票创建者，你应该去邀请页面。",
+  "goToInvite": "前往邀请页面"
 }
