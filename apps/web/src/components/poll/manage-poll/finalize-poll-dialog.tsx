@@ -74,7 +74,7 @@ export const FinalizePollForm = ({
   onSubmit,
 }: {
   name: string;
-  onSubmit: (data: FinalizeFormData) => void;
+  onSubmit?: (data: FinalizeFormData) => void;
 }) => {
   const poll = usePoll();
   const [max, setMax] = React.useState(pageSize);
@@ -119,7 +119,7 @@ export const FinalizePollForm = ({
       <form
         id={name}
         className="space-y-4"
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((data) => onSubmit?.(data))}
       >
         <FormField
           control={form.control}

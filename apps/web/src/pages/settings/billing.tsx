@@ -1,8 +1,8 @@
 import { trpc } from "@rallly/backend";
 import { CreditCardIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import { Card } from "@rallly/ui/card";
 import { Label } from "@rallly/ui/label";
-import { Switch } from "@rallly/ui/switch";
 import dayjs from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
@@ -10,11 +10,12 @@ import Script from "next/script";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import { Card } from "@/components/card";
+import { BillingPlans } from "@/components/billing/billing-plans";
 import { getProfileLayout } from "@/components/layouts/profile-layout";
 import { SettingsSection } from "@/components/settings/settings-section";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { usePlan } from "@/contexts/plan";
 
 import { NextPageWithLayout } from "../../types";
 import { getStaticTranslations } from "../../utils/with-page-translations";
@@ -29,208 +30,120 @@ declare global {
   }
 }
 
-const monthlyPriceUsd = 5;
-const annualPriceUsd = 30;
-
-export const plusMonthlyPlanId = process.env
+export const basicPlanIdMonthly = process.env
   .NEXT_PUBLIC_PLUS_PLAN_ID_MONTHLY as string;
 
-export const plusYearlyPlanId = process.env
-  .NEXT_PUBLIC_PLUS_PLAN_ID_MONTHLY as string;
-
-const Active = () => {
-  return (
-    <span className="bg-primary rounded px-1.5 py-0.5 text-xs font-medium text-white">
-      <Trans i18nKey="planActive" defaults="Active" />
-    </span>
-  );
-};
+export const basicPlanIdYearly = process.env
+  .NEXT_PUBLIC_PLUS_PLAN_ID_YEARLY as string;
 
 const SubscriptionStatus = () => {
-  const userPaymentDataQuery = trpc.user.getBilling.useQuery();
   const { user } = useUser();
 
-  const [isBilledAnnually, setBilledAnnually] = React.useState(true);
+  trpc.user.getBilling.useQuery(undefined, {
+    refetchInterval: 5000,
+  });
+
+  const plan = usePlan();
+  const isPlus = plan === "paid";
 
   if (user.isGuest) {
     return <>You need to be logged in.</>;
   }
 
-  const userPaymentData = userPaymentDataQuery.data;
-  const isPlus = Boolean(
-    userPaymentData &&
-      userPaymentData.subscriptionEndDate.getTime() > Date.now(),
-  );
-
-  return (
-    <div>
-      <Label className="mb-4">Subscription</Label>
-      <p className="text-muted-foreground mb-4 text-sm">
-        Please consider subscribing to help support the continued development of
-        Rallly.
-      </p>
-      <div className="mb-6 flex items-center gap-2.5">
-        <Switch
-          id="annual-switch"
-          checked={isBilledAnnually}
-          onCheckedChange={(checked) => {
-            setBilledAnnually(checked);
-          }}
-        />
-        <Label htmlFor="annual-switch">
-          <Trans
-            i18nKey="annualBilling"
-            defaults="Annual billing (Save {discount}%)"
-            values={{
-              discount: Math.round(100 - (annualPriceUsd / 12 / 5) * 100),
-            }}
-          />
-        </Label>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Card className="flex flex-col divide-y">
-          <div className="p-4">
-            <div className="mb-4 flex items-center gap-x-4">
-              <h2>Free</h2>
-              {!isPlus ? <Active /> : null}
-            </div>
-            <div>
-              <span className="text-3xl font-bold">$0</span>
-              <div className="text-muted-foreground text-sm">free forever</div>
-            </div>
-          </div>
-          <div className="flex grow flex-col p-4">
-            <ul className="text-muted-foreground grow text-sm">
-              <li>Unlimited polls</li>
-              <li>Unlimited participants</li>
-            </ul>
-          </div>
-        </Card>
-        <Card className="border-primary ring-primary divide-y ring-1">
-          <div className="bg-pattern p-4">
-            <div className="mb-4 flex items-center gap-x-4">
-              <h2 className="text-primary">Plus</h2>
-              {isPlus ? <Active /> : null}
-            </div>
-
-            {isBilledAnnually ? (
-              <div>
-                <span className="mr-2 text-xl font-bold line-through">
-                  ${monthlyPriceUsd}
-                </span>
-                <span className="text-3xl font-bold">
-                  ${(annualPriceUsd / 12).toFixed(2)}
-                </span>
-                <div className="text-muted-foreground text-sm">
-                  per month, billed annually
-                </div>
-              </div>
-            ) : (
-              <div>
-                <span className="text-3xl font-bold">$5</span>
-                <div className="text-muted-foreground text-sm">per month</div>
-              </div>
-            )}
-          </div>
-          <div className="p-4">
-            <p className="text-muted-foreground mb-6 text-sm">
-              By subscribing, you not only gain access to all features but you
-              are also directly supporting further development of Rallly.
-            </p>
-            <ul className="text-muted-foreground text-sm">
-              <li>Unlimited polls</li>
-              <li>Unlimited participants</li>
-              <li>Finalize polls</li>
-              <li>Extended poll life</li>
-              <li>Priority support</li>
-              <li>Access to new features</li>
-            </ul>
-            {!isPlus ? (
-              <div className="mt-6">
-                <Button
-                  className="w-full"
-                  variant="primary"
-                  onClick={() => {
-                    window.LemonSqueezy.Url.Open(
-                      `https://rallly.lemonsqueezy.com/checkout/buy/${
-                        isBilledAnnually ? plusYearlyPlanId : plusMonthlyPlanId
-                      }?checkout[email]=${user.email}&logo=0`,
-                    );
-                    // window.Paddle.Checkout.open({
-                    //   allowQuantity: false,
-                    //   product: isBilledAnnually
-                    //     ? plusPlanIdYearly
-                    //     : plusPlanIdMonthly,
-                    //   email: user.email,
-                    //   disableLogout: true,
-                    //   passthrough: JSON.stringify({ userId: user.id }),
-                    //   successCallback: () => {
-                    //     // fetch user till we get the new plan
-                    //   },
-                    // });
-                  }}
-                >
-                  <Trans i18nKey="planUpgrade" defaults="Upgrade" />
-                </Button>
-              </div>
-            ) : null}
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
+  if (isPlus) {
+    return <BillingStatus />;
+  } else {
+    return <BillingPlans />;
+  }
 };
 
 const BillingStatus = () => {
-  const userPaymentDataQuery = trpc.user.getBilling.useQuery();
+  const { data: userPaymentData } = trpc.user.getBilling.useQuery();
 
-  if (!userPaymentDataQuery.isFetched) {
+  if (!userPaymentData) {
     return null;
   }
 
-  const userPaymentData = userPaymentDataQuery.data;
+  const { status, endDate, planId } = userPaymentData;
 
-  const isPlus = Boolean(
-    userPaymentData &&
-      userPaymentData.subscriptionEndDate.getTime() > Date.now(),
-  );
-
-  if (!isPlus) {
-    return (
-      <div>
-        <Label className="mb-4">Inactive</Label>
-        <p className="text-muted-foreground text-sm">
-          You are currently not subscribed to a paid plan.
-        </p>
-      </div>
-    );
+  if (status === "trialing" || status === "past_due") {
+    return null;
   }
 
-  if (isPlus && userPaymentData?.subscriptionStatus === "active") {
-    return (
-      <div>
-        <div className="mb-4 font-medium">Active</div>
-        <p className="text-sm">
-          <Trans
-            i18nKey="subscriptionActive"
-            defaults="Your subscription is <b>active</b> and will automatically renew on <b>{date}</b>."
-            components={{ b: <strong /> }}
-            values={{
-              date: dayjs(userPaymentData.subscriptionEndDate).format("L"),
-            }}
-          />
-        </p>
-        <div className="mt-4 flex gap-x-2">
+  return (
+    <Card>
+      <div className="grid gap-4 p-4 sm:grid-cols-2">
+        <div>
+          <Label>
+            <Trans i18nKey="billingStatusState" defaults="Status" />
+          </Label>
+          <div>
+            {(() => {
+              switch (status) {
+                case "active":
+                  return (
+                    <Trans i18nKey="billingStatusActive" defaults="Active" />
+                  );
+                case "paused":
+                  return (
+                    <Trans i18nKey="billingStatusPaused" defaults="Paused" />
+                  );
+                case "deleted":
+                  return (
+                    <Trans
+                      i18nKey="billingStatusDeleted"
+                      defaults="Cancelled"
+                    />
+                  );
+              }
+            })()}
+          </div>
+        </div>
+        <div>
+          {status === "deleted" ? (
+            <Label>
+              <Trans i18nKey="endDate" defaults="End date" />
+            </Label>
+          ) : (
+            <Label>
+              <Trans i18nKey="dueDate" defaults="Due date" />
+            </Label>
+          )}
+          <div>{dayjs(endDate).format("LL")}</div>
+        </div>
+        <div>
+          <Label>
+            <Trans i18nKey="billingStatusPlan" defaults="Plan" />
+          </Label>
+          <div>
+            <Trans i18nKey="planBasic" defaults="Basic" />
+          </div>
+        </div>
+        <div>
+          <Label>
+            <Trans i18nKey="billingPeriod" defaults="Period" />
+          </Label>
+          <div>
+            {planId === basicPlanIdMonthly ? (
+              <Trans i18nKey="billingPeriodMonthly" defaults="Monthly" />
+            ) : (
+              <Trans i18nKey="billingPeriodYearly" defaults="Yearly" />
+            )}
+          </div>
+        </div>
+      </div>
+      {status === "active" || status === "paused" ? (
+        <div className="flex items-center gap-x-2 border-t bg-gray-50 p-3">
           <Button
             asChild
             onClick={(e) => {
               e.preventDefault();
               window.Paddle.Checkout.open({
-                override: userPaymentData.subscriptionUpdateUrl,
+                override: userPaymentData.updateUrl,
               });
             }}
           >
-            <Link href={userPaymentData.subscriptionUpdateUrl}>
+            <Link href={userPaymentData.updateUrl}>
               <CreditCardIcon className="h-4 w-4" />
               <Trans
                 i18nKey="subscriptionUpdatePayment"
@@ -244,38 +157,18 @@ const BillingStatus = () => {
             onClick={(e) => {
               e.preventDefault();
               window.Paddle.Checkout.open({
-                override: userPaymentData.subscriptionCancelUrl,
+                override: userPaymentData.cancelUrl,
               });
             }}
           >
-            <Link href={userPaymentData.subscriptionCancelUrl}>
+            <Link href={userPaymentData.cancelUrl}>
               <Trans i18nKey="subscriptionCancel" defaults="Cancel" />
             </Link>
           </Button>
         </div>
-      </div>
-    );
-  }
-
-  if (isPlus && userPaymentData?.subscriptionStatus === "deleted") {
-    return (
-      <div>
-        <div className="mb-4 font-medium text-rose-600">Cancelled</div>
-        <p className="text-sm">
-          <Trans
-            i18nKey="subscriptionCancelled"
-            defaults="Your current subscription will end on <b>{date}</b>. You won't be charged again."
-            values={{
-              date: dayjs(userPaymentData.subscriptionEndDate).format("L"),
-            }}
-            components={{ b: <strong /> }}
-          />
-        </p>
-      </div>
-    );
-  }
-
-  return <div></div>;
+      ) : null}
+    </Card>
+  );
 };
 
 const Page: NextPageWithLayout = () => {
@@ -286,13 +179,6 @@ const Page: NextPageWithLayout = () => {
       <Head>
         <title>{t("billing")}</title>
       </Head>
-      <Script
-        src="https://app.lemonsqueezy.com/js/lemon.js"
-        defer
-        onLoad={() => {
-          window.createLemonSqueezy();
-        }}
-      />
       <Script
         src="https://cdn.paddle.com/paddle/paddle.js"
         onLoad={() => {
@@ -305,23 +191,15 @@ const Page: NextPageWithLayout = () => {
         }}
       />
       <SettingsSection
-        title={<Trans i18nKey="plan" defaults="Plan" />}
-        description={
-          <Trans i18nKey="planDescription" defaults="Choose your plan" />
-        }
-      >
-        <SubscriptionStatus />
-      </SettingsSection>
-      <SettingsSection
-        title={<Trans i18nKey="billingStatus" defaults="Status" />}
+        title={<Trans i18nKey="billingStatus" defaults="Billing Status" />}
         description={
           <Trans
             i18nKey="billingStatusDescription"
-            defaults="Your current billing status"
+            defaults="Manage your subscription and billing details."
           />
         }
       >
-        <BillingStatus />
+        <SubscriptionStatus />
       </SettingsSection>
     </div>
   );

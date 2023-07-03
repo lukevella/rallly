@@ -32,22 +32,22 @@ model User {
 
 enum SubscriptionStatus {
   active
-  deleted
-  past_due
-  trialing
   paused
+  deleted
+  trialing
+  past_due
 
   @@map("subscription_status")
 }
 
 model UserPaymentData {
-  userId                String             @id @map("user_id")
-  subscriptionId        String             @map("subscription_id")
-  subscriptionPlanId    String             @map("subscription_plan_id")
-  subscriptionEndDate   DateTime           @map("subscription_end_date")
-  subscriptionStatus    SubscriptionStatus @map("subscription_status")
-  subscriptionUpdateUrl String             @map("subscription_update_url")
-  subscriptionCancelUrl String             @map("subscription_cancel_url")
+  userId         String             @id @map("user_id")
+  subscriptionId String             @map("subscription_id")
+  planId         String             @map("plan_id")
+  endDate        DateTime           @map("end_date")
+  status         SubscriptionStatus
+  updateUrl      String             @map("update_url")
+  cancelUrl      String             @map("cancel_url")
 
   @@map("user_payment_data")
 }

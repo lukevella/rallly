@@ -12,6 +12,7 @@ import {
   UserIcon,
   UserPlusIcon,
 } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -34,17 +35,19 @@ const Plan = () => {
     return null;
   }
 
-  if (data?.subscriptionStatus === "active") {
+  const isPlus = data && data.endDate.getTime() > Date.now();
+
+  if (isPlus) {
     return (
-      <span className="bg-primary rounded-full px-1.5 py-0.5 text-xs text-white">
+      <Badge>
         <Trans i18nKey="planPro" defaults="Pro" />
-      </span>
+      </Badge>
     );
   }
   return (
-    <span className="bg-foreground rounded-full px-1.5 py-0.5 text-xs text-white">
+    <Badge variant="secondary">
       <Trans i18nKey="planFree" defaults="Free" />
-    </span>
+    </Badge>
   );
 };
 export const UserDropdown = () => {

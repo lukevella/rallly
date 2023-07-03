@@ -8,18 +8,17 @@ export const user = router({
     return await prisma.userPaymentData.findUnique({
       select: {
         subscriptionId: true,
-        subscriptionStatus: true,
-        subscriptionPlanId: true,
-        subscriptionEndDate: true,
-        subscriptionUpdateUrl: true,
-        subscriptionCancelUrl: true,
+        status: true,
+        planId: true,
+        endDate: true,
+        updateUrl: true,
+        cancelUrl: true,
       },
       where: {
         userId: ctx.user.id,
       },
     });
   }),
-
   changeName: publicProcedure
     .input(
       z.object({

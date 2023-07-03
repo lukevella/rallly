@@ -11,10 +11,16 @@ const allowedIpAdresses = [
   "34.194.127.46",
   "54.234.237.108",
   "3.208.120.145",
+  "44.226.236.210",
+  "44.241.183.62",
+  "100.20.172.113",
   // Production
   "34.232.58.13",
   "34.195.105.136",
   "34.237.3.244",
+  "35.155.119.135",
+  "52.11.166.252",
+  "34.212.5.7",
 ];
 
 const getIpAddress = (req: NextApiRequest): string => {
@@ -113,31 +119,52 @@ export default async function handler(
 
     // At this point, the webhook is valid, handle the webhook event
     switch (payload.alert_name) {
-      case "subscription_created":
+      case "subscription_created": {
         // Handle new subscription
+        const data = {
+          subscriptionId: payload.subscription_id,
+          status: payload.status,
+          planId: payload.subscription_plan_id,
+          endDate: new Date(payload.next_bill_date),
+          updateUrl: payload.update_url,
+          cancelUrl: payload.cancel_url,
+        };
+
         await prisma.userPaymentData.upsert({
           where: {
             userId: passthrough.userId,
           },
           create: {
             userId: passthrough.userId,
-            subscriptionId: payload.subscription_id,
-            subscriptionStatus: payload.status,
-            subscriptionPlanId: payload.subscription_plan_id,
-            subscriptionEndDate: new Date(payload.next_bill_date),
-            subscriptionUpdateUrl: payload.update_url,
-            subscriptionCancelUrl: payload.cancel_url,
+            ...data,
           },
-          update: {
-            subscriptionId: payload.subscription_id,
-            subscriptionStatus: payload.status,
-            subscriptionPlanId: payload.subscription_plan_id,
-            subscriptionEndDate: new Date(payload.next_bill_date),
-            subscriptionUpdateUrl: payload.update_url,
-            subscriptionCancelUrl: payload.cancel_url,
+          update: data,
+        });
+        break;
+      }
+      case "subscription_payment_succeeded":
+        // Handle successful payment
+        await prisma.userPaymentData.update({
+          where: {
+            userId: passthrough.userId,
+          },
+          data: {
+            status: payload.status,
+            endDate: new Date(payload.next_bill_date),
           },
         });
         break;
+      case "subscription_payment_failed":
+        await prisma.userPaymentData.update({
+          where: {
+            userId: passthrough.userId,
+          },
+          data: {
+            status: payload.status,
+          },
+        });
+        break;
+
       case "subscription_updated":
         // Handle updated subscription
         await prisma.userPaymentData.update({
@@ -145,11 +172,11 @@ export default async function handler(
             userId: passthrough.userId,
           },
           data: {
-            subscriptionStatus: payload.status,
-            subscriptionPlanId: payload.subscription_plan_id,
-            subscriptionEndDate: new Date(payload.next_bill_date),
-            subscriptionUpdateUrl: payload.update_url,
-            subscriptionCancelUrl: payload.cancel_url,
+            status: payload.status,
+            planId: payload.subscription_plan_id,
+            endDate: new Date(payload.next_bill_date),
+            updateUrl: payload.update_url,
+            cancelUrl: payload.cancel_url,
           },
         });
         break;
@@ -160,35 +187,8 @@ export default async function handler(
             userId: passthrough.userId,
           },
           data: {
-            subscriptionStatus: payload.status,
-            subscriptionEndDate: new Date(payload.cancellation_effective_date),
-          },
-        });
-        break;
-      case "subscription_payment_succeeded":
-        // Handle successful payment
-        await prisma.userPaymentData.update({
-          where: {
-            userId: passthrough.userId,
-          },
-          data: {
-            subscriptionId: payload.subscription_id,
-            subscriptionStatus: payload.status,
-            subscriptionPlanId: payload.subscription_plan_id,
-            subscriptionEndDate: new Date(payload.next_bill_date),
-          },
-        });
-        break;
-      case "subscription_payment_failed":
-        // Handle failed payment
-        await prisma.userPaymentData.update({
-          where: {
-            userId: passthrough.userId,
-          },
-          data: {
-            subscriptionEndDate: payload.next_retry_date
-              ? new Date(payload.next_retry_date)
-              : new Date(),
+            status: payload.status,
+            endDate: new Date(payload.cancellation_effective_date),
           },
         });
         break;
@@ -200,7 +200,5 @@ export default async function handler(
     // If everything went well, send a 200 OK
     return res.status(200).json({ success: true });
   } else {
-    // If the request method is not POST, return a 405 Method Not Allowed
-    return res.status(405).json({ error: "Method not allowed" });
   }
 }

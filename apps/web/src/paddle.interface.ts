@@ -32,6 +32,7 @@ interface BasePaddleRequest {
   passthrough: string;
   subscription_id: string;
   subscription_plan_id: string;
+  currency: string;
 }
 
 interface SubscriptionCreatedRequest extends BasePaddleRequest {
@@ -39,6 +40,7 @@ interface SubscriptionCreatedRequest extends BasePaddleRequest {
   next_bill_date: string;
   cancel_url: string;
   update_url: string;
+  unit_price: string;
 }
 
 interface SubscriptionUpdatedRequest extends BasePaddleRequest {
@@ -46,6 +48,7 @@ interface SubscriptionUpdatedRequest extends BasePaddleRequest {
   next_bill_date: string;
   cancel_url: string;
   update_url: string;
+  new_unit_price: string;
 }
 
 interface SubscriptionCancelledRequest extends BasePaddleRequest {

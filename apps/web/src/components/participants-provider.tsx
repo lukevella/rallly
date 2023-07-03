@@ -23,6 +23,7 @@ export const ParticipantsProvider: React.FunctionComponent<{
     },
     {
       staleTime: 1000 * 10,
+      cacheTime: Infinity,
     },
   );
 
