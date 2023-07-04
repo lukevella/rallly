@@ -85,7 +85,7 @@ const Teaser = () => {
   return (
     <div className="relative mx-auto max-w-3xl">
       <div className="absolute inset-0 z-10 flex items-center justify-center rounded-md bg-white/10  backdrop-blur-sm">
-        <div className="shadow-huge space-y-4 overflow-hidden rounded-md border bg-white p-4">
+        <div className="shadow-huge space-y-4 overflow-hidden rounded-md bg-white p-4">
           <div className="flex gap-x-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 shadow-sm">
               <LockIcon className="text-primary h-5 w-5" />

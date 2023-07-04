@@ -8,7 +8,6 @@ import Head from "next/head";
 import Link from "next/link";
 import Script from "next/script";
 import { useTranslation } from "next-i18next";
-import React from "react";
 
 import { BillingPlans } from "@/components/billing/billing-plans";
 import { getProfileLayout } from "@/components/layouts/profile-layout";
@@ -30,11 +29,11 @@ declare global {
   }
 }
 
-export const basicPlanIdMonthly = process.env
-  .NEXT_PUBLIC_PLUS_PLAN_ID_MONTHLY as string;
+export const proPlanIdMonthly = process.env
+  .NEXT_PUBLIC_PRO_PLAN_ID_MONTHLY as string;
 
-export const basicPlanIdYearly = process.env
-  .NEXT_PUBLIC_PLUS_PLAN_ID_YEARLY as string;
+export const proPlanIdYearly = process.env
+  .NEXT_PUBLIC_PRO_PLAN_ID_YEARLY as string;
 
 const SubscriptionStatus = () => {
   const { user } = useUser();
@@ -116,7 +115,7 @@ const BillingStatus = () => {
             <Trans i18nKey="billingStatusPlan" defaults="Plan" />
           </Label>
           <div>
-            <Trans i18nKey="planBasic" defaults="Basic" />
+            <Trans i18nKey="planPro" />
           </div>
         </div>
         <div>
@@ -124,7 +123,7 @@ const BillingStatus = () => {
             <Trans i18nKey="billingPeriod" defaults="Period" />
           </Label>
           <div>
-            {planId === basicPlanIdMonthly ? (
+            {planId === proPlanIdMonthly ? (
               <Trans i18nKey="billingPeriodMonthly" defaults="Monthly" />
             ) : (
               <Trans i18nKey="billingPeriodYearly" defaults="Yearly" />

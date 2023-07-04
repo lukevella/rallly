@@ -1,3 +1,4 @@
+import { CheckIcon } from "@rallly/icons";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
@@ -14,9 +15,9 @@ const monthlyPriceUsd = 5;
 const annualPriceUsd = 30;
 
 const basicPlanIdMonthly = process.env
-  .NEXT_PUBLIC_PLUS_PLAN_ID_MONTHLY as string;
+  .NEXT_PUBLIC_PRO_PLAN_ID_MONTHLY as string;
 
-const basicPlanIdYearly = process.env.NEXT_PUBLIC_PLUS_PLAN_ID_YEARLY as string;
+const basicPlanIdYearly = process.env.NEXT_PUBLIC_PRO_PLAN_ID_YEARLY as string;
 
 export const BillingPlans = () => {
   const { user } = useUser();
@@ -75,18 +76,18 @@ export const BillingPlans = () => {
           </div>
           <div className="flex grow flex-col p-4">
             <ul className="text-muted-foreground grow text-sm">
-              <li>
+              <Perk>
                 <Trans
                   i18nKey="plan_unlimitedPolls"
                   defaults="Unlimited polls"
                 />
-              </li>
-              <li>
+              </Perk>
+              <Perk>
                 <Trans
                   i18nKey="plan_unlimitedParticipants"
                   defaults="Unlimited participants"
                 />
-              </li>
+              </Perk>
             </ul>
           </div>
         </Card>
@@ -124,6 +125,15 @@ export const BillingPlans = () => {
         </ProPlan>
       </div>
     </div>
+  );
+};
+
+const Perk = ({ children }: React.PropsWithChildren) => {
+  return (
+    <li className="flex">
+      <CheckIcon className="mr-2 inline h-4 w-4 translate-y-0.5 -translate-x-0.5 text-green-600" />
+      <span>{children}</span>
+    </li>
   );
 };
 
@@ -168,33 +178,27 @@ export const ProPlan = ({
       </div>
       <div className="p-4">
         <ul className="text-muted-foreground text-sm">
-          <li>
+          <Perk>
             <Trans i18nKey="plan_unlimitedPolls" defaults="Unlimited polls" />
-          </li>
-          <li>
+          </Perk>
+          <Perk>
             <Trans
               i18nKey="plan_unlimitedParticipants"
               defaults="Unlimited participants"
             />
-          </li>
-          <li>
+          </Perk>
+          <Perk>
             <Trans i18nKey="plan_finalizePolls" defaults="Finalize polls" />
-          </li>
-          <li>
+          </Perk>
+          <Perk>
             <Trans
               i18nKey="plan_extendedPollLife"
               defaults="Extended poll life"
             />
-          </li>
-          <li>
+          </Perk>
+          <Perk>
             <Trans i18nKey="plan_prioritySupport" defaults="Priority support" />
-          </li>
-          <li>
-            <Trans
-              i18nKey="plan_accessFeatures"
-              defaults="Access to new upcoming features"
-            />
-          </li>
+          </Perk>
         </ul>
         {children}
       </div>
