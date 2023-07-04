@@ -45,6 +45,9 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
   return (
     <nav className={className}>
       <NavLink href="/blog">{t("common_blog")}</NavLink>
+      <NavLink href="/pricing">
+        <Trans i18nKey="pricing">Pricing</Trans>
+      </NavLink>
       <NavLink href="https://support.rallly.co">{t("common_support")}</NavLink>
     </nav>
   );
@@ -76,7 +79,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
         />
       </svg>
-      <div className="mx-auto flex w-full max-w-7xl items-center p-6 sm:p-8">
+      <div className="mx-auto flex w-full max-w-6xl items-center p-6 sm:p-8">
         <div className="flex grow items-center gap-x-12">
           <Link className="inline-block rounded" href="/">
             <Image src="/logo.svg" width={130} height={30} alt="rallly.co" />
@@ -137,7 +140,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           </div>
         </div>
       </div>
-      <div className="mx-auto w-full max-w-7xl grow p-6 sm:p-8">{children}</div>
+      <div className="mx-auto w-full max-w-6xl grow p-6 sm:p-8">{children}</div>
       <Footer />
     </div>
   );

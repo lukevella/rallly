@@ -1,45 +1,23 @@
 import { CheckIcon } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
+import { Card } from "@rallly/ui/card";
 import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import React from "react";
 
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
-import { usePlan } from "@/contexts/plan";
 
 const monthlyPriceUsd = 5;
 const annualPriceUsd = 30;
 
-const basicPlanIdMonthly = process.env
-  .NEXT_PUBLIC_PRO_PLAN_ID_MONTHLY as string;
-
-const basicPlanIdYearly = process.env.NEXT_PUBLIC_PRO_PLAN_ID_YEARLY as string;
-
 export const BillingPlans = () => {
-  const { user } = useUser();
-  const router = useRouter();
-  const [isPendingSubscription, setPendingSubscription] = React.useState(false);
-
   const [isBilledAnnually, setBilledAnnually] = React.useState(true);
-  const plan = usePlan();
-  const isPlus = plan === "paid";
 
   return (
     <div className="space-y-4">
-      <div>
-        <Label className="mb-4">
-          <Trans i18nKey="subscriptionPlans" defaults="Plans" />
-        </Label>
-        <p className="text-muted-foreground mb-4 text-sm">
-          <Trans
-            i18nKey="subscriptionDescription"
-            defaults="By subscribing, you not only gain access to all features but you are also directly supporting further development of Rallly."
-          />
-        </p>
-      </div>
-      <div className="flex items-center gap-2.5">
+      <Card className="flex items-center gap-2.5 p-4">
         <Switch
           id="annual-switch"
           checked={isBilledAnnually}
@@ -56,12 +34,14 @@ export const BillingPlans = () => {
             }}
           />
         </Label>
-      </div>
+      </Card>
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col divide-y rounded-md border">
+        <Card className="flex flex-col divide-y">
           <div className="p-4">
-            <div className="mb-4 flex items-center gap-x-4 text-xl font-bold">
-              <Trans i18nKey="planFree" defaults="Free" />
+            <div className="mb-4 flex items-center gap-x-4">
+              <Badge variant="secondary">
+                <Trans i18nKey="planFree" defaults="Free" />
+              </Badge>
             </div>
             <div>
               <span className="text-3xl font-bold">$0</span>
@@ -71,7 +51,7 @@ export const BillingPlans = () => {
             </div>
           </div>
           <div className="flex grow flex-col p-4">
-            <ul className="text-muted-foreground grow space-y-1 text-sm">
+            <ul className="text-muted-foreground grow text-sm">
               <Perk>
                 <Trans
                   i18nKey="plan_unlimitedPolls"
@@ -86,38 +66,13 @@ export const BillingPlans = () => {
               </Perk>
             </ul>
           </div>
-        </div>
+        </Card>
         <ProPlan annual={isBilledAnnually}>
-          {!isPlus ? (
-            <div className="mt-6">
-              <Button
-                className="w-full"
-                loading={isPendingSubscription}
-                variant="primary"
-                onClick={() => {
-                  if (user.isGuest) {
-                    router.push("/login");
-                  } else {
-                    window.Paddle.Checkout.open({
-                      allowQuantity: false,
-                      product: isBilledAnnually
-                        ? basicPlanIdYearly
-                        : basicPlanIdMonthly,
-                      email: user.email,
-                      disableLogout: true,
-                      passthrough: JSON.stringify({ userId: user.id }),
-                      successCallback: () => {
-                        // fetch user till we get the new plan
-                        setPendingSubscription(true);
-                      },
-                    });
-                  }
-                }}
-              >
-                <Trans i18nKey="planUpgrade" defaults="Upgrade" />
-              </Button>
-            </div>
-          ) : null}
+          <Button className="mt-4 w-full" variant="primary" asChild>
+            <Link href="https://app.rallly.co/settings/billing">
+              <Trans i18nKey="upgrade">Upgrade</Trans>
+            </Link>
+          </Button>
         </ProPlan>
       </div>
     </div>
@@ -140,11 +95,14 @@ export const ProPlan = ({
   annual?: boolean;
 }>) => {
   return (
-    <div className="border-primary ring-primary divide-y overflow-hidden rounded-md border ring-1">
+    <Card className="border-primary ring-primary divide-y ring-1">
       <div className="bg-pattern p-4">
-        <div className="text-primary mb-4 flex items-center gap-x-4 text-xl font-bold">
-          <Trans i18nKey="planPro" />
+        <div className="mb-4 flex items-center gap-x-4">
+          <Badge>
+            <Trans i18nKey="planPro" defaults="Pro" />
+          </Badge>
         </div>
+
         {annual ? (
           <div>
             <span className="mr-2 text-xl font-bold line-through">
@@ -170,7 +128,7 @@ export const ProPlan = ({
         )}
       </div>
       <div className="p-4">
-        <ul className="text-muted-foreground space-y-1 text-sm">
+        <ul className="text-muted-foreground text-sm">
           <Perk>
             <Trans i18nKey="plan_unlimitedPolls" defaults="Unlimited polls" />
           </Perk>
@@ -195,6 +153,6 @@ export const ProPlan = ({
         </ul>
         {children}
       </div>
-    </div>
+    </Card>
   );
 };
