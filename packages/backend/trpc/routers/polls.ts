@@ -9,7 +9,7 @@ import utc from "dayjs/plugin/utc";
 import * as ics from "ics";
 import { z } from "zod";
 
-import { printDate } from "../../utils/date";
+import { getTimeZoneAbbreviation } from "../../utils/date";
 import { nanoid } from "../../utils/nanoid";
 import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
 import { comments } from "./polls/comments";
@@ -496,12 +496,6 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (process.env.NEXT_PUBLIC_ENABLE_FINALIZATION !== "true") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This feature is not enabled",
-        });
-      }
       const poll = await prisma.poll.findUnique({
         where: {
           id: input.pollId,
@@ -511,6 +505,7 @@ export const polls = router({
           timeZone: true,
           title: true,
           location: true,
+          description: true,
           user: {
             select: {
               name: true,
@@ -564,15 +559,17 @@ export const polls = router({
         });
       }
 
-      const eventStart = poll.timeZone
-        ? dayjs(option.start).utc().tz(poll.timeZone, true).toDate()
-        : option.start;
+      let eventStart = dayjs(option.start).utc();
+
+      if (poll.timeZone) {
+        eventStart = eventStart.tz(poll.timeZone, true);
+      }
 
       await prisma.event.create({
         data: {
           pollId: poll.id,
           optionId: input.optionId,
-          start: eventStart,
+          start: eventStart.toDate(),
           duration: option.duration,
           title: poll.title,
           userId: ctx.user.id,
@@ -583,46 +580,49 @@ export const polls = router({
         p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
       );
 
-      let event: ics.ReturnObject;
-      if (option.duration > 0) {
-        // we need to remember to call .utc() on the dayjs() object
-        // to make sure we get the correct time  because dayjs() will
-        // use the local timezone
-        const start = poll.timeZone
-          ? dayjs(option.start).utc().tz(poll.timeZone, true).utc()
-          : dayjs(option.start).utc();
+      const icsAttendees = attendees
+        .filter((a) => !!a.email) // remove participants without email
+        .map((a) => ({
+          name: a.name,
+          email: a.email ?? undefined,
+        }));
 
-        event = ics.createEvent({
-          title: poll.title,
-          start: [
-            start.year(),
-            start.month() + 1,
-            start.date(),
-            start.hour(),
-            start.minute(),
-          ],
-          organizer: {
-            name: poll.user.name,
-            email: poll.user.email,
-          },
-          startInputType: poll.timeZone ? "utc" : "local",
-          duration: { minutes: option.duration },
-          attendees: attendees
-            .filter((a) => !!a.email) // remove participants without email
-            .map((a) => ({
-              name: a.name,
-              email: a.email ?? undefined,
-            })),
-        });
-      } else {
-        const start = dayjs(option.start);
-        const end = start.add(1, "day");
-        event = ics.createEvent({
-          title: poll.title,
-          start: [start.year(), start.month() + 1, start.date()],
-          end: [end.year(), end.month() + 1, end.date()],
-        });
-      }
+      const utcStart = eventStart.utc();
+      const eventEnd =
+        option.duration > 0
+          ? eventStart.add(option.duration, "minutes")
+          : eventStart.add(1, "day");
+
+      const event = ics.createEvent({
+        title: poll.title,
+        location: poll.location ?? undefined,
+        description: poll.description ?? undefined,
+        organizer: {
+          name: poll.user.name,
+          email: poll.user.email,
+        },
+        attendees: icsAttendees,
+        ...(option.duration > 0
+          ? {
+              start: [
+                utcStart.year(),
+                utcStart.month() + 1,
+                utcStart.date(),
+                utcStart.hour(),
+                utcStart.minute(),
+              ],
+              startInputType: poll.timeZone ? "utc" : "local",
+              duration: { minutes: option.duration },
+            }
+          : {
+              start: [
+                eventStart.year(),
+                eventStart.month() + 1,
+                eventStart.date(),
+              ],
+              end: [eventEnd.year(), eventEnd.month() + 1, eventEnd.date()],
+            }),
+      });
 
       if (event.error) {
         throw new TRPCError({
@@ -637,30 +637,21 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const formattedDate = printDate(
-          eventStart,
-          option.duration,
-          poll.timeZone ?? undefined,
+        const timeZone = poll.timeZone ?? "UTC";
+        const timeZoneAbbrev = getTimeZoneAbbreviation(
+          eventStart.toDate(),
+          timeZone,
         );
-        // const formatDate = (
-        //   date: Date,
-        //   duration: number,
-        //   timeZone?: string | null,
-        // ) => {
-        //   if (duration > 0) {
-        //     if (timeZone) {
-        //       return `${dayjs(date)
-        //         .utc()
-        //         .format(
-        //           "dddd, MMMM D, YYYY, HH:mm",
-        //         )} (${getTimeZoneAbbreviation(timeZone)})`;
-        //     } else {
-        //       return dayjs(date).utc().format("dddd, MMMM D, YYYY, HH:mm");
-        //     }
-        //   } else {
-        //     return dayjs(date).format("dddd, MMMM D, YYYY");
-        //   }
-        // };
+        const date = eventStart.format("dddd, MMMM D, YYYY");
+        const day = eventStart.format("D");
+        const dow = eventStart.format("ddd");
+        const startTime = eventStart.format("hh:mm A");
+        const endTime = eventEnd.format("hh:mm A");
+
+        const time =
+          option.duration > 0
+            ? `${startTime} - ${endTime} ${timeZoneAbbrev}`
+            : "All-day";
 
         const participantsToEmail: Array<{ name: string; email: string }> = [];
 
@@ -701,13 +692,16 @@ export const polls = router({
                 ),
               )
               .map((p) => p.name),
-            date: formattedDate,
+            date,
+            day,
+            dow,
+            time,
           },
           attachments: [{ filename: "event.ics", content: event.value }],
         });
 
         const emailsToParticipants = participantsToEmail.map((p) => {
-          return sendEmail("FinalizeHostEmail", {
+          return sendEmail("FinalizeParticipantEmail", {
             subject: `Date booked for ${poll.title}`,
             to: p.email,
             props: {
@@ -715,6 +709,7 @@ export const polls = router({
               pollUrl: absoluteUrl(`/poll/${poll.id}`),
               location: poll.location,
               title: poll.title,
+              hostName: poll.user?.name ?? "",
               attendees: poll.participants
                 .filter((p) =>
                   p.votes.some(
@@ -722,7 +717,10 @@ export const polls = router({
                   ),
                 )
                 .map((p) => p.name),
-              date: formattedDate,
+              date,
+              day,
+              dow,
+              time,
             },
             attachments: [{ filename: "event.ics", content: event.value }],
           });

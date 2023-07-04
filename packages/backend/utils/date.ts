@@ -15,19 +15,3 @@ export const getTimeZoneAbbreviation = (date: Date, timeZone: string) => {
   const abbrev = spaceTimeDate.isDST() ? dstAbbrev : standardAbbrev;
   return abbrev;
 };
-
-export const printDate = (date: Date, duration: number, timeZone?: string) => {
-  if (duration === 0) {
-    return dayjs(date).format("LL");
-  } else if (timeZone) {
-    return `${dayjs(date).tz(timeZone).format("LLL")} - ${dayjs(date)
-      .add(duration, "minutes")
-      .tz(timeZone)
-      .format("LT")} ${getTimeZoneAbbreviation(date, timeZone)}`;
-  } else {
-    return `${dayjs(date).utc().format("LLL")} - ${dayjs(date)
-      .utc()
-      .add(duration, "minutes")
-      .format("LT")}`;
-  }
-};
