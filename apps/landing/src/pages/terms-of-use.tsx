@@ -9,12 +9,14 @@ const PrivacyPolicy = () => {
       <NextSeo title="Terms of Use" />
       <div className="prose my-16 mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Terms of Use</h1>
-        <p>Last updated: 15 June 2023</p>
+        <p>Last updated: 4 July 2023</p>
         <p>
-          Welcome to rallly.co, an open-source project provided under the AGPLv3
-          license. By accessing and using this website, you agree to comply with
-          and be bound by the following terms of use. If you do not agree to
-          these terms, please do not use this website.
+          {`This website is operated by Stack Snap Ltd. References made to "we",
+          "us" or "our" pertain directly and exclusively to Stack Snap Ltd. We
+          provide you, as the user, with this website, which includes all the
+          information, tools, and services accessible on it, under the
+          stipulation that you agree to all the terms, conditions, policies, and
+          notices laid out herein.`}
         </p>
 
         <h2>1. Use of Website</h2>
@@ -57,9 +59,24 @@ const PrivacyPolicy = () => {
           such modifications.
         </p>
 
+        <h2>6. Contact</h2>
         <p>
           If you have any questions about these terms of use, please contact us
           at <a href="mailto:support@rallly.co">support@rallly.co</a>.
+        </p>
+
+        <p className="text-sm font-semibold">
+          Stack Snap Ltd.
+          <br />
+          The Gallery 14
+          <br />
+          Upland Road
+          <br />
+          London
+          <br />
+          SE22 9EE
+          <br />
+          United Kingdom
         </p>
       </div>
     </PageLayout>
