@@ -1,5 +1,5 @@
 import { trpc } from "@rallly/backend";
-import { UnlockIcon } from "@rallly/icons";
+import { LockIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
   CardContent,
@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { ProPlan } from "@/components/billing/billing-plans";
 import { Card } from "@/components/card";
 import { getPollLayout } from "@/components/layouts/poll-layout";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
@@ -84,10 +85,10 @@ const Teaser = () => {
   return (
     <div className="relative mx-auto max-w-3xl">
       <div className="absolute inset-0 z-10 flex items-center justify-center rounded-md bg-white/10  backdrop-blur-sm">
-        <div className="shadow-huge overflow-hidden rounded-md border bg-white">
-          <div className="flex gap-x-4 p-4">
+        <div className="shadow-huge space-y-4 overflow-hidden rounded-md border bg-white p-4">
+          <div className="flex gap-x-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 shadow-sm">
-              <UnlockIcon className="text-primary h-5 w-5" />
+              <LockIcon className="text-primary h-5 w-5" />
             </div>
             <div>
               <h2 className="text-base font-semibold leading-tight">
@@ -101,16 +102,8 @@ const Teaser = () => {
               </p>
             </div>
           </div>
-          <div className="px-4">
-            <p className="max-w-sm text-sm">
-              <Trans
-                i18nKey="upgradeOverlayDescription"
-                defaults="Upgrade today to gain access to this feature and so much more."
-              />
-            </p>
-          </div>
-          <div className="flex gap-x-2 p-4">
-            <Button variant="primary" asChild>
+          <ProPlan annual={true}>
+            <Button variant="primary" asChild className="mt-4 w-full">
               <Link href="/settings/billing">
                 <Trans
                   i18nKey="upgradeOverlayGoToBilling"
@@ -118,7 +111,7 @@ const Teaser = () => {
                 />
               </Link>
             </Button>
-          </div>
+          </ProPlan>
         </div>
       </div>
       <FinalizationForm />

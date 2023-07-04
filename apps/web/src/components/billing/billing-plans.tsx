@@ -90,110 +90,114 @@ export const BillingPlans = () => {
             </ul>
           </div>
         </Card>
-        <Card className="border-primary ring-primary divide-y ring-1">
-          <div className="bg-pattern p-4">
-            <div className="mb-4 flex items-center gap-x-4">
-              <Badge>
-                <Trans i18nKey="planPro" />
-              </Badge>
+        <ProPlan annual={isBilledAnnually}>
+          {!isPlus ? (
+            <div className="mt-6">
+              <Button
+                className="w-full"
+                loading={isPendingSubscription}
+                variant="primary"
+                onClick={() => {
+                  if (user.isGuest) {
+                    router.push("/login");
+                  } else {
+                    window.Paddle.Checkout.open({
+                      allowQuantity: false,
+                      product: isBilledAnnually
+                        ? basicPlanIdYearly
+                        : basicPlanIdMonthly,
+                      email: user.email,
+                      disableLogout: true,
+                      passthrough: JSON.stringify({ userId: user.id }),
+                      successCallback: () => {
+                        // fetch user till we get the new plan
+                        setPendingSubscription(true);
+                      },
+                    });
+                  }
+                }}
+              >
+                <Trans i18nKey="planUpgrade" defaults="Upgrade" />
+              </Button>
             </div>
-
-            {isBilledAnnually ? (
-              <div>
-                <span className="mr-2 text-xl font-bold line-through">
-                  ${monthlyPriceUsd}
-                </span>
-                <span className="text-3xl font-bold">
-                  ${(annualPriceUsd / 12).toFixed(2)}
-                </span>
-                <div className="text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="annualBillingDescription"
-                    defaults="per month, billed annually"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div>
-                <span className="text-3xl font-bold">$5</span>
-                <div className="text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="monthlyBillingDescription"
-                    defaults="per month"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="p-4">
-            <ul className="text-muted-foreground text-sm">
-              <li>
-                <Trans
-                  i18nKey="plan_unlimitedPolls"
-                  defaults="Unlimited polls"
-                />
-              </li>
-              <li>
-                <Trans
-                  i18nKey="plan_unlimitedParticipants"
-                  defaults="Unlimited participants"
-                />
-              </li>
-              <li>
-                <Trans i18nKey="plan_finalizePolls" defaults="Finalize polls" />
-              </li>
-              <li>
-                <Trans
-                  i18nKey="plan_extendedPollLife"
-                  defaults="Extended poll life"
-                />
-              </li>
-              <li>
-                <Trans
-                  i18nKey="plan_prioritySupport"
-                  defaults="Priority support"
-                />
-              </li>
-              <li>
-                <Trans
-                  i18nKey="plan_accessFeatures"
-                  defaults="Access to new upcoming features"
-                />
-              </li>
-            </ul>
-            {!isPlus ? (
-              <div className="mt-6">
-                <Button
-                  className="w-full"
-                  loading={isPendingSubscription}
-                  variant="primary"
-                  onClick={() => {
-                    if (user.isGuest) {
-                      router.push("/login");
-                    } else {
-                      window.Paddle.Checkout.open({
-                        allowQuantity: false,
-                        product: isBilledAnnually
-                          ? basicPlanIdYearly
-                          : basicPlanIdMonthly,
-                        email: user.email,
-                        disableLogout: true,
-                        passthrough: JSON.stringify({ userId: user.id }),
-                        successCallback: () => {
-                          // fetch user till we get the new plan
-                          setPendingSubscription(true);
-                        },
-                      });
-                    }
-                  }}
-                >
-                  <Trans i18nKey="planUpgrade" defaults="Upgrade" />
-                </Button>
-              </div>
-            ) : null}
-          </div>
-        </Card>
+          ) : null}
+        </ProPlan>
       </div>
     </div>
+  );
+};
+
+export const ProPlan = ({
+  annual,
+  children,
+}: React.PropsWithChildren<{
+  annual?: boolean;
+}>) => {
+  return (
+    <Card className="border-primary ring-primary divide-y ring-1">
+      <div className="bg-pattern p-4">
+        <div className="mb-4 flex items-center gap-x-4">
+          <Badge>
+            <Trans i18nKey="planPro" />
+          </Badge>
+        </div>
+
+        {annual ? (
+          <div>
+            <span className="mr-2 text-xl font-bold line-through">
+              ${monthlyPriceUsd}
+            </span>
+            <span className="text-3xl font-bold">
+              ${(annualPriceUsd / 12).toFixed(2)}
+            </span>
+            <div className="text-muted-foreground text-sm">
+              <Trans
+                i18nKey="annualBillingDescription"
+                defaults="per month, billed annually"
+              />
+            </div>
+          </div>
+        ) : (
+          <div>
+            <span className="text-3xl font-bold">$5</span>
+            <div className="text-muted-foreground text-sm">
+              <Trans i18nKey="monthlyBillingDescription" defaults="per month" />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="p-4">
+        <ul className="text-muted-foreground text-sm">
+          <li>
+            <Trans i18nKey="plan_unlimitedPolls" defaults="Unlimited polls" />
+          </li>
+          <li>
+            <Trans
+              i18nKey="plan_unlimitedParticipants"
+              defaults="Unlimited participants"
+            />
+          </li>
+          <li>
+            <Trans i18nKey="plan_finalizePolls" defaults="Finalize polls" />
+          </li>
+          <li>
+            <Trans
+              i18nKey="plan_extendedPollLife"
+              defaults="Extended poll life"
+            />
+          </li>
+          <li>
+            <Trans i18nKey="plan_prioritySupport" defaults="Priority support" />
+          </li>
+          <li>
+            <Trans
+              i18nKey="plan_accessFeatures"
+              defaults="Access to new upcoming features"
+            />
+          </li>
+        </ul>
+        {children}
+      </div>
+    </Card>
   );
 };
