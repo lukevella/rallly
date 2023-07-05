@@ -7,7 +7,7 @@ import Ban from "./ban-ads.svg";
 const Bonus: React.FunctionComponent = () => {
   const { t } = useTranslation();
   return (
-    <div className="mx-auto max-w-7xl py-12">
+    <div>
       <h2 className="heading">{t("homepage_principles")}</h2>
       <p className="subheading">{t("homepage_principlesSubheading")}</p>
       <div className="grid grid-cols-4 gap-16">

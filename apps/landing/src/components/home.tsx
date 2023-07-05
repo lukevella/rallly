@@ -9,7 +9,7 @@ import Hero from "./home/hero";
 const Home: React.FunctionComponent = () => {
   const { t } = useTranslation();
   return (
-    <>
+    <div className="space-y-24">
       <NextSeo
         title={t("homepage_metaTitle")}
         description={t("homepage_metaDescription")}
@@ -22,7 +22,7 @@ const Home: React.FunctionComponent = () => {
       <Hero />
       <Features />
       <Bonus />
-    </>
+    </div>
   );
 };
 
