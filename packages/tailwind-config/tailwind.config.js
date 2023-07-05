@@ -22,8 +22,13 @@ module.exports = {
         primary: {
           ...colors.indigo,
           DEFAULT: colors.indigo["600"],
-          foreground: colors.indigo["600"],
+          foreground: colors.white,
           background: colors.indigo["50"],
+        },
+        secondary: {
+          background: colors.gray["100"],
+          DEFAULT: colors.gray["100"],
+          foreground: colors.gray["800"],
         },
         gray: colors.gray,
         border: colors.gray["200"],

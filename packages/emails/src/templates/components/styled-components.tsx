@@ -13,6 +13,7 @@ import {
 
 import { getDomain } from "./utils";
 
+export const borderColor = "#E2E8F0";
 export const Text = (
   props: TextProps & { light?: boolean; small?: boolean },
 ) => {

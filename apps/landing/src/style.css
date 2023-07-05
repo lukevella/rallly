@@ -11,7 +11,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   html {
-    @apply h-full font-sans text-base text-gray-700;
+    @apply h-full font-sans text-base;
   }
   body #__next {
     @apply min-h-screen;
@@ -21,7 +21,7 @@
   h3,
   h4,
   h5 {
-    @apply font-sans font-semibold text-gray-800;
+    @apply font-sans font-semibold;
   }
   h1 {
     @apply text-2xl;

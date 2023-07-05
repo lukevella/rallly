@@ -4,29 +4,20 @@ import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
 export const user = router({
-  getPolls: publicProcedure.query(async ({ ctx }) => {
-    const userPolls = await prisma.user.findUnique({
-      where: {
-        id: ctx.user.id,
-      },
+  getBilling: publicProcedure.query(async ({ ctx }) => {
+    return await prisma.userPaymentData.findUnique({
       select: {
-        polls: {
-          where: {
-            deleted: false,
-          },
-          select: {
-            title: true,
-            closed: true,
-            createdAt: true,
-            adminUrlId: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
+        subscriptionId: true,
+        status: true,
+        planId: true,
+        endDate: true,
+        updateUrl: true,
+        cancelUrl: true,
+      },
+      where: {
+        userId: ctx.user.id,
       },
     });
-    return userPolls;
   }),
   changeName: publicProcedure
     .input(

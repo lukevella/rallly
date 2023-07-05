@@ -9,6 +9,7 @@ import * as React from "react";
 
 import { getRandomAvatarColor } from "@/components/home/color-hash";
 import { Trans } from "@/components/trans";
+import { linkToApp } from "@/lib/linkToApp";
 
 const VoteIcon = ({ variant }: { variant: VoteType }) => {
   return (
@@ -108,8 +109,8 @@ const participants: Array<{ name: string; votes: VoteType[] }> = [
 ];
 const Demo = () => {
   return (
-    <div className="sm:shadow-huge min-w-0 max-w-full select-none overflow-x-auto rounded-md border border-gray-300/75 bg-white pb-1">
-      <div className="sticky left-0 flex h-14 items-center justify-between border-b bg-gray-50 px-4 py-3 font-semibold">
+    <div className="sm:shadow-huge w-[700px] min-w-0 shrink-0 select-none overflow-hidden rounded-md border border-gray-300/75 bg-white pb-1">
+      <div className="flex h-14 items-center justify-between border-b bg-gray-50 px-4 py-3 font-semibold">
         <div>
           <Trans i18nKey="participantCount" values={{ count: 5 }} />
         </div>
@@ -175,62 +176,55 @@ const Demo = () => {
 
 const Hero: React.FunctionComponent = () => {
   return (
-    <div className="mx-auto max-w-7xl">
-      <div className="mt-8 text-center sm:mt-16">
-        <div className="mb-6 sm:mb-8">
-          <Link
-            target="_blank"
-            href="https://github.com/lukevella/rallly"
-            className="hover:text-primary hover:border-primary active:bg-primary-50 group inline-flex items-center rounded-full border bg-gray-50/50 px-2.5 py-2 text-xs font-medium text-gray-600 transition-colors sm:text-sm"
-          >
-            <span className="px-2.5">
-              <Trans i18nKey="opensource" defaults="We're Open Source!" />
-            </span>
-            <span className="inline-flex items-center gap-2 border-l px-2.5">
-              <GithubIcon className="h-4 w-4" />
-              <Trans i18nKey="startUsOnGithub" defaults="Star us on Github" />
-              <ArrowRightIcon className="inline-block h-4 w-4 transition-transform group-hover:translate-x-1 group-active:translate-x-2" />
-            </span>
-          </Link>
-        </div>
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl">
-          <Trans
-            i18nKey="headline"
-            defaults="Ditch the back-and-forth emails"
-          />
-        </h1>
-        <p className="text-xl text-gray-500">
-          <Trans
-            i18nKey="subheadling"
-            defaults="Streamline your scheduling process and save time"
-          />
-        </p>
-        <div className="mt-8 flex justify-center gap-3">
-          <div className="relative">
-            <Button size="lg" className="shadow-sm" variant="primary" asChild>
-              <Link href="https://app.rallly.co/new">
-                <Trans i18nKey="homepage_getStarted" />
-              </Link>
-            </Button>
-          </div>
-          <Button size="lg" className="shadow-sm" asChild>
-            <Link href="https://support.rallly.co">
-              <Trans i18nKey="homepage_readDocs" defaults="Read the docs" />
-              <ArrowRightIcon className="h-4 w-4" />
+    <div className="mt-8 max-w-full text-center sm:mt-16">
+      <div className="mb-6 sm:mb-8">
+        <Link
+          target="_blank"
+          href="https://github.com/lukevella/rallly"
+          className="hover:text-primary hover:border-primary active:bg-primary-50 group inline-flex items-center rounded-full border border-gray-300/50 bg-gray-50/50 px-2.5 py-2 text-xs font-medium text-gray-600 transition-colors sm:text-sm"
+        >
+          <span className="px-2.5">
+            <Trans i18nKey="opensource" defaults="We're Open Source!" />
+          </span>
+          <span className="inline-flex items-center gap-2 border-l px-2.5">
+            <GithubIcon className="h-4 w-4" />
+            <Trans i18nKey="startUsOnGithub" defaults="Star us on Github" />
+            <ArrowRightIcon className="inline-block h-4 w-4 transition-transform group-hover:translate-x-1 group-active:translate-x-2" />
+          </span>
+        </Link>
+      </div>
+      <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl">
+        <Trans i18nKey="headline" defaults="Ditch the back-and-forth emails" />
+      </h1>
+      <p className="text-xl text-gray-500">
+        <Trans
+          i18nKey="subheadling"
+          defaults="Streamline your scheduling process and save time"
+        />
+      </p>
+      <div className="mt-8 flex justify-center gap-3">
+        <div className="relative">
+          <Button size="lg" className="shadow-sm" variant="primary" asChild>
+            <Link href={linkToApp("/new")}>
+              <Trans i18nKey="homepage_getStarted" />
             </Link>
           </Button>
         </div>
-        <div className="mt-8">
-          <p className="text-muted-foreground mb-8 whitespace-nowrap text-center text-sm">
-            <Trans
-              i18nKey="getStartedHint"
-              defaults="Create a poll. It's free. No login required."
-            />
-          </p>
-          <div className="mx-auto max-w-[700px]">
-            <Demo />
-          </div>
-        </div>
+        <Button size="lg" className="shadow-sm" asChild>
+          <Link href="https://support.rallly.co">
+            <Trans i18nKey="homepage_readDocs" defaults="Read the docs" />
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+        </Button>
+      </div>
+      <p className="text-muted-foreground mt-8 mb-8 whitespace-nowrap text-center text-sm">
+        <Trans
+          i18nKey="getStartedHint"
+          defaults="Create a poll. It's free. No login required."
+        />
+      </p>
+      <div className="-mx-4 flex overflow-x-auto p-4 sm:justify-center sm:overflow-visible">
+        <Demo />
       </div>
     </div>
   );

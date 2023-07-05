@@ -5,12 +5,11 @@ import React from "react";
 import Bonus from "./home/bonus";
 import Features from "./home/features";
 import Hero from "./home/hero";
-import PageLayout from "./layouts/page-layout";
 
 const Home: React.FunctionComponent = () => {
   const { t } = useTranslation();
   return (
-    <PageLayout>
+    <div className="space-y-24">
       <NextSeo
         title={t("homepage_metaTitle")}
         description={t("homepage_metaDescription")}
@@ -23,7 +22,7 @@ const Home: React.FunctionComponent = () => {
       <Hero />
       <Features />
       <Bonus />
-    </PageLayout>
+    </div>
   );
 };
 

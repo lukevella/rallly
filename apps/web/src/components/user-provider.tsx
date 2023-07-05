@@ -49,6 +49,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const queryClient = trpc.useContext();
 
   const { data: user } = trpc.whoami.get.useQuery();
+  const billingQuery = trpc.user.getBilling.useQuery();
   const { data: userPreferences } = trpc.userPreferences.get.useQuery();
 
   const shortName = user
@@ -57,7 +58,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
       : user.id.substring(0, 10)
     : t("guest");
 
-  if (!user || userPreferences === undefined) {
+  if (!user || userPreferences === undefined || !billingQuery.isFetched) {
     return null;
   }
 

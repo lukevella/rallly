@@ -1,5 +1,7 @@
+import { trpc } from "@rallly/backend";
 import {
   ChevronDown,
+  CreditCardIcon,
   LifeBuoyIcon,
   ListIcon,
   LogInIcon,
@@ -10,6 +12,7 @@ import {
   UserIcon,
   UserPlusIcon,
 } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -26,6 +29,27 @@ import { CurrentUserAvatar } from "@/components/user";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
+const Plan = () => {
+  const { isFetched, data } = trpc.user.getBilling.useQuery();
+  if (!isFetched) {
+    return null;
+  }
+
+  const isPlus = data && data.endDate.getTime() > Date.now();
+
+  if (isPlus) {
+    return (
+      <Badge>
+        <Trans i18nKey="planPro" defaults="Pro" />
+      </Badge>
+    );
+  }
+  return (
+    <Badge variant="secondary">
+      <Trans i18nKey="planFree" defaults="Free" />
+    </Badge>
+  );
+};
 export const UserDropdown = () => {
   const { user } = useUser();
   return (
@@ -45,9 +69,7 @@ export const UserDropdown = () => {
             </div>
           </div>
           <div className="ml-4">
-            <span className="bg-foreground rounded-full px-1.5 py-0.5 text-xs text-white">
-              <Trans i18nKey="planFree" defaults="Free" />
-            </span>
+            <Plan />
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -71,12 +93,17 @@ export const UserDropdown = () => {
             <Trans i18nKey="preferences" defaults="Preferences" />
           </Link>
         </DropdownMenuItem>
-        {/* <DropdownMenuItem asChild={true}>
-          <Link href="/settings/billing" className="flex items-center gap-x-2">
-            <CreditCardIcon className="h-4 w-4" />
-            <Trans i18nKey="Billing" defaults="Billing" />
-          </Link>
-        </DropdownMenuItem> */}
+        <IfAuthenticated>
+          <DropdownMenuItem asChild={true}>
+            <Link
+              href="/settings/billing"
+              className="flex items-center gap-x-2"
+            >
+              <CreditCardIcon className="h-4 w-4" />
+              <Trans i18nKey="Billing" defaults="Billing" />
+            </Link>
+          </DropdownMenuItem>
+        </IfAuthenticated>
         <DropdownMenuItem asChild={true}>
           <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
             <ListIcon className="h-4 w-4" />

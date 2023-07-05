@@ -1,11 +1,11 @@
-import { Settings2Icon, UserIcon } from "@rallly/icons";
+import { CreditCardIcon, Settings2Icon, UserIcon } from "@rallly/icons";
+import { Card } from "@rallly/ui/card";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Trans } from "react-i18next";
 
-import { Card } from "@/components/card";
 import { Container } from "@/components/container";
 import { StandardLayout } from "@/components/layouts/standard-layout";
 
@@ -37,8 +37,8 @@ const MenuItem = (props: {
 export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <div>
-      <Container className="px-0 sm:py-8">
-        <Card className="mx-auto max-w-4xl" fullWidthOnMobile={true}>
+      <Container className="p-2 sm:py-8">
+        <Card className="mx-auto max-w-4xl overflow-hidden">
           <div className="flex gap-4 gap-x-6 border-b bg-gray-50 px-3 py-4 md:px-4">
             <IfAuthenticated>
               <MenuItem href="/settings/profile" icon={UserIcon}>
@@ -48,11 +48,11 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
             <MenuItem href="/settings/preferences" icon={Settings2Icon}>
               <Trans i18nKey="preferences" defaults="Preferences" />
             </MenuItem>
-            {/* <IfAuthenticated>
+            <IfAuthenticated>
               <MenuItem href="/settings/billing" icon={CreditCardIcon}>
                 <Trans i18nKey="billing" defaults="Billing" />
               </MenuItem>
-            </IfAuthenticated> */}
+            </IfAuthenticated>
           </div>
           {children}
         </Card>

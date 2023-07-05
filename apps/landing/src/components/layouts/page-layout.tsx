@@ -1,18 +1,27 @@
 import {
   ArrowRightIcon,
+  GemIcon,
   LifeBuoyIcon,
   LogInIcon,
   MenuIcon,
   NewspaperIcon,
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { absoluteUrl } from "@rallly/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
+
+import { linkToApp } from "@/lib/linkToApp";
 
 import Footer from "./page-layout/footer";
 
@@ -45,6 +54,9 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
   return (
     <nav className={className}>
       <NavLink href="/blog">{t("common_blog")}</NavLink>
+      <NavLink href="/pricing">
+        <Trans i18nKey="pricing">Pricing</Trans>
+      </NavLink>
       <NavLink href="https://support.rallly.co">{t("common_support")}</NavLink>
     </nav>
   );
@@ -76,69 +88,83 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
         />
       </svg>
-      <div className="mx-auto flex w-full max-w-7xl items-center p-6 sm:p-8">
-        <div className="flex grow items-center gap-x-12">
-          <Link className="inline-block rounded" href="/">
-            <Image src="/logo.svg" width={130} height={30} alt="rallly.co" />
-          </Link>
-          <Menu className="hidden items-center space-x-8 sm:flex" />
-        </div>
-        <div className="flex items-center gap-4 sm:gap-8">
-          <Link
-            href={absoluteUrl("/login")}
-            className="hover:text-primary text-muted-foreground hidden rounded text-sm font-medium hover:no-underline hover:underline-offset-2 sm:inline-flex"
-          >
-            <Trans i18nKey="login" defaults="Login" />
-          </Link>
-          <Link
-            href="https://app.rallly.co"
-            className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
-          >
-            <span>
-              <Trans i18nKey="goToApp" defaults="Go to app" />
-            </span>
-            <ArrowRightIcon className="inline-block h-4 w-4 -translate-x-1 transition-all group-hover:translate-x-0 group-active:translate-x-1" />
-          </Link>
-          <div className="flex items-center justify-center sm:hidden">
-            <Popover>
-              <PopoverTrigger>
-                <MenuIcon className="h-6 w-6" />
-              </PopoverTrigger>
-              <PopoverContent
-                sideOffset={20}
-                collisionPadding={16}
-                align="end"
-                className="w-[var(--radix-popover-content-available-width)] bg-white/90 p-4 backdrop-blur-md"
-              >
-                <Link
-                  className="flex items-center gap-3 p-2 text-lg"
-                  href="https://rallly.co/blog"
-                >
-                  <NewspaperIcon className="h-5 w-5" />
-                  <Trans i18nKey="common_blog" />
-                </Link>
-                <Link
-                  className="flex items-center gap-3 p-2 text-lg"
-                  href="https://support.rallly.co"
-                >
-                  <LifeBuoyIcon className="h-5 w-5" />
-                  <Trans i18nKey="common_support" />
-                </Link>
-                <hr className="my-2" />
-                <Link
-                  className="flex items-center gap-3 p-2 text-lg"
-                  href="https://app.rallly.co/login"
-                >
-                  <LogInIcon className="h-5 w-5" />
-                  <Trans i18nKey="login" defaults="Login" />
-                </Link>
-              </PopoverContent>
-            </Popover>
+      <div className="mx-auto max-w-full grow p-4 sm:max-w-7xl sm:p-8">
+        <div className="mb-16 flex w-full items-center">
+          <div className="flex grow items-center gap-x-12">
+            <Link className="inline-block rounded" href="/">
+              <Image src="/logo.svg" width={130} height={30} alt="rallly.co" />
+            </Link>
+            <Menu className="hidden items-center space-x-8 sm:flex" />
+          </div>
+          <div className="flex items-center gap-4 sm:gap-8">
+            <Link
+              href={absoluteUrl("/login")}
+              className="hover:text-primary text-muted-foreground hidden rounded text-sm font-medium hover:no-underline hover:underline-offset-2 sm:inline-flex"
+            >
+              <Trans i18nKey="login" defaults="Login" />
+            </Link>
+            <Link
+              href={linkToApp()}
+              className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
+            >
+              <span>
+                <Trans i18nKey="goToApp" defaults="Go to app" />
+              </span>
+              <ArrowRightIcon className="inline-block h-4 w-4 -translate-x-1 transition-all group-hover:translate-x-0 group-active:translate-x-1" />
+            </Link>
+            <div className="flex items-center justify-center sm:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <MenuIcon className="h-6 w-6" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" sideOffset={16}>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      className="flex items-center gap-3 p-2 text-lg"
+                      href="/blog"
+                    >
+                      <NewspaperIcon className="h-5 w-5" />
+                      <Trans i18nKey="common_blog" />
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      className="flex items-center gap-3 p-2 text-lg"
+                      href="/pricing"
+                    >
+                      <GemIcon className="h-5 w-5" />
+                      <Trans i18nKey="pricing" defaults="Pricing" />
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      className="flex items-center gap-3 p-2 text-lg"
+                      href="https://support.rallly.co"
+                    >
+                      <LifeBuoyIcon className="h-5 w-5" />
+                      <Trans i18nKey="common_support" />
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link
+                      className="flex items-center gap-3 p-2 text-lg"
+                      href={linkToApp("/login")}
+                    >
+                      <LogInIcon className="h-5 w-5" />
+                      <Trans i18nKey="login" defaults="Login" />
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
+        <div className="grow">{children}</div>
+        <div className="pt-36">
+          <Footer />
+        </div>
       </div>
-      <div className="mx-auto w-full max-w-7xl grow p-6 sm:p-8">{children}</div>
-      <Footer />
     </div>
   );
 };

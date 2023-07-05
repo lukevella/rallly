@@ -25,20 +25,32 @@ model User {
   comments  Comment[]
   polls     Poll[]
   watcher   Watcher[]
-  events     Event[]
+  events    Event[]
 
   @@map("users")
 }
 
-// model UserPaymentData {
-//   userId                String   @id @map("user_id")
-//   subscriptionId        String   @map("subscription_id")
-//   subscriptionPlanId    String   @map("subscription_plan_id")
-//   subscriptionEndDate   DateTime @map("subscription_end_date")
-//   subscriptionStatus    String   @map("subscription_status")
-//   subscriptionUpdateUrl String   @map("subscription_update_url")
-//   subscriptionCancelUrl String   @map("subscription_cancel_url")
-// }
+enum SubscriptionStatus {
+  active
+  paused
+  deleted
+  trialing
+  past_due
+
+  @@map("subscription_status")
+}
+
+model UserPaymentData {
+  userId         String             @id @map("user_id")
+  subscriptionId String             @map("subscription_id")
+  planId         String             @map("plan_id")
+  endDate        DateTime           @map("end_date")
+  status         SubscriptionStatus
+  updateUrl      String             @map("update_url")
+  cancelUrl      String             @map("cancel_url")
+
+  @@map("user_payment_data")
+}
 
 model UserPreferences {
   userId     String      @id @map("user_id")
@@ -97,7 +109,6 @@ model Event {
   @@index([userId], type: Hash)
   @@map("events")
 }
-
 
 model Watcher {
   id        Int      @id @default(autoincrement())
