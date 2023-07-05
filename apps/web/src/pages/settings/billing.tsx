@@ -23,9 +23,6 @@ declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Paddle: any;
-    createLemonSqueezy: () => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    LemonSqueezy: any;
   }
 }
 
@@ -60,13 +57,13 @@ const BillingStatus = () => {
   const { data: userPaymentData } = trpc.user.getBilling.useQuery();
 
   if (!userPaymentData) {
-    return null;
+    return <p>Something when wrong. Missing user payment data.</p>;
   }
 
   const { status, endDate, planId } = userPaymentData;
 
   if (status === "trialing" || status === "past_due") {
-    return null;
+    return <p>Invalid billing status</p>;
   }
 
   return (
