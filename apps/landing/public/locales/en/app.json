@@ -73,5 +73,6 @@
   "faq_howToUpgrade": "How do I upgrade to a paid plan?",
   "faq_howToUpgradeAnswer": "To upgrade, you can go to your <a>billing settings</a> and click on <b>Upgrade</b>.",
   "faq_cancelSubscription": "How do I cancel my subscription?",
-  "faq_cancelSubscriptionAnswer": "You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
+  "faq_cancelSubscriptionAnswer": "You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan.",
+  "priceIncreaseInfo": "Prices will be adjusted regularly as more features are added"
 }

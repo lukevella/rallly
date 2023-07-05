@@ -9,7 +9,7 @@ const billingPlanVariants = cva(
     variants: {
       variant: {
         primary: "bg-white",
-        default: "bg-white/50",
+        default: "bg-gray-50",
       },
     },
     defaultVariants: {
