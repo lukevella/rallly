@@ -88,7 +88,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
         />
       </svg>
-      <div className="mx-auto max-w-full grow p-4 sm:max-w-7xl sm:p-8">
+      <div className="mx-auto w-full max-w-full grow p-4 sm:max-w-7xl sm:p-8">
         <div className="mb-16 flex w-full items-center">
           <div className="flex grow items-center gap-x-12">
             <Link className="inline-block rounded" href="/">
