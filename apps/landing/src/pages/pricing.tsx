@@ -1,19 +1,15 @@
 import { CheckIcon } from "@rallly/icons";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@rallly/ui/accordion";
-import {
   BillingPlan,
-  BillingPlanDescription,
+  BillingPlanFooter,
   BillingPlanHeader,
+  BillingPlanPeriod,
   BillingPlanPerk,
   BillingPlanPerks,
   BillingPlanPrice,
   BillingPlanTitle,
 } from "@rallly/ui/billing-plan";
+import { Button } from "@rallly/ui/button";
 import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
 import Link from "next/link";
@@ -23,6 +19,7 @@ import React from "react";
 
 import { getPageLayout } from "@/components/layouts/page-layout";
 import { Trans } from "@/components/trans";
+import { linkToApp } from "@/lib/linkToApp";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/page-translations";
 
@@ -42,7 +39,7 @@ const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
   const [annualBilling, setAnnualBilling] = React.useState(true);
   return (
-    <div className="mx-auto max-w-2xl bg-gray-100">
+    <div className="mx-auto bg-gray-100">
       <NextSeo title={t("pricing", { defaultValue: "Pricing" })} />
       <h1 className="mb-4 text-4xl font-bold tracking-tight">
         <Trans i18nKey="pricing">Pricing</Trans>
@@ -53,7 +50,7 @@ const Page: NextPageWithLayout = () => {
           defaults="Get started for free. No login required."
         />
       </p>
-      <div className="mt-8 mb-8">
+      <div className="my-8">
         <div className="mb-4 flex items-center gap-x-2">
           <Switch
             id="annual-billing"
@@ -68,16 +65,16 @@ const Page: NextPageWithLayout = () => {
             />
           </Label>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           <BillingPlan>
             <BillingPlanHeader>
               <BillingPlanTitle>
                 <Trans i18nKey="planFree" defaults="Free" />
               </BillingPlanTitle>
               <BillingPlanPrice>$0</BillingPlanPrice>
-              <BillingPlanDescription>
+              <BillingPlanPeriod>
                 <Trans i18nKey="freeForever" defaults="free forever" />
-              </BillingPlanDescription>
+              </BillingPlanPeriod>
             </BillingPlanHeader>
             <BillingPlanPerks>
               <BillingPlanPerk>
@@ -93,6 +90,13 @@ const Page: NextPageWithLayout = () => {
                 />
               </BillingPlanPerk>
             </BillingPlanPerks>
+            <BillingPlanFooter>
+              <Button className="w-full" asChild>
+                <Link href={linkToApp()}>
+                  <Trans i18nKey="getStarted">Get started for free</Trans>
+                </Link>
+              </Button>
+            </BillingPlanFooter>
           </BillingPlan>
           <BillingPlan variant="primary">
             <BillingPlanHeader>
@@ -106,22 +110,22 @@ const Page: NextPageWithLayout = () => {
                   >
                     ${monthlyPriceUsd}
                   </BillingPlanPrice>
-                  <BillingPlanDescription>
+                  <BillingPlanPeriod>
                     <Trans
                       i18nKey="annualBillingDescription"
                       defaults="per month, billed annually"
                     />
-                  </BillingPlanDescription>
+                  </BillingPlanPeriod>
                 </>
               ) : (
                 <>
                   <BillingPlanPrice>${monthlyPriceUsd}</BillingPlanPrice>
-                  <BillingPlanDescription>
+                  <BillingPlanPeriod>
                     <Trans
                       i18nKey="monthlyBillingDescription"
                       defaults="per month"
                     />
-                  </BillingPlanDescription>
+                  </BillingPlanPeriod>
                 </>
               )}
             </BillingPlanHeader>
@@ -154,37 +158,102 @@ const Page: NextPageWithLayout = () => {
                 />
               </BillingPlanPerk>
             </BillingPlanPerks>
+            <BillingPlanFooter>
+              <Button variant="primary" className="w-full" asChild>
+                <Link href={linkToApp("/settings/billing")}>
+                  <Trans i18nKey="upgrade">Upgrade</Trans>
+                </Link>
+              </Button>
+            </BillingPlanFooter>
           </BillingPlan>
         </div>
       </div>
-      <h2>
-        <Trans i18nKey="faq" defaults="Frequently Asked Questions"></Trans>
-      </h2>
-      <Accordion type="multiple">
-        <AccordionItem value="how-to-upgrade">
-          <AccordionTrigger>
-            <Trans
-              i18nKey="faq_howToUpgrade"
-              defaults="How do I upgrade to a paid plan?"
-            ></Trans>
-          </AccordionTrigger>
-          <AccordionContent>
-            <Trans
-              i18nKey="faq_howToUpgradeAnswer"
-              components={{
-                a: (
-                  <Link
-                    className="text-link"
-                    href="https://app.rallly.co/settings/billing"
-                  />
-                ),
-                b: <strong />,
-              }}
-              defaults="To upgrade, you can go to your <a>billing settings</a> and click on <b>Upgrade</b>."
-            ></Trans>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      <hr className="my-8" />
+      <div>
+        <h2 className="mb-4">
+          <Trans i18nKey="faq" defaults="Frequently Asked Questions"></Trans>
+        </h2>
+        <div className="divide-y">
+          <div className="grid gap-x-8 gap-y-1 py-4 md:grid-cols-3">
+            <h3 className="col-span-1">
+              <Trans
+                i18nKey="faq_canUseFree"
+                defaults="Can I use Rallly for free?"
+              ></Trans>
+            </h3>
+            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+              <Trans
+                i18nKey="faq_canUseFreeAnswer"
+                components={{
+                  a: (
+                    <Link
+                      className="text-link"
+                      href="https://app.rallly.co/settings/billing"
+                    />
+                  ),
+                  b: <strong />,
+                }}
+                defaults="Yes, as a free user you can create polls and get insight into your participant's availability. You will still see the results of your poll but you won't be able to select a final date or send calendar invites."
+              ></Trans>
+            </p>
+          </div>
+          <div className="grid gap-x-8 gap-y-1 py-4 md:grid-cols-3">
+            <h3 className="col-span-1">
+              <Trans
+                i18nKey="faq_whyUpgrade"
+                defaults="Why should I upgrade?"
+              ></Trans>
+            </h3>
+            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+              <Trans
+                i18nKey="faq_whyUpgradeAnswer"
+                defaults="When you upgrade to a paid plan, you will be able to finalize your polls and automatically send calendar invites to your participants with your selected date. We will also keep your polls indefinitely so they won't be automatically deleted even after they are finalized."
+              ></Trans>
+            </p>
+          </div>
+          <div className="grid gap-x-8 gap-y-1 py-4 md:grid-cols-3">
+            <h3 className="col-span-1">
+              <Trans
+                i18nKey="faq_howToUpgrade"
+                defaults="How do I upgrade to a paid plan?"
+              />
+            </h3>
+            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+              <Trans
+                i18nKey="faq_howToUpgradeAnswer"
+                components={{
+                  a: (
+                    <Link
+                      className="text-link"
+                      href={linkToApp("/settings/billing")}
+                    />
+                  ),
+                  b: <strong />,
+                }}
+                defaults="To upgrade, you can go to your <a>billing settings</a> and click on <b>Upgrade</b>."
+              />
+            </p>
+          </div>
+          <div className="grid gap-x-8 gap-y-1 py-4 md:grid-cols-3">
+            <h3 className="col-span-1">
+              <Trans
+                i18nKey="faq_cancelSubscription"
+                defaults="How do I cancel my subscription?"
+              ></Trans>
+            </h3>
+            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+              <Trans
+                i18nKey="faq_cancelSubscriptionAnswer"
+                components={{
+                  a: <Link className="text-link" href="/settings/billing" />,
+                  b: <strong />,
+                }}
+                defaults="You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
+              ></Trans>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,14 @@
 import { CheckIcon } from "@rallly/icons";
+import {
+  BillingPlan,
+  BillingPlanFooter,
+  BillingPlanHeader,
+  BillingPlanPeriod,
+  BillingPlanPerk,
+  BillingPlanPerks,
+  BillingPlanPrice,
+  BillingPlanTitle,
+} from "@rallly/ui/billing-plan";
 import { Button } from "@rallly/ui/button";
 import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
@@ -58,65 +68,57 @@ export const BillingPlans = () => {
         </Label>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col divide-y rounded-md border">
-          <div className="p-4">
-            <div className="mb-4 flex items-center gap-x-4 text-xl font-bold">
+        <BillingPlan>
+          <BillingPlanHeader>
+            <BillingPlanTitle>
               <Trans i18nKey="planFree" defaults="Free" />
-            </div>
-            <div>
-              <span className="text-3xl font-bold">$0</span>
-              <div className="text-muted-foreground text-sm">
-                <Trans i18nKey="freeForever" defaults="free forever" />
-              </div>
-            </div>
-          </div>
-          <div className="flex grow flex-col p-4">
-            <ul className="text-muted-foreground grow space-y-1 text-sm">
-              <Perk>
-                <Trans
-                  i18nKey="plan_unlimitedPolls"
-                  defaults="Unlimited polls"
-                />
-              </Perk>
-              <Perk>
-                <Trans
-                  i18nKey="plan_unlimitedParticipants"
-                  defaults="Unlimited participants"
-                />
-              </Perk>
-            </ul>
-          </div>
-        </div>
+            </BillingPlanTitle>
+            <BillingPlanPrice>$0</BillingPlanPrice>
+            <BillingPlanPeriod>
+              <Trans i18nKey="freeForever" defaults="free forever" />
+            </BillingPlanPeriod>
+          </BillingPlanHeader>
+          <BillingPlanPerks>
+            <BillingPlanPerk>
+              <Trans i18nKey="plan_unlimitedPolls" defaults="Unlimited polls" />
+            </BillingPlanPerk>
+            <BillingPlanPerk>
+              <Trans
+                i18nKey="plan_unlimitedParticipants"
+                defaults="Unlimited participants"
+              />
+            </BillingPlanPerk>
+          </BillingPlanPerks>
+        </BillingPlan>
+
         <ProPlan annual={isBilledAnnually}>
           {!isPlus ? (
-            <div className="mt-6">
-              <Button
-                className="w-full"
-                loading={isPendingSubscription}
-                variant="primary"
-                onClick={() => {
-                  if (user.isGuest) {
-                    router.push("/login");
-                  } else {
-                    window.Paddle.Checkout.open({
-                      allowQuantity: false,
-                      product: isBilledAnnually
-                        ? basicPlanIdYearly
-                        : basicPlanIdMonthly,
-                      email: user.email,
-                      disableLogout: true,
-                      passthrough: JSON.stringify({ userId: user.id }),
-                      successCallback: () => {
-                        // fetch user till we get the new plan
-                        setPendingSubscription(true);
-                      },
-                    });
-                  }
-                }}
-              >
-                <Trans i18nKey="planUpgrade" defaults="Upgrade" />
-              </Button>
-            </div>
+            <Button
+              className="w-full"
+              loading={isPendingSubscription}
+              variant="primary"
+              onClick={() => {
+                if (user.isGuest) {
+                  router.push("/login");
+                } else {
+                  window.Paddle.Checkout.open({
+                    allowQuantity: false,
+                    product: isBilledAnnually
+                      ? basicPlanIdYearly
+                      : basicPlanIdMonthly,
+                    email: user.email,
+                    disableLogout: true,
+                    passthrough: JSON.stringify({ userId: user.id }),
+                    successCallback: () => {
+                      // fetch user till we get the new plan
+                      setPendingSubscription(true);
+                    },
+                  });
+                }
+              }}
+            >
+              <Trans i18nKey="planUpgrade" defaults="Upgrade" />
+            </Button>
           ) : null}
         </ProPlan>
       </div>
@@ -140,61 +142,56 @@ export const ProPlan = ({
   annual?: boolean;
 }>) => {
   return (
-    <div className="border-primary ring-primary divide-y overflow-hidden rounded-md border ring-1">
-      <div className="bg-pattern p-4">
-        <div className="text-primary mb-4 flex items-center gap-x-4 text-xl font-bold">
-          <Trans i18nKey="planPro" />
-        </div>
+    <BillingPlan variant="primary">
+      <BillingPlanHeader>
+        <BillingPlanTitle className="text-primary">
+          <Trans i18nKey="planPro" defaults="Pro" />
+        </BillingPlanTitle>
         {annual ? (
-          <div>
-            <span className="mr-2 text-xl font-bold line-through">
+          <>
+            <BillingPlanPrice discount={`$${(annualPriceUsd / 12).toFixed(2)}`}>
               ${monthlyPriceUsd}
-            </span>
-            <span className="text-3xl font-bold">
-              ${(annualPriceUsd / 12).toFixed(2)}
-            </span>
-            <div className="text-muted-foreground text-sm">
+            </BillingPlanPrice>
+            <BillingPlanPeriod>
               <Trans
                 i18nKey="annualBillingDescription"
                 defaults="per month, billed annually"
               />
-            </div>
-          </div>
+            </BillingPlanPeriod>
+          </>
         ) : (
-          <div>
-            <span className="text-3xl font-bold">$5</span>
-            <div className="text-muted-foreground text-sm">
+          <>
+            <BillingPlanPrice>${monthlyPriceUsd}</BillingPlanPrice>
+            <BillingPlanPeriod>
               <Trans i18nKey="monthlyBillingDescription" defaults="per month" />
-            </div>
-          </div>
+            </BillingPlanPeriod>
+          </>
         )}
-      </div>
-      <div className="p-4">
-        <ul className="text-muted-foreground space-y-1 text-sm">
-          <Perk>
-            <Trans i18nKey="plan_unlimitedPolls" defaults="Unlimited polls" />
-          </Perk>
-          <Perk>
-            <Trans
-              i18nKey="plan_unlimitedParticipants"
-              defaults="Unlimited participants"
-            />
-          </Perk>
-          <Perk>
-            <Trans i18nKey="plan_finalizePolls" defaults="Finalize polls" />
-          </Perk>
-          <Perk>
-            <Trans
-              i18nKey="plan_extendedPollLife"
-              defaults="Extended poll life"
-            />
-          </Perk>
-          <Perk>
-            <Trans i18nKey="plan_prioritySupport" defaults="Priority support" />
-          </Perk>
-        </ul>
-        {children}
-      </div>
-    </div>
+      </BillingPlanHeader>
+      <BillingPlanPerks>
+        <BillingPlanPerk>
+          <Trans i18nKey="plan_unlimitedPolls" defaults="Unlimited polls" />
+        </BillingPlanPerk>
+        <BillingPlanPerk>
+          <Trans
+            i18nKey="plan_unlimitedParticipants"
+            defaults="Unlimited participants"
+          />
+        </BillingPlanPerk>
+        <Perk>
+          <Trans i18nKey="plan_finalizePolls" defaults="Finalize polls" />
+        </Perk>
+        <BillingPlanPerk>
+          <Trans
+            i18nKey="plan_extendedPollLife"
+            defaults="Extended poll life"
+          />
+        </BillingPlanPerk>
+        <BillingPlanPerk>
+          <Trans i18nKey="plan_prioritySupport" defaults="Priority support" />
+        </BillingPlanPerk>
+      </BillingPlanPerks>
+      <BillingPlanFooter>{children}</BillingPlanFooter>
+    </BillingPlan>
   );
 };

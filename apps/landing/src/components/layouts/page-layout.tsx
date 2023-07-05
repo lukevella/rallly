@@ -1,18 +1,27 @@
 import {
   ArrowRightIcon,
+  GemIcon,
   LifeBuoyIcon,
   LogInIcon,
   MenuIcon,
   NewspaperIcon,
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { absoluteUrl } from "@rallly/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
+
+import { linkToApp } from "@/lib/linkToApp";
 
 import Footer from "./page-layout/footer";
 
@@ -94,7 +103,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
             <Trans i18nKey="login" defaults="Login" />
           </Link>
           <Link
-            href="https://app.rallly.co"
+            href={linkToApp()}
             className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
           >
             <span>
@@ -103,40 +112,50 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
             <ArrowRightIcon className="inline-block h-4 w-4 -translate-x-1 transition-all group-hover:translate-x-0 group-active:translate-x-1" />
           </Link>
           <div className="flex items-center justify-center sm:hidden">
-            <Popover>
-              <PopoverTrigger>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
                 <MenuIcon className="h-6 w-6" />
-              </PopoverTrigger>
-              <PopoverContent
-                sideOffset={20}
-                collisionPadding={16}
-                align="end"
-                className="w-[var(--radix-popover-content-available-width)] bg-white/90 p-4 backdrop-blur-md"
-              >
-                <Link
-                  className="flex items-center gap-3 p-2 text-lg"
-                  href="https://rallly.co/blog"
-                >
-                  <NewspaperIcon className="h-5 w-5" />
-                  <Trans i18nKey="common_blog" />
-                </Link>
-                <Link
-                  className="flex items-center gap-3 p-2 text-lg"
-                  href="https://support.rallly.co"
-                >
-                  <LifeBuoyIcon className="h-5 w-5" />
-                  <Trans i18nKey="common_support" />
-                </Link>
-                <hr className="my-2" />
-                <Link
-                  className="flex items-center gap-3 p-2 text-lg"
-                  href="https://app.rallly.co/login"
-                >
-                  <LogInIcon className="h-5 w-5" />
-                  <Trans i18nKey="login" defaults="Login" />
-                </Link>
-              </PopoverContent>
-            </Popover>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={16}>
+                <DropdownMenuItem asChild>
+                  <Link
+                    className="flex items-center gap-3 p-2 text-lg"
+                    href="/blog"
+                  >
+                    <NewspaperIcon className="h-5 w-5" />
+                    <Trans i18nKey="common_blog" />
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    className="flex items-center gap-3 p-2 text-lg"
+                    href="/pricing"
+                  >
+                    <GemIcon className="h-5 w-5" />
+                    <Trans i18nKey="pricing" defaults="Pricing" />
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    className="flex items-center gap-3 p-2 text-lg"
+                    href="https://support.rallly.co"
+                  >
+                    <LifeBuoyIcon className="h-5 w-5" />
+                    <Trans i18nKey="common_support" />
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link
+                    className="flex items-center gap-3 p-2 text-lg"
+                    href={linkToApp("/login")}
+                  >
+                    <LogInIcon className="h-5 w-5" />
+                    <Trans i18nKey="login" defaults="Login" />
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

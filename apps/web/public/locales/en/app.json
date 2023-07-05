@@ -185,7 +185,6 @@
   "annualBillingDescription": "per month, billed annually",
   "upgradeOverlayTitle": "Upgrade",
   "upgradeOverlaySubtitle": "A paid plan is required to use this feature",
-  "upgradeOverlayDescription": "Upgrade today to gain access to this feature and much more.",
   "upgradeOverlayGoToBilling": "Go to billing",
   "billingStatusState": "Status",
   "billingStatusActive": "Active",
@@ -194,7 +193,6 @@
   "endDate": "End date",
   "dueDate": "Next payment due",
   "billingStatusPlan": "Plan",
-  "planBasic": "Basic",
   "billingPeriod": "Period",
   "billingPeriodMonthly": "Monthly",
   "billingPeriodYearly": "Yearly",
@@ -203,6 +201,5 @@
   "monthlyBillingDescription": "per month",
   "plan_finalizePolls": "Finalize polls",
   "plan_extendedPollLife": "Keep polls indefinitely",
-  "plan_prioritySupport": "Priority support",
-  "plan_accessFeatures": "Access to new upcoming features"
+  "plan_prioritySupport": "Priority support"
 }

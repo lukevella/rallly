@@ -103,7 +103,7 @@ const Teaser = () => {
             </div>
           </div>
           <ProPlan annual={true}>
-            <Button variant="primary" asChild className="mt-4 w-full">
+            <Button variant="primary" asChild className="w-full">
               <Link href="/settings/billing">
                 <Trans
                   i18nKey="upgradeOverlayGoToBilling"

@@ -8,6 +8,7 @@ import Link from "next/link";
 import React from "react";
 
 import { Trans } from "@/components/trans";
+import { linkToApp } from "@/lib/linkToApp";
 
 const monthlyPriceUsd = 5;
 const annualPriceUsd = 30;
@@ -69,7 +70,7 @@ export const BillingPlans = () => {
         </Card>
         <ProPlan annual={isBilledAnnually}>
           <Button className="mt-4 w-full" variant="primary" asChild>
-            <Link href="https://app.rallly.co/settings/billing">
+            <Link href={linkToApp("/settings/billing")}>
               <Trans i18nKey="upgrade">Upgrade</Trans>
             </Link>
           </Button>

@@ -9,6 +9,7 @@ import * as React from "react";
 
 import { getRandomAvatarColor } from "@/components/home/color-hash";
 import { Trans } from "@/components/trans";
+import { linkToApp } from "@/lib/linkToApp";
 
 const VoteIcon = ({ variant }: { variant: VoteType }) => {
   return (
@@ -208,7 +209,7 @@ const Hero: React.FunctionComponent = () => {
         <div className="mt-8 flex justify-center gap-3">
           <div className="relative">
             <Button size="lg" className="shadow-sm" variant="primary" asChild>
-              <Link href="https://app.rallly.co/new">
+              <Link href={linkToApp("/new")}>
                 <Trans i18nKey="homepage_getStarted" />
               </Link>
             </Button>
