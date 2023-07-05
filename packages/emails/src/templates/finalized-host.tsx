@@ -68,7 +68,7 @@ export const FinalizeHostEmail = ({
         </Row>
       </Section>
       <Text>
-        We&apos;ve notified participants and send them calendar invites.
+        We&apos;ve notified participants and sent them calendar invites.
       </Text>
       <Text>
         <Button href={pollUrl}>View Event</Button>
