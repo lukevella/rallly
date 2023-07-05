@@ -161,7 +161,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           </div>
         </div>
         <div className="grow">{children}</div>
-        <div className="pt-24">
+        <div className="pt-36">
           <Footer />
         </div>
       </div>
