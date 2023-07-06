@@ -69,10 +69,6 @@ declare global {
        */
       ALLOWED_EMAILS?: string;
       /**
-       * "true" to require authentication for creating new polls and accessing admin pages
-       */
-      AUTH_REQUIRED?: string;
-      /**
        * Determines what email provider to use. "smtp" or "ses"
        */
       EMAIL_PROVIDER?: "smtp" | "ses";

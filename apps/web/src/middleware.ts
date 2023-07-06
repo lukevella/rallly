@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
   );
 
   const isProtectedPathDueToRequiredAuth =
-    process.env.AUTH_REQUIRED === "true" &&
+    process.env.NEXT_PUBLIC_SELF_HOSTED === "true" &&
     !publicPaths.some((publicPath) =>
       req.nextUrl.pathname.startsWith(publicPath),
     );

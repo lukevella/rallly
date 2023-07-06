@@ -21,6 +21,9 @@ RUN yarn db:generate
 ARG APP_VERSION
 ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
 
+ARG SELF_HOSTED
+ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
+
 RUN yarn build
 
 FROM node:18 AS runner
@@ -47,5 +50,8 @@ EXPOSE 3000
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+
+ARG SELF_HOSTED
+ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 
 CMD ["./docker-start.sh"]
