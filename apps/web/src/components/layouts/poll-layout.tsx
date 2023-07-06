@@ -277,7 +277,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
     return <Error404 />;
   }
 
-  if (!poll.isFetched || !watchers.isFetched || !participants.isFetched) {
+  if (!poll.data || !watchers.data || !participants.data) {
     return (
       <div>
         <TopBar className="flex flex-col items-start justify-between gap-y-2 gap-x-4 sm:flex-row">
