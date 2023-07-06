@@ -6,6 +6,7 @@ export type DateOption = {
 export type TimeOption = {
   type: "timeSlot";
   start: string;
+  duration: number;
   end: string;
 };
 

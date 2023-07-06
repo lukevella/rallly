@@ -157,6 +157,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         const newEvent: DateTimeOption = {
           type: "timeSlot",
           start: formatDateWithoutTz(startDate),
+          duration: dayjs(endDate).diff(endDate, "minutes"),
           end: formatDateWithoutTz(endDate),
         };
 

@@ -67,6 +67,7 @@ const Page: NextPageWithLayout = () => {
                 ? {
                     type: "timeSlot",
                     start: start.format("YYYY-MM-DDTHH:mm:ss"),
+                    duration: option.duration,
                     end: start
                       .add(option.duration, "minute")
                       .format("YYYY-MM-DDTHH:mm:ss"),
