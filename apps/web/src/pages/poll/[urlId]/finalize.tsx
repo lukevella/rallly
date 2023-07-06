@@ -19,11 +19,14 @@ import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
 import { NextPageWithLayout } from "@/types";
+import { usePostHog } from "@/utils/posthog";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const FinalizationForm = () => {
   const plan = usePlan();
   const poll = usePoll();
+  const posthog = usePostHog();
+
   const router = useRouter();
   const redirectBackToPoll = () => {
     router.replace(`/poll/${poll.id}`);
@@ -59,6 +62,10 @@ const FinalizationForm = () => {
                 pollId: poll.id,
                 optionId: data.selectedOptionId,
                 notify: data.notify,
+              });
+
+              posthog?.capture("finalize poll", {
+                pollId: poll.id,
               });
             }
           }}
