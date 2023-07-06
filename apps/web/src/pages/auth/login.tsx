@@ -22,6 +22,8 @@ export const Page = () => {
   const router = useRouter();
   const { token } = router.query;
   const posthog = usePostHog();
+  const queryClient = trpc.useContext();
+
   const authenticate = trpc.whoami.authenticate.useMutation();
 
   useMount(() => {
@@ -33,7 +35,7 @@ export const Page = () => {
             name: user.name,
             email: user.email,
           });
-
+          queryClient.invalidate();
           setTimeout(() => {
             router.replace(defaultRedirectPath);
           }, 1000);
