@@ -55,7 +55,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
         }}
       >
         <User2Icon className="h-3 w-3" />
-        <AnimatePresence initial={false} exitBeforeEnter={true}>
+        <AnimatePresence initial={false} mode="wait">
           <m.span
             transition={{
               duration: 0.1,

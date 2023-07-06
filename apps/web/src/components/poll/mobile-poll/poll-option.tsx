@@ -243,7 +243,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
               />
             </div>
           ) : (
-            <AnimatePresence initial={false} exitBeforeEnter={true}>
+            <AnimatePresence initial={false} mode="wait">
               <PopInOut
                 key={vote}
                 className="flex h-full w-9 items-center justify-center"
