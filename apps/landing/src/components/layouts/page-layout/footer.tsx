@@ -120,6 +120,14 @@ const Footer: React.FunctionComponent = () => {
           <ul className="space-y-2">
             <li>
               <Link
+                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                href="/pricing"
+              >
+                <Trans i18nKey="pricing" defaults="Pricing" />
+              </Link>
+            </li>
+            <li>
+              <Link
                 target="_blank"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"

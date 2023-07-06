@@ -167,8 +167,8 @@ const Page: NextPageWithLayout = () => {
             </BillingPlanFooter>
           </BillingPlan>
         </div>
-        <p className="text-muted-foreground mt-8 flex flex-col gap-x-2 gap-y-2 text-sm sm:flex-row sm:items-center sm:justify-center sm:text-center">
-          <InfoIcon className="h-4 w-4" />
+        <p className="text-muted-foreground mt-8 flex gap-x-2 text-sm sm:justify-center sm:text-center">
+          <InfoIcon className="h-4 w-4 shrink-0 translate-y-0.5" />
           <Trans i18nKey="priceIncreaseInfo">
             Prices will be adjusted regularly as more features are added
           </Trans>
@@ -180,7 +180,7 @@ const Page: NextPageWithLayout = () => {
           <Trans i18nKey="faq" defaults="Frequently Asked Questions"></Trans>
         </h2>
         <div className="divide-y">
-          <div className="grid gap-x-8 gap-y-2 py-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
                 i18nKey="faq_canUseFree"
@@ -203,7 +203,7 @@ const Page: NextPageWithLayout = () => {
               ></Trans>
             </p>
           </div>
-          <div className="grid gap-x-8 gap-y-2 py-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
                 i18nKey="faq_whyUpgrade"
@@ -217,7 +217,7 @@ const Page: NextPageWithLayout = () => {
               ></Trans>
             </p>
           </div>
-          <div className="grid gap-x-8 gap-y-2 py-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
                 i18nKey="faq_howToUpgrade"
@@ -240,7 +240,7 @@ const Page: NextPageWithLayout = () => {
               />
             </p>
           </div>
-          <div className="grid gap-x-8 gap-y-2 py-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
                 i18nKey="faq_cancelSubscription"
