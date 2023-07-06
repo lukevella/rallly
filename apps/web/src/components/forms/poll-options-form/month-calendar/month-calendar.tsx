@@ -150,6 +150,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             : {
                                 type: "timeSlot",
                                 start: formatDateWithoutTz(selectedDate),
+                                duration,
                                 end: formatDateWithoutTz(
                                   dayjs(selectedDate)
                                     .add(duration, "minutes")
@@ -225,6 +226,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         return {
                           type: "timeSlot",
                           start: formatDateWithoutTz(startDate),
+                          duration: duration,
                           end: formatDateWithoutTz(endDate),
                         };
                       }),
@@ -346,6 +348,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                 {
                                   type: "timeSlot",
                                   start: startTime,
+                                  duration,
                                   end: formatDateWithoutTz(
                                     dayjs(new Date(startTime))
                                       .add(duration, "minutes")
@@ -382,6 +385,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                         startTime: option.start.substring(
                                           option.start.indexOf("T"),
                                         ),
+                                        duration: option.duration,
                                         endTime: option.end.substring(
                                           option.end.indexOf("T"),
                                         ),
@@ -392,10 +396,15 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   Object.keys(optionsByDay).forEach(
                                     (dateString) => {
                                       times.forEach((time) => {
+                                        const start =
+                                          dateString + time.startTime;
                                         newOptions.push({
                                           type: "timeSlot",
-                                          start: dateString + time.startTime,
-                                          end: dateString + time.endTime,
+                                          start: start,
+                                          duration,
+                                          end: dayjs(start)
+                                            .add(duration, "minutes")
+                                            .format("YYYY-MM-DDTHH:mm"),
                                         });
                                       });
                                     },

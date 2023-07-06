@@ -40,8 +40,6 @@ export interface ParsedTimeSlotOption {
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
-const isTimeSlot = (value: string) => value.indexOf("/") !== -1;
-
 export const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
   const hours = Math.floor(endTime.diff(startTime, "hours"));
   const minutes = Math.floor(endTime.diff(startTime, "minute") - hours * 60);
@@ -156,20 +154,4 @@ export const expectTimeOption = (d: DateTimeOption): TimeOption => {
     throw new Error("Expected timeSlot but got date instead");
   }
   return d;
-};
-
-export const parseValue = (value: string): DateTimeOption => {
-  if (isTimeSlot(value)) {
-    const [start, end] = value.split("/");
-    return {
-      type: "timeSlot",
-      start,
-      end,
-    };
-  } else {
-    return {
-      type: "date",
-      date: value,
-    };
-  }
 };
