@@ -27,16 +27,15 @@ These variables need to be configured for Rallly to run and function properly.
 
 ### Email Configuration
 
-These variables need to be configured to let Rallly send out transaction emails.
+These variables need to be configured to let Rallly send out transactional emails.
 
 <ParamField path="NOREPLY_EMAIL" default="">
-  This email is used as the sender for all transactional emails.
+  This email is used as the sender for all transactional emails. If not set,
+  `SUPPORT_EMAIL` will be used instead.
 </ParamField>
 
 <ParamField path="SUPPORT_EMAIL" default="">
-  This email will be shown as the contact email for support queries. If
-  `NOREPLY_EMAIL` is not set, it will also be used as the sender for all
-  transactional emails.
+  This email will be shown as the contact email for support queries.
 </ParamField>
 
 <ParamField path="SMTP_HOST" default="localhost">
