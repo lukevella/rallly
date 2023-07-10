@@ -194,7 +194,7 @@ const Page: NextPageWithLayout = () => {
                   a: (
                     <Link
                       className="text-link"
-                      href="https://app.rallly.co/settings/billing"
+                      href={linkToApp("settings/billing")}
                     />
                   ),
                   b: <strong />,
@@ -251,7 +251,12 @@ const Page: NextPageWithLayout = () => {
               <Trans
                 i18nKey="faq_cancelSubscriptionAnswer"
                 components={{
-                  a: <Link className="text-link" href="/settings/billing" />,
+                  a: (
+                    <Link
+                      className="text-link"
+                      href={linkToApp("/settings/billing")}
+                    />
+                  ),
                   b: <strong />,
                 }}
                 defaults="You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
