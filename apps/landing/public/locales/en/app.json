@@ -32,7 +32,6 @@
   "startUsOnGithub": "Star us on Github",
   "headline": "Ditch the back-and-forth emails",
   "subheadling": "Streamline your scheduling process and save time",
-  "getStartedHint": "Create a page like this in seconds!",
   "goToApp": "Go to app",
   "blogTitle": "Rallly - Blog",
   "blogDescription": "News, updates and announcement about Rallly.",
@@ -72,5 +71,6 @@
   "statsLanguagesSupported": "10+ languages supported",
   "noLoginRequired": "No login required",
   "viaTrustpilot": "via Trustpilot",
-  "hint": "It's free! No login required."
+  "hint": "It's free! No login required.",
+  "createPageLikeThis": "Create a page like this in seconds!"
 }

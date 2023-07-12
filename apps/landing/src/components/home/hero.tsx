@@ -30,7 +30,10 @@ const Screenshot = () => {
         }}
         className="shadow-huge relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50 subpixel-antialiased"
       >
-        <Trans i18nKey="getStartedHint" />
+        <Trans
+          i18nKey="createPageLikeThis"
+          defaults="Create a page like this in seconds!"
+        />
         <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
         <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
         <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
