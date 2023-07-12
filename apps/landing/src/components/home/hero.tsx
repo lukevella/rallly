@@ -11,32 +11,54 @@ import { linkToApp } from "@/lib/linkToApp";
 const Screenshot = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   return (
-    <m.div
-      transition={{
-        delay: 0.5,
-        type: "spring",
-        duration: 2,
-        bounce: 0.3,
-      }}
-      variants={{
-        hidden: { opacity: 0, scale: 0.5, rotateX: -90, y: -250 },
-        visible: { opacity: 1, scale: 1, rotateX: 0, y: 0 },
-      }}
-      initial="hidden"
-      animate={isLoaded ? "visible" : "hidden"}
-      className="shadow-huge mx-auto w-fit overflow-hidden rounded-md border"
-    >
-      <Image
-        src="/static/images/hero-shot.png"
-        alt="Screenshot of Rallly Poll"
-        width={1024}
-        height={768}
-        quality={100}
-        onLoadingComplete={() => {
-          setIsLoaded(true);
+    <>
+      <m.span
+        transition={{
+          delay: 1,
+          type: "spring",
+          duration: 1,
+          bounce: 0.4,
         }}
-      />
-    </m.div>
+        variants={{
+          hidden: { opacity: 0, top: -20 },
+          visible: { opacity: 1, top: -48 },
+        }}
+        initial="hidden"
+        animate={isLoaded ? "visible" : "hidden"}
+        className="shadow-huge absolute left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50"
+      >
+        <Trans i18nKey="getStartedHint" />
+        <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
+        <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+      </m.span>
+      <m.div
+        transition={{
+          delay: 0.5,
+          type: "spring",
+          duration: 2,
+          bounce: 0.3,
+        }}
+        variants={{
+          hidden: { opacity: 0, scale: 0.5, rotateX: -90, y: -250 },
+          visible: { opacity: 1, scale: 1, rotateX: 0, y: 0 },
+        }}
+        initial="hidden"
+        animate={isLoaded ? "visible" : "hidden"}
+        className="shadow-huge mx-auto w-fit overflow-hidden rounded-md border"
+      >
+        <Image
+          src="/static/images/hero-shot.png"
+          alt="Screenshot of Rallly Poll"
+          width={1024}
+          height={768}
+          quality={100}
+          onLoadingComplete={() => {
+            setIsLoaded(true);
+          }}
+        />
+      </m.div>
+    </>
   );
 };
 
@@ -99,22 +121,6 @@ const Hero: React.FunctionComponent = () => {
         </div>
       </div>
       <div className="relative mt-24">
-        <m.span
-          transition={{
-            delay: 1,
-            type: "spring",
-            duration: 1,
-            bounce: 0.4,
-          }}
-          initial={{ opacity: 0, top: -20 }}
-          animate={{ opacity: 1, top: -48 }}
-          className="shadow-huge absolute left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50"
-        >
-          <Trans i18nKey="getStartedHint" />
-          <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
-          <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-          <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-        </m.span>
         <Screenshot />
       </div>
     </m.div>
