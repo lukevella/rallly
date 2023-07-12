@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "@rallly/icons";
+import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -82,14 +83,26 @@ import Hero from "./home/hero";
 const Mention = ({
   logo,
   children,
+  delay = 0,
 }: React.PropsWithChildren<{
   logo: React.ReactNode;
+  delay?: number;
 }>) => {
   return (
-    <div className="flex flex-col items-center space-y-4 rounded-md">
+    <m.div
+      transition={{
+        delay,
+        type: "spring",
+        bounce: 0.5,
+      }}
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: "all" }}
+      className="flex flex-col items-center space-y-4 rounded-md"
+    >
       <div className="flex items-start justify-between">{logo}</div>
       <p className="grow text-center text-base">{children}</p>
-    </div>
+    </m.div>
   );
 };
 
@@ -98,6 +111,7 @@ const MentionedBy = () => {
     <div>
       <div className="grid gap-8 md:grid-cols-4">
         <Mention
+          delay={0.25}
           logo={
             <div className="relative h-8 w-14">
               <Image
@@ -115,6 +129,7 @@ const MentionedBy = () => {
           />
         </Mention>
         <Mention
+          delay={0.5}
           logo={
             <div className="relative h-8 w-24">
               <Image
@@ -132,6 +147,7 @@ const MentionedBy = () => {
           />
         </Mention>
         <Mention
+          delay={0.75}
           logo={
             <div className="relative h-8 w-32">
               <Image
@@ -149,6 +165,7 @@ const MentionedBy = () => {
           />
         </Mention>
         <Mention
+          delay={1}
           logo={
             <div className="relative h-8 w-20">
               <Image
@@ -244,7 +261,17 @@ const MentionedBy = () => {
 
 const BigTestimonial = () => {
   return (
-    <div className="flex flex-col items-center gap-y-8 ">
+    <m.div
+      transition={{
+        duration: 1,
+        type: "spring",
+        bounce: 0.5,
+      }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: "all" }}
+      className="flex flex-col items-center gap-y-8 "
+    >
       <Image
         src="/static/images/stars-5.svg"
         width={120}
@@ -287,7 +314,7 @@ const BigTestimonial = () => {
           </div>
         </div>
       </div>
-    </div>
+    </m.div>
   );
 };
 const Home: React.FunctionComponent = () => {

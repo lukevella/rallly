@@ -12,7 +12,7 @@ const Screenshot = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   return (
     <>
-      <m.span
+      <m.div
         transition={{
           delay: 1,
           type: "spring",
@@ -20,23 +20,26 @@ const Screenshot = () => {
           bounce: 0.4,
         }}
         variants={{
-          hidden: { opacity: 0, top: -20 },
-          visible: { opacity: 1, top: -48 },
+          hidden: { opacity: 0, y: 0, z: 0, rotateY: 45 },
+          visible: { opacity: 1, y: -10, z: 0, rotateY: 0 },
         }}
         initial="hidden"
         animate={isLoaded ? "visible" : "hidden"}
-        className="shadow-huge absolute left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50"
+        style={{
+          backfaceVisibility: "hidden",
+        }}
+        className="shadow-huge relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50 subpixel-antialiased"
       >
         <Trans i18nKey="getStartedHint" />
         <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
         <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
         <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-      </m.span>
+      </m.div>
       <m.div
         transition={{
           delay: 0.5,
           type: "spring",
-          duration: 2,
+          duration: 1.5,
           bounce: 0.3,
         }}
         variants={{
@@ -107,7 +110,7 @@ const Hero: React.FunctionComponent = () => {
       <div className="my-8 flex flex-col items-center justify-center gap-4">
         <Button
           size="lg"
-          className="rounded-full shadow-sm"
+          className="rounded-full hover:shadow-md active:translate-y-1 active:shadow-sm"
           variant="primary"
           asChild
         >
@@ -120,7 +123,7 @@ const Hero: React.FunctionComponent = () => {
           <Trans i18nKey="hint" defaults="It's free! No login required." />
         </div>
       </div>
-      <div className="relative mt-24">
+      <div className="mt-16">
         <Screenshot />
       </div>
     </m.div>
