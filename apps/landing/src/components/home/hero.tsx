@@ -50,8 +50,8 @@ const Screenshot = () => {
         <Image
           src="/static/images/hero-shot.png"
           alt="Screenshot of Rallly Poll"
-          width={1024}
-          height={768}
+          width={1280}
+          height={946}
           quality={100}
           onLoadingComplete={() => {
             setIsLoaded(true);
