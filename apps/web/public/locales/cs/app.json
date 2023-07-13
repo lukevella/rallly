@@ -168,5 +168,6 @@
   "notificationsGuestTooltip": "Pro zasílání oznámení si vytvořte účet nebo se přihlaste",
   "planFree": "Zdarma",
   "dateAndTimeDescription": "Změnit preferované nastavení data a času",
-  "createdTime": "Vytvořeno {relativeTime}"
+  "createdTime": "Vytvořeno {relativeTime}",
+  "becomeATranslator": "Pomozte s překladem"
 }
