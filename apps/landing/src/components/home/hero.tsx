@@ -129,7 +129,7 @@ const Hero = () => {
           asChild
         >
           <Link href={linkToApp("/new")}>
-            <Trans i18nKey="home:homepage_getStarted" defaults="Get started" />
+            <Trans i18nKey="home:getStarted" defaults="Get started" />
             <ChevronRightIcon className="-ml-1 h-5 w-5 transition-transform group-active:translate-x-1" />
           </Link>
         </Button>

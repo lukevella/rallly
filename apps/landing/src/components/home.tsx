@@ -178,7 +178,7 @@ const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:popsciTestimonial"
+            i18nKey="home:popsciQuote"
             defaults="“The perfect pick if you want to keep your RSVPs simple.”"
           />
         </Mention>
@@ -281,7 +281,7 @@ const BigTestimonial = () => {
       <div className="text-center">
         <p className="max-w-xl text-center text-lg font-medium leading-normal">
           <Trans
-            i18nKey="home:eriqQuote"
+            i18nKey="home:ericQuote"
             defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
           />
         </p>
@@ -322,10 +322,10 @@ const Home = () => {
   return (
     <div className="space-y-12 sm:space-y-24">
       <NextSeo
-        title={t("home:homepage_metaTitle", {
+        title={t("home:metaTitle", {
           defaultValue: "Rallly - Schedule Group Meetings",
         })}
-        description={t("home:homepage_metaDescription", {
+        description={t("home:metaDescription", {
           defaultValue:
             "Create polls and vote to find the best day or time. A free alternative to Doodle.",
         })}

@@ -79,13 +79,13 @@ const Page: NextPageWithLayout = () => {
             <BillingPlanPerks>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="pricing:plan_unlimitedPolls"
+                  i18nKey="pricing:unlimitedPolls"
                   defaults="Unlimited polls"
                 />
               </BillingPlanPerk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="pricing:plan_unlimitedParticipants"
+                  i18nKey="pricing:unlimitedParticipants"
                   defaults="Unlimited participants"
                 />
               </BillingPlanPerk>
@@ -134,31 +134,31 @@ const Page: NextPageWithLayout = () => {
             <BillingPlanPerks>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="pricing:plan_unlimitedPolls"
+                  i18nKey="pricing:unlimitedPolls"
                   defaults="Unlimited polls"
                 />
               </BillingPlanPerk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="pricing:plan_unlimitedParticipants"
+                  i18nKey="pricing:unlimitedParticipants"
                   defaults="Unlimited participants"
                 />
               </BillingPlanPerk>
               <Perk>
                 <Trans
-                  i18nKey="pricing:plan_finalizePolls"
+                  i18nKey="pricing:finalizePolls"
                   defaults="Finalize polls"
                 />
               </Perk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="pricing:plan_extendedPollLife"
+                  i18nKey="pricing:extendedPollLife"
                   defaults="Extended poll life"
                 />
               </BillingPlanPerk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="pricing:plan_prioritySupport"
+                  i18nKey="pricing:prioritySupport"
                   defaults="Priority support"
                 />
               </BillingPlanPerk>
@@ -191,13 +191,13 @@ const Page: NextPageWithLayout = () => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="pricing:faq_canUseFree"
+                i18nKey="pricing:canUseFree"
                 defaults="Can I use Rallly for free?"
               ></Trans>
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="pricing:faq_canUseFreeAnswer"
+                i18nKey="pricing:canUseFreeAnswer"
                 components={{
                   a: (
                     <Link
@@ -214,13 +214,13 @@ const Page: NextPageWithLayout = () => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="pricing:faq_whyUpgrade"
+                i18nKey="pricing:whyUpgrade"
                 defaults="Why should I upgrade?"
               ></Trans>
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="pricing:faq_whyUpgradeAnswer"
+                i18nKey="pricing:whyUpgradeAnswer"
                 defaults="When you upgrade to a paid plan, you will be able to finalize your polls and automatically send calendar invites to your participants with your selected date. We will also keep your polls indefinitely so they won't be automatically deleted even after they are finalized."
               ></Trans>
             </p>
@@ -228,13 +228,13 @@ const Page: NextPageWithLayout = () => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="pricing:faq_howToUpgrade"
+                i18nKey="pricing:howToUpgrade"
                 defaults="How do I upgrade to a paid plan?"
               />
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="pricing:faq_howToUpgradeAnswer"
+                i18nKey="pricing:howToUpgradeAnswer"
                 components={{
                   a: (
                     <Link
@@ -251,13 +251,13 @@ const Page: NextPageWithLayout = () => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="pricing:faq_cancelSubscription"
+                i18nKey="pricing:cancelSubscription"
                 defaults="How do I cancel my subscription?"
               ></Trans>
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="pricing:faq_cancelSubscriptionAnswer"
+                i18nKey="pricing:cancelSubscriptionAnswer"
                 components={{
                   a: (
                     <Link
