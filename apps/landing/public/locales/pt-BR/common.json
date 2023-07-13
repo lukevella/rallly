@@ -1,0 +1,20 @@
+{
+  "login": "Logar",
+  "links": "Links",
+  "blog": "Blog",
+  "discussions": "Discussões",
+  "footerCredit": "Feito por <a>@imlukevella</a>",
+  "footerSponsor": "Este projeto é financiado pelo usuário. Por gentileza, considere apoiá-lo fazendo uma <a>doação</a>.",
+  "language": "Idioma",
+  "poweredBy": "Tecnologias de",
+  "privacyPolicy": "Política de Privacidade",
+  "support": "Suporte",
+  "cookiePolicy": "Política de Cookies",
+  "termsOfUse": "Termos de Uso",
+  "volunteerTranslator": "Ajude a traduzir esta página",
+  "notFoundTitle": "404 Página não encontrada",
+  "notFoundDescription": "Não conseguimos encontrar a página que você está procurando.",
+  "goToHome": "Ir para o início",
+  "goToApp": "Ir para o App",
+  "pricing": "Preços"
+}
