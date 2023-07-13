@@ -75,6 +75,8 @@ export default function Document() {
           href="/favicon-128x128.png"
           sizes="128x128"
         />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="manifest" href="/manifest.json" />
         <meta name="robots" content="noindex,nofollow" />
         <meta name="application-name" content="Rallly" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
