@@ -1,8 +1,10 @@
 import { ChevronRightIcon, GithubIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import { preventWidows } from "@rallly/utils";
 import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { Trans } from "@/components/trans";
@@ -14,7 +16,7 @@ const Screenshot = () => {
     <>
       <m.div
         transition={{
-          delay: 1,
+          delay: 1.5,
           type: "spring",
           duration: 1,
           bounce: 0.4,
@@ -31,7 +33,7 @@ const Screenshot = () => {
         className="shadow-huge relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50 subpixel-antialiased"
       >
         <Trans
-          i18nKey="createPageLikeThis"
+          i18nKey="home:createPageLikeThis"
           defaults="Create a page like this in seconds!"
         />
         <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
@@ -68,7 +70,8 @@ const Screenshot = () => {
   );
 };
 
-const Hero: React.FunctionComponent = () => {
+const Hero = () => {
+  const { t } = useTranslation();
   return (
     <m.div
       transition={{
@@ -87,7 +90,7 @@ const Hero: React.FunctionComponent = () => {
           className="hover:ring-primary hover:text-primary relative inline-flex items-center gap-x-4 rounded-full bg-gray-100 px-4 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10"
         >
           <span className="hidden sm:block">
-            <Trans i18nKey="opensource" defaults="We're Open Source!" />
+            <Trans i18nKey="home:opensource" defaults="We're Open Source!" />
           </span>
           <span
             className="hidden h-4 w-px bg-gray-900/10 sm:block"
@@ -96,34 +99,42 @@ const Hero: React.FunctionComponent = () => {
           <span className="flex items-center gap-x-1">
             <span className="absolute inset-0" aria-hidden="true" />
             <GithubIcon className="mr-1 h-4 w-4" />
-            <Trans i18nKey="startUsOnGithub" defaults="Star us on Github" />
+            <Trans
+              i18nKey="home:startUsOnGithub"
+              defaults="Star us on Github"
+            />
             <ChevronRightIcon className="-mr-2 h-4 w-4" aria-hidden="true" />
           </span>
         </Link>
       </m.div>
       <m.h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl">
-        <Trans i18nKey="headline" defaults="Ditch the back-and-forth emails" />
+        {preventWidows(
+          t("home:headline", {
+            defaultValue: "Ditch the back-and-forth emails",
+          }),
+        )}
       </m.h1>
       <p className="text-lg text-gray-500 sm:text-xl">
-        <Trans
-          i18nKey="subheadling"
-          defaults="Streamline your scheduling process and save time"
-        />
+        {preventWidows(
+          t("home:subheading", {
+            defaultValue: "Streamline your scheduling process and save time",
+          }),
+        )}
       </p>
       <div className="my-8 flex flex-col items-center justify-center gap-4">
         <Button
           size="lg"
-          className="rounded-full hover:shadow-md active:translate-y-1 active:shadow-sm"
+          className="group rounded-full hover:shadow-md active:shadow-sm"
           variant="primary"
           asChild
         >
           <Link href={linkToApp("/new")}>
-            <Trans i18nKey="homepage_getStarted" />
-            <ChevronRightIcon className="-mr-1 h-5 w-5" />
+            <Trans i18nKey="home:homepage_getStarted" defaults="Get started" />
+            <ChevronRightIcon className="-ml-1 h-5 w-5 transition-transform group-active:translate-x-1" />
           </Link>
         </Button>
         <div className="whitespace-nowrap text-center text-sm font-medium text-gray-500">
-          <Trans i18nKey="hint" defaults="It's free! No login required." />
+          <Trans i18nKey="home:hint" defaults="It's free! No login required." />
         </div>
       </div>
       <div className="mt-16">

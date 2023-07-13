@@ -11,4 +11,4 @@ Page.getLayout = getPageLayout;
 
 export default Page;
 
-export const getStaticProps = getStaticTranslations;
+export const getStaticProps = getStaticTranslations(["home"]);

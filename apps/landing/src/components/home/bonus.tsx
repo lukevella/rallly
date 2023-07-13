@@ -49,21 +49,24 @@ const Bonus: React.FunctionComponent = () => {
     <div className="mx-auto flex flex-wrap justify-center  gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
       <Item className="bg-indigo-600" icon={Users2Icon}>
         <Trans
-          i18nKey="statsUsersRegistered"
+          i18nKey="home:statsUsersRegistered"
           defaults="45k+ registered users"
         />
       </Item>
       <Item delay={0.25} className="bg-pink-600" icon={CalendarCheck2Icon}>
-        <Trans i18nKey="statsPollsCreated" defaults="100k+ polls created" />
+        <Trans
+          i18nKey="home:statsPollsCreated"
+          defaults="100k+ polls created"
+        />
       </Item>
       <Item delay={0.5} className="bg-gray-800" icon={LanguagesIcon}>
         <Trans
-          i18nKey="statsLanguagesSupported"
+          i18nKey="home:statsLanguagesSupported"
           defaults="10+ languages supported"
         />
       </Item>
       <Item delay={0.75} className="bg-amber-500" icon={ZapIcon}>
-        <Trans i18nKey="noLoginRequired" defaults="No login required" />
+        <Trans i18nKey="home:noLoginRequired" defaults="No login required" />
       </Item>
     </div>
   );

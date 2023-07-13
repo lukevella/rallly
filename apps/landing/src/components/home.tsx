@@ -124,7 +124,7 @@ const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="pcmagQuote"
+            i18nKey="home:pcmagQuote"
             defaults="“Set up a scheduling poll in as little time as possible.”"
           />
         </Mention>
@@ -142,7 +142,7 @@ const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="hubspotQuote"
+            i18nKey="home:hubspotQuote"
             defaults="“The simplest choice for availability polling for large groups.”"
           />
         </Mention>
@@ -160,7 +160,7 @@ const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="goodfirmsQuote"
+            i18nKey="home:goodfirmsQuote"
             defaults="“Unique in its simplicity and requires minimum interaction time.”"
           />
         </Mention>
@@ -178,7 +178,7 @@ const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="popsciTestimonial"
+            i18nKey="home:popsciTestimonial"
             defaults="“The perfect pick if you want to keep your RSVPs simple.”"
           />
         </Mention>
@@ -263,7 +263,7 @@ const BigTestimonial = () => {
   return (
     <m.div
       transition={{
-        duration: 1,
+        duration: 2,
         type: "spring",
         bounce: 0.5,
       }}
@@ -281,7 +281,7 @@ const BigTestimonial = () => {
       <div className="text-center">
         <p className="max-w-xl text-center text-lg font-medium leading-normal">
           <Trans
-            i18nKey="eriqQuote"
+            i18nKey="home:eriqQuote"
             defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
           />
         </p>
@@ -291,7 +291,7 @@ const BigTestimonial = () => {
             className="text-sm text-gray-500 hover:underline"
             href="https://www.trustpilot.com/reviews/645e1d1976733924e89d8203"
           >
-            <Trans i18nKey="viaTrustpilot" defaults="via Trustpilot" />
+            <Trans i18nKey="home:viaTrustpilot" defaults="via Trustpilot" />
             <ArrowUpRight className="ml-1 inline h-3 w-3" />
           </Link>
         </p>
@@ -308,7 +308,7 @@ const BigTestimonial = () => {
           <div className="font-semibold">Eric Fletcher</div>
           <div className="text-sm text-gray-500">
             <Trans
-              i18nKey="ericJobTitle"
+              i18nKey="home:ericJobTitle"
               defaults="Executive Assistant at MIT"
             />
           </div>
@@ -317,13 +317,18 @@ const BigTestimonial = () => {
     </m.div>
   );
 };
-const Home: React.FunctionComponent = () => {
+const Home = () => {
   const { t } = useTranslation();
   return (
     <div className="space-y-12 sm:space-y-24">
       <NextSeo
-        title={t("homepage_metaTitle")}
-        description={t("homepage_metaDescription")}
+        title={t("home:homepage_metaTitle", {
+          defaultValue: "Rallly - Schedule Group Meetings",
+        })}
+        description={t("home:homepage_metaDescription", {
+          defaultValue:
+            "Create polls and vote to find the best day or time. A free alternative to Doodle.",
+        })}
         twitter={{
           handle: "@imlukevella",
           site: "@ralllyco",

@@ -17,10 +17,10 @@ const Page: NextPageWithLayout<Props> = ({ allPosts }) => {
   return (
     <div>
       <NextSeo
-        title={t("blogTitle", {
+        title={t("blog:blogTitle", {
           defaultValue: "Rallly - Blog",
         })}
-        description={t("blogDescription", {
+        description={t("blog:blogDescription", {
           defaultValue: "News, updates and announcement about Rallly.",
         })}
       />
@@ -45,7 +45,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     "excerpt",
   ]);
 
-  const res = await getStaticTranslations(ctx);
+  const res = await getStaticTranslations(["blog"])(ctx);
 
   if ("props" in res) {
     return {

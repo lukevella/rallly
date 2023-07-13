@@ -1,5 +1,5 @@
 import {
-  ArrowRightIcon,
+  ChevronRightIcon,
   GemIcon,
   LifeBuoyIcon,
   LogInIcon,
@@ -105,12 +105,12 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
             </Link>
             <Link
               href={linkToApp()}
-              className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
+              className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-1 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
             >
               <span>
                 <Trans i18nKey="goToApp" defaults="Go to app" />
               </span>
-              <ArrowRightIcon className="inline-block h-4 w-4 -translate-x-1 transition-all group-hover:translate-x-0 group-active:translate-x-1" />
+              <ChevronRightIcon className="inline-block h-4 w-4 transition-all group-active:translate-x-1" />
             </Link>
             <div className="flex items-center justify-center sm:hidden">
               <DropdownMenu>
@@ -161,7 +161,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           </div>
         </div>
         <div className="grow">{children}</div>
-        <div className="pt-36">
+        <div className="pt-16 sm:pt-36">
           <Footer />
         </div>
       </div>
