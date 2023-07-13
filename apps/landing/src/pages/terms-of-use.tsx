@@ -85,4 +85,4 @@ const PrivacyPolicy = () => {
 
 export default PrivacyPolicy;
 
-export const getStaticProps = getStaticTranslations;
+export const getStaticProps = getStaticTranslations();
