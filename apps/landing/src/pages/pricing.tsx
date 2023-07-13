@@ -40,13 +40,13 @@ const Page: NextPageWithLayout = () => {
   const [annualBilling, setAnnualBilling] = React.useState(true);
   return (
     <div className="mx-auto bg-gray-100">
-      <NextSeo title={t("pricing", { defaultValue: "Pricing" })} />
+      <NextSeo title={t("common:pricing", { defaultValue: "Pricing" })} />
       <h1 className="mb-4 text-4xl font-bold tracking-tight">
-        <Trans i18nKey="pricing">Pricing</Trans>
+        <Trans i18nKey="pricing:pricing">Pricing</Trans>
       </h1>
       <p className="text-muted-foreground text-lg">
         <Trans
-          i18nKey="pricingDescription"
+          i18nKey="pricing:pricingDescription"
           defaults="Get started for free. No login required."
         />
       </p>
@@ -59,7 +59,7 @@ const Page: NextPageWithLayout = () => {
           />
           <Label htmlFor="annual-billing">
             <Trans
-              i18nKey="annualBilling"
+              i18nKey="pricing:annualBilling"
               values={{ discount: 50 }}
               defaults="Annual billing (Save {discount}%)"
             />
@@ -69,23 +69,23 @@ const Page: NextPageWithLayout = () => {
           <BillingPlan>
             <BillingPlanHeader>
               <BillingPlanTitle>
-                <Trans i18nKey="planFree" defaults="Free" />
+                <Trans i18nKey="pricing:planFree" defaults="Free" />
               </BillingPlanTitle>
               <BillingPlanPrice>$0</BillingPlanPrice>
               <BillingPlanPeriod>
-                <Trans i18nKey="freeForever" defaults="free forever" />
+                <Trans i18nKey="pricing:freeForever" defaults="free forever" />
               </BillingPlanPeriod>
             </BillingPlanHeader>
             <BillingPlanPerks>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="plan_unlimitedPolls"
+                  i18nKey="pricing:unlimitedPolls"
                   defaults="Unlimited polls"
                 />
               </BillingPlanPerk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="plan_unlimitedParticipants"
+                  i18nKey="pricing:unlimitedParticipants"
                   defaults="Unlimited participants"
                 />
               </BillingPlanPerk>
@@ -93,7 +93,9 @@ const Page: NextPageWithLayout = () => {
             <BillingPlanFooter>
               <Button className="w-full" asChild>
                 <Link href={linkToApp()}>
-                  <Trans i18nKey="getStarted">Get started for free</Trans>
+                  <Trans i18nKey="pricing:getStarted">
+                    Get started for free
+                  </Trans>
                 </Link>
               </Button>
             </BillingPlanFooter>
@@ -101,7 +103,7 @@ const Page: NextPageWithLayout = () => {
           <BillingPlan variant="primary">
             <BillingPlanHeader>
               <BillingPlanTitle className="text-primary m-0">
-                <Trans i18nKey="planPro" defaults="Pro" />
+                <Trans i18nKey="pricing:planPro" defaults="Pro" />
               </BillingPlanTitle>
               {annualBilling ? (
                 <>
@@ -112,7 +114,7 @@ const Page: NextPageWithLayout = () => {
                   </BillingPlanPrice>
                   <BillingPlanPeriod>
                     <Trans
-                      i18nKey="annualBillingDescription"
+                      i18nKey="pricing:annualBillingDescription"
                       defaults="per month, billed annually"
                     />
                   </BillingPlanPeriod>
@@ -122,7 +124,7 @@ const Page: NextPageWithLayout = () => {
                   <BillingPlanPrice>${monthlyPriceUsd}</BillingPlanPrice>
                   <BillingPlanPeriod>
                     <Trans
-                      i18nKey="monthlyBillingDescription"
+                      i18nKey="pricing:monthlyBillingDescription"
                       defaults="per month"
                     />
                   </BillingPlanPeriod>
@@ -132,28 +134,31 @@ const Page: NextPageWithLayout = () => {
             <BillingPlanPerks>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="plan_unlimitedPolls"
+                  i18nKey="pricing:unlimitedPolls"
                   defaults="Unlimited polls"
                 />
               </BillingPlanPerk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="plan_unlimitedParticipants"
+                  i18nKey="pricing:unlimitedParticipants"
                   defaults="Unlimited participants"
                 />
               </BillingPlanPerk>
               <Perk>
-                <Trans i18nKey="plan_finalizePolls" defaults="Finalize polls" />
+                <Trans
+                  i18nKey="pricing:finalizePolls"
+                  defaults="Finalize polls"
+                />
               </Perk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="plan_extendedPollLife"
+                  i18nKey="pricing:extendedPollLife"
                   defaults="Extended poll life"
                 />
               </BillingPlanPerk>
               <BillingPlanPerk>
                 <Trans
-                  i18nKey="plan_prioritySupport"
+                  i18nKey="pricing:prioritySupport"
                   defaults="Priority support"
                 />
               </BillingPlanPerk>
@@ -161,7 +166,7 @@ const Page: NextPageWithLayout = () => {
             <BillingPlanFooter>
               <Button variant="primary" className="w-full" asChild>
                 <Link href={linkToApp("/settings/billing")}>
-                  <Trans i18nKey="upgrade">Upgrade</Trans>
+                  <Trans i18nKey="pricing:upgrade">Upgrade</Trans>
                 </Link>
               </Button>
             </BillingPlanFooter>
@@ -169,7 +174,7 @@ const Page: NextPageWithLayout = () => {
         </div>
         <p className="text-muted-foreground mt-8 flex gap-x-2 text-sm sm:justify-center sm:text-center">
           <InfoIcon className="h-4 w-4 shrink-0 translate-y-0.5" />
-          <Trans i18nKey="priceIncreaseInfo">
+          <Trans i18nKey="pricing:priceIncreaseInfo">
             Prices will be adjusted regularly as more features are added
           </Trans>
         </p>
@@ -177,19 +182,22 @@ const Page: NextPageWithLayout = () => {
       <hr className="my-8" />
       <div>
         <h2 className="mb-4">
-          <Trans i18nKey="faq" defaults="Frequently Asked Questions"></Trans>
+          <Trans
+            i18nKey="pricing:faq"
+            defaults="Frequently Asked Questions"
+          ></Trans>
         </h2>
         <div className="divide-y">
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="faq_canUseFree"
+                i18nKey="pricing:canUseFree"
                 defaults="Can I use Rallly for free?"
               ></Trans>
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="faq_canUseFreeAnswer"
+                i18nKey="pricing:canUseFreeAnswer"
                 components={{
                   a: (
                     <Link
@@ -206,13 +214,13 @@ const Page: NextPageWithLayout = () => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="faq_whyUpgrade"
+                i18nKey="pricing:whyUpgrade"
                 defaults="Why should I upgrade?"
               ></Trans>
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="faq_whyUpgradeAnswer"
+                i18nKey="pricing:whyUpgradeAnswer"
                 defaults="When you upgrade to a paid plan, you will be able to finalize your polls and automatically send calendar invites to your participants with your selected date. We will also keep your polls indefinitely so they won't be automatically deleted even after they are finalized."
               ></Trans>
             </p>
@@ -220,13 +228,13 @@ const Page: NextPageWithLayout = () => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="faq_howToUpgrade"
+                i18nKey="pricing:howToUpgrade"
                 defaults="How do I upgrade to a paid plan?"
               />
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="faq_howToUpgradeAnswer"
+                i18nKey="pricing:howToUpgradeAnswer"
                 components={{
                   a: (
                     <Link
@@ -243,13 +251,13 @@ const Page: NextPageWithLayout = () => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
             <h3 className="col-span-1">
               <Trans
-                i18nKey="faq_cancelSubscription"
+                i18nKey="pricing:cancelSubscription"
                 defaults="How do I cancel my subscription?"
               ></Trans>
             </h3>
             <p className="col-span-2 text-sm leading-relaxed text-slate-600">
               <Trans
-                i18nKey="faq_cancelSubscriptionAnswer"
+                i18nKey="pricing:cancelSubscriptionAnswer"
                 components={{
                   a: (
                     <Link
@@ -273,4 +281,4 @@ Page.getLayout = getPageLayout;
 
 export default Page;
 
-export const getStaticProps = getStaticTranslations;
+export const getStaticProps = getStaticTranslations(["pricing"]);

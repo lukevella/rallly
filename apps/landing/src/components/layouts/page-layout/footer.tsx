@@ -1,7 +1,7 @@
 import {
   DiscordIcon,
+  GithubIcon,
   LanguagesIcon,
-  StarIcon,
   TwitterIcon,
 } from "@rallly/icons";
 import languages from "@rallly/languages";
@@ -12,13 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
 
 import { Trans } from "@/components/trans";
 import DigitalOcean from "~/digitalocean.svg";
-import Logo from "~/logo.svg";
 import Sentry from "~/sentry.svg";
 import Vercel from "~/vercel-logotype-dark.svg";
 
@@ -54,11 +54,16 @@ const Footer: React.FunctionComponent = () => {
     <div className="mx-auto space-y-8">
       <div className="space-y-8 lg:flex lg:space-x-16 lg:space-y-0">
         <div className=" lg:w-2/6">
-          <Logo className="w-32 text-gray-500" />
-          <div className="mb-8 mt-4 text-gray-500">
+          <Image
+            src="/logo-grayscale.svg"
+            width={140}
+            height={30}
+            alt="Rallly"
+          />
+          <div className="my-8 text-gray-500">
             <p className="mb-4 leading-relaxed">
               <Trans
-                i18nKey="common_footerSponsor"
+                i18nKey="footerSponsor"
                 components={{
                   a: (
                     <Link
@@ -71,7 +76,7 @@ const Footer: React.FunctionComponent = () => {
             </p>
             <div>
               <Trans
-                i18nKey="common_footerCredit"
+                i18nKey="footerCredit"
                 components={{
                   a: (
                     <Link
@@ -87,35 +92,29 @@ const Footer: React.FunctionComponent = () => {
             <Link
               target="_blank"
               href="https://twitter.com/ralllyco"
-              className="hover:text-primary-600 text-sm text-gray-500 transition-colors hover:no-underline"
+              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
               <TwitterIcon className="h-5 w-5" />
             </Link>
             <Link
               target="_blank"
               href="https://discord.gg/uzg4ZcHbuM"
-              className="hover:text-primary-600 text-sm text-gray-500 transition-colors hover:no-underline"
+              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
               <DiscordIcon className="h-5 w-5" />
             </Link>
             <Link
               target="_blank"
               href="https://github.com/lukevella/rallly"
-              className="hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-600 inline-flex h-8 items-center rounded-full bg-gray-100 pl-2 pr-3 text-sm text-gray-500 transition-colors hover:text-white hover:no-underline focus:ring-2 focus:ring-offset-1"
+              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
-              <StarIcon className="mr-2 inline-block w-5" />
-              <span>
-                <Trans
-                  i18nKey="common_starOnGithub"
-                  defaults="Star us on Github"
-                />
-              </span>
+              <GithubIcon className="h-5 w-5" />
             </Link>
           </div>
         </div>
         <div className="lg:w-1/6">
-          <div className="mb-4 font-medium">
-            <Trans i18nKey="homepage_links" defaults="Links" />
+          <div className="mb-8 font-medium">
+            <Trans i18nKey="links" defaults="Links" />
           </div>
           <ul className="space-y-2">
             <li>
@@ -132,7 +131,7 @@ const Footer: React.FunctionComponent = () => {
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
-                <Trans i18nKey="common_discussions" defaults="Discussions" />
+                <Trans i18nKey="discussions" defaults="Discussions" />
               </Link>
             </li>
             <li>
@@ -140,7 +139,7 @@ const Footer: React.FunctionComponent = () => {
                 href="https://rallly.co/blog"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
-                <Trans i18nKey="common_blog" defaults="Blog" />
+                <Trans i18nKey="blog" defaults="Blog" />
               </Link>
             </li>
             <li>
@@ -148,14 +147,14 @@ const Footer: React.FunctionComponent = () => {
                 href="https://support.rallly.co"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
-                <Trans i18nKey="common_support" defaults="Support" />
+                <Trans i18nKey="support" defaults="Support" />
               </Link>
             </li>
           </ul>
         </div>
         <div className="lg:w-1/6">
-          <div className="mb-4 font-medium">
-            <Trans i18nKey="common_poweredBy" defaults="Powered by" />
+          <div className="mb-8 font-medium">
+            <Trans i18nKey="poweredBy" defaults="Powered by" />
           </div>
           <div className="block space-y-4">
             <div>
@@ -188,8 +187,8 @@ const Footer: React.FunctionComponent = () => {
           </div>
         </div>
         <div className="lg:w-2/6">
-          <div className="mb-4 font-medium">
-            <Trans i18nKey="common_language" defaults="Language" />
+          <div className="mb-8 font-medium">
+            <Trans i18nKey="language" defaults="Language" />
           </div>
           <div className="mb-4">
             <LanguageSelect />
@@ -199,7 +198,7 @@ const Footer: React.FunctionComponent = () => {
             className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
           >
             <LanguagesIcon className="mr-2 h-5 w-5" />
-            <Trans i18nKey="common_volunteerTranslator" /> &rarr;
+            <Trans i18nKey="volunteerTranslator" /> &rarr;
           </Link>
         </div>
       </div>
@@ -209,7 +208,7 @@ const Footer: React.FunctionComponent = () => {
             href="/privacy-policy"
             className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
           >
-            <Trans i18nKey="common_privacyPolicy" />
+            <Trans i18nKey="privacyPolicy" />
           </Link>
         </li>
         <li>
@@ -217,7 +216,7 @@ const Footer: React.FunctionComponent = () => {
             href="/cookie-policy"
             className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
           >
-            <Trans i18nKey="common_cookiePolicy" />
+            <Trans i18nKey="cookiePolicy" />
           </Link>
         </li>
         <li>
@@ -225,7 +224,7 @@ const Footer: React.FunctionComponent = () => {
             href="/terms-of-use"
             className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
           >
-            <Trans i18nKey="common_termsOfUse" />
+            <Trans i18nKey="termsOfUse" />
           </Link>
         </li>
       </ul>

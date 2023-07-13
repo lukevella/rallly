@@ -1,0 +1,20 @@
+{
+  "login": "Login",
+  "links": "Links",
+  "blog": "Blog",
+  "discussions": "Discussions",
+  "footerCredit": "Made by <a>@imlukevella</a>",
+  "footerSponsor": "This project is user-funded. Please consider supporting it by <a>donating</a>.",
+  "language": "Language",
+  "poweredBy": "Powered by",
+  "privacyPolicy": "Privacy Policy",
+  "support": "Support",
+  "cookiePolicy": "Cookie Policy",
+  "termsOfUse": "Terms of Use",
+  "volunteerTranslator": "Help translate this site",
+  "notFoundTitle": "404 not found",
+  "notFoundDescription": "We couldn't find the page you're looking for.",
+  "goToHome": "Go to home",
+  "goToApp": "Go to app",
+  "pricing": "Pricing"
+}

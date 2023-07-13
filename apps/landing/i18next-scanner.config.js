@@ -3,12 +3,10 @@ const typescriptTransform = require("i18next-scanner-typescript");
 module.exports = {
   input: ["src/**/*.{ts,tsx}"],
   options: {
-    keySeparator: ".",
-    nsSeparator: false,
-    defaultNs: "app",
-    defaultValue: "__STRING_NOT_TRANSLATED__",
+    nsSeparator: ":",
+    defaultNs: "common",
     lngs: ["en"],
-    ns: ["app"],
+    ns: ["common", "home", "pricing", "blog"],
     plural: false,
     removeUnusedKeys: true,
     func: {

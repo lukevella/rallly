@@ -1,232 +1,146 @@
-import { VoteType } from "@rallly/database";
-import { ArrowRightIcon, GithubIcon, User2Icon } from "@rallly/icons";
+import { ChevronRightIcon, GithubIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import { cn } from "@rallly/ui/lib/utils";
-import dayjs from "dayjs";
+import { preventWidows } from "@rallly/utils";
+import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import { getRandomAvatarColor } from "@/components/home/color-hash";
 import { Trans } from "@/components/trans";
 import { linkToApp } from "@/lib/linkToApp";
 
-const VoteIcon = ({ variant }: { variant: VoteType }) => {
+const Screenshot = () => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
   return (
-    <Image
-      src={`/${variant === "ifNeedBe" ? "if-need-be" : variant}.svg`}
-      width={20}
-      height={20}
-      alt={variant}
-    />
-  );
-};
-
-const Participant = ({ name }: { name: string }) => {
-  const { color, requiresDarkText } = getRandomAvatarColor(name);
-  return (
-    <div className="flex items-center gap-x-4">
-      <span
-        className={cn(
-          "inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold",
-          requiresDarkText ? "text-gray-800" : "text-white",
-        )}
-        style={{
-          background: color,
+    <>
+      <m.div
+        transition={{
+          delay: 1.5,
+          type: "spring",
+          duration: 1,
+          bounce: 0.4,
         }}
+        variants={{
+          hidden: { opacity: 0, y: 0, z: 0, rotateY: 45 },
+          visible: { opacity: 1, y: -10, z: 0, rotateY: 0 },
+        }}
+        initial="hidden"
+        animate={isLoaded ? "visible" : "hidden"}
+        style={{
+          backfaceVisibility: "hidden",
+        }}
+        className="shadow-huge relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50 subpixel-antialiased"
       >
-        {name[0]}
-      </span>
-      <span className="whitespace-nowrap font-semibold">{name}</span>
-    </div>
+        <Trans
+          i18nKey="home:createPageLikeThis"
+          defaults="Create a page like this in seconds!"
+        />
+        <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
+        <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+      </m.div>
+      <m.div
+        transition={{
+          delay: 0.5,
+          type: "spring",
+          duration: 1.5,
+          bounce: 0.3,
+        }}
+        variants={{
+          hidden: { opacity: 0, scale: 0.5, rotateX: -90, y: -250 },
+          visible: { opacity: 1, scale: 1, rotateX: 0, y: 0 },
+        }}
+        initial="hidden"
+        animate={isLoaded ? "visible" : "hidden"}
+        className="shadow-huge mx-auto w-fit overflow-hidden rounded-md border"
+      >
+        <Image
+          src="/static/images/hero-shot.png"
+          alt="Screenshot of Rallly Poll"
+          width={1280}
+          height={946}
+          quality={100}
+          onLoadingComplete={() => {
+            setIsLoaded(true);
+          }}
+        />
+      </m.div>
+    </>
   );
 };
 
-export const DateIcon = ({
-  date,
-  className,
-}: {
-  date?: Date;
-  className?: string;
-}) => {
+const Hero = () => {
+  const { t } = useTranslation();
   return (
-    <div
-      className={cn(
-        "inline-block w-14 overflow-hidden rounded-md border bg-white text-center text-slate-800",
-        className,
-      )}
+    <m.div
+      transition={{
+        type: "spring",
+        bounce: 0.4,
+        duration: 1,
+      }}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-8 max-w-full text-center sm:mt-16"
     >
-      <div className="h-4 border-b border-slate-200 bg-slate-50 text-xs leading-4">
-        {dayjs(date).format("ddd")}
-      </div>
-      <div className="flex items-center justify-center py-1">
-        <div>
-          <div className="my-px text-lg font-bold leading-none">
-            {dayjs(date).format("DD")}
-          </div>
-          <div className="text-xs font-bold uppercase">
-            {dayjs(date).format("MMM")}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const options = [
-  {
-    date: new Date("2023-05-12"),
-    score: 4,
-  },
-  {
-    date: new Date("2023-05-13"),
-    score: 3,
-  },
-  {
-    date: new Date("2023-05-14"),
-    score: 4,
-  },
-  {
-    date: new Date("2023-05-15"),
-    score: 5,
-    highScore: true,
-  },
-  {
-    date: new Date("2023-05-16"),
-    score: 1,
-  },
-];
-
-const participants: Array<{ name: string; votes: VoteType[] }> = [
-  { name: "Sarah Johnson", votes: ["yes", "no", "yes", "yes", "no"] },
-  { name: "Michael Lee", votes: ["yes", "yes", "yes", "yes", "no"] },
-  {
-    name: "Leslie Bradtke",
-    votes: ["no", "yes", "yes", "yes", "yes"],
-  },
-  { name: "Edward Marvin", votes: ["yes", "no", "ifNeedBe", "yes", "no"] },
-  { name: "Samantha Patel", votes: ["yes", "yes", "no", "yes", "no"] },
-];
-const Demo = () => {
-  return (
-    <div className="sm:shadow-huge w-[700px] min-w-0 shrink-0 select-none overflow-hidden rounded-md border border-gray-300/75 bg-white pb-1">
-      <div className="flex h-14 items-center justify-between border-b bg-gray-50 px-4 py-3 font-semibold">
-        <div>
-          <Trans i18nKey="participantCount" values={{ count: 5 }} />
-        </div>
-        <div>
-          <Trans i18nKey="optionCount" values={{ count: 5 }} />
-        </div>
-      </div>
-      <table className="w-full table-auto">
-        <thead>
-          <tr>
-            <th></th>
-            {options.map((option, i) => {
-              return (
-                <th key={i} className="p-3 font-normal">
-                  <div className="grid gap-1">
-                    <div>
-                      <DateIcon date={option.date} />
-                    </div>
-                    <div>
-                      <span
-                        className={cn(
-                          "relative inline-flex select-none items-center gap-1 rounded-full border py-0.5 px-2 text-xs tabular-nums",
-                          option.highScore
-                            ? "border-green-500 text-green-500"
-                            : "border-transparent text-gray-500",
-                        )}
-                      >
-                        <User2Icon className="h-3 w-3 shrink-0" />
-                        <span>{option.score}</span>
-                      </span>
-                    </div>
-                  </div>
-                </th>
-              );
-            })}
-            <th className="h-20 w-20 p-3 align-bottom"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {participants.map((participant, i) => {
-            return (
-              <tr key={i}>
-                <td className="py-3 pr-3 pl-4">
-                  <Participant name={participant.name} />
-                </td>
-                {participant.votes.map((vote, j) => {
-                  return (
-                    <td key={j} className="w-16 p-1 text-center">
-                      <div className="flex h-10 items-center justify-center rounded-md border bg-gray-50">
-                        <VoteIcon variant={vote} />
-                      </div>
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-const Hero: React.FunctionComponent = () => {
-  return (
-    <div className="mt-8 max-w-full text-center sm:mt-16">
-      <div className="mb-6 sm:mb-8">
+      <m.div className="mb-8">
         <Link
           target="_blank"
           href="https://github.com/lukevella/rallly"
-          className="hover:text-primary hover:border-primary active:bg-primary-50 group inline-flex items-center rounded-full border border-gray-300/50 bg-gray-50/50 px-2.5 py-2 text-xs font-medium text-gray-600 transition-colors sm:text-sm"
+          className="hover:ring-primary hover:text-primary relative inline-flex items-center gap-x-4 rounded-full bg-gray-100 px-4 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10"
         >
-          <span className="px-2.5">
-            <Trans i18nKey="opensource" defaults="We're Open Source!" />
+          <span className="hidden sm:block">
+            <Trans i18nKey="home:opensource" defaults="We're Open Source!" />
           </span>
-          <span className="inline-flex items-center gap-2 border-l px-2.5">
-            <GithubIcon className="h-4 w-4" />
-            <Trans i18nKey="startUsOnGithub" defaults="Star us on Github" />
-            <ArrowRightIcon className="inline-block h-4 w-4 transition-transform group-hover:translate-x-1 group-active:translate-x-2" />
+          <span
+            className="hidden h-4 w-px bg-gray-900/10 sm:block"
+            aria-hidden="true"
+          />
+          <span className="flex items-center gap-x-1">
+            <span className="absolute inset-0" aria-hidden="true" />
+            <GithubIcon className="mr-1 h-4 w-4" />
+            <Trans
+              i18nKey="home:startUsOnGithub"
+              defaults="Star us on Github"
+            />
+            <ChevronRightIcon className="-mr-2 h-4 w-4" aria-hidden="true" />
           </span>
         </Link>
-      </div>
-      <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl">
-        <Trans i18nKey="headline" defaults="Ditch the back-and-forth emails" />
-      </h1>
-      <p className="text-xl text-gray-500">
-        <Trans
-          i18nKey="subheadling"
-          defaults="Streamline your scheduling process and save time"
-        />
+      </m.div>
+      <m.h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl">
+        {preventWidows(
+          t("home:headline", {
+            defaultValue: "Ditch the back-and-forth emails",
+          }),
+        )}
+      </m.h1>
+      <p className="text-lg text-gray-500 sm:text-xl">
+        {preventWidows(
+          t("home:subheading", {
+            defaultValue: "Streamline your scheduling process and save time",
+          }),
+        )}
       </p>
-      <div className="mt-8 flex justify-center gap-3">
-        <div className="relative">
-          <Button size="lg" className="shadow-sm" variant="primary" asChild>
-            <Link href={linkToApp("/new")}>
-              <Trans i18nKey="homepage_getStarted" />
-            </Link>
-          </Button>
-        </div>
-        <Button size="lg" className="shadow-sm" asChild>
-          <Link href="https://support.rallly.co">
-            <Trans i18nKey="homepage_readDocs" defaults="Read the docs" />
-            <ArrowRightIcon className="h-4 w-4" />
+      <div className="my-8 flex flex-col items-center justify-center gap-4">
+        <Button
+          size="lg"
+          className="group rounded-full hover:shadow-md active:shadow-sm"
+          variant="primary"
+          asChild
+        >
+          <Link href={linkToApp("/new")}>
+            <Trans i18nKey="home:getStarted" defaults="Get started" />
+            <ChevronRightIcon className="-ml-1 h-5 w-5 transition-transform group-active:translate-x-1" />
           </Link>
         </Button>
+        <div className="whitespace-nowrap text-center text-sm font-medium text-gray-500">
+          <Trans i18nKey="home:hint" defaults="It's free! No login required." />
+        </div>
       </div>
-      <p className="text-muted-foreground mt-8 mb-8 whitespace-nowrap text-center text-sm">
-        <Trans
-          i18nKey="getStartedHint"
-          defaults="Create a poll. It's free. No login required."
-        />
-      </p>
-      <div className="-mx-4 flex overflow-x-auto p-4 sm:justify-center sm:overflow-visible">
-        <Demo />
+      <div className="mt-16">
+        <Screenshot />
       </div>
-    </div>
+    </m.div>
   );
 };
 

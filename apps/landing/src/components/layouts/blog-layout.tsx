@@ -7,7 +7,6 @@ export const BlogLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="mx-auto w-full max-w-2xl">
       <div>{children}</div>
-
       <Script
         id="mailerlite"
         dangerouslySetInnerHTML={{

@@ -73,7 +73,7 @@ Page.getLayout = getBlogLayout;
 export default Page;
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
-  const res = await getStaticTranslations(ctx);
+  const res = await getStaticTranslations(["blog"])(ctx);
   const post = getPostBySlug(ctx.params?.slug as string, [
     "title",
     "date",

@@ -1,64 +1,73 @@
-import { CodeIcon, MousePointerClickIcon, ServerIcon } from "@rallly/icons";
-import { Trans, useTranslation } from "next-i18next";
-import * as React from "react";
+import {
+  CalendarCheck2Icon,
+  LanguagesIcon,
+  Users2Icon,
+  ZapIcon,
+} from "@rallly/icons";
+import { cn } from "@rallly/ui";
+import { m } from "framer-motion";
 
-import Ban from "./ban-ads.svg";
+import { Trans } from "@/components/trans";
+import { IconComponent } from "@/types";
+
+const Item = ({
+  icon: Icon,
+  className,
+  children,
+  delay = 0,
+}: React.PropsWithChildren<{
+  icon: IconComponent;
+  className?: string;
+  delay?: number;
+}>) => {
+  return (
+    <m.div
+      transition={{
+        delay,
+        type: "spring",
+        bounce: 0.5,
+      }}
+      initial={{ opacity: 0, y: -100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: "all" }}
+      className="flex justify-center"
+    >
+      <div className="flex items-center justify-center gap-x-2.5 rounded-full border bg-gray-50 p-1 pr-6 shadow-sm">
+        <span
+          className={cn("bg-primary rounded-full p-2 text-gray-50", className)}
+        >
+          <Icon className="h-4 w-4" />
+        </span>
+        <div className="text-sm font-semibold">{children}</div>
+      </div>
+    </m.div>
+  );
+};
 
 const Bonus: React.FunctionComponent = () => {
-  const { t } = useTranslation();
   return (
-    <div>
-      <h2 className="heading">{t("homepage_principles")}</h2>
-      <p className="subheading">{t("homepage_principlesSubheading")}</p>
-      <div className="grid grid-cols-4 gap-16">
-        <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-gray-400">
-            <MousePointerClickIcon className="h-16 w-16" />
-          </div>
-          <h3 className="heading-sm">{t("homepage_noLoginRequired")}</h3>
-          <div className="text text-base leading-relaxed">
-            {t("homepage_noLoginRequiredDescription")}
-          </div>
-        </div>
-        <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-gray-400">
-            <CodeIcon className="h-16 w-16" />
-          </div>
-          <h3 className="heading-sm">{t("homepage_openSource")}</h3>
-          <div className="text text-base leading-relaxed">
-            <Trans
-              t={t}
-              i18nKey="homepage_openSourceDescription"
-              components={{
-                a: (
-                  <a
-                    className="text-link"
-                    href="https://github.com/lukevella/rallly"
-                  />
-                ),
-              }}
-            />
-          </div>
-        </div>
-        <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-gray-400">
-            <ServerIcon className="h-16 w-16" />
-          </div>
-          <h3 className="heading-sm">{t("homepage_selfHostable")}</h3>
-          <div className="text text-base leading-relaxed">
-            {t("homepage_selfHostableDescription")}
-          </div>
-        </div>
-        <div className="col-span-4 md:col-span-2 lg:col-span-1">
-          <div className="mb-4 text-gray-400">
-            <Ban className="h-16 w-16" />
-          </div>
-          <h3 className="heading-sm">{t("homepage_adFree")}</h3>
-          <div className="text text-base leading-relaxed">
-            {t("homepage_adFreeDescription")}
-          </div>
-        </div>
-      </div>
+    <div className="mx-auto flex flex-wrap justify-center  gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
+      <Item className="bg-indigo-600" icon={Users2Icon}>
+        <Trans
+          i18nKey="home:statsUsersRegistered"
+          defaults="45k+ registered users"
+        />
+      </Item>
+      <Item delay={0.25} className="bg-pink-600" icon={CalendarCheck2Icon}>
+        <Trans
+          i18nKey="home:statsPollsCreated"
+          defaults="100k+ polls created"
+        />
+      </Item>
+      <Item delay={0.5} className="bg-gray-800" icon={LanguagesIcon}>
+        <Trans
+          i18nKey="home:statsLanguagesSupported"
+          defaults="10+ languages supported"
+        />
+      </Item>
+      <Item delay={0.75} className="bg-amber-500" icon={ZapIcon}>
+        <Trans i18nKey="home:noLoginRequired" defaults="No login required" />
+      </Item>
     </div>
   );
 };

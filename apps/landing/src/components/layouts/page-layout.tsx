@@ -1,5 +1,5 @@
 import {
-  ArrowRightIcon,
+  ChevronRightIcon,
   GemIcon,
   LifeBuoyIcon,
   LogInIcon,
@@ -53,11 +53,11 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
   const { t } = useTranslation();
   return (
     <nav className={className}>
-      <NavLink href="/blog">{t("common_blog")}</NavLink>
+      <NavLink href="/blog">{t("blog")}</NavLink>
       <NavLink href="/pricing">
         <Trans i18nKey="pricing">Pricing</Trans>
       </NavLink>
-      <NavLink href="https://support.rallly.co">{t("common_support")}</NavLink>
+      <NavLink href="https://support.rallly.co">{t("support")}</NavLink>
     </nav>
   );
 };
@@ -88,7 +88,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
         />
       </svg>
-      <div className="mx-auto w-full max-w-full grow p-4 sm:max-w-7xl sm:p-8">
+      <div className="mx-auto w-full max-w-full grow p-4 sm:max-w-7xl sm:px-8 sm:py-6">
         <div className="mb-16 flex w-full items-center">
           <div className="flex grow items-center gap-x-12">
             <Link className="inline-block rounded" href="/">
@@ -105,12 +105,12 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
             </Link>
             <Link
               href={linkToApp()}
-              className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-2 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
+              className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-1 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
             >
               <span>
                 <Trans i18nKey="goToApp" defaults="Go to app" />
               </span>
-              <ArrowRightIcon className="inline-block h-4 w-4 -translate-x-1 transition-all group-hover:translate-x-0 group-active:translate-x-1" />
+              <ChevronRightIcon className="inline-block h-4 w-4 transition-all group-active:translate-x-1" />
             </Link>
             <div className="flex items-center justify-center sm:hidden">
               <DropdownMenu>
@@ -124,7 +124,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                       href="/blog"
                     >
                       <NewspaperIcon className="h-5 w-5" />
-                      <Trans i18nKey="common_blog" />
+                      <Trans i18nKey="blog" />
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -142,7 +142,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                       href="https://support.rallly.co"
                     >
                       <LifeBuoyIcon className="h-5 w-5" />
-                      <Trans i18nKey="common_support" />
+                      <Trans i18nKey="support" />
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -161,7 +161,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           </div>
         </div>
         <div className="grow">{children}</div>
-        <div className="pt-36">
+        <div className="pt-16 sm:pt-36">
           <Footer />
         </div>
       </div>

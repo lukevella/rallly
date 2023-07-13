@@ -31,14 +31,14 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
         </div>
         <div className="flex justify-center space-x-3">
           <Link href="/" className="btn-primary">
-            {t("errors_goToHome")}
+            {t("goToHome")}
           </Link>
           <Link
             href="https://support.rallly.co"
             passHref={true}
             className="btn-default"
           >
-            {t("common_support")}
+            {t("support")}
           </Link>
         </div>
       </div>
