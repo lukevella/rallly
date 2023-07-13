@@ -188,5 +188,19 @@
   "upgradeOverlayGoToBilling": "Ga naar facturatie",
   "billingStatusState": "Status",
   "billingStatusActive": "Actief",
-  "billingStatusPaused": "Gepauzeerd"
+  "billingStatusPaused": "Gepauzeerd",
+  "billingStatusDeleted": "Geannuleerd",
+  "endDate": "Einddatum",
+  "dueDate": "Volgende betaling verschuldigd",
+  "billingStatusPlan": "Abonnement",
+  "billingPeriod": "Periode",
+  "billingPeriodMonthly": "Maandelijks",
+  "billingPeriodYearly": "Jaarlijks",
+  "plan_unlimitedPolls": "Onbeperkt aantal polls",
+  "plan_unlimitedParticipants": "Onbeperkt aantal deelnemers",
+  "monthlyBillingDescription": "per maand",
+  "plan_finalizePolls": "Polls voltooien",
+  "plan_extendedPollLife": "Houd polls voor onbepaalde tijd",
+  "plan_prioritySupport": "Snelle ondersteuning",
+  "becomeATranslator": "Help vertalen"
 }
