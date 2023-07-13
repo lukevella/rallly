@@ -1,0 +1,20 @@
+{
+  "login": "Přihlásit",
+  "links": "Odkazy",
+  "blog": "Blog",
+  "discussions": "Diskuze",
+  "footerCredit": "Vytvořil <a>@imlukevella</a>",
+  "footerSponsor": "Tento projekt je financován uživateli. Zvažte jeho podporu <a>příspěvkem</a>.",
+  "language": "Jazyk",
+  "poweredBy": "Poháněn",
+  "privacyPolicy": "Ochrana osobních údajů",
+  "support": "Podpora",
+  "cookiePolicy": "Zásady používání cookies",
+  "termsOfUse": "Podmínky používání webu",
+  "volunteerTranslator": "Pomozte přeložit tento web",
+  "notFoundTitle": "404 nenalezeno",
+  "notFoundDescription": "Nemohli jsme najít stránku, kterou hledáte.",
+  "goToHome": "Přejít domů",
+  "goToApp": "Přejít do aplikace",
+  "pricing": "Ceník"
+}
