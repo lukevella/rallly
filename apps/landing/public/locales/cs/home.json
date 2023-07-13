@@ -1,9 +1,12 @@
 {
+  "createPageLikeThis": "Vytvořte obdobnou stránku za pár vteřin!",
   "opensource": "Máme otevřený zdrojový kód!",
   "startUsOnGithub": "Dejte nám hvězdu na Github",
   "noLoginRequired": "Bez přihlášení",
+  "metaTitle": "Rallly - Plánování skupinových setkání",
   "metaDescription": "Vytvořte ankety a hlasujte pro nalezení nejlepšího dne nebo času. Bezplatná alternativa k Doodle.",
   "getStarted": "Začněme",
   "headline": "Neřešte plánování termínů v e-mailech",
-  "subheading": "Zjednodušte proces plánování a šetřete čas"
+  "subheading": "Zjednodušte proces plánování a šetřete čas",
+  "pcmagQuote": "„Vytvořte anketu v co nejkratším čase.\""
 }
