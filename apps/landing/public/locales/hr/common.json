@@ -1,0 +1,20 @@
+{
+  "login": "Prijava",
+  "links": "Poveznice",
+  "blog": "Blog",
+  "discussions": "Rasprave",
+  "footerCredit": "Autor: <a>@imlukevella</a>",
+  "footerSponsor": "Ovaj projekt financiraju korisnici. Razmislite o podršci <a>donacijom</a>.",
+  "language": "Jezik",
+  "poweredBy": "Pokreće",
+  "privacyPolicy": "Pravila privatnosti",
+  "support": "Podrška",
+  "cookiePolicy": "Pravila o uporabi kolačića",
+  "termsOfUse": "Uvjeti korištenja",
+  "volunteerTranslator": "Pomozite prevesti ovu stranicu",
+  "notFoundTitle": "404 Nije pronađeno",
+  "notFoundDescription": "Nije bilo moguće pronaći stranicu koju želite otvoriti.",
+  "goToHome": "Idi na naslovnicu",
+  "goToApp": "Idite u aplikaciju",
+  "pricing": "Cijene"
+}
