@@ -12,8 +12,8 @@ const Custom404: NextPageWithLayout = () => {
   return (
     <ErrorPage
       icon={FileSearchIcon}
-      title={t("errors_notFoundTitle")}
-      description={t("errors_notFoundDescription")}
+      title={t("notFoundTitle")}
+      description={t("notFoundDescription")}
     />
   );
 };

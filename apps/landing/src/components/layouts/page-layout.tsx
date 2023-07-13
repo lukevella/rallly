@@ -53,11 +53,11 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
   const { t } = useTranslation();
   return (
     <nav className={className}>
-      <NavLink href="/blog">{t("common_blog")}</NavLink>
+      <NavLink href="/blog">{t("blog")}</NavLink>
       <NavLink href="/pricing">
         <Trans i18nKey="pricing">Pricing</Trans>
       </NavLink>
-      <NavLink href="https://support.rallly.co">{t("common_support")}</NavLink>
+      <NavLink href="https://support.rallly.co">{t("support")}</NavLink>
     </nav>
   );
 };
@@ -124,7 +124,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                       href="/blog"
                     >
                       <NewspaperIcon className="h-5 w-5" />
-                      <Trans i18nKey="common_blog" />
+                      <Trans i18nKey="blog" />
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -142,7 +142,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                       href="https://support.rallly.co"
                     >
                       <LifeBuoyIcon className="h-5 w-5" />
-                      <Trans i18nKey="common_support" />
+                      <Trans i18nKey="support" />
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

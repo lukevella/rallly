@@ -63,7 +63,7 @@ const Footer: React.FunctionComponent = () => {
           <div className="my-8 text-gray-500">
             <p className="mb-4 leading-relaxed">
               <Trans
-                i18nKey="common_footerSponsor"
+                i18nKey="footerSponsor"
                 components={{
                   a: (
                     <Link
@@ -76,7 +76,7 @@ const Footer: React.FunctionComponent = () => {
             </p>
             <div>
               <Trans
-                i18nKey="common_footerCredit"
+                i18nKey="footerCredit"
                 components={{
                   a: (
                     <Link
@@ -114,7 +114,7 @@ const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:w-1/6">
           <div className="mb-8 font-medium">
-            <Trans i18nKey="homepage_links" defaults="Links" />
+            <Trans i18nKey="links" defaults="Links" />
           </div>
           <ul className="space-y-2">
             <li>
@@ -131,7 +131,7 @@ const Footer: React.FunctionComponent = () => {
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
-                <Trans i18nKey="common_discussions" defaults="Discussions" />
+                <Trans i18nKey="discussions" defaults="Discussions" />
               </Link>
             </li>
             <li>
@@ -139,7 +139,7 @@ const Footer: React.FunctionComponent = () => {
                 href="https://rallly.co/blog"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
-                <Trans i18nKey="common_blog" defaults="Blog" />
+                <Trans i18nKey="blog" defaults="Blog" />
               </Link>
             </li>
             <li>
@@ -147,14 +147,14 @@ const Footer: React.FunctionComponent = () => {
                 href="https://support.rallly.co"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
-                <Trans i18nKey="common_support" defaults="Support" />
+                <Trans i18nKey="support" defaults="Support" />
               </Link>
             </li>
           </ul>
         </div>
         <div className="lg:w-1/6">
           <div className="mb-8 font-medium">
-            <Trans i18nKey="common_poweredBy" defaults="Powered by" />
+            <Trans i18nKey="poweredBy" defaults="Powered by" />
           </div>
           <div className="block space-y-4">
             <div>
@@ -188,7 +188,7 @@ const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:w-2/6">
           <div className="mb-8 font-medium">
-            <Trans i18nKey="common_language" defaults="Language" />
+            <Trans i18nKey="language" defaults="Language" />
           </div>
           <div className="mb-4">
             <LanguageSelect />
@@ -198,7 +198,7 @@ const Footer: React.FunctionComponent = () => {
             className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
           >
             <LanguagesIcon className="mr-2 h-5 w-5" />
-            <Trans i18nKey="common_volunteerTranslator" /> &rarr;
+            <Trans i18nKey="volunteerTranslator" /> &rarr;
           </Link>
         </div>
       </div>
@@ -208,7 +208,7 @@ const Footer: React.FunctionComponent = () => {
             href="/privacy-policy"
             className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
           >
-            <Trans i18nKey="common_privacyPolicy" />
+            <Trans i18nKey="privacyPolicy" />
           </Link>
         </li>
         <li>
@@ -216,7 +216,7 @@ const Footer: React.FunctionComponent = () => {
             href="/cookie-policy"
             className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
           >
-            <Trans i18nKey="common_cookiePolicy" />
+            <Trans i18nKey="cookiePolicy" />
           </Link>
         </li>
         <li>
@@ -224,7 +224,7 @@ const Footer: React.FunctionComponent = () => {
             href="/terms-of-use"
             className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
           >
-            <Trans i18nKey="common_termsOfUse" />
+            <Trans i18nKey="termsOfUse" />
           </Link>
         </li>
       </ul>
