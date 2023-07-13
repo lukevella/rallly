@@ -1,9 +1,22 @@
 {
+  "createPageLikeThis": "Maak een pagina zoals deze in seconden!",
   "opensource": "We zijn Open-Source!",
   "startUsOnGithub": "Geef ons een ster op GitHub",
   "noLoginRequired": "Inloggen is niet vereist",
+  "metaTitle": "Rallly - Plan Groep Meetings",
   "metaDescription": "Maak polls en stem om de beste dag of tijd te vinden. Een gratis alternatief voor Doodle.",
   "getStarted": "Ga aan de slag",
   "headline": "Ditch de heen-en-weer e-mails",
-  "subheading": "Stroomlijn je planningsproces en bespaar tijd"
+  "subheading": "Stroomlijn je planningsproces en bespaar tijd",
+  "pcmagQuote": "“Maak in enkele ogenblikken een plannings poll op.\"",
+  "hubspotQuote": "De eenvoudigste keuze voor beschikbaarheid van grote groepen.\"",
+  "goodfirmsQuote": "“Uniek in zijn eenvoud en met minimale interactietijd.\"",
+  "popsciQuote": "\"De perfecte keuze als je je RSVP's simpel wilt houden.\"",
+  "ericQuote": "\"Als je planningsworkflow via e-mails verloopt, kan ik je sterk aanraden om Rallly uit te proberen om je planning op te stellen, voor een meer georganiseerde en minder stressvolle werkdag.\"",
+  "viaTrustpilot": "via Trustpilot",
+  "ericJobTitle": "Executive Assistant bij MIT",
+  "statsUsersRegistered": "45k+ geregistreerde gebruikers",
+  "statsPollsCreated": "100k+ polls aangemaakt",
+  "statsLanguagesSupported": "10+ talen worden ondersteund",
+  "hint": "Het is gratis! Geen login vereist."
 }
