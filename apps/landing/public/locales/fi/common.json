@@ -1,0 +1,20 @@
+{
+  "login": "Kirjaudu sisään",
+  "links": "Linkit",
+  "blog": "Blogi",
+  "discussions": "Keskustelut",
+  "footerCredit": "Tehnyt <a>@imlukevella</a>",
+  "footerSponsor": "Tämä projekti on käyttäjiensä rahoittama. Harkitse sen tukemista <a>tekemällä lahjoitus</a>.",
+  "language": "Kieli",
+  "poweredBy": "Palvelun tarjoaa",
+  "privacyPolicy": "Tietosuojakäytäntö",
+  "support": "Tuki",
+  "cookiePolicy": "Evästekäytäntö",
+  "termsOfUse": "Käyttöehdot",
+  "volunteerTranslator": "Auta sivuston kääntämisessä",
+  "notFoundTitle": "404 ei löytynyt",
+  "notFoundDescription": "Emme löytäneet hakemaasi sivua.",
+  "goToHome": "Siirry etusivulle",
+  "goToApp": "Avaa sovellus",
+  "pricing": "Hinnasto"
+}
