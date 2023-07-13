@@ -1,9 +1,19 @@
 {
+  "createPageLikeThis": "Erstelle eine Seite wie diese in Sekunden!",
   "opensource": "Wir sind Open-Source!",
   "startUsOnGithub": "Gebe uns einen Stern auf Github",
   "noLoginRequired": "Keine Anmeldung benötigt",
+  "metaTitle": "Rallly - Gruppenmeetings planen",
   "metaDescription": "Erstelle Umfragen und stimme ab, um den besten Tag oder die beste Zeit zu finden. Eine kostenlose Alternative zu Doodle.",
   "getStarted": "Los geht's",
   "headline": "Lass den ständigen E-Mail-Austausch hinter dir",
-  "subheading": "Spare Zeit mit einem reibungslosen Planungsprozess"
+  "subheading": "Spare Zeit mit einem reibungslosen Planungsprozess",
+  "popsciQuote": "„Die perfekte Wahl, wenn Sie Ihre RSVPs einfach halten wollen.“",
+  "ericQuote": "„Wenn Ihr Zeitplan-Workflow über E-Mails läuft, empfehle ich Ihnen für einen besser organisierten und weniger stressigen Arbeitsalltag dringend, mit Rallly Ihre Planungsaufgaben zu vereinfachen.“",
+  "viaTrustpilot": "via Trustpilot",
+  "ericJobTitle": "Executive Assistent bei MIT",
+  "statsUsersRegistered": "45k+ registrierte Benutzer",
+  "statsPollsCreated": "100k+ Umfragen erstellt",
+  "statsLanguagesSupported": "10+ unterstützte Sprachen",
+  "hint": "Es ist kostenlos! Kein Login erforderlich."
 }

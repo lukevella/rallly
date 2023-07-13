@@ -1,9 +1,22 @@
 {
+  "createPageLikeThis": "Vytvorte stránku, ako je táto, za pár sekúnd!",
   "opensource": "My sme Open-Source!",
   "startUsOnGithub": "Podporte nás na GitHube",
   "noLoginRequired": "Bez prihlásenia",
+  "metaTitle": "Rallly — Naplánujte skupinové stretnutia",
   "metaDescription": "Naplánujte si skupinové stretnutia v ten najvhodnejší čas. Bezplatná alternatíva k službe Doodle.",
   "getStarted": "Začnite tu",
   "headline": "Zabudnite na nekonečnú výmenu emailov",
-  "subheading": "Zefektívnite svoje plánovanie a ušetrite čas"
+  "subheading": "Zefektívnite svoje plánovanie a ušetrite čas",
+  "pcmagQuote": "\"Nastavte skupinové hlasovanie jednoducho a rýchlo.\"",
+  "hubspotQuote": "\"Najjednoduchšia voľba pre hľadanie voľného termínu skupiny.\"",
+  "goodfirmsQuote": "\"Unikátne v jednoduchosti a efektivite plánovania.\"",
+  "popsciQuote": "\"Perfektný výber, ak chcete aby vaše RSVP boli jednoduché.\"",
+  "ericQuote": "\"Ak ste doteraz plánovali skupinové stretnutia pomocou desiatok mailov, odporúčam vám skúsiť a použiť Rallly. Zjednoduší vám plánovanie a prinesie väčšiu pohodu do rutinných pracovných stretnutí.\"",
+  "viaTrustpilot": "z Trustpilot",
+  "ericJobTitle": "Výkonný asistent na MIT",
+  "statsUsersRegistered": "Viac ako 45 tisíc používateľov",
+  "statsPollsCreated": "Viac ako 100 tisíc ankiet vytvorených",
+  "statsLanguagesSupported": "S podporou viac ako 10 jazykov",
+  "hint": "Sme zdarma! Prihlasovanie nie je nutné."
 }
