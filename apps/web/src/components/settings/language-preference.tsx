@@ -1,5 +1,7 @@
+import { ArrowUpRight } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
@@ -44,7 +46,7 @@ export const LanguagePreference = () => {
             </FormItem>
           )}
         />
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-2">
           <Button
             variant="primary"
             disabled={!form.formState.isDirty}
@@ -52,6 +54,15 @@ export const LanguagePreference = () => {
             type="submit"
           >
             <Trans i18nKey="save" />
+          </Button>
+          <Button asChild variant="ghost">
+            <Link
+              target="_blank"
+              href="https://support.rallly.co/contribute/translations"
+            >
+              <Trans i18nKey="becomeATranslator" defaults="Help translate" />
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </form>
