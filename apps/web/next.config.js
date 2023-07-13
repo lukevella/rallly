@@ -10,7 +10,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 
 const nextConfig = {
-  i18n: i18n,
+  i18n: { ...i18n, localeDetection: false },
   productionBrowserSourceMaps: true,
   output: "standalone",
   transpilePackages: [
