@@ -15,24 +15,23 @@ export async function middleware(req: NextRequest) {
   const newUrl = nextUrl.clone();
   const res = NextResponse.next();
   const session = await getSession(req, res);
-  if (
+
+  // a protected path is one that requires to be logged in
+  const isProtectedPath = protectedPaths.some((protectedPath) =>
+    req.nextUrl.pathname.includes(protectedPath),
+  );
+
+  const isProtectedPathDueToRequiredAuth =
     process.env.AUTH_REQUIRED &&
-    session.user?.isGuest !== false &&
     !publicPaths.some((publicPath) =>
       req.nextUrl.pathname.startsWith(publicPath),
-    )
-  ) {
-    newUrl.pathname = "/login";
-    return NextResponse.redirect(newUrl);
-  }
+    );
 
-  if (
-    session.user?.isGuest !== false &&
-    protectedPaths.some((protectedPath) =>
-      req.nextUrl.pathname.includes(protectedPath),
-    )
-  ) {
+  const isGuest = session.user?.isGuest !== false;
+
+  if (isGuest && (isProtectedPathDueToRequiredAuth || isProtectedPath)) {
     newUrl.pathname = "/login";
+    newUrl.searchParams.set("redirect", req.nextUrl.pathname);
     return NextResponse.redirect(newUrl);
   }
 
