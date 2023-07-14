@@ -1,3 +1,4 @@
-export const linkToApp = (path?: string) => {
-  return process.env.NEXT_PUBLIC_APP_BASE_URL + (path ? path : "");
+export const linkToApp = (path = "") => {
+  const url = new URL(path, process.env.NEXT_PUBLIC_APP_BASE_URL);
+  return url.href;
 };
