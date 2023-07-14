@@ -191,5 +191,16 @@
   "billingStatusPaused": "Pausat",
   "billingStatusDeleted": "Cancel·lat",
   "endDate": "Data de finalització",
-  "dueDate": "Próxim pagament"
+  "dueDate": "Próxim pagament",
+  "billingStatusPlan": "Pla",
+  "billingPeriod": "Període",
+  "billingPeriodMonthly": "Mensual",
+  "billingPeriodYearly": "Anual",
+  "plan_unlimitedPolls": "Enquestes il·limitades",
+  "plan_unlimitedParticipants": "Participants il·limitats",
+  "monthlyBillingDescription": "per mes",
+  "plan_finalizePolls": "Acabar enquestes",
+  "plan_extendedPollLife": "Mantenir enquestes indefinides",
+  "plan_prioritySupport": "Suport prioritari",
+  "becomeATranslator": "Ajuda'ns a traduir"
 }
