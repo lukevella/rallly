@@ -1,4 +1,3 @@
-import { withSessionSsr } from "@rallly/backend/next";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -6,11 +5,11 @@ import { useTranslation } from "next-i18next";
 
 import { AuthLayout } from "../components/auth/auth-layout";
 import { RegisterForm } from "../components/auth/login-form";
-import { withSession } from "../components/user-provider";
-import { withPageTranslations } from "../utils/with-page-translations";
+import { getStaticTranslations } from "../utils/with-page-translations";
 
 const Page: NextPage = () => {
   const { t } = useTranslation();
+
   const router = useRouter();
   return (
     <AuthLayout>
@@ -19,13 +18,13 @@ const Page: NextPage = () => {
       </Head>
       <RegisterForm
         onRegistered={() => {
-          router.replace("/polls");
+          router.replace("/");
         }}
       />
     </AuthLayout>
   );
 };
 
-export const getServerSideProps = withSessionSsr(withPageTranslations());
+export const getStaticProps = getStaticTranslations;
 
-export default withSession(Page);
+export default Page;

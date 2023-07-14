@@ -11,7 +11,6 @@ import { useInterval } from "react-use";
 import spacetime from "spacetime";
 import soft from "timezone-soft";
 
-import { LoginModalProvider } from "@/components/auth/login-modal";
 import { Container } from "@/components/container";
 import FeedbackButton from "@/components/feedback";
 import { Spinner } from "@/components/spinner";
@@ -154,13 +153,11 @@ export const StandardLayout: React.FunctionComponent<{
     <UserProvider>
       <Toaster />
       <ModalProvider>
-        <LoginModalProvider>
-          <div className="flex min-h-screen flex-col" {...rest}>
-            <MainNav />
-            <div>{children}</div>
-          </div>
-          {process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ? <FeedbackButton /> : null}
-        </LoginModalProvider>
+        <div className="flex min-h-screen flex-col" {...rest}>
+          <MainNav />
+          <div>{children}</div>
+        </div>
+        {process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ? <FeedbackButton /> : null}
       </ModalProvider>
     </UserProvider>
   );

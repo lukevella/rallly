@@ -1,4 +1,5 @@
 import { trpc } from "@rallly/backend";
+import { ArrowRightIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
@@ -98,7 +99,7 @@ const VerifyCode: React.FunctionComponent<{
             {t("verificationCodeHelp")}
           </p>
         </fieldset>
-        <div className="mt-6 space-y-4 sm:flex sm:space-x-3 sm:space-y-0">
+        <div className="mt-6 flex flex-col gap-2 sm:flex-row">
           <Button
             loading={formState.isSubmitting || formState.isSubmitSuccessful}
             type="submit"
@@ -128,7 +129,7 @@ type RegisterFormData = {
 
 export const RegisterForm: React.FunctionComponent<{
   onClickLogin?: React.MouseEventHandler;
-  onRegistered: () => void;
+  onRegistered?: () => void;
   defaultValues?: Partial<RegisterFormData>;
 }> = ({ onClickLogin, onRegistered, defaultValues }) => {
   const { t } = useTranslation();
@@ -157,7 +158,7 @@ export const RegisterForm: React.FunctionComponent<{
 
           queryClient.invalidate();
 
-          onRegistered();
+          onRegistered?.();
           posthog?.identify(res.user.id, {
             email: res.user.email,
             name: res.user.name,
@@ -252,7 +253,7 @@ export const RegisterForm: React.FunctionComponent<{
         loading={formState.isSubmitting}
         type="submit"
         variant="primary"
-        className="h-12 px-6"
+        size="lg"
       >
         {t("continue")}
       </Button>
@@ -280,7 +281,7 @@ export const LoginForm: React.FunctionComponent<{
     e: React.MouseEvent<HTMLAnchorElement>,
     email: string,
   ) => void;
-  onAuthenticated: () => void;
+  onAuthenticated?: () => void;
 }> = ({ onAuthenticated, onClickRegister }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, getValues, formState, setError } = useForm<{
@@ -305,7 +306,7 @@ export const LoginForm: React.FunctionComponent<{
           if (!res.user) {
             throw new Error("Failed to authenticate user");
           } else {
-            onAuthenticated();
+            onAuthenticated?.();
             queryClient.invalidate();
             posthog?.identify(res.user.id, {
               email: res.user.email,
@@ -395,25 +396,27 @@ export const LoginForm: React.FunctionComponent<{
           </div>
         ) : null}
       </fieldset>
-      <div className="space-y-3">
+      <div className="flex flex-col gap-2">
         <Button
           loading={formState.isSubmitting}
           type="submit"
           size="lg"
           variant="primary"
-          className="h-12 w-full px-6"
+          className=""
         >
           {t("continue")}
         </Button>
-        <Link
-          href="/register"
-          className="btn-default h-12 w-full px-6"
-          onClick={(e) => {
-            onClickRegister?.(e, getValues("email"));
-          }}
-        >
-          {t("notRegistered")}
-        </Link>
+        <Button size="lg" asChild>
+          <Link
+            href="/register"
+            onClick={(e) => {
+              onClickRegister?.(e, getValues("email"));
+            }}
+          >
+            {t("createAnAccount")}
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+        </Button>
       </div>
     </form>
   );

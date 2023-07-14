@@ -6,17 +6,25 @@ const getVercelUrl = () => {
     : null;
 };
 
+function joinPath(baseUrl: string, subpath = "") {
+  if (subpath) {
+    const url = new URL(subpath, baseUrl);
+    return url.href;
+  }
+
+  return baseUrl;
+}
+
 export function absoluteUrl(subpath = "") {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ??
     getVercelUrl() ??
     `http://localhost:${port}`;
-  const url = new URL(subpath, baseUrl);
-  return url.href;
+
+  return joinPath(baseUrl, subpath);
 }
 
 export function shortUrl(subpath = "") {
   const baseUrl = process.env.NEXT_PUBLIC_SHORT_BASE_URL ?? absoluteUrl();
-  const url = new URL(subpath, baseUrl);
-  return url.href;
+  return joinPath(baseUrl, subpath);
 }

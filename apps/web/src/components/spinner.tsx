@@ -1,9 +1,9 @@
-import { SpinnerIcon } from "@rallly/icons";
+import { Loader2Icon } from "@rallly/icons";
 import clsx from "clsx";
 
 export const Spinner = (props: { className?: string }) => {
   return (
-    <SpinnerIcon
+    <Loader2Icon
       className={clsx("inline-block h-5 animate-spin", props.className)}
     />
   );
