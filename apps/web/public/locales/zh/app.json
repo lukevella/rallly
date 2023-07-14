@@ -163,14 +163,14 @@
   "timeShownInLocalTime": "当前显示时区为本地时间",
   "editDetailsDescription": "更改活动的详细信息。",
   "editOptionsDescription": "更改投票中可用的选项。",
-  "finalizeDescription": "选择活动投票的最后日期。",
+  "finalizeDescription": "选择此活动的最终决定日期。",
   "notificationsGuestTooltip": "创建一个帐户或登录以获取通知",
   "planFree": "免费",
   "dateAndTimeDescription": "更改您的首选日期/时间设置",
   "createdTime": "创建于 {relativeTime}",
   "permissionDeniedParticipant": "如果你不是投票创建者，你应该去邀请页面。",
   "goToInvite": "前往邀请页面",
-  "planPro": "Pro",
+  "planPro": "专业版",
   "Billing": "账单",
   "annualBilling": "年费 (节省 {discount}%)",
   "planUpgrade": "升级",
@@ -200,5 +200,6 @@
   "monthlyBillingDescription": "每月",
   "plan_finalizePolls": "完成投票",
   "plan_extendedPollLife": "无限期保留投票",
-  "plan_prioritySupport": "优先支持"
+  "plan_prioritySupport": "优先支持",
+  "becomeATranslator": "帮助翻译"
 }
