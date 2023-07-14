@@ -1,3 +1,27 @@
 {
-  "planFree": "Gratuït"
+  "pricing": "Preus",
+  "pricingDescription": "Comença de forma gratuïta. No cal iniciar sessió.",
+  "annualBilling": "Facturació anual (Estalvia un {discount}%)",
+  "planFree": "Gratuït",
+  "freeForever": "gratuït per sempre",
+  "unlimitedPolls": "Enquestes il·limitades",
+  "unlimitedParticipants": "Participants il·limitats",
+  "getStarted": "Comença gratis",
+  "planPro": "Pro",
+  "annualBillingDescription": "mensual amb facturació anual",
+  "monthlyBillingDescription": "per mes",
+  "finalizePolls": "Acaba enquestes",
+  "extendedPollLife": "Duració de l'enquesta augmentada",
+  "prioritySupport": "Suport prioritari",
+  "upgrade": "Millora",
+  "priceIncreaseInfo": "Els preus s'ajustaran de forma regular mentre es vagin afegint prestacions",
+  "faq": "Preguntes freqüents",
+  "canUseFree": "Puc utilitzar Rallly sense cap cost?",
+  "canUseFreeAnswer": "Sí, com a usuari bàsic pots crear enquestes i rep informació sobre la disponibilitat dels participants. Pots veure els resultats de la teva enquesta, però no podràs seleccionar una data final ni enviar invitacions al calendari.",
+  "whyUpgrade": "Per què m'hauria de subscriure?",
+  "whyUpgradeAnswer": "Quan actualitzes a un pla de pagament, seràs capaç de finalitzar les enquestes i enviar de forma automàtica invitacions als participants amb la data seleccionada. A més, mantindrem les teves enquestes de forma indefinida, és a dir, no s'eliminaran de forma automàtica tot i que han finalitzat.",
+  "howToUpgrade": "Com em subscric a un pla de pagament?",
+  "howToUpgradeAnswer": "Per subscriure't, pots anar a <a>Opcions de facturació</a> i fes click a <b>Millora</b>.",
+  "cancelSubscription": "Com puc cancel·lar la meva subscripció?",
+  "cancelSubscriptionAnswer": "Pots cancel·lar la teva subscripció quan vulguis, només has d'anar a <a>opcions de facturació</a>. Un cop allà podràs cancel·lar la teva subscripció, continuaràs tenint accés a les prestacions de pagament fins que finalitzi el període de subscripció. En finalitzar la subscripció, tornaràs al pla gratuït."
 }
