@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 3000;
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL = `http://localhost:${PORT}`;
 
+process.env.NEXT_PUBLIC_BASE_URL = baseURL;
+
 // Reference: https://playwright.dev/docs/test-configuration
 const config: PlaywrightTestConfig = {
   // Artifacts folder where screenshots, videos, and traces are stored.

@@ -6,10 +6,17 @@ const getVercelUrl = () => {
     : null;
 };
 
-export function absoluteUrl(path = "") {
+export function absoluteUrl(subpath = "") {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ??
     getVercelUrl() ??
     `http://localhost:${port}`;
-  return `${baseUrl}${path}`;
+  const url = new URL(subpath, baseUrl);
+  return url.href;
+}
+
+export function shortUrl(subpath = "") {
+  const baseUrl = process.env.NEXT_PUBLIC_SHORT_BASE_URL ?? absoluteUrl();
+  const url = new URL(subpath, baseUrl);
+  return url.href;
 }

@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
+import { shortUrl } from "@rallly/utils";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
@@ -29,7 +30,7 @@ export const InviteDialog = () => {
     }
   }, [state]);
 
-  const inviteLink = `${window.location.origin}/invite/${poll?.id}`;
+  const inviteLink = shortUrl(`/invite/${poll?.id}`);
   const [didCopy, setDidCopy] = React.useState(false);
 
   return (
