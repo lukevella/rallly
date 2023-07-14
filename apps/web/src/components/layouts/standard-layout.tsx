@@ -89,9 +89,6 @@ const Logo = () => {
       >
         {isBusy ? <Spinner /> : null}
       </div>
-      <div className="rounded-full border px-2 py-0.5 text-xs text-gray-400">
-        Beta
-      </div>
     </div>
   );
 };
