@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { PostHogProvider } from "@/contexts/posthog";
+import { useWhoAmI } from "@/contexts/whoami";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -48,7 +49,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
 
   const queryClient = trpc.useContext();
 
-  const { data: user } = trpc.whoami.get.useQuery();
+  const user = useWhoAmI();
   const billingQuery = trpc.user.getBilling.useQuery();
   const { data: userPreferences } = trpc.userPreferences.get.useQuery();
 
