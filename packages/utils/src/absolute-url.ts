@@ -13,3 +13,9 @@ export function absoluteUrl(path = "") {
     `http://localhost:${port}`;
   return `${baseUrl}${path}`;
 }
+
+export function shortUrl(subpath = "") {
+  const baseUrl = process.env.NEXT_PUBLIC_SHORT_BASE_URL ?? absoluteUrl();
+  const url = new URL(subpath, baseUrl);
+  return url.href;
+}

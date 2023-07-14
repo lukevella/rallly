@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 import { sendEmail } from "@rallly/emails";
-import { absoluteUrl } from "@rallly/utils";
+import { absoluteUrl, shortUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
@@ -140,7 +140,7 @@ export const polls = router({
         ? absoluteUrl(`/admin/${adminToken}`)
         : absoluteUrl(`/poll/${pollId}`);
 
-      const participantLink = absoluteUrl(`/invite/${pollId}`);
+      const participantLink = shortUrl(`/invite/${pollId}`);
 
       if (email && name) {
         await sendEmail("NewPollEmail", {
