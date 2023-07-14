@@ -17,6 +17,7 @@
   "priceIncreaseInfo": "Hintoja mukautetaan säännöllisesti uusien ominaisuuksien myötä",
   "faq": "Usein kysytyt kysymykset",
   "canUseFree": "Voinko käyttää Ralllya ilmaiseksi?",
+  "canUseFreeAnswer": "Kyllä, ilmaisena käyttäjänä voit luoda kyselyitä ja kerätä vastauksia osallistujilta. Näet kyselysi tulokset, mutta et voi valita sille lopullista päivämäärää tai lähettää kalenterikutsuja.",
   "whyUpgrade": "Miksi minun kannattaa vaihtaa maksulliseen sopimukseen?",
   "whyUpgradeAnswer": "Vaihdettuasi maksulliseen sopimukseen voit sulkea kyselysi ja lähettää automaattisesti kalenterikutsuja osallistujille valitsemallasi päivämäärällä. Lisäksi säilytämme kyselyitäsi pysyvästi, eli niitä ei poisteta automaattisesti edes niiden sulkeuduttua.",
   "howToUpgrade": "Miten vaihdan maksulliseen suunnitelmaan?",

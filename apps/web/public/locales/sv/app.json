@@ -66,7 +66,6 @@
   "no": "Nej",
   "noDatesSelected": "Inga datum valda",
   "notificationsDisabled": "Aviseringar har inaktiverats för <b>{title}</b>",
-  "notRegistered": "Skapa ett nytt konto →",
   "noVotes": "Ingen har röstat för detta alternativ",
   "ok": "Ok",
   "optional": "frivilligt",
@@ -115,5 +114,6 @@
   "permissionDeniedDescription": "Om du är skaparen av enkäten, vänligen logga in för att komma åt din enkät",
   "share": "Dela",
   "permissionDeniedParticipant": "Om du inte är skaparen av enkäten bör du gå till inbjudningssidan.",
-  "goToInvite": "Gå till inbjudningssidan"
+  "goToInvite": "Gå till inbjudningssidan",
+  "becomeATranslator": "Hjälp till att översätta"
 }

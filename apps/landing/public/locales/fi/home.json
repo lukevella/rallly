@@ -1,9 +1,22 @@
 {
+  "createPageLikeThis": "Luo tällainen sivu sekunneissa!",
   "opensource": "Lähdekoodimme on avointa!",
   "startUsOnGithub": "Anna meille tähti Githubissa",
   "noLoginRequired": "Kirjautumista ei tarvita",
+  "metaTitle": "Rallly - Suunnittele ryhmätapaamisia",
   "metaDescription": "Luo kyselyitä ja äänestä parhaasta päivästä tai ajankohdasta. Ilmainen vaihtoehto Doodlelle.",
   "getStarted": "Aloita tästä",
   "headline": "Sano hyvästi edestakaisin viestittelylle",
-  "subheading": "Aikatauluta sujuvasti ja säästä aikaa"
+  "subheading": "Aikatauluta sujuvasti ja säästä aikaa",
+  "pcmagQuote": "”Luo aikataulukysely niin lyhyessä ajassa kuin vain mahdollista.”",
+  "hubspotQuote": "”Isojen ryhmien vaivattomin valinta tiedustella sopivia aikoja.”",
+  "goodfirmsQuote": "”Yksinkertaisuudessaan ainutlaatuinen ja vie hyvin vähän aikaa.”",
+  "popsciQuote": "”Täydellinen valinta, jos haluat vastaukset kutsuihisi vaivattomasti.”",
+  "ericQuote": "”Jos tapasi sopia aikatauluista kulkee sähköpostitse, suosittelen vahvasti kokeilemaan Ralllya ja antaa sen helpottaa aikataulujasi, jotta työpäiväsi olisi selkeämpi ja rennompi.”",
+  "viaTrustpilot": "Trustpilotissa",
+  "ericJobTitle": "Johdon assistentti MIT:ssä",
+  "statsUsersRegistered": "45k+ käyttäjää",
+  "statsPollsCreated": "100k+ luotua kyselyä",
+  "statsLanguagesSupported": "10+ tuettua kieltä",
+  "hint": "Se ei maksa mitään! Kirjautumista ei tarvita."
 }

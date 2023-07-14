@@ -68,7 +68,6 @@
   "no": "Ei",
   "noDatesSelected": "Ei valittuja päivämääriä",
   "notificationsDisabled": "Kohteen <b>{title}</b> ilmoitukset on poistettu käytöstä",
-  "notRegistered": "Luo uusi käyttäjätili →",
   "noVotes": "Kukaan ei ole äänestänyt tätä vaihtoehtoa",
   "ok": "OK",
   "optional": "valinnainen",
@@ -201,5 +200,6 @@
   "monthlyBillingDescription": "kuukaudessa",
   "plan_finalizePolls": "Kyselyjen sulkeminen",
   "plan_extendedPollLife": "Umpeutumattomat kyselyt",
-  "plan_prioritySupport": "Ensisijainen tuki"
+  "plan_prioritySupport": "Ensisijainen tuki",
+  "becomeATranslator": "Auta kääntämisessä"
 }
