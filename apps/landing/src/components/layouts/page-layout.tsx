@@ -18,7 +18,7 @@ import { absoluteUrl } from "@rallly/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Trans, useTranslation } from "next-i18next";
+import { Trans } from "next-i18next";
 import * as React from "react";
 
 import { linkToApp } from "@/lib/linkToApp";
@@ -50,14 +50,17 @@ const NavLink = ({
 const Menu: React.FunctionComponent<{ className: string }> = ({
   className,
 }) => {
-  const { t } = useTranslation();
   return (
     <nav className={className}>
-      <NavLink href="/blog">{t("blog")}</NavLink>
       <NavLink href="/pricing">
-        <Trans i18nKey="pricing">Pricing</Trans>
+        <Trans i18nKey="pricing" />
       </NavLink>
-      <NavLink href="https://support.rallly.co">{t("support")}</NavLink>
+      <NavLink href="/blog">
+        <Trans i18nKey="blog" />
+      </NavLink>
+      <NavLink href="https://support.rallly.co">
+        <Trans i18nKey="support" />
+      </NavLink>
     </nav>
   );
 };
