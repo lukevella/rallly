@@ -1,9 +1,22 @@
 {
+  "createPageLikeThis": "Crea una pàgina com aquesta en segons!",
   "opensource": "Som de codi obert!",
   "startUsOnGithub": "Segueix-nos a GitHub",
   "noLoginRequired": "No cal iniciar sessió",
+  "metaTitle": "Rallly - Planifica reunions de grup",
   "metaDescription": "Crea enquestes i vota per trobar el millor dia o hora. Una alternativa gratuïta a Doodle.",
   "getStarted": "Comença",
   "headline": "Desfés-te dels fils de correu interminables",
-  "subheading": "Agilitza la programació d'esdeveniments i estalvia temps"
+  "subheading": "Agilitza la programació d'esdeveniments i estalvia temps",
+  "pcmagQuote": "\"Planifica una enquesta en molt poc temps.\"",
+  "hubspotQuote": "\"La forma més senzilla per conèixer la disponibilitat en grups grans.¨",
+  "goodfirmsQuote": "\"Únic en la senzillesa i requereix molt poc temps d'interacció.\"",
+  "popsciQuote": "\"La millor decisió si vols mantenir els RSVPs senzills.\"",
+  "ericQuote": "\"Si la teva planificació recau en correus, et recomano que li donis una oportunitat i deixa que Rallly simplifiqui les tasques de planificació per tenir un dia laborable més organitzat i sense tant estrès.\"",
+  "viaTrustpilot": "via Trustpilot",
+  "ericJobTitle": "Assistent executiu al MIT",
+  "statsUsersRegistered": "més de 45.000 usuaris registrats",
+  "statsPollsCreated": "més de 100.000 enquestes creades",
+  "statsLanguagesSupported": "més de 10 idiomes suportats",
+  "hint": "És gratuït! No fa falta un compte."
 }
