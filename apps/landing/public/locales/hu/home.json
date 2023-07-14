@@ -1,4 +1,5 @@
 {
+  "createPageLikeThis": "Hozz létre szavazást pillanatok alatt!",
   "opensource": "Nyílt forráskóduak vagyunk!",
   "startUsOnGithub": "Csillagozz be GitHub-on",
   "noLoginRequired": "Bejelentkezés nem szükséges",
@@ -6,5 +7,16 @@
   "metaDescription": "Hozz létre szavazásokat és szavazz, hogy megtaláld a legjobb napot vagy időt. Egy ingyenes Doodle alternatíva.",
   "getStarted": "Kezdjünk bele",
   "headline": "Kerüld el az adok-kapok levelezést",
-  "subheading": "Egyszerűsítsd az ütemezési folyamataid és takaríts meg időt"
+  "subheading": "Egyszerűsítsd az ütemezési folyamataid és takaríts meg időt",
+  "pcmagQuote": "\"Állítsd össze időpont szavazások a lehető legrövidebb idő alatt.\"",
+  "hubspotQuote": "\"A legegyszerűbb választás elérhetőség felméréshez nagy csoportok számára.\"",
+  "goodfirmsQuote": "\"Egyedi az egyszerűségében és minimális időráfordítást igényel.\"",
+  "popsciQuote": "\"A tökéletes választás, ha a résztvevő visszajelzéseket egyszerűen akarod kezelni.\"",
+  "ericQuote": "\"Ha emailes időpont menedzselések közt élsz, erősem ajánlom, hogy tégy egy próbát és engedd, hogy a Rallly leegyszerűsítse a időpont szervezési feladataid és jobban rendszerezett és kevésbé stresszes napokat hozzon.\"",
+  "viaTrustpilot": "Trustpilot által",
+  "ericJobTitle": "Ügyvezető Asszisztens az MIT-nál",
+  "statsUsersRegistered": "45 ezernél több felhasználó",
+  "statsPollsCreated": "100 ezernél több szavazás",
+  "statsLanguagesSupported": "Több mint 10 támogatott nyelv",
+  "hint": "Ingyenes! Nem igényel regisztrációt."
 }
