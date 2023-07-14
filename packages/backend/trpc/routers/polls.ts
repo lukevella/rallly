@@ -347,7 +347,6 @@ export const polls = router({
         where: {
           adminUrlId: input.urlId,
         },
-        rejectOnNotFound: false,
       });
 
       if (!res) {
@@ -404,7 +403,6 @@ export const polls = router({
         where: {
           id: input.urlId,
         },
-        rejectOnNotFound: false,
       });
 
       if (!res) {
