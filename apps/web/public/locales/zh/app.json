@@ -21,7 +21,7 @@
   "createdBy": "由 <b>{name}</b> 发起",
   "createPoll": "创建投票",
   "delete": "删除",
-  "deleteDate": "删除这个日期",
+  "deleteDate": "删除日期",
   "deletedPoll": "已删除投票",
   "deletedPollInfo": "该投票不存在。",
   "deleteParticipant": "删除 {name}?",
