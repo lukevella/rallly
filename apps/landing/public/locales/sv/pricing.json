@@ -1,1 +1,6 @@
-{}
+{
+  "planPro": "Pro",
+  "annualBillingDescription": "per månad, faktureras årligen",
+  "monthlyBillingDescription": "per månad",
+  "upgrade": "Uppgradera"
+}
