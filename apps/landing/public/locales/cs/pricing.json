@@ -1,3 +1,22 @@
 {
-  "planFree": "Zdarma"
+  "pricing": "Ceník",
+  "pricingDescription": "Začněte zdarma. Přihlášení není vyžadováno.",
+  "annualBilling": "Roční fakturace (Ušetříte {discount}%)",
+  "planFree": "Zdarma",
+  "freeForever": "zdarma navždy",
+  "unlimitedPolls": "Neomezený počet hlasování",
+  "unlimitedParticipants": "Neomezený počet účastníků",
+  "getStarted": "Začněte zdarma",
+  "planPro": "Pro",
+  "annualBillingDescription": "za měsíc, účtováno ročně",
+  "monthlyBillingDescription": "měsíčně",
+  "finalizePolls": "Dokončit hlasování",
+  "extendedPollLife": "Rozšířená délka hlasování",
+  "prioritySupport": "Přednostní podpora",
+  "upgrade": "Upgradovat",
+  "faq": "Často kladené otázky",
+  "canUseFree": "Mohu použít Rallly zdarma?",
+  "whyUpgrade": "Proč bych měl upgradovat?",
+  "howToUpgrade": "Jak mohu přejít na placený plán?",
+  "cancelSubscription": "Jak zrušit předplatné?"
 }
