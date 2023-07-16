@@ -201,5 +201,7 @@
   "plan_finalizePolls": "Polls voltooien",
   "plan_extendedPollLife": "Houd polls voor onbepaalde tijd",
   "plan_prioritySupport": "Snelle ondersteuning",
-  "becomeATranslator": "Help vertalen"
+  "becomeATranslator": "Help vertalen",
+  "noPolls": "Geen polls",
+  "noPollsDescription": "Ga aan de slag door een nieuwe poll te maken."
 }
