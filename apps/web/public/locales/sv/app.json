@@ -122,6 +122,7 @@
   "permissionDeniedParticipant": "Om du inte är skaparen av enkäten bör du gå till inbjudningssidan.",
   "goToInvite": "Gå till inbjudningssidan",
   "planPro": "Pro",
+  "annualBilling": "Årlig fakturering (Spara {discount}%)",
   "planUpgrade": "Uppgradera",
   "upgradeOverlayTitle": "Uppgradera",
   "billingStatusState": "Status",
