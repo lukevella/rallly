@@ -16,7 +16,7 @@ const Screenshot = () => {
     <>
       <m.div
         transition={{
-          delay: 1.5,
+          delay: 2,
           type: "spring",
           duration: 1,
           bounce: 0.4,
