@@ -201,5 +201,7 @@
   "plan_finalizePolls": "Finalize polls",
   "plan_extendedPollLife": "Keep polls indefinitely",
   "plan_prioritySupport": "Priority support",
-  "becomeATranslator": "Help translate"
+  "becomeATranslator": "Help translate",
+  "noPolls": "No polls",
+  "noPollsDescription": "Get started by creating a new poll."
 }

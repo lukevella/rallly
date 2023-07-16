@@ -35,10 +35,13 @@ const EmptyState = () => {
           <InboxIcon className="inline-block h-10 w-10 text-gray-500" />
         </div>
         <h3>
-          <Trans defaults="No polls" />
+          <Trans i18nKey="noPolls" defaults="No polls" />
         </h3>
         <p>
-          <Trans defaults="Get started by creating a new poll." />
+          <Trans
+            i18nKey="noPollsDescription"
+            defaults="Get started by creating a new poll."
+          />
         </p>
         <div className="mt-6">
           <Button variant="primary" asChild={true}>
