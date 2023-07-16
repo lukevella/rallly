@@ -94,7 +94,7 @@
   "userAlreadyExists": "使用这个电子邮箱的用户已存在",
   "userNotFound": "此电子邮件的用户不存在。",
   "validEmail": "请输入有效的电子邮件",
-  "verificationCodeHelp": "没有收到电子邮件？请检查您的垃圾邮件。",
+  "verificationCodeHelp": "没有收到电子邮件？请检查您的垃圾邮箱。",
   "verificationCodePlaceholder": "输入 6 位验证码",
   "verificationCodeSent": "验证码已发送至 <b>{email}</b> <a>更改</a>",
   "verifyYourEmail": "邮箱验证",
