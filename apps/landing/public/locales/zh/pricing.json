@@ -21,7 +21,7 @@
   "whyUpgrade": "我为什么要升级？",
   "whyUpgradeAnswer": "当您升级到付费计划时，您将能够完成投票并自动向参与者发送日历邀请以及您选择的日期。我们还将无限期保留您的投票，因此即使在最终确定后，它们也不会被自动删除。",
   "howToUpgrade": "如何升级到付费方案？",
-  "howToUpgradeAnswer": "如需要升级，您可以前往<a>订阅设置</a>并点击<b>升级</b>。",
+  "howToUpgradeAnswer": "如需要升级，您可以前往 <a>订阅设置</a> 并点击<b>升级</b>。",
   "cancelSubscription": "我如何取消我的订阅？",
   "cancelSubscriptionAnswer": "你可以随时前往 <a>订阅设置</a> 取消您的订阅。取消订阅后，您仍然可以访问付费方案，直到计费周期结束。之后，您将降级为免费方案。"
 }
