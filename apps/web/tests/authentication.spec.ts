@@ -76,7 +76,7 @@ test.describe.serial(() => {
 
       await page.getByText("Continue").click();
 
-      await expect(page.getByText("No polls")).toBeVisible();
+      await page.waitForURL("/polls");
     });
   });
 
@@ -129,7 +129,7 @@ test.describe.serial(() => {
 
       page.getByText("Click here").click();
 
-      await expect(page.getByText("No polls")).toBeVisible();
+      await page.waitForURL("/polls");
     });
 
     test("can login with verification code", async ({ page }) => {
@@ -147,7 +147,7 @@ test.describe.serial(() => {
 
       await page.getByText("Continue").click();
 
-      await expect(page.getByText("No polls")).toBeVisible();
+      await page.waitForURL("/polls");
     });
   });
 });
