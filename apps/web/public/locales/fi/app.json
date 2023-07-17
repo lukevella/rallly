@@ -201,5 +201,7 @@
   "plan_finalizePolls": "Kyselyjen sulkeminen",
   "plan_extendedPollLife": "Umpeutumattomat kyselyt",
   "plan_prioritySupport": "Ensisijainen tuki",
-  "becomeATranslator": "Auta kääntämisessä"
+  "becomeATranslator": "Auta kääntämisessä",
+  "noPolls": "Ei kyselyjä",
+  "noPollsDescription": "Aloita luomalla uusi kysely."
 }

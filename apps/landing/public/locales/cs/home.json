@@ -4,9 +4,19 @@
   "startUsOnGithub": "Dejte nám hvězdu na Github",
   "noLoginRequired": "Bez přihlášení",
   "metaTitle": "Rallly - Plánování skupinových setkání",
-  "metaDescription": "Vytvořte ankety a hlasujte pro nalezení nejlepšího dne nebo času. Bezplatná alternativa k Doodle.",
-  "getStarted": "Začněme",
+  "metaDescription": "Vytvořte hlasování a najděte společně nejlepší den nebo čas. Bezplatná alternativa k Doodle.",
+  "getStarted": "Začínáme",
   "headline": "Neřešte plánování termínů v e-mailech",
   "subheading": "Zjednodušte proces plánování a šetřete čas",
-  "pcmagQuote": "„Vytvořte anketu v co nejkratším čase.\""
+  "pcmagQuote": "„Vytvořte hlasování v co nejkratším čase.\"",
+  "hubspotQuote": "„Nejjednodušší volba při hlasování o termínech schůzek pro velké skupiny.“",
+  "goodfirmsQuote": "„Jedinečné ve své jednoduchosti a hlasování zabere minimum času.“",
+  "popsciQuote": "„Dokonalá volba, pokud chcete udržet své RSVP jednoduché.“",
+  "ericQuote": "„Pokud vaše plánování schůzek probíhá stále v emailech, důrazně vás vyzývám, abyste se vyzkoušeli Rallly a nechali ho zjednodušit vaše plánování schůzek. Bude více organizované a váš den bude méně stesující.“",
+  "viaTrustpilot": "skrze Trustpilot",
+  "ericJobTitle": "Výkonný asistent na MIT",
+  "statsUsersRegistered": "Více než 45.000 registrovaných uživatelů",
+  "statsPollsCreated": "Více než 100.000 vytvořených hlasování",
+  "statsLanguagesSupported": "Podporováno více než 10 jazyků",
+  "hint": "Je to zdarma! Přihlášení není vyžadováno."
 }

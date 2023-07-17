@@ -201,5 +201,7 @@
   "plan_finalizePolls": "Szavazások véglegesítése",
   "plan_extendedPollLife": "Szavazások megőrzése örökre",
   "plan_prioritySupport": "Kiemelt támogatás",
-  "becomeATranslator": "Segíts a fordításban"
+  "becomeATranslator": "Segíts a fordításban",
+  "noPolls": "Nincsenek szavazások",
+  "noPollsDescription": "Kezdj neki egy új szavazás létrehozásával."
 }

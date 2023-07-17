@@ -27,7 +27,6 @@
   "deleteParticipant": "Verwijder {name}?",
   "deleteParticipantDescription": "Weet je zeker dat je deze deelnemer wil verwijderen? Dit kan niet ongedaan worden gemaakt.",
   "deletePoll": "Verwijder poll",
-  "deletePollDescription": "Alle gegevens van deze poll zullen worden verwijderd. Om dit te bevestigen, type <s>\"{confirmText}\"</s> in de onderstaande invoerveld:",
   "deletingOptionsWarning": "Je verwijdert opties waar deelnemers op hebben gestemd. Hun keuzen zullen ook worden verwijderd.",
   "description": "Beschrijving",
   "descriptionPlaceholder": "Hallo iedereen, kies alstublieft de data die voor jou werken!",
@@ -87,7 +86,7 @@
   "stepSummary": "Stap {current} van {total}",
   "submit": "Verzenden",
   "timeFormat": "Tijdnotatie:",
-  "timeZone": "Tijdzone:",
+  "timeZone": "Tijdzone",
   "title": "Titel",
   "titlePlaceholder": "Maandelijkse Meetup",
   "today": "Vandaag",
@@ -201,5 +200,7 @@
   "plan_finalizePolls": "Polls voltooien",
   "plan_extendedPollLife": "Houd polls voor onbepaalde tijd",
   "plan_prioritySupport": "Snelle ondersteuning",
-  "becomeATranslator": "Help vertalen"
+  "becomeATranslator": "Help vertalen",
+  "noPolls": "Geen polls",
+  "noPollsDescription": "Ga aan de slag door een nieuwe poll te maken."
 }

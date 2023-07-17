@@ -1,9 +1,22 @@
 {
+  "createPageLikeThis": "在几秒钟内创建一个这样的页面！",
   "opensource": "我们是开源的！",
   "startUsOnGithub": "在 GitHub 上 Star",
   "noLoginRequired": "无需登录",
+  "metaTitle": "Rallly - 安排小组会议",
   "metaDescription": "通过投票安排最和适合时间。免费替代 Doodle。",
   "getStarted": "开始",
-  "headline": "抛弃邮件沟通",
-  "subheading": "简化您的日程安排流程，并节省时间"
+  "headline": "抛弃传统邮件沟通",
+  "subheading": "简化您的日程安排流程并节约时间",
+  "pcmagQuote": "“在尽可能短的时间内进行一次计划投票。”",
+  "hubspotQuote": "“为大型团体提供投票的最简单选择。”",
+  "goodfirmsQuote": "“其独特之处在于其简单性，仅需最低限度的交互。”",
+  "popsciQuote": "“如果你想要保持你的RSVP简单，这是完美的选择。”",
+  "ericQuote": "“如果您使用电子邮件安排工作流程，我强烈建议您尝试让 Rallly 简化您的日程安排，让工作更有条理、压力更小”",
+  "viaTrustpilot": "前往 Trustpilot",
+  "ericJobTitle": "MIT 行政助理",
+  "statsUsersRegistered": "45k+ 注册用户",
+  "statsPollsCreated": "已创建 100k+ 投票",
+  "statsLanguagesSupported": "10+ 语言支持",
+  "hint": "无需登录即可免费使用"
 }

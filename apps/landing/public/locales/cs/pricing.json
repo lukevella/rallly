@@ -1,3 +1,27 @@
 {
-  "planFree": "Zdarma"
+  "pricing": "Ceník",
+  "pricingDescription": "Začněte zdarma. Přihlášení není vyžadováno.",
+  "annualBilling": "Roční fakturace (Ušetříte {discount}%)",
+  "planFree": "Zdarma",
+  "freeForever": "zdarma navždy",
+  "unlimitedPolls": "Neomezený počet hlasování",
+  "unlimitedParticipants": "Neomezený počet účastníků",
+  "getStarted": "Začněte zdarma",
+  "planPro": "Pro",
+  "annualBillingDescription": "za měsíc, účtováno ročně",
+  "monthlyBillingDescription": "měsíčně",
+  "finalizePolls": "Dokončit hlasování",
+  "extendedPollLife": "Rozšířená délka hlasování",
+  "prioritySupport": "Přednostní podpora",
+  "upgrade": "Upgradovat",
+  "priceIncreaseInfo": "Ceny budou pravidelně upravovány, jakmile poroste počet podporvaných funkcí",
+  "faq": "Často kladené otázky",
+  "canUseFree": "Mohu použít Rallly zdarma?",
+  "canUseFreeAnswer": "Ano, jako neplaticí uživatel můžete vytvořit ankety a získat informace o časových možnostech hlasujících. Uvidíte výsledky vašeho hlasování, ale nebudete moci vybrat konečné datum nebo rozesílat pozvánky do kalendářů.",
+  "whyUpgrade": "Proč bych měl upgradovat?",
+  "whyUpgradeAnswer": "Když přejdete na placený tarif, budete moci dokončit vaše ankety a automaticky odeslat pozvánky do kalendáře se zvoleným datem. Vaše ankety si také uložíme po neomezenou dobu, takže nebudou automaticky smazány ani po jejich dokončení.",
+  "howToUpgrade": "Jak mohu přejít na placený plán?",
+  "howToUpgradeAnswer": "Chcete-li upgradovat, můžete přejít do <a>nastavení fakturace</a> a klikněte na <b>Upgrade</b>.",
+  "cancelSubscription": "Jak zrušit předplatné?",
+  "cancelSubscriptionAnswer": "Předplatné můžete kdykoliv zrušit tak, že přejdete do <a>nastavení fakturace</a>. Jakmile zrušíte předplatné, budete mít přístup k placenému tarifu až do konce fakturačního období. Poté budete poníženi na bezplatný plán."
 }
