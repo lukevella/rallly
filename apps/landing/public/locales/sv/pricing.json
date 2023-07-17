@@ -6,6 +6,7 @@
   "annualBillingDescription": "per månad, faktureras årligen",
   "monthlyBillingDescription": "per månad",
   "upgrade": "Uppgradera",
+  "canUseFree": "Kan jag använda Rallly gratis?",
   "whyUpgrade": "Varför ska jag uppgradera?",
   "cancelSubscription": "Hur avbryter jag min prenumeration?"
 }
