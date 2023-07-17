@@ -7,8 +7,10 @@ import React from "react";
 
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { LoginForm } from "@/components/auth/login-form";
+import { StandardLayout } from "@/components/layouts/standard-layout";
 import { PageDialog } from "@/components/page-dialog";
 import { useWhoAmI } from "@/contexts/whoami";
+import { NextPageWithLayout } from "@/types";
 
 import { getStaticTranslations } from "../utils/with-page-translations";
 
@@ -26,7 +28,7 @@ const Redirect = () => {
   );
 };
 
-const Page: NextPage<{ referer: string | null }> = () => {
+const Page: NextPageWithLayout<{ referer: string | null }> = () => {
   const { t } = useTranslation();
   const whoami = useWhoAmI();
 
@@ -44,6 +46,10 @@ const Page: NextPage<{ referer: string | null }> = () => {
       </AuthLayout>
     </>
   );
+};
+
+Page.getLayout = (page) => {
+  return <StandardLayout hideNav={true}>{page}</StandardLayout>;
 };
 
 export default Page;
