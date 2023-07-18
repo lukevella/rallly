@@ -1,9 +1,12 @@
 {
+  "createPageLikeThis": "Crie uma página como esta em segundos!",
   "opensource": "Somos Código Aberto!",
   "startUsOnGithub": "Qualifique-nos no GitHub",
   "noLoginRequired": "Não é necessário iniciar sessão",
+  "metaTitle": "Rallly - Agende Reuniões de Grupo",
   "metaDescription": "Crie sondagens e vote para encontrar o melhor dia ou hora. Uma alternativa gratuita ao Doodle.",
   "getStarted": "Começar",
   "headline": "Livre-se do vai e volta de emails",
-  "subheading": "Agilize seu processo de agendamento e poupe tempo"
+  "subheading": "Agilize seu processo de agendamento e poupe tempo",
+  "pcmagQuote": "“Configure uma enquete agendada no menor tempo possível”"
 }
