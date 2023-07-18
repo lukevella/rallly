@@ -1,22 +1,21 @@
 import { trpc } from "@rallly/backend";
-import { withSessionSsr } from "@rallly/backend/next";
 import { CheckCircleIcon } from "@rallly/icons";
 import clsx from "clsx";
-import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Trans, useTranslation } from "next-i18next";
 import { useMount } from "react-use";
 
 import { AuthLayout } from "@/components/layouts/auth-layout";
+import { StandardLayout } from "@/components/layouts/standard-layout";
 import { Spinner } from "@/components/spinner";
-import { withSession } from "@/components/user-provider";
+import { NextPageWithLayout } from "@/types";
 import { usePostHog } from "@/utils/posthog";
-import { withPageTranslations } from "@/utils/with-page-translations";
+import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const defaultRedirectPath = "/polls";
 
-export const Page = () => {
+const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
 
   const router = useRouter();
@@ -76,8 +75,10 @@ export const Page = () => {
   );
 };
 
-export default withSession(Page);
+Page.getLayout = (page) => {
+  return <StandardLayout hideNav={true}>{page}</StandardLayout>;
+};
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(
-  withPageTranslations(),
-);
+export default Page;
+
+export const getStaticProps = getStaticTranslations;

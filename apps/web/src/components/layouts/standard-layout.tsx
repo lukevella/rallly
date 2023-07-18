@@ -2,6 +2,7 @@ import { ClockIcon, ListIcon, LogInIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import { AnimatePresence, m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -116,7 +117,16 @@ const Clock = () => {
 
 const MainNav = () => {
   return (
-    <div className="border-b bg-gray-50/50">
+    <m.div
+      variants={{
+        hidden: { y: -56, opacity: 0, height: 0 },
+        visible: { y: 0, opacity: 1, height: "auto" },
+      }}
+      initial={"hidden"}
+      animate="visible"
+      exit={"hidden"}
+      className="border-b bg-gray-50/50"
+    >
       <Container className="flex h-14 items-center justify-between gap-4">
         <div className="flex shrink-0">
           <Logo />
@@ -142,20 +152,37 @@ const MainNav = () => {
           <UserDropdown />
         </div>
       </Container>
-    </div>
+    </m.div>
   );
 };
 
 export const StandardLayout: React.FunctionComponent<{
   children?: React.ReactNode;
-}> = ({ children, ...rest }) => {
+  hideNav?: boolean;
+}> = ({ children, hideNav, ...rest }) => {
+  const key = hideNav ? "no-nav" : "nav";
   return (
     <UserProvider>
       <Toaster />
       <ModalProvider>
         <div className="flex min-h-screen flex-col" {...rest}>
-          <MainNav />
-          <div>{children}</div>
+          <AnimatePresence initial={false}>
+            {!hideNav ? <MainNav /> : null}
+          </AnimatePresence>
+          <AnimatePresence mode="wait" initial={false}>
+            <m.div
+              key={key}
+              variants={{
+                hidden: { opacity: 0, y: -56 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              initial="hidden"
+              animate="visible"
+              exit={{ opacity: 0, y: 56 }}
+            >
+              {children}
+            </m.div>
+          </AnimatePresence>
         </div>
         {process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ? <FeedbackButton /> : null}
       </ModalProvider>

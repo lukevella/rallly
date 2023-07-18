@@ -1,5 +1,4 @@
 import { Loader2Icon } from "@rallly/icons";
-import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
@@ -7,17 +6,20 @@ import React from "react";
 
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { LoginForm } from "@/components/auth/login-form";
+import { StandardLayout } from "@/components/layouts/standard-layout";
 import { PageDialog } from "@/components/page-dialog";
 import { useWhoAmI } from "@/contexts/whoami";
+import { NextPageWithLayout } from "@/types";
 
 import { getStaticTranslations } from "../utils/with-page-translations";
 
 const Redirect = () => {
   const router = useRouter();
+  const [redirect] = React.useState(router.query.redirect as string);
 
   React.useEffect(() => {
-    router.replace((router.query.redirect as string) ?? "/");
-  });
+    router.replace(redirect ?? "/");
+  }, [router, redirect]);
 
   return (
     <PageDialog>
@@ -26,7 +28,7 @@ const Redirect = () => {
   );
 };
 
-const Page: NextPage<{ referer: string | null }> = () => {
+const Page: NextPageWithLayout<{ referer: string | null }> = () => {
   const { t } = useTranslation();
   const whoami = useWhoAmI();
 
@@ -44,6 +46,10 @@ const Page: NextPage<{ referer: string | null }> = () => {
       </AuthLayout>
     </>
   );
+};
+
+Page.getLayout = (page) => {
+  return <StandardLayout hideNav={true}>{page}</StandardLayout>;
 };
 
 export default Page;
