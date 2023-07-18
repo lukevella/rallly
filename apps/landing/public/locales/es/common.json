@@ -9,8 +9,12 @@
   "poweredBy": "Con tecnología de",
   "privacyPolicy": "Política de privacidad",
   "support": "Soporte",
+  "cookiePolicy": "Política de cookies",
+  "termsOfUse": "Términos y condiciones de uso",
   "volunteerTranslator": "Ayuda a traducir esta página",
   "notFoundTitle": "404 Página no encontrada",
   "notFoundDescription": "No pudimos encontrar la página que estás buscando.",
-  "goToHome": "Ir al inicio"
+  "goToHome": "Ir al inicio",
+  "goToApp": "Ir a app",
+  "pricing": "Precios"
 }
