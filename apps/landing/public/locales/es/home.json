@@ -1,6 +1,22 @@
 {
+  "createPageLikeThis": "¡Crea una página como ésta en segundos!",
+  "opensource": "¡Somos de código abierto!",
   "startUsOnGithub": "Seguir el proyecto en GitHub",
   "noLoginRequired": "No es necesario iniciar sesión",
+  "metaTitle": "Rallly - Programar reuniones de grupo",
   "metaDescription": "Crea encuestas y vota para encontrar el mejor día o la mejor hora. Una alternativa gratuita a Doodle.",
-  "getStarted": "Empezar"
+  "getStarted": "Empezar",
+  "headline": "Olvídate del ir y venir de correos",
+  "subheading": "Agiliza tu proceso de planeación y ahorra tiempo",
+  "pcmagQuote": "Configura una encuesta de horarios disponibles en el menor tiempo posible",
+  "hubspotQuote": "La elección más simple para encuestas de disponibilidad para grupos grandes",
+  "goodfirmsQuote": "Único en su simplicidad y requiere un mínimo de tiempo de interacción",
+  "popsciQuote": "La elección perfecta si quieres mantener tus confirmaciones de asistencia simples",
+  "ericQuote": "Si tu flujo de programación de horarios vive en correos electrónicos, te recomiendo ampliamente que pruebes Rally y permitas que te ayude a simplificar tus tareas de programación para tener un día de trabajo más organizado y menos estresante",
+  "viaTrustpilot": "Trustpilot",
+  "ericJobTitle": "Asistente Ejecutivo en MIT",
+  "statsUsersRegistered": "Más de 45k usuarios registrados",
+  "statsPollsCreated": "Más de 100k encuestas creadas",
+  "statsLanguagesSupported": "Más de 10 idiomas soportados",
+  "hint": "¡Es gratis! No se requiere iniciar sesión."
 }
