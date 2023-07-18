@@ -34,7 +34,7 @@ export const TopBarTitle = ({
   return (
     <div className="flex h-9 min-w-0 items-center gap-2.5">
       {/* <Icon className="-ml-0.5 h-6 w-6 shrink-0" /> */}
-      <div className="truncate font-bold tracking-tight">{title}</div>
+      <div className="truncate font-medium tracking-tight">{title}</div>
     </div>
   );
 };
