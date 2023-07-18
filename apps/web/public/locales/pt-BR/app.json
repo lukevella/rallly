@@ -200,5 +200,8 @@
   "monthlyBillingDescription": "por mês",
   "plan_finalizePolls": "Finalizar enquetes",
   "plan_extendedPollLife": "Manter enquetes indefinidamente",
-  "plan_prioritySupport": "Suporte prioritário"
+  "plan_prioritySupport": "Suporte prioritário",
+  "becomeATranslator": "Ajude a traduzir",
+  "noPolls": "Sem enquetes",
+  "noPollsDescription": "Comece criando uma nova enquete."
 }
