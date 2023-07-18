@@ -15,10 +15,11 @@ import { getStaticTranslations } from "../utils/with-page-translations";
 
 const Redirect = () => {
   const router = useRouter();
+  const [redirect] = React.useState(router.query.redirect as string);
 
   React.useEffect(() => {
-    router.replace((router.query.redirect as string) ?? "/");
-  });
+    router.replace(redirect ?? "/");
+  }, [router, redirect]);
 
   return (
     <PageDialog>
