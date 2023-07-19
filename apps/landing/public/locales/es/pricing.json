@@ -1,1 +1,27 @@
-{}
+{
+  "pricing": "Precios",
+  "pricingDescription": "Comience a utilizarlo gratis. No se necesita tarjeta de crédito.",
+  "annualBilling": "Facturación anual (Ahorre {discount}%)",
+  "planFree": "Gratis",
+  "freeForever": "gratis para siempre",
+  "unlimitedPolls": "Encuestas ilimitadas",
+  "unlimitedParticipants": "Sin límite de participantes",
+  "getStarted": "Comience gratis",
+  "planPro": "Pro",
+  "annualBillingDescription": "por mes, facturado anualmente",
+  "monthlyBillingDescription": "por mes",
+  "finalizePolls": "Finalizar encuestas",
+  "extendedPollLife": "Vida extendida de la encuesta",
+  "prioritySupport": "Soporte prioritario",
+  "upgrade": "Mejorar",
+  "priceIncreaseInfo": "Los precios se ajustarán regularmente a medida que se añadan más características",
+  "faq": "Preguntas frecuentes",
+  "canUseFree": "¿Puedo usar Rallly de forma gratuita?",
+  "canUseFreeAnswer": "Sí, como usuario gratuito puedes crear encuestas y ver la disponibilidad de tus participantes. Verás los resultados de tu encuesta, pero no podrás seleccionar una fecha final o enviar invitaciones al calendario.",
+  "whyUpgrade": "¿Por qué debo mejorar?",
+  "whyUpgradeAnswer": "Al actualizar a un plan de pago, podrás finalizar tus encuestas y enviar automáticamente invitaciones de calendario a tus participantes con la fecha seleccionada. También mantendremos sus encuestas indefinidamente para que no sean eliminadas automáticamente incluso después de que hayan finalizado.",
+  "howToUpgrade": "¿Cómo puedo cambiar a un plan de pago?",
+  "howToUpgradeAnswer": "Para mejorar, puedes ir a tu <a>configuración de facturación</a> y hacer clic en <b>Actualizar</b>.",
+  "cancelSubscription": "¿Cómo puedo cancelar mi suscripción?",
+  "cancelSubscriptionAnswer": "Puedes cancelar tu suscripción en cualquier momento dirigiéndote a tu <a>configuración de facturación</a>. Una vez que cancele su suscripción, tendrá acceso a su plan de pago hasta el final de su período de facturación. Después, usted será degradado a un plan gratuito."
+}
