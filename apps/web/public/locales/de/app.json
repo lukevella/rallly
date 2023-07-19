@@ -201,5 +201,7 @@
   "plan_finalizePolls": "Umfragen abschließen",
   "plan_extendedPollLife": "Umfragen auf unbestimmte Zeit behalten",
   "plan_prioritySupport": "Vorrangiger Support",
-  "becomeATranslator": "Hilf bei der Übersetzung"
+  "becomeATranslator": "Hilf bei der Übersetzung",
+  "noPolls": "Keine Umfragen",
+  "noPollsDescription": "Starte, indem du eine Umfrage erstellst."
 }
