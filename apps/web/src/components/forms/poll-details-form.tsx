@@ -1,13 +1,17 @@
-import { Form, FormItem, FormLabel } from "@rallly/ui/form";
+import { FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { Label } from "@rallly/ui/label";
+import { Switch } from "@rallly/ui/switch";
 import { Textarea } from "@rallly/ui/textarea";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
-import { requiredString } from "../../utils/form-validation";
-import { PollFormProps } from "./types";
+import WeekCalendar from "@/components/forms/poll-options-form/week-calendar";
+import { requiredString } from "@/utils/form-validation";
+
+import { NewEventData, PollFormProps } from "./types";
 
 export interface PollDetailsData {
   title: string;
@@ -15,77 +19,97 @@ export interface PollDetailsData {
   description: string;
 }
 
-export const PollDetailsForm: React.FunctionComponent<
-  PollFormProps<PollDetailsData>
-> = ({ name, defaultValues, onSubmit, onChange, className }) => {
+export const PollDetailsForm = () => {
   const { t } = useTranslation();
-  const form = useForm<PollDetailsData>({ defaultValues });
+  const form = useFormContext<NewEventData>();
 
   const {
-    handleSubmit,
     register,
-    watch,
-    formState: { errors },
+    setValue,
+    control,
+    formState: { errors, touchedFields },
   } = form;
 
-  React.useEffect(() => {
-    if (onChange) {
-      const subscription = watch(onChange);
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [onChange, watch]);
-
   return (
-    <Form {...form}>
-      <form
-        id={name}
-        className={clsx("space-y-6", className)}
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {/* <div className="mb-8">
-          <h2 className="">
-            <Trans i18nKey="eventDetails" defaults="Event Details" />
-          </h2>
-          <p className="leading-6 text-gray-500">
-            <Trans
-              i18nKey="eventDetailsDescription"
-              defaults="What are you organzing?"
-            />
-          </p>
-        </div> */}
-        <FormItem>
-          <FormLabel htmlFor="title">{t("title")}</FormLabel>
-          <Input
-            type="text"
-            id="title"
-            className={clsx("w-full", {
-              "input-error": errors.title,
-            })}
-            placeholder={t("titlePlaceholder")}
-            {...register("title", { validate: requiredString })}
-          />
-        </FormItem>
-        <FormItem>
-          <FormLabel>{t("location")}</FormLabel>
-          <Input
-            type="text"
-            id="location"
-            placeholder={t("locationPlaceholder")}
-            {...register("location")}
-          />
-        </FormItem>
-        <FormItem>
-          <FormLabel htmlFor="description">{t("description")}</FormLabel>
-          <Textarea
-            id="description"
-            placeholder={t("descriptionPlaceholder")}
-            rows={5}
-            {...register("description")}
-          />
-        </FormItem>
-      </form>
-    </Form>
+    <div className="grid gap-4 py-1">
+      <FormItem>
+        <FormLabel htmlFor="title">{t("title")}</FormLabel>
+        <Input
+          type="text"
+          id="title"
+          className={clsx("w-full", {
+            "input-error": errors.eventDetails?.title,
+          })}
+          placeholder={t("titlePlaceholder")}
+          {...register("eventDetails.title", { validate: requiredString })}
+        />
+      </FormItem>
+      <FormItem>
+        <FormLabel>{t("location")}</FormLabel>
+        <Input
+          type="text"
+          id="location"
+          placeholder={t("locationPlaceholder")}
+          {...register("eventDetails.location")}
+        />
+      </FormItem>
+      <FormItem>
+        <FormLabel htmlFor="description">{t("description")}</FormLabel>
+        <Textarea
+          id="description"
+          placeholder={t("descriptionPlaceholder")}
+          rows={5}
+          {...register("eventDetails.description")}
+        />
+      </FormItem>
+      <hr />
+      <FormField
+        control={control}
+        name="allDay"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel></FormLabel>
+            <div className="flex items-center gap-x-2">
+              <Switch
+                checked={field.value}
+                onCheckedChange={(checked) => {
+                  React.startTransition(() => {
+                    field.onChange(checked);
+                  });
+                }}
+              />
+              <Label htmlFor="allDay">{t("allDay")}</Label>
+            </div>
+          </FormItem>
+        )}
+      />
+      {!form.watch("allDay") ? (
+        <FormField
+          control={control}
+          name="options.options"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Select times</FormLabel>
+              <WeekCalendar
+                options={field.value ?? []}
+                date={
+                  new Date(form.watch("options.navigationDate") ?? Date.now())
+                }
+                onNavigate={(date) => {
+                  setValue("options.navigationDate", date.toISOString());
+                }}
+                onChange={field.onChange}
+                duration={form.watch("options.duration")}
+                onChangeDuration={(duration) => {
+                  setValue("options.duration", duration);
+                }}
+              />
+            </FormItem>
+          )}
+        />
+      ) : (
+        <div>Date Picker</div>
+      )}
+    </div>
   );
 };

@@ -4871,7 +4871,14 @@ create-require@^1.1.0:
   resolved "https://registry.npmjs.org/create-require/-/create-require-1.1.1.tgz"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
-cross-spawn@^7.0.2, cross-spawn@^7.0.3:
+cross-env@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-7.0.3.tgz#865264b29677dc015ba8418918965dd232fc54cf"
+  integrity sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==
+  dependencies:
+    cross-spawn "^7.0.1"
+
+cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.3.tgz"
   integrity sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
@@ -8356,10 +8363,10 @@ quick-lru@^5.1.1:
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-5.1.1.tgz"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-react-big-calendar@^1.5.0:
-  version "1.6.8"
-  resolved "https://registry.npmjs.org/react-big-calendar/-/react-big-calendar-1.6.8.tgz"
-  integrity sha512-uDuHoqH5/Wnk3tBxXnrXQD5w9FEofd1Ch1vMpLuv2LRBqrF2u7FcIruc80urizrkxcDWrTGxa7bsr0a9bby4Mw==
+react-big-calendar@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/react-big-calendar/-/react-big-calendar-1.8.1.tgz#07886a66086fcae16934572c5ace8c4c433dbbed"
+  integrity sha512-yEiScxReMrRCc0qFdZIKY/L6+argK4ZiYzLk5bck8CRYVbHjCCb/6Ictv42kPs/g3Q4RIb8+GUjDzk/uFtu76Q==
   dependencies:
     "@babel/runtime" "^7.20.7"
     clsx "^1.2.1"

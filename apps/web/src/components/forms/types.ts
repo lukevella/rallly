@@ -4,6 +4,7 @@ import { UserDetailsData } from "./user-details-form";
 
 export interface NewEventData {
   currentStep: number;
+  allDay: boolean;
   eventDetails?: Partial<PollDetailsData>;
   options?: Partial<PollOptionsData>;
   userDetails?: Partial<UserDetailsData>;

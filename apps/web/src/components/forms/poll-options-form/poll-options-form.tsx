@@ -134,15 +134,10 @@ const PollOptionsForm: React.FunctionComponent<
   });
 
   return (
-    <Form {...form}>
-      <form
-        id={name}
-        className={clsx("w-full", className)}
-        onSubmit={handleSubmit(onSubmit, openHelpModal)}
-      >
-        {calendarHelpModal}
-        {dateOrTimeRangeModal}
-        {/* <div className="mb-8">
+    <div>
+      {calendarHelpModal}
+      {dateOrTimeRangeModal}
+      {/* <div className="mb-8">
             <h2 className="">
               <Trans i18nKey="dates" defaults="Dates" />
             </h2>
@@ -153,86 +148,85 @@ const PollOptionsForm: React.FunctionComponent<
               />
             </p>
           </div> */}
-        <FormItem>
-          <div className="mb-3 flex flex-col gap-x-4 gap-y-3 sm:flex-row">
-            <div className="grow">
-              <Controller
-                control={control}
-                name="timeZone"
-                render={({ field }) => (
-                  <TimeZonePicker
-                    value={field.value}
-                    onBlur={field.onBlur}
-                    onChange={(timeZone) => {
-                      setValue("timeZone", timeZone, { shouldTouch: true });
-                    }}
-                    disabled={datesOnly}
-                  />
-                )}
-              />
-            </div>
-            <div className="flex space-x-3">
-              <div className="segment-button w-full sm:w-auto">
-                <button
-                  className={clsx({
-                    "segment-button-active": selectedView.value === "month",
-                  })}
-                  onClick={() => {
-                    setValue("view", "month");
+      <FormItem>
+        <div className="mb-3 flex flex-col gap-x-4 gap-y-3 sm:flex-row">
+          <div className="grow">
+            <Controller
+              control={control}
+              name="timeZone"
+              render={({ field }) => (
+                <TimeZonePicker
+                  value={field.value}
+                  onBlur={field.onBlur}
+                  onChange={(timeZone) => {
+                    setValue("timeZone", timeZone, { shouldTouch: true });
                   }}
-                  type="button"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" /> {t("monthView")}
-                </button>
-                <button
-                  className={clsx({
-                    "segment-button-active": selectedView.value === "week",
-                  })}
-                  type="button"
-                  onClick={() => {
-                    setValue("view", "week");
-                  }}
-                >
-                  <TableIcon className="mr-2 h-4 w-4" /> {t("weekView")}
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-md border">
-            <selectedView.Component
-              title={title}
-              options={watchOptions}
-              date={navigationDate}
-              onNavigate={(date) => {
-                setValue("navigationDate", date.toISOString());
-              }}
-              onChange={(options) => {
-                setValue("options", options);
-                if (
-                  options.length === 0 ||
-                  options.every((option) => option.type === "date")
-                ) {
-                  // unset the timeZone if we only have date option
-                  setValue("timeZone", "");
-                }
-                if (
-                  options.length > 0 &&
-                  !formState.touchedFields.timeZone &&
-                  options.every((option) => option.type === "timeSlot")
-                ) {
-                  // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-                  setValue("timeZone", getBrowserTimeZone());
-                }
-              }}
-              duration={watchDuration}
-              onChangeDuration={(duration) => {
-                setValue("duration", duration);
-              }}
+                  disabled={datesOnly}
+                />
+              )}
             />
           </div>
-        </FormItem>
-      </form>
-    </Form>
+          <div className="flex space-x-3">
+            <div className="segment-button w-full sm:w-auto">
+              <button
+                className={clsx({
+                  "segment-button-active": selectedView.value === "month",
+                })}
+                onClick={() => {
+                  setValue("view", "month");
+                }}
+                type="button"
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" /> {t("monthView")}
+              </button>
+              <button
+                className={clsx({
+                  "segment-button-active": selectedView.value === "week",
+                })}
+                type="button"
+                onClick={() => {
+                  setValue("view", "week");
+                }}
+              >
+                <TableIcon className="mr-2 h-4 w-4" /> {t("weekView")}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="overflow-hidden rounded-md border">
+          <selectedView.Component
+            title={title}
+            options={watchOptions}
+            date={navigationDate}
+            onNavigate={(date) => {
+              setValue("navigationDate", date.toISOString());
+            }}
+            onChange={(options) => {
+              setValue("options", options);
+              if (
+                options.length === 0 ||
+                options.every((option) => option.type === "date")
+              ) {
+                // unset the timeZone if we only have date option
+                setValue("timeZone", "");
+              }
+              if (
+                options.length > 0 &&
+                !formState.touchedFields.timeZone &&
+                options.every((option) => option.type === "timeSlot")
+              ) {
+                // set timeZone if we are adding time ranges and we haven't touched the timeZone field
+                setValue("timeZone", getBrowserTimeZone());
+              }
+            }}
+            duration={watchDuration}
+            onChangeDuration={(duration) => {
+              setValue("duration", duration);
+            }}
+          />
+        </div>
+      </FormItem>
+    </div>
   );
 };
 
