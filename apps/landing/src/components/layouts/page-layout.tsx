@@ -101,7 +101,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
           </div>
           <div className="flex items-center gap-4 sm:gap-8">
             <Link
-              href={absoluteUrl("/login")}
+              href={linkToApp("/login")}
               className="hover:text-primary text-muted-foreground hidden rounded text-sm font-medium hover:no-underline hover:underline-offset-2 sm:inline-flex"
             >
               <Trans i18nKey="login" defaults="Login" />
