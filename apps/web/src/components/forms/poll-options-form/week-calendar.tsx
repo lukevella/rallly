@@ -123,7 +123,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           }: {
             children?: React.ReactNode;
           }) {
-            return <div className="h-7 text-xs text-gray-500">{children}</div>;
+            return <div className="h-4 text-xs text-gray-500">{children}</div>;
           },
         }}
         step={15}

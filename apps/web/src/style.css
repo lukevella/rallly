@@ -207,7 +207,7 @@
   @apply mr-2;
 }
 .rbc-slot-selection {
-  @apply bg-gray-50 text-gray-600;
+  @apply bg-gray-100/50 text-gray-600;
 }
 
 .rbc-header.rbc-today {
