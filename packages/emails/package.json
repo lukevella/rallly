@@ -16,7 +16,7 @@
     "@react-email/render": "0.0.6",
     "clsx": "^1.2.1",
     "nodemailer": "^6.9.1",
-    "react-email": "^1.9.1"
+    "react-email": "^1.7.15"
   },
   "devDependencies": {
     "@rallly/tailwind-config": "*",
