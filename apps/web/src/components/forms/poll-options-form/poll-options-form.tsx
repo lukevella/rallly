@@ -1,14 +1,15 @@
 import { CalendarIcon, TableIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
 import { Form, FormItem } from "@rallly/ui/form";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useFormContext } from "react-hook-form";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { useModal } from "../../modal";
 import TimeZonePicker from "../../time-zone-picker";
-import { PollFormProps } from "../types";
+import { NewEventData, PollFormProps } from "../types";
 import MonthCalendar from "./month-calendar";
 import { DateTimeOption } from "./types";
 import WeekCalendar from "./week-calendar";
@@ -23,28 +24,9 @@ export type PollOptionsData = {
 
 const PollOptionsForm: React.FunctionComponent<
   PollFormProps<PollOptionsData> & { title?: string }
-> = ({ name, defaultValues, onSubmit, onChange, title, className }) => {
+> = ({ onChange, title }) => {
   const { t } = useTranslation();
-  const form = useForm<PollOptionsData>({
-    defaultValues: {
-      options: [],
-      duration: 30,
-      timeZone: "",
-      navigationDate: new Date().toISOString(),
-      ...defaultValues,
-    },
-    resolver: (values) => {
-      return {
-        values,
-        errors:
-          values.options.length === 0
-            ? {
-                options: true,
-              }
-            : {},
-      };
-    },
-  });
+  const form = useFormContext<NewEventData>();
 
   const { control, handleSubmit, watch, setValue, formState } = form;
 
@@ -64,16 +46,17 @@ const PollOptionsForm: React.FunctionComponent<
     return res;
   }, [t]);
 
-  const watchView = watch("view");
+  const watchView = watch("options.view");
 
   const selectedView = React.useMemo(
     () => views.find((view) => view.value === watchView) ?? views[0],
     [views, watchView],
   );
 
-  const watchOptions = watch("options");
-  const watchDuration = watch("duration");
-  const watchTimeZone = watch("timeZone");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const watchOptions = watch("options.options", [])!;
+  const watchDuration = watch("options.duration");
+  const watchTimeZone = watch("options.timeZone");
 
   const datesOnly = watchOptions.every((option) => option.type === "date");
 
@@ -83,20 +66,20 @@ const PollOptionsForm: React.FunctionComponent<
     okText: t("mixedOptionsKeepTimes"),
     onOk: () => {
       setValue(
-        "options",
+        "options.options",
         watchOptions.filter((option) => option.type === "timeSlot"),
       );
       if (!watchTimeZone) {
-        setValue("timeZone", getBrowserTimeZone());
+        setValue("options.timeZone", getBrowserTimeZone());
       }
     },
     cancelText: t("mixedOptionsKeepDates"),
     onCancel: () => {
       setValue(
-        "options",
+        "options.options",
         watchOptions.filter((option) => option.type === "date"),
       );
-      setValue("timeZone", "");
+      setValue("options.timeZone", "");
     },
   });
 
@@ -123,8 +106,8 @@ const PollOptionsForm: React.FunctionComponent<
     }
   }, [watchOptions, openDateOrTimeRangeModal]);
 
-  const watchNavigationDate = watch("navigationDate");
-  const navigationDate = new Date(watchNavigationDate);
+  const watchNavigationDate = watch("options.navigationDate");
+  const navigationDate = new Date(watchNavigationDate ?? Date.now());
 
   const [calendarHelpModal, openHelpModal] = useModal({
     overlayClosable: true,
@@ -148,84 +131,38 @@ const PollOptionsForm: React.FunctionComponent<
               />
             </p>
           </div> */}
-      <FormItem>
-        <div className="mb-3 flex flex-col gap-x-4 gap-y-3 sm:flex-row">
-          <div className="grow">
-            <Controller
-              control={control}
-              name="timeZone"
-              render={({ field }) => (
-                <TimeZonePicker
-                  value={field.value}
-                  onBlur={field.onBlur}
-                  onChange={(timeZone) => {
-                    setValue("timeZone", timeZone, { shouldTouch: true });
-                  }}
-                  disabled={datesOnly}
-                />
-              )}
-            />
-          </div>
-          <div className="flex space-x-3">
-            <div className="segment-button w-full sm:w-auto">
-              <button
-                className={clsx({
-                  "segment-button-active": selectedView.value === "month",
-                })}
-                onClick={() => {
-                  setValue("view", "month");
-                }}
-                type="button"
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" /> {t("monthView")}
-              </button>
-              <button
-                className={clsx({
-                  "segment-button-active": selectedView.value === "week",
-                })}
-                type="button"
-                onClick={() => {
-                  setValue("view", "week");
-                }}
-              >
-                <TableIcon className="mr-2 h-4 w-4" /> {t("weekView")}
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="overflow-hidden rounded-md border">
-          <selectedView.Component
-            title={title}
-            options={watchOptions}
-            date={navigationDate}
-            onNavigate={(date) => {
-              setValue("navigationDate", date.toISOString());
-            }}
-            onChange={(options) => {
-              setValue("options", options);
-              if (
-                options.length === 0 ||
-                options.every((option) => option.type === "date")
-              ) {
-                // unset the timeZone if we only have date option
-                setValue("timeZone", "");
-              }
-              if (
-                options.length > 0 &&
-                !formState.touchedFields.timeZone &&
-                options.every((option) => option.type === "timeSlot")
-              ) {
-                // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-                setValue("timeZone", getBrowserTimeZone());
-              }
-            }}
-            duration={watchDuration}
-            onChangeDuration={(duration) => {
-              setValue("duration", duration);
-            }}
-          />
-        </div>
-      </FormItem>
+      <div>
+        <selectedView.Component
+          title={title}
+          options={watchOptions}
+          date={navigationDate}
+          onNavigate={(date) => {
+            setValue("options.navigationDate", date.toISOString());
+          }}
+          onChange={(options) => {
+            setValue("options.options", options);
+            if (
+              options.length === 0 ||
+              options.every((option) => option.type === "date")
+            ) {
+              // unset the timeZone if we only have date option
+              setValue("options.timeZone", "");
+            }
+            if (
+              options.length > 0 &&
+              !formState.touchedFields.options?.timeZone &&
+              options.every((option) => option.type === "timeSlot")
+            ) {
+              // set timeZone if we are adding time ranges and we haven't touched the timeZone field
+              setValue("options.timeZone", getBrowserTimeZone());
+            }
+          }}
+          duration={watchDuration}
+          onChangeDuration={(duration) => {
+            setValue("options.duration", duration);
+          }}
+        />
+      </div>
     </div>
   );
 };

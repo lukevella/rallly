@@ -1,9 +1,13 @@
+import { XIcon } from "@rallly/icons";
+import { Button } from "@rallly/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@rallly/ui/dialog";
 import { FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
 import { Textarea } from "@rallly/ui/textarea";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
@@ -30,6 +34,7 @@ export const PollDetailsForm = () => {
     formState: { errors, touchedFields },
   } = form;
 
+  const options = form.watch("options.options") ?? [];
   return (
     <div className="grid gap-4 py-1">
       <FormItem>
@@ -62,8 +67,8 @@ export const PollDetailsForm = () => {
           {...register("eventDetails.description")}
         />
       </FormItem>
-      <hr />
-      <FormField
+
+      {/* <FormField
         control={control}
         name="allDay"
         render={({ field }) => (
@@ -82,14 +87,13 @@ export const PollDetailsForm = () => {
             </div>
           </FormItem>
         )}
-      />
-      {!form.watch("allDay") ? (
+      /> */}
+      {/* {!form.watch("allDay") ? (
         <FormField
           control={control}
           name="options.options"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Select times</FormLabel>
               <WeekCalendar
                 options={field.value ?? []}
                 date={
@@ -109,7 +113,7 @@ export const PollDetailsForm = () => {
         />
       ) : (
         <div>Date Picker</div>
-      )}
+      )} */}
     </div>
   );
 };

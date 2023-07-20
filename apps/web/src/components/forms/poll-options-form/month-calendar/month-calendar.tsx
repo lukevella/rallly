@@ -7,6 +7,7 @@ import {
   SparklesIcon,
   XIcon,
 } from "@rallly/icons";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -88,7 +89,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   });
 
   return (
-    <div className="overflow-hidden lg:flex">
+    <div className="h-[600px] overflow-hidden lg:flex">
       <div className="shrink-0 border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
         <div>
           <div className="flex w-full flex-col">
@@ -170,17 +171,26 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         }
                       }}
                       className={clsx(
-                        "relative flex h-full w-full items-center justify-center text-sm hover:bg-gray-50 focus:z-10 focus:rounded active:bg-gray-100",
+                        "group relative flex h-full w-full items-center justify-center text-sm font-medium focus:z-10 focus:rounded",
                         {
                           "bg-gray-50 text-gray-500": day.outOfMonth,
-                          "font-bold": day.today,
-                          "text-primary-600": day.today && !day.selected,
-                          "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-600 after:content-['']":
-                            day.selected,
+                          "text-primary-600": day.selected,
                         },
                       )}
                     >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "absolute -z-0 h-8 w-8 rounded-md border",
+                          day.selected
+                            ? "border-primary-100 group-hover:bg-primary-100 group-active:bg-primary-200 bg-primary-50 shadow-sm"
+                            : "border-transparent group-hover:border-gray-200 group-hover:bg-gray-100 group-active:bg-gray-200",
+                        )}
+                      ></span>
                       <span className="z-10">{day.day}</span>
+                      {day.today ? (
+                        <span className="bg-primary absolute bottom-2.5 h-1 w-1 rounded-full" />
+                      ) : null}
                     </button>
                   </div>
                 );

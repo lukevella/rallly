@@ -194,6 +194,9 @@
 .rbc-header + .rbc-header {
   @apply border-l-0;
 }
+.rbc-time-slot {
+  @apply pl-2 pt-1;
+}
 
 .rbc-timeslot-group {
   @apply border-gray-100;
@@ -207,9 +210,8 @@
   @apply mr-2;
 }
 .rbc-slot-selection {
-  @apply bg-gray-100/50 text-gray-600;
+  @apply bg-gray-100/50 leading-tight text-gray-600;
 }
-
 .rbc-header.rbc-today {
   @apply bg-white text-rose-600;
 }

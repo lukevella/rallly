@@ -1,4 +1,6 @@
 import { trpc } from "@rallly/backend";
+import { CalendarIcon, TableIcon } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -7,10 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
-import { Form } from "@rallly/ui/form";
+import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
+import { Label } from "@rallly/ui/label";
+import { Switch } from "@rallly/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
@@ -41,6 +47,10 @@ export const CreatePoll: React.FunctionComponent = () => {
   const form = useForm<NewEventData>({
     defaultValues: {
       allDay: true,
+      options: {
+        view: "week",
+        options: [],
+      },
     },
   });
 
@@ -48,6 +58,7 @@ export const CreatePoll: React.FunctionComponent = () => {
   const queryClient = trpc.useContext();
   const createPoll = trpc.polls.create.useMutation();
 
+  const { t } = useTranslation();
   return (
     <Form {...form}>
       <form
@@ -88,23 +99,83 @@ export const CreatePoll: React.FunctionComponent = () => {
         <div className="mx-auto max-w-4xl space-y-4 p-2 sm:p-8">
           <Card>
             <CardHeader>
-              <CardTitle>
-                <Trans i18nKey="newPoll" />
-              </CardTitle>
-              <CardDescription>
-                <Trans
-                  i18nKey="createPollDescription"
-                  defaults="Create an event and invite participants to vote on the best time to meet."
-                />
-              </CardDescription>
+              <CardTitle>Event</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <PollDetailsForm />
             </CardContent>
           </Card>
-
+          <Tabs
+            className="flex justify-center"
+            value={form.watch("options.view")}
+            onValueChange={(value) => {
+              form.setValue("options.view", value);
+            }}
+          >
+            <TabsList>
+              <TabsTrigger value="month">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                <Trans i18nKey="monthView" />
+              </TabsTrigger>
+              <TabsTrigger value="week">
+                <TableIcon className="mr-2 h-4 w-4" />
+                <Trans i18nKey="weekView" />
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between gap-x-4">
+                <CardTitle>Select Dates</CardTitle>
+              </div>
+            </CardHeader>
+            <PollOptionsForm />
+          </Card>
           <hr />
-          <Button size="lg" type="submit" className="w-full" variant="primary">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-x-2">
+                <CardTitle>Advanced</CardTitle>
+                <Badge>Pro</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                <FormField
+                  control={form.control}
+                  name="allDay"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-start justify-between gap-x-4">
+                        <div className="grid gap-2 pt-0.5">
+                          <Label htmlFor="allDay">Hide participant</Label>
+                          <p className="text-muted-foreground text-sm">
+                            Only you will be able to see the participant names
+                          </p>
+                        </div>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            React.startTransition(() => {
+                              field.onChange(checked);
+                            });
+                          }}
+                        />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+          <hr />
+          <Button
+            loading={form.formState.isSubmitting || form.formState.isSubmitted}
+            size="lg"
+            type="submit"
+            className="w-full"
+            variant="primary"
+          >
             <Trans i18nKey="createPoll" />
           </Button>
         </div>

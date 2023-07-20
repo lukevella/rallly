@@ -11,7 +11,7 @@ export interface NewEventData {
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface PollFormProps<T extends Record<string, any>> {
-  onSubmit: (data: T) => void;
+  onSubmit?: (data: T) => void;
   onChange?: (data: Partial<T>) => void;
   defaultValues?: Partial<T>;
   name?: string;

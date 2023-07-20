@@ -1,8 +1,10 @@
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
 import { XIcon } from "@rallly/icons";
 import dayjs from "dayjs";
 import React from "react";
 import { Calendar } from "react-big-calendar";
-import { useMount } from "react-use";
+import { useMount, useMountedState } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";
@@ -20,11 +22,10 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration = 60,
   onChangeDuration,
 }) => {
+  const isMounted = useMountedState();
+
   return (
-    <div
-      key=""
-      className="h-[600px] max-h-[800px] min-h-[400px] rounded-md border"
-    >
+    <div className="relative h-[600px]">
       <Calendar
         events={options.map((option) => {
           if (option.type === "date") {
@@ -39,7 +40,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         culture="default"
         onNavigate={onNavigate}
         date={date}
-        className=" w-full"
         defaultView="week"
         views={["week", "day"]}
         selectable={true}
@@ -107,7 +107,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             header: function Header({ date }: any) {
               return (
-                <span className="w-full rounded-md py-2 text-center text-xs">
+                <span className="w-full rounded-md text-center text-sm tracking-tight">
                   <span className="mr-1.5  font-normal opacity-50">
                     {dayjs(date).format("ddd")}
                   </span>
@@ -118,12 +118,19 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               );
             },
           },
+          timeGutterHeader: function TimeGutterHeader() {
+            return <div className="w-20" />;
+          },
           timeSlotWrapper: function TimeSlotWrapper({
             children,
           }: {
             children?: React.ReactNode;
           }) {
-            return <div className="h-4 text-xs text-gray-500">{children}</div>;
+            return (
+              <div className="h-6 w-20 text-xs leading-none text-gray-500">
+                {children}
+              </div>
+            );
           },
         }}
         step={15}
