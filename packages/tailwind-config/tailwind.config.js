@@ -45,13 +45,13 @@ module.exports = {
           background: colors.rose["50"],
           foreground: colors.rose["50"],
         },
-        background: colors.gray["100"],
+        background: colors.white,
         foreground: colors.gray["800"],
         accent: {
           DEFAULT: colors.gray["100"],
         },
         muted: {
-          DEFAULT: colors.gray["200"],
+          DEFAULT: colors.gray["100"],
           background: colors.gray["50"],
           foreground: colors.gray["500"],
         },

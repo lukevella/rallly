@@ -46,11 +46,8 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   const form = useForm<NewEventData>({
     defaultValues: {
-      allDay: true,
-      options: {
-        view: "week",
-        options: [],
-      },
+      view: "week",
+      options: [],
     },
   });
 
@@ -63,21 +60,21 @@ export const CreatePoll: React.FunctionComponent = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (formData) => {
-          const title = required(formData?.eventDetails?.title);
+          const title = required(formData?.title);
 
           await createPoll.mutateAsync(
             {
               title: title,
-              location: formData?.eventDetails?.location,
-              description: formData?.eventDetails?.description,
-              user: session.user.isGuest
-                ? {
-                    name: required(formData?.userDetails?.name),
-                    email: required(formData?.userDetails?.contact),
-                  }
-                : undefined,
-              timeZone: formData?.options?.timeZone,
-              options: required(formData?.options?.options).map((option) => ({
+              location: formData?.location,
+              description: formData?.description,
+              // user: session.user.isGuest
+              //   ? {
+              //       name: required(formData?.userDetails?.name),
+              //       email: required(formData?.userDetails?.contact),
+              //     }
+              //   : undefined,
+              timeZone: formData?.timeZone,
+              options: required(formData?.options).map((option) => ({
                 startDate: option.type === "date" ? option.date : option.start,
                 endDate: option.type === "timeSlot" ? option.end : undefined,
               })),
@@ -86,8 +83,8 @@ export const CreatePoll: React.FunctionComponent = () => {
               onSuccess: (res) => {
                 posthog?.capture("created poll", {
                   pollId: res.id,
-                  numberOfOptions: formData.options?.options?.length,
-                  optionsView: formData?.options?.view,
+                  numberOfOptions: formData.options?.length,
+                  optionsView: formData?.view,
                 });
                 queryClient.polls.list.invalidate();
                 router.replace(`/poll/${res.id}`);
@@ -105,28 +102,28 @@ export const CreatePoll: React.FunctionComponent = () => {
               <PollDetailsForm />
             </CardContent>
           </Card>
-          <Tabs
-            className="flex justify-center"
-            value={form.watch("options.view")}
-            onValueChange={(value) => {
-              form.setValue("options.view", value);
-            }}
-          >
-            <TabsList>
-              <TabsTrigger value="month">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                <Trans i18nKey="monthView" />
-              </TabsTrigger>
-              <TabsTrigger value="week">
-                <TableIcon className="mr-2 h-4 w-4" />
-                <Trans i18nKey="weekView" />
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
           <Card>
-            <CardHeader>
+            <CardHeader className="sm:py-2.5">
               <div className="flex items-center justify-between gap-x-4">
                 <CardTitle>Select Dates</CardTitle>
+                <Tabs
+                  className="flex justify-center"
+                  value={form.watch("view")}
+                  onValueChange={(value) => {
+                    form.setValue("view", value);
+                  }}
+                >
+                  <TabsList>
+                    <TabsTrigger value="month">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <Trans i18nKey="monthView" />
+                    </TabsTrigger>
+                    <TabsTrigger value="week">
+                      <TableIcon className="mr-2 h-4 w-4" />
+                      <Trans i18nKey="weekView" />
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
             </CardHeader>
             <PollOptionsForm />
@@ -156,9 +153,7 @@ export const CreatePoll: React.FunctionComponent = () => {
                         <Switch
                           checked={field.value}
                           onCheckedChange={(checked) => {
-                            React.startTransition(() => {
-                              field.onChange(checked);
-                            });
+                            field.onChange(checked);
                           }}
                         />
                       </div>

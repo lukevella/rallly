@@ -89,7 +89,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   });
 
   return (
-    <div className="h-[600px] overflow-hidden lg:flex">
+    <div className="min-h-[600px] overflow-hidden lg:flex">
       <div className="shrink-0 border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
         <div>
           <div className="flex w-full flex-col">
@@ -99,7 +99,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 title={t("previousMonth")}
                 onClick={datepicker.prev}
               />
-              <div className="grow text-center text-lg font-medium">
+              <div className="grow text-center font-semibold tracking-tight">
                 {datepicker.label}
               </div>
               <Button
@@ -173,6 +173,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       className={clsx(
                         "group relative flex h-full w-full items-center justify-center text-sm font-medium focus:z-10 focus:rounded",
                         {
+                          "text-rose-600": day.today && !day.selected,
                           "bg-gray-50 text-gray-500": day.outOfMonth,
                           "text-primary-600": day.selected,
                         },
@@ -188,9 +189,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         )}
                       ></span>
                       <span className="z-10">{day.day}</span>
-                      {day.today ? (
-                        <span className="bg-primary absolute bottom-2.5 h-1 w-1 rounded-full" />
-                      ) : null}
                     </button>
                   </div>
                 );
