@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Switch } from "@rallly/ui/switch";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
@@ -32,7 +33,6 @@ import {
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
-import Switch from "../../../switch";
 import { DateTimeOption } from "..";
 import { DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
@@ -89,8 +89,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   });
 
   return (
-    <div className="overflow-hidden lg:flex">
-      <div className="border-b p-3 sm:p-4 lg:w-[400px] lg:border-b-0 lg:border-r">
+    <div className="overflow-hidden md:flex">
+      <div className="border-b p-3 sm:p-4 md:w-[400px] md:border-b-0 md:border-r">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -217,7 +217,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               <Switch
                 data-testid="specify-times-switch"
                 checked={isTimedEvent}
-                onChange={(checked) => {
+                onCheckedChange={(checked) => {
                   if (checked) {
                     // convert dates to time slots
                     onChange(

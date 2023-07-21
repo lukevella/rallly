@@ -19,6 +19,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
+import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { usePostHog } from "@/utils/posthog";
 
@@ -26,7 +27,6 @@ import { requiredString } from "../../utils/form-validation";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
-import { usePoll } from "../poll-context";
 import { useUser } from "../user-provider";
 
 interface CommentForm {
@@ -36,16 +36,17 @@ interface CommentForm {
 
 const Discussion: React.FunctionComponent = () => {
   const { t } = useTranslation();
-  const { poll } = usePoll();
 
+  const poll = usePoll();
+  const role = useRole();
   const pollId = poll.id;
 
-  const { data: comments } = trpc.polls.comments.list.useQuery(
-    { pollId },
-    {
-      staleTime: 1000 * 5,
-    },
-  );
+  const hideParticipants = role === "participant" && poll.hideParticipants;
+
+  const queryKey = { pollId, hideParticipants };
+  const { data: comments } = trpc.polls.comments.list.useQuery(queryKey, {
+    staleTime: 1000 * 5,
+  });
   const posthog = usePostHog();
 
   const queryClient = trpc.useContext();
@@ -60,7 +61,7 @@ const Discussion: React.FunctionComponent = () => {
   const deleteComment = trpc.polls.comments.delete.useMutation({
     onMutate: ({ commentId }) => {
       queryClient.polls.comments.list.setData(
-        { pollId },
+        queryKey,
         (existingComments = []) => {
           return [...existingComments].filter(({ id }) => id !== commentId);
         },
@@ -82,7 +83,6 @@ const Discussion: React.FunctionComponent = () => {
     });
 
   const [isWriting, setIsWriting] = React.useState(false);
-  const role = useRole();
   const { isUser } = usePermissions();
 
   if (!comments) {

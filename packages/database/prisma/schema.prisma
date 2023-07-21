@@ -88,7 +88,8 @@ model Poll {
   adminUrlId       String        @unique @map("admin_url_id")
   eventId          String?       @map("event_id")
   event            Event?
-
+  hideParticipants Boolean       @default(false) @map("hide_participants")
+  
   @@index([userId], type: Hash)
   @@map("polls")
 }

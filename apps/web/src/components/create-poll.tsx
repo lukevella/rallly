@@ -1,4 +1,5 @@
 import { trpc } from "@rallly/backend";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -12,6 +13,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 
+import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { usePostHog } from "@/utils/posthog";
@@ -85,12 +87,13 @@ export const CreatePoll: React.FunctionComponent = () => {
           <Card>
             <CardHeader>
               <CardTitle>
-                <Trans i18nKey="event">Event</Trans>
+                <Trans i18nKey="event" defaults="Event" />
               </CardTitle>
               <CardDescription>
-                <Trans i18nKey="describeYourEvent">
-                  Describe what your event is about
-                </Trans>
+                <Trans
+                  i18nKey="describeYourEvent"
+                  defaults="Describe what your event is about"
+                />
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -110,41 +113,19 @@ export const CreatePoll: React.FunctionComponent = () => {
             </CardHeader>
             <PollOptionsForm />
           </Card>
-          {/* <hr />
           <Card>
             <CardHeader>
               <div className="flex items-center gap-x-2">
                 <CardTitle>Advanced</CardTitle>
-                <Badge>Pro</Badge>
+                <Badge>
+                  <Trans i18nKey="planPro" />
+                </Badge>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4">
-                <FormField
-                  control={form.control}
-                  name="hideParticipants"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-start justify-between gap-x-4">
-                        <div className="grid gap-2 pt-0.5">
-                          <Label htmlFor="allDay">Hide participants</Label>
-                          <p className="text-muted-foreground text-sm">
-                            Only you will be able to see the participant names
-                          </p>
-                        </div>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked);
-                          }}
-                        />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <PollSettingsForm />
             </CardContent>
-          </Card> */}
+          </Card>
           <hr />
           <Button
             loading={form.formState.isSubmitting}

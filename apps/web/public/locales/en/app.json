@@ -11,7 +11,7 @@
   "changeNameDescription": "Enter a new name for this participant.",
   "changeNameInfo": "This will not affect any votes you have already made.",
   "close": "Close",
-  "commentPlaceholder": "Leave a comment on this poll (visible to everyone)",
+  "commentPlaceholder": "Leave a comment on this poll",
   "comments": "Comments",
   "continue": "Continue",
   "copied": "Copied",
@@ -204,5 +204,8 @@
   "calendar": "Calendar",
   "selectPotentialDates": "Select potential dates for your event",
   "optionalLabel": "(Optional)",
-  "calendarHelp": "You can't create a poll without any options. Add at least one option to continue."
+  "calendarHelp": "You can't create a poll without any options. Add at least one option to continue.",
+  "hideParticipants": "Hide participants",
+  "hideParticipantsDescription": "Participants won't be able to see each other's votes and comments",
+  "editSettings": "Edit settings"
 }

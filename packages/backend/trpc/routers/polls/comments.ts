@@ -12,11 +12,12 @@ export const comments = router({
     .input(
       z.object({
         pollId: z.string(),
+        hideParticipants: z.boolean().optional(),
       }),
     )
-    .query(async ({ input: { pollId } }) => {
+    .query(async ({ input: { pollId, hideParticipants }, ctx }) => {
       return await prisma.comment.findMany({
-        where: { pollId },
+        where: { pollId, userId: hideParticipants ? ctx.user.id : undefined },
         orderBy: [
           {
             createdAt: "asc",
