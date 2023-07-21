@@ -3,7 +3,7 @@ import { FormField } from "@rallly/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import TimeZonePicker from "@/components/time-zone-picker";
 
@@ -113,7 +113,7 @@ const PollOptionsForm: React.FunctionComponent<
     <div>
       {dateOrTimeRangeModal}
       <div>
-        <div className="flex flex-col justify-between gap-y-3 gap-x-4 border-b border-gray-100 p-3 sm:flex-row sm:items-center sm:px-5 sm:py-4">
+        <div className="flex flex-col justify-between gap-y-3 gap-x-4 border-b border-gray-100 p-3 sm:flex-row sm:items-center sm:p-4">
           <div className="grow">
             <FormField
               control={form.control}
@@ -151,35 +151,41 @@ const PollOptionsForm: React.FunctionComponent<
             />
           </div>
         </div>
-        <selectedView.Component
-          title={title}
-          options={watchOptions}
-          date={navigationDate}
-          onNavigate={(date) => {
-            setValue("navigationDate", date.toISOString());
-          }}
-          onChange={(options) => {
-            setValue("options", options);
-            if (
-              length === 0 ||
-              options.every((option) => option.type === "date")
-            ) {
-              // unset the timeZone if we only have date option
-              setValue("timeZone", "");
-            }
-            if (
-              options.length > 0 &&
-              !formState.touchedFields.timeZone &&
-              options.every((option) => option.type === "timeSlot")
-            ) {
-              // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-              setValue("timeZone", getBrowserTimeZone());
-            }
-          }}
-          duration={watchDuration}
-          onChangeDuration={(duration) => {
-            setValue("duration", duration);
-          }}
+        <FormField
+          control={form.control}
+          name="options"
+          render={({ field }) => (
+            <selectedView.Component
+              title={title}
+              options={field.value}
+              date={navigationDate}
+              onNavigate={(date) => {
+                setValue("navigationDate", date.toISOString());
+              }}
+              onChange={(options) => {
+                field.onChange(options);
+                if (
+                  length === 0 ||
+                  options.every((option) => option.type === "date")
+                ) {
+                  // unset the timeZone if we only have date option
+                  setValue("timeZone", "");
+                }
+                if (
+                  options.length > 0 &&
+                  !formState.touchedFields.timeZone &&
+                  options.every((option) => option.type === "timeSlot")
+                ) {
+                  // set timeZone if we are adding time ranges and we haven't touched the timeZone field
+                  setValue("timeZone", getBrowserTimeZone());
+                }
+              }}
+              duration={watchDuration}
+              onChangeDuration={(duration) => {
+                setValue("duration", duration);
+              }}
+            />
+          )}
         />
       </div>
     </div>

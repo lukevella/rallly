@@ -17,7 +17,6 @@ import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { usePostHog } from "@/utils/posthog";
 
 import { NewEventData, PollDetailsForm, PollOptionsForm } from "./forms";
-import { useUser } from "./user-provider";
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {
@@ -36,8 +35,6 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
-
-  const session = useUser();
 
   const form = useForm<NewEventData>({
     defaultValues: {

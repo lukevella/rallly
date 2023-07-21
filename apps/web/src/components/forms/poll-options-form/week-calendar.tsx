@@ -21,6 +21,13 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration = 60,
   onChangeDuration,
 }) => {
+  const scrollToTime =
+    options.length > 0
+      ? options[0].type === "timeSlot"
+        ? new Date(options[0].start)
+        : undefined
+      : undefined;
+
   return (
     <div className="relative h-[600px]">
       <Calendar
@@ -165,7 +172,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             onChange([...options, newEvent]);
           }
         }}
-        scrollToTime={date}
+        scrollToTime={scrollToTime}
       />
     </div>
   );
