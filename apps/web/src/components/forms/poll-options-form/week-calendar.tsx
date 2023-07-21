@@ -29,8 +29,9 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
       : undefined;
 
   return (
-    <div className="relative h-[600px]">
+    <div className="relative flex h-[600px]">
       <Calendar
+        className="absolute inset-0"
         events={options.map((option) => {
           if (option.type === "date") {
             return { start: new Date(option.date) };
@@ -122,16 +123,13 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               );
             },
           },
-          timeGutterHeader: function TimeGutterHeader() {
-            return <div className="w-20" />;
-          },
           timeSlotWrapper: function TimeSlotWrapper({
             children,
           }: {
             children?: React.ReactNode;
           }) {
             return (
-              <div className="h-6 w-20 text-xs leading-none text-gray-500">
+              <div className="h-6  text-xs leading-none text-gray-500">
                 {children}
               </div>
             );
