@@ -4,7 +4,6 @@ import { XIcon } from "@rallly/icons";
 import dayjs from "dayjs";
 import React from "react";
 import { Calendar } from "react-big-calendar";
-import { useMount, useMountedState } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";
@@ -22,8 +21,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration = 60,
   onChangeDuration,
 }) => {
-  const isMounted = useMountedState();
-
   return (
     <div className="relative h-[600px]">
       <Calendar

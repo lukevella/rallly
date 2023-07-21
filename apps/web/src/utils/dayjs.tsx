@@ -175,7 +175,7 @@ export const DayjsProvider: React.FunctionComponent<{
   const localeConfig = dayjsLocales[router.locale ?? "en"];
   const { data } = trpc.userPreferences.get.useQuery();
 
-  useAsync(async () => {
+  const state = useAsync(async () => {
     const locale = await localeConfig.import();
     const localeTimeFormat = localeConfig.timeFormat;
     const timeFormat = data?.timeFormat ?? localeConfig.timeFormat;
@@ -199,6 +199,11 @@ export const DayjsProvider: React.FunctionComponent<{
   };
 
   const preferredTimeZone = data?.timeZone ?? locale.timeZone;
+
+  if (state.loading) {
+    // wait for locale to load before rendering
+    return null;
+  }
 
   return (
     <DayjsContext.Provider

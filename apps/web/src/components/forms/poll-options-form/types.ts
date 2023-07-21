@@ -18,7 +18,7 @@ export interface DateTimePickerProps {
   date?: Date;
   onNavigate: (date: Date) => void;
   onChange: (options: DateTimeOption[]) => void;
-  duration?: number;
+  duration: number;
   onChangeDuration: (duration: number) => void;
   scrollToTime?: Date;
 }

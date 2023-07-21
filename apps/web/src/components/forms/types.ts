@@ -1,7 +1,8 @@
 import { PollDetailsData } from "./poll-details-form";
 import { PollOptionsData } from "./poll-options-form/poll-options-form";
 
-export type NewEventData = PollDetailsData & PollOptionsData;
+export type NewEventData = PollDetailsData &
+  PollOptionsData & { hideParticipants: boolean };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface PollFormProps<T extends Record<string, any>> {

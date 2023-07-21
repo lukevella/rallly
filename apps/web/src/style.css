@@ -39,7 +39,7 @@
   input,
   select,
   textarea {
-    @apply rounded outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-gray-300;
+    @apply rounded outline-none focus-visible:ring-2 focus-visible:ring-gray-300;
   }
 
   #floating-ui-root {

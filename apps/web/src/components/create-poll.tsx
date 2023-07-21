@@ -1,6 +1,4 @@
 import { trpc } from "@rallly/backend";
-import { CalendarIcon, TableIcon } from "@rallly/icons";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -9,16 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
-import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
-import { Label } from "@rallly/ui/label";
-import { Switch } from "@rallly/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 import { Trans } from "@/components/trans";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { usePostHog } from "@/utils/posthog";
 
 import { NewEventData, PollDetailsForm, PollOptionsForm } from "./forms";
@@ -46,8 +41,11 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   const form = useForm<NewEventData>({
     defaultValues: {
-      view: "week",
+      view: "month",
+      timeZone: getBrowserTimeZone(),
       options: [],
+      hideParticipants: false,
+      duration: 60,
     },
   });
 
@@ -55,7 +53,6 @@ export const CreatePoll: React.FunctionComponent = () => {
   const queryClient = trpc.useContext();
   const createPoll = trpc.polls.create.useMutation();
 
-  const { t } = useTranslation();
   return (
     <Form {...form}>
       <form
@@ -67,12 +64,6 @@ export const CreatePoll: React.FunctionComponent = () => {
               title: title,
               location: formData?.location,
               description: formData?.description,
-              // user: session.user.isGuest
-              //   ? {
-              //       name: required(formData?.userDetails?.name),
-              //       email: required(formData?.userDetails?.contact),
-              //     }
-              //   : undefined,
               timeZone: formData?.timeZone,
               options: required(formData?.options).map((option) => ({
                 startDate: option.type === "date" ? option.date : option.start,
@@ -96,39 +87,33 @@ export const CreatePoll: React.FunctionComponent = () => {
         <div className="mx-auto max-w-4xl space-y-4 p-2 sm:p-8">
           <Card>
             <CardHeader>
-              <CardTitle>Event</CardTitle>
+              <CardTitle>
+                <Trans i18nKey="event">Event</Trans>
+              </CardTitle>
+              <CardDescription>
+                <Trans i18nKey="describeYourEvent">
+                  Describe what your event is about
+                </Trans>
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <PollDetailsForm />
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="sm:py-2.5">
-              <div className="flex items-center justify-between gap-x-4">
-                <CardTitle>Select Dates</CardTitle>
-                <Tabs
-                  className="flex justify-center"
-                  value={form.watch("view")}
-                  onValueChange={(value) => {
-                    form.setValue("view", value);
-                  }}
-                >
-                  <TabsList>
-                    <TabsTrigger value="month">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      <Trans i18nKey="monthView" />
-                    </TabsTrigger>
-                    <TabsTrigger value="week">
-                      <TableIcon className="mr-2 h-4 w-4" />
-                      <Trans i18nKey="weekView" />
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div>
+            <CardHeader>
+              <CardTitle>
+                <Trans i18nKey="calendar">Calendar</Trans>
+              </CardTitle>
+              <CardDescription>
+                <Trans i18nKey="selectPotentialDates">
+                  Select potential dates for your event
+                </Trans>
+              </CardDescription>
             </CardHeader>
             <PollOptionsForm />
           </Card>
-          <hr />
+          {/* <hr />
           <Card>
             <CardHeader>
               <div className="flex items-center gap-x-2">
@@ -140,12 +125,12 @@ export const CreatePoll: React.FunctionComponent = () => {
               <div className="grid gap-4">
                 <FormField
                   control={form.control}
-                  name="allDay"
+                  name="hideParticipants"
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-start justify-between gap-x-4">
                         <div className="grid gap-2 pt-0.5">
-                          <Label htmlFor="allDay">Hide participant</Label>
+                          <Label htmlFor="allDay">Hide participants</Label>
                           <p className="text-muted-foreground text-sm">
                             Only you will be able to see the participant names
                           </p>
@@ -162,7 +147,7 @@ export const CreatePoll: React.FunctionComponent = () => {
                 />
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
           <hr />
           <Button
             loading={form.formState.isSubmitting || form.formState.isSubmitted}

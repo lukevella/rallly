@@ -51,12 +51,6 @@ export const polls = router({
         timeZone: z.string().optional(),
         location: z.string().optional(),
         description: z.string().optional(),
-        user: z
-          .object({
-            name: z.string(),
-            email: z.string(),
-          })
-          .optional(),
         options: z
           .object({
             startDate: z.string(),
@@ -70,27 +64,6 @@ export const polls = router({
       const adminToken = nanoid();
       const participantUrlId = nanoid();
       const pollId = nanoid();
-      let email: string;
-      let name: string;
-      if (input.user && ctx.user.isGuest) {
-        email = input.user.email;
-        name = input.user.name;
-      } else {
-        const user = await prisma.user.findUnique({
-          select: { email: true, name: true },
-          where: { id: ctx.user.id },
-        });
-
-        if (!user) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "User not found",
-          });
-        }
-
-        email = user.email;
-        name = user.name;
-      }
 
       const poll = await prisma.poll.create({
         select: {
@@ -142,17 +115,24 @@ export const polls = router({
 
       const participantLink = shortUrl(`/invite/${pollId}`);
 
-      if (email && name) {
-        await sendEmail("NewPollEmail", {
-          to: email,
-          subject: `Let's find a date for ${poll.title}`,
-          props: {
-            title: poll.title,
-            name,
-            adminLink: pollLink,
-            participantLink,
-          },
+      if (ctx.user.isGuest === false) {
+        const user = await prisma.user.findUnique({
+          select: { email: true, name: true },
+          where: { id: ctx.user.id },
         });
+
+        if (user) {
+          await sendEmail("NewPollEmail", {
+            to: user.email,
+            subject: `Let's find a date for ${poll.title}`,
+            props: {
+              title: poll.title,
+              name: user.name,
+              adminLink: pollLink,
+              participantLink,
+            },
+          });
+        }
       }
 
       return { id: poll.id };

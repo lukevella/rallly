@@ -1,6 +1,11 @@
-import { useTranslation } from "next-i18next";
+import { CalendarIcon, TableIcon } from "@rallly/icons";
+import { FormField } from "@rallly/ui/form";
+import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+
+import TimeZonePicker from "@/components/time-zone-picker";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { useModal } from "../../modal";
@@ -104,19 +109,48 @@ const PollOptionsForm: React.FunctionComponent<
   const watchNavigationDate = watch("navigationDate");
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
 
-  const [calendarHelpModal, openHelpModal] = useModal({
-    overlayClosable: true,
-    title: t("calendarHelpTitle"),
-    description: t("calendarHelp"),
-    okText: t("ok"),
-  });
-
   return (
     <div>
-      {calendarHelpModal}
       {dateOrTimeRangeModal}
-
       <div>
+        <div className="flex flex-col justify-between gap-y-3 gap-x-4 border-b border-gray-100 p-3 sm:flex-row sm:items-center sm:px-5 sm:py-4">
+          <div className="grow">
+            <FormField
+              control={form.control}
+              name="timeZone"
+              render={({ field }) => (
+                <TimeZonePicker
+                  value={field.value}
+                  onBlur={field.onBlur}
+                  onChange={(timeZone) => {
+                    setValue("timeZone", timeZone, { shouldTouch: true });
+                  }}
+                  disabled={datesOnly}
+                />
+              )}
+            />
+          </div>
+          <div>
+            <FormField
+              control={form.control}
+              name="view"
+              render={({ field }) => (
+                <Tabs value={field.value} onValueChange={field.onChange}>
+                  <TabsList className="w-full">
+                    <TabsTrigger className="grow" value="month">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <Trans i18nKey="monthView" />
+                    </TabsTrigger>
+                    <TabsTrigger className="grow" value="week">
+                      <TableIcon className="mr-2 h-4 w-4" />
+                      <Trans i18nKey="weekView" />
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              )}
+            />
+          </div>
+        </div>
         <selectedView.Component
           title={title}
           options={watchOptions}

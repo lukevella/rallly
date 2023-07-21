@@ -89,8 +89,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   });
 
   return (
-    <div className="min-h-[600px] overflow-hidden lg:flex">
-      <div className="shrink-0 border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
+    <div className="overflow-hidden lg:flex">
+      <div className="border-b p-3 sm:p-4 lg:w-[400px] lg:border-b-0 lg:border-r">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -120,12 +120,12 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 );
               })}
             </div>
-            <div className="grid grow grid-cols-7 rounded-lg border bg-white shadow-sm">
+            <div className="grid grow grid-cols-7 rounded-md border bg-white shadow-sm">
               {datepicker.days.map((day, i) => {
                 return (
                   <div
                     key={i}
-                    className={clsx("h-12", {
+                    className={clsx("h-11", {
                       "border-r": (i + 1) % 7 !== 0,
                       "border-b": i < datepicker.days.length - 7,
                     })}
@@ -221,7 +221,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   if (checked) {
                     // convert dates to time slots
                     onChange(
-                      options.map((option) => {
+                      options.map<DateTimeOption>((option) => {
                         if (option.type === "timeSlot") {
                           throw new Error(
                             "Expected option to be a date but received timeSlot",
