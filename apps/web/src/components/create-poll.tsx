@@ -147,7 +147,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           </Card> */}
           <hr />
           <Button
-            loading={form.formState.isSubmitting || form.formState.isSubmitted}
+            loading={form.formState.isSubmitting}
             size="lg"
             type="submit"
             className="w-full"

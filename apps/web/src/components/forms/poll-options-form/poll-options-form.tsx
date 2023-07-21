@@ -1,5 +1,5 @@
 import { CalendarIcon, TableIcon } from "@rallly/icons";
-import { FormField } from "@rallly/ui/form";
+import { FormField, FormMessage } from "@rallly/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
@@ -154,37 +154,54 @@ const PollOptionsForm: React.FunctionComponent<
         <FormField
           control={form.control}
           name="options"
+          rules={{
+            validate: (options) => {
+              return options.length > 0
+                ? true
+                : t("calendarHelp", {
+                    defaultValue:
+                      "You can't create a poll without any options. Add at least one option to continue.",
+                  });
+            },
+          }}
           render={({ field }) => (
-            <selectedView.Component
-              title={title}
-              options={field.value}
-              date={navigationDate}
-              onNavigate={(date) => {
-                setValue("navigationDate", date.toISOString());
-              }}
-              onChange={(options) => {
-                field.onChange(options);
-                if (
-                  length === 0 ||
-                  options.every((option) => option.type === "date")
-                ) {
-                  // unset the timeZone if we only have date option
-                  setValue("timeZone", "");
-                }
-                if (
-                  options.length > 0 &&
-                  !formState.touchedFields.timeZone &&
-                  options.every((option) => option.type === "timeSlot")
-                ) {
-                  // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-                  setValue("timeZone", getBrowserTimeZone());
-                }
-              }}
-              duration={watchDuration}
-              onChangeDuration={(duration) => {
-                setValue("duration", duration);
-              }}
-            />
+            <div>
+              <selectedView.Component
+                title={title}
+                options={field.value}
+                date={navigationDate}
+                onNavigate={(date) => {
+                  setValue("navigationDate", date.toISOString());
+                }}
+                onChange={(options) => {
+                  field.onChange(options);
+                  if (
+                    length === 0 ||
+                    options.every((option) => option.type === "date")
+                  ) {
+                    // unset the timeZone if we only have date option
+                    setValue("timeZone", "");
+                  }
+                  if (
+                    options.length > 0 &&
+                    !formState.touchedFields.timeZone &&
+                    options.every((option) => option.type === "timeSlot")
+                  ) {
+                    // set timeZone if we are adding time ranges and we haven't touched the timeZone field
+                    setValue("timeZone", getBrowserTimeZone());
+                  }
+                }}
+                duration={watchDuration}
+                onChangeDuration={(duration) => {
+                  setValue("duration", duration);
+                }}
+              />
+              {formState.errors.options ? (
+                <div className="border-t bg-red-50 p-3 text-center">
+                  <FormMessage />
+                </div>
+              ) : null}
+            </div>
           )}
         />
       </div>
