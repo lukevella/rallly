@@ -171,7 +171,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         }
                       }}
                       className={clsx(
-                        "group relative flex h-full w-full items-center justify-center text-sm font-medium focus:z-10 focus:rounded",
+                        "group relative flex h-full w-full items-start justify-end px-2.5 py-1.5 text-sm font-medium tracking-tight focus:z-10 focus:rounded",
                         {
                           "text-rose-600": day.today && !day.selected,
                           "bg-gray-50 text-gray-500": day.outOfMonth,
@@ -182,7 +182,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       <span
                         aria-hidden
                         className={cn(
-                          "absolute -z-0 h-8 w-8 rounded-md border",
+                          "absolute inset-1 -z-0 rounded-md border",
                           day.selected
                             ? "border-primary-100 group-hover:bg-primary-100 group-active:bg-primary-200 bg-primary-50 shadow-sm"
                             : "border-transparent group-hover:border-gray-200 group-hover:bg-gray-100 group-active:bg-gray-200",
