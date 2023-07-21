@@ -119,6 +119,7 @@
   "language": "Språk",
   "back": "Tillbaka",
   "dates": "Datum",
+  "menu": "Meny",
   "billing": "Fakturering",
   "attendeeCount": "{count, plural, one {# deltagare} other {# deltagare}}",
   "notificationsOn": "Aviseringar är på",
