@@ -77,6 +77,7 @@
   "register": "Registrera",
   "requiredString": "“{name}” är obligatoriskt",
   "resendVerificationCode": "Skicka verifieringskoden igen",
+  "response": "Svar",
   "save": "Spara",
   "saveInstruction": "Välj din tillgänglighet och klicka på <b>{action}</b>",
   "send": "Skicka",
