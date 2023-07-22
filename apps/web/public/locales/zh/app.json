@@ -166,13 +166,13 @@
   "finalizeDescription": "选择此投票的最终决定日期以完成投票。",
   "notificationsGuestTooltip": "创建一个帐户或登录以获取通知",
   "planFree": "免费版",
-  "dateAndTimeDescription": "更改您的首选日期& 时间",
+  "dateAndTimeDescription": "设置您的首选日期& 时间",
   "createdTime": "创建于 {relativeTime}",
   "permissionDeniedParticipant": "如果你不是投票创建者，你应该去邀请页面。",
   "goToInvite": "前往邀请页面",
   "planPro": "专业版",
   "Billing": "订阅",
-  "annualBilling": "年费 (节省 {discount}%)",
+  "annualBilling": "按年付费 (-{discount}%)",
   "planUpgrade": "升级",
   "subscriptionUpdatePayment": "更新付款详情",
   "subscriptionCancel": "取消订阅",
@@ -203,5 +203,5 @@
   "plan_prioritySupport": "优先支持",
   "becomeATranslator": "帮助翻译",
   "noPolls": "没有投票",
-  "noPollsDescription": "从创建一个新投票开始。"
+  "noPollsDescription": "创建一个新投票以开始使用。"
 }
