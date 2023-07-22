@@ -3,10 +3,10 @@
   "links": "Länkar",
   "blog": "Blogg",
   "discussions": "Diskussioner",
-  "footerCredit": "Gjort av <a>@imlukevella</a>",
+  "footerCredit": "Skapad av <a>@imlukevella</a>",
   "footerSponsor": "Detta projekt är användarfinansierat. Överväg att stödja det genom att göra en <a>donation</a>.",
   "language": "Språk",
-  "poweredBy": "Byggd på",
+  "poweredBy": "Drivs av",
   "privacyPolicy": "Integritetspolicy",
   "support": "Support",
   "cookiePolicy": "Policy för kakor",
@@ -14,5 +14,6 @@
   "volunteerTranslator": "Hjälp till att översätta denna webbplats",
   "notFoundTitle": "404 hittades inte",
   "notFoundDescription": "Vi kunde inte hitta sidan du försökte nå.",
-  "goToHome": "Gå till hem"
+  "goToHome": "Gå till hem",
+  "pricing": "Priser"
 }
