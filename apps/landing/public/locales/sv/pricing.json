@@ -1,6 +1,8 @@
 {
   "annualBilling": "Årlig fakturering (Spara {discount}%)",
   "planFree": "Gratis",
+  "unlimitedPolls": "Obegränsade omröstningar",
+  "unlimitedParticipants": "Obegränsat antal deltagare",
   "getStarted": "Kom igång gratis",
   "planPro": "Pro",
   "annualBillingDescription": "per månad, faktureras årligen",
@@ -8,5 +10,6 @@
   "upgrade": "Uppgradera",
   "canUseFree": "Kan jag använda Rallly gratis?",
   "whyUpgrade": "Varför ska jag uppgradera?",
+  "howToUpgrade": "Hur uppgraderar jag till en betald plan?",
   "cancelSubscription": "Hur avbryter jag min prenumeration?"
 }
