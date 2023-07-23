@@ -171,10 +171,13 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         }
                       }}
                       className={clsx(
-                        "group relative flex h-full w-full items-start justify-end px-2.5 py-1.5 text-sm font-medium tracking-tight focus:z-10 focus:rounded",
+                        "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 text-sm font-medium tracking-tight focus:z-10 focus:rounded",
                         {
+                          "pointer-events-none bg-gray-100 text-gray-400":
+                            day.isPast,
                           "text-rose-600": day.today && !day.selected,
-                          "bg-gray-50 text-gray-500": day.outOfMonth,
+                          "bg-gray-50 text-gray-500":
+                            day.outOfMonth && !day.isPast,
                           "text-primary-600": day.selected,
                         },
                       )}
