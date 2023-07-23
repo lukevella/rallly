@@ -1,8 +1,8 @@
 {
   "pricing": "价格",
   "pricingDescription": "无需登录即可开始免费使用。",
-  "annualBilling": "年费 (节省 {discount}%)",
-  "planFree": "免费",
+  "annualBilling": "按年付费 (-{discount}%)",
+  "planFree": "免费版",
   "freeForever": "永远免费",
   "unlimitedPolls": "无限投票",
   "unlimitedParticipants": "无限参与者",

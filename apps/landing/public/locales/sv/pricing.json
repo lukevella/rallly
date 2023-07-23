@@ -1,12 +1,22 @@
 {
+  "pricing": "Priser",
+  "pricingDescription": "Kom igång gratis. Ingen inloggning krävs.",
   "annualBilling": "Årlig fakturering (Spara {discount}%)",
   "planFree": "Gratis",
+  "freeForever": "gratis för alltid",
+  "unlimitedPolls": "Obegränsade omröstningar",
+  "unlimitedParticipants": "Obegränsat antal deltagare",
   "getStarted": "Kom igång gratis",
   "planPro": "Pro",
   "annualBillingDescription": "per månad, faktureras årligen",
   "monthlyBillingDescription": "per månad",
+  "prioritySupport": "Prioriterad support",
   "upgrade": "Uppgradera",
+  "priceIncreaseInfo": "Priserna kommer att justeras regelbundet i takt med att fler funktioner läggs till",
   "canUseFree": "Kan jag använda Rallly gratis?",
   "whyUpgrade": "Varför ska jag uppgradera?",
-  "cancelSubscription": "Hur avbryter jag min prenumeration?"
+  "howToUpgrade": "Hur uppgraderar jag till en betald plan?",
+  "howToUpgradeAnswer": "För att uppgradera kan du gå till dina <a>Faktureringsinställningar</a> och klicka på <b>Uppgradera</b>.",
+  "cancelSubscription": "Hur avbryter jag min prenumeration?",
+  "cancelSubscriptionAnswer": "Du kan när som helst avbryta din prenumeration genom att gå till dina <a>faktureringsinställningar</a>. När du avslutar din prenumeration har du fortfarande tillgång till din betalda plan fram till slutet av din faktureringsperiod. Efter det kommer du att nedgraderas till en gratis plan."
 }

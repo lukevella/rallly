@@ -1,8 +1,12 @@
 {
-  "startUsOnGithub": "Stjärnmarkera på GitHub",
+  "createPageLikeThis": "Skapa en sida som denna på några sekunder!",
+  "startUsOnGithub": "Stjärnmärk oss på GitHub",
   "noLoginRequired": "Ingen inloggning krävs",
   "metaTitle": "Rallly - Schemalägg gruppmöten",
-  "metaDescription": "Skapa förfrågningar och rösta för att hitta den bästa dagen eller tiden. Ett gratis alternativ till Doodle.",
+  "metaDescription": "Skapa omröstningar och rösta för att hitta den bästa dagen eller tiden. Ett gratis alternativ till Doodle.",
   "getStarted": "Kom igång",
-  "subheading": "Effektivisera din schemaläggning och spara tid"
+  "subheading": "Effektivisera din schemaläggning och spara tid",
+  "ericQuote": "\"Om ditt sätt att komma överens om scheman är via e-post rekommenderar jag starkt att du testar Rallly och låter det underlätta dina scheman så att din arbetsdag blir tydligare och mer avslappnad.\"",
+  "viaTrustpilot": "via Trustpilot",
+  "hint": "Det är gratis! Ingen inloggning krävs."
 }
