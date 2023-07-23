@@ -38,7 +38,6 @@ const Page: NextPageWithLayout = () => {
   const form = useForm<PollSettingsFormData>({
     defaultValues: {
       hideParticipants: poll.hideParticipants,
-      hideScores: poll.hideScores,
     },
   });
 
