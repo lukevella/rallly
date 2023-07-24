@@ -160,7 +160,7 @@ const Discussion: React.FunctionComponent = () => {
               <Textarea
                 id="comment"
                 autoFocus={true}
-                placeholder={t("commentPlaceholder")}
+                placeholder={t("commentInstruction")}
                 {...register("content", { validate: requiredString })}
               />
             </div>
@@ -196,7 +196,7 @@ const Discussion: React.FunctionComponent = () => {
             className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
             onClick={() => setIsWriting(true)}
           >
-            <Trans i18nKey="commentPlaceholder" />
+            <Trans i18nKey="commentInstruction" defaults="Leave a comment" />
           </button>
         )}
       </div>

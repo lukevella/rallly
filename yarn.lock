@@ -8430,6 +8430,11 @@ react-email@^1.9.1:
     shelljs "0.8.5"
     tree-node-cli "1.6.0"
 
+react-hook-form-persist@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form-persist/-/react-hook-form-persist-3.0.0.tgz#4aa1f7150d3f836408240cbfbfdb0fe4842f31a2"
+  integrity sha512-6nwW65JyFpBem9RjLYAWvIFxOLoCk0E13iB9e5yeF5jeHlwx1ua0M77FvwhPpD8eaCz7hG4ziCdOxRcnJVUSxQ==
+
 react-hook-form@^7.42.1:
   version "7.43.2"
   resolved "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.43.2.tgz"

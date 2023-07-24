@@ -11,6 +11,7 @@ import {
 import { FormField, FormItem } from "@rallly/ui/form";
 import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
+import Link from "next/link";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";
@@ -27,29 +28,42 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
 
   const plan = usePlan();
 
+  const disabled = plan === "free";
+
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-x-2">
-          <CardTitle>
-            <Trans i18nKey="settings" />
-          </CardTitle>
-          <Badge>
-            <Trans i18nKey="planPro" />
-          </Badge>
+        <div className="flex justify-between gap-x-4">
+          <div>
+            <div className="flex items-center gap-x-2">
+              <CardTitle>
+                <Trans i18nKey="settings" />
+              </CardTitle>
+              <Badge>
+                <Trans i18nKey="planPro" />
+              </Badge>
+            </div>
+            <CardDescription>
+              <Trans
+                i18nKey="pollSettingsDescription"
+                defaults="Customize the behaviour of your poll"
+              />
+            </CardDescription>
+          </div>
+          {disabled ? (
+            <div>
+              <Link className="text-link text-sm" href="/settings/billing">
+                <Trans i18nKey="planUpgrade" />
+              </Link>
+            </div>
+          ) : null}
         </div>
-        <CardDescription>
-          <Trans
-            i18nKey="pollSettingsDescription"
-            defaults="Customize the behaviour of your poll"
-          />
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <div
           className={cn(
             "grid gap-2.5",
-            plan === "free" ? "pointer-events-none opacity-50" : "",
+            disabled ? "pointer-events-none opacity-50" : "",
           )}
         >
           <div className="rounded-lg border p-4">
@@ -76,6 +90,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                       </p>
                     </div>
                     <Switch
+                      disabled={disabled}
                       checked={field.value}
                       onCheckedChange={(checked) => {
                         field.onChange(checked);

@@ -11,7 +11,6 @@
   "changeNameDescription": "Enter a new name for this participant.",
   "changeNameInfo": "This will not affect any votes you have already made.",
   "close": "Close",
-  "commentPlaceholder": "Leave a comment on this poll",
   "comments": "Comments",
   "continue": "Continue",
   "copied": "Copied",
@@ -207,5 +206,7 @@
   "calendarHelp": "You can't create a poll without any options. Add at least one option to continue.",
   "hideParticipants": "Hide participants",
   "hideParticipantsDescription": "Participants won't be able to see each other's votes and comments",
-  "editSettings": "Edit settings"
+  "editSettings": "Edit settings",
+  "commentInstruction": "Leave a comment (optional)",
+  "pollSettingsDescription": "Customize the behaviour of your poll"
 }

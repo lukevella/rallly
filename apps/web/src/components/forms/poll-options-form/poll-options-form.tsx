@@ -10,7 +10,7 @@ import TimeZonePicker from "@/components/time-zone-picker";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { useModal } from "../../modal";
-import { NewEventData, PollFormProps } from "../types";
+import { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar";
 import { DateTimeOption } from "./types";
 import WeekCalendar from "./week-calendar";

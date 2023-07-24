@@ -1,5 +1,4 @@
 import { trpc } from "@rallly/backend";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -12,10 +11,10 @@ import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import useFormPersist from "react-hook-form-persist";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { usePostHog } from "@/utils/posthog";
 
 import { NewEventData, PollDetailsForm, PollOptionsForm } from "./forms";
@@ -41,11 +40,15 @@ export const CreatePoll: React.FunctionComponent = () => {
   const form = useForm<NewEventData>({
     defaultValues: {
       view: "month",
-      timeZone: getBrowserTimeZone(),
       options: [],
       hideParticipants: false,
       duration: 60,
     },
+  });
+
+  useFormPersist("new-poll", {
+    watch: form.watch,
+    setValue: form.setValue,
   });
 
   const posthog = usePostHog();

@@ -56,6 +56,7 @@
     "posthog-js": "^1.57.2",
     "react-big-calendar": "^1.8.1",
     "react-hook-form": "^7.42.1",
+    "react-hook-form-persist": "^3.0.0",
     "react-hot-toast": "^2.4.0",
     "react-i18next": "^12.1.4",
     "react-linkify": "^1.0.0-alpha",

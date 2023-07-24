@@ -14,7 +14,7 @@ import { formatDateWithoutTz } from "./utils";
 
 const localizer = dayjsLocalizer(dayjs);
 
-const useView = createBreakpoint({ week: 720, day: 360 });
+const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
 
 const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   options,
@@ -31,7 +31,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         : undefined
       : undefined;
 
-  const view = useView();
+  const defaultView = useDevice() === "mobile" ? "day" : "week";
 
   return (
     <div className="relative flex h-[600px]">
@@ -50,7 +50,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         culture="default"
         onNavigate={onNavigate}
         date={date}
-        view={view as any}
+        defaultView={defaultView}
         views={["week", "day"]}
         selectable={true}
         localizer={localizer}
