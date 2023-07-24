@@ -1,6 +1,22 @@
 {
+  "createPageLikeThis": "Crea una pagina come questa in secondi!",
+  "opensource": "Siamo Open Source!",
   "startUsOnGithub": "Aggiungi ai preferiti su Github",
   "noLoginRequired": "Login non necessario",
+  "metaTitle": "Rallly - Programma incontri di gruppo",
   "metaDescription": "Crea sondaggi e vota per trovare il miglior giorno o orario. Un alternativa gratuita a Doodle.",
-  "getStarted": "Inizia ora"
+  "getStarted": "Inizia ora",
+  "headline": "Abbandona avanti e indietro di email",
+  "subheading": "Semplifica il processo di programmazione e risparmia tempo",
+  "pcmagQuote": "Imposta un sondaggio di pianificazione in pochissimo tempo",
+  "hubspotQuote": "La soluzione più semplice per i sondaggi di fattibilità per gruppi numerosi",
+  "goodfirmsQuote": "Unico nella sua semplicità, richiede un tempo d'interazione minimo",
+  "popsciQuote": "La scelta perfetta se volete mantenere il vostro RSVP semplice",
+  "ericQuote": "Se il vostro flusso di lavoro di pianificazione passa per le e-mail, vi incoraggio caldamente a lasciare che Rally semplifichi le vostre attività di pianificazione per una giornata di lavoro più organizzata e meno stressante",
+  "viaTrustpilot": "via Trustpilot",
+  "ericJobTitle": "Assistente esecutivo al MIT",
+  "statsUsersRegistered": "45k+ utenti registrati",
+  "statsPollsCreated": "100k+ sondaggi creati",
+  "statsLanguagesSupported": "10+ lingue supportate",
+  "hint": "È gratuito! Nessun login richiesto."
 }
