@@ -1,1 +1,27 @@
-{}
+{
+  "pricing": "Prezzi",
+  "pricingDescription": "Inizia gratuitamente. Nessun login richiesto.",
+  "annualBilling": "Fatturazione annuale ( {discount}%)",
+  "planFree": "Gratis",
+  "freeForever": "gratis per sempre",
+  "unlimitedPolls": "Sondaggi illimitati",
+  "unlimitedParticipants": "Partecipanti illimitati",
+  "getStarted": "Inizia gratis",
+  "planPro": "Piano professionale",
+  "annualBillingDescription": "descrizione fatturazione annuale",
+  "monthlyBillingDescription": "descrizione fatturazione mensile",
+  "finalizePolls": "Finalizza i sondaggi",
+  "extendedPollLife": "Prolunga la durata del sondaggio",
+  "prioritySupport": "Supporto prioritario",
+  "upgrade": "Potenzia",
+  "priceIncreaseInfo": "I prezzi saranno regolati regolarmente come vengono aggiunte altre caratteristiche",
+  "faq": "Domande Frequenti",
+  "canUseFree": "Posso usare Rallly gratuitamente?",
+  "canUseFreeAnswer": "Sì, come utente gratuito è possibile creare sondaggi e ottenere informazioni sulla disponibilità dei partecipanti. Potrete comunque vedere i risultati del sondaggio, ma non potrete selezionare una data finale o inviare inviti a calendario.",
+  "whyUpgrade": "Perché dovrei aggiornare?",
+  "whyUpgradeAnswer": "Quando passerete a un piano a pagamento, potrete finalizzare i vostri sondaggi e inviare automaticamente inviti a calendario ai partecipanti con la data selezionata. Inoltre, conserveremo i vostri sondaggi a tempo indeterminato, in modo che non vengano eliminati automaticamente anche dopo la loro conclusione.",
+  "howToUpgrade": "Come faccio ad aggiornare a un piano a pagamento?",
+  "howToUpgradeAnswer": "Per aggiornare, puoi andare alle tue impostazioni di fatturazione <a></a> e fare clic su <b>Aggiorna</b>.",
+  "cancelSubscription": "Come annullo il mio abbonamento?",
+  "cancelSubscriptionAnswer": "È possibile annullare l'abbonamento in qualsiasi momento accedendo alle <a>billing settings</a>. Una volta annullato l'abbonamento, si avrà ancora accesso al piano a pagamento fino alla fine del periodo di fatturazione. Dopodiché, sarete declassati a un piano gratuito."
+}
