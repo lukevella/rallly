@@ -1,5 +1,5 @@
 {
-  "login": "Accedi",
+  "login": "Login",
   "links": "Link",
   "blog": "Blog",
   "discussions": "Discussioni",
@@ -9,8 +9,12 @@
   "poweredBy": "Powered by",
   "privacyPolicy": "Informativa sulla privacy",
   "support": "Assistenza",
+  "cookiePolicy": "Informativa sui cookie",
+  "termsOfUse": "Termini di Utilizzo",
   "volunteerTranslator": "Aiutaci a tradurre il sito",
   "notFoundTitle": "404 non trovato",
   "notFoundDescription": "Non abbiamo trovato la pagina che stavi cercando.",
-  "goToHome": "Vai alla home"
+  "goToHome": "Vai alla home",
+  "goToApp": "Vai all’app",
+  "pricing": "Prezzi"
 }
