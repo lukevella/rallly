@@ -15,7 +15,10 @@ import { useRole } from "@/contexts/role";
 import { TimePreferences } from "@/contexts/time-preferences";
 
 import { useNewParticipantModal } from "../new-participant-modal";
-import { useParticipants } from "../participants-provider";
+import {
+  useParticipants,
+  useVisibleParticipants,
+} from "../participants-provider";
 import { usePoll } from "../poll-context";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
@@ -101,6 +104,8 @@ const Poll: React.FunctionComponent = () => {
 
   const updateParticipant = useUpdateParticipantMutation();
   const showNewParticipantModal = useNewParticipantModal();
+
+  const visibleParticipants = useVisibleParticipants();
   return (
     <PollContext.Provider
       value={{
@@ -218,9 +223,9 @@ const Poll: React.FunctionComponent = () => {
                   }}
                 />
               ) : null}
-              {participants.length > 0 ? (
+              {visibleParticipants.length > 0 ? (
                 <div className="py-2">
-                  {participants.map((participant, i) => {
+                  {visibleParticipants.map((participant, i) => {
                     return (
                       <ParticipantRow
                         key={i}

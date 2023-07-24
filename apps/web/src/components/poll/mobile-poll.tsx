@@ -15,7 +15,10 @@ import { TimePreferences } from "@/contexts/time-preferences";
 
 import { styleMenuItem } from "../menu-styles";
 import { useNewParticipantModal } from "../new-participant-modal";
-import { useParticipants } from "../participants-provider";
+import {
+  useParticipants,
+  useVisibleParticipants,
+} from "../participants-provider";
 import { useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
@@ -59,6 +62,7 @@ const MobilePoll: React.FunctionComponent = () => {
     }
   });
 
+  const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
@@ -149,7 +153,7 @@ const MobilePoll: React.FunctionComponent = () => {
                     <Listbox.Option value={undefined} className={styleMenuItem}>
                       {t("participantCount", { count: participants.length })}
                     </Listbox.Option>
-                    {participants.map((participant) => (
+                    {visibleParticipants.map((participant) => (
                       <Listbox.Option
                         key={participant.id}
                         value={participant.id}

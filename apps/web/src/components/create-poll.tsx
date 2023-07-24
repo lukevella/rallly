@@ -55,6 +55,7 @@ export const CreatePoll: React.FunctionComponent = () => {
   return (
     <Form {...form}>
       <form
+        className="pb-16"
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
 
@@ -100,32 +101,10 @@ export const CreatePoll: React.FunctionComponent = () => {
               <PollDetailsForm />
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Trans i18nKey="calendar">Calendar</Trans>
-              </CardTitle>
-              <CardDescription>
-                <Trans i18nKey="selectPotentialDates">
-                  Select potential dates for your event
-                </Trans>
-              </CardDescription>
-            </CardHeader>
-            <PollOptionsForm />
-          </Card>
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-x-2">
-                <CardTitle>Advanced</CardTitle>
-                <Badge>
-                  <Trans i18nKey="planPro" />
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <PollSettingsForm />
-            </CardContent>
-          </Card>
+
+          <PollOptionsForm />
+
+          <PollSettingsForm />
           <hr />
           <Button
             loading={form.formState.isSubmitting}

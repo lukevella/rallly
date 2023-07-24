@@ -5,6 +5,8 @@ import { AnimatePresence, m } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { IfParticipantsVisible } from "@/components/visibility";
+
 import { useParticipants } from "../../participants-provider";
 import { ConnectedScoreSummary } from "../score-summary";
 import UserAvatar from "../user-avatar";
@@ -212,17 +214,19 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
                 setExpanded((value) => !value);
               }}
             >
-              {participants.length > 0 ? (
-                <SummarizedParticipantList participants={participants} />
-              ) : null}
-              <ChevronDownIcon
-                className={clsx(
-                  "h-5 shrink-0 text-gray-500 transition-transform",
-                  {
-                    "-rotate-180": expanded,
-                  },
-                )}
-              />
+              <IfParticipantsVisible>
+                {participants.length > 0 ? (
+                  <SummarizedParticipantList participants={participants} />
+                ) : null}
+                <ChevronDownIcon
+                  className={clsx(
+                    "h-5 shrink-0 text-gray-500 transition-transform",
+                    {
+                      "-rotate-180": expanded,
+                    },
+                  )}
+                />
+              </IfParticipantsVisible>
             </m.button>
           )}
         </AnimatePresence>

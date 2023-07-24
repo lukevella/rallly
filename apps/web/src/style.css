@@ -88,7 +88,7 @@
   }
   .btn.btn-disabled {
     text-shadow: none;
-    @apply pointer-events-none border-gray-200 bg-gray-500/5 text-gray-400 shadow-none;
+    @apply pointer-events-none border-gray-200 bg-gray-50 text-gray-400 shadow-none;
   }
   .btn-primary {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;

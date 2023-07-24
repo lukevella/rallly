@@ -1,11 +1,5 @@
 import { Button } from "@rallly/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
+import { CardFooter } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -44,6 +38,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <Form {...form}>
       <form
+        className="mx-auto max-w-3xl"
         onSubmit={form.handleSubmit(async (data) => {
           //submit
           await update.mutateAsync(
@@ -54,15 +49,7 @@ const Page: NextPageWithLayout = () => {
           );
         })}
       >
-        <Card className="mx-auto max-w-4xl">
-          <CardHeader>
-            <CardTitle>
-              <Trans i18nKey="settings" defaults="Settings" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PollSettingsForm />
-          </CardContent>
+        <PollSettingsForm>
           <CardFooter className="justify-between">
             <Button asChild>
               <Link href={pollLink}>
@@ -73,7 +60,7 @@ const Page: NextPageWithLayout = () => {
               <Trans i18nKey="save" />
             </Button>
           </CardFooter>
-        </Card>
+        </PollSettingsForm>
       </form>
     </Form>
   );

@@ -47,6 +47,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <Form {...form}>
       <form
+        className="mx-auto max-w-3xl"
         onSubmit={form.handleSubmit((data) => {
           //submit
           updatePollMutation(
@@ -55,7 +56,7 @@ const Page: NextPageWithLayout = () => {
           );
         })}
       >
-        <Card className="mx-auto max-w-4xl">
+        <Card>
           <CardHeader>
             <CardTitle>
               <Trans i18nKey="editDetails" defaults="Edit details" />

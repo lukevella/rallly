@@ -4,6 +4,7 @@ import { XIcon } from "@rallly/icons";
 import dayjs from "dayjs";
 import React from "react";
 import { Calendar } from "react-big-calendar";
+import { createBreakpoint } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";
@@ -12,6 +13,8 @@ import { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTz } from "./utils";
 
 const localizer = dayjsLocalizer(dayjs);
+
+const useView = createBreakpoint({ week: 720, day: 360 });
 
 const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   options,
@@ -27,6 +30,8 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         ? new Date(options[0].start)
         : undefined
       : undefined;
+
+  const view = useView();
 
   return (
     <div className="relative flex h-[600px]">
@@ -45,7 +50,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         culture="default"
         onNavigate={onNavigate}
         date={date}
-        defaultView="week"
+        view={view as any}
         views={["week", "day"]}
         selectable={true}
         localizer={localizer}

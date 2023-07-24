@@ -1,4 +1,5 @@
 import { CalendarIcon, TableIcon } from "@rallly/icons";
+import { Card, CardDescription, CardHeader, CardTitle } from "@rallly/ui/card";
 import { FormField, FormMessage } from "@rallly/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { Trans, useTranslation } from "next-i18next";
@@ -22,9 +23,7 @@ export type PollOptionsData = {
   options: DateTimeOption[];
 };
 
-const PollOptionsForm: React.FunctionComponent<
-  PollFormProps<PollOptionsData> & { title?: string }
-> = ({ onChange, title }) => {
+const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
 
@@ -84,19 +83,6 @@ const PollOptionsForm: React.FunctionComponent<
   });
 
   React.useEffect(() => {
-    if (onChange) {
-      const subscription = watch(({ options = [], ...rest }) => {
-        // Watch returns a deep partial here which is not really accurate and messes up
-        // the types a bit. Repackaging it to keep the types sane.
-        onChange({ options: options as DateTimeOption[], ...rest });
-      });
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [watch, onChange]);
-
-  React.useEffect(() => {
     if (watchOptions.length > 1) {
       const optionType = watchOptions[0].type;
       // all options needs to be the same type
@@ -110,25 +96,18 @@ const PollOptionsForm: React.FunctionComponent<
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
 
   return (
-    <div>
-      {dateOrTimeRangeModal}
-      <div>
-        <div className="flex flex-col justify-between gap-y-3 gap-x-4 border-b border-gray-100 p-3 sm:flex-row sm:items-center sm:p-4">
-          <div className="grow">
-            <FormField
-              control={form.control}
-              name="timeZone"
-              render={({ field }) => (
-                <TimeZonePicker
-                  value={field.value}
-                  onBlur={field.onBlur}
-                  onChange={(timeZone) => {
-                    setValue("timeZone", timeZone, { shouldTouch: true });
-                  }}
-                  disabled={datesOnly}
-                />
-              )}
-            />
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col justify-between gap-4 sm:flex-row">
+          <div>
+            <CardTitle>
+              <Trans i18nKey="calendar">Calendar</Trans>
+            </CardTitle>
+            <CardDescription>
+              <Trans i18nKey="selectPotentialDates">
+                Select potential dates for your event
+              </Trans>
+            </CardDescription>
           </div>
           <div>
             <FormField
@@ -151,6 +130,9 @@ const PollOptionsForm: React.FunctionComponent<
             />
           </div>
         </div>
+      </CardHeader>
+      {dateOrTimeRangeModal}
+      <div>
         <FormField
           control={form.control}
           name="options"
@@ -167,7 +149,6 @@ const PollOptionsForm: React.FunctionComponent<
           render={({ field }) => (
             <div>
               <selectedView.Component
-                title={title}
                 options={field.value}
                 date={navigationDate}
                 onNavigate={(date) => {
@@ -205,7 +186,24 @@ const PollOptionsForm: React.FunctionComponent<
           )}
         />
       </div>
-    </div>
+      <div className="grow border-t bg-gray-50 px-5 py-3">
+        <FormField
+          control={form.control}
+          name="timeZone"
+          render={({ field }) => (
+            <TimeZonePicker
+              value={field.value}
+              onBlur={field.onBlur}
+              onChange={(timeZone) => {
+                setValue("timeZone", timeZone, { shouldTouch: true });
+              }}
+              disabled={datesOnly}
+            />
+          )}
+        />
+      </div>
+      {children}
+    </Card>
   );
 };
 
