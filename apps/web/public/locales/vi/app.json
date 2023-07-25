@@ -5,13 +5,10 @@
   "alreadyRegistered": "Đã đăng ký? <a>Đăng nhập →</a>",
   "applyToAllDates": "Áp dụng cho mọi ngày",
   "areYouSure": "Bạn chắc chứ?",
-  "calendarHelp": "Bạn không thể tạo bình chọn nếu chưa có lựa chọn nào. Hãy thêm ít nhất một lựa chọn để tiếp tục.",
-  "calendarHelpTitle": "Bạn quên gì đó?",
   "cancel": "Hủy",
   "changeName": "Đổi tên",
   "changeNameDescription": "Nhập tên mới cho người tham dự này.",
   "changeNameInfo": "Việc đổi tên sẽ không ảnh hưởng đến các bầu chọn bạn đã làm.",
-  "commentPlaceholder": "Để lại một bình luận trên bình chọn này (mọi người đều có thể nhìn thấy)",
   "comments": "Bình luận",
   "continue": "Tiếp tục",
   "copied": "Đã sao chép",
@@ -61,7 +58,6 @@
   "no": "Không",
   "noDatesSelected": "Không có ngày nào được chọn",
   "noVotes": "Chưa ai bầu cho bình chọn này",
-  "ok": "Ok",
   "optional": "tuỳ chọn",
   "preferences": "Tuỳ chỉnh",
   "previousMonth": "Tháng trước",
@@ -100,7 +96,8 @@
   "errors_goToHome": "Về trang chủ",
   "optionCount": "{count, plural, other {# tuỳ chọn}}",
   "participantCount": "{count, plural, other {# người tham dự}}",
-  "back": "Quay lại",
   "notificationsOn": "Đã bật thông báo",
-  "share": "Chia sẻ"
+  "share": "Chia sẻ",
+  "calendarHelp": "Bạn không thể tạo bình chọn nếu chưa có lựa chọn nào. Hãy thêm ít nhất một lựa chọn để tiếp tục.",
+  "commentPlaceholder": "Để lại một bình luận trên bình chọn này (mọi người đều có thể nhìn thấy)"
 }
