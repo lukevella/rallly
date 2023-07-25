@@ -198,6 +198,18 @@
   "becomeATranslator": "Hilf bei der Übersetzung",
   "noPolls": "Keine Umfragen",
   "noPollsDescription": "Starte, indem du eine Umfrage erstellst.",
+  "event": "Veranstaltung",
+  "describeYourEvent": "Beschreibe deine Veranstaltung",
+  "calendar": "Kalender",
+  "selectPotentialDates": "Wähle potenzielle Termine oder Zeiten für deine Veranstaltung",
+  "optionalLabel": "(Optional)",
   "calendarHelp": "Du kannst keine Umfrage ohne Optionen erstellen. Füge mindestens eine Option hinzu, um fortzufahren.",
-  "commentPlaceholder": "Kommentar zu dieser Umfrage hinterlassen (für jeden sichtbar)"
+  "hideParticipants": "Teilnehmerliste ausblenden",
+  "hideParticipantsDescription": "Verstecke die Teilnehmerdetails vor anderen Teilnehmern",
+  "editSettings": "Einstellungen bearbeiten",
+  "commentPlaceholder": "Kommentar zu dieser Umfrage hinterlassen (für jeden sichtbar)",
+  "hideScores": "Abstimmungen ausblenden",
+  "disableComments": "Kommentare deaktivieren",
+  "disableCommentsDescription": "Entferne die Möglichkeit, die Umfrage zu kommentieren",
+  "planCustomizablePollSettings": "Anpassbare Umfrageeinstellungen"
 }
