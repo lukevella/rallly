@@ -198,6 +198,7 @@
   "becomeATranslator": "Çeviriye yardım et",
   "noPolls": "Anket yok",
   "noPollsDescription": "Yeni bir anket oluşturarak başlayın.",
+  "event": "Etkinlik",
   "calendarHelp": "Seçenekleri olmayan bir anket oluşturamazsınız. Devam etmek için en az bir seçenek eklemelisiniz.",
   "commentPlaceholder": "Bu anket için bir yorum ekle (herkes tarafından görülebilir)"
 }
