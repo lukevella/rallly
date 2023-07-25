@@ -23,5 +23,7 @@
   "howToUpgrade": "Hogyan bővíthetek egy fizetős csomagra?",
   "howToUpgradeAnswer": "A bővítéshez menj a <a>számlázási beállításokhoz</a> és kattints a <b>Bővítés</b> gombra.",
   "cancelSubscription": "Hogyan mondhatom le az előfizetésemet?",
-  "cancelSubscriptionAnswer": "Bármikor lemondhatod az előfizetésed ha belépsz a <a>számlázási beállításokba</a>. Amennyiben lemondod az előfizetésed, úgy továbbra is elérhető lesza fizetős csomagod a számlázási időszak végéig. Azt követően lefokozódsz ingyenes csomagra."
+  "cancelSubscriptionAnswer": "Bármikor lemondhatod az előfizetésed ha belépsz a <a>számlázási beállításokba</a>. Amennyiben lemondod az előfizetésed, úgy továbbra is elérhető lesza fizetős csomagod a számlázási időszak végéig. Azt követően lefokozódsz ingyenes csomagra.",
+  "earlyAccess": "Eary bird kedvezmény",
+  "customPollSettings": "Személyreszabható szavazás beállítások"
 }
