@@ -37,6 +37,9 @@ export const TimePreferences = () => {
         };
       });
     },
+    onSuccess: () => {
+      queryClient.userPreferences.get.invalidate();
+    },
   });
 
   if (data === undefined) {
