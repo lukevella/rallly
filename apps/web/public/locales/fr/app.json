@@ -200,5 +200,8 @@
   "monthlyBillingDescription": "par mois",
   "plan_finalizePolls": "Finaliser les sondages",
   "plan_extendedPollLife": "Conserver les sondages indéfiniment",
-  "plan_prioritySupport": "Support prioritaire"
+  "plan_prioritySupport": "Support prioritaire",
+  "becomeATranslator": "Aidez à la traduction",
+  "noPolls": "Aucun sondage",
+  "noPollsDescription": "Commencez par créer un nouveau sondage."
 }

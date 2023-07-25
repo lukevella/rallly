@@ -9,7 +9,12 @@
   "poweredBy": "Destekliyenler",
   "privacyPolicy": "Gizlilik Politikası",
   "support": "Yardım",
+  "cookiePolicy": "Çerez Politikası",
+  "termsOfUse": "Kullanım Koşulları",
   "volunteerTranslator": "Bu sitenin çevirilmesine yardım edin",
   "notFoundTitle": "404 Sayfa bulunamadı",
-  "goToHome": "Ana sayfaya git"
+  "notFoundDescription": "Aradığınız sayfayı bulamadık.",
+  "goToHome": "Ana sayfaya git",
+  "goToApp": "Uygulamaya git",
+  "pricing": "Fiyatlandırma"
 }
