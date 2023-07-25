@@ -1,11 +1,5 @@
 import { Button } from "@rallly/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
+import { CardFooter } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -72,6 +66,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <Form {...form}>
       <form
+        className="mx-auto max-w-3xl"
         onSubmit={form.handleSubmit((data) => {
           const encodedOptions = data.options.map(encodeDateOption);
           const optionsToDelete = poll.options.filter((option) => {
@@ -124,19 +119,7 @@ const Page: NextPageWithLayout = () => {
           }
         })}
       >
-        <Card className="mx-auto max-w-4xl">
-          <CardHeader>
-            <CardTitle>
-              <Trans i18nKey="editOptions" />
-            </CardTitle>
-            <CardDescription>
-              <Trans
-                i18nKey="editOptionsDescription"
-                defaults="Change the options available in your poll."
-              />
-            </CardDescription>
-          </CardHeader>
-          <PollOptionsForm />
+        <PollOptionsForm>
           <CardFooter className="justify-between">
             <Button asChild>
               <Link href={pollLink}>
@@ -147,7 +130,7 @@ const Page: NextPageWithLayout = () => {
               <Trans i18nKey="save" />
             </Button>
           </CardFooter>
-        </Card>
+        </PollOptionsForm>
       </form>
     </Form>
   );
