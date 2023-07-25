@@ -54,8 +54,9 @@
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.21",
     "posthog-js": "^1.57.2",
-    "react-big-calendar": "^1.5.0",
+    "react-big-calendar": "^1.8.1",
     "react-hook-form": "^7.42.1",
+    "react-hook-form-persist": "^3.0.0",
     "react-hot-toast": "^2.4.0",
     "react-i18next": "^12.1.4",
     "react-linkify": "^1.0.0-alpha",
@@ -70,7 +71,6 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
     "@playwright/test": "^1.35.1",
     "@rallly/tsconfig": "*",
     "@types/accept-language-parser": "^1.5.3",
@@ -84,6 +84,7 @@
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.50.0",
     "cheerio": "^1.0.0-rc.12",
+    "cross-env": "^7.0.3",
     "eslint": "^7.26.0",
     "eslint-config-next": "^13.0.1",
     "eslint-config-turbo": "^0.0.9",

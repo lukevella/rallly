@@ -62,6 +62,14 @@ model UserPreferences {
   @@map("user_preferences")
 }
 
+enum ParticipantVisibility {
+  full
+  scoresOnly
+  limited
+
+  @@map("participant_visibility")
+}
+
 model Poll {
   id               String        @id @unique @map("id")
   createdAt        DateTime      @default(now()) @map("created_at")
@@ -88,6 +96,9 @@ model Poll {
   adminUrlId       String        @unique @map("admin_url_id")
   eventId          String?       @map("event_id")
   event            Event?
+  hideParticipants Boolean       @default(false) @map("hide_participants")
+  hideScores       Boolean       @default(false) @map("hide_scores")
+  disableComments  Boolean       @default(false) @map("disable_comments")
 
   @@index([userId], type: Hash)
   @@map("polls")

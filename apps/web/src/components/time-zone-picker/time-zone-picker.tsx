@@ -202,7 +202,7 @@ const TimeZonePicker: React.FunctionComponent<{
           }}
           onBlur={onBlur}
         />
-        <Combobox.Button className="absolute inset-0 flex h-9 w-full cursor-default items-center px-2 text-left">
+        <Combobox.Button className="absolute inset-0 flex h-9 w-full cursor-default items-center px-2 text-left text-sm">
           <span className="grow truncate">
             {!query ? selectedTimeZone.label : null}
           </span>

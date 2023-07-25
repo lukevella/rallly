@@ -2,6 +2,7 @@ import {
   ChevronDownIcon,
   DownloadIcon,
   PencilIcon,
+  Settings2Icon,
   SettingsIcon,
   TableIcon,
   TrashIcon,
@@ -54,6 +55,13 @@ const ManagePoll: React.FunctionComponent<{
             <Link href={`/poll/${poll.id}/edit-options`}>
               <DropdownMenuItemIconLabel icon={TableIcon}>
                 <Trans i18nKey="editOptions" />
+              </DropdownMenuItemIconLabel>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/poll/${poll.id}/edit-settings`}>
+              <DropdownMenuItemIconLabel icon={Settings2Icon}>
+                <Trans i18nKey="editSettings" defaults="Edit settings" />
               </DropdownMenuItemIconLabel>
             </Link>
           </DropdownMenuItem>

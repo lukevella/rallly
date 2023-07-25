@@ -38,6 +38,19 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
   return res.id;
 };
 
+const getPro = async (userId: string) => {
+  return Boolean(
+    await prisma.userPaymentData.findFirst({
+      where: {
+        userId,
+        endDate: {
+          gt: new Date(),
+        },
+      },
+    }),
+  );
+};
+
 export const polls = router({
   demo,
   participants,
@@ -51,12 +64,9 @@ export const polls = router({
         timeZone: z.string().optional(),
         location: z.string().optional(),
         description: z.string().optional(),
-        user: z
-          .object({
-            name: z.string(),
-            email: z.string(),
-          })
-          .optional(),
+        hideParticipants: z.boolean().optional(),
+        hideScores: z.boolean().optional(),
+        disableComments: z.boolean().optional(),
         options: z
           .object({
             startDate: z.string(),
@@ -70,27 +80,8 @@ export const polls = router({
       const adminToken = nanoid();
       const participantUrlId = nanoid();
       const pollId = nanoid();
-      let email: string;
-      let name: string;
-      if (input.user && ctx.user.isGuest) {
-        email = input.user.email;
-        name = input.user.name;
-      } else {
-        const user = await prisma.user.findUnique({
-          select: { email: true, name: true },
-          where: { id: ctx.user.id },
-        });
 
-        if (!user) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "User not found",
-          });
-        }
-
-        email = user.email;
-        name = user.name;
-      }
+      const isPro = await getPro(ctx.user.id);
 
       const poll = await prisma.poll.create({
         select: {
@@ -133,6 +124,13 @@ export const polls = router({
               })),
             },
           },
+          ...(isPro
+            ? {
+                hideParticipants: input.hideParticipants,
+                disableComments: input.disableComments,
+                hideScores: input.hideScores,
+              }
+            : undefined),
         },
       });
 
@@ -142,17 +140,24 @@ export const polls = router({
 
       const participantLink = shortUrl(`/invite/${pollId}`);
 
-      if (email && name) {
-        await sendEmail("NewPollEmail", {
-          to: email,
-          subject: `Let's find a date for ${poll.title}`,
-          props: {
-            title: poll.title,
-            name,
-            adminLink: pollLink,
-            participantLink,
-          },
+      if (ctx.user.isGuest === false) {
+        const user = await prisma.user.findUnique({
+          select: { email: true, name: true },
+          where: { id: ctx.user.id },
         });
+
+        if (user) {
+          await sendEmail("NewPollEmail", {
+            to: user.email,
+            subject: `Let's find a date for ${poll.title}`,
+            props: {
+              title: poll.title,
+              name: user.name,
+              adminLink: pollLink,
+              participantLink,
+            },
+          });
+        }
       }
 
       return { id: poll.id };
@@ -168,10 +173,15 @@ export const polls = router({
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
         closed: z.boolean().optional(),
+        hideParticipants: z.boolean().optional(),
+        disableComments: z.boolean().optional(),
+        hideScores: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
+
+      const isPro = await getPro(ctx.user.id);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
         await prisma.option.deleteMany({
@@ -215,6 +225,13 @@ export const polls = router({
           description: input.description,
           timeZone: input.timeZone,
           closed: input.closed,
+          ...(isPro
+            ? {
+                hideScores: input.hideScores,
+                hideParticipants: input.hideParticipants,
+                disableComments: input.disableComments,
+              }
+            : undefined),
         },
       });
     }),
@@ -378,6 +395,9 @@ export const polls = router({
           participantUrlId: true,
           closed: true,
           legacy: true,
+          hideParticipants: true,
+          disableComments: true,
+          hideScores: true,
           demo: true,
           options: {
             orderBy: {

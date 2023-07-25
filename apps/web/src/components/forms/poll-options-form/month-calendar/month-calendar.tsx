@@ -7,6 +7,7 @@ import {
   SparklesIcon,
   XIcon,
 } from "@rallly/icons";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -16,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Switch } from "@rallly/ui/switch";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
@@ -31,7 +33,6 @@ import {
 import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
-import Switch from "../../../switch";
 import { DateTimeOption } from "..";
 import { DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
@@ -88,8 +89,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   });
 
   return (
-    <div className="overflow-hidden lg:flex">
-      <div className="shrink-0 border-b p-3 sm:p-4 lg:w-[440px] lg:border-b-0 lg:border-r">
+    <div className="overflow-hidden md:flex">
+      <div className="border-b p-3 sm:p-4 md:w-[400px] md:border-b-0 md:border-r">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -98,7 +99,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 title={t("previousMonth")}
                 onClick={datepicker.prev}
               />
-              <div className="grow text-center text-lg font-medium">
+              <div className="grow text-center font-semibold tracking-tight">
                 {datepicker.label}
               </div>
               <Button
@@ -119,12 +120,12 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 );
               })}
             </div>
-            <div className="grid grow grid-cols-7 rounded-lg border bg-white shadow-sm">
+            <div className="grid grow grid-cols-7 rounded-md border bg-white shadow-sm">
               {datepicker.days.map((day, i) => {
                 return (
                   <div
                     key={i}
-                    className={clsx("h-12", {
+                    className={clsx("h-11", {
                       "border-r": (i + 1) % 7 !== 0,
                       "border-b": i < datepicker.days.length - 7,
                     })}
@@ -170,16 +171,25 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         }
                       }}
                       className={clsx(
-                        "relative flex h-full w-full items-center justify-center text-sm hover:bg-gray-50 focus:z-10 focus:rounded active:bg-gray-100",
+                        "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 text-sm font-medium tracking-tight focus:z-10 focus:rounded",
                         {
-                          "bg-gray-50 text-gray-500": day.outOfMonth,
-                          "font-bold": day.today,
-                          "text-primary-600": day.today && !day.selected,
-                          "font-normal text-white after:absolute after:-z-0 after:h-8 after:w-8 after:rounded-full after:bg-green-600 after:content-['']":
-                            day.selected,
+                          "bg-gray-100 text-gray-400": day.isPast,
+                          "text-rose-600": day.today && !day.selected,
+                          "bg-gray-50 text-gray-500":
+                            day.outOfMonth && !day.isPast,
+                          "text-primary-600": day.selected,
                         },
                       )}
                     >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "absolute inset-1 -z-0 rounded-md border",
+                          day.selected
+                            ? "border-primary-300 group-hover:border-primary-400 border-dashed shadow-sm"
+                            : "border-dashed border-transparent group-hover:border-gray-400 group-active:bg-gray-200",
+                        )}
+                      ></span>
                       <span className="z-10">{day.day}</span>
                     </button>
                   </div>
@@ -209,11 +219,11 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               <Switch
                 data-testid="specify-times-switch"
                 checked={isTimedEvent}
-                onChange={(checked) => {
+                onCheckedChange={(checked) => {
                   if (checked) {
                     // convert dates to time slots
                     onChange(
-                      options.map((option) => {
+                      options.map<DateTimeOption>((option) => {
                         if (option.type === "timeSlot") {
                           throw new Error(
                             "Expected option to be a date but received timeSlot",

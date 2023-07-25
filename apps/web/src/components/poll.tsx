@@ -36,10 +36,14 @@ export const Poll = () => {
       <Card fullWidthOnMobile={false}>
         <PollComponent />
       </Card>
-      <hr className="my-4" />
-      <Card fullWidthOnMobile={false}>
-        <Discussion />
-      </Card>
+      {poll.disableComments ? null : (
+        <>
+          <hr className="my-4" />
+          <Card fullWidthOnMobile={false}>
+            <Discussion />
+          </Card>
+        </>
+      )}
     </div>
   );
 };

@@ -25,7 +25,6 @@ export const usePermissions = () => {
       if (isClosed) {
         return false;
       }
-
       if (role === "admin" && user.id === poll.userId) {
         return true;
       }
@@ -37,7 +36,7 @@ export const usePermissions = () => {
       if (
         participant &&
         (participant.userId === user.id ||
-          participant.userId === context.userId)
+          (context.userId && participant.userId === context.userId))
       ) {
         return true;
       }

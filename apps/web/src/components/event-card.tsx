@@ -9,6 +9,7 @@ import { useParticipants } from "@/components/participants-provider";
 import { PollStatusBadge } from "@/components/poll-status";
 import { TextSummary } from "@/components/text-summary";
 import { Trans } from "@/components/trans";
+import { IfParticipantsVisible } from "@/components/visibility";
 import { usePoll } from "@/contexts/poll";
 import { generateGradient } from "@/utils/color-hash";
 import { useDayjs } from "@/utils/dayjs";
@@ -88,15 +89,17 @@ export const EventCard = () => {
                 {!poll.event ? (
                   <PollSubheader />
                 ) : (
-                  <div className="mt-4">
-                    <div className="text-muted-foreground mb-2 text-sm">
+                  <div className="mt-4 space-y-2">
+                    <div className="text-muted-foreground text-sm">
                       <Trans
                         i18nKey="attendeeCount"
                         defaults="{count, plural, one {# attendee} other {# attendees}}"
                         values={{ count: attendees.length }}
                       />
                     </div>
-                    <ParticipantAvatarBar participants={attendees} max={10} />
+                    <IfParticipantsVisible>
+                      <ParticipantAvatarBar participants={attendees} max={10} />
+                    </IfParticipantsVisible>
                   </div>
                 )}
               </div>

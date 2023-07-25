@@ -1,33 +1,24 @@
 import { Button } from "@rallly/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
+import { CardFooter } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import {
-  PollDetailsData,
-  PollDetailsForm,
-} from "@/components/forms/poll-details-form";
+  PollSettingsForm,
+  PollSettingsFormData,
+} from "@/components/forms/poll-settings";
 import { getPollLayout } from "@/components/layouts/poll-layout";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
-import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
+import { usePoll } from "@/contexts/poll";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
-  const { poll } = usePoll();
-  const urlId = poll.adminUrlId;
-  const { mutate: updatePollMutation, isLoading: isUpdating } =
-    useUpdatePollMutation();
+  const poll = usePoll();
+
   const router = useRouter();
 
   const pollLink = `/poll/${poll.id}`;
@@ -36,11 +27,13 @@ const Page: NextPageWithLayout = () => {
     router.push(pollLink);
   };
 
-  const form = useForm<PollDetailsData>({
+  const update = useUpdatePollMutation();
+
+  const form = useForm<PollSettingsFormData>({
     defaultValues: {
-      title: poll.title,
-      location: poll.location ?? "",
-      description: poll.description ?? "",
+      hideParticipants: poll.hideParticipants,
+      hideScores: poll.hideScores,
+      disableComments: poll.disableComments,
     },
   });
 
@@ -48,40 +41,28 @@ const Page: NextPageWithLayout = () => {
     <Form {...form}>
       <form
         className="mx-auto max-w-3xl"
-        onSubmit={form.handleSubmit((data) => {
+        onSubmit={form.handleSubmit(async (data) => {
           //submit
-          updatePollMutation(
-            { urlId, ...data },
-            { onSuccess: redirectBackToPoll },
+          await update.mutateAsync(
+            { urlId: poll.adminUrlId, ...data },
+            {
+              onSuccess: redirectBackToPoll,
+            },
           );
         })}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <Trans i18nKey="editDetails" defaults="Edit details" />
-            </CardTitle>
-            <CardDescription>
-              <Trans
-                i18nKey="editDetailsDescription"
-                defaults="Change the details of your event."
-              />
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <PollDetailsForm />
-          </CardContent>
+        <PollSettingsForm>
           <CardFooter className="justify-between">
             <Button asChild>
               <Link href={pollLink}>
                 <Trans i18nKey="cancel" />
               </Link>
             </Button>
-            <Button type="submit" loading={isUpdating} variant="primary">
+            <Button type="submit" variant="primary">
               <Trans i18nKey="save" />
             </Button>
           </CardFooter>
-        </Card>
+        </PollSettingsForm>
       </form>
     </Form>
   );

@@ -1,14 +1,16 @@
 import { CalendarIcon, TableIcon } from "@rallly/icons";
-import { Form, FormItem } from "@rallly/ui/form";
-import clsx from "clsx";
-import { useTranslation } from "next-i18next";
+import { Card, CardDescription, CardHeader, CardTitle } from "@rallly/ui/card";
+import { FormField, FormMessage } from "@rallly/ui/form";
+import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
+
+import TimeZonePicker from "@/components/time-zone-picker";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { useModal } from "../../modal";
-import TimeZonePicker from "../../time-zone-picker";
-import { PollFormProps } from "../types";
+import { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar";
 import { DateTimeOption } from "./types";
 import WeekCalendar from "./week-calendar";
@@ -21,32 +23,11 @@ export type PollOptionsData = {
   options: DateTimeOption[];
 };
 
-const PollOptionsForm: React.FunctionComponent<
-  PollFormProps<PollOptionsData> & { title?: string }
-> = ({ name, defaultValues, onSubmit, onChange, title, className }) => {
+const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
   const { t } = useTranslation();
-  const form = useForm<PollOptionsData>({
-    defaultValues: {
-      options: [],
-      duration: 30,
-      timeZone: "",
-      navigationDate: new Date().toISOString(),
-      ...defaultValues,
-    },
-    resolver: (values) => {
-      return {
-        values,
-        errors:
-          values.options.length === 0
-            ? {
-                options: true,
-              }
-            : {},
-      };
-    },
-  });
+  const form = useFormContext<NewEventData>();
 
-  const { control, handleSubmit, watch, setValue, formState } = form;
+  const { watch, setValue, formState } = form;
 
   const views = React.useMemo(() => {
     const res = [
@@ -71,7 +52,8 @@ const PollOptionsForm: React.FunctionComponent<
     [views, watchView],
   );
 
-  const watchOptions = watch("options");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const watchOptions = watch("options", [])!;
   const watchDuration = watch("duration");
   const watchTimeZone = watch("timeZone");
 
@@ -101,19 +83,6 @@ const PollOptionsForm: React.FunctionComponent<
   });
 
   React.useEffect(() => {
-    if (onChange) {
-      const subscription = watch(({ options = [], ...rest }) => {
-        // Watch returns a deep partial here which is not really accurate and messes up
-        // the types a bit. Repackaging it to keep the types sane.
-        onChange({ options: options as DateTimeOption[], ...rest });
-      });
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [watch, onChange]);
-
-  React.useEffect(() => {
     if (watchOptions.length > 1) {
       const optionType = watchOptions[0].type;
       // all options needs to be the same type
@@ -124,115 +93,117 @@ const PollOptionsForm: React.FunctionComponent<
   }, [watchOptions, openDateOrTimeRangeModal]);
 
   const watchNavigationDate = watch("navigationDate");
-  const navigationDate = new Date(watchNavigationDate);
-
-  const [calendarHelpModal, openHelpModal] = useModal({
-    overlayClosable: true,
-    title: t("calendarHelpTitle"),
-    description: t("calendarHelp"),
-    okText: t("ok"),
-  });
+  const navigationDate = new Date(watchNavigationDate ?? Date.now());
 
   return (
-    <Form {...form}>
-      <form
-        id={name}
-        className={clsx("w-full", className)}
-        onSubmit={handleSubmit(onSubmit, openHelpModal)}
-      >
-        {calendarHelpModal}
-        {dateOrTimeRangeModal}
-        {/* <div className="mb-8">
-            <h2 className="">
-              <Trans i18nKey="dates" defaults="Dates" />
-            </h2>
-            <p className="leading-6 text-gray-500">
-              <Trans
-                i18nKey="datesDescription"
-                defaults="Select a few dates for your participants to choose from"
-              />
-            </p>
-          </div> */}
-        <FormItem>
-          <div className="mb-3 flex flex-col gap-x-4 gap-y-3 sm:flex-row">
-            <div className="grow">
-              <Controller
-                control={control}
-                name="timeZone"
-                render={({ field }) => (
-                  <TimeZonePicker
-                    value={field.value}
-                    onBlur={field.onBlur}
-                    onChange={(timeZone) => {
-                      setValue("timeZone", timeZone, { shouldTouch: true });
-                    }}
-                    disabled={datesOnly}
-                  />
-                )}
-              />
-            </div>
-            <div className="flex space-x-3">
-              <div className="segment-button w-full sm:w-auto">
-                <button
-                  className={clsx({
-                    "segment-button-active": selectedView.value === "month",
-                  })}
-                  onClick={() => {
-                    setValue("view", "month");
-                  }}
-                  type="button"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" /> {t("monthView")}
-                </button>
-                <button
-                  className={clsx({
-                    "segment-button-active": selectedView.value === "week",
-                  })}
-                  type="button"
-                  onClick={() => {
-                    setValue("view", "week");
-                  }}
-                >
-                  <TableIcon className="mr-2 h-4 w-4" /> {t("weekView")}
-                </button>
-              </div>
-            </div>
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col justify-between gap-4 sm:flex-row">
+          <div>
+            <CardTitle>
+              <Trans i18nKey="calendar">Calendar</Trans>
+            </CardTitle>
+            <CardDescription>
+              <Trans i18nKey="selectPotentialDates">
+                Select potential dates for your event
+              </Trans>
+            </CardDescription>
           </div>
-          <div className="rounded-md border">
-            <selectedView.Component
-              title={title}
-              options={watchOptions}
-              date={navigationDate}
-              onNavigate={(date) => {
-                setValue("navigationDate", date.toISOString());
-              }}
-              onChange={(options) => {
-                setValue("options", options);
-                if (
-                  options.length === 0 ||
-                  options.every((option) => option.type === "date")
-                ) {
-                  // unset the timeZone if we only have date option
-                  setValue("timeZone", "");
-                }
-                if (
-                  options.length > 0 &&
-                  !formState.touchedFields.timeZone &&
-                  options.every((option) => option.type === "timeSlot")
-                ) {
-                  // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-                  setValue("timeZone", getBrowserTimeZone());
-                }
-              }}
-              duration={watchDuration}
-              onChangeDuration={(duration) => {
-                setValue("duration", duration);
-              }}
+          <div>
+            <FormField
+              control={form.control}
+              name="view"
+              render={({ field }) => (
+                <Tabs value={field.value} onValueChange={field.onChange}>
+                  <TabsList className="w-full">
+                    <TabsTrigger className="grow" value="month">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <Trans i18nKey="monthView" />
+                    </TabsTrigger>
+                    <TabsTrigger className="grow" value="week">
+                      <TableIcon className="mr-2 h-4 w-4" />
+                      <Trans i18nKey="weekView" />
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              )}
             />
           </div>
-        </FormItem>
-      </form>
-    </Form>
+        </div>
+      </CardHeader>
+      {dateOrTimeRangeModal}
+      <div>
+        <FormField
+          control={form.control}
+          name="options"
+          rules={{
+            validate: (options) => {
+              return options.length > 0
+                ? true
+                : t("calendarHelp", {
+                    defaultValue:
+                      "You can't create a poll without any options. Add at least one option to continue.",
+                  });
+            },
+          }}
+          render={({ field }) => (
+            <div>
+              <selectedView.Component
+                options={field.value}
+                date={navigationDate}
+                onNavigate={(date) => {
+                  setValue("navigationDate", date.toISOString());
+                }}
+                onChange={(options) => {
+                  field.onChange(options);
+                  if (
+                    length === 0 ||
+                    options.every((option) => option.type === "date")
+                  ) {
+                    // unset the timeZone if we only have date option
+                    setValue("timeZone", "");
+                  }
+                  if (
+                    options.length > 0 &&
+                    !formState.touchedFields.timeZone &&
+                    options.every((option) => option.type === "timeSlot")
+                  ) {
+                    // set timeZone if we are adding time ranges and we haven't touched the timeZone field
+                    setValue("timeZone", getBrowserTimeZone());
+                  }
+                }}
+                duration={watchDuration}
+                onChangeDuration={(duration) => {
+                  setValue("duration", duration);
+                }}
+              />
+              {formState.errors.options ? (
+                <div className="border-t bg-red-50 p-3 text-center">
+                  <FormMessage />
+                </div>
+              ) : null}
+            </div>
+          )}
+        />
+      </div>
+      <div className="grow border-t bg-gray-50 px-5 py-3">
+        <FormField
+          control={form.control}
+          name="timeZone"
+          render={({ field }) => (
+            <TimeZonePicker
+              value={field.value}
+              onBlur={field.onBlur}
+              onChange={(timeZone) => {
+                setValue("timeZone", timeZone, { shouldTouch: true });
+              }}
+              disabled={datesOnly}
+            />
+          )}
+        />
+      </div>
+      {children}
+    </Card>
   );
 };
 

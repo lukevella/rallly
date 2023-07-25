@@ -5,6 +5,7 @@ import * as React from "react";
 import { usePrevious } from "react-use";
 
 import { usePoll } from "@/components/poll-context";
+import { IfScoresVisible } from "@/components/visibility";
 
 export interface PopularityScoreProps {
   yesScore: number;
@@ -20,12 +21,14 @@ export const ConnectedScoreSummary: React.FunctionComponent<{
   const { yes, ifNeedBe } = getScore(optionId);
   const score = yes + ifNeedBe;
   return (
-    <ScoreSummary
-      yesScore={yes}
-      ifNeedBeScore={ifNeedBe}
-      highScore={highScore}
-      highlight={score === highScore && score > 1}
-    />
+    <IfScoresVisible>
+      <ScoreSummary
+        yesScore={yes}
+        ifNeedBeScore={ifNeedBe}
+        highScore={highScore}
+        highlight={score === highScore && score > 1}
+      />
+    </IfScoresVisible>
   );
 };
 

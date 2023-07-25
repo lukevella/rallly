@@ -196,7 +196,10 @@ const Discussion: React.FunctionComponent = () => {
             className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
             onClick={() => setIsWriting(true)}
           >
-            <Trans i18nKey="commentPlaceholder" />
+            <Trans
+              i18nKey="commentPlaceholder"
+              defaults="Leave a comment on this poll (visible to everyone)"
+            />
           </button>
         )}
       </div>

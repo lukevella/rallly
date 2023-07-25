@@ -25,8 +25,6 @@ export class NewPollPage {
 
     await page.keyboard.type("This is a test description");
 
-    await page.click('text="Continue"');
-
     await page.click('[title="Next month"]');
 
     // Select a few days
@@ -34,14 +32,6 @@ export class NewPollPage {
     await page.click("text=/^7$/");
     await page.click("text=/^10$/");
     await page.click("text=/^15$/");
-
-    await page.click('text="Continue"');
-
-    await page.type('[placeholder="Jessie Smith"]', "John");
-    await page.type(
-      '[placeholder="jessie.smith@example.com"]',
-      "john.doe@example.com",
-    );
 
     await page.click('text="Create poll"');
 

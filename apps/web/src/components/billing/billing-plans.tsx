@@ -1,4 +1,3 @@
-import { CheckIcon } from "@rallly/icons";
 import {
   BillingPlan,
   BillingPlanFooter,
@@ -126,15 +125,6 @@ export const BillingPlans = () => {
   );
 };
 
-const Perk = ({ children }: React.PropsWithChildren) => {
-  return (
-    <li className="flex">
-      <CheckIcon className="mr-2 inline h-4 w-4 translate-y-0.5 -translate-x-0.5 text-green-600" />
-      <span>{children}</span>
-    </li>
-  );
-};
-
 export const ProPlan = ({
   annual,
   children,
@@ -178,9 +168,15 @@ export const ProPlan = ({
             defaults="Unlimited participants"
           />
         </BillingPlanPerk>
-        <Perk>
+        <BillingPlanPerk>
           <Trans i18nKey="plan_finalizePolls" defaults="Finalize polls" />
-        </Perk>
+        </BillingPlanPerk>
+        <BillingPlanPerk>
+          <Trans
+            i18nKey="planCustomizablePollSettings"
+            defaults="Customizable poll settings"
+          />
+        </BillingPlanPerk>
         <BillingPlanPerk>
           <Trans
             i18nKey="plan_extendedPollLife"

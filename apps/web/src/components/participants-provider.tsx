@@ -2,6 +2,9 @@ import { trpc } from "@rallly/backend";
 import { Participant, Vote, VoteType } from "@rallly/database";
 import * as React from "react";
 
+import { useVisibility } from "@/components/visibility";
+import { usePermissions } from "@/contexts/permissions";
+
 import { useRequiredContext } from "./use-required-context";
 
 const ParticipantsContext = React.createContext<{
@@ -40,9 +43,6 @@ export const ParticipantsProvider: React.FunctionComponent<{
       });
     });
   };
-
-  // TODO (Luke Vella) [2022-05-18]: Add mutations here
-
   if (!participants) {
     return null;
   }
@@ -52,4 +52,21 @@ export const ParticipantsProvider: React.FunctionComponent<{
       {children}
     </ParticipantsContext.Provider>
   );
+};
+
+export const useVisibleParticipants = () => {
+  const { canSeeOtherParticipants } = useVisibility();
+  const { canEditParticipant } = usePermissions();
+  const { participants } = useParticipants();
+
+  const filteredParticipants = React.useMemo(() => {
+    if (!canSeeOtherParticipants) {
+      return participants.filter((participant) =>
+        canEditParticipant(participant.id),
+      );
+    }
+    return participants;
+  }, [canEditParticipant, canSeeOtherParticipants, participants]);
+
+  return filteredParticipants;
 };

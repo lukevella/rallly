@@ -7,6 +7,7 @@ interface DayProps {
   weekend: boolean;
   outOfMonth: boolean;
   today: boolean;
+  isPast: boolean;
   selected: boolean;
 }
 
@@ -61,6 +62,7 @@ export const useHeadlessDatePicker = (
       outOfMonth: d.month() !== currentMonth,
       today: d.isSame(today, "day"),
       selected: selection.some((selectedDate) => d.isSame(selectedDate, "day")),
+      isPast: d.isBefore(today, "day"),
     });
     i++;
     reachedEnd =

@@ -15,7 +15,7 @@ export type DateTimeOption = DateOption | TimeOption;
 export interface DateTimePickerProps {
   title?: string;
   options: DateTimeOption[];
-  date: Date;
+  date?: Date;
   onNavigate: (date: Date) => void;
   onChange: (options: DateTimeOption[]) => void;
   duration: number;

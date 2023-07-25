@@ -48,9 +48,7 @@ const PollHeader: React.FunctionComponent = () => {
             {option.type === "timeSlot" ? (
               <TimeRange start={option.startTime} end={option.endTime} />
             ) : null}
-            <div className="flex justify-center">
-              <ConnectedScoreSummary optionId={option.optionId} />
-            </div>
+            <ConnectedScoreSummary optionId={option.optionId} />
           </div>
         );
       })}
