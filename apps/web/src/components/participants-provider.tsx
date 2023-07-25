@@ -62,13 +62,19 @@ export const useVisibleParticipants = () => {
   const { participants } = useParticipants();
 
   const filteredParticipants = React.useMemo(() => {
-    if (role === "participant" && poll.hideParticipants) {
+    if (role === "participant" && (poll.hideParticipants || poll.hideScores)) {
       return participants.filter((participant) =>
         canEditParticipant(participant.id),
       );
     }
     return participants;
-  }, [canEditParticipant, participants, poll.hideParticipants, role]);
+  }, [
+    canEditParticipant,
+    participants,
+    poll.hideParticipants,
+    poll.hideScores,
+    role,
+  ]);
 
   return filteredParticipants;
 };

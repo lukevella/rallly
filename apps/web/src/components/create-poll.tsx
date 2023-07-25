@@ -41,7 +41,9 @@ export const CreatePoll: React.FunctionComponent = () => {
     defaultValues: {
       view: "month",
       options: [],
+      hideScores: false,
       hideParticipants: false,
+      disableComments: false,
       duration: 60,
     },
   });
@@ -68,6 +70,9 @@ export const CreatePoll: React.FunctionComponent = () => {
               location: formData?.location,
               description: formData?.description,
               timeZone: formData?.timeZone,
+              hideParticipants: formData?.hideParticipants,
+              disableComments: formData?.disableComments,
+              hideScores: formData?.hideScores,
               options: required(formData?.options).map((option) => ({
                 startDate: option.type === "date" ? option.date : option.start,
                 endDate: option.type === "timeSlot" ? option.end : undefined,

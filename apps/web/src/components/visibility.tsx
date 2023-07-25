@@ -4,20 +4,28 @@ import { useRole } from "@/contexts/role";
 export const IfParticipantsVisible = (props: React.PropsWithChildren) => {
   const role = useRole();
   const poll = usePoll();
-  if (role === "participant" && poll.hideParticipants) {
+  if (role === "participant" && (poll.hideParticipants || poll.hideScores)) {
     return null;
   }
 
   return <>{props.children}</>;
 };
 
-export const IfHiddenParticipants = (props: React.PropsWithChildren) => {
-  const role = useRole();
+export const IfCommentsEnabled = (props: React.PropsWithChildren) => {
   const poll = usePoll();
-
-  if (role === "participant" && poll.hideParticipants) {
-    return <>{props.children}</>;
+  if (poll.disableComments) {
+    return null;
   }
 
-  return null;
+  return <>{props.children}</>;
+};
+
+export const IfScoresVisible = (props: React.PropsWithChildren) => {
+  const role = useRole();
+  const poll = usePoll();
+  if (role === "participant" && poll.hideScores) {
+    return null;
+  }
+
+  return <>{props.children}</>;
 };

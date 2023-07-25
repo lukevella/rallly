@@ -38,6 +38,19 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
   return res.id;
 };
 
+const getPro = async (userId: string) => {
+  return Boolean(
+    await prisma.userPaymentData.findFirst({
+      where: {
+        userId,
+        endDate: {
+          gt: new Date(),
+        },
+      },
+    }),
+  );
+};
+
 export const polls = router({
   demo,
   participants,
@@ -52,6 +65,8 @@ export const polls = router({
         location: z.string().optional(),
         description: z.string().optional(),
         hideParticipants: z.boolean().optional(),
+        hideScores: z.boolean().optional(),
+        disableComments: z.boolean().optional(),
         options: z
           .object({
             startDate: z.string(),
@@ -65,6 +80,8 @@ export const polls = router({
       const adminToken = nanoid();
       const participantUrlId = nanoid();
       const pollId = nanoid();
+
+      const isPro = await getPro(ctx.user.id);
 
       const poll = await prisma.poll.create({
         select: {
@@ -87,7 +104,6 @@ export const polls = router({
           adminUrlId: adminToken,
           participantUrlId,
           userId: ctx.user.id,
-          hideParticipants: input.hideParticipants,
           watchers: !ctx.user.isGuest
             ? {
                 create: {
@@ -108,6 +124,13 @@ export const polls = router({
               })),
             },
           },
+          ...(isPro
+            ? {
+                hideParticipants: input.hideParticipants,
+                disableComments: input.disableComments,
+                hideScores: input.hideScores,
+              }
+            : undefined),
         },
       });
 
@@ -151,11 +174,14 @@ export const polls = router({
         optionsToAdd: z.string().array().optional(),
         closed: z.boolean().optional(),
         hideParticipants: z.boolean().optional(),
+        disableComments: z.boolean().optional(),
         hideScores: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
+
+      const isPro = await getPro(ctx.user.id);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
         await prisma.option.deleteMany({
@@ -199,7 +225,13 @@ export const polls = router({
           description: input.description,
           timeZone: input.timeZone,
           closed: input.closed,
-          hideParticipants: input.hideParticipants,
+          ...(isPro
+            ? {
+                hideScores: input.hideScores,
+                hideParticipants: input.hideParticipants,
+                disableComments: input.disableComments,
+              }
+            : undefined),
         },
       });
     }),
@@ -364,6 +396,8 @@ export const polls = router({
           closed: true,
           legacy: true,
           hideParticipants: true,
+          disableComments: true,
+          hideScores: true,
           demo: true,
           options: {
             orderBy: {

@@ -1,4 +1,4 @@
-import { EyeOffIcon } from "@rallly/icons";
+import { EyeIcon, MessageCircleIcon, VoteIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
@@ -21,6 +21,25 @@ import { usePlan } from "@/contexts/plan";
 export type PollSettingsFormData = {
   hideParticipants: boolean;
   hideScores: boolean;
+  disableComments: boolean;
+};
+
+const SettingContent = ({ children }: React.PropsWithChildren) => {
+  return <div className="grid grow gap-1.5 pt-0.5">{children}</div>;
+};
+
+const SettingDescription = ({ children }: React.PropsWithChildren) => {
+  return <p className="text-muted-foreground text-sm">{children}</p>;
+};
+
+const SettingTitle = Label;
+
+const Setting = ({ children }: React.PropsWithChildren) => {
+  return (
+    <FormItem className="rounded-lg border p-4">
+      <div className="flex items-start justify-between gap-x-4">{children}</div>
+    </FormItem>
+  );
 };
 
 export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
@@ -66,41 +85,89 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             disabled ? "pointer-events-none opacity-50" : "",
           )}
         >
-          <div className="rounded-lg border p-4">
-            <FormField
-              control={form.control}
-              name="hideParticipants"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-start justify-between gap-x-4">
-                    <div>
-                      <EyeOffIcon className="h-6 w-6" />
-                    </div>
-                    <div className="grid grow gap-1.5 pt-0.5">
-                      <Label htmlFor="allDay">
-                        <Trans i18nKey="hideParticipants">
-                          Hide participants
-                        </Trans>
-                      </Label>
-                      <p className="text-muted-foreground text-sm">
-                        <Trans
-                          i18nKey="hideParticipantsDescription"
-                          defaults="Participants won't be able to see each other's votes and comments"
-                        />
-                      </p>
-                    </div>
-                    <Switch
-                      disabled={disabled}
-                      checked={field.value}
-                      onCheckedChange={(checked) => {
-                        field.onChange(checked);
-                      }}
+          <FormField
+            control={form.control}
+            name="hideParticipants"
+            render={({ field }) => (
+              <Setting>
+                <EyeIcon className="h-6 w-6" />
+                <SettingContent>
+                  <SettingTitle>
+                    <Trans i18nKey="hideParticipants">
+                      Hide participant list
+                    </Trans>
+                  </SettingTitle>
+                  <SettingDescription>
+                    <Trans
+                      i18nKey="hideParticipantsDescription"
+                      defaults="Keep participant details private"
                     />
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
+                  </SettingDescription>
+                </SettingContent>
+                <Switch
+                  disabled={disabled}
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+              </Setting>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="hideScores"
+            render={({ field }) => (
+              <Setting>
+                <VoteIcon className="h-6 w-6" />
+                <SettingContent>
+                  <SettingTitle>
+                    <Trans i18nKey="hideScores">Hide scores</Trans>
+                  </SettingTitle>
+                  <SettingDescription>
+                    <Trans
+                      i18nKey="hideScoresDescription"
+                      defaults="Reduce bias by hiding the current vote counts from participants"
+                    />
+                  </SettingDescription>
+                </SettingContent>
+                <Switch
+                  disabled={disabled}
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+              </Setting>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="disableComments"
+            render={({ field }) => (
+              <Setting>
+                <MessageCircleIcon className="h-6 w-6" />
+                <SettingContent>
+                  <SettingTitle>
+                    <Trans i18nKey="disableComments">Disable comments</Trans>
+                  </SettingTitle>
+                  <SettingDescription>
+                    <Trans
+                      i18nKey="disableCommentsDescription"
+                      defaults="Remove the option to leave a comment on the poll"
+                    />
+                  </SettingDescription>
+                </SettingContent>
+                <Switch
+                  disabled={disabled}
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+              </Setting>
+            )}
+          />
         </div>
       </CardContent>
       {children}
