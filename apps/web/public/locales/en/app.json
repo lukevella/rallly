@@ -212,5 +212,6 @@
   "hideScores": "Hide scores",
   "hideScoresDescription": "Only show scores until after a participant has voted",
   "disableComments": "Disable comments",
-  "disableCommentsDescription": "Remove the option to leave a comment on the poll"
+  "disableCommentsDescription": "Remove the option to leave a comment on the poll",
+  "planCustomizablePollSettings": "Customizable poll settings"
 }

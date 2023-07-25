@@ -1,4 +1,5 @@
-import { CheckIcon, InfoIcon } from "@rallly/icons";
+import { InfoIcon } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import {
   BillingPlan,
   BillingPlanFooter,
@@ -22,15 +23,6 @@ import { Trans } from "@/components/trans";
 import { linkToApp } from "@/lib/linkToApp";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/page-translations";
-
-const Perk = ({ children }: React.PropsWithChildren) => {
-  return (
-    <li className="flex">
-      <CheckIcon className="mr-2 inline h-4 w-4 translate-y-0.5 -translate-x-0.5 text-green-600" />
-      <span>{children}</span>
-    </li>
-  );
-};
 
 const monthlyPriceUsd = 5;
 const annualPriceUsd = 30;
@@ -102,9 +94,17 @@ const Page: NextPageWithLayout = () => {
           </BillingPlan>
           <BillingPlan variant="primary">
             <BillingPlanHeader>
-              <BillingPlanTitle className="text-primary m-0">
-                <Trans i18nKey="pricing:planPro" defaults="Pro" />
-              </BillingPlanTitle>
+              <div className="flex justify-between">
+                <BillingPlanTitle className="text-primary m-0">
+                  <Trans i18nKey="pricing:planPro" defaults="Pro" />
+                </BillingPlanTitle>
+                <Badge variant="secondary">
+                  <Trans
+                    i18nKey="pricing:earlyAccess"
+                    defaults="Early bird discount"
+                  />
+                </Badge>
+              </div>
               {annualBilling ? (
                 <>
                   <BillingPlanPrice
@@ -144,12 +144,18 @@ const Page: NextPageWithLayout = () => {
                   defaults="Unlimited participants"
                 />
               </BillingPlanPerk>
-              <Perk>
+              <BillingPlanPerk>
+                <Trans
+                  i18nKey="pricing:customPollSettings"
+                  defaults="Customizable poll settings"
+                />
+              </BillingPlanPerk>
+              <BillingPlanPerk>
                 <Trans
                   i18nKey="pricing:finalizePolls"
                   defaults="Finalize polls"
                 />
-              </Perk>
+              </BillingPlanPerk>
               <BillingPlanPerk>
                 <Trans
                   i18nKey="pricing:extendedPollLife"
