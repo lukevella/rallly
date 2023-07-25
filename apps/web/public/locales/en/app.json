@@ -205,12 +205,12 @@
   "optionalLabel": "(Optional)",
   "calendarHelp": "You can't create a poll without any options. Add at least one option to continue.",
   "hideParticipants": "Hide participant list",
-  "hideParticipantsDescription": "Keep participant details private",
+  "hideParticipantsDescription": "Keep participant details hidden from other participants",
   "editSettings": "Edit settings",
   "pollSettingsDescription": "Customize the behaviour of your poll",
   "commentPlaceholder": "Leave a comment on this poll (visible to everyone)",
   "hideScores": "Hide scores",
-  "hideScoresDescription": "Reduce bias by hiding the current vote counts from participants",
+  "hideScoresDescription": "Only show scores until after a participant has voted",
   "disableComments": "Disable comments",
   "disableCommentsDescription": "Remove the option to leave a comment on the poll"
 }

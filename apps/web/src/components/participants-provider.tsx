@@ -2,9 +2,8 @@ import { trpc } from "@rallly/backend";
 import { Participant, Vote, VoteType } from "@rallly/database";
 import * as React from "react";
 
+import { useVisibility } from "@/components/visibility";
 import { usePermissions } from "@/contexts/permissions";
-import { usePoll } from "@/contexts/poll";
-import { useRole } from "@/contexts/role";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -56,25 +55,18 @@ export const ParticipantsProvider: React.FunctionComponent<{
 };
 
 export const useVisibleParticipants = () => {
-  const role = useRole();
-  const poll = usePoll();
+  const { canSeeOtherParticipants } = useVisibility();
   const { canEditParticipant } = usePermissions();
   const { participants } = useParticipants();
 
   const filteredParticipants = React.useMemo(() => {
-    if (role === "participant" && (poll.hideParticipants || poll.hideScores)) {
+    if (!canSeeOtherParticipants) {
       return participants.filter((participant) =>
         canEditParticipant(participant.id),
       );
     }
     return participants;
-  }, [
-    canEditParticipant,
-    participants,
-    poll.hideParticipants,
-    poll.hideScores,
-    role,
-  ]);
+  }, [canEditParticipant, canSeeOtherParticipants, participants]);
 
   return filteredParticipants;
 };

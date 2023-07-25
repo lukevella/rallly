@@ -7,7 +7,7 @@ export const styleMenuItem = ({
   active: boolean;
   selected: boolean;
 }) =>
-  clsx("menu-item", {
+  clsx("menu-item text-sm", {
     "font-medium": selected,
     "bg-blue-50": active,
   });
