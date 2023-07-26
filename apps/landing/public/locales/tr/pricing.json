@@ -23,5 +23,7 @@
   "howToUpgrade": "Ücretli bir plana nasıl yükseltirim?",
   "howToUpgradeAnswer": "Yükseltmek için, <a>faturalandırma ayarları</a> kısmına gidin ve <b>Yükselt</b> seçeneğine tıklayın.",
   "cancelSubscription": "Aboneliğimi nasıl iptal edebilirim?",
-  "cancelSubscriptionAnswer": "Aboneliğinizi <a>faturalandırma ayarları</a> kısmına gidip istediğiniz zaman iptal edebilirsiniz. İptal ettikten sonra, fatura döneminizin sonuna kadar ücretli planınıza erişmeye devam edeceksiniz. Ondan sonra, ücretsiz plan a geçiş yapmış olacaksınız."
+  "cancelSubscriptionAnswer": "Aboneliğinizi <a>faturalandırma ayarları</a> kısmına gidip istediğiniz zaman iptal edebilirsiniz. İptal ettikten sonra, fatura döneminizin sonuna kadar ücretli planınıza erişmeye devam edeceksiniz. Ondan sonra, ücretsiz plan a geçiş yapmış olacaksınız.",
+  "earlyAccess": "Erkenci kuş indirirmi",
+  "customPollSettings": "Değiştirilebilir anket ayarları"
 }
