@@ -212,5 +212,6 @@
   "disableComments": "Desativar comentários",
   "disableCommentsDescription": "Remover a opção de deixar um comentário na enquete",
   "planCustomizablePollSettings": "Configurações de enquete personalizáveis",
+  "clockPreferences": "Preferências de relógio",
   "clockPreferencesDescription": "Defina seu fuso horário e formato de hora preferidos."
 }
