@@ -199,6 +199,15 @@
   "noPolls": "Anket yok",
   "noPollsDescription": "Yeni bir anket oluşturarak başlayın.",
   "event": "Etkinlik",
+  "describeYourEvent": "Etkinliğinizin ne hakkında olduğunu açıklayın",
+  "calendar": "Takvim",
+  "selectPotentialDates": "Etkinliğiniz için olası tarih veya saatleri seçin",
+  "optionalLabel": "(İsteğe bağlı)",
   "calendarHelp": "Seçenekleri olmayan bir anket oluşturamazsınız. Devam etmek için en az bir seçenek eklemelisiniz.",
-  "commentPlaceholder": "Bu anket için bir yorum ekle (herkes tarafından görülebilir)"
+  "hideParticipants": "Katılımcı listesini gizle",
+  "hideParticipantsDescription": "Katılımcı detaylarını diğer katılımcılardan gizle",
+  "editSettings": "Ayarları düzenle",
+  "pollSettingsDescription": "Anketinizin davranışını özelleştirin",
+  "commentPlaceholder": "Bu anket için bir yorum ekle (herkes tarafından görülebilir)",
+  "hideScores": "Sonuçları gizle"
 }
