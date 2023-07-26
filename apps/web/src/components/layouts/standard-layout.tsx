@@ -35,20 +35,22 @@ const NavMenuItem = ({
 }) => {
   const router = useRouter();
   return (
-    <Link
-      target={target}
-      href={href}
-      className={cn(
-        "flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-medium",
-        router.asPath === href
-          ? "text-foreground"
-          : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
-        className,
-      )}
-    >
-      <Icon className="h-4 w-4" />
-      {label}
-    </Link>
+    <Button variant="ghost" asChild>
+      <Link
+        target={target}
+        href={href}
+        className={cn(
+          "flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-medium",
+          router.asPath === href
+            ? "text-foreground"
+            : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
+          className,
+        )}
+      >
+        <Icon className="h-4 w-4" />
+        {label}
+      </Link>
+    </Button>
   );
 };
 
@@ -120,14 +122,14 @@ const MainNav = () => {
           <nav className="flex gap-x-2">
             <IfGuest>
               <NavMenuItem
-                className="hidden sm:block"
+                className="hidden sm:flex"
                 icon={LogInIcon}
                 href="/login"
                 label={<Trans i18nKey="login" defaults="Login" />}
               />
             </IfGuest>
             <ClockPreferences>
-              <Button variant="ghost">
+              <Button className="text-muted-foreground" variant="ghost">
                 <Clock />
               </Button>
             </ClockPreferences>
