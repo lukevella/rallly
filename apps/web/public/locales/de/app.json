@@ -209,5 +209,7 @@
   "hideScores": "Abstimmungen ausblenden",
   "disableComments": "Kommentare deaktivieren",
   "disableCommentsDescription": "Entferne die Möglichkeit, die Umfrage zu kommentieren",
-  "planCustomizablePollSettings": "Anpassbare Umfrageeinstellungen"
+  "planCustomizablePollSettings": "Anpassbare Umfrageeinstellungen",
+  "clockPreferences": "Uhrzeit-Einstellungen",
+  "clockPreferencesDescription": "Lege dein bevorzugtes Zeitzonen und Zeitformat fest."
 }
