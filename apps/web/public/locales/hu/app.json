@@ -211,5 +211,7 @@
   "hideScoresDescription": "Csak akkor mutasd a szavazatszámlálót, ha a résztvevő már szavazott",
   "disableComments": "Hozzaszólások kikapcsolása",
   "disableCommentsDescription": "Rejtsd el a lehetőségét annak, hogy hozzászólást lehessen rögzíteni a szavazáshoz",
-  "planCustomizablePollSettings": "Egyedi szavazat beállítások"
+  "planCustomizablePollSettings": "Egyedi szavazat beállítások",
+  "clockPreferences": "Óra beállítások",
+  "clockPreferencesDescription": "Állitsd be a preferált időzónát és idő formátumot."
 }
