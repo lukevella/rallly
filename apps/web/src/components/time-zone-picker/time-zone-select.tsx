@@ -57,11 +57,11 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
               <CommandItem
                 key={option.value}
                 onSelect={() => onSelect?.(option.value)}
-                className="flex min-w-0 gap-x-4"
+                className="flex min-w-0 gap-x-2.5"
               >
                 <CheckIcon
                   className={cn(
-                    "mr-2 h-4 w-4",
+                    "h-4 w-4 shrink-0",
                     value === option.value ? "opacity-100" : "opacity-0",
                   )}
                 />
@@ -84,7 +84,7 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
     const popoverContentId = "timeZoneSelect__popoverContent";
 
     return (
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover modal={false} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild={true}>
           <button
             ref={ref}
@@ -93,10 +93,10 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
             role="combobox"
             aria-expanded={open}
             aria-controls={popoverContentId}
-            className="bg-input-background flex h-9 w-full items-center gap-x-1.5 rounded-md border px-2 py-2 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-input-background flex h-9 w-full min-w-0 items-center gap-x-1.5 rounded-md border px-2 py-2 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             <GlobeIcon className="h-4 w-4" />
-            <span className="grow text-left">
+            <span className="grow truncate text-left">
               {value ? (
                 options.find((option) => option.value === value)?.label
               ) : (
@@ -112,7 +112,7 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
         <PopoverContent
           id={popoverContentId}
           align="start"
-          className="min-w-[var(--radix-popover-trigger-width)] bg-white p-0"
+          className="z-[1000] max-w-[var(--radix-popover-trigger-width)] bg-white p-0"
         >
           <TimeZoneCommand
             value={value}

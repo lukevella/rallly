@@ -1,23 +1,16 @@
 import { trpc } from "@rallly/backend";
 import { GlobeIcon } from "@rallly/icons";
-import { Button } from "@rallly/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@rallly/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import dayjs, { Dayjs } from "dayjs";
 import React from "react";
 
-import { TimeFormatPicker } from "@/components/time-format-picker";
-import {
-  TimeZoneCommand,
-  timeZones,
-} from "@/components/time-zone-picker/time-zone-select";
-import { Trans } from "@/components/trans";
+import { TimesShownIn } from "@/components/clock";
+import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
 import { usePoll } from "@/contexts/poll";
 import { useDayjs } from "@/utils/dayjs";
 
 export const TimePreferences = () => {
-  const poll = usePoll();
-
-  const { timeZone, timeFormat } = useDayjs();
+  const { timeZone } = useDayjs();
   const queryClient = trpc.useContext();
 
   const [open, setIsOpen] = React.useState(false);
@@ -31,9 +24,7 @@ export const TimePreferences = () => {
         }
         return {
           ...oldPreferences,
-          timeFormat: newPreferences.timeFormat ?? oldPreferences?.timeFormat,
           timeZone: newPreferences.timeZone ?? oldPreferences?.timeZone ?? null,
-          weekStart: newPreferences.weekStart ?? oldPreferences?.weekStart,
         };
       });
     },
@@ -47,50 +38,23 @@ export const TimePreferences = () => {
   }
 
   return (
-    <div className="flex justify-between gap-x-4 overflow-x-auto  sm:overflow-x-visible">
-      <Dialog open={open} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button icon={GlobeIcon} disabled={!poll.timeZone}>
-            {poll.timeZone ? (
-              <Trans
-                i18nKey="timeShownIn"
-                defaults="Times shown in {timeZone}"
-                values={{
-                  timeZone: timeZones[timeZone as keyof typeof timeZones],
-                }}
-              />
-            ) : (
-              <Trans
-                i18nKey="timeShownInLocalTime"
-                defaults="Times shown in local time"
-              />
-            )}
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="p-0">
-          <TimeZoneCommand
-            value={timeZone}
-            onSelect={(value) => {
-              updatePreferences.mutate({
-                timeZone: value,
-              });
-              setIsOpen(false);
-            }}
-          />
-        </DialogContent>
-      </Dialog>
-
-      <div>
-        <TimeFormatPicker
-          value={timeFormat}
-          onChange={(newTimeFormat) => {
+    <Popover open={open} onOpenChange={setIsOpen}>
+      <PopoverTrigger className="inline-flex items-center gap-x-2 text-sm hover:underline">
+        <GlobeIcon className="h-4 w-4" />
+        <TimesShownIn />
+      </PopoverTrigger>
+      <PopoverContent align="center" className="p-0">
+        <TimeZoneCommand
+          value={timeZone}
+          onSelect={(value) => {
             updatePreferences.mutate({
-              timeFormat: newTimeFormat,
+              timeZone: value,
             });
+            setIsOpen(false);
           }}
         />
-      </div>
-    </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 export const useDateFormatter = () => {

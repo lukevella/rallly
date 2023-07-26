@@ -1,23 +1,20 @@
-import { ClockIcon, ListIcon, LogInIcon } from "@rallly/icons";
+import { ListIcon, LogInIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
-import dayjs from "dayjs";
 import { AnimatePresence, m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import { useInterval } from "react-use";
-import spacetime from "spacetime";
-import soft from "timezone-soft";
 
+import { Clock, ClockPreferences } from "@/components/clock";
 import { Container } from "@/components/container";
 import FeedbackButton from "@/components/feedback";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
-import { useDayjs } from "@/utils/dayjs";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
@@ -28,27 +25,32 @@ const NavMenuItem = ({
   target,
   label,
   icon: Icon,
+  className,
 }: {
   icon: IconComponent;
   href: string;
   target?: string;
   label: React.ReactNode;
+  className?: string;
 }) => {
   const router = useRouter();
   return (
-    <Link
-      target={target}
-      href={href}
-      className={cn(
-        "flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-medium",
-        router.asPath === href
-          ? "text-foreground"
-          : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
-      )}
-    >
-      <Icon className="h-4 w-4" />
-      {label}
-    </Link>
+    <Button variant="ghost" asChild>
+      <Link
+        target={target}
+        href={href}
+        className={cn(
+          "flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-medium",
+          router.asPath === href
+            ? "text-foreground"
+            : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
+          className,
+        )}
+      >
+        <Icon className="h-4 w-4" />
+        {label}
+      </Link>
+    </Button>
   );
 };
 
@@ -93,28 +95,6 @@ const Logo = () => {
   );
 };
 
-const Clock = () => {
-  const { timeZone } = useDayjs();
-  const timeZoneDisplayFormat = soft(timeZone)[0];
-  const now = spacetime.now(timeZone);
-  const standardAbbrev = timeZoneDisplayFormat.standard.abbr;
-  const dstAbbrev = timeZoneDisplayFormat.daylight?.abbr;
-  const abbrev = now.isDST() ? dstAbbrev : standardAbbrev;
-  const [time, setTime] = React.useState(new Date());
-
-  useInterval(() => {
-    setTime(new Date());
-  }, 1000);
-
-  return (
-    <NavMenuItem
-      icon={ClockIcon}
-      href="/settings/preferences"
-      label={`${dayjs(time).tz(timeZone).format("LT")} ${abbrev}`}
-    />
-  );
-};
-
 const MainNav = () => {
   return (
     <m.div
@@ -139,15 +119,20 @@ const MainNav = () => {
           </nav>
         </div>
         <div className="flex items-center gap-x-4">
-          <nav className="hidden gap-x-2 sm:flex">
+          <nav className="flex gap-x-2">
             <IfGuest>
               <NavMenuItem
+                className="hidden sm:flex"
                 icon={LogInIcon}
                 href="/login"
                 label={<Trans i18nKey="login" defaults="Login" />}
               />
             </IfGuest>
-            <Clock />
+            <ClockPreferences>
+              <Button className="text-muted-foreground" variant="ghost">
+                <Clock />
+              </Button>
+            </ClockPreferences>
           </nav>
           <UserDropdown />
         </div>
