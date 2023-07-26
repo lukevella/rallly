@@ -154,9 +154,7 @@
   "noTransfer": "No, take me home",
   "share": "Share",
   "timeShownIn": "Times shown in {timeZone}",
-  "timeShownInLocalTime": "Times shown in local time",
   "editDetailsDescription": "Change the details of your event.",
-  "editOptionsDescription": "Change the options available in your poll.",
   "finalizeDescription": "Select a final date for your event.",
   "notificationsGuestTooltip": "Create an account or login to turn get notifications",
   "planFree": "Free",
@@ -213,5 +211,7 @@
   "hideScoresDescription": "Only show scores until after a participant has voted",
   "disableComments": "Disable comments",
   "disableCommentsDescription": "Remove the option to leave a comment on the poll",
-  "planCustomizablePollSettings": "Customizable poll settings"
+  "planCustomizablePollSettings": "Customizable poll settings",
+  "clockPreferences": "Clock Preferences",
+  "clockPreferencesDescription": "Set your preferred time zone and time format."
 }

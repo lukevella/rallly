@@ -10,9 +10,9 @@ import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure, useUpdateEffect } from "react-use";
 
+import { TimesShownIn } from "@/components/clock";
 import { usePermissions } from "@/contexts/permissions";
 import { useRole } from "@/contexts/role";
-import { TimePreferences } from "@/contexts/time-preferences";
 
 import { useNewParticipantModal } from "../new-participant-modal";
 import {
@@ -193,8 +193,8 @@ const Poll: React.FunctionComponent = () => {
             </div>
           </div>
           {poll.options[0].duration !== 0 ? (
-            <div className="border-b p-3">
-              <TimePreferences />
+            <div className="border-b bg-gray-50 p-3">
+              <TimesShownIn />
             </div>
           ) : null}
           <div>

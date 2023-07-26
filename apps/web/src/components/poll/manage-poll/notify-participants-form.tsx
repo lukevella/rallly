@@ -18,8 +18,7 @@ import { DateIcon } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
-import { usePoll } from "@/contexts/poll";
-import { useDateFormatter } from "@/contexts/time-preferences";
+import { useDateFormatter, usePoll } from "@/contexts/poll";
 
 const formSchema = z.object({
   selectedOptionId: z.string(),
