@@ -5,10 +5,7 @@
   "alreadyRegistered": "Já está registado? <a>Login →</a>",
   "applyToAllDates": "Aplicar a todas as datas",
   "areYouSure": "Tem a certeza?",
-  "calendarHelp": "Não é possível criar uma sondagem sem opções. Adicionar no mínimo uma opção para continuar.",
-  "calendarHelpTitle": "Esqueceste algo?",
   "cancel": "Cancelar",
-  "commentPlaceholder": "Deixa um comentário nesta sondagem (visível para todos)",
   "comments": "Comentários",
   "continue": "Continuar",
   "copied": "Copiado",
@@ -55,7 +52,6 @@
   "no": "Não",
   "noDatesSelected": "Nenhuma data selecionada",
   "noVotes": "Ninguém votou nesta opção",
-  "ok": "Ok",
   "optional": "opcional",
   "preferences": "Preferências",
   "previousMonth": "Mês anterior",
@@ -94,7 +90,8 @@
   "errors_goToHome": "Ir para a página inicial",
   "optionCount": "{count, plural, one {# opção} other {# opções}}",
   "participantCount": "{count, plural, one {# participante} other {# participantes}}",
-  "back": "Voltar",
   "notificationsOn": "Notificações ativadas",
-  "share": "Partilhar"
+  "share": "Partilhar",
+  "calendarHelp": "Não é possível criar uma sondagem sem opções. Adicionar no mínimo uma opção para continuar.",
+  "commentPlaceholder": "Deixa um comentário nesta sondagem (visível para todos)"
 }

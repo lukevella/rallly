@@ -23,5 +23,7 @@
   "howToUpgrade": "Hoe kan ik upgraden naar een betalend abonnement?",
   "howToUpgradeAnswer": "Om te upgraden, ga naar je <a>abonnement instellingen</a> en klik op <b>Upgrade</b>.",
   "cancelSubscription": "Hoe kan ik mijn abonnement opzeggen?",
-  "cancelSubscriptionAnswer": "Je kan je abonnement op elk gewenst moment annuleren door naar je <a>abonnement instellingen</a>te gaan. Zodra je je abonnement opzegt, heb je nog steeds toegang tot je betaald abonnement tot het einde van de factureringsperiode. Daarna zul je worden beperkt tot een gratis abonnement."
+  "cancelSubscriptionAnswer": "Je kan je abonnement op elk gewenst moment annuleren door naar je <a>abonnement instellingen</a>te gaan. Zodra je je abonnement opzegt, heb je nog steeds toegang tot je betaald abonnement tot het einde van de factureringsperiode. Daarna zul je worden beperkt tot een gratis abonnement.",
+  "earlyAccess": "Early bird korting",
+  "customPollSettings": "Aanpasbare poll instellingen"
 }
