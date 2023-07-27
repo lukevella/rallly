@@ -655,11 +655,9 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const timeZone = poll.timeZone ?? "UTC";
-        const timeZoneAbbrev = getTimeZoneAbbreviation(
-          eventStart.toDate(),
-          timeZone,
-        );
+        const timeZoneAbbrev = poll.timeZone
+          ? getTimeZoneAbbreviation(eventStart.toDate(), poll.timeZone)
+          : "";
         const date = eventStart.format("dddd, MMMM D, YYYY");
         const day = eventStart.format("D");
         const dow = eventStart.format("ddd");
