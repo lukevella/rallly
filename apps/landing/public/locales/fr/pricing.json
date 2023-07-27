@@ -23,5 +23,7 @@
   "howToUpgrade": "Comment faire une mise à niveau vers un forfait payant ?",
   "howToUpgradeAnswer": "Pour faire une mise à niveau, vous pouvez aller dans vos <a>paramètres de facturation</a> et cliquer sur <b>Mettre à niveau</b>.",
   "cancelSubscription": "Comment résilier mon abonnement ?",
-  "cancelSubscriptionAnswer": "Vous pouvez annuler votre abonnement à tout moment en allant dans vos <a>paramètres de facturation</a>. Une fois que vous annulez votre abonnement, vous aurez toujours accès à votre plan payant jusqu'à la fin de votre période de facturation. Après cela, vous serez rétrogradé vers un plan gratuit."
+  "cancelSubscriptionAnswer": "Vous pouvez annuler votre abonnement à tout moment en allant dans vos <a>paramètres de facturation</a>. Une fois que vous annulez votre abonnement, vous aurez toujours accès à votre plan payant jusqu'à la fin de votre période de facturation. Après cela, vous serez rétrogradé vers un plan gratuit.",
+  "earlyAccess": "Remise de lancement",
+  "customPollSettings": "Personnalisation des paramètres de sondage"
 }
