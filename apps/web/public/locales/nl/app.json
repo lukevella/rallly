@@ -211,5 +211,7 @@
   "hideScoresDescription": "Verberg scores totdat een deelnemer heeft gestemd",
   "disableComments": "Opmerkingen uitschakelen",
   "disableCommentsDescription": "Verwijder de optie om een reactie te geven op de poll",
-  "planCustomizablePollSettings": "Aanpasbare poll instellingen"
+  "planCustomizablePollSettings": "Aanpasbare poll instellingen",
+  "clockPreferences": "Klok Voorkeuren",
+  "clockPreferencesDescription": "Stel je gewenste tijdzone en tijdnotatie in."
 }
