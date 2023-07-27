@@ -154,9 +154,7 @@
   "noTransfer": "Nem, vigyél a főoldalra",
   "share": "Megosztás",
   "timeShownIn": "Időpontok a(z) {timeZone} időzóna szerint jelennek meg",
-  "timeShownInLocalTime": "Időpontok a helyi időzóna szerint jelennek meg",
   "editDetailsDescription": "Változtasd meg az eseményed részleteit.",
-  "editOptionsDescription": "Módosítsd a lehetőségek elérhetőségét a szavazásodnál.",
   "finalizeDescription": "Válassz egy végleges dátumot az eseményedhez.",
   "notificationsGuestTooltip": "Hozz létre felhasználót vagy lépj be, hogy bekapcsolhasd az értesítéseket",
   "planFree": "Ingyenes",
@@ -213,5 +211,7 @@
   "hideScoresDescription": "Csak akkor mutasd a szavazatszámlálót, ha a résztvevő már szavazott",
   "disableComments": "Hozzaszólások kikapcsolása",
   "disableCommentsDescription": "Rejtsd el a lehetőségét annak, hogy hozzászólást lehessen rögzíteni a szavazáshoz",
-  "planCustomizablePollSettings": "Egyedi szavazat beállítások"
+  "planCustomizablePollSettings": "Egyedi szavazat beállítások",
+  "clockPreferences": "Óra beállítások",
+  "clockPreferencesDescription": "Állitsd be a preferált időzónát és idő formátumot."
 }

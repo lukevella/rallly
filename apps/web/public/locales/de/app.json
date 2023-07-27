@@ -154,9 +154,7 @@
   "noTransfer": "Nein, zurück",
   "share": "Teilen",
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt",
-  "timeShownInLocalTime": "Uhrzeit in lokaler Zeit angezeigt",
   "editDetailsDescription": "Änder die Details deiner Veranstaltung.",
-  "editOptionsDescription": "Änder die Optionen deiner Abstimmung.",
   "finalizeDescription": "Wähle einen finalen Termin für deine Veranstaltung.",
   "notificationsGuestTooltip": "Erstelle ein Konto oder logge dich ein, um Benachrichtigungen zu erhalten",
   "planFree": "Kostenlos",
@@ -211,5 +209,7 @@
   "hideScores": "Abstimmungen ausblenden",
   "disableComments": "Kommentare deaktivieren",
   "disableCommentsDescription": "Entferne die Möglichkeit, die Umfrage zu kommentieren",
-  "planCustomizablePollSettings": "Anpassbare Umfrageeinstellungen"
+  "planCustomizablePollSettings": "Anpassbare Umfrageeinstellungen",
+  "clockPreferences": "Uhrzeit-Einstellungen",
+  "clockPreferencesDescription": "Lege dein bevorzugtes Zeitzonen und Zeitformat fest."
 }

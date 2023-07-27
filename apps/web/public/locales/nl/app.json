@@ -154,9 +154,7 @@
   "noTransfer": "Nee, ga terug",
   "share": "Delen",
   "timeShownIn": "Tijden getoond in {timeZone}",
-  "timeShownInLocalTime": "Tijden getoond in lokale tijd",
   "editDetailsDescription": "Wijzig de details van uw evenement.",
-  "editOptionsDescription": "Verander de opties die beschikbaar zijn in je poll.",
   "finalizeDescription": "Selecteer een einddatum voor uw evenement.",
   "notificationsGuestTooltip": "Maak een account aan of log in om meldingen te krijgen",
   "planFree": "Gratis",
@@ -213,5 +211,7 @@
   "hideScoresDescription": "Verberg scores totdat een deelnemer heeft gestemd",
   "disableComments": "Opmerkingen uitschakelen",
   "disableCommentsDescription": "Verwijder de optie om een reactie te geven op de poll",
-  "planCustomizablePollSettings": "Aanpasbare poll instellingen"
+  "planCustomizablePollSettings": "Aanpasbare poll instellingen",
+  "clockPreferences": "Klok Voorkeuren",
+  "clockPreferencesDescription": "Stel je gewenste tijdzone en tijdnotatie in."
 }

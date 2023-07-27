@@ -154,9 +154,7 @@
   "noTransfer": "Não, me leve para o início",
   "share": "Compartilhar",
   "timeShownIn": "Horários exibidos em {timeZone}",
-  "timeShownInLocalTime": "Horários exibidos na hora local",
   "editDetailsDescription": "Altere os detalhes do seu evento.",
-  "editOptionsDescription": "Altere as opções disponíveis em sua enquete.",
   "finalizeDescription": "Selecione uma data final para o seu evento.",
   "notificationsGuestTooltip": "Crie uma conta ou faça o login para ativar as notificações",
   "planFree": "Grátis",
@@ -213,5 +211,7 @@
   "hideScoresDescription": "Só mostrar pontuações até depois de um participante ter votado",
   "disableComments": "Desativar comentários",
   "disableCommentsDescription": "Remover a opção de deixar um comentário na enquete",
-  "planCustomizablePollSettings": "Configurações de enquete personalizáveis"
+  "planCustomizablePollSettings": "Configurações de enquete personalizáveis",
+  "clockPreferences": "Preferências de relógio",
+  "clockPreferencesDescription": "Defina seu fuso horário e formato de hora preferidos."
 }
