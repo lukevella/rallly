@@ -196,6 +196,22 @@
   "becomeATranslator": "Aidez à la traduction",
   "noPolls": "Aucun sondage",
   "noPollsDescription": "Commencez par créer un nouveau sondage.",
+  "event": "Evénement",
+  "describeYourEvent": "Décrivez en quoi consiste votre événement",
+  "calendar": "Calendrier",
+  "selectPotentialDates": "Sélectionnez les dates ou heures potentielles pour votre événement",
+  "optionalLabel": "(Facultatif)",
   "calendarHelp": "Vous ne pouvez pas créer un sondage sans aucune option. Ajoutez au moins une option pour continuer.",
-  "commentPlaceholder": "Laissez un commentaire sur ce sondage (visible par tous)"
+  "hideParticipants": "Cacher la liste de participants",
+  "hideParticipantsDescription": "Garder les détails des participants cachés aux autres participants",
+  "editSettings": "Modifier les paramètres",
+  "pollSettingsDescription": "Personnaliser le comportement de votre sondage",
+  "commentPlaceholder": "Laissez un commentaire sur ce sondage (visible par tous)",
+  "hideScores": "Masquer le score",
+  "hideScoresDescription": "Ne montrer les scores que lorsqu'un participant a voté",
+  "disableComments": "Désactiver les commentaires",
+  "disableCommentsDescription": "Supprimer la possibilité de laisser un commentaire sur le sondage",
+  "planCustomizablePollSettings": "Personnalisation des paramètres du sondage",
+  "clockPreferences": "Préférences de l'horloge",
+  "clockPreferencesDescription": "Définissez votre fuseau horaire et votre format horaire préférés."
 }
