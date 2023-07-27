@@ -168,7 +168,11 @@
   "calendar": "Kalender",
   "calendarHelp": "Du kan inte skapa en omröstning utan några alternativ. Lägg till minst ett alternativ för att fortsätta.",
   "hideParticipants": "Dölj deltagarlista",
+  "hideParticipantsDescription": "Håll deltagardetaljer dolda för andra deltagare",
   "editSettings": "Redigera inställningar",
   "commentPlaceholder": "Lämna en kommentar på denna omröstning (Synlig för alla)",
-  "disableComments": "Inaktivera kommentarer"
+  "hideScores": "Dölj poäng",
+  "hideScoresDescription": "Visa endast poäng när en deltagare har röstat",
+  "disableComments": "Inaktivera kommentarer",
+  "planCustomizablePollSettings": "Anpassa omröstningsinställningar"
 }
