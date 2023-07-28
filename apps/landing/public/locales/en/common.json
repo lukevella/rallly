@@ -16,5 +16,13 @@
   "notFoundDescription": "We couldn't find the page you're looking for.",
   "goToHome": "Go to home",
   "goToApp": "Go to app",
-  "pricing": "Pricing"
+  "pricing": "Pricing",
+  "bestDoodleAlternative": "Best Doodle Alternative",
+  "freeSchedulingPoll": "Free Scheduling Poll",
+  "findATime": "Find a Time",
+  "getStarted": "Get started",
+  "metaTitle": "Rallly - Schedule Group Meetings",
+  "metaDescription": "Create polls and vote to find the best day or time. A free alternative to Doodle.",
+  "availabilityPoll": "Availability Poll",
+  "solutions": "Solutions"
 }

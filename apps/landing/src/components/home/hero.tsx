@@ -4,7 +4,6 @@ import { preventWidows } from "@rallly/utils";
 import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { Trans } from "@/components/trans";
@@ -70,8 +69,15 @@ const Screenshot = () => {
   );
 };
 
-const Hero = () => {
-  const { t } = useTranslation();
+export const MarketingHero = ({
+  title,
+  description,
+  callToAction,
+}: {
+  title: string;
+  description: string;
+  callToAction: React.ReactNode;
+}) => {
   return (
     <m.div
       transition={{
@@ -107,19 +113,11 @@ const Hero = () => {
           </span>
         </Link>
       </m.div>
-      <m.h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl">
-        {preventWidows(
-          t("home:headline", {
-            defaultValue: "Ditch the back-and-forth emails",
-          }),
-        )}
-      </m.h1>
-      <p className="text-lg text-gray-500 sm:text-xl">
-        {preventWidows(
-          t("home:subheading", {
-            defaultValue: "Streamline your scheduling process and save time",
-          }),
-        )}
+      <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
+        {preventWidows(title)}
+      </h1>
+      <p className="mx-auto max-w-3xl text-lg text-gray-500 sm:text-xl sm:leading-relaxed">
+        {preventWidows(description)}
       </p>
       <div className="my-8 flex flex-col items-center justify-center gap-4">
         <Button
@@ -129,7 +127,7 @@ const Hero = () => {
           asChild
         >
           <Link href={linkToApp("/new")}>
-            <Trans i18nKey="home:getStarted" defaults="Get started" />
+            {callToAction}
             <ChevronRightIcon className="-ml-1 h-5 w-5 transition-transform group-active:translate-x-1" />
           </Link>
         </Button>
@@ -143,5 +141,3 @@ const Hero = () => {
     </m.div>
   );
 };
-
-export default Hero;
