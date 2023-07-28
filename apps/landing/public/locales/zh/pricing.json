@@ -23,5 +23,7 @@
   "howToUpgrade": "如何升级到付费方案？",
   "howToUpgradeAnswer": "如需要升级，您可以前往 <a>订阅设置</a> 并点击<b>升级</b>。",
   "cancelSubscription": "我如何取消我的订阅？",
-  "cancelSubscriptionAnswer": "你可以随时前往 <a>订阅设置</a> 取消您的订阅。取消订阅后，您仍然可以访问付费方案，直到计费周期结束。之后，您将降级为免费方案。"
+  "cancelSubscriptionAnswer": "你可以随时前往 <a>订阅设置</a> 取消您的订阅。取消订阅后，您仍然可以访问付费方案，直到计费周期结束。之后，您将降级为免费方案。",
+  "earlyAccess": "预售优惠",
+  "customPollSettings": "自定义投票设置"
 }

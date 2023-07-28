@@ -196,6 +196,22 @@
   "becomeATranslator": "帮助翻译",
   "noPolls": "没有投票",
   "noPollsDescription": "创建一个新投票以开始使用。",
+  "event": "事件",
+  "describeYourEvent": "描述您的事件内容",
+  "calendar": "日历",
+  "selectPotentialDates": "选择投票的潜在日期或时间",
+  "optionalLabel": "(可选)",
   "calendarHelp": "创建失败，请添加至少一个选项",
-  "commentPlaceholder": "评论这个投票 (对所有人可见)"
+  "hideParticipants": "隐藏参与者列表",
+  "hideParticipantsDescription": "对参与者隐藏其他参与者的详细信息",
+  "editSettings": "设置",
+  "pollSettingsDescription": "自定义投票行为",
+  "commentPlaceholder": "评论这个投票 (对所有人可见)",
+  "hideScores": "隐藏分数",
+  "hideScoresDescription": "只有在参与者投票后才显示分数",
+  "disableComments": "禁用评论",
+  "disableCommentsDescription": "关闭投票下方的评论功能",
+  "planCustomizablePollSettings": "自定义投票设置",
+  "clockPreferences": "时钟设置",
+  "clockPreferencesDescription": "设置您首选的时区和时间格式。"
 }
