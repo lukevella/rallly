@@ -9,8 +9,18 @@
   "poweredBy": "Drevet af",
   "privacyPolicy": "Fortrolighedspolitik",
   "support": "Support",
+  "cookiePolicy": "Cookiepolitik",
+  "termsOfUse": "Vilkår for anvendelse",
   "volunteerTranslator": "Hjælp med at oversætte dette websted",
   "notFoundTitle": "404 Ikke Fundet",
   "notFoundDescription": "Kunne ikke finde den side, du ledte efter.",
-  "goToHome": "Gå til startside"
+  "goToHome": "Gå til startside",
+  "goToApp": "Gå til app'en",
+  "pricing": "Priser",
+  "bestDoodleAlternative": "Det bedste alternativ til Doodle",
+  "freeSchedulingPoll": "Gratis planlægningsafstemning",
+  "findATime": "Find en tid",
+  "getStarted": "Kom i gang",
+  "metaTitle": "Rallly - Planlæg gruppemøder",
+  "solutions": "Løsninger"
 }
