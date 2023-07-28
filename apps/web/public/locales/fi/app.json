@@ -196,6 +196,22 @@
   "becomeATranslator": "Auta kääntämisessä",
   "noPolls": "Ei kyselyjä",
   "noPollsDescription": "Aloita luomalla uusi kysely.",
+  "event": "Tapahtuma",
+  "describeYourEvent": "Kuvaile, mistä tapahtumassasi on kyse",
+  "calendar": "Kalenteri",
+  "selectPotentialDates": "Valitse mahdolliset päivämäärät tai ajat tapahtumallesi",
+  "optionalLabel": "(Valinnainen)",
   "calendarHelp": "Et voi luoda kyselyä ilman vaihtoehtoja. Lisää vähintään yksi vaihtoehto jatkaaksesi.",
-  "commentPlaceholder": "Jätä kommentti tähän kyselyyn (kaikkien nähtävissä)"
+  "hideParticipants": "Piilota osallistujaluettelo",
+  "hideParticipantsDescription": "Piilota osallistujien tiedot muilta osallistujilta",
+  "editSettings": "Muokkaa asetuksia",
+  "pollSettingsDescription": "Mukauta kyselyn toimintaa",
+  "commentPlaceholder": "Jätä kommentti tähän kyselyyn (kaikkien nähtävissä)",
+  "hideScores": "Piilota pisteet",
+  "hideScoresDescription": "Näytä pisteet vasta kun osallistuja on äänestänyt",
+  "disableComments": "Poista kommentit käytöstä",
+  "disableCommentsDescription": "Poista mahdollisuus jättää kyselyyn kommentteja",
+  "planCustomizablePollSettings": "Mukautettavat kyselyasetukset",
+  "clockPreferences": "Kellon asetukset",
+  "clockPreferencesDescription": "Aseta ensisijainen aikavyöhyke ja aikamuoto."
 }
