@@ -11,20 +11,24 @@ const Page: NextPageWithLayout = () => {
   const { t } = useTranslation(["home"]);
   return (
     <Marketing
-      title={t("metaTitle", {
-        defaultValue: "Rallly - Schedule Group Meetings",
+      title={t("home:findATimeMetaTitle", {
+        defaultValue: "Find a Time to Meet | Rallly",
       })}
-      description={t("metaDescription", {
-        defaultValue:
-          "Create polls and vote to find the best day or time. A free alternative to Doodle.",
+      description={t("home:findATimeMetaDescription", {
+        defaultValue: "Create a meeting poll in seconds, no login required.",
       })}
     >
       <MarketingHero
-        title={t("home:headline")}
-        description={t("home:subheading", {
-          defaultValue: "Streamline your scheduling process and save time",
+        title={t("home:findATimeTitle", {
+          defaultValue: "Find a Time to Meet",
         })}
-        callToAction={<Trans i18nKey="getStarted" defaults="Get started" />}
+        description={t("home:findATimeDescription", {
+          defaultValue:
+            "Create a meeting poll and let your participants vote on the best time to meet.",
+        })}
+        callToAction={
+          <Trans i18nKey="home:createAPoll" defaults="Create a Meeting Poll" />
+        }
       />
     </Marketing>
   );

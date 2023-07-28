@@ -2,14 +2,11 @@ import { ArrowUpRight } from "@rallly/icons";
 import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
 import { NextSeo } from "next-seo";
 import React from "react";
 
 import Bonus from "@/components/home/bonus";
 import { Trans } from "@/components/trans";
-
-import Hero from "./home/hero";
 
 // const UsedBy = () => {
 //   return (
@@ -75,6 +72,78 @@ import Hero from "./home/hero";
 //             alt="NASA"
 //           />
 //         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const Testimonials = () => {
+//   return (
+//     <div>
+//       <h2 className="mb-12 text-center">Testimonials</h2>
+//       <div className="">
+//         {/* <Testimonial author="Dan">
+//           {`Rallly is the only service that meets all my needs and is 100%
+//         free. It's incredibly easy to use, no sign-in even required. And I
+//         trust rallly.co because the entire project is open source.`}
+//         </Testimonial>
+//         <Testimonial author="Robert">
+//           I was looking for something simple and clean (without tons of ads)
+//           that would be easy for me to administer and easy for others to use.
+//           This fit the bill perfectly.
+//         </Testimonial>
+//         <Testimonial author="Adrià">
+//           Awesome Doodle alternative. I love its open-source nature, and how
+//           easy it is to use thanks to its modern and clean UI.
+//         </Testimonial> */}
+//       </div>
+//       {/* <div className="mt-8 text-center">
+//         <Button className="rounded-full px-6" asChild>
+//           <Link
+//             target="_blank"
+//             href="https://www.trustpilot.com/evaluate/rallly.co"
+//           >
+//             <span>Share your experience</span>
+//             <ArrowRight className="h-4 w-4" />
+//           </Link>
+//         </Button>
+//       </div> */}
+//     </div>
+//   );
+// };
+
+// const Testimonial = ({
+//   author,
+//   children,
+//   logo,
+// }: React.PropsWithChildren<{ author: string; logo?: string }>) => {
+//   return (
+//     <div className="relative flex flex-col space-y-4 rounded-md bg-gray-50 px-4 py-3 shadow-sm">
+//       <QuoteIcon className="h-4 w-4 text-gray-400" />
+//       <div className="flex justify-between">
+//         <div className="flex flex-col gap-2">
+//           <div className="font-semibold">{author}</div>
+//           <Image
+//             src="/static/images/stars-5.svg"
+//             width={100}
+//             height={30}
+//             alt="5 stars"
+//           />
+//         </div>
+//         {logo ? (
+//           <div className="relative h-16 w-16">
+//             <Image src={logo} fill alt="logo" />
+//           </div>
+//         ) : null}
+//       </div>
+//       <p className="grow text-sm leading-relaxed">{children}</p>
+//       <div className="relative h-8 w-24">
+//         <Image
+//           src="/trustpilot-logo.svg"
+//           fill
+//           alt="TrustPilot"
+//           style={{ objectPosition: "left", objectFit: "contain" }}
+//         />
 //       </div>
 //     </div>
 //   );
@@ -187,78 +256,6 @@ const MentionedBy = () => {
   );
 };
 
-// const Testimonials = () => {
-//   return (
-//     <div>
-//       <h2 className="mb-12 text-center">Testimonials</h2>
-//       <div className="">
-//         {/* <Testimonial author="Dan">
-//           {`Rallly is the only service that meets all my needs and is 100%
-//         free. It's incredibly easy to use, no sign-in even required. And I
-//         trust rallly.co because the entire project is open source.`}
-//         </Testimonial>
-//         <Testimonial author="Robert">
-//           I was looking for something simple and clean (without tons of ads)
-//           that would be easy for me to administer and easy for others to use.
-//           This fit the bill perfectly.
-//         </Testimonial>
-//         <Testimonial author="Adrià">
-//           Awesome Doodle alternative. I love its open-source nature, and how
-//           easy it is to use thanks to its modern and clean UI.
-//         </Testimonial> */}
-//       </div>
-//       {/* <div className="mt-8 text-center">
-//         <Button className="rounded-full px-6" asChild>
-//           <Link
-//             target="_blank"
-//             href="https://www.trustpilot.com/evaluate/rallly.co"
-//           >
-//             <span>Share your experience</span>
-//             <ArrowRight className="h-4 w-4" />
-//           </Link>
-//         </Button>
-//       </div> */}
-//     </div>
-//   );
-// };
-
-// const Testimonial = ({
-//   author,
-//   children,
-//   logo,
-// }: React.PropsWithChildren<{ author: string; logo?: string }>) => {
-//   return (
-//     <div className="relative flex flex-col space-y-4 rounded-md bg-gray-50 px-4 py-3 shadow-sm">
-//       <QuoteIcon className="h-4 w-4 text-gray-400" />
-//       <div className="flex justify-between">
-//         <div className="flex flex-col gap-2">
-//           <div className="font-semibold">{author}</div>
-//           <Image
-//             src="/static/images/stars-5.svg"
-//             width={100}
-//             height={30}
-//             alt="5 stars"
-//           />
-//         </div>
-//         {logo ? (
-//           <div className="relative h-16 w-16">
-//             <Image src={logo} fill alt="logo" />
-//           </div>
-//         ) : null}
-//       </div>
-//       <p className="grow text-sm leading-relaxed">{children}</p>
-//       <div className="relative h-8 w-24">
-//         <Image
-//           src="/trustpilot-logo.svg"
-//           fill
-//           alt="TrustPilot"
-//           style={{ objectPosition: "left", objectFit: "contain" }}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
 const BigTestimonial = () => {
   return (
     <m.div
@@ -317,30 +314,18 @@ const BigTestimonial = () => {
     </m.div>
   );
 };
-const Home = () => {
-  const { t } = useTranslation();
+
+export const Marketing = ({
+  children,
+  ...props
+}: React.PropsWithChildren<{ title: string; description: string }>) => {
   return (
     <div className="space-y-12 sm:space-y-24">
-      <NextSeo
-        title={t("home:metaTitle", {
-          defaultValue: "Rallly - Schedule Group Meetings",
-        })}
-        description={t("home:metaDescription", {
-          defaultValue:
-            "Create polls and vote to find the best day or time. A free alternative to Doodle.",
-        })}
-        twitter={{
-          handle: "@imlukevella",
-          site: "@ralllyco",
-          cardType: "summary_large_image",
-        }}
-      />
-      <Hero />
+      <NextSeo {...props} />
+      {children}
       <Bonus />
       <BigTestimonial />
       <MentionedBy />
     </div>
   );
 };
-
-export default Home;
