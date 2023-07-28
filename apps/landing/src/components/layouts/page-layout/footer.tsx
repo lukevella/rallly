@@ -154,7 +154,7 @@ const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:w-1/6">
           <div className="mb-8 font-medium">
-            <Trans i18nKey="marketing" defaults="Other" />
+            <Trans i18nKey="solutions" defaults="Solutions" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
