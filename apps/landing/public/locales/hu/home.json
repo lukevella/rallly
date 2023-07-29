@@ -19,5 +19,20 @@
   "doodleAlternative": "A legjobb ingyenes Doodle alternatíva",
   "doodleAlternativeDescription": "Rallly az a Doodle alternatíva, amit mindenki keres. Több ezer felhasználó már váltott és most te is élvezheted a professzionális reklámmentes szavazásokat egy magától értetődő, könnyen használható felületen.        ",
   "availabilityPollCta": "Hozz létre egy elérhetőség szavazást",
-  "availabilityPollMetaTitle": "Elérhetőség szavazás | Szervezz szavazást a Rallly-val"
+  "availabilityPollMetaTitle": "Elérhetőség szavazás | Szervezz szavazást a Rallly-val",
+  "availabilityPollMetaDescription": "Szervezz találkozókat és eseményeket gond nélkül a Rallly elérhetőség szavazásával. Biztosítsd hogy mindenki ráérjen egy egyszerű és hatékony tervezési élménnyel.",
+  "availabilityPollTitle": "Elérhetőség szavazások",
+  "availabilityPollDescription": "Belefáradtál abb, hogy olyan időpontot találj, amikor nmindenki ráér. Szervezd meg az időpont keresést egy elérhetőség szavazással - egy tökéletes eszköz, ami úgy lett megtervezve hogy leegyszerűsítse és optimalizálja az eseményeid és találkozó tervezéseid.",
+  "createAPoll": "Hozz létre egy találkozó szavazást",
+  "doodleAlternativeMetaTitle": "Legjobb ingyenes Doodle alternatíva | Rallly",
+  "doodleAlternativeMetaDescription": "Egy Doodle alternatívát keresel? Próbáld ki a Rallly-t! Ingyenes, egyszerű használni és nem igényel felhasználót.",
+  "findATimeMetaTitle": "Találj egy időpontot a találkozódnak | Rallly",
+  "findATimeMetaDescription": "Hozz létre egy szavazást pillanatok alatt, nem igényel bejelentkezést.",
+  "findATimeTitle": "Találj időpontot a találkozáshoz",
+  "findATimeDescription": "Hozz létre egy találkozó szavazást es engedd hogy a résztvevőid szavazzák meg a legjobb időpontot a találkozásra.",
+  "createASchedulingPoll": "Hozz létre egy ütemező szavazást",
+  "freeSchedulingPollMetaTitle": "Ingyenes ütemező szavazás | Rallly",
+  "freeSchedulingPollMetaDescription": "Hozz létre ingyenes ütemező szavazást pillanatok alatt. Tökéletes találkozók, események, konferenciák rendezésére, sport csapatok és még sok mindenki számára.",
+  "freeSchedulingPollTitle": "Ingyenes ütemező szavazást keresel?",
+  "freeSchedulingPollDescription": "Rallly segít hogy létrehozz gyönyörű és könnyen használható szavazásokaz, hogy megtaláld a legjobb időpontot a következő eseményedhez."
 }
