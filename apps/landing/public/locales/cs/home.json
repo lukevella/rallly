@@ -3,9 +3,6 @@
   "opensource": "Máme otevřený zdrojový kód!",
   "startUsOnGithub": "Dejte nám hvězdu na Github",
   "noLoginRequired": "Bez přihlášení",
-  "metaTitle": "Rallly - Plánování skupinových setkání",
-  "metaDescription": "Vytvořte hlasování a najděte společně nejlepší den nebo čas. Bezplatná alternativa k Doodle.",
-  "getStarted": "Začínáme",
   "headline": "Neřešte plánování termínů v e-mailech",
   "subheading": "Zjednodušte proces plánování a šetřete čas",
   "pcmagQuote": "„Vytvořte hlasování v co nejkratším čase.\"",
@@ -18,5 +15,7 @@
   "statsUsersRegistered": "Více než 45.000 registrovaných uživatelů",
   "statsPollsCreated": "Více než 100.000 vytvořených hlasování",
   "statsLanguagesSupported": "Podporováno více než 10 jazyků",
-  "hint": "Je to zdarma! Přihlášení není vyžadováno."
+  "hint": "Je to zdarma! Přihlášení není vyžadováno.",
+  "availabilityPollTitle": "Dostupná hlasování",
+  "createAPoll": "Vytvořit hlasování o schůzce"
 }
