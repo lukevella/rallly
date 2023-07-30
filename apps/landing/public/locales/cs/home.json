@@ -3,9 +3,6 @@
   "opensource": "Máme otevřený zdrojový kód!",
   "startUsOnGithub": "Dejte nám hvězdu na Github",
   "noLoginRequired": "Bez přihlášení",
-  "metaTitle": "Rallly - Plánování skupinových setkání",
-  "metaDescription": "Vytvořte hlasování a najděte společně nejlepší den nebo čas. Bezplatná alternativa k Doodle.",
-  "getStarted": "Začínáme",
   "headline": "Neřešte plánování termínů v e-mailech",
   "subheading": "Zjednodušte proces plánování a šetřete čas",
   "pcmagQuote": "„Vytvořte hlasování v co nejkratším čase.\"",
@@ -18,5 +15,16 @@
   "statsUsersRegistered": "Více než 45.000 registrovaných uživatelů",
   "statsPollsCreated": "Více než 100.000 vytvořených hlasování",
   "statsLanguagesSupported": "Podporováno více než 10 jazyků",
-  "hint": "Je to zdarma! Přihlášení není vyžadováno."
+  "hint": "Je to zdarma! Přihlášení není vyžadováno.",
+  "doodleAlternative": "Nejlepší bezplatná alternativa k Doodle",
+  "doodleAlternativeDescription": "Rallly je tady pro vás, pokud hledáte alternativu k Doodle. Tisíce uživatelů již přešly a nyní si užívají profesionální hlasování o termínech schůzek bez reklam v intuitivním a snadno použitelném rozhraní.        ",
+  "availabilityPollCta": "Vytvořit hlasování o termínu",
+  "availabilityPollMetaDescription": "Plánujte schůzky a události bez problémů pomocí Rallly. Zajistěte, aby byla zohledněna časové možnosti všech účastníků a plánování probíhalo hladce a efektivně.",
+  "availabilityPollTitle": "Dostupná hlasování",
+  "availabilityPollDescription": "Už vás nebaví hledat čas schůzky, který by vyhovoval všem? Zjednodušte plánování pomocí hlasování - výkonného nástroje, který je navržen tak, aby zjednodušil a optimalizoval plánování událostí a schůzek.",
+  "createAPoll": "Vytvořit hlasování o schůzce",
+  "doodleAlternativeMetaTitle": "Nejlepší bezplatná alternativa k Doodle | Rallly",
+  "findATimeMetaTitle": "Najděte čas na schůzku | Rallly",
+  "findATimeTitle": "Najděte čas na schůzku",
+  "freeSchedulingPollTitle": "Hledáte bezplatný nástroj na plánování schůzek?"
 }

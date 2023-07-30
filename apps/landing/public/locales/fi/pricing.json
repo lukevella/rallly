@@ -23,5 +23,7 @@
   "howToUpgrade": "Miten vaihdan maksulliseen suunnitelmaan?",
   "howToUpgradeAnswer": "Voit vaihtaa sopimusta siirtymällä <a>laskutusasetuksiin</a> ja valitsemalla <b>Vaihda sopimus</b>.",
   "cancelSubscription": "Miten perun tilaukseni?",
-  "cancelSubscriptionAnswer": "Voit perua tilauksesi milloin vain <a>laskutusasetuksistasi</a>. Kun perut tilauksesi, maksullinen sopimuksesi säilyy laskutuskauden loppuun asti. Tämän jälkeen siirryt ilmaiseen sopimukseen."
+  "cancelSubscriptionAnswer": "Voit perua tilauksesi milloin vain <a>laskutusasetuksistasi</a>. Kun perut tilauksesi, maksullinen sopimuksesi säilyy laskutuskauden loppuun asti. Tämän jälkeen siirryt ilmaiseen sopimukseen.",
+  "earlyAccess": "Aikaisen linnun alennus",
+  "customPollSettings": "Mukautettavat kyselyasetukset"
 }

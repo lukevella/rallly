@@ -16,5 +16,13 @@
   "notFoundDescription": "我们无法找到你想要的网页。",
   "goToHome": "回到主页",
   "goToApp": "前往应用",
-  "pricing": "价格"
+  "pricing": "价格",
+  "bestDoodleAlternative": "最好的 Doodle 替代品",
+  "freeSchedulingPoll": "免费日程投票",
+  "findATime": "找个时间",
+  "getStarted": "开始使用",
+  "metaTitle": "Rallly - 安排小组会议",
+  "metaDescription": "通过投票来寻找最和合适的日期或时间。一个免费的 Doodle 替代方案。",
+  "availabilityPoll": "可用性投票",
+  "solutions": "解決方案"
 }
