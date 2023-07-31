@@ -174,5 +174,7 @@
   "hideScores": "Dölj poäng",
   "hideScoresDescription": "Visa endast poäng när en deltagare har röstat",
   "disableComments": "Inaktivera kommentarer",
-  "planCustomizablePollSettings": "Anpassa omröstningsinställningar"
+  "planCustomizablePollSettings": "Anpassa omröstningsinställningar",
+  "clockPreferences": "Inställningar för klocka",
+  "clockPreferencesDescription": "Ställ in önskad tidszon och tidsformat."
 }
