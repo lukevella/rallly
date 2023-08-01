@@ -89,13 +89,14 @@ Thank you to our sponsors for making this project possible.
 
 [Become a sponsor &rarr;](https://github.com/sponsors/lukevella)
 
-This project is also supported by the following companies through their open-source sponsorships.
+And thank you to these companies for sponsoring and showing support for this project.
 
-<a href="https://appwrite.io"><img src="./assets/images/appwrite.svg" alt="appwrite" height="30" /></a>
+<a href="https://appwrite.io?utm_source=rallly"><img src="./assets/images/appwrite.svg" alt="appwrite" height="24" /></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss"><img src="./apps/landing/public/vercel-logotype-dark.svg" alt="Powered by Vercel" height="30" /></a>
+<a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss"><img src="./apps/landing/public/vercel-logotype-dark.svg" alt="Powered by Vercel" height="24" /></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://m.do.co/c/f91efc9c9e50"><img src="./apps/landing/public/digitalocean.svg" alt="Digital Ocean" height="30" /></a>
+<a href="https://m.do.co/c/f91efc9c9e50"><img src="./apps/landing/public/digitalocean.svg" alt="Digital Ocean" height="24" /></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://sentry.io"><img src="./apps/landing/public/sentry.svg" alt="Sentry" height="30" /></a>&nbsp;&nbsp;&nbsp;
-<a href="https://cloudron.io"><img src="./assets/images/cloudron-logo.svg" alt="Cloudron" height="36"></a>
+<a href="https://sentry.io?utm_source=rallly"><img src="./apps/landing/public/sentry.svg" alt="Sentry" height="24" /></a>&nbsp;&nbsp;&nbsp;
+<a href="https://cloudron.io?utm_source=rallly"><img src="./assets/images/cloudron-logo.svg" alt="Cloudron" height="32"></a>&nbsp;&nbsp;&nbsp;
+<a href="https://featurebase.app?utm_source=rallly"><img src="./assets/images/featurebase.svg" alt="Featurebase" height="30"></a>
