@@ -14,6 +14,7 @@ import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
 import React from "react";
 
+import { FeaturebaseProvider } from "@/components/featurebase";
 import Maintenance from "@/components/maintenance";
 import { UserProvider } from "@/components/user-provider";
 import { DayjsProvider } from "@/utils/dayjs";
