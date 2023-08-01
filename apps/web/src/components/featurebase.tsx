@@ -8,7 +8,7 @@ export const FeaturebaseProvider = ({ children }: React.PropsWithChildren) => {
 
   React.useEffect(() => {
     if (user.isGuest) return;
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const win = window as any;
 
     if (typeof win.Featurebase !== "function") {
