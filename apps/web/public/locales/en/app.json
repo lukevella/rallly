@@ -10,7 +10,6 @@
   "settings": "Settings",
   "changeNameDescription": "Enter a new name for this participant.",
   "changeNameInfo": "This will not affect any votes you have already made.",
-  "close": "Close",
   "comments": "Comments",
   "continue": "Continue",
   "copied": "Copied",
@@ -36,11 +35,6 @@
   "emailPlaceholder": "jessie.smith@example.com",
   "expiredOrInvalidLink": "This link is expired or invalid. Please request a new link.",
   "exportToCsv": "Export to CSV",
-  "feedbackFormFooter": "Need help? Visit the <a>support page</a>.",
-  "feedbackFormLabel": "How can we improve <appname />?",
-  "feedbackFormPlaceholder": "Share your thoughts…",
-  "feedbackFormTitle": "Feedback Form",
-  "feedbackSent": "Thank you! Your feedback has been sent.",
   "forgetMe": "Forget me",
   "guest": "Guest",
   "ifNeedBe": "If need be",
@@ -76,7 +70,6 @@
   "response": "Response",
   "save": "Save",
   "saveInstruction": "Select your availability and click <b>{action}</b>",
-  "send": "Send",
   "sendFeedback": "Send Feedback",
   "specifyTimes": "Specify times",
   "specifyTimesDescription": "Include start and end times for each option",
@@ -213,5 +206,8 @@
   "disableCommentsDescription": "Remove the option to leave a comment on the poll",
   "planCustomizablePollSettings": "Customizable poll settings",
   "clockPreferences": "Clock Preferences",
-  "clockPreferencesDescription": "Set your preferred time zone and time format."
+  "clockPreferencesDescription": "Set your preferred time zone and time format.",
+  "featureRequest": "Request a Feature",
+  "bugReport": "Report an Issue",
+  "getSupport": "Get Support"
 }
