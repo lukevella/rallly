@@ -98,4 +98,5 @@ This project is also supported by the following companies through their open-sou
 <a href="https://m.do.co/c/f91efc9c9e50"><img src="./apps/landing/public/digitalocean.svg" alt="Digital Ocean" height="30" /></a>
 &nbsp;&nbsp;&nbsp;
 <a href="https://sentry.io"><img src="./apps/landing/public/sentry.svg" alt="Sentry" height="30" /></a>&nbsp;&nbsp;&nbsp;
-<a href="https://cloudron.io"><img src="./assets/images/cloudron-logo.svg" alt="Cloudron" height="36"></a>
+<a href="https://cloudron.io"><img src="./assets/images/cloudron-logo.svg" alt="Cloudron" height="36"></a>&nbsp;&nbsp;&nbsp;
+<a href="https://featurebase.app"><img src="./assets/images/featurebase.svg" alt="Featurebase" height="36"></a>
