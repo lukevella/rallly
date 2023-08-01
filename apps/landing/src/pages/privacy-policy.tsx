@@ -44,12 +44,6 @@ const PrivacyPolicy = () => {
           website.
         </p>
 
-        <p>
-          We also use Featurebase to help collect feedback and engage with our
-          users. Your name and email may be shared with Featurbase to provide a
-          seamless transition between the two services.
-        </p>
-
         <h2>Legal basis for processing</h2>
 
         <p>
@@ -78,6 +72,12 @@ const PrivacyPolicy = () => {
           applicable laws and regulations, to respond to a subpoena, search
           warrant or other lawful request for information we receive, or to
           otherwise protect our rights.
+        </p>
+
+        <p>
+          We also use Featurebase to help collect feedback and engage with our
+          users. Your name and email may be shared with Featurbase to provide a
+          seamless transition between the two services.
         </p>
 
         <h2>Your rights</h2>
