@@ -206,5 +206,8 @@
   "disableCommentsDescription": "Rejtsd el a lehetőségét annak, hogy hozzászólást lehessen rögzíteni a szavazáshoz",
   "planCustomizablePollSettings": "Egyedi szavazat beállítások",
   "clockPreferences": "Óra beállítások",
-  "clockPreferencesDescription": "Állitsd be a preferált időzónát és idő formátumot."
+  "clockPreferencesDescription": "Állitsd be a preferált időzónát és idő formátumot.",
+  "featureRequest": "Javasolj új funkciót",
+  "bugReport": "Jelezz hibákat",
+  "getSupport": "Kérj segítséget"
 }
