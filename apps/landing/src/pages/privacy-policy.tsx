@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
       <NextSeo title="Privacy Policy" />
       <div className="prose my-16 mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Privacy Policy</h1>
-        <p>Last updated: 19 April 2023</p>
+        <p>Last updated: 1 August 2023</p>
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -44,6 +44,12 @@ const PrivacyPolicy = () => {
           website.
         </p>
 
+        <p>
+          We also use Featurebase to help collect feedback and engage with our
+          users. Your name and email will be shared with Featurbase to provide a
+          seamless transition between the two services.
+        </p>
+
         <h2>Legal basis for processing</h2>
 
         <p>
@@ -66,10 +72,12 @@ const PrivacyPolicy = () => {
         <h2>Sharing of personal data</h2>
 
         <p>
-          We do not share your personal data with third parties, except for our
-          data processor, Posthog, which is based in the United States. We have
-          implemented appropriate safeguards to protect your personal data when
-          it is transferred outside of the European Economic Area.
+          We do not share your personal data with any third parties for
+          marketing or commercial purposes. We may share your personal data with
+          third parties to provide you with our services, to comply with
+          applicable laws and regulations, to respond to a subpoena, search
+          warrant or other lawful request for information we receive, or to
+          otherwise protect our rights.
         </p>
 
         <h2>Your rights</h2>
