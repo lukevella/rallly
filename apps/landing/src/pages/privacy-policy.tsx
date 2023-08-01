@@ -46,7 +46,7 @@ const PrivacyPolicy = () => {
 
         <p>
           We also use Featurebase to help collect feedback and engage with our
-          users. Your name and email will be shared with Featurbase to provide a
+          users. Your name and email may be shared with Featurbase to provide a
           seamless transition between the two services.
         </p>
 
