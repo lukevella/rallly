@@ -136,6 +136,7 @@
   "Billing": "Fakturering",
   "annualBilling": "Årlig fakturering (Spara {discount}%)",
   "planUpgrade": "Uppgradera",
+  "subscriptionUpdatePayment": "Uppdatera betalningsinformation",
   "billingStatus": "Faktureringsstatus",
   "subscriptionPlans": "Planer",
   "subscriptionDescription": "Få tillgång till fler funktioner genom att uppgradera till en betalplan.",
