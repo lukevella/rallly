@@ -188,5 +188,8 @@
   "plan_prioritySupport": "Přednostní podpora",
   "becomeATranslator": "Pomozte s překladem",
   "calendarHelp": "Hlasování nelze vytvořit bez možností. Chcete-li pokračovat, přidejte alespoň jednu možnost.",
-  "commentPlaceholder": "Zanechte u hlasování komentář (uvidí jej všichni)"
+  "commentPlaceholder": "Zanechte u hlasování komentář (uvidí jej všichni)",
+  "featureRequest": "Požadavek na funkci",
+  "bugReport": "Náhlasit chybu",
+  "getSupport": "Získat podporu"
 }
