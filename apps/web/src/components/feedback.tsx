@@ -31,15 +31,18 @@ const FeedbackButton = () => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="https://feedback.rallly.co/?b=feedback" target="_blank">
+            <Link
+              href={`https://rallly.featurebase.app/?b=feedback`}
+              target={"_blank"}
+            >
               <SmileIcon className="mr-2 h-4 w-4" />
               <Trans i18nKey="sendFeedback" defaults="Send Feedback" />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link
-              href="https://feedback.rallly.co/?b=feature-request"
-              target="_blank"
+              href={`https://rallly.featurebase.app/?b=feature-request`}
+              target={"_blank"}
             >
               <LightbulbIcon className="mr-2 h-4 w-4" />
               <Trans
@@ -50,8 +53,8 @@ const FeedbackButton = () => {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link
-              href="https://feedback.rallly.co/?b=bug-reports"
-              target="_blank"
+              href={`https://rallly.featurebase.app/?b=bug-reports`}
+              target={"_blank"}
             >
               <BugIcon className="mr-2 h-4 w-4" />
               <Trans i18nKey={"bugReport"} defaults={"Report an Issue"} />
@@ -59,7 +62,7 @@ const FeedbackButton = () => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`https://support.rallly.co`} target="_blank">
+            <Link href={`https://support.rallly.co`} target={"_blank"}>
               <LifeBuoyIcon className="mr-2 h-4 w-4" />
               <Trans i18nKey={"getSupport"} defaults={"Get Support"} />
             </Link>
