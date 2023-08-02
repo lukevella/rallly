@@ -170,5 +170,8 @@
   "disableComments": "Inaktivera kommentarer",
   "planCustomizablePollSettings": "Anpassa omröstningsinställningar",
   "clockPreferences": "Inställningar för klocka",
-  "clockPreferencesDescription": "Ställ in önskad tidszon och tidsformat."
+  "clockPreferencesDescription": "Ställ in önskad tidszon och tidsformat.",
+  "featureRequest": "Efterfråga funktionalitet",
+  "bugReport": "Rapportera ett problem",
+  "getSupport": "Få hjälp"
 }
