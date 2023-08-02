@@ -208,5 +208,6 @@
   "clockPreferencesDescription": "Ustaw preferowaną strefę czasową i format czasu.",
   "featureRequest": "Poproś o funkcję",
   "bugReport": "Zgłoś problem",
-  "getSupport": "Uzyskaj wsparcie"
+  "getSupport": "Uzyskaj wsparcie",
+  "feedback": "Feedback"
 }
