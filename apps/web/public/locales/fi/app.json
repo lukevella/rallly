@@ -206,5 +206,8 @@
   "disableCommentsDescription": "Poista mahdollisuus jättää kyselyyn kommentteja",
   "planCustomizablePollSettings": "Mukautettavat kyselyasetukset",
   "clockPreferences": "Kellon asetukset",
-  "clockPreferencesDescription": "Aseta ensisijainen aikavyöhyke ja aikamuoto."
+  "clockPreferencesDescription": "Aseta ensisijainen aikavyöhyke ja aikamuoto.",
+  "featureRequest": "Ehdota ominaisuutta",
+  "bugReport": "Ilmoita ongelmasta",
+  "getSupport": "Hae tukea"
 }
