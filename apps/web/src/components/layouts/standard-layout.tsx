@@ -121,14 +121,19 @@ const MainNav = () => {
           </nav>
         </div>
         <div className="flex items-center gap-x-4">
-          <nav className="flex gap-x-1">
+          <nav className="flex items-center gap-x-1 sm:gap-x-2">
             <IfGuest>
-              <NavMenuItem
+              <Button
+                size="sm"
+                variant="ghost"
+                asChild
                 className="hidden sm:flex"
-                icon={LogInIcon}
-                href="/login"
-                label={<Trans i18nKey="login" defaults="Login" />}
-              />
+              >
+                <Link href="/login">
+                  <LogInIcon className="h-4 w-4" />
+                  <Trans i18nKey="login" defaults="Login" />
+                </Link>
+              </Button>
             </IfGuest>
             <Changelog />
             <ClockPreferences>
