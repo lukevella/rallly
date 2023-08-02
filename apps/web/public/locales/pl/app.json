@@ -206,5 +206,8 @@
   "disableCommentsDescription": "Usunięcie opcji pozostawienia komentarza w ankiecie",
   "planCustomizablePollSettings": "Konfigurowalne ustawienia ankiet",
   "clockPreferences": "Preferencje zegara",
-  "clockPreferencesDescription": "Ustaw preferowaną strefę czasową i format czasu."
+  "clockPreferencesDescription": "Ustaw preferowaną strefę czasową i format czasu.",
+  "featureRequest": "Poproś o funkcję",
+  "bugReport": "Zgłoś problem",
+  "getSupport": "Uzyskaj wsparcie"
 }
