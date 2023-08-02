@@ -206,5 +206,8 @@
   "disableCommentsDescription": "Verwijder de optie om een reactie te geven op de poll",
   "planCustomizablePollSettings": "Aanpasbare poll instellingen",
   "clockPreferences": "Klok Voorkeuren",
-  "clockPreferencesDescription": "Stel je gewenste tijdzone en tijdnotatie in."
+  "clockPreferencesDescription": "Stel je gewenste tijdzone en tijdnotatie in.",
+  "featureRequest": "Vraag een nieuwe feature aan",
+  "bugReport": "Meld een probleem",
+  "getSupport": "Vraag hulp"
 }
