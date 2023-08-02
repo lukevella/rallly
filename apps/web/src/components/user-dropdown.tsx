@@ -6,8 +6,8 @@ import {
   ListIcon,
   LogInIcon,
   LogOutIcon,
+  MegaphoneIcon,
   RefreshCcwIcon,
-  ScrollTextIcon,
   Settings2Icon,
   UserIcon,
   UserPlusIcon,
@@ -26,6 +26,7 @@ import Link from "next/link";
 
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
+import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
@@ -121,16 +122,18 @@ export const UserDropdown = () => {
             <Trans i18nKey="support" defaults="Support" />
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild={true}>
-          <Link
-            target="_blank"
-            href="https://rallly.co/blog"
-            className="flex items-center gap-x-2"
-          >
-            <ScrollTextIcon className="h-4 w-4" />
-            <Trans i18nKey="changelog" defaults="Change log" />
-          </Link>
-        </DropdownMenuItem>
+        {isFeedbackEnabled ? (
+          <DropdownMenuItem asChild={true}>
+            <Link
+              target="_blank"
+              href="https://rallly.featurebase.app"
+              className="flex items-center gap-x-2"
+            >
+              <MegaphoneIcon className="h-4 w-4" />
+              <Trans i18nKey="feedback" defaults="Feedback" />
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuSeparator />
         <IfGuest>
           <DropdownMenuItem asChild={true}>

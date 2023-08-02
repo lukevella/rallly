@@ -121,7 +121,6 @@
   "inviteLink": "Invite Link",
   "inviteParticipantLinkInfo": "Anyone with this link will be able to vote on your poll.",
   "support": "Support",
-  "changelog": "Change log",
   "billing": "Billing",
   "guestPollAlertDescription": "<0>Create an account</0> or <1>login</1> to claim this poll.",
   "guestPollAlertTitle": "Your administrator rights can be lost if you clear your cookies",
@@ -209,5 +208,6 @@
   "clockPreferencesDescription": "Set your preferred time zone and time format.",
   "featureRequest": "Request a Feature",
   "bugReport": "Report an Issue",
-  "getSupport": "Get Support"
+  "getSupport": "Get Support",
+  "feedback": "Feedback"
 }

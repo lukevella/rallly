@@ -1,5 +1,3 @@
-import "react-big-calendar/lib/css/react-big-calendar.css";
-
 import { XIcon } from "@rallly/icons";
 import dayjs from "dayjs";
 import React from "react";
