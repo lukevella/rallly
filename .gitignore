@@ -36,3 +36,6 @@ tsconfig.tsbuildinfo
 
 # Turbo
 .turbo
+
+# Jetbrains IDE
+.idea
