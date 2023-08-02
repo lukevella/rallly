@@ -16,8 +16,6 @@ import {
 import Link from "next/link";
 import { Trans } from "next-i18next";
 
-import { FeaturebaseIdentify } from "@/components/featurebase";
-
 const FeedbackButton = () => {
   return (
     <DropdownMenu modal={false}>
