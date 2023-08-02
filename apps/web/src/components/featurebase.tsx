@@ -8,10 +8,11 @@ import React from "react";
 import { Trans } from "@/components/trans";
 import { isFeedbackEnabled } from "@/utils/constants";
 
-const FeaturebaseContext = React.createContext(false);
+const FeaturebaseScript = () => (
+  <Script src="https://do.featurebase.app/js/sdk.js" id="featurebase-sdk" />
+);
 
 export const Changelog = ({ className }: { className?: string }) => {
-  const isFeaturebaseEnabled = React.useContext(FeaturebaseContext);
   React.useEffect(() => {
     const win = window as any;
 
@@ -28,11 +29,11 @@ export const Changelog = ({ className }: { className?: string }) => {
     });
   }, []);
 
-  if (!isFeaturebaseEnabled) return null;
+  if (!isFeedbackEnabled) return null;
 
   return (
     <>
-      <Script src="https://do.featurebase.app/js/sdk.js" id="featurebase-sdk" />
+      <FeaturebaseScript />
       <Button
         className={cn("[&>*]:pointer-events-none", className)}
         size="sm"
@@ -52,7 +53,7 @@ export const Changelog = ({ className }: { className?: string }) => {
   );
 };
 
-export const FeaturebaseProvider = ({ children }: React.PropsWithChildren) => {
+export const FeaturebaseIdentify = () => {
   const { data: user } = trpc.whoami.get.useQuery();
 
   React.useEffect(() => {
@@ -86,10 +87,5 @@ export const FeaturebaseProvider = ({ children }: React.PropsWithChildren) => {
     );
   }, [user]);
 
-  return (
-    <FeaturebaseContext.Provider value={true}>
-      <Script src="https://do.featurebase.app/js/sdk.js" id="featurebase-sdk" />
-      {children}
-    </FeaturebaseContext.Provider>
-  );
+  return <FeaturebaseScript />;
 };

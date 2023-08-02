@@ -11,7 +11,7 @@ import { Toaster } from "react-hot-toast";
 
 import { Clock, ClockPreferences } from "@/components/clock";
 import { Container } from "@/components/container";
-import { Changelog, FeaturebaseProvider } from "@/components/featurebase";
+import { Changelog, FeaturebaseIdentify } from "@/components/featurebase";
 import FeedbackButton from "@/components/feedback";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
@@ -37,12 +37,11 @@ const NavMenuItem = ({
 }) => {
   const router = useRouter();
   return (
-    <Button variant="ghost" asChild>
+    <Button variant="ghost" size="sm" asChild>
       <Link
         target={target}
         href={href}
         className={cn(
-          "flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-medium",
           router.asPath === href
             ? "text-foreground"
             : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
@@ -154,12 +153,9 @@ export const StandardLayout: React.FunctionComponent<{
   hideNav?: boolean;
 }> = ({ children, hideNav, ...rest }) => {
   const key = hideNav ? "no-nav" : "nav";
-  const FeedbackProvider = isFeedbackEnabled
-    ? FeaturebaseProvider
-    : React.Fragment;
 
   return (
-    <FeedbackProvider>
+    <>
       <Toaster />
       <ModalProvider>
         <div className="flex min-h-screen flex-col" {...rest}>
@@ -181,9 +177,14 @@ export const StandardLayout: React.FunctionComponent<{
             </m.div>
           </AnimatePresence>
         </div>
-        {isFeedbackEnabled ? <FeedbackButton /> : null}
+        {isFeedbackEnabled ? (
+          <>
+            <FeaturebaseIdentify />
+            <FeedbackButton />
+          </>
+        ) : null}
       </ModalProvider>
-    </FeedbackProvider>
+    </>
   );
 };
 
