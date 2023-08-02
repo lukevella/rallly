@@ -1,3 +1,4 @@
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "../style.css";
 

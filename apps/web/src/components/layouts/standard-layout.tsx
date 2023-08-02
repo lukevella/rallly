@@ -11,14 +11,16 @@ import { Toaster } from "react-hot-toast";
 
 import { Clock, ClockPreferences } from "@/components/clock";
 import { Container } from "@/components/container";
+import { Changelog, FeaturebaseProvider } from "@/components/featurebase";
 import FeedbackButton from "@/components/feedback";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
+import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
-import { IfGuest, UserProvider } from "../user-provider";
+import { IfGuest } from "../user-provider";
 
 const NavMenuItem = ({
   href,
@@ -119,7 +121,7 @@ const MainNav = () => {
           </nav>
         </div>
         <div className="flex items-center gap-x-4">
-          <nav className="flex gap-x-2">
+          <nav className="flex gap-x-1">
             <IfGuest>
               <NavMenuItem
                 className="hidden sm:flex"
@@ -128,8 +130,9 @@ const MainNav = () => {
                 label={<Trans i18nKey="login" defaults="Login" />}
               />
             </IfGuest>
+            <Changelog />
             <ClockPreferences>
-              <Button className="text-muted-foreground" variant="ghost">
+              <Button size="sm" variant="ghost">
                 <Clock />
               </Button>
             </ClockPreferences>
@@ -146,8 +149,12 @@ export const StandardLayout: React.FunctionComponent<{
   hideNav?: boolean;
 }> = ({ children, hideNav, ...rest }) => {
   const key = hideNav ? "no-nav" : "nav";
+  const FeedbackProvider = isFeedbackEnabled
+    ? FeaturebaseProvider
+    : React.Fragment;
+
   return (
-    <UserProvider>
+    <FeedbackProvider>
       <Toaster />
       <ModalProvider>
         <div className="flex min-h-screen flex-col" {...rest}>
@@ -169,9 +176,9 @@ export const StandardLayout: React.FunctionComponent<{
             </m.div>
           </AnimatePresence>
         </div>
-        {process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ? <FeedbackButton /> : null}
+        {isFeedbackEnabled ? <FeedbackButton /> : null}
       </ModalProvider>
-    </UserProvider>
+    </FeedbackProvider>
   );
 };
 

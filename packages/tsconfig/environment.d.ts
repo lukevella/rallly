@@ -36,7 +36,7 @@ declare global {
       /**
        * When defined users will be able to send feedback to this email address
        */
-      NEXT_PUBLIC_FEEDBACK_EMAIL?: string;
+      NEXT_PUBLIC_FEEDBACK_ENABLED?: string;
       /**
        * Users of your instance will see this as their support email
        */
