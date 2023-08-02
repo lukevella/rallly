@@ -10,7 +10,6 @@
   "settings": "Nastavení",
   "changeNameDescription": "Zadejte nové jméno pro tohoto účastníka.",
   "changeNameInfo": "Toto nebude mít vliv na žádné hlasy, které jste již provedli.",
-  "close": "Zavřít",
   "comments": "Komentáře",
   "continue": "Pokračovat",
   "copied": "Zkopírováno",
@@ -36,11 +35,6 @@
   "emailPlaceholder": "karel.novak@example.com",
   "expiredOrInvalidLink": "Platnost odkazu vypršela nebo je neplatná. Požádejte o nový odkaz.",
   "exportToCsv": "Exportovat do CSV",
-  "feedbackFormFooter": "Potřebujete pomoci? Navštivte <a>stránku podpory</a>.",
-  "feedbackFormLabel": "Jak můžeme vylepšit <appname />?",
-  "feedbackFormPlaceholder": "Podělte se o své myšlenky…",
-  "feedbackFormTitle": "Formulář na zpětnou vazbu",
-  "feedbackSent": "Děkujeme! Vaše zpětná vazba byla odeslána.",
   "forgetMe": "Zapomenout mě",
   "guest": "Host",
   "ifNeedBe": "Pokud je to nutné",
@@ -76,7 +70,6 @@
   "response": "Reakce",
   "save": "Uložit",
   "saveInstruction": "Vyberte svou dostupnost a klikněte na <b>{action}</b>",
-  "send": "Odeslat",
   "sendFeedback": "Odeslat zpětnou vazbu",
   "specifyTimes": "Určete časy",
   "specifyTimesDescription": "Zahrnout počáteční a koncové časy pro každý termín",
@@ -195,5 +188,8 @@
   "plan_prioritySupport": "Přednostní podpora",
   "becomeATranslator": "Pomozte s překladem",
   "calendarHelp": "Hlasování nelze vytvořit bez možností. Chcete-li pokračovat, přidejte alespoň jednu možnost.",
-  "commentPlaceholder": "Zanechte u hlasování komentář (uvidí jej všichni)"
+  "commentPlaceholder": "Zanechte u hlasování komentář (uvidí jej všichni)",
+  "featureRequest": "Požadavek na funkci",
+  "bugReport": "Náhlasit chybu",
+  "getSupport": "Získat podporu"
 }

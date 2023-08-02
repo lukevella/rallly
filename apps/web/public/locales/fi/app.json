@@ -10,7 +10,6 @@
   "settings": "Asetukset",
   "changeNameDescription": "Anna uusi nimi tälle osallistujalle.",
   "changeNameInfo": "Tämä ei vaikuta jo antamiisi ääniin.",
-  "close": "Sulje",
   "comments": "Kommentit",
   "continue": "Jatka",
   "copied": "Kopioitu",
@@ -36,11 +35,6 @@
   "emailPlaceholder": "maija.meikalainen@example.com",
   "expiredOrInvalidLink": "Linkki on vanhentunut tai virheellinen. Pyydä uusi linkki.",
   "exportToCsv": "Vie CSV-tiedostoon",
-  "feedbackFormFooter": "Tarvitsetko apua? Vieraile <a>tukisivulla</a>.",
-  "feedbackFormLabel": "Miten <appname /> voisi olla parempi?",
-  "feedbackFormPlaceholder": "Kerro ajatuksistasi…",
-  "feedbackFormTitle": "Palautelomake",
-  "feedbackSent": "Kiitos! Palautteesi on lähetetty.",
   "forgetMe": "Unohda minut",
   "guest": "Vieras",
   "ifNeedBe": "Tarvittaessa",
@@ -76,7 +70,6 @@
   "response": "Vastaus",
   "save": "Tallenna",
   "saveInstruction": "Valitse sinulle sopivat vaihtoehdot ja napsauta <b>{action}</b>",
-  "send": "Lähetä",
   "sendFeedback": "Lähetä palautetta",
   "specifyTimes": "Määritä ajat",
   "specifyTimesDescription": "Aseta jokaiselle vaihtoehdolle alkamis- ja päättymisaika",
@@ -213,5 +206,8 @@
   "disableCommentsDescription": "Poista mahdollisuus jättää kyselyyn kommentteja",
   "planCustomizablePollSettings": "Mukautettavat kyselyasetukset",
   "clockPreferences": "Kellon asetukset",
-  "clockPreferencesDescription": "Aseta ensisijainen aikavyöhyke ja aikamuoto."
+  "clockPreferencesDescription": "Aseta ensisijainen aikavyöhyke ja aikamuoto.",
+  "featureRequest": "Ehdota ominaisuutta",
+  "bugReport": "Ilmoita ongelmasta",
+  "getSupport": "Hae tukea"
 }

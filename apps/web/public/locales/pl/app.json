@@ -10,7 +10,6 @@
   "settings": "Ustawienia",
   "changeNameDescription": "Wpisz nową nazwę dla tego uczestnika.",
   "changeNameInfo": "Nie wpłynie to na żadne głosy, które już zrobiłeś.",
-  "close": "Zamknij",
   "comments": "Komentarze",
   "continue": "Kontynuuj",
   "copied": "Skopiowano",
@@ -36,11 +35,6 @@
   "emailPlaceholder": "jan.kowalski@example.com",
   "expiredOrInvalidLink": "Ten link wygasł lub jest nieprawidłowy. Poproś o nowy link.",
   "exportToCsv": "Eksport do CSV",
-  "feedbackFormFooter": "Potrzebujesz pomocy? Odwiedź <a>stronę wsparcia</a>.",
-  "feedbackFormLabel": "Jak możemy ulepszyć <appname />?",
-  "feedbackFormPlaceholder": "Podziel się swoją opinią…",
-  "feedbackFormTitle": "Formularz opinii",
-  "feedbackSent": "Dziękujemy! Twoja opinia została wysłana.",
   "forgetMe": "Zapomnij mnie",
   "guest": "Gość",
   "ifNeedBe": "W razie potrzeby",
@@ -76,7 +70,6 @@
   "response": "Odpowiedź",
   "save": "Zapisz",
   "saveInstruction": "Wybierz swoją dostępność i kliknij <b>{action}</b>",
-  "send": "Wyślij",
   "sendFeedback": "Prześlij opinię",
   "specifyTimes": "Podaj czas",
   "specifyTimesDescription": "Dołącz godziny rozpoczęcia i zakończenia dla każdej opcji",
@@ -213,5 +206,8 @@
   "disableCommentsDescription": "Usunięcie opcji pozostawienia komentarza w ankiecie",
   "planCustomizablePollSettings": "Konfigurowalne ustawienia ankiet",
   "clockPreferences": "Preferencje zegara",
-  "clockPreferencesDescription": "Ustaw preferowaną strefę czasową i format czasu."
+  "clockPreferencesDescription": "Ustaw preferowaną strefę czasową i format czasu.",
+  "featureRequest": "Poproś o funkcję",
+  "bugReport": "Zgłoś problem",
+  "getSupport": "Uzyskaj wsparcie"
 }

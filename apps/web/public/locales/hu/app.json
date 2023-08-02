@@ -10,7 +10,6 @@
   "settings": "Beállítások",
   "changeNameDescription": "Adj meg egy új nevet a részvételhez.",
   "changeNameInfo": "Ez nincs hatással a korábban rögzített szavazataidra.",
-  "close": "Bezárás",
   "comments": "Hozzászólások",
   "continue": "Tovább",
   "copied": "Másolva",
@@ -36,11 +35,6 @@
   "emailPlaceholder": "kovacs.anna@pelda.hu",
   "expiredOrInvalidLink": "A link érvénytelennek tűnik. Kérjük, igényeljen egy újat.",
   "exportToCsv": "Exportálás CSV fájlba",
-  "feedbackFormFooter": "Segítségre van szükséged? <a>Katt ide</a>!",
-  "feedbackFormLabel": "Hogyan fejleszthetnénk a <appname />-t?",
-  "feedbackFormPlaceholder": "Oszd meg gondolataidat…",
-  "feedbackFormTitle": "Visszajelzés",
-  "feedbackSent": "Köszönjük! Visszajelzésed elküldtük.",
   "forgetMe": "Felejts el",
   "guest": "Vendég",
   "ifNeedBe": "Ha szükséges",
@@ -76,7 +70,6 @@
   "response": "Válasz",
   "save": "Mentés",
   "saveInstruction": "Válaszd ki mikor érsz rá és kattints a <b>{action}</b> gombra",
-  "send": "Küldés",
   "sendFeedback": "Visszajelzés küldése",
   "specifyTimes": "Időpontok megadása",
   "specifyTimesDescription": "Adj meg kezdő és záró időpontot minden lehetőséghez",
@@ -213,5 +206,8 @@
   "disableCommentsDescription": "Rejtsd el a lehetőségét annak, hogy hozzászólást lehessen rögzíteni a szavazáshoz",
   "planCustomizablePollSettings": "Egyedi szavazat beállítások",
   "clockPreferences": "Óra beállítások",
-  "clockPreferencesDescription": "Állitsd be a preferált időzónát és idő formátumot."
+  "clockPreferencesDescription": "Állitsd be a preferált időzónát és idő formátumot.",
+  "featureRequest": "Javasolj új funkciót",
+  "bugReport": "Jelezz hibákat",
+  "getSupport": "Kérj segítséget"
 }

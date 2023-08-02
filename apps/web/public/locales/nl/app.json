@@ -10,7 +10,6 @@
   "settings": "Instellingen",
   "changeNameDescription": "Voer een nieuwe naam in voor deze deelnemer.",
   "changeNameInfo": "Dit zal geen invloed hebben op de keuzes die je al hebt gemaakt.",
-  "close": "Sluiten",
   "comments": "Reacties",
   "continue": "Doorgaan",
   "copied": "Gekopieerd",
@@ -36,11 +35,6 @@
   "emailPlaceholder": "jessie.smith@example.com",
   "expiredOrInvalidLink": "Deze link is verlopen of ongeldig. Vraag een nieuwe link aan.",
   "exportToCsv": "Exporteer naar CSV",
-  "feedbackFormFooter": "Hulp nodig? Bezoek de <a>help pagina</a>.",
-  "feedbackFormLabel": "Hoe kunnen we <appname /> verbeteren?",
-  "feedbackFormPlaceholder": "Deel je mening…",
-  "feedbackFormTitle": "Feedbackformulier",
-  "feedbackSent": "Bedankt! Je feedback is doorgestuurd.",
   "forgetMe": "Vergeet me",
   "guest": "Gast",
   "ifNeedBe": "Indien nodig",
@@ -76,7 +70,6 @@
   "response": "Antwoord",
   "save": "Opslaan",
   "saveInstruction": "Selecteer je beschikbaarheid en klik op <b>{action}</b>",
-  "send": "Verzenden",
   "sendFeedback": "Feedback Versturen",
   "specifyTimes": "Tijden opgeven",
   "specifyTimesDescription": "Voeg start- en eindtijden voor elke optie toe",
@@ -213,5 +206,8 @@
   "disableCommentsDescription": "Verwijder de optie om een reactie te geven op de poll",
   "planCustomizablePollSettings": "Aanpasbare poll instellingen",
   "clockPreferences": "Klok Voorkeuren",
-  "clockPreferencesDescription": "Stel je gewenste tijdzone en tijdnotatie in."
+  "clockPreferencesDescription": "Stel je gewenste tijdzone en tijdnotatie in.",
+  "featureRequest": "Vraag een nieuwe feature aan",
+  "bugReport": "Meld een probleem",
+  "getSupport": "Vraag hulp"
 }
