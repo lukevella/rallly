@@ -78,6 +78,7 @@
   "timeFormat": "Tidsformat",
   "timeZone": "Tidszon",
   "title": "Titel",
+  "titlePlaceholder": "Månatligt möte",
   "today": "Idag",
   "userAlreadyExists": "En användare med denna e-postadress finns redan",
   "userNotFound": "Det finns ingen användare med denna e-postadress",
@@ -115,7 +116,6 @@
   "menu": "Meny",
   "inviteParticipantsDescription": "Kopiera och dela denna inbjudningslänk för att börja samla svar från dina deltagare.",
   "support": "Support",
-  "changelog": "Ändringslogg",
   "billing": "Fakturering",
   "guestPollAlertDescription": "<0>Skapa ett konto</0> eller <1>logga in</1> för att göra anspråk på denna omröstning.",
   "guestPollAlertTitle": "Dina administratörsrättigheter kan gå förlorade om du rensar dina cookies",
@@ -123,6 +123,7 @@
   "notificationsValue": "Aviseringar: <b>{value}</b>",
   "notificationsOn": "Aviseringar är på",
   "notificationsOff": "Aviseringar har inaktiverats",
+  "pollStatusPaused": "Pausad",
   "pausePoll": "Pausa",
   "permissionDeniedDescription": "Om du är skaparen av enkäten, vänligen logga in för att komma åt din enkät",
   "yesTransfer": "Ja, överför till aktuell användare",
@@ -173,5 +174,6 @@
   "clockPreferencesDescription": "Ställ in önskad tidszon och tidsformat.",
   "featureRequest": "Efterfråga funktionalitet",
   "bugReport": "Rapportera ett problem",
-  "getSupport": "Få hjälp"
+  "getSupport": "Få hjälp",
+  "feedback": "Feedback"
 }

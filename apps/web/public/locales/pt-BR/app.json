@@ -121,7 +121,6 @@
   "inviteLink": "Link convite",
   "inviteParticipantLinkInfo": "Qualquer um com este link poderá votar na sua enquete.",
   "support": "Suporte",
-  "changelog": "Log de mudanças",
   "billing": "Cobrança",
   "guestPollAlertDescription": "<0>Crie uma conta</0> ou <1>faça o login</1> para reivindicar esta enquete.",
   "guestPollAlertTitle": "Seus direitos de administrador podem ser perdidos se você limpar seus cookies",
@@ -206,5 +205,9 @@
   "disableCommentsDescription": "Remover a opção de deixar um comentário na enquete",
   "planCustomizablePollSettings": "Configurações de enquete personalizáveis",
   "clockPreferences": "Preferências de relógio",
-  "clockPreferencesDescription": "Defina seu fuso horário e formato de hora preferidos."
+  "clockPreferencesDescription": "Defina seu fuso horário e formato de hora preferidos.",
+  "featureRequest": "Solicite um Recurso",
+  "bugReport": "Reporte um Problema",
+  "getSupport": "Obter Suporte",
+  "feedback": "Dê sua opinião"
 }

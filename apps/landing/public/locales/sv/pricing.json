@@ -18,5 +18,6 @@
   "howToUpgrade": "Hur uppgraderar jag till en betald plan?",
   "howToUpgradeAnswer": "För att uppgradera kan du gå till dina <a>Faktureringsinställningar</a> och klicka på <b>Uppgradera</b>.",
   "cancelSubscription": "Hur avbryter jag min prenumeration?",
-  "cancelSubscriptionAnswer": "Du kan när som helst avbryta din prenumeration genom att gå till dina <a>faktureringsinställningar</a>. När du avslutar din prenumeration har du fortfarande tillgång till din betalda plan fram till slutet av din faktureringsperiod. Efter det kommer du att nedgraderas till en gratis plan."
+  "cancelSubscriptionAnswer": "Du kan när som helst avbryta din prenumeration genom att gå till dina <a>faktureringsinställningar</a>. När du avslutar din prenumeration har du fortfarande tillgång till din betalda plan fram till slutet av din faktureringsperiod. Efter det kommer du att nedgraderas till en gratis plan.",
+  "customPollSettings": "Anpassa omröstningsinställningar"
 }

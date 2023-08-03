@@ -121,7 +121,6 @@
   "inviteLink": "Link z zaproszeniem",
   "inviteParticipantLinkInfo": "Każdy, kto ma ten link, będzie mógł zagłosować w Twojej ankiecie.",
   "support": "Wsparcie",
-  "changelog": "Dziennik zmian",
   "billing": "Płatności",
   "guestPollAlertDescription": "<0>Stwórz konto</0> lub <1>zaloguj się</1>, aby odebrać tę ankietę.",
   "guestPollAlertTitle": "Twoje prawa administratora mogą zostać utracone po wyczyszczeniu ciasteczek",
@@ -209,5 +208,6 @@
   "clockPreferencesDescription": "Ustaw preferowaną strefę czasową i format czasu.",
   "featureRequest": "Poproś o funkcję",
   "bugReport": "Zgłoś problem",
-  "getSupport": "Uzyskaj wsparcie"
+  "getSupport": "Uzyskaj wsparcie",
+  "feedback": "Feedback"
 }

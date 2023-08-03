@@ -16,5 +16,8 @@
   "notFoundDescription": "Nous n'avons pas trouvé la page que vous recherchez.",
   "goToHome": "Retourner à la page d'accueil",
   "goToApp": "Accéder à l'application",
-  "pricing": "Tarifs"
+  "pricing": "Tarifs",
+  "getStarted": "Commencez",
+  "metaTitle": "Rallly - Planifier des réunions de groupe",
+  "metaDescription": "Créez des sondages et votez pour trouver le meilleur jour ou la meilleure heure. Une alternative gratuite à Doodle."
 }
