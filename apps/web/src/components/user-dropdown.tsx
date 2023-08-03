@@ -126,7 +126,7 @@ export const UserDropdown = () => {
           <DropdownMenuItem asChild={true}>
             <Link
               target="_blank"
-              href="https://rallly.featurebase.app"
+              href="https://feedback.rallly.co"
               className="flex items-center gap-x-2"
             >
               <MegaphoneIcon className="h-4 w-4" />
