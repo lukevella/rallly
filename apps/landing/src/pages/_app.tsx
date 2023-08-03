@@ -50,7 +50,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
     } else {
       return absoluteUrl(`/${router.locale}${path}`);
     }
-  }, [router.asPath, router.defaultLocale, router.locale, router.pathname]);
+  }, [router.defaultLocale, router.locale, router.pathname]);
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
