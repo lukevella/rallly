@@ -205,5 +205,9 @@
   "disableCommentsDescription": "关闭投票下方的评论功能",
   "planCustomizablePollSettings": "自定义投票设置",
   "clockPreferences": "时钟设置",
-  "clockPreferencesDescription": "设置您首选的时区和时间格式。"
+  "clockPreferencesDescription": "设置您首选的时区和时间格式。",
+  "featureRequest": "请求功能",
+  "bugReport": "反馈问题",
+  "getSupport": "获取支持",
+  "feedback": "反馈"
 }
