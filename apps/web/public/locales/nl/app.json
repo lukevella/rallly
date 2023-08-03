@@ -121,7 +121,6 @@
   "inviteLink": "Uitnodigingslink",
   "inviteParticipantLinkInfo": "Iedereen met deze link kan deelnemen aan je poll.",
   "support": "Ondersteuning",
-  "changelog": "Wijzigingen",
   "billing": "Facturatie",
   "guestPollAlertDescription": "<0>Maak een account aan</0> of <1>login</1> om deze poll te claimen.",
   "guestPollAlertTitle": "Je rechten als beheerder kunnen verloren gaan als je de cookies verwijdert",
@@ -209,5 +208,6 @@
   "clockPreferencesDescription": "Stel je gewenste tijdzone en tijdnotatie in.",
   "featureRequest": "Vraag een nieuwe feature aan",
   "bugReport": "Meld een probleem",
-  "getSupport": "Vraag hulp"
+  "getSupport": "Vraag hulp",
+  "feedback": "Feedback"
 }
