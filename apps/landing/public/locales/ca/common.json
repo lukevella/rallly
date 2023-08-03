@@ -16,5 +16,8 @@
   "notFoundDescription": "No s'ha pogut trobar la pàgina que estaves buscant.",
   "goToHome": "Anar a l'Inici",
   "goToApp": "Vés a l'aplicació",
-  "pricing": "Preus"
+  "pricing": "Preus",
+  "getStarted": "Comença",
+  "metaTitle": "Rallly - Planifica reunions de grup",
+  "metaDescription": "Crea enquestes i vota per trobar el millor dia o hora. Una alternativa gratuïta a Doodle."
 }
