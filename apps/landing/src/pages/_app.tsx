@@ -11,6 +11,7 @@ import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
 import React from "react";
@@ -34,6 +35,7 @@ type AppPropsWithLayout = AppProps<PageProps> & {
 };
 
 const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
+  const router = useRouter();
   React.useEffect(() => {
     if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
       // calling inject directly to avoid having this run for self-hosted instances
@@ -41,15 +43,25 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
     }
   }, []);
 
+  const canonicalUrl = React.useMemo(() => {
+    const path = router.pathname === "/" ? "" : router.pathname;
+    if (router.locale === router.defaultLocale) {
+      return absoluteUrl(path);
+    } else {
+      return absoluteUrl(`/${router.locale}${path}`);
+    }
+  }, [router.defaultLocale, router.locale, router.pathname]);
+
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <LazyMotion features={domMax}>
       <DefaultSeo
+        canonical={canonicalUrl}
         openGraph={{
           siteName: "Rallly",
           type: "website",
-          url: absoluteUrl(),
+          url: canonicalUrl,
           images: [
             {
               url: absoluteUrl("/og-image-1200.png"),
