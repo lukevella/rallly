@@ -121,7 +121,6 @@
   "inviteLink": "Meghívó link",
   "inviteParticipantLinkInfo": "Ezen a linken keresztül bárki adhat le szavazatot.",
   "support": "Segítség",
-  "changelog": "Változások",
   "billing": "Számlázás",
   "guestPollAlertDescription": "<0>Hozz létre felhasználót</0> vagy <1>lépj be</1> hogy szavazhass.",
   "guestPollAlertTitle": "Az adminisztrátor jogaid elveszhetnek ha törlőd a böngésző sütiket",
@@ -209,5 +208,6 @@
   "clockPreferencesDescription": "Állitsd be a preferált időzónát és idő formátumot.",
   "featureRequest": "Javasolj új funkciót",
   "bugReport": "Jelezz hibákat",
-  "getSupport": "Kérj segítséget"
+  "getSupport": "Kérj segítséget",
+  "feedback": "Visszajelzés"
 }
