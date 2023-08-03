@@ -121,7 +121,6 @@
   "inviteLink": "Odkaz s pozvánkou",
   "inviteParticipantLinkInfo": "Každý s tímto odkazem bude moci hlasovat.",
   "support": "Podpora",
-  "changelog": "Seznam změn",
   "billing": "Fakturace",
   "guestPollAlertDescription": "<0>Vytvořte si účet</0> nebo se <1>přihlašte</1> pro převzetí tohoto hlasování.",
   "guestPollAlertTitle": "Vaše správcovská práva mohou být ztracena, pokud vymažete soubory cookies",
@@ -191,5 +190,6 @@
   "commentPlaceholder": "Zanechte u hlasování komentář (uvidí jej všichni)",
   "featureRequest": "Požadavek na funkci",
   "bugReport": "Náhlasit chybu",
-  "getSupport": "Získat podporu"
+  "getSupport": "Získat podporu",
+  "feedback": "Zpětná vazba"
 }
