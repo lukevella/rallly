@@ -97,7 +97,7 @@
   "errors_notFoundTitle": "404 hittades inte",
   "errors_notFoundDescription": "Vi kunde inte hitta sidan du letade efter.",
   "errors_goToHome": "Gå till hem",
-  "optionCount": "{count, plural, other {# val}}",
+  "optionCount": "{count, plural, one {# val} other {# val}}",
   "participantCount": "{count, plural, one {# deltagare} other {# deltagare}}",
   "addComment": "Lägg till kommentar",
   "profile": "Profil",
