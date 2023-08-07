@@ -209,5 +209,9 @@
   "featureRequest": "Request a Feature",
   "bugReport": "Report an Issue",
   "getSupport": "Get Support",
-  "feedback": "Feedback"
+  "feedback": "Feedback",
+  "duplicate": "Duplicate",
+  "duplicateDescription": "Create a new poll based on this one",
+  "duplicateTitleLabel": "Title",
+  "duplicateTitleDescription": "Hint: Give your new poll a unique title"
 }

@@ -1,5 +1,6 @@
 import {
   ChevronDownIcon,
+  CopyIcon,
   DownloadIcon,
   PencilIcon,
   Settings2Icon,
@@ -7,6 +8,7 @@ import {
   TableIcon,
   TrashIcon,
 } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -66,6 +68,16 @@ const ManagePoll: React.FunctionComponent<{
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={`/poll/${poll.id}/duplicate`}>
+              <DropdownMenuItemIconLabel icon={CopyIcon}>
+                <Trans i18nKey="duplicate" defaults="Duplicate" />
+                <Badge className="ml-2">
+                  <Trans i18nKey="planPro" />
+                </Badge>
+              </DropdownMenuItemIconLabel>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={exportToCsv}>
             <DropdownMenuItemIconLabel icon={DownloadIcon}>
               <Trans i18nKey="exportToCsv" />

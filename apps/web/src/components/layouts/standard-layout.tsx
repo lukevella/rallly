@@ -37,7 +37,7 @@ const NavMenuItem = ({
 }) => {
   const router = useRouter();
   return (
-    <Button variant="ghost" size="sm" asChild>
+    <Button variant="ghost" asChild>
       <Link
         target={target}
         href={href}

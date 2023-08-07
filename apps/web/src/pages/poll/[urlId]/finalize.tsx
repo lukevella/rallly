@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { ProPlan } from "@/components/billing/billing-plans";
 import { Card } from "@/components/card";
 import { getPollLayout } from "@/components/layouts/poll-layout";
+import { PayWall } from "@/components/pay-wall";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
@@ -127,13 +128,11 @@ const Teaser = () => {
 };
 
 const Page: NextPageWithLayout = () => {
-  const plan = usePlan();
-
-  if (plan === "paid") {
-    return <FinalizationForm />;
-  }
-
-  return <Teaser />;
+  return (
+    <PayWall>
+      <FinalizationForm />
+    </PayWall>
+  );
 };
 
 Page.getLayout = getPollLayout;

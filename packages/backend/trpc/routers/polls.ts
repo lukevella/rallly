@@ -7,11 +7,17 @@ import timezone from "dayjs/plugin/timezone";
 import toArray from "dayjs/plugin/toArray";
 import utc from "dayjs/plugin/utc";
 import * as ics from "ics";
+import { Simulate } from "react-dom/test-utils";
 import { z } from "zod";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import { nanoid } from "../../utils/nanoid";
-import { possiblyPublicProcedure, publicProcedure, router } from "../trpc";
+import {
+  possiblyPublicProcedure,
+  proProcedure,
+  publicProcedure,
+  router,
+} from "../trpc";
 import { comments } from "./polls/comments";
 import { demo } from "./polls/demo";
 import { options } from "./polls/options";
@@ -505,7 +511,7 @@ export const polls = router({
 
     return polls;
   }),
-  book: possiblyPublicProcedure
+  book: proProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -784,6 +790,67 @@ export const polls = router({
           closed: true,
         },
       });
+    }),
+  duplicate: proProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        newTitle: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const poll = await prisma.poll.findUnique({
+        where: {
+          id: input.pollId,
+        },
+        select: {
+          location: true,
+          description: true,
+          timeZone: true,
+          hideParticipants: true,
+          hideScores: true,
+          disableComments: true,
+          options: {
+            select: {
+              start: true,
+              duration: true,
+            },
+          },
+        },
+      });
+
+      if (!poll) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
+
+      const newPoll = await prisma.poll.create({
+        select: {
+          id: true,
+        },
+        data: {
+          id: nanoid(),
+          title: input.newTitle,
+          userId: ctx.user.id,
+          timeZone: poll.timeZone,
+          location: poll.location,
+          description: poll.description,
+          hideParticipants: poll.hideParticipants,
+          hideScores: poll.hideScores,
+          disableComments: poll.disableComments,
+          adminUrlId: nanoid(),
+          participantUrlId: nanoid(),
+          watchers: {
+            create: {
+              userId: ctx.user.id,
+            },
+          },
+          options: {
+            create: poll.options,
+          },
+        },
+      });
+
+      return newPoll;
     }),
   resume: possiblyPublicProcedure
     .input(

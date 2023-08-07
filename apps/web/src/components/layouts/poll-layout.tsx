@@ -12,6 +12,7 @@ import {
   RotateCcw,
   ShieldCloseIcon,
 } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -150,6 +151,9 @@ const StatusControl = () => {
                 <Link href={`/poll/${poll.id}/finalize`}>
                   <DropdownMenuItemIconLabel icon={CheckCircleIcon}>
                     <Trans i18nKey="finishPoll" defaults="Finalize" />
+                    <Badge className="ml-2">
+                      <Trans i18nKey="planPro" />
+                    </Badge>
                   </DropdownMenuItemIconLabel>
                 </Link>
               </DropdownMenuItem>
@@ -168,9 +172,9 @@ const AdminControls = () => {
   return (
     <TopBar>
       <div className="flex flex-col items-start justify-between gap-y-2 gap-x-4 sm:flex-row">
-        <div className="flex min-w-0 gap-2">
+        <div className="flex min-w-0 gap-4">
           {router.asPath !== pollLink ? (
-            <Button variant="ghost" asChild>
+            <Button asChild>
               <Link href={pollLink}>
                 <ArrowLeftIcon className="h-4 w-4" />
               </Link>
@@ -267,7 +271,8 @@ const Title = () => {
 
 const Prefetch = ({ children }: React.PropsWithChildren) => {
   const router = useRouter();
-  const [urlId] = React.useState(router.query.urlId as string);
+
+  const urlId = router.query.urlId as string;
 
   const poll = trpc.polls.get.useQuery({ urlId });
   const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
