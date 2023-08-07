@@ -44,7 +44,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   }, []);
 
   const canonicalUrl = React.useMemo(() => {
-    const path = router.pathname === "/" ? "" : router.pathname;
+    const path = router.asPath === "/" ? "" : router.asPath;
     if (router.locale === router.defaultLocale) {
       return absoluteUrl(path);
     } else {
