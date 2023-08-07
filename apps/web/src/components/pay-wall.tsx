@@ -1,8 +1,6 @@
-import { LockIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 
-import { ProPlan } from "@/components/billing/billing-plans";
 import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
 
