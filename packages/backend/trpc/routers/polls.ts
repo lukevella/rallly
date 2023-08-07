@@ -7,7 +7,6 @@ import timezone from "dayjs/plugin/timezone";
 import toArray from "dayjs/plugin/toArray";
 import utc from "dayjs/plugin/utc";
 import * as ics from "ics";
-import { Simulate } from "react-dom/test-utils";
 import { z } from "zod";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
