@@ -197,11 +197,17 @@
   "hideParticipants": "Teilnehmerliste ausblenden",
   "hideParticipantsDescription": "Verstecke die Teilnehmerdetails vor anderen Teilnehmern",
   "editSettings": "Einstellungen bearbeiten",
+  "pollSettingsDescription": "Passen Sie das Verhalten Ihrer Umfrage an",
   "commentPlaceholder": "Kommentar zu dieser Umfrage hinterlassen (für jeden sichtbar)",
   "hideScores": "Abstimmungen ausblenden",
+  "hideScoresDescription": "Zeige das Ergebnis erst an, wenn ein Teilnehmer abgestimmt hat",
   "disableComments": "Kommentare deaktivieren",
   "disableCommentsDescription": "Entferne die Möglichkeit, die Umfrage zu kommentieren",
   "planCustomizablePollSettings": "Anpassbare Umfrageeinstellungen",
   "clockPreferences": "Uhrzeit-Einstellungen",
-  "clockPreferencesDescription": "Lege dein bevorzugtes Zeitzonen und Zeitformat fest."
+  "clockPreferencesDescription": "Lege dein bevorzugtes Zeitzonen und Zeitformat fest.",
+  "featureRequest": "Ein Feature vorschlagen",
+  "bugReport": "Problem melden",
+  "getSupport": "Hilfe erhalten",
+  "feedback": "Feedback"
 }

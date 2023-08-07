@@ -15,5 +15,10 @@
   "statsUsersRegistered": "45k+ registrierte Benutzer",
   "statsPollsCreated": "100k+ Umfragen erstellt",
   "statsLanguagesSupported": "10+ unterstützte Sprachen",
-  "hint": "Es ist kostenlos! Kein Login erforderlich."
+  "hint": "Es ist kostenlos! Kein Login erforderlich.",
+  "doodleAlternative": "Die beste kostenlose Doodle Alternative",
+  "doodleAlternativeDescription": "Rallly ist die Doodle Alternative, nach der alle suchen. Tausende von Nutzerinnen haben bereits gewechselt und erfreuen sich nun an einer professionellen, werbefreien Terminplanung mit einer intuitiven und einfach zu benutzenden Oberfläche.        ",
+  "availabilityPollCta": "Erstelle eine Terminplanungsumfrage",
+  "availabilityPollMetaTitle": "Terminplanung | Optimiere Terminplanung mit Rallly",
+  "availabilityPollTitle": "Terminplanung"
 }

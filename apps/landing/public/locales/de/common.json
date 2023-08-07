@@ -17,7 +17,12 @@
   "goToHome": "Zur Startseite",
   "goToApp": "Zur App",
   "pricing": "Preise",
+  "bestDoodleAlternative": "Beste Doodle Alternative",
+  "freeSchedulingPoll": "Kostenlose Umfrage zur Terminplanung",
+  "findATime": "Zeit finden",
   "getStarted": "Los geht's",
   "metaTitle": "Rallly - Gruppenmeetings planen",
-  "metaDescription": "Erstelle Umfragen und stimme ab, um den besten Tag oder die beste Zeit zu finden. Eine kostenlose Alternative zu Doodle."
+  "metaDescription": "Erstelle Umfragen und stimme ab, um den besten Tag oder die beste Zeit zu finden. Eine kostenlose Alternative zu Doodle.",
+  "availabilityPoll": "Verfügbarkeitsumfrage",
+  "solutions": "Lösungen"
 }
