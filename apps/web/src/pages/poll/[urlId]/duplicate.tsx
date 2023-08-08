@@ -79,7 +79,7 @@ const Page: NextPageWithLayout = () => {
                       <FormLabel>
                         <Trans i18nKey="duplicateTitleLabel" defaults="Title" />
                       </FormLabel>
-                      <Input {...field} autoFocus={true} />
+                      <Input {...field} />
                       <FormDescription>
                         <Trans
                           i18nKey="duplicateTitleDescription"

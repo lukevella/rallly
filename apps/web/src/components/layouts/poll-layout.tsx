@@ -146,17 +146,6 @@ const StatusControl = () => {
                   </DropdownMenuItemIconLabel>
                 </DropdownMenuItem>
               )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href={`/poll/${poll.id}/finalize`}>
-                  <DropdownMenuItemIconLabel icon={CheckCircleIcon}>
-                    <Trans i18nKey="finishPoll" defaults="Finalize" />
-                    <Badge className="ml-2">
-                      <Trans i18nKey="planPro" />
-                    </Badge>
-                  </DropdownMenuItemIconLabel>
-                </Link>
-              </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>

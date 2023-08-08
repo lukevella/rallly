@@ -144,15 +144,17 @@ export default async function handler(
       }
       case "subscription_payment_succeeded":
         // Handle successful payment
-        await prisma.userPaymentData.update({
-          where: {
-            userId: passthrough.userId,
-          },
-          data: {
-            status: payload.status,
-            endDate: new Date(payload.next_bill_date),
-          },
-        });
+        if (payload.initial_payment !== 1) {
+          await prisma.userPaymentData.update({
+            where: {
+              userId: passthrough.userId,
+            },
+            data: {
+              status: payload.status,
+              endDate: new Date(payload.next_bill_date),
+            },
+          });
+        }
         break;
       case "subscription_payment_failed":
         await prisma.userPaymentData.update({

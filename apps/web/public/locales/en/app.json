@@ -166,9 +166,6 @@
   "subscriptionDescription": "Get access to more features by upgrading to a paid plan.",
   "freeForever": "free forever",
   "annualBillingDescription": "per month, billed annually",
-  "upgradeOverlayTitle": "Upgrade",
-  "upgradeOverlaySubtitle": "A paid plan is required to use this feature",
-  "upgradeOverlayGoToBilling": "Go to billing",
   "billingStatusState": "Status",
   "billingStatusActive": "Active",
   "billingStatusPaused": "Paused",
@@ -213,5 +210,16 @@
   "duplicate": "Duplicate",
   "duplicateDescription": "Create a new poll based on this one",
   "duplicateTitleLabel": "Title",
-  "duplicateTitleDescription": "Hint: Give your new poll a unique title"
+  "duplicateTitleDescription": "Hint: Give your new poll a unique title",
+  "thankYou": "Thank you!",
+  "pleaseWait": "Your account is being upgraded. This should only take a few seconds.",
+  "proFeature": "Pro Feature",
+  "upgradeOverlaySubtitle2": "Please upgrade to a paid plan to use this feature. This is how we keep the lights on :)",
+  "savePercent": "Save {percent}%",
+  "priceIncreaseSoon": "Price increase soon.",
+  "lockPrice": "Upgrade today to keep this price forever.",
+  "noAds": "No ads",
+  "upgrade": "Upgrade",
+  "notToday": "Not Today",
+  "supportProject": "Support this project"
 }

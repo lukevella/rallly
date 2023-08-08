@@ -1,6 +1,5 @@
 import {
   CalendarCheck2Icon,
-  CheckCircleIcon,
   ChevronDownIcon,
   CopyIcon,
   DownloadIcon,
@@ -10,7 +9,6 @@ import {
   TableIcon,
   TrashIcon,
 } from "@rallly/icons";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,

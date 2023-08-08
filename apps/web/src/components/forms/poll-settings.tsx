@@ -1,6 +1,5 @@
 import { EyeIcon, MessageCircleIcon, VoteIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
 import {
   Card,
   CardContent,

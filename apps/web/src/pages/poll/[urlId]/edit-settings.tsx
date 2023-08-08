@@ -10,6 +10,7 @@ import {
   PollSettingsFormData,
 } from "@/components/forms/poll-settings";
 import { getPollLayout } from "@/components/layouts/poll-layout";
+import { PayWall } from "@/components/pay-wall";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
@@ -38,33 +39,35 @@ const Page: NextPageWithLayout = () => {
   });
 
   return (
-    <Form {...form}>
-      <form
-        className="mx-auto max-w-3xl"
-        onSubmit={form.handleSubmit(async (data) => {
-          //submit
-          await update.mutateAsync(
-            { urlId: poll.adminUrlId, ...data },
-            {
-              onSuccess: redirectBackToPoll,
-            },
-          );
-        })}
-      >
-        <PollSettingsForm>
-          <CardFooter className="justify-between">
-            <Button asChild>
-              <Link href={pollLink}>
-                <Trans i18nKey="cancel" />
-              </Link>
-            </Button>
-            <Button type="submit" variant="primary">
-              <Trans i18nKey="save" />
-            </Button>
-          </CardFooter>
-        </PollSettingsForm>
-      </form>
-    </Form>
+    <PayWall>
+      <Form {...form}>
+        <form
+          className="mx-auto max-w-3xl"
+          onSubmit={form.handleSubmit(async (data) => {
+            //submit
+            await update.mutateAsync(
+              { urlId: poll.adminUrlId, ...data },
+              {
+                onSuccess: redirectBackToPoll,
+              },
+            );
+          })}
+        >
+          <PollSettingsForm>
+            <CardFooter className="justify-between">
+              <Button asChild>
+                <Link href={pollLink}>
+                  <Trans i18nKey="cancel" />
+                </Link>
+              </Button>
+              <Button type="submit" variant="primary">
+                <Trans i18nKey="save" />
+              </Button>
+            </CardFooter>
+          </PollSettingsForm>
+        </form>
+      </Form>
+    </PayWall>
   );
 };
 

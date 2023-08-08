@@ -6,7 +6,6 @@ import { Label } from "@rallly/ui/label";
 import dayjs from "dayjs";
 import Head from "next/head";
 import Link from "next/link";
-import Script from "next/script";
 import { useTranslation } from "next-i18next";
 
 import { BillingPlans } from "@/components/billing/billing-plans";
@@ -175,17 +174,6 @@ const Page: NextPageWithLayout = () => {
       <Head>
         <title>{t("billing")}</title>
       </Head>
-      <Script
-        src="https://cdn.paddle.com/paddle/paddle.js"
-        onLoad={() => {
-          if (process.env.NEXT_PUBLIC_PADDLE_SANDBOX === "true") {
-            window.Paddle.Environment.set("sandbox");
-          }
-          window.Paddle.Setup({
-            vendor: Number(process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID),
-          });
-        }}
-      />
       <SettingsSection
         title={<Trans i18nKey="billingStatus" defaults="Billing Status" />}
         description={
