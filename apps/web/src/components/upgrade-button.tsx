@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import { Button } from "@rallly/ui/button";
 import { useRouter } from "next/router";
 import React from "react";
@@ -15,6 +16,11 @@ export const UpgradeButton = ({
   const [isPendingSubscription, setPendingSubscription] = React.useState(false);
   const { user } = useUser();
   const router = useRouter();
+
+  trpc.user.getBilling.useQuery(undefined, {
+    refetchInterval: isPendingSubscription ? 1000 : 0,
+  });
+
   return (
     <>
       <Button

@@ -8,29 +8,18 @@ import {
   BillingPlanPrice,
   BillingPlanTitle,
 } from "@rallly/ui/billing-plan";
-import { Button } from "@rallly/ui/button";
 import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
-import { useRouter } from "next/router";
 import React from "react";
 
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { UpgradeButton } from "@/components/upgrade-button";
 import { usePlan } from "@/contexts/plan";
 
 const monthlyPriceUsd = 5;
 const annualPriceUsd = 30;
 
-const basicPlanIdMonthly = process.env
-  .NEXT_PUBLIC_PRO_PLAN_ID_MONTHLY as string;
-
-const basicPlanIdYearly = process.env.NEXT_PUBLIC_PRO_PLAN_ID_YEARLY as string;
-
 export const BillingPlans = () => {
-  const { user } = useUser();
-  const router = useRouter();
-  const [isPendingSubscription, setPendingSubscription] = React.useState(false);
-
   const [isBilledAnnually, setBilledAnnually] = React.useState(true);
   const plan = usePlan();
   const isPlus = plan === "paid";
@@ -92,32 +81,9 @@ export const BillingPlans = () => {
 
         <ProPlan annual={isBilledAnnually}>
           {!isPlus ? (
-            <Button
-              className="w-full"
-              loading={isPendingSubscription}
-              variant="primary"
-              onClick={() => {
-                if (user.isGuest) {
-                  router.push("/login");
-                } else {
-                  window.Paddle.Checkout.open({
-                    allowQuantity: false,
-                    product: isBilledAnnually
-                      ? basicPlanIdYearly
-                      : basicPlanIdMonthly,
-                    email: user.email,
-                    disableLogout: true,
-                    passthrough: JSON.stringify({ userId: user.id }),
-                    successCallback: () => {
-                      // fetch user till we get the new plan
-                      setPendingSubscription(true);
-                    },
-                  });
-                }
-              }}
-            >
+            <UpgradeButton annual={isBilledAnnually}>
               <Trans i18nKey="planUpgrade" defaults="Upgrade" />
-            </Button>
+            </UpgradeButton>
           ) : null}
         </ProPlan>
       </div>

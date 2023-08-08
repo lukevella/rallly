@@ -34,10 +34,6 @@ export const proPlanIdYearly = process.env
 const SubscriptionStatus = () => {
   const { user } = useUser();
 
-  trpc.user.getBilling.useQuery(undefined, {
-    refetchInterval: 5000,
-  });
-
   const plan = usePlan();
   const isPlus = plan === "paid";
 

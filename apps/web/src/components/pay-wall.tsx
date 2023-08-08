@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import {
   CalendarCheck2Icon,
   CopyIcon,
@@ -46,9 +45,6 @@ const Teaser = () => {
   const [didUpgrade, setDidUpgrade] = React.useState(false);
 
   const [tab, setTab] = React.useState("yearly");
-  trpc.user.getBilling.useQuery(undefined, {
-    refetchInterval: didUpgrade ? 1000 : 0,
-  });
 
   return (
     <m.div
