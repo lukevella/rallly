@@ -2,7 +2,6 @@ import { trpc } from "@rallly/backend";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
-  CheckCircleIcon,
   ChevronDownIcon,
   FileBarChart,
   LogInIcon,
@@ -12,14 +11,12 @@ import {
   RotateCcw,
   ShieldCloseIcon,
 } from "@rallly/icons";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuItemIconLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import Head from "next/head";

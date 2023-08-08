@@ -1,7 +1,5 @@
 // Original source: https://gist.github.com/dsumer/5a4b120d6c8bde061b75667b067797c7
 
-import { init } from "smtp-tester";
-
 export interface PaddlePassthrough {
   userId: string; // the id of the user in our supabase database
 }
