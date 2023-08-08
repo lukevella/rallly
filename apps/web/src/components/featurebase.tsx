@@ -36,7 +36,10 @@ export const Changelog = ({ className }: { className?: string }) => {
     <>
       <FeaturebaseScript />
       <Button
-        className={cn("[&>*]:pointer-events-none", className)}
+        className={cn(
+          "hidden sm:inline-flex [&>*]:pointer-events-none",
+          className,
+        )}
         size="sm"
         variant="ghost"
         data-featurebase-changelog
@@ -47,7 +50,7 @@ export const Changelog = ({ className }: { className?: string }) => {
         </span>
         <span
           id="fb-update-badge"
-          className="bg-primary rounded-md px-1 py-px text-xs text-gray-100 empty:hidden"
+          className="bg-primary rounded-full px-2 py-px text-xs text-gray-100 empty:hidden"
         />
       </Button>
     </>
