@@ -15,5 +15,16 @@
   "statsUsersRegistered": "Plus de 45 000 utilisateurs inscrits",
   "statsPollsCreated": "100 000+ sondages créés",
   "statsLanguagesSupported": "Plus de 10 langues supportées",
-  "hint": "C'est gratuit ! Aucune connexion requise."
+  "hint": "C'est gratuit ! Aucune connexion requise.",
+  "doodleAlternative": "La meilleure alternative gratuite à Doodle",
+  "doodleAlternativeDescription": "Rallly est l'alternative Doodle que tout le monde cherche. Des milliers d'utilisateurs ont déjà fait ce changement et profitent maintenant de sondages professionnels sans publicité dans une interface intuitive et facile à utiliser.        ",
+  "availabilityPollCta": "Créer un sondage de disponibilité",
+  "availabilityPollMetaTitle": "Sondage de disponibilité | Simplifier la planification avec Rallly",
+  "availabilityPollMetaDescription": "Planifiez des réunions et des événements en toute simplicité avec le sondage de disponibilité Rallly. Assurez-vous que la disponibilité de tous est prise en compte pour une expérience de planification harmonieuse et efficace.",
+  "availabilityPollTitle": "Sondages de disponibilité",
+  "availabilityPollDescription": "Fatigué de se battre pour trouver un créneau qui convienne à tout le monde? Simplifiez votre planification avec un sondage de disponibilité - un outil puissant conçu pour simplifier et optimiser votre planning de réunion et d'événement.",
+  "createAPoll": "Créer un sondage de réunion",
+  "doodleAlternativeMetaTitle": "Meilleure alternative libre de Doodle | Rallly",
+  "doodleAlternativeMetaDescription": "À la recherche d'une alternative à Doodle ? Essayez Rally! C'est gratuit, facile à utiliser et ne requiert pas de compte.",
+  "findATimeMetaTitle": "Trouvez le moment pour vous rencontrer | Rally"
 }
