@@ -5,7 +5,6 @@ import { DateIconInner } from "@/components/date-icon";
 import { useOptions } from "@/components/poll-context";
 
 import { ConnectedScoreSummary } from "../score-summary";
-import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
 const TimeRange: React.FunctionComponent<{
@@ -30,29 +29,31 @@ const PollHeader: React.FunctionComponent = () => {
   const { options } = useOptions();
   const { setActiveOptionId, columnWidth } = usePollContext();
   return (
-    <ControlledScrollArea>
+    <>
       {options.map((option) => {
         return (
-          <div
+          <th
             key={option.optionId}
-            className="flex shrink-0 flex-col items-center gap-y-3"
-            style={{ width: columnWidth }}
+            className="sticky top-0 z-20 space-y-3 bg-white"
+            style={{ minWidth: columnWidth }}
             onMouseOver={() => setActiveOptionId(option.optionId)}
             onMouseOut={() => setActiveOptionId(null)}
           >
-            <DateIconInner
-              day={option.day}
-              dow={option.dow}
-              month={option.month}
-            />
-            {option.type === "timeSlot" ? (
-              <TimeRange start={option.startTime} end={option.endTime} />
-            ) : null}
-            <ConnectedScoreSummary optionId={option.optionId} />
-          </div>
+            <div className="flex flex-col items-center gap-2.5 py-3">
+              <DateIconInner
+                day={option.day}
+                dow={option.dow}
+                month={option.month}
+              />
+              {option.type === "timeSlot" ? (
+                <TimeRange start={option.startTime} end={option.endTime} />
+              ) : null}
+              <ConnectedScoreSummary optionId={option.optionId} />
+            </div>
+          </th>
         );
       })}
-    </ControlledScrollArea>
+    </>
   );
 };
 

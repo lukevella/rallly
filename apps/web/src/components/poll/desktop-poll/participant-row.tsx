@@ -12,7 +12,6 @@ import { usePermissions } from "@/contexts/permissions";
 import { ParticipantFormSubmitted } from "../types";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
-import ControlledScrollArea from "./controlled-scroll-area";
 import ParticipantRowForm from "./participant-row-form";
 import { usePollContext } from "./poll-context";
 
@@ -44,38 +43,38 @@ export const ParticipantRowView: React.FunctionComponent<{
   participantId,
 }) => {
   return (
-    <div
+    <tr
       data-testid="participant-row"
       data-participantid={participantId}
-      className={clsx("flex h-12 items-center", className)}
+      className={clsx(className)}
     >
-      <div
-        className="flex h-full shrink-0 items-center justify-between gap-2 px-3 sm:pl-5"
+      <td
+        className="sticky left-0 z-10 bg-white pl-4 pr-4"
         style={{ width: sidebarWidth }}
       >
-        <UserAvatar name={name} showName={true} isYou={isYou} />
-        {action}
-      </div>
-      <ControlledScrollArea className="h-full">
-        {votes.map((vote, i) => {
-          return (
+        <div className="flex items-center justify-between gap-x-4 ">
+          <UserAvatar name={name} showName={true} isYou={isYou} />
+          {action}
+        </div>
+      </td>
+      {votes.map((vote, i) => {
+        return (
+          <td
+            key={i}
+            className={clsx("h-12 bg-white p-1")}
+            style={{ width: columnWidth }}
+          >
             <div
-              key={i}
-              className={clsx("relative flex h-full shrink-0 p-1")}
-              style={{ width: columnWidth }}
+              className={clsx(
+                "flex h-full w-full items-center justify-center rounded border bg-gray-50",
+              )}
             >
-              <div
-                className={clsx(
-                  "flex h-full w-full items-center justify-center rounded border bg-gray-50",
-                )}
-              >
-                <VoteIcon type={vote} />
-              </div>
+              <VoteIcon type={vote} />
             </div>
-          );
-        })}
-      </ControlledScrollArea>
-    </div>
+          </td>
+        );
+      })}
+    </tr>
   );
 };
 
@@ -117,30 +116,28 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   }
 
   return (
-    <>
-      <ParticipantRowView
-        sidebarWidth={sidebarWidth}
-        columnWidth={columnWidth}
-        className={className}
-        name={participant.name}
-        votes={optionIds.map((optionId) => {
-          return getVote(participant.id, optionId);
-        })}
-        participantId={participant.id}
-        action={
-          canEdit ? (
-            <ParticipantDropdown
-              participant={participant}
-              align="start"
-              onEdit={() => onChangeEditMode?.(true)}
-            >
-              <Button size="sm" icon={MoreHorizontalIcon} />
-            </ParticipantDropdown>
-          ) : null
-        }
-        isYou={isYou}
-      />
-    </>
+    <ParticipantRowView
+      sidebarWidth={sidebarWidth}
+      columnWidth={columnWidth}
+      className={className}
+      name={participant.name}
+      votes={optionIds.map((optionId) => {
+        return getVote(participant.id, optionId);
+      })}
+      participantId={participant.id}
+      action={
+        canEdit ? (
+          <ParticipantDropdown
+            participant={participant}
+            align="start"
+            onEdit={() => onChangeEditMode?.(true)}
+          >
+            <Button size="sm" icon={MoreHorizontalIcon} />
+          </ParticipantDropdown>
+        ) : null
+      }
+      isYou={isYou}
+    />
   );
 };
 

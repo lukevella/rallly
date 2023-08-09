@@ -4,11 +4,13 @@ import {
   PlusIcon,
   Users2Icon,
 } from "@rallly/icons";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Table } from "@rallly/ui/table";
 import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useMeasure, useUpdateEffect } from "react-use";
+import { useMeasure, useScroll, useUpdateEffect } from "react-use";
 
 import { TimesShownIn } from "@/components/clock";
 import { usePermissions } from "@/contexts/permissions";
@@ -44,7 +46,7 @@ const Poll: React.FunctionComponent = () => {
     string | null
   >(null);
 
-  const columnWidth = 80;
+  const columnWidth = 75;
 
   const numberOfVisibleColumns = Math.min(
     poll.options.length,
@@ -106,6 +108,15 @@ const Poll: React.FunctionComponent = () => {
   const showNewParticipantModal = useNewParticipantModal();
 
   const visibleParticipants = useVisibleParticipants();
+
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const { x } = useScroll(scrollRef);
+
+  const showScrollHint =
+    scrollRef.current &&
+    scrollRef.current.scrollWidth > scrollRef.current.clientWidth &&
+    x + scrollRef.current.offsetWidth < scrollRef.current.scrollWidth;
+
   return (
     <PollContext.Provider
       value={{
@@ -130,7 +141,7 @@ const Poll: React.FunctionComponent = () => {
         style={{ width: pollWidth }}
         ref={ref}
       >
-        <div className="flex flex-col overflow-hidden">
+        <div className="flex flex-col">
           <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 py-3 px-4">
             <div>
               {shouldShowNewParticipantForm || editingParticipantId ? (
@@ -197,62 +208,70 @@ const Poll: React.FunctionComponent = () => {
               <TimesShownIn />
             </div>
           ) : null}
-          <div>
-            <div className="flex py-3">
-              <div
-                className="flex shrink-0 items-end pl-4 pr-2 font-medium"
-                style={{ width: sidebarWidth }}
-              >
-                <div className="font-semibold text-gray-800"></div>
-              </div>
-              <PollHeader />
-            </div>
-          </div>
-          <div>
-            <div>
-              {shouldShowNewParticipantForm && !editingParticipantId ? (
-                <ParticipantRowForm
-                  className="mb-2 shrink-0"
-                  onSubmit={async ({ votes }) => {
-                    showNewParticipantModal({
-                      votes,
-                      onSubmit: () => {
-                        setShouldShowNewParticipantForm(false);
-                      },
-                    });
-                  }}
-                />
-              ) : null}
-              {visibleParticipants.length > 0 ? (
-                <div className="py-2">
-                  {visibleParticipants.map((participant, i) => {
-                    return (
-                      <ParticipantRow
-                        key={i}
-                        participant={participant}
-                        editMode={editingParticipantId === participant.id}
-                        onChangeEditMode={(isEditing) => {
-                          if (isEditing) {
+          <div className="relative">
+            <div
+              className={cn(
+                "pointer-events-none absolute right-0 z-30 h-full w-20 bg-gradient-to-r from-transparent to-gray-100 transition-opacity",
+                showScrollHint ? "opacity-100" : " opacity-0",
+              )}
+            />
+            <div
+              ref={scrollRef}
+              className="scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-100 relative z-10 max-h-[calc(100vh-100px)] flex-grow overflow-auto pb-2 pr-3"
+            >
+              <table>
+                <thead>
+                  <tr>
+                    <th
+                      className="sticky left-0 top-0 z-30 bg-white pl-4 pr-4"
+                      style={{ minWidth: sidebarWidth }}
+                    />
+                    <PollHeader />
+                  </tr>
+                </thead>
+                <tbody>
+                  {shouldShowNewParticipantForm && !editingParticipantId ? (
+                    <ParticipantRowForm
+                      className="mb-2 shrink-0"
+                      onSubmit={async ({ votes }) => {
+                        showNewParticipantModal({
+                          votes,
+                          onSubmit: () => {
                             setShouldShowNewParticipantForm(false);
-                            setEditingParticipantId(participant.id);
-                          }
-                        }}
-                        onSubmit={async ({ votes }) => {
-                          await updateParticipant.mutateAsync({
-                            participantId: participant.id,
-                            pollId: poll.id,
-                            votes,
-                          });
-                          setEditingParticipantId(null);
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              ) : null}
+                          },
+                        });
+                      }}
+                    />
+                  ) : null}
+                  {visibleParticipants.length > 0
+                    ? visibleParticipants.map((participant, i) => {
+                        return (
+                          <ParticipantRow
+                            key={i}
+                            participant={participant}
+                            editMode={editingParticipantId === participant.id}
+                            onChangeEditMode={(isEditing) => {
+                              if (isEditing) {
+                                setShouldShowNewParticipantForm(false);
+                                setEditingParticipantId(participant.id);
+                              }
+                            }}
+                            onSubmit={async ({ votes }) => {
+                              await updateParticipant.mutateAsync({
+                                participantId: participant.id,
+                                pollId: poll.id,
+                                votes,
+                              });
+                              setEditingParticipantId(null);
+                            }}
+                          />
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
             </div>
           </div>
-
           {shouldShowNewParticipantForm || editingParticipantId ? (
             <div className="flex shrink-0 items-center border-t bg-gray-50">
               <div className="flex w-full items-center justify-between gap-3 p-3">
