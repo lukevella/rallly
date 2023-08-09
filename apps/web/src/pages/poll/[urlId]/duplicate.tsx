@@ -25,13 +25,14 @@ import { PayWall } from "@/components/pay-wall";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
+import { usePostHog } from "@/utils/posthog";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
   const { poll } = usePoll();
   const duplicate = trpc.polls.duplicate.useMutation();
   const router = useRouter();
-
+  const posthog = usePostHog();
   const pollLink = `/poll/${poll.id}`;
 
   const form = useForm<{ title: string }>({
@@ -51,6 +52,10 @@ const Page: NextPageWithLayout = () => {
               { pollId: poll.id, newTitle: data.title },
               {
                 onSuccess: async (res) => {
+                  posthog?.capture("duplicate poll", {
+                    pollId: poll.id,
+                    newPollId: res.id,
+                  });
                   await router.push(`/poll/${res.id}`);
                 },
               },
