@@ -205,5 +205,9 @@
   "disableCommentsDescription": "Supprimer la possibilité de laisser un commentaire sur le sondage",
   "planCustomizablePollSettings": "Personnalisation des paramètres du sondage",
   "clockPreferences": "Préférences de l'horloge",
-  "clockPreferencesDescription": "Définissez votre fuseau horaire et votre format horaire préférés."
+  "clockPreferencesDescription": "Définissez votre fuseau horaire et votre format horaire préférés.",
+  "featureRequest": "Demander une fonctionnalité",
+  "bugReport": "Signaler un bug",
+  "getSupport": "Obtenir de l'aide",
+  "feedback": "Commentaires"
 }
