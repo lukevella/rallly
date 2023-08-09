@@ -65,7 +65,7 @@ export const polls = router({
   create: possiblyPublicProcedure
     .input(
       z.object({
-        title: z.string(),
+        title: z.string().trim().min(1),
         timeZone: z.string().optional(),
         location: z.string().optional(),
         description: z.string().optional(),
@@ -794,7 +794,7 @@ export const polls = router({
     .input(
       z.object({
         pollId: z.string(),
-        newTitle: z.string(),
+        newTitle: z.string().min(1),
       }),
     )
     .mutation(async ({ input, ctx }) => {
