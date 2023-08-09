@@ -1,15 +1,11 @@
 import { cn } from "@rallly/ui";
-import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { Controller, useForm } from "react-hook-form";
 
 import { usePoll } from "../../poll-context";
-import { normalizeVotes } from "../mutations";
 import { ParticipantForm, ParticipantFormSubmitted } from "../types";
 import UserAvatar, { YouAvatar } from "../user-avatar";
 import { VoteSelector } from "../vote-selector";
-import ControlledScrollArea from "./controlled-scroll-area";
 import { usePollContext } from "./poll-context";
 
 export interface ParticipantRowFormProps {

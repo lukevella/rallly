@@ -5,7 +5,6 @@ import { DateIconInner } from "@/components/date-icon";
 import { useOptions } from "@/components/poll-context";
 
 import { ConnectedScoreSummary } from "../score-summary";
-import { usePollContext } from "./poll-context";
 
 const TimeRange: React.FunctionComponent<{
   start: string;
@@ -27,7 +26,6 @@ const TimeRange: React.FunctionComponent<{
 
 const PollHeader: React.FunctionComponent = () => {
   const { options } = useOptions();
-  const { setActiveOptionId, columnWidth } = usePollContext();
   return (
     <>
       {options.map((option) => {
@@ -35,9 +33,7 @@ const PollHeader: React.FunctionComponent = () => {
           <th
             key={option.optionId}
             className="sticky top-0 z-20 space-y-3 bg-white"
-            style={{ minWidth: columnWidth }}
-            onMouseOver={() => setActiveOptionId(option.optionId)}
-            onMouseOut={() => setActiveOptionId(null)}
+            style={{ minWidth: 80, maxWidth: 90 }}
           >
             <div className="flex flex-col items-center gap-2.5 py-3">
               <DateIconInner

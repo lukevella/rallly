@@ -61,7 +61,7 @@ export const ParticipantRowView: React.FunctionComponent<{
         return (
           <td
             key={i}
-            className={clsx("h-12 bg-white p-1")}
+            className={clsx("h-12 p-1")}
             style={{ width: columnWidth }}
           >
             <div
