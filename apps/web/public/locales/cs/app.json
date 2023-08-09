@@ -188,5 +188,17 @@
   "featureRequest": "Požadavek na funkci",
   "bugReport": "Náhlasit chybu",
   "getSupport": "Získat podporu",
-  "feedback": "Zpětná vazba"
+  "feedback": "Zpětná vazba",
+  "duplicate": "Kopírovat",
+  "duplicateTitleLabel": "Název",
+  "thankYou": "Děkujeme!",
+  "proFeature": "Profesionální funkce",
+  "savePercent": "Ušetříte {percent}%",
+  "priceIncreaseSoon": "Cena se brzy zvýší.",
+  "lockPrice": "Upgradujte dnes a udržte si tuto cenu navždy.",
+  "noAds": "Bez reklam",
+  "upgrade": "Upgradovat",
+  "notToday": "Dnes ne",
+  "supportProject": "Podpořte tento projekt",
+  "features": "Získejte přístup ke všem aktuálním i budoucím Pro funkcím!"
 }
