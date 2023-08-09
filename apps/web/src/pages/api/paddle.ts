@@ -144,7 +144,10 @@ export default async function handler(
       }
       case "subscription_payment_succeeded":
         // Handle successful payment
-        if (payload.initial_payment !== 1) {
+        // This event is triggered before subscription_created which means
+        // the row has not been created yet. If the subscription is renewed inital_payment
+        // won't be "1" and we can update the row.
+        if (payload.initial_payment !== "1") {
           await prisma.userPaymentData.update({
             where: {
               userId: passthrough.userId,

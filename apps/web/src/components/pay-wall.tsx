@@ -1,3 +1,4 @@
+import { trpc } from "@rallly/backend";
 import {
   CalendarCheck2Icon,
   CopyIcon,
@@ -27,9 +28,19 @@ const Feature = ({
   icon: Icon,
   children,
   className,
-}: React.PropsWithChildren<{ icon: IconComponent; className?: string }>) => {
+  upcoming,
+}: React.PropsWithChildren<{
+  icon: IconComponent;
+  upcoming?: boolean;
+  className?: string;
+}>) => {
   return (
-    <li className="flex translate-y-0 cursor-default items-center justify-center gap-x-2.5 rounded-full border bg-gray-50 p-1 pr-4 shadow-sm transition-all hover:-translate-y-1 hover:bg-white/50">
+    <li
+      className={cn(
+        "flex translate-y-0 cursor-default items-center justify-center gap-x-2.5 rounded-full border bg-gray-50 p-1 pr-4 shadow-sm transition-all hover:-translate-y-1 hover:bg-white/50",
+        upcoming ? "bg-transparent` border-dashed shadow-none" : "",
+      )}
+    >
       <span
         className={cn("bg-primary rounded-full p-1 text-gray-50", className)}
       >
@@ -37,6 +48,29 @@ const Feature = ({
       </span>
       <div className="text-sm font-semibold">{children}</div>
     </li>
+  );
+};
+
+const ThankYou = () => {
+  trpc.user.getBilling.useQuery(undefined, {
+    refetchInterval: 1000,
+  });
+
+  return (
+    <div className="space-y-2 text-center">
+      <h2>
+        <Trans i18nKey="thankYou" defaults="Thank you!" />
+      </h2>
+      <p className="text-muted-foreground mx-auto max-w-xs text-sm">
+        <Trans
+          i18nKey="pleaseWait"
+          defaults="Your account is being upgraded. This should only take a few seconds."
+        />
+      </p>
+      <div className="p-4 text-gray-500">
+        <Loader2Icon className="inline-block h-7 w-7 animate-spin" />
+      </div>
+    </div>
   );
 };
 
@@ -72,26 +106,13 @@ const Teaser = () => {
           className="text-center"
           aria-hidden="true"
         >
-          <Badge className="translate-y-0 py-1 px-4 text-lg">
+          <Badge className="translate-y-0 py-0.5 px-4 text-lg">
             <Trans i18nKey="planPro" />
           </Badge>
         </m.div>
       </div>
       {didUpgrade ? (
-        <div className="space-y-2 text-center">
-          <h2>
-            <Trans i18nKey="thankYou" defaults="Thank you!" />
-          </h2>
-          <p className="text-muted-foreground mx-auto max-w-xs text-sm">
-            <Trans
-              i18nKey="pleaseWait"
-              defaults="Your account is being upgraded. This should only take a few seconds."
-            />
-          </p>
-          <div className="p-4 text-gray-500">
-            <Loader2Icon className="inline-block h-7 w-7 animate-spin" />
-          </div>
-        </div>
+        <ThankYou />
       ) : (
         <div className="space-y-6">
           <div className="space-y-2 text-center">
@@ -175,7 +196,13 @@ const Teaser = () => {
               />
             </p>
           </div>
-          <ul className="flex flex-wrap justify-center gap-2 border-gray-100 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-100 via-transparent py-4">
+          <h3 className="mx-auto max-w-sm text-center">
+            <Trans
+              i18nKey="features"
+              defaults="Get access to all current and future Pro features!"
+            />
+          </h3>
+          <ul className="flex flex-wrap justify-center gap-2 border-gray-100 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-100 via-transparent">
             <Feature className="bg-violet-500" icon={ImageOffIcon}>
               <Trans i18nKey="noAds" defaults="No ads" />
             </Feature>
