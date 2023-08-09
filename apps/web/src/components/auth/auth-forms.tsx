@@ -1,15 +1,17 @@
 import { trpc } from "@rallly/backend";
-import { ArrowRightIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { createGlobalState } from "react-use";
 
 import { usePostHog } from "@/utils/posthog";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { TextInput } from "../text-input";
+
+export const useDefaultEmail = createGlobalState("");
 
 const VerifyCode: React.FunctionComponent<{
   email: string;
@@ -130,12 +132,12 @@ type RegisterFormData = {
 export const RegisterForm: React.FunctionComponent<{
   onClickLogin?: React.MouseEventHandler;
   onRegistered?: () => void;
-  defaultValues?: Partial<RegisterFormData>;
-}> = ({ onClickLogin, onRegistered, defaultValues }) => {
+}> = ({ onClickLogin, onRegistered }) => {
+  const [defaultEmail, setDefaultEmail] = useDefaultEmail();
   const { t } = useTranslation();
   const { register, handleSubmit, getValues, setError, formState } =
     useForm<RegisterFormData>({
-      defaultValues,
+      defaultValues: { email: defaultEmail },
     });
   const queryClient = trpc.useContext();
   const requestRegistration = trpc.auth.requestRegistration.useMutation();
@@ -266,7 +268,10 @@ export const RegisterForm: React.FunctionComponent<{
               <Link
                 href="/login"
                 className="text-link"
-                onClick={onClickLogin}
+                onClick={(e) => {
+                  setDefaultEmail(getValues("email"));
+                  onClickLogin?.(e);
+                }}
               />
             ),
           }}
@@ -284,9 +289,13 @@ export const LoginForm: React.FunctionComponent<{
   onAuthenticated?: () => void;
 }> = ({ onAuthenticated, onClickRegister }) => {
   const { t } = useTranslation();
+  const [defaultEmail, setDefaultEmail] = useDefaultEmail();
+
   const { register, handleSubmit, getValues, formState, setError } = useForm<{
     email: string;
-  }>();
+  }>({
+    defaultValues: { email: defaultEmail },
+  });
 
   const requestLogin = trpc.auth.requestLogin.useMutation();
   const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
@@ -294,6 +303,7 @@ export const LoginForm: React.FunctionComponent<{
   const queryClient = trpc.useContext();
   const [token, setToken] = React.useState<string>();
   const posthog = usePostHog();
+
   if (token) {
     return (
       <VerifyCode
@@ -410,11 +420,13 @@ export const LoginForm: React.FunctionComponent<{
           <Link
             href="/register"
             onClick={(e) => {
-              onClickRegister?.(e, getValues("email"));
+              React.startTransition(() => {
+                setDefaultEmail(getValues("email"));
+                onClickRegister?.(e, getValues("email"));
+              });
             }}
           >
             {t("createAnAccount")}
-            <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </Button>
       </div>

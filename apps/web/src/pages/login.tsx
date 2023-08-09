@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { LoginForm } from "@/components/auth/auth-forms";
 import { AuthLayout } from "@/components/auth/auth-layout";
-import { LoginForm } from "@/components/auth/login-form";
 import { StandardLayout } from "@/components/layouts/standard-layout";
 import { PageDialog } from "@/components/page-dialog";
 import { useWhoAmI } from "@/contexts/whoami";

@@ -5,8 +5,8 @@ import { useTranslation } from "next-i18next";
 import { StandardLayout } from "@/components/layouts/standard-layout";
 import { NextPageWithLayout } from "@/types";
 
+import { RegisterForm } from "../components/auth/auth-forms";
 import { AuthLayout } from "../components/auth/auth-layout";
-import { RegisterForm } from "../components/auth/login-form";
 import { getStaticTranslations } from "../utils/with-page-translations";
 
 const Page: NextPageWithLayout = () => {
