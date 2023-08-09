@@ -287,6 +287,15 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
 };
 
 const PollLayout = ({ children }: React.PropsWithChildren) => {
+  const router = useRouter();
+
+  const urlId = router.query.urlId as string;
+
+  if (!urlId) {
+    // probably navigating away
+    return null;
+  }
+
   return (
     <Prefetch>
       <LegacyPollContextProvider>
