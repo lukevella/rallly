@@ -1,5 +1,7 @@
 import {
+  CalendarCheck2Icon,
   ChevronDownIcon,
+  CopyIcon,
   DownloadIcon,
   PencilIcon,
   Settings2Icon,
@@ -20,6 +22,7 @@ import Link from "next/link";
 import { Trans } from "next-i18next";
 import * as React from "react";
 
+import { ProBadge } from "@/components/pro-badge";
 import { usePoll } from "@/contexts/poll";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
@@ -62,6 +65,7 @@ const ManagePoll: React.FunctionComponent<{
             <Link href={`/poll/${poll.id}/edit-settings`}>
               <DropdownMenuItemIconLabel icon={Settings2Icon}>
                 <Trans i18nKey="editSettings" defaults="Edit settings" />
+                <ProBadge />
               </DropdownMenuItemIconLabel>
             </Link>
           </DropdownMenuItem>
@@ -71,6 +75,23 @@ const ManagePoll: React.FunctionComponent<{
               <Trans i18nKey="exportToCsv" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/poll/${poll.id}/duplicate`}>
+              <DropdownMenuItemIconLabel icon={CopyIcon}>
+                <Trans i18nKey="duplicate" defaults="Duplicate" />
+                <ProBadge />
+              </DropdownMenuItemIconLabel>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild disabled={!!poll.event}>
+            <Link href={`/poll/${poll.id}/finalize`}>
+              <DropdownMenuItemIconLabel icon={CalendarCheck2Icon}>
+                <Trans i18nKey="finishPoll" defaults="Finalize" />
+                <ProBadge />
+              </DropdownMenuItemIconLabel>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setShowDeletePollDialog(true);

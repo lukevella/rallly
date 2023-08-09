@@ -1,5 +1,4 @@
 import { trpc } from "@rallly/backend";
-import { LockIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
   CardContent,
@@ -8,12 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { ProPlan } from "@/components/billing/billing-plans";
 import { Card } from "@/components/card";
 import { getPollLayout } from "@/components/layouts/poll-layout";
+import { PayWall } from "@/components/pay-wall";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
@@ -88,52 +86,12 @@ const FinalizationForm = () => {
   );
 };
 
-const Teaser = () => {
-  return (
-    <div className="relative mx-auto max-w-3xl">
-      <div className="absolute inset-0 z-10 flex items-center justify-center rounded-md bg-white/10  backdrop-blur-sm">
-        <div className="shadow-huge space-y-4 overflow-hidden rounded-md bg-white p-4">
-          <div className="flex gap-x-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 shadow-sm">
-              <LockIcon className="text-primary h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-base font-semibold leading-tight">
-                <Trans i18nKey="upgradeOverlayTitle" defaults="Upgrade" />
-              </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                <Trans
-                  i18nKey="upgradeOverlaySubtitle"
-                  defaults="A paid plan is required to use this feature"
-                />
-              </p>
-            </div>
-          </div>
-          <ProPlan annual={true}>
-            <Button variant="primary" asChild className="w-full">
-              <Link href="/settings/billing">
-                <Trans
-                  i18nKey="upgradeOverlayGoToBilling"
-                  defaults="Go to billing"
-                />
-              </Link>
-            </Button>
-          </ProPlan>
-        </div>
-      </div>
-      <FinalizationForm />
-    </div>
-  );
-};
-
 const Page: NextPageWithLayout = () => {
-  const plan = usePlan();
-
-  if (plan === "paid") {
-    return <FinalizationForm />;
-  }
-
-  return <Teaser />;
+  return (
+    <PayWall>
+      <FinalizationForm />
+    </PayWall>
+  );
 };
 
 Page.getLayout = getPollLayout;

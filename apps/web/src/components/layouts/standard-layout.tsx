@@ -37,7 +37,7 @@ const NavMenuItem = ({
 }) => {
   const router = useRouter();
   return (
-    <Button variant="ghost" size="sm" asChild>
+    <Button variant="ghost" asChild>
       <Link
         target={target}
         href={href}
@@ -69,7 +69,7 @@ const Logo = () => {
     };
   }, [router.events]);
   return (
-    <div className="relative flex items-center justify-center gap-4 pr-8">
+    <div className="relative flex items-center justify-center gap-4">
       <Link
         href="/polls"
         className={clsx(
@@ -86,7 +86,7 @@ const Logo = () => {
       </Link>
       <div
         className={cn(
-          "pointer-events-none absolute -right-0 flex items-center justify-center text-gray-500 transition-opacity delay-500",
+          "pointer-events-none flex w-8 items-center justify-center text-gray-500 transition-opacity delay-500",
           isBusy ? "opacity-100" : "opacity-0",
         )}
       >
@@ -103,7 +103,7 @@ const MainNav = () => {
         hidden: { y: -56, opacity: 0, height: 0 },
         visible: { y: 0, opacity: 1, height: "auto" },
       }}
-      initial={"hidden"}
+      initial="hidden"
       animate="visible"
       exit={"hidden"}
       className="border-b bg-gray-50/50"

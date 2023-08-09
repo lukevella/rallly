@@ -68,6 +68,7 @@ interface SubscriptionPaymentSucceededRequest extends BasePaddleRequest {
   receipt_url: string;
   sale_gross: string;
   next_bill_date: string;
+  initial_payment: string;
 }
 
 interface SubscriptionPaymentFailedRequest extends BasePaddleRequest {

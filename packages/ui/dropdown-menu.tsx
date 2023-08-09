@@ -207,9 +207,9 @@ export const DropdownMenuItemIconLabel = ({
   children: React.ReactNode;
 }) => {
   return (
-    <>
-      <Icon className="mr-2 h-4 w-4" />
+    <span className="flex items-center gap-2">
+      <Icon className="h-4 w-4" />
       {children}
-    </>
+    </span>
   );
 };
