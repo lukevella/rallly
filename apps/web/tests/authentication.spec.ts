@@ -46,7 +46,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .type(testUserEmail);
 
-      await page.getByText("Continue").click();
+      await page.getByRole("button", { name: "Continue" }).click();
 
       // Make sure the user doesn't exist yet and that logging in is not possible
       await expect(
@@ -64,7 +64,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .type(testUserEmail);
 
-      await page.click("text=Continue");
+      await page.getByRole("button", { name: "Continue" }).click();
 
       const codeInput = page.getByPlaceholder("Enter your 6-digit code");
 
@@ -74,7 +74,7 @@ test.describe.serial(() => {
 
       await codeInput.type(code);
 
-      await page.getByText("Continue").click();
+      await page.getByRole("button", { name: "Continue" }).click();
 
       await page.waitForURL("/polls");
     });
@@ -91,7 +91,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .type(testUserEmail);
 
-      await page.click("text=Continue");
+      await page.getByRole("button", { name: "Continue" }).click();
 
       await expect(
         page.getByText("A user with that email already exists"),
@@ -111,7 +111,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .type(testUserEmail);
 
-      await page.getByText("Continue").click();
+      await page.getByRole("button", { name: "Continue" }).click();
 
       const { email } = await mailServer.captureOne(testUserEmail, {
         wait: 5000,
@@ -139,13 +139,13 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .type(testUserEmail);
 
-      await page.getByText("Continue").click();
+      await page.getByRole("button", { name: "Continue" }).click();
 
       const code = await getCode();
 
       await page.getByPlaceholder("Enter your 6-digit code").type(code);
 
-      await page.getByText("Continue").click();
+      await page.getByRole("button", { name: "Continue" }).click();
 
       await page.waitForURL("/polls");
     });
