@@ -2,7 +2,7 @@
   "12h": "12-hour",
   "24h": "24-hour",
   "addTimeOption": "Add time option",
-  "alreadyRegistered": "Already registered? <a>Login →</a>",
+  "alreadyRegistered": "Already registered? <a>Login</a>",
   "applyToAllDates": "Apply to all dates",
   "areYouSure": "Are you sure?",
   "cancel": "Cancel",
@@ -222,5 +222,6 @@
   "upgrade": "Upgrade",
   "notToday": "Not Today",
   "supportProject": "Support this project",
-  "features": "Get access to all current and future Pro features!"
+  "features": "Get access to all current and future Pro features!",
+  "continueAsGuest": "Continue as Guest"
 }
