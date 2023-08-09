@@ -2,6 +2,7 @@
   "12h": "12-godzinny",
   "24h": "24-godzinny",
   "addTimeOption": "Dodaj opcję czasową",
+  "alreadyRegistered": "Już zarejestrowany? <a>Zaloguj się</a>",
   "applyToAllDates": "Zastosuj do wszystkich dat",
   "areYouSure": "Jesteś pewny?",
   "cancel": "Anuluj",
@@ -221,5 +222,6 @@
   "upgrade": "Ulepsz",
   "notToday": "Nie dzisiaj",
   "supportProject": "Wspierasz ten projekt",
-  "features": "Uzyskaj dostęp do wszystkich obecnych i przyszłych funkcji Pro!"
+  "features": "Uzyskaj dostęp do wszystkich obecnych i przyszłych funkcji Pro!",
+  "continueAsGuest": "Kontynuuj jako Gość"
 }
