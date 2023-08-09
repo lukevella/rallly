@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@rallly/backend";
 import { Button } from "@rallly/ui/button";
 import {
@@ -19,6 +20,7 @@ import { Input } from "@rallly/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { getPollLayout } from "@/components/layouts/poll-layout";
 import { PayWall } from "@/components/pay-wall";
@@ -28,6 +30,10 @@ import { NextPageWithLayout } from "@/types";
 import { usePostHog } from "@/utils/posthog";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
+const formSchema = z.object({
+  title: z.string().trim().min(1),
+});
+
 const Page: NextPageWithLayout = () => {
   const { poll } = usePoll();
   const duplicate = trpc.polls.duplicate.useMutation();
@@ -35,7 +41,8 @@ const Page: NextPageWithLayout = () => {
   const posthog = usePostHog();
   const pollLink = `/poll/${poll.id}`;
 
-  const form = useForm<{ title: string }>({
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: poll.title,
     },
