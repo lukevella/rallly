@@ -2,6 +2,7 @@
   "12h": "12小时制",
   "24h": "24小时制",
   "addTimeOption": "增加时间段",
+  "alreadyRegistered": "已注册？ <a>登录</a>",
   "applyToAllDates": "应用到所有日期",
   "areYouSure": "确定要这样做吗?",
   "cancel": "取消",
