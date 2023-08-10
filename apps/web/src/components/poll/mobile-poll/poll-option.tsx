@@ -190,7 +190,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 
   return (
     <div
-      className={clsx("space-y-4 overflow-hidden p-3", {
+      className={clsx("space-y-4 overflow-hidden px-4 py-3", {
         "bg-gray-500/5": editable && active,
       })}
       onTouchStart={() => setActive(editable)}
