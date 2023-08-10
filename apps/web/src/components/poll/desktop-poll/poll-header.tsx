@@ -19,7 +19,7 @@ const TimeRange: React.FunctionComponent<{
         className,
       )}
     >
-      <div className="tabular-nums">{start}</div>
+      <div className="font-medium tabular-nums">{start}</div>
       <div className="text-muted-foreground tabular-nums">{end}</div>
     </div>
   );
