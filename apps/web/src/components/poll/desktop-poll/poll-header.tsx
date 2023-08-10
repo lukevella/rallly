@@ -90,25 +90,15 @@ const PollHeader: React.FunctionComponent = () => {
             <th
               key={option.optionId}
               style={{ minWidth: 80, maxWidth: 90 }}
-              className="sticky top-12 z-20 h-16 space-y-3 bg-white"
+              className="sticky top-12 z-20 h-16 space-y-2 bg-white pb-3"
             >
               <DateIconInner day={option.day} dow={option.dow} />
               {option.type === "timeSlot" ? (
                 <TimeRange start={option.startTime} end={option.endTime} />
               ) : null}
-            </th>
-          );
-        })}
-      </TimelineRow>
-      <TimelineRow>
-        {options.map((option) => {
-          return (
-            <th
-              key={option.optionId}
-              style={{ minWidth: 80, maxWidth: 90 }}
-              className="bg-white pb-3 text-center"
-            >
-              <ConnectedScoreSummary optionId={option.optionId} />
+              <div>
+                <ConnectedScoreSummary optionId={option.optionId} />
+              </div>
             </th>
           );
         })}
