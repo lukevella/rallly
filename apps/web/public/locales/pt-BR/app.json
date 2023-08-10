@@ -206,5 +206,19 @@
   "featureRequest": "Solicite um Recurso",
   "bugReport": "Reporte um Problema",
   "getSupport": "Obter Suporte",
-  "feedback": "Dê sua opinião"
+  "feedback": "Dê sua opinião",
+  "duplicate": "Duplicar",
+  "duplicateDescription": "Crie uma nova enquete baseada nesta",
+  "duplicateTitleLabel": "Título",
+  "duplicateTitleDescription": "Dica: Dê um título exclusivo a sua nova enquete",
+  "thankYou": "Obrigado!",
+  "pleaseWait": "Sua conta está sendo atualizada. Isso deve levar só alguns segundos.",
+  "proFeature": "Recursos Pro",
+  "upgradeOverlaySubtitle2": "Por favor, atualize para um plano pago para usar este recurso. É assim que mantemos as luzes acesas :)",
+  "savePercent": "Economize {percent}%",
+  "priceIncreaseSoon": "O preço aumenta em breve.",
+  "lockPrice": "Atualize hoje para manter este preço para sempre.",
+  "noAds": "Sem anúncios",
+  "upgrade": "Atualize",
+  "continueAsGuest": "Continuar como Convidado"
 }
