@@ -2,6 +2,7 @@
   "12h": "12-tuntinen",
   "24h": "24-tuntinen",
   "addTimeOption": "Lisää aikavaihtoehto",
+  "alreadyRegistered": "Oletko jo rekisteröitynyt? <a>Kirjaudu sisään</a>",
   "applyToAllDates": "Käytä kaikkiin päivämääriin",
   "areYouSure": "Oletko varma?",
   "cancel": "Peruuta",
