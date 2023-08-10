@@ -27,15 +27,15 @@ const TimeRange: React.FunctionComponent<{
 const PollHeader: React.FunctionComponent = () => {
   const { options } = useOptions();
   return (
-    <>
+    <tr>
+      <th className="sticky left-0 z-30 min-w-[200px] bg-white pl-4 pr-4" />
       {options.map((option) => {
         return (
           <th
             key={option.optionId}
-            className="sticky top-0 z-20 space-y-3 bg-white"
-            style={{ minWidth: 80, maxWidth: 90 }}
+            className="sticky top-0 z-20  space-y-3 bg-white"
           >
-            <div className="flex flex-col items-center gap-2.5 py-3">
+            <div className="flex flex-col items-center gap-2.5 px-2.5 pb-3">
               <DateIconInner
                 day={option.day}
                 dow={option.dow}
@@ -49,7 +49,7 @@ const PollHeader: React.FunctionComponent = () => {
           </th>
         );
       })}
-    </>
+    </tr>
   );
 };
 

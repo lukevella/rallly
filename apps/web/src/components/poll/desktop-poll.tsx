@@ -4,12 +4,10 @@ import {
   PlusIcon,
   Users2Icon,
 } from "@rallly/icons";
-import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import clsx from "clsx";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useMeasure, useScroll, useUpdateEffect } from "react-use";
+import { useScroll, useUpdateEffect } from "react-use";
 
 import { TimesShownIn } from "@/components/clock";
 import { usePermissions } from "@/contexts/permissions";
@@ -28,6 +26,38 @@ import {
   useAddParticipantMutation,
   useUpdateParticipantMutation,
 } from "./mutations";
+
+const useIsOverflowing = <E extends Element | null>(
+  ref: React.RefObject<E>,
+) => {
+  const [isOverflowing, setIsOverflowing] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkOverflow = () => {
+      if (ref.current) {
+        const element = ref.current;
+        const overflowX = element.scrollWidth > element.clientWidth;
+        const overflowY = element.scrollHeight > element.clientHeight;
+
+        setIsOverflowing(overflowX || overflowY);
+      }
+    };
+
+    if (ref.current) {
+      const resizeObserver = new ResizeObserver(checkOverflow);
+      resizeObserver.observe(ref.current);
+
+      // Initial check
+      checkOverflow();
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, [ref]);
+
+  return isOverflowing;
+};
 
 const Poll: React.FunctionComponent = () => {
   const { t } = useTranslation();
@@ -58,13 +88,13 @@ const Poll: React.FunctionComponent = () => {
 
   const goToNextPage = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft += scrollRef.current.clientWidth;
+      scrollRef.current.scrollLeft += 220;
     }
   };
 
   const goToPreviousPage = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft -= scrollRef.current.offsetWidth;
+      scrollRef.current.scrollLeft -= 220;
     }
   };
 
@@ -76,15 +106,9 @@ const Poll: React.FunctionComponent = () => {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  const { x } = useScroll(scrollRef);
-  const isOverflowing =
-    scrollRef.current &&
-    scrollRef.current.scrollWidth > scrollRef.current.clientWidth;
+  const isOverflowing = useIsOverflowing(scrollRef);
 
-  const showScrollHint =
-    scrollRef.current &&
-    isOverflowing &&
-    x + scrollRef.current.offsetWidth < scrollRef.current.scrollWidth;
+  const { x } = useScroll(scrollRef);
 
   return (
     <div>
@@ -132,10 +156,15 @@ const Poll: React.FunctionComponent = () => {
             </div>
             {isOverflowing ? (
               <div className="flex gap-2">
-                <Button onClick={goToPreviousPage}>
+                <Button disabled={x === 0} onClick={goToPreviousPage}>
                   <ArrowLeftIcon className="h-4 w-4" />
                 </Button>
                 <Button
+                  disabled={Boolean(
+                    scrollRef.current &&
+                      x + scrollRef.current.offsetWidth >=
+                        scrollRef.current.scrollWidth,
+                  )}
                   onClick={() => {
                     goToNextPage();
                   }}
@@ -153,26 +182,16 @@ const Poll: React.FunctionComponent = () => {
         ) : null}
         <div className="relative">
           <div
-            className={cn(
-              "pointer-events-none absolute right-0 z-30 h-full w-20  bg-gradient-to-r from-transparent to-gray-50 transition-transform",
-              showScrollHint ? "translate-x-0" : "translate-x-20",
-            )}
-          />
-          <div
             ref={scrollRef}
-            className="scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-100 relative z-10 max-h-[calc(100vh-100px)] flex-grow overflow-auto scroll-smooth pb-2 pr-3"
+            className="scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 max-h-[calc(100vh-100px)] flex-grow overflow-auto scroll-smooth py-3 pr-3"
           >
-            <table className="table-fixed">
+            <table className="table-auto">
               <thead>
-                <tr>
-                  <th className="sticky left-0 z-30 bg-white pl-4 pr-4" />
-                  <PollHeader />
-                </tr>
+                <PollHeader />
               </thead>
               <tbody>
                 {shouldShowNewParticipantForm && !editingParticipantId ? (
                   <ParticipantRowForm
-                    className="mb-2 shrink-0"
                     onSubmit={async ({ votes }) => {
                       showNewParticipantModal({
                         votes,
