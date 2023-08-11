@@ -20,5 +20,12 @@
   "doodleAlternativeDescription": "Rallly ist die Doodle Alternative, nach der alle suchen. Tausende von Nutzerinnen haben bereits gewechselt und erfreuen sich nun an einer professionellen, werbefreien Terminplanung mit einer intuitiven und einfach zu benutzenden Oberfläche.        ",
   "availabilityPollCta": "Erstelle eine Terminplanungsumfrage",
   "availabilityPollMetaTitle": "Terminplanung | Optimiere Terminplanung mit Rallly",
-  "availabilityPollTitle": "Terminplanung"
+  "availabilityPollTitle": "Terminplanung",
+  "createAPoll": "Erstelle eine Umfrage zur Terminfindung",
+  "findATimeMetaTitle": "Finde eine Zeit zum Treffen | Rallly",
+  "findATimeMetaDescription": "Erstelle eine Umfrage zur Terminfindung in Sekunden. Keine Anmeldung erforderlich.",
+  "findATimeTitle": "Finde eine Zeit zum Treffen",
+  "createASchedulingPoll": "Erstelle eine Umfrage zur Terminplanung",
+  "freeSchedulingPollMetaTitle": "Kostenlose Umfrage zur Terminfindung | Rallly",
+  "freeSchedulingPollTitle": "Auf der Suche nach einem kostenlosen Tool zur Terminplanung?"
 }
