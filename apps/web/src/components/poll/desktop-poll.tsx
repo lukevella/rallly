@@ -8,14 +8,12 @@ import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useScroll, useUpdateEffect } from "react-use";
+import { useScroll } from "react-use";
 
 import { TimesShownIn } from "@/components/clock";
 import { useVotingForm, VotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
-import { useRole } from "@/contexts/role";
 
-import { useNewParticipantModal } from "../new-participant-modal";
 import {
   useParticipants,
   useVisibleParticipants,
@@ -24,7 +22,6 @@ import { usePoll } from "../poll-context";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import PollHeader from "./desktop-poll/poll-header";
-import { normalizeVotes, useUpdateParticipantMutation } from "./mutations";
 
 const useIsOverflowing = <E extends Element | null>(
   ref: React.RefObject<E>,
@@ -61,30 +58,15 @@ const useIsOverflowing = <E extends Element | null>(
 const DesktopPoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const { poll, userAlreadyVoted } = usePoll();
+  const { poll } = usePoll();
 
   const { participants } = useParticipants();
 
   const votingForm = useVotingForm();
 
-  const editingParticipantId = votingForm.watch("participantId");
+  const mode = votingForm.watch("mode");
 
-  const setEditingParticipantId = (newParticipantId?: string) => {
-    votingForm.setValue("participantId", newParticipantId);
-  };
   const { canAddNewParticipant } = usePermissions();
-
-  const role = useRole();
-  const [shouldShowNewParticipantForm, setShouldShowNewParticipantForm] =
-    React.useState(
-      canAddNewParticipant && !userAlreadyVoted && role === "participant",
-    );
-
-  useUpdateEffect(() => {
-    if (!canAddNewParticipant) {
-      setShouldShowNewParticipantForm(false);
-    }
-  }, [canAddNewParticipant]);
 
   const goToNextPage = () => {
     if (scrollRef.current) {
@@ -98,10 +80,6 @@ const DesktopPoll: React.FunctionComponent = () => {
     }
   };
 
-  const updateParticipant = useUpdateParticipantMutation();
-
-  const showNewParticipantModal = useNewParticipantModal();
-
   const visibleParticipants = useVisibleParticipants();
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -114,15 +92,13 @@ const DesktopPoll: React.FunctionComponent = () => {
     <div className="flex flex-col">
       <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 py-3 px-4">
         <div>
-          {shouldShowNewParticipantForm || editingParticipantId ? (
+          {mode !== "view" ? (
             <div>
               <Trans
                 t={t}
                 i18nKey="saveInstruction"
                 values={{
-                  action: shouldShowNewParticipantForm
-                    ? t("continue")
-                    : t("save"),
+                  action: mode === "new" ? t("continue") : t("save"),
                 }}
                 components={{ b: <strong /> }}
               />
@@ -141,13 +117,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   data-testid="add-participant-button"
                   icon={PlusIcon}
                   onClick={() => {
-                    votingForm.reset({
-                      participantId: undefined,
-                      votes: poll.options.map((option) => ({
-                        optionId: option.id,
-                      })),
-                    });
-                    setShouldShowNewParticipantForm(true);
+                    votingForm.newParticipant();
                   }}
                 />
               ) : null}
@@ -201,19 +171,10 @@ const DesktopPoll: React.FunctionComponent = () => {
               <PollHeader />
             </thead>
             <tbody>
-              {shouldShowNewParticipantForm && !editingParticipantId ? (
+              {mode === "new" ? (
                 <>
-                  <ParticipantRowForm
-                    onSubmit={async ({ votes }) => {
-                      showNewParticipantModal({
-                        votes,
-                        onSubmit: () => {
-                          setShouldShowNewParticipantForm(false);
-                        },
-                      });
-                    }}
-                  />
-                  <tr>
+                  <ParticipantRowForm />
+                  <tr aria-hidden="true">
                     <td colSpan={poll.options.length + 1} className="py-2" />
                   </tr>
                 </>
@@ -224,26 +185,13 @@ const DesktopPoll: React.FunctionComponent = () => {
                       <ParticipantRow
                         key={i}
                         participant={participant}
-                        editMode={editingParticipantId === participant.id}
+                        editMode={
+                          votingForm.watch("participantId") === participant.id
+                        }
                         onChangeEditMode={(isEditing) => {
                           if (isEditing) {
-                            setEditingParticipantId(participant.id);
-                            votingForm.reset({
-                              participantId: participant.id,
-                              votes: normalizeVotes(
-                                poll.options.map(({ id }) => id),
-                                participant.votes,
-                              ),
-                            });
+                            votingForm.setEditingParticipantId(participant.id);
                           }
-                        }}
-                        onSubmit={async ({ votes }) => {
-                          await updateParticipant.mutateAsync({
-                            participantId: participant.id,
-                            pollId: poll.id,
-                            votes,
-                          });
-                          setEditingParticipantId();
                         }}
                       />
                     );
@@ -253,22 +201,17 @@ const DesktopPoll: React.FunctionComponent = () => {
           </table>
         </div>
       </div>
-      {shouldShowNewParticipantForm || editingParticipantId ? (
+      {mode !== "view" ? (
         <div className="flex shrink-0 items-center border-t bg-gray-50">
           <div className="flex w-full items-center justify-between gap-3 p-3">
             <Button
               onClick={() => {
-                votingForm.reset();
-                if (editingParticipantId) {
-                  setEditingParticipantId();
-                } else {
-                  setShouldShowNewParticipantForm(false);
-                }
+                votingForm.cancel();
               }}
             >
               {t("cancel")}
             </Button>
-            {shouldShowNewParticipantForm ? (
+            {mode === "new" ? (
               <Button
                 type="submit"
                 variant="primary"

@@ -9,7 +9,6 @@ import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 import { usePermissions } from "@/contexts/permissions";
 
-import { ParticipantFormSubmitted } from "../types";
 import UserAvatar from "../user-avatar";
 import VoteIcon from "../vote-icon";
 import ParticipantRowForm from "./participant-row-form";
@@ -19,7 +18,6 @@ export interface ParticipantRowProps {
   className?: string;
   editMode?: boolean;
   onChangeEditMode?: (editMode: boolean) => void;
-  onSubmit?: (data: ParticipantFormSubmitted) => Promise<void>;
 }
 
 export const ParticipantRowView: React.FunctionComponent<{
@@ -65,7 +63,6 @@ export const ParticipantRowView: React.FunctionComponent<{
 const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   participant,
   editMode,
-  onSubmit,
   className,
   onChangeEditMode,
 }) => {
@@ -82,10 +79,6 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
       <ParticipantRowForm
         name={participant.name}
         isYou={isYou}
-        onSubmit={async ({ votes }) => {
-          await onSubmit?.({ votes });
-          onChangeEditMode?.(false);
-        }}
         onCancel={() => onChangeEditMode?.(false)}
       />
     );

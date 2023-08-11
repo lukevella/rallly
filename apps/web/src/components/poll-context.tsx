@@ -4,7 +4,6 @@ import { keyBy } from "lodash";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import { usePermissions } from "@/contexts/permissions";
 import {
   decodeOptions,
   ParsedDateOption,
@@ -16,10 +15,8 @@ import { GetPollApiResponse } from "@/utils/trpc/types";
 import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
 import { useRequiredContext } from "./use-required-context";
-import { useUser } from "./user-provider";
 
 type PollContextValue = {
-  userAlreadyVoted: boolean;
   poll: GetPollApiResponse;
   urlId: string;
   admin: boolean;
@@ -51,9 +48,6 @@ export const PollContextProvider: React.FunctionComponent<{
 }> = ({ poll, urlId, admin, children }) => {
   const { t } = useTranslation();
   const { participants } = useParticipants();
-  const { user } = useUser();
-
-  const { canEditParticipant } = usePermissions();
 
   const getScore = React.useCallback(
     (optionId: string) => {
@@ -95,11 +89,6 @@ export const PollContextProvider: React.FunctionComponent<{
       return participant;
     };
 
-    const userAlreadyVoted =
-      user && participants
-        ? participants.some((participant) => canEditParticipant(participant.id))
-        : false;
-
     const optionIds = poll.options.map(({ id }) => id);
 
     const participantById = keyBy(
@@ -119,7 +108,6 @@ export const PollContextProvider: React.FunctionComponent<{
 
     return {
       optionIds,
-      userAlreadyVoted,
       poll,
       urlId,
       admin,
@@ -137,7 +125,7 @@ export const PollContextProvider: React.FunctionComponent<{
       },
       getScore,
     };
-  }, [admin, canEditParticipant, getScore, participants, poll, urlId, user]);
+  }, [admin, getScore, participants, poll, urlId]);
 
   if (poll.deleted) {
     return (

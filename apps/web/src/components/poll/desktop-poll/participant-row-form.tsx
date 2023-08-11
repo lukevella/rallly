@@ -6,13 +6,11 @@ import { Controller } from "react-hook-form";
 import { useVotingForm } from "@/components/poll/voting-form";
 
 import { usePoll } from "../../poll-context";
-import { ParticipantFormSubmitted } from "../types";
 import UserAvatar, { YouAvatar } from "../user-avatar";
 import { VoteSelector } from "../vote-selector";
 
 export interface ParticipantRowFormProps {
   name?: string;
-  onSubmit: (data: ParticipantFormSubmitted) => Promise<void>;
   className?: string;
   isYou?: boolean;
   onCancel?: () => void;

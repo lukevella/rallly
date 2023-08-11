@@ -32,14 +32,7 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();
 
-  const {
-    poll,
-    admin,
-    getParticipantById,
-    optionIds,
-    getVote,
-    userAlreadyVoted,
-  } = pollContext;
+  const { poll, admin, getParticipantById, optionIds, getVote } = pollContext;
 
   const { options } = useOptions();
   const { participants } = useParticipants();
@@ -70,7 +63,7 @@ const MobilePoll: React.FunctionComponent = () => {
   const { canEditParticipant, canAddNewParticipant } = usePermissions();
 
   const [isEditing, setIsEditing] = React.useState(
-    canAddNewParticipant && !userAlreadyVoted,
+    canAddNewParticipant && !participants.some((p) => canEditParticipant(p.id)),
   );
 
   useUpdateEffect(() => {
