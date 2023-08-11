@@ -206,5 +206,22 @@
   "featureRequest": "Javasolj új funkciót",
   "bugReport": "Jelezz hibákat",
   "getSupport": "Kérj segítséget",
-  "feedback": "Visszajelzés"
+  "feedback": "Visszajelzés",
+  "duplicate": "Duplikálás",
+  "duplicateDescription": "Hozz létre egy új szavazást ez alapján",
+  "duplicateTitleLabel": "Cím",
+  "duplicateTitleDescription": "Tipp: Adj egyedi nevet az új szavazásodnak",
+  "thankYou": "Köszönjük!",
+  "pleaseWait": "A felhasználói csomagod frissítjük. Ez csak egy pár másodpercet vesz igénybe.",
+  "proFeature": "Pro funkció",
+  "upgradeOverlaySubtitle2": "Kérlek frissítsd a csomagod hogy használhasd ezt a funkciót. Így tudjuk üzemeltetni az alkalmazást :)",
+  "savePercent": "Spórolj {percent}%-ot",
+  "priceIncreaseSoon": "Az ár hamarosan emelkedik.",
+  "lockPrice": "Frissítsd ma, hogy örökre ezt az árat fizesd.",
+  "noAds": "Nincs reklám",
+  "upgrade": "Frissítsd",
+  "notToday": "Nem ma",
+  "supportProject": "Támogasd a projektet",
+  "features": "Szerezz hozzáférést az aktuális és jövőbeli Pro funkciókhoz!",
+  "continueAsGuest": "Folytatás vendégként"
 }
