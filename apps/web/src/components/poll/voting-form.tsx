@@ -2,6 +2,11 @@ import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
+import { useNewParticipantModal } from "@/components/new-participant-modal";
+import {
+  normalizeVotes,
+  useUpdateParticipantMutation,
+} from "@/components/poll/mutations";
 import { usePoll } from "@/contexts/poll";
 
 const formSchema = z.object({
@@ -21,7 +26,12 @@ export const useVotingForm = () => {
 };
 
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
-  const { options } = usePoll();
+  const { id: pollId, options } = usePoll();
+  const showNewParticipantModal = useNewParticipantModal();
+  const updateParticipant = useUpdateParticipantMutation();
+
+  const optionIds = options.map((option) => option.id);
+
   const form = useForm<VotingFormValues>({
     defaultValues: {
       votes: options.map((option) => ({
@@ -33,17 +43,31 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => {
-          console.log("new-partiipant");
+        onSubmit={form.handleSubmit(async (data) => {
+          if (data.participantId) {
+            // update participant
+            await updateParticipant.mutateAsync({
+              participantId: data.participantId,
+              pollId,
+              votes: normalizeVotes(optionIds, data.votes),
+            });
+
+            form.reset({
+              participantId: undefined,
+              votes: options.map((option) => ({
+                optionId: option.id,
+              })),
+            });
+          } else {
+            // new participant
+            showNewParticipantModal({
+              votes: normalizeVotes(optionIds, data.votes),
+            });
+          }
         })}
-      />
-      <form
-        id="edit-participant-form"
-        onSubmit={form.handleSubmit((data) => {
-          console.log("edit-partiipant");
-        })}
-      />
-      {children}
+      >
+        {children}
+      </form>
     </FormProvider>
   );
 };

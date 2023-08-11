@@ -4,7 +4,7 @@ export interface ParticipantForm {
   votes: Array<
     | {
         optionId: string;
-        type: VoteType;
+        type?: VoteType;
       }
     | undefined
   >;
