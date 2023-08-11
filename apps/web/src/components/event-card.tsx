@@ -71,7 +71,7 @@ export const EventCard = () => {
                       : `${adjustTimeZone(
                           poll.event.start,
                           !poll.timeZone,
-                        ).format("LLL")} - ${adjustTimeZone(
+                        ).format("LL LT")} - ${adjustTimeZone(
                           dayjs(poll.event.start).add(
                             poll.event.duration,
                             "minutes",
