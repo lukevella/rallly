@@ -213,10 +213,11 @@ export const DayjsProvider: React.FunctionComponent<{
   return (
     <DayjsContext.Provider
       value={{
-        adjustTimeZone: (date, keepLocalTime) =>
-          keepLocalTime
-            ? dayjs(date).tz("GMT")
-            : dayjs(date).tz(preferredTimeZone),
+        adjustTimeZone: (date, keepLocalTime) => {
+          return keepLocalTime
+            ? dayjs(date).utc()
+            : dayjs(date).tz(preferredTimeZone);
+        },
         dayjs,
         locale,
         timeZone: preferredTimeZone,
