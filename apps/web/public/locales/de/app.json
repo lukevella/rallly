@@ -206,5 +206,22 @@
   "featureRequest": "Ein Feature vorschlagen",
   "bugReport": "Problem melden",
   "getSupport": "Hilfe erhalten",
-  "feedback": "Feedback"
+  "feedback": "Feedback",
+  "duplicate": "Duplizieren",
+  "duplicateDescription": "Erstelle eine neue Kopie dieser Umfrage",
+  "duplicateTitleLabel": "Titel",
+  "duplicateTitleDescription": "Tipp: Gib deiner neuen Umfrage einen einzigartigen Titel",
+  "thankYou": "Vielen Dank!",
+  "pleaseWait": "Dein Konto wird aktualisiert. Dies sollte nur einige Sekunden dauern.",
+  "proFeature": "Pro-Funktionen",
+  "upgradeOverlaySubtitle2": "Bitte upgrade auf einen kostenpflichtigen Plan, um dieses Feature zu nutzen. So halten wir die Lichter an :)",
+  "savePercent": "Spare {percent}%",
+  "priceIncreaseSoon": "Preis steigt demnächst.",
+  "lockPrice": "Upgrade noch heute, um diesen Preis für immer zu behalten.",
+  "noAds": "Keine Werbung",
+  "upgrade": "Upgrade",
+  "notToday": "Heute nicht",
+  "supportProject": "Unterstütze dieses Projekt",
+  "features": "Erhalte Zugriff auf alle aktuellen und zukünftigen Pro-Funktionen!",
+  "continueAsGuest": "Als Gast fortfahren"
 }
