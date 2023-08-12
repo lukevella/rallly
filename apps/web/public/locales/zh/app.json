@@ -206,5 +206,22 @@
   "featureRequest": "请求功能",
   "bugReport": "反馈问题",
   "getSupport": "获取支持",
-  "feedback": "反馈"
+  "feedback": "反馈",
+  "duplicate": "复制",
+  "duplicateDescription": "基于此投票创建一个新的投票。",
+  "duplicateTitleLabel": "标题",
+  "duplicateTitleDescription": "提示：请为你的新投票起一个独一无二的标题",
+  "thankYou": "谢谢你！",
+  "pleaseWait": "您的账户正在升级中，这个过程通常只需要几秒钟的时间。",
+  "proFeature": "专业版功能",
+  "upgradeOverlaySubtitle2": "请升级到付费方案以使用此功能。这是我们维持运营的方式 :)",
+  "savePercent": "节省 {percent}%",
+  "priceIncreaseSoon": "即将涨价",
+  "lockPrice": "立即升级以永久享受此价格。",
+  "noAds": "无广告",
+  "upgrade": "升级",
+  "notToday": "今天不行",
+  "supportProject": "支持这个项目",
+  "features": "获取当前和未来的所有专业版功能！",
+  "continueAsGuest": "以游客身份继续"
 }
