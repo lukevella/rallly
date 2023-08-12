@@ -1,6 +1,6 @@
 {
   "pricing": "Preise",
-  "pricingDescription": "Kostenlos loslegen. Kein Login erforderlich.",
+  "pricingDescription": "Starte kostenlos. Keine Anmeldung erforderlich.",
   "annualBilling": "Jährliche Abrechnung (Spare {discount}%)",
   "planFree": "Kostenlos",
   "freeForever": "dauerhaft kostenlos",
@@ -24,5 +24,6 @@
   "howToUpgradeAnswer": "Um ein Upgrade durchzuführen, kannst du zu deinen <a>Abrechnungseinstellungen</a> gehen und auf <b>Upgrade</b> klicken.",
   "cancelSubscription": "Wie kann ich mein Abo kündigen?",
   "cancelSubscriptionAnswer": "Du kannst dein Abonnement jederzeit kündigen, indem du zu deinen <a>Abrechnungseinstellungen</a> gehst. Nach der Kündigung hast du weiterhin Zugriff auf deinen kostenpflichtigen Plan bis zum Ende deines Abrechnungszeitraums. Danach wirst du auf einen kostenlosen Plan zurückgestuft.",
+  "earlyAccess": "Frühbucherrabatt",
   "customPollSettings": "Anpassbare Umfrageeinstellungen"
 }
