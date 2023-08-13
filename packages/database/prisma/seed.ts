@@ -20,7 +20,7 @@ async function main() {
   const polls = await Promise.all(
     Array.from({ length: 20 }).map(async (_, i) => {
       // create some polls with no duration (all day) and some with a random duration.
-      const duration = i % 5 === 0 ? 15 * randInt(8) : 0;
+      const duration = i % 2 === 0 ? 15 * randInt(8) : 0;
       const poll = await prisma.poll.create({
         include: {
           participants: true,
@@ -43,7 +43,7 @@ async function main() {
               .betweens(
                 Date.now(),
                 Date.now() + 1000 * 60 * 60 * 24 * 30,
-                randInt(16, 1),
+                randInt(30, 1),
               )
               .map((date) => {
                 // rounded to nearest 15 minutes

@@ -8,19 +8,17 @@ export const DateIconInner = (props: {
   className?: string;
 }) => {
   return (
-    <div className="inline-block text-center">
-      <div
-        className={clsx(
-          "inline-block w-12 overflow-hidden rounded-md border bg-gray-50 text-center text-slate-800",
-          props.className,
-        )}
-      >
-        <div className="text-muted-foreground border-b border-gray-200 text-xs font-normal leading-5">
-          {props.dow}
-        </div>
-        <div className="flex h-7 items-center justify-center bg-white text-lg font-semibold leading-none tracking-tight">
-          {props.day}
-        </div>
+    <div
+      className={clsx(
+        "inline-flex h-12 w-12 flex-col overflow-hidden rounded-md border bg-gray-50 text-center text-slate-800",
+        props.className,
+      )}
+    >
+      <div className="text-muted-foreground border-b border-gray-200 text-xs font-normal leading-4">
+        {props.dow}
+      </div>
+      <div className="flex grow items-center justify-center bg-white text-lg font-semibold leading-none tracking-tight">
+        {props.day}
       </div>
     </div>
   );

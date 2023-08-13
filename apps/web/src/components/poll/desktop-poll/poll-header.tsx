@@ -41,6 +41,25 @@ const TimelineRow = ({
   );
 };
 
+const monthRowHeight = 48;
+const dayRowHeight = 64;
+
+const scoreRowTop = monthRowHeight + dayRowHeight;
+
+const Trail = ({ end }: { end?: boolean }) => {
+  return end ? (
+    <div aria-hidden="true" className="absolute top-6 left-0 z-10 h-full w-1/2">
+      <div className="h-px bg-gray-200" />
+      <div className="absolute right-0 top-0 h-full w-px bg-gray-200" />
+    </div>
+  ) : (
+    <div
+      aria-hidden="true"
+      className="absolute top-6 h-px w-full bg-gray-200"
+    />
+  );
+};
+
 const PollHeader: React.FunctionComponent = () => {
   const { options } = useOptions();
   return (
@@ -54,23 +73,14 @@ const PollHeader: React.FunctionComponent = () => {
           return (
             <th
               key={option.optionId}
+              style={{ height: monthRowHeight }}
               className={cn(
-                "sticky top-0 h-12 space-y-3 bg-white",
+                "sticky top-0 space-y-3 bg-white",
                 firstOfMonth ? "left-[240px] z-20" : "z-10",
               )}
             >
               <div className="flex items-center justify-center">
-                {firstOfMonth ? null : lastOfMonth ? (
-                  <div
-                    aria-hidden="true"
-                    className="absolute top-6 left-0 w-1/2"
-                  >
-                    <div className="h-px bg-gray-200" />
-                    <div className="absolute right-0 top-0 h-2 w-px bg-gray-100" />
-                  </div>
-                ) : (
-                  <div className="absolute top-6 h-px w-full bg-gray-100" />
-                )}
+                {firstOfMonth ? null : <Trail end={lastOfMonth} />}
                 <div
                   className={cn(
                     "h-5 px-2 py-0.5 text-sm font-semibold",
@@ -84,15 +94,47 @@ const PollHeader: React.FunctionComponent = () => {
           );
         })}
       </TimelineRow>
-      <TimelineRow top={48}>
+      <TimelineRow top={monthRowHeight}>
+        {options.map((option, i) => {
+          const firstOfDay =
+            i === 0 ||
+            options[i - 1]?.day !== option.day ||
+            options[i - 1]?.month !== option.month;
+          const lastOfDay =
+            options[i + 1]?.day !== option.day ||
+            options[i + 1]?.month !== option.month;
+          return (
+            <th
+              key={option.optionId}
+              style={{
+                minWidth: 80,
+                width: 80,
+                maxWidth: 90,
+                height: dayRowHeight,
+                // could enable this to make the date column sticky
+                // left: firstOfDay ? 240 : 0,
+                top: monthRowHeight,
+              }}
+              className={cn("sticky z-10 space-y-2 bg-white align-top")}
+            >
+              {firstOfDay ? null : <Trail end={lastOfDay} />}
+              <DateIconInner
+                className={firstOfDay ? "opacity-100" : "opacity-0"}
+                day={option.day}
+                dow={option.dow}
+              />
+            </th>
+          );
+        })}
+      </TimelineRow>
+      <TimelineRow top={scoreRowTop}>
         {options.map((option) => {
           return (
             <th
               key={option.optionId}
-              style={{ minWidth: 80, maxWidth: 90 }}
-              className="sticky top-12 z-20 h-16 space-y-2 bg-white pb-3"
+              style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
+              className="sticky z-20 space-y-2 bg-white py-2"
             >
-              <DateIconInner day={option.day} dow={option.dow} />
               {option.type === "timeSlot" ? (
                 <TimeRange start={option.startTime} end={option.endTime} />
               ) : null}
