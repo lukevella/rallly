@@ -19,7 +19,7 @@ import { Trans } from "next-i18next";
 const FeedbackButton = () => {
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger className="shadow-huge fixed bottom-8 right-6 hidden h-12 w-12 items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 active:shadow-none sm:inline-flex">
+      <DropdownMenuTrigger className="shadow-huge fixed bottom-8 right-6 z-20 hidden h-12 w-12 items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 active:shadow-none sm:inline-flex">
         <MegaphoneIcon className="h-5 text-white" />
       </DropdownMenuTrigger>
       <DropdownMenuContent sideOffset={10} align="end">

@@ -5,9 +5,10 @@
   "main": "tailwind.config.js",
   "types": "tailwind.config.d.ts",
   "dependencies": {
-    "tailwindcss": "^3.2.7"
+    "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
-    "tailwind-scrollbar": "^3.0.4"
+    "tailwind-scrollbar": "^3.0.4",
+    "tailwindcss-animate": "^1.0.5"
   }
 }
