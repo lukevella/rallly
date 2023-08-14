@@ -114,15 +114,12 @@ const PollHeader: React.FunctionComponent = () => {
                 width: 80,
                 maxWidth: 90,
                 height: dayRowHeight,
-                // could enable this to make the date column sticky
-                left: firstOfDay ? 240 : 0,
+                left: firstOfDay && !lastOfDay ? 240 : 0,
                 top: monthRowHeight,
               }}
               className={cn(
-                "sticky space-y-2 align-top",
-                firstOfDay
-                  ? "z-20 bg-gradient-to-r from-transparent to-white"
-                  : "z-10 bg-white",
+                "sticky space-y-2 bg-white align-top",
+                firstOfDay ? "z-20" : "z-10",
               )}
             >
               {firstOfDay ? null : <Trail end={lastOfDay} />}
