@@ -15,6 +15,14 @@
   "notFoundTitle": "404: Не найдено",
   "notFoundDescription": "Мы не можем найти страницу, которую вы искали.",
   "goToHome": "Вернуться на главную",
+  "goToApp": "К приложению",
+  "pricing": "Цены",
+  "bestDoodleAlternative": "Лучшая альтернатива Doodle",
+  "freeSchedulingPoll": "Бесплатные опции расписания",
+  "findATime": "Найти время",
   "getStarted": "Начать",
-  "metaDescription": "Создавайте опросы и голосуйте за лучший день или время. Бесплатная альтернатива Doodle."
+  "metaTitle": "Rallly - Расписание групповых встреч",
+  "metaDescription": "Создавайте опросы и голосуйте за лучший день или время. Бесплатная альтернатива Doodle.",
+  "availabilityPoll": "Опрос доступности",
+  "solutions": "Решения"
 }
