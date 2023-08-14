@@ -96,6 +96,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
   return (
     <FormProvider {...form}>
       <form
+        id="voting-form"
         onSubmit={form.handleSubmit(async (data) => {
           const optionIds = options.map((option) => option.id);
 
@@ -130,9 +131,8 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
             });
           }
         })}
-      >
-        {children}
-      </form>
+      />
+      {children}
     </FormProvider>
   );
 };

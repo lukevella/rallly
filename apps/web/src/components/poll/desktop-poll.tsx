@@ -164,7 +164,7 @@ const DesktopPoll: React.FunctionComponent = () => {
         />
         <div
           ref={scrollRef}
-          className="scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 max-h-[800px] flex-grow overflow-auto scroll-smooth pr-3 pb-3"
+          className="scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth pr-3 pb-3"
         >
           <table className="w-full table-auto border-separate border-spacing-0 ">
             <thead>
@@ -213,6 +213,7 @@ const DesktopPoll: React.FunctionComponent = () => {
             </Button>
             {mode === "new" ? (
               <Button
+                form="voting-form"
                 type="submit"
                 variant="primary"
                 loading={votingForm.formState.isSubmitting}
@@ -221,6 +222,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               </Button>
             ) : (
               <Button
+                form="voting-form"
                 type="submit"
                 variant="primary"
                 loading={votingForm.formState.isSubmitting}

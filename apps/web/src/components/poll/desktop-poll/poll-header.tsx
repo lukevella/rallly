@@ -50,13 +50,16 @@ const Trail = ({ end }: { end?: boolean }) => {
   return end ? (
     <div aria-hidden="true" className="absolute top-6 left-0 z-10 h-full w-1/2">
       <div className="h-px bg-gray-200" />
-      <div className="absolute right-0 top-0 h-full w-px bg-gray-200" />
+      <div className="absolute right-0 top-0 h-5 w-px bg-gray-200" />
     </div>
   ) : (
     <div
       aria-hidden="true"
-      className="absolute top-6 h-px w-full bg-gray-200"
-    />
+      className={cn("absolute top-6 left-0 z-10 h-full w-full")}
+    >
+      <div className="h-px bg-gray-200" />
+      <div className={cn("absolute right-1/2 top-0 h-2 w-px bg-gray-200")} />
+    </div>
   );
 };
 
@@ -112,10 +115,15 @@ const PollHeader: React.FunctionComponent = () => {
                 maxWidth: 90,
                 height: dayRowHeight,
                 // could enable this to make the date column sticky
-                // left: firstOfDay ? 240 : 0,
+                left: firstOfDay ? 240 : 0,
                 top: monthRowHeight,
               }}
-              className={cn("sticky z-10 space-y-2 bg-white align-top")}
+              className={cn(
+                "sticky space-y-2 align-top",
+                firstOfDay
+                  ? "z-20 bg-gradient-to-r from-transparent to-white"
+                  : "z-10 bg-white",
+              )}
             >
               {firstOfDay ? null : <Trail end={lastOfDay} />}
               <DateIconInner
