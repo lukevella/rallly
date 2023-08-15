@@ -1,7 +1,5 @@
 {
   "createPageLikeThis": "Create a page like this in seconds!",
-  "opensource": "We're Open Source!",
-  "startUsOnGithub": "Star us on Github",
   "noLoginRequired": "No login required",
   "headline": "Ditch the back-and-forth emails",
   "subheading": "Streamline your scheduling process and save time",
@@ -34,5 +32,8 @@
   "freeSchedulingPollMetaTitle": "Free Scheduling Poll | Rallly",
   "freeSchedulingPollMetaDescription": "Create a free scheduling poll in seconds. Ideal for organizing meetings, events, conferences, sports teams and more.",
   "freeSchedulingPollTitle": "Looking for a free scheduling poll?",
-  "freeSchedulingPollDescription": "Rallly let's you create beautiful and easy to use scheduling polls so you can find the best time for your next event."
+  "freeSchedulingPollDescription": "Rallly let's you create beautiful and easy to use scheduling polls so you can find the best time for your next event.",
+  "new": "New",
+  "julyRecap": "July Recap",
+  "pricingUpdates": "Pricing Updates"
 }
