@@ -166,7 +166,7 @@ const Mention = ({
       }}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: "all" }}
+      viewport={{ once: true }}
       className="flex flex-col items-center space-y-4 rounded-md"
     >
       <div className="flex items-start justify-between">{logo}</div>
