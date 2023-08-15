@@ -27,7 +27,7 @@ const Item = ({
         type: "spring",
         bounce: 0.5,
       }}
-      initial={{ opacity: 0, y: -50 }}
+      initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: "all" }}
       className="flex justify-center"
