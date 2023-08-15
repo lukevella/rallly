@@ -48,14 +48,14 @@ const scoreRowTop = monthRowHeight + dayRowHeight;
 
 const Trail = ({ end }: { end?: boolean }) => {
   return end ? (
-    <div aria-hidden="true" className="absolute top-6 left-0 z-10 h-full w-1/2">
+    <div aria-hidden="true" className="absolute left-0 top-6 z-10 h-full w-1/2">
       <div className="h-px bg-gray-200" />
       <div className="absolute right-0 top-0 h-5 w-px bg-gray-200" />
     </div>
   ) : (
     <div
       aria-hidden="true"
-      className={cn("absolute top-6 left-0 z-10 h-full w-full")}
+      className={cn("absolute left-0 top-6 z-10 h-full w-full")}
     >
       <div className="h-px bg-gray-200" />
       <div className={cn("absolute right-1/2 top-0 h-2 w-px bg-gray-200")} />
@@ -138,7 +138,7 @@ const PollHeader: React.FunctionComponent = () => {
             <th
               key={option.optionId}
               style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
-              className="sticky z-20 space-y-2 bg-white py-2"
+              className="sticky z-20 space-y-2 bg-white pb-3 pt-2"
             >
               {option.type === "timeSlot" ? (
                 <TimeRange start={option.startTime} end={option.endTime} />
