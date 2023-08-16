@@ -1,0 +1,13 @@
+{
+  "name": "@rallly/og-image",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/og-image.tsx",
+  "types": "src/og-image.tsx",
+  "dependencies": {
+    "@vercel/og": "^0.5.11"
+  },
+  "devDependencies": {
+    "@rallly/tsconfig": "*"
+  }
+}
