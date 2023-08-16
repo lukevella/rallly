@@ -7,18 +7,9 @@ export const BlogLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="mx-auto w-full max-w-2xl">
       <div>{children}</div>
-      <Script
-        id="mailerlite"
-        dangerouslySetInnerHTML={{
-          __html: `(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
-            .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
-            n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
-            (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
-            ml('account', '99567');`,
-        }}
-      />
+      <Script id="mailerlite" src="/static/scripts/mailerlite.js" />
       <div className="mt-16 overflow-hidden rounded-md border bg-gray-200/50 backdrop-blur-sm">
-        <div className="flex flex-col gap-y-2 gap-x-4 p-6  pb-0 sm:flex-row">
+        <div className="flex flex-col gap-x-4 gap-y-2 p-6  pb-0 sm:flex-row">
           <div>
             <NewspaperIcon className="h-6 w-6" />
           </div>
