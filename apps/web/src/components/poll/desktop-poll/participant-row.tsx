@@ -48,7 +48,12 @@ export const ParticipantRowView: React.FunctionComponent<{
           <td key={i} className={clsx("h-12 p-1")}>
             <div
               className={clsx(
-                "flex h-full w-full items-center justify-center rounded border bg-gray-50",
+                "flex h-full items-center justify-center rounded-md border",
+                {
+                  "border-green-200 bg-green-50": vote === "yes",
+                  "border-amber-100 bg-amber-50": vote === "ifNeedBe",
+                  "bg-gray-50": vote === "no",
+                },
               )}
             >
               <VoteIcon type={vote} />
