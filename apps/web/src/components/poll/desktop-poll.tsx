@@ -8,6 +8,7 @@ import {
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { AnimatePresence, m } from "framer-motion";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure, useScroll } from "react-use";
@@ -149,7 +150,7 @@ const DesktopPoll: React.FunctionComponent = () => {
             <div className="text-sm font-medium">
               {t("optionCount", { count: poll.options.length })}
             </div>
-            {isOverflowing ? (
+            {isOverflowing || expanded ? (
               <div className="flex gap-2">
                 <Button disabled={x === 0} onClick={goToPreviousPage}>
                   <ArrowLeftIcon className="h-4 w-4" />
@@ -166,7 +167,15 @@ const DesktopPoll: React.FunctionComponent = () => {
                 >
                   <ArrowRightIcon className="h-4 w-4" />
                 </Button>
-                {expanded ? null : (
+                {expanded ? (
+                  <Button
+                    onClick={() => {
+                      collapse();
+                    }}
+                  >
+                    <ExpandIcon className="h-4 w-4" />
+                  </Button>
+                ) : (
                   <Button
                     onClick={() => {
                       expand();
@@ -176,15 +185,6 @@ const DesktopPoll: React.FunctionComponent = () => {
                   </Button>
                 )}
               </div>
-            ) : null}
-            {expanded ? (
-              <Button
-                onClick={() => {
-                  collapse();
-                }}
-              >
-                <ShrinkIcon className="h-4 w-4" />
-              </Button>
             ) : null}
           </div>
         </div>
