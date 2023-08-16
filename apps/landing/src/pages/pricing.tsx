@@ -33,17 +33,19 @@ const Page: NextPageWithLayout = () => {
   return (
     <div className="mx-auto bg-gray-100">
       <NextSeo title={t("common:pricing", { defaultValue: "Pricing" })} />
-      <h1 className="mb-4 text-4xl font-bold tracking-tight">
-        <Trans i18nKey="pricing:pricing">Pricing</Trans>
-      </h1>
-      <p className="text-muted-foreground text-lg">
-        <Trans
-          i18nKey="pricing:pricingDescription"
-          defaults="Get started for free. No login required."
-        />
-      </p>
-      <div className="my-8">
-        <div className="mb-4 flex items-center gap-x-2">
+      <div className="text-center">
+        <h1 className="mb-4 text-4xl font-bold tracking-tight">
+          <Trans i18nKey="pricing:pricing">Pricing</Trans>
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          <Trans
+            i18nKey="pricing:pricingDescription"
+            defaults="Get started for free. No login required."
+          />
+        </p>
+      </div>
+      <div className="mx-auto my-8 max-w-2xl">
+        <div className="mb-8 flex items-center justify-center gap-x-2">
           <Switch
             id="annual-billing"
             checked={annualBilling}

@@ -20,6 +20,7 @@ const PostPreview = ({ title, date, excerpt, slug }: Props) => {
       <div className="grow">
         <h3 className="mb-3 text-lg font-bold tracking-tight">
           <Link
+            locale="en"
             as={`/blog/${slug}`}
             href="/blog/[slug]"
             className="hover:text-indigo-600 hover:underline"

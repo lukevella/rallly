@@ -1,4 +1,5 @@
-import { ChevronRightIcon, GithubIcon } from "@rallly/icons";
+import { ChevronRightIcon } from "@rallly/icons";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { preventWidows } from "@rallly/utils";
 import { m } from "framer-motion";
@@ -36,8 +37,8 @@ const Screenshot = () => {
           defaults="Create a page like this in seconds!"
         />
         <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
-        <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-        <span className="absolute left-1/2 -bottom-12 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute -bottom-12 left-1/2 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute -bottom-12 left-1/2 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
       </m.div>
       <m.div
         transition={{
@@ -89,27 +90,35 @@ export const MarketingHero = ({
       animate={{ opacity: 1, y: 0 }}
       className="mt-8 max-w-full text-center sm:mt-16"
     >
-      <m.div className="mb-8">
+      <m.div
+        transition={{
+          type: "spring",
+          bounce: 0.4,
+          delay: 0.2,
+          duration: 1,
+        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
         <Link
-          target="_blank"
-          href="https://github.com/lukevella/rallly"
-          className="hover:ring-primary hover:text-primary relative inline-flex items-center gap-x-4 rounded-full bg-gray-100 px-4 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10"
+          locale="en"
+          href="/blog/july-recap"
+          className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
         >
+          <Badge className="bg-green-500">
+            <Trans i18nKey="home:new" defaults="New" />
+          </Badge>
           <span className="hidden sm:block">
-            <Trans i18nKey="home:opensource" defaults="We're Open Source!" />
+            <Trans i18nKey="home:julyRecap" defaults="July Recap" />
           </span>
           <span
             className="hidden h-4 w-px bg-gray-900/10 sm:block"
             aria-hidden="true"
           />
           <span className="flex items-center gap-x-1">
-            <span className="absolute inset-0" aria-hidden="true" />
-            <GithubIcon className="mr-1 h-4 w-4" />
-            <Trans
-              i18nKey="home:startUsOnGithub"
-              defaults="Star us on Github"
-            />
-            <ChevronRightIcon className="-mr-2 h-4 w-4" aria-hidden="true" />
+            <Trans i18nKey="home:pricingUpdates" defaults="Pricing Updates" />
+            <ChevronRightIcon className="-mr-1 h-4 w-4" aria-hidden="true" />
           </span>
         </Link>
       </m.div>
