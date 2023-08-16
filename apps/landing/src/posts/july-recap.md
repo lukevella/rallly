@@ -1,7 +1,7 @@
 ---
-title: July Recap
+title: July Recap & Pricing Updates
 date: "2023-08-16"
-excerpt: Wow, time flies! It's been over a month since the Rallly Pro launch.
+excerpt: A recap of what has changed and some information about the upcoming pricing changes.
 ---
 
 Wow, time flies!
@@ -38,6 +38,6 @@ The updated prices will kick in on **1st September 2023** (so you have until the
 
 ## 👍 Thank you
 
-To all the subscribers and sponsors who make it possible for me to continue my work here.
+To all the subscribers and sponsors who make it possible for me to continue my work on Rallly.
 
 Cheers!
