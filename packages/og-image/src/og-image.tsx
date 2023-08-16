@@ -50,7 +50,9 @@ export default async function handler(req: NextRequest) {
           <h2 tw="flex flex-col text-7xl leading-tight font-bold tracking-tight text-gray-900 text-left">
             <span>{title}</span>
           </h2>
-          <p tw="text-4xl leading-relaxed text-gray-500">{excerpt}</p>
+          {excerpt ? (
+            <p tw="text-4xl leading-relaxed text-gray-500">{excerpt}</p>
+          ) : null}
         </div>
       </div>
     ),

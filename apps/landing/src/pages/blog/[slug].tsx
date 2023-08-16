@@ -64,16 +64,6 @@ const Page: NextPageWithLayout<Props> = ({ post }) => {
       <article>
         <Head>
           <title>{post.title}</title>
-          <meta
-            property="og:image"
-            content={`${
-              process.env.NEXT_PUBLIC_BASE_URL
-            }/api/og-image?type=${encodeURIComponent(
-              "Blog",
-            )}&title=${encodeURIComponent(
-              post.title,
-            )}&excerpt=${encodeURIComponent(post.excerpt)}`}
-          />
         </Head>
         <PostHeader title={post.title} date={post.date} />
         <PostBody content={post.content} />
