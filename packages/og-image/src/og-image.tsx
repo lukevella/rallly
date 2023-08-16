@@ -34,7 +34,7 @@ export default async function handler(req: NextRequest) {
           backgroundColor: "white",
         }}
       >
-        <div tw="bg-gray-50 h-full flex-col w-full px-24 py-16 flex">
+        <div tw="bg-gray-50 h-full flex-col w-full px-18 py-16 flex">
           <div tw="mb-16 flex justify-between">
             <div tw="flex justify-between items-center w-full">
               <img

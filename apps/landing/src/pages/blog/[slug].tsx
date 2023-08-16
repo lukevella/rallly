@@ -38,9 +38,13 @@ const Page: NextPageWithLayout<Props> = ({ post }) => {
                 `${absoluteUrl()}/_next/image?w=1200&q=100&url=${encodeURIComponent(
                   `/api/og-image`,
                 )}` +
-                `?type=${encodeURIComponent("Blog")}&title=${encodeURIComponent(
-                  post.title,
-                )}&excerpt=${encodeURIComponent(post.excerpt)}`,
+                encodeURIComponent(
+                  `?type=${encodeURIComponent(
+                    "Blog",
+                  )}&title=${encodeURIComponent(
+                    post.title,
+                  )}&excerpt=${encodeURIComponent(post.excerpt)}`,
+                ),
               width: 1200,
               height: 630,
               alt: post.title,
