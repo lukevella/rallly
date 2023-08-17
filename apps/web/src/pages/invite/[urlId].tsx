@@ -107,10 +107,14 @@ const SEO = () => {
         images: [
           {
             url:
-              absoluteUrl("/api/og-image-poll") +
-              `?title=${encodeURIComponent(
-                truncateText(title, 55),
-              )}&author=${encodeURIComponent(name)}`,
+              `${absoluteUrl()}/_next/image?w=1200&q=100&url=${encodeURIComponent(
+                `/api/og-image-poll`,
+              )}` +
+              encodeURIComponent(
+                `?title=${encodeURIComponent(
+                  truncateText(title, 55),
+                )}&author=${encodeURIComponent(name)}`,
+              ),
             width: 1200,
             height: 630,
             alt: title,
