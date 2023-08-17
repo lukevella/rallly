@@ -223,9 +223,5 @@
   "notToday": "Not Today",
   "supportProject": "Support this project",
   "features": "Get access to all current and future Pro features!",
-  "continueAsGuest": "Continue as Guest",
-  "scrollLeft": "Scroll Left",
-  "scrollRight": "Scroll Right",
-  "shrink": "Shrink",
-  "expand": "Expand"
+  "continueAsGuest": "Continue as Guest"
 }
