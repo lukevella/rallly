@@ -1,14 +1,17 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ExpandIcon,
   PlusIcon,
+  ShrinkIcon,
   Users2Icon,
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
-import { useScroll } from "react-use";
+import { useMeasure, useScroll } from "react-use";
 
 import { TimesShownIn } from "@/components/clock";
 import { useVotingForm, VotingForm } from "@/components/poll/voting-form";
@@ -66,12 +69,24 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const mode = votingForm.watch("mode");
 
+  const [measureRef, { height }] = useMeasure<HTMLDivElement>();
+
   const { canAddNewParticipant } = usePermissions();
 
   const goToNextPage = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += 240;
     }
+  };
+
+  const [expanded, setExpanded] = React.useState(false);
+
+  const expand = () => {
+    setExpanded(true);
+  };
+
+  const collapse = () => {
+    setExpanded(false);
   };
 
   const goToPreviousPage = () => {
@@ -89,150 +104,203 @@ const DesktopPoll: React.FunctionComponent = () => {
   const { x } = useScroll(scrollRef);
 
   return (
-    <div className="flex flex-col">
-      <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4 py-3">
-        <div>
-          {mode !== "view" ? (
-            <div>
-              <Trans
-                t={t}
-                i18nKey="saveInstruction"
-                values={{
-                  action: mode === "new" ? t("continue") : t("save"),
-                }}
-                components={{ b: <strong /> }}
-              />
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Users2Icon className="h-5 w-5 shrink-0" />
-              <div className="font-semibold">
-                {t("participants", { count: participants.length })} (
-                {participants.length})
-              </div>
-              {canAddNewParticipant ? (
-                <Button
-                  className="ml-2"
-                  size="sm"
-                  data-testid="add-participant-button"
-                  icon={PlusIcon}
-                  onClick={() => {
-                    votingForm.newParticipant();
+    <div ref={measureRef} style={{ height: expanded ? height : undefined }}>
+      <div
+        className={cn(
+          expanded
+            ? "shadow-huge absolute left-1/2 max-w-[calc(100vw-64px)] -translate-x-1/2 -translate-y-1  rounded-md border bg-white"
+            : "",
+        )}
+      >
+        <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4 py-3">
+          <div>
+            {mode !== "view" ? (
+              <div>
+                <Trans
+                  t={t}
+                  i18nKey="saveInstruction"
+                  values={{
+                    action: mode === "new" ? t("continue") : t("save"),
                   }}
+                  components={{ b: <strong /> }}
                 />
-              ) : null}
-            </div>
-          )}
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="font-semibold">
-            {t("optionCount", { count: poll.options.length })}
-          </div>
-          {isOverflowing ? (
-            <div className="flex gap-2">
-              <Button disabled={x === 0} onClick={goToPreviousPage}>
-                <ArrowLeftIcon className="h-4 w-4" />
-              </Button>
-              <Button
-                disabled={Boolean(
-                  scrollRef.current &&
-                    x + scrollRef.current.offsetWidth >=
-                      scrollRef.current.scrollWidth,
-                )}
-                onClick={() => {
-                  goToNextPage();
-                }}
-              >
-                <ArrowRightIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : null}
-        </div>
-      </div>
-      {poll.options[0].duration !== 0 ? (
-        <div className="border-b bg-gray-50 p-3">
-          <TimesShownIn />
-        </div>
-      ) : null}
-      <div className="relative">
-        <div
-          aria-hidden="true"
-          className={cn(
-            "pointer-events-none absolute bottom-2 left-[240px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
-            x > 0 ? "opacity-100" : "opacity-0",
-          )}
-        />
-        <div
-          ref={scrollRef}
-          className="scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth pb-3 pr-3"
-        >
-          <table className="w-full table-auto border-separate border-spacing-0 ">
-            <thead>
-              <PollHeader />
-            </thead>
-            <tbody>
-              {mode === "new" ? (
-                <>
-                  <ParticipantRowForm />
-                  <tr aria-hidden="true">
-                    <td colSpan={poll.options.length + 1} className="py-2" />
-                  </tr>
-                </>
-              ) : null}
-              {visibleParticipants.length > 0
-                ? visibleParticipants.map((participant, i) => {
-                    return (
-                      <ParticipantRow
-                        key={i}
-                        participant={participant}
-                        editMode={
-                          votingForm.watch("participantId") === participant.id
-                        }
-                        onChangeEditMode={(isEditing) => {
-                          if (isEditing) {
-                            votingForm.setEditingParticipantId(participant.id);
-                          }
-                        }}
-                      />
-                    );
-                  })
-                : null}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {mode !== "view" ? (
-        <div className="flex shrink-0 items-center border-t bg-gray-50">
-          <div className="flex w-full items-center justify-between gap-3 p-3">
-            <Button
-              onClick={() => {
-                votingForm.cancel();
-              }}
-            >
-              {t("cancel")}
-            </Button>
-            {mode === "new" ? (
-              <Button
-                form="voting-form"
-                type="submit"
-                variant="primary"
-                loading={votingForm.formState.isSubmitting}
-              >
-                {t("continue")}
-              </Button>
+              </div>
             ) : (
-              <Button
-                form="voting-form"
-                type="submit"
-                variant="primary"
-                loading={votingForm.formState.isSubmitting}
-              >
-                {t("save")}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Users2Icon className="h-5 w-5 shrink-0" />
+                <div className="font-semibold">
+                  {t("participants", { count: participants.length })} (
+                  {participants.length})
+                </div>
+                {canAddNewParticipant ? (
+                  <Button
+                    className="ml-2"
+                    size="sm"
+                    data-testid="add-participant-button"
+                    icon={PlusIcon}
+                    onClick={() => {
+                      votingForm.newParticipant();
+                    }}
+                  />
+                ) : null}
+              </div>
             )}
           </div>
+          <div className="flex items-center gap-4">
+            <div className="text-sm font-medium">
+              {t("optionCount", { count: poll.options.length })}
+            </div>
+            {isOverflowing || expanded ? (
+              <div className="flex gap-2">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button disabled={x === 0} onClick={goToPreviousPage}>
+                      <ArrowLeftIcon className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <Trans i18nKey="scrollLeft" defaults="Scroll Left" />
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      disabled={Boolean(
+                        scrollRef.current &&
+                          x + scrollRef.current.offsetWidth >=
+                            scrollRef.current.scrollWidth,
+                      )}
+                      onClick={() => {
+                        goToNextPage();
+                      }}
+                    >
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <Trans i18nKey="scrollRight" defaults="Scroll Right" />
+                  </TooltipContent>
+                </Tooltip>
+                {expanded ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        icon={ShrinkIcon}
+                        onClick={() => {
+                          collapse();
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <Trans i18nKey="shrink" defaults="Shrink" />
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        icon={ExpandIcon}
+                        onClick={() => {
+                          expand();
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <Trans i18nKey="expand" defaults="Expand" />
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </div>
+            ) : null}
+          </div>
         </div>
-      ) : null}
+        {poll.options[0].duration !== 0 ? (
+          <div className="border-b bg-gray-50 p-3">
+            <TimesShownIn />
+          </div>
+        ) : null}
+        <div className="relative">
+          <div
+            aria-hidden="true"
+            className={cn(
+              "pointer-events-none absolute bottom-2 left-[240px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
+              x > 0 ? "opacity-100" : "opacity-0",
+            )}
+          />
+          <div
+            ref={scrollRef}
+            className="scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth pb-3 pr-3"
+          >
+            <table className="w-full table-auto border-separate border-spacing-0 ">
+              <thead>
+                <PollHeader />
+              </thead>
+              <tbody>
+                {mode === "new" ? (
+                  <>
+                    <ParticipantRowForm />
+                    <tr aria-hidden="true">
+                      <td colSpan={poll.options.length + 1} className="py-2" />
+                    </tr>
+                  </>
+                ) : null}
+                {visibleParticipants.length > 0
+                  ? visibleParticipants.map((participant, i) => {
+                      return (
+                        <ParticipantRow
+                          key={i}
+                          participant={participant}
+                          editMode={
+                            votingForm.watch("participantId") === participant.id
+                          }
+                          onChangeEditMode={(isEditing) => {
+                            if (isEditing) {
+                              votingForm.setEditingParticipantId(
+                                participant.id,
+                              );
+                            }
+                          }}
+                        />
+                      );
+                    })
+                  : null}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {mode !== "view" ? (
+          <div className="flex shrink-0 items-center border-t bg-gray-50">
+            <div className="flex w-full items-center justify-between gap-3 p-3">
+              <Button
+                onClick={() => {
+                  votingForm.cancel();
+                }}
+              >
+                {t("cancel")}
+              </Button>
+              {mode === "new" ? (
+                <Button
+                  form="voting-form"
+                  type="submit"
+                  variant="primary"
+                  loading={votingForm.formState.isSubmitting}
+                >
+                  {t("continue")}
+                </Button>
+              ) : (
+                <Button
+                  form="voting-form"
+                  type="submit"
+                  variant="primary"
+                  loading={votingForm.formState.isSubmitting}
+                >
+                  {t("save")}
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };
