@@ -34,35 +34,38 @@ export default async function handler(req: NextRequest) {
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "white",
-        }}
-      >
-        <div tw="bg-gray-50 h-full flex-col w-full px-18 py-16 flex">
-          <div tw="mb-16 flex justify-between">
-            <div tw="flex justify-between items-center w-full">
-              <img
-                alt="Rallly"
-                src="https://rallly.co/logo-color.svg"
-                height={64}
-              />
-              <div tw="flex text-gray-800 text-3xl tracking-tight font-bold">
-                <span tw="bg-gray-200 px-6 py-3 rounded-full">Poll</span>
-              </div>
+      <div tw="flex relative flex-col bg-gray-100 w-full h-full px-[80px] py-[70px] items-start justify-center">
+        <div tw="h-full flex flex-col w-full justify-start">
+          <div tw="flex justify-between items-center w-full">
+            <img
+              alt="Rallly"
+              src="https://rallly.co/logo-color.svg"
+              height={64}
+            />
+            <div tw="flex text-gray-800 text-3xl tracking-tight font-bold">
+              <span tw="bg-gray-200 px-6 py-3 rounded-full">Invite</span>
             </div>
           </div>
-          <div tw="flex flex-col text-7xl font-bold leading-tight tracking-tight text-gray-900 text-left">
-            {title}
-          </div>
-          <div tw="text-4xl flex m-0 leading-relaxed text-gray-500">
-            by {author}
+          <div tw="relative flex w-full flex-col mt-auto">
+            <div
+              tw="flex text-gray-500 text-[48px] w-[1040px] overflow-hidden"
+              style={{
+                width: 1000,
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              By {author}
+            </div>
+            <div
+              tw="flex mt-3 text-[64px] font-bold w-[1040px] overflow-hidden"
+              style={{
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {title}
+            </div>
           </div>
         </div>
       </div>
