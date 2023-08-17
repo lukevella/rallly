@@ -184,5 +184,9 @@
   "notToday": "Inte idag",
   "supportProject": "Stöd detta projekt",
   "features": "Få tillgång till alla nuvarande och framtida Pro-funktioner!",
-  "continueAsGuest": "Fortsätt som gäst"
+  "continueAsGuest": "Fortsätt som gäst",
+  "scrollLeft": "Rulla åt vänster",
+  "scrollRight": "Rulla åt höger",
+  "shrink": "Krymp",
+  "expand": "Expandera"
 }
