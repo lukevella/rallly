@@ -98,16 +98,19 @@ const truncateText = (text: string, length: number) => {
 const SEO = () => {
   const { t } = useTranslation();
   const { title, user } = usePoll();
+  const name = user ? user.name : t("guest");
   return (
     <NextSeo
       openGraph={{
+        title,
+        description: `By ${name}`,
         images: [
           {
             url:
               absoluteUrl("/api/og-image-poll") +
               `?title=${encodeURIComponent(
                 truncateText(title, 55),
-              )}&author=${encodeURIComponent(user ? user.name : t("guest"))}`,
+              )}&author=${encodeURIComponent(name)}`,
             width: 1200,
             height: 630,
             alt: title,
