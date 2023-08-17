@@ -2,6 +2,7 @@ import {
   DiscordIcon,
   GithubIcon,
   LanguagesIcon,
+  LinkedinIcon,
   TwitterIcon,
 } from "@rallly/icons";
 import languages from "@rallly/languages";
@@ -102,6 +103,13 @@ const Footer: React.FunctionComponent = () => {
               className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
               <DiscordIcon className="h-5 w-5" />
+            </Link>
+            <Link
+              target="_blank"
+              href="https://www.linkedin.com/company/rallly"
+              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
+            >
+              <LinkedinIcon className="h-5 w-5" />
             </Link>
             <Link
               target="_blank"
@@ -216,7 +224,7 @@ const Footer: React.FunctionComponent = () => {
           </Link>
         </div>
       </div>
-      <div className="flex flex-col justify-between gap-y-8 gap-x-8 sm:flex-row sm:items-end sm:pb-8">
+      <div className="flex flex-col justify-between gap-x-8 gap-y-8 sm:flex-row sm:items-end sm:pb-8">
         <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
           <li>
             <Link
@@ -247,7 +255,7 @@ const Footer: React.FunctionComponent = () => {
           <div className="text-sm tracking-tight sm:text-right">
             <Trans i18nKey="poweredBy" defaults="Powered by" />
           </div>
-          <div className="flex flex-wrap items-center gap-y-2 gap-x-8 md:justify-end">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-2 md:justify-end">
             <div>
               <Link
                 target="_blank"
