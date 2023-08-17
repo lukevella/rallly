@@ -82,19 +82,6 @@ const GoToApp = () => {
   );
 };
 
-const truncateText = (text: string, length: number) => {
-  if (text.length <= length) {
-    return text;
-  }
-  // end at the last space before the length
-  const lastSpaceIndex = text.lastIndexOf(" ", length);
-  if (lastSpaceIndex !== -1) {
-    return text.substring(0, lastSpaceIndex) + "...";
-  }
-
-  return text.substring(0, length) + "...";
-};
-
 const SEO = () => {
   const { t } = useTranslation();
   const { title, user } = usePoll();
@@ -112,7 +99,7 @@ const SEO = () => {
               )}` +
               encodeURIComponent(
                 `?title=${encodeURIComponent(
-                  truncateText(title, 55),
+                  title,
                 )}&author=${encodeURIComponent(name)}`,
               ),
             width: 1200,
