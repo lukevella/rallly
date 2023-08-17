@@ -108,11 +108,9 @@ const SEO = () => {
                 `/api/og-image-poll`,
               )}` +
               encodeURIComponent(
-                `?type=${encodeURIComponent("Blog")}&title=${encodeURIComponent(
+                `?title=${encodeURIComponent(
                   truncateText(title, 55),
-                )}&author=${encodeURIComponent(
-                  t("createdBy", { name: user ? user.name : t("guest") }),
-                )}`,
+                )}&author=${encodeURIComponent(user ? user.name : t("guest"))}`,
               ),
             width: 1200,
             height: 630,

@@ -58,15 +58,12 @@ export default async function handler(req: NextRequest) {
               </div>
             </div>
           </div>
-
-          <div tw="flex flex-col text-7xl mb-16 line-clamp-1 font-bold leading-tight tracking-tight text-gray-900 text-left">
+          <div tw="flex flex-col text-7xl mb-16 font-bold leading-tight tracking-tight text-gray-900 text-left">
             {title}
           </div>
-          {author ? (
-            <div tw="text-4xl flex m-0 leading-relaxed text-gray-500">
-              {author}
-            </div>
-          ) : null}
+          <div tw="text-4xl flex m-0 leading-relaxed text-gray-500">
+            {author}
+          </div>
         </div>
       </div>
     ),
