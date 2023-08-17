@@ -58,11 +58,11 @@ export default async function handler(req: NextRequest) {
               </div>
             </div>
           </div>
-          <div tw="flex flex-col text-7xl mb-16 font-bold leading-tight tracking-tight text-gray-900 text-left">
+          <div tw="flex flex-col text-7xl font-bold leading-tight tracking-tight text-gray-900 text-left">
             {title}
           </div>
           <div tw="text-4xl flex m-0 leading-relaxed text-gray-500">
-            {author}
+            by {author}
           </div>
         </div>
       </div>
