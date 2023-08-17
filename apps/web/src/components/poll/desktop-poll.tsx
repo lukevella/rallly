@@ -8,7 +8,7 @@ import {
 } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { AnimatePresence, m } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useMeasure, useScroll } from "react-use";
@@ -108,7 +108,7 @@ const DesktopPoll: React.FunctionComponent = () => {
       <div
         className={cn(
           expanded
-            ? "shadow-huge absolute left-1/2 max-w-[calc(90vw)] -translate-x-1/2  rounded-md border bg-white"
+            ? "shadow-huge absolute left-1/2 max-w-[calc(100vw-64px)] -translate-x-1/2 -translate-y-1  rounded-md border bg-white"
             : "",
         )}
       >
@@ -152,37 +152,63 @@ const DesktopPoll: React.FunctionComponent = () => {
             </div>
             {isOverflowing || expanded ? (
               <div className="flex gap-2">
-                <Button disabled={x === 0} onClick={goToPreviousPage}>
-                  <ArrowLeftIcon className="h-4 w-4" />
-                </Button>
-                <Button
-                  disabled={Boolean(
-                    scrollRef.current &&
-                      x + scrollRef.current.offsetWidth >=
-                        scrollRef.current.scrollWidth,
-                  )}
-                  onClick={() => {
-                    goToNextPage();
-                  }}
-                >
-                  <ArrowRightIcon className="h-4 w-4" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button disabled={x === 0} onClick={goToPreviousPage}>
+                      <ArrowLeftIcon className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <Trans i18nKey="scrollLeft" defaults="Scroll Left" />
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      disabled={Boolean(
+                        scrollRef.current &&
+                          x + scrollRef.current.offsetWidth >=
+                            scrollRef.current.scrollWidth,
+                      )}
+                      onClick={() => {
+                        goToNextPage();
+                      }}
+                    >
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <Trans i18nKey="scrollRight" defaults="Scroll Right" />
+                  </TooltipContent>
+                </Tooltip>
                 {expanded ? (
-                  <Button
-                    onClick={() => {
-                      collapse();
-                    }}
-                  >
-                    <ExpandIcon className="h-4 w-4" />
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        icon={ShrinkIcon}
+                        onClick={() => {
+                          collapse();
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <Trans i18nKey="shrink" defaults="Shrink" />
+                    </TooltipContent>
+                  </Tooltip>
                 ) : (
-                  <Button
-                    onClick={() => {
-                      expand();
-                    }}
-                  >
-                    <ExpandIcon className="h-4 w-4" />
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        icon={ExpandIcon}
+                        onClick={() => {
+                          expand();
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <Trans i18nKey="expand" defaults="Expand" />
+                    </TooltipContent>
+                  </Tooltip>
                 )}
               </div>
             ) : null}
