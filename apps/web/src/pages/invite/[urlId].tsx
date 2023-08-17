@@ -1,9 +1,12 @@
 import { trpc } from "@rallly/backend";
 import { ArrowUpLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
+import { absoluteUrl } from "@rallly/utils";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 import { Poll } from "@/components/poll";
@@ -79,9 +82,53 @@ const GoToApp = () => {
   );
 };
 
+const truncateText = (text: string, length: number) => {
+  if (text.length <= length) {
+    return text;
+  }
+  // end at the last space before the length
+  const lastSpaceIndex = text.lastIndexOf(" ", length);
+  if (lastSpaceIndex !== -1) {
+    return text.substring(0, lastSpaceIndex) + "...";
+  }
+
+  return text.substring(0, length) + "...";
+};
+
+const SEO = () => {
+  const { t } = useTranslation();
+  const { title, user } = usePoll();
+  return (
+    <NextSeo
+      openGraph={{
+        images: [
+          {
+            url:
+              `${absoluteUrl()}/_next/image?w=1200&q=100&url=${encodeURIComponent(
+                `/api/og-image-poll`,
+              )}` +
+              encodeURIComponent(
+                `?type=${encodeURIComponent("Blog")}&title=${encodeURIComponent(
+                  truncateText(title, 55),
+                )}&author=${encodeURIComponent(
+                  t("createdBy", { name: user ? user.name : t("guest") }),
+                )}`,
+              ),
+            width: 1200,
+            height: 630,
+            alt: title,
+            type: "image/png",
+          },
+        ],
+      }}
+    />
+  );
+};
+
 const Page = () => {
   return (
     <Prefetch>
+      <SEO />
       <LegacyPollContextProvider>
         <VisibilityProvider>
           <div className="">
