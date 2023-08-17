@@ -1,7 +1,5 @@
 {
   "createPageLikeThis": "Crie uma página como esta em segundos!",
-  "opensource": "Somos Código Aberto!",
-  "startUsOnGithub": "Qualifique-nos no GitHub",
   "noLoginRequired": "Não é necessário iniciar sessão",
   "headline": "Livre-se do vai e volta de emails",
   "subheading": "Agilize seu processo de agendamento e poupe tempo",
@@ -34,5 +32,8 @@
   "freeSchedulingPollMetaTitle": "Enquete de Agendamento Grátis | Rallly",
   "freeSchedulingPollMetaDescription": "Crie uma enquete de agendamento gratuita em segundos. Ideal para organizar reuniões, eventos, conferências, equipes esportivas e muito mais.",
   "freeSchedulingPollTitle": "Procurando por uma enquete de agendamento gratuita?",
-  "freeSchedulingPollDescription": "Rallly te permite criar enquetes de agendamento bonitas e fáceis de usar para que você possa encontrar o melhor horário do seu próximo evento."
+  "freeSchedulingPollDescription": "Rallly te permite criar enquetes de agendamento bonitas e fáceis de usar para que você possa encontrar o melhor horário do seu próximo evento.",
+  "new": "Novo",
+  "julyRecap": "Relembre julho",
+  "pricingUpdates": "Atualizações de Preços"
 }

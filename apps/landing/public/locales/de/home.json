@@ -1,7 +1,5 @@
 {
   "createPageLikeThis": "Erstelle eine Seite wie diese in Sekunden!",
-  "opensource": "Wir sind Open-Source!",
-  "startUsOnGithub": "Gebe uns einen Stern auf Github",
   "noLoginRequired": "Keine Anmeldung erforderlich",
   "headline": "Lass den ständigen E-Mail-Austausch hinter dir",
   "subheading": "Spare Zeit mit einem reibungslosen Planungsprozess",
@@ -34,5 +32,8 @@
   "freeSchedulingPollMetaTitle": "Kostenlose Umfrage zur Terminfindung | Rallly",
   "freeSchedulingPollMetaDescription": "Erstelle in Sekunden eine kostenlose Terminumfrage. Ideal zur Organisation von Meetings, Veranstaltungen, Konferenzen, Sportteams und vielem mehr.",
   "freeSchedulingPollTitle": "Auf der Suche nach einem kostenlosen Tool zur Terminplanung?",
-  "freeSchedulingPollDescription": "Rallly ermöglicht es dir, schöne und einfach zu verwendende Terminumfragen zu erstellen, damit du die beste Zeit für dein nächstes Ereignis finden kannst."
+  "freeSchedulingPollDescription": "Rallly ermöglicht es dir, schöne und einfach zu verwendende Terminumfragen zu erstellen, damit du die beste Zeit für dein nächstes Ereignis finden kannst.",
+  "new": "Neu",
+  "julyRecap": "Juli-Recap",
+  "pricingUpdates": "Preisaktualisierungen"
 }

@@ -222,5 +222,6 @@
   "upgrade": "Vaihda sopimus",
   "notToday": "Ei tällä kertaa",
   "supportProject": "Tue tätä projektia",
-  "features": "Saa käyttöösi kaikki nykyiset ja tulevat pro-ominaisuudet!"
+  "features": "Saa käyttöösi kaikki nykyiset ja tulevat pro-ominaisuudet!",
+  "continueAsGuest": "Jatka vieraana"
 }

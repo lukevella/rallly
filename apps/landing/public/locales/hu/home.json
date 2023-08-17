@@ -1,7 +1,5 @@
 {
   "createPageLikeThis": "Hozz létre szavazást pillanatok alatt!",
-  "opensource": "Nyílt forráskóduak vagyunk!",
-  "startUsOnGithub": "Csillagozz be GitHub-on",
   "noLoginRequired": "Bejelentkezés nem szükséges",
   "headline": "Kerüld el az adok-kapok levelezést",
   "subheading": "Egyszerűsítsd az ütemezési folyamataid és takaríts meg időt",
@@ -34,5 +32,8 @@
   "freeSchedulingPollMetaTitle": "Ingyenes ütemező szavazás | Rallly",
   "freeSchedulingPollMetaDescription": "Hozz létre ingyenes ütemező szavazást pillanatok alatt. Tökéletes találkozók, események, konferenciák rendezésére, sport csapatok és még sok mindenki számára.",
   "freeSchedulingPollTitle": "Ingyenes ütemező szavazást keresel?",
-  "freeSchedulingPollDescription": "Rallly segít hogy létrehozz gyönyörű és könnyen használható szavazásokaz, hogy megtaláld a legjobb időpontot a következő eseményedhez."
+  "freeSchedulingPollDescription": "Rallly segít hogy létrehozz gyönyörű és könnyen használható szavazásokaz, hogy megtaláld a legjobb időpontot a következő eseményedhez.",
+  "new": "Új",
+  "julyRecap": "Júliusi visszatekintés",
+  "pricingUpdates": "Árazási változások"
 }

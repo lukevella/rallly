@@ -1,7 +1,5 @@
 {
   "createPageLikeThis": "在几秒钟内创建一个这样的页面！",
-  "opensource": "我们是开源的！",
-  "startUsOnGithub": "在 GitHub 上 Star",
   "noLoginRequired": "无需登录",
   "headline": "抛弃传统邮件沟通",
   "subheading": "简化您日程安排的流程并节约时间",
@@ -34,5 +32,8 @@
   "freeSchedulingPollMetaTitle": "免费的日程投票 | Rallly",
   "freeSchedulingPollMetaDescription": "在几秒钟内创建免费的日程投票。非常适合组织见面、活动、会议、运动队等。",
   "freeSchedulingPollTitle": "正在寻找免费的日程投票工具？",
-  "freeSchedulingPollDescription": "Rallly 可让您创建美观且易于使用的日程投票，以便您确定下一次活动的最佳时间。"
+  "freeSchedulingPollDescription": "Rallly 可让您创建美观且易于使用的日程投票，以便您确定下一次活动的最佳时间。",
+  "new": "新",
+  "julyRecap": "七月回顾",
+  "pricingUpdates": "定价更新"
 }
