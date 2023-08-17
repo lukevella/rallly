@@ -15,7 +15,6 @@
   "dependencies": {
     "@rallly/icons": "*",
     "@rallly/languages": "*",
-    "@rallly/og-image": "*",
     "@rallly/tailwind-config": "*",
     "@rallly/ui": "*",
     "@svgr/webpack": "^6.5.1",
