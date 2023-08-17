@@ -219,5 +219,7 @@
   "upgrade": "Yükselt",
   "notToday": "Bugün Değil",
   "supportProject": "Bu projeye destek ol",
-  "features": "Mevcut ve gelecekteki tüm Pro özelliklere erişin!"
+  "features": "Mevcut ve gelecekteki tüm Pro özelliklere erişin!",
+  "continueAsGuest": "Misafir olarak devam et",
+  "expand": "Genişlet"
 }
