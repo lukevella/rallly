@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env TAILWIND_MODE=watch next dev --port 3001",
+    "dev": "cross-env PORT=3001 TAILWIND_MODE=watch next dev",
     "build": "next build",
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
