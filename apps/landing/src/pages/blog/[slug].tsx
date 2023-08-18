@@ -36,6 +36,7 @@ const Page: NextPageWithLayout<Props> = ({ post }) => {
         openGraph={{
           title: post.title,
           description: post.excerpt,
+          url: absoluteUrl(`/blog/${post.slug}`),
           images: [
             {
               url: absoluteUrl("/api/og-image", {
