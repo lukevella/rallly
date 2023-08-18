@@ -31,7 +31,11 @@ const Page: NextPageWithLayout<Props> = ({ post }) => {
   return (
     <div>
       <NextSeo
+        title={post.title}
+        description={post.excerpt}
         openGraph={{
+          title: post.title,
+          description: post.excerpt,
           images: [
             {
               url:

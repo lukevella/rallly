@@ -14,7 +14,9 @@ import React from "react";
 import { useMount } from "react-use";
 
 import { AuthLayout } from "@/components/layouts/auth-layout";
+import { StandardLayout } from "@/components/layouts/standard-layout";
 import { Spinner } from "@/components/spinner";
+import { NextPageWithLayout } from "@/types";
 import { usePostHog } from "@/utils/posthog";
 import { withPageTranslations } from "@/utils/with-page-translations";
 
@@ -69,7 +71,7 @@ type PageProps =
     }
   | { error: undefined; data: Data };
 
-const Page = (props: PageProps) => {
+const Page: NextPageWithLayout<PageProps> = (props) => {
   const { t } = useTranslation();
   const posthog = usePostHog();
 
@@ -99,6 +101,10 @@ const Page = (props: PageProps) => {
       )}
     </AuthLayout>
   );
+};
+
+Page.getLayout = (page) => {
+  return <StandardLayout hideNav={true}>{page}</StandardLayout>;
 };
 
 export const getServerSideProps = composeGetServerSideProps(
