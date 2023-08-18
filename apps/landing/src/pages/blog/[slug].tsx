@@ -36,19 +36,13 @@ const Page: NextPageWithLayout<Props> = ({ post }) => {
         openGraph={{
           title: post.title,
           description: post.excerpt,
+          url: absoluteUrl(`/blog/${post.slug}`),
           images: [
             {
-              url:
-                `${absoluteUrl()}/_next/image?w=1200&q=100&url=${encodeURIComponent(
-                  `/api/og-image`,
-                )}` +
-                encodeURIComponent(
-                  `?type=${encodeURIComponent(
-                    "Blog",
-                  )}&title=${encodeURIComponent(
-                    post.title,
-                  )}&excerpt=${encodeURIComponent(post.excerpt)}`,
-                ),
+              url: absoluteUrl("/api/og-image", {
+                title: post.title,
+                excerpt: post.excerpt,
+              }),
               width: 1200,
               height: 630,
               alt: post.title,
