@@ -87,7 +87,7 @@ const GoToApp = () => {
 
 type PageProps = {
   title: string;
-  user?: string;
+  user: string | null;
 };
 
 const Page = ({ title, user }: PageProps) => {
@@ -208,7 +208,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
       props: {
         ...res.props,
         title: poll.title,
-        user: poll.user?.name,
+        user: poll.user?.name ?? null,
       },
       revalidate: 100,
     };
