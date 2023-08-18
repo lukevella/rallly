@@ -86,11 +86,12 @@ const GoToApp = () => {
 };
 
 type PageProps = {
+  id: string;
   title: string;
   user: string | null;
 };
 
-const Page = ({ title, user }: PageProps) => {
+const Page = ({ id, title, user }: PageProps) => {
   const { t } = useTranslation();
   const name = user ?? t("guest");
   return (
@@ -99,17 +100,13 @@ const Page = ({ title, user }: PageProps) => {
         openGraph={{
           title,
           description: `By ${name}`,
+          url: absoluteUrl(`/invite/${id}`),
           images: [
             {
-              url:
-                `${absoluteUrl()}/_next/image?w=1200&q=100&url=${encodeURIComponent(
-                  `/api/og-image-poll`,
-                )}` +
-                encodeURIComponent(
-                  `?title=${encodeURIComponent(
-                    title,
-                  )}&author=${encodeURIComponent(name)}`,
-                ),
+              url: `${absoluteUrl("/api/og-image-poll", {
+                title,
+                author: name,
+              })}`,
               width: 1200,
               height: 630,
               alt: title,
@@ -192,6 +189,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
       id: ctx.params?.urlId as string,
     },
     select: {
+      id: true,
       title: true,
       user: {
         select: {
@@ -207,6 +205,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     return {
       props: {
         ...res.props,
+        id: poll.id,
         title: poll.title,
         user: poll.user?.name ?? null,
       },

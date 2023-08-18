@@ -23,7 +23,6 @@ export default async function handler(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const title = searchParams.get("title");
   const excerpt = searchParams.get("excerpt");
-  const type = searchParams.get("type");
 
   return new ImageResponse(
     (
@@ -47,7 +46,7 @@ export default async function handler(req: NextRequest) {
                 height={64}
               />
               <div tw="flex text-gray-800 text-3xl tracking-tight font-bold">
-                <span tw="bg-gray-200 px-6 py-3 rounded-full">{type}</span>
+                <span tw="bg-gray-200 px-6 py-3 rounded-full">Blog</span>
               </div>
             </div>
           </div>
