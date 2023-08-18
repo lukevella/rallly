@@ -210,7 +210,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
         title: poll.title,
         user: poll.user?.name ?? null,
       },
-      revalidate: 100,
+      revalidate: 10,
     };
   }
 
