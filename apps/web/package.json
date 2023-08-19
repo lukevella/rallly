@@ -48,6 +48,7 @@
     "iron-session": "^6.3.1",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
+    "micro": "^10.0.1",
     "nanoid": "^4.0.0",
     "next-i18next": "^13.0.3",
     "next-seo": "^5.15.0",

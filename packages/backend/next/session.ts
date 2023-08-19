@@ -1,3 +1,5 @@
+import type { IncomingMessage, ServerResponse } from "http";
+import { getIronSession } from "iron-session";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import {
   GetServerSideProps,
@@ -12,6 +14,13 @@ import { composeGetServerSideProps } from "./utils";
 export function withSessionRoute(handler: NextApiHandler) {
   return withIronSessionApiRoute(handler, sessionConfig);
 }
+
+export const getSession = async (
+  req: Request | IncomingMessage,
+  res: Response | ServerResponse,
+) => {
+  return getIronSession(req, res, sessionConfig);
+};
 
 export function withSessionSsr(
   handler: GetServerSideProps | GetServerSideProps[],

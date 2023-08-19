@@ -227,5 +227,10 @@
   "scrollLeft": "Scroll Left",
   "scrollRight": "Scroll Right",
   "shrink": "Shrink",
-  "expand": "Expand"
+  "expand": "Expand",
+  "activeSubscription": "Thank you for subscribing to Rallly Pro. You can manage your subscription and billing details from the billing portal.",
+  "billingPortal": "Billing Portal",
+  "supportDescription": "Need help with anything?",
+  "supportBilling": "Please reach out if you need any assistance.",
+  "contactSupport": "Contact Support"
 }
