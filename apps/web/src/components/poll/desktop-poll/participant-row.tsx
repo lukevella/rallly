@@ -52,7 +52,7 @@ export const ParticipantRowView: React.FunctionComponent<{
                 {
                   "border-green-200 bg-green-50": vote === "yes",
                   "border-amber-100 bg-amber-50": vote === "ifNeedBe",
-                  "bg-gray-50": vote === "no",
+                  "bg-gray-50": vote === "no" || !vote,
                 },
               )}
             >
