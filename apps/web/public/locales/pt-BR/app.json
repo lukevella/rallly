@@ -223,5 +223,9 @@
   "notToday": "Hoje não",
   "supportProject": "Apoie este projeto",
   "features": "Obtenha acesso a todos os atuais e futuros recursos Pro!",
-  "continueAsGuest": "Continuar como Convidado"
+  "continueAsGuest": "Continuar como Convidado",
+  "scrollLeft": "Rolar à esquerda",
+  "scrollRight": "Rolar à direita",
+  "shrink": "Recolher",
+  "expand": "Expandir"
 }

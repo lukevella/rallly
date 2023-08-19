@@ -223,5 +223,9 @@
   "notToday": "今天不行",
   "supportProject": "支持这个项目",
   "features": "获取当前和未来的所有专业版功能！",
-  "continueAsGuest": "以游客身份继续"
+  "continueAsGuest": "以游客身份继续",
+  "scrollLeft": "向左滚动",
+  "scrollRight": "向右滚动",
+  "shrink": "缩小",
+  "expand": "展开"
 }
