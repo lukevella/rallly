@@ -1,10 +1,10 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
-import { privateProcedure, router } from "../trpc";
+import { possiblyPublicProcedure, privateProcedure, router } from "../trpc";
 
 export const user = router({
-  getBilling: privateProcedure.query(async ({ ctx }) => {
+  getBilling: possiblyPublicProcedure.query(async ({ ctx }) => {
     return await prisma.userPaymentData.findUnique({
       select: {
         subscriptionId: true,
@@ -19,7 +19,7 @@ export const user = router({
       },
     });
   }),
-  subscription: privateProcedure.query(async ({ ctx }) => {
+  subscription: possiblyPublicProcedure.query(async ({ ctx }) => {
     const user = await prisma.user.findUnique({
       where: {
         id: ctx.user.id,
