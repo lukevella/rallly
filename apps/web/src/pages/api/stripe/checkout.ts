@@ -86,12 +86,11 @@ export default async function handler(
       {
         price:
           period === "yearly"
-            ? "price_1NfKIXHeFNQIbmrtv7s6Wv7U"
-            : "price_1NfKF2HeFNQIbmrtaXE0mS8N",
+            ? (process.env.STRIPE_YEARLY_PRICE as string)
+            : (process.env.STRIPE_MONTHLY_PRICE as string),
         quantity: 1,
       },
     ],
-    automatic_tax: { enabled: true },
   });
 
   if (session.url) {
