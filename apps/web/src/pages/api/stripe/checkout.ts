@@ -92,6 +92,9 @@ export default async function handler(
         quantity: 1,
       },
     ],
+    automatic_tax: {
+      enabled: true,
+    },
   });
 
   if (session.url) {
