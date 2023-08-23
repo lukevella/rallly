@@ -186,5 +186,10 @@
   "scrollLeft": "Rulla åt vänster",
   "scrollRight": "Rulla åt höger",
   "shrink": "Krymp",
-  "expand": "Expandera"
+  "expand": "Expandera",
+  "activeSubscription": "Tack för att du prenumererar på Rallly Pro. Du kan hantera din prenumeration och din faktureringsdetaljer på faktureringsportalen.",
+  "billingPortal": "Faktureringsportal",
+  "supportDescription": "Behöver du hjälp med något?",
+  "supportBilling": "Hör gärna av dig om du behöver hjälp.",
+  "contactSupport": "Kontakta support"
 }
