@@ -1,6 +1,7 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
+import { getSubscriptionStatus } from "../../utils/auth";
 import { possiblyPublicProcedure, privateProcedure, router } from "../trpc";
 
 export const user = router({
@@ -27,47 +28,7 @@ export const user = router({
       };
     }
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: ctx.user.id,
-      },
-      select: {
-        subscription: {
-          select: {
-            active: true,
-          },
-        },
-      },
-    });
-
-    if (user?.subscription?.active === true) {
-      return {
-        active: true,
-      };
-    }
-
-    const userPaymentData = await prisma.userPaymentData.findUnique({
-      where: {
-        userId: ctx.user.id,
-      },
-      select: {
-        endDate: true,
-      },
-    });
-
-    if (
-      userPaymentData?.endDate &&
-      userPaymentData.endDate.getTime() > Date.now()
-    ) {
-      return {
-        active: true,
-        legacy: true,
-      };
-    }
-
-    return {
-      active: false,
-    };
+    return await getSubscriptionStatus(ctx.user.id);
   }),
   changeName: privateProcedure
     .input(

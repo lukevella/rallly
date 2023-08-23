@@ -1,7 +1,7 @@
-import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
+import { getSubscriptionStatus } from "../utils/auth";
 import { Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
@@ -38,16 +38,7 @@ export const proProcedure = t.procedure.use(
       });
     }
 
-    const isPro = Boolean(
-      await prisma.userPaymentData.findFirst({
-        where: {
-          userId: ctx.user.id,
-          endDate: {
-            gt: new Date(),
-          },
-        },
-      }),
-    );
+    const { active: isPro } = await getSubscriptionStatus(ctx.user.id);
 
     if (!isPro) {
       throw new TRPCError({
