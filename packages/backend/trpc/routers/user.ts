@@ -1,10 +1,10 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
-import { publicProcedure, router } from "../trpc";
+import { privateProcedure, router } from "../trpc";
 
 export const user = router({
-  getBilling: publicProcedure.query(async ({ ctx }) => {
+  getBilling: privateProcedure.query(async ({ ctx }) => {
     return await prisma.userPaymentData.findUnique({
       select: {
         subscriptionId: true,
@@ -19,7 +19,50 @@ export const user = router({
       },
     });
   }),
-  changeName: publicProcedure
+  subscription: privateProcedure.query(async ({ ctx }) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: ctx.user.id,
+      },
+      select: {
+        subscription: {
+          select: {
+            active: true,
+          },
+        },
+      },
+    });
+
+    if (user?.subscription?.active === true) {
+      return {
+        active: true,
+      };
+    }
+
+    const userPaymentData = await prisma.userPaymentData.findUnique({
+      where: {
+        userId: ctx.user.id,
+      },
+      select: {
+        endDate: true,
+      },
+    });
+
+    if (
+      userPaymentData?.endDate &&
+      userPaymentData.endDate.getTime() > Date.now()
+    ) {
+      return {
+        active: true,
+        legacy: true,
+      };
+    }
+
+    return {
+      active: false,
+    };
+  }),
+  changeName: privateProcedure
     .input(
       z.object({
         name: z.string().min(1).max(100),

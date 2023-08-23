@@ -211,8 +211,6 @@
   "duplicateDescription": "Create a new poll based on this one",
   "duplicateTitleLabel": "Title",
   "duplicateTitleDescription": "Hint: Give your new poll a unique title",
-  "thankYou": "Thank you!",
-  "pleaseWait": "Your account is being upgraded. This should only take a few seconds.",
   "proFeature": "Pro Feature",
   "upgradeOverlaySubtitle2": "Please upgrade to a paid plan to use this feature. This is how we keep the lights on :)",
   "savePercent": "Save {percent}%",
@@ -227,5 +225,10 @@
   "scrollLeft": "Scroll Left",
   "scrollRight": "Scroll Right",
   "shrink": "Shrink",
-  "expand": "Expand"
+  "expand": "Expand",
+  "activeSubscription": "Thank you for subscribing to Rallly Pro. You can manage your subscription and billing details from the billing portal.",
+  "billingPortal": "Billing Portal",
+  "supportDescription": "Need help with anything?",
+  "supportBilling": "Please reach out if you need any assistance.",
+  "contactSupport": "Contact Support"
 }

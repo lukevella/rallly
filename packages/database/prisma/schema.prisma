@@ -17,15 +17,18 @@ enum TimeFormat {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  name      String
-  email     String    @unique() @db.Citext
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  comments  Comment[]
-  polls     Poll[]
-  watcher   Watcher[]
-  events    Event[]
+  id             String        @id @default(cuid())
+  name           String
+  email          String        @unique() @db.Citext
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime?     @updatedAt @map("updated_at")
+  comments       Comment[]
+  polls          Poll[]
+  watcher        Watcher[]
+  events         Event[]
+  customerId     String?       @map("customer_id")
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  subscriptionId String?       @unique @map("subscription_id")
 
   @@map("users")
 }
@@ -50,6 +53,21 @@ model UserPaymentData {
   cancelUrl      String             @map("cancel_url")
 
   @@map("user_payment_data")
+}
+
+model Subscription {
+  id            String   @id
+  priceId       String   @map("price_id")
+  active        Boolean
+  currency      String?
+  interval      String?
+  intervalCount Int?     @map("interval_count")
+  createdAt     DateTime @default(now()) @map("created_at")
+  periodStart   DateTime @map("period_start")
+  periodEnd     DateTime @map("period_end")
+  user          User?
+
+  @@map("subscriptions")
 }
 
 model UserPreferences {
