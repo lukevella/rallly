@@ -211,8 +211,6 @@
   "duplicateDescription": "基于此投票创建一个新的投票。",
   "duplicateTitleLabel": "标题",
   "duplicateTitleDescription": "提示：请为你的新投票起一个独一无二的标题",
-  "thankYou": "谢谢你！",
-  "pleaseWait": "您的账户正在升级中，这个过程通常只需要几秒钟的时间。",
   "proFeature": "专业版功能",
   "upgradeOverlaySubtitle2": "请升级到付费方案以使用此功能。这是我们维持运营的方式 :)",
   "savePercent": "节省 {percent}%",
