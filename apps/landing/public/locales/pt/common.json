@@ -9,10 +9,20 @@
   "poweredBy": "Com tecnologia",
   "privacyPolicy": "Política de Privacidade",
   "support": "Ajuda",
+  "cookiePolicy": "Política de Cookies",
+  "termsOfUse": "Termos de utilização",
   "volunteerTranslator": "Ajude a traduzir esta página",
   "notFoundTitle": "404 Página não encontrada",
   "notFoundDescription": "Não conseguimos encontrar a página que procuras.",
   "goToHome": "Ir para a página inicial",
+  "goToApp": "Ir para a aplicação",
+  "pricing": "Preço",
+  "bestDoodleAlternative": "Melhor alternativa ao Doodle",
+  "freeSchedulingPoll": "Sondagem de agendamento gratuita",
+  "findATime": "Encontrar uma hora",
   "getStarted": "Começar",
-  "metaDescription": "Crie sondagens e vote para encontrar o melhor dia ou hora. Uma alternativa gratuita ao Doodle."
+  "metaTitle": "Rallly - Agendar reuniões de grupo",
+  "metaDescription": "Crie sondagens e vote para encontrar o melhor dia ou hora. Uma alternativa gratuita ao Doodle.",
+  "availabilityPoll": "Sondagem de disponibilidade",
+  "solutions": "Soluções"
 }
