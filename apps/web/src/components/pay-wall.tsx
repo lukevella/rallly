@@ -152,11 +152,17 @@ const Teaser = () => {
         </Tabs>
         <div className="space-y-2">
           <p className="text-primary text-center text-xs">
-            <TrendingUpIcon className="mr-2 inline-block h-4 w-4" />
-            <Trans
-              i18nKey="priceIncreaseSoon"
-              defaults="Price increase soon."
-            />
+            <Link
+              className="text-link"
+              href="https://rallly.co/blog/july-recap"
+              target="_blank"
+            >
+              <TrendingUpIcon className="mr-2 inline-block h-4 w-4" />
+              <Trans
+                i18nKey="priceIncreaseSoon"
+                defaults="Price increase soon."
+              />
+            </Link>
           </p>
           <p className="text-center text-xs text-gray-400">
             <LockIcon className="mr-2 inline-block h-4 w-4" />
