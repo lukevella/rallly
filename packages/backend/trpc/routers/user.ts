@@ -20,6 +20,13 @@ export const user = router({
     });
   }),
   subscription: possiblyPublicProcedure.query(async ({ ctx }) => {
+    if (ctx.user.isGuest) {
+      // guest user can't have an active subscription
+      return {
+        active: false,
+      };
+    }
+
     const user = await prisma.user.findUnique({
       where: {
         id: ctx.user.id,
