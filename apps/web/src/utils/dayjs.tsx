@@ -118,6 +118,11 @@ const dayjsLocales: Record<
     timeFormat: "hours24",
     import: () => import("dayjs/locale/nl"),
   },
+  no: {
+    weekStart: 1,
+    timeFormat: "hours24",
+    import: () => import("dayjs/locale/nb"), // Bokmål
+  },
   hu: {
     weekStart: 1,
     timeFormat: "hours24",
