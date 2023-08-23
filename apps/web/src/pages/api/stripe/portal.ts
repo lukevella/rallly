@@ -1,5 +1,6 @@
 import { getSession } from "@rallly/backend/next/session";
 import { stripe } from "@rallly/backend/stripe";
+import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
@@ -24,7 +25,7 @@ export default async function handler(
       );
   }
 
-  const user = await prisma?.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: userSession.user.id,
     },
