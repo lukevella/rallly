@@ -211,8 +211,6 @@
   "duplicateDescription": "Créer un nouveau sondage basé sur celui-ci",
   "duplicateTitleLabel": "Titre",
   "duplicateTitleDescription": "Conseil: donner à votre nouveau sondage un nom unique",
-  "thankYou": "Merci !",
-  "pleaseWait": "Votre compte vient d'être surclassé. Celà ne devrait prendre que quelques instants.",
   "proFeature": "Fonctionnalité Pro",
   "upgradeOverlaySubtitle2": "Veuillez passer à un plan payant pour utiliser cette fonctionnalité. C'est par ce moyen que nous pouvons continuer à exister :)",
   "savePercent": "Économisez {percent}%",
