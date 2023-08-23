@@ -211,8 +211,6 @@
   "duplicateDescription": "Luo uusi kysely tämän kyselyn pohjalta",
   "duplicateTitleLabel": "Otsikko",
   "duplicateTitleDescription": "Vihje: Anna uudelle kyselyllesi ainutlaatuinen otsikko",
-  "thankYou": "Kiitos!",
-  "pleaseWait": "Tilisi sopimusta vaihdetaan. Tämän pitäisi kestää vain muutama sekunti.",
   "proFeature": "Pro-ominaisuus",
   "upgradeOverlaySubtitle2": "Vaihda maksulliseen sopimukseen käyttääksesi tätä ominaisuutta. Avullasi pidämme palvelun pystyssä :)",
   "savePercent": "Säästä {percent}%",
