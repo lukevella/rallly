@@ -225,5 +225,10 @@
   "scrollLeft": "Naar links scrollen",
   "scrollRight": "Naar rechts scrollen",
   "shrink": "Verkleinen",
-  "expand": "Vergroten"
+  "expand": "Vergroten",
+  "activeSubscription": "Bedankt voor je Rallly Pro inschrijving. Je kan je abonnement en factuurgegevens beheren vanuit het billing portaal.",
+  "billingPortal": "Billing Portaal",
+  "supportDescription": "Hulp nodig met iets?",
+  "supportBilling": "Neem contact op aub als je hulp nodig hebt.",
+  "contactSupport": "Contact met Support"
 }
