@@ -151,7 +151,7 @@
   "notificationsGuestTooltip": "Opprett en konto eller logg inn for å motta varslinger",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Endre foretrukket dato- og klokkeslettformat",
-  "createdTime": "Opprettet {relativeTime}",
+  "createdTime": "Opprettet for {relativeTime}",
   "permissionDeniedParticipant": "Hvis du ikke opprettet denne avstemningen, bør du gå til invitasjonssiden.",
   "goToInvite": "Gå til invitasjonssiden",
   "planPro": "Pro",
@@ -225,5 +225,10 @@
   "scrollLeft": "Rull til venstre",
   "scrollRight": "Rull til høyre",
   "shrink": "Gjør mindre",
-  "expand": "Gjør større"
+  "expand": "Gjør større",
+  "activeSubscription": "Tusen takk for at du abonnerer på Rally Pro! Du kan administrere abonnementet ditt og faktureringsinformasjonen i fakureringsportalen.",
+  "billingPortal": "Faktureringsportal",
+  "supportDescription": "Trenger du hjelp med noe?",
+  "supportBilling": "Gi beskjed hvis du trenger hjelp.",
+  "contactSupport": "Kontakt kundestøtte"
 }

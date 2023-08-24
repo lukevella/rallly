@@ -225,5 +225,10 @@
   "scrollLeft": "Links scrollen",
   "scrollRight": "Scrolle rechts",
   "shrink": "Verkleinern",
-  "expand": "Erweitern"
+  "expand": "Erweitern",
+  "activeSubscription": "Vielen Dank, dass du Rallly Pro abonniert hast. Du kannst deine Abonnement- und Abrechnungsinformationen über das Rechnungsportal verwalten.",
+  "billingPortal": "Rechnungsportal",
+  "supportDescription": "Brauchst du Hilfe mit irgendetwas?",
+  "supportBilling": "Bitte kontaktiere uns, wenn du Hilfe brauchst.",
+  "contactSupport": "Support kontaktieren"
 }

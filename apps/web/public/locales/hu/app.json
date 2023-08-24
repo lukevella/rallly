@@ -221,5 +221,14 @@
   "notToday": "Nem ma",
   "supportProject": "Támogasd a projektet",
   "features": "Szerezz hozzáférést az aktuális és jövőbeli Pro funkciókhoz!",
-  "continueAsGuest": "Folytatás vendégként"
+  "continueAsGuest": "Folytatás vendégként",
+  "scrollLeft": "Görgess balra",
+  "scrollRight": "Görgess jobbra",
+  "shrink": "Összecsuk",
+  "expand": "Kinyit",
+  "activeSubscription": "Köszönjük hogy előfizettél a Rallly Pro-ra! A számlázás oldalon kezelheted az előfizetés és számlázás részleteit.",
+  "billingPortal": "Számlázás oldal",
+  "supportDescription": "Szükséged van segítségre?",
+  "supportBilling": "Kérjük keress minket, ha támogatásra van szükséged.",
+  "contactSupport": "Támogatás felkeresése"
 }
