@@ -6,7 +6,7 @@ import * as React from "react";
 import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex border font-medium disabled:text-muted-foreground focus:ring-1 focus:ring-gray-200 disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center gap-x-2 whitespace-nowrap rounded-md border",
+  "inline-flex border font-medium disabled:text-muted-foreground focus:ring-1 focus:ring-gray-200 disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",
   {
     variants: {
       variant: {
@@ -22,8 +22,8 @@ const buttonVariants = cva(
         link: "underline-offset-4 hover:underline text-primary",
       },
       size: {
-        default: "h-9 px-2.5 text-sm",
-        sm: "h-7 text-xs px-1.5 rounded-md",
+        default: "h-9 px-2.5 gap-x-2.5 text-sm",
+        sm: "h-7 text-xs px-2 gap-x-1.5 rounded-md",
         lg: "h-11 text-base px-4 rounded-md",
       },
     },
@@ -78,7 +78,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {loading ? (
               <SpinnerIcon className="inline-block h-4 w-4 animate-spin" />
             ) : Icon ? (
-              <Icon className="h-4 w-4" />
+              <Icon className="-ml-0.5 h-4 w-4" />
             ) : null}
             {children}
           </>
