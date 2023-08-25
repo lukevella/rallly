@@ -225,5 +225,10 @@
   "scrollLeft": "向左滚动",
   "scrollRight": "向右滚动",
   "shrink": "缩小",
-  "expand": "展开"
+  "expand": "展开",
+  "activeSubscription": "感谢您订阅Rallly Pro。您可以在订阅页面查看并管理您的订阅和账单。",
+  "billingPortal": "账单页面",
+  "supportDescription": "需要帮助吗？",
+  "supportBilling": "如果您需要任何帮助，请联系我。",
+  "contactSupport": "联系支持"
 }
