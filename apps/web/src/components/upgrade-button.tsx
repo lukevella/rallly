@@ -1,5 +1,6 @@
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
+import { Trans } from "next-i18next";
 import React from "react";
 
 import { usePostHog } from "@/utils/posthog";
@@ -25,7 +26,7 @@ export const UpgradeButton = ({
             annual ? "yearly" : "monthly"
           }&return_path=${encodeURIComponent(window.location.pathname)}`}
         >
-          {children}
+          {children || <Trans i18nKey="upgrade" defaults="Upgrade" />}
         </Link>
       </Button>
     </>
