@@ -68,7 +68,9 @@ export default async function handler(
     case "customer.subscription.deleted":
     case "customer.subscription.updated":
     case "customer.subscription.created":
-      const subscription = event.data.object as Stripe.Subscription;
+      const { id } = event.data.object as Stripe.Subscription;
+
+      const subscription = await stripe.subscriptions.retrieve(id);
 
       // check if the subscription is active
       const isActive = subscription.status === "active";
@@ -103,7 +105,9 @@ export default async function handler(
       break;
     default:
       // Unexpected event type
-      console.error(`Unhandled event type ${event.type}.`);
+      res.status(400).json({
+        error: "Unhandled event type",
+      });
   }
 
   res.end();
