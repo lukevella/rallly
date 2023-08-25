@@ -1,10 +1,12 @@
-import { Option, TimeFormat } from "@rallly/database";
+import { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
 
 import {
   DateTimeOption,
   TimeOption,
 } from "../components/forms/poll-options-form";
+
+type Option = { id: string; start: Date; duration: number };
 
 export const getBrowserTimeZone = () =>
   Intl.DateTimeFormat().resolvedOptions().timeZone;

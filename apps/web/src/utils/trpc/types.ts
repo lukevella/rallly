@@ -1,11 +1,11 @@
-import { Option, User } from "@rallly/database";
+import { User } from "@rallly/database";
 
 export type GetPollApiResponse = {
   id: string;
   title: string;
   location: string | null;
   description: string | null;
-  options: Option[];
+  options: { id: string; start: Date; duration: number }[];
   user: User | null;
   timeZone: string | null;
   adminUrlId: string;

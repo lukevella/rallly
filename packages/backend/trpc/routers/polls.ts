@@ -405,6 +405,11 @@ export const polls = router({
           hideScores: true,
           demo: true,
           options: {
+            select: {
+              id: true,
+              start: true,
+              duration: true,
+            },
             orderBy: {
               start: "asc",
             },
