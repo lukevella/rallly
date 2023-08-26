@@ -21,7 +21,12 @@ export const participants = router({
           pollId,
         },
         include: {
-          votes: true,
+          votes: {
+            select: {
+              optionId: true,
+              type: true,
+            },
+          },
         },
         orderBy: [
           {

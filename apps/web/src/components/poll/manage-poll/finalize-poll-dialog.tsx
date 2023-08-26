@@ -38,31 +38,22 @@ const useScoreByOptionId = () => {
   const { options } = usePoll();
 
   return React.useMemo(() => {
-    const res = options.reduce<Record<string, OptionScore>>((acc, option) => {
-      acc[option.id] = { yes: [], ifNeedBe: [], no: [] };
-      return acc;
-    }, {});
+    const scoreByOptionId: Record<string, OptionScore> = {};
+    options.forEach((option) => {
+      scoreByOptionId[option.id] = {
+        yes: [],
+        ifNeedBe: [],
+        no: [],
+      };
+    });
 
-    const votes = responses.flatMap((response) => response.votes);
+    responses?.forEach((response) => {
+      response.votes.forEach((vote) => {
+        scoreByOptionId[vote.optionId][vote.type].push(response.id);
+      });
+    });
 
-    for (const vote of votes) {
-      if (!res[vote.optionId]) {
-        res[vote.optionId] = { yes: [], ifNeedBe: [], no: [] };
-      }
-
-      switch (vote.type) {
-        case "yes":
-          res[vote.optionId].yes.push(vote.participantId);
-          break;
-        case "ifNeedBe":
-          res[vote.optionId].ifNeedBe.push(vote.participantId);
-          break;
-        case "no":
-          res[vote.optionId].no.push(vote.participantId);
-          break;
-      }
-    }
-    return res;
+    return scoreByOptionId;
   }, [responses, options]);
 };
 
@@ -195,7 +186,7 @@ export const FinalizePollForm = ({
                   </RadioGroup>
                 </FormControl>
                 {max < options.length ? (
-                  <div className="absolute bottom-0 mt-2 w-full bg-gradient-to-t from-white via-white to-white/10 py-8 px-3">
+                  <div className="absolute bottom-0 mt-2 w-full bg-gradient-to-t from-white via-white to-white/10 px-3 py-8">
                     <Button
                       variant="ghost"
                       className="w-full"
