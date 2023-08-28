@@ -12,23 +12,21 @@ export const UpgradeButton = ({
   const posthog = usePostHog();
 
   return (
-    <>
-      <Button
-        className="w-full"
-        variant="primary"
-        asChild
-        onClick={() => {
-          posthog?.capture("click upgrade button");
-        }}
+    <Button
+      className="w-full"
+      variant="primary"
+      asChild
+      onClick={() => {
+        posthog?.capture("click upgrade button");
+      }}
+    >
+      <Link
+        href={`/api/stripe/checkout?period=${
+          annual ? "yearly" : "monthly"
+        }&return_path=${encodeURIComponent(window.location.pathname)}`}
       >
-        <Link
-          href={`/api/stripe/checkout?period=${
-            annual ? "yearly" : "monthly"
-          }&return_path=${encodeURIComponent(window.location.pathname)}`}
-        >
-          {children || <Trans i18nKey="upgrade" defaults="Upgrade" />}
-        </Link>
-      </Button>
-    </>
+        {children || <Trans i18nKey="upgrade" defaults="Upgrade" />}
+      </Link>
+    </Button>
   );
 };
