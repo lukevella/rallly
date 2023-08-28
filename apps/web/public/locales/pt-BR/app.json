@@ -225,5 +225,8 @@
   "scrollLeft": "Rolar à esquerda",
   "scrollRight": "Rolar à direita",
   "shrink": "Recolher",
-  "expand": "Expandir"
+  "expand": "Expandir",
+  "activeSubscription": "Obrigado por assinar o Rallly Pro. Você pode gerenciar seus detalhes de assinatura e cobrança no portal de cobrança.",
+  "billingPortal": "Portal de Cobrança",
+  "supportDescription": "Precisa de ajuda com alguma coisa?"
 }
