@@ -76,14 +76,21 @@ const SubscriptionStatus = () => {
     return <>You need to be logged in.</>;
   }
 
-  if (data.legacy) {
-    // User is on the old billing system
-    return <LegacyBilling />;
-  } else if (data.active) {
-    return <BillingPortal />;
-  } else {
-    return <BillingPlans />;
-  }
+  return (
+    <div className="space-y-4">
+      <div>
+        <div>
+          <Label className="mb-4">
+            <Trans i18nKey="subscriptionPlans" defaults="Plans" />
+          </Label>
+          <p className="text-muted-foreground mb-4 text-sm">
+            <Trans i18nKey="subscriptionDescription" />
+          </p>
+        </div>
+        <BillingPlans />
+      </div>
+    </div>
+  );
 };
 
 const LegacyBilling = () => {
