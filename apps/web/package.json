@@ -61,6 +61,7 @@
     "react-hot-toast": "^2.4.0",
     "react-i18next": "^12.1.4",
     "react-linkify": "^1.0.0-alpha",
+    "react-remove-scroll": "^2.5.6",
     "react-use": "^17.4.0",
     "smoothscroll-polyfill": "^0.4.4",
     "spacetime": "^7.1.4",
