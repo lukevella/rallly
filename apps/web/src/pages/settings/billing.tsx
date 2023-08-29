@@ -1,6 +1,5 @@
 import { trpc } from "@rallly/backend";
 import { ArrowUpRight, CreditCardIcon } from "@rallly/icons";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
 import { Label } from "@rallly/ui/label";
@@ -14,6 +13,7 @@ import { getProfileLayout } from "@/components/layouts/profile-layout";
 import { SettingsSection } from "@/components/settings/settings-section";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { Plan } from "@/contexts/plan";
 
 import { NextPageWithLayout } from "../../types";
 import { getStaticTranslations } from "../../utils/with-page-translations";
@@ -28,12 +28,10 @@ declare global {
 const BillingPortal = () => {
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
-        <Badge>
-          <Trans i18nKey="planPro" />
-        </Badge>
-      </div>
-      <p>
+      <Label className="mb-2">
+        <Trans i18nKey="billingPortal" />
+      </Label>
+      <p className="text-sm">
         <Trans
           i18nKey="activeSubscription"
           defaults="Thank you for subscribing to Rallly Pro. You can manage your subscription and billing details from the billing portal."
@@ -76,27 +74,28 @@ const SubscriptionStatus = () => {
     return <>You need to be logged in.</>;
   }
 
-  if (data.active) {
-    if (data.legacy) {
-      return <LegacyBilling />;
-    } else {
-      return <BillingPortal />;
-    }
-  }
-
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
+        <Label className="mb-2">
+          <Trans i18nKey="currentPlan" />
+        </Label>
+        <div>
+          <Plan />
+        </div>
+      </div>
+      {!data.active ? (
         <div>
           <Label className="mb-4">
-            <Trans i18nKey="subscriptionPlans" defaults="Plans" />
+            <Trans i18nKey="upgrade" />
           </Label>
-          <p className="text-muted-foreground mb-4 text-sm">
-            <Trans i18nKey="subscriptionDescription" />
-          </p>
+          <BillingPlans />
         </div>
-        <BillingPlans />
-      </div>
+      ) : data.legacy ? (
+        <LegacyBilling />
+      ) : (
+        <BillingPortal />
+      )}
     </div>
   );
 };
@@ -244,7 +243,7 @@ const Page: NextPageWithLayout = () => {
         }
       >
         <div className="space-y-6">
-          <p>
+          <p className="text-sm">
             <Trans
               i18nKey="supportBilling"
               defaults="Please reach out if you need any assistance."
