@@ -41,8 +41,8 @@ const Perk = ({
   );
 };
 
-const Plans = () => {
-  const [tab, setTab] = React.useState("monthly");
+export const BillingPlans = () => {
+  const [tab, setTab] = React.useState("yearly");
 
   return (
     <div className="space-y-4">
@@ -173,10 +173,6 @@ const Plans = () => {
       </div>
     </div>
   );
-};
-
-export const BillingPlans = () => {
-  return <Plans />;
 };
 
 export const ProPlan = ({

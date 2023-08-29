@@ -76,6 +76,14 @@ const SubscriptionStatus = () => {
     return <>You need to be logged in.</>;
   }
 
+  if (data.active) {
+    if (data.legacy) {
+      return <LegacyBilling />;
+    } else {
+      return <BillingPortal />;
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div>
