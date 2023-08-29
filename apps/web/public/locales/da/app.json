@@ -106,15 +106,10 @@
   "share": "Del",
   "planFree": "Gratis",
   "planPro": "Pro",
-  "annualBilling": "Fakturering årligt (spar {discount}%)",
   "planUpgrade": "Opgradér",
   "freeForever": "gratis for evigt",
   "annualBillingDescription": "pr. måned, faktureres årligt",
-  "plan_unlimitedPolls": "Ubegrænsede afstemninger",
-  "plan_unlimitedParticipants": "Ubegrænset antal deltagere",
   "monthlyBillingDescription": "pr. måned",
-  "plan_finalizePolls": "Afslut afstemninger",
-  "plan_prioritySupport": "Prioriteret support",
   "calendarHelp": "Du kan ikke oprette en afstemning uden valgmuligheder. Tilføj mindst et tidspunkt for at fortsætte.",
   "commentPlaceholder": "Giv en kommentar for denne afstemning (Synlig for alle)"
 }
