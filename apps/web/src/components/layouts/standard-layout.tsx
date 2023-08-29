@@ -1,4 +1,4 @@
-import { ListIcon, LogInIcon } from "@rallly/icons";
+import { ListIcon, LogInIcon, SparklesIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
@@ -16,6 +16,7 @@ import FeedbackButton from "@/components/feedback";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
+import { IfFreeUser } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 import { DayjsProvider } from "@/utils/dayjs";
 
@@ -51,6 +52,17 @@ const NavMenuItem = ({
       >
         <Icon className="h-4 w-4" />
         {label}
+      </Link>
+    </Button>
+  );
+};
+
+const Upgrade = () => {
+  return (
+    <Button variant="primary" size="sm" asChild>
+      <Link href="/settings/billing">
+        <SparklesIcon className="-ml-0.5 h-4 w-4" />
+        <Trans i18nKey="upgrade" defaults="Upgrade" />
       </Link>
     </Button>
   );
@@ -106,7 +118,7 @@ const MainNav = () => {
       }}
       initial="hidden"
       animate="visible"
-      exit={"hidden"}
+      exit="hidden"
       className="border-b bg-gray-50/50"
     >
       <Container className="flex h-14 items-center justify-between gap-4">
@@ -121,7 +133,10 @@ const MainNav = () => {
           </nav>
         </div>
         <div className="flex items-center gap-x-4">
-          <nav className="flex items-center gap-x-1 sm:gap-x-2">
+          <nav className="flex items-center gap-x-1 sm:gap-x-1.5">
+            <IfFreeUser>
+              <Upgrade />
+            </IfFreeUser>
             <IfGuest>
               <Button
                 size="sm"

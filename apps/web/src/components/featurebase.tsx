@@ -2,9 +2,11 @@ import { trpc } from "@rallly/backend";
 import { HelpCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import Script from "next/script";
 import React from "react";
 
+import Tooltip from "@/components/tooltip";
 import { Trans } from "@/components/trans";
 import { isFeedbackEnabled } from "@/utils/constants";
 
@@ -35,24 +37,28 @@ export const Changelog = ({ className }: { className?: string }) => {
   return (
     <>
       <FeaturebaseScript />
-      <Button
-        className={cn(
-          "hidden sm:inline-flex [&>*]:pointer-events-none",
-          className,
-        )}
-        size="sm"
-        variant="ghost"
-        data-featurebase-changelog
-      >
-        <HelpCircleIcon className="h-4 w-4" />
-        <span className="hidden sm:block">
+      <Tooltip>
+        <TooltipTrigger>
+          <Button
+            className={cn(
+              "hidden sm:inline-flex [&>*]:pointer-events-none",
+              className,
+            )}
+            size="sm"
+            variant="ghost"
+            data-featurebase-changelog
+          >
+            <HelpCircleIcon className="h-4 w-4" />
+            <span
+              id="fb-update-badge"
+              className="bg-primary rounded-full px-2 py-px text-xs text-gray-100 empty:hidden"
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
           <Trans key="whatsNew" defaults="What's new?" />
-        </span>
-        <span
-          id="fb-update-badge"
-          className="bg-primary rounded-full px-2 py-px text-xs text-gray-100 empty:hidden"
-        />
-      </Button>
+        </TooltipContent>
+      </Tooltip>
     </>
   );
 };

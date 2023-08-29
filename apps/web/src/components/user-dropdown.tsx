@@ -11,7 +11,6 @@ import {
   UserIcon,
   UserPlusIcon,
 } from "@rallly/icons";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -25,27 +24,11 @@ import Link from "next/link";
 
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
-import { usePlan } from "@/contexts/plan";
+import { Plan } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
-const Plan = () => {
-  const plan = usePlan();
-
-  if (plan === "paid") {
-    return (
-      <Badge>
-        <Trans i18nKey="planPro" defaults="Pro" />
-      </Badge>
-    );
-  }
-  return (
-    <Badge variant="secondary">
-      <Trans i18nKey="planFree" defaults="Free" />
-    </Badge>
-  );
-};
 export const UserDropdown = () => {
   const { user } = useUser();
   return (
