@@ -79,6 +79,11 @@ const nextConfig = {
         destination: createAppUrl("/register"),
         permanent: true,
       },
+      {
+        source: "/S17JJrRWc",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
 };
