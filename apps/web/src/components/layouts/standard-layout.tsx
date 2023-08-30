@@ -59,7 +59,12 @@ const NavMenuItem = ({
 
 const Upgrade = () => {
   return (
-    <Button variant="primary" size="sm" asChild>
+    <Button
+      className="hidden sm:inline-flex"
+      variant="primary"
+      size="sm"
+      asChild
+    >
       <Link href="/settings/billing">
         <SparklesIcon className="-ml-0.5 h-4 w-4" />
         <Trans i18nKey="upgrade" defaults="Upgrade" />
