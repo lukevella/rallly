@@ -104,7 +104,7 @@ const Logo = () => {
       </Link>
       <div
         className={cn(
-          "pointer-events-none flex w-8 items-center justify-center text-gray-500 transition-opacity delay-500",
+          "pointer-events-none flex w-5 items-center justify-center text-gray-500 transition-opacity delay-500",
           isBusy ? "opacity-100" : "opacity-0",
         )}
       >
@@ -126,7 +126,7 @@ const MainNav = () => {
       exit="hidden"
       className="border-b bg-gray-50/50"
     >
-      <Container className="flex h-14 items-center justify-between gap-4">
+      <Container className="flex h-14 items-center justify-between gap-x-2.5">
         <div className="flex shrink-0">
           <Logo />
           <nav className="hidden gap-x-2 sm:flex">
