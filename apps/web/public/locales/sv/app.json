@@ -203,6 +203,5 @@
   "accessAllFeatures": "Få tillgång till alla funktioner",
   "earlyAccess": "Få tidig tillgång till nya funktioner",
   "earlyAdopterDescription": "Som tidig prenumerant förblir priset för din prenumeration densamma och påverkas inte av eventuella prishöjningar.",
-  "nextPriceIncrease": "Nästa prishöjning är planerad till <b>{date}</b>.",
   "upgradeNowSaveLater": "Uppgradera nu, spara senare"
 }
