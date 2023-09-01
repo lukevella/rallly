@@ -3,14 +3,11 @@ import { cn } from "@rallly/ui";
 import { BillingPlanPeriod, BillingPlanPrice } from "@rallly/ui/billing-plan";
 import { Button } from "@rallly/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
-import dayjs from "dayjs";
 import React from "react";
 
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
-
-const monthlyPriceUsd = 5;
-const annualPriceUsd = 30;
+import { annualPriceUsd, monthlyPriceUsd } from "@/utils/constants";
 
 const Perks = ({ children }: React.PropsWithChildren) => {
   return <ul className="grid gap-1">{children}</ul>;
@@ -144,8 +141,8 @@ export const BillingPlans = () => {
         </div>
       </Tabs>
       <div className="rounded-md border border-cyan-200 bg-cyan-50 px-4 py-3 text-cyan-800">
-        <div className="flex items-start justify-between">
-          <TrendingUpIcon className="text-indigo mb-4 mr-2 mt-0.5 h-6 w-6 shrink-0 text-cyan-500" />
+        <div className="mb-2 flex items-start justify-between">
+          <TrendingUpIcon className="text-indigo mr-2 mt-0.5 h-6 w-6 shrink-0" />
         </div>
         <div className="mb-2 flex items-center gap-x-2">
           <h3 className="text-sm">
@@ -155,27 +152,10 @@ export const BillingPlans = () => {
             />
           </h3>
         </div>
-        <p className="-200 mb-4 text-sm">
+        <p className="text-sm">
           <Trans
             i18nKey="earlyAdopterDescription"
             defaults="As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases."
-          />
-        </p>
-        <p className="text-sm">
-          <Trans
-            i18nKey="nextPriceIncrease"
-            defaults="Next price increase is scheduled for <b>{date}</b>."
-            components={{
-              b: (
-                <a
-                  href="https://rallly.co/blog/july-recap"
-                  className="font-bold hover:underline"
-                />
-              ),
-            }}
-            values={{
-              date: dayjs("2023-09-01").format("LL"),
-            }}
           />
         </p>
       </div>

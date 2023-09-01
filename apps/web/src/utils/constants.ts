@@ -6,3 +6,6 @@ export const planIdYearly = process.env
 
 export const isFeedbackEnabled =
   process.env.NEXT_PUBLIC_FEEDBACK_ENABLED === "true";
+
+export const monthlyPriceUsd = 7;
+export const annualPriceUsd = 42;

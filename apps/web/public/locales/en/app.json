@@ -231,6 +231,5 @@
   "accessAllFeatures": "Access all features",
   "earlyAccess": "Get early access to new features",
   "earlyAdopterDescription": "As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases.",
-  "nextPriceIncrease": "Next price increase is scheduled for <b>{date}</b>.",
   "upgradeNowSaveLater": "Upgrade now, save later"
 }
