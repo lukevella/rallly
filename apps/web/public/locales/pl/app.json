@@ -231,6 +231,5 @@
   "accessAllFeatures": "Dostęp do wszystkich funkcji",
   "earlyAccess": "Wczesny dostęp do nowych funkcji",
   "earlyAdopterDescription": "Jako wczesny użytkownik zablokujesz swoją cenę subskrypcji i nie będą miały na nią wpływu przyszłe podwyżki cen.",
-  "nextPriceIncrease": "Kolejna podwyżka cen zaplanowana jest na <b>{date}</b>.",
   "upgradeNowSaveLater": "Ulepsz teraz, oszczędzaj później"
 }
