@@ -231,6 +231,5 @@
   "accessAllFeatures": "Pääsy kaikkiin ominaisuuksiin",
   "earlyAccess": "Ennakkopääsy uusiin ominaisuuksiin",
   "earlyAdopterDescription": "Varhaisena tilaajana tilausmaksusi pysyy samana eivätkä mahdolliset hinnankorotukset vaikuta siihen.",
-  "nextPriceIncrease": "Seuraavan hinnankorotuksen ajankohta on <b>{date}</b>.",
   "upgradeNowSaveLater": "Vaihda sopimus nyt ja säästä myöhemmin"
 }
