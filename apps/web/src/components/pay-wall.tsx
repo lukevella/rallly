@@ -21,6 +21,7 @@ import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
 import { usePlan } from "@/contexts/plan";
 import { IconComponent } from "@/types";
+import { annualPriceUsd, monthlyPriceUsd } from "@/utils/constants";
 
 const Feature = ({
   icon: Icon,
@@ -114,7 +115,7 @@ const Teaser = () => {
           <TabsContent value="monthly">
             <div>
               <div className="flex items-start justify-center gap-2.5">
-                <div className=" text-4xl font-bold">$5</div>
+                <div className=" text-4xl font-bold">${monthlyPriceUsd}</div>
                 <div>
                   <div className="text-xs font-semibold leading-5">USD</div>
                 </div>
@@ -128,8 +129,12 @@ const Teaser = () => {
             <div className="text-center">
               <div className="flex items-start justify-center gap-2.5">
                 <div className="flex items-end gap-2">
-                  <div className="font-bold text-gray-500 line-through">$5</div>
-                  <div className=" text-4xl font-bold">$2.50</div>
+                  <div className="font-bold text-gray-500 line-through">
+                    ${monthlyPriceUsd}
+                  </div>
+                  <div className=" text-4xl font-bold">
+                    ${(annualPriceUsd / 12).toFixed(2)}
+                  </div>
                 </div>
                 <div>
                   <div className="mt-1 text-xs font-semibold">USD</div>
@@ -143,7 +148,9 @@ const Teaser = () => {
                   <Trans
                     i18nKey="savePercent"
                     defaults="Save {percent}%"
-                    values={{ percent: 50 }}
+                    values={{
+                      percent: (annualPriceUsd / 12 / monthlyPriceUsd) * 100,
+                    }}
                   />
                 </span>
               </p>

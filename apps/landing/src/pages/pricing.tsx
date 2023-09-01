@@ -24,8 +24,8 @@ import { linkToApp } from "@/lib/linkToApp";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/page-translations";
 
-const monthlyPriceUsd = 5;
-const annualPriceUsd = 30;
+const monthlyPriceUsd = 7;
+const annualPriceUsd = 42;
 
 const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
