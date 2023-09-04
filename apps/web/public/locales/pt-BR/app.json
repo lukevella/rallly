@@ -222,5 +222,14 @@
   "billingPortal": "Portal de Cobrança",
   "supportDescription": "Precisa de ajuda com alguma coisa?",
   "supportBilling": "Por favor, entre em contato se precisar de ajuda.",
-  "contactSupport": "Contatar o Suporte"
+  "contactSupport": "Contatar o Suporte",
+  "planFreeDescription": "Para usuários eventuais",
+  "currentPlan": "Plano Atual",
+  "limitedAccess": "Acesso aos recursos principais",
+  "pollsDeleted": "Enquetes são automaticamente excluídas assim que ficarem inativas",
+  "planProDescription": "Para usuários avançados e profissionais",
+  "accessAllFeatures": "Acesse todos os recursos",
+  "earlyAccess": "Obtenha acesso antecipado a novas funcionalidades",
+  "earlyAdopterDescription": "Como um utilizador antecipado, você bloqueará a taxa de assinatura e não será afetado por futuros aumentos de preços.",
+  "upgradeNowSaveLater": "Atualize agora, economize depois"
 }
