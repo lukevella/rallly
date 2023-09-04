@@ -93,7 +93,7 @@ type PageProps = {
 
 const Page = ({ id, title, user }: PageProps) => {
   const { t } = useTranslation();
-  const name = user ?? t("guest");
+  const name = user || t("guest");
   return (
     <>
       <NextSeo
