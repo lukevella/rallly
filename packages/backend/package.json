@@ -18,7 +18,7 @@
     "@trpc/react-query": "^10.13.0",
     "@trpc/server": "^10.13.0",
     "iron-session": "^6.3.1",
-    "spacetime": "^7.4.4",
+    "spacetime": "^7.4.7",
     "stripe": "^13.2.0",
     "superjson": "^1.12.2",
     "timezone-soft": "^1.4.1"
