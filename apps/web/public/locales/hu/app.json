@@ -231,6 +231,5 @@
   "accessAllFeatures": "Hozzáférés minden funkcióhoz",
   "earlyAccess": "Korai hozzáférés új funkciókhoz",
   "earlyAdopterDescription": "Korai előfizetőként rögzül az előfizetésed ára és nem lesz rád hatássál a jövőbeni áremelkedések.",
-  "nextPriceIncrease": "A következő áremelkedés várható időpontja: <b>{date}</b>.",
   "upgradeNowSaveLater": "Fizess elő most, spórolj később"
 }

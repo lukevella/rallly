@@ -231,6 +231,5 @@
   "accessAllFeatures": "Accès à toutes les fonctionnalités",
   "earlyAccess": "Accès en avant-première aux nouvelles fonctionnalités",
   "earlyAdopterDescription": "En tant qu'adopteur précoce, vous verrouillez votre abonnement et ne serez pas affecté par des augmentations de prix futures.",
-  "nextPriceIncrease": "La prochaine augmentation de prix est prévue pour <b>{date}</b>.",
   "upgradeNowSaveLater": "Mettre à niveau maintenant, enregistrer plus tard"
 }

@@ -197,12 +197,13 @@
   "supportDescription": "Behöver du hjälp med något?",
   "supportBilling": "Hör gärna av dig om du behöver hjälp.",
   "contactSupport": "Kontakta support",
+  "planFreeDescription": "För tillfälliga användare",
   "currentPlan": "Nuvarande plan",
+  "limitedAccess": "Tillgång till grundläggande funktioner",
   "pollsDeleted": "Omröstningar raderas automatiskt när de blir inaktiva",
   "planProDescription": "För avancerade användare och proffs",
   "accessAllFeatures": "Få tillgång till alla funktioner",
   "earlyAccess": "Få tidig tillgång till nya funktioner",
   "earlyAdopterDescription": "Som tidig prenumerant förblir priset för din prenumeration densamma och påverkas inte av eventuella prishöjningar.",
-  "nextPriceIncrease": "Nästa prishöjning är planerad till <b>{date}</b>.",
   "upgradeNowSaveLater": "Uppgradera nu, spara senare"
 }
