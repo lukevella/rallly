@@ -9328,15 +9328,10 @@ space-separated-tokens@^2.0.0:
   resolved "https://registry.yarnpkg.com/space-separated-tokens/-/space-separated-tokens-2.0.2.tgz#1ecd9d2350a3844572c3f4a312bceb018348859f"
   integrity sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==
 
-spacetime@^7.1.4:
-  version "7.4.1"
-  resolved "https://registry.npmjs.org/spacetime/-/spacetime-7.4.1.tgz"
-  integrity sha512-khQpvLNMhHFzfFJslMfunqqsjOxdmoDDYX5Wh4qYb8N6f8vBPI6HvbT7Wb2wcMa+oP1Xh1HpEcwfPFrj8UfvHQ==
-
-spacetime@^7.4.4:
-  version "7.4.4"
-  resolved "https://registry.npmjs.org/spacetime/-/spacetime-7.4.4.tgz"
-  integrity sha512-88oqexyzGTzMCOibaBTE+3HXmaT+mw3EZVMymNTn1Xkg/6bC+nA3ZvsfmFEwxzc0VfG9BYYaXevvLiDRP7RJ6A==
+spacetime@^7.4.7:
+  version "7.4.7"
+  resolved "https://registry.yarnpkg.com/spacetime/-/spacetime-7.4.7.tgz#58e88c688727ff9b8e7be243404f511c89399828"
+  integrity sha512-5qVgPHUQj9TD4g1Xl68tXXwEi/27Xatvroyj8VU8/E7RgaqLJNaTte5tu3GRowuMqHcNMxs7UfzKeqAlLCo3tQ==
 
 spdx-correct@^3.0.0:
   version "3.1.1"
