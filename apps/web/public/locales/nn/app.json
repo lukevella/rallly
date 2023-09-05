@@ -1,1 +1,16 @@
-{}
+{
+  "areYouSure": "Er du sikker?",
+  "cancel": "Avbryt",
+  "changeName": "Endre namn",
+  "settings": "Innstillingar",
+  "comments": "Kommentarar",
+  "continue": "Hald fram",
+  "copied": "Kopiert",
+  "createAnAccount": "Opprett ein konto",
+  "createdBy": "av <b>{name}</b>",
+  "createPoll": "Opprett avrøysting",
+  "delete": "Slett",
+  "deleteDate": "Slett dato",
+  "deletedPoll": "Sletta avrøysting",
+  "deletedPollInfo": "Denne avrøystinga finst ikkje lenger."
+}
