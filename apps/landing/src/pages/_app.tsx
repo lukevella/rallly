@@ -13,7 +13,7 @@ import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { appWithTranslation } from "next-i18next";
-import { DefaultSeo } from "next-seo";
+import { DefaultSeo, SoftwareAppJsonLd } from "next-seo";
 import React from "react";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
@@ -80,6 +80,20 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           site: "@ralllyco",
           cardType: "summary_large_image",
         }}
+      />
+      <SoftwareAppJsonLd
+        name="Rallly"
+        aggregateRating={{
+          ratingValue: "4.2",
+          bestRating: "5",
+          worstRating: "0",
+          ratingCount: "6",
+        }}
+        price="0"
+        priceCurrency="USD"
+        operatingSystem="All"
+        applicationCategory="Scheduling"
+        description="Group scheduling made easy. Create polls, send links, and get feedback from your participants in seconds."
       />
       <Head>
         <meta
