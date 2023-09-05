@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "flex flex-col shadow-sm sm:flex-row gap-x-3 gap-y-2 rounded-md border p-3",
+  "flex sm:flex-row flex-col gap-x-3 gap-y-2 rounded-md border p-4",
   {
     variants: {
       variant: {
@@ -32,7 +32,7 @@ const Alert = React.forwardRef<
     className={cn(alertVariants({ variant }), className)}
     {...props}
   >
-    {Icon ? <Icon className="mt-0.5 h-4 w-4" /> : null}
+    {Icon ? <Icon className="mb-2 h-6 w-6" /> : null}
     <div>{children}</div>
   </div>
 ));
@@ -45,7 +45,10 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    className={cn(
+      "mb-2 text-sm font-bold leading-none tracking-tight",
+      className,
+    )}
     {...props}
   />
 ));
