@@ -110,10 +110,8 @@ export const EventCard = () => {
           {poll.description ? (
             <div className="flex gap-4">
               <TextIcon className="h-4 w-4 shrink-0 translate-y-1" />
-              <div className="border-primary whitespace-pre-line leading-relaxed">
-                <TruncatedLinkify>
-                  <TextSummary text={preventWidows(poll.description)} />
-                </TruncatedLinkify>
+              <div className="whitespace-pre-line leading-relaxed">
+                <TruncatedLinkify>{poll.description}</TruncatedLinkify>
               </div>
             </div>
           ) : null}

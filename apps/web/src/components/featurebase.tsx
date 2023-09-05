@@ -2,11 +2,10 @@ import { trpc } from "@rallly/backend";
 import { HelpCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import Script from "next/script";
 import React from "react";
 
-import Tooltip from "@/components/tooltip";
 import { Trans } from "@/components/trans";
 import { isFeedbackEnabled } from "@/utils/constants";
 
