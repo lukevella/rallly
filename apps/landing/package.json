@@ -36,8 +36,7 @@
     "react-i18next": "^12.1.4",
     "react-use": "^17.4.0",
     "remark": "^14.0.3",
-    "remark-html": "^15.0.2",
-    "typescript": "^4.9.4"
+    "remark-html": "^15.0.2"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.4",
@@ -50,11 +49,8 @@
     "@types/react-dom": "^18.0.11",
     "@types/react-linkify": "^1.0.1",
     "@types/smoothscroll-polyfill": "^0.3.1",
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.50.0",
     "cheerio": "^1.0.0-rc.12",
     "cross-env": "^7.0.3",
-    "eslint": "^7.26.0",
     "eslint-config-next": "^13.0.1",
     "eslint-config-turbo": "^0.0.9",
     "eslint-import-resolver-typescript": "^2.7.0",
