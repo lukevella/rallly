@@ -9,6 +9,7 @@ import utc from "dayjs/plugin/utc";
 import * as ics from "ics";
 import { z } from "zod";
 
+import { getSubscriptionStatus } from "../../utils/auth";
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import { nanoid } from "../../utils/nanoid";
 import {
@@ -43,19 +44,6 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
   return res.id;
 };
 
-const getPro = async (userId: string) => {
-  return Boolean(
-    await prisma.userPaymentData.findFirst({
-      where: {
-        userId,
-        endDate: {
-          gt: new Date(),
-        },
-      },
-    }),
-  );
-};
-
 export const polls = router({
   demo,
   participants,
@@ -86,7 +74,7 @@ export const polls = router({
       const participantUrlId = nanoid();
       const pollId = nanoid();
 
-      const isPro = await getPro(ctx.user.id);
+      const { active: isPro } = await getSubscriptionStatus(ctx.user.id);
 
       const poll = await prisma.poll.create({
         select: {
@@ -186,7 +174,7 @@ export const polls = router({
     .mutation(async ({ ctx, input }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
-      const isPro = await getPro(ctx.user.id);
+      const { active: isPro } = await getSubscriptionStatus(ctx.user.id);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
         await prisma.option.deleteMany({
