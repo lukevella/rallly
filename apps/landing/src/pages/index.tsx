@@ -11,10 +11,10 @@ const Page: NextPageWithLayout = () => {
   const { t } = useTranslation(["home"]);
   return (
     <Marketing
-      title={t("metaTitle", {
+      title={t("home:metaTitle", {
         defaultValue: "Rallly - Schedule Group Meetings",
       })}
-      description={t("metaDescription", {
+      description={t("home:metaDescription", {
         defaultValue:
           "Create polls and vote to find the best day or time. A free alternative to Doodle.",
       })}
