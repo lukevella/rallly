@@ -179,5 +179,7 @@
   "noPolls": "No hay encuestas",
   "noPollsDescription": "Comienza creando una nueva encuesta.",
   "calendarHelp": "No puedes crear una encuesta sin ninguna opción. Añada al menos una opción para continuar.",
-  "commentPlaceholder": "Dejar un comentario en esta encuesta (visible para todos)"
+  "commentPlaceholder": "Dejar un comentario en esta encuesta (visible para todos)",
+  "duplicateTitleLabel": "Título",
+  "upgrade": "Mejorar"
 }
