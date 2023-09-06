@@ -13,5 +13,8 @@
   "statsUsersRegistered": "Más de 45k usuarios registrados",
   "statsPollsCreated": "Más de 100k encuestas creadas",
   "statsLanguagesSupported": "Más de 10 idiomas soportados",
-  "hint": "¡Es gratis! No se requiere iniciar sesión."
+  "hint": "¡Es gratis! No se requiere iniciar sesión.",
+  "new": "Nuevo",
+  "metaTitle": "Rallly - Programar reuniones de grupo",
+  "metaDescription": "Crea encuestas y vota para encontrar el mejor día o la mejor hora. Una alternativa gratuita a Doodle."
 }
