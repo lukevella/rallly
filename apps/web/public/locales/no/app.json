@@ -26,7 +26,7 @@
   "deletePollDescription": "Alle data knyttet til denne avstemningen, blir slettet. Denne handlingen kan ikke angres.",
   "deletingOptionsWarning": "Du sletter alternativer som deltakere har stemt på. Stemmene deres blir også slettet.",
   "description": "Beskrivelse",
-  "descriptionPlaceholder": "Hei alle sammen, vennligst velg hvilke datoer som fungerer for dere!",
+  "descriptionPlaceholder": "Hei, alle sammen! Velg datoene som passer for dere.",
   "editDetails": "Rediger detaljer",
   "editOptions": "Rediger alternativer",
   "editVotes": "Rediger stemmer",
