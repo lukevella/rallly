@@ -2,5 +2,8 @@
   "noLoginRequired": "Intet login påkrævet",
   "viaTrustpilot": "via Trustpilot",
   "doodleAlternative": "Det bedste gratis alternativ til Doodle",
-  "findATimeTitle": "Find et tidspunkt at mødes"
+  "findATimeTitle": "Find et tidspunkt at mødes",
+  "new": "Ny",
+  "metaTitle": "Rallly - Planlæg gruppemøder",
+  "metaDescription": "Opret afstemninger og stemme for at finde den bedste dag eller tid. Et gratis alternativ til Doodle."
 }
