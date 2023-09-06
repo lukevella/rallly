@@ -194,5 +194,7 @@
   "disableComments": "Zakázať komentáre",
   "disableCommentsDescription": "Odstrániť možnosť komentovať anketu",
   "clockPreferences": "Nastavenia hodín",
-  "clockPreferencesDescription": "Nastavenie vašej časovej zóny a formátu času."
+  "clockPreferencesDescription": "Nastavenie vašej časovej zóny a formátu času.",
+  "duplicateTitleLabel": "Názov",
+  "upgrade": "Upgrade"
 }
