@@ -18,11 +18,12 @@ export default async function handler(
 
   if (userSession.user?.isGuest !== false) {
     // You need to be logged in to subscribe
-    return res
+    res
       .status(403)
       .redirect(
         `/login${req.url ? `?redirect=${encodeURIComponent(req.url)}` : ""}`,
       );
+    return;
   }
 
   const user = await prisma.user.findUnique({
@@ -36,7 +37,8 @@ export default async function handler(
   });
 
   if (!user) {
-    return res.status(403).redirect("/logout");
+    res.status(403).redirect("/logout");
+    return;
   }
 
   const { session_id: sessionId, return_path } = inputSchema.parse(req.query);
