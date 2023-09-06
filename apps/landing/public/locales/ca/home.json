@@ -13,5 +13,8 @@
   "statsUsersRegistered": "més de 45.000 usuaris registrats",
   "statsPollsCreated": "més de 100.000 enquestes creades",
   "statsLanguagesSupported": "més de 10 idiomes suportats",
-  "hint": "És gratuït! No fa falta un compte."
+  "hint": "És gratuït! No fa falta un compte.",
+  "new": "Nou",
+  "metaTitle": "Rallly - Planifica reunions de grup",
+  "metaDescription": "Crea enquestes i vota per trobar el millor dia o hora. Una alternativa gratuïta a Doodle."
 }
