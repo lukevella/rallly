@@ -125,5 +125,6 @@
   "share": "Chia sẻ",
   "dateAndTimeDescription": "Thay đổi cài đặt ngày và giờ ưa thích của bạn",
   "calendarHelp": "Bạn không thể tạo bình chọn nếu chưa có lựa chọn nào. Hãy thêm ít nhất một lựa chọn để tiếp tục.",
-  "commentPlaceholder": "Để lại một bình luận trên bình chọn này (mọi người đều có thể nhìn thấy)"
+  "commentPlaceholder": "Để lại một bình luận trên bình chọn này (mọi người đều có thể nhìn thấy)",
+  "duplicateTitleLabel": "Tiêu đề"
 }
