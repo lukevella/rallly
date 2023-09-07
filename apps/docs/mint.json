@@ -12,13 +12,13 @@
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
   },
   "topbarCtaButton": {
-    "name": "Get Started",
-    "url": "https://rallly.co/new"
+    "name": "Go to App",
+    "url": "https://app.rallly.co"
   },
   "topbarLinks": [
     {
-      "name": "Contact",
-      "url": "/contact/support"
+      "name": "Home",
+      "url": "https://rallly.co"
     }
   ],
   "anchors": [
@@ -63,7 +63,10 @@
       "group": "Self-Hosting",
       "pages": [
         "self-hosting/introduction",
-        "self-hosting/managed-hosting",
+        {
+          "group": "Quick Start",
+          "pages": ["self-hosting/own-server", "self-hosting/managed-hosting"]
+        },
         "self-hosting/configuration-options"
       ]
     },
