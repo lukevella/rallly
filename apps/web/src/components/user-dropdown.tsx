@@ -1,6 +1,7 @@
 import {
   ChevronDown,
   CreditCardIcon,
+  HeartHandshakeIcon,
   LifeBuoyIcon,
   ListIcon,
   LogInIcon,
@@ -24,7 +25,7 @@ import Link from "next/link";
 
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
-import { IfCloudHosted } from "@/contexts/environment";
+import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { Plan } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 
@@ -96,6 +97,18 @@ export const UserDropdown = () => {
             <Trans i18nKey="support" defaults="Support" />
           </Link>
         </DropdownMenuItem>
+        <IfSelfHosted>
+          <DropdownMenuItem asChild={true}>
+            <Link
+              target="_blank"
+              href="https://support.rallly.co/contribute"
+              className="flex items-center gap-x-2"
+            >
+              <HeartHandshakeIcon className="h-4 w-4" />
+              <Trans i18nKey="contribute" defaults="Contribute" />
+            </Link>
+          </DropdownMenuItem>
+        </IfSelfHosted>
         {isFeedbackEnabled ? (
           <DropdownMenuItem asChild={true}>
             <Link
