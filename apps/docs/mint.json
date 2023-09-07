@@ -63,10 +63,7 @@
       "group": "Self-Hosting",
       "pages": [
         "self-hosting/introduction",
-        {
-          "group": "Quick Start",
-          "pages": ["self-hosting/own-server", "self-hosting/managed-hosting"]
-        },
+        "self-hosting/managed-hosting",
         "self-hosting/configuration-options"
       ]
     },
