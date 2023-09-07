@@ -8,28 +8,37 @@ const supportedLocales = Object.keys(languages);
 // these paths are always public
 const publicPaths = ["/login", "/register", "/invite", "/auth"];
 // these paths always require authentication
-const protectedPaths = ["/settings/billing", "/settings/profile"];
+const protectedPaths = ["/settings/profile"];
+
+const checkLoginRequirements = async (req: NextRequest, res: NextResponse) => {
+  const session = await getSession(req, res);
+  const isGuest = session.user?.isGuest !== false;
+
+  if (!isGuest) {
+    return false;
+  }
+
+  if (process.env.NEXT_PUBLIC_SELF_HOSTED === "true") {
+    // when self-hosting, only public paths don't require login
+    return !publicPaths.some((publicPath) =>
+      req.nextUrl.pathname.startsWith(publicPath),
+    );
+  } else {
+    // when using the hosted version, only protected paths require login
+    return protectedPaths.some((protectedPath) =>
+      req.nextUrl.pathname.includes(protectedPath),
+    );
+  }
+};
 
 export async function middleware(req: NextRequest) {
   const { headers, cookies, nextUrl } = req;
   const newUrl = nextUrl.clone();
   const res = NextResponse.next();
-  const session = await getSession(req, res);
 
-  // a protected path is one that requires to be logged in
-  const isProtectedPath = protectedPaths.some((protectedPath) =>
-    req.nextUrl.pathname.includes(protectedPath),
-  );
+  const isLoginRequired = await checkLoginRequirements(req, res);
 
-  const isProtectedPathDueToRequiredAuth =
-    process.env.NEXT_PUBLIC_SELF_HOSTED === "true" &&
-    !publicPaths.some((publicPath) =>
-      req.nextUrl.pathname.startsWith(publicPath),
-    );
-
-  const isGuest = session.user?.isGuest !== false;
-
-  if (isGuest && (isProtectedPathDueToRequiredAuth || isProtectedPath)) {
+  if (isLoginRequired) {
     newUrl.pathname = "/login";
     newUrl.searchParams.set("redirect", req.nextUrl.pathname);
     return NextResponse.redirect(newUrl);

@@ -3,7 +3,11 @@ import { useTranslation } from "next-i18next";
 
 import { getProfileLayout } from "@/components/layouts/profile-layout";
 import { ProfileSettings } from "@/components/settings/profile-settings";
-import { SettingsSection } from "@/components/settings/settings-section";
+import {
+  Settings,
+  SettingsHeader,
+  SettingsSection,
+} from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
@@ -18,10 +22,13 @@ const Page: NextPageWithLayout = () => {
     return null;
   }
   return (
-    <div className="divide-y">
+    <Settings>
       <Head>
-        <title>{t("settings")}</title>
+        <title>{t("profile")}</title>
       </Head>
+      <SettingsHeader>
+        <Trans i18nKey="profile" />
+      </SettingsHeader>
       <SettingsSection
         title={<Trans i18nKey="profile" defaults="Profile" />}
         description={
@@ -59,7 +66,7 @@ const Page: NextPageWithLayout = () => {
           <Trans i18nKey="deleteMyAccount" defaults="Yes, delete my account" />
         </Button>
       </SettingsSection> */}
-    </div>
+    </Settings>
   );
 };
 

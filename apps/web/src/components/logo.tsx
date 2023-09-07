@@ -1,25 +1,25 @@
-import clsx from "clsx";
+import Image from "next/image";
 
-export const Logo = (props: { className?: string; color?: boolean }) => {
-  const { color = true } = props;
+const sizes = {
+  sm: {
+    width: 120,
+    height: 22,
+  },
+  md: {
+    width: 150,
+    height: 30,
+  },
+};
+
+export const Logo = ({ size = "md" }: { size?: keyof typeof sizes }) => {
   return (
-    <span className="inline-flex select-none items-center">
-      <span
-        className={clsx(
-          "font-semibold uppercase tracking-widest",
-          {
-            "text-primary-600": color,
-          },
-          props.className,
-        )}
-      >
-        Rallly
-      </span>
-      {process.env.NEXT_PUBLIC_BETA === "1" ? (
-        <span className="ml-2 inline-block rounded bg-rose-500 px-1 text-xs lowercase tracking-tight text-gray-50">
-          beta
-        </span>
-      ) : null}
-    </span>
+    <Image
+      priority={true}
+      className="mx"
+      src="/static/logo.svg"
+      width={sizes[size].width}
+      height={sizes[size].height}
+      alt="Rallly"
+    />
   );
 };

@@ -24,6 +24,7 @@ import Link from "next/link";
 
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
+import { IfCloudHosted } from "@/contexts/environment";
 import { Plan } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 
@@ -34,7 +35,7 @@ export const UserDropdown = () => {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className="group">
-        <Button className="rounded-full">
+        <Button variant="ghost" className="rounded-full">
           <CurrentUserAvatar size="sm" className="-ml-1" />
           <ChevronDown className="h-4 w-4" />
         </Button>
@@ -52,17 +53,18 @@ export const UserDropdown = () => {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <IfAuthenticated>
-          <DropdownMenuItem asChild={true}>
-            <Link
-              href="/settings/profile"
-              className="flex items-center gap-x-2"
-            >
-              <UserIcon className="h-4 w-4" />
-              <Trans i18nKey="profile" defaults="Profile" />
-            </Link>
-          </DropdownMenuItem>
-        </IfAuthenticated>
+        <DropdownMenuItem asChild={true}>
+          <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
+            <ListIcon className="h-4 w-4" />
+            <Trans i18nKey="polls" defaults="Polls" />
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild={true}>
+          <Link href="/settings/profile" className="flex items-center gap-x-2">
+            <UserIcon className="h-4 w-4" />
+            <Trans i18nKey="profile" defaults="Profile" />
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild={true}>
           <Link
             href="/settings/preferences"
@@ -72,7 +74,7 @@ export const UserDropdown = () => {
             <Trans i18nKey="preferences" defaults="Preferences" />
           </Link>
         </DropdownMenuItem>
-        <IfAuthenticated>
+        <IfCloudHosted>
           <DropdownMenuItem asChild={true}>
             <Link
               href="/settings/billing"
@@ -82,13 +84,7 @@ export const UserDropdown = () => {
               <Trans i18nKey="Billing" defaults="Billing" />
             </Link>
           </DropdownMenuItem>
-        </IfAuthenticated>
-        <DropdownMenuItem asChild={true}>
-          <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
-            <ListIcon className="h-4 w-4" />
-            <Trans i18nKey="polls" defaults="Polls" />
-          </Link>
-        </DropdownMenuItem>
+        </IfCloudHosted>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild={true}>
           <Link

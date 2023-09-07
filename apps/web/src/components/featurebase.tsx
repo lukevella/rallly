@@ -13,7 +13,7 @@ const FeaturebaseScript = () => (
   <Script src="https://do.featurebase.app/js/sdk.js" id="featurebase-sdk" />
 );
 
-export const Changelog = ({ className }: { className?: string }) => {
+export const FeaturebaseChangelog = ({ className }: { className?: string }) => {
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const win = window as any;
@@ -37,7 +37,7 @@ export const Changelog = ({ className }: { className?: string }) => {
     <>
       <FeaturebaseScript />
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <Button
             className={cn(
               "hidden sm:inline-flex [&>*]:pointer-events-none",

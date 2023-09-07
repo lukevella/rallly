@@ -8,7 +8,7 @@ import { useWhoAmI } from "@/contexts/whoami";
 import { useRequiredContext } from "./use-required-context";
 
 export const UserContext = React.createContext<{
-  user: UserSession & { shortName: string };
+  user: UserSession & { name: string };
   refresh: () => void;
   ownsObject: (obj: { userId: string | null }) => boolean;
 } | null>(null);
@@ -50,23 +50,22 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const queryClient = trpc.useContext();
 
   const user = useWhoAmI();
-  const subscriptionQuery = trpc.user.subscription.useQuery();
   const { data: userPreferences } = trpc.userPreferences.get.useQuery();
 
-  const shortName = user
+  const name = user
     ? user.isGuest === false
-      ? user.name.split(" ")[0]
+      ? user.name
       : user.id.substring(0, 10)
     : t("guest");
 
-  if (!user || userPreferences === undefined || !subscriptionQuery.isFetched) {
+  if (!user || userPreferences === undefined) {
     return null;
   }
 
   return (
     <UserContext.Provider
       value={{
-        user: { ...user, shortName },
+        user: { ...user, name },
         refresh: () => {
           return queryClient.whoami.invalidate();
         },

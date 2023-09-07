@@ -59,7 +59,7 @@ const Page: NextPageWithLayout<{ userId: string; pollId: string }> = ({
           <ArrowRightIcon className="text-muted-foreground h-4 w-4" />
           <div className="flex items-center gap-x-2.5">
             <CurrentUserAvatar />
-            <div>{user.shortName}</div>
+            <div>{user.name}</div>
           </div>
         </div>
       </PageDialogContent>
