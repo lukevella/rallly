@@ -103,7 +103,6 @@
   "addComment": "Afegeix un comentari",
   "profile": "Perfil",
   "polls": "Enquestes",
-  "showLess": "Mostra menys…",
   "showMore": "Mostra més…",
   "timeZoneSelect__defaultValue": "Selecciona la zona horària…",
   "timeZoneSelect__noOption": "No s'ha trobat cap opció",
@@ -177,5 +176,8 @@
   "plan_extendedPollLife": "Mantenir enquestes indefinides",
   "becomeATranslator": "Ajuda'ns a traduir",
   "calendarHelp": "No pots crear una enquesta sense cap opció. Afegeix com a mínim una opció per a continuar.",
-  "commentPlaceholder": "Deixa un comentari en aquesta enquesta (visible per a tothom)"
+  "commentPlaceholder": "Deixa un comentari en aquesta enquesta (visible per a tothom)",
+  "duplicateTitleLabel": "Títol",
+  "upgrade": "Millora",
+  "pricing": "Preus"
 }
