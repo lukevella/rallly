@@ -51,10 +51,6 @@ export const IfFreeUser = ({ children }: React.PropsWithChildren) => {
 export const Plan = () => {
   const plan = usePlan();
 
-  if (isSelfHosted) {
-    return null;
-  }
-
   if (plan === "paid") {
     return (
       <Badge>
