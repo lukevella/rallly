@@ -2,11 +2,6 @@
 
 read -p "Enter the new version number: " new_version
 
-# Check if the version number follows semver format
-if ! [[ $new_version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  echo "Error: Invalid version number. The version number must follow the semver format (e.g. 1.0.0)."
-  exit 1
-fi
 
 if [ ! -f "package.json" ]; then
   echo "Error: package.json file not found."
