@@ -21,7 +21,7 @@ export const UpgradeButton = ({
       <input
         type="hidden"
         name="return_path"
-        value={encodeURIComponent(window.location.pathname)}
+        value={window.location.pathname}
       />
       <Button
         className="w-full"
