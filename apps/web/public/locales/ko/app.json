@@ -105,5 +105,6 @@
   "notificationsOff": "알람이 꺼져 있습니다.",
   "share": "공유하기",
   "calendarHelp": "옵션이 없는 투표는 생성할 수 없습니다. 최소 1개의 옵션을 추가해주세요.",
-  "commentPlaceholder": "이 투표에 댓글 남기기 (모두에게 공개됩니다)"
+  "commentPlaceholder": "이 투표에 댓글 남기기 (모두에게 공개됩니다)",
+  "duplicateTitleLabel": "제목"
 }
