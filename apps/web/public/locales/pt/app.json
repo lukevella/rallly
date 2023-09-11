@@ -96,5 +96,7 @@
   "notificationsOn": "Notificações ativadas",
   "share": "Partilhar",
   "calendarHelp": "Não é possível criar uma sondagem sem opções. Adicionar no mínimo uma opção para continuar.",
-  "commentPlaceholder": "Deixa um comentário nesta sondagem (visível para todos)"
+  "commentPlaceholder": "Deixa um comentário nesta sondagem (visível para todos)",
+  "duplicateTitleLabel": "Título",
+  "pricing": "Preço"
 }
