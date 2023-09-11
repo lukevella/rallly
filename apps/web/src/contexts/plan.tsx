@@ -10,7 +10,7 @@ export const useSubscription = () => {
   const { user } = useUser();
 
   const { data } = trpc.user.subscription.useQuery(undefined, {
-    enabled: !isSelfHosted && user?.isGuest === false,
+    enabled: !isSelfHosted && user.isGuest === false,
   });
 
   if (isSelfHosted) {
