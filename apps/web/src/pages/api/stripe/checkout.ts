@@ -20,18 +20,19 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const userSession = await getSession(req, res);
+  const { period = "monthly", return_path } = inputSchema.parse(req.body);
 
   if (userSession.user?.isGuest !== false) {
     // You need to be logged in to subscribe
     res.redirect(
       303,
-      `/login${req.url ? `?redirect=${encodeURIComponent(req.url)}` : ""}`,
+      `/login${
+        return_path ? `?redirect=${encodeURIComponent(return_path)}` : ""
+      }`,
     );
 
     return;
   }
-
-  const { period = "monthly", return_path } = inputSchema.parse(req.body);
 
   const user = await prisma.user.findUnique({
     where: {
