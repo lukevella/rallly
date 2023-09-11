@@ -35,15 +35,18 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method !== "POST") {
-    return res.status(405).end();
+    res.status(405).end();
+    return;
   }
   if (!endpointSecret) {
-    return res.status(400).send("No endpoint secret");
+    res.status(400).send("No endpoint secret");
+    return;
   }
   const event = await validatedWebhook(req);
 
   if (!event) {
-    return res.status(400).send("Invalid signature");
+    res.status(400).send("Invalid signature");
+    return;
   }
 
   switch (event.type) {
@@ -52,7 +55,8 @@ export default async function handler(
       const { userId } = metadataSchema.parse(checkoutSession.metadata);
 
       if (!userId) {
-        return res.status(400).send("Missing client reference ID");
+        res.status(400).send("Missing client reference ID");
+        return;
       }
 
       await prisma.user.update({

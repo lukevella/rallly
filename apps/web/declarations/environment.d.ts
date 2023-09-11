@@ -34,10 +34,6 @@ declare global {
        */
       NEXT_PUBLIC_CRISP_WEBSITE_ID?: string;
       /**
-       * When `true` it will show the feedback button and pull the changelog from featurebase
-       */
-      NEXT_PUBLIC_FEEDBACK_ENABLED?: string;
-      /**
        * Users of your instance will see this as their support email
        */
       SUPPORT_EMAIL: string;
@@ -68,10 +64,6 @@ declare global {
        * Example: "user@example.com, *@example.com, *@*.example.com"
        */
       ALLOWED_EMAILS?: string;
-      /**
-       * "true" to require authentication for creating new polls and accessing admin pages
-       */
-      AUTH_REQUIRED?: string;
       /**
        * Determines what email provider to use. "smtp" or "ses"
        */

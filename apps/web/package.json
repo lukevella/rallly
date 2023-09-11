@@ -33,6 +33,7 @@
     "@tailwindcss/typography": "^0.5.9",
     "@tanstack/react-table": "^8.9.1",
     "@vercel/analytics": "^0.1.8",
+    "@vercel/og": "^0.5.13",
     "accept-language-parser": "^1.5.0",
     "autoprefixer": "^10.4.13",
     "class-variance-authority": "^0.6.0",
@@ -67,7 +68,6 @@
     "spacetime": "^7.4.7",
     "superjson": "^1.12.2",
     "timezone-soft": "^1.4.1",
-    "typescript": "^4.9.4",
     "zod": "^3.20.2"
   },
   "devDependencies": {
@@ -81,11 +81,8 @@
     "@types/react-dom": "^18.0.11",
     "@types/react-linkify": "^1.0.1",
     "@types/smoothscroll-polyfill": "^0.3.1",
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.50.0",
     "cheerio": "^1.0.0-rc.12",
     "cross-env": "^7.0.3",
-    "eslint": "^7.26.0",
     "eslint-config-next": "^13.0.1",
     "eslint-config-turbo": "^0.0.9",
     "eslint-import-resolver-typescript": "^2.7.0",

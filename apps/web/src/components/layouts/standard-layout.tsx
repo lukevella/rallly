@@ -1,9 +1,8 @@
-import { ListIcon, LogInIcon, SparklesIcon } from "@rallly/icons";
+import { ListIcon, SparklesIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -11,13 +10,18 @@ import { Toaster } from "react-hot-toast";
 
 import { Clock, ClockPreferences } from "@/components/clock";
 import { Container } from "@/components/container";
-import { Changelog, FeaturebaseIdentify } from "@/components/featurebase";
+import {
+  FeaturebaseChangelog,
+  FeaturebaseIdentify,
+} from "@/components/featurebase";
 import FeedbackButton from "@/components/feedback";
+import { Logo } from "@/components/logo";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
+import { IfCloudHosted } from "@/contexts/environment";
 import { IfFreeUser } from "@/contexts/plan";
-import { isFeedbackEnabled } from "@/utils/constants";
+import { appVersion, isFeedbackEnabled } from "@/utils/constants";
 import { DayjsProvider } from "@/utils/dayjs";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
@@ -73,7 +77,7 @@ const Upgrade = () => {
   );
 };
 
-const Logo = () => {
+const LogoArea = () => {
   const router = useRouter();
   const [isBusy, setIsBusy] = React.useState(false);
   React.useEffect(() => {
@@ -87,20 +91,14 @@ const Logo = () => {
     };
   }, [router.events]);
   return (
-    <div className="relative flex items-center justify-center gap-4">
+    <div className="relative flex items-center justify-center gap-x-4">
       <Link
         href="/polls"
         className={clsx(
           "inline-block transition-transform active:translate-y-1",
         )}
       >
-        <Image
-          priority={true}
-          src="/static/logo.svg"
-          width={120}
-          height={22}
-          alt="Rallly"
-        />
+        <Logo size="sm" />
       </Link>
       <div
         className={cn(
@@ -112,6 +110,10 @@ const Logo = () => {
       </div>
     </div>
   );
+};
+
+const Changelog = () => {
+  return <FeaturebaseChangelog />;
 };
 
 const MainNav = () => {
@@ -127,8 +129,8 @@ const MainNav = () => {
       className="border-b bg-gray-50/50"
     >
       <Container className="flex h-14 items-center justify-between gap-x-2.5">
-        <div className="flex shrink-0">
-          <Logo />
+        <div className="flex shrink-0 gap-x-4">
+          <LogoArea />
           <nav className="hidden gap-x-2 sm:flex">
             <NavMenuItem
               icon={ListIcon}
@@ -137,11 +139,13 @@ const MainNav = () => {
             />
           </nav>
         </div>
-        <div className="flex items-center gap-x-4">
+        <div className="flex items-center gap-x-2.5">
           <nav className="flex items-center gap-x-1 sm:gap-x-1.5">
-            <IfFreeUser>
-              <Upgrade />
-            </IfFreeUser>
+            <IfCloudHosted>
+              <IfFreeUser>
+                <Upgrade />
+              </IfFreeUser>
+            </IfCloudHosted>
             <IfGuest>
               <Button
                 size="sm"
@@ -150,12 +154,13 @@ const MainNav = () => {
                 className="hidden sm:flex"
               >
                 <Link href="/login">
-                  <LogInIcon className="h-4 w-4" />
                   <Trans i18nKey="login" defaults="Login" />
                 </Link>
               </Button>
             </IfGuest>
-            <Changelog />
+            <IfCloudHosted>
+              <Changelog />
+            </IfCloudHosted>
             <ClockPreferences>
               <Button size="sm" variant="ghost">
                 <Clock />
@@ -198,6 +203,17 @@ export const StandardLayout: React.FunctionComponent<{
                 {children}
               </m.div>
             </AnimatePresence>
+            {appVersion ? (
+              <div className="fixed bottom-0 right-0 z-50 rounded-tl-md bg-gray-200/90">
+                <Link
+                  className="px-2 py-1 text-xs tabular-nums tracking-tight"
+                  target="_blank"
+                  href={`https://github.com/lukevella/rallly/releases/${appVersion}`}
+                >
+                  {`${appVersion}`}
+                </Link>
+              </div>
+            ) : null}
           </div>
           {isFeedbackEnabled ? (
             <>

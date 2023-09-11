@@ -20,17 +20,19 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const userSession = await getSession(req, res);
+  const { period = "monthly", return_path } = inputSchema.parse(req.body);
 
   if (userSession.user?.isGuest !== false) {
     // You need to be logged in to subscribe
-    return res
-      .status(403)
-      .redirect(
-        `/login${req.url ? `?redirect=${encodeURIComponent(req.url)}` : ""}`,
-      );
-  }
+    res.redirect(
+      303,
+      `/login${
+        return_path ? `?redirect=${encodeURIComponent(return_path)}` : ""
+      }`,
+    );
 
-  const { period = "monthly", return_path } = inputSchema.parse(req.query);
+    return;
+  }
 
   const user = await prisma.user.findUnique({
     where: {
@@ -48,12 +50,14 @@ export default async function handler(
   });
 
   if (!user) {
-    return res.status(403).redirect("/logout");
+    res.redirect(303, "/logout");
+    return;
   }
 
   if (user.subscription?.active === true) {
     // User already has an active subscription. Take them to customer portal
-    return res.redirect("/api/stripe/portal");
+    res.redirect(303, "/api/stripe/portal");
+    return;
   }
 
   const session = await stripe.checkout.sessions.create({
@@ -99,10 +103,11 @@ export default async function handler(
 
   if (session.url) {
     // redirect to checkout session
-    return res.status(303).redirect(session.url);
+    res.redirect(303, session.url);
+    return;
   }
 
-  return res
+  res
     .status(500)
     .json({ error: "Something went wrong while creating a checkout session" });
 }

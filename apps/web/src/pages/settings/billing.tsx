@@ -1,19 +1,28 @@
 import { trpc } from "@rallly/backend";
-import { ArrowUpRight, CreditCardIcon } from "@rallly/icons";
+import { ArrowUpRight, CreditCardIcon, SendIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
 import { Label } from "@rallly/ui/label";
 import dayjs from "dayjs";
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 
 import { BillingPlans } from "@/components/billing/billing-plans";
 import { getProfileLayout } from "@/components/layouts/profile-layout";
-import { SettingsSection } from "@/components/settings/settings-section";
+import {
+  Settings,
+  SettingsContent,
+  SettingsGroup,
+  SettingsHeader,
+  SettingsItem,
+  SettingsItemTitle,
+  SettingsSection,
+} from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
-import { Plan } from "@/contexts/plan";
+import { useSubscription } from "@/contexts/plan";
+import { isSelfHosted } from "@/utils/constants";
 
 import { NextPageWithLayout } from "../../types";
 import { getStaticTranslations } from "../../utils/with-page-translations";
@@ -28,9 +37,13 @@ declare global {
 const BillingPortal = () => {
   return (
     <div>
-      <Label className="mb-2">
-        <Trans i18nKey="billingPortal" />
-      </Label>
+      <SettingsGroup>
+        <SettingsItem>
+          <SettingsItemTitle>
+            <Trans i18nKey="billingStatus" />
+          </SettingsItemTitle>
+        </SettingsItem>
+      </SettingsGroup>
       <p className="text-sm">
         <Trans
           i18nKey="activeSubscription"
@@ -40,10 +53,12 @@ const BillingPortal = () => {
       <div className="mt-6">
         <Button asChild>
           <Link
+            target="_blank"
             href={`/api/stripe/portal?return_path=${encodeURIComponent(
               window.location.pathname,
             )}`}
           >
+            <CreditCardIcon className="h-4 w-4" />
             <span>
               <Trans i18nKey="billingPortal" defaults="Billing Portal" />
             </span>
@@ -62,28 +77,14 @@ export const proPlanIdYearly = process.env
   .NEXT_PUBLIC_PRO_PLAN_ID_YEARLY as string;
 
 const SubscriptionStatus = () => {
-  const { user } = useUser();
-
-  const { data } = trpc.user.subscription.useQuery();
+  const data = useSubscription();
 
   if (!data) {
     return null;
   }
 
-  if (user.isGuest) {
-    return <>You need to be logged in.</>;
-  }
-
   return (
     <div className="space-y-6">
-      <div>
-        <Label className="mb-2">
-          <Trans i18nKey="currentPlan" />
-        </Label>
-        <div>
-          <Plan />
-        </div>
-      </div>
       {!data.active ? (
         <div>
           <Label className="mb-4">
@@ -214,54 +215,89 @@ const LegacyBilling = () => {
   );
 };
 
+<SettingsSection
+  title={<Trans i18nKey="support" defaults="Support" />}
+  description={
+    <Trans i18nKey="supportDescription" defaults="Need help with anything?" />
+  }
+>
+  <div className="space-y-6">
+    <p className="text-sm">
+      <Trans
+        i18nKey="supportBilling"
+        defaults="Please reach out if you need any assistance."
+      />
+    </p>
+    <Button asChild>
+      <Link href="mailto:support@rallly.co">
+        <SendIcon className="h-4 w-4" />
+        <Trans i18nKey="contactSupport" defaults="Contact Support" />
+      </Link>
+    </Button>
+  </div>
+</SettingsSection>;
+
 const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="divide-y">
+    <Settings>
+      <SettingsHeader>
+        <Trans i18nKey="billing" />
+      </SettingsHeader>
       <Head>
         <title>{t("billing")}</title>
       </Head>
-      <SettingsSection
-        title={<Trans i18nKey="billingStatus" defaults="Billing Status" />}
-        description={
-          <Trans
-            i18nKey="billingStatusDescription"
-            defaults="Manage your subscription and billing details."
-          />
-        }
-      >
-        <SubscriptionStatus />
-      </SettingsSection>
-      <SettingsSection
-        title={<Trans i18nKey="support" defaults="Support" />}
-        description={
-          <Trans
-            i18nKey="supportDescription"
-            defaults="Need help with anything?"
-          />
-        }
-      >
-        <div className="space-y-6">
-          <p className="text-sm">
+      <SettingsContent>
+        <SettingsSection
+          title={<Trans i18nKey="billingStatus" defaults="Billing Status" />}
+          description={
             <Trans
-              i18nKey="supportBilling"
-              defaults="Please reach out if you need any assistance."
+              i18nKey="billingStatusDescription"
+              defaults="Manage your subscription and billing details."
             />
-          </p>
-          <Button asChild>
-            <Link href="mailto:support@rallly.co">
-              <Trans i18nKey="contactSupport" defaults="Contact Support" />
-            </Link>
-          </Button>
-        </div>
-      </SettingsSection>
-    </div>
+          }
+        >
+          <SubscriptionStatus />
+        </SettingsSection>
+        <SettingsSection
+          title={<Trans i18nKey="support" defaults="Support" />}
+          description={
+            <Trans
+              i18nKey="supportDescription"
+              defaults="Need help with anything?"
+            />
+          }
+        >
+          <div className="space-y-6">
+            <p className="text-sm">
+              <Trans
+                i18nKey="supportBilling"
+                defaults="Please reach out if you need any assistance."
+              />
+            </p>
+            <Button asChild>
+              <Link href="mailto:support@rallly.co">
+                <SendIcon className="h-4 w-4" />
+                <Trans i18nKey="contactSupport" defaults="Contact Support" />
+              </Link>
+            </Button>
+          </div>
+        </SettingsSection>
+      </SettingsContent>
+    </Settings>
   );
 };
 
 Page.getLayout = getProfileLayout;
 
-export const getStaticProps = getStaticTranslations;
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  if (isSelfHosted) {
+    return {
+      notFound: true,
+    };
+  }
+  return await getStaticTranslations(ctx);
+};
 
 export default Page;

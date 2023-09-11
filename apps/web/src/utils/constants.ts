@@ -4,8 +4,11 @@ export const planIdMonthly = process.env
 export const planIdYearly = process.env
   .NEXT_PUBLIC_PRO_PLAN_ID_YEARLY as string;
 
-export const isFeedbackEnabled =
-  process.env.NEXT_PUBLIC_FEEDBACK_ENABLED === "true";
+export const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === "true";
+
+export const isFeedbackEnabled = !isSelfHosted;
 
 export const monthlyPriceUsd = 7;
+
 export const annualPriceUsd = 42;
+export const appVersion = process.env.NEXT_PUBLIC_APP_VERSION;

@@ -18,8 +18,8 @@ export const getSubscriptionStatus = async (userId: string) => {
   if (user?.subscription?.active === true) {
     return {
       active: true,
-      expiresAt: user.subscription.periodEnd,
-    };
+      legacy: false,
+    } as const;
   }
 
   const userPaymentData = await prisma.userPaymentData.findFirst({
@@ -34,18 +34,14 @@ export const getSubscriptionStatus = async (userId: string) => {
     },
   });
 
-  if (
-    userPaymentData?.endDate &&
-    userPaymentData.endDate.getTime() > Date.now()
-  ) {
+  if (userPaymentData) {
     return {
       active: true,
       legacy: true,
-      expiresAt: userPaymentData.endDate,
-    };
+    } as const;
   }
 
   return {
     active: false,
-  };
+  } as const;
 };

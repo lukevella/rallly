@@ -1,4 +1,5 @@
 ---
+icon: gear
 title: Configuration Options
 description: Using environment variable to configure a self-hosted instance of Rallly.
 ---
@@ -12,33 +13,39 @@ This page lists all environment variables supported by Rallly.
 
 These variables need to be configured for Rallly to run and function properly.
 
-<ParamField path="DATABASE_URL" default="">
+<ParamField path="DATABASE_URL" required>
   Postgres database connection string
 </ParamField>
 
-<ParamField path="NEXT_PUBLIC_BASE_URL" default="http://localhost:3000">
+<ParamField path="NEXT_PUBLIC_BASE_URL" required>
   The base url where this instance is accessible, including the scheme (eg.
   `http://` or `https://`), the domain name, and optionally a port.
 </ParamField>
 
-<ParamField path="SECRET_PASSWORD">
+<ParamField path="SECRET_PASSWORD" required>
   A random 32-character secret key used to encrypt user sessions
+</ParamField>
+
+<ParamField path="ALLOWED_EMAILS">
+  Comma separated list of email addresses that are allowed to register and
+  login. Wildcard characters are supported. Example: Setting it to
+  `*@example.com` to allow anyone with a `@example.com` email address.
 </ParamField>
 
 ### Email Configuration
 
 These variables need to be configured to let Rallly send out transactional emails.
 
-<ParamField path="NOREPLY_EMAIL" default="">
+<ParamField path="NOREPLY_EMAIL">
   This email is used as the sender for all transactional emails. If not set,
   `SUPPORT_EMAIL` will be used instead.
 </ParamField>
 
-<ParamField path="SUPPORT_EMAIL" default="">
+<ParamField path="SUPPORT_EMAIL" required>
   This email will be shown as the contact email for support queries.
 </ParamField>
 
-<ParamField path="SMTP_HOST" default="localhost">
+<ParamField path="SMTP_HOST" required>
   The host address of your SMTP server
 </ParamField>
 
@@ -46,7 +53,7 @@ These variables need to be configured to let Rallly send out transactional email
   The port of your SMTP server
 </ParamField>
 
-<ParamField path="SMTP_SECURE" default={"false"}>
+<ParamField path="SMTP_SECURE" default="false">
   Set to "true" if SSL is enabled for your SMTP connection
 </ParamField>
 
@@ -60,22 +67,4 @@ These variables need to be configured to let Rallly send out transactional email
 
 <ParamField path="SMTP_TLS_ENABLED" default={"false"}>
   Enable TLS for your SMTP connection
-</ParamField>
-
-### Custom Configuration
-
-These variables allow you to change Rallly's default behavior.
-
-<ParamField path="ALLOWED_EMAILS" default="">
-  Comma separated list of email addresses that are allowed to register and
-  login. Wildcard characters are supported. Example: `*@yourcompany.com`
-</ParamField>
-
-<ParamField path="AUTH_REQUIRED" default={"false"}>
-  Set to `true` to require authentication for creating new polls and accessing
-  admin pages
-</ParamField>
-
-<ParamField path="DISABLE_LANDING_PAGE" default={"false"}>
-  Whether or not to disable the landing page
 </ParamField>
