@@ -103,7 +103,6 @@
   "addComment": "Pridat komentár",
   "profile": "Profil",
   "polls": "Ankety",
-  "showLess": "Zobraziť menej…",
   "showMore": "Zobraziť viac…",
   "timeZoneSelect__defaultValue": "Vybrať časové pásmo…",
   "timeZoneSelect__noOption": "Neboli nájdené žiadne možnosti",
@@ -194,5 +193,8 @@
   "disableComments": "Zakázať komentáre",
   "disableCommentsDescription": "Odstrániť možnosť komentovať anketu",
   "clockPreferences": "Nastavenia hodín",
-  "clockPreferencesDescription": "Nastavenie vašej časovej zóny a formátu času."
+  "clockPreferencesDescription": "Nastavenie vašej časovej zóny a formátu času.",
+  "duplicateTitleLabel": "Názov",
+  "upgrade": "Upgrade",
+  "pricing": "Cenník"
 }
