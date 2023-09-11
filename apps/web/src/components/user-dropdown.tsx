@@ -1,7 +1,7 @@
 import {
   ChevronDown,
   CreditCardIcon,
-  HeartHandshakeIcon,
+  GemIcon,
   LifeBuoyIcon,
   ListIcon,
   LogInIcon,
@@ -101,11 +101,11 @@ export const UserDropdown = () => {
           <DropdownMenuItem asChild={true}>
             <Link
               target="_blank"
-              href="https://support.rallly.co/contribute"
+              href="https://support.rallly.co/self-hosting/pricing"
               className="flex items-center gap-x-2"
             >
-              <HeartHandshakeIcon className="h-4 w-4" />
-              <Trans i18nKey="contribute" defaults="Contribute" />
+              <GemIcon className="h-4 w-4" />
+              <Trans i18nKey="pricing" defaults="Pricing" />
             </Link>
           </DropdownMenuItem>
         </IfSelfHosted>

@@ -63,6 +63,7 @@
       "group": "Self-Hosting",
       "pages": [
         "self-hosting/introduction",
+        "self-hosting/pricing",
         "self-hosting/managed-hosting",
         "self-hosting/configuration-options"
       ]

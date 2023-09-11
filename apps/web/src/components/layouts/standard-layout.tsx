@@ -1,4 +1,4 @@
-import { HelpCircleIcon, ListIcon, SparklesIcon } from "@rallly/icons";
+import { ListIcon, SparklesIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
@@ -21,7 +21,7 @@ import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 import { IfCloudHosted } from "@/contexts/environment";
 import { IfFreeUser } from "@/contexts/plan";
-import { appVersion, isFeedbackEnabled, isSelfHosted } from "@/utils/constants";
+import { appVersion, isFeedbackEnabled } from "@/utils/constants";
 import { DayjsProvider } from "@/utils/dayjs";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
@@ -113,19 +113,6 @@ const LogoArea = () => {
 };
 
 const Changelog = () => {
-  if (isSelfHosted) {
-    return (
-      <Button size="sm" variant="ghost" asChild>
-        <Link
-          href="https://github.com/lukevella/rallly/releases"
-          target="_blank"
-        >
-          <HelpCircleIcon className="h-4 w-4" />
-        </Link>
-      </Button>
-    );
-  }
-
   return <FeaturebaseChangelog />;
 };
 
@@ -171,7 +158,9 @@ const MainNav = () => {
                 </Link>
               </Button>
             </IfGuest>
-            <Changelog />
+            <IfCloudHosted>
+              <Changelog />
+            </IfCloudHosted>
             <ClockPreferences>
               <Button size="sm" variant="ghost">
                 <Clock />
@@ -215,13 +204,13 @@ export const StandardLayout: React.FunctionComponent<{
               </m.div>
             </AnimatePresence>
             {appVersion ? (
-              <div className="fixed bottom-0 right-0 z-50 rounded-tl-md border-l border-t bg-gray-100/75">
+              <div className="fixed bottom-0 right-0 z-50 rounded-tl-md bg-gray-200/90">
                 <Link
-                  className="text-muted-foreground px-2 py-1 text-xs"
+                  className="px-2 py-1 text-xs tabular-nums tracking-tight"
                   target="_blank"
                   href={`https://github.com/lukevella/rallly/releases/${appVersion}`}
                 >
-                  {`rallly ${appVersion}`}
+                  {`${appVersion}`}
                 </Link>
               </div>
             ) : null}
