@@ -103,7 +103,6 @@
   "addComment": "Dodaj komentar",
   "profile": "Profil",
   "polls": "Ankete",
-  "showLess": "Prikaži manje…",
   "showMore": "Prikaži više…",
   "timeZoneSelect__defaultValue": "Odaberite vremensku zonu…",
   "timeZoneSelect__noOption": "Nije pronađena nijedna opcija",
@@ -176,5 +175,8 @@
   "monthlyBillingDescription": "mjesečno",
   "plan_extendedPollLife": "Zadržite ankete zauvijek",
   "calendarHelp": "Ne možete stvoriti anketu bez opcija. Dodajte barem jednu opciju kako bi mogli nastaviti.",
-  "commentPlaceholder": "Napišite komentar o ovoj anketi (vidljivo svim sudionicima)"
+  "commentPlaceholder": "Napišite komentar o ovoj anketi (vidljivo svim sudionicima)",
+  "duplicateTitleLabel": "Naslov",
+  "upgrade": "Nadogradi",
+  "pricing": "Cijene"
 }
