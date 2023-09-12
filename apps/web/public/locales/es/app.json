@@ -103,7 +103,6 @@
   "addComment": "Agregar comentario",
   "profile": "Perfil",
   "polls": "Encuestas",
-  "showLess": "Mostrar menos…",
   "showMore": "Mostrar más…",
   "timeZoneSelect__defaultValue": "Selecciona la zona horaria…",
   "timeZoneSelect__noOption": "No se encontraron opciones",
@@ -179,5 +178,8 @@
   "noPolls": "No hay encuestas",
   "noPollsDescription": "Comienza creando una nueva encuesta.",
   "calendarHelp": "No puedes crear una encuesta sin ninguna opción. Añada al menos una opción para continuar.",
-  "commentPlaceholder": "Dejar un comentario en esta encuesta (visible para todos)"
+  "commentPlaceholder": "Dejar un comentario en esta encuesta (visible para todos)",
+  "duplicateTitleLabel": "Título",
+  "upgrade": "Mejorar",
+  "pricing": "Precios"
 }

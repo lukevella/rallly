@@ -111,5 +111,8 @@
   "annualBillingDescription": "pr. måned, faktureres årligt",
   "monthlyBillingDescription": "pr. måned",
   "calendarHelp": "Du kan ikke oprette en afstemning uden valgmuligheder. Tilføj mindst et tidspunkt for at fortsætte.",
-  "commentPlaceholder": "Giv en kommentar for denne afstemning (Synlig for alle)"
+  "commentPlaceholder": "Giv en kommentar for denne afstemning (Synlig for alle)",
+  "duplicateTitleLabel": "Overskrift",
+  "upgrade": "Opgradér",
+  "pricing": "Priser"
 }

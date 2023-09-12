@@ -1,5 +1,10 @@
 {
   "noLoginRequired": "Nije potrebna prijava na sustav",
   "headline": "Riješite se silnih poruka e-pošte za dogovore i odabire",
-  "subheading": "Poboljšajte postupak zakazivanja termina i uštedite na vremenu"
+  "subheading": "Poboljšajte postupak zakazivanja termina i uštedite na vremenu",
+  "availabilityPollTitle": "Ankete o dostupnosti",
+  "createAPoll": "Stvori anketu za sastanak",
+  "new": "Novo",
+  "pricingUpdates": "Osvježavanja cjenika",
+  "metaDescription": "Napravite ankete i glasajte kako biste pronašli najbolji dan ili vrijeme. Besplatna alternativa Doodleu."
 }

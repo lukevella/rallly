@@ -23,5 +23,6 @@
   "howToUpgrade": "Come faccio ad aggiornare a un piano a pagamento?",
   "howToUpgradeAnswer": "Per aggiornare, puoi andare alle tue impostazioni di fatturazione <a></a> e fare clic su <b>Aggiorna</b>.",
   "cancelSubscription": "Come annullo il mio abbonamento?",
-  "cancelSubscriptionAnswer": "È possibile annullare l'abbonamento in qualsiasi momento accedendo alle <a>billing settings</a>. Una volta annullato l'abbonamento, si avrà ancora accesso al piano a pagamento fino alla fine del periodo di fatturazione. Dopodiché, sarete declassati a un piano gratuito."
+  "cancelSubscriptionAnswer": "È possibile annullare l'abbonamento in qualsiasi momento accedendo alle <a>billing settings</a>. Una volta annullato l'abbonamento, si avrà ancora accesso al piano a pagamento fino alla fine del periodo di fatturazione. Dopodiché, sarete declassati a un piano gratuito.",
+  "customPollSettings": "Impostazioni sondaggio personalizzabili"
 }

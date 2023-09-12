@@ -19,6 +19,7 @@
   "deletePollDescription": "Alle data knytt til denne avrøystinga, blir sletta. Denne handlinga kan ikkje angrast.",
   "description": "Skildring",
   "descriptionPlaceholder": "Hei, alle saman! Vel datoane som passar for dykk.",
+  "optional": "valfritt",
   "billingStatusPlan": "Abonnement",
   "billingPeriod": "Periode",
   "billingPeriodMonthly": "Månadleg",

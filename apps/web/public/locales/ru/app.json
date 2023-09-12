@@ -108,5 +108,6 @@
   "duplicate": "Копировать",
   "duplicateDescription": "Создать новый опрос на основе этого",
   "duplicateTitleLabel": "Заголовок",
-  "duplicateTitleDescription": "Подсказка: Дайте вашему новому опросу уникальный заголовок"
+  "duplicateTitleDescription": "Подсказка: Дайте вашему новому опросу уникальный заголовок",
+  "pricing": "Цены"
 }
