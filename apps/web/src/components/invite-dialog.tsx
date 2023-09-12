@@ -16,6 +16,7 @@ import { useCopyToClipboard } from "react-use";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { isSelfHosted } from "@/utils/constants";
 
 export const InviteDialog = () => {
   const { participants } = useParticipants();
@@ -30,7 +31,10 @@ export const InviteDialog = () => {
     }
   }, [state]);
 
-  const inviteLink = shortUrl(`/invite/${poll?.id}`);
+  const inviteLink = isSelfHosted
+    ? window.location.origin + `/invite/${poll?.id}`
+    : shortUrl(`/invite/${poll?.id}`);
+
   const [didCopy, setDidCopy] = React.useState(false);
 
   return (
