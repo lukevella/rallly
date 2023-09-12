@@ -1,10 +1,19 @@
 {
+  "createPageLikeThis": "Stvorite stranicu poput ove u par sekundi!",
   "noLoginRequired": "Nije potrebna prijava na sustav",
   "headline": "Riješite se silnih poruka e-pošte za dogovore i odabire",
   "subheading": "Poboljšajte postupak zakazivanja termina i uštedite na vremenu",
+  "viaTrustpilot": "na Trustpilotu",
+  "statsUsersRegistered": "više od 45.000 registriranih korisnika",
+  "statsPollsCreated": "stvoreno više od 100.000 anketa",
+  "statsLanguagesSupported": "podržano više od 10 jezika",
+  "hint": "Besplatno! Ne zahtijeva prijavu.",
   "availabilityPollTitle": "Ankete o dostupnosti",
   "createAPoll": "Stvori anketu za sastanak",
+  "doodleAlternativeMetaTitle": "Najbolja besplatna Doodle alternativa",
+  "findATimeTitle": "Dogovorite vrijeme za sastanak",
   "new": "Novo",
+  "julyRecap": "Sažetak mjeseca srpnja",
   "pricingUpdates": "Osvježavanja cjenika",
   "metaDescription": "Napravite ankete i glasajte kako biste pronašli najbolji dan ili vrijeme. Besplatna alternativa Doodleu."
 }
