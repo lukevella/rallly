@@ -1,7 +1,7 @@
 {
   "name": "rallly",
   "private": true,
-  "version": "3.0.0-rc1",
+  "version": "3.0.0",
   "scripts": {
     "dev:app": "dotenv -- turbo dev --filter=@rallly/web...",
     "dev": "dotenv -- turbo dev",
