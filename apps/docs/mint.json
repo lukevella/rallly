@@ -19,22 +19,23 @@
     {
       "name": "Home",
       "url": "https://rallly.co"
+    },
+    {
+      "name": "Contact",
+      "url": "contact"
     }
   ],
-  "anchors": [
+  "tabs": [
     {
       "name": "Self-Hosting",
-      "icon": "server",
       "url": "self-hosting"
     },
     {
       "name": "Contributing Guide",
-      "icon": "hand-holding-heart",
       "url": "contribute"
     },
     {
       "name": "Contact",
-      "icon": "messages",
       "url": "contact"
     }
   ],
@@ -63,6 +64,11 @@
       "group": "Self-Hosting",
       "pages": [
         "self-hosting/introduction",
+        {
+          "icon": "bolt",
+          "group": "Get Started",
+          "pages": ["self-hosting/docker-compose"]
+        },
         "self-hosting/pricing",
         "self-hosting/managed-hosting",
         "self-hosting/configuration-options"
