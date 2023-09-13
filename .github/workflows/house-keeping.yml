@@ -17,5 +17,5 @@ jobs:
         env:
           API_SECRET: ${{ secrets.API_SECRET }}
         run: |
-          curl -X "POST" --fail "https://rallly.co/api/house-keeping${{ github.event.inputs.query }}" \
+          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping${{ github.event.inputs.query }}" \
           -H "Authorization: Bearer ${API_SECRET}"
