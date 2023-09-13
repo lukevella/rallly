@@ -103,21 +103,17 @@ export const MarketingHero = ({
       >
         <Link
           locale="en"
-          href="/blog/july-recap"
+          href="/blog/rallly-3-0-self-hosting"
           className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
         >
           <Badge className="bg-green-500">
             <Trans i18nKey="home:new" defaults="New" />
           </Badge>
-          <span className="hidden sm:block">
-            <Trans i18nKey="home:julyRecap" defaults="July Recap" />
-          </span>
-          <span
-            className="hidden h-4 w-px bg-gray-900/10 sm:block"
-            aria-hidden="true"
-          />
           <span className="flex items-center gap-x-1">
-            <Trans i18nKey="home:pricingUpdates" defaults="Pricing Updates" />
+            <Trans
+              i18nKey="home:selfHostingBlog"
+              defaults="Rallly 3.0 Self-Hosting"
+            />
             <ChevronRightIcon className="-mr-1 h-4 w-4" aria-hidden="true" />
           </span>
         </Link>
