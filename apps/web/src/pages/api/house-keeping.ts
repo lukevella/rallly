@@ -1,10 +1,6 @@
-import { Prisma, prisma } from "@rallly/database";
-import dayjs from "dayjs";
+import { prisma } from "@rallly/database";
 import { NextApiRequest, NextApiResponse } from "next";
 
-/**
- * DANGER: This endpoint will permanently delete polls.
- */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -22,115 +18,36 @@ export default async function handler(
     return;
   }
 
-  // get polls that have not been accessed for over 30 days
-  const thirtyDaysAgo = dayjs().subtract(30, "days").toDate();
-
-  const oldPollsWithAllPastOptions = await prisma.poll.findMany({
-    select: {
-      id: true,
-    },
-    where: {
-      touchedAt: { lte: thirtyDaysAgo },
-      options: {
-        every: {
-          start: { lt: new Date() },
-        },
-      },
-    },
-  });
-
-  const softDeletedPolls = await prisma.poll.deleteMany({
-    where: {
-      id: {
-        in: oldPollsWithAllPastOptions.map(({ id }) => id),
-      },
-    },
-  });
-
-  // Permantly delete old demos and polls that have been soft deleted for 7 days
-  const pollIdsToDelete = (
-    await prisma.poll.findMany({
-      where: {
-        OR: [
-          {
-            deleted: true,
-            deletedAt: {
-              lte: dayjs().add(-7, "days").toDate(),
-            },
-          },
-          // demo polls that are 1 day old
-          {
-            demo: true,
-            createdAt: {
-              lte: dayjs().add(-1, "days").toDate(),
-            },
-          },
-        ],
-      },
-      select: {
-        id: true,
-      },
-      orderBy: {
-        createdAt: "asc", // oldest first
-      },
-    })
-  ).map(({ id }) => id);
-
-  if (pollIdsToDelete.length !== 0) {
-    // Delete comments
-    await prisma.comment.deleteMany({
-      where: {
-        pollId: {
-          in: pollIdsToDelete,
-        },
-      },
-    });
-
-    // Delete votes
-    await prisma.vote.deleteMany({
-      where: {
-        pollId: {
-          in: pollIdsToDelete,
-        },
-      },
-    });
-
-    // Delete participants
-    await prisma.participant.deleteMany({
-      where: {
-        pollId: {
-          in: pollIdsToDelete,
-        },
-      },
-    });
-
-    // Delete options
-    await prisma.option.deleteMany({
-      where: {
-        pollId: {
-          in: pollIdsToDelete,
-        },
-      },
-    });
-
-    // Delete watchers
-    await prisma.watcher.deleteMany({
-      where: {
-        pollId: {
-          in: pollIdsToDelete,
-        },
-      },
-    });
-
-    // Delete polls
-    // Using execute raw to bypass soft delete middelware
-    await prisma.$executeRaw`DELETE FROM polls WHERE id IN (${Prisma.join(
-      pollIdsToDelete,
-    )})`;
-  }
+  const deletedPolls = await prisma.$executeRaw`
+    UPDATE polls p
+    SET
+      deleted = true,
+      deleted_at = NOW()
+    WHERE touched_at < NOW() - INTERVAL '30 days'
+    AND deleted = false
+    AND id NOT IN (
+      SELECT poll_id 
+      FROM options 
+      WHERE poll_id = p.id
+      AND start > NOW()
+    )
+    AND user_id NOT IN (
+      SELECT id
+      FROM users
+      WHERE id IN (
+        SELECT user_id 
+          FROM user_payment_data 
+          WHERE end_date > NOW()
+      )
+      OR subscription_id IN (
+        SELECT subscription_id 
+          FROM subscriptions
+          WHERE active = true
+      )
+    );
+  `;
 
   res.status(200).json({
-    softDeleted: softDeletedPolls.count,
-    deleted: pollIdsToDelete.length,
+    softDeleted: deletedPolls,
   });
 }
