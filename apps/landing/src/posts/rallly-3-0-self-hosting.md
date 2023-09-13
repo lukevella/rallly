@@ -20,6 +20,6 @@ This update is [available for free](https://support.rallly.co/self-hosting/prici
 
 If you are already self-hosting Rallly you can have a look at the [release notes](https://github.com/lukevella/rallly/releases/tag/v3.0.0) for instructions and information about breaking changes.
 
-I hope you enjoy this update and as always please let me know if you have any [feedback](feedback@rallly.co).
+I hope you enjoy this update and as always please let me know if you have any [feedback](mailto:feedback@rallly.co).
 
 Cheers!
