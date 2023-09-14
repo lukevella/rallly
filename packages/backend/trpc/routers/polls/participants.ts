@@ -83,6 +83,7 @@ export const participants = router({
         data: {
           pollId: pollId,
           name: name,
+          email,
           userId: user.id,
           votes: {
             createMany: {
