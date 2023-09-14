@@ -14,6 +14,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuItemIconLabel,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import {
@@ -67,6 +69,17 @@ export const ParticipantDropdown = ({
           {children}
         </DropdownMenuTrigger>
         <DropdownMenuContent align={align}>
+          <DropdownMenuLabel>
+            <div className="grid gap-0.5">
+              <div>{participant.name}</div>
+              {participant.email ? (
+                <div className="text-muted-foreground text-xs font-normal">
+                  {participant.email}
+                </div>
+              ) : null}
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={onEdit}>
             <DropdownMenuItemIconLabel icon={PencilIcon}>
               <Trans i18nKey="editVotes" />
@@ -78,6 +91,7 @@ export const ParticipantDropdown = ({
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuItem
+            className="text-rose-600"
             onClick={() => setIsDeleteParticipantModalVisible(true)}
           >
             <DropdownMenuItemIconLabel icon={TrashIcon}>
