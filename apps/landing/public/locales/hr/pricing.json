@@ -17,10 +17,13 @@
   "priceIncreaseInfo": "Cijene će se redovito prilagođavati kako se bude dodavalo više značajki",
   "faq": "Često postavljana pitanja",
   "canUseFree": "Mogu li besplatno koristiti Rallly?",
+  "canUseFreeAnswer": "Da, kao besplatni korisnik možete kreirati ankete i dobiti uvid u dostupnost vaših sudionika. I dalje ćete vidjeti rezultate svoje ankete, ali nećete moći odabrati završni datum ili poslati pozivnice iz kalendara.",
   "whyUpgrade": "Zašto bih trebao nadograditi uslugu?",
   "whyUpgradeAnswer": "Kada nadogradite na plaćeni plan, moći ćete dovršiti svoje ankete i automatski slati kalendarske pozivnice svojim sudionicima s odabranim datumom. Također ćemo čuvati vaše ankete na neodređeno vrijeme kako se ne bi automatski izbrisale čak ni nakon što budu završene.",
   "howToUpgrade": "Kako mogu nadograditi na plaćenu uslugu?",
   "howToUpgradeAnswer": "Za nadogradnju možete otići na svoje <a>postavke naplate</a> i kliknuti na <b>Nadogradi</b>.",
   "cancelSubscription": "Kako mogu otkazati pretplatu?",
-  "cancelSubscriptionAnswer": "Svoju pretplatu možete otkazati u bilo kojem trenutku u <a>postavkama naplate</a>. Nakon što otkažete pretplatu, i dalje ćete imati pristup svojoj plaćenoj pretplati do kraja obračunskog razdoblja. Nakon toga bit ćete vraćeni na besplatnu pretplatu."
+  "cancelSubscriptionAnswer": "Svoju pretplatu možete otkazati u bilo kojem trenutku u <a>postavkama naplate</a>. Nakon što otkažete pretplatu, i dalje ćete imati pristup svojoj plaćenoj pretplati do kraja obračunskog razdoblja. Nakon toga bit ćete vraćeni na besplatnu pretplatu.",
+  "earlyAccess": "Popust za prve korisnike",
+  "customPollSettings": "Prilagođene postavke ankete"
 }

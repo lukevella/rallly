@@ -34,8 +34,7 @@
   "freeSchedulingPollTitle": "Ser du etter en gratis planleggingsavstemning?",
   "freeSchedulingPollDescription": "Rallly lar deg opprette fine planleggingsavstemninger som er enkle å bruke, slik at du kan finne frem til det beste tidspunktet for ditt neste arrangement.",
   "new": "Nytt",
-  "julyRecap": "Juli-oppsummering",
-  "pricingUpdates": "Prisoppdateringer",
   "metaTitle": "Rallly - Planlegg gruppemøter",
-  "metaDescription": "Opprett avstemninger og stem for å finne den beste dagen eller tidspunktet. Et gratis Doodle-alternativ."
+  "metaDescription": "Opprett avstemninger og stem for å finne den beste dagen eller tidspunktet. Et gratis Doodle-alternativ.",
+  "selfHostingBlog": "Rallly 3.0 på egen infrastruktur"
 }

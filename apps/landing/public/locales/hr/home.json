@@ -8,12 +8,18 @@
   "statsPollsCreated": "stvoreno više od 100.000 anketa",
   "statsLanguagesSupported": "podržano više od 10 jezika",
   "hint": "Besplatno! Ne zahtijeva prijavu.",
+  "doodleAlternative": "Najbolja besplatna alternativa za Doodle",
+  "availabilityPollCta": "Stvori anketu o dostupnosti",
   "availabilityPollTitle": "Ankete o dostupnosti",
   "createAPoll": "Stvori anketu za sastanak",
   "doodleAlternativeMetaTitle": "Najbolja besplatna Doodle alternativa",
+  "findATimeMetaTitle": "Dogovorite vrijeme za sastanak | Rallly",
+  "findATimeMetaDescription": "Stvorite anketu za sastanak u par sekundi, bez potrebe za prijavom sustavu.",
   "findATimeTitle": "Dogovorite vrijeme za sastanak",
+  "findATimeDescription": "Stvorite događaj i pozovite sudionike na glasanje o terminu koji im najviše odgovara.",
+  "createASchedulingPoll": "Stvori anketu za sastanak",
   "new": "Novo",
-  "julyRecap": "Sažetak mjeseca srpnja",
-  "pricingUpdates": "Osvježavanja cjenika",
-  "metaDescription": "Napravite ankete i glasajte kako biste pronašli najbolji dan ili vrijeme. Besplatna alternativa Doodleu."
+  "metaTitle": "Rallly - zakazivanje termina sastanaka",
+  "metaDescription": "Napravite ankete i glasajte kako biste pronašli najbolji dan ili vrijeme. Besplatna alternativa Doodleu.",
+  "selfHostingBlog": "Rallly 3.0 samostalni hosting"
 }
