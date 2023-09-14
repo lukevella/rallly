@@ -4,7 +4,6 @@ import "../style.css";
 
 import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
 import { TooltipProvider } from "@rallly/ui/tooltip";
-import { inject } from "@vercel/analytics";
 import { domMax, LazyMotion } from "framer-motion";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -35,13 +34,6 @@ type AppPropsWithLayout = AppProps<PageProps> & {
 };
 
 const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
-  React.useEffect(() => {
-    if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
-      // calling inject directly to avoid having this run for self-hosted instances
-      inject({ debug: false });
-    }
-  }, []);
-
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1") {
     return <Maintenance />;
   }
