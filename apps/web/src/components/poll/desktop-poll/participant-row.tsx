@@ -52,7 +52,7 @@ export const ParticipantRowView: React.FunctionComponent<{
                 "flex h-full items-center justify-center rounded-md border",
                 {
                   "border-green-200 bg-green-50": vote === "yes",
-                  "border-amber-100 bg-amber-50": vote === "ifNeedBe",
+                  "border-amber-200 bg-amber-50": vote === "ifNeedBe",
                   "bg-gray-50": vote === "no" || !vote,
                 },
               )}
