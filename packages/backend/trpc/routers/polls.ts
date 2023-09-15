@@ -9,7 +9,7 @@ import * as ics from "ics";
 import { z } from "zod";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
-import { emailClient } from "../../utils/emailClient";
+import { emailClient } from "../../utils/email-client";
 import { nanoid } from "../../utils/nanoid";
 import {
   possiblyPublicProcedure,

@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createToken } from "../../../session";
-import { emailClient } from "../../../utils/emailClient";
+import { emailClient } from "../../../utils/email-client";
 import { publicProcedure, router } from "../../trpc";
 import { DisableNotificationsPayload } from "../../types";
 

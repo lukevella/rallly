@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createToken, decryptToken } from "../../session";
-import { emailClient } from "../../utils/emailClient";
+import { emailClient } from "../../utils/email-client";
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
 import { LoginTokenPayload, RegistrationTokenPayload } from "../types";

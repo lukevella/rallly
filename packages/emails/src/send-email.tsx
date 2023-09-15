@@ -18,10 +18,6 @@ type TemplateProps<T extends TemplateName> = React.ComponentProps<
 
 type TemplateComponent<T extends TemplateName> = Templates[T];
 
-const env = process.env["NODE" + "_ENV"] || "development";
-
-let transport: Transporter;
-
 type SendEmailOptions<T extends TemplateName> = {
   to: string;
   subject: string;
@@ -54,6 +50,7 @@ type EmailClientConfig = {
 
 export class EmailClient {
   private config: EmailClientConfig;
+  private cachedTransport?: Transporter;
 
   constructor(config: EmailClientConfig) {
     this.config = config;
@@ -94,46 +91,45 @@ export class EmailClient {
       return;
     }
 
-    const transport = this.getTransport();
     try {
-      await transport.sendMail(options);
+      await this.transport.sendMail(options);
       return;
     } catch (e) {
       console.error("Error sending email", e);
     }
   }
 
-  private getTransport() {
-    if (transport) {
+  private get transport() {
+    if (this.cachedTransport) {
       // Reuse the transport if it exists
-      return transport;
+      return this.cachedTransport;
     }
 
-    if (env === "test") {
-      transport = createTransport({ port: 4025 });
-      return transport;
+    if (process.env.NODE_ENV === "test") {
+      this.cachedTransport = createTransport({
+        port: 4025,
+      });
+      return this.cachedTransport;
     }
 
     switch (this.config.provider.name) {
-      case "ses":
-        {
-          const ses = new aws.SES({
-            region: process.env["AWS" + "_REGION"],
-            credentialDefaultProvider: defaultProvider,
-          });
+      case "ses": {
+        const ses = new aws.SES({
+          region: process.env["AWS" + "_REGION"],
+          credentialDefaultProvider: defaultProvider,
+        });
 
-          transport = createTransport({
-            SES: {
-              ses,
-              aws,
-              sendingRate: 10,
-            },
-          });
-        }
-        break;
-      default: {
+        this.cachedTransport = createTransport({
+          SES: {
+            ses,
+            aws,
+            sendingRate: 10,
+          },
+        });
+      }
+      case "smtp": {
         const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
-        transport = createTransport({
+        this.cachedTransport = createTransport({
           host: process.env.SMTP_HOST,
           port: process.env.SMTP_PORT
             ? parseInt(process.env.SMTP_PORT)
@@ -156,6 +152,6 @@ export class EmailClient {
       }
     }
 
-    return transport;
+    return this.cachedTransport;
   }
 }
