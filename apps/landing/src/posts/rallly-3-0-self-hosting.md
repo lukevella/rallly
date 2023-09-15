@@ -14,7 +14,7 @@ For information on how to self-host your own instance of Rallly, check out the [
 
 ## Pricing
 
-This update is [available for free](https://support.rallly.co/self-hosting/pricing) and allows users to enjoy all the features available here on their own self-hosted instance. If you are willing and able, there is an option to pay a one-time free which will help support further development of this project.
+This update is [available for free](https://support.rallly.co/self-hosting/pricing) and allows users to enjoy all the features available here on their own self-hosted instance. If you are willing and able, there is an option to pay a one-time fee which will help support further development of this project.
 
 ## Upgrading from 2.x
 
