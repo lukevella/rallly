@@ -1,13 +1,21 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@rallly/ui/dialog";
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
-import { useNewParticipantModal } from "@/components/new-participant-modal";
+import { NewParticipantForm } from "@/components/new-participant-modal";
 import { useParticipants } from "@/components/participants-provider";
 import {
   normalizeVotes,
   useUpdateParticipantMutation,
 } from "@/components/poll/mutations";
+import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
@@ -70,7 +78,6 @@ export const useVotingForm = () => {
 
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
   const { id: pollId, options } = usePoll();
-  const showNewParticipantModal = useNewParticipantModal();
   const updateParticipant = useUpdateParticipantMutation();
   const { participants } = useParticipants();
 
@@ -80,6 +87,10 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
   );
 
   const role = useRole();
+  const optionIds = options.map((option) => option.id);
+
+  const [isNewParticipantModalOpen, setIsNewParticipantModalOpen] =
+    React.useState(false);
 
   const form = useForm<VotingFormValues>({
     defaultValues: {
@@ -87,6 +98,10 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         canAddNewParticipant && !userAlreadyVoted && role === "participant"
           ? "new"
           : "view",
+      participantId:
+        role === "participant"
+          ? participants.find((p) => canEditParticipant(p.id))?.id
+          : undefined,
       votes: options.map((option) => ({
         optionId: option.id,
       })),
@@ -98,8 +113,6 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
       <form
         id="voting-form"
         onSubmit={form.handleSubmit(async (data) => {
-          const optionIds = options.map((option) => option.id);
-
           if (data.participantId) {
             // update participant
 
@@ -110,6 +123,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
             });
 
             form.reset({
+              mode: "view",
               participantId: undefined,
               votes: options.map((option) => ({
                 optionId: option.id,
@@ -117,21 +131,39 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
             });
           } else {
             // new participant
-            showNewParticipantModal({
-              votes: normalizeVotes(optionIds, data.votes),
-              onSubmit: async () => {
-                form.reset({
-                  mode: "view",
-                  participantId: undefined,
-                  votes: options.map((option) => ({
-                    optionId: option.id,
-                  })),
-                });
-              },
-            });
+            setIsNewParticipantModalOpen(true);
           }
         })}
       />
+      <Dialog
+        open={isNewParticipantModalOpen}
+        onOpenChange={setIsNewParticipantModalOpen}
+      >
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>
+              <Trans i18nKey="newParticipant" />
+            </DialogTitle>
+            <DialogDescription>
+              <Trans i18nKey="newParticipantFormDescription" />
+            </DialogDescription>
+          </DialogHeader>
+          <NewParticipantForm
+            votes={normalizeVotes(optionIds, form.watch("votes"))}
+            onSubmit={(newParticipant) => {
+              form.reset({
+                mode: "view",
+                participantId: newParticipant.id,
+                votes: options.map((option) => ({
+                  optionId: option.id,
+                })),
+              });
+              setIsNewParticipantModalOpen(false);
+            }}
+            onCancel={() => setIsNewParticipantModalOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
       {children}
     </FormProvider>
   );

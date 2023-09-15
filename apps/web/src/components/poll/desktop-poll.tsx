@@ -15,7 +15,7 @@ import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
 
 import { TimesShownIn } from "@/components/clock";
-import { useVotingForm, VotingForm } from "@/components/poll/voting-form";
+import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
 
 import {
@@ -266,8 +266,9 @@ const DesktopPoll: React.FunctionComponent = () => {
                             key={i}
                             participant={participant}
                             editMode={
+                              votingForm.watch("mode") === "edit" &&
                               votingForm.watch("participantId") ===
-                              participant.id
+                                participant.id
                             }
                             onChangeEditMode={(isEditing) => {
                               if (isEditing) {
@@ -322,12 +323,4 @@ const DesktopPoll: React.FunctionComponent = () => {
   );
 };
 
-const WrappedDesktopPoll = () => {
-  return (
-    <VotingForm>
-      <DesktopPoll />
-    </VotingForm>
-  );
-};
-
-export default WrappedDesktopPoll;
+export default DesktopPoll;
