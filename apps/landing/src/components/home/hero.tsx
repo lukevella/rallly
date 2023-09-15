@@ -12,18 +12,19 @@ import { linkToApp } from "@/lib/linkToApp";
 
 const Screenshot = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
+
   return (
     <>
       <m.div
         transition={{
-          delay: 1.5,
+          delay: 0.5,
           type: "spring",
           duration: 1,
           bounce: 0.4,
         }}
         variants={{
-          hidden: { opacity: 0, y: 0, z: 0, rotateY: 45 },
-          visible: { opacity: 1, y: -10, z: 0, rotateY: 0 },
+          hidden: { opacity: 0, y: 0, z: 0 },
+          visible: { opacity: 1, y: -10, z: 0 },
         }}
         initial="hidden"
         animate={isLoaded ? "visible" : "hidden"}
@@ -42,14 +43,13 @@ const Screenshot = () => {
       </m.div>
       <m.div
         transition={{
-          delay: 0.5,
           type: "spring",
-          duration: 1.5,
+          duration: 1,
           bounce: 0.3,
         }}
         variants={{
-          hidden: { opacity: 0, scale: 0.5, rotateX: -90, y: -250 },
-          visible: { opacity: 1, scale: 1, rotateX: 0, y: 0 },
+          hidden: { opacity: 0, scale: 0.95, y: 5 },
+          visible: { opacity: 1, scale: 1, y: 0 },
         }}
         initial="hidden"
         animate={isLoaded ? "visible" : "hidden"}
@@ -58,8 +58,8 @@ const Screenshot = () => {
         <Image
           src="/static/images/hero-shot.png"
           alt="Screenshot of Rallly Poll"
-          width={1280}
-          height={946}
+          width={1440}
+          height={1152}
           quality={100}
           onLoadingComplete={() => {
             setIsLoaded(true);
@@ -80,27 +80,8 @@ export const MarketingHero = ({
   callToAction: React.ReactNode;
 }) => {
   return (
-    <m.div
-      transition={{
-        type: "spring",
-        bounce: 0.4,
-        duration: 1,
-      }}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mt-8 max-w-full text-center sm:mt-16"
-    >
-      <m.div
-        transition={{
-          type: "spring",
-          bounce: 0.4,
-          delay: 0.2,
-          duration: 1,
-        }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
+    <div className="mt-8 max-w-full text-center sm:mt-16">
+      <div className="mb-8">
         <Link
           locale="en"
           href="/blog/rallly-3-0-self-hosting"
@@ -117,7 +98,7 @@ export const MarketingHero = ({
             <ChevronRightIcon className="-mr-1 h-4 w-4" aria-hidden="true" />
           </span>
         </Link>
-      </m.div>
+      </div>
       <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
         {preventWidows(title)}
       </h1>
@@ -143,6 +124,6 @@ export const MarketingHero = ({
       <div className="mt-16">
         <Screenshot />
       </div>
-    </m.div>
+    </div>
   );
 };
