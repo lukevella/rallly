@@ -25,7 +25,7 @@ export async function createContext(
     openPreviews: process.env.NODE_ENV === "development",
     useTestServer: process.env.NODE_ENV === "test",
     provider: {
-      name: process.env.EMAIL_PROVIDER as SupportedEmailProviders,
+      name: (process.env.EMAIL_PROVIDER as SupportedEmailProviders) ?? "smtp",
     },
     mail: {
       from: {
