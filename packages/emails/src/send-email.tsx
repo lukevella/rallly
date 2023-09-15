@@ -8,6 +8,8 @@ import React from "react";
 
 import * as templates from "./templates";
 
+const env = process.env["NODE" + "_ENV"] || "development";
+
 type Templates = typeof templates;
 
 type TemplateName = keyof typeof templates;
@@ -100,15 +102,15 @@ export class EmailClient {
   }
 
   private get transport() {
-    if (this.cachedTransport) {
-      // Reuse the transport if it exists
-      return this.cachedTransport;
-    }
-
-    if (process.env.NODE_ENV === "test") {
+    if (env === "test") {
       this.cachedTransport = createTransport({
         port: 4025,
       });
+      return this.cachedTransport;
+    }
+
+    if (this.cachedTransport) {
+      // Reuse the transport if it exists
       return this.cachedTransport;
     }
 

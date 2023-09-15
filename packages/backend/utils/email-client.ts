@@ -1,7 +1,7 @@
 import { EmailClient, SupportedEmailProviders } from "@rallly/emails";
 
 export const emailClient = new EmailClient({
-  openPreviews: process.env.NODE_ENV === "development",
+  openPreviews: process.env["NODE" + "_ENV"] === "development",
   provider: {
     name: process.env.EMAIL_PROVIDER as SupportedEmailProviders,
   },
