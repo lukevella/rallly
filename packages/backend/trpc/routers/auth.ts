@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { sendEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -78,6 +77,7 @@ export const auth = router({
     .mutation(
       async ({
         input,
+        ctx,
       }): Promise<
         | { ok: true; token: string }
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
@@ -107,7 +107,7 @@ export const auth = router({
           code,
         });
 
-        await sendEmail("RegisterEmail", {
+        await ctx.emailClient.sendTemplate("RegisterEmail", {
           to: input.email,
           subject: `${input.name}, please verify your email address`,
           props: {
@@ -168,6 +168,7 @@ export const auth = router({
     .mutation(
       async ({
         input,
+        ctx,
       }): Promise<
         | { ok: true; token: string }
         | { ok: false; reason: "emailNotAllowed" | "userNotFound" }
@@ -193,7 +194,7 @@ export const auth = router({
           code,
         });
 
-        await sendEmail("LoginEmail", {
+        await ctx.emailClient.sendTemplate("LoginEmail", {
           to: input.email,
           subject: `${code} is your 6-digit code`,
           props: {

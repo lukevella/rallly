@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { sendEmail } from "@rallly/emails";
 import { absoluteUrl, shortUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
@@ -133,7 +132,7 @@ export const polls = router({
         });
 
         if (user) {
-          await sendEmail("NewPollEmail", {
+          await ctx.emailClient.sendTemplate("NewPollEmail", {
             to: user.email,
             subject: `Let's find a date for ${poll.title}`,
             props: {
@@ -678,7 +677,7 @@ export const polls = router({
           });
         }
 
-        const emailToHost = sendEmail("FinalizeHostEmail", {
+        const emailToHost = ctx.emailClient.sendTemplate("FinalizeHostEmail", {
           subject: `Date booked for ${poll.title}`,
           to: poll.user.email,
           props: {
@@ -702,7 +701,7 @@ export const polls = router({
         });
 
         const emailsToParticipants = participantsToEmail.map((p) => {
-          return sendEmail("FinalizeParticipantEmail", {
+          return ctx.emailClient.sendTemplate("FinalizeParticipantEmail", {
             subject: `Date booked for ${poll.title}`,
             to: p.email,
             props: {

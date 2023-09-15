@@ -1,3 +1,4 @@
+import { EmailClient, SupportedEmailProviders } from "@rallly/emails";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
@@ -19,12 +20,30 @@ export async function createContext(
     opts.req.session.user = user;
     await opts.req.session.save();
   }
+
+  const emailClient = new EmailClient({
+    openPreviews: process.env.NODE_ENV === "development",
+    useTestServer: process.env.NODE_ENV === "test",
+    provider: {
+      name: process.env.EMAIL_PROVIDER as SupportedEmailProviders,
+    },
+    mail: {
+      from: {
+        name: "Rallly",
+        address:
+          (process.env.NOREPLY_EMAIL as string) ||
+          (process.env.SUPPORT_EMAIL as string),
+      },
+    },
+  });
+
   return {
     user,
     session: opts.req.session,
     req: opts.req,
     res: opts.res,
     isSelfHosted: process.env.NEXT_PUBLIC_SELF_HOSTED === "true",
+    emailClient,
   };
 }
 
