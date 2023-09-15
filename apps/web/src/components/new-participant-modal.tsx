@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
 import z from "zod";
 
-import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
 import { useAddParticipantMutation } from "./poll/mutations";
@@ -18,7 +17,7 @@ const schema = z
   .object({
     requireEmail: z.boolean().optional().default(false),
     name: z.string().min(1),
-    email: z.string().email(),
+    email: z.string().email().or(z.literal("")),
   })
   .refine((data) => {
     if (data.requireEmail && !data.email.trim()) {
