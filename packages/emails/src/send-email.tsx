@@ -8,8 +8,6 @@ import React from "react";
 
 import * as templates from "./templates";
 
-const env = process.env["NODE" + "_ENV"] || "development";
-
 type Templates = typeof templates;
 
 type TemplateName = keyof typeof templates;
@@ -40,8 +38,21 @@ type EmailProviderConfig =
 export type SupportedEmailProviders = EmailProviderConfig["name"];
 
 type EmailClientConfig = {
+  /**
+   * Whether to open previews of each email in the browser
+   */
   openPreviews?: boolean;
+  /**
+   * Whether to send emails to the test server
+   */
+  useTestServer: boolean;
+  /**
+   * Email provider config
+   */
   provider: EmailProviderConfig;
+  /**
+   * Mail config
+   */
   mail: {
     from: {
       name: string;
@@ -102,7 +113,7 @@ export class EmailClient {
   }
 
   private get transport() {
-    if (env === "test") {
+    if (this.config.useTestServer) {
       this.cachedTransport = createTransport({
         port: 4025,
       });
