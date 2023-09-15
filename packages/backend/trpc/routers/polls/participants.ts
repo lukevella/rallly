@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { sendEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -107,7 +106,7 @@ export const participants = router({
         );
 
         emailsToSend.push(
-          sendEmail("NewParticipantConfirmationEmail", {
+          ctx.emailClient.sendTemplate("NewParticipantConfirmationEmail", {
             to: email,
             subject: `Thanks for responding to ${poll.title}`,
             props: {
@@ -144,7 +143,7 @@ export const participants = router({
           { ttl: 0 },
         );
         emailsToSend.push(
-          sendEmail("NewParticipantEmail", {
+          ctx.emailClient.sendTemplate("NewParticipantEmail", {
             to: email,
             subject: `${participant.name} has responded to ${poll.title}`,
             props: {
