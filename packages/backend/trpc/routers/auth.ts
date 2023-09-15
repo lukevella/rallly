@@ -1,10 +1,10 @@
 import { prisma } from "@rallly/database";
+import { sendEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createToken, decryptToken } from "../../session";
-import { emailClient } from "../../utils/email-client";
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
 import { LoginTokenPayload, RegistrationTokenPayload } from "../types";
@@ -107,7 +107,7 @@ export const auth = router({
           code,
         });
 
-        await emailClient.sendTemplate("RegisterEmail", {
+        await sendEmail("RegisterEmail", {
           to: input.email,
           subject: `${input.name}, please verify your email address`,
           props: {
@@ -193,7 +193,7 @@ export const auth = router({
           code,
         });
 
-        await emailClient.sendTemplate("LoginEmail", {
+        await sendEmail("LoginEmail", {
           to: input.email,
           subject: `${code} is your 6-digit code`,
           props: {

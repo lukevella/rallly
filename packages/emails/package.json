@@ -7,8 +7,8 @@
     "lint": "eslint ./src",
     "lint:tsc": "tsc --noEmit"
   },
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
   "dependencies": {
     "@aws-sdk/client-ses": "^3.292.0",
     "@aws-sdk/credential-provider-node": "^3.292.0",
@@ -16,14 +16,12 @@
     "@react-email/render": "0.0.6",
     "clsx": "^1.2.1",
     "nodemailer": "^6.9.1",
-    "preview-email": "^3.0.19",
     "react-email": "^1.9.1"
   },
   "devDependencies": {
     "@rallly/tailwind-config": "*",
     "@rallly/tsconfig": "*",
     "@rallly/utils": "*",
-    "@types/nodemailer": "^6.4.7",
-    "@types/preview-email": "^3.0.1"
+    "@types/nodemailer": "^6.4.7"
   }
 }
