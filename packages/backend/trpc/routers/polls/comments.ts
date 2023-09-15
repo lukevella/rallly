@@ -1,9 +1,9 @@
 import { prisma } from "@rallly/database";
-import { sendEmail } from "@rallly/emails";
 import { absoluteUrl } from "@rallly/utils";
 import { z } from "zod";
 
 import { createToken } from "../../../session";
+import { emailClient } from "../../../utils/email-client";
 import { publicProcedure, router } from "../../trpc";
 import { DisableNotificationsPayload } from "../../types";
 
@@ -82,7 +82,7 @@ export const comments = router({
           { ttl: 0 },
         );
         emailsToSend.push(
-          sendEmail("NewCommentEmail", {
+          emailClient.sendTemplate("NewCommentEmail", {
             to: email,
             subject: `${authorName} has commented on ${poll.title}`,
             props: {
