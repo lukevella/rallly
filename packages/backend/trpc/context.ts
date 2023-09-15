@@ -8,6 +8,9 @@ import superjson from "superjson";
 import { randomid } from "../utils/nanoid";
 import { appRouter } from "./routers";
 
+// Avoid use NODE_ENV directly because it will be replaced when using the dev server for e2e tests
+const env = process.env["NODE" + "_ENV"];
+
 export async function createContext(
   opts: trpcNext.CreateNextContextOptions | GetServerSidePropsContext,
 ) {
@@ -22,8 +25,8 @@ export async function createContext(
   }
 
   const emailClient = new EmailClient({
-    openPreviews: process.env.NODE_ENV === "development",
-    useTestServer: process.env.NODE_ENV === "test",
+    openPreviews: env === "development",
+    useTestServer: env === "test",
     provider: {
       name: (process.env.EMAIL_PROVIDER as SupportedEmailProviders) ?? "smtp",
     },
