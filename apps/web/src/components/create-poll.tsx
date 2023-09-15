@@ -73,6 +73,7 @@ export const CreatePoll: React.FunctionComponent = () => {
               hideParticipants: formData?.hideParticipants,
               disableComments: formData?.disableComments,
               hideScores: formData?.hideScores,
+              requireParticipantEmail: formData?.requireParticipantEmail,
               options: required(formData?.options).map((option) => ({
                 startDate: option.type === "date" ? option.date : option.start,
                 endDate: option.type === "timeSlot" ? option.end : undefined,
@@ -115,7 +116,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           <PollSettingsForm />
           <hr />
           <Button
-            loading={form.formState.isSubmitting}
+            loading={form.formState.isSubmitting || form.formState.isSubmitted}
             size="lg"
             type="submit"
             className="w-full"
