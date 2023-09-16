@@ -13,19 +13,19 @@ import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
 import { TextInput } from "./text-input";
 
-const schema = z
-  .object({
-    requireEmail: z.boolean().optional().default(false),
-    name: z.string().min(1),
-    email: z.string().email().or(z.literal("")),
-  })
-  .refine((data) => {
-    if (data.requireEmail && !data.email.trim()) {
-      return false;
-    }
+const requiredEmailSchema = z.object({
+  requireEmail: z.literal(true),
+  name: z.string().min(1),
+  email: z.string().email(),
+});
 
-    return true;
-  });
+const optionalEmailSchema = z.object({
+  requireEmail: z.literal(false),
+  name: z.string().min(1),
+  email: z.string().email().or(z.literal("")),
+});
+
+const schema = z.union([requiredEmailSchema, optionalEmailSchema]);
 
 type NewParticipantFormData = z.infer<typeof schema>;
 
