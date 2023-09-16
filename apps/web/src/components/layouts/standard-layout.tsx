@@ -192,13 +192,14 @@ export const StandardLayout: React.FunctionComponent<{
             <AnimatePresence mode="wait" initial={false}>
               <m.div
                 key={key}
+                transition={{ duration: 0.2 }}
                 variants={{
-                  hidden: { opacity: 0, y: -56 },
+                  hidden: { opacity: 0, y: -26 },
                   visible: { opacity: 1, y: 0 },
                 }}
                 initial="hidden"
                 animate="visible"
-                exit={{ opacity: 0, y: 56 }}
+                exit={{ opacity: 0, y: 26 }}
               >
                 {children}
               </m.div>
