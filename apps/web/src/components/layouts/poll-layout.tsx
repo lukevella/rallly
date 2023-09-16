@@ -3,7 +3,6 @@ import {
   ArrowLeftIcon,
   ArrowUpRight,
   ChevronDownIcon,
-  FileBarChart,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
@@ -27,10 +26,7 @@ import React from "react";
 import { Container } from "@/components/container";
 import { InviteDialog } from "@/components/invite-dialog";
 import { StandardLayout } from "@/components/layouts/standard-layout";
-import {
-  TopBar,
-  TopBarTitle,
-} from "@/components/layouts/standard-layout/top-bar";
+import { TopBar } from "@/components/layouts/standard-layout/top-bar";
 import {
   PageDialog,
   PageDialogDescription,
@@ -152,9 +148,6 @@ const StatusControl = () => {
 };
 
 const AdminControls = () => {
-  const poll = usePoll();
-  const pollLink = `/poll/${poll.id}`;
-  const router = useRouter();
   return (
     <TopBar>
       <div className="flex min-w-0 items-center justify-between gap-4">
