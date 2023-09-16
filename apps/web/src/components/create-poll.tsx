@@ -116,7 +116,9 @@ export const CreatePoll: React.FunctionComponent = () => {
           <PollSettingsForm />
           <hr />
           <Button
-            loading={form.formState.isSubmitting || form.formState.isSubmitted}
+            loading={
+              form.formState.isSubmitting || form.formState.isSubmitSuccessful
+            }
             size="lg"
             type="submit"
             className="w-full"
