@@ -12,13 +12,13 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "dependencies": {
-    "@prisma/client": "^5.0.0"
+    "@prisma/client": "^5.3.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@rallly/tsconfig": "*",
     "@types/node": "^18.15.10",
-    "prisma": "^5.0.0",
+    "prisma": "^5.3.1",
     "ts-node": "^10.9.1"
   }
 }
