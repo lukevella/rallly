@@ -155,7 +155,6 @@
   "goToInvite": "Gå til invitasjonssiden",
   "planPro": "Pro",
   "Billing": "Fakturering",
-  "planUpgrade": "Oppgrader",
   "subscriptionUpdatePayment": "Oppdater betalingsinformasjon",
   "subscriptionCancel": "Avslutt abonnement",
   "billingStatus": "Faktureringsstatus",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "Velg mulige datoer eller tidpunkt for arrangementet ditt",
   "optionalLabel": "(Valgfritt)",
   "calendarHelp": "Du kan ikke opprette en avstemning uten alternativer. Legg til minst ett alternativ for å fortsette.",
-  "hideParticipants": "Skjul deltakerliste",
-  "hideParticipantsDescription": "Hold deltakerdetaljer skjult for andre deltakere",
   "editSettings": "Endre innstillinger",
-  "pollSettingsDescription": "Tilpass oppførselen til avstemningen din",
   "commentPlaceholder": "Legg igjen en kommentar på denne avstemningen (synlig for alle)",
-  "hideScores": "Skjul resultater",
-  "hideScoresDescription": "Vis resultater kun etter at en deltaker har avgitt stemmer",
   "disableComments": "Deaktiver kommentarer",
-  "disableCommentsDescription": "Deaktiver muligheten til å kommentere på avstemningen",
   "clockPreferences": "Klokkeinnstillinger",
   "clockPreferencesDescription": "Velg foretrukket tidssone og klokkeslettformat.",
   "featureRequest": "Foreslå ny funksjon",
@@ -231,5 +224,6 @@
   "features": "Få tilgang til alle nåværende og fremtidige Pro-funksjoner!",
   "noAds": "Ingen reklame",
   "supportProject": "Støtt dette prosjektet",
-  "pricing": "Priser"
+  "pricing": "Priser",
+  "pollSettingsDescription": "Tilpass oppførselen til avstemningen din"
 }
