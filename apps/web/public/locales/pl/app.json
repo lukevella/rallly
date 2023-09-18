@@ -225,5 +225,9 @@
   "noAds": "Brak reklam",
   "supportProject": "Wspierasz ten projekt",
   "pricing": "Cennik",
-  "pollSettingsDescription": "Dostosuj zachowanie ankiety"
+  "pleaseUpgrade": "Ulepsz do wersji Pro, aby korzystać z tej funkcji",
+  "pollSettingsDescription": "Dostosuj zachowanie ankiety",
+  "requireParticipantEmailLabel": "Ustaw, aby był wymagany adres e-mail dla uczestników",
+  "hideParticipantsLabel": "Ukryj listę uczestników przed innymi uczestnikami",
+  "hideScoresLabel": "Ukryj wyniki do momentu oddania głosu przez uczestnika"
 }
