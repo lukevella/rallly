@@ -155,7 +155,6 @@
   "goToInvite": "Vai alla pagina di invito",
   "planPro": "Pro",
   "Billing": "Fatturazione",
-  "planUpgrade": "Migliora",
   "subscriptionUpdatePayment": "Aggiorna i dettagli di pagamento",
   "subscriptionCancel": "Annulla abbonamento",
   "billingStatus": "Stato di fatturazione",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "Seleziona potenziali date o orari per il tuo evento",
   "optionalLabel": "(Opzionale)",
   "calendarHelp": "Non puoi creare un sondaggio senza nessuna opzione. Aggiungi almeno un opzione per continuare.",
-  "hideParticipants": "Nascondi lista partecipanti",
-  "hideParticipantsDescription": "Nascondi i dettagli dei partecipanti agli altri partecipanti",
   "editSettings": "Modifica impostazioni",
-  "pollSettingsDescription": "Personalizza il comportamento del tuo sondaggio",
   "commentPlaceholder": "Lascia un commento su questo sondaggio (visibile a tutti)",
-  "hideScores": "Nascondi punteggi",
-  "hideScoresDescription": "Mostra i voti solo dopo che il partecipante ha votato",
   "disableComments": "Disabilita commenti",
-  "disableCommentsDescription": "Rimuovi l'opzione di commentare il sondaggio",
   "clockPreferences": "Preferenze Orologio",
   "clockPreferencesDescription": "Imposta il tuo fuso orario e il formato orario preferiti.",
   "featureRequest": "Richiedi una Funzionalità",
@@ -222,5 +215,6 @@
   "features": "Ottieni accesso a tutte le funzionalità Pro attuali e future!",
   "noAds": "Nessuna pubblicità",
   "supportProject": "Supporta questo progetto",
-  "pricing": "Prezzi"
+  "pricing": "Prezzi",
+  "pollSettingsDescription": "Personalizza il comportamento del tuo sondaggio"
 }

@@ -155,7 +155,6 @@
   "goToInvite": "Zur Einladungsseite gehen",
   "planPro": "Pro",
   "Billing": "Abrechnung",
-  "planUpgrade": "Upgrade",
   "subscriptionUpdatePayment": "Zahlungsdetails aktualisieren",
   "subscriptionCancel": "Abonnement löschen",
   "billingStatus": "Rechnungsstatus",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "Wähle potenzielle Termine oder Zeiten für deine Veranstaltung",
   "optionalLabel": "(Optional)",
   "calendarHelp": "Du kannst keine Umfrage ohne Optionen erstellen. Füge mindestens eine Option hinzu, um fortzufahren.",
-  "hideParticipants": "Teilnehmerliste ausblenden",
-  "hideParticipantsDescription": "Verstecke die Teilnehmerdetails vor anderen Teilnehmern",
   "editSettings": "Einstellungen bearbeiten",
-  "pollSettingsDescription": "Passen Sie das Verhalten Ihrer Umfrage an",
   "commentPlaceholder": "Kommentar zu dieser Umfrage hinterlassen (für jeden sichtbar)",
-  "hideScores": "Abstimmungen ausblenden",
-  "hideScoresDescription": "Zeige das Ergebnis erst an, wenn ein Teilnehmer abgestimmt hat",
   "disableComments": "Kommentare deaktivieren",
-  "disableCommentsDescription": "Entferne die Möglichkeit, die Umfrage zu kommentieren",
   "clockPreferences": "Uhrzeit-Einstellungen",
   "clockPreferencesDescription": "Lege dein bevorzugtes Zeitzonen und Zeitformat fest.",
   "featureRequest": "Ein Feature vorschlagen",
@@ -231,5 +224,6 @@
   "features": "Erhalte Zugriff auf alle aktuellen und zukünftigen Pro-Funktionen!",
   "noAds": "Keine Werbung",
   "supportProject": "Unterstütze dieses Projekt",
-  "pricing": "Preise"
+  "pricing": "Preise",
+  "pollSettingsDescription": "Passen Sie das Verhalten Ihrer Umfrage an"
 }
