@@ -155,7 +155,6 @@
   "goToInvite": "Siirry kutsusivulle",
   "planPro": "Pro",
   "Billing": "Laskutus",
-  "planUpgrade": "Vaihda sopimus",
   "subscriptionUpdatePayment": "Päivitä maksutiedot",
   "subscriptionCancel": "Peruuta tilaus",
   "billingStatus": "Laskujen tila",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "Valitse mahdolliset päivämäärät tai ajat tapahtumallesi",
   "optionalLabel": "(Valinnainen)",
   "calendarHelp": "Et voi luoda kyselyä ilman vaihtoehtoja. Lisää vähintään yksi vaihtoehto jatkaaksesi.",
-  "hideParticipants": "Piilota osallistujaluettelo",
-  "hideParticipantsDescription": "Piilota osallistujien tiedot muilta osallistujilta",
   "editSettings": "Muokkaa asetuksia",
-  "pollSettingsDescription": "Mukauta kyselyn toimintaa",
   "commentPlaceholder": "Jätä kommentti tähän kyselyyn (kaikkien nähtävissä)",
-  "hideScores": "Piilota pisteet",
-  "hideScoresDescription": "Näytä pisteet vasta kun osallistuja on äänestänyt",
   "disableComments": "Poista kommentit käytöstä",
-  "disableCommentsDescription": "Poista mahdollisuus jättää kyselyyn kommentteja",
   "clockPreferences": "Kellon asetukset",
   "clockPreferencesDescription": "Aseta ensisijainen aikavyöhyke ja aikamuoto.",
   "featureRequest": "Ehdota ominaisuutta",
@@ -231,5 +224,6 @@
   "features": "Saa käyttöösi kaikki nykyiset ja tulevat pro-ominaisuudet!",
   "noAds": "Ei mainoksia",
   "supportProject": "Tue tätä projektia",
-  "pricing": "Hinnasto"
+  "pricing": "Hinnasto",
+  "pollSettingsDescription": "Mukauta kyselyn toimintaa"
 }
