@@ -155,7 +155,6 @@
   "goToInvite": "前往邀请页面",
   "planPro": "专业版",
   "Billing": "订阅",
-  "planUpgrade": "升级",
   "subscriptionUpdatePayment": "更新付款详情",
   "subscriptionCancel": "取消订阅",
   "billingStatus": "订阅状态",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "选择活动的潜在日期或时间",
   "optionalLabel": "(可选)",
   "calendarHelp": "创建失败，请添加至少一个选项",
-  "hideParticipants": "隐藏参与者列表",
-  "hideParticipantsDescription": "对参与者隐藏其他参与者的详细信息",
   "editSettings": "设置",
-  "pollSettingsDescription": "自定义投票行为",
   "commentPlaceholder": "评论这个投票 (对所有人可见)",
-  "hideScores": "隐藏投票统计",
-  "hideScoresDescription": "仅在参与者投票后显示投票统计",
   "disableComments": "禁用评论",
-  "disableCommentsDescription": "关闭投票下方的评论功能",
   "clockPreferences": "时钟设置",
   "clockPreferencesDescription": "设置您首选的时区和时间格式。",
   "featureRequest": "请求功能",
@@ -223,5 +216,6 @@
   "features": "获取当前和未来的所有专业版功能！",
   "noAds": "无广告",
   "supportProject": "支持这个项目",
-  "pricing": "价格"
+  "pricing": "价格",
+  "pollSettingsDescription": "自定义投票行为"
 }
