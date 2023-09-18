@@ -1,39 +1,17 @@
-import { trpc } from "@rallly/backend";
 import { Badge } from "@rallly/ui/badge";
 import React from "react";
 
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
-import { isSelfHosted } from "@/utils/constants";
-
-export const useSubscription = () => {
-  const { user } = useUser();
-
-  const { data } = trpc.user.subscription.useQuery(undefined, {
-    enabled: !isSelfHosted && user.isGuest === false,
-  });
-
-  if (isSelfHosted) {
-    return {
-      active: true,
-    };
-  }
-
-  if (user.isGuest) {
-    return {
-      active: false,
-    };
-  }
-
-  return data;
-};
+import { useWhoAmI } from "@/contexts/whoami";
 
 export const usePlan = () => {
-  const data = useSubscription();
+  const user = useWhoAmI();
 
-  const isPaid = data?.active === true;
+  if (user?.isGuest) {
+    return "free";
+  }
 
-  return isPaid ? "paid" : "free";
+  return user?.hasActiveSubscription ? "paid" : "free";
 };
 
 export const IfSubscribed = ({ children }: React.PropsWithChildren) => {

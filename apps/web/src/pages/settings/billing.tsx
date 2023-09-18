@@ -21,7 +21,7 @@ import {
   SettingsSection,
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
-import { useSubscription } from "@/contexts/plan";
+import { useWhoAmI } from "@/contexts/whoami";
 import { isSelfHosted } from "@/utils/constants";
 
 import { NextPageWithLayout } from "../../types";
@@ -77,22 +77,22 @@ export const proPlanIdYearly = process.env
   .NEXT_PUBLIC_PRO_PLAN_ID_YEARLY as string;
 
 const SubscriptionStatus = () => {
-  const data = useSubscription();
+  const userInfo = useWhoAmI();
 
-  if (!data) {
+  if (!userInfo) {
     return null;
   }
 
   return (
     <div className="space-y-6">
-      {!data.active ? (
+      {!userInfo.hasActiveSubscription ? (
         <div>
           <Label className="mb-4">
             <Trans i18nKey="upgrade" />
           </Label>
           <BillingPlans />
         </div>
-      ) : data.legacy ? (
+      ) : userInfo.legacyBilling ? (
         <LegacyBilling />
       ) : (
         <BillingPortal />

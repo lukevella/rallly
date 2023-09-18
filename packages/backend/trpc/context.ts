@@ -11,6 +11,8 @@ import { appRouter } from "./routers";
 // Avoid use NODE_ENV directly because it will be replaced when using the dev server for e2e tests
 const env = process.env["NODE" + "_ENV"];
 
+const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === "true";
+
 export async function createContext(
   opts: trpcNext.CreateNextContextOptions | GetServerSidePropsContext,
 ) {
@@ -45,7 +47,7 @@ export async function createContext(
     session: opts.req.session,
     req: opts.req,
     res: opts.res,
-    isSelfHosted: process.env.NEXT_PUBLIC_SELF_HOSTED === "true",
+    isSelfHosted,
     emailClient,
   };
 }

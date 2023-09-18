@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
-import { getSubscriptionStatus } from "../utils/auth";
+import { getUserInfo } from "../utils/auth";
 import { Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
@@ -44,9 +44,9 @@ export const proProcedure = t.procedure.use(
       return next();
     }
 
-    const { active: isPro } = await getSubscriptionStatus(ctx.user.id);
+    const { hasActiveSubscription } = await getUserInfo(ctx.user.id);
 
-    if (!isPro) {
+    if (!hasActiveSubscription) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message:
