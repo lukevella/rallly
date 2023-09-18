@@ -36,7 +36,7 @@ export const VoteSelector = React.forwardRef<
       onBlur={onBlur}
       onKeyDown={onKeyDown}
       className={clsx(
-        "relative flex h-9 items-center justify-center overflow-hidden rounded-md border hover:bg-gray-50 active:bg-gray-100",
+        "relative flex h-9 items-center justify-center overflow-hidden rounded-md border hover:bg-gray-50 focus:ring-1 focus:ring-gray-200 active:bg-gray-100",
         className,
       )}
       onClick={() => {
