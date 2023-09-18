@@ -39,6 +39,9 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   const form = useForm<NewEventData>({
     defaultValues: {
+      title: "",
+      description: "",
+      location: "",
       view: "month",
       options: [],
       hideScores: false,
