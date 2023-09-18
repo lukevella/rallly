@@ -155,7 +155,6 @@
   "goToInvite": "Přejít na stránku s pozvánkou",
   "planPro": "Pro",
   "Billing": "Fakturace",
-  "planUpgrade": "Upgradovat",
   "subscriptionUpdatePayment": "Aktualizovat platební údaje",
   "subscriptionCancel": "Zrušit předplatné",
   "billingStatus": "Stav platby",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "Vyberte potenciální data nebo časy pro vaši událost",
   "optionalLabel": "(Volitelné)",
   "calendarHelp": "Hlasování nelze vytvořit bez možností. Chcete-li pokračovat, přidejte alespoň jednu možnost.",
-  "hideParticipants": "Skrýt seznam účastníků",
-  "hideParticipantsDescription": "Skrýt detaily o účastnících před ostatními účastníky",
   "editSettings": "Upravit nastavení",
-  "pollSettingsDescription": "Přizpůsobit chování ankety",
   "commentPlaceholder": "Zanechte u hlasování komentář (uvidí jej všichni)",
-  "hideScores": "Skrýt výsledky",
-  "hideScoresDescription": "Zobrazí výsledky až poté, co účastník zahlasuje",
   "disableComments": "Vypnout komentáře",
-  "disableCommentsDescription": "Odstranit možnost zanechat komentář na anketě",
   "clockPreferences": "Předvolby hodin",
   "clockPreferencesDescription": "Nastavte preferované časové pásmo a formát času.",
   "featureRequest": "Požadavek na funkci",
@@ -217,5 +210,6 @@
   "features": "Získejte přístup ke všem aktuálním i budoucím Pro funkcím!",
   "noAds": "Bez reklam",
   "supportProject": "Podpořte tento projekt",
-  "pricing": "Ceník"
+  "pricing": "Ceník",
+  "pollSettingsDescription": "Přizpůsobit chování ankety"
 }
