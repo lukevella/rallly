@@ -155,7 +155,6 @@
   "goToInvite": "Accéder à la page d'invitation",
   "planPro": "Pro",
   "Billing": "Facturation",
-  "planUpgrade": "Mettre à niveau",
   "subscriptionUpdatePayment": "Mettre à jour les détails de paiement",
   "subscriptionCancel": "Annuler l'abonnement",
   "billingStatus": "Statut de facturation",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "Sélectionnez les dates ou heures potentielles pour votre événement",
   "optionalLabel": "(Facultatif)",
   "calendarHelp": "Vous ne pouvez pas créer un sondage sans aucune option. Ajoutez au moins une option pour continuer.",
-  "hideParticipants": "Cacher la liste de participants",
-  "hideParticipantsDescription": "Empêcher les participants d'accéder aux détails des autres participants",
   "editSettings": "Modifier les paramètres",
-  "pollSettingsDescription": "Personnaliser le comportement de votre sondage",
   "commentPlaceholder": "Laissez un commentaire sur ce sondage (visible par tous)",
-  "hideScores": "Ne pas afficher les votes",
-  "hideScoresDescription": "Ne montrer le résultat des votes qu'après participation",
   "disableComments": "Désactiver les commentaires",
-  "disableCommentsDescription": "Supprimer la possibilité de laisser un commentaire sur le sondage",
   "clockPreferences": "Préférences de l'horloge",
   "clockPreferencesDescription": "Définissez votre fuseau horaire et votre format horaire préférés.",
   "featureRequest": "Demander une fonctionnalité",
@@ -231,5 +224,6 @@
   "features": "Accédez à toutes les fonctionnalités Pro actuelles et futures!",
   "noAds": "Pas de publicités",
   "supportProject": "Soutenez ce projet",
-  "pricing": "Tarifs"
+  "pricing": "Tarifs",
+  "pollSettingsDescription": "Personnaliser le comportement de votre sondage"
 }
