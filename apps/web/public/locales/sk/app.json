@@ -155,7 +155,6 @@
   "goToInvite": "Prejsť na Stránku pozvánky",
   "planPro": "Pro",
   "Billing": "Fakturácia",
-  "planUpgrade": "Upgrade",
   "subscriptionUpdatePayment": "Aktualizovať platobné detaily",
   "subscriptionCancel": "Zrušiť predplatné",
   "billingStatus": "Vyúčtované",
@@ -183,18 +182,13 @@
   "selectPotentialDates": "Vyberte možné dátumy alebo časy vašej udalosti",
   "optionalLabel": "(Voliteľné)",
   "calendarHelp": "Nie je možné vytvoriť hlasovanie bez možností. Ak chcete pokračovať, pridajte aspoň jednu možnosť.",
-  "hideParticipants": "Skryť zoznam účastníkov",
-  "hideParticipantsDescription": "Skryť údaje o účastníkoch pred ostatnými účastníkmi",
   "editSettings": "Upraviť nastavenia",
-  "pollSettingsDescription": "Prispôsobiť nastavenie vašej ankety",
   "commentPlaceholder": "Zanechajte komentár k tejto ankete (viditeľný pre všetkých)",
-  "hideScores": "Skryť výsledky",
-  "hideScoresDescription": "Zobraziť výsledky až po tom, ako účastník hlasoval",
   "disableComments": "Zakázať komentáre",
-  "disableCommentsDescription": "Odstrániť možnosť komentovať anketu",
   "clockPreferences": "Nastavenia hodín",
   "clockPreferencesDescription": "Nastavenie vašej časovej zóny a formátu času.",
   "duplicateTitleLabel": "Názov",
   "upgrade": "Upgrade",
-  "pricing": "Cenník"
+  "pricing": "Cenník",
+  "pollSettingsDescription": "Prispôsobiť nastavenie vašej ankety"
 }
