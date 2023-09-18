@@ -24,5 +24,6 @@
   "howToUpgradeAnswer": "Pre upgrade na platený plán, choďte <a>nastavenie fakturácie</a> a kliknite na <b>Upgrade</b>.",
   "cancelSubscription": "Ako zruším svoje predplatné?",
   "cancelSubscriptionAnswer": "Zrušiť svoje predplatné môžete zrušiť kedykoľvek kliknutím na <a>fakturačné nastavania</a>. Po zrušení predplatného budete mať stále prístup k svojmu platenému plánu až do konca fakturačného obdobia. Potom budete preradený na bezplatný plán.",
+  "earlyAccess": "Zľava pre tých najrýchlejších",
   "customPollSettings": "Prispôsobiť nastavenie ankety"
 }
