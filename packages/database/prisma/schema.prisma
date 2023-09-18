@@ -89,34 +89,35 @@ enum ParticipantVisibility {
 }
 
 model Poll {
-  id               String        @id @unique @map("id")
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @updatedAt @map("updated_at")
-  deadline         DateTime?
-  title            String
-  description      String?
-  location         String?
-  user             User?         @relation(fields: [userId], references: [id])
-  userId           String        @map("user_id")
-  votes            Vote[]
-  timeZone         String?       @map("time_zone")
-  options          Option[]
-  participants     Participant[]
-  watchers         Watcher[]
-  demo             Boolean       @default(false)
-  comments         Comment[]
-  legacy           Boolean       @default(false) // @deprecated
-  closed           Boolean       @default(false) // we use this to indicate whether a poll is paused
-  deleted          Boolean       @default(false)
-  deletedAt        DateTime?     @map("deleted_at")
-  touchedAt        DateTime      @default(now()) @map("touched_at")
-  participantUrlId String        @unique @map("participant_url_id")
-  adminUrlId       String        @unique @map("admin_url_id")
-  eventId          String?       @map("event_id")
-  event            Event?
-  hideParticipants Boolean       @default(false) @map("hide_participants")
-  hideScores       Boolean       @default(false) @map("hide_scores")
-  disableComments  Boolean       @default(false) @map("disable_comments")
+  id                      String        @id @unique @map("id")
+  createdAt               DateTime      @default(now()) @map("created_at")
+  updatedAt               DateTime      @updatedAt @map("updated_at")
+  deadline                DateTime?
+  title                   String
+  description             String?
+  location                String?
+  user                    User?         @relation(fields: [userId], references: [id])
+  userId                  String        @map("user_id")
+  votes                   Vote[]
+  timeZone                String?       @map("time_zone")
+  options                 Option[]
+  participants            Participant[]
+  watchers                Watcher[]
+  demo                    Boolean       @default(false)
+  comments                Comment[]
+  legacy                  Boolean       @default(false) // @deprecated
+  closed                  Boolean       @default(false) // we use this to indicate whether a poll is paused
+  deleted                 Boolean       @default(false)
+  deletedAt               DateTime?     @map("deleted_at")
+  touchedAt               DateTime      @default(now()) @map("touched_at")
+  participantUrlId        String        @unique @map("participant_url_id")
+  adminUrlId              String        @unique @map("admin_url_id")
+  eventId                 String?       @map("event_id")
+  event                   Event?
+  hideParticipants        Boolean       @default(false) @map("hide_participants")
+  hideScores              Boolean       @default(false) @map("hide_scores")
+  disableComments         Boolean       @default(false) @map("disable_comments")
+  requireParticipantEmail Boolean       @default(false) @map("require_participant_email")
 
   @@index([userId], type: Hash)
   @@map("polls")

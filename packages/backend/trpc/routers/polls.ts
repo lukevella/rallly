@@ -58,6 +58,7 @@ export const polls = router({
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         disableComments: z.boolean().optional(),
+        requireParticipantEmail: z.boolean().optional(),
         options: z
           .object({
             startDate: z.string(),
@@ -116,6 +117,7 @@ export const polls = router({
           hideParticipants: input.hideParticipants,
           disableComments: input.disableComments,
           hideScores: input.hideScores,
+          requireParticipantEmail: input.requireParticipantEmail,
         },
       });
 
@@ -161,6 +163,7 @@ export const polls = router({
         hideParticipants: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         hideScores: z.boolean().optional(),
+        requireParticipantEmail: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -211,6 +214,7 @@ export const polls = router({
           hideScores: input.hideScores,
           hideParticipants: input.hideParticipants,
           disableComments: input.disableComments,
+          requireParticipantEmail: input.requireParticipantEmail,
         },
       });
     }),
@@ -377,6 +381,7 @@ export const polls = router({
           hideParticipants: true,
           disableComments: true,
           hideScores: true,
+          requireParticipantEmail: true,
           demo: true,
           options: {
             select: {

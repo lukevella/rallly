@@ -65,7 +65,6 @@ const ManagePoll: React.FunctionComponent<{
             <Link href={`/poll/${poll.id}/edit-settings`}>
               <DropdownMenuItemIconLabel icon={Settings2Icon}>
                 <Trans i18nKey="editSettings" defaults="Edit settings" />
-                <ProBadge />
               </DropdownMenuItemIconLabel>
             </Link>
           </DropdownMenuItem>

@@ -1,11 +1,11 @@
 import { VoteType } from "@rallly/database";
 import * as React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
+import { useVotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/components/poll-context";
 import { ParsedDateTimeOpton } from "@/utils/date-time-utils";
 
-import { ParticipantForm } from "../types";
 import DateOption from "./date-option";
 import TimeSlotOption from "./time-slot-option";
 
@@ -20,7 +20,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
   editable,
   selectedParticipantId,
 }) => {
-  const { control } = useFormContext<ParticipantForm>();
+  const { control } = useVotingForm();
   const {
     getParticipantsWhoVotedForOption,
     getParticipantById,

@@ -1,4 +1,10 @@
-import { EyeIcon, MessageCircleIcon, VoteIcon } from "@rallly/icons";
+import {
+  AtSignIcon,
+  EyeIcon,
+  InfoIcon,
+  MessageCircleIcon,
+  VoteIcon,
+} from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
   Card,
@@ -7,10 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
-import { FormField, FormItem } from "@rallly/ui/form";
-import { Label } from "@rallly/ui/label";
+import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
-import Link from "next/link";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";
@@ -19,26 +24,57 @@ import { ProBadge } from "@/components/pro-badge";
 import { usePlan } from "@/contexts/plan";
 
 export type PollSettingsFormData = {
+  requireParticipantEmail: boolean;
   hideParticipants: boolean;
   hideScores: boolean;
   disableComments: boolean;
 };
 
 const SettingContent = ({ children }: React.PropsWithChildren) => {
-  return <div className="grid grow gap-1.5 pt-0.5">{children}</div>;
+  return <div className="grid grow pt-0.5">{children}</div>;
 };
 
-const SettingDescription = ({ children }: React.PropsWithChildren) => {
-  return <p className="text-muted-foreground text-sm">{children}</p>;
-};
-
-const SettingTitle = Label;
-
-const Setting = ({ children }: React.PropsWithChildren) => {
+const SettingTitle = ({
+  children,
+  pro,
+  hint,
+}: React.PropsWithChildren<{
+  pro?: boolean;
+  htmlFor?: string;
+  hint?: React.ReactNode;
+}>) => {
   return (
-    <FormItem className="rounded-lg border p-4">
-      <div className="flex items-start justify-between gap-x-4">{children}</div>
-    </FormItem>
+    <div className="flex min-w-0 items-center gap-x-2.5">
+      <div className="text-sm font-medium">{children}</div>
+      {pro ? <ProBadge /> : null}
+      {hint ? (
+        <Tooltip>
+          <TooltipTrigger>
+            <InfoIcon className="text-muted-foreground h-4 w-4" />
+          </TooltipTrigger>
+          <TooltipContent>{hint}</TooltipContent>
+        </Tooltip>
+      ) : null}
+    </div>
+  );
+};
+
+const Setting = ({
+  children,
+  disabled,
+}: React.PropsWithChildren<{ disabled?: boolean }>) => {
+  const Component = disabled ? "div" : "label";
+  return (
+    <Component
+      className={cn(
+        disabled
+          ? "bg-muted-background text-muted-foreground"
+          : "cursor-pointer bg-white hover:bg-gray-50 active:bg-gray-100",
+        "flex select-none justify-between gap-x-4 gap-y-2.5 rounded-md border p-3 sm:flex-row ",
+      )}
+    >
+      {children}
+    </Component>
   );
 };
 
@@ -47,7 +83,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
 
   const plan = usePlan();
 
-  const disabled = plan === "free";
+  const isFree = plan === "free";
 
   return (
     <Card>
@@ -58,7 +94,6 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
               <CardTitle>
                 <Trans i18nKey="settings" />
               </CardTitle>
-              <ProBadge />
             </div>
             <CardDescription>
               <Trans
@@ -67,43 +102,71 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
               />
             </CardDescription>
           </div>
-          {disabled ? (
-            <div>
-              <Link className="text-link text-sm" href="/settings/billing">
-                <Trans i18nKey="planUpgrade" />
-              </Link>
-            </div>
-          ) : null}
         </div>
       </CardHeader>
       <CardContent>
-        <div
-          className={cn(
-            "grid gap-2.5",
-            disabled ? "pointer-events-none opacity-50" : "",
-          )}
-        >
+        <div className={cn("grid gap-2.5")}>
+          <FormField
+            control={form.control}
+            name="disableComments"
+            render={({ field }) => (
+              <Setting>
+                <MessageCircleIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
+                <SettingContent>
+                  <SettingTitle htmlFor="disableComments">
+                    <Trans i18nKey="disableComments">Disable Comments</Trans>
+                  </SettingTitle>
+                </SettingContent>
+                <Switch
+                  id={field.name}
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+              </Setting>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="requireParticipantEmail"
+            render={({ field }) => (
+              <Setting disabled={isFree}>
+                <AtSignIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
+                <SettingContent>
+                  <SettingTitle pro>
+                    <Trans
+                      i18nKey="requireParticipantEmailLabel"
+                      defaults="Make email address required for participants"
+                    />
+                  </SettingTitle>
+                </SettingContent>
+                <Switch
+                  disabled={isFree}
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+              </Setting>
+            )}
+          />
           <FormField
             control={form.control}
             name="hideParticipants"
             render={({ field }) => (
-              <Setting>
-                <EyeIcon className="h-6 w-6" />
+              <Setting disabled={isFree}>
+                <EyeIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
-                  <SettingTitle>
-                    <Trans i18nKey="hideParticipants">
-                      Hide participant list
-                    </Trans>
-                  </SettingTitle>
-                  <SettingDescription>
+                  <SettingTitle pro>
                     <Trans
-                      i18nKey="hideParticipantsDescription"
-                      defaults="Keep participant details private"
+                      i18nKey="hideParticipantsLabel"
+                      defaults="Hide participants from each other"
                     />
-                  </SettingDescription>
+                  </SettingTitle>
                 </SettingContent>
                 <Switch
-                  disabled={disabled}
+                  disabled={isFree}
                   checked={field.value}
                   onCheckedChange={(checked) => {
                     field.onChange(checked);
@@ -116,48 +179,19 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             control={form.control}
             name="hideScores"
             render={({ field }) => (
-              <Setting>
-                <VoteIcon className="h-6 w-6" />
+              <Setting disabled={isFree}>
+                <VoteIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
-                  <SettingTitle>
-                    <Trans i18nKey="hideScores">Hide scores</Trans>
-                  </SettingTitle>
-                  <SettingDescription>
+                  <SettingTitle htmlFor={field.name} pro>
                     <Trans
-                      i18nKey="hideScoresDescription"
-                      defaults="Reduce bias by hiding the current vote counts from participants"
+                      i18nKey="hideScoresLabel"
+                      defaults="Hide scores until after a participant has voted"
                     />
-                  </SettingDescription>
+                  </SettingTitle>
                 </SettingContent>
                 <Switch
-                  disabled={disabled}
-                  checked={field.value}
-                  onCheckedChange={(checked) => {
-                    field.onChange(checked);
-                  }}
-                />
-              </Setting>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="disableComments"
-            render={({ field }) => (
-              <Setting>
-                <MessageCircleIcon className="h-6 w-6" />
-                <SettingContent>
-                  <SettingTitle>
-                    <Trans i18nKey="disableComments">Disable comments</Trans>
-                  </SettingTitle>
-                  <SettingDescription>
-                    <Trans
-                      i18nKey="disableCommentsDescription"
-                      defaults="Remove the option to leave a comment on the poll"
-                    />
-                  </SettingDescription>
-                </SettingContent>
-                <Switch
-                  disabled={disabled}
+                  id={field.name}
+                  disabled={isFree}
                   checked={field.value}
                   onCheckedChange={(checked) => {
                     field.onChange(checked);
