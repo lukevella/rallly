@@ -155,7 +155,6 @@
   "goToInvite": "Davet sayfasına git",
   "planPro": "Pro",
   "Billing": "Faturalandırma",
-  "planUpgrade": "Yükselt",
   "subscriptionUpdatePayment": "Ödeme Bilgisini Güncelle",
   "subscriptionCancel": "Aboneliği İptal Et",
   "billingStatus": "Faturalama Durumu",
@@ -183,15 +182,9 @@
   "selectPotentialDates": "Etkinliğiniz için olası tarih veya saatleri seçin",
   "optionalLabel": "(İsteğe bağlı)",
   "calendarHelp": "Seçenekleri olmayan bir anket oluşturamazsınız. Devam etmek için en az bir seçenek eklemelisiniz.",
-  "hideParticipants": "Katılımcı listesini gizle",
-  "hideParticipantsDescription": "Katılımcı detaylarını diğer katılımcılardan gizle",
   "editSettings": "Ayarları düzenle",
-  "pollSettingsDescription": "Anketinizin davranışını özelleştirin",
   "commentPlaceholder": "Bu anket için bir yorum ekle (herkes tarafından görülebilir)",
-  "hideScores": "Sonuçları gizle",
-  "hideScoresDescription": "Katılımcı oylama yaptıktan sonra sonuçları göster",
   "disableComments": "Yorumları devre dışı bırak",
-  "disableCommentsDescription": "Ankete yorum yapabilme seçeneğini kaldır",
   "clockPreferences": "Saat Tercihleri",
   "clockPreferencesDescription": "Tercih ettiğiniz saat dilimi ve saat formatını ayarlayın.",
   "featureRequest": "Bir özellik iste",
@@ -217,5 +210,6 @@
   "features": "Mevcut ve gelecekteki tüm Pro özelliklere erişin!",
   "noAds": "Reklamsız",
   "supportProject": "Bu projeye destek ol",
-  "pricing": "Fiyatlandırma"
+  "pricing": "Fiyatlandırma",
+  "pollSettingsDescription": "Anketinizin davranışını özelleştirin"
 }
