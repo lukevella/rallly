@@ -92,6 +92,7 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
+            className="text-destructive"
             onClick={() => {
               setShowDeletePollDialog(true);
             }}
