@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
+import { useUnmount } from "react-use";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
@@ -51,10 +52,12 @@ export const CreatePoll: React.FunctionComponent = () => {
     },
   });
 
-  useFormPersist("new-poll", {
+  const { clear } = useFormPersist("new-poll", {
     watch: form.watch,
     setValue: form.setValue,
   });
+
+  useUnmount(clear);
 
   const posthog = usePostHog();
   const queryClient = trpc.useContext();
@@ -90,7 +93,7 @@ export const CreatePoll: React.FunctionComponent = () => {
                   optionsView: formData?.view,
                 });
                 queryClient.polls.list.invalidate();
-                router.replace(`/poll/${res.id}`);
+                router.push(`/poll/${res.id}`);
               },
             },
           );
