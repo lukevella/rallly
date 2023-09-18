@@ -226,8 +226,8 @@
   "supportProject": "Support this project",
   "pricing": "Pricing",
   "pleaseUpgrade": "Please upgrade to Pro to use this feature",
-  "pollSettingsTitle": "Customize the behaviour of your poll",
-  "requireParticipantEmailTitle": "Participants must provide an email address to vote",
-  "hideParticipantsTitle": "Keep participant details private",
-  "hideScoresTitle": "Reduce bias by hiding the current vote counts from participants"
+  "pollSettingsDescription": "Customize the behaviour of your poll",
+  "requireParticipantEmailLabel": "Make email address required for participants",
+  "hideParticipantsLabel": "Hide participant list from other participants",
+  "hideScoresLabel": "Hide scores until after a participant has voted"
 }

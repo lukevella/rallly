@@ -97,7 +97,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             </div>
             <CardDescription>
               <Trans
-                i18nKey="pollSettingsTitle"
+                i18nKey="pollSettingsDescription"
                 defaults="Customize the behaviour of your poll"
               />
             </CardDescription>
@@ -136,8 +136,8 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                 <SettingContent>
                   <SettingTitle pro>
                     <Trans
-                      i18nKey="requireParticipantEmailTitle"
-                      defaults="Participants must provide an email address to vote"
+                      i18nKey="requireParticipantEmailLabel"
+                      defaults="Make email address required for participants"
                     />
                   </SettingTitle>
                 </SettingContent>
@@ -160,8 +160,8 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                 <SettingContent>
                   <SettingTitle pro>
                     <Trans
-                      i18nKey="hideParticipantsTitle"
-                      defaults="Keep participant details private"
+                      i18nKey="hideParticipantsLabel"
+                      defaults="Hide participants from each other"
                     />
                   </SettingTitle>
                 </SettingContent>
@@ -184,8 +184,8 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                 <SettingContent>
                   <SettingTitle htmlFor={field.name} pro>
                     <Trans
-                      i18nKey="hideScoresTitle"
-                      defaults="Reduce bias by hiding the current vote counts from participants"
+                      i18nKey="hideScoresLabel"
+                      defaults="Hide scores until after a participant has voted"
                     />
                   </SettingTitle>
                 </SettingContent>
