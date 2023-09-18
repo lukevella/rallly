@@ -225,5 +225,9 @@
   "noAds": "Geen advertenties",
   "supportProject": "Dit project steunen",
   "pricing": "Prijzen",
-  "pollSettingsDescription": "Pas het gedrag van je poll aan"
+  "pleaseUpgrade": "Gelieve te upgraden naar Pro om deze functie te gebruiken",
+  "pollSettingsDescription": "Pas het gedrag van je poll aan",
+  "requireParticipantEmailLabel": "Maak e-mailadres verplicht voor de deelnemers",
+  "hideParticipantsLabel": "Deelnemersgegevens verborgen houden voor andere deelnemers",
+  "hideScoresLabel": "Verberg scores totdat een deelnemer heeft gestemd"
 }
