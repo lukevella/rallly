@@ -225,5 +225,9 @@
   "noAds": "Keine Werbung",
   "supportProject": "Unterstütze dieses Projekt",
   "pricing": "Preise",
-  "pollSettingsDescription": "Passen Sie das Verhalten Ihrer Umfrage an"
+  "pleaseUpgrade": "Bitte aktualisiere auf Pro, um diese Funktion zu nutzen",
+  "pollSettingsDescription": "Passen Sie das Verhalten Ihrer Umfrage an",
+  "requireParticipantEmailLabel": "E-Mail-Adresse für Teilnehmer erforderlich machen",
+  "hideParticipantsLabel": "Teilnehmerliste vor anderen Teilnehmern verbergen",
+  "hideScoresLabel": "Zeige das Ergebnis erst an, wenn ein Teilnehmer abgestimmt hat"
 }
