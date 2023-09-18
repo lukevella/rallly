@@ -225,5 +225,7 @@
   "noAds": "Ingen reklame",
   "supportProject": "Støtt dette prosjektet",
   "pricing": "Priser",
-  "pollSettingsDescription": "Tilpass oppførselen til avstemningen din"
+  "pleaseUpgrade": "Vennligst oppgrader til Pro for å bruke denne funksjonen",
+  "pollSettingsDescription": "Tilpass oppførselen til avstemningen din",
+  "requireParticipantEmailLabel": "Krev e-postadresse fra deltakere"
 }
