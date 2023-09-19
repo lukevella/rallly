@@ -23,7 +23,6 @@
   "deleteParticipant": "Excluir {name}?",
   "deleteParticipantDescription": "Tem certeza de que deseja excluir este participante? Esta ação não pode ser desfeita.",
   "deletePoll": "Excluir enquete",
-  "deletePollDescription": "Todos os dados relacionados a esta enquete serão excluídos. Para confirmar, digite <s>“{confirmText}”</s> no espaço abaixo:",
   "deletingOptionsWarning": "Você está excluindo opções que outros participantes já votaram. Esses votos serão excluídos também.",
   "description": "Descrição",
   "descriptionPlaceholder": "Olá a todos! Por gentileza, escolha as datas que sirva para você!",
