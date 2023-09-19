@@ -23,7 +23,6 @@
   "deleteParticipant": "Eliminare {name}?",
   "deleteParticipantDescription": "Sei sicuro di voler eliminare questo partecipante? L'operazione non può essere annullata.",
   "deletePoll": "Elimina sondaggio",
-  "deletePollDescription": "Tutti i dati relativi a questo sondaggio saranno eliminati. Per confermare, digita <s>“{confirmText}”</s> qui sotto:",
   "deletingOptionsWarning": "Stai eliminando opzioni per le quali i partecipanti hanno votato. Anche il loro voto sarà eliminato.",
   "description": "Descrizione",
   "descriptionPlaceholder": "Ciao a tutti, scegliete le date che per voi vanno bene!",
