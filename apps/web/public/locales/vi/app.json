@@ -23,7 +23,6 @@
   "deleteParticipant": "Xoá {name}?",
   "deleteParticipantDescription": "Bạn có chắc sẽ xóa người tham dự này này? Hành động này không thể hoàn tác.",
   "deletePoll": "Xóa bình chọn",
-  "deletePollDescription": "Tất cả dữ liệu liên quan đến bình chọn này sẽ được xoá. Để chấp thuận, vui lòng nhập <s>“{confirmText}”</s> vào ô phía dưới:",
   "deletingOptionsWarning": "Bạn đang xoá các lựa chọn mà người tham dự đã bầu. Phiếu bầu của họ sẽ bị xoá.",
   "description": "Mô tả",
   "descriptionPlaceholder": "Mọi người ơi, hãy chọn tất cả ngày giờ phù hợp với mọi người nhé!",
