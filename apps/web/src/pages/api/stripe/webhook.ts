@@ -52,12 +52,13 @@ export default async function handler(
   switch (event.type) {
     case "checkout.session.completed":
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
-      const { userId } = metadataSchema.parse(checkoutSession.metadata);
 
       if (checkoutSession.subscription === null) {
         // This is a one-time payment (probably for Rallly Self-Hosted)
         break;
       }
+
+      const { userId } = metadataSchema.parse(checkoutSession.metadata);
 
       if (!userId) {
         res.status(400).send("Missing client reference ID");
