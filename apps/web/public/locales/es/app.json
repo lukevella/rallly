@@ -23,7 +23,6 @@
   "deleteParticipant": "¿Eliminar {name}?",
   "deleteParticipantDescription": "¿Está seguro que quieres eliminar este participante? Esta acción no se puede deshacer.",
   "deletePoll": "Borrar encuesta",
-  "deletePollDescription": "Todos los datos relacionados con esta encuesta se eliminarán. Para confirmar, por favor escribe <s>“{confirmText}”</s> en el campo siguiente:",
   "deletingOptionsWarning": "Estás eliminando opciones por las que algunos participantes han votado. También se eliminarán sus votos.",
   "description": "Descripción",
   "descriptionPlaceholder": "¡Hola a todos, por favor elijan las fechas que les convengan!",
