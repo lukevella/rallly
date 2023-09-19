@@ -4,6 +4,7 @@ import React from "react";
 
 import { PostHogProvider } from "@/contexts/posthog";
 import { useWhoAmI } from "@/contexts/whoami";
+import { isSelfHosted } from "@/utils/constants";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -51,6 +52,11 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
 
   const user = useWhoAmI();
   const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+
+  // TODO (Luke Vella) [2023-09-19]: Remove this when we have a better way to query for an active subscription
+  trpc.user.subscription.useQuery(undefined, {
+    enabled: !isSelfHosted,
+  });
 
   const name = user
     ? user.isGuest === false
