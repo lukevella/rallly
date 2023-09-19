@@ -52,6 +52,12 @@ export default async function handler(
   switch (event.type) {
     case "checkout.session.completed":
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
+
+      if (checkoutSession.subscription === null) {
+        // This is a one-time payment (probably for Rallly Self-Hosted)
+        break;
+      }
+
       const { userId } = metadataSchema.parse(checkoutSession.metadata);
 
       if (!userId) {
