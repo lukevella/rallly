@@ -23,7 +23,6 @@
   "deleteParticipant": "Supprimer {name}?",
   "deleteParticipantDescription": "Êtes-vous sûr de vouloir supprimer ce participant ? Cette action ne peut pas être annulée.",
   "deletePoll": "Supprimer le sondage",
-  "deletePollDescription": "Toutes les données liées à ce sondage seront supprimées. Pour confirmer, veuillez taper <s>\"{confirmText}\"</s> dans l'entrée ci-dessous :",
   "deletingOptionsWarning": "Vous supprimez des options pour lesquelles les participants ont voté. Leurs votes seront également supprimés.",
   "description": "Description",
   "descriptionPlaceholder": "Hé tout le monde, choisissez les dates qui vous conviennent !",

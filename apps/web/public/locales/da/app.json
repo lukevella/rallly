@@ -22,7 +22,6 @@
   "deleteParticipant": "Slet {name}?",
   "deleteParticipantDescription": "Er du sikker på, at du vil slette denne deltager? Denne handling kan ikke fortrydes.",
   "deletePoll": "Slet afstemning",
-  "deletePollDescription": "Alle data relateret til denne afstemning vil blive slettet. For bekræftning skriv <s>\"{confirmText}\"</s> i feltet nedenfor:",
   "deletingOptionsWarning": "Du sletter mulighederne som medlemmer har stemt på. Deres stemmer vil også blive slettet.",
   "description": "Beskrivelse",
   "descriptionPlaceholder": "Hej alle, vælg venligst de datoer som passer jer!",

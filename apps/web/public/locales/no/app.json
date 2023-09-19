@@ -227,5 +227,7 @@
   "pricing": "Priser",
   "pleaseUpgrade": "Vennligst oppgrader til Pro for å bruke denne funksjonen",
   "pollSettingsDescription": "Tilpass oppførselen til avstemningen din",
-  "requireParticipantEmailLabel": "Krev e-postadresse fra deltakere"
+  "requireParticipantEmailLabel": "Krev e-postadresse fra deltakere",
+  "hideParticipantsLabel": "Skjul deltakerliste fra andre deltakere",
+  "hideScoresLabel": "Skjul resultater frem til etter deltakere har stemt"
 }

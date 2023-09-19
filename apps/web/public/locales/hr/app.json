@@ -23,7 +23,6 @@
   "deleteParticipant": "Izbriši {name}?",
   "deleteParticipantDescription": "Sigurno želite izbrisati ovog sudionika? Ovo nije moguće naknadno poništiti.",
   "deletePoll": "Izbriši anketu",
-  "deletePollDescription": "Svi podaci vezani uz ovu anketu bit će izbrisani. Za potvrdu upišite <s>“{confirmText}”</s> u polje za unos ispod:",
   "deletingOptionsWarning": "Brišete opcije za koje su glasali sudionici. I njihovi odabiri će također biti izbrisani.",
   "description": "Opis",
   "descriptionPlaceholder": "Pozdrav svima, odaberite termine koji vam odgovaraju!",

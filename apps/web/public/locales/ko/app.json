@@ -22,7 +22,6 @@
   "deleteParticipant": "{name} 을/를 삭제하시겠습니까?",
   "deleteParticipantDescription": "정말로 이 참여자를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
   "deletePoll": "투표 삭제하기",
-  "deletePollDescription": "이 투표의 모든 데이터가 삭제됩니다. 계속하시려면 <s>“{confirmText}”</s> 를 아래 입력창에 입력해주세요.",
   "deletingOptionsWarning": "해당 옵션과 참여자들의 투표 내역을 모두 삭제합니다.",
   "description": "설명",
   "descriptionPlaceholder": "안녕하세요, 당신이 원하는 날짜를 선택해주세요.",

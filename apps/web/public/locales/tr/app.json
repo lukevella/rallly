@@ -23,7 +23,6 @@
   "deleteParticipant": "{name} Silinsin mi?",
   "deleteParticipantDescription": "Bu katılımcıyı silmek istediğinizden emin misiniz? Bu eylem geri alınamaz.",
   "deletePoll": "Anketi sil",
-  "deletePollDescription": "Bu anketle ilgili tüm veriler silinecek. Onaylamak için lütfen aşağıdaki metin kutusuna <s>“{confirmText}”</s> yazın:",
   "deletingOptionsWarning": "Katılımcıların oy verdiği seçenekleri siliyorsunuz. Verilen oylarda silinecektir.",
   "description": "Açıklama",
   "descriptionPlaceholder": "Herkese merhaba, lütfen size uygun tarihleri seçiniz!",
