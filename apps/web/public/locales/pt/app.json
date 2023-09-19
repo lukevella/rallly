@@ -17,7 +17,6 @@
   "deletedPoll": "Sondagem eliminada",
   "deletedPollInfo": "Esta sondagem já não existe.",
   "deletePoll": "Apagar sondagem",
-  "deletePollDescription": "Todos os dados relacionados a esta sondagem serão apagados. Para confirmar, digite <s>“{confirmText}</s> na entrada abaixo:",
   "deletingOptionsWarning": "Está a apagar opções em que os participantes já votaram. Os votos deles serão também ser apagados.",
   "description": "Descrição",
   "descriptionPlaceholder": "Olá, por favor escolha as datas mais convenientes!",
