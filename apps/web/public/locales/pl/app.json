@@ -23,7 +23,7 @@
   "deleteParticipant": "Usunąć {name}?",
   "deleteParticipantDescription": "Czy na pewno chcesz usunąć tego uczestnika? Tej operacji nie można cofnąć.",
   "deletePoll": "Usuń ankietę",
-  "deletePollDescription": "Wszystkie dane związane z tą ankietą zostaną usunięte. Aby potwierdzić, wpisz <s>„{confirmText}”</s> poniższej:",
+  "deletePollDescription": "Wszystkie dane związane z tą ankietą zostaną usunięte. Tej operacji nie można cofnąć.",
   "deletingOptionsWarning": "Usuwasz opcje, na które głosowali uczestnicy. Ich głosy również zostaną usunięte.",
   "description": "Opis",
   "descriptionPlaceholder": "Cześć wszystkim, wybierzcie terminy, które Wam pasują!",
