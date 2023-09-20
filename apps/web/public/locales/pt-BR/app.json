@@ -23,6 +23,7 @@
   "deleteParticipant": "Excluir {name}?",
   "deleteParticipantDescription": "Tem certeza de que deseja excluir este participante? Esta ação não pode ser desfeita.",
   "deletePoll": "Excluir enquete",
+  "deletePollDescription": "Todos os dados relacionados a esta enquete serão excluídos. Esta ação não pode ser desfeita.",
   "deletingOptionsWarning": "Você está excluindo opções que outros participantes já votaram. Esses votos serão excluídos também.",
   "description": "Descrição",
   "descriptionPlaceholder": "Olá a todos! Por gentileza, escolha as datas que sirva para você!",
@@ -224,5 +225,9 @@
   "noAds": "Sem anúncios",
   "supportProject": "Apoie este projeto",
   "pricing": "Preços",
-  "pollSettingsDescription": "Personalizar o comportamento da sua enquete"
+  "pleaseUpgrade": "Por favor, atualize para a versão Pro para usar este recurso",
+  "pollSettingsDescription": "Personalizar o comportamento da sua enquete",
+  "requireParticipantEmailLabel": "Torne necessário o endereço de e-mail para participantes",
+  "hideParticipantsLabel": "Oculte a lista de participantes de outros participantes",
+  "hideScoresLabel": "Oculte as pontuações até que o participante tenha votado"
 }
