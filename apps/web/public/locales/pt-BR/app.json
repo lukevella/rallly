@@ -224,5 +224,7 @@
   "noAds": "Sem anúncios",
   "supportProject": "Apoie este projeto",
   "pricing": "Preços",
-  "pollSettingsDescription": "Personalizar o comportamento da sua enquete"
+  "pleaseUpgrade": "Por favor, atualize para a versão Pro para usar este recurso",
+  "pollSettingsDescription": "Personalizar o comportamento da sua enquete",
+  "requireParticipantEmailLabel": "Torne necessário o endereço de e-mail para participantes"
 }
