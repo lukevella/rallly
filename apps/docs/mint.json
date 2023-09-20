@@ -6,9 +6,13 @@
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#4f46e5",
+    "primary": "#4F46E5",
     "light": "#6366f1",
-    "dark": "#1f2937",
+    "dark": "#4F46E5",
+    "background": {
+      "light": "#F9FAFB",
+      "dark": "#111827"
+    },
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
   },
   "topbarCtaButton": {
@@ -25,17 +29,20 @@
       "url": "contact"
     }
   ],
-  "tabs": [
+  "anchors": [
     {
       "name": "Self-Hosting",
+      "icon": "server",
       "url": "self-hosting"
     },
     {
       "name": "Contributing Guide",
+      "icon": "hand-holding-heart",
       "url": "contribute"
     },
     {
       "name": "Contact",
+      "icon": "messages",
       "url": "contact"
     }
   ],
@@ -45,17 +52,14 @@
       "pages": ["introduction", "faq"]
     },
     {
-      "group": "Meeting Poll Workflow",
-      "pages": [
-        "workflow/create-a-meeting-poll",
-        "workflow/invite-participants",
-        "workflow/collect-responses",
-        "workflow/finalize"
-      ]
+      "group": "How it Works",
+      "pages": ["workflow/create", "workflow/invite", "workflow/finalize"]
     },
     {
-      "group": "Guides for Participants",
+      "group": "Guides",
       "pages": [
+        "administrators/deleting-a-meeting-poll",
+        "administrators/editing-a-meeting-poll",
         "participants/submitting-a-response",
         "participants/editing-a-response"
       ]
@@ -93,6 +97,7 @@
   ],
   "footerSocials": {
     "twitter": "https://twitter.com/ralllyco",
+    "linkedin": "https://www.linkedin.com/company/rallly/",
     "github": "https://github.com/lukevella/rallly",
     "discord": "https://discord.com/invite/uzg4ZcHbuM",
     "website": "https://rallly.co/"
@@ -104,7 +109,11 @@
   "redirects": [
     {
       "source": "administrators/creating-a-meeting-poll",
-      "destination": "workflow/create-a-meeting-poll"
+      "destination": "workflow/create"
+    },
+    {
+      "source": "administrators/sharing-a-meeting-poll",
+      "destination": "workflow/invite"
     }
   ]
 }
