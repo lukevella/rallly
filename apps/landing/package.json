@@ -50,7 +50,6 @@
     "@types/smoothscroll-polyfill": "^0.3.1",
     "cheerio": "^1.0.0-rc.12",
     "cross-env": "^7.0.3",
-    "eslint-config-next": "^13.0.1",
     "eslint-config-turbo": "^0.0.9",
     "eslint-import-resolver-typescript": "^2.7.0",
     "eslint-plugin-import": "^2.22.1",

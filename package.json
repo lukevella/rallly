@@ -38,6 +38,7 @@
     "@typescript-eslint/parser": "^6.6.0",
     "dotenv-cli": "^7.1.0",
     "eslint": "^8.48.0",
+    "eslint-config-next": "^13.5.1",
     "prettier": "^2.8.4",
     "turbo": "^1.10.7"
   },
