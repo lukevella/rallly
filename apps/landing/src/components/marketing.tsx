@@ -162,9 +162,9 @@ const Mention = ({
       transition={{
         delay,
         type: "spring",
-        bounce: 0.5,
+        bounce: 0.3,
       }}
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       className="flex flex-col items-center space-y-4 rounded-md"
@@ -260,9 +260,9 @@ const BigTestimonial = () => {
   return (
     <m.div
       transition={{
-        duration: 2,
+        duration: 1,
         type: "spring",
-        bounce: 0.5,
+        bounce: 0.3,
       }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
