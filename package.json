@@ -27,16 +27,18 @@
   ],
   "dependencies": {
     "framer-motion": "^10.16.4",
-    "next": "^13.2.4",
+    "next": "^13.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "dotenv-cli": "^7.1.0",
     "eslint": "^8.48.0",
+    "eslint-config-next": "^13.5.1",
     "prettier": "^2.8.4",
     "turbo": "^1.10.7"
   },
