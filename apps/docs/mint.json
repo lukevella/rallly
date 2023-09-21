@@ -6,9 +6,12 @@
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#4f46e5",
+    "primary": "#4F46E5",
     "light": "#6366f1",
-    "dark": "#1f2937",
+    "dark": "#4F46E5",
+    "background": {
+      "light": "#F9FAFB"
+    },
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
   },
   "topbarCtaButton": {
@@ -25,17 +28,20 @@
       "url": "contact"
     }
   ],
-  "tabs": [
+  "anchors": [
     {
       "name": "Self-Hosting",
+      "icon": "server",
       "url": "self-hosting"
     },
     {
       "name": "Contributing Guide",
+      "icon": "hand-holding-heart",
       "url": "contribute"
     },
     {
       "name": "Contact",
+      "icon": "messages",
       "url": "contact"
     }
   ],
@@ -45,20 +51,12 @@
       "pages": ["introduction", "faq"]
     },
     {
-      "group": "Guides for Administrators",
-      "pages": [
-        "administrators/creating-a-meeting-poll",
-        "administrators/sharing-a-meeting-poll",
-        "administrators/editing-a-meeting-poll",
-        "administrators/deleting-a-meeting-poll"
-      ]
+      "group": "How it Works",
+      "pages": ["workflow/create", "workflow/invite", "workflow/finalize"]
     },
     {
-      "group": "Guides for Participants",
-      "pages": [
-        "participants/submitting-a-response",
-        "participants/editing-a-response"
-      ]
+      "group": "Guides",
+      "pages": ["guide/participant-guide"]
     },
     {
       "group": "Self-Hosting",
@@ -93,6 +91,7 @@
   ],
   "footerSocials": {
     "twitter": "https://twitter.com/ralllyco",
+    "linkedin": "https://www.linkedin.com/company/rallly/",
     "github": "https://github.com/lukevella/rallly",
     "discord": "https://discord.com/invite/uzg4ZcHbuM",
     "website": "https://rallly.co/"
@@ -100,5 +99,23 @@
   "feedback": {
     "suggestEdit": true,
     "raiseIssue": true
-  }
+  },
+  "redirects": [
+    {
+      "source": "/administrators/creating-a-meeting-poll",
+      "destination": "/workflow/create"
+    },
+    {
+      "source": "/administrators/sharing-a-meeting-poll",
+      "destination": "/workflow/invite"
+    },
+    {
+      "source": "/participants/submitting-a-response",
+      "destination": "/guide/participant-guide"
+    },
+    {
+      "source": "/participants/editing-a-response",
+      "destination": "/guide/participant-guide"
+    }
+  ]
 }
