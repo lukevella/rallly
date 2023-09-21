@@ -56,12 +56,7 @@
     },
     {
       "group": "Guides",
-      "pages": [
-        "administrators/deleting-a-meeting-poll",
-        "administrators/editing-a-meeting-poll",
-        "participants/submitting-a-response",
-        "participants/editing-a-response"
-      ]
+      "pages": ["guide/participant-guide"]
     },
     {
       "group": "Self-Hosting",
@@ -107,12 +102,20 @@
   },
   "redirects": [
     {
-      "source": "administrators/creating-a-meeting-poll",
-      "destination": "workflow/create"
+      "source": "/administrators/creating-a-meeting-poll",
+      "destination": "/workflow/create"
     },
     {
-      "source": "administrators/sharing-a-meeting-poll",
-      "destination": "workflow/invite"
+      "source": "/administrators/sharing-a-meeting-poll",
+      "destination": "/workflow/invite"
+    },
+    {
+      "source": "/participants/submitting-a-response",
+      "destination": "/guide/participant-guide"
+    },
+    {
+      "source": "/participants/editing-a-response",
+      "destination": "/guide/participant-guide"
     }
   ]
 }

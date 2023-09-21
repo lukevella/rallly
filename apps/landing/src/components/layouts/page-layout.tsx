@@ -1,11 +1,4 @@
-import {
-  ChevronRightIcon,
-  GemIcon,
-  LifeBuoyIcon,
-  LogInIcon,
-  MenuIcon,
-  NewspaperIcon,
-} from "@rallly/icons";
+import { ChevronRightIcon, MenuIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
   DropdownMenu,
@@ -37,7 +30,7 @@ const NavLink = ({
   return (
     <Link
       className={cn(
-        "rounded text-sm font-medium",
+        "inline-flex items-center gap-x-2.5 rounded text-sm font-medium",
         isActive ? "" : "hover:text-primary text-muted-foreground ",
         className,
       )}
@@ -51,6 +44,9 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
 }) => {
   return (
     <nav className={className}>
+      <NavLink href="https://support.rallly.co/workflow">
+        <Trans i18nKey="howItWorks" defaults="How it Works" />
+      </NavLink>
       <NavLink href="/pricing">
         <Trans i18nKey="pricing" />
       </NavLink>
@@ -96,12 +92,12 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
             <Link className="inline-block rounded" href="/">
               <Image src="/logo.svg" width={130} height={30} alt="rallly.co" />
             </Link>
-            <Menu className="hidden items-center space-x-8 sm:flex" />
+            <Menu className="hidden items-center space-x-8 lg:flex" />
           </div>
           <div className="flex items-center gap-4 sm:gap-8">
             <Link
               href={linkToApp("/login")}
-              className="hover:text-primary text-muted-foreground hidden rounded text-sm font-medium hover:no-underline hover:underline-offset-2 sm:inline-flex"
+              className="hover:text-primary text-muted-foreground hidden rounded text-sm font-medium hover:no-underline hover:underline-offset-2 lg:inline-flex"
             >
               <Trans i18nKey="login" defaults="Login" />
             </Link>
@@ -114,7 +110,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
               </span>
               <ChevronRightIcon className="inline-block h-4 w-4 transition-all group-active:translate-x-1" />
             </Link>
-            <div className="flex items-center justify-center sm:hidden">
+            <div className="flex items-center justify-center lg:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <MenuIcon className="h-6 w-6" />
@@ -123,10 +119,9 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                   <DropdownMenuItem asChild>
                     <Link
                       className="flex items-center gap-3 p-2 text-lg"
-                      href="/blog"
+                      href="https://support.rallly.co"
                     >
-                      <NewspaperIcon className="h-5 w-5" />
-                      <Trans i18nKey="blog" />
+                      <Trans i18nKey="howItWorks" defaults="How it Works" />
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -134,8 +129,15 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                       className="flex items-center gap-3 p-2 text-lg"
                       href="/pricing"
                     >
-                      <GemIcon className="h-5 w-5" />
                       <Trans i18nKey="pricing" defaults="Pricing" />
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      className="flex items-center gap-3 p-2 text-lg"
+                      href="/blog"
+                    >
+                      <Trans i18nKey="blog" />
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -143,7 +145,6 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                       className="flex items-center gap-3 p-2 text-lg"
                       href="https://support.rallly.co"
                     >
-                      <LifeBuoyIcon className="h-5 w-5" />
                       <Trans i18nKey="support" />
                     </Link>
                   </DropdownMenuItem>
@@ -153,7 +154,6 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                       className="flex items-center gap-3 p-2 text-lg"
                       href={linkToApp("/login")}
                     >
-                      <LogInIcon className="h-5 w-5" />
                       <Trans i18nKey="login" defaults="Login" />
                     </Link>
                   </DropdownMenuItem>
