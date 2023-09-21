@@ -44,7 +44,7 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
 }) => {
   return (
     <nav className={className}>
-      <NavLink href="https://support.rallly.co/workflow">
+      <NavLink href="https://support.rallly.co/workflow/create">
         <Trans i18nKey="howItWorks" defaults="How it Works" />
       </NavLink>
       <NavLink href="/pricing">
@@ -119,7 +119,7 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
                   <DropdownMenuItem asChild>
                     <Link
                       className="flex items-center gap-3 p-2 text-lg"
-                      href="https://support.rallly.co"
+                      href="https://support.rallly.co/workflow/create"
                     >
                       <Trans i18nKey="howItWorks" defaults="How it Works" />
                     </Link>
