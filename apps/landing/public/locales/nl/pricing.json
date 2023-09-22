@@ -16,13 +16,15 @@
   "billingPeriodMonthly": "Maandelijks",
   "billingPeriodYearly": "Jaarlijks",
   "planFreeDescription": "Voor gewone gebruikers",
-  "limitedAccess": "Toegang tot alle functies",
+  "limitedAccess": "Toegang tot de basisfuncties",
   "pollsDeleted": "Polls worden automatisch verwijderd zodra ze inactief zijn",
   "planProDescription": "Voor geavanceerde gebruikers en professionals",
   "accessAllFeatures": "Toegang tot alle functies",
   "getEarlyAccess": "Vroegtijdige toegang tot de nieuwste functies",
+  "canUseFreeAnswer2": "Ja, de meeste functies van Rallly zijn gratis en veel gebruikers zullen nooit ergens voor hoeven te betalen. Er zijn echter een aantal functies die alleen beschikbaar zijn voor betalende klanten. Deze functies zijn ontworpen om je te helpen het meeste uit Rallly te halen.",
+  "whyUpgradeAnswer2": "Upgraden naar een betaald abonnement is zinvol als je Rallly vaak gebruikt of het voor je werk gebruikt. Het huidige abonnementstarief is speciaal voor early adopters en zal in de toekomst stijgen. Door nu te upgraden krijg je vroegtijdige toegang tot nieuwe planningshulpmiddelen van hoge kwaliteit zodra ze worden uitgebracht en kun je je abonnement vastzetten zodat je niet wordt beïnvloed door toekomstige prijsstijgingen.",
   "upgradeNowSaveLater": "Upgrade nu, bespaar later",
-  "earlyAdopterDescription": "Als een early adopter, heb je een vaste abonnementsprijs die niet zal worden beïnvloed door toekomstige prijsstijgingen.",
+  "earlyAdopterDescription": "Als een early adopter heb je een vaste abonnementsprijs die niet zal worden beïnvloed door toekomstige prijsstijgingen.",
   "planFree": "Gratis",
-  "keepPollsIndefinitely": "Polls voor onbepaalde tijd behouden"
+  "keepPollsIndefinitely": "Behoud polls voor onbepaalde tijd"
 }
