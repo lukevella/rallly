@@ -20,7 +20,9 @@
   "planProDescription": "För avancerade användare och proffs",
   "accessAllFeatures": "Få tillgång till alla funktioner",
   "getEarlyAccess": "Få tidig tillgång till nya funktioner",
+  "canUseFreeAnswer2": "Ja, de flesta av Ralllys funktioner är gratis och många användare kommer aldrig att behöva betala för någonting. Det finns dock vissa funktioner som endast är tillgängliga för betalande kunder. Dessa funktioner är utformade för att hjälpa dig att få ut det mesta av Rallly.",
   "upgradeNowSaveLater": "Uppgradera nu, spara senare",
-  "earlyAdopterDescription": "Som tidig prenumerant förblir priset för din prenumeration densamma och påverkas inte av eventuella prishöjningar.",
-  "planFree": "Gratis"
+  "earlyAdopterDescription": "Som tidig användare låser du din prenumerationsavgift och påverkas inte av framtida prishöjningar.",
+  "planFree": "Gratis",
+  "keepPollsIndefinitely": "Behåll omröstningar på obestämd tid"
 }
