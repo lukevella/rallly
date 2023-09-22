@@ -149,7 +149,7 @@
   "notificationsGuestTooltip": "Créez un compte ou connectez-vous pour acheter un abonnement",
   "planFree": "Gratuit",
   "dateAndTimeDescription": "Changez vos paramètres de date et d'heure préférés",
-  "createdTime": "Créé le {relativeTime}",
+  "createdTime": "Créé {relativeTime}",
   "permissionDeniedParticipant": "Si vous n'êtes pas le créateur du sondage, vous devriez aller à la page d'invitation.",
   "goToInvite": "Accéder à la page d'invitation",
   "planPro": "Pro",
