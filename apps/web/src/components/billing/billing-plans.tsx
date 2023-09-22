@@ -1,6 +1,14 @@
-import { CheckCircle2Icon, TrendingUpIcon } from "@rallly/icons";
-import { cn } from "@rallly/ui";
-import { BillingPlanPeriod, BillingPlanPrice } from "@rallly/ui/billing-plan";
+import { TrendingUpIcon } from "@rallly/icons";
+import {
+  BillingPlan,
+  BillingPlanDescription,
+  BillingPlanHeader,
+  BillingPlanPeriod,
+  BillingPlanPerk,
+  BillingPlanPerks,
+  BillingPlanPrice,
+  BillingPlanTitle,
+} from "@rallly/ui/billing-plan";
 import { Button } from "@rallly/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import React from "react";
@@ -8,27 +16,6 @@ import React from "react";
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
 import { annualPriceUsd, monthlyPriceUsd } from "@/utils/constants";
-
-const Perks = ({ children }: React.PropsWithChildren) => {
-  return <ul className="grid gap-1">{children}</ul>;
-};
-
-const Perk = ({
-  children,
-  pro,
-}: React.PropsWithChildren<{ pro?: boolean }>) => {
-  return (
-    <li className="flex items-start gap-x-2.5">
-      <CheckCircle2Icon
-        className={cn(
-          "mt-0.5 h-4 w-4 shrink-0",
-          !pro ? "text-gray-500" : "text-primary",
-        )}
-      />
-      <div className="text-sm">{children}</div>
-    </li>
-  );
-};
 
 export const BillingPlans = () => {
   const [tab, setTab] = React.useState("yearly");
@@ -45,18 +32,18 @@ export const BillingPlans = () => {
           </TabsTrigger>
         </TabsList>
         <div className="grid gap-4 rounded-md md:grid-cols-2">
-          <div className="space-y-4 rounded-md border p-4">
-            <div>
-              <h3>
+          <BillingPlan>
+            <BillingPlanHeader>
+              <BillingPlanTitle>
                 <Trans i18nKey="planFree" />
-              </h3>
-              <p className="text-muted-foreground text-sm">
+              </BillingPlanTitle>
+              <BillingPlanDescription>
                 <Trans
                   i18nKey="planFreeDescription"
                   defaults="For casual users"
                 />
-              </p>
-            </div>
+              </BillingPlanDescription>
+            </BillingPlanHeader>
             <div>
               <BillingPlanPrice>$0</BillingPlanPrice>
               <BillingPlanPeriod>
@@ -67,21 +54,21 @@ export const BillingPlans = () => {
             <Button disabled className="w-full">
               <Trans i18nKey="currentPlan" defaults="Current Plan" />
             </Button>
-            <Perks>
-              <Perk>
+            <BillingPlanPerks>
+              <BillingPlanPerk>
                 <Trans
                   i18nKey="limitedAccess"
                   defaults="Access to core features"
                 />
-              </Perk>
-              <Perk>
+              </BillingPlanPerk>
+              <BillingPlanPerk>
                 <Trans
                   i18nKey="pollsDeleted"
                   defaults="Polls are automatically deleted once they become inactive"
                 />
-              </Perk>
-            </Perks>
-          </div>
+              </BillingPlanPerk>
+            </BillingPlanPerks>
+          </BillingPlan>
           <div className="space-y-4 rounded-md border p-4">
             <div>
               <h3>
@@ -120,23 +107,23 @@ export const BillingPlans = () => {
             </div>
             <hr />
             <UpgradeButton annual={tab === "yearly"} />
-            <Perks>
-              <Perk pro={true}>
+            <BillingPlanPerks>
+              <BillingPlanPerk pro={true}>
                 <Trans
                   i18nKey="accessAllFeatures"
                   defaults="Access all features"
                 />
-              </Perk>
-              <Perk pro={true}>
+              </BillingPlanPerk>
+              <BillingPlanPerk pro={true}>
                 <Trans i18nKey="plan_extendedPollLife" />
-              </Perk>
-              <Perk pro={true}>
+              </BillingPlanPerk>
+              <BillingPlanPerk pro={true}>
                 <Trans
                   i18nKey="earlyAccess"
                   defaults="Get early access to new features"
                 />
-              </Perk>
-            </Perks>
+              </BillingPlanPerk>
+            </BillingPlanPerks>
           </div>
         </div>
       </Tabs>

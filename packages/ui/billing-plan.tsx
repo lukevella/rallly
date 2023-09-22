@@ -1,46 +1,38 @@
-import { CheckIcon } from "@rallly/icons";
-import { cva, VariantProps } from "class-variance-authority";
+import { CheckCircle2Icon } from "@rallly/icons";
 
 import { cn } from "./lib/utils";
 
-const billingPlanVariants = cva(
-  "border  flex flex-col rounded-md shadow-sm overflow-hidden divide-y",
-  {
-    variants: {
-      variant: {
-        primary: "bg-white",
-        default: "bg-gray-50",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  },
-);
-
 export const BillingPlan = ({
-  variant = "default",
   children,
-}: React.PropsWithChildren<VariantProps<typeof billingPlanVariants>>) => {
-  return <div className={billingPlanVariants({ variant })}>{children}</div>;
+  className,
+}: React.PropsWithChildren<{ className?: string }>) => {
+  return (
+    <div
+      className={cn(
+        "space-y-4 rounded-md border bg-gradient-to-b from-white to-white/75 px-5 py-4 backdrop-blur-sm",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
 };
 
 export const BillingPlanHeader = ({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) => {
-  return <div className={cn("px-4 py-3", className)}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 };
 
-export const BillingPlanTitle = ({
+export const BillingPlanTitle = ({ children }: React.PropsWithChildren) => {
+  return <h3>{children}</h3>;
+};
+
+export const BillingPlanDescription = ({
   children,
-  className,
-}: React.PropsWithChildren<{ className?: string }>) => {
-  return (
-    <h1 className={cn("mb-2 text-xl font-bold tracking-tight", className)}>
-      {children}
-    </h1>
-  );
+}: React.PropsWithChildren) => {
+  return <p className="text-muted-foreground text-sm">{children}</p>;
 };
 
 export const BillingPlanPrice = ({
@@ -68,18 +60,22 @@ export const BillingPlanPeriod = ({ children }: React.PropsWithChildren) => {
 };
 
 export const BillingPlanPerks = ({ children }: React.PropsWithChildren) => {
-  return <ul className="grow space-y-1 p-4 text-sm">{children}</ul>;
+  return <ul className="grid gap-1">{children}</ul>;
 };
 
-export const BillingPlanPerk = ({ children }: React.PropsWithChildren) => {
+export const BillingPlanPerk = ({
+  children,
+  pro,
+}: React.PropsWithChildren<{ pro?: boolean }>) => {
   return (
-    <li className="flex items-center gap-x-2 ">
-      <CheckIcon className="h-4 w-4 text-green-600" />
-      <span>{children}</span>
+    <li className="flex items-start gap-x-2.5">
+      <CheckCircle2Icon
+        className={cn(
+          "mt-0.5 h-4 w-4 shrink-0",
+          !pro ? "text-gray-500" : "text-primary",
+        )}
+      />
+      <div className="text-sm">{children}</div>
     </li>
   );
-};
-
-export const BillingPlanFooter = ({ children }: React.PropsWithChildren) => {
-  return <div className="p-4">{children}</div>;
 };
