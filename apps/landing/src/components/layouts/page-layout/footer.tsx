@@ -61,7 +61,7 @@ const Footer: React.FunctionComponent = () => {
             height={30}
             alt="Rallly"
           />
-          <div className="my-8 text-gray-500">
+          <div className="my-8 text-sm text-gray-500">
             <p className="mb-4 leading-relaxed">
               <Trans
                 i18nKey="footerSponsor"

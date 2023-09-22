@@ -1,8 +1,7 @@
-import { InfoIcon } from "@rallly/icons";
-import { Badge } from "@rallly/ui/badge";
+import { TrendingUpIcon } from "@rallly/icons";
 import {
   BillingPlan,
-  BillingPlanFooter,
+  BillingPlanDescription,
   BillingPlanHeader,
   BillingPlanPeriod,
   BillingPlanPerk,
@@ -11,8 +10,7 @@ import {
   BillingPlanTitle,
 } from "@rallly/ui/billing-plan";
 import { Button } from "@rallly/ui/button";
-import { Label } from "@rallly/ui/label";
-import { Switch } from "@rallly/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import { NextSeo } from "next-seo";
@@ -27,13 +25,245 @@ import { getStaticTranslations } from "@/utils/page-translations";
 const monthlyPriceUsd = 7;
 const annualPriceUsd = 42;
 
-const Page: NextPageWithLayout = () => {
-  const { t } = useTranslation();
-  const [annualBilling, setAnnualBilling] = React.useState(true);
+export const UpgradeButton = ({
+  children,
+  annual,
+}: React.PropsWithChildren<{ annual?: boolean }>) => {
   return (
-    <div className="mx-auto bg-gray-100">
-      <NextSeo title={t("common:pricing", { defaultValue: "Pricing" })} />
-      <div className="text-center">
+    <form method="POST" action={linkToApp("/api/stripe/checkout")}>
+      <input
+        type="hidden"
+        name="period"
+        value={annual ? "yearly" : "monthly"}
+      />
+      <input
+        type="hidden"
+        name="return_path"
+        value={window.location.pathname}
+      />
+      <Button className="w-full" type="submit" variant="primary">
+        {children || <Trans i18nKey="pricing:upgrade" defaults="Upgrade" />}
+      </Button>
+    </form>
+  );
+};
+
+const PriceTables = () => {
+  const [tab, setTab] = React.useState("yearly");
+  return (
+    <Tabs value={tab} onValueChange={setTab}>
+      <div className="flex justify-center">
+        <TabsList className="mb-4 sm:mb-6">
+          <TabsTrigger value="monthly">
+            <Trans i18nKey="pricing:billingPeriodMonthly" defaults="Monthly" />
+          </TabsTrigger>
+          <TabsTrigger value="yearly">
+            <Trans i18nKey="pricing:billingPeriodYearly" defaults="Yearly" />
+          </TabsTrigger>
+        </TabsList>
+      </div>
+      <div className="mx-auto grid gap-4 sm:gap-6 md:grid-cols-2">
+        <BillingPlan>
+          <BillingPlanHeader>
+            <BillingPlanTitle>
+              <Trans i18nKey="pricing:planFree" defaults="Free" />
+            </BillingPlanTitle>
+            <BillingPlanDescription>
+              <Trans
+                i18nKey="pricing:planFreeDescription"
+                defaults="For casual users"
+              />
+            </BillingPlanDescription>
+          </BillingPlanHeader>
+          <div>
+            <BillingPlanPrice>$0</BillingPlanPrice>
+            <BillingPlanPeriod>
+              <Trans i18nKey="pricing:freeForever" defaults="free forever" />
+            </BillingPlanPeriod>
+          </div>
+          <hr />
+          <Button className="w-full">
+            <Link href={linkToApp("/")}>
+              <Trans i18nKey="common:getStarted" defaults="Get started" />
+            </Link>
+          </Button>
+          <BillingPlanPerks>
+            <BillingPlanPerk>
+              <Trans
+                i18nKey="pricing:limitedAccess"
+                defaults="Access to core features"
+              />
+            </BillingPlanPerk>
+            <BillingPlanPerk>
+              <Trans
+                i18nKey="pricing:pollsDeleted"
+                defaults="Polls are automatically deleted once they become inactive"
+              />
+            </BillingPlanPerk>
+          </BillingPlanPerks>
+        </BillingPlan>
+        <BillingPlan className="relative">
+          <BillingPlanHeader>
+            <BillingPlanTitle>
+              <Trans i18nKey="pricing:planPro" defaults="Pro" />
+            </BillingPlanTitle>
+            <BillingPlanDescription>
+              <Trans
+                i18nKey="pricing:planProDescription"
+                defaults="For power users and professionals"
+              />
+            </BillingPlanDescription>
+          </BillingPlanHeader>
+          <TabsContent value="yearly">
+            <BillingPlanPrice discount={`$${(annualPriceUsd / 12).toFixed(2)}`}>
+              ${monthlyPriceUsd}
+            </BillingPlanPrice>
+            <BillingPlanPeriod>
+              <Trans
+                i18nKey="pricing:annualBillingDescription"
+                defaults="per month, billed annually"
+              />
+            </BillingPlanPeriod>
+          </TabsContent>
+          <TabsContent value="monthly">
+            <BillingPlanPrice>${monthlyPriceUsd}</BillingPlanPrice>
+            <BillingPlanPeriod>
+              <Trans
+                i18nKey="pricing:monthlyBillingDescription"
+                defaults="per month"
+              />
+            </BillingPlanPeriod>
+          </TabsContent>
+          <hr />
+          <Button asChild variant="primary" className="w-full">
+            <Link href={linkToApp("/settings/billing")}>
+              <Trans i18nKey="pricing:upgrade" defaults="Go to billing" />
+            </Link>
+          </Button>
+          <BillingPlanPerks>
+            <BillingPlanPerk pro={true}>
+              <Trans
+                i18nKey="pricing:accessAllFeatures"
+                defaults="Access all features"
+              />
+            </BillingPlanPerk>
+            <BillingPlanPerk pro={true}>
+              <Trans
+                i18nKey="pricing:keepPollsIndefinitely"
+                defaults="Keep polls indefinitely"
+              />
+            </BillingPlanPerk>
+            <BillingPlanPerk pro={true}>
+              <Trans
+                i18nKey="pricing:getEarlyAccess"
+                defaults="Get early access to new features"
+              />
+            </BillingPlanPerk>
+          </BillingPlanPerks>
+        </BillingPlan>
+      </div>
+    </Tabs>
+  );
+};
+
+const FAQ = () => {
+  return (
+    <div className="rounded-md p-6">
+      <h2 className="mb-4 sm:mb-6">
+        <Trans
+          i18nKey="pricing:faq"
+          defaults="Frequently Asked Questions"
+        ></Trans>
+      </h2>
+      <div className="space-y-4 sm:space-y-6">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-2">
+          <h3 className="col-span-1">
+            <Trans
+              i18nKey="pricing:canUseFree"
+              defaults="Can I use Rallly for free?"
+            ></Trans>
+          </h3>
+          <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+            <Trans
+              i18nKey="pricing:canUseFreeAnswer2"
+              defaults="Yes, most of Rallly's features are free and many users will never need to pay for anything. However, there are some features that are only available to paying customers. These features are designed to help you get the most out of Rallly."
+            ></Trans>
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-x-8 gap-y-2">
+          <h3 className="col-span-1">
+            <Trans
+              i18nKey="pricing:whyUpgrade"
+              defaults="Why should I upgrade?"
+            ></Trans>
+          </h3>
+          <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+            <Trans
+              i18nKey="pricing:whyUpgradeAnswer2"
+              defaults="Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases."
+            ></Trans>
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-x-8 gap-y-2">
+          <h3 className="col-span-1">
+            <Trans
+              i18nKey="pricing:howToUpgrade"
+              defaults="How do I upgrade to a paid plan?"
+            />
+          </h3>
+          <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+            <Trans
+              i18nKey="pricing:howToUpgradeAnswer"
+              components={{
+                a: (
+                  <Link
+                    className="text-link"
+                    href={linkToApp("/settings/billing")}
+                  />
+                ),
+                b: <strong />,
+              }}
+              defaults="To upgrade, you can go to your <a>billing settings</a> and click on <b>Upgrade</b>."
+            />
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-x-8 gap-y-2">
+          <h3 className="col-span-1">
+            <Trans
+              i18nKey="pricing:cancelSubscription"
+              defaults="How do I cancel my subscription?"
+            ></Trans>
+          </h3>
+          <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+            <Trans
+              i18nKey="pricing:cancelSubscriptionAnswer"
+              components={{
+                a: (
+                  <Link
+                    className="text-link"
+                    href={linkToApp("/settings/billing")}
+                  />
+                ),
+                b: <strong />,
+              }}
+              defaults="You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
+            ></Trans>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Page: NextPageWithLayout = () => {
+  const { t } = useTranslation(["pricing"]);
+  return (
+    <div className="mx-auto max-w-3xl">
+      <NextSeo
+        title={t("common:pricing", { defaultValue: "Pricing" })}
+        description={t("pricing:pricingDescription")}
+      />
+      <div className="mb-4 text-center sm:mb-6">
         <h1 className="mb-4 text-4xl font-bold tracking-tight">
           <Trans i18nKey="pricing:pricing">Pricing</Trans>
         </h1>
@@ -44,242 +274,29 @@ const Page: NextPageWithLayout = () => {
           />
         </p>
       </div>
-      <div className="mx-auto my-8 max-w-2xl">
-        <div className="mb-8 flex items-center justify-center gap-x-2">
-          <Switch
-            id="annual-billing"
-            checked={annualBilling}
-            onCheckedChange={setAnnualBilling}
-          />
-          <Label htmlFor="annual-billing">
+      <div className="space-y-4 sm:space-y-6">
+        <PriceTables />
+        <div className="rounded-md border bg-gradient-to-b from-cyan-50 to-cyan-50/60 px-5 py-4 text-cyan-800">
+          <div className="mb-2">
+            <TrendingUpIcon className="text-indigo mr-2 mt-0.5 h-6 w-6 shrink-0" />
+          </div>
+          <div className="mb-1 flex items-center gap-x-2">
+            <h3 className="text-sm">
+              <Trans
+                i18nKey="pricing:upgradeNowSaveLater"
+                defaults="Upgrade now, save later"
+              />
+            </h3>
+          </div>
+          <p className="text-sm">
             <Trans
-              i18nKey="pricing:annualBilling"
-              values={{ discount: 50 }}
-              defaults="Annual billing (Save {discount}%)"
+              i18nKey="pricing:earlyAdopterDescription"
+              defaults="As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases."
             />
-          </Label>
+          </p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <BillingPlan>
-            <BillingPlanHeader>
-              <BillingPlanTitle>
-                <Trans i18nKey="pricing:planFree" defaults="Free" />
-              </BillingPlanTitle>
-              <BillingPlanPrice>$0</BillingPlanPrice>
-              <BillingPlanPeriod>
-                <Trans i18nKey="pricing:freeForever" defaults="free forever" />
-              </BillingPlanPeriod>
-            </BillingPlanHeader>
-            <BillingPlanPerks>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:unlimitedPolls"
-                  defaults="Unlimited polls"
-                />
-              </BillingPlanPerk>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:unlimitedParticipants"
-                  defaults="Unlimited participants"
-                />
-              </BillingPlanPerk>
-            </BillingPlanPerks>
-            <BillingPlanFooter>
-              <Button className="w-full" asChild>
-                <Link href={linkToApp()}>
-                  <Trans i18nKey="pricing:getStarted">
-                    Get started for free
-                  </Trans>
-                </Link>
-              </Button>
-            </BillingPlanFooter>
-          </BillingPlan>
-          <BillingPlan variant="primary">
-            <BillingPlanHeader>
-              <div className="flex justify-between">
-                <BillingPlanTitle className="text-primary m-0">
-                  <Trans i18nKey="pricing:planPro" defaults="Pro" />
-                </BillingPlanTitle>
-                <Badge variant="secondary">
-                  <Trans
-                    i18nKey="pricing:earlyAccess"
-                    defaults="Early bird discount"
-                  />
-                </Badge>
-              </div>
-              {annualBilling ? (
-                <>
-                  <BillingPlanPrice
-                    discount={`$${(annualPriceUsd / 12).toFixed(2)}`}
-                  >
-                    ${monthlyPriceUsd}
-                  </BillingPlanPrice>
-                  <BillingPlanPeriod>
-                    <Trans
-                      i18nKey="pricing:annualBillingDescription"
-                      defaults="per month, billed annually"
-                    />
-                  </BillingPlanPeriod>
-                </>
-              ) : (
-                <>
-                  <BillingPlanPrice>${monthlyPriceUsd}</BillingPlanPrice>
-                  <BillingPlanPeriod>
-                    <Trans
-                      i18nKey="pricing:monthlyBillingDescription"
-                      defaults="per month"
-                    />
-                  </BillingPlanPeriod>
-                </>
-              )}
-            </BillingPlanHeader>
-            <BillingPlanPerks>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:unlimitedPolls"
-                  defaults="Unlimited polls"
-                />
-              </BillingPlanPerk>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:unlimitedParticipants"
-                  defaults="Unlimited participants"
-                />
-              </BillingPlanPerk>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:customPollSettings"
-                  defaults="Customizable poll settings"
-                />
-              </BillingPlanPerk>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:finalizePolls"
-                  defaults="Finalize polls"
-                />
-              </BillingPlanPerk>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:extendedPollLife"
-                  defaults="Extended poll life"
-                />
-              </BillingPlanPerk>
-              <BillingPlanPerk>
-                <Trans
-                  i18nKey="pricing:prioritySupport"
-                  defaults="Priority support"
-                />
-              </BillingPlanPerk>
-            </BillingPlanPerks>
-            <BillingPlanFooter>
-              <Button variant="primary" className="w-full" asChild>
-                <Link href={linkToApp("/settings/billing")}>
-                  <Trans i18nKey="pricing:upgrade">Upgrade</Trans>
-                </Link>
-              </Button>
-            </BillingPlanFooter>
-          </BillingPlan>
-        </div>
-        <p className="text-muted-foreground mt-8 flex gap-x-2 text-sm sm:justify-center sm:text-center">
-          <InfoIcon className="h-4 w-4 shrink-0 translate-y-0.5" />
-          <Trans i18nKey="pricing:priceIncreaseInfo">
-            Prices will be adjusted regularly as more features are added
-          </Trans>
-        </p>
-      </div>
-      <hr className="my-8" />
-      <div>
-        <h2 className="mb-4">
-          <Trans
-            i18nKey="pricing:faq"
-            defaults="Frequently Asked Questions"
-          ></Trans>
-        </h2>
-        <div className="divide-y">
-          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
-            <h3 className="col-span-1">
-              <Trans
-                i18nKey="pricing:canUseFree"
-                defaults="Can I use Rallly for free?"
-              ></Trans>
-            </h3>
-            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
-              <Trans
-                i18nKey="pricing:canUseFreeAnswer"
-                components={{
-                  a: (
-                    <Link
-                      className="text-link"
-                      href={linkToApp("settings/billing")}
-                    />
-                  ),
-                  b: <strong />,
-                }}
-                defaults="Yes, as a free user you can create polls and get insight into your participant's availability. You will still see the results of your poll but you won't be able to select a final date or send calendar invites."
-              ></Trans>
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
-            <h3 className="col-span-1">
-              <Trans
-                i18nKey="pricing:whyUpgrade"
-                defaults="Why should I upgrade?"
-              ></Trans>
-            </h3>
-            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
-              <Trans
-                i18nKey="pricing:whyUpgradeAnswer"
-                defaults="When you upgrade to a paid plan, you will be able to finalize your polls and automatically send calendar invites to your participants with your selected date. We will also keep your polls indefinitely so they won't be automatically deleted even after they are finalized."
-              ></Trans>
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
-            <h3 className="col-span-1">
-              <Trans
-                i18nKey="pricing:howToUpgrade"
-                defaults="How do I upgrade to a paid plan?"
-              />
-            </h3>
-            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
-              <Trans
-                i18nKey="pricing:howToUpgradeAnswer"
-                components={{
-                  a: (
-                    <Link
-                      className="text-link"
-                      href={linkToApp("/settings/billing")}
-                    />
-                  ),
-                  b: <strong />,
-                }}
-                defaults="To upgrade, you can go to your <a>billing settings</a> and click on <b>Upgrade</b>."
-              />
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-x-8 gap-y-2 py-4 md:grid-cols-3">
-            <h3 className="col-span-1">
-              <Trans
-                i18nKey="pricing:cancelSubscription"
-                defaults="How do I cancel my subscription?"
-              ></Trans>
-            </h3>
-            <p className="col-span-2 text-sm leading-relaxed text-slate-600">
-              <Trans
-                i18nKey="pricing:cancelSubscriptionAnswer"
-                components={{
-                  a: (
-                    <Link
-                      className="text-link"
-                      href={linkToApp("/settings/billing")}
-                    />
-                  ),
-                  b: <strong />,
-                }}
-                defaults="You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
-              ></Trans>
-            </p>
-          </div>
-        </div>
+        <hr />
+        <FAQ />
       </div>
     </div>
   );
