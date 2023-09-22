@@ -225,5 +225,9 @@
   "noAds": "Ei mainoksia",
   "supportProject": "Tue tätä projektia",
   "pricing": "Hinnasto",
-  "pollSettingsDescription": "Mukauta kyselyn toimintaa"
+  "pleaseUpgrade": "Vaihda sopimuksesi Pro-versioon käyttääksesi tätä ominaisuutta",
+  "pollSettingsDescription": "Mukauta kyselyn toimintaa",
+  "requireParticipantEmailLabel": "Edellytä osallistujilta sähköpostiosotteita",
+  "hideParticipantsLabel": "Piilota osallistujien tiedot muilta osallistujilta",
+  "hideScoresLabel": "Piilota pisteet kunnes osallistuja on äänestänyt"
 }
