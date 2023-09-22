@@ -1,21 +1,15 @@
 {
   "pricing": "Priser",
   "pricingDescription": "Kom i gang gratis. Kræver ikke login.",
-  "annualBilling": "Fakturering årligt (spar {discount}%)",
-  "planFree": "Gratis",
   "freeForever": "gratis for evigt",
-  "unlimitedPolls": "Ubegrænsede afstemninger",
-  "unlimitedParticipants": "Ubegrænset antal deltagere",
-  "getStarted": "Kom gratis i gang",
   "planPro": "Pro",
   "annualBillingDescription": "pr. måned, faktureres årligt",
   "monthlyBillingDescription": "pr. måned",
-  "finalizePolls": "Afslut afstemninger",
-  "prioritySupport": "Prioriteret support",
   "upgrade": "Opgradér",
   "faq": "Ofte stillede spørgsmål (FAQ)",
   "canUseFree": "Kan jeg bruge Rallly gratis?",
   "whyUpgrade": "Hvorfor opgradere?",
   "howToUpgrade": "Hvordan opgraderer jeg til et betalt abonnement?",
-  "cancelSubscription": "Hvordan annullerer jeg mit abonnement?"
+  "cancelSubscription": "Hvordan annullerer jeg mit abonnement?",
+  "planFree": "Gratis"
 }
