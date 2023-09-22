@@ -149,7 +149,7 @@ const PriceTables = () => {
             </BillingPlanPerk>
             <BillingPlanPerk pro={true}>
               <Trans
-                i18nKey="pricing:extendedPollLife"
+                i18nKey="pricing:keepPollsIndefinitely"
                 defaults="Keep polls indefinitely"
               />
             </BillingPlanPerk>

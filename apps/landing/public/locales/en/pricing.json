@@ -5,7 +5,6 @@
   "planPro": "Pro",
   "annualBillingDescription": "per month, billed annually",
   "monthlyBillingDescription": "per month",
-  "extendedPollLife": "Extended poll life",
   "upgrade": "Upgrade",
   "faq": "Frequently Asked Questions",
   "canUseFree": "Can I use Rallly for free?",
@@ -26,5 +25,6 @@
   "whyUpgradeAnswer2": "Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases.",
   "upgradeNowSaveLater": "Upgrade now, save later",
   "earlyAdopterDescription": "As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases.",
-  "planFree": "Free"
+  "planFree": "Free",
+  "keepPollsIndefinitely": "Keep polls indefinitely"
 }
