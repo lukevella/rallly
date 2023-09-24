@@ -210,6 +210,14 @@
   "supportBilling": "如果您需要任何帮助，请联系我。",
   "contactSupport": "联系支持",
   "planFreeDescription": "对于临时用户",
+  "currentPlan": "当前订阅",
+  "limitedAccess": "使用核心功能",
+  "pollsDeleted": "投票处于非活动状态时将自动删除",
+  "planProDescription": "对于高级和专业用户",
+  "accessAllFeatures": "使用所有功能",
+  "earlyAccess": "提前体验新功能",
+  "earlyAdopterDescription": "作为早期支持者，折扣将在订阅后锁定，您将不会受到未来涨价的影响",
+  "upgradeNowSaveLater": "立即升级，节省更多",
   "savePercent": "节省 {percent}%",
   "priceIncreaseSoon": "即将涨价",
   "lockPrice": "立即升级以永久享受此价格。",
@@ -217,5 +225,9 @@
   "noAds": "无广告",
   "supportProject": "支持这个项目",
   "pricing": "价格",
-  "pollSettingsDescription": "自定义投票行为"
+  "pleaseUpgrade": "请升级至专业版以使用此功能",
+  "pollSettingsDescription": "自定义投票行为",
+  "requireParticipantEmailLabel": "参与者必须填写电子邮件地址",
+  "hideParticipantsLabel": "对参与者隐藏其他参与者列表",
+  "hideScoresLabel": "仅在参与者投票后显示投票统计"
 }
