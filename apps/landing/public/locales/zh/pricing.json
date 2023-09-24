@@ -16,6 +16,15 @@
   "billingPeriodMonthly": "每月",
   "billingPeriodYearly": "每年",
   "planFreeDescription": "对于临时用户",
+  "limitedAccess": "使用核心功能",
+  "pollsDeleted": "投票处于非活动状态时将自动删除",
+  "planProDescription": "对于高级和专业用户",
+  "accessAllFeatures": "使用所有功能",
+  "getEarlyAccess": "提前体验新功能",
+  "canUseFreeAnswer2": "是的，Rallly 的大部分功能都是免费的，对于大多数用户来说免费版完全可以满足需求。然而，有些功能仅对付费客户可用。这些功能旨在帮助您充分利用Rallly。",
+  "whyUpgradeAnswer2": "如果你经常使用 Rallly 或在工作中使用它，升级到付费方案是有意义的。目前的折扣并不会持续很久，未来会涨价。如果现在升级，您将获得新功能的早期试用许可，并锁定您的折扣，这样您就不会受到未来价格上涨的影响。",
+  "upgradeNowSaveLater": "立即升级，节省更多",
+  "earlyAdopterDescription": "作为早期支持者，折扣将在订阅后锁定，您将不会受到未来涨价的影响",
   "planFree": "免费版",
   "keepPollsIndefinitely": "无限期保留投票"
 }
