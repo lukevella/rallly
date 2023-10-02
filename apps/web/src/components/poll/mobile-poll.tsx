@@ -152,7 +152,7 @@ const MobilePoll: React.FunctionComponent = () => {
           ) : null}
         </div>
       </div>
-      {poll.options[0].duration !== 0 ? (
+      {poll.options[0].duration !== 0 && poll.timeZone ? (
         <div className="flex border-b bg-gray-50 p-3">
           <TimesShownIn />
         </div>

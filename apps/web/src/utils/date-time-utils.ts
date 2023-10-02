@@ -105,9 +105,18 @@ export const parseTimeSlotOption = (
   timeFormat: TimeFormat,
 ): ParsedTimeSlotOption => {
   const adjustTimeZone = (date: Date | dayjs.Dayjs) => {
-    return timeZone && targetTimeZone
-      ? dayjs(date).utc().tz(timeZone, true).tz(targetTimeZone)
-      : dayjs(date).utc();
+    const d = dayjs(date);
+    if (!timeZone) {
+      return d.utc();
+    }
+
+    const t = d.tz(timeZone, true);
+
+    if (targetTimeZone !== timeZone) {
+      return t.tz(targetTimeZone);
+    } else {
+      return t;
+    }
   };
   const startDate = adjustTimeZone(option.start);
 
