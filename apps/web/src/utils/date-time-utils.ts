@@ -104,24 +104,20 @@ export const parseTimeSlotOption = (
   targetTimeZone: string,
   timeFormat: TimeFormat,
 ): ParsedTimeSlotOption => {
-  const adjustTimeZone = (date: Date | dayjs.Dayjs) => {
-    const d = dayjs(date).utc();
+  const adjustTimeZone = (date: string) => {
     if (!timeZone) {
-      return d;
+      return dayjs(date);
     }
 
-    const t = d.tz(timeZone, true);
-
-    if (targetTimeZone !== timeZone) {
-      return t.tz(targetTimeZone);
-    } else {
-      return t;
-    }
+    return dayjs.tz(date, timeZone).tz(targetTimeZone);
   };
-  const startDate = adjustTimeZone(option.start);
+
+  const start = dayjs(option.start).utc().format("YYYY-MM-DD HH:mm");
+
+  const startDate = adjustTimeZone(start);
 
   const endDate = adjustTimeZone(
-    dayjs(option.start).add(option.duration, "minute"),
+    dayjs(start).add(option.duration, "minute").format("YYYY-MM-DD HH:mm"),
   );
 
   return {
