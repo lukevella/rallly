@@ -13,5 +13,18 @@
   "howToUpgradeAnswer": "For å oppgradere, går du til <a>faktureringsinnstillingene</a> og klikker på <b>Oppgrader</b>.",
   "cancelSubscription": "Hvordan avslutter jeg abonnementet?",
   "cancelSubscriptionAnswer": "Du kan avslutte abonnementet ditt når som helst ved å gå til <a>faktureringsinnstillingene</a>. Når du avslutter abonnementet, vil du fortsatt ha tilgang til det betalte abonnementet ditt frem til slutten av faktureringsperioden. Etter dette blir du nedgradert til et gratis abonnement.",
-  "planFree": "Gratis"
+  "billingPeriodMonthly": "Månedlig",
+  "billingPeriodYearly": "Årlig",
+  "planFreeDescription": "For grunnleggende bruk",
+  "limitedAccess": "Tilgang til grunnleggende funksjoner",
+  "pollsDeleted": "Avstemninger slettes automatisk når de blir inaktive",
+  "planProDescription": "For superbrukere og profesjonelle",
+  "accessAllFeatures": "Tilgang til alle funksjoner",
+  "getEarlyAccess": "Få tidlig tilgang til nye funksjoner",
+  "canUseFreeAnswer2": "Ja, de fleste av Ralllys funksjoner er gratis, og mange brukere vil aldri trenge å betale for noe. Det er imidlertid noen funksjoner som kun er tilgjengelige for betalende kunder. Disse funksjonene er laget for å hjelpe deg med å få mest mulig ut av Rallly.",
+  "whyUpgradeAnswer2": "Oppgradering til en betalt plan gir mening hvis du bruker Rallly ofte eller på jobb. Dagens abonnementspris er en spesiell tidligpris og vil økes i fremtiden. Ved å oppgradere nå, vil du få tidlig tilgang til nye planleggingsverktøy av høy kvalitet så fort de gis ut, og abonnementsprisen din låses, slik at du ikke påvirkes av fremtidige prisøkninger.",
+  "upgradeNowSaveLater": "Oppgrader nå, spar senere",
+  "earlyAdopterDescription": "Som en tidlig bruker, vil du beholde nåværende abonnementspris uten å bli påvirket av fremtidige prisøkninger.",
+  "planFree": "Gratis",
+  "keepPollsIndefinitely": "Behold avstemninger på ubestemt tid"
 }

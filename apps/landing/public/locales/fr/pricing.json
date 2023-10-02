@@ -13,5 +13,18 @@
   "howToUpgradeAnswer": "Pour faire une mise à niveau, vous pouvez aller dans vos <a>paramètres de facturation</a> et cliquer sur <b>Mettre à niveau</b>.",
   "cancelSubscription": "Comment résilier mon abonnement ?",
   "cancelSubscriptionAnswer": "Vous pouvez annuler votre abonnement à tout moment en allant dans vos <a>paramètres de facturation</a>. Une fois que vous annulez votre abonnement, vous aurez toujours accès à votre plan payant jusqu'à la fin de votre période de facturation. Après cela, vous serez rétrogradé vers un plan gratuit.",
-  "planFree": "Gratuit"
+  "billingPeriodMonthly": "Mensuelle",
+  "billingPeriodYearly": "Annuelle",
+  "planFreeDescription": "Pour les utilisateurs occasionnels",
+  "limitedAccess": "Accès aux fonctionnalités principales",
+  "pollsDeleted": "Les sondages sont automatiquement supprimés une fois qu'ils deviennent inactifs",
+  "planProDescription": "Pour les utilisateurs avancés et les professionnels",
+  "accessAllFeatures": "Accès à toutes les fonctionnalités",
+  "getEarlyAccess": "Accès en avant-première aux nouvelles fonctionnalités",
+  "canUseFreeAnswer2": "Oui, la plupart des fonctionnalités de Rallly sont gratuites et de nombreux utilisateurs n'auront jamais besoin de payer pour quoi que ce soit. Cependant, certaines fonctionnalités ne sont disponibles que dans un forfait payant. Ces fonctionnalités sont conçues pour vous aider à tirer le meilleur parti de Rallly.",
+  "whyUpgradeAnswer2": "La mise à niveau vers une offre payante est logique si vous utilisez Rallly souvent ou si vous l’utilisez au travail. Le taux d'abonnement actuel est un taux spécial de pré-adoption et augmentera à l'avenir. En mettant à niveau maintenant, vous aurez un accès exclusif aux nouveautés des outils de réservation de haute qualité, car ils sont publiés et compris dans votre taux d'abonnement de sorte que vous ne serez pas affecté par de futures augmentations de prix.",
+  "upgradeNowSaveLater": "Mettre à niveau maintenant, enregistrer plus tard",
+  "earlyAdopterDescription": "En tant qu'adopteur précoce, vous verrouillez votre abonnement et ne serez pas affecté par des augmentations de prix futures.",
+  "planFree": "Gratuit",
+  "keepPollsIndefinitely": "Conserver les sondages indéfiniment"
 }

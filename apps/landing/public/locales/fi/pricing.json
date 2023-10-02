@@ -21,6 +21,8 @@
   "planProDescription": "Tehokäyttäjille ja ammattilaisille",
   "accessAllFeatures": "Pääsy kaikkiin ominaisuuksiin",
   "getEarlyAccess": "Ennakkopääsy uusiin ominaisuuksiin",
+  "canUseFreeAnswer2": "Kyllä, suurin osa Ralllyn ominaisuuksista on ilmaisia, ja monien käyttäjien ei tarvitse maksaa mitään. Tietyt ominaisuudet ovat kuitenkin saatavilla vain maksaville asiakkaille. Nämä ominaisuudet on suunniteltu auttamaan saamaan kaiken irti Ralllystä.",
+  "whyUpgradeAnswer2": "Maksulliseen sopimukseen vaihtaminen on järkevää, jos käytät Ralllyä usein tai työn yhteydessä. Tällä hetkellä tilausmaksu on erityinen varhaisille tilaajille ja se nousee tulevaisuudessa. Kun vaihdat sopimuksesi nyt, saat varhaisen pääsyn uusin, laadukkaisiin aikataulutyökaluihin heti kun ne julkaistaan ja lukitset tilausmaksusi, jolloin tulevat hinnankorotukset eivät kosketa sinua.",
   "upgradeNowSaveLater": "Vaihda sopimus nyt ja säästä myöhemmin",
   "earlyAdopterDescription": "Varhaisena tilaajana tilausmaksusi pysyy samana eivätkä mahdolliset hinnankorotukset vaikuta siihen.",
   "planFree": "Ilmainen",

@@ -13,5 +13,8 @@
   "howToUpgradeAnswer": "Para mejorar, puedes ir a tu <a>configuración de facturación</a> y hacer clic en <b>Actualizar</b>.",
   "cancelSubscription": "¿Cómo puedo cancelar mi suscripción?",
   "cancelSubscriptionAnswer": "Puedes cancelar tu suscripción en cualquier momento dirigiéndote a tu <a>configuración de facturación</a>. Una vez que cancele su suscripción, tendrá acceso a su plan de pago hasta el final de su período de facturación. Después, usted será degradado a un plan gratuito.",
-  "planFree": "Gratis"
+  "billingPeriodMonthly": "Mensual",
+  "billingPeriodYearly": "Anualmente",
+  "planFree": "Gratis",
+  "keepPollsIndefinitely": "Mantener encuestas indefinidamente"
 }

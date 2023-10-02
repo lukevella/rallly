@@ -35,5 +35,6 @@
   "freeSchedulingPollDescription": "Rallly vous permet de créer des sondates beaux et simples à utiliser afin que vous puissiez trouver le meilleur moment pour votre prochain événement.",
   "new": "Nouveau",
   "metaTitle": "Rallly - Planifier des réunions de groupe",
-  "metaDescription": "Créez des sondages et votez pour trouver le meilleur jour ou la meilleure heure. Une alternative gratuite à Doodle."
+  "metaDescription": "Créez des sondages et votez pour trouver le meilleur jour ou la meilleure heure. Une alternative gratuite à Doodle.",
+  "selfHostingBlog": "Rallly 3.0 auto-hébergé"
 }

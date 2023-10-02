@@ -153,6 +153,7 @@
   "billingPeriodMonthly": "Månadsvis",
   "billingPeriodYearly": "Årligen",
   "monthlyBillingDescription": "per månad",
+  "plan_extendedPollLife": "Behåll omröstningar på obestämd tid",
   "becomeATranslator": "Hjälp till att översätta",
   "noPolls": "Inga omröstningar",
   "noPollsDescription": "Kom igång genom att skapa en ny omröstning.",
@@ -201,5 +202,6 @@
   "noAds": "Inga annonser",
   "supportProject": "Stöd detta projekt",
   "pricing": "Priser",
-  "pleaseUpgrade": "Vänligen uppgradera till Pro för att använda denna funktion"
+  "pleaseUpgrade": "Vänligen uppgradera till Pro för att använda denna funktion",
+  "hideParticipantsLabel": "Dölj deltagarlistan från andra deltagare"
 }

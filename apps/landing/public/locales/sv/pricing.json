@@ -12,5 +12,17 @@
   "howToUpgradeAnswer": "För att uppgradera kan du gå till dina <a>Faktureringsinställningar</a> och klicka på <b>Uppgradera</b>.",
   "cancelSubscription": "Hur avbryter jag min prenumeration?",
   "cancelSubscriptionAnswer": "Du kan när som helst avbryta din prenumeration genom att gå till dina <a>faktureringsinställningar</a>. När du avslutar din prenumeration har du fortfarande tillgång till din betalda plan fram till slutet av din faktureringsperiod. Efter det kommer du att nedgraderas till en gratis plan.",
-  "planFree": "Gratis"
+  "billingPeriodMonthly": "Månadsvis",
+  "billingPeriodYearly": "Årligen",
+  "planFreeDescription": "För tillfälliga användare",
+  "limitedAccess": "Tillgång till grundläggande funktioner",
+  "pollsDeleted": "Omröstningar raderas automatiskt när de blir inaktiva",
+  "planProDescription": "För avancerade användare och proffs",
+  "accessAllFeatures": "Få tillgång till alla funktioner",
+  "getEarlyAccess": "Få tidig tillgång till nya funktioner",
+  "canUseFreeAnswer2": "Ja, de flesta av Ralllys funktioner är gratis och många användare kommer aldrig att behöva betala för någonting. Det finns dock vissa funktioner som endast är tillgängliga för betalande kunder. Dessa funktioner är utformade för att hjälpa dig att få ut det mesta av Rallly.",
+  "upgradeNowSaveLater": "Uppgradera nu, spara senare",
+  "earlyAdopterDescription": "Som tidig användare låser du din prenumerationsavgift och påverkas inte av framtida prishöjningar.",
+  "planFree": "Gratis",
+  "keepPollsIndefinitely": "Behåll omröstningar på obestämd tid"
 }

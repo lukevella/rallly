@@ -1,13 +1,13 @@
 {
-  "createPageLikeThis": "在几秒钟内创建一个这样的页面！",
+  "createPageLikeThis": "仅需几秒即可创建一个这样的页面！",
   "noLoginRequired": "无需登录",
   "headline": "抛弃传统邮件沟通",
   "subheading": "简化您日程安排的流程并节约时间",
-  "pcmagQuote": "“在尽可能短的时间内进行一次计划投票。”",
+  "pcmagQuote": "“在尽可能短的时间内进行一次投票。”",
   "hubspotQuote": "“为大型团体提供投票的最简单选择。”",
   "goodfirmsQuote": "“其独特之处在于其简单性，仅需最低限度的交互。”",
   "popsciQuote": "“如果你想要保持你的RSVP简单，这是完美的选择。”",
-  "ericQuote": "“如果您使用电子邮件安排工作流程，我强烈建议您尝试让 Rallly 简化您的日程安排，让工作更有条理、压力更小”",
+  "ericQuote": "“如果您使用电子邮件安排工作流程，我强烈建议您尝试让 Rallly 简化您的日程安排，让工作更加轻松更有条理”",
   "viaTrustpilot": "前往 Trustpilot",
   "ericJobTitle": "MIT 行政助理",
   "statsUsersRegistered": "45k+ 注册用户",
@@ -35,5 +35,6 @@
   "freeSchedulingPollDescription": "Rallly 可让您创建美观且易于使用的日程投票，以便您确定下一次活动的最佳时间。",
   "new": "新",
   "metaTitle": "Rallly - 安排小组会议",
-  "metaDescription": "通过投票来寻找最和合适的日期或时间。一个免费的 Doodle 替代方案。"
+  "metaDescription": "通过投票来寻找最和合适的日期或时间。一个免费的 Doodle 替代方案。",
+  "selfHostingBlog": "Rallly 3.0 自托管"
 }

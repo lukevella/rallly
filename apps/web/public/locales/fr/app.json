@@ -23,6 +23,7 @@
   "deleteParticipant": "Supprimer {name}?",
   "deleteParticipantDescription": "Êtes-vous sûr de vouloir supprimer ce participant ? Cette action ne peut pas être annulée.",
   "deletePoll": "Supprimer le sondage",
+  "deletePollDescription": "Toutes les données de ce sondage seront supprimées. Cette action est irréversible.",
   "deletingOptionsWarning": "Vous supprimez des options pour lesquelles les participants ont voté. Leurs votes seront également supprimés.",
   "description": "Description",
   "descriptionPlaceholder": "Hé tout le monde, choisissez les dates qui vous conviennent !",
@@ -149,7 +150,7 @@
   "notificationsGuestTooltip": "Créez un compte ou connectez-vous pour acheter un abonnement",
   "planFree": "Gratuit",
   "dateAndTimeDescription": "Changez vos paramètres de date et d'heure préférés",
-  "createdTime": "Créé le {relativeTime}",
+  "createdTime": "Créé {relativeTime}",
   "permissionDeniedParticipant": "Si vous n'êtes pas le créateur du sondage, vous devriez aller à la page d'invitation.",
   "goToInvite": "Accéder à la page d'invitation",
   "planPro": "Pro",
@@ -224,5 +225,9 @@
   "noAds": "Pas de publicités",
   "supportProject": "Soutenez ce projet",
   "pricing": "Tarifs",
-  "pollSettingsDescription": "Personnaliser le comportement de votre sondage"
+  "pleaseUpgrade": "Veuillez passer à la version Pro pour utiliser cette fonctionnalité",
+  "pollSettingsDescription": "Personnaliser le comportement de votre sondage",
+  "requireParticipantEmailLabel": "Rendre l'adresse e-mail requise pour les participants",
+  "hideParticipantsLabel": "Cacher la liste des participants aux autres participants",
+  "hideScoresLabel": "Cacher les résultats jusqu'à ce qu'un participant ait voté"
 }
