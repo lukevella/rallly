@@ -106,7 +106,7 @@ export const parseTimeSlotOption = (
 ): ParsedTimeSlotOption => {
   const adjustTimeZone = (date: Date | dayjs.Dayjs) => {
     const d = dayjs(date);
-    if (timeZone === null) {
+    if (!timeZone) {
       return d.utc();
     }
 
