@@ -14,10 +14,7 @@ import { getProfileLayout } from "@/components/layouts/profile-layout";
 import {
   Settings,
   SettingsContent,
-  SettingsGroup,
   SettingsHeader,
-  SettingsItem,
-  SettingsItemTitle,
   SettingsSection,
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
@@ -37,13 +34,6 @@ declare global {
 const BillingPortal = () => {
   return (
     <div>
-      <SettingsGroup>
-        <SettingsItem>
-          <SettingsItemTitle>
-            <Trans i18nKey="billingStatus" />
-          </SettingsItemTitle>
-        </SettingsItem>
-      </SettingsGroup>
       <p className="text-sm">
         <Trans
           i18nKey="activeSubscription"
