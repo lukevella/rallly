@@ -184,7 +184,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   // We get these props to be able to render the og:image
-  const poll = await prisma.poll.findUniqueOrThrow({
+  const poll = await prisma.poll.findUnique({
     where: {
       id: ctx.params?.urlId as string,
     },
@@ -198,6 +198,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
       },
     },
   });
+
+  if (!poll) {
+    return { props: {}, notFound: 404 };
+  }
 
   const res = await getStaticTranslations(ctx);
 
