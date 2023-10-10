@@ -62,12 +62,17 @@ export const UserDropdown = () => {
             <Trans i18nKey="polls" defaults="Polls" />
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild={true}>
-          <Link href="/settings/profile" className="flex items-center gap-x-2">
-            <UserIcon className="h-4 w-4" />
-            <Trans i18nKey="profile" defaults="Profile" />
-          </Link>
-        </DropdownMenuItem>
+        <IfAuthenticated>
+          <DropdownMenuItem asChild={true}>
+            <Link
+              href="/settings/profile"
+              className="flex items-center gap-x-2"
+            >
+              <UserIcon className="h-4 w-4" />
+              <Trans i18nKey="profile" defaults="Profile" />
+            </Link>
+          </DropdownMenuItem>
+        </IfAuthenticated>
         <DropdownMenuItem asChild={true}>
           <Link
             href="/settings/preferences"
