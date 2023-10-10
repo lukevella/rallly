@@ -1,12 +1,10 @@
 import { prisma } from "@rallly/database";
-import { absoluteUrl } from "@rallly/utils";
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createToken, decryptToken } from "../../session";
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
-import { LoginTokenPayload, RegistrationTokenPayload } from "../types";
+import { RegistrationTokenPayload } from "../types";
 
 // assigns participants and comments created by guests to a user
 // we could have multiple guests because a login might be triggered from one device
@@ -126,107 +124,11 @@ export const auth = router({
         },
       });
 
-      if (ctx.session.user?.isGuest) {
-        await mergeGuestsIntoUser(user.id, [ctx.session.user.id]);
+      if (ctx.user.isGuest) {
+        await mergeGuestsIntoUser(user.id, [ctx.user.id]);
       }
-
-      ctx.session.user = {
-        isGuest: false,
-        id: user.id,
-      };
-
-      await ctx.session.save();
 
       return { ok: true, user };
-    }),
-  requestLogin: publicProcedure
-    .input(
-      z.object({
-        email: z.string(),
-      }),
-    )
-    .mutation(
-      async ({
-        input,
-        ctx,
-      }): Promise<
-        | { ok: true; token: string }
-        | { ok: false; reason: "emailNotAllowed" | "userNotFound" }
-      > => {
-        const user = await prisma.user.findUnique({
-          where: {
-            email: input.email,
-          },
-        });
-
-        if (!user) {
-          return { ok: false, reason: "userNotFound" };
-        }
-
-        const code = generateOtp();
-
-        const token = await createToken<LoginTokenPayload>({
-          userId: user.id,
-          code,
-        });
-
-        await ctx.emailClient.sendTemplate("LoginEmail", {
-          to: input.email,
-          subject: `${code} is your 6-digit code`,
-          props: {
-            name: user.name,
-            code,
-            magicLink: absoluteUrl(`/auth/login?token=${token}`),
-          },
-        });
-
-        return { ok: true, token };
-      },
-    ),
-  authenticateLogin: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-        code: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const payload = await decryptToken<LoginTokenPayload>(input.token);
-
-      if (!payload) {
-        return { user: null };
-      }
-
-      const { userId, code } = payload;
-
-      if (input.code !== code) {
-        return { user: null };
-      }
-
-      const user = await prisma.user.findUnique({
-        select: { id: true, name: true, email: true },
-        where: { id: userId },
-      });
-
-      if (!user) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "The user doesn't exist anymore",
-        });
-      }
-
-      if (ctx.session.user?.isGuest) {
-        await mergeGuestsIntoUser(user.id, [ctx.session.user.id]);
-      }
-
-      ctx.session.user = {
-        isGuest: false,
-        id: user.id,
-      };
-
-      await ctx.session.save();
-
-      return { user };
     }),
   getUserPermission: publicProcedure
     .input(z.object({ token: z.string() }))

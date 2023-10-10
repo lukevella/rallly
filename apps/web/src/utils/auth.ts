@@ -1,4 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { RegistrationTokenPayload } from "@rallly/backend";
+import { decryptToken } from "@rallly/backend/session";
 import { generateOtp, randomid } from "@rallly/backend/utils/nanoid";
 import { prisma } from "@rallly/database";
 import cookie from "cookie";
@@ -36,6 +38,48 @@ const authOptions = {
     },
   },
   providers: [
+    // When a user registers, we don't want to go through the email verification process
+    // so this providers allows us exchange the registration token for a session token
+    CredentialsProvider({
+      id: "registration-token",
+      name: "Registration Token",
+      credentials: {
+        token: {
+          label: "Token",
+          type: "text",
+        },
+      },
+      async authorize(credentials) {
+        if (credentials?.token) {
+          const payload = await decryptToken<RegistrationTokenPayload>(
+            credentials.token,
+          );
+          if (payload) {
+            const user = await prisma.user.findUnique({
+              where: {
+                email: payload.email,
+              },
+              select: {
+                id: true,
+                email: true,
+                name: true,
+              },
+            });
+
+            if (user) {
+              return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                isGuest: false,
+              };
+            }
+          }
+        }
+
+        return null;
+      },
+    }),
     CredentialsProvider({
       id: "guest",
       name: "Guest",
