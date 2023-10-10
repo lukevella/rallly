@@ -46,26 +46,6 @@ const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
   });
 };
 
-const isEmailBlocked = (email: string) => {
-  if (process.env.ALLOWED_EMAILS) {
-    const allowedEmails = process.env.ALLOWED_EMAILS.split(",");
-    // Check whether the email matches enough of the patterns specified in ALLOWED_EMAILS
-    const isAllowed = allowedEmails.some((allowedEmail) => {
-      const regex = new RegExp(
-        `^${allowedEmail
-          .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
-          .replaceAll(/[*]/g, ".*")}$`,
-      );
-      return regex.test(email);
-    });
-
-    if (!isAllowed) {
-      return true;
-    }
-  }
-  return false;
-};
-
 export const auth = router({
   requestRegistration: publicProcedure
     .input(
@@ -82,9 +62,9 @@ export const auth = router({
         | { ok: true; token: string }
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
-        if (isEmailBlocked(input.email)) {
-          return { ok: false, reason: "emailNotAllowed" };
-        }
+        // if (isEmailBlocked(input.email)) {
+        //   return { ok: false, reason: "emailNotAllowed" };
+        // }
 
         const user = await prisma.user.findUnique({
           select: {
@@ -173,10 +153,6 @@ export const auth = router({
         | { ok: true; token: string }
         | { ok: false; reason: "emailNotAllowed" | "userNotFound" }
       > => {
-        if (isEmailBlocked(input.email)) {
-          return { ok: false, reason: "emailNotAllowed" };
-        }
-
         const user = await prisma.user.findUnique({
           where: {
             email: input.email,

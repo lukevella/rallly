@@ -15,6 +15,7 @@ import {
   FeaturebaseIdentify,
 } from "@/components/featurebase";
 import FeedbackButton from "@/components/feedback";
+import { LoginLink } from "@/components/login-link";
 import { Logo } from "@/components/logo";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
@@ -153,9 +154,9 @@ const MainNav = () => {
                 asChild
                 className="hidden sm:flex"
               >
-                <Link href="/login">
+                <LoginLink>
                   <Trans i18nKey="login" defaults="Login" />
-                </Link>
+                </LoginLink>
               </Button>
             </IfGuest>
             <IfCloudHosted>
@@ -179,7 +180,6 @@ export const StandardLayout: React.FunctionComponent<{
   hideNav?: boolean;
 }> = ({ children, hideNav, ...rest }) => {
   const key = hideNav ? "no-nav" : "nav";
-
   return (
     <UserProvider>
       <DayjsProvider>

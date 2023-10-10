@@ -1,12 +1,19 @@
+import { EmailClient } from "@rallly/emails";
 import * as trpcNext from "@trpc/server/adapters/next";
 
-import { createContext } from "../../trpc/context";
 import { appRouter } from "../../trpc/routers";
-import { withSessionRoute } from "../session";
 
-export const trpcNextApiHandler = withSessionRoute(
-  trpcNext.createNextApiHandler({
+export interface TRPCContext {
+  user: { id: string; isGuest: boolean };
+  emailClient: EmailClient;
+  isSelfHosted: boolean;
+}
+
+export const trpcNextApiHandler = (context: TRPCContext) => {
+  return trpcNext.createNextApiHandler({
     router: appRouter,
-    createContext,
-  }),
-);
+    createContext: async () => {
+      return context;
+    },
+  });
+};

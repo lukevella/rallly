@@ -1,6 +1,8 @@
 import { trpc } from "@rallly/backend";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -13,7 +15,7 @@ import { TextInput } from "../text-input";
 
 export const useDefaultEmail = createGlobalState("");
 
-const VerifyCode: React.FunctionComponent<{
+export const VerifyCode: React.FunctionComponent<{
   email: string;
   onSubmit: (code: string) => Promise<void>;
   onResend: () => Promise<void>;
@@ -297,6 +299,7 @@ export const LoginForm: React.FunctionComponent<{
     defaultValues: { email: defaultEmail },
   });
 
+  const router = useRouter();
   const requestLogin = trpc.auth.requestLogin.useMutation();
   const authenticateLogin = trpc.auth.authenticateLogin.useMutation();
 
@@ -356,27 +359,12 @@ export const LoginForm: React.FunctionComponent<{
 
   return (
     <form
-      onSubmit={handleSubmit(async (data) => {
-        const res = await requestLogin.mutateAsync({
-          email: data.email,
+      onSubmit={handleSubmit(async ({ email }) => {
+        await signIn("email", {
+          redirect: false,
+          email,
+          callbackUrl: router.query.callbackUrl as string,
         });
-
-        if (res.ok) {
-          setToken(res.token);
-        } else {
-          switch (res.reason) {
-            case "emailNotAllowed":
-              setError("email", {
-                message: t("emailNotAllowed"),
-              });
-              break;
-            case "userNotFound":
-              setError("email", {
-                message: t("userNotFound"),
-              });
-              break;
-          }
-        }
       })}
     >
       <div className="mb-1 text-2xl font-bold">{t("login")}</div>

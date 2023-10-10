@@ -10,6 +10,8 @@ import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import Script from "next/script";
+import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
 import React from "react";
@@ -27,6 +29,7 @@ const inter = Inter({
 
 type PageProps = {
   user?: UserSession;
+  session: Session;
 };
 
 type AppPropsWithLayout = AppProps<PageProps> & {
@@ -41,54 +44,56 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <LazyMotion features={domMax}>
-      <DefaultSeo
-        openGraph={{
-          siteName: "Rallly",
-          type: "website",
-          url: absoluteUrl(),
-          images: [
-            {
-              url: absoluteUrl("/og-image-1200.png"),
-              width: 1200,
-              height: 630,
-              alt: "Rallly | Schedule group meetings",
-              type: "image/png",
-            },
-          ],
-        }}
-        facebook={{
-          appId: "920386682263077",
-        }}
-      />
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=yes"
-        />
-      </Head>
-      {process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID ? (
-        <Script
-          src="https://cdn.paddle.com/paddle/paddle.js"
-          onLoad={() => {
-            if (process.env.NEXT_PUBLIC_PADDLE_SANDBOX === "true") {
-              window.Paddle.Environment.set("sandbox");
-            }
-            window.Paddle.Setup({
-              vendor: Number(process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID),
-            });
+    <SessionProvider session={pageProps.session}>
+      <LazyMotion features={domMax}>
+        <DefaultSeo
+          openGraph={{
+            siteName: "Rallly",
+            type: "website",
+            url: absoluteUrl(),
+            images: [
+              {
+                url: absoluteUrl("/og-image-1200.png"),
+                width: 1200,
+                height: 630,
+                alt: "Rallly | Schedule group meetings",
+                type: "image/png",
+              },
+            ],
+          }}
+          facebook={{
+            appId: "920386682263077",
           }}
         />
-      ) : null}
-      <style jsx global>{`
-        html {
-          --font-inter: ${inter.style.fontFamily};
-        }
-      `}</style>
-      <TooltipProvider delayDuration={200}>
-        {getLayout(<Component {...pageProps} />)}
-      </TooltipProvider>
-    </LazyMotion>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=yes"
+          />
+        </Head>
+        {process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID ? (
+          <Script
+            src="https://cdn.paddle.com/paddle/paddle.js"
+            onLoad={() => {
+              if (process.env.NEXT_PUBLIC_PADDLE_SANDBOX === "true") {
+                window.Paddle.Environment.set("sandbox");
+              }
+              window.Paddle.Setup({
+                vendor: Number(process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID),
+              });
+            }}
+          />
+        ) : null}
+        <style jsx global>{`
+          html {
+            --font-inter: ${inter.style.fontFamily};
+          }
+        `}</style>
+        <TooltipProvider delayDuration={200}>
+          {getLayout(<Component {...pageProps} />)}
+        </TooltipProvider>
+      </LazyMotion>
+    </SessionProvider>
   );
 };
 

@@ -1,15 +1,20 @@
-import { trpc, UserSession } from "@rallly/backend";
+import { trpc } from "@rallly/backend";
+import { signIn, useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { PostHogProvider } from "@/contexts/posthog";
-import { useWhoAmI } from "@/contexts/whoami";
 import { isSelfHosted } from "@/utils/constants";
 
 import { useRequiredContext } from "./use-required-context";
 
 export const UserContext = React.createContext<{
-  user: UserSession & { name: string };
+  user: {
+    isGuest: boolean;
+    name: string;
+    id: string;
+    email: string | null;
+  };
   refresh: () => void;
   ownsObject: (obj: { userId: string | null }) => boolean;
 } | null>(null);
@@ -48,33 +53,33 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation();
 
-  const queryClient = trpc.useContext();
+  const session = useSession();
 
-  const user = useWhoAmI();
+  const user = session.data?.user;
+
   const { data: userPreferences } = trpc.userPreferences.get.useQuery();
 
+  React.useEffect(() => {
+    if (session.status === "unauthenticated") {
+      // Default to a guest user if not authenticated
+      signIn("guest");
+    }
+  }, [session.status]);
   // TODO (Luke Vella) [2023-09-19]: Remove this when we have a better way to query for an active subscription
   trpc.user.subscription.useQuery(undefined, {
     enabled: !isSelfHosted,
   });
 
-  const name = user
-    ? user.isGuest === false
-      ? user.name
-      : user.id.substring(0, 10)
-    : t("guest");
-
-  if (!user || userPreferences === undefined) {
+  if (!user || userPreferences === undefined || !session.data) {
     return null;
   }
 
+  const name = user.name || t("guest");
   return (
     <UserContext.Provider
       value={{
-        user: { ...user, name },
-        refresh: () => {
-          return queryClient.whoami.invalidate();
-        },
+        user: { ...user, name, email: user.email ?? null },
+        refresh: session.update,
         ownsObject: ({ userId }) => {
           return userId ? [user.id].includes(userId) : false;
         },

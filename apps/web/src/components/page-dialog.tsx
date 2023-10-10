@@ -8,9 +8,7 @@ export const PageDialog = (
     <Container className="flex h-[calc(75vh)] items-center justify-center">
       <div className="text-center">
         {props.icon ? (
-          <p className="text-primary text-base font-semibold">
-            <props.icon className="inline-block h-14 w-14" />
-          </p>
+          <props.icon className="text-primary inline-block h-14 w-14" />
         ) : null}
         {props.children}
       </div>
@@ -19,16 +17,16 @@ export const PageDialog = (
 };
 
 export const PageDialogContent = (props: React.PropsWithChildren) => {
-  return <div className="mt-4 mb-6">{props.children}</div>;
+  return <div className="mb-6 mt-4">{props.children}</div>;
 };
 
 export const PageDialogHeader = (props: React.PropsWithChildren) => {
-  return <div className="mt-4 mb-6 space-y-2">{props.children}</div>;
+  return <div className="mb-6 mt-4 space-y-2">{props.children}</div>;
 };
 
 export const PageDialogFooter = (props: React.PropsWithChildren) => {
   return (
-    <div className="mt-6 flex flex-col items-center justify-center gap-y-4 gap-x-4 sm:flex-row">
+    <div className="mt-6 flex flex-col items-center justify-center gap-x-4 gap-y-4 sm:flex-row">
       {props.children}
     </div>
   );

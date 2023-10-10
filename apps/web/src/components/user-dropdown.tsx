@@ -22,7 +22,9 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
+import { LoginLink } from "@/components/login-link";
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
@@ -124,10 +126,10 @@ export const UserDropdown = () => {
         <DropdownMenuSeparator />
         <IfGuest>
           <DropdownMenuItem asChild={true}>
-            <Link href="/login" className="flex items-center gap-x-2">
+            <LoginLink className="flex items-center gap-x-2">
               <LogInIcon className="h-4 w-4" />
               <Trans i18nKey="login" defaults="login" />
-            </Link>
+            </LoginLink>
           </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
             <Link href="/register" className="flex items-center gap-x-2">
@@ -135,19 +137,25 @@ export const UserDropdown = () => {
               <Trans i18nKey="createAnAccount" defaults="Register" />
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild={true}>
-            <Link href="/logout" className="flex items-center gap-x-2">
-              <RefreshCcwIcon className="h-4 w-4" />
-              <Trans i18nKey="forgetMe" />
-            </Link>
+          <DropdownMenuItem
+            className="flex items-center gap-x-2"
+            onSelect={() =>
+              signOut({
+                redirect: false,
+              })
+            }
+          >
+            <RefreshCcwIcon className="h-4 w-4" />
+            <Trans i18nKey="forgetMe" />
           </DropdownMenuItem>
         </IfGuest>
         <IfAuthenticated>
-          <DropdownMenuItem asChild={true}>
-            <Link href="/logout" className="flex items-center gap-x-2">
-              <LogOutIcon className="h-4 w-4" />
-              <Trans i18nKey="logout" />
-            </Link>
+          <DropdownMenuItem
+            className="flex items-center gap-x-2"
+            onSelect={() => signOut()}
+          >
+            <LogOutIcon className="h-4 w-4" />
+            <Trans i18nKey="logout" />
           </DropdownMenuItem>
         </IfAuthenticated>
       </DropdownMenuContent>

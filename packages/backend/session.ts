@@ -1,4 +1,3 @@
-import { TimeFormat } from "@rallly/database";
 import { sealData, unsealData } from "iron-session";
 
 import { sessionConfig } from "./session-config";
@@ -6,11 +5,6 @@ import { sessionConfig } from "./session-config";
 type UserSessionData = {
   id: string;
   isGuest: boolean;
-  preferences?: {
-    timeZone?: string;
-    weekStart?: number;
-    timeFormat?: TimeFormat;
-  };
 };
 
 declare module "iron-session" {
