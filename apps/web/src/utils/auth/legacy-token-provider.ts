@@ -33,7 +33,6 @@ export const LegacyTokenProvider = CredentialsProvider({
         if (session.user.isGuest) {
           return {
             id: session.user.id,
-            isGuest: true,
             email: null,
             name: "Guest",
           };
@@ -54,7 +53,6 @@ export const LegacyTokenProvider = CredentialsProvider({
               id: user.id,
               name: user.name,
               email: user.email,
-              isGuest: false,
             };
           }
         }

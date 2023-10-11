@@ -73,7 +73,6 @@ const authOptions = {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                isGuest: false,
               };
             }
           }
@@ -91,7 +90,6 @@ const authOptions = {
           id: `user-${randomid()}`,
           email: null,
           name: "Guest",
-          isGuest: true,
         };
       },
     }),
@@ -149,12 +147,12 @@ const authOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.userId = user.id;
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string;
+      session.user.id = token.userId as string;
       session.user.isGuest = token.email === null;
       return session;
     },
