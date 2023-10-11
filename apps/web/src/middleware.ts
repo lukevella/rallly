@@ -9,7 +9,6 @@ export default withAuth(
   function middleware(req) {
     const { headers, cookies, nextUrl } = req;
     const newUrl = nextUrl.clone();
-    const res = NextResponse.next();
 
     // if the user is already logged in, don't let them access the login page
     if (
@@ -25,7 +24,6 @@ export default withAuth(
     const preferredLocale = localeCookie && localeCookie.value;
     if (preferredLocale && supportedLocales.includes(preferredLocale)) {
       newUrl.pathname = `/${preferredLocale}${newUrl.pathname}`;
-      return NextResponse.rewrite(newUrl);
     } else {
       // Check if locale is specified in header
       const acceptLanguageHeader = headers.get("accept-language");
@@ -38,12 +36,27 @@ export default withAuth(
 
         if (locale) {
           newUrl.pathname = `/${locale}${newUrl.pathname}`;
-          return NextResponse.rewrite(newUrl);
         }
       }
     }
 
-    return res;
+    const res = NextResponse.rewrite(newUrl);
+
+    /**
+     * We moved from a bespoke session implementation to next-auth.
+     * This middleware looks for the old session cookie and moves it to
+     * a temporary cookie accessible to the client which will use it to
+     * exchange it for a new session token with the legacy-token provider.
+     */
+    const legacyToken = req.cookies.get("rallly-session");
+    if (legacyToken) {
+      res.cookies.set({
+        name: "legacy-token",
+        value: legacyToken.value,
+      });
+      res.cookies.delete("rallly-session");
+      return res;
+    }
   },
   {
     secret: process.env.SECRET_PASSWORD,

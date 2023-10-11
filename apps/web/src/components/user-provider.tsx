@@ -1,4 +1,5 @@
 import { trpc } from "@rallly/backend";
+import Cookies from "js-cookie";
 import { signIn, useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import React from "react";
@@ -61,8 +62,16 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
 
   React.useEffect(() => {
     if (session.status === "unauthenticated") {
-      // Default to a guest user if not authenticated
-      signIn("guest");
+      const legacyToken = Cookies.get("legacy-token");
+      Cookies.remove("legacy-token");
+      if (legacyToken) {
+        signIn("legacy-token", {
+          token: legacyToken,
+        });
+      } else {
+        // Default to a guest user if not authenticated
+        signIn("guest");
+      }
     }
   }, [session.status]);
   // TODO (Luke Vella) [2023-09-19]: Remove this when we have a better way to query for an active subscription

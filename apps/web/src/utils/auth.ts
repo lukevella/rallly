@@ -17,6 +17,7 @@ import NextAuth, {
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
+import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
 import { emailClient } from "@/utils/emails";
 
 const authOptions = {
@@ -38,6 +39,7 @@ const authOptions = {
     },
   },
   providers: [
+    LegacyTokenProvider,
     // When a user registers, we don't want to go through the email verification process
     // so this providers allows us exchange the registration token for a session token
     CredentialsProvider({

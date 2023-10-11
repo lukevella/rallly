@@ -2,7 +2,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "../style.css";
 
-import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
+import { trpc } from "@rallly/backend/next/trpc/client";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domMax, LazyMotion } from "framer-motion";
 import { NextPage } from "next";
@@ -10,7 +10,6 @@ import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import Script from "next/script";
-import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
@@ -27,13 +26,8 @@ const inter = Inter({
   display: "swap",
 });
 
-type PageProps = {
-  user?: UserSession;
-  session: Session;
-};
-
-type AppPropsWithLayout = AppProps<PageProps> & {
-  Component: NextPageWithLayout<PageProps>;
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
 };
 
 const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
@@ -44,7 +38,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider>
       <LazyMotion features={domMax}>
         <DefaultSeo
           openGraph={{
