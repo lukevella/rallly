@@ -3,7 +3,13 @@ import { prisma } from "@rallly/database";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 /**
- * This provider allows us to exchange the legacy token for a new session token
+ * This provider allows us to login with a token from an older session created with
+ * iron-session.
+ *
+ * We should keep this provider available for at least 30 days in production to allow returning
+ * users to keep their existing sessions.
+ *
+ * @deprecated
  */
 export const LegacyTokenProvider = CredentialsProvider({
   id: "legacy-token",
