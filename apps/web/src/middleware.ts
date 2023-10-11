@@ -45,8 +45,8 @@ export default withAuth(
     /**
      * We moved from a bespoke session implementation to next-auth.
      * This middleware looks for the old session cookie and moves it to
-     * a temporary cookie accessible to the client which will use it to
-     * exchange it for a new session token with the legacy-token provider.
+     * a temporary cookie accessible to the client which will exchange it
+     * for a new session token with the legacy-token provider.
      */
     const legacyToken = req.cookies.get("rallly-session");
     if (legacyToken) {
@@ -55,8 +55,9 @@ export default withAuth(
         value: legacyToken.value,
       });
       res.cookies.delete("rallly-session");
-      return res;
     }
+
+    return res;
   },
   {
     secret: process.env.SECRET_PASSWORD,
