@@ -166,7 +166,6 @@ const DayjsContext = React.createContext<{
   locale: {
     weekStart: number;
     timeFormat: TimeFormat;
-    timeZone: string;
   };
   weekStart: number;
   timeZone: string;
@@ -203,12 +202,11 @@ export const DayjsProvider: React.FunctionComponent<{
   }, [localeConfig, data]);
 
   const locale = {
-    timeZone: getBrowserTimeZone(),
     weekStart: localeConfig.weekStart,
     timeFormat: localeConfig.timeFormat,
   };
 
-  const preferredTimeZone = data?.timeZone ?? locale.timeZone;
+  const preferredTimeZone = data?.timeZone ?? getBrowserTimeZone();
 
   if (state.loading) {
     // wait for locale to load before rendering
@@ -224,8 +222,8 @@ export const DayjsProvider: React.FunctionComponent<{
             : dayjs(date).tz(preferredTimeZone);
         },
         dayjs,
-        locale,
-        timeZone: preferredTimeZone,
+        locale, // locale defaults
+        timeZone: preferredTimeZone, // shouldn't be here (belongs to user)
         weekStart: dayjs.localeData().firstDayOfWeek() === 0 ? 0 : 1,
         timeFormat: data?.timeFormat ?? localeConfig.timeFormat,
       }}
