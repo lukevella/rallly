@@ -26,18 +26,6 @@ const authOptions = {
   session: {
     strategy: "jwt",
   },
-  cookies: {
-    sessionToken: {
-      name: "next-auth.session-token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure:
-          process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://") ?? false,
-      },
-    },
-  },
   providers: [
     LegacyTokenProvider,
     // When a user registers, we don't want to go through the email verification process
