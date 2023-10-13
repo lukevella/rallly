@@ -1,6 +1,8 @@
 export type RegistrationTokenPayload = {
   name: string;
   email: string;
+  locale?: string;
+  timeZone?: string;
   code: string;
 };
 

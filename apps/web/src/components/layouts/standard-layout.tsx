@@ -23,7 +23,7 @@ import { UserDropdown } from "@/components/user-dropdown";
 import { IfCloudHosted } from "@/contexts/environment";
 import { IfFreeUser } from "@/contexts/plan";
 import { appVersion, isFeedbackEnabled } from "@/utils/constants";
-import { DayjsProvider } from "@/utils/dayjs";
+import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
@@ -182,7 +182,7 @@ export const StandardLayout: React.FunctionComponent<{
   const key = hideNav ? "no-nav" : "nav";
   return (
     <UserProvider>
-      <DayjsProvider>
+      <ConnectedDayjsProvider>
         <Toaster />
         <ModalProvider>
           <div className="flex min-h-screen flex-col" {...rest}>
@@ -222,7 +222,7 @@ export const StandardLayout: React.FunctionComponent<{
             </>
           ) : null}
         </ModalProvider>
-      </DayjsProvider>
+      </ConnectedDayjsProvider>
     </UserProvider>
   );
 };

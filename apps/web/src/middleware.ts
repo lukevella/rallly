@@ -7,7 +7,7 @@ const supportedLocales = Object.keys(languages);
 
 export default withAuth(
   function middleware(req) {
-    const { headers, cookies, nextUrl } = req;
+    const { headers, nextUrl } = req;
     const newUrl = nextUrl.clone();
 
     // if the user is already logged in, don't let them access the login page
@@ -20,8 +20,7 @@ export default withAuth(
     }
 
     // Check if locale is specified in cookie
-    const localeCookie = cookies.get("NEXT_LOCALE");
-    const preferredLocale = localeCookie && localeCookie.value;
+    const preferredLocale = req.nextauth.token?.locale;
     if (preferredLocale && supportedLocales.includes(preferredLocale)) {
       newUrl.pathname = `/${preferredLocale}${newUrl.pathname}`;
     } else {

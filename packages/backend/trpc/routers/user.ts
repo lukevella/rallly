@@ -48,4 +48,23 @@ export const user = router({
         },
       });
     }),
+  updatePreferences: privateProcedure
+    .input(
+      z.object({
+        locale: z.string().optional(),
+        timeZone: z.string().optional(),
+        weekStart: z.number().min(0).max(6).optional(),
+        timeFormat: z.enum(["hours12", "hours24"]).optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.isGuest === false) {
+        await prisma.user.update({
+          where: {
+            id: ctx.user.id,
+          },
+          data: input,
+        });
+      }
+    }),
 });

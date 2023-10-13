@@ -45,6 +45,7 @@ const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
 };
 
 export const auth = router({
+  // @deprecated
   requestRegistration: publicProcedure
     .input(
       z.object({
@@ -102,6 +103,8 @@ export const auth = router({
       z.object({
         token: z.string(),
         code: z.string(),
+        timeZone: z.string().optional(),
+        locale: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -121,6 +124,8 @@ export const auth = router({
         data: {
           name,
           email,
+          timeZone: input.timeZone,
+          locale: input.locale,
         },
       });
 

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { trpc } from "@rallly/backend";
 import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import {
@@ -16,6 +15,7 @@ import { z } from "zod";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
+import { usePreferences } from "@/contexts/preferences";
 import { useDayjs } from "@/utils/dayjs";
 
 const formSchema = z.object({
@@ -27,42 +27,25 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const DateTimePreferencesForm = () => {
-  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+  const { timeFormat, weekStart, timeZone, locale } = useDayjs();
+  const { preferences, updatePreferences } = usePreferences();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      timeFormat: preferences.timeFormat ?? timeFormat,
+      weekStart: preferences.weekStart ?? weekStart,
+      timeZone: preferences.timeZone ?? timeZone,
+    },
   });
 
   const { handleSubmit, formState } = form;
-
-  const queryClient = trpc.useContext();
-  const update = trpc.userPreferences.update.useMutation({
-    onSuccess: () => {
-      queryClient.userPreferences.get.invalidate();
-    },
-  });
-  const deleteUserPreferences = trpc.userPreferences.delete.useMutation({
-    onSuccess: () => {
-      queryClient.userPreferences.get.invalidate();
-    },
-  });
-
-  const {
-    timeFormat: localeTimeFormat,
-    weekStart: localeWeekStart,
-    timeZone,
-    locale,
-  } = useDayjs();
-
-  if (userPreferences === undefined) {
-    return null;
-  }
 
   return (
     <Form {...form}>
       <form
         onSubmit={handleSubmit(async (data) => {
-          await update.mutateAsync(data);
+          updatePreferences(data);
           form.reset(data);
         })}
       >
@@ -70,7 +53,6 @@ const DateTimePreferencesForm = () => {
           <FormField
             control={form.control}
             name="timeZone"
-            defaultValue={userPreferences?.timeZone ?? timeZone}
             render={({ field }) => {
               return (
                 <FormItem>
@@ -88,7 +70,6 @@ const DateTimePreferencesForm = () => {
           <FormField
             control={form.control}
             name="timeFormat"
-            defaultValue={userPreferences?.timeFormat ?? localeTimeFormat}
             render={({ field }) => {
               return (
                 <FormItem>
@@ -106,7 +87,6 @@ const DateTimePreferencesForm = () => {
           <FormField
             control={form.control}
             name="weekStart"
-            defaultValue={userPreferences?.weekStart ?? localeWeekStart}
             render={({ field }) => {
               return (
                 <FormItem>
@@ -144,12 +124,17 @@ const DateTimePreferencesForm = () => {
           >
             <Trans i18nKey="save" />
           </Button>
-          {userPreferences !== null ? (
+          {preferences.timeFormat || preferences.weekStart ? (
             <Button
-              loading={deleteUserPreferences.isLoading}
               onClick={async () => {
-                await deleteUserPreferences.mutateAsync();
-                form.reset(locale);
+                updatePreferences({
+                  weekStart: null,
+                  timeFormat: null,
+                });
+                form.reset({
+                  weekStart: locale.weekStart,
+                  timeFormat: locale.timeFormat,
+                });
               }}
             >
               <Trans

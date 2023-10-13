@@ -19,7 +19,7 @@ import { UserProvider, useUser } from "@/components/user-provider";
 import { VisibilityProvider } from "@/components/visibility";
 import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
-import { DayjsProvider } from "@/utils/dayjs";
+import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 import Error404 from "../404";
@@ -119,7 +119,7 @@ const Page = ({ id, title, user }: PageProps) => {
         }}
       />
       <UserProvider>
-        <DayjsProvider>
+        <ConnectedDayjsProvider>
           <Prefetch>
             <LegacyPollContextProvider>
               <VisibilityProvider>
@@ -172,7 +172,7 @@ const Page = ({ id, title, user }: PageProps) => {
               </VisibilityProvider>
             </LegacyPollContextProvider>
           </Prefetch>
-        </DayjsProvider>
+        </ConnectedDayjsProvider>
       </UserProvider>
     </>
   );

@@ -25,7 +25,7 @@ export default async function handler(
 
   return trpcNextApiHandler({
     user: {
-      isGuest: session.user.isGuest,
+      isGuest: session.user.email === null,
       id: session.user.id,
     },
     emailClient,

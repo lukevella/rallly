@@ -13,7 +13,6 @@ import Script from "next/script";
 import { SessionProvider } from "next-auth/react";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
-import React from "react";
 
 import Maintenance from "@/components/maintenance";
 

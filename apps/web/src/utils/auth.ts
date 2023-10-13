@@ -53,15 +53,14 @@ const authOptions = {
                 id: true,
                 email: true,
                 name: true,
+                locale: true,
+                timeFormat: true,
+                timeZone: true,
               },
             });
 
             if (user) {
-              return {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-              };
+              return user;
             }
           }
         }
@@ -77,7 +76,6 @@ const authOptions = {
         return {
           id: `user-${randomid()}`,
           email: null,
-          name: "Guest",
         };
       },
     }),
@@ -88,22 +86,32 @@ const authOptions = {
         return generateOtp();
       },
       async sendVerificationRequest({ identifier: email, token, url }) {
-        await emailClient.sendTemplate("LoginEmail", {
-          to: email,
-          subject: `${token} is your 6-digit code`,
-          props: {
-            name: "User",
-            magicLink: url,
-            code: token,
+        const user = await prisma.user.findUnique({
+          where: {
+            email,
+          },
+          select: {
+            name: true,
           },
         });
+
+        if (user) {
+          await emailClient.sendTemplate("LoginEmail", {
+            to: email,
+            subject: `${token} is your 6-digit code`,
+            props: {
+              name: user.name,
+              magicLink: url,
+              code: token,
+            },
+          });
+        }
       },
     }),
   ],
   pages: {
     signIn: "/login",
     signOut: "/logout",
-    verifyRequest: "/verify",
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
@@ -133,15 +141,39 @@ const authOptions = {
 
       return true;
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.userId = user.id;
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update" && session) {
+        if (token.email) {
+          // For registered users we want to save the preferences to the database
+          try {
+            await prisma.user.update({
+              where: {
+                id: token.sub,
+              },
+              data: session,
+            });
+          } catch (e) {
+            console.error("Failed to update user preferences", session);
+          }
+        }
+        token = { ...token, ...session };
       }
+
+      if (trigger === "signIn" && user) {
+        token.locale = user.locale;
+        token.timeFormat = user.timeFormat;
+        token.timeZone = user.timeZone;
+        token.weekStart = user.weekStart;
+      }
+
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.userId as string;
-      session.user.isGuest = token.email === null;
+      session.user.id = token.sub as string;
+      session.user.timeFormat = token.timeFormat;
+      session.user.timeZone = token.timeZone;
+      session.user.locale = token.locale;
+      session.user.weekStart = token.weekStart;
       return session;
     },
   },

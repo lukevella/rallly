@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import type { TimeFormat } from "@rallly/database";
 import { extend } from "lodash";
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import { DefaultJWT, JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
@@ -8,21 +9,30 @@ declare module "next-auth" {
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    version: number;
     user: {
-      isGuest: boolean;
       id: string;
       name?: string;
       email?: string | null;
-      image?: string | null;
+      timeZone?: string | null;
+      timeFormat?: TimeFormat | null;
+      locale?: string | null;
+      weekStart?: number | null;
     };
+  }
+
+  interface User extends DefaultUser {
+    locale?: string | null;
+    timeZone?: string | null;
+    timeFormat?: TimeFormat | null;
+    weekStart?: number | null;
   }
 }
 
 declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT extends DefaultJWT {
-    userId?: string;
-    plan?: "guest" | "user" | "pro";
+    locale?: string | null;
+    timeZone?: string | null;
+    timeFormat?: TimeFormat | null;
+    weekStart?: number | null;
   }
 }

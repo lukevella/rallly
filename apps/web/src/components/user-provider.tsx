@@ -1,10 +1,13 @@
 import { trpc } from "@rallly/backend";
 import Cookies from "js-cookie";
+import { Session } from "next-auth";
 import { signIn, useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import React from "react";
 import { z } from "zod";
 
 import { PostHogProvider } from "@/contexts/posthog";
+import { PreferencesProvider } from "@/contexts/preferences";
 import { isSelfHosted } from "@/utils/constants";
 
 import { useRequiredContext } from "./use-required-context";
@@ -14,11 +17,14 @@ const userSchema = z.object({
   name: z.string(),
   email: z.string().email().nullable(),
   isGuest: z.boolean(),
+  timeZone: z.string().nullish(),
+  timeFormat: z.enum(["hours12", "hours24"]).nullish(),
+  weekStart: z.number().min(0).max(6).nullish(),
 });
 
 export const UserContext = React.createContext<{
   user: z.infer<typeof userSchema>;
-  refresh: () => void;
+  refresh: (data: Record<string, unknown>) => Promise<Session | null>;
   ownsObject: (obj: { userId: string | null }) => boolean;
 } | null>(null);
 
@@ -53,37 +59,28 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
   return <>{props.children}</>;
 };
 
-/**
- * Gets and removes the legacy token from the cookies
- * @return The legacy token if it exists, otherwise null
- */
-const getLegacyToken = () => {
-  const token = Cookies.get("legacy-token");
-  // It's important to remove the token from the cookies,
-  // otherwise when the user signs out.
-  Cookies.remove("legacy-token");
-
-  return token ?? null;
-};
-
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const session = useSession();
 
   const user = session.data?.user;
 
-  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (session.status === "unauthenticated") {
-      const legacyToken = getLegacyToken();
+      // Begin: Legacy token migration
+      const legacyToken = Cookies.get("legacy-token");
+      // It's important to remove the token from the cookies,
+      // otherwise when the user signs out.
       if (legacyToken) {
+        Cookies.remove("legacy-token");
         signIn("legacy-token", {
           token: legacyToken,
         });
-      } else {
-        // Default to a guest user if not authenticated
-        signIn("guest");
+        return;
       }
+      // End: Legacy token migration
+      signIn("guest");
     }
   }, [session.status]);
 
@@ -92,7 +89,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     enabled: !isSelfHosted,
   });
 
-  if (!user || userPreferences === undefined || !session.data) {
+  if (!user || !session.data) {
     return null;
   }
 
@@ -101,9 +98,9 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
       value={{
         user: {
           id: user.id as string,
-          name: user.name as string,
-          email: user.email as string | null,
-          isGuest: user.isGuest as boolean,
+          name: user.name ?? t("guest"),
+          email: user.email || null,
+          isGuest: user.email === null,
         },
         refresh: session.update,
         ownsObject: ({ userId }) => {
@@ -111,7 +108,19 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
         },
       }}
     >
-      <PostHogProvider>{props.children}</PostHogProvider>
+      <PreferencesProvider
+        initialValue={{
+          locale: user.locale ?? undefined,
+          timeZone: user.timeZone ?? undefined,
+          timeFormat: user.timeFormat ?? undefined,
+          weekStart: user.weekStart ?? undefined,
+        }}
+        onUpdate={async (newPreferences) => {
+          await session.update(newPreferences);
+        }}
+      >
+        <PostHogProvider>{props.children}</PostHogProvider>
+      </PreferencesProvider>
     </UserContext.Provider>
   );
 };

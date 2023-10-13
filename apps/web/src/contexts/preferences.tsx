@@ -1,45 +1,50 @@
-import { trpc } from "@rallly/backend";
-import Cookies from "js-cookie";
-import { useTranslation } from "next-i18next";
+import { TimeFormat } from "@rallly/database";
+import React from "react";
+import { useSetState } from "react-use";
 
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
-import { useDayjs } from "@/utils/dayjs";
-
-export const useSystemPreferences = () => {
-  const { i18n } = useTranslation();
-  const { timeFormat: localeTimeFormat, weekStart: localeTimeFormatWeekStart } =
-    useDayjs();
-
-  return {
-    language: i18n.language, // this should be the value detected in
-    timeFormat: localeTimeFormat,
-    weekStart: localeTimeFormatWeekStart,
-    timeZone: getBrowserTimeZone(),
-  } as const;
+type Preferences = {
+  timeZone?: string | null;
+  locale?: string | null;
+  timeFormat?: TimeFormat | null;
+  weekStart?: number | null;
 };
 
-export const updateLanguage = (language: string) => {
-  Cookies.set("NEXT_LOCALE", language, {
-    expires: 30,
-  });
+type PreferencesContextValue = {
+  preferences: Preferences;
+  updatePreferences: (preferences: Partial<Preferences>) => void;
 };
 
-export const useUserPreferences = () => {
-  const { data, isFetched } = trpc.userPreferences.get.useQuery(undefined, {
-    staleTime: Infinity,
-    cacheTime: Infinity,
-  });
+const PreferencesContext = React.createContext<PreferencesContextValue>({
+  preferences: {},
+  updatePreferences: () => {},
+});
 
-  const sytemPreferences = useSystemPreferences();
+export const PreferencesProvider = ({
+  children,
+  initialValue,
+  onUpdate,
+}: {
+  children?: React.ReactNode;
+  initialValue: Partial<Preferences>;
+  onUpdate?: (preferences: Partial<Preferences>) => void;
+}) => {
+  const [preferences, setPreferences] = useSetState<Preferences>(initialValue);
 
-  // We decide the defaults by detecting the user's preferred locale from their browser
-  // by looking at the accept-language header.
-  if (isFetched) {
-    return {
-      automatic: data === null,
-      timeFormat: data?.timeFormat ?? sytemPreferences.timeFormat,
-      weekStart: data?.weekStart ?? sytemPreferences.weekStart,
-      timeZone: data?.timeZone ?? sytemPreferences.timeZone,
-    } as const;
-  }
+  return (
+    <PreferencesContext.Provider
+      value={{
+        preferences,
+        updatePreferences: (newPreferences) => {
+          setPreferences(newPreferences);
+          onUpdate?.(newPreferences);
+        },
+      }}
+    >
+      {children}
+    </PreferencesContext.Provider>
+  );
+};
+
+export const usePreferences = () => {
+  return React.useContext(PreferencesContext);
 };
