@@ -15,13 +15,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const token = ctx.query.token as string;
   const session = await getServerSession(ctx.req, ctx.res);
 
-  if (!session || session.user.isGuest) {
+  if (!session || session.user.email === null) {
     return {
       props: {},
       redirect: {
         destination:
-          "/api/auth/signin?callbackUrl=" +
-          encodeURIComponent(ctx.req.url ?? "/"),
+          "/login?callbackUrl=" + encodeURIComponent(ctx.req.url ?? "/"),
       },
     };
   }

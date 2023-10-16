@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import {
   Form,
   FormControl,
@@ -15,7 +14,7 @@ import { UserAvatar } from "@/components/user";
 import { useUser } from "@/components/user-provider";
 
 export const ProfileSettings = () => {
-  const { user } = useUser();
+  const { user, refresh } = useUser();
 
   const form = useForm<{
     name: string;
@@ -23,7 +22,7 @@ export const ProfileSettings = () => {
   }>({
     defaultValues: {
       name: user.isGuest ? "" : user.name,
-      email: user.isGuest ? "" : user.email,
+      email: user.email ?? "",
     },
   });
 
@@ -31,18 +30,12 @@ export const ProfileSettings = () => {
 
   const watchName = watch("name");
 
-  const queryClient = trpc.useContext();
-  const changeName = trpc.user.changeName.useMutation({
-    onSuccess: () => {
-      queryClient.whoami.invalidate();
-    },
-  });
   return (
     <div className="grid gap-y-4">
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            await changeName.mutateAsync({ name: data.name });
+            await refresh({ name: data.name });
             reset(data);
           })}
         >

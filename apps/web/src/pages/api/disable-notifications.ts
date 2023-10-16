@@ -16,7 +16,7 @@ export default async function handler(
 
   const session = await getServerSession(req, res);
 
-  if (!session || session.user.isGuest) {
+  if (!session || session.user.email === null) {
     res.redirect("/api/auth/signin");
     return;
   }

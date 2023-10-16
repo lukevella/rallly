@@ -150,7 +150,13 @@ const authOptions = {
               where: {
                 id: token.sub,
               },
-              data: session,
+              data: {
+                locale: session.locale,
+                timeFormat: session.timeFormat,
+                timeZone: session.timeZone,
+                weekStart: session.weekStart,
+                name: session.name,
+              },
             });
           } catch (e) {
             console.error("Failed to update user preferences", session);
@@ -170,6 +176,7 @@ const authOptions = {
     },
     async session({ session, token }) {
       session.user.id = token.sub as string;
+      session.user.name = token.name;
       session.user.timeFormat = token.timeFormat;
       session.user.timeZone = token.timeZone;
       session.user.locale = token.locale;

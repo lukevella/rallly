@@ -253,11 +253,11 @@ export const ConnectedDayjsProvider = ({
   return (
     <DayjsProvider
       config={{
-        locale: preferences.locale,
-        timeZone: preferences.timeZone,
+        locale: preferences.locale ?? undefined,
+        timeZone: preferences.timeZone ?? undefined,
         localeOverrides: {
-          weekStart: preferences.weekStart,
-          timeFormat: preferences.timeFormat,
+          weekStart: preferences.weekStart ?? undefined,
+          timeFormat: preferences.timeFormat ?? undefined,
         },
       }}
     >
