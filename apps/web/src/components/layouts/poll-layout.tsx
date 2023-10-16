@@ -31,6 +31,7 @@ import {
   TopBar,
   TopBarTitle,
 } from "@/components/layouts/standard-layout/top-bar";
+import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
   PageDialogDescription,
@@ -157,7 +158,7 @@ const AdminControls = () => {
   const router = useRouter();
   return (
     <TopBar>
-      <div className="flex flex-col items-start justify-between gap-y-2 gap-x-4 sm:flex-row">
+      <div className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
         <div className="flex min-w-0 gap-4">
           {router.asPath !== pollLink ? (
             <Button asChild>
@@ -219,10 +220,10 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
         <PageDialogFooter>
           {user.isGuest ? (
             <Button asChild variant="primary" size="lg">
-              <Link href="/login">
+              <LoginLink>
                 <LogInIcon className="-ml-1 h-5 w-5" />
                 <Trans i18nKey="login" defaults="Login" />
-              </Link>
+              </LoginLink>
             </Button>
           ) : (
             <Button asChild variant="primary" size="lg">
@@ -271,7 +272,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   if (!poll.data || !watchers.data || !participants.data) {
     return (
       <div>
-        <TopBar className="flex flex-col items-start justify-between gap-y-2 gap-x-4 sm:flex-row">
+        <TopBar className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
           <Skeleton className="my-2 h-5 w-48" />
           <div className="flex gap-x-2">
             <Skeleton className="h-9 w-24" />

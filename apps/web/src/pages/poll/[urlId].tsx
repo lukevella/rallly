@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Trans } from "next-i18next";
 
 import { getPollLayout } from "@/components/layouts/poll-layout";
+import { LoginLink } from "@/components/login-link";
 import { Poll } from "@/components/poll";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
@@ -40,11 +41,7 @@ const GuestPollAlert = () => {
               key="register"
               href="/register"
             />,
-            <Link
-              className="hover:text-primary underline"
-              key="login"
-              href="/login"
-            />,
+            <LoginLink className="hover:text-primary underline" key="login" />,
           ]}
         />
       </AlertDescription>
