@@ -61,9 +61,9 @@ export const auth = router({
         | { ok: true; token: string }
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
-        // if (isEmailBlocked(input.email)) {
-        //   return { ok: false, reason: "emailNotAllowed" };
-        // }
+        if (ctx.isEmailBlocked?.(input.email)) {
+          return { ok: false, reason: "emailNotAllowed" };
+        }
 
         const user = await prisma.user.findUnique({
           select: {

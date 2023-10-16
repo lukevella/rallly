@@ -127,8 +127,6 @@ test.describe.serial(() => {
 
       await page.goto(magicLink);
 
-      page.getByText("Click here").click();
-
       await page.waitForURL("/polls");
     });
 

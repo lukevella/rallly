@@ -26,7 +26,7 @@ const config: PlaywrightTestConfig = {
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `NODE_ENV=test yarn dev --port ${PORT}`,
+    command: `NODE_ENV=test NEXTAUTH_URL=${baseURL} yarn dev --port ${PORT}`,
     url: baseURL,
     timeout: 120 * 1000,
     reuseExistingServer: !ci,

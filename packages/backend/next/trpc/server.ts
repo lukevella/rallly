@@ -7,6 +7,7 @@ export interface TRPCContext {
   user: { id: string; isGuest: boolean };
   emailClient: EmailClient;
   isSelfHosted: boolean;
+  isEmailBlocked?: (email: string) => boolean;
 }
 
 export const trpcNextApiHandler = (context: TRPCContext) => {

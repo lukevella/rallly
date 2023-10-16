@@ -1,7 +1,7 @@
 import { trpcNextApiHandler } from "@rallly/backend/next/trpc/server";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getServerSession } from "@/utils/auth";
+import { getServerSession, isEmailBlocked } from "@/utils/auth";
 import { isSelfHosted } from "@/utils/constants";
 import { emailClient } from "@/utils/emails";
 
@@ -30,5 +30,6 @@ export default async function handler(
     },
     emailClient,
     isSelfHosted,
+    isEmailBlocked,
   })(req, res);
 }
