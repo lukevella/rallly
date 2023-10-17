@@ -13,6 +13,7 @@ import { CommandList } from "cmdk";
 import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import React from "react";
+import spacetime from "spacetime";
 
 import { Trans } from "@/components/trans";
 
@@ -78,10 +79,68 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
   );
 };
 
+const findFuzzyTz = (zone: string) => {
+  let currentTime = spacetime.now("GMT");
+  try {
+    currentTime = spacetime.now(zone);
+  } catch (err) {
+    return;
+  }
+
+  const currentOffset = dayjs().tz(zone).utcOffset();
+
+  return options
+    .filter((tz) => {
+      const offset = dayjs().tz(tz.value).utcOffset();
+      return offset === currentOffset;
+    })
+    .map((tz) => {
+      let score = 0;
+      if (
+        currentTime.timezones[tz.value.toLowerCase()] &&
+        !!currentTime.timezones[tz.value.toLowerCase()].dst ===
+          currentTime.timezone().hasDst
+      ) {
+        if (
+          tz.value
+            .toLowerCase()
+            .indexOf(
+              currentTime.tz.substring(currentTime.tz.indexOf("/") + 1),
+            ) !== -1
+        ) {
+          score += 8;
+        }
+        if (
+          tz.label
+            .toLowerCase()
+            .indexOf(
+              currentTime.tz.substring(currentTime.tz.indexOf("/") + 1),
+            ) !== -1
+        ) {
+          score += 4;
+        }
+        if (
+          tz.value
+            .toLowerCase()
+            .indexOf(currentTime.tz.substring(0, currentTime.tz.indexOf("/")))
+        ) {
+          score += 2;
+        }
+        score += 1;
+      } else if (tz.value === "GMT") {
+        score += 1;
+      }
+      return { tz, score };
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(({ tz }) => tz)[0];
+};
+
 export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
   ({ value, onValueChange, disabled }, ref) => {
     const [open, setOpen] = React.useState(false);
     const popoverContentId = "timeZoneSelect__popoverContent";
+    const fuzzyValue = value ? findFuzzyTz(value) : undefined;
 
     return (
       <Popover modal={false} open={open} onOpenChange={setOpen}>
@@ -97,8 +156,8 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
           >
             <GlobeIcon className="h-4 w-4" />
             <span className="grow truncate text-left">
-              {value ? (
-                options.find((option) => option.value === value)?.label
+              {fuzzyValue ? (
+                fuzzyValue.label
               ) : (
                 <Trans
                   i18nKey="timeZoneSelect__defaultValue"
