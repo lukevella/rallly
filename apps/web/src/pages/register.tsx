@@ -13,6 +13,7 @@ import { useDefaultEmail, VerifyCode } from "@/components/auth/auth-forms";
 import { StandardLayout } from "@/components/layouts/standard-layout";
 import { TextInput } from "@/components/text-input";
 import { NextPageWithLayout } from "@/types";
+import { useDayjs } from "@/utils/dayjs";
 import { requiredString, validEmail } from "@/utils/form-validation";
 
 import { AuthLayout } from "../components/auth/auth-layout";
@@ -29,6 +30,7 @@ export const RegisterForm: React.FunctionComponent<{
 }> = ({ onClickLogin, onRegistered }) => {
   const [defaultEmail, setDefaultEmail] = useDefaultEmail();
   const { t } = useTranslation();
+  const { timeZone } = useDayjs();
   const router = useRouter();
   const { register, handleSubmit, getValues, setError, formState } =
     useForm<RegisterFormData>({
@@ -46,7 +48,6 @@ export const RegisterForm: React.FunctionComponent<{
       <VerifyCode
         onSubmit={async (code) => {
           // get user's time zone
-          const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
           const locale = router.locale;
           const res = await authenticateRegistration.mutateAsync({
             token,
