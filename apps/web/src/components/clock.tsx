@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { GlobeIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
@@ -25,11 +24,6 @@ import { useDayjs } from "@/utils/dayjs";
 export const TimePreferences = () => {
   const { preferences, updatePreferences } = usePreferences();
   const { timeFormat, timeZone } = useDayjs();
-  const { data } = trpc.userPreferences.get.useQuery();
-
-  if (data === undefined) {
-    return null;
-  }
 
   return (
     <div className="grid gap-4">
