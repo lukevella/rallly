@@ -26,8 +26,7 @@ type RegisterFormData = {
 
 export const RegisterForm: React.FunctionComponent<{
   onClickLogin?: React.MouseEventHandler;
-  onRegistered?: () => void;
-}> = ({ onClickLogin, onRegistered }) => {
+}> = ({ onClickLogin }) => {
   const [defaultEmail, setDefaultEmail] = useDefaultEmail();
   const { t } = useTranslation();
   const { timeZone } = useDayjs();
@@ -62,7 +61,6 @@ export const RegisterForm: React.FunctionComponent<{
 
           queryClient.invalidate();
 
-          onRegistered?.();
           posthog?.identify(res.user.id, {
             email: res.user.email,
             name: res.user.name,
@@ -187,17 +185,12 @@ export const RegisterForm: React.FunctionComponent<{
 const Page: NextPageWithLayout = () => {
   const { t } = useTranslation();
 
-  const router = useRouter();
   return (
     <AuthLayout>
       <Head>
         <title>{t("register")}</title>
       </Head>
-      <RegisterForm
-        onRegistered={() => {
-          router.replace("/");
-        }}
-      />
+      <RegisterForm />
     </AuthLayout>
   );
 };
