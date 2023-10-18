@@ -1,5 +1,5 @@
 import { decryptToken } from "@rallly/backend/session";
-import { prisma } from "@rallly/database";
+import { prisma, TimeFormat } from "@rallly/database";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 /**
@@ -26,6 +26,11 @@ export const LegacyTokenProvider = CredentialsProvider({
         user: {
           id: string;
           isGuest: boolean;
+          preferences?: {
+            weekStart?: number;
+            timeZone?: string;
+            timeFormat?: TimeFormat;
+          };
         };
       }>(credentials.token);
 
@@ -34,7 +39,9 @@ export const LegacyTokenProvider = CredentialsProvider({
           return {
             id: session.user.id,
             email: null,
-            name: "Guest",
+            weekStart: session.user.preferences?.weekStart,
+            timeZone: session.user.preferences?.timeZone,
+            timeFormat: session.user.preferences?.timeFormat,
           };
         } else {
           const user = await prisma.user.findUnique({
