@@ -24,7 +24,7 @@ const userSchema = z.object({
 
 export const UserContext = React.createContext<{
   user: z.infer<typeof userSchema>;
-  refresh: (data: Record<string, unknown>) => Promise<Session | null>;
+  refresh: (data?: Record<string, unknown>) => Promise<Session | null>;
   ownsObject: (obj: { userId: string | null }) => boolean;
 } | null>(null);
 
