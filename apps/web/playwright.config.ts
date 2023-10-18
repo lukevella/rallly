@@ -29,6 +29,9 @@ const config: PlaywrightTestConfig = {
     timeout: 120 * 1000,
     reuseExistingServer: !ci,
   },
+  expect: {
+    timeout: 10000, // 10 seconds
+  },
   reporter: [
     [ci ? "github" : "list"],
     ["html", { open: !ci ? "on-failure" : "never" }],
