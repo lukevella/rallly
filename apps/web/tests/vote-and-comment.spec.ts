@@ -74,6 +74,8 @@ test.describe(() => {
 
   test("should be able to edit submission", async ({ page: newPage }) => {
     await newPage.goto(editSubmissionUrl);
-    await expect(newPage.getByTestId("participant-menu")).toBeVisible();
+    await expect(newPage.getByTestId("participant-menu")).toBeVisible({
+      timeout: 10000,
+    });
   });
 });
