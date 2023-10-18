@@ -68,8 +68,6 @@ test.describe.serial(() => {
 
       const codeInput = page.getByPlaceholder("Enter your 6-digit code");
 
-      codeInput.waitFor({ state: "visible" });
-
       const code = await getCode();
 
       await codeInput.type(code);
