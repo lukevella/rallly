@@ -73,6 +73,7 @@ export const RegisterForm: React.FunctionComponent<{
 
           signIn("registration-token", {
             token,
+            callbackUrl: router.query.callbackUrl as string,
           });
         }}
         onChange={() => setToken(undefined)}

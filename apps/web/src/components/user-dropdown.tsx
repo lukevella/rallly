@@ -25,6 +25,7 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 
 import { LoginLink } from "@/components/login-link";
+import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
@@ -137,10 +138,10 @@ export const UserDropdown = () => {
             </LoginLink>
           </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
-            <Link href="/register" className="flex items-center gap-x-2">
+            <RegisterLink className="flex items-center gap-x-2">
               <UserPlusIcon className="h-4 w-4" />
               <Trans i18nKey="createAnAccount" defaults="Register" />
-            </Link>
+            </RegisterLink>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="flex items-center gap-x-2"
