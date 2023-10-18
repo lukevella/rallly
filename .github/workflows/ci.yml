@@ -58,9 +58,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "DATABASE_URL=postgresql://postgres:password@localhost:5432/db" >> $GITHUB_ENV
-          echo "SECRET_PASSWORD=abcdefghijklmnopqrstuvwxyz1234567890" >> $GITHUB_ENV
-          echo "SUPPORT_EMAIL=support@rallly.co" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgresql://postgres:password@localhost:5432/rallly" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -68,7 +66,7 @@ jobs:
       - name: Run db
         run: |
           docker pull postgres:14.2
-          docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db postgres:14.2
+          docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=rallly postgres:14.2
           yarn wait-on --timeout 60000 tcp:localhost:5432
 
       - name: Deploy migrations
