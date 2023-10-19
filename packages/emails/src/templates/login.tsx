@@ -1,3 +1,4 @@
+import { useEmailContext } from "./components/email-context";
 import { EmailLayout } from "./components/email-layout";
 import {
   Button,
@@ -7,7 +8,6 @@ import {
   Text,
   trackingWide,
 } from "./components/styled-components";
-import { getDomain } from "./components/utils";
 
 interface LoginEmailProps {
   name: string;
@@ -20,6 +20,7 @@ export const LoginEmail = ({
   code = "123456",
   magicLink = "https://rallly.co",
 }: LoginEmailProps) => {
+  const { domain } = useEmailContext();
   return (
     <EmailLayout
       footNote={
@@ -39,7 +40,7 @@ export const LoginEmail = ({
         <Heading>Option 1: Magic Link</Heading>
         <Text>Click this magic link to log in on this device.</Text>
         <Button href={magicLink} id="magicLink">
-          Log in to {getDomain()}
+          Log in to {domain}
         </Button>
         <Text light={true}>This link will expire in 15 minutes.</Text>
       </Card>

@@ -1,6 +1,6 @@
+import { useEmailContext } from "./components/email-context";
 import { EmailLayout } from "./components/email-layout";
 import { Button, Domain, Section, Text } from "./components/styled-components";
-import { getDomain } from "./components/utils";
 
 interface NewParticipantConfirmationEmailProps {
   name: string;
@@ -12,6 +12,7 @@ export const NewParticipantConfirmationEmail = ({
   name = "John",
   editSubmissionUrl = "https://rallly.co",
 }: NewParticipantConfirmationEmailProps) => {
+  const { domain } = useEmailContext();
   return (
     <EmailLayout
       footNote={
@@ -32,7 +33,7 @@ export const NewParticipantConfirmationEmail = ({
       </Text>
       <Section>
         <Button id="editSubmissionUrl" href={editSubmissionUrl}>
-          Review response on {getDomain()}
+          Review response on {domain}
         </Button>
       </Section>
     </EmailLayout>

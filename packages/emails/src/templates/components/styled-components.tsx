@@ -11,7 +11,6 @@ import {
 } from "@react-email/components";
 
 import { useEmailContext } from "./email-context";
-import { getDomain } from "./utils";
 
 export const borderColor = "#E2E8F0";
 export const Text = (
@@ -34,8 +33,8 @@ export const Text = (
 };
 
 export const Domain = () => {
-  const { baseUrl } = useEmailContext();
-  return <Link href={baseUrl}>{getDomain(baseUrl)}</Link>;
+  const { baseUrl, domain } = useEmailContext();
+  return <Link href={baseUrl}>{domain}</Link>;
 };
 
 export const Button = (props: ButtonProps) => {

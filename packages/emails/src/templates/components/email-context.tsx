@@ -11,5 +11,9 @@ export const EmailContext = React.createContext<EmailContext>({
 });
 
 export const useEmailContext = () => {
-  return React.useContext(EmailContext);
+  const context = React.useContext(EmailContext);
+  return {
+    ...context,
+    domain: context.baseUrl.replace(/(^\w+:|^)\/\//, ""),
+  };
 };

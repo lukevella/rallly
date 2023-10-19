@@ -1,6 +1,6 @@
+import { useEmailContext } from "./email-context";
 import { EmailLayout } from "./email-layout";
 import { Button, Link, Text } from "./styled-components";
-import { getDomain } from "./utils";
 
 export interface NotificationBaseProps {
   name: string;
@@ -20,6 +20,7 @@ export const NotificationEmail = ({
   preview,
   children,
 }: React.PropsWithChildren<NotificationEmailProps>) => {
+  const { domain } = useEmailContext();
   return (
     <EmailLayout
       recipientName={name}
@@ -36,7 +37,7 @@ export const NotificationEmail = ({
     >
       {children}
       <Text>
-        <Button href={pollUrl}>View on {getDomain()}</Button>
+        <Button href={pollUrl}>View on {domain}</Button>
       </Text>
     </EmailLayout>
   );
