@@ -1,5 +1,4 @@
 import { ArrowLeftIcon } from "@rallly/icons";
-import { absoluteUrl } from "@rallly/utils";
 import { GetStaticPropsContext } from "next";
 import ErrorPage from "next/error";
 import Head from "next/head";
@@ -14,6 +13,7 @@ import { getBlogLayout } from "@/components/layouts/blog-layout";
 import { getAllPosts, getPostBySlug } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
 import { NextPageWithLayout, Post } from "@/types";
+import { absoluteUrl } from "@/utils/absolute-url";
 import { getStaticTranslations } from "@/utils/page-translations";
 
 type Props = {

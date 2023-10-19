@@ -8,6 +8,13 @@ export interface TRPCContext {
   emailClient: EmailClient;
   isSelfHosted: boolean;
   isEmailBlocked?: (email: string) => boolean;
+  /**
+   * Takes a relative path and returns an absolute URL to the app
+   * @param path
+   * @returns absolute URL
+   */
+  absoluteUrl: (path?: string) => string;
+  shortUrl: (path?: string) => string;
 }
 
 export const trpcNextApiHandler = (context: TRPCContext) => {

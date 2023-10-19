@@ -28,8 +28,3 @@ export function absoluteUrl(subpath = "", query?: Record<string, string>) {
 
   return joinPath(baseUrl, subpath) + queryString;
 }
-
-export function shortUrl(subpath = "") {
-  const baseUrl = process.env.NEXT_PUBLIC_SHORT_BASE_URL ?? absoluteUrl();
-  return joinPath(baseUrl, subpath);
-}

@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { absoluteUrl } from "@rallly/utils";
 import { z } from "zod";
 
 import { createToken } from "../../../session";
@@ -87,8 +86,8 @@ export const comments = router({
             props: {
               name: watcher.user.name,
               authorName,
-              pollUrl: absoluteUrl(`/poll/${poll.id}`),
-              disableNotificationsUrl: absoluteUrl(
+              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
+              disableNotificationsUrl: ctx.absoluteUrl(
                 `/auth/disable-notifications?token=${token}`,
               ),
               title: poll.title,

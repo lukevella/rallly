@@ -2,7 +2,6 @@ import { trpc } from "@rallly/backend";
 import { prisma } from "@rallly/database";
 import { ArrowUpLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import { absoluteUrl } from "@rallly/utils";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -19,6 +18,7 @@ import { UserProvider, useUser } from "@/components/user-provider";
 import { VisibilityProvider } from "@/components/visibility";
 import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
+import { absoluteUrl } from "@/utils/absolute-url";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 

@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
-import { shortUrl } from "@rallly/utils";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
@@ -16,6 +15,7 @@ import { useCopyToClipboard } from "react-use";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { shortUrl } from "@/utils/absolute-url";
 import { isSelfHosted } from "@/utils/constants";
 
 export const InviteDialog = () => {
