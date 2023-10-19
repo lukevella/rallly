@@ -112,6 +112,7 @@ const authOptions = {
   pages: {
     signIn: "/login",
     signOut: "/logout",
+    error: "/auth/error",
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
