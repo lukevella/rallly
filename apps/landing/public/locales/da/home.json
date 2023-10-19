@@ -1,6 +1,11 @@
 {
+  "createPageLikeThis": "Opret en side som denne hurtigt!",
   "noLoginRequired": "Intet login påkrævet",
   "viaTrustpilot": "via Trustpilot",
+  "statsUsersRegistered": "Over 45.000 registrerede brugere",
+  "statsPollsCreated": "Over 100.000 afstemninger",
+  "statsLanguagesSupported": "Over 10 sprog understøttet",
+  "hint": "Det er gratis! Intet login kræves.",
   "doodleAlternative": "Det bedste gratis alternativ til Doodle",
   "findATimeTitle": "Find et tidspunkt at mødes",
   "new": "Ny",
