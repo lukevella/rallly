@@ -1,9 +1,10 @@
 import { getSession } from "@rallly/backend/next/session";
 import { stripe } from "@rallly/backend/stripe";
 import { prisma } from "@rallly/database";
-import { absoluteUrl } from "@rallly/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
+
+import { absoluteUrl } from "@/utils/absolute-url";
 
 export const config = {
   edge: true,

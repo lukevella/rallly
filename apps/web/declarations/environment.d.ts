@@ -10,10 +10,6 @@ declare global {
        */
       NODE_ENV: "development" | "production";
       /**
-       * Set to "true" to take users straight to app instead of landing page
-       */
-      DISABLE_LANDING_PAGE?: string;
-      /**
        * Must be 32 characters long
        */
       SECRET_PASSWORD: string;
@@ -84,10 +80,6 @@ declare global {
        * The app version just for reference
        */
       NEXT_PUBLIC_APP_VERSION?: string;
-      /**
-       * "true" to enable finalization of polls
-       */
-      NEXT_PUBLIC_ENABLE_FINALIZATION?: string;
     }
   }
 }

@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { absoluteUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -112,7 +111,7 @@ export const participants = router({
             props: {
               name,
               title: poll.title,
-              editSubmissionUrl: absoluteUrl(
+              editSubmissionUrl: ctx.absoluteUrl(
                 `/invite/${poll.id}?token=${token}`,
               ),
             },
@@ -149,8 +148,8 @@ export const participants = router({
             props: {
               name: watcher.user.name,
               participantName: participant.name,
-              pollUrl: absoluteUrl(`/poll/${poll.id}`),
-              disableNotificationsUrl: absoluteUrl(
+              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
+              disableNotificationsUrl: ctx.absoluteUrl(
                 `/auth/disable-notifications?token=${token}`,
               ),
               title: poll.title,

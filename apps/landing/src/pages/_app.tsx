@@ -2,7 +2,6 @@ import "tailwindcss/tailwind.css";
 import "../style.css";
 
 import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
-import { absoluteUrl } from "@rallly/utils";
 import { inject } from "@vercel/analytics";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -15,6 +14,8 @@ import { useRouter } from "next/router";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo, SoftwareAppJsonLd } from "next-seo";
 import React from "react";
+
+import { absoluteUrl } from "@/utils/absolute-url";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
 import { NextPageWithLayout } from "../types";

@@ -7,6 +7,7 @@ import previewEmail from "preview-email";
 import React from "react";
 
 import * as templates from "./templates";
+import { EmailContext } from "./templates/components/email-context";
 
 type Templates = typeof templates;
 
@@ -15,7 +16,6 @@ type TemplateName = keyof typeof templates;
 type TemplateProps<T extends TemplateName> = React.ComponentProps<
   TemplateComponent<T>
 >;
-
 type TemplateComponent<T extends TemplateName> = Templates[T];
 
 type SendEmailOptions<T extends TemplateName> = {
@@ -59,6 +59,10 @@ type EmailClientConfig = {
       address: string;
     };
   };
+  /**
+   * Context to pass to each email
+   */
+  context: EmailContext;
 };
 
 export class EmailClient {
@@ -79,8 +83,14 @@ export class EmailClient {
     }
 
     const Template = templates[templateName] as TemplateComponent<T>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const html = render(<Template {...(options.props as any)} />);
+    const html = render(
+      <EmailContext.Provider value={this.config.context}>
+        <Template
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          {...(options.props as any)}
+        />
+      </EmailContext.Provider>,
+    );
 
     try {
       await this.sendEmail({

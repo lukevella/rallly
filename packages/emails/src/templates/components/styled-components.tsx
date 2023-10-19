@@ -1,4 +1,3 @@
-import { absoluteUrl } from "@rallly/utils";
 import {
   Button as UnstyledButton,
   ButtonProps,
@@ -11,7 +10,7 @@ import {
   TextProps,
 } from "@react-email/components";
 
-import { getDomain } from "./utils";
+import { useEmailContext } from "./email-context";
 
 export const borderColor = "#E2E8F0";
 export const Text = (
@@ -34,7 +33,8 @@ export const Text = (
 };
 
 export const Domain = () => {
-  return <Link href={absoluteUrl()}>{getDomain()}</Link>;
+  const { baseUrl, domain } = useEmailContext();
+  return <Link href={baseUrl}>{domain}</Link>;
 };
 
 export const Button = (props: ButtonProps) => {

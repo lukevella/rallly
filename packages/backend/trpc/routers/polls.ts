@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { absoluteUrl, shortUrl } from "@rallly/utils";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
@@ -121,9 +120,9 @@ export const polls = router({
         },
       });
 
-      const pollLink = absoluteUrl(`/poll/${pollId}`);
+      const pollLink = ctx.absoluteUrl(`/poll/${pollId}`);
 
-      const participantLink = shortUrl(`/invite/${pollId}`);
+      const participantLink = ctx.shortUrl(`/invite/${pollId}`);
 
       if (ctx.user.isGuest === false) {
         const user = await prisma.user.findUnique({
@@ -658,7 +657,7 @@ export const polls = router({
           to: poll.user.email,
           props: {
             name: poll.user.name,
-            pollUrl: absoluteUrl(`/poll/${poll.id}`),
+            pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
             location: poll.location,
             title: poll.title,
             attendees: poll.participants
@@ -682,7 +681,7 @@ export const polls = router({
             to: p.email,
             props: {
               name: p.name,
-              pollUrl: absoluteUrl(`/poll/${poll.id}`),
+              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
               location: poll.location,
               title: poll.title,
               hostName: poll.user?.name ?? "",
