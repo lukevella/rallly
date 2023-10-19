@@ -1,4 +1,3 @@
-import { absoluteUrl } from "@rallly/utils";
 import {
   Body,
   Container,
@@ -9,6 +8,7 @@ import {
   Preview,
 } from "@react-email/components";
 
+import { useEmailContext } from "./email-context";
 import { fontFamily, Section, Text } from "./styled-components";
 
 export interface EmailLayoutProps {
@@ -43,13 +43,14 @@ export const EmailLayout = ({
   children,
   footNote,
 }: React.PropsWithChildren<EmailLayoutProps>) => {
+  const { logoUrl, baseUrl } = useEmailContext();
   return (
     <Html>
       <Head />
       <Preview>{preview}</Preview>
       <Body style={{ backgroundColor: "#F3F4F6", padding: "16px" }}>
         <Container style={containerStyles}>
-          <Img src={absoluteUrl("/logo.png")} alt="Rallly" width={128} />
+          <Img src={logoUrl} alt="Rallly" width={128} />
           <Section style={sectionStyles}>
             <Text>Hi {recipientName},</Text>
             {children}
@@ -68,7 +69,7 @@ export const EmailLayout = ({
             ) : null}
           </Section>
           <Section style={{ ...sectionStyles, fontSize: 14, marginBottom: 0 }}>
-            <Link style={linkStyles} href={absoluteUrl()}>
+            <Link style={linkStyles} href={baseUrl}>
               Home
             </Link>
             <span>&nbsp;&bull;&nbsp;</span>

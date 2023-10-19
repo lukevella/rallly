@@ -1,5 +1,4 @@
-import { absoluteUrl } from "@rallly/utils";
-
+import { useEmailContext } from "./components/email-context";
 import { EmailLayout } from "./components/email-layout";
 import { Button, Card, Link, Text } from "./components/styled-components";
 import { getDomain } from "./components/utils";
@@ -40,12 +39,13 @@ export const NewPollEmail = ({
   adminLink = "https://rallly.co/admin/abcdefg123",
   participantLink = "https://rallly.co/invite/wxyz9876",
 }: NewPollEmailProps) => {
+  const { baseUrl } = useEmailContext();
   return (
     <EmailLayout
       footNote={
         <>
           You are receiving this email because a new poll was created with this
-          email address on <Link href={absoluteUrl()}>{getDomain()}</Link>. If
+          email address on <Link href={baseUrl}>{getDomain(baseUrl)}</Link>. If
           this wasn&apos;t you, please ignore this email.
         </>
       }
