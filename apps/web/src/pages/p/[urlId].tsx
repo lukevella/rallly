@@ -1,36 +1,39 @@
-/**
- * This page is used to redirect older links to the new invite page
- */
 import { prisma } from "@rallly/database";
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 
 const Page = () => {
   return null;
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const participantUrlId = ctx.query.urlId as string;
-  const token = ctx.query.token as string;
+export default Page;
 
-  const res = await prisma.poll.findUnique({
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: true,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  // We get these props to be able to render the og:image
+  const poll = await prisma.poll.findUnique({
     where: {
-      participantUrlId: participantUrlId,
+      participantUrlId: ctx.params?.urlId as string,
     },
     select: {
       id: true,
     },
   });
 
-  if (!res) {
-    return { notFound: true };
+  if (!poll) {
+    return { props: {}, notFound: 404 };
   }
 
   return {
+    props: {},
     redirect: {
-      destination: `/invite/${res.id}${token ? `?token=${token}` : ""}`,
+      destination: `/poll/${poll.id}`,
       permanent: true,
     },
   };
 };
-
-export default Page;

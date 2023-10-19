@@ -15,6 +15,7 @@ import {
   FeaturebaseIdentify,
 } from "@/components/featurebase";
 import FeedbackButton from "@/components/feedback";
+import { LoginLink } from "@/components/login-link";
 import { Logo } from "@/components/logo";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
@@ -22,7 +23,7 @@ import { UserDropdown } from "@/components/user-dropdown";
 import { IfCloudHosted } from "@/contexts/environment";
 import { IfFreeUser } from "@/contexts/plan";
 import { appVersion, isFeedbackEnabled } from "@/utils/constants";
-import { DayjsProvider } from "@/utils/dayjs";
+import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
@@ -153,9 +154,9 @@ const MainNav = () => {
                 asChild
                 className="hidden sm:flex"
               >
-                <Link href="/login">
+                <LoginLink>
                   <Trans i18nKey="login" defaults="Login" />
-                </Link>
+                </LoginLink>
               </Button>
             </IfGuest>
             <IfCloudHosted>
@@ -179,10 +180,9 @@ export const StandardLayout: React.FunctionComponent<{
   hideNav?: boolean;
 }> = ({ children, hideNav, ...rest }) => {
   const key = hideNav ? "no-nav" : "nav";
-
   return (
     <UserProvider>
-      <DayjsProvider>
+      <ConnectedDayjsProvider>
         <Toaster />
         <ModalProvider>
           <div className="flex min-h-screen flex-col" {...rest}>
@@ -222,7 +222,7 @@ export const StandardLayout: React.FunctionComponent<{
             </>
           ) : null}
         </ModalProvider>
-      </DayjsProvider>
+      </ConnectedDayjsProvider>
     </UserProvider>
   );
 };

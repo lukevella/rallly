@@ -6,13 +6,7 @@ import { publicProcedure, router } from "../trpc";
 export const userPreferences = router({
   get: publicProcedure.query(async ({ ctx }) => {
     if (ctx.user.isGuest) {
-      return ctx.user.preferences
-        ? {
-            timeZone: ctx.user.preferences.timeZone ?? null,
-            timeFormat: ctx.user.preferences.timeFormat ?? null,
-            weekStart: ctx.user.preferences.weekStart ?? null,
-          }
-        : null;
+      return null;
     } else {
       return await prisma.userPreferences.findUnique({
         where: {
@@ -48,21 +42,11 @@ export const userPreferences = router({
             ...input,
           },
         });
-      } else {
-        ctx.session.user = {
-          ...ctx.user,
-          preferences: { ...ctx.user.preferences, ...input },
-        };
-        await ctx.session.save();
       }
     }),
   delete: publicProcedure.mutation(async ({ ctx }) => {
     if (ctx.user.isGuest) {
-      ctx.session.user = {
-        ...ctx.user,
-        preferences: undefined,
-      };
-      await ctx.session.save();
+      // delete guest preferences
     } else {
       await prisma.userPreferences.delete({
         where: {

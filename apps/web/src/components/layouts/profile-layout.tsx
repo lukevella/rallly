@@ -20,7 +20,7 @@ import { IfCloudHosted } from "@/contexts/environment";
 import { Plan } from "@/contexts/plan";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
-import { useUser } from "../user-provider";
+import { IfAuthenticated, useUser } from "../user-provider";
 
 const MenuItem = (props: {
   icon: IconComponent;
@@ -79,9 +79,11 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
                   </div>
                   <Plan />
                 </div>
-                <MenuItem href="/settings/profile" icon={UserIcon}>
-                  <Trans i18nKey="profile" defaults="Profile" />
-                </MenuItem>
+                <IfAuthenticated>
+                  <MenuItem href="/settings/profile" icon={UserIcon}>
+                    <Trans i18nKey="profile" defaults="Profile" />
+                  </MenuItem>
+                </IfAuthenticated>
                 <MenuItem href="/settings/preferences" icon={Settings2Icon}>
                   <Trans i18nKey="preferences" defaults="Preferences" />
                 </MenuItem>

@@ -1,11 +1,8 @@
 export type RegistrationTokenPayload = {
   name: string;
   email: string;
-  code: string;
-};
-
-export type LoginTokenPayload = {
-  userId: string;
+  locale?: string;
+  timeZone?: string;
   code: string;
 };
 

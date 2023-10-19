@@ -17,18 +17,24 @@ enum TimeFormat {
 }
 
 model User {
-  id             String        @id @default(cuid())
+  id             String      @id @default(cuid())
   name           String
-  email          String        @unique() @db.Citext
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime?     @updatedAt @map("updated_at")
-  comments       Comment[]
-  polls          Poll[]
-  watcher        Watcher[]
-  events         Event[]
-  customerId     String?       @map("customer_id")
-  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
-  subscriptionId String?       @unique @map("subscription_id")
+  email          String      @unique() @db.Citext
+  emailVerified  DateTime?   @map("email_verified")
+  timeZone       String?     @map("time_zone")
+  weekStart      Int?        @map("week_start")
+  timeFormat     TimeFormat? @map("time_format")
+  locale         String?
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime?   @updatedAt @map("updated_at")
+  customerId     String?     @map("customer_id")
+  subscriptionId String?     @unique @map("subscription_id")
+
+  comments     Comment[]
+  polls        Poll[]
+  watcher      Watcher[]
+  events       Event[]
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
 
   @@map("users")
 }
@@ -70,6 +76,7 @@ model Subscription {
   @@map("subscriptions")
 }
 
+// @deprecated
 model UserPreferences {
   userId     String      @id @map("user_id")
   timeZone   String?     @map("time_zone")
@@ -218,4 +225,13 @@ model Comment {
   @@index([userId], type: Hash)
   @@index([pollId], type: Hash)
   @@map("comments")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }

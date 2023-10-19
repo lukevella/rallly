@@ -121,9 +121,7 @@ export const polls = router({
         },
       });
 
-      const pollLink = ctx.user.isGuest
-        ? absoluteUrl(`/admin/${adminToken}`)
-        : absoluteUrl(`/poll/${pollId}`);
+      const pollLink = absoluteUrl(`/poll/${pollId}`);
 
       const participantLink = shortUrl(`/invite/${pollId}`);
 
@@ -288,7 +286,7 @@ export const polls = router({
         });
       }
 
-      const res = await prisma.watcher.findFirst({
+      const watcher = await prisma.watcher.findFirst({
         where: {
           pollId: input.pollId,
           userId: ctx.user.id,
@@ -298,18 +296,13 @@ export const polls = router({
         },
       });
 
-      if (!res) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Not watching this poll",
+      if (watcher) {
+        await prisma.watcher.delete({
+          where: {
+            id: watcher.id,
+          },
         });
       }
-
-      await prisma.watcher.delete({
-        where: {
-          id: res.id,
-        },
-      });
     }),
   getByAdminUrlId: possiblyPublicProcedure
     .input(
@@ -321,28 +314,6 @@ export const polls = router({
       const res = await prisma.poll.findUnique({
         select: {
           id: true,
-          timeZone: true,
-          title: true,
-          location: true,
-          description: true,
-          createdAt: true,
-          adminUrlId: true,
-          participantUrlId: true,
-          closed: true,
-          legacy: true,
-          demo: true,
-          options: {
-            orderBy: {
-              start: "asc",
-            },
-          },
-          user: true,
-          deleted: true,
-          watchers: {
-            select: {
-              userId: true,
-            },
-          },
         },
         where: {
           adminUrlId: input.urlId,

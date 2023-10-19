@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { HelpCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
@@ -7,6 +6,7 @@ import Script from "next/script";
 import React from "react";
 
 import { Trans } from "@/components/trans";
+import { useUser } from "@/components/user-provider";
 import { isFeedbackEnabled } from "@/utils/constants";
 
 const FeaturebaseScript = () => (
@@ -63,7 +63,7 @@ export const FeaturebaseChangelog = ({ className }: { className?: string }) => {
 };
 
 export const FeaturebaseIdentify = () => {
-  const { data: user } = trpc.whoami.get.useQuery();
+  const { user } = useUser();
 
   React.useEffect(() => {
     if (user?.isGuest !== false || !isFeedbackEnabled) return;

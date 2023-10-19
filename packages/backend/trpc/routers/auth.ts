@@ -1,12 +1,10 @@
 import { prisma } from "@rallly/database";
-import { absoluteUrl } from "@rallly/utils";
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createToken, decryptToken } from "../../session";
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
-import { LoginTokenPayload, RegistrationTokenPayload } from "../types";
+import { RegistrationTokenPayload } from "../types";
 
 // assigns participants and comments created by guests to a user
 // we could have multiple guests because a login might be triggered from one device
@@ -46,27 +44,8 @@ const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
   });
 };
 
-const isEmailBlocked = (email: string) => {
-  if (process.env.ALLOWED_EMAILS) {
-    const allowedEmails = process.env.ALLOWED_EMAILS.split(",");
-    // Check whether the email matches enough of the patterns specified in ALLOWED_EMAILS
-    const isAllowed = allowedEmails.some((allowedEmail) => {
-      const regex = new RegExp(
-        `^${allowedEmail
-          .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
-          .replaceAll(/[*]/g, ".*")}$`,
-      );
-      return regex.test(email);
-    });
-
-    if (!isAllowed) {
-      return true;
-    }
-  }
-  return false;
-};
-
 export const auth = router({
+  // @deprecated
   requestRegistration: publicProcedure
     .input(
       z.object({
@@ -82,7 +61,7 @@ export const auth = router({
         | { ok: true; token: string }
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
-        if (isEmailBlocked(input.email)) {
+        if (ctx.isEmailBlocked?.(input.email)) {
           return { ok: false, reason: "emailNotAllowed" };
         }
 
@@ -124,6 +103,8 @@ export const auth = router({
       z.object({
         token: z.string(),
         code: z.string(),
+        timeZone: z.string().optional(),
+        locale: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -143,114 +124,16 @@ export const auth = router({
         data: {
           name,
           email,
+          timeZone: input.timeZone,
+          locale: input.locale,
         },
       });
 
-      if (ctx.session.user?.isGuest) {
-        await mergeGuestsIntoUser(user.id, [ctx.session.user.id]);
+      if (ctx.user.isGuest) {
+        await mergeGuestsIntoUser(user.id, [ctx.user.id]);
       }
-
-      ctx.session.user = {
-        isGuest: false,
-        id: user.id,
-      };
-
-      await ctx.session.save();
 
       return { ok: true, user };
-    }),
-  requestLogin: publicProcedure
-    .input(
-      z.object({
-        email: z.string(),
-      }),
-    )
-    .mutation(
-      async ({
-        input,
-        ctx,
-      }): Promise<
-        | { ok: true; token: string }
-        | { ok: false; reason: "emailNotAllowed" | "userNotFound" }
-      > => {
-        if (isEmailBlocked(input.email)) {
-          return { ok: false, reason: "emailNotAllowed" };
-        }
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email: input.email,
-          },
-        });
-
-        if (!user) {
-          return { ok: false, reason: "userNotFound" };
-        }
-
-        const code = generateOtp();
-
-        const token = await createToken<LoginTokenPayload>({
-          userId: user.id,
-          code,
-        });
-
-        await ctx.emailClient.sendTemplate("LoginEmail", {
-          to: input.email,
-          subject: `${code} is your 6-digit code`,
-          props: {
-            name: user.name,
-            code,
-            magicLink: absoluteUrl(`/auth/login?token=${token}`),
-          },
-        });
-
-        return { ok: true, token };
-      },
-    ),
-  authenticateLogin: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-        code: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const payload = await decryptToken<LoginTokenPayload>(input.token);
-
-      if (!payload) {
-        return { user: null };
-      }
-
-      const { userId, code } = payload;
-
-      if (input.code !== code) {
-        return { user: null };
-      }
-
-      const user = await prisma.user.findUnique({
-        select: { id: true, name: true, email: true },
-        where: { id: userId },
-      });
-
-      if (!user) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "The user doesn't exist anymore",
-        });
-      }
-
-      if (ctx.session.user?.isGuest) {
-        await mergeGuestsIntoUser(user.id, [ctx.session.user.id]);
-      }
-
-      ctx.session.user = {
-        isGuest: false,
-        id: user.id,
-      };
-
-      await ctx.session.save();
-
-      return { user };
     }),
   getUserPermission: publicProcedure
     .input(z.object({ token: z.string() }))

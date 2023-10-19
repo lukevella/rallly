@@ -1,16 +1,30 @@
-import { trpc, UserSession } from "@rallly/backend";
+import { trpc } from "@rallly/backend";
+import Cookies from "js-cookie";
+import { Session } from "next-auth";
+import { signIn, useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import React from "react";
+import { z } from "zod";
 
 import { PostHogProvider } from "@/contexts/posthog";
-import { useWhoAmI } from "@/contexts/whoami";
+import { PreferencesProvider } from "@/contexts/preferences";
 import { isSelfHosted } from "@/utils/constants";
 
 import { useRequiredContext } from "./use-required-context";
 
+const userSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email().nullable(),
+  isGuest: z.boolean(),
+  timeZone: z.string().nullish(),
+  timeFormat: z.enum(["hours12", "hours24"]).nullish(),
+  weekStart: z.number().min(0).max(6).nullish(),
+});
+
 export const UserContext = React.createContext<{
-  user: UserSession & { name: string };
-  refresh: () => void;
+  user: z.infer<typeof userSchema>;
+  refresh: (data?: Record<string, unknown>) => Promise<Session | null>;
   ownsObject: (obj: { userId: string | null }) => boolean;
 } | null>(null);
 
@@ -46,66 +60,67 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 };
 
 export const UserProvider = (props: { children?: React.ReactNode }) => {
+  const session = useSession();
+
+  const user = session.data?.user;
+
   const { t } = useTranslation();
 
-  const queryClient = trpc.useContext();
-
-  const user = useWhoAmI();
-  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+  React.useEffect(() => {
+    if (session.status === "unauthenticated") {
+      // Begin: Legacy token migration
+      const legacyToken = Cookies.get("legacy-token");
+      // It's important to remove the token from the cookies,
+      // otherwise when the user signs out.
+      if (legacyToken) {
+        Cookies.remove("legacy-token");
+        signIn("legacy-token", {
+          token: legacyToken,
+        });
+        return;
+      }
+      // End: Legacy token migration
+      signIn("guest");
+    }
+  }, [session.status]);
 
   // TODO (Luke Vella) [2023-09-19]: Remove this when we have a better way to query for an active subscription
   trpc.user.subscription.useQuery(undefined, {
     enabled: !isSelfHosted,
   });
 
-  const name = user
-    ? user.isGuest === false
-      ? user.name
-      : user.id.substring(0, 10)
-    : t("guest");
-
-  if (!user || userPreferences === undefined) {
+  if (!user || !session.data) {
     return null;
   }
 
   return (
     <UserContext.Provider
       value={{
-        user: { ...user, name },
-        refresh: () => {
-          return queryClient.whoami.invalidate();
+        user: {
+          id: user.id as string,
+          name: user.name ?? t("guest"),
+          email: user.email || null,
+          isGuest: user.email === null,
         },
+        refresh: session.update,
         ownsObject: ({ userId }) => {
           return userId ? [user.id].includes(userId) : false;
         },
       }}
     >
-      <PostHogProvider>{props.children}</PostHogProvider>
+      <PreferencesProvider
+        initialValue={{
+          locale: user.locale ?? undefined,
+          timeZone: user.timeZone ?? undefined,
+          timeFormat: user.timeFormat ?? undefined,
+          weekStart: user.weekStart ?? undefined,
+        }}
+        onUpdate={async (newPreferences) => {
+          await session.update(newPreferences);
+        }}
+      >
+        <PostHogProvider>{props.children}</PostHogProvider>
+      </PreferencesProvider>
     </UserContext.Provider>
   );
 };
-
-type ParticipantOrComment = {
-  userId: string | null;
-};
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const withSession = <P extends {} = {}>(
-  component: React.ComponentType<P>,
-) => {
-  const ComposedComponent: React.FunctionComponent<P> = (props: P) => {
-    const Component = component;
-    return (
-      <UserProvider>
-        <Component {...props} />
-      </UserProvider>
-    );
-  };
-  ComposedComponent.displayName = `withUser(${component.displayName})`;
-  return ComposedComponent;
-};
-
-/**
- * @deprecated Stop using this function. All object
- */
-export const isUnclaimed = (obj: ParticipantOrComment) => !obj.userId;

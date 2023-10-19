@@ -1,11 +1,12 @@
 import { InfoIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import Link from "next/link";
 import { Trans } from "next-i18next";
 
 import { getPollLayout } from "@/components/layouts/poll-layout";
+import { LoginLink } from "@/components/login-link";
 import { Poll } from "@/components/poll";
+import { RegisterLink } from "@/components/register-link";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { NextPageWithLayout } from "@/types";
@@ -35,16 +36,11 @@ const GuestPollAlert = () => {
           i18nKey="guestPollAlertDescription"
           defaults="<0>Create an account</0> or <1>login</1> to claim this poll."
           components={[
-            <Link
+            <RegisterLink
               className="hover:text-primary underline"
               key="register"
-              href="/register"
             />,
-            <Link
-              className="hover:text-primary underline"
-              key="login"
-              href="/login"
-            />,
+            <LoginLink className="hover:text-primary underline" key="login" />,
           ]}
         />
       </AlertDescription>

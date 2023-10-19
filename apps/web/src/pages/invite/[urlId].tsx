@@ -14,11 +14,12 @@ import React from "react";
 import { Poll } from "@/components/poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
+import { UserDropdown } from "@/components/user-dropdown";
 import { UserProvider, useUser } from "@/components/user-provider";
 import { VisibilityProvider } from "@/components/visibility";
 import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
-import { DayjsProvider } from "@/utils/dayjs";
+import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 import Error404 from "../404";
@@ -66,22 +67,24 @@ const GoToApp = () => {
   const poll = usePoll();
   const { user } = useUser();
 
-  if (poll.user?.id !== user.id) {
-    return null;
-  }
-
   return (
-    <>
-      <div className="flex items-center gap-2">
-        <Button asChild>
+    <div className="flex items-center justify-between gap-2 p-3">
+      <div>
+        <Button
+          variant="ghost"
+          asChild
+          className={poll.userId !== user.id ? "hidden" : ""}
+        >
           <Link href={`/poll/${poll.id}`}>
             <ArrowUpLeftIcon className="h-4 w-4" />
             <Trans i18nKey="manage" />
           </Link>
         </Button>
       </div>
-      <hr />
-    </>
+      <div>
+        <UserDropdown />
+      </div>
+    </div>
   );
 };
 
@@ -116,11 +119,11 @@ const Page = ({ id, title, user }: PageProps) => {
         }}
       />
       <UserProvider>
-        <DayjsProvider>
+        <ConnectedDayjsProvider>
           <Prefetch>
             <LegacyPollContextProvider>
               <VisibilityProvider>
-                <div className="">
+                <div>
                   <svg
                     className="absolute inset-x-0 top-0 -z-10 hidden h-[64rem] w-full stroke-gray-300/75 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)] sm:block"
                     aria-hidden="true"
@@ -144,8 +147,8 @@ const Page = ({ id, title, user }: PageProps) => {
                       fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
                     />
                   </svg>
-                  <div className="mx-auto max-w-4xl space-y-4 p-3 sm:py-8">
-                    <GoToApp />
+                  <GoToApp />
+                  <div className="mx-auto max-w-4xl space-y-4 px-3 sm:py-8">
                     <Poll />
                     <div className="mt-4 space-y-4 text-center text-gray-500">
                       <div className="py-8">
@@ -169,7 +172,7 @@ const Page = ({ id, title, user }: PageProps) => {
               </VisibilityProvider>
             </LegacyPollContextProvider>
           </Prefetch>
-        </DayjsProvider>
+        </ConnectedDayjsProvider>
       </UserProvider>
     </>
   );

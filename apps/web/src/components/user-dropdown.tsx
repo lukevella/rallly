@@ -22,7 +22,10 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
+import { LoginLink } from "@/components/login-link";
+import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
@@ -60,12 +63,17 @@ export const UserDropdown = () => {
             <Trans i18nKey="polls" defaults="Polls" />
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild={true}>
-          <Link href="/settings/profile" className="flex items-center gap-x-2">
-            <UserIcon className="h-4 w-4" />
-            <Trans i18nKey="profile" defaults="Profile" />
-          </Link>
-        </DropdownMenuItem>
+        <IfAuthenticated>
+          <DropdownMenuItem asChild={true}>
+            <Link
+              href="/settings/profile"
+              className="flex items-center gap-x-2"
+            >
+              <UserIcon className="h-4 w-4" />
+              <Trans i18nKey="profile" defaults="Profile" />
+            </Link>
+          </DropdownMenuItem>
+        </IfAuthenticated>
         <DropdownMenuItem asChild={true}>
           <Link
             href="/settings/preferences"
@@ -124,30 +132,36 @@ export const UserDropdown = () => {
         <DropdownMenuSeparator />
         <IfGuest>
           <DropdownMenuItem asChild={true}>
-            <Link href="/login" className="flex items-center gap-x-2">
+            <LoginLink className="flex items-center gap-x-2">
               <LogInIcon className="h-4 w-4" />
               <Trans i18nKey="login" defaults="login" />
-            </Link>
+            </LoginLink>
           </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
-            <Link href="/register" className="flex items-center gap-x-2">
+            <RegisterLink className="flex items-center gap-x-2">
               <UserPlusIcon className="h-4 w-4" />
               <Trans i18nKey="createAnAccount" defaults="Register" />
-            </Link>
+            </RegisterLink>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild={true}>
-            <Link href="/logout" className="flex items-center gap-x-2">
-              <RefreshCcwIcon className="h-4 w-4" />
-              <Trans i18nKey="forgetMe" />
-            </Link>
+          <DropdownMenuItem
+            className="flex items-center gap-x-2"
+            onSelect={() =>
+              signOut({
+                redirect: false,
+              })
+            }
+          >
+            <RefreshCcwIcon className="h-4 w-4" />
+            <Trans i18nKey="forgetMe" />
           </DropdownMenuItem>
         </IfGuest>
         <IfAuthenticated>
-          <DropdownMenuItem asChild={true}>
-            <Link href="/logout" className="flex items-center gap-x-2">
-              <LogOutIcon className="h-4 w-4" />
-              <Trans i18nKey="logout" />
-            </Link>
+          <DropdownMenuItem
+            className="flex items-center gap-x-2"
+            onSelect={() => signOut()}
+          >
+            <LogOutIcon className="h-4 w-4" />
+            <Trans i18nKey="logout" />
           </DropdownMenuItem>
         </IfAuthenticated>
       </DropdownMenuContent>

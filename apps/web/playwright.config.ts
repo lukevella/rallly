@@ -4,15 +4,13 @@ import path from "path";
 
 const ci = process.env.CI === "true";
 
-dotenv.config({ path: path.resolve(__dirname, "../../", ".env") });
+dotenv.config({ path: path.resolve(__dirname, "../../", ".env.test") });
 
 // Use process.env.PORT by default and fallback to port 3000
 const PORT = process.env.PORT || 3000;
 
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL = `http://localhost:${PORT}`;
-
-process.env.NEXT_PUBLIC_BASE_URL = baseURL;
 
 // Reference: https://playwright.dev/docs/test-configuration
 const config: PlaywrightTestConfig = {
@@ -30,6 +28,9 @@ const config: PlaywrightTestConfig = {
     url: baseURL,
     timeout: 120 * 1000,
     reuseExistingServer: !ci,
+  },
+  expect: {
+    timeout: 10000, // 10 seconds
   },
   reporter: [
     [ci ? "github" : "list"],

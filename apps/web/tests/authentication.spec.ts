@@ -68,8 +68,6 @@ test.describe.serial(() => {
 
       const codeInput = page.getByPlaceholder("Enter your 6-digit code");
 
-      codeInput.waitFor({ state: "visible" });
-
       const code = await getCode();
 
       await codeInput.type(code);
@@ -126,8 +124,6 @@ test.describe.serial(() => {
       }
 
       await page.goto(magicLink);
-
-      page.getByText("Click here").click();
 
       await page.waitForURL("/polls");
     });

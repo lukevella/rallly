@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { GlobeIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
@@ -19,36 +18,12 @@ import soft from "timezone-soft";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
+import { usePreferences } from "@/contexts/preferences";
 import { useDayjs } from "@/utils/dayjs";
 
 export const TimePreferences = () => {
-  const { timeZone, timeFormat } = useDayjs();
-  const queryClient = trpc.useContext();
-
-  const { data } = trpc.userPreferences.get.useQuery();
-
-  const updatePreferences = trpc.userPreferences.update.useMutation({
-    onMutate: (newPreferences) => {
-      queryClient.userPreferences.get.setData(undefined, (oldPreferences) => {
-        if (!oldPreferences) {
-          return null;
-        }
-        return {
-          ...oldPreferences,
-          timeFormat: newPreferences.timeFormat ?? oldPreferences?.timeFormat,
-          timeZone: newPreferences.timeZone ?? oldPreferences?.timeZone ?? null,
-          weekStart: newPreferences.weekStart ?? oldPreferences?.weekStart,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.userPreferences.get.invalidate();
-    },
-  });
-
-  if (data === undefined) {
-    return null;
-  }
+  const { preferences, updatePreferences } = usePreferences();
+  const { timeFormat, timeZone } = useDayjs();
 
   return (
     <div className="grid gap-4">
@@ -57,11 +32,9 @@ export const TimePreferences = () => {
           <Trans i18nKey="timeZone" />
         </Label>
         <TimeZoneSelect
-          value={timeZone}
+          value={preferences.timeZone ?? timeZone}
           onValueChange={(newTimeZone) => {
-            updatePreferences.mutate({
-              timeZone: newTimeZone,
-            });
+            updatePreferences({ timeZone: newTimeZone });
           }}
         />
       </div>
@@ -70,11 +43,9 @@ export const TimePreferences = () => {
           <Trans i18nKey="timeFormat" />
         </Label>
         <TimeFormatPicker
-          value={timeFormat}
+          value={preferences.timeFormat ?? timeFormat}
           onChange={(newTimeFormat) => {
-            updatePreferences.mutate({
-              timeFormat: newTimeFormat,
-            });
+            updatePreferences({ timeFormat: newTimeFormat });
           }}
         />
       </div>

@@ -1,15 +1,17 @@
+import { trpc } from "@rallly/backend";
 import { ArrowUpRight } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
-import { updateLanguage } from "@/contexts/preferences";
+import { useUser } from "@/components/user-provider";
 
 const formSchema = z.object({
   language: z.string(),
@@ -19,6 +21,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export const LanguagePreference = () => {
   const { i18n } = useTranslation();
+  const { user } = useUser();
   const router = useRouter();
   const form = useForm<FormData>({
     defaultValues: {
@@ -26,11 +29,17 @@ export const LanguagePreference = () => {
     },
   });
 
+  const updatePreferences = trpc.user.updatePreferences.useMutation();
+  const session = useSession();
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          updateLanguage(data.language);
+          if (!user.isGuest) {
+            await updatePreferences.mutateAsync({ locale: data.language });
+          }
+          await session.update({ locale: data.language });
           router.reload();
         })}
       >
