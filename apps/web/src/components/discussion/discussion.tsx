@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import {
   MessageCircleIcon,
   MoreHorizontalIcon,
@@ -21,6 +20,7 @@ import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { useRole } from "@/contexts/role";
 import { usePostHog } from "@/utils/posthog";
+import { trpc } from "@/utils/trpc/client";
 
 import { requiredString } from "../../utils/form-validation";
 import NameInput from "../name-input";

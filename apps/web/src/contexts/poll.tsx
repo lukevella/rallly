@@ -1,9 +1,9 @@
-import { trpc } from "@rallly/backend";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
 import React from "react";
 
 import { useDayjs } from "@/utils/dayjs";
+import { trpc } from "@/utils/trpc/client";
 
 export const usePoll = () => {
   const router = useRouter();

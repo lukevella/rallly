@@ -1,6 +1,7 @@
-import { trpc } from "@rallly/backend";
 import React from "react";
 import { createStateContext } from "react-use";
+
+import { trpc } from "@/utils/trpc/client";
 
 export const [usePollId, PollIdProvider] = createStateContext<string>("");
 

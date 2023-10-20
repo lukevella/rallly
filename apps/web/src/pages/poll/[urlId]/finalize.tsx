@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { Button } from "@rallly/ui/button";
 import {
   CardContent,
@@ -18,6 +17,7 @@ import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
 import { NextPageWithLayout } from "@/types";
 import { usePostHog } from "@/utils/posthog";
+import { trpc } from "@/utils/trpc/client";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const FinalizationForm = () => {

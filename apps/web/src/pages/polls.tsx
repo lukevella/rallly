@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import {
   InboxIcon,
   PauseCircleIcon,
@@ -25,6 +24,7 @@ import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
 import { useDayjs } from "@/utils/dayjs";
+import { trpc } from "@/utils/trpc/client";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const EmptyState = () => {
@@ -94,7 +94,7 @@ const Page: NextPageWithLayout = () => {
                       key={poll.id}
                       className="flex overflow-hidden rounded-md border shadow-sm"
                     >
-                      <div className="flex grow flex-col-reverse justify-between gap-y-4 gap-x-4 bg-white p-4 sm:flex-row sm:items-start sm:px-6">
+                      <div className="flex grow flex-col-reverse justify-between gap-x-4 gap-y-4 bg-white p-4 sm:flex-row sm:items-start sm:px-6">
                         <div className="flex gap-x-4">
                           <div className="sm:-ml-2">
                             {poll.event ? (

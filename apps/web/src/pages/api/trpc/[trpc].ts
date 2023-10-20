@@ -1,5 +1,6 @@
-import { trpcNextApiHandler } from "@rallly/backend/next/trpc/server";
-import { NextApiRequest, NextApiResponse } from "next";
+import { createTRPCContext } from "@rallly/backend/trpc/context";
+import { AppRouter, appRouter } from "@rallly/backend/trpc/routers";
+import * as trpcNext from "@trpc/server/adapters/next";
 
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
 import { getServerSession, isEmailBlocked } from "@/utils/auth";
@@ -12,27 +13,27 @@ export const config = {
   },
 };
 
-// export API handler
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const session = await getServerSession(req, res);
+export default trpcNext.createNextApiHandler<AppRouter>({
+  router: appRouter,
+  createContext: async (opts) => {
+    return createTRPCContext(opts, {
+      async getUser({ req, res }) {
+        const session = await getServerSession(req, res);
 
-  if (!session) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
+        if (!session) {
+          return null;
+        }
 
-  return trpcNextApiHandler({
-    user: {
-      isGuest: session.user.email === null,
-      id: session.user.id,
-    },
-    emailClient,
-    isSelfHosted,
-    isEmailBlocked,
-    absoluteUrl,
-    shortUrl,
-  })(req, res);
-}
+        return {
+          id: session.user.id,
+          isGuest: session.user.email === null,
+        };
+      },
+      emailClient,
+      isSelfHosted,
+      isEmailBlocked,
+      absoluteUrl,
+      shortUrl,
+    });
+  },
+});

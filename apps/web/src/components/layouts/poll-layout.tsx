@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
@@ -48,6 +47,7 @@ import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import Error404 from "@/pages/404";
+import { trpc } from "@/utils/trpc/client";
 
 import { NextPageWithLayout } from "../../types";
 

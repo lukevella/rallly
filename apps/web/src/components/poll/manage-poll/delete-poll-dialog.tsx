@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -13,6 +12,7 @@ import * as React from "react";
 
 import { Trans } from "@/components/trans";
 import { usePostHog } from "@/utils/posthog";
+import { trpc } from "@/utils/trpc/client";
 
 export const DeletePollDialog: React.FunctionComponent<{
   open: boolean;
