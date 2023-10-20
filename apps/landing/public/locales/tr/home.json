@@ -15,7 +15,11 @@
   "statsLanguagesSupported": "10+ desteklenen diller",
   "hint": "Ücretsiz! Hesap gerekli değil.",
   "doodleAlternative": "En iyi Doodle Alternatifi",
+  "createAPoll": "Buluşma Anketi oluştur",
+  "doodleAlternativeMetaTitle": "En iyi ücretsiz Doodle alternatifi | Rallly",
+  "doodleAlternativeMetaDescription": "Doodle alternatifi mi arıyorsun? Rallly i dene! Ücretsiz, kullanımı kolay ve hesap gerektirmiyor.",
   "findATimeMetaTitle": "Buluşmak İçin Bir Zaman Bul | Rallly",
+  "findATimeTitle": "Buluşmak için bir zaman bul",
   "new": "Yeni",
   "metaTitle": "Rallly - Grup Toplantıları Planlayın",
   "metaDescription": "Anketler oluşturun ve en iyi günü veya saati bulmak için oy verin. Doodle'a ücretsiz bir alternatif."
