@@ -6,44 +6,6 @@ import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
 import { RegistrationTokenPayload } from "../types";
 
-// assigns participants and comments created by guests to a user
-// we could have multiple guests because a login might be triggered from one device
-// and opened in another one.
-const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
-  await prisma.poll.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-
-  await prisma.participant.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-
-  await prisma.comment.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-};
-
 export const auth = router({
   // @deprecated
   requestRegistration: publicProcedure
@@ -107,7 +69,7 @@ export const auth = router({
         locale: z.string().optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const payload = await decryptToken<RegistrationTokenPayload>(input.token);
 
       if (!payload) {
@@ -128,10 +90,6 @@ export const auth = router({
           locale: input.locale,
         },
       });
-
-      if (ctx.user.isGuest) {
-        await mergeGuestsIntoUser(user.id, [ctx.user.id]);
-      }
 
       return { ok: true, user };
     }),

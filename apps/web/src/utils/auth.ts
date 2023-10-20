@@ -18,185 +18,189 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
 import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
+import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
 
-const authOptions = {
-  adapter: PrismaAdapter(prisma),
-  secret: process.env.SECRET_PASSWORD,
-  session: {
-    strategy: "jwt",
-  },
-  providers: [
-    LegacyTokenProvider,
-    // When a user registers, we don't want to go through the email verification process
-    // so this providers allows us exchange the registration token for a session token
-    CredentialsProvider({
-      id: "registration-token",
-      name: "Registration Token",
-      credentials: {
-        token: {
-          label: "Token",
-          type: "text",
+const getAuthOptions = (...args: GetServerSessionParams) =>
+  ({
+    adapter: PrismaAdapter(prisma),
+    secret: process.env.SECRET_PASSWORD,
+    session: {
+      strategy: "jwt",
+    },
+    providers: [
+      LegacyTokenProvider,
+      // When a user registers, we don't want to go through the email verification process
+      // so this providers allows us exchange the registration token for a session token
+      CredentialsProvider({
+        id: "registration-token",
+        name: "Registration Token",
+        credentials: {
+          token: {
+            label: "Token",
+            type: "text",
+          },
         },
-      },
-      async authorize(credentials) {
-        if (credentials?.token) {
-          const payload = await decryptToken<RegistrationTokenPayload>(
-            credentials.token,
-          );
-          if (payload) {
-            const user = await prisma.user.findUnique({
-              where: {
-                email: payload.email,
-              },
-              select: {
-                id: true,
-                email: true,
-                name: true,
-                locale: true,
-                timeFormat: true,
-                timeZone: true,
-              },
-            });
+        async authorize(credentials) {
+          if (credentials?.token) {
+            const payload = await decryptToken<RegistrationTokenPayload>(
+              credentials.token,
+            );
+            if (payload) {
+              const user = await prisma.user.findUnique({
+                where: {
+                  email: payload.email,
+                },
+                select: {
+                  id: true,
+                  email: true,
+                  name: true,
+                  locale: true,
+                  timeFormat: true,
+                  timeZone: true,
+                },
+              });
 
-            if (user) {
-              return user;
+              if (user) {
+                return user;
+              }
             }
           }
-        }
 
-        return null;
-      },
-    }),
-    CredentialsProvider({
-      id: "guest",
-      name: "Guest",
-      credentials: {},
-      async authorize() {
-        return {
-          id: `user-${randomid()}`,
-          email: null,
-        };
-      },
-    }),
-    EmailProvider({
-      server: "",
-      from: process.env.NOREPLY_EMAIL,
-      generateVerificationToken() {
-        return generateOtp();
-      },
-      async sendVerificationRequest({ identifier: email, token, url }) {
-        const user = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-          select: {
-            name: true,
-          },
-        });
-
-        if (user) {
-          await emailClient.sendTemplate("LoginEmail", {
-            to: email,
-            subject: `${token} is your 6-digit code`,
-            props: {
-              name: user.name,
-              magicLink: url,
-              code: token,
+          return null;
+        },
+      }),
+      CredentialsProvider({
+        id: "guest",
+        name: "Guest",
+        credentials: {},
+        async authorize() {
+          return {
+            id: `user-${randomid()}`,
+            email: null,
+          };
+        },
+      }),
+      EmailProvider({
+        server: "",
+        from: process.env.NOREPLY_EMAIL,
+        generateVerificationToken() {
+          return generateOtp();
+        },
+        async sendVerificationRequest({ identifier: email, token, url }) {
+          const user = await prisma.user.findUnique({
+            where: {
+              email,
+            },
+            select: {
+              name: true,
             },
           });
-        }
-      },
-    }),
-  ],
-  pages: {
-    signIn: "/login",
-    signOut: "/logout",
-    error: "/auth/error",
-  },
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    },
-    async signIn({ user }) {
-      if (user.email) {
-        const userExists =
-          (await prisma.user.count({
-            where: {
-              email: user.email,
-            },
-          })) > 0;
-        if (userExists) {
-          if (isEmailBlocked(user.email)) {
-            return false;
-          }
-          return true;
-        } else {
-          return false;
-        }
-      }
 
-      return true;
-    },
-    async jwt({ token, user, trigger, session }) {
-      if (trigger === "update" && session) {
-        if (token.email) {
-          // For registered users we want to save the preferences to the database
-          try {
-            await prisma.user.update({
-              where: {
-                id: token.sub,
-              },
-              data: {
-                locale: session.locale,
-                timeFormat: session.timeFormat,
-                timeZone: session.timeZone,
-                weekStart: session.weekStart,
-                name: session.name,
+          if (user) {
+            await emailClient.sendTemplate("LoginEmail", {
+              to: email,
+              subject: `${token} is your 6-digit code`,
+              props: {
+                name: user.name,
+                magicLink: url,
+                code: token,
               },
             });
-          } catch (e) {
-            console.error("Failed to update user preferences", session);
+          }
+        },
+      }),
+    ],
+    pages: {
+      signIn: "/login",
+      signOut: "/logout",
+      error: "/auth/error",
+    },
+    callbacks: {
+      async signIn({ user, email }) {
+        if (email?.verificationRequest) {
+          if (user.email) {
+            const userExists =
+              (await prisma.user.count({
+                where: {
+                  email: user.email,
+                },
+              })) > 0;
+
+            if (userExists) {
+              if (isEmailBlocked(user.email)) {
+                return false;
+              }
+              return true;
+            } else {
+              return false;
+            }
+          }
+        } else {
+          const session = await getServerSession(...args);
+          if (session && session.user.email === null) {
+            await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
         }
-        token = { ...token, ...session };
-      }
 
-      if (trigger === "signIn" && user) {
-        token.locale = user.locale;
-        token.timeFormat = user.timeFormat;
-        token.timeZone = user.timeZone;
-        token.weekStart = user.weekStart;
-      }
+        return true;
+      },
+      async jwt({ token, user, trigger, session }) {
+        if (trigger === "update" && session) {
+          if (token.email) {
+            // For registered users we want to save the preferences to the database
+            try {
+              await prisma.user.update({
+                where: {
+                  id: token.sub,
+                },
+                data: {
+                  locale: session.locale,
+                  timeFormat: session.timeFormat,
+                  timeZone: session.timeZone,
+                  weekStart: session.weekStart,
+                  name: session.name,
+                },
+              });
+            } catch (e) {
+              console.error("Failed to update user preferences", session);
+            }
+          }
+          token = { ...token, ...session };
+        }
 
-      return token;
+        if (trigger === "signIn" && user) {
+          token.locale = user.locale;
+          token.timeFormat = user.timeFormat;
+          token.timeZone = user.timeZone;
+          token.weekStart = user.weekStart;
+        }
+
+        return token;
+      },
+      async session({ session, token }) {
+        session.user.id = token.sub as string;
+        session.user.name = token.name;
+        session.user.timeFormat = token.timeFormat;
+        session.user.timeZone = token.timeZone;
+        session.user.locale = token.locale;
+        session.user.weekStart = token.weekStart;
+        return session;
+      },
     },
-    async session({ session, token }) {
-      session.user.id = token.sub as string;
-      session.user.name = token.name;
-      session.user.timeFormat = token.timeFormat;
-      session.user.timeZone = token.timeZone;
-      session.user.locale = token.locale;
-      session.user.weekStart = token.weekStart;
-      return session;
-    },
-  },
-} satisfies NextAuthOptions;
+  } satisfies NextAuthOptions);
 
-export async function getServerSession(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSessionWithOptions(...args, authOptions);
+type GetServerSessionParams =
+  | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+  | [NextApiRequest, NextApiResponse]
+  | [];
+
+export function getServerSession(...args: GetServerSessionParams) {
+  return getServerSessionWithOptions(...args, getAuthOptions(...args));
 }
 
 export async function AuthApiRoute(req: NextApiRequest, res: NextApiResponse) {
+  const authOptions = getAuthOptions(req, res);
   return NextAuth(req, res, authOptions);
 }
 
