@@ -1,7 +1,6 @@
 import "tailwindcss/tailwind.css";
 import "../style.css";
 
-import { trpc, UserSession } from "@rallly/backend/next/trpc/client";
 import { inject } from "@vercel/analytics";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -27,12 +26,8 @@ const inter = Inter({
   display: "swap",
 });
 
-type PageProps = {
-  user?: UserSession;
-};
-
-type AppPropsWithLayout = AppProps<PageProps> & {
-  Component: NextPageWithLayout<PageProps>;
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
 };
 
 const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
@@ -112,4 +107,4 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   );
 };
 
-export default trpc.withTRPC(appWithTranslation(MyApp, nextI18nNextConfig));
+export default appWithTranslation(MyApp, nextI18nNextConfig);
