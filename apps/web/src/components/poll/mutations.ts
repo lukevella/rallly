@@ -1,7 +1,6 @@
-import { trpc } from "@rallly/backend";
-
 import { usePoll } from "@/components/poll-context";
 import { usePostHog } from "@/utils/posthog";
+import { trpc } from "@/utils/trpc/client";
 
 import { ParticipantForm } from "./types";
 

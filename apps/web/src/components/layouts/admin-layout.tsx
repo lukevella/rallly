@@ -1,10 +1,10 @@
-import { trpc } from "@rallly/backend";
 import { useRouter } from "next/router";
 import React from "react";
 
 import { StandardLayout } from "@/components/layouts/standard-layout";
 import { useUser } from "@/components/user-provider";
 import { NextPageWithLayout } from "@/types";
+import { trpc } from "@/utils/trpc/client";
 
 const AdminLayout = (props: React.PropsWithChildren) => {
   const router = useRouter();

@@ -1,19 +1,18 @@
+import { AppRouter } from "@rallly/backend/trpc/routers";
 import { MutationCache } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import toast from "react-hot-toast";
 import superjson from "superjson";
 
-import { AppRouter } from "../../trpc/routers";
-
-export * from "../../trpc/types";
+import { absoluteUrl } from "@/utils/absolute-url";
 
 export const trpc = createTRPCNext<AppRouter>({
   config() {
     return {
       links: [
         httpBatchLink({
-          url: `/api/trpc`,
+          url: absoluteUrl("/api/trpc"),
         }),
       ],
       transformer: superjson,
@@ -21,7 +20,6 @@ export const trpc = createTRPCNext<AppRouter>({
         defaultOptions: {
           queries: {
             retry: false,
-            networkMode: "always",
             cacheTime: Infinity,
             staleTime: 1000 * 60,
           },
@@ -36,5 +34,4 @@ export const trpc = createTRPCNext<AppRouter>({
       },
     };
   },
-  ssr: false,
 });

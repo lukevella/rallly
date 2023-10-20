@@ -1,1 +1,1 @@
-export * from "./next/trpc/client";
+export * from "./trpc/types";

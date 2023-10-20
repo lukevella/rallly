@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import Cookies from "js-cookie";
 import { Session } from "next-auth";
 import { signIn, useSession } from "next-auth/react";
@@ -9,6 +8,7 @@ import { z } from "zod";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { isSelfHosted } from "@/utils/constants";
+import { trpc } from "@/utils/trpc/client";
 
 import { useRequiredContext } from "./use-required-context";
 

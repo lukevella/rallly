@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend";
+import { trpc } from "@/utils/trpc/client";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
 import React from "react";

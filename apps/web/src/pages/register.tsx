@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { Button } from "@rallly/ui/button";
 import Head from "next/head";
 import Link from "next/link";
@@ -15,6 +14,7 @@ import { TextInput } from "@/components/text-input";
 import { NextPageWithLayout } from "@/types";
 import { useDayjs } from "@/utils/dayjs";
 import { requiredString, validEmail } from "@/utils/form-validation";
+import { trpc } from "@/utils/trpc/client";
 
 import { AuthLayout } from "../components/auth/auth-layout";
 import { getStaticTranslations } from "../utils/with-page-translations";

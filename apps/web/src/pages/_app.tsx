@@ -2,7 +2,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "../style.css";
 
-import { trpc } from "@rallly/backend/next/trpc/client";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domMax, LazyMotion } from "framer-motion";
 import { NextPage } from "next";
@@ -15,6 +14,7 @@ import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
 
 import Maintenance from "@/components/maintenance";
+import { trpc } from "@/utils/trpc/client";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
 import { NextPageWithLayout } from "../types";

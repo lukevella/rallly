@@ -1,10 +1,10 @@
-import { trpc } from "@rallly/backend";
 import { Badge } from "@rallly/ui/badge";
 import React from "react";
 
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { isSelfHosted } from "@/utils/constants";
+import { trpc } from "@/utils/trpc/client";
 
 export const useSubscription = () => {
   const { user } = useUser();

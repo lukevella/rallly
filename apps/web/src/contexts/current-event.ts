@@ -1,4 +1,4 @@
-import { trpc } from "@rallly/backend";
+import { trpc } from "@/utils/trpc/client";
 import React from "react";
 import { createStateContext } from "react-use";
 

@@ -1,4 +1,3 @@
-import { trpc } from "@rallly/backend";
 import { prisma } from "@rallly/database";
 import { ArrowUpLeftIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
@@ -20,6 +19,7 @@ import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
+import { trpc } from "@/utils/trpc/client";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 import Error404 from "../404";
