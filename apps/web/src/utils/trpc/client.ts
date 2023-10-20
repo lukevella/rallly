@@ -1,4 +1,5 @@
 import { AppRouter } from "@rallly/backend/trpc/routers";
+import * as Sentry from "@sentry/browser";
 import { MutationCache } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
@@ -25,10 +26,11 @@ export const trpc = createTRPCNext<AppRouter>({
           },
         },
         mutationCache: new MutationCache({
-          onError: () => {
+          onError: (error) => {
             toast.error(
               "Uh oh! Something went wrong. The issue has been logged and we'll fix it as soon as possible. Please try again later.",
             );
+            Sentry.captureException(error);
           },
         }),
       },
