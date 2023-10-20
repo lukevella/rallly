@@ -6,14 +6,12 @@ import { createTRPCNext } from "@trpc/next";
 import toast from "react-hot-toast";
 import superjson from "superjson";
 
-import { absoluteUrl } from "@/utils/absolute-url";
-
 export const trpc = createTRPCNext<AppRouter>({
   config() {
     return {
       links: [
         httpBatchLink({
-          url: absoluteUrl("/api/trpc"),
+          url: "/api/trpc",
         }),
       ],
       transformer: superjson,
