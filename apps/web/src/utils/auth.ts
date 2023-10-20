@@ -5,7 +5,11 @@ import { generateOtp, randomid } from "@rallly/backend/utils/nanoid";
 import { prisma } from "@rallly/database";
 import cookie from "cookie";
 import { IronSession, unsealData } from "iron-session";
-import { NextApiRequest, NextApiResponse } from "next";
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 import { NextAuthOptions, RequestInternal } from "next-auth";
 import NextAuth, {
   getServerSession as getServerSessionWithOptions,
@@ -51,7 +55,7 @@ const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
   });
 };
 
-const getAuthOptions = (req: NextApiRequest, res: NextApiResponse) =>
+const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
     adapter: PrismaAdapter(prisma),
     secret: process.env.SECRET_PASSWORD,
@@ -167,7 +171,7 @@ const getAuthOptions = (req: NextApiRequest, res: NextApiResponse) =>
             }
           }
         } else {
-          const session = await getServerSession(req, res);
+          const session = await getServerSession(...args);
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
@@ -220,10 +224,13 @@ const getAuthOptions = (req: NextApiRequest, res: NextApiResponse) =>
     },
   } satisfies NextAuthOptions);
 
-export function getServerSession(...args: [NextApiRequest, NextApiResponse]) {
-  const [req, res] = args;
-  const authOptions = getAuthOptions(req, res);
-  return getServerSessionWithOptions(req, res, authOptions);
+type GetServerSessionParams =
+  | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+  | [NextApiRequest, NextApiResponse]
+  | [];
+
+export function getServerSession(...args: GetServerSessionParams) {
+  return getServerSessionWithOptions(...args, getAuthOptions(...args));
 }
 
 export async function AuthApiRoute(req: NextApiRequest, res: NextApiResponse) {
