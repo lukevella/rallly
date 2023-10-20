@@ -1,10 +1,10 @@
-import { getSession } from "@rallly/backend/next/session";
 import { stripe } from "@rallly/backend/stripe";
 import { prisma } from "@rallly/database";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 import { absoluteUrl } from "@/utils/absolute-url";
+import { getServerSession } from "@/utils/auth";
 
 const inputSchema = z.object({
   session_id: z.string().optional(),
@@ -15,9 +15,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const userSession = await getSession(req, res);
+  const userSession = await getServerSession(req, res);
 
-  if (userSession.user?.isGuest !== false) {
+  if (!userSession?.user.email) {
     // You need to be logged in to subscribe
     res
       .status(403)
