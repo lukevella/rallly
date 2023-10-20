@@ -18,42 +18,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
 import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
+import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
-
-const mergeGuestsIntoUser = async (userId: string, guestIds: string[]) => {
-  await prisma.poll.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-
-  await prisma.participant.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-
-  await prisma.comment.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
-      },
-    },
-    data: {
-      userId: userId,
-    },
-  });
-};
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
