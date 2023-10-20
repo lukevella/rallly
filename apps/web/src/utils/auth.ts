@@ -187,7 +187,7 @@ const authOptions = {
   },
 } satisfies NextAuthOptions;
 
-export function getServerSession(
+export async function getServerSession(
   ...args:
     | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
     | [NextApiRequest, NextApiResponse]

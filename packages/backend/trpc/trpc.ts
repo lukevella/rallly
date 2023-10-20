@@ -1,8 +1,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
-import { TRPCContext } from "../next/trpc/server";
 import { getSubscriptionStatus } from "../utils/auth";
+import { TRPCContext } from "./context";
 
 const t = initTRPC.context<TRPCContext>().create({
   transformer: superjson,
