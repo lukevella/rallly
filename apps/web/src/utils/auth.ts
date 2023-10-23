@@ -19,11 +19,12 @@ import EmailProvider from "next-auth/providers/email";
 
 import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
+import { VerificationTokenFixAdapter } from "@/utils/auth/verification-token-fix";
 import { emailClient } from "@/utils/emails";
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
-    adapter: PrismaAdapter(prisma),
+    adapter: VerificationTokenFixAdapter(PrismaAdapter(prisma)),
     secret: process.env.SECRET_PASSWORD,
     session: {
       strategy: "jwt",
