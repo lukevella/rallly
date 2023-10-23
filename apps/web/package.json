@@ -29,7 +29,7 @@
     "@rallly/languages": "*",
     "@rallly/tailwind-config": "*",
     "@rallly/ui": "*",
-    "@sentry/nextjs": "^7.46.0",
+    "@sentry/nextjs": "^7.74.1",
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/typography": "^0.5.9",
     "@tanstack/react-query": "^4.0.0",
