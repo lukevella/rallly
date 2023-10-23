@@ -15,12 +15,21 @@ function joinPath(baseUrl: string, subpath = "") {
   return baseUrl;
 }
 
+export function objectToQueryString(obj: Record<string, string>) {
+  const parts = [];
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key];
+      if (value !== undefined) {
+        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+    }
+  }
+  return parts.join("&");
+}
 export function absoluteUrl(subpath = "", query?: Record<string, string>) {
-  const queryString = query
-    ? `?${Object.entries(query)
-        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-        .join("&")}`
-    : "";
+  const queryString = query ? `?${objectToQueryString(query)}` : "";
+
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ??
     getVercelUrl() ??

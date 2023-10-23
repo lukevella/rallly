@@ -7,6 +7,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { createGlobalState } from "react-use";
 
+import { absoluteUrl } from "@/utils/absolute-url";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -16,10 +17,11 @@ import { TextInput } from "../text-input";
 export const useDefaultEmail = createGlobalState("");
 
 const verifyCode = async (options: { email: string; token: string }) => {
-  const res = await fetch(
-    "/api/auth/callback/email?" + new URLSearchParams(options),
-  );
-  return res.status === 200;
+  const url = absoluteUrl("/api/auth/callback/email", options);
+
+  const res = await fetch(url);
+
+  return !res.url.includes("auth/error");
 };
 
 export const VerifyCode: React.FunctionComponent<{
