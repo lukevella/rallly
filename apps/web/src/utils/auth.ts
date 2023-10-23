@@ -1,4 +1,3 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { RegistrationTokenPayload } from "@rallly/backend";
 import { decryptToken } from "@rallly/backend/session";
 import { generateOtp, randomid } from "@rallly/backend/utils/nanoid";
@@ -17,13 +16,14 @@ import NextAuth, {
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
+import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
 import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
-    adapter: PrismaAdapter(prisma),
+    adapter: CustomPrismaAdapter(prisma),
     secret: process.env.SECRET_PASSWORD,
     session: {
       strategy: "jwt",
