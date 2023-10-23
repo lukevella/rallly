@@ -22,9 +22,6 @@ export function CustomPrismaAdapter(prisma: PrismaClient): Adapter {
       return verificationToken;
     },
     async useVerificationToken(identifier_token) {
-      // NOTE: Some users have inboxes with spam filters that check all links before they are delivered.
-      // This means the verification link will be used before the user gets it. To get around this, we
-      // avoid deleting the verification token for now.
       try {
         const verificationToken = await prisma.verificationToken.findUnique({
           where: { identifier_token },
