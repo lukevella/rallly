@@ -11,6 +11,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import updateLocale from "dayjs/plugin/updateLocale";
 import utc from "dayjs/plugin/utc";
+import { useRouter } from "next/router";
 import * as React from "react";
 import { useAsync } from "react-use";
 
@@ -188,7 +189,8 @@ export const DayjsProvider: React.FunctionComponent<{
     };
   };
 }> = ({ config, children }) => {
-  const l = config?.locale ?? "en";
+  const router = useRouter();
+  const l = config?.locale ?? router.locale ?? "en";
   const state = useAsync(async () => {
     return await dayjsLocales[l].import();
   }, [l]);
@@ -249,7 +251,6 @@ export const ConnectedDayjsProvider = ({
   children,
 }: React.PropsWithChildren) => {
   const { preferences } = usePreferences();
-
   return (
     <DayjsProvider
       config={{
