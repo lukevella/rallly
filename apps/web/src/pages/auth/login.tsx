@@ -48,7 +48,7 @@ const Page: NextPageWithLayout = () => {
             </div>
           </div>
           <Button asChild size="lg" variant="primary" className="mt-4 w-full">
-            <a href={magicLink}>
+            <a role="link" href={magicLink}>
               <Trans i18nKey="continue" />
             </a>
           </Button>
