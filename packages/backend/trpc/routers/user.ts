@@ -2,7 +2,12 @@ import { prisma } from "@rallly/database";
 import { z } from "zod";
 
 import { getSubscriptionStatus } from "../../utils/auth";
-import { possiblyPublicProcedure, privateProcedure, router } from "../trpc";
+import {
+  possiblyPublicProcedure,
+  privateProcedure,
+  publicProcedure,
+  router,
+} from "../trpc";
 
 export const user = router({
   getBilling: possiblyPublicProcedure.query(async ({ ctx }) => {
@@ -20,6 +25,19 @@ export const user = router({
       },
     });
   }),
+  getByEmail: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .query(async ({ input }) => {
+      return await prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+        select: {
+          name: true,
+          email: true,
+        },
+      });
+    }),
   subscription: possiblyPublicProcedure.query(
     async ({ ctx }): Promise<{ legacy?: boolean; active: boolean }> => {
       if (ctx.user.isGuest) {

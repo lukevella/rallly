@@ -1,3 +1,4 @@
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { RegistrationTokenPayload } from "@rallly/backend";
 import { decryptToken } from "@rallly/backend/session";
 import { generateOtp, randomid } from "@rallly/backend/utils/nanoid";
@@ -16,14 +17,14 @@ import NextAuth, {
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
-import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
+import { absoluteUrl } from "@/utils/absolute-url";
 import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
-    adapter: CustomPrismaAdapter(prisma),
+    adapter: PrismaAdapter(prisma),
     secret: process.env.SECRET_PASSWORD,
     session: {
       strategy: "jwt",
@@ -103,7 +104,9 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
               subject: `${token} is your 6-digit code`,
               props: {
                 name: user.name,
-                magicLink: url,
+                magicLink: absoluteUrl("/auth/login", {
+                  magicLink: url,
+                }),
                 code: token,
               },
             });

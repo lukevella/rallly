@@ -125,7 +125,13 @@ test.describe.serial(() => {
 
       await page.goto(magicLink);
 
+      await page.getByRole("button", { name: "Continue" }).click();
+
       await page.waitForURL("/polls");
+
+      await page.getByTestId("user-dropdown").click();
+
+      await expect(page.getByText("Test User")).toBeVisible();
     });
 
     test("can login with verification code", async ({ page }) => {
@@ -144,6 +150,10 @@ test.describe.serial(() => {
       await page.getByRole("button", { name: "Continue" }).click();
 
       await page.waitForURL("/polls");
+
+      await page.getByTestId("user-dropdown").click();
+
+      await expect(page.getByText("Test User")).toBeVisible();
     });
   });
 });
