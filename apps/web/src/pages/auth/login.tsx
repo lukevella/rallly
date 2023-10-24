@@ -13,8 +13,13 @@ import { trpc } from "@/utils/trpc/client";
 import { getServerSideTranslations } from "@/utils/with-page-translations";
 
 const params = z.object({
-  email: z.string(),
-  magicLink: z.string(),
+  magicLink: z.string().url(),
+  email: z.string().email(),
+});
+
+const magicLinkParams = z.object({
+  email: z.string().email(),
+  token: z.string(),
 });
 
 type PageProps = z.infer<typeof params>;
@@ -70,11 +75,25 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       notFound: true,
     };
   }
-  const { email, magicLink } = parse.data;
+
+  const { magicLink } = parse.data;
+
+  const url = new URL(magicLink);
+
+  const parseMagicLink = magicLinkParams.safeParse(
+    Object.fromEntries(url.searchParams),
+  );
+
+  if (!parseMagicLink.success) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
-      email,
       magicLink,
+      email: parseMagicLink.data.email,
       ...(await getServerSideTranslations(ctx)),
     },
   };
