@@ -222,5 +222,6 @@
   "hideScoresLabel": "Hide scores until after a participant has voted",
   "authErrorTitle": "Login Error",
   "authErrorDescription": "There was an error logging you in. Please try again.",
-  "authErrorCta": "Go to login page"
+  "authErrorCta": "Go to login page",
+  "continueAs": "Continue as"
 }
