@@ -1,5 +1,6 @@
 import { Button } from "@rallly/ui/button";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { z } from "zod";
 
 import { Logo } from "@/components/logo";
 import { Skeleton } from "@/components/skeleton";
@@ -7,19 +8,17 @@ import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
 import { NextPageWithLayout } from "@/types";
 import { trpc } from "@/utils/trpc/client";
-import { getStaticTranslations } from "@/utils/with-page-translations";
+import { getServerSideTranslations } from "@/utils/with-page-translations";
 
-const Page: NextPageWithLayout = () => {
-  const router = useRouter();
-  const email = router.query.email as string;
-  const magicLink = (router.query.magicLink as string) ?? "";
+const params = z.object({
+  email: z.string(),
+  magicLink: z.string(),
+});
 
-  const { data } = trpc.user.getByEmail.useQuery(
-    { email },
-    {
-      enabled: !!email,
-    },
-  );
+type PageProps = z.infer<typeof params>;
+
+const Page: NextPageWithLayout<PageProps> = ({ magicLink, email }) => {
+  const { data } = trpc.user.getByEmail.useQuery({ email });
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4 p-4">
@@ -36,9 +35,7 @@ const Page: NextPageWithLayout = () => {
             <UserAvatar size="lg" name={data?.name} />
             <div className="py-4 text-center">
               <div className="mb-1 h-6 font-medium">
-                {data?.name ?? (
-                  <Skeleton className="inline-block h-full w-16" />
-                )}
+                {data?.name ?? <Skeleton className="inline-block h-5 w-16" />}
               </div>
               <div className="text-muted-foreground h-5 truncate text-sm">
                 {data?.email ?? (
@@ -58,6 +55,21 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-export const getStaticProps = getStaticTranslations;
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const parse = params.safeParse(ctx.query);
+  if (!parse.success) {
+    return {
+      notFound: true,
+    };
+  }
+  const { email, magicLink } = parse.data;
+  return {
+    props: {
+      email,
+      magicLink,
+      ...getServerSideTranslations(ctx),
+    },
+  };
+};
 
 export default Page;
