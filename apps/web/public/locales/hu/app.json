@@ -222,5 +222,6 @@
   "hideScoresLabel": "Rejtsd el a szavazatszámlálót, amíg nem szavaz a résztvevő",
   "authErrorTitle": "Bejelentkezési hiba",
   "authErrorDescription": "Hiba történt a bejelentkezés közben. Kérjük, próbáld újra!",
-  "authErrorCta": "Irány a bejelentkezési oldalra"
+  "authErrorCta": "Irány a bejelentkezési oldalra",
+  "continueAs": "Folytatás, mint"
 }
