@@ -125,7 +125,7 @@ test.describe.serial(() => {
 
       await page.goto(magicLink);
 
-      await page.getByRole("link", { name: "Continue" }).click();
+      await page.getByRole("button", { name: "Continue" }).click();
 
       await page.waitForURL("/polls");
 
