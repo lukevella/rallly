@@ -21,7 +21,10 @@
   "planProDescription": "Pro pravidelné uživatele a profesionály",
   "accessAllFeatures": "Přístup ke všem funkcím",
   "getEarlyAccess": "Přednostní přístup k novým funkcím",
+  "canUseFreeAnswer2": "Ano, většina funkcí Rallly je zdarma a mnoho uživatelů za nic nebude muset platit. Existují však některé funkce, které jsou k dispozici pouze platícím zákazníkům. Tyto funkce jsou navrženy tak, aby vám pomohly získat ještě víc z Rallly.",
+  "whyUpgradeAnswer2": "Upgrade na placený plán má smysl, pokud používáte Rallly často nebo ho používáte pro práci. Aktuální cena předplatného je akce pro \"early adopters\" a v budoucnu se zvýší. Upgradem dnes získáte přednostní přístup k novým funkcím vysoce kvalitního nástroje pro plánování a cena vašeho předplátného vám zůstane napořád. Budoucí zvýšení cen se vás nedotkne.",
   "upgradeNowSaveLater": "Upgradujte dnes a ušetřete",
+  "earlyAdopterDescription": "Jako \"early adopter\" vám zůstane aktuální cena předplatného napořád a nedotkne se vás budoucí zvýšení cen.",
   "planFree": "Zdarma",
   "keepPollsIndefinitely": "Uchovat hlasování neomezeně"
 }

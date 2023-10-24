@@ -15,6 +15,9 @@
   "cancelSubscriptionAnswer": "Aboneliğinizi <a>faturalandırma ayarları</a> kısmına gidip istediğiniz zaman iptal edebilirsiniz. İptal ettikten sonra, fatura döneminizin sonuna kadar ücretli planınıza erişmeye devam edeceksiniz. Ondan sonra, ücretsiz plan a geçiş yapmış olacaksınız.",
   "billingPeriodMonthly": "Aylık",
   "billingPeriodYearly": "Yıllık",
+  "limitedAccess": "Temel özelliklere erişim",
+  "accessAllFeatures": "Tüm Özelliklere Erişin",
+  "getEarlyAccess": "Yeni özelliklere erken erişin",
   "planFree": "Ücretsiz",
   "keepPollsIndefinitely": "Anketleri süresiz olarak sakla"
 }
