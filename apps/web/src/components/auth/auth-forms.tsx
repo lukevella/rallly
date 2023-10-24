@@ -158,7 +158,9 @@ export const LoginForm: React.FunctionComponent<{
                 name: s.user.name,
               });
             }
-            posthog?.capture("login");
+            posthog?.capture("login", {
+              method: "verification-code"
+            });
             router.push(callbackUrl);
           }
         }}

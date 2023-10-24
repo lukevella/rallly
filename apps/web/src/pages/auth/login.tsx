@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
 import { NextPageWithLayout } from "@/types";
+import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 import { getServerSideTranslations } from "@/utils/with-page-translations";
 
@@ -29,13 +30,32 @@ type PageProps = { magicLink: string; email: string };
 
 const Page: NextPageWithLayout<PageProps> = ({ magicLink, email }) => {
   const session = useSession();
+  const posthog = usePostHog();
+  const trpcUtils = trpc.useUtils();
   const magicLinkFetch = useMutation({
     mutationFn: async () => {
       const res = await fetch(magicLink);
       return res;
     },
-    onSuccess: (data) => {
-      session.update();
+    onSuccess: async (data) => {
+      if (!data.url.includes("auth/error")) {
+        // if login was successful, update the session
+        const updatedSession = await session.update();
+        if (updatedSession) {
+          // identify the user in posthog
+          posthog?.identify(updatedSession.user.id, {
+            email: updatedSession.user.email,
+            name: updatedSession.user.name,
+          });
+
+          posthog?.capture("login", {
+            method: "magic-link",
+          });
+
+          await trpcUtils.invalidate();
+        }
+      }
+
       router.push(data.url);
     },
   });
