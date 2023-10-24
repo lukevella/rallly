@@ -222,5 +222,6 @@
   "hideScoresLabel": "Scores verbergen totdat een deelnemer heeft gestemd",
   "authErrorTitle": "Fout bij het inloggen",
   "authErrorDescription": "Er is een fout opgetreden bij het inloggen. Probeer het opnieuw.",
-  "authErrorCta": "Ga naar de inlogpagina"
+  "authErrorCta": "Ga naar de inlogpagina",
+  "continueAs": "Ga verder als"
 }
