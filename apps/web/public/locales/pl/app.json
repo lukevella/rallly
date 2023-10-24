@@ -222,5 +222,6 @@
   "hideScoresLabel": "Ukryj wyniki do momentu oddania głosu przez uczestnika",
   "authErrorTitle": "Błąd logowania",
   "authErrorDescription": "Wystąpił błąd podczas logowania. Spróbuj ponownie.",
-  "authErrorCta": "Przejdź do strony logowania"
+  "authErrorCta": "Przejdź do strony logowania",
+  "continueAs": "Kontynuuj jako"
 }
