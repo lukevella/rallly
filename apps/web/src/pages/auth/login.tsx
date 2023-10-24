@@ -31,6 +31,7 @@ type PageProps = { magicLink: string; email: string };
 const Page: NextPageWithLayout<PageProps> = ({ magicLink, email }) => {
   const session = useSession();
   const posthog = usePostHog();
+  const trpcUtils = trpc.useUtils();
   const magicLinkFetch = useMutation({
     mutationFn: async () => {
       const res = await fetch(magicLink);
@@ -50,6 +51,8 @@ const Page: NextPageWithLayout<PageProps> = ({ magicLink, email }) => {
           posthog?.capture("login", {
             method: "magic-link",
           });
+
+          await trpcUtils.invalidate();
         }
       }
 
