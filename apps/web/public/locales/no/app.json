@@ -220,5 +220,6 @@
   "requireParticipantEmailLabel": "Krev e-postadresse fra deltakere",
   "hideParticipantsLabel": "Skjul deltakerliste fra andre deltakere",
   "hideScoresLabel": "Skjul resultater frem til etter deltakere har stemt",
+  "authErrorTitle": "Feil ved innlogging",
   "continueAs": "Fortsett som"
 }
