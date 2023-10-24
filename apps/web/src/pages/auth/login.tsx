@@ -1,9 +1,13 @@
 import { Button } from "@rallly/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { z } from "zod";
 
+import { StandardLayout } from "@/components/layouts/standard-layout";
 import { Logo } from "@/components/logo";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
@@ -14,7 +18,6 @@ import { getServerSideTranslations } from "@/utils/with-page-translations";
 
 const params = z.object({
   magicLink: z.string().url(),
-  email: z.string().email(),
 });
 
 const magicLinkParams = z.object({
@@ -22,10 +25,22 @@ const magicLinkParams = z.object({
   token: z.string(),
 });
 
-type PageProps = z.infer<typeof params>;
+type PageProps = { magicLink: string; email: string };
 
 const Page: NextPageWithLayout<PageProps> = ({ magicLink, email }) => {
+  const session = useSession();
+  const magicLinkFetch = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(magicLink);
+      return res;
+    },
+    onSuccess: (data) => {
+      session.update();
+      router.push(data.url);
+    },
+  });
   const { data } = trpc.user.getByEmail.useQuery({ email });
+  const router = useRouter();
   const { t } = useTranslation();
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4 p-4">
@@ -54,16 +69,26 @@ const Page: NextPageWithLayout<PageProps> = ({ magicLink, email }) => {
               </div>
             </div>
           </div>
-          <Button asChild size="lg" variant="primary" className="mt-4 w-full">
-            <a role="link" href={magicLink}>
-              <Trans i18nKey="continue" />
-            </a>
+          <Button
+            loading={magicLinkFetch.isLoading}
+            onClick={async () => {
+              await magicLinkFetch.mutateAsync();
+            }}
+            size="lg"
+            variant="primary"
+            className="mt-4 w-full"
+          >
+            <Trans i18nKey="continue" />
           </Button>
         </div>
       </div>
     </div>
   );
 };
+
+Page.getLayout = (page) => (
+  <StandardLayout hideNav={true}>{page}</StandardLayout>
+);
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
   ctx,

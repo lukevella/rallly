@@ -105,7 +105,6 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
               props: {
                 name: user.name,
                 magicLink: absoluteUrl("/auth/login", {
-                  email,
                   magicLink: url,
                 }),
                 code: token,
