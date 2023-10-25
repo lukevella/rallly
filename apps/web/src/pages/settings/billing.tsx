@@ -282,6 +282,7 @@ const Page: NextPageWithLayout = () => {
 Page.getLayout = getProfileLayout;
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
+  // This page is only available on the hosted version
   if (isSelfHosted) {
     return {
       notFound: true,

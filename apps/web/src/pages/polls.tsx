@@ -23,6 +23,7 @@ import { PollStatusBadge } from "@/components/poll-status";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { NextPageWithLayout } from "@/types";
+import { isSelfHosted } from "@/utils/constants";
 import { useDayjs } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 import { getStaticTranslations } from "@/utils/with-page-translations";
@@ -187,6 +188,7 @@ const Page: NextPageWithLayout = () => {
 };
 
 Page.getLayout = getStandardLayout;
+Page.isAuthRequired = isSelfHosted;
 
 export default Page;
 

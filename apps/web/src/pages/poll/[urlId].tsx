@@ -10,6 +10,7 @@ import { RegisterLink } from "@/components/register-link";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { NextPageWithLayout } from "@/types";
+import { isSelfHosted } from "@/utils/constants";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
 const GuestPollAlert = () => {
@@ -58,6 +59,7 @@ const Page: NextPageWithLayout = () => {
 };
 
 Page.getLayout = getPollLayout;
+Page.isAuthRequired = isSelfHosted;
 
 export const getStaticPaths = async () => {
   return {

@@ -71,6 +71,7 @@ const Page: NextPageWithLayout = () => {
 };
 
 Page.getLayout = getProfileLayout;
+Page.isAuthRequired = true;
 
 export const getStaticProps = getStaticTranslations;
 
