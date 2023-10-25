@@ -6,7 +6,7 @@ export type EmailContext = {
 };
 
 export const EmailContext = React.createContext<EmailContext>({
-  logoUrl: "",
+  logoUrl: "/static/logo.png",
   baseUrl: "",
 });
 
