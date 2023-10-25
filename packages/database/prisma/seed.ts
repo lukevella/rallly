@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
+import dayjs from "dayjs";
 
 const prisma = new PrismaClient();
 
@@ -7,15 +8,7 @@ const randInt = (max = 1, floor = 0) => {
   return Math.round(Math.random() * max) + floor;
 };
 
-async function main() {
-  // Create some users
-  const user = await prisma.user.create({
-    data: {
-      name: "Dev User",
-      email: "dev@rallly.co",
-    },
-  });
-
+async function createPollsForUser(userId: string) {
   // Create some polls
   const polls = await Promise.all(
     Array.from({ length: 20 }).map(async (_, i) => {
@@ -34,7 +27,7 @@ async function main() {
           deadline: faker.date.future(),
           user: {
             connect: {
-              id: user.id,
+              id: userId,
             },
           },
           timeZone: duration !== 0 ? "America/New_York" : undefined,
@@ -102,8 +95,59 @@ async function main() {
       });
     }
   }
+}
 
-  console.info(`Seeded database with user: ${user.email}`);
+async function main() {
+  // Create some users
+  const freeUser = await prisma.user.create({
+    data: {
+      name: "Dev User",
+      email: "dev@rallly.co",
+      timeZone: "America/New_York",
+    },
+  });
+
+  const proUser = await prisma.user.create({
+    data: {
+      name: "Pro User",
+      email: "dev+pro@rallly.co",
+      customerId: "cus_123",
+      subscription: {
+        create: {
+          id: "sub_123",
+          active: true,
+          priceId: "price_123",
+          periodStart: new Date(),
+          periodEnd: dayjs().add(1, "year").toDate(),
+        },
+      },
+    },
+  });
+
+  const proUserLegacy = await prisma.user.create({
+    data: {
+      name: "Pro User Legacy",
+      email: "dev+prolegacy@rallly.co",
+    },
+  });
+
+  await prisma.userPaymentData.create({
+    data: {
+      userId: proUserLegacy.id,
+      status: "active",
+      endDate: dayjs().add(1, "year").toDate(),
+      planId: "pro_123",
+      updateUrl: "https://example.com/update",
+      cancelUrl: "https://example.com/cancel",
+      subscriptionId: "sub_123",
+    },
+  });
+
+  [freeUser.id, proUser.id, proUserLegacy.id].forEach(async (userId) => {
+    await createPollsForUser(userId);
+  });
+
+  console.info(`Seeded data`);
 }
 
 main()
