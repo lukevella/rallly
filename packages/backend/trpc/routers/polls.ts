@@ -388,11 +388,12 @@ export const polls = router({
           message: "Poll not found",
         });
       }
+      const inviteLink = ctx.shortUrl(`/invite/${res.id}`);
 
       if (ctx.user.id === res.userId || res.adminUrlId === input.adminToken) {
-        return res;
+        return { ...res, inviteLink };
       } else {
-        return { ...res, adminUrlId: "" };
+        return { ...res, adminUrlId: "", inviteLink };
       }
     }),
   transfer: possiblyPublicProcedure

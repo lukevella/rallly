@@ -15,8 +15,6 @@ import { useCopyToClipboard } from "react-use";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
-import { shortUrl } from "@/utils/absolute-url";
-import { isSelfHosted } from "@/utils/constants";
 
 export const InviteDialog = () => {
   const { participants } = useParticipants();
@@ -30,10 +28,6 @@ export const InviteDialog = () => {
       console.error(`Unable to copy value: ${state.error.message}`);
     }
   }, [state]);
-
-  const inviteLink = isSelfHosted
-    ? window.location.origin + `/invite/${poll?.id}`
-    : shortUrl(`/invite/${poll?.id}`);
 
   const [didCopy, setDidCopy] = React.useState(false);
 
@@ -72,7 +66,7 @@ export const InviteDialog = () => {
             <Button
               className="w-full min-w-0 bg-gray-50 px-2.5"
               onClick={() => {
-                copyToClipboard(inviteLink);
+                copyToClipboard(poll.inviteLink);
                 setDidCopy(true);
                 setTimeout(() => {
                   setDidCopy(false);
@@ -82,7 +76,7 @@ export const InviteDialog = () => {
               {didCopy ? (
                 <Trans i18nKey="copied" />
               ) : (
-                <span className="flex truncate">{inviteLink}</span>
+                <span className="flex truncate">{poll.inviteLink}</span>
               )}
             </Button>
             <div className="shrink-0">
