@@ -16,7 +16,6 @@ import {
   router,
 } from "../trpc";
 import { comments } from "./polls/comments";
-import { demo } from "./polls/demo";
 import { options } from "./polls/options";
 import { participants } from "./polls/participants";
 
@@ -42,7 +41,6 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 };
 
 export const polls = router({
-  demo,
   participants,
   comments,
   options,
