@@ -15,6 +15,8 @@ import { DefaultSeo } from "next-seo";
 import React from "react";
 
 import Maintenance from "@/components/maintenance";
+import { UserProvider } from "@/components/user-provider";
+import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
@@ -102,11 +104,15 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           }
         `}</style>
         <TooltipProvider delayDuration={200}>
-          {Component.isAuthRequired ? (
-            <Auth>{getLayout(children)}</Auth>
-          ) : (
-            getLayout(children)
-          )}
+          <UserProvider>
+            <ConnectedDayjsProvider>
+              {Component.isAuthRequired ? (
+                <Auth>{getLayout(children)}</Auth>
+              ) : (
+                getLayout(children)
+              )}
+            </ConnectedDayjsProvider>
+          </UserProvider>
         </TooltipProvider>
       </LazyMotion>
     </SessionProvider>

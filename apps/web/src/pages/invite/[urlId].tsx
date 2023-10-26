@@ -13,12 +13,11 @@ import { Poll } from "@/components/poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
-import { UserProvider, useUser } from "@/components/user-provider";
+import { useUser } from "@/components/user-provider";
 import { VisibilityProvider } from "@/components/visibility";
 import { PermissionsContext } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { absoluteUrl } from "@/utils/absolute-url";
-import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
@@ -118,62 +117,58 @@ const Page = ({ id, title, user }: PageProps) => {
           ],
         }}
       />
-      <UserProvider>
-        <ConnectedDayjsProvider>
-          <Prefetch>
-            <LegacyPollContextProvider>
-              <VisibilityProvider>
-                <div>
-                  <svg
-                    className="absolute inset-x-0 top-0 -z-10 hidden h-[64rem] w-full stroke-gray-300/75 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)] sm:block"
-                    aria-hidden="true"
+      <Prefetch>
+        <LegacyPollContextProvider>
+          <VisibilityProvider>
+            <div>
+              <svg
+                className="absolute inset-x-0 top-0 -z-10 hidden h-[64rem] w-full stroke-gray-300/75 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)] sm:block"
+                aria-hidden="true"
+              >
+                <defs>
+                  <pattern
+                    id="1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84"
+                    width={240}
+                    height={240}
+                    x="50%"
+                    y={-1}
+                    patternUnits="userSpaceOnUse"
                   >
-                    <defs>
-                      <pattern
-                        id="1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84"
-                        width={240}
-                        height={240}
-                        x="50%"
-                        y={-1}
-                        patternUnits="userSpaceOnUse"
-                      >
-                        <path d="M.5 240V.5H240" fill="none" />
-                      </pattern>
-                    </defs>
-                    <rect
-                      width="100%"
-                      height="100%"
-                      strokeWidth={0}
-                      fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
+                    <path d="M.5 240V.5H240" fill="none" />
+                  </pattern>
+                </defs>
+                <rect
+                  width="100%"
+                  height="100%"
+                  strokeWidth={0}
+                  fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
+                />
+              </svg>
+              <GoToApp />
+              <div className="mx-auto max-w-4xl space-y-4 px-3 sm:py-8">
+                <Poll />
+                <div className="mt-4 space-y-4 text-center text-gray-500">
+                  <div className="py-8">
+                    <Trans
+                      defaults="Powered by <a>{name}</a>"
+                      i18nKey="poweredByRallly"
+                      values={{ name: "rallly.co" }}
+                      components={{
+                        a: (
+                          <Link
+                            className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
+                            href="https://rallly.co"
+                          />
+                        ),
+                      }}
                     />
-                  </svg>
-                  <GoToApp />
-                  <div className="mx-auto max-w-4xl space-y-4 px-3 sm:py-8">
-                    <Poll />
-                    <div className="mt-4 space-y-4 text-center text-gray-500">
-                      <div className="py-8">
-                        <Trans
-                          defaults="Powered by <a>{name}</a>"
-                          i18nKey="poweredByRallly"
-                          values={{ name: "rallly.co" }}
-                          components={{
-                            a: (
-                              <Link
-                                className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                                href="https://rallly.co"
-                              />
-                            ),
-                          }}
-                        />
-                      </div>
-                    </div>
                   </div>
                 </div>
-              </VisibilityProvider>
-            </LegacyPollContextProvider>
-          </Prefetch>
-        </ConnectedDayjsProvider>
-      </UserProvider>
+              </div>
+            </div>
+          </VisibilityProvider>
+        </LegacyPollContextProvider>
+      </Prefetch>
     </>
   );
 };

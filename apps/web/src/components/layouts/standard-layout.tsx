@@ -23,11 +23,10 @@ import { UserDropdown } from "@/components/user-dropdown";
 import { IfCloudHosted } from "@/contexts/environment";
 import { IfFreeUser } from "@/contexts/plan";
 import { appVersion, isFeedbackEnabled } from "@/utils/constants";
-import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
 import ModalProvider from "../modal/modal-provider";
-import { IfGuest, UserProvider } from "../user-provider";
+import { IfGuest } from "../user-provider";
 
 const NavMenuItem = ({
   href,
@@ -181,49 +180,45 @@ export const StandardLayout: React.FunctionComponent<{
 }> = ({ children, hideNav, ...rest }) => {
   const key = hideNav ? "no-nav" : "nav";
   return (
-    <UserProvider>
-      <ConnectedDayjsProvider>
-        <Toaster />
-        <ModalProvider>
-          <div className="flex min-h-screen flex-col" {...rest}>
-            <AnimatePresence initial={false}>
-              {!hideNav ? <MainNav /> : null}
-            </AnimatePresence>
-            <AnimatePresence mode="wait" initial={false}>
-              <m.div
-                key={key}
-                variants={{
-                  hidden: { opacity: 0, y: -56 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                initial="hidden"
-                animate="visible"
-                exit={{ opacity: 0, y: 56 }}
-              >
-                {children}
-              </m.div>
-            </AnimatePresence>
-            {appVersion ? (
-              <div className="fixed bottom-0 right-0 z-50 rounded-tl-md bg-gray-200/90">
-                <Link
-                  className="px-2 py-1 text-xs tabular-nums tracking-tight"
-                  target="_blank"
-                  href={`https://github.com/lukevella/rallly/releases/${appVersion}`}
-                >
-                  {`${appVersion}`}
-                </Link>
-              </div>
-            ) : null}
+    <ModalProvider>
+      <Toaster />
+      <div className="flex min-h-screen flex-col" {...rest}>
+        <AnimatePresence initial={false}>
+          {!hideNav ? <MainNav /> : null}
+        </AnimatePresence>
+        <AnimatePresence mode="wait" initial={false}>
+          <m.div
+            key={key}
+            variants={{
+              hidden: { opacity: 0, y: -56 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate="visible"
+            exit={{ opacity: 0, y: 56 }}
+          >
+            {children}
+          </m.div>
+        </AnimatePresence>
+        {appVersion ? (
+          <div className="fixed bottom-0 right-0 z-50 rounded-tl-md bg-gray-200/90">
+            <Link
+              className="px-2 py-1 text-xs tabular-nums tracking-tight"
+              target="_blank"
+              href={`https://github.com/lukevella/rallly/releases/${appVersion}`}
+            >
+              {`${appVersion}`}
+            </Link>
           </div>
-          {isFeedbackEnabled ? (
-            <>
-              <FeaturebaseIdentify />
-              <FeedbackButton />
-            </>
-          ) : null}
-        </ModalProvider>
-      </ConnectedDayjsProvider>
-    </UserProvider>
+        ) : null}
+      </div>
+      {isFeedbackEnabled ? (
+        <>
+          <FeaturebaseIdentify />
+          <FeedbackButton />
+        </>
+      ) : null}
+    </ModalProvider>
   );
 };
 
