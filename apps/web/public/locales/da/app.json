@@ -141,5 +141,6 @@
   "pricing": "Priser",
   "authErrorTitle": "Loginfejl",
   "authErrorDescription": "Der opstod en fejl ved login. Prøv venligst igen.",
-  "authErrorCta": "Gå til loginsiden"
+  "authErrorCta": "Gå til loginsiden",
+  "continueAs": "Fortsæt som"
 }
