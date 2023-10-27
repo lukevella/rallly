@@ -228,7 +228,7 @@ model Comment {
 }
 
 model VerificationToken {
-  identifier String
+  identifier String   @db.Citext
   token      String   @unique
   expires    DateTime
 
