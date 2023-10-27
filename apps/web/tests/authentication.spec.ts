@@ -96,12 +96,6 @@ test.describe.serial(() => {
       ).toBeVisible();
     });
 
-    test.describe("login", () => {
-      test.afterEach(async ({ page }) => {
-        await page.goto("/logout");
-      });
-    });
-
     test("can login with magic link", async ({ page }) => {
       await page.goto("/login");
 
@@ -140,6 +134,28 @@ test.describe.serial(() => {
       await page
         .getByPlaceholder("jessie.smith@example.com")
         .type(testUserEmail);
+
+      await page.getByRole("button", { name: "Continue" }).click();
+
+      const code = await getCode();
+
+      await page.getByPlaceholder("Enter your 6-digit code").type(code);
+
+      await page.getByRole("button", { name: "Continue" }).click();
+
+      await page.waitForURL("/polls");
+
+      await page.getByTestId("user-dropdown").click();
+
+      await expect(page.getByText("Test User")).toBeVisible();
+    });
+
+    test("allow using different case in email", async ({ page }) => {
+      await page.goto("/login");
+
+      await page
+        .getByPlaceholder("jessie.smith@example.com")
+        .type("Test@example.com");
 
       await page.getByRole("button", { name: "Continue" }).click();
 
