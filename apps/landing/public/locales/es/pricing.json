@@ -15,6 +15,16 @@
   "cancelSubscriptionAnswer": "Puedes cancelar tu suscripción en cualquier momento dirigiéndote a tu <a>configuración de facturación</a>. Una vez que cancele su suscripción, tendrá acceso a su plan de pago hasta el final de su período de facturación. Después, usted será degradado a un plan gratuito.",
   "billingPeriodMonthly": "Mensual",
   "billingPeriodYearly": "Anualmente",
+  "planFreeDescription": "Para usuarios ocasionales",
+  "limitedAccess": "Acceso a funciones principales",
+  "pollsDeleted": "Las encuestas se eliminan automáticamente una vez que se inactivan",
+  "planProDescription": "Para usuarios avanzados y profesionales",
+  "accessAllFeatures": "Acceso a todas las funcionalidades",
+  "getEarlyAccess": "Acceso anticipado a nuevas funciones",
+  "canUseFreeAnswer2": "Sí, la mayoría de las funciones de Rallly son gratuitas y muchos usuarios nunca tendrán que pagar nada. Sin embargo, hay algunas características que sólo están disponibles para clientes de pago. Estas características están diseñadas para ayudarte a sacar el máximo partido de Rallly.",
+  "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso temprano a nuevas herramientas de programación de alta calidad a medida que se liberan y se bloquean en su tarifa de suscripción para que no se vea afectado por aumentos de precios futuros.",
+  "upgradeNowSaveLater": "Actualizar ahora, guardar más tarde",
+  "earlyAdopterDescription": "Como usuario pionero, fijará su tarifa de suscripción y no se verá afectado por futuras subidas de precios.",
   "planFree": "Gratis",
   "keepPollsIndefinitely": "Mantener encuestas indefinidamente"
 }
