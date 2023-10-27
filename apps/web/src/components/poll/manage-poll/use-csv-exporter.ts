@@ -14,11 +14,10 @@ export const useCsvExporter = () => {
   return {
     exportToCsv: () => {
       const header = [
-        t("participantCount", {
-          count: participants.length,
-        }),
+        t("name"),
+        t("email"),
         ...options.map((decodedOption) => {
-          const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month}`;
+          const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month} ${decodedOption.year}`;
           return decodedOption.type === "date"
             ? day
             : `${day} ${decodedOption.startTime} - ${decodedOption.endTime}`;
@@ -27,6 +26,7 @@ export const useCsvExporter = () => {
       const rows = participants.map((participant) => {
         return [
           participant.name,
+          participant.email,
           ...poll.options.map((option) => {
             const vote = participant.votes.find((vote) => {
               return vote.optionId === option.id;
