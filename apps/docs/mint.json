@@ -10,7 +10,8 @@
     "light": "#6366f1",
     "dark": "#4F46E5",
     "background": {
-      "light": "#F9FAFB"
+      "light": "#F9FAFB",
+      "dark": "#18181B"
     },
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
   },
@@ -22,10 +23,6 @@
     {
       "name": "Home",
       "url": "https://rallly.co"
-    },
-    {
-      "name": "Contact",
-      "url": "contact"
     }
   ],
   "anchors": [
