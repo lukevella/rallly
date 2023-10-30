@@ -16,7 +16,6 @@ import {
   router,
 } from "../trpc";
 import { comments } from "./polls/comments";
-import { demo } from "./polls/demo";
 import { options } from "./polls/options";
 import { participants } from "./polls/participants";
 
@@ -42,7 +41,6 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 };
 
 export const polls = router({
-  demo,
   participants,
   comments,
   options,
@@ -390,11 +388,12 @@ export const polls = router({
           message: "Poll not found",
         });
       }
+      const inviteLink = ctx.shortUrl(`/invite/${res.id}`);
 
       if (ctx.user.id === res.userId || res.adminUrlId === input.adminToken) {
-        return res;
+        return { ...res, inviteLink };
       } else {
-        return { ...res, adminUrlId: "" };
+        return { ...res, adminUrlId: "", inviteLink };
       }
     }),
   transfer: possiblyPublicProcedure

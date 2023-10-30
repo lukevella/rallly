@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 
 import { CreatePoll } from "@/components/create-poll";
 import { getStandardLayout } from "@/components/layouts/standard-layout";
+import { isSelfHosted } from "@/utils/constants";
 
 import { NextPageWithLayout } from "../types";
 import { getStaticTranslations } from "../utils/with-page-translations";
@@ -95,6 +96,7 @@ const Page: NextPageWithLayout = () => {
 };
 
 Page.getLayout = getStandardLayout;
+Page.isAuthRequired = isSelfHosted;
 
 export default Page;
 

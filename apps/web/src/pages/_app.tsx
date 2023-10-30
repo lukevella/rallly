@@ -9,11 +9,14 @@ import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import Script from "next/script";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
+import React from "react";
 
 import Maintenance from "@/components/maintenance";
+import { UserProvider } from "@/components/user-provider";
+import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
 import * as nextI18nNextConfig from "../../next-i18next.config.js";
@@ -29,12 +32,30 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+const Auth = ({ children }: { children: React.ReactNode }) => {
+  const session = useSession();
+  const isAuthenticated = !!session.data?.user.email;
+
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      signIn();
+    }
+  }, [isAuthenticated]);
+
+  if (isAuthenticated) {
+    return <>{children}</>;
+  }
+
+  return null;
+};
+
 const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1") {
     return <Maintenance />;
   }
 
   const getLayout = Component.getLayout ?? ((page) => page);
+  const children = <Component {...pageProps} />;
 
   return (
     <SessionProvider>
@@ -83,7 +104,15 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           }
         `}</style>
         <TooltipProvider delayDuration={200}>
-          {getLayout(<Component {...pageProps} />)}
+          <UserProvider>
+            <ConnectedDayjsProvider>
+              {Component.isAuthRequired ? (
+                <Auth>{getLayout(children)}</Auth>
+              ) : (
+                getLayout(children)
+              )}
+            </ConnectedDayjsProvider>
+          </UserProvider>
         </TooltipProvider>
       </LazyMotion>
     </SessionProvider>
