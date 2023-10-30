@@ -7,7 +7,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { createGlobalState } from "react-use";
 
-import { absoluteUrl } from "@/utils/absolute-url";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -17,7 +16,11 @@ import { TextInput } from "../text-input";
 export const useDefaultEmail = createGlobalState("");
 
 const verifyCode = async (options: { email: string; token: string }) => {
-  const url = absoluteUrl("/api/auth/callback/email", options);
+  const url = `${
+    window.location.origin
+  }/api/auth/callback/email?email=${encodeURIComponent(options.email)}&token=${
+    options.token
+  }`;
 
   const res = await fetch(url);
 
@@ -159,7 +162,7 @@ export const LoginForm: React.FunctionComponent<{
               });
             }
             posthog?.capture("login", {
-              method: "verification-code"
+              method: "verification-code",
             });
             router.push(callbackUrl);
           }
