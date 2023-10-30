@@ -1,5 +1,4 @@
 import { SelectProps } from "@radix-ui/react-select";
-import { CheckIcon, ChevronDownIcon, GlobeIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
   Command,
@@ -11,6 +10,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { CommandList } from "cmdk";
 import dayjs from "dayjs";
+import { CheckIcon, ChevronDownIcon, GlobeIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import spacetime from "spacetime";

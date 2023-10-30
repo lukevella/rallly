@@ -1,10 +1,11 @@
-import { ListIcon, SparklesIcon } from "@rallly/icons";
+"use client";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
+import { ListIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -17,7 +18,6 @@ import {
 import FeedbackButton from "@/components/feedback";
 import { LoginLink } from "@/components/login-link";
 import { Logo } from "@/components/logo";
-import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 import { IfCloudHosted } from "@/contexts/environment";
@@ -41,14 +41,14 @@ const NavMenuItem = ({
   label: React.ReactNode;
   className?: string;
 }) => {
-  const router = useRouter();
+  const pathname = usePathname();
   return (
     <Button variant="ghost" asChild>
       <Link
         target={target}
         href={href}
         className={cn(
-          router.asPath === href
+          pathname === href
             ? "text-foreground"
             : "text-muted-foreground hover:text-foreground active:bg-gray-200/50",
           className,
@@ -78,18 +78,6 @@ const Upgrade = () => {
 };
 
 const LogoArea = () => {
-  const router = useRouter();
-  const [isBusy, setIsBusy] = React.useState(false);
-  React.useEffect(() => {
-    const setBusy = () => setIsBusy(true);
-    const setNotBusy = () => setIsBusy(false);
-    router.events.on("routeChangeStart", setBusy);
-    router.events.on("routeChangeComplete", setNotBusy);
-    return () => {
-      router.events.off("routeChangeStart", setBusy);
-      router.events.off("routeChangeComplete", setNotBusy);
-    };
-  }, [router.events]);
   return (
     <div className="relative flex items-center justify-center gap-x-4">
       <Link
@@ -100,14 +88,6 @@ const LogoArea = () => {
       >
         <Logo size="sm" />
       </Link>
-      <div
-        className={cn(
-          "pointer-events-none flex w-5 items-center justify-center text-gray-500 transition-opacity delay-500",
-          isBusy ? "opacity-100" : "opacity-0",
-        )}
-      >
-        {isBusy ? <Spinner /> : null}
-      </div>
     </div>
   );
 };

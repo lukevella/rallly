@@ -1,7 +1,7 @@
 import { Participant, VoteType } from "@rallly/database";
-import { ChevronDownIcon } from "@rallly/icons";
 import clsx from "clsx";
 import { AnimatePresence, m } from "framer-motion";
+import { ChevronDownIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 

@@ -1,5 +1,5 @@
 import Link, { LinkProps } from "next/link";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 export const RegisterLink = React.forwardRef<
@@ -7,6 +7,7 @@ export const RegisterLink = React.forwardRef<
   React.PropsWithChildren<Omit<LinkProps, "href"> & { className?: string }>
 >(function RegisterLink({ children, ...props }, ref) {
   const router = useRouter();
+  const pathname = usePathname() ?? "/";
   return (
     <Link
       ref={ref}
@@ -15,9 +16,7 @@ export const RegisterLink = React.forwardRef<
       onClick={async (e) => {
         e.preventDefault();
         props.onClick?.(e);
-        router.push(
-          "/register?callbackUrl=" + encodeURIComponent(router.asPath),
-        );
+        router.push("/register?callbackUrl=" + encodeURIComponent(pathname));
       }}
     >
       {children}

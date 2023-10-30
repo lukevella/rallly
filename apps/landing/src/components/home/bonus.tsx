@@ -1,11 +1,11 @@
+import { cn } from "@rallly/ui";
+import { m } from "framer-motion";
 import {
   CalendarCheck2Icon,
   LanguagesIcon,
   Users2Icon,
   ZapIcon,
-} from "@rallly/icons";
-import { cn } from "@rallly/ui";
-import { m } from "framer-motion";
+} from "lucide-react";
 
 import { Trans } from "@/components/trans";
 import { IconComponent } from "@/types";

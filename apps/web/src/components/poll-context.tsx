@@ -1,6 +1,6 @@
 import { Participant, VoteType } from "@rallly/database";
-import { TrashIcon } from "@rallly/icons";
 import { keyBy } from "lodash";
+import { TrashIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import React from "react";
 

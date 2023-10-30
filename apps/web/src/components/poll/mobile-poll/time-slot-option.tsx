@@ -1,4 +1,4 @@
-import { ClockIcon } from "@rallly/icons";
+import { ClockIcon } from "lucide-react";
 import * as React from "react";
 
 import PollOption, { PollOptionProps } from "./poll-option";

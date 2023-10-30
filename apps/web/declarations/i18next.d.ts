@@ -1,4 +1,4 @@
-import "react-i18next";
+import "i18next";
 
 import app from "../public/locales/en/app.json";
 

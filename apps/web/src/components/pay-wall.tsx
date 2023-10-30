@@ -1,3 +1,8 @@
+import { cn } from "@rallly/ui";
+import { Badge } from "@rallly/ui/badge";
+import { Button } from "@rallly/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { m } from "framer-motion";
 import {
   CalendarCheck2Icon,
   CopyIcon,
@@ -7,14 +12,9 @@ import {
   LockIcon,
   Settings2Icon,
   TrendingUpIcon,
-} from "@rallly/icons";
-import { cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
-import { Button } from "@rallly/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
-import { m } from "framer-motion";
+} from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
 import React from "react";
 
 import { Trans } from "@/components/trans";
@@ -51,7 +51,7 @@ const Feature = ({
 };
 
 const Teaser = () => {
-  const router = useRouter();
+  const params = useParams();
 
   const [tab, setTab] = React.useState("yearly");
 
@@ -213,7 +213,7 @@ const Teaser = () => {
             <Trans i18nKey="upgrade" defaults="Upgrade" />
           </UpgradeButton>
           <Button asChild className="w-full">
-            <Link href={`/poll/${router.query.urlId as string}`}>
+            <Link href={`/poll/${params?.urlId as string}`}>
               <Trans i18nKey="notToday" defaults="Not Today" />
             </Link>
           </Button>

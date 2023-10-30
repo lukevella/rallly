@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from "@rallly/icons";
+import { ArrowLeftIcon } from "lucide-react";
 import { GetStaticPropsContext } from "next";
 import ErrorPage from "next/error";
 import Head from "next/head";
@@ -117,6 +117,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
       },
     };
   }
+
+  return res;
 }
 
 export async function getStaticPaths() {

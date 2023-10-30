@@ -1,8 +1,8 @@
-import { ChevronRightIcon } from "@rallly/icons";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { preventWidows } from "@rallly/utils";
 import { m } from "framer-motion";
+import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";

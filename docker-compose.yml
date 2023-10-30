@@ -2,6 +2,8 @@ services:
   rallly_db:
     image: postgres:14.2
     restart: always
+    ports:
+      - "5450:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -13,7 +15,7 @@ services:
       timeout: 5s
       retries: 5
 
-  rallly:
+  rallly_selfhosted:
     build:
       args:
         - SELF_HOSTED=true
@@ -26,7 +28,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@rallly_db:5432/db
+      - DATABASE_URL=postgres://postgres:postgres@rallly_db:5450/db
     env_file:
       - .env
 

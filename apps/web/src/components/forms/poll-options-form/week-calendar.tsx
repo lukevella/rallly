@@ -1,5 +1,5 @@
-import { XIcon } from "@rallly/icons";
 import dayjs from "dayjs";
+import { XIcon } from "lucide-react";
 import React from "react";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
@@ -98,7 +98,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   width: `calc(${props.style?.width}%)`,
                 }}
               >
-                <div className="absolute top-1.5 right-1.5 flex justify-end opacity-0 group-hover:opacity-100">
+                <div className="absolute right-1.5 top-1.5 flex justify-end opacity-0 group-hover:opacity-100">
                   <XIcon className="h-3 w-3" />
                 </div>
                 <div>

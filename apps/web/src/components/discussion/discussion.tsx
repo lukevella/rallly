@@ -1,8 +1,3 @@
-import {
-  MessageCircleIcon,
-  MoreHorizontalIcon,
-  TrashIcon,
-} from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +7,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Textarea } from "@rallly/ui/textarea";
 import dayjs from "dayjs";
+import { MessageCircleIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";

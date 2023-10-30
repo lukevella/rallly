@@ -1,10 +1,4 @@
-import {
-  DiscordIcon,
-  GithubIcon,
-  LanguagesIcon,
-  LinkedinIcon,
-  TwitterIcon,
-} from "@rallly/icons";
+import { DiscordIcon } from "@rallly/icons";
 import languages from "@rallly/languages";
 import {
   Select,
@@ -13,6 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
+import {
+  GithubIcon,
+  LanguagesIcon,
+  LinkedinIcon,
+  TwitterIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";

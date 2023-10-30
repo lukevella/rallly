@@ -1,6 +1,5 @@
-import { FrownIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
-import Head from "next/head";
+import { FrownIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -19,9 +18,6 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
   const { t } = useTranslation();
   return (
     <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
-      <Head>
-        <title>{title}</title>
-      </Head>
       <div className="space-y-8">
         <div className="space-y-4 text-center">
           <Icon className="mb-4 inline-block h-24 w-24 text-gray-400" />

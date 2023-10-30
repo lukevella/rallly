@@ -1,4 +1,4 @@
-import { FileSearchIcon } from "@rallly/icons";
+import { FileSearchIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import React from "react";
 

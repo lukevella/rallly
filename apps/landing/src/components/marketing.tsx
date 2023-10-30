@@ -1,5 +1,5 @@
-import { ArrowUpRight } from "@rallly/icons";
 import { m } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { NextSeo } from "next-seo";

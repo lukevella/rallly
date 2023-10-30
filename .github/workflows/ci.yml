@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       # Downloads a copy of the code in your repository before running CI tests
       - name: Check out repository code
@@ -56,21 +56,21 @@ jobs:
           node-version: 18
           cache: yarn
 
-      - name: Set environment variables
-        run: |
-          echo "DATABASE_URL=postgresql://postgres:password@localhost:5432/rallly" >> $GITHUB_ENV
-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+
+      - name: Set environment variables
+        run: |
+          echo "DATABASE_URL=postgresql://postgres:password@localhost:5450/db" >> $GITHUB_ENV
 
       - name: Run db
         run: |
           docker pull postgres:14.2
-          docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=rallly postgres:14.2
-          yarn wait-on --timeout 60000 tcp:localhost:5432
+          docker run -d -p 5450:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=rallly postgres:14.2
+          yarn wait-on --timeout 60000 tcp:localhost:5450
 
       - name: Deploy migrations
-        run: yarn db:deploy
+        run: yarn db:setup
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium

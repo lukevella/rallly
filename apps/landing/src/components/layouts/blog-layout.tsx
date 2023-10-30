@@ -1,4 +1,4 @@
-import { NewspaperIcon } from "@rallly/icons";
+import { NewspaperIcon } from "lucide-react";
 import Script from "next/script";
 
 import PageLayout from "@/components/layouts/page-layout";

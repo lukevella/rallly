@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
-import { XIcon } from "@rallly/icons";
 import { AnimatePresence, m } from "framer-motion";
+import { XIcon } from "lucide-react";
 import * as React from "react";
 
 import { ButtonProps, LegacyButton } from "../button";

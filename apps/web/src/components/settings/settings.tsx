@@ -1,6 +1,6 @@
-import { InfoIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { InfoIcon } from "lucide-react";
 
 export const Settings = ({ children }: React.PropsWithChildren) => {
   return <div className="px-4 py-3 md:p-6">{children}</div>;

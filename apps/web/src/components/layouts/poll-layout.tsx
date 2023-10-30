@@ -1,3 +1,12 @@
+"use client";
+import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItemIconLabel,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
@@ -9,18 +18,10 @@ import {
   PlayCircleIcon,
   RotateCcw,
   ShieldCloseIcon,
-} from "@rallly/icons";
-import { Button } from "@rallly/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuItemIconLabel,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
+} from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { Container } from "@/components/container";
@@ -46,7 +47,6 @@ import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
-import Error404 from "@/pages/404";
 import { trpc } from "@/utils/trpc/client";
 
 import { NextPageWithLayout } from "../../types";
@@ -155,12 +155,12 @@ const StatusControl = () => {
 const AdminControls = () => {
   const poll = usePoll();
   const pollLink = `/poll/${poll.id}`;
-  const router = useRouter();
+  const pathname = usePathname();
   return (
     <TopBar>
       <div className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
         <div className="flex min-w-0 gap-4">
-          {router.asPath !== pollLink ? (
+          {pathname !== pollLink ? (
             <Button asChild>
               <Link href={pollLink}>
                 <ArrowLeftIcon className="h-4 w-4" />
@@ -257,17 +257,13 @@ const Title = () => {
 };
 
 const Prefetch = ({ children }: React.PropsWithChildren) => {
-  const router = useRouter();
+  const params = useParams();
 
-  const urlId = router.query.urlId as string;
+  const urlId = params?.urlId as string;
 
   const poll = trpc.polls.get.useQuery({ urlId });
   const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
-
-  if (poll.error?.data?.code === "NOT_FOUND") {
-    return <Error404 />;
-  }
 
   if (!poll.data || !watchers.data || !participants.data) {
     return (
@@ -287,10 +283,10 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
-const PollLayout = ({ children }: React.PropsWithChildren) => {
-  const router = useRouter();
+export const PollLayout = ({ children }: React.PropsWithChildren) => {
+  const params = useParams();
 
-  const urlId = router.query.urlId as string;
+  const urlId = params?.urlId as string;
 
   if (!urlId) {
     // probably navigating away

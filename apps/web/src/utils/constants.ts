@@ -6,7 +6,7 @@ export const planIdYearly = process.env
 
 export const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === "true";
 
-export const isFeedbackEnabled = !isSelfHosted;
+export const isFeedbackEnabled = false;
 
 export const monthlyPriceUsd = 7;
 

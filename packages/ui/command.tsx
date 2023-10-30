@@ -1,7 +1,7 @@
 "use client";
 
 import { DialogProps } from "@radix-ui/react-dialog";
-import { SearchIcon } from "@rallly/icons";
+import { SearchIcon } from "lucide-react";
 import { Command as CommandPrimitive } from "cmdk";
 import * as React from "react";
 

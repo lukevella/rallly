@@ -1,7 +1,7 @@
 import { Participant, VoteType } from "@rallly/database";
-import { MoreHorizontalIcon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
+import { MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
 
 import { ParticipantDropdown } from "@/components/participant-dropdown";
