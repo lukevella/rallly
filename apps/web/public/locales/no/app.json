@@ -221,5 +221,7 @@
   "hideParticipantsLabel": "Skjul deltakerliste fra andre deltakere",
   "hideScoresLabel": "Skjul resultater frem til etter deltakere har stemt",
   "authErrorTitle": "Feil ved innlogging",
+  "authErrorDescription": "Det oppstod en feil under påloggingen. Prøv på nytt.",
+  "authErrorCta": "Gå til innlogging",
   "continueAs": "Fortsett som"
 }
