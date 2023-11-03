@@ -137,7 +137,6 @@
   "timeShownIn": "Aikavyöhyke: {timeZone}",
   "editDetailsDescription": "Muuta tapahtuman tietoja.",
   "finalizeDescription": "Valitse lopullinen päivämäärä tapahtumallesi.",
-  "notificationsGuestTooltip": "Luo tili tai kirjaudu sisään saadaksesi ilmoituksia",
   "planFree": "Ilmainen",
   "dateAndTimeDescription": "Muuta ensisijaisia päivämäärä- ja aika-asetuksiasi",
   "createdTime": "luotu {relativeTime}",
