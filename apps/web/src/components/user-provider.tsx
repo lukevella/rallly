@@ -7,8 +7,6 @@ import { z } from "zod";
 
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { isSelfHosted } from "@/utils/constants";
-import { trpc } from "@/utils/trpc/client";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -83,11 +81,6 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
       signIn("guest");
     }
   }, [session.status]);
-
-  // TODO (Luke Vella) [2023-09-19]: Remove this when we have a better way to query for an active subscription
-  trpc.user.subscription.useQuery(undefined, {
-    enabled: !isSelfHosted,
-  });
 
   if (!user || !session.data) {
     return null;
