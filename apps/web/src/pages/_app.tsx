@@ -8,7 +8,6 @@ import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
-import Script from "next/script";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
@@ -85,19 +84,6 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
             content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=yes"
           />
         </Head>
-        {process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID ? (
-          <Script
-            src="https://cdn.paddle.com/paddle/paddle.js"
-            onLoad={() => {
-              if (process.env.NEXT_PUBLIC_PADDLE_SANDBOX === "true") {
-                window.Paddle.Environment.set("sandbox");
-              }
-              window.Paddle.Setup({
-                vendor: Number(process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID),
-              });
-            }}
-          />
-        ) : null}
         <style jsx global>{`
           html {
             --font-inter: ${inter.style.fontFamily};

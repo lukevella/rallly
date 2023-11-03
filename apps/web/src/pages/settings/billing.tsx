@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import Script from "next/script";
 import { useTranslation } from "next-i18next";
 
 import { BillingPlans } from "@/components/billing/billing-plans";
@@ -106,6 +107,19 @@ const LegacyBilling = () => {
 
   return (
     <Card>
+      {process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID ? (
+        <Script
+          src="https://cdn.paddle.com/paddle/paddle.js"
+          onLoad={() => {
+            if (process.env.NEXT_PUBLIC_PADDLE_SANDBOX === "true") {
+              window.Paddle.Environment.set("sandbox");
+            }
+            window.Paddle.Setup({
+              vendor: Number(process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID),
+            });
+          }}
+        />
+      ) : null}
       <div className="grid gap-4 p-4 sm:grid-cols-2">
         <div>
           <Label>
