@@ -137,7 +137,7 @@
   "timeShownIn": "Times shown in {timeZone}",
   "editDetailsDescription": "Change the details of your event.",
   "finalizeDescription": "Select a final date for your event.",
-  "notificationsGuestTooltip": "Create an account or login to turn get notifications",
+  "notificationsGuestTooltip": "Create an account or login to turn on notifications",
   "planFree": "Free",
   "dateAndTimeDescription": "Change your preferred date and time settings",
   "createdTime": "Created {relativeTime}",
@@ -223,5 +223,7 @@
   "authErrorTitle": "Login Error",
   "authErrorDescription": "There was an error logging you in. Please try again.",
   "authErrorCta": "Go to login page",
-  "continueAs": "Continue as"
+  "continueAs": "Continue as",
+  "finalizeFeature": "Finalize",
+  "duplicateFeature": "Duplicate"
 }
