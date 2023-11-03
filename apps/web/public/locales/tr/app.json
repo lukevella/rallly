@@ -137,7 +137,6 @@
   "timeShownIn": "Zamanlar {timeZone} bölgesine göredir",
   "editDetailsDescription": "Etkinliğinizin detaylarını değiştirin.",
   "finalizeDescription": "Etkinliğiniz için bitiş tarihi seçin.",
-  "notificationsGuestTooltip": "Bildirimleri açmak için bir hesap oluşturun yada giriş yapın",
   "planFree": "Ücretsiz",
   "dateAndTimeDescription": "Tercih ettiğiniz tarih ve saat ayarlarını değiştirin",
   "createdTime": "{relativeTime} Oluşturuldu",
