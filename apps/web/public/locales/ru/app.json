@@ -137,7 +137,6 @@
   "timeShownIn": "Показано время в {timeZone}",
   "editDetailsDescription": "Изменить детали вашего события.",
   "finalizeDescription": "Выбрать итоговую дату вашего события.",
-  "notificationsGuestTooltip": "Создайте аккаунт или войдите, чтобы получать уведомления",
   "planFree": "Бесплатный",
   "dateAndTimeDescription": "Изменить настройки даты и времени",
   "createdTime": "Создано {relativeTime}",
