@@ -137,7 +137,6 @@
   "timeShownIn": "Temps affichés en {timeZone}",
   "editDetailsDescription": "Modifiez les détails de votre événement.",
   "finalizeDescription": "Sélectionnez une date finale pour votre événement.",
-  "notificationsGuestTooltip": "Créez un compte ou connectez-vous pour acheter un abonnement",
   "planFree": "Gratuit",
   "dateAndTimeDescription": "Changez vos paramètres de date et d'heure préférés",
   "createdTime": "Créé {relativeTime}",
