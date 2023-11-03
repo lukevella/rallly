@@ -137,7 +137,6 @@
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt",
   "editDetailsDescription": "Änder die Details deiner Veranstaltung.",
   "finalizeDescription": "Wähle einen finalen Termin für deine Veranstaltung.",
-  "notificationsGuestTooltip": "Erstelle ein Konto oder logge dich ein, um Benachrichtigungen zu erhalten",
   "planFree": "Kostenlos",
   "dateAndTimeDescription": "Änder deine bevorzugten Datums- und Zeiteinstellungen",
   "createdTime": "{relativeTime} erstellt",
