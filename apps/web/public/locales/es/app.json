@@ -137,7 +137,6 @@
   "timeShownIn": "Horarios mostrados en {timeZone}",
   "editDetailsDescription": "Cambia los detalles de tu evento.",
   "finalizeDescription": "Selecciona una fecha final para tu evento.",
-  "notificationsGuestTooltip": "Crea una cuenta o inicia sesión para activar las notificaciones",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Cambia la configuración de fecha y hora preferida",
   "createdTime": "Creado {relativeTime}",
