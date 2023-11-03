@@ -137,7 +137,6 @@
   "timeShownIn": "Megjelenítési időzóna: {timeZone}",
   "editDetailsDescription": "Változtasd meg az eseményed részleteit.",
   "finalizeDescription": "Válassz egy végleges dátumot az eseményedhez.",
-  "notificationsGuestTooltip": "Hozz létre felhasználót vagy lépj be, hogy bekapcsolhasd az értesítéseket",
   "planFree": "Ingyenes",
   "dateAndTimeDescription": "Módosítsd a preferált dátum és idő beállításaid",
   "createdTime": "Létrehozva {relativeTime}",
