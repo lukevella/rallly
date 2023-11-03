@@ -101,7 +101,7 @@
   "timeZoneSelect__defaultValue": "Выбрать часовой пояс…",
   "timeZoneSelect__noOption": "Вариантов не найдено",
   "timeZoneSelect__inputPlaceholder": "Поиск…",
-  "poweredByRallly": "Создано <a>{name}</a>",
+  "poweredByRallly": "Работает с помощью <a>{name}</a>",
   "participants": "Участники",
   "language": "Язык",
   "languageDescription": "Изменить язык",
@@ -137,6 +137,7 @@
   "timeShownIn": "Показано время в {timeZone}",
   "editDetailsDescription": "Изменить детали вашего события.",
   "finalizeDescription": "Выбрать итоговую дату вашего события.",
+  "notificationsGuestTooltip": "Создайте аккаунт или войдите, чтобы включить уведомления",
   "planFree": "Бесплатный",
   "dateAndTimeDescription": "Изменить настройки даты и времени",
   "createdTime": "Создано {relativeTime}",
@@ -222,5 +223,7 @@
   "authErrorTitle": "Ошибка входа",
   "authErrorDescription": "При входе произошла ошибка. Пожалуйста, попробуйте еще раз.",
   "authErrorCta": "Перейти на страницу входа",
-  "continueAs": "Продолжить как"
+  "continueAs": "Продолжить как",
+  "finalizeFeature": "Утверждение даты",
+  "duplicateFeature": "Копирование"
 }
