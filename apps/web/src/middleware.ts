@@ -1,12 +1,13 @@
 import languages from "@rallly/languages";
 import languageParser from "accept-language-parser";
+import { unsealData } from "iron-session/edge";
 import { NextResponse } from "next/server";
 import withAuth from "next-auth/middleware";
 
 const supportedLocales = Object.keys(languages);
 
 export default withAuth(
-  function middleware(req) {
+  async function middleware(req) {
     const { headers, nextUrl } = req;
     const newUrl = nextUrl.clone();
 
@@ -49,11 +50,20 @@ export default withAuth(
      */
     const legacyToken = req.cookies.get("rallly-session");
     if (legacyToken) {
-      res.cookies.set({
-        name: "legacy-token",
-        value: legacyToken.value,
-      });
+      // delete old cookie
       res.cookies.delete("rallly-session");
+      // make sure old cookie isn't expired
+      const payload = await unsealData(legacyToken.value, {
+        password: process.env.SECRET_PASSWORD,
+      });
+      // if it's not expired, write it to a new cookie that we
+      // can read from the client
+      if (Object.keys(payload).length > 0) {
+        res.cookies.set({
+          name: "legacy-token",
+          value: legacyToken.value,
+        });
+      }
     }
 
     return res;
