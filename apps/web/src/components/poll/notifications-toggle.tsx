@@ -85,7 +85,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
         {user.isGuest ? (
           <Trans
             i18nKey="notificationsGuestTooltip"
-            defaults="Create an account or login to turn get notifications"
+            defaults="Create an account or login to turn on notifications"
           />
         ) : (
           <Trans

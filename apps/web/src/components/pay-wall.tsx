@@ -196,10 +196,10 @@ const Teaser = () => {
             />
           </Feature>
           <Feature className="bg-green-500" icon={CalendarCheck2Icon}>
-            <Trans i18nKey="finalize" defaults="Finalize" />
+            <Trans i18nKey="finalizeFeature" defaults="Finalize" />
           </Feature>
           <Feature className="bg-teal-500" icon={CopyIcon}>
-            <Trans i18nKey="duplicate" defaults="Duplicate" />
+            <Trans i18nKey="duplicateFeature" defaults="Duplicate" />
           </Feature>
           <Feature className="bg-gray-700" icon={Settings2Icon}>
             <Trans i18nKey="settings" defaults="Settings" />
