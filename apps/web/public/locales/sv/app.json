@@ -124,7 +124,6 @@
   "permissionDeniedDescription": "Om du är skaparen av enkäten, vänligen logga in för att komma åt din enkät",
   "share": "Dela",
   "timeShownIn": "Tidszon: {timeZone}",
-  "notificationsGuestTooltip": "Skapa ett konto eller logga in för att få aviseringar",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Ändra önskade datum- och tidsinställningar",
   "createdTime": "Skapad {relativeTime}",
