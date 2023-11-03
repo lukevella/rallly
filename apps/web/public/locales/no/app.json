@@ -137,7 +137,6 @@
   "timeShownIn": "Tider vises i {timeZone}",
   "editDetailsDescription": "Rediger detaljene for arrangementet ditt.",
   "finalizeDescription": "Velg en endelig dato for arrangementet.",
-  "notificationsGuestTooltip": "Opprett en konto eller logg inn for å motta varslinger",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Endre foretrukket dato- og klokkeslettformat",
   "createdTime": "Opprettet for {relativeTime}",
