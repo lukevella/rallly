@@ -42,27 +42,30 @@ export default withAuth(
 
     const res = NextResponse.rewrite(newUrl);
 
-    /**
-     * We moved from a bespoke session implementation to next-auth.
-     * This middleware looks for the old session cookie and moves it to
-     * a temporary cookie accessible to the client which will exchange it
-     * for a new session token with the legacy-token provider.
-     */
-    const legacyToken = req.cookies.get("rallly-session");
-    if (legacyToken) {
-      // delete old cookie
-      res.cookies.delete("rallly-session");
-      // make sure old cookie isn't expired
-      const payload = await unsealData(legacyToken.value, {
-        password: process.env.SECRET_PASSWORD,
-      });
-      // if it's not expired, write it to a new cookie that we
-      // can read from the client
-      if (Object.keys(payload).length > 0) {
-        res.cookies.set({
-          name: "legacy-token",
-          value: legacyToken.value,
+    if (!req.nextauth.token) {
+      /**
+       * We moved from a bespoke session implementation to next-auth.
+       * This middleware looks for the old session cookie and moves it to
+       * a temporary cookie accessible to the client which will exchange it
+       * for a new session token with the legacy-token provider.
+       */
+      const legacyToken = req.cookies.get("rallly-session");
+      if (legacyToken) {
+        // delete old cookie
+        res.cookies.delete("rallly-session");
+        // make sure old cookie isn't expired
+        const payload = await unsealData(legacyToken.value, {
+          password: process.env.SECRET_PASSWORD,
         });
+        // if it's not expired, write it to a new cookie that we
+        // can read from the client
+        if (Object.keys(payload).length > 0) {
+          res.cookies.set({
+            name: "legacy-token",
+            value: legacyToken.value,
+            httpOnly: false,
+          });
+        }
       }
     }
 
