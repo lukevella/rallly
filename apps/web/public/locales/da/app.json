@@ -137,7 +137,6 @@
   "timeShownIn": "Tider vises i {timeZone}",
   "editDetailsDescription": "Ret detaljerne i din begivenhed.",
   "finalizeDescription": "Vælg en slutdato for din begivenhed.",
-  "notificationsGuestTooltip": "Opret en konto eller log ind, for at slå notifikationer til",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Skift dine foretrukne indstillinger for dato og tid",
   "createdTime": "Oprettet {relativeTime}",
