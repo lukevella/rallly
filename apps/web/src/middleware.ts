@@ -29,17 +29,12 @@ export default withAuth(
     } else {
       // Check if locale is specified in header
       const acceptLanguageHeader = headers.get("accept-language");
+      const localeFromHeader = acceptLanguageHeader
+        ? languageParser.pick(supportedLocales, acceptLanguageHeader)
+        : null;
+      const locale = localeFromHeader ?? "en";
 
-      if (acceptLanguageHeader) {
-        const locale = languageParser.pick(
-          supportedLocales,
-          acceptLanguageHeader,
-        );
-
-        if (locale) {
-          newUrl.pathname = `/${locale}${newUrl.pathname}`;
-        }
-      }
+      newUrl.pathname = `/${locale}${newUrl.pathname}`;
     }
 
     const res = NextResponse.rewrite(newUrl);
