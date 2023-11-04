@@ -71,6 +71,11 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           token: legacyToken,
           redirect: false,
         });
+      } else {
+        // End: Legacy token migration
+        signIn("guest", {
+          redirect: false,
+        });
       }
     },
   });

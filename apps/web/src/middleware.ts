@@ -62,29 +62,29 @@ export default withAuth(
             value: legacyToken.value,
             httpOnly: false,
           });
-        }
-      } else {
-        // Create new guest user
-        const newUser = `user-${randomid()}`;
-        const token = await encode({
-          token: {
-            sub: newUser,
-            email: null,
-          },
-          secret: process.env.SECRET_PASSWORD,
-        });
-        const secure = process.env.NODE_ENV === "production";
-        const prefix = secure ? "__Secure-" : "";
-        const name = `${prefix}next-auth.session-token`;
+        } else {
+          // Create new guest user
+          const newUser = `user-${randomid()}`;
+          const token = await encode({
+            token: {
+              sub: newUser,
+              email: null,
+            },
+            secret: process.env.SECRET_PASSWORD,
+          });
+          const secure = process.env.NODE_ENV === "production";
+          const prefix = secure ? "__Secure-" : "";
+          const name = `${prefix}next-auth.session-token`;
 
-        res.cookies.set({
-          name,
-          value: token,
-          httpOnly: true,
-          secure,
-          sameSite: "lax",
-          path: "/",
-        });
+          res.cookies.set({
+            name,
+            value: token,
+            httpOnly: true,
+            secure,
+            sameSite: "lax",
+            path: "/",
+          });
+        }
       }
     }
 
