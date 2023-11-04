@@ -54,7 +54,7 @@ import { NextPageWithLayout } from "../../types";
 const StatusControl = () => {
   const poll = usePoll();
   const state = poll.event ? "closed" : poll.closed ? "paused" : "live";
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const reopen = trpc.polls.reopen.useMutation({
     onMutate: () => {
       queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {

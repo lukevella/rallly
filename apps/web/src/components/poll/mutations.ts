@@ -16,7 +16,7 @@ export const normalizeVotes = (
 
 export const useAddParticipantMutation = () => {
   const posthog = usePostHog();
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
 
   return trpc.polls.participants.add.useMutation({
     onSuccess: (_, { pollId, name, email }) => {
@@ -31,7 +31,7 @@ export const useAddParticipantMutation = () => {
 };
 
 export const useUpdateParticipantMutation = () => {
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const posthog = usePostHog();
   return trpc.polls.participants.update.useMutation({
     onSuccess: (participant) => {
@@ -59,7 +59,7 @@ export const useUpdateParticipantMutation = () => {
 };
 
 export const useDeleteParticipantMutation = () => {
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const posthog = usePostHog();
   const { poll } = usePoll();
   return trpc.polls.participants.delete.useMutation({
@@ -82,7 +82,7 @@ export const useDeleteParticipantMutation = () => {
 };
 
 export const useUpdatePollMutation = () => {
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const posthog = usePostHog();
   return trpc.polls.update.useMutation({
     onSuccess: (_data, { urlId }) => {

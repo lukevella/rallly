@@ -129,7 +129,7 @@ export const LoginForm: React.FunctionComponent<{
   });
 
   const session = useSession();
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const [email, setEmail] = React.useState<string>();
   const posthog = usePostHog();
   const router = useRouter();

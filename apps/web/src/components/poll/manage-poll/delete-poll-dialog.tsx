@@ -20,7 +20,7 @@ export const DeletePollDialog: React.FunctionComponent<{
   urlId: string;
 }> = ({ open, onOpenChange, urlId }) => {
   const posthog = usePostHog();
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const router = useRouter();
   const deletePoll = trpc.polls.delete.useMutation({
     onSuccess: () => {

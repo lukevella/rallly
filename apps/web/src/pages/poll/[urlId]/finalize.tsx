@@ -29,7 +29,7 @@ const FinalizationForm = () => {
   const redirectBackToPoll = () => {
     router.replace(`/poll/${poll.id}`);
   };
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
 
   const bookDate = trpc.polls.book.useMutation({
     onSuccess: () => {

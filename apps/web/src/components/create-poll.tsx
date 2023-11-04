@@ -60,7 +60,7 @@ export const CreatePoll: React.FunctionComponent = () => {
   useUnmount(clear);
 
   const posthog = usePostHog();
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const createPoll = trpc.polls.create.useMutation();
 
   return (

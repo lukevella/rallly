@@ -36,7 +36,7 @@ export const RegisterForm: React.FunctionComponent<{
       defaultValues: { email: defaultEmail },
     });
 
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
   const requestRegistration = trpc.auth.requestRegistration.useMutation();
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();

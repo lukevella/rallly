@@ -48,7 +48,7 @@ const Discussion: React.FunctionComponent = () => {
   );
   const posthog = usePostHog();
 
-  const queryClient = trpc.useContext();
+  const queryClient = trpc.useUtils();
 
   const addComment = trpc.polls.comments.add.useMutation({
     onSuccess: () => {
