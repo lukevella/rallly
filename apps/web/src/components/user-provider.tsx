@@ -58,14 +58,9 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 };
 
 export const UserProvider = (props: { children?: React.ReactNode }) => {
-  const session = useSession();
-
-  const user = session.data?.user;
-
-  const { t } = useTranslation();
-
-  React.useEffect(() => {
-    if (session.status === "unauthenticated") {
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
       // Begin: Legacy token migration
       const legacyToken = Cookies.get("legacy-token");
       // It's important to remove the token from the cookies,
@@ -74,13 +69,20 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
         Cookies.remove("legacy-token");
         signIn("legacy-token", {
           token: legacyToken,
+          redirect: false,
         });
-        return;
+      } else {
+        // End: Legacy token migration
+        signIn("guest", {
+          redirect: false,
+        });
       }
-      // End: Legacy token migration
-      signIn("guest");
-    }
-  }, [session.status]);
+    },
+  });
+
+  const user = session.data?.user;
+
+  const { t } = useTranslation();
 
   if (!user) {
     return null;
