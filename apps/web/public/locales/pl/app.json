@@ -137,6 +137,7 @@
   "timeShownIn": "Godziny wyświetlane w {timeZone}",
   "editDetailsDescription": "Zmień szczegóły Twojego wydarzenia.",
   "finalizeDescription": "Wybierz ostateczny termin dla Twojego wydarzenia.",
+  "notificationsGuestTooltip": "Utwórz konto lub zaloguj się, aby włączyć powiadomienia",
   "planFree": "Darmowy",
   "dateAndTimeDescription": "Zmień ustawienia preferowanej daty i godziny",
   "createdTime": "Utworzono {relativeTime}",
@@ -222,5 +223,7 @@
   "authErrorTitle": "Błąd logowania",
   "authErrorDescription": "Wystąpił błąd podczas logowania. Spróbuj ponownie.",
   "authErrorCta": "Przejdź do strony logowania",
-  "continueAs": "Kontynuuj jako"
+  "continueAs": "Kontynuuj jako",
+  "finalizeFeature": "Finalizuj",
+  "duplicateFeature": "Duplikuj"
 }
