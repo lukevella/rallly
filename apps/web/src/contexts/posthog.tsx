@@ -21,7 +21,7 @@ const PostHogProviderInner = (props: PostHogProviderProps) => {
         capture_pageview: true,
         persistence: "memory",
         capture_pageleave: false,
-        autocapture: false,
+        autocapture: true,
         opt_in_site_apps: true,
         bootstrap: {
           distinctID: user.id,
