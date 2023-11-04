@@ -82,7 +82,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     }
   }, [session.status]);
 
-  if (!user || !session.data) {
+  if (!user) {
     return null;
   }
 
