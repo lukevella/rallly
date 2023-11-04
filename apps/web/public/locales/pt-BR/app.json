@@ -137,6 +137,7 @@
   "timeShownIn": "Horários exibidos em {timeZone}",
   "editDetailsDescription": "Altere os detalhes do seu evento.",
   "finalizeDescription": "Selecione uma data final para o seu evento.",
+  "notificationsGuestTooltip": "Crie uma conta ou faça o login para ativar as notificações",
   "planFree": "Grátis",
   "dateAndTimeDescription": "Altere suas configurações preferidas de data e hora",
   "createdTime": "Criado {relativeTime}",
@@ -222,5 +223,7 @@
   "authErrorTitle": "Erro no login",
   "authErrorDescription": "Houve um erro ao fazer login. Por favor, tente novamente.",
   "authErrorCta": "Ir para a página de login",
-  "continueAs": "Continuar como"
+  "continueAs": "Continuar como",
+  "finalizeFeature": "Finalizar",
+  "duplicateFeature": "Duplicar"
 }
