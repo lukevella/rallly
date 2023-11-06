@@ -124,6 +124,7 @@
   "permissionDeniedDescription": "Om du är skaparen av enkäten, vänligen logga in för att komma åt din enkät",
   "share": "Dela",
   "timeShownIn": "Tidszon: {timeZone}",
+  "notificationsGuestTooltip": "Skapa ett konto eller logga in för att aktivera aviseringar",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Ändra önskade datum- och tidsinställningar",
   "createdTime": "Skapad {relativeTime}",
@@ -196,5 +197,7 @@
   "pricing": "Priser",
   "pleaseUpgrade": "Vänligen uppgradera till Pro för att använda denna funktion",
   "hideParticipantsLabel": "Dölj deltagarlistan från andra deltagare",
-  "continueAs": "Fortsätt som"
+  "continueAs": "Fortsätt som",
+  "finalizeFeature": "Slutför",
+  "duplicateFeature": "Duplicera"
 }
