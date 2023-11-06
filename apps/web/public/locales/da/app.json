@@ -225,5 +225,6 @@
   "authErrorCta": "Gå til loginsiden",
   "continueAs": "Fortsæt som",
   "finalizeFeature": "Afslut",
-  "duplicateFeature": "Dupliker"
+  "duplicateFeature": "Dupliker",
+  "pageMovedDescription": "Omdirigerer til <a>{newUrl}</a>"
 }
