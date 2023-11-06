@@ -97,7 +97,7 @@ const LegacyBilling = () => {
   }
 
   return (
-    <Card>
+    <>
       {process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID ? (
         <Script
           src="https://cdn.paddle.com/paddle/paddle.js"
