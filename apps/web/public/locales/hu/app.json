@@ -225,5 +225,6 @@
   "authErrorCta": "Irány a bejelentkezési oldalra",
   "continueAs": "Folytatás, mint",
   "finalizeFeature": "Véglegesítés",
-  "duplicateFeature": "Duplikálás"
+  "duplicateFeature": "Duplikálás",
+  "pageMovedDescription": "Átirányítás ide: <a>{newUrl}</a>"
 }
