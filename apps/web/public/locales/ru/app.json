@@ -225,5 +225,6 @@
   "authErrorCta": "Перейти на страницу входа",
   "continueAs": "Продолжить как",
   "finalizeFeature": "Утверждение даты",
-  "duplicateFeature": "Копирование"
+  "duplicateFeature": "Копирование",
+  "pageMovedDescription": "Перенаправление на <a>{newUrl}</a>"
 }
