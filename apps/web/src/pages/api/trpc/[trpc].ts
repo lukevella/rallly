@@ -1,5 +1,6 @@
 import { createTRPCContext } from "@rallly/backend/trpc/context";
 import { AppRouter, appRouter } from "@rallly/backend/trpc/routers";
+import * as Sentry from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
@@ -35,5 +36,10 @@ export default trpcNext.createNextApiHandler<AppRouter>({
       absoluteUrl,
       shortUrl,
     });
+  },
+  onError({ error }) {
+    if (error.code === "INTERNAL_SERVER_ERROR") {
+      Sentry.captureException(error);
+    }
   },
 });
