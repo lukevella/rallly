@@ -1,3 +1,6 @@
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./rbc-overrides.css";
+
 import dayjs from "dayjs";
 import { XIcon } from "lucide-react";
 import React from "react";

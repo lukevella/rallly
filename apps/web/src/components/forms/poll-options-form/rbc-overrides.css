@@ -1,0 +1,68 @@
+.rbc-time-view {
+  @apply border-0 border-b border-t border-gray-100;
+}
+
+.rbc-today {
+  @apply bg-gray-50 bg-opacity-50;
+}
+
+.rbc-day-slot .rbc-time-slot {
+  @apply border-gray-100;
+}
+
+.rbc-time-content > * + * > * {
+  @apply border-gray-200;
+}
+.rbc-time-header.rbc-overflowing,
+.rbc-time-header-content,
+.rbc-header {
+  @apply border-gray-100;
+}
+
+.rbc-time-content {
+  @apply border-t-0;
+}
+
+.rbc-time-view .rbc-allday-cell {
+  @apply hidden;
+}
+
+.rbc-current-time-indicator {
+  @apply bg-rose-400;
+}
+
+.rbc-header + .rbc-header {
+  @apply border-l-0;
+}
+.rbc-time-slot {
+  @apply pl-2 pt-1;
+}
+
+.rbc-timeslot-group {
+  @apply border-gray-100;
+}
+
+.rbc-day-slot .rbc-time-slot {
+  @apply border-dashed border-gray-50;
+}
+
+.rbc-day-slot .rbc-events-container {
+  @apply mr-2;
+}
+.rbc-slot-selection {
+  @apply bg-gray-100/50 leading-tight text-gray-600;
+}
+.rbc-header.rbc-today {
+  @apply bg-white text-rose-600;
+}
+
+.rbc-button-link {
+  @apply pointer-events-none m-1 w-full;
+}
+.rbc-time-content > * + * > * {
+  @apply border-gray-100;
+}
+
+.rbc-time-header-gutter {
+  @apply border-b border-gray-100;
+}
