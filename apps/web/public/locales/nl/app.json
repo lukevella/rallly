@@ -225,5 +225,6 @@
   "authErrorCta": "Ga naar de inlogpagina",
   "continueAs": "Ga verder als",
   "finalizeFeature": "Voltooien",
-  "duplicateFeature": "Kopiëren"
+  "duplicateFeature": "Kopiëren",
+  "pageMovedDescription": "Doorverwijzen naar <a>{newUrl}</a>"
 }
