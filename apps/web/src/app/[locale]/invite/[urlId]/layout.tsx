@@ -67,20 +67,20 @@ export async function generateMetadata({
 
   const { title, id, user } = poll;
 
-  const name = user?.name ?? t("guest");
+  const author = user?.name || t("guest");
 
   return {
     title,
     metadataBase: new URL(absoluteUrl()),
     openGraph: {
       title,
-      description: `By ${name}`,
+      description: `By ${author}`,
       url: `/invite/${id}`,
       images: [
         {
           url: `${absoluteUrl("/api/og-image-poll", {
             title,
-            author: user?.name ?? t("guest"),
+            author,
           })}`,
           width: 1200,
           height: 630,
