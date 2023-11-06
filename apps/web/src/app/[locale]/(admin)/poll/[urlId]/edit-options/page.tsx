@@ -39,7 +39,7 @@ const Page = () => {
   };
   const form = useForm<PollOptionsData>({
     defaultValues: {
-      navigationDate: dayjs(poll.options[0].start).utc().format("YYYY-MM-DD"),
+      navigationDate: dayjs(poll.options[0]?.start).utc().format("YYYY-MM-DD"),
       view: "month",
       options: poll.options.map((option) => {
         const start = dayjs(option.start).utc();
@@ -58,7 +58,7 @@ const Page = () => {
             };
       }),
       timeZone: poll.timeZone ?? "",
-      duration: poll.options[0].duration || 60,
+      duration: poll.options[0]?.duration || 60,
     },
   });
   return (

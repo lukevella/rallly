@@ -222,7 +222,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               ) : null}
             </div>
           </div>
-          {poll.options[0].duration !== 0 && poll.timeZone ? (
+          {poll.options[0]?.duration !== 0 && poll.timeZone ? (
             <div className="border-b bg-gray-50 p-3">
               <TimesShownIn />
             </div>
