@@ -1,25 +1,24 @@
+import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
+import { Card } from "@rallly/ui/card";
+import clsx from "clsx";
 import {
   CreditCardIcon,
   MenuIcon,
   Settings2Icon,
   UserIcon,
-} from "@rallly/icons";
-import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
-import { Card } from "@rallly/ui/card";
-import clsx from "clsx";
+} from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { Trans } from "react-i18next";
 import { useToggle } from "react-use";
 
 import { Container } from "@/components/container";
-import { StandardLayout } from "@/components/layouts/standard-layout";
 import { IfCloudHosted } from "@/contexts/environment";
 import { Plan } from "@/contexts/plan";
 
-import { IconComponent, NextPageWithLayout } from "../../types";
+import { IconComponent } from "../../types";
 import { IfAuthenticated, useUser } from "../user-provider";
 
 const MenuItem = (props: {
@@ -27,12 +26,12 @@ const MenuItem = (props: {
   href: string;
   children: React.ReactNode;
 }) => {
-  const router = useRouter();
+  const pathname = usePathname();
   return (
     <Link
       className={clsx(
         "flex min-w-0 items-center gap-x-2.5 px-2.5 py-1.5 text-sm font-medium",
-        router.asPath === props.href
+        pathname === props.href
           ? "bg-gray-200"
           : "text-gray-500 hover:bg-gray-100 hover:text-gray-800",
       )}
@@ -48,13 +47,13 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
   const { user } = useUser();
 
   // reset toggle whenever route changes
-  const router = useRouter();
+  const pathname = usePathname();
 
   const [isMenuOpen, toggle] = useToggle(false);
 
   React.useEffect(() => {
     toggle(false);
-  }, [router.asPath, toggle]);
+  }, [pathname, toggle]);
 
   return (
     <div>
@@ -101,12 +100,3 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
     </div>
   );
 };
-
-export const getProfileLayout: NextPageWithLayout["getLayout"] =
-  function getLayout(page) {
-    return (
-      <StandardLayout>
-        <ProfileLayout>{page}</ProfileLayout>
-      </StandardLayout>
-    );
-  };

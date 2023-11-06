@@ -1,10 +1,11 @@
+"use client";
 import Cookies from "js-cookie";
 import { Session } from "next-auth";
 import { signIn, useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
 import React from "react";
 import { z } from "zod";
 
+import { useTranslation } from "@/app/i18n/client";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
 

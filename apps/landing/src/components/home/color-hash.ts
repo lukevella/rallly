@@ -40,7 +40,7 @@ function isBright(color: RGBColor): boolean {
 export const getRandomAvatarColor = (str: string) => {
   const strSum = str.split("").reduce((acc, val) => acc + val.charCodeAt(0), 0);
   const randomIndex = strSum % avatarBackgroundColors.length;
-  const color = avatarBackgroundColors[randomIndex];
+  const color = avatarBackgroundColors[randomIndex] as RGBColor;
   const [r, g, b] = color;
   return { color: `rgb(${r}, ${g}, ${b})`, requiresDarkText: isBright(color) };
 };

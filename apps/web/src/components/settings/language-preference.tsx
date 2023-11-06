@@ -1,8 +1,8 @@
-import { ArrowUpRight } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
@@ -40,7 +40,7 @@ export const LanguagePreference = () => {
             await updatePreferences.mutateAsync({ locale: data.language });
           }
           await session.update({ locale: data.language });
-          router.reload();
+          router.refresh();
         })}
       >
         <FormField

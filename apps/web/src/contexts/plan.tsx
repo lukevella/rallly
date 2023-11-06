@@ -1,3 +1,4 @@
+"use client";
 import { Badge } from "@rallly/ui/badge";
 import React from "react";
 

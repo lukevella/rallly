@@ -3,16 +3,22 @@
   "private": true,
   "version": "3.2.1",
   "scripts": {
-    "dev:app": "dotenv -- turbo dev --filter=@rallly/web...",
-    "dev": "dotenv -- turbo dev",
-    "start": "turbo run start --filter=@rallly/web...",
-    "build": "turbo run build --filter=@rallly/web...",
+    "dev": "dotenv -c development -- turbo dev --filter=@rallly/web",
+    "dev:emails": "turbo dev --filter=@rallly/emails",
+    "start": "dotenv -c -- turbo run start --filter=@rallly/web",
+    "build": "dotenv -c -- turbo run build --filter=@rallly/web",
+    "build:test": "turbo build:test",
     "docs:dev": "turbo dev --filter=@rallly/docs...",
     "db:deploy": "prisma migrate deploy",
     "db:generate": "turbo db:generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "test": "yarn workspace @rallly/web test",
+    "db:up": "docker compose up -d rallly_db && wait-on --timeout 60000 tcp:localhost:5450",
+    "db:seed": "yarn workspace @rallly/database db:seed",
+    "db:down": "docker compose down --volumes --remove-orphans rallly_db",
+    "db:setup": "run-s db:deploy db:generate db:seed",
+    "dx": "run-s db:up db:setup",
+    "test": "turbo build:test && turbo test",
     "lint": "turbo lint",
     "i18n:scan": "turbo i18n:scan",
     "lint:tsc": "turbo lint:tsc",
@@ -26,24 +32,22 @@
     "packages/*"
   ],
   "dependencies": {
+    "@sentry/nextjs": "^7.77.0",
     "framer-motion": "^10.16.4",
-    "next": "^13.5.1",
+    "next": "^14.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2",
     "zod": "^3.22.3"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.6.0",
-    "@typescript-eslint/parser": "^6.6.0",
     "dotenv-cli": "^7.1.0",
-    "eslint": "^8.48.0",
-    "eslint-config-next": "^13.5.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.8.4",
     "turbo": "^1.10.7"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=18.17.0"
   },
   "packageManager": "yarn@1.22.19"
 }

@@ -77,11 +77,6 @@ export class EmailClient {
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
-    if (!process.env.SUPPORT_EMAIL) {
-      console.info("SUPPORT_EMAIL not configured - skipping email send");
-      return;
-    }
-
     const Template = templates[templateName] as TemplateComponent<T>;
     const html = render(
       <EmailContext.Provider value={this.config.context}>
@@ -113,6 +108,11 @@ export class EmailClient {
       });
     }
 
+    if (!process.env["SUPPORT_EMAIL"]) {
+      console.info("ℹ SUPPORT_EMAIL not configured - skipping email send");
+      return;
+    }
+
     try {
       await this.transport.sendMail(options);
       return;
@@ -137,7 +137,7 @@ export class EmailClient {
     switch (this.config.provider.name) {
       case "ses": {
         const ses = new aws.SES({
-          region: process.env["AWS" + "_REGION"],
+          region: process.env["AWS" + "_REGION"] as string,
           credentialDefaultProvider: defaultProvider,
         });
 
@@ -151,21 +151,21 @@ export class EmailClient {
         break;
       }
       case "smtp": {
-        const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
+        const hasAuth = process.env["SMTP_USER"] || process.env["SMTP_PWD"];
         this.cachedTransport = createTransport({
-          host: process.env.SMTP_HOST,
-          port: process.env.SMTP_PORT
-            ? parseInt(process.env.SMTP_PORT)
+          host: process.env["SMTP_HOST"],
+          port: process.env["SMTP_PORT"]
+            ? parseInt(process.env["SMTP_PORT"])
             : undefined,
-          secure: process.env.SMTP_SECURE === "true",
+          secure: process.env["SMTP_SECURE"] === "true",
           auth: hasAuth
             ? {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PWD,
+                user: process.env["SMTP_USER"],
+                pass: process.env["SMTP_PWD"],
               }
             : undefined,
           tls:
-            process.env.SMTP_TLS_ENABLED === "true"
+            process.env["SMTP_TLS_ENABLED"] === "true"
               ? {
                   ciphers: "SSLv3",
                   rejectUnauthorized: false,

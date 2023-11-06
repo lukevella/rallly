@@ -90,7 +90,7 @@ export const EmailLayout = ({
             <span>&nbsp;&bull;&nbsp;</span>
             <Link
               style={linkStyles}
-              href={`mailto:${process.env.SUPPORT_EMAIL}`}
+              href={`mailto:${process.env["SUPPORT_EMAIL"]}`}
             >
               Contact
             </Link>

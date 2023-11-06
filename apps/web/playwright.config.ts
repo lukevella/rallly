@@ -4,7 +4,7 @@ import path from "path";
 
 const ci = process.env.CI === "true";
 
-dotenv.config({ path: path.resolve(__dirname, "../../", ".env.test") });
+dotenv.config({ path: path.resolve(__dirname, ".env.test") });
 
 // Use process.env.PORT by default and fallback to port 3000
 const PORT = process.env.PORT || 3000;
@@ -24,13 +24,9 @@ const config: PlaywrightTestConfig = {
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `NODE_ENV=test yarn dev --port ${PORT}`,
+    command: `NODE_ENV=test yarn start --port ${PORT}`,
     url: baseURL,
-    timeout: 120 * 1000,
-    reuseExistingServer: !ci,
-  },
-  expect: {
-    timeout: 10000, // 10 seconds
+    reuseExistingServer: !process.env.CI,
   },
   reporter: [
     [ci ? "github" : "list"],

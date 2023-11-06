@@ -4,17 +4,16 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require("@sentry/nextjs");
-const i18n = require("./i18n.config.js");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  i18n: { ...i18n, localeDetection: false },
   productionBrowserSourceMaps: true,
-  output: "standalone",
   transpilePackages: [
     "@rallly/backend",
+    "@rallly/database",
     "@rallly/icons",
     "@rallly/ui",
     "@rallly/tailwind-config",
@@ -22,11 +21,13 @@ const nextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
-      issuer: /\.[jt]sx?$/,
       use: ["@svgr/webpack"],
     });
 
     return config;
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
@@ -61,6 +62,7 @@ const sentryWebpackPluginOptions = {
   // recommended:
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
+  authToken: process.env.SENTRY_AUTH_TOKEN,
   dryRun: !process.env.SENTRY_AUTH_TOKEN,
   silent: true, // Suppresses all logs
   // For all available options, see:

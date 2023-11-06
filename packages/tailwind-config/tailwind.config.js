@@ -2,12 +2,7 @@ const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-  content: [
-    "./src/pages/**/*.{ts,tsx}",
-    "./src/components/**/*.{ts,tsx}",
-    "../../packages/tailwind-config/tailwind.config.js",
-    "../../packages/ui/**/*.{ts,tsx}",
-  ],
+  content: ["./src/**/*.{ts,tsx}", "../../packages/ui/**/*.{ts,tsx}"],
   plugins: [
     require("@tailwindcss/typography"),
     require("tailwindcss-animate"),

@@ -1,7 +1,7 @@
-import { CalendarIcon, TableIcon } from "@rallly/icons";
 import { Card, CardDescription, CardHeader, CardTitle } from "@rallly/ui/card";
 import { FormField, FormMessage } from "@rallly/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { CalendarIcon, TableIcon } from "lucide-react";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";

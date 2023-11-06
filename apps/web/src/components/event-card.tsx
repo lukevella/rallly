@@ -1,5 +1,5 @@
-import { MapPinIcon, MousePointerClickIcon, TextIcon } from "@rallly/icons";
 import dayjs from "dayjs";
+import { MapPinIcon, MousePointerClickIcon, TextIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 
 import { Card } from "@/components/card";

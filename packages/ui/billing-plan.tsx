@@ -1,4 +1,4 @@
-import { CheckCircle2Icon } from "@rallly/icons";
+import { CheckCircle2Icon } from "lucide-react";
 
 import { cn } from "./lib/utils";
 

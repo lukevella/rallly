@@ -6,8 +6,8 @@ import {
   useFloating,
 } from "@floating-ui/react-dom-interactions";
 import { Combobox } from "@headlessui/react";
-import { ChevronDownIcon } from "@rallly/icons";
 import clsx from "clsx";
+import { ChevronDownIcon } from "lucide-react";
 import React from "react";
 import spacetime from "spacetime";
 import soft from "timezone-soft";

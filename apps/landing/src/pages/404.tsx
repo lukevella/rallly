@@ -1,4 +1,4 @@
-import { FileSearchIcon } from "@rallly/icons";
+import { FileSearchIcon } from "lucide-react";
 import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";

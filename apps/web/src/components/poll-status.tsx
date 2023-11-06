@@ -1,5 +1,5 @@
-import { CheckCircleIcon, PauseCircleIcon, RadioIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
+import { CheckCircleIcon, PauseCircleIcon, RadioIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
 import { IconComponent } from "@/types";

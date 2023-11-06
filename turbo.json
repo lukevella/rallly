@@ -1,9 +1,14 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env"],
+  "globalDotEnv": [".env"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "build:test": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*", "!tests/**/*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "@rallly/web#build": {
@@ -15,8 +20,9 @@
       "outputs": [".next/**"]
     },
     "test": {
-      "outputs": [],
-      "env": ["CI"]
+      "inputs": ["src/**/*", "tests/**/*"],
+      "env": ["CI"],
+      "dependsOn": ["^build:test"]
     },
     "db:generate": {
       "dependsOn": ["^db:generate"]
@@ -28,6 +34,7 @@
       "outputs": []
     },
     "dev": {
+      "dotEnv": [".env.development"],
       "cache": false
     },
     "start": {
@@ -69,10 +76,10 @@
     "NEXT_PUBLIC_PADDLE_SANDBOX",
     "NEXT_PUBLIC_PADDLE_VENDOR_ID",
     "NEXT_PUBLIC_POSTHOG_API_HOST",
-    "NEXT_PUBLIC_SELF_HOSTED",
     "NEXT_PUBLIC_POSTHOG_API_KEY",
     "NEXT_PUBLIC_PRO_PLAN_ID_MONTHLY",
     "NEXT_PUBLIC_PRO_PLAN_ID_YEARLY",
+    "NEXT_PUBLIC_SELF_HOSTED",
     "NEXT_PUBLIC_SENTRY_DSN",
     "NEXT_PUBLIC_SHORT_BASE_URL",
     "NEXT_PUBLIC_VERCEL_URL",
@@ -83,6 +90,7 @@
     "SECRET_PASSWORD",
     "SENTRY_AUTH_TOKEN",
     "SENTRY_DSN",
+    "SENTRY_IGNORE_API_RESOLUTION_ERROR",
     "SMTP_HOST",
     "SMTP_PORT",
     "SMTP_PWD",

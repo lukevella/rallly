@@ -10,8 +10,11 @@ dayjs.extend(timezone);
 export const getTimeZoneAbbreviation = (date: Date, timeZone: string) => {
   const timeZoneDisplayFormat = soft(timeZone)[0];
   const spaceTimeDate = spacetime(date, timeZone);
-  const standardAbbrev = timeZoneDisplayFormat.standard.abbr;
-  const dstAbbrev = timeZoneDisplayFormat.daylight?.abbr;
+  if (!timeZoneDisplayFormat) {
+    console.error(`No timezone display format for ${timeZone}`);
+  }
+  const standardAbbrev = timeZoneDisplayFormat?.standard.abbr ?? timeZone;
+  const dstAbbrev = timeZoneDisplayFormat?.daylight?.abbr ?? timeZone;
   const abbrev = spaceTimeDate.isDST() ? dstAbbrev : standardAbbrev;
   return abbrev;
 };

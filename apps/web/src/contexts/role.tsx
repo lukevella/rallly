@@ -1,6 +1,6 @@
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 export const useRole = () => {
-  const router = useRouter();
-  return router.asPath.includes("/poll") ? "admin" : "participant";
+  const pathname = usePathname();
+  return pathname?.includes("/poll") ? "admin" : "participant";
 };

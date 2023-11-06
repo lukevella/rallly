@@ -6,9 +6,9 @@ import {
   useFloating,
 } from "@floating-ui/react-dom-interactions";
 import { Listbox } from "@headlessui/react";
-import { ChevronDownIcon } from "@rallly/icons";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import { ChevronDownIcon } from "lucide-react";
 import * as React from "react";
 
 import { getDuration } from "@/utils/date-time-utils";

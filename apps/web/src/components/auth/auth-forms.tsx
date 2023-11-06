@@ -1,6 +1,7 @@
+"use client";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
@@ -133,7 +134,7 @@ export const LoginForm: React.FunctionComponent<{
   const [email, setEmail] = React.useState<string>();
   const posthog = usePostHog();
   const router = useRouter();
-  const callbackUrl = (router.query.callbackUrl as string) ?? "/";
+  const callbackUrl = (useSearchParams()?.get("callbackUrl") as string) ?? "/";
 
   const sendVerificationEmail = (email: string) => {
     return signIn("email", {

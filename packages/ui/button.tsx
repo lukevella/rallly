@@ -1,3 +1,4 @@
+"use client";
 import { Slot } from "@radix-ui/react-slot";
 import { SpinnerIcon } from "@rallly/icons";
 import { cva, VariantProps } from "class-variance-authority";

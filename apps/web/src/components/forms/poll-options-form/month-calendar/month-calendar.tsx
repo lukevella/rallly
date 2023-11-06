@@ -1,12 +1,3 @@
-import {
-  CalendarIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MoreHorizontalIcon,
-  PlusIcon,
-  SparklesIcon,
-  XIcon,
-} from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -20,6 +11,15 @@ import {
 import { Switch } from "@rallly/ui/switch";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import {
+  CalendarIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MoreHorizontalIcon,
+  PlusIcon,
+  SparklesIcon,
+  XIcon,
+} from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 

@@ -1,7 +1,7 @@
-import { HelpCircleIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { HelpCircleIcon } from "lucide-react";
 import Script from "next/script";
 import React from "react";
 

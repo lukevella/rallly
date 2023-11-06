@@ -225,5 +225,6 @@
   "authErrorCta": "Go to login page",
   "continueAs": "Continue as",
   "finalizeFeature": "Finalize",
-  "duplicateFeature": "Duplicate"
+  "duplicateFeature": "Duplicate",
+  "pageMovedDescription": "Redirecting to <a>{newUrl}</a>"
 }

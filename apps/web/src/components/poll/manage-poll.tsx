@@ -1,3 +1,12 @@
+import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItemIconLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import {
   CalendarCheck2Icon,
   ChevronDownIcon,
@@ -8,21 +17,12 @@ import {
   SettingsIcon,
   TableIcon,
   TrashIcon,
-} from "@rallly/icons";
-import { Button } from "@rallly/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuItemIconLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
+} from "lucide-react";
 import Link from "next/link";
-import { Trans } from "next-i18next";
 import * as React from "react";
 
 import { ProBadge } from "@/components/pro-badge";
+import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";

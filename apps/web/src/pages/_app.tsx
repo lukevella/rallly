@@ -9,16 +9,15 @@ import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
-import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "next-seo";
 import React from "react";
 
+import { I18nProvider } from "@/app/i18n/client";
 import Maintenance from "@/components/maintenance";
 import { UserProvider } from "@/components/user-provider";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
-import * as nextI18nNextConfig from "../../next-i18next.config.js";
 import { NextPageWithLayout } from "../types";
 import { absoluteUrl } from "../utils/absolute-url";
 
@@ -89,20 +88,22 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
             --font-inter: ${inter.style.fontFamily};
           }
         `}</style>
-        <TooltipProvider delayDuration={200}>
-          <UserProvider>
-            <ConnectedDayjsProvider>
-              {Component.isAuthRequired ? (
-                <Auth>{getLayout(children)}</Auth>
-              ) : (
-                getLayout(children)
-              )}
-            </ConnectedDayjsProvider>
-          </UserProvider>
-        </TooltipProvider>
+        <I18nProvider>
+          <TooltipProvider delayDuration={200}>
+            <UserProvider>
+              <ConnectedDayjsProvider>
+                {Component.isAuthRequired ? (
+                  <Auth>{getLayout(children)}</Auth>
+                ) : (
+                  getLayout(children)
+                )}
+              </ConnectedDayjsProvider>
+            </UserProvider>
+          </TooltipProvider>
+        </I18nProvider>
       </LazyMotion>
     </SessionProvider>
   );
 };
 
-export default trpc.withTRPC(appWithTranslation(MyApp, nextI18nNextConfig));
+export default trpc.withTRPC(MyApp);

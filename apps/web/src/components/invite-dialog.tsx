@@ -1,4 +1,3 @@
-import { ArrowUpRightIcon, Share2Icon } from "@rallly/icons";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -8,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
+import { ArrowUpRightIcon, Share2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";

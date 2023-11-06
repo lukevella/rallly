@@ -1,24 +1,13 @@
 {
+  "extends": "@rallly/tsconfig/next.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "~/*": ["public/*"]
     },
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "incremental": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve"
+    "checkJs": false
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-i18next.config.js"],
-  "exclude": ["node_modules", "**/*.js"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

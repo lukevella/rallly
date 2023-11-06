@@ -1,6 +1,6 @@
-import { User2Icon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import { AnimatePresence, m } from "framer-motion";
+import { User2Icon } from "lucide-react";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
@@ -48,7 +48,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
       <div
         data-testid="popularity-score"
         className={cn(
-          "relative inline-flex select-none items-center gap-1 rounded-full border py-0.5 px-2 text-xs font-normal tabular-nums",
+          "relative inline-flex select-none items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-normal tabular-nums",
           highlight
             ? "border-green-500 text-green-500"
             : "border-transparent text-gray-600",
@@ -77,7 +77,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
           </m.span>
         </AnimatePresence>
         {highlight && ifNeedBeScore > 0 ? (
-          <span className="absolute -top-0.5 -right-1 h-2 w-2 rounded-full bg-amber-400 ring-2 ring-white" />
+          <span className="absolute -right-1 -top-0.5 h-2 w-2 rounded-full bg-amber-400 ring-2 ring-white" />
         ) : null}
       </div>
     );

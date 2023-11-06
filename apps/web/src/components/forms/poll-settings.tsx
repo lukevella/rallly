@@ -1,10 +1,3 @@
-import {
-  AtSignIcon,
-  EyeIcon,
-  InfoIcon,
-  MessageCircleIcon,
-  VoteIcon,
-} from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
   Card,
@@ -16,6 +9,13 @@ import {
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import {
+  AtSignIcon,
+  EyeIcon,
+  InfoIcon,
+  MessageCircleIcon,
+  VoteIcon,
+} from "lucide-react";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";

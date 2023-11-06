@@ -1,4 +1,3 @@
-import { TrendingUpIcon } from "@rallly/icons";
 import {
   BillingPlan,
   BillingPlanDescription,
@@ -11,6 +10,7 @@ import {
 } from "@rallly/ui/billing-plan";
 import { Button } from "@rallly/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { TrendingUpIcon } from "lucide-react";
 import React from "react";
 
 import { Trans } from "@/components/trans";

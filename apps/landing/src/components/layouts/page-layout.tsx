@@ -1,4 +1,3 @@
-import { ChevronRightIcon, MenuIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
 import {
   DropdownMenu,
@@ -7,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { ChevronRightIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";

@@ -143,11 +143,12 @@ async function main() {
     },
   });
 
-  [freeUser.id, proUser.id, proUserLegacy.id].forEach(async (userId) => {
-    await createPollsForUser(userId);
-  });
-
-  console.info(`Seeded data`);
+  await Promise.all(
+    [freeUser, proUser, proUserLegacy].map(async (user) => {
+      await createPollsForUser(user.id);
+      console.info(`✓ Added ${user.email}`);
+    }),
+  );
 }
 
 main()

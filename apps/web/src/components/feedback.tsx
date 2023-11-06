@@ -1,11 +1,4 @@
 import {
-  BugIcon,
-  LifeBuoyIcon,
-  LightbulbIcon,
-  MegaphoneIcon,
-  SmileIcon,
-} from "@rallly/icons";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -13,6 +6,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import {
+  BugIcon,
+  LifeBuoyIcon,
+  LightbulbIcon,
+  MegaphoneIcon,
+  SmileIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Trans } from "next-i18next";
 
