@@ -2,6 +2,8 @@ import { TimeFormat } from "@rallly/database";
 import React from "react";
 import { useSetState } from "react-use";
 
+import { useRequiredContext } from "@/components/use-required-context";
+
 type Preferences = {
   timeZone?: string | null;
   locale?: string | null;
@@ -14,10 +16,9 @@ type PreferencesContextValue = {
   updatePreferences: (preferences: Partial<Preferences>) => void;
 };
 
-const PreferencesContext = React.createContext<PreferencesContextValue>({
-  preferences: {},
-  updatePreferences: () => {},
-});
+const PreferencesContext = React.createContext<PreferencesContextValue | null>(
+  null,
+);
 
 export const PreferencesProvider = ({
   children,
@@ -46,5 +47,5 @@ export const PreferencesProvider = ({
 };
 
 export const usePreferences = () => {
-  return React.useContext(PreferencesContext);
+  return useRequiredContext(PreferencesContext);
 };
