@@ -1,1 +1,23 @@
-{}
+{
+  "login": "Hasi saioa",
+  "links": "Estekak",
+  "blog": "Bloga",
+  "discussions": "Eztabaidak",
+  "footerCredit": "<a>@imlukevella</a>-k egina",
+  "footerSponsor": "Proiektu hau erabiltzaileak finantzatzen du. Mesedez, eman <a>laguntza</a>.",
+  "language": "Hizkuntza",
+  "poweredBy": "Babestuta",
+  "privacyPolicy": "Pribatutasun politika",
+  "support": "Laguntza",
+  "cookiePolicy": "Cookie-politika",
+  "termsOfUse": "Erabilera-baldintzak",
+  "volunteerTranslator": "Lagundu aplikazio hau itzultzen",
+  "notFoundTitle": "404 not found",
+  "notFoundDescription": "Ez dugu aurkitzen bilatzen ari zaren orria.",
+  "goToHome": "Hasierara joan",
+  "goToApp": "Aplikaziora joan",
+  "pricing": "Prezioak",
+  "bestDoodleAlternative": "Doodleen alternatiba onena",
+  "getStarted": "Hasi erabiltzen",
+  "solutions": "Soluzioak"
+}
