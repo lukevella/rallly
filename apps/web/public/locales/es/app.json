@@ -225,5 +225,6 @@
   "authErrorCta": "Ir a la página de inicio de sesión",
   "continueAs": "Continuar como",
   "finalizeFeature": "Finalizar",
-  "duplicateFeature": "Duplicar"
+  "duplicateFeature": "Duplicar",
+  "pageMovedDescription": "Redireccionando a <a>{newUrl}</a>"
 }
