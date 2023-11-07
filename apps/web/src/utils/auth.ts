@@ -139,7 +139,8 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
               return false;
             }
           }
-        } else {
+        } else if (user.email) {
+          // merge guest user into newly logged in user
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
@@ -198,8 +199,8 @@ type GetServerSessionParams =
   | [NextApiRequest, NextApiResponse]
   | [];
 
-export function getServerSession(...args: GetServerSessionParams) {
-  return getServerSessionWithOptions(...args, getAuthOptions(...args));
+export async function getServerSession(...args: GetServerSessionParams) {
+  return await getServerSessionWithOptions(...args, getAuthOptions(...args));
 }
 
 export async function AuthApiRoute(req: NextApiRequest, res: NextApiResponse) {
