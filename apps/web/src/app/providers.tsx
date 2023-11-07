@@ -31,13 +31,15 @@ export function Providers(props: { children: React.ReactNode }) {
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <I18nProvider>
-            <ConnectedDayjsProvider>
-              <TooltipProvider>
-                <SessionProvider>
-                  <UserProvider>{props.children}</UserProvider>
-                </SessionProvider>
-              </TooltipProvider>
-            </ConnectedDayjsProvider>
+            <TooltipProvider>
+              <SessionProvider>
+                <UserProvider>
+                  <ConnectedDayjsProvider>
+                    {props.children}
+                  </ConnectedDayjsProvider>
+                </UserProvider>
+              </SessionProvider>
+            </TooltipProvider>
           </I18nProvider>
         </QueryClientProvider>
       </trpc.Provider>
