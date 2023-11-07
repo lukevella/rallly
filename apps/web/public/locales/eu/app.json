@@ -1,1 +1,27 @@
-{}
+{
+  "12h": "12 ordu",
+  "24h": "24 ordu",
+  "addTimeOption": "Gehitu ordu aukerak",
+  "alreadyRegistered": "Dagoeneko erregistratuta? <a>Saio-hasiera</a>",
+  "applyToAllDates": "Aplikatu data guztiei",
+  "areYouSure": "Ziur zaude?",
+  "cancel": "Ezeztatu",
+  "changeName": "Izena aldatu",
+  "settings": "Ezarpenak",
+  "changeNameDescription": "Sartu izen berria parte hartzaile honi.",
+  "changeNameInfo": "Horrek ez die eragingo lehendik egindako bozketei.",
+  "comments": "Iruzkinak",
+  "continue": "Jarraitu",
+  "copied": "Kopiatuta",
+  "createAnAccount": "Sortu Kontu bat",
+  "createdBy": "<b>{name}</b>-(r)en eskutik",
+  "createPoll": "Sortu inkesta bat",
+  "delete": "Ezabatu",
+  "deleteDate": "Ezabatu data",
+  "deletedPoll": "Ezabatu galdetegia",
+  "deletedPollInfo": "Galdetegi hau ez da gehiago existituko.",
+  "deleteParticipant": "{name} ezabatu?",
+  "deleteParticipantDescription": "Ziur al zaude erabiltzaile hau ezabatu nahi duzula? Ekintza hau ezingo da desegin.",
+  "deletePoll": "Ezabatu galdetegia",
+  "deletePollDescription": "Galdetegi honekin zerikusia duen informazioa ezabatuko da. Ekintza hau ezingo da berreskuratu."
+}
