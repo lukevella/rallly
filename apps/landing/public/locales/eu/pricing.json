@@ -1,1 +1,25 @@
-{}
+{
+  "pricing": "Prezioak",
+  "pricingDescription": "Doan hasi zaitezke. Ez duzu saioa hasi beharrik.",
+  "freeForever": "betirako doan",
+  "planPro": "Pro",
+  "annualBillingDescription": "hilero, urteko ordainketarekin",
+  "monthlyBillingDescription": "hilero",
+  "upgrade": "Mailaz hobetu",
+  "faq": "Ohiko galderak",
+  "canUseFree": "Rallly dohan erabil dezaket?",
+  "whyUpgrade": "Zergatik hobetu behar dut?",
+  "howToUpgrade": "Nola eguneratu dezaket ordainketa-plan batera?",
+  "howToUpgradeAnswer": "Eguneratzeko, <a>fakturazio-konfiguraziora</a> joan eta <b>Eguneratu</b> aukeran klik egin dezakezu.",
+  "cancelSubscription": "Nola ezeztatu dezaket nire harpidetza?",
+  "billingPeriodMonthly": "Hilero",
+  "billingPeriodYearly": "Urtero",
+  "pollsDeleted": "Inaktibo bihurtu ondoren, inkestak automatikoki ezabatzen dira",
+  "planProDescription": "Erabiltzaile norbanako eta profesionalentzat",
+  "accessAllFeatures": "Ezaugarri guztietara sartu",
+  "getEarlyAccess": "Sarbide azkarra eduki funtzio berrietara",
+  "upgradeNowSaveLater": "Eguneratu orain, gorde gero",
+  "earlyAdopterDescription": "Adoptatzaile goiztiarra zarenez, zure harpidetza-tasa blokeatuko duzu, eta ez duzu prezio-igoerarik izango.",
+  "planFree": "Dohakoa",
+  "keepPollsIndefinitely": "Inkestak mugarik gabe mantentzea"
+}
