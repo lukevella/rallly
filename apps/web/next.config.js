@@ -10,6 +10,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/backend",
@@ -71,6 +72,6 @@ const sentryWebpackPluginOptions = {
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withBundleAnalyzer(
-  withSentryConfig(nextConfig, sentryWebpackPluginOptions),
+module.exports = withSentryConfig(
+  withBundleAnalyzer(nextConfig, sentryWebpackPluginOptions),
 );
