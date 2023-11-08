@@ -6,27 +6,18 @@ import { encode, JWT } from "next-auth/jwt";
 
 import { absoluteUrl } from "@/utils/absolute-url";
 
-export async function initGuest(
-  req: NextRequest,
-  res: NextResponse,
-  options?: { force?: boolean },
-) {
+function getCookieSettings() {
   const secure = absoluteUrl().startsWith("https://");
   const prefix = secure ? "__Secure-" : "";
   const name = `${prefix}next-auth.session-token`;
-
-  if (req.cookies.has(name) && !options?.force) {
-    // already has a session token
-    return;
-  }
-
-  // TODO (Luke Vella) [2023-11-07]: Remove this after 30 days (Date: 2023-12-07)
-  const legacyJwt = await getLegacyToken(req, res);
-
-  const jwt: JWT = legacyJwt || {
-    sub: `user-${randomid()}`,
-    email: null,
+  return {
+    secure,
+    name,
   };
+}
+
+async function setCookie(res: NextResponse, jwt: JWT) {
+  const { name, secure } = getCookieSettings();
 
   const token = await encode({
     token: jwt,
@@ -41,6 +32,35 @@ export async function initGuest(
     sameSite: "lax",
     path: "/",
   });
+}
+
+export async function resetUser(res: NextResponse) {
+  // resets to a new guest user
+  const jwt: JWT = {
+    sub: `user-${randomid()}`,
+    email: null,
+  };
+
+  await setCookie(res, jwt);
+}
+
+export async function initGuest(req: NextRequest, res: NextResponse) {
+  const { name } = getCookieSettings();
+
+  if (req.cookies.has(name)) {
+    // already has a session token
+    return;
+  }
+
+  // TODO (Luke Vella) [2023-11-07]: Remove this after 30 days (Date: 2023-12-07)
+  const legacyJwt = await getLegacyToken(req, res);
+
+  const jwt: JWT = legacyJwt || {
+    sub: `user-${randomid()}`,
+    email: null,
+  };
+
+  await setCookie(res, jwt);
 
   return jwt;
 }

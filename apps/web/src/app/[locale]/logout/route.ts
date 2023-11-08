@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-import { initGuest } from "@/app/guest";
+import { resetUser } from "@/app/guest";
+import { absoluteUrl } from "@/utils/absolute-url";
 
-export async function GET(req: NextRequest) {
-  const redirect = req.nextUrl.searchParams.get("redirect");
-  const res = NextResponse.redirect(new URL(redirect ?? "/", req.url));
-  await initGuest(req, res, { force: true });
+export async function GET() {
+  const res = NextResponse.redirect(absoluteUrl());
+  await resetUser(res);
   return res;
 }
