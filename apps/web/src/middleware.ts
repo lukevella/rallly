@@ -1,14 +1,13 @@
-import { randomid } from "@rallly/backend/utils/nanoid";
 import languages from "@rallly/languages";
 import languageParser from "accept-language-parser";
-import { unsealData } from "iron-session/edge";
 import { NextResponse } from "next/server";
-import { encode } from "next-auth/jwt";
 import withAuth from "next-auth/middleware";
+
+import { initGuest } from "@/app/guest";
 
 const supportedLocales = Object.keys(languages);
 
-export default withAuth(
+export const middleware = withAuth(
   async function middleware(req) {
     const { headers, nextUrl } = req;
     const newUrl = nextUrl.clone();
@@ -39,54 +38,7 @@ export default withAuth(
 
     const res = NextResponse.rewrite(newUrl);
 
-    if (!req.nextauth.token) {
-      /**
-       * We moved from a bespoke session implementation to next-auth.
-       * This middleware looks for the old session cookie and moves it to
-       * a temporary cookie accessible to the client which will exchange it
-       * for a new session token with the legacy-token provider.
-       */
-      const legacyToken = req.cookies.get("rallly-session");
-      if (legacyToken) {
-        // delete old cookie
-        res.cookies.delete("rallly-session");
-        // make sure old cookie isn't expired
-        const payload = await unsealData(legacyToken.value, {
-          password: process.env.SECRET_PASSWORD,
-        });
-        // if it's not expired, write it to a new cookie that we
-        // can read from the client
-        if (Object.keys(payload).length > 0) {
-          res.cookies.set({
-            name: "legacy-token",
-            value: legacyToken.value,
-            httpOnly: false,
-          });
-        } else {
-          // Create new guest user
-          const newUser = `user-${randomid()}`;
-          const token = await encode({
-            token: {
-              sub: newUser,
-              email: null,
-            },
-            secret: process.env.SECRET_PASSWORD,
-          });
-          const secure = process.env.NODE_ENV === "production";
-          const prefix = secure ? "__Secure-" : "";
-          const name = `${prefix}next-auth.session-token`;
-
-          res.cookies.set({
-            name,
-            value: token,
-            httpOnly: true,
-            secure,
-            sameSite: "lax",
-            path: "/",
-          });
-        }
-      }
-    }
+    await initGuest(req, res);
 
     return res;
   },

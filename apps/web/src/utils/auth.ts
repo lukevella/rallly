@@ -18,7 +18,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
 import { absoluteUrl } from "@/utils/absolute-url";
-import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
 
@@ -30,7 +29,6 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
       strategy: "jwt",
     },
     providers: [
-      LegacyTokenProvider,
       // When a user registers, we don't want to go through the email verification process
       // so this providers allows us exchange the registration token for a session token
       CredentialsProvider({

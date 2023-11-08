@@ -1,7 +1,6 @@
 "use client";
-import Cookies from "js-cookie";
 import { Session } from "next-auth";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { z } from "zod";
 
@@ -59,27 +58,7 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 };
 
 export const UserProvider = (props: { children?: React.ReactNode }) => {
-  const session = useSession({
-    required: true,
-    onUnauthenticated() {
-      // Begin: Legacy token migration
-      const legacyToken = Cookies.get("legacy-token");
-      // It's important to remove the token from the cookies,
-      // otherwise when the user signs out.
-      if (legacyToken) {
-        Cookies.remove("legacy-token");
-        signIn("legacy-token", {
-          token: legacyToken,
-          redirect: false,
-        });
-      } else {
-        // End: Legacy token migration
-        signIn("guest", {
-          redirect: false,
-        });
-      }
-    },
-  });
+  const session = useSession();
 
   const user = session.data?.user;
 
