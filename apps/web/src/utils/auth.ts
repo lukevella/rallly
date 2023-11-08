@@ -18,7 +18,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
 import { absoluteUrl } from "@/utils/absolute-url";
-import { LegacyTokenProvider } from "@/utils/auth/legacy-token-provider";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
 
@@ -30,7 +29,6 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
       strategy: "jwt",
     },
     providers: [
-      LegacyTokenProvider,
       // When a user registers, we don't want to go through the email verification process
       // so this providers allows us exchange the registration token for a session token
       CredentialsProvider({
@@ -139,7 +137,8 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
               return false;
             }
           }
-        } else {
+        } else if (user.email) {
+          // merge guest user into newly logged in user
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
@@ -198,8 +197,8 @@ type GetServerSessionParams =
   | [NextApiRequest, NextApiResponse]
   | [];
 
-export function getServerSession(...args: GetServerSessionParams) {
-  return getServerSessionWithOptions(...args, getAuthOptions(...args));
+export async function getServerSession(...args: GetServerSessionParams) {
+  return await getServerSessionWithOptions(...args, getAuthOptions(...args));
 }
 
 export async function AuthApiRoute(req: NextApiRequest, res: NextApiResponse) {
