@@ -107,4 +107,10 @@ And thank you to these companies for sponsoring and showing support for this pro
 &nbsp;&nbsp;&nbsp;
 <a href="https://sentry.io?utm_source=rallly"><img src="./apps/landing/public/sentry.svg" alt="Sentry" height="24" /></a>&nbsp;&nbsp;&nbsp;
 <a href="https://cloudron.io?utm_source=rallly"><img src="./assets/images/cloudron-logo.svg" alt="Cloudron" height="32"></a>&nbsp;&nbsp;&nbsp;
-<a href="https://featurebase.app?utm_source=rallly"><img src="./assets/images/featurebase.svg" alt="Featurebase" height="30"></a>
+<a href="https://featurebase.app?utm_source=rallly"><img src="./assets/images/featurebase.svg" alt="Featurebase" height="30"></a><a href="https://ura.design?utm_source=rallly">
+<picture>
+
+<source media="(prefers-color-scheme: dark)" srcset="./assets/images/ura-logo-white.svg">
+<img height="30" alt="Ura Design" src="./assets/images/ura-logo-blue.svg">
+</picture>
+</a>
