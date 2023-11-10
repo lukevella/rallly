@@ -137,7 +137,7 @@
   "timeShownIn": "Aikavyöhyke: {timeZone}",
   "editDetailsDescription": "Muuta tapahtuman tietoja.",
   "finalizeDescription": "Valitse lopullinen päivämäärä tapahtumallesi.",
-  "notificationsGuestTooltip": "Luo tili tai kirjaudu sisään saadaksesi ilmoituksia",
+  "notificationsGuestTooltip": "Luo tili tai kirjaudu sisään ottaaksesi ilmoitukset käyttöön",
   "planFree": "Ilmainen",
   "dateAndTimeDescription": "Muuta ensisijaisia päivämäärä- ja aika-asetuksiasi",
   "createdTime": "luotu {relativeTime}",
@@ -222,5 +222,9 @@
   "hideScoresLabel": "Piilota pisteet kunnes osallistuja on äänestänyt",
   "authErrorTitle": "Kirjautumisvirhe",
   "authErrorDescription": "Sisäänkirjautumisessa tapahtui virhe. Ole hyvä ja yritä uudelleen.",
-  "authErrorCta": "Siirry kirjautumissivulle"
+  "authErrorCta": "Siirry kirjautumissivulle",
+  "continueAs": "Jatka käyttäjänä",
+  "finalizeFeature": "Sulje",
+  "duplicateFeature": "Luo kopio",
+  "pageMovedDescription": "Ohjataan osoitteeseen <a>{newUrl}</a>"
 }

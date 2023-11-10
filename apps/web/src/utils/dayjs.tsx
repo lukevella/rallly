@@ -28,6 +28,11 @@ const dayjsLocales: Record<
     import: () => Promise<ILocale>;
   }
 > = {
+  eu: {
+    weekStart: 1,
+    timeFormat: "hours24",
+    import: () => import("dayjs/locale/eu"),
+  },
   en: {
     weekStart: 1,
     timeFormat: "hours12",

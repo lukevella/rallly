@@ -222,5 +222,8 @@
   "hideScoresLabel": "Zobrazit výsledky až poté, co účastník zahlasuje",
   "authErrorTitle": "Chyba v přihlašování",
   "authErrorDescription": "Při přihlašování došlo k chybě. Zkuste to prosím znovu.",
-  "authErrorCta": "Přejít na přihlášení"
+  "authErrorCta": "Přejít na přihlášení",
+  "continueAs": "Pokračovat jako",
+  "finalizeFeature": "Dokončit",
+  "duplicateFeature": "Kopírovat"
 }

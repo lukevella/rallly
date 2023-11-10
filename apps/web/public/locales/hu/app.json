@@ -115,7 +115,7 @@
   "inviteParticipantLinkInfo": "Ezen a linken keresztül bárki adhat le szavazatot.",
   "support": "Segítség",
   "billing": "Számlázás",
-  "guestPollAlertDescription": "<0>Hozz létre felhasználót</0> vagy <1>lépj be</1> hogy szavazhass.",
+  "guestPollAlertDescription": "<0>Hozz létre fiókot</0> vagy <1>lépj be</1> hogy szavazhass.",
   "guestPollAlertTitle": "Az adminisztrátor jogaid elveszhetnek ha törlőd a böngésző sütiket",
   "attendeeCount": "{count, plural, one {# résztvevő} other {# résztvevő}}",
   "notificationsValue": "Értesítések: <b>{value}</b>",
@@ -137,7 +137,7 @@
   "timeShownIn": "Megjelenítési időzóna: {timeZone}",
   "editDetailsDescription": "Változtasd meg az eseményed részleteit.",
   "finalizeDescription": "Válassz egy végleges dátumot az eseményedhez.",
-  "notificationsGuestTooltip": "Hozz létre felhasználót vagy lépj be, hogy bekapcsolhasd az értesítéseket",
+  "notificationsGuestTooltip": "Hozz létre fiókot vagy lépj be, hogy bekapcsolhasd az értesítéseket",
   "planFree": "Ingyenes",
   "dateAndTimeDescription": "Módosítsd a preferált dátum és idő beállításaid",
   "createdTime": "Létrehozva {relativeTime}",
@@ -222,5 +222,9 @@
   "hideScoresLabel": "Rejtsd el a szavazatszámlálót, amíg nem szavaz a résztvevő",
   "authErrorTitle": "Bejelentkezési hiba",
   "authErrorDescription": "Hiba történt a bejelentkezés közben. Kérjük, próbáld újra!",
-  "authErrorCta": "Irány a bejelentkezési oldalra"
+  "authErrorCta": "Irány a bejelentkezési oldalra",
+  "continueAs": "Folytatás, mint",
+  "finalizeFeature": "Véglegesítés",
+  "duplicateFeature": "Duplikálás",
+  "pageMovedDescription": "Átirányítás ide: <a>{newUrl}</a>"
 }

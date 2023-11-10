@@ -137,7 +137,7 @@
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt",
   "editDetailsDescription": "Änder die Details deiner Veranstaltung.",
   "finalizeDescription": "Wähle einen finalen Termin für deine Veranstaltung.",
-  "notificationsGuestTooltip": "Erstelle ein Konto oder logge dich ein, um Benachrichtigungen zu erhalten",
+  "notificationsGuestTooltip": "Erstelle ein Konto oder logge dich ein, um Benachrichtigungen einzuschalten",
   "planFree": "Kostenlos",
   "dateAndTimeDescription": "Änder deine bevorzugten Datums- und Zeiteinstellungen",
   "createdTime": "{relativeTime} erstellt",
@@ -222,5 +222,8 @@
   "hideScoresLabel": "Zeige das Ergebnis erst an, wenn ein Teilnehmer abgestimmt hat",
   "authErrorTitle": "Login Fehler",
   "authErrorDescription": "Es gab einen Fehler beim Anmelden, versuche es bitte erneut.",
-  "authErrorCta": "Zur Login-Seite"
+  "authErrorCta": "Zur Login-Seite",
+  "continueAs": "Fortsetzen als",
+  "finalizeFeature": "Finalisieren",
+  "duplicateFeature": "Duplizieren"
 }

@@ -15,9 +15,12 @@
   "cancelSubscriptionAnswer": "Aboneliğinizi <a>faturalandırma ayarları</a> kısmına gidip istediğiniz zaman iptal edebilirsiniz. İptal ettikten sonra, fatura döneminizin sonuna kadar ücretli planınıza erişmeye devam edeceksiniz. Ondan sonra, ücretsiz plan a geçiş yapmış olacaksınız.",
   "billingPeriodMonthly": "Aylık",
   "billingPeriodYearly": "Yıllık",
+  "planFreeDescription": "Sıradan kullanıcılar için",
   "limitedAccess": "Temel özelliklere erişim",
+  "planProDescription": "Uzmanlar ve profesyoneller için",
   "accessAllFeatures": "Tüm Özelliklere Erişin",
   "getEarlyAccess": "Yeni özelliklere erken erişin",
+  "canUseFreeAnswer2": "Evet, Rally'nin özelliklerinin çoğu ücretsizdir ve çoğu kullanıcının hiçbir zaman hiçbir şey için ödeme yapması gerekmeyecektir. Ancak yalnızca ödeme yapan müşterilerin kullanabileceği bazı özellikler vardır. Bu özellikler Rally'den en iyi şekilde yararlanmanıza yardımcı olmak için tasarlanmıştır.",
   "planFree": "Ücretsiz",
   "keepPollsIndefinitely": "Anketleri süresiz olarak sakla"
 }

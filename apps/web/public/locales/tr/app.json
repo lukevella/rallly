@@ -199,9 +199,11 @@
   "supportDescription": "Herhangi bir konuda yardım mı gerek?",
   "supportBilling": "Lütfen yardıma ihtiyacınız varsa ulaşın.",
   "contactSupport": "Destek ile iletişime geç",
+  "planFreeDescription": "Sıradan kullanıcılar için",
   "currentPlan": "Mevcut Plan",
   "limitedAccess": "Temel özelliklere erişim",
   "pollsDeleted": "Anketler inaktif olduktan sonra otomatik olarak silinir",
+  "planProDescription": "Uzmanlar ve profesyoneller için",
   "accessAllFeatures": "Tüm Özelliklere Erişin",
   "earlyAccess": "Yeni özelliklere erken erişim",
   "savePercent": "{percent}% İndirim",
@@ -213,7 +215,12 @@
   "pricing": "Fiyatlandırma",
   "pleaseUpgrade": "Bu özelliği kullanmak için lütfen Pro plana yükseltin",
   "pollSettingsDescription": "Anketinizin davranışını özelleştirin",
+  "hideParticipantsLabel": "Katılımcı listesini diğer katılımcılardan gizle",
+  "hideScoresLabel": "Katılımcı oylama yaptıktan sonra sonuçları göster",
   "authErrorTitle": "Giriş Hatası",
   "authErrorDescription": "Giriş yaparken bir sorun oluştu. Lütfen tekrar deneyin.",
-  "authErrorCta": "Oturum açma sayfasına git"
+  "authErrorCta": "Oturum açma sayfasına git",
+  "continueAs": "Olarak devam edin",
+  "finalizeFeature": "Sonlandır",
+  "duplicateFeature": "Çoğalt"
 }

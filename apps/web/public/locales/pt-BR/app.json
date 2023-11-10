@@ -222,5 +222,9 @@
   "hideScoresLabel": "Oculte as pontuações até que o participante tenha votado",
   "authErrorTitle": "Erro no login",
   "authErrorDescription": "Houve um erro ao fazer login. Por favor, tente novamente.",
-  "authErrorCta": "Ir para a página de login"
+  "authErrorCta": "Ir para a página de login",
+  "continueAs": "Continuar como",
+  "finalizeFeature": "Finalizar",
+  "duplicateFeature": "Duplicar",
+  "pageMovedDescription": "Redirecionando para <a>{newUrl}</a>"
 }
