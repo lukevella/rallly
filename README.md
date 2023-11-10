@@ -110,7 +110,7 @@ And thank you to these companies for sponsoring and showing support for this pro
 <a href="https://featurebase.app?utm_source=rallly"><img src="./assets/images/featurebase.svg" alt="Featurebase" height="30"></a><a href="https://ura.design?utm_source=rallly">
 <picture>
 
-<source media="(prefers-color-scheme: dark)" srcset="./assets/images/ura-logo-white.svg">
-<img height="30" alt="Ura Design" src="./assets/images/ura-logo-blue.svg">
+<img height="30" alt="Ura Design" src="./assets/images/ura-logo-white.svg#gh-dark-mode-only">
+<img height="30" alt="Ura Design" src="./assets/images/ura-logo-blue.svg#gh-light-mode-only">
 </picture>
 </a>
