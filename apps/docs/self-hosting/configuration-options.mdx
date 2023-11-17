@@ -68,3 +68,24 @@ These variables need to be configured to let Rallly send out transactional email
 <ParamField path="SMTP_TLS_ENABLED" default={"false"}>
   Enable TLS for your SMTP connection
 </ParamField>
+
+### Openid Connect Configuration
+
+These variables needs to be configured to enable oidc log in.
+
+<ParamField path="OIDC_NAME">
+  The name of your oidc provider. The variable will be used to label `Log in
+  with ...` button.
+</ParamField>
+
+<ParamField path="OIDC_DISCOVERY_URL">
+  URL of the provider `.well-known/openid-configuration` endpoint.
+</ParamField>
+
+<ParamField path="OIDC_CLIENT_ID">
+  A client id for the connection with the provider.
+</ParamField>
+
+<ParamField path="OIDC_CLIENT_SECRET">
+  The secret associated with `OIDC_CLIENT_ID`.
+</ParamField>
