@@ -274,7 +274,9 @@ export const LoginForm: React.FunctionComponent<{
                 onClick={() => signIn(provider.id)}
                 key={provider.name}
               >
-                <Link href="">Se connecter avec {provider.name}</Link>
+                <Link href="">
+                  {t("loginWith")} {provider.name}
+                </Link>
               </Button>
             ) : null,
           )}
