@@ -20,6 +20,119 @@ import EmailProvider from "next-auth/providers/email";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
+import { Provider } from "next-auth/providers/index";
+
+const providers: Provider[] = [
+  // When a user registers, we don't want to go through the email verification process
+  // so this providers allows us exchange the registration token for a session token
+  CredentialsProvider({
+    id: "registration-token",
+    name: "Registration Token",
+    credentials: {
+      token: {
+        label: "Token",
+        type: "text",
+      },
+    },
+    async authorize(credentials) {
+      if (credentials?.token) {
+        const payload = await decryptToken<RegistrationTokenPayload>(
+          credentials.token,
+        );
+        if (payload) {
+          const user = await prisma.user.findUnique({
+            where: {
+              email: payload.email,
+            },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              locale: true,
+              timeFormat: true,
+              timeZone: true,
+            },
+          });
+
+          if (user) {
+            return user;
+          }
+        }
+      }
+
+      return null;
+    },
+  }),
+  CredentialsProvider({
+    id: "guest",
+    name: "Guest",
+    credentials: {},
+    async authorize() {
+      return {
+        id: `user-${randomid()}`,
+        email: null,
+      };
+    },
+  }),
+  EmailProvider({
+    server: "",
+    from: process.env.NOREPLY_EMAIL,
+    generateVerificationToken() {
+      return generateOtp();
+    },
+    async sendVerificationRequest({ identifier: email, token, url }) {
+      const user = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+        select: {
+          name: true,
+        },
+      });
+
+      if (user) {
+        await emailClient.sendTemplate("LoginEmail", {
+          to: email,
+          subject: `${token} is your 6-digit code`,
+          props: {
+            name: user.name,
+            magicLink: absoluteUrl("/auth/login", {
+              magicLink: url,
+            }),
+            code: token,
+          },
+        });
+      }
+    },
+  }),
+];
+
+// If we have an OAuth provider configured, we add it to the list of providers
+if (process.env.OIDC_NAME) {
+  providers.push({
+    id: process.env.OIDC_NAME,
+    name: process.env.OIDC_NAME,
+    type: "oauth",
+    wellKnown: process.env.OIDC_DISCOVERY_URL,
+    authorization: { params: { scope: "openid" } },
+    clientId: process.env.OIDC_CLIENT_ID,
+    clientSecret: process.env.OIDC_CLIENT_SECRET,
+    idToken: true,
+    checks: ["state"],
+    userinfo: {
+      async request(context) {
+        return await context.client.userinfo(context.tokens.access_token ?? "");
+      },
+    },
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+      };
+    },
+  });
+}
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
@@ -28,115 +141,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     session: {
       strategy: "jwt",
     },
-    providers: [
-      // When a user registers, we don't want to go through the email verification process
-      // so this providers allows us exchange the registration token for a session token
-      CredentialsProvider({
-        id: "registration-token",
-        name: "Registration Token",
-        credentials: {
-          token: {
-            label: "Token",
-            type: "text",
-          },
-        },
-        async authorize(credentials) {
-          if (credentials?.token) {
-            const payload = await decryptToken<RegistrationTokenPayload>(
-              credentials.token,
-            );
-            if (payload) {
-              const user = await prisma.user.findUnique({
-                where: {
-                  email: payload.email,
-                },
-                select: {
-                  id: true,
-                  email: true,
-                  name: true,
-                  locale: true,
-                  timeFormat: true,
-                  timeZone: true,
-                },
-              });
-
-              if (user) {
-                return user;
-              }
-            }
-          }
-
-          return null;
-        },
-      }),
-      CredentialsProvider({
-        id: "guest",
-        name: "Guest",
-        credentials: {},
-        async authorize() {
-          return {
-            id: `user-${randomid()}`,
-            email: null,
-          };
-        },
-      }),
-      EmailProvider({
-        server: "",
-        from: process.env.NOREPLY_EMAIL,
-        generateVerificationToken() {
-          return generateOtp();
-        },
-        async sendVerificationRequest({ identifier: email, token, url }) {
-          const user = await prisma.user.findUnique({
-            where: {
-              email,
-            },
-            select: {
-              name: true,
-            },
-          });
-
-          if (user) {
-            await emailClient.sendTemplate("LoginEmail", {
-              to: email,
-              subject: `${token} is your 6-digit code`,
-              props: {
-                name: user.name,
-                magicLink: absoluteUrl("/auth/login", {
-                  magicLink: url,
-                }),
-                code: token,
-              },
-            });
-          }
-        },
-      }),
-      {
-        id: "",
-        name: "",
-        type: "oauth",
-        wellKnown: "http://localhost:8000/.well-known/openid-configuration",
-        authorization: { params: { scope: "openid" } },
-        clientId: "",
-        clientSecret: "",
-        idToken: true,
-        checks: ["state"],
-        userinfo: {
-          async request(context) {
-            return await context.client.userinfo(
-              context.tokens.access_token ?? "",
-            );
-          },
-        },
-        profile(profile) {
-          return {
-            id: profile.sub,
-            name: profile.name,
-            email: profile.email,
-          };
-        },
-      },
-    ],
+    providers: providers,
     pages: {
       signIn: "/login",
       signOut: "/logout",
