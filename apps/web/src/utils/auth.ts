@@ -111,6 +111,31 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           }
         },
       }),
+      {
+        id: "",
+        name: "",
+        type: "oauth",
+        wellKnown: "http://localhost:8000/.well-known/openid-configuration",
+        authorization: { params: { scope: "openid" } },
+        clientId: "",
+        clientSecret: "",
+        idToken: true,
+        checks: ["state"],
+        userinfo: {
+          async request(context) {
+            return await context.client.userinfo(
+              context.tokens.access_token ?? "",
+            );
+          },
+        },
+        profile(profile) {
+          return {
+            id: profile.sub,
+            name: profile.name,
+            email: profile.email,
+          };
+        },
+      },
     ],
     pages: {
       signIn: "/login",
@@ -118,7 +143,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
       error: "/auth/error",
     },
     callbacks: {
-      async signIn({ user, email }) {
+      async signIn({ user, email, account, profile }) {
         if (email?.verificationRequest) {
           if (user.email) {
             const userExists =
@@ -137,11 +162,69 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
               return false;
             }
           }
-        } else if (user.email) {
-          // merge guest user into newly logged in user
-          const session = await getServerSession(...args);
-          if (session && session.user.email === null) {
-            await mergeGuestsIntoUser(user.id, [session.user.id]);
+        } else {
+          if (profile && account?.type === "oauth") {
+            // The sign in was initiated by an OAuth provider in response to a request initiated by the user
+
+            const existing_account = await prisma.account.findFirst({
+              select: {
+                userId: true,
+              },
+              where: {
+                providerAccountId: account.providerAccountId,
+                provider: account.provider,
+              },
+            });
+
+            // If there is not an existing Rallly user, that is already linked to the provider account
+            // we need to link a (new or existing) Rallly user to the provider account
+            if (!existing_account) {
+              if (!profile.name || !profile.email) {
+                throw new Error(
+                  "Failed to authenticate user as the profile did not return a name and an email",
+                );
+              }
+
+              // If there is an existing Rallly user with the same email as the OAuth profile
+              // we want to link the provider account to that user
+              // Otherwise we want to create a new user and link the provider account to that user
+              var existing_user = await prisma.user.findUnique({
+                where: {
+                  email: profile.email,
+                },
+              });
+
+              if (!existing_user) {
+                // Create a new user
+                existing_user = await prisma.user.create({
+                  data: {
+                    name: profile.name,
+                    email: profile.email,
+                  },
+                });
+              }
+
+              // Now we have a Rallly user, we link the provider account to this user
+              await prisma.account.create({
+                data: {
+                  userId: existing_user.id,
+                  type: account.type,
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId,
+                },
+              });
+            }
+
+            // We can update `user` email and id to allow Rallly to merge guests into the user
+            user.email = profile.email;
+            user.id = existing_account?.userId ?? user.id;
+          }
+          if (user.email) {
+            // merge guest user into newly logged in user
+            const session = await getServerSession(...args);
+            if (session && session.user.email === null) {
+              await mergeGuestsIntoUser(user.id, [session.user.id]);
+            }
           }
         }
 

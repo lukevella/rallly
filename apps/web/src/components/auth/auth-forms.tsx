@@ -2,9 +2,15 @@
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import {
+  ClientSafeProvider,
+  LiteralUnion,
+  getProviders,
+  signIn,
+  useSession,
+} from "next-auth/react";
 import { Trans, useTranslation } from "next-i18next";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { createGlobalState } from "react-use";
 
@@ -13,6 +19,8 @@ import { trpc } from "@/utils/trpc/client";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { TextInput } from "../text-input";
+
+import { BuiltInProviderType } from "next-auth/providers/index";
 
 export const useDefaultEmail = createGlobalState("");
 
@@ -136,6 +144,22 @@ export const LoginForm: React.FunctionComponent<{
   const router = useRouter();
   const callbackUrl = (useSearchParams()?.get("callbackUrl") as string) ?? "/";
 
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>(null);
+
+  // Fetch Next Auth providers list to display "Sign in with" buttons
+  useEffect(() => {
+    (async () => {
+      const res = (await getProviders()) as Record<
+        LiteralUnion<BuiltInProviderType>,
+        ClientSafeProvider
+      >;
+      setProviders(res);
+    })();
+  }, []);
+
   const sendVerificationEmail = (email: string) => {
     return signIn("email", {
       redirect: false,
@@ -238,6 +262,22 @@ export const LoginForm: React.FunctionComponent<{
             {t("createAnAccount")}
           </Link>
         </Button>
+
+        {providers ? <hr className="border-t border-grey-500 my-2" /> : null}
+
+        {providers &&
+          Object.values(providers).map((provider) =>
+            provider.type === "oauth" ? (
+              <Button
+                size="lg"
+                asChild
+                onClick={() => signIn(provider.id)}
+                key={provider.name}
+              >
+                <Link href="">Se connecter avec {provider.name}</Link>
+              </Button>
+            ) : null,
+          )}
       </div>
     </form>
   );
