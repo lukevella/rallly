@@ -16,11 +16,11 @@ import NextAuth, {
 } from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
+import { Provider } from "next-auth/providers/index";
 
 import { absoluteUrl } from "@/utils/absolute-url";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
-import { Provider } from "next-auth/providers/index";
 
 const providers: Provider[] = [
   // When a user registers, we don't want to go through the email verification process
@@ -193,7 +193,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
               // If there is an existing Rallly user with the same email as the OAuth profile
               // we want to link the provider account to that user
               // Otherwise we want to create a new user and link the provider account to that user
-              var existing_user = await prisma.user.findUnique({
+              let existing_user = await prisma.user.findUnique({
                 where: {
                   email: profile.email,
                 },

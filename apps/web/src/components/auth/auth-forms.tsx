@@ -2,15 +2,16 @@
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { BuiltInProviderType } from "next-auth/providers/index";
 import {
   ClientSafeProvider,
-  LiteralUnion,
   getProviders,
+  LiteralUnion,
   signIn,
   useSession,
 } from "next-auth/react";
 import { Trans, useTranslation } from "next-i18next";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { createGlobalState } from "react-use";
 
@@ -19,8 +20,6 @@ import { trpc } from "@/utils/trpc/client";
 
 import { requiredString, validEmail } from "../../utils/form-validation";
 import { TextInput } from "../text-input";
-
-import { BuiltInProviderType } from "next-auth/providers/index";
 
 export const useDefaultEmail = createGlobalState("");
 
@@ -144,13 +143,13 @@ export const LoginForm: React.FunctionComponent<{
   const router = useRouter();
   const callbackUrl = (useSearchParams()?.get("callbackUrl") as string) ?? "/";
 
-  const [providers, setProviders] = useState<Record<
+  const [providers, setProviders] = React.useState<Record<
     LiteralUnion<BuiltInProviderType, string>,
     ClientSafeProvider
   > | null>(null);
 
   // Fetch Next Auth providers list to display "Sign in with" buttons
-  useEffect(() => {
+  React.useEffect(() => {
     (async () => {
       const res = (await getProviders()) as Record<
         LiteralUnion<BuiltInProviderType>,
