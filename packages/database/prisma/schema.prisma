@@ -29,11 +29,11 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  
+
   user User @relation(fields: [userId], references: [id])
 
-  
   @@unique([provider, providerAccountId])
+  @@index([userId], type: Hash)
 }
 
 model User {
