@@ -71,7 +71,9 @@ These variables need to be configured to let Rallly send out transactional email
 
 ### Openid Connect Configuration
 
-These variables needs to be configured to enable oidc log in.
+These variables needs to be configured to enable oauth 2.0 or openid connect (oidc) log in.
+Rallly use [NextAuth.js](https://next-auth.js.org/) for authentication and most options are derived from the framework.
+Refer to their documentation if you need more information about the following parameters.
 
 <ParamField path="OIDC_NAME">
   The name of your oidc provider. The variable will be used to label `Log in
@@ -88,4 +90,34 @@ These variables needs to be configured to enable oidc log in.
 
 <ParamField path="OIDC_CLIENT_SECRET">
   The secret associated with `OIDC_CLIENT_ID`.
+</ParamField>
+
+<ParamField path="OIDC_SCOPES" default="openid">
+  Custom scopes that should be provided when configuring the oidc client.
+</ParamField>
+
+<ParamField path="OIDC_ID_TOKEN_EXPECTED" default="true">
+  When using openid connect, set OIDC_ID_TOKEN_EXPECTED to true to let next-auth
+  know the provider will return an ID token.
+</ParamField>
+
+<ParamField path="OIDC_FORCE_USER_INFO" default="false">
+  When using an openid connect that support userinfo endpoint, set
+  `OIDC_FORCE_USER_INFO` to force next-auth to use it instead of getting
+  userinfo from the ID token.
+</ParamField>
+
+<ParamField path="OIDC_USER_INFO_URL">
+  When using a provider that does not provide a userinfo endpoint in its
+  discovery document, you can set this to the URL of the userinfo endpoint.
+  `OIDC_USER_INFO_URL` may not be usable when `OIDC_FORCE_USER_INFO` is set to
+  `true`.
+</ParamField>
+
+<ParamField path="OIDC_NAME_CLAIM" default="name">
+  The name of the `name` field returned by the oidc provider.
+</ParamField>
+
+<ParamField path="OIDC_EMAIL_CLAIM" default="email">
+  The name of the `email` field returned by the oidc provider.
 </ParamField>

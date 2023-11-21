@@ -109,26 +109,37 @@ const providers: Provider[] = [
 
 // If we have an OAuth provider configured, we add it to the list of providers
 if (process.env.OIDC_NAME) {
+  let userinfo = {};
+  if (process.env.OIDC_FORCE_USER_INFO) {
+    userinfo = {
+      ...userinfo,
+      async request(context: any) {
+        return await context.client.userinfo(context.tokens.access_token ?? "");
+      },
+    };
+  }
+  if (process.env.OIDC_USER_INFO_URL) {
+    userinfo = {
+      ...userinfo,
+      url: process.env.OIDC_USER_INFO_URL,
+    };
+  }
   providers.push({
     id: process.env.OIDC_NAME,
     name: process.env.OIDC_NAME,
     type: "oauth",
     wellKnown: process.env.OIDC_DISCOVERY_URL,
-    authorization: { params: { scope: "openid" } },
+    authorization: { params: { scope: process.env.OIDC_SCOPES ?? "openid" } },
     clientId: process.env.OIDC_CLIENT_ID,
     clientSecret: process.env.OIDC_CLIENT_SECRET,
-    idToken: true,
+    idToken: process.env.OIDC_ID_TOKEN_EXPECTED ?? true,
     checks: ["state"],
-    userinfo: {
-      async request(context) {
-        return await context.client.userinfo(context.tokens.access_token ?? "");
-      },
-    },
+    userinfo: userinfo,
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
-        email: profile.email,
+        name: profile[process.env.OIDC_NAME_CLAIM ?? "name"],
+        email: profile[process.env.OIDC_NAME_CLAIM ?? "email"],
       };
     },
   });
