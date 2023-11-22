@@ -110,7 +110,7 @@ const providers: Provider[] = [
 // If we have an OAuth provider configured, we add it to the list of providers
 if (process.env.OIDC_NAME) {
   let userinfo = {};
-  if (process.env.OIDC_FORCE_USER_INFO) {
+  if (process.env.OIDC_FORCE_USER_INFO === "true") {
     userinfo = {
       ...userinfo,
       async request(context: any) {
@@ -132,7 +132,7 @@ if (process.env.OIDC_NAME) {
     authorization: { params: { scope: process.env.OIDC_SCOPES ?? "openid" } },
     clientId: process.env.OIDC_CLIENT_ID,
     clientSecret: process.env.OIDC_CLIENT_SECRET,
-    idToken: process.env.OIDC_ID_TOKEN_EXPECTED ?? true,
+    idToken: process.env.OIDC_ID_TOKEN_EXPECTED !== "false" ?? true,
     checks: ["state"],
     userinfo: userinfo,
     profile(profile) {

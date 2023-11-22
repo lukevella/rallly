@@ -91,12 +91,12 @@ declare global {
       /**
        * If Rallly should expect the oidc provider to return an ID token
        */
-      OIDC_ID_TOKEN_EXPECTED?: boolean;
+      OIDC_ID_TOKEN_EXPECTED?: string;
       /**
        * When using an oidc provider that support the userinfo endpoint, set this to "true" to
        * use it instead of getting the user info from the ID token
        */
-      OIDC_FORCE_USER_INFO?: boolean;
+      OIDC_FORCE_USER_INFO?: string;
       /**
        * When using a provider that does not provide a userinfo endpoint in its discovery document,
        * `OIDC_FORCE_USER_INFO` may be set to the URL of the userinfo endpoint.
