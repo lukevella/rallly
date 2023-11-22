@@ -129,7 +129,9 @@ if (process.env.OIDC_NAME) {
     name: process.env.OIDC_NAME,
     type: "oauth",
     wellKnown: process.env.OIDC_DISCOVERY_URL,
-    authorization: { params: { scope: process.env.OIDC_SCOPES ?? "openid" } },
+    authorization: {
+      params: { scope: process.env.OIDC_SCOPES ?? "openid email profile" },
+    },
     clientId: process.env.OIDC_CLIENT_ID,
     clientSecret: process.env.OIDC_CLIENT_SECRET,
     idToken: process.env.OIDC_ID_TOKEN_EXPECTED !== "false" ?? true,
