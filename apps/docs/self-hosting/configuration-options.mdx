@@ -72,8 +72,6 @@ These variables need to be configured to let Rallly send out transactional email
 ### Openid Connect Configuration
 
 These variables needs to be configured to enable oauth 2.0 or openid connect (oidc) log in.
-Rallly use [NextAuth.js](https://next-auth.js.org/) for authentication and most options are derived from the framework.
-Refer to their documentation if you need more information about the following parameters.
 
 <ParamField path="OIDC_NAME">
   The name of your oidc provider. The variable will be used to label `Log in
@@ -97,14 +95,14 @@ Refer to their documentation if you need more information about the following pa
 </ParamField>
 
 <ParamField path="OIDC_ID_TOKEN_EXPECTED" default="true">
-  When using openid connect, set OIDC_ID_TOKEN_EXPECTED to true to let next-auth
+  When using openid connect, set OIDC_ID_TOKEN_EXPECTED to true to let Rallly
   know the provider will return an ID token.
 </ParamField>
 
 <ParamField path="OIDC_FORCE_USER_INFO" default="false">
   When using an openid connect that support userinfo endpoint, set
-  `OIDC_FORCE_USER_INFO` to force next-auth to use it instead of getting
-  userinfo from the ID token.
+  `OIDC_FORCE_USER_INFO` to force Rallly to use it instead of getting userinfo
+  from the ID token.
 </ParamField>
 
 <ParamField path="OIDC_USER_INFO_URL">
