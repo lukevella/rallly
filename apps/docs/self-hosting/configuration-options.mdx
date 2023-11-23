@@ -69,53 +69,48 @@ These variables need to be configured to let Rallly send out transactional email
   Enable TLS for your SMTP connection
 </ParamField>
 
-### Openid Connect Configuration
+### Single Sign On (SSO) with OpenID Connect (OIDC)
 
-These variables needs to be configured to enable oauth 2.0 or openid connect (oidc) log in.
+To enable SSO with OIDC compliant identity provider you will need to configure the following variables.
 
-<ParamField path="OIDC_NAME">
-  The name of your oidc provider. The variable will be used to label `Log in
-  with ...` button.
+<ParamField path="OIDC_ENABLED">
+  Must be set to `true` to enable OIDC Login
+</ParamField>
+
+<ParamField path="OIDC_NAME" default="OpenID Connect">
+  The user-facing name of your provider as it will be shown on the login page
 </ParamField>
 
 <ParamField path="OIDC_DISCOVERY_URL">
-  URL of the provider `.well-known/openid-configuration` endpoint.
+  URL of the `.well-known/openid-configuration` endpoint for your OIDC provider
 </ParamField>
 
 <ParamField path="OIDC_CLIENT_ID">
-  A client id for the connection with the provider.
+  The client ID of your OIDC application
 </ParamField>
 
 <ParamField path="OIDC_CLIENT_SECRET">
-  The secret associated with `OIDC_CLIENT_ID`.
+  The client secret of your OIDC application
 </ParamField>
 
-<ParamField path="OIDC_SCOPES" default="openid email profile">
-  Custom scopes that should be provided when configuring the oidc client.
-</ParamField>
+#### Required Scopes
 
-<ParamField path="OIDC_ID_TOKEN_EXPECTED" default="true">
-  When using openid connect, set OIDC_ID_TOKEN_EXPECTED to true to let Rallly
-  know the provider will return an ID token.
-</ParamField>
+The following scopes are required for OIDC to function properly.
 
-<ParamField path="OIDC_FORCE_USER_INFO" default="false">
-  When using an openid connect that support userinfo endpoint, set
-  `OIDC_FORCE_USER_INFO` to force Rallly to use it instead of getting userinfo
-  from the ID token.
-</ParamField>
+- `openid`: Essential for OIDC to function, used to perform authentication.
+- `profile`: Access to the user's personal information such as name and picture.
+- `email`: Access to the user's email address.
 
-<ParamField path="OIDC_USER_INFO_URL">
-  When using a provider that does not provide a userinfo endpoint in its
-  discovery document, you can set this to the URL of the userinfo endpoint.
-  `OIDC_USER_INFO_URL` may not be usable when `OIDC_FORCE_USER_INFO` is set to
-  `true`.
-</ParamField>
+#### Callback URL / Redirect URI
 
-<ParamField path="OIDC_NAME_CLAIM" default="name">
-  The name of the `name` field returned by the oidc provider.
-</ParamField>
+The callback URL for your OIDC application must be set to:
 
-<ParamField path="OIDC_EMAIL_CLAIM" default="email">
-  The name of the `email` field returned by the oidc provider.
-</ParamField>
+```
+{NEXT_PUBLIC_BASE_URL}/api/auth/callback/oidc
+```
+
+<Info>
+  Replace `{NEXT_PUBLIC_BASE_URL}` with the base URL of your Rallly instance.
+</Info>
+
+Ensure this URL is added to the list of allowed redirect URIs in your OIDC provider's application settings.

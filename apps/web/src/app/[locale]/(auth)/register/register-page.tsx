@@ -1,14 +1,13 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Trans, useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
 import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { useDefaultEmail, VerifyCode } from "@/components/auth/auth-forms";
+import { VerifyCode } from "@/components/auth/auth-forms";
 import { TextInput } from "@/components/text-input";
 import { useDayjs } from "@/utils/dayjs";
 import { requiredString, validEmail } from "@/utils/form-validation";
@@ -19,17 +18,14 @@ type RegisterFormData = {
   email: string;
 };
 
-export const RegisterForm: React.FunctionComponent<{
-  onClickLogin?: React.MouseEventHandler;
-}> = ({ onClickLogin }) => {
-  const [defaultEmail, setDefaultEmail] = useDefaultEmail();
+export const RegisterForm = () => {
   const { t } = useTranslation();
   const { timeZone } = useDayjs();
   const params = useParams<{ locale: string }>();
   const searchParams = useSearchParams();
   const { register, handleSubmit, getValues, setError, formState } =
     useForm<RegisterFormData>({
-      defaultValues: { email: defaultEmail },
+      defaultValues: { email: "" },
     });
 
   const queryClient = trpc.useUtils();
@@ -71,7 +67,6 @@ export const RegisterForm: React.FunctionComponent<{
             callbackUrl: searchParams?.get("callbackUrl") ?? undefined,
           });
         }}
-        onChange={() => setToken(undefined)}
         email={getValues("email")}
       />
     );
@@ -156,24 +151,6 @@ export const RegisterForm: React.FunctionComponent<{
       >
         {t("continue")}
       </Button>
-      <div className="mt-4 border-t pt-4 text-gray-500 sm:text-base">
-        <Trans
-          t={t}
-          i18nKey="alreadyRegistered"
-          components={{
-            a: (
-              <Link
-                href="/login"
-                className="text-link"
-                onClick={(e) => {
-                  setDefaultEmail(getValues("email"));
-                  onClickLogin?.(e);
-                }}
-              />
-            ),
-          }}
-        />
-      </div>
     </form>
   );
 };

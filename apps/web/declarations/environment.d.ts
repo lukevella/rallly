@@ -65,6 +65,10 @@ declare global {
        */
       EMAIL_PROVIDER?: "smtp" | "ses";
       /**
+       * Set to "true" to enable OIDC authentication
+       */
+      OIDC_ENABLED?: string;
+      /**
        * Name of the oidc provider
        */
       OIDC_NAME?: string;
@@ -80,25 +84,6 @@ declare global {
        * Client secret of the oidc provider
        */
       OIDC_CLIENT_SECRET?: string;
-      /**
-       * Scopes that should be used when configuring the oidc provider
-       */
-      OIDC_SCOPES?: string;
-      /**
-       * If Rallly should expect the oidc provider to return an ID token
-       */
-      OIDC_ID_TOKEN_EXPECTED?: string;
-      /**
-       * When using an oidc provider that support the userinfo endpoint, set this to "true" to
-       * use it instead of getting the user info from the ID token
-       */
-      OIDC_FORCE_USER_INFO?: string;
-      /**
-       * When using a provider that does not provide a userinfo endpoint in its discovery document,
-       * `OIDC_FORCE_USER_INFO` may be set to the URL of the userinfo endpoint.
-       * `OIDC_USER_INFO_URL` may not be usable when `OIDC_FORCE_USER_INFO` is set to `true`
-       */
-      OIDC_USER_INFO_URL?: string;
       /**
        * AWS access key ID
        */
