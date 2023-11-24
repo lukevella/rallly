@@ -21,7 +21,7 @@ import { Logo } from "@/components/logo";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 import { IfCloudHosted } from "@/contexts/environment";
-import { IfFreeUser } from "@/contexts/plan";
+import { useSubscription } from "@/contexts/plan";
 import { appVersion, isFeedbackEnabled } from "@/utils/constants";
 
 import { IconComponent, NextPageWithLayout } from "../../types";
@@ -97,6 +97,7 @@ const Changelog = () => {
 };
 
 const MainNav = () => {
+  const subscription = useSubscription();
   return (
     <m.div
       variants={{
@@ -122,9 +123,7 @@ const MainNav = () => {
         <div className="flex items-center gap-x-2.5">
           <nav className="flex items-center gap-x-1 sm:gap-x-1.5">
             <IfCloudHosted>
-              <IfFreeUser>
-                <Upgrade />
-              </IfFreeUser>
+              {subscription?.active === false ? <Upgrade /> : null}
             </IfCloudHosted>
             <IfGuest>
               <Button
