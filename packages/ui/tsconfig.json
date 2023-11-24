@@ -1,5 +1,5 @@
 {
-  "extends": "@rallly/tsconfig/react-library",
+  "extends": "@rallly/tsconfig/react.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
