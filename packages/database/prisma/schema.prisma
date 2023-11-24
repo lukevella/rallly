@@ -56,8 +56,7 @@ model User {
   watcher      Watcher[]
   events       Event[]
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
-
-  account Account[]
+  accounts     Account[]
 
   @@map("users")
 }
