@@ -55,7 +55,7 @@
     "lodash": "^4.17.21",
     "micro": "^10.0.1",
     "nanoid": "^4.0.0",
-    "next-auth": "^4.23.2",
+    "next-auth": "^4.24.5",
     "next-i18next": "^13.0.3",
     "next-seo": "^5.15.0",
     "php-serialize": "^4.1.1",
