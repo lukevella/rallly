@@ -40,6 +40,7 @@
   "location": "Locatie",
   "locationPlaceholder": "Koffiehuis Joe's",
   "login": "Inloggen",
+  "loginWith": "Log in met {provider}",
   "logout": "Uitloggen",
   "manage": "Beheren",
   "mixedOptionsDescription": "Je kunt niet opties voor zowel een tijd als alleen een datum in dezelfde poll gebruiken. Wat wil je behouden?",
@@ -226,5 +227,6 @@
   "continueAs": "Ga verder als",
   "finalizeFeature": "Voltooien",
   "duplicateFeature": "Kopiëren",
-  "pageMovedDescription": "Doorverwijzen naar <a>{newUrl}</a>"
+  "pageMovedDescription": "Doorverwijzen naar <a>{newUrl}</a>",
+  "notRegistered": "Heb je geen account? <a>Registreer</a>"
 }

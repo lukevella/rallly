@@ -92,7 +92,7 @@
   "errors_notFoundTitle": "404: Не найдено",
   "errors_notFoundDescription": "Мы не можем найти страницу, которую вы ищете.",
   "errors_goToHome": "Вернуться на главную",
-  "optionCount": "{count, plural, one {# опция} few {# опции} other {# опций}}",
+  "optionCount": "{count, plural, one {# вариант} few {# варианта} other {# вариантов}}",
   "participantCount": "{count, plural, one {# участник}  few {# участника} other {# участников}}",
   "addComment": "Добавить комментарий",
   "profile": "Профиль",
