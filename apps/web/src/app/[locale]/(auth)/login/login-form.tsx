@@ -130,7 +130,7 @@ export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
             <div className="grid gap-4">
               <IfCloudHosted>
                 <Button size="lg" asChild>
-                  <Link href="/">
+                  <Link href={callbackUrl}>
                     <UserIcon className="w-4 h-4" />
                     <Trans i18nKey="continueAsGuest" />
                   </Link>
