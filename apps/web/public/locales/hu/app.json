@@ -40,6 +40,7 @@
   "location": "Helyszín",
   "locationPlaceholder": "János kávézója",
   "login": "Bejelentkezés",
+  "loginWith": "Bejelentkezés {provider} fiókkal",
   "logout": "Kijelentkezés",
   "manage": "Kezelés",
   "mixedOptionsDescription": "Egyszerre nem lehet időpont és dátum szerinti lehetőség a szavazásban. Melyiket szeretnéd megtartani?",
@@ -226,5 +227,6 @@
   "continueAs": "Folytatás, mint",
   "finalizeFeature": "Véglegesítés",
   "duplicateFeature": "Duplikálás",
-  "pageMovedDescription": "Átirányítás ide: <a>{newUrl}</a>"
+  "pageMovedDescription": "Átirányítás ide: <a>{newUrl}</a>",
+  "notRegistered": "Nincs felhasználód? <a>Regisztrálj</a>"
 }
