@@ -40,6 +40,7 @@
   "location": "Local",
   "locationPlaceholder": "Loja Café do Júlio",
   "login": "Logar",
+  "loginWith": "Logar como {provider}",
   "logout": "Deslogar",
   "manage": "Gerenciar",
   "mixedOptionsDescription": "Você não pode ter ambas as opções de data e hora na mesma enquete. Qual você gostaria de manter?",
