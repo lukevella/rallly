@@ -146,35 +146,34 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     },
     callbacks: {
       async signIn({ user, email }) {
-        if (email?.verificationRequest) {
-          // For now, we don't allow users to login unless they have
-          // registered an account. This is just because we need a name
-          // to display on the dashboard. The flow can be modified so that
-          // the name is requested after the user has logged in.
-          if (user.email) {
-            const userExists =
-              (await prisma.user.count({
-                where: {
-                  email: user.email,
-                },
-              })) > 0;
+        // Make sure email is allowed
+        if (user.email) {
+          const isBlocked = isEmailBlocked(user.email);
+          if (isBlocked) {
+            return false;
+          }
+        }
 
-            if (userExists) {
-              if (isEmailBlocked(user.email)) {
-                return false;
-              }
-              return true;
-            } else {
-              return false;
-            }
+        // For now, we don't allow users to login unless they have
+        // registered an account. This is just because we need a name
+        // to display on the dashboard. The flow can be modified so that
+        // the name is requested after the user has logged in.
+        if (email?.verificationRequest) {
+          const isUnregisteredUser =
+            (await prisma.user.count({
+              where: {
+                email: user.email as string,
+              },
+            })) === 0;
+
+          if (isUnregisteredUser) {
+            return false;
           }
         } else {
-          if (user.email) {
-            // merge guest user into newly logged in user
-            const session = await getServerSession(...args);
-            if (session && session.user.email === null) {
-              await mergeGuestsIntoUser(user.id, [session.user.id]);
-            }
+          // merge guest user into newly logged in user
+          const session = await getServerSession(...args);
+          if (session && session.user.email === null) {
+            await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
         }
 
