@@ -40,6 +40,7 @@
   "location": "Место",
   "locationPlaceholder": "Кофейня Джо",
   "login": "Войти",
+  "loginWith": "Войти с помощью {provider}",
   "logout": "Выйти",
   "manage": "Настроить",
   "mixedOptionsDescription": "Нельзя иметь варианты и времени, и дат в одном опросе. Что вы хотите оставить?",
@@ -226,5 +227,6 @@
   "continueAs": "Продолжить как",
   "finalizeFeature": "Утверждение даты",
   "duplicateFeature": "Копирование",
-  "pageMovedDescription": "Перенаправление на <a>{newUrl}</a>"
+  "pageMovedDescription": "Перенаправление на <a>{newUrl}</a>",
+  "notRegistered": "Нет учетной записи? <a>Зарегистрироваться</a>"
 }
