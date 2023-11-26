@@ -65,10 +65,6 @@ declare global {
        */
       EMAIL_PROVIDER?: "smtp" | "ses";
       /**
-       * Set to "true" to enable OIDC authentication
-       */
-      OIDC_ENABLED?: string;
-      /**
        * Name of the oidc provider
        */
       OIDC_NAME?: string;

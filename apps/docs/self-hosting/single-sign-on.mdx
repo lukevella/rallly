@@ -1,0 +1,62 @@
+---
+icon: key
+title: Single Sign On (SSO)
+description: How to use your own identity provider
+---
+
+<Info>Available in v3.4.0 and later.</Info>
+
+<Warning>
+#### Account Linking
+
+Accounts using the same email are linked together. This assumes
+that you are using a trusted identity provider that uses verified email
+addresses.
+
+</Warning>
+
+## OpenID Connect (OIDC)
+
+If your identity provider supports OAuth 2.0 based authentication with OpenID Connect (OIDC), you can use it to authenticate users on your Rallly instance.
+
+### Required Scopes
+
+Your OAuth 2.0 application needs to be configured with the following scopes:
+
+- `openid`: Essential for OIDC to function, used to perform authentication.
+- `profile`: Access to the user's personal information such as name and picture.
+- `email`: Access to the user's email address.
+
+### Callback URL / Redirect URI
+
+Your identity provider will redirect the user back to the following URL:
+
+```
+{BASE_URL}/api/auth/callback/oidc
+```
+
+<Info>
+  Replace `{BASE_URL}` with the base URL of your Rallly instance and add it to
+  the list of allowed redirect URIs.
+</Info>
+
+### Configuration
+
+The following configuration options are available for OIDC.
+All required fields must be set for OIDC to be enabled.
+
+<ParamField path="OIDC_NAME" default="OpenID Connect">
+  The user-facing name of your provider as it will be shown on the login page
+</ParamField>
+
+<ParamField path="OIDC_DISCOVERY_URL" required>
+  URL of the `.well-known/openid-configuration` endpoint for your OIDC provider
+</ParamField>
+
+<ParamField path="OIDC_CLIENT_ID" required>
+  The client ID of your OIDC application
+</ParamField>
+
+<ParamField path="OIDC_CLIENT_SECRET" required>
+  The client secret of your OIDC application
+</ParamField>

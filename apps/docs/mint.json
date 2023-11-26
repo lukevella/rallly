@@ -62,11 +62,14 @@
         {
           "icon": "bolt",
           "group": "Get Started",
-          "pages": ["self-hosting/docker-compose"]
+          "pages": [
+            "self-hosting/docker-compose",
+            "self-hosting/single-sign-on",
+            "self-hosting/configuration-options"
+          ]
         },
         "self-hosting/pricing",
-        "self-hosting/managed-hosting",
-        "self-hosting/configuration-options"
+        "self-hosting/managed-hosting"
       ]
     },
     {
