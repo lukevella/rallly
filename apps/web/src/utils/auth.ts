@@ -16,10 +16,120 @@ import NextAuth, {
 } from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
+import { Provider } from "next-auth/providers/index";
 
 import { absoluteUrl } from "@/utils/absolute-url";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
+import { isOIDCEnabled, oidcName } from "@/utils/constants";
 import { emailClient } from "@/utils/emails";
+
+const providers: Provider[] = [
+  // When a user registers, we don't want to go through the email verification process
+  // so this providers allows us exchange the registration token for a session token
+  CredentialsProvider({
+    id: "registration-token",
+    name: "Registration Token",
+    credentials: {
+      token: {
+        label: "Token",
+        type: "text",
+      },
+    },
+    async authorize(credentials) {
+      if (credentials?.token) {
+        const payload = await decryptToken<RegistrationTokenPayload>(
+          credentials.token,
+        );
+        if (payload) {
+          const user = await prisma.user.findUnique({
+            where: {
+              email: payload.email,
+            },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              locale: true,
+              timeFormat: true,
+              timeZone: true,
+            },
+          });
+
+          if (user) {
+            return user;
+          }
+        }
+      }
+
+      return null;
+    },
+  }),
+  CredentialsProvider({
+    id: "guest",
+    name: "Guest",
+    credentials: {},
+    async authorize() {
+      return {
+        id: `user-${randomid()}`,
+        email: null,
+      };
+    },
+  }),
+  EmailProvider({
+    server: "",
+    from: process.env.NOREPLY_EMAIL,
+    generateVerificationToken() {
+      return generateOtp();
+    },
+    async sendVerificationRequest({ identifier: email, token, url }) {
+      const user = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+        select: {
+          name: true,
+        },
+      });
+
+      if (user) {
+        await emailClient.sendTemplate("LoginEmail", {
+          to: email,
+          subject: `${token} is your 6-digit code`,
+          props: {
+            name: user.name,
+            magicLink: absoluteUrl("/auth/login", {
+              magicLink: url,
+            }),
+            code: token,
+          },
+        });
+      }
+    },
+  }),
+];
+
+// If we have an OAuth provider configured, we add it to the list of providers
+if (isOIDCEnabled) {
+  providers.push({
+    id: "oidc",
+    name: oidcName,
+    type: "oauth",
+    wellKnown: process.env.OIDC_DISCOVERY_URL,
+    authorization: { params: { scope: "openid email profile" } },
+    clientId: process.env.OIDC_CLIENT_ID,
+    clientSecret: process.env.OIDC_CLIENT_SECRET,
+    idToken: true,
+    checks: ["state"],
+    allowDangerousEmailAccountLinking: true,
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+      };
+    },
+  });
+}
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
@@ -28,90 +138,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     session: {
       strategy: "jwt",
     },
-    providers: [
-      // When a user registers, we don't want to go through the email verification process
-      // so this providers allows us exchange the registration token for a session token
-      CredentialsProvider({
-        id: "registration-token",
-        name: "Registration Token",
-        credentials: {
-          token: {
-            label: "Token",
-            type: "text",
-          },
-        },
-        async authorize(credentials) {
-          if (credentials?.token) {
-            const payload = await decryptToken<RegistrationTokenPayload>(
-              credentials.token,
-            );
-            if (payload) {
-              const user = await prisma.user.findUnique({
-                where: {
-                  email: payload.email,
-                },
-                select: {
-                  id: true,
-                  email: true,
-                  name: true,
-                  locale: true,
-                  timeFormat: true,
-                  timeZone: true,
-                },
-              });
-
-              if (user) {
-                return user;
-              }
-            }
-          }
-
-          return null;
-        },
-      }),
-      CredentialsProvider({
-        id: "guest",
-        name: "Guest",
-        credentials: {},
-        async authorize() {
-          return {
-            id: `user-${randomid()}`,
-            email: null,
-          };
-        },
-      }),
-      EmailProvider({
-        server: "",
-        from: process.env.NOREPLY_EMAIL,
-        generateVerificationToken() {
-          return generateOtp();
-        },
-        async sendVerificationRequest({ identifier: email, token, url }) {
-          const user = await prisma.user.findUnique({
-            where: {
-              email,
-            },
-            select: {
-              name: true,
-            },
-          });
-
-          if (user) {
-            await emailClient.sendTemplate("LoginEmail", {
-              to: email,
-              subject: `${token} is your 6-digit code`,
-              props: {
-                name: user.name,
-                magicLink: absoluteUrl("/auth/login", {
-                  magicLink: url,
-                }),
-                code: token,
-              },
-            });
-          }
-        },
-      }),
-    ],
+    providers: providers,
     pages: {
       signIn: "/login",
       signOut: "/logout",
@@ -119,25 +146,30 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     },
     callbacks: {
       async signIn({ user, email }) {
-        if (email?.verificationRequest) {
-          if (user.email) {
-            const userExists =
-              (await prisma.user.count({
-                where: {
-                  email: user.email,
-                },
-              })) > 0;
-
-            if (userExists) {
-              if (isEmailBlocked(user.email)) {
-                return false;
-              }
-              return true;
-            } else {
-              return false;
-            }
+        // Make sure email is allowed
+        if (user.email) {
+          const isBlocked = isEmailBlocked(user.email);
+          if (isBlocked) {
+            return false;
           }
-        } else if (user.email) {
+        }
+
+        // For now, we don't allow users to login unless they have
+        // registered an account. This is just because we need a name
+        // to display on the dashboard. The flow can be modified so that
+        // the name is requested after the user has logged in.
+        if (email?.verificationRequest) {
+          const isUnregisteredUser =
+            (await prisma.user.count({
+              where: {
+                email: user.email as string,
+              },
+            })) === 0;
+
+          if (isUnregisteredUser) {
+            return false;
+          }
+        } else {
           // merge guest user into newly logged in user
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {

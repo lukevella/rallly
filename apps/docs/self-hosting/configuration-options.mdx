@@ -68,3 +68,49 @@ These variables need to be configured to let Rallly send out transactional email
 <ParamField path="SMTP_TLS_ENABLED" default={"false"}>
   Enable TLS for your SMTP connection
 </ParamField>
+
+### Single Sign On (SSO) with OpenID Connect (OIDC)
+
+To enable SSO with an OIDC compliant identity provider you will need to configure the following variables.
+
+<ParamField path="OIDC_ENABLED">
+  Must be set to `true` to enable OIDC Login
+</ParamField>
+
+<ParamField path="OIDC_NAME" default="OpenID Connect">
+  The user-facing name of your provider as it will be shown on the login page
+</ParamField>
+
+<ParamField path="OIDC_DISCOVERY_URL">
+  URL of the `.well-known/openid-configuration` endpoint for your OIDC provider
+</ParamField>
+
+<ParamField path="OIDC_CLIENT_ID">
+  The client ID of your OIDC application
+</ParamField>
+
+<ParamField path="OIDC_CLIENT_SECRET">
+  The client secret of your OIDC application
+</ParamField>
+
+#### Required Scopes
+
+The following scopes are required for OIDC to function properly.
+
+- `openid`: Essential for OIDC to function, used to perform authentication.
+- `profile`: Access to the user's personal information such as name and picture.
+- `email`: Access to the user's email address.
+
+#### Callback URL / Redirect URI
+
+The callback URL for your OIDC application must be set to:
+
+```
+{NEXT_PUBLIC_BASE_URL}/api/auth/callback/oidc
+```
+
+<Info>
+  Replace `{NEXT_PUBLIC_BASE_URL}` with the base URL of your Rallly instance.
+</Info>
+
+Ensure this URL is added to the list of allowed redirect URIs in your OIDC provider's application settings.

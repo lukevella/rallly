@@ -40,6 +40,7 @@
   "location": "Location",
   "locationPlaceholder": "Joe's Coffee Shop",
   "login": "Login",
+  "loginWith": "Login with {provider}",
   "logout": "Logout",
   "manage": "Manage",
   "mixedOptionsDescription": "You can't have both time and date options in the same poll. Which would you like to keep?",
@@ -226,5 +227,6 @@
   "continueAs": "Continue as",
   "finalizeFeature": "Finalize",
   "duplicateFeature": "Duplicate",
-  "pageMovedDescription": "Redirecting to <a>{newUrl}</a>"
+  "pageMovedDescription": "Redirecting to <a>{newUrl}</a>",
+  "notRegistered": "Don't have an account? <a>Register</a>"
 }

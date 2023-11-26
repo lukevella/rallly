@@ -65,6 +65,26 @@ declare global {
        */
       EMAIL_PROVIDER?: "smtp" | "ses";
       /**
+       * Set to "true" to enable OIDC authentication
+       */
+      OIDC_ENABLED?: string;
+      /**
+       * Name of the oidc provider
+       */
+      OIDC_NAME?: string;
+      /**
+       * URL of the oidc provider .well-known/openid-configuration endpoint
+       */
+      OIDC_DISCOVERY_URL?: string;
+      /**
+       * Client ID of the oidc provider
+       */
+      OIDC_CLIENT_ID?: string;
+      /**
+       * Client secret of the oidc provider
+       */
+      OIDC_CLIENT_SECRET?: string;
+      /**
        * AWS access key ID
        */
       AWS_ACCESS_KEY_ID?: string;
