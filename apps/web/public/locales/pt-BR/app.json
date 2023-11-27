@@ -227,5 +227,6 @@
   "continueAs": "Continuar como",
   "finalizeFeature": "Finalizar",
   "duplicateFeature": "Duplicar",
-  "pageMovedDescription": "Redirecionando para <a>{newUrl}</a>"
+  "pageMovedDescription": "Redirecionando para <a>{newUrl}</a>",
+  "notRegistered": "Não tem uma conta? <a>Registre-se</a>"
 }
