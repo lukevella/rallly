@@ -40,6 +40,7 @@
   "location": "Plats",
   "locationPlaceholder": "Joe's Café",
   "login": "Logga in",
+  "loginWith": "Logga in med {provider}",
   "logout": "Logga ut",
   "manage": "Hantera",
   "mixedOptionsDescription": "Du kan inte ha både tids- och datumalternativ i samma omröstning. Vad vill du behålla?",
@@ -199,5 +200,6 @@
   "hideParticipantsLabel": "Dölj deltagarlistan från andra deltagare",
   "continueAs": "Fortsätt som",
   "finalizeFeature": "Slutför",
-  "duplicateFeature": "Duplicera"
+  "duplicateFeature": "Duplicera",
+  "notRegistered": "Har du inget konto? <a>Registrera dig</a>"
 }
