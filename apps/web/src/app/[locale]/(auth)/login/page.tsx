@@ -7,6 +7,8 @@ import { getTranslation } from "@/app/i18n";
 import { AuthCard } from "@/components/auth/auth-layout";
 import { isOIDCEnabled, oidcName } from "@/utils/constants";
 
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   return (
