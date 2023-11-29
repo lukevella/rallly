@@ -5,9 +5,11 @@ import { LoginForm } from "@/app/[locale]/(auth)/login/login-form";
 import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 import { AuthCard } from "@/components/auth/auth-layout";
-import { isOIDCEnabled, oidcName } from "@/utils/constants";
+import { isOIDCEnabled, isSelfHosted, oidcName } from "@/utils/constants";
 
-export const dynamic = "force-dynamic";
+// Self-hosted instances only have env vars for OIDC at runtime, so we need to
+// use force-dynamic to avoid statically rendering this page during build time..
+export const dynamic = isSelfHosted ? "force-dynamic" : "auto";
 
 export default async function LoginPage({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
