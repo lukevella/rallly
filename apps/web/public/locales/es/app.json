@@ -40,6 +40,7 @@
   "location": "Ubicación",
   "locationPlaceholder": "Café de Carlos",
   "login": "Iniciar sesión",
+  "loginWith": "Iniciar sesión con {provider}",
   "logout": "Cerrar sesión",
   "manage": "Gestionar",
   "mixedOptionsDescription": "No puedes tener opciones de fecha y opciones de hora en la misma encuesta. ¿Cuáles quieres mantener?",
@@ -226,5 +227,6 @@
   "continueAs": "Continuar como",
   "finalizeFeature": "Finalizar",
   "duplicateFeature": "Duplicar",
-  "pageMovedDescription": "Redireccionando a <a>{newUrl}</a>"
+  "pageMovedDescription": "Redireccionando a <a>{newUrl}</a>",
+  "notRegistered": "¿Todavía no tienes cuenta? <a>Regístrate.</a>"
 }
