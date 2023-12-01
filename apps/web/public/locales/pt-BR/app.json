@@ -40,6 +40,7 @@
   "location": "Local",
   "locationPlaceholder": "Loja Café do Júlio",
   "login": "Logar",
+  "loginWith": "Logar como {provider}",
   "logout": "Deslogar",
   "manage": "Gerenciar",
   "mixedOptionsDescription": "Você não pode ter ambas as opções de data e hora na mesma enquete. Qual você gostaria de manter?",
@@ -226,5 +227,6 @@
   "continueAs": "Continuar como",
   "finalizeFeature": "Finalizar",
   "duplicateFeature": "Duplicar",
-  "pageMovedDescription": "Redirecionando para <a>{newUrl}</a>"
+  "pageMovedDescription": "Redirecionando para <a>{newUrl}</a>",
+  "notRegistered": "Não tem uma conta? <a>Registre-se</a>"
 }

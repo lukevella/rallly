@@ -40,6 +40,7 @@
   "location": "Lokalizacja",
   "locationPlaceholder": "Sklep z kawą Joe",
   "login": "Logowanie",
+  "loginWith": "Zaloguj się przez {provider}",
   "logout": "Wyloguj",
   "manage": "Zarządzaj",
   "mixedOptionsDescription": "Nie możesz mieć w tej samej ankiecie obu opcji daty i godziny. Które chciałbyś zachować?",
@@ -226,5 +227,6 @@
   "continueAs": "Kontynuuj jako",
   "finalizeFeature": "Finalizuj",
   "duplicateFeature": "Duplikuj",
-  "pageMovedDescription": "Przekierowanie do <a>{newUrl}</a>"
+  "pageMovedDescription": "Przekierowanie do <a>{newUrl}</a>",
+  "notRegistered": "Nie masz konta? <a>Zarejestruj się</a>"
 }

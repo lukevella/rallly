@@ -40,6 +40,7 @@
   "location": "Localisation",
   "locationPlaceholder": "Le café de Joe",
   "login": "Connexion",
+  "loginWith": "Se connecter avec {provider}",
   "logout": "Déconnexion",
   "manage": "Gérer",
   "mixedOptionsDescription": "Vous ne pouvez pas avoir les deux options d'heure et de date dans le même sondage. Laquelle voulez-vous garder ?",
@@ -226,5 +227,6 @@
   "continueAs": "Continuer comme",
   "finalizeFeature": "Finaliser",
   "duplicateFeature": "Dupliquer",
-  "pageMovedDescription": "Redirection vers <a>{newUrl}</a>"
+  "pageMovedDescription": "Redirection vers <a>{newUrl}</a>",
+  "notRegistered": "Vous n'avez pas de compte ? <a>Créer un compte</a>"
 }
