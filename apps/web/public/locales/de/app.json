@@ -40,6 +40,7 @@
   "location": "Ort",
   "locationPlaceholder": "Joe's Café",
   "login": "Login",
+  "loginWith": "Anmelden mit {provider}",
   "logout": "Ausloggen",
   "manage": "Verwalten",
   "mixedOptionsDescription": "Du kannst keine Zeit- und Datumsoptionen in der gleichen Umfrage haben. Welche möchtest Du beibehalten?",
@@ -226,5 +227,6 @@
   "continueAs": "Fortsetzen als",
   "finalizeFeature": "Finalisieren",
   "duplicateFeature": "Duplizieren",
-  "pageMovedDescription": "Weiterleitung zu <a>{newUrl}</a>"
+  "pageMovedDescription": "Weiterleitung zu <a>{newUrl}</a>",
+  "notRegistered": "Haben Sie noch kein Konto? <a>Registrieren Sie sich</a>"
 }
