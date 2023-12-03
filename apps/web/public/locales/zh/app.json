@@ -1,1 +1,24 @@
-{}
+{
+  "12h": "12小時制",
+  "24h": "24小時制",
+  "addTimeOption": "新增時間選項",
+  "alreadyRegistered": "已有帳號？ <a>立即登入</a>",
+  "applyToAllDates": "套用至所有日期",
+  "areYouSure": "你確定嗎？",
+  "cancel": "取消",
+  "changeName": "重新命名",
+  "settings": "設定",
+  "changeNameDescription": "替該位參與者命名。",
+  "changeNameInfo": "這不會影響任何現有的投票。",
+  "comments": "留言",
+  "continue": "下一步",
+  "copied": "複製成功",
+  "createAnAccount": "建立帳號",
+  "createdBy": "由 <b>{name}</b> 發起",
+  "createPoll": "建立投票",
+  "delete": "刪除",
+  "deleteDate": "刪除日期",
+  "deletedPoll": "已刪除投票",
+  "deletedPollInfo": "該投票不存在。",
+  "deleteParticipant": "刪除 {name}?"
+}
