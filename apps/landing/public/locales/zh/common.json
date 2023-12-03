@@ -1,1 +1,17 @@
-{}
+{
+  "support": "技術支援",
+  "cookiePolicy": "Cookie政策",
+  "termsOfUse": "使用條款",
+  "volunteerTranslator": "協助我們翻譯這個網站",
+  "notFoundTitle": "404：頁面不存在",
+  "notFoundDescription": "我們無法找到您要查找的頁面。",
+  "goToHome": "回到首頁",
+  "goToApp": "前往APP",
+  "pricing": "定價",
+  "bestDoodleAlternative": "最好的 Doodle 替代品",
+  "freeSchedulingPoll": "免費的日程投票",
+  "findATime": "找個時間見面",
+  "getStarted": "開始使用",
+  "solutions": "解決方案",
+  "howItWorks": "Rallly的運作方式"
+}
