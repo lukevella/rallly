@@ -1,4 +1,9 @@
 {
+  "login": "登入",
+  "links": "一覽",
+  "blog": "部落格",
+  "discussions": "討論區",
+  "footerCredit": "由 <a>@imlukevella</a> 製作",
   "support": "技術支援",
   "cookiePolicy": "Cookie政策",
   "termsOfUse": "使用條款",
@@ -12,6 +17,7 @@
   "freeSchedulingPoll": "免費的日程投票",
   "findATime": "找個時間見面",
   "getStarted": "開始使用",
+  "availabilityPoll": "日程投票",
   "solutions": "解決方案",
   "howItWorks": "Rallly的運作方式"
 }
