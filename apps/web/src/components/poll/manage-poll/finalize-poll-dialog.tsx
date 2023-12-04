@@ -49,7 +49,7 @@ const useScoreByOptionId = () => {
 
     responses?.forEach((response) => {
       response.votes.forEach((vote) => {
-        scoreByOptionId[vote.optionId][vote.type].push(response.id);
+        scoreByOptionId[vote.optionId]?.[vote.type].push(response.id);
       });
     });
 
