@@ -25,7 +25,7 @@ import { emailClient } from "@/utils/emails";
 
 const providers: Provider[] = [
   // When a user registers, we don't want to go through the email verification process
-  // so this providers allows us exchange the registration token for a session token
+  // so this provider allows us exchange the registration token for a session token
   CredentialsProvider({
     id: "registration-token",
     name: "Registration Token",
