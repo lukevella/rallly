@@ -1,1 +1,21 @@
-{}
+{
+  "pricing": "定價",
+  "pricingDescription": "無須登入即可免費使用。",
+  "freeForever": "永久免費",
+  "annualBillingDescription": "每月，按年計費",
+  "monthlyBillingDescription": "每月",
+  "upgrade": "升級",
+  "faq": "常見問題",
+  "canUseFree": "我可以免費使用 Rallly 嗎？",
+  "whyUpgrade": "為什麼要升級？",
+  "howToUpgrade": "如何升級至付費方案？",
+  "howToUpgradeAnswer": "如需升級，您可前往您的 <a>帳單設定</a> 並點擊 <b>升級</b>。",
+  "cancelSubscription": "如何取消訂閱？",
+  "cancelSubscriptionAnswer": "您可以隨時前往 <a>帳單設定</a> 取消訂閱。取消訂閱後，您仍可存取付費方案的功能直至計費週期結束。在那之後，您將降級為免費方案。",
+  "billingPeriodMonthly": "按月計費",
+  "billingPeriodYearly": "按年計費",
+  "planFreeDescription": "適合一般用戶",
+  "limitedAccess": "取得所有功能",
+  "canUseFreeAnswer2": "是的，Rallly的大部分功能都是免費的，且對多數用戶來說，可能永遠不需要支付任何費用。然而，有些功能僅開放付費用戶使用。這些功能旨在幫助您充分發揮 Rallly 的潛力。",
+  "planFree": "免費"
+}
