@@ -83,7 +83,8 @@ export default async function handler(
       const subscription = await stripe.subscriptions.retrieve(id);
 
       // check if the subscription is active
-      const isActive = subscription.status === "active";
+      const isActive =
+        subscription.status === "active" || subscription.status === "past_due";
 
       // get the subscription price details
       const lineItem = subscription.items.data[0];
