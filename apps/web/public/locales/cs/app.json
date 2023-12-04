@@ -40,6 +40,7 @@
   "location": "Místo",
   "locationPlaceholder": "Příjemná kavárna v centru",
   "login": "Přihlásit",
+  "loginWith": "Přihlaste se pomocí {provider}",
   "logout": "Odhlásit se",
   "manage": "Spravovat",
   "mixedOptionsDescription": "Nemůžete mít ve stejné anketě souběžně datum i čas. Kterou volbu chcete zachovat?",
@@ -225,5 +226,7 @@
   "authErrorCta": "Přejít na přihlášení",
   "continueAs": "Pokračovat jako",
   "finalizeFeature": "Dokončit",
-  "duplicateFeature": "Kopírovat"
+  "duplicateFeature": "Kopírovat",
+  "pageMovedDescription": "Přesměrovávám na <a>{newUrl}</a>",
+  "notRegistered": "Nemáte účet? <a>Zaregistrovat</a>"
 }
