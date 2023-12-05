@@ -138,6 +138,11 @@ const dayjsLocales: Record<
     timeFormat: "hours24",
     import: () => import("dayjs/locale/zh"),
   },
+  "zh-Hant": {
+    weekStart: 0,
+    timeFormat: "hours24",
+    import: () => import("dayjs/locale/zh-tw"),
+  },
   vi: {
     weekStart: 1,
     timeFormat: "hours24",
