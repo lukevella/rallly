@@ -34,8 +34,6 @@ export const EventCard = () => {
     ),
   );
 
-  const status = poll?.event ? "closed" : poll?.closed ? "paused" : "live";
-
   if (!poll) {
     return null;
   }
@@ -49,7 +47,7 @@ export const EventCard = () => {
         />
         <div className="bg-pattern p-4 sm:flex sm:flex-row-reverse sm:justify-between sm:px-6">
           <div className="mb-2">
-            <PollStatusBadge status={status} />
+            <PollStatusBadge status={poll.status} />
           </div>
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4 sm:gap-6">
