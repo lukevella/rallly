@@ -87,7 +87,6 @@ export const polls = router({
           timeZone: input.timeZone,
           location: input.location,
           description: input.description,
-          demo: input.demo,
           adminUrlId: adminToken,
           participantUrlId,
           userId: ctx.user.id,
@@ -355,12 +354,11 @@ export const polls = router({
           adminUrlId: true,
           participantUrlId: true,
           closed: true,
-          legacy: true,
+          status: true,
           hideParticipants: true,
           disableComments: true,
           hideScores: true,
           requireParticipantEmail: true,
-          demo: true,
           options: {
             select: {
               id: true,
@@ -436,6 +434,7 @@ export const polls = router({
         timeZone: true,
         adminUrlId: true,
         participantUrlId: true,
+        status: true,
         event: {
           select: {
             start: true,
@@ -551,14 +550,20 @@ export const polls = router({
         eventStart = eventStart.tz(poll.timeZone, true);
       }
 
-      await prisma.event.create({
+      await prisma.poll.update({
+        where: {
+          id: input.pollId,
+        },
         data: {
-          pollId: poll.id,
-          optionId: input.optionId,
-          start: eventStart.toDate(),
-          duration: option.duration,
-          title: poll.title,
-          userId: ctx.user.id,
+          event: {
+            create: {
+              optionId: input.optionId,
+              start: eventStart.toDate(),
+              duration: option.duration,
+              title: poll.title,
+              userId: ctx.user.id,
+            },
+          },
         },
       });
 
@@ -721,18 +726,16 @@ export const polls = router({
     )
     .mutation(async ({ input }) => {
       await prisma.$transaction([
-        prisma.event.delete({
-          where: {
-            pollId: input.pollId,
-          },
-        }),
         prisma.poll.update({
           where: {
             id: input.pollId,
           },
           data: {
-            eventId: null,
-            closed: false,
+            event: {
+              delete: true,
+            },
+            status: "live",
+            closed: false, // @deprecated
           },
         }),
       ]);
@@ -749,7 +752,8 @@ export const polls = router({
           id: input.pollId,
         },
         data: {
-          closed: true,
+          closed: true, // TODO (Luke Vella) [2023-12-05]:  Remove this
+          status: "paused",
         },
       });
     }),
@@ -827,6 +831,7 @@ export const polls = router({
         },
         data: {
           closed: false,
+          status: "live",
         },
       });
     }),

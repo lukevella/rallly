@@ -1,4 +1,4 @@
-import { User, VoteType } from "@rallly/database";
+import { PollStatus, User, VoteType } from "@rallly/database";
 
 export type GetPollApiResponse = {
   id: string;
@@ -9,10 +9,9 @@ export type GetPollApiResponse = {
   user: User | null;
   timeZone: string | null;
   adminUrlId: string;
+  status: PollStatus;
   participantUrlId: string;
   closed: boolean;
-  legacy: boolean;
-  demo: boolean;
   createdAt: Date;
   deleted: boolean;
 };

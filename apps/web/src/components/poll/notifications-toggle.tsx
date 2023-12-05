@@ -65,7 +65,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
           loading={watch.isLoading || unwatch.isLoading}
           icon={isWatching ? BellRingIcon : BellOffIcon}
           data-testid="notifications-toggle"
-          disabled={poll.demo || user.isGuest}
+          disabled={user.isGuest}
           className="flex items-center gap-2 px-2.5"
           onClick={async () => {
             if (user.isGuest) {

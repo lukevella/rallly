@@ -1,10 +1,9 @@
+import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { CheckCircleIcon, PauseCircleIcon, RadioIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
 import { IconComponent } from "@/types";
-
-export type PollState = "live" | "paused" | "closed";
 
 const LabelWithIcon = ({
   icon: Icon,
@@ -23,11 +22,11 @@ const LabelWithIcon = ({
   );
 };
 
-export const PollStatus = ({
+export const PollStatusLabel = ({
   status,
   className,
 }: {
-  status: PollState;
+  status: PollStatus;
   className?: string;
 }) => {
   switch (status) {
@@ -43,7 +42,7 @@ export const PollStatus = ({
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
         </LabelWithIcon>
       );
-    case "closed":
+    case "finalized":
       return (
         <LabelWithIcon icon={CheckCircleIcon} className={className}>
           <Trans i18nKey="pollStatusClosed" defaults="Finalized" />
@@ -52,13 +51,13 @@ export const PollStatus = ({
   }
 };
 
-export const PollStatusBadge = ({ status }: { status: PollState }) => {
+export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
-    <PollStatus
+    <PollStatusLabel
       className={cn("rounded-full border py-0.5 pl-1.5 pr-3 text-sm", {
         "border-blue-500 text-blue-500": status === "live",
         "border-gray-500 text-gray-500": status === "paused",
-        "border-green-500 text-green-500": status === "closed",
+        "border-green-500 text-green-500": status === "finalized",
       })}
       status={status}
     />

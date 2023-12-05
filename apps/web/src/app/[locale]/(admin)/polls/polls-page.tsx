@@ -75,12 +75,7 @@ export function PollsPage() {
             data.length > 0 ? (
               <div className="mx-auto grid max-w-3xl gap-3 sm:gap-4">
                 {data.map((poll) => {
-                  const { title, id: pollId, createdAt, closed: paused } = poll;
-                  const status = poll.event
-                    ? "closed"
-                    : paused
-                    ? "paused"
-                    : "live";
+                  const { title, id: pollId, createdAt, status } = poll;
                   return (
                     <div
                       key={poll.id}

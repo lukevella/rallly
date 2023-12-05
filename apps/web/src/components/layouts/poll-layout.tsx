@@ -42,7 +42,7 @@ import {
 import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
-import { PollStatus } from "@/components/poll-status";
+import { PollStatusLabel } from "@/components/poll-status";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
@@ -53,7 +53,6 @@ import { NextPageWithLayout } from "../../types";
 
 const StatusControl = () => {
   const poll = usePoll();
-  const state = poll.event ? "closed" : poll.closed ? "paused" : "live";
   const queryClient = trpc.useUtils();
   const reopen = trpc.polls.reopen.useMutation({
     onMutate: () => {
@@ -110,7 +109,7 @@ const StatusControl = () => {
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button>
-            <PollStatus status={state} />
+            <PollStatusLabel status={poll.status} />
             <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
