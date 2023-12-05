@@ -555,6 +555,7 @@ export const polls = router({
           id: input.pollId,
         },
         data: {
+          status: "finalized",
           event: {
             create: {
               optionId: input.optionId,
