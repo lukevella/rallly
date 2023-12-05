@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { m } from "framer-motion";
 import React from "react";
 
 import { Container } from "@/components/container";
@@ -12,15 +11,13 @@ export const TopBar = (
   }>,
 ) => {
   return (
-    <m.div
-      initial={{ y: 0 }}
-      exit={{ y: -100 }}
+    <div
       className={cn(
         "sticky top-0 z-20 border-b bg-gray-50/75 py-3 backdrop-blur-md",
       )}
     >
       <Container className={cn(props.className)}>{props.children}</Container>
-    </m.div>
+    </div>
   );
 };
 
