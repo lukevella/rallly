@@ -84,8 +84,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
   return (
     <div className="flex h-full">
-      <div className="flex w-72 shrink-0 flex-col gap-y-5 overflow-y-auto border-r px-6 pb-4">
-        <div className="flex justify-between shrink-0 mt-4 mb-2 items-center">
+      <div className="flex w-72 shrink-0 flex-col gap-y-5 overflow-y-auto border-r px-6 py-5">
+        <div className="flex justify-between mb-4 shrink-0 items-center">
           <Link href="/" className="active:translate-y-1 transition-transform">
             <Image alt="Rallly" src="/logo-mark.svg" width={32} height={32} />
           </Link>

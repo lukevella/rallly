@@ -26,7 +26,7 @@ export const BillingPlanHeader = ({
 };
 
 export const BillingPlanTitle = ({ children }: React.PropsWithChildren) => {
-  return <h3>{children}</h3>;
+  return <h3 className="font-semibold">{children}</h3>;
 };
 
 export const BillingPlanDescription = ({

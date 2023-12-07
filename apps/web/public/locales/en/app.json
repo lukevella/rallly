@@ -217,7 +217,6 @@
   "noAds": "No ads",
   "supportProject": "Support this project",
   "pricing": "Pricing",
-  "pleaseUpgrade": "Please upgrade to Pro to use this feature",
   "pollSettingsDescription": "Customize the behaviour of your poll",
   "requireParticipantEmailLabel": "Make email address required for participants",
   "hideParticipantsLabel": "Hide participant list from other participants",
@@ -236,6 +235,5 @@
   "integrations": "Integrations",
   "contacts": "Contacts",
   "unlockFeatures": "Remove watermarks and unlock all Pro features.",
-  "pollsCount": "{count, plural, one {# poll} other {# polls}}",
   "back": "Back"
 }

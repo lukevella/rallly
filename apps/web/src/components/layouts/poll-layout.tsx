@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 
+import { PageContainer, PageContent, PageHeader } from "@/app/components/page";
 import { InviteDialog } from "@/components/invite-dialog";
 import { TopBar } from "@/components/layouts/standard-layout/top-bar";
 import { LoginLink } from "@/components/login-link";
@@ -145,33 +146,33 @@ const StatusControl = () => {
 
 const AdminControls = () => {
   return (
-    <TopBar>
-      <div className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
-        <div className="flex min-w-0 gap-2">
-          <Button variant="ghost" asChild>
-            <Link href="/polls">
-              <ArrowLeftIcon className="h-4 w-4" />
-              <Trans i18nKey="back" defaults="Back" />
-            </Link>
-          </Button>
-        </div>
-        <div className="flex items-center gap-x-2">
-          <NotificationsToggle />
-          <StatusControl />
-          <ManagePoll />
-          <InviteDialog />
-        </div>
+    <div className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
+      <div className="flex min-w-0 gap-2">
+        <Button variant="ghost" asChild>
+          <Link href="/polls">
+            <ArrowLeftIcon className="h-4 w-4" />
+            <Trans i18nKey="back" defaults="Back" />
+          </Link>
+        </Button>
       </div>
-    </TopBar>
+      <div className="flex items-center gap-x-2">
+        <NotificationsToggle />
+        <StatusControl />
+        <ManagePoll />
+        <InviteDialog />
+      </div>
+    </div>
   );
 };
 
 const Layout = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="flex h-full min-w-0 flex-col">
-      <AdminControls />
-      <div className="p-6 grow bg-gray-100">{children}</div>
-    </div>
+    <PageContainer>
+      <PageHeader>
+        <AdminControls />
+      </PageHeader>
+      <PageContent className="mt-12">{children}</PageContent>
+    </PageContainer>
   );
 };
 

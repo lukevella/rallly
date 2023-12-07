@@ -6,10 +6,16 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { useToggle } from "react-use";
 
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageTitle,
+} from "@/app/components/page";
 import { IfCloudHosted } from "@/contexts/environment";
 
 import { IconComponent } from "../../types";
-import { IfAuthenticated, useUser } from "../user-provider";
+import { IfAuthenticated } from "../user-provider";
 
 const MenuItem = (props: {
   icon: IconComponent;
@@ -44,27 +50,30 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
   }, [pathname, toggle]);
 
   return (
-    <div className="bg-gray-50 h-full">
-      <div className="relative h-full">
-        <div className="border-b px-4 py-3">
-          <div className="flex gap-x-2">
-            <IfAuthenticated>
-              <MenuItem href="/settings/profile" icon={UserIcon}>
-                <Trans i18nKey="profile" defaults="Profile" />
-              </MenuItem>
-            </IfAuthenticated>
-            <MenuItem href="/settings/preferences" icon={Settings2Icon}>
-              <Trans i18nKey="preferences" defaults="Preferences" />
+    <PageContainer>
+      <PageHeader>
+        <PageTitle>
+          <Trans i18nKey="settings" defaults="Settings" />
+        </PageTitle>
+        <div className="flex mt-4 gap-x-2">
+          <IfAuthenticated>
+            <MenuItem href="/settings/profile" icon={UserIcon}>
+              <Trans i18nKey="profile" defaults="Profile" />
             </MenuItem>
-            <IfCloudHosted>
-              <MenuItem href="/settings/billing" icon={CreditCardIcon}>
-                <Trans i18nKey="billing" defaults="Billing" />
-              </MenuItem>
-            </IfCloudHosted>
-          </div>
+          </IfAuthenticated>
+          <MenuItem href="/settings/preferences" icon={Settings2Icon}>
+            <Trans i18nKey="preferences" defaults="Preferences" />
+          </MenuItem>
+          <IfCloudHosted>
+            <MenuItem href="/settings/billing" icon={CreditCardIcon}>
+              <Trans i18nKey="billing" defaults="Billing" />
+            </MenuItem>
+          </IfCloudHosted>
         </div>
-        <div className="max-w-2xl grow">{children}</div>
-      </div>
-    </div>
+      </PageHeader>
+      <PageContent>
+        <div className="max-w-2xl">{children}</div>
+      </PageContent>
+    </PageContainer>
   );
 };

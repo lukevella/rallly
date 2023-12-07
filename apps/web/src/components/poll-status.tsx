@@ -54,10 +54,10 @@ export const PollStatusLabel = ({
 export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
     <PollStatusLabel
-      className={cn("rounded-full py-1.5 pr-3 ring-1 pl-2 text-xs", {
-        "bg-blue-600 text-blue-50 ring-blue-700": status === "live",
-        "bg-gray-100 text-gray-500 ring-gray-200": status === "paused",
-        "bg-green-600 text-green-50 ring-green-700": status === "finalized",
+      className={cn("rounded-full border py-1.5 pr-3 pl-2 text-xs", {
+        "bg-primary-50 border-primary-100 text-primary-500": status === "live",
+        "bg-gray-200 border-gray-200 text-gray-500": status === "paused",
+        "bg-green-50 text-green-500 border-green-100": status === "finalized",
       })}
       status={status}
     />

@@ -14,7 +14,7 @@ import { trpc } from "@/utils/trpc/client";
 
 const EmptyState = () => {
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="py-24">
       <div className="mx-auto max-w-md rounded-md border-2 w-full border-dashed border-gray-300 p-8 text-center">
         <div className="mb-4">
           <InboxIcon className="inline-block h-10 w-10 text-gray-400" />
@@ -70,16 +70,7 @@ export function PollsPage() {
   if (data.length === 0) return <EmptyState />;
 
   return (
-    <div className="p-6">
-      <h2 className="mb-6 font-bold text-lg">
-        <Trans
-          i18nKey="pollsCount"
-          defaults="{count, plural, one {# poll} other {# polls}}"
-          values={{
-            count: data.length,
-          }}
-        />
-      </h2>
+    <div>
       <Table
         layout="auto"
         data={data as Column[]}

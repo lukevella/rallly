@@ -1,17 +1,25 @@
+import { Button } from "@rallly/ui/button";
+import { ArrowLeftIcon } from "lucide-react";
+import Link from "next/link";
+import { Trans } from "react-i18next/TransWithoutContext";
+
+import { PageContainer, PageHeader } from "@/app/components/page";
 import { getTranslation } from "@/app/i18n";
 import { CreatePoll } from "@/components/create-poll";
 
-export default function Page() {
-  return <CreatePoll />;
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
+export default async function Page({ params }: { params: { locale: string } }) {
   const { t } = await getTranslation(params.locale);
-  return {
-    title: t("newPoll"),
-  };
+  return (
+    <PageContainer>
+      <PageHeader>
+        <Button asChild variant="ghost">
+          <Link href="/polls">
+            <ArrowLeftIcon className="w-4 h-4" />
+            <Trans t={t} i18nKey="back" />
+          </Link>
+        </Button>
+      </PageHeader>
+      <CreatePoll />
+    </PageContainer>
+  );
 }
