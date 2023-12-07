@@ -3,12 +3,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 
 export const Settings = ({ children }: React.PropsWithChildren) => {
-  return <div className="px-4 py-3 md:p-6">{children}</div>;
+  return <div className="py-4 px-6">{children}</div>;
 };
 
 export const SettingsHeader = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="mb-4 md:mb-8">
+    <div className="mb-4 font-semibold text-lg md:mb-8">
       <h2>{children}</h2>
     </div>
   );

@@ -11,11 +11,7 @@ export const TopBar = (
   }>,
 ) => {
   return (
-    <div
-      className={cn(
-        "sticky top-0 z-20 border-b bg-gray-50/75 py-3 backdrop-blur-md",
-      )}
-    >
+    <div className={cn("border-b bg-gray-100 sticky top-0 z-20 py-4")}>
       <Container className={cn(props.className)}>{props.children}</Container>
     </div>
   );

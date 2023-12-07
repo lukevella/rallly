@@ -1,28 +1,28 @@
 "use client";
+import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { InboxIcon, PauseCircleIcon, PlusIcon, RadioIcon } from "lucide-react";
+import { DotIcon, InboxIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 
-import { DateIcon } from "@/components/date-icon";
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusBadge } from "@/components/poll-status";
 import { Skeleton } from "@/components/skeleton";
+import { Table } from "@/components/table";
 import { Trans } from "@/components/trans";
-import { useDayjs } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
 const EmptyState = () => {
   return (
-    <div className="p-8 lg:p-36">
-      <div className="mx-auto max-w-lg rounded-md border-2 border-dashed border-gray-300 p-8 text-center text-gray-600">
+    <div className="h-full flex items-center justify-center">
+      <div className="mx-auto max-w-md rounded-md border-2 w-full border-dashed border-gray-300 p-8 text-center">
         <div className="mb-4">
-          <InboxIcon className="inline-block h-10 w-10 text-gray-500" />
+          <InboxIcon className="inline-block h-10 w-10 text-gray-400" />
         </div>
-        <h3>
+        <h3 className="font-semibold">
           <Trans i18nKey="noPolls" defaults="No polls" />
         </h3>
-        <p>
+        <p className="text-muted-foreground">
           <Trans
             i18nKey="noPollsDescription"
             defaults="Get started by creating a new poll."
@@ -41,101 +41,96 @@ const EmptyState = () => {
   );
 };
 
-export function PollsPage() {
-  const { data } = trpc.polls.list.useQuery();
-  const { adjustTimeZone } = useDayjs();
-
-  return data ? (
-    data.length > 0 ? (
-      <div className="mx-auto grid max-w-3xl gap-3 sm:gap-4">
-        {data.map((poll) => {
-          const { title, id: pollId, createdAt, status } = poll;
-          return (
-            <div
-              key={poll.id}
-              className="flex overflow-hidden rounded-md border shadow-sm"
-            >
-              <div className="flex grow flex-col-reverse justify-between gap-x-4 gap-y-4 bg-white p-4 sm:flex-row sm:items-start sm:px-6">
-                <div className="flex gap-x-4">
-                  <div className="sm:-ml-2">
-                    {poll.event ? (
-                      <DateIcon
-                        date={adjustTimeZone(poll.event.start, !poll.timeZone)}
-                      />
-                    ) : (
-                      <div className="inline-flex h-14 w-14 items-center justify-center rounded-md border bg-gray-50 text-gray-400">
-                        {status === "live" ? (
-                          <RadioIcon className="h-5 w-5" />
-                        ) : (
-                          <PauseCircleIcon className="h-5 w-5" />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <div className="text-muted-foreground text-sm">
-                      {poll.event
-                        ? poll.event.duration > 0
-                          ? `${adjustTimeZone(
-                              poll.event.start,
-                              !poll.timeZone,
-                            ).format("LL LT")} - ${adjustTimeZone(
-                              dayjs(poll.event.start).add(
-                                poll.event.duration,
-                                "minutes",
-                              ),
-                              !poll.timeZone,
-                            ).format("LT")}`
-                          : adjustTimeZone(
-                              poll.event.start,
-                              !poll.timeZone,
-                            ).format("LL")
-                        : null}
-                    </div>
-                    <div>
-                      <Link
-                        href={`/poll/${pollId}`}
-                        className="text-lg font-semibold tracking-tight hover:underline"
-                      >
-                        {title}
-                      </Link>
-                    </div>
-                    <div className="text-muted-foreground text-sm">
-                      <Trans
-                        i18nKey="createdTime"
-                        defaults="Created {relativeTime}"
-                        values={{
-                          relativeTime: dayjs(createdAt).fromNow(),
-                        }}
-                      />
-                    </div>
-                    {poll.participants.length > 0 ? (
-                      <div className="mt-4">
-                        <ParticipantAvatarBar
-                          participants={poll.participants}
-                          max={5}
-                        />
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-                <div>
-                  <PollStatusBadge status={status} />
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    ) : (
-      <EmptyState />
-    )
-  ) : (
+function PollsSkeleton() {
+  return (
     <div className="mx-auto grid max-w-3xl gap-3 sm:gap-4">
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
+    </div>
+  );
+}
+
+type Column = {
+  id: string;
+  status: PollStatus;
+  title: string;
+  createdAt: Date;
+  participants: { name: string }[];
+};
+
+const columnHelper = createColumnHelper<Column>();
+
+export function PollsPage() {
+  const { data } = trpc.polls.list.useQuery();
+
+  if (!data) return <PollsSkeleton />;
+
+  if (data.length === 0) return <EmptyState />;
+
+  return (
+    <div className="p-6">
+      <h2 className="mb-6 font-bold text-lg">
+        <Trans
+          i18nKey="pollsCount"
+          defaults="{count, plural, one {# poll} other {# polls}}"
+          values={{
+            count: data.length,
+          }}
+        />
+      </h2>
+      <Table
+        layout="auto"
+        data={data as Column[]}
+        columns={[
+          columnHelper.accessor("status", {
+            header: () => null,
+            cell: ({ row }) => {
+              return (
+                <div className="text-right">
+                  <PollStatusBadge status={row.getValue("status")} />
+                </div>
+              );
+            },
+          }),
+          columnHelper.display({
+            id: "title",
+            header: () => null,
+            size: 99999,
+            cell: ({ row }) => {
+              const createdAt = row.original.createdAt;
+              return (
+                <div className="relative">
+                  <h3 className="font-semibold align-middle leading-6 mb-1 text-gray-600 hover:text-gray-900 hover:underline">
+                    <Link href={`/poll/${row.original.id}`}>
+                      {row.original.title}
+                      <span className="absolute inset-0" />
+                    </Link>
+                  </h3>
+                  <div className="flex items-center gap-x-1 text-muted-foreground">
+                    <p className="text-sm">
+                      <time dateTime={createdAt.toDateString()}>
+                        <Trans
+                          i18nKey="createdTime"
+                          values={{ relativeTime: dayjs(createdAt).fromNow() }}
+                        />
+                      </time>
+                    </p>
+                    <DotIcon className="h-4 w-4" />
+                    <p className="text-sm whitespace-nowrap">
+                      <Trans
+                        i18nKey="participantCount"
+                        values={{ count: row.original.participants.length }}
+                      />
+                    </p>
+                  </div>
+                </div>
+              );
+            },
+          }),
+        ]}
+      />
     </div>
   );
 }

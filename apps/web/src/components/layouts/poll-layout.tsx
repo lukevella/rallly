@@ -11,7 +11,6 @@ import {
   ArrowLeftIcon,
   ArrowUpRight,
   ChevronDownIcon,
-  FileBarChart,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
@@ -21,16 +20,11 @@ import {
 } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import React from "react";
 
-import { Container } from "@/components/container";
 import { InviteDialog } from "@/components/invite-dialog";
-import { StandardLayout } from "@/components/layouts/standard-layout";
-import {
-  TopBar,
-  TopBarTitle,
-} from "@/components/layouts/standard-layout/top-bar";
+import { TopBar } from "@/components/layouts/standard-layout/top-bar";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -48,8 +42,6 @@ import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/utils/trpc/client";
-
-import { NextPageWithLayout } from "../../types";
 
 const StatusControl = () => {
   const poll = usePoll();
@@ -152,21 +144,16 @@ const StatusControl = () => {
 };
 
 const AdminControls = () => {
-  const poll = usePoll();
-  const pollLink = `/poll/${poll.id}`;
-  const pathname = usePathname();
   return (
     <TopBar>
       <div className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
-        <div className="flex min-w-0 gap-4">
-          {pathname !== pollLink ? (
-            <Button asChild>
-              <Link href={pollLink}>
-                <ArrowLeftIcon className="h-4 w-4" />
-              </Link>
-            </Button>
-          ) : null}
-          <TopBarTitle title={poll?.title} icon={FileBarChart} />
+        <div className="flex min-w-0 gap-2">
+          <Button variant="ghost" asChild>
+            <Link href="/polls">
+              <ArrowLeftIcon className="h-4 w-4" />
+              <Trans i18nKey="back" defaults="Back" />
+            </Link>
+          </Button>
         </div>
         <div className="flex items-center gap-x-2">
           <NotificationsToggle />
@@ -181,11 +168,9 @@ const AdminControls = () => {
 
 const Layout = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="flex min-w-0 grow flex-col">
+    <div className="flex h-full min-w-0 flex-col">
       <AdminControls />
-      <div>
-        <Container className="py-3 sm:py-8">{children}</Container>
-      </div>
+      <div className="p-6 grow bg-gray-100">{children}</div>
     </div>
   );
 };
@@ -303,12 +288,3 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
     </Prefetch>
   );
 };
-
-export const getPollLayout: NextPageWithLayout["getLayout"] =
-  function getLayout(page) {
-    return (
-      <StandardLayout>
-        <PollLayout>{page}</PollLayout>
-      </StandardLayout>
-    );
-  };

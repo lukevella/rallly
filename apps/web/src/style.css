@@ -7,27 +7,14 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground overflow-y-scroll overscroll-none bg-gray-200/50;
+    @apply text-foreground bg-gray-100;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   html {
     @apply h-full font-sans text-base text-gray-700;
   }
   body #__next {
-    @apply min-h-screen;
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    @apply font-sans font-bold tracking-tight;
-  }
-  h1 {
-    @apply text-2xl;
-  }
-  h2 {
-    @apply text-xl;
+    @apply h-full;
   }
 
   label {

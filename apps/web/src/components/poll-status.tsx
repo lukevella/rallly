@@ -17,7 +17,7 @@ const LabelWithIcon = ({
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
       <Icon className="h-4 w-4" />
-      <span>{children}</span>
+      <span className="font-medium">{children}</span>
     </span>
   );
 };
@@ -54,10 +54,10 @@ export const PollStatusLabel = ({
 export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
     <PollStatusLabel
-      className={cn("rounded-full border py-0.5 pl-1.5 pr-3 text-sm", {
-        "border-blue-500 text-blue-500": status === "live",
-        "border-gray-500 text-gray-500": status === "paused",
-        "border-green-500 text-green-500": status === "finalized",
+      className={cn("rounded-full py-1.5 pr-3 ring-1 pl-2 text-xs", {
+        "bg-blue-600 text-blue-50 ring-blue-700": status === "live",
+        "bg-gray-100 text-gray-500 ring-gray-200": status === "paused",
+        "bg-green-600 text-green-50 ring-green-700": status === "finalized",
       })}
       status={status}
     />

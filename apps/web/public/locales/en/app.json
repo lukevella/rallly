@@ -229,5 +229,13 @@
   "finalizeFeature": "Finalize",
   "duplicateFeature": "Duplicate",
   "pageMovedDescription": "Redirecting to <a>{newUrl}</a>",
-  "notRegistered": "Don't have an account? <a>Register</a>"
+  "notRegistered": "Don't have an account? <a>Register</a>",
+  "comingSoon": "Coming Soon",
+  "registeration": "Registrations",
+  "rspvs": "RSVPs",
+  "integrations": "Integrations",
+  "contacts": "Contacts",
+  "unlockFeatures": "Remove watermarks and unlock all Pro features.",
+  "pollsCount": "{count, plural, one {# poll} other {# polls}}",
+  "back": "Back"
 }

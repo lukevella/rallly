@@ -42,9 +42,10 @@ export const UserDropdown = () => {
         asChild
         className="group"
       >
-        <Button variant="ghost" className="rounded-full">
+        <Button variant="ghost">
           <CurrentUserAvatar size="sm" className="-ml-1" />
-          <ChevronDown className="h-4 w-4" />
+          <span className="truncate">{user.name}</span>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

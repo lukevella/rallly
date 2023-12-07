@@ -53,6 +53,7 @@
     "iron-session": "^6.3.1",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.294.0",
     "micro": "^10.0.1",
     "nanoid": "^4.0.0",
     "next-auth": "^4.24.5",
