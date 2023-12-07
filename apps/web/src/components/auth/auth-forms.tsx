@@ -22,7 +22,8 @@ export const verifyCode = async (options: { email: string; token: string }) => {
 export const VerifyCode: React.FunctionComponent<{
   email: string;
   onSubmit: (code: string) => Promise<void>;
-}> = ({ onSubmit, email }) => {
+  onChangeEmail?: () => void;
+}> = ({ onSubmit, onChangeEmail, email }) => {
   const { register, handleSubmit, setError, formState } = useForm<{
     code: string;
   }>();
@@ -58,11 +59,11 @@ export const VerifyCode: React.FunctionComponent<{
               components={{
                 b: <strong className="whitespace-nowrap" />,
                 a: (
-                  <a
+                  <button
+                    role="button"
                     className="text-link"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
+                      onChangeEmail?.();
                     }}
                   />
                 ),

@@ -69,6 +69,9 @@ export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
           }
         }}
         email={getValues("email")}
+        onChangeEmail={() => {
+          setEmail(undefined);
+        }}
       />
     );
   }
