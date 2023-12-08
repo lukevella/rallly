@@ -1,13 +1,15 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
   CheckCircle2Icon,
-  CogIcon,
   CreditCardIcon,
   LogInIcon,
+  MenuIcon,
+  Settings2Icon,
   SparklesIcon,
   UserIcon,
   UsersIcon,
@@ -19,6 +21,7 @@ import { usePathname } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { useToggle } from "react-use";
 
 import { ProBadge } from "@/components/pro-badge";
 import { UserDropdown } from "@/components/user-dropdown";
@@ -79,13 +82,35 @@ function MenuItem({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [open, toggleMenu] = useToggle(false);
+
+  React.useEffect(() => {
+    toggleMenu(false);
+  }, [pathname, toggleMenu]);
+
   if (isSelfHosted) {
     return <Auth>{children}</Auth>;
   }
   return (
-    <div className="flex h-full">
-      <div className="flex w-72 shrink-0 flex-col gap-y-5 overflow-y-auto border-r px-6 py-5">
-        <div className="flex justify-between mb-4 shrink-0 items-center">
+    <div className="lg:flex h-full">
+      <div className="lg:hidden flex justify-between border-b p-3">
+        <Button
+          onClick={() => {
+            toggleMenu();
+          }}
+          variant="ghost"
+        >
+          <MenuIcon className="h-4 w-4" />
+        </Button>
+        <UserDropdown />
+      </div>
+      <div
+        className={cn(
+          "lg:flex lg:w-72 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-5 px-5 py-3",
+          open ? "block" : "hidden",
+        )}
+      >
+        <div className="hidden lg:flex justify-between mb-4 shrink-0 items-center">
           <Link href="/" className="active:translate-y-1 transition-transform">
             <Image alt="Rallly" src="/logo-mark.svg" width={32} height={32} />
           </Link>
@@ -150,7 +175,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       <span className="text-gray-500 leading-relaxed text-sm">
                         <Trans
                           i18nKey="unlockFeatures"
-                          defaults="Remove watermarks and unlock all Pro features."
+                          defaults="Unlock all Pro features."
                         />
                       </span>
                     </Link>
@@ -174,8 +199,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   </li>
                 </IfGuest>
                 <li>
-                  <MenuItem href="/settings/profile" icon={CogIcon}>
-                    <Trans i18nKey="settings" />
+                  <MenuItem href="/settings/preferences" icon={Settings2Icon}>
+                    <Trans i18nKey="preferences" />
                   </MenuItem>
                 </li>
               </ul>
@@ -183,7 +208,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </ul>
         </nav>
       </div>
-      <div className="grow overflow-auto bg-gray-50">{children}</div>
+      <div
+        className={cn("grow overflow-auto bg-gray-50", open ? "hidden" : "")}
+      >
+        {children}
+      </div>
     </div>
   );
 }

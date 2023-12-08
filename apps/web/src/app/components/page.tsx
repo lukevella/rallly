@@ -4,7 +4,9 @@ export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn("px-6 py-5", className)}>{children}</div>;
+  return (
+    <div className={cn("lg:px-6 lg:py-5 px-4 py-3", className)}>{children}</div>
+  );
 }
 
 export function PageTitle({
@@ -26,7 +28,7 @@ export function PageHeader({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("", className)}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 }
 
 export function PageContent({
@@ -36,5 +38,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("mt-6", className)}>{children}</div>;
+  return <div className={cn("lg:mt-6 mt-3", className)}>{children}</div>;
 }

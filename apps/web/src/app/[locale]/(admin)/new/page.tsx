@@ -3,7 +3,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { PageContainer, PageHeader } from "@/app/components/page";
+import { PageContainer, PageContent, PageHeader } from "@/app/components/page";
 import { getTranslation } from "@/app/i18n";
 import { CreatePoll } from "@/components/create-poll";
 
@@ -19,7 +19,9 @@ export default async function Page({ params }: { params: { locale: string } }) {
           </Link>
         </Button>
       </PageHeader>
-      <CreatePoll />
+      <PageContent>
+        <CreatePoll />
+      </PageContent>
     </PageContainer>
   );
 }

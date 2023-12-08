@@ -25,7 +25,6 @@ import React from "react";
 
 import { PageContainer, PageContent, PageHeader } from "@/app/components/page";
 import { InviteDialog } from "@/components/invite-dialog";
-import { TopBar } from "@/components/layouts/standard-layout/top-bar";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -38,7 +37,6 @@ import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { PollStatusLabel } from "@/components/poll-status";
-import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
@@ -171,7 +169,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
       <PageHeader>
         <AdminControls />
       </PageHeader>
-      <PageContent className="mt-12">{children}</PageContent>
+      <PageContent>{children}</PageContent>
     </PageContainer>
   );
 };
@@ -251,18 +249,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
 
   if (!poll.data || !watchers.data || !participants.data) {
-    return (
-      <div>
-        <TopBar className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
-          <Skeleton className="my-2 h-5 w-48" />
-          <div className="flex gap-x-2">
-            <Skeleton className="h-9 w-24" />
-            <Skeleton className="h-9 w-24" />
-            <Skeleton className="h-9 w-24" />
-          </div>
-        </TopBar>
-      </div>
-    );
+    return null;
   }
 
   return <>{children}</>;

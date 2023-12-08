@@ -67,7 +67,6 @@ export const CreatePoll: React.FunctionComponent = () => {
   return (
     <Form {...form}>
       <form
-        className="pb-16"
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
 
@@ -100,7 +99,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           );
         })}
       >
-        <div className="mx-auto max-w-4xl space-y-4 p-2 sm:p-8">
+        <div className="mx-auto max-w-4xl space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>

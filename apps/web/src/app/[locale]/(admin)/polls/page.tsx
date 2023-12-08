@@ -11,7 +11,7 @@ import {
 } from "@/app/components/page";
 import { getTranslation } from "@/app/i18n";
 
-import { PollsPage } from "./polls-page";
+import { PollsList } from "./polls-list";
 
 export default async function Page({ params }: { params: { locale: string } }) {
   const { t } = await getTranslation(params.locale);
@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
         </div>
       </PageHeader>
       <PageContent>
-        <PollsPage />
+        <PollsList />
       </PageContent>
     </PageContainer>
   );
