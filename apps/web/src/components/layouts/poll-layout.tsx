@@ -169,7 +169,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
         </Button>
       </PageHeader>
       <PageContent>
-        <div className="max-w-4xl py-4 mx-auto space-y-4">
+        <div className="space-y-8">
           <AdminControls />
           <div>{children}</div>
         </div>

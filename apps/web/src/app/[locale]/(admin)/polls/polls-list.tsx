@@ -3,7 +3,7 @@ import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { DotIcon, InboxIcon, PlusIcon } from "lucide-react";
+import { DotIcon, InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 
 import { PollStatusBadge } from "@/components/poll-status";
@@ -80,29 +80,33 @@ export function PollsList() {
             const createdAt = row.original.createdAt;
             return (
               <div className="relative">
-                <h3 className="font-semibold align-middle leading-6 mb-1 text-gray-600 hover:text-gray-900 hover:underline">
+                <h3 className="font-semibold mb-1 text-gray-600 hover:text-gray-900 hover:underline">
                   <Link href={`/poll/${row.original.id}`}>
                     {row.original.title}
                     <span className="absolute inset-0" />
                   </Link>
                 </h3>
-                <div className="flex items-center gap-x-1 text-muted-foreground">
-                  <p className="text-sm">
-                    <time dateTime={createdAt.toDateString()}>
-                      <Trans
-                        i18nKey="createdTime"
-                        values={{ relativeTime: dayjs(createdAt).fromNow() }}
-                      />
-                    </time>
-                  </p>
-                  <DotIcon className="h-4 w-4" />
-                  <p className="text-sm whitespace-nowrap">
+                <p className="text-sm text-muted-foreground">
+                  <time dateTime={createdAt.toDateString()}>
                     <Trans
-                      i18nKey="participantCount"
-                      values={{ count: row.original.participants.length }}
+                      i18nKey="createdTime"
+                      values={{ relativeTime: dayjs(createdAt).fromNow() }}
                     />
-                  </p>
-                </div>
+                  </time>
+                </p>
+              </div>
+            );
+          },
+        }),
+        columnHelper.accessor("participants", {
+          header: () => null,
+          cell: ({ row }) => {
+            return (
+              <div className="flex items-center justify-end gap-x-2">
+                <UsersIcon className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">
+                  {row.original.participants.length}
+                </span>
               </div>
             );
           },

@@ -73,7 +73,7 @@ export const Table = <
                   }}
                   key={cell.id}
                   className={clsx(
-                    "overflow-hidden align-top border-gray-100 px-4 py-3",
+                    "overflow-hidden align-top border-gray-100 pr-4 py-3",
                     {
                       "border-b": table.getRowModel().rows.length !== i + 1,
                     },
