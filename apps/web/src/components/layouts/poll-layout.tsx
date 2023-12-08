@@ -104,7 +104,7 @@ const StatusControl = () => {
             <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="start">
           {poll.event ? (
             <DropdownMenuItem
               onClick={() => {
@@ -144,19 +144,13 @@ const StatusControl = () => {
 
 const AdminControls = () => {
   return (
-    <div className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
-      <div className="flex min-w-0 gap-2">
-        <Button variant="ghost" asChild>
-          <Link href="/polls">
-            <ArrowLeftIcon className="h-4 w-4" />
-            <Trans i18nKey="back" defaults="Back" />
-          </Link>
-        </Button>
-      </div>
+    <div className="flex justify-between items-center gap-x-2">
       <div className="flex items-center gap-x-2">
         <NotificationsToggle />
         <StatusControl />
         <ManagePoll />
+      </div>
+      <div className="flex items-center gap-x-2">
         <InviteDialog />
       </div>
     </div>
@@ -167,9 +161,19 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   return (
     <PageContainer>
       <PageHeader>
-        <AdminControls />
+        <Button variant="ghost" asChild>
+          <Link href="/polls">
+            <ArrowLeftIcon className="h-4 w-4" />
+            <Trans i18nKey="back" defaults="Back" />
+          </Link>
+        </Button>
       </PageHeader>
-      <PageContent>{children}</PageContent>
+      <PageContent>
+        <div className="max-w-4xl py-4 mx-auto space-y-4">
+          <AdminControls />
+          <div>{children}</div>
+        </div>
+      </PageContent>
     </PageContainer>
   );
 };

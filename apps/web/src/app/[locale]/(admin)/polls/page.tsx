@@ -25,7 +25,9 @@ export default async function Page({ params }: { params: { locale: string } }) {
           <Button asChild variant="ghost">
             <Link href="/new">
               <PenBoxIcon className="w-4 h-4" />
-              <Trans t={t} i18nKey="newPoll" />
+              <span className="hidden sm:inline">
+                <Trans t={t} i18nKey="newPoll" />
+              </span>
             </Link>
           </Button>
         </div>

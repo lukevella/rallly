@@ -46,7 +46,7 @@ const ManagePoll: React.FunctionComponent<{
             <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="start">
           <DropdownMenuItem asChild>
             <Link href={`/poll/${poll.id}/edit-details`}>
               <DropdownMenuItemIconLabel icon={PencilIcon}>

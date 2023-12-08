@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -41,7 +42,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
       <DropdownMenuTrigger
         data-testid="user-dropdown"
         asChild
-        className={cn("group min-w-0", className)}
+        className={cn("group min-w-0 rounded-full", className)}
       >
         <Button variant="ghost">
           <CurrentUserAvatar size="sm" className="shrink-0 -ml-1" />
@@ -49,7 +50,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="end">
         <DropdownMenuLabel className="flex items-center gap-2">
           <div className="grow">
             <div>{user.isGuest ? <Trans i18nKey="guest" /> : user.name}</div>
