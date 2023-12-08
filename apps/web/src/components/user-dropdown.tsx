@@ -1,3 +1,4 @@
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -33,19 +34,19 @@ import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
-export const UserDropdown = () => {
+export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useUser();
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         data-testid="user-dropdown"
         asChild
-        className="group"
+        className={cn("group min-w-0", className)}
       >
         <Button variant="ghost">
-          <CurrentUserAvatar size="sm" className="-ml-1" />
+          <CurrentUserAvatar size="sm" className="shrink-0 -ml-1" />
           <span className="truncate">{user.name}</span>
-          <ChevronDown className="h-4 w-4 text-muted-foreground text-muted-foreground" />
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">

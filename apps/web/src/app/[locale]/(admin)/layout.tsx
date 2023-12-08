@@ -92,7 +92,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return <Auth>{children}</Auth>;
   }
   return (
-    <div className="lg:flex h-full">
+    <div className="lg:flex h-full bg-gray-50">
       <div className="lg:hidden flex justify-between border-b p-3">
         <Button
           onClick={() => {
@@ -106,17 +106,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
       <div
         className={cn(
-          "lg:flex lg:w-72 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-5 px-5 py-3",
+          "lg:flex lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-5 px-5 py-3",
           open ? "block" : "hidden",
         )}
       >
-        <div className="hidden lg:flex justify-between mb-4 shrink-0 items-center">
-          <Link href="/" className="active:translate-y-1 transition-transform">
+        <div className="hidden lg:flex justify-between mb-4 shrink-0 items-center gap-x-4">
+          <Link
+            href="/"
+            className="active:translate-y-1 shrink-0 transition-transform"
+          >
             <Image alt="Rallly" src="/logo-mark.svg" width={32} height={32} />
           </Link>
-          <div className="flex gap-x-2">
-            <UserDropdown />
-          </div>
+          <UserDropdown />
         </div>
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
