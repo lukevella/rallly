@@ -7,6 +7,8 @@ import React from "react";
 
 import { Providers } from "@/app/providers";
 
+import Toaster from "./toaster";
+
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -26,6 +28,7 @@ export default function Root({
   return (
     <html lang={locale} className={inter.className}>
       <body className="h-screen overflow-y-scroll">
+        <Toaster />
         <Providers>{children}</Providers>
       </body>
     </html>

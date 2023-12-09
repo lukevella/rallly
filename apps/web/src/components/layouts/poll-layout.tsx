@@ -206,21 +206,21 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
         </PageDialogHeader>
         <PageDialogFooter>
           {user.isGuest ? (
-            <Button asChild variant="primary" size="lg">
+            <Button asChild variant="primary">
               <LoginLink>
-                <LogInIcon className="-ml-1 h-5 w-5" />
+                <LogInIcon className="-ml-1 h-4 w-4" />
                 <Trans i18nKey="login" defaults="Login" />
               </LoginLink>
             </Button>
           ) : (
-            <Button asChild variant="primary" size="lg">
+            <Button asChild variant="primary">
               <Link href="/logout">
-                <LogOutIcon className="-ml-1 h-5 w-5" />
+                <LogOutIcon className="-ml-1 h-4 w-4" />
                 <Trans i18nKey="loginDifferent" defaults="Switch user" />
               </Link>
             </Button>
           )}
-          <Button asChild size="lg">
+          <Button asChild>
             <Link href={`/invite/${poll.id}`}>
               <Trans i18nKey="goToInvite" defaults="Go to Invite Page" />
               <ArrowUpRight className="h-4 w-4" />

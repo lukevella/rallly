@@ -35,11 +35,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           "hidden lg:flex lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-5 px-5 py-3",
         )}
       >
-        <div className="mb-2">
-          <Link href="/" className="active:translate-y-1 transition-transform">
-            <Image alt="Rallly" src="/logo-mark.svg" width={32} height={32} />
-          </Link>
-        </div>
+        <Link
+          href="/"
+          className="active:translate-y-1 mb-2 transition-transform"
+        >
+          <Image alt="Rallly" src="/logo-mark.svg" width={32} height={32} />
+        </Link>
         <Sidebar />
       </div>
       <div className={cn("grow overflow-auto bg-gray-50")}>{children}</div>
