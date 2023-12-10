@@ -3,7 +3,7 @@ import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { DotIcon, InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
+import { InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 
 import { PollStatusBadge } from "@/components/poll-status";
