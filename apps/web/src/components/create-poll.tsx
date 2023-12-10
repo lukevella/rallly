@@ -16,6 +16,7 @@ import { useUnmount } from "react-use";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
+import { setCookie } from "@/utils/cookies";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -62,7 +63,12 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   const posthog = usePostHog();
   const queryClient = trpc.useUtils();
-  const createPoll = trpc.polls.create.useMutation();
+  const createPoll = trpc.polls.create.useMutation({
+    networkMode: "always",
+    onSuccess: () => {
+      setCookie("new-poll", "1");
+    },
+  });
 
   return (
     <Form {...form}>

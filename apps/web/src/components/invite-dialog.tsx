@@ -8,6 +8,7 @@ import { useCopyToClipboard } from "react-use";
 
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { popCookie } from "@/utils/cookies";
 
 export const InviteDialog = () => {
   const poll = usePoll();
@@ -20,6 +21,12 @@ export const InviteDialog = () => {
       console.error(`Unable to copy value: ${state.error.message}`);
     }
   }, [state]);
+
+  React.useEffect(() => {
+    if (popCookie("new-poll")) {
+      handleCopy();
+    }
+  });
 
   function handleCopy() {
     copyToClipboard(`${window.location.origin}/invite/${poll.id}`);
@@ -46,7 +53,7 @@ export const InviteDialog = () => {
           }}
         >
           <ShareIcon className="h-4 w-4" />
-          <span className="hidden tracking-tight sm:block">{inviteUrl}</span>
+          <span className="hidden sm:block">{inviteUrl}</span>
         </Button>
       </TooltipTrigger>
       <TooltipContent align="center">

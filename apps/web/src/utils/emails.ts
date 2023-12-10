@@ -5,7 +5,7 @@ import { absoluteUrl } from "@/utils/absolute-url";
 const env = process.env["NODE" + "_ENV"];
 
 export const emailClient = new EmailClient({
-  openPreviews: env === "development",
+  openPreviews: false,
   useTestServer: env === "test",
   provider: {
     name: (process.env.EMAIL_PROVIDER as SupportedEmailProviders) ?? "smtp",

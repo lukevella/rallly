@@ -24,7 +24,7 @@ const DateCard: React.FunctionComponent<DateCardProps> = ({
       )}
     >
       {annotation ? (
-        <div className="absolute -right-3 -top-3 z-20">{annotation}</div>
+        <div className="absolute -right-3 -top-3 z-10">{annotation}</div>
       ) : null}
       <div>
         {dow ? (
