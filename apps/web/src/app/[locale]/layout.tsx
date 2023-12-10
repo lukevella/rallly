@@ -2,12 +2,11 @@ import "tailwindcss/tailwind.css";
 import "../../style.css";
 
 import languages from "@rallly/languages";
+import { Toaster } from "@rallly/ui/toaster";
 import { Inter } from "next/font/google";
 import React from "react";
 
 import { Providers } from "@/app/providers";
-
-import Toaster from "./toaster";
 
 const inter = Inter({
   subsets: ["latin"],

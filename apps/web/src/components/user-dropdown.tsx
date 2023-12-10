@@ -42,7 +42,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
       <DropdownMenuTrigger
         data-testid="user-dropdown"
         asChild
-        className={cn("group min-w-0 rounded-full", className)}
+        className={cn("group min-w-0", className)}
       >
         <Button variant="ghost">
           <CurrentUserAvatar size="sm" className="shrink-0 -ml-1" />

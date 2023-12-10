@@ -1,7 +1,7 @@
 import { Button } from "@rallly/ui/button";
+import { useToast } from "@rallly/ui/use-toast";
 import { ShareIcon } from "lucide-react";
 import React from "react";
-import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useCopyToClipboard } from "react-use";
 
@@ -11,7 +11,7 @@ import { usePoll } from "@/contexts/poll";
 export const InviteDialog = () => {
   const poll = usePoll();
   const { t } = useTranslation();
-
+  const { toast } = useToast();
   const [state, copyToClipboard] = useCopyToClipboard();
 
   React.useEffect(() => {
@@ -22,11 +22,11 @@ export const InviteDialog = () => {
 
   function handleCopy() {
     copyToClipboard(`${window.location.origin}/invite/${poll.id}`);
-    toast.success(
-      t("copiedToClipboard", {
+    toast({
+      description: t("copiedToClipboard", {
         defaultValue: "Invite link copied to clipboard",
       }),
-    );
+    });
   }
 
   return (
