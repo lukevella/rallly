@@ -112,9 +112,6 @@
   "dates": "Dates",
   "menu": "Menu",
   "useLocaleDefaults": "Use locale defaults",
-  "inviteParticipantsDescription": "Copy and share this invite link to start gathering responses from your participants.",
-  "inviteLink": "Invite Link",
-  "inviteParticipantLinkInfo": "Anyone with this link will be able to vote on your poll.",
   "support": "Support",
   "billing": "Billing",
   "guestPollAlertDescription": "<0>Create an account</0> or <1>login</1> to claim this poll.",
@@ -235,5 +232,7 @@
   "integrations": "Integrations",
   "contacts": "Contacts",
   "unlockFeatures": "Unlock all Pro features.",
-  "back": "Back"
+  "back": "Back",
+  "shareTooltip": "Copy the invite link to your clipboard",
+  "copiedToClipboard": "Invite link copied to clipboard"
 }

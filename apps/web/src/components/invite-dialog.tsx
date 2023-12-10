@@ -1,4 +1,5 @@
 import { Button } from "@rallly/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { useToast } from "@rallly/ui/use-toast";
 import { ShareIcon } from "lucide-react";
 import React from "react";
@@ -23,22 +24,37 @@ export const InviteDialog = () => {
   function handleCopy() {
     copyToClipboard(`${window.location.origin}/invite/${poll.id}`);
     toast({
+      title: t("copied"),
       description: t("copiedToClipboard", {
         defaultValue: "Invite link copied to clipboard",
       }),
     });
   }
 
+  const inviteUrl = React.useMemo(() => {
+    // Remove protocol
+    const url = new URL(poll.inviteLink);
+    return url.host + url.pathname;
+  }, [poll.inviteLink]);
+
   return (
-    <Button
-      icon={ShareIcon}
-      onClick={() => {
-        handleCopy();
-      }}
-    >
-      <span className="hidden sm:block">
-        <Trans i18nKey="share" defaults="Share" />
-      </span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          onClick={() => {
+            handleCopy();
+          }}
+        >
+          <ShareIcon className="h-4 w-4" />
+          <span className="hidden tracking-tight sm:block">{inviteUrl}</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent align="center">
+        <Trans
+          i18nKey="shareTooltip"
+          defaults="Copy the invite link to your clipboard"
+        />
+      </TooltipContent>
+    </Tooltip>
   );
 };
