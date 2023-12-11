@@ -57,10 +57,11 @@ export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
       className={cn(
         "rounded-full whitespace-nowrap border py-1.5 pr-3 pl-2 text-xs",
         {
-          "bg-primary-50 border-primary-100 text-primary-500":
+          "border-dashed animate-pulse border-pink-500/50 text-pink-500":
             status === "live",
-          "bg-gray-200 border-gray-200 text-gray-500": status === "paused",
-          "bg-green-50 text-green-500 border-green-100": status === "finalized",
+          "bg-gray-100 border-gray-200 text-gray-500": status === "paused",
+          "bg-primary-600 text-primary-50 border-primary-600":
+            status === "finalized",
         },
       )}
       status={status}

@@ -104,7 +104,7 @@ const StatusControl = () => {
             <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
+        <DropdownMenuContent align="end">
           {poll.event ? (
             <DropdownMenuItem
               onClick={() => {
@@ -147,11 +147,11 @@ const AdminControls = () => {
     <div className="flex justify-between items-center gap-x-2">
       <div className="flex items-center gap-x-2">
         <NotificationsToggle />
-        <StatusControl />
-        <ManagePoll />
       </div>
       <div className="flex items-center gap-x-2">
         <InviteDialog />
+        <StatusControl />
+        <ManagePoll />
       </div>
     </div>
   );

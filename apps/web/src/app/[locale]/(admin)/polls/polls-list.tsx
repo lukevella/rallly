@@ -3,12 +3,14 @@ import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
+import { DotIcon, InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
+import { ZodNullableType } from "zod";
 
 import { PollStatusBadge } from "@/components/poll-status";
 import { Table } from "@/components/table";
 import { Trans } from "@/components/trans";
+import { useDayjs } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
 const EmptyState = () => {
@@ -46,12 +48,18 @@ type Column = {
   title: string;
   createdAt: Date;
   participants: { name: string }[];
+  timeZone: string | null;
+  event: {
+    start: Date;
+    duration: number;
+  } | null;
 };
 
 const columnHelper = createColumnHelper<Column>();
 
 export function PollsList() {
   const { data } = trpc.polls.list.useQuery();
+  const { adjustTimeZone } = useDayjs();
 
   if (!data) return null;
 
@@ -66,7 +74,7 @@ export function PollsList() {
           header: () => null,
           cell: ({ row }) => {
             return (
-              <div className="text-right">
+              <div className="text-center">
                 <PollStatusBadge status={row.getValue("status")} />
               </div>
             );
@@ -86,14 +94,30 @@ export function PollsList() {
                     <span className="absolute inset-0" />
                   </Link>
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  <time dateTime={createdAt.toDateString()}>
-                    <Trans
-                      i18nKey="createdTime"
-                      values={{ relativeTime: dayjs(createdAt).fromNow() }}
-                    />
-                  </time>
-                </p>
+                <div className="flex items-center gap-x-0.5">
+                  {row.original.event ? (
+                    <p className="text-sm text-muted-foreground">
+                      {adjustTimeZone(
+                        row.original.event.start,
+                        !row.original.timeZone,
+                      ).format(row.original.event.duration > 0 ? "LLL" : "LL")}
+                    </p>
+                  ) : (
+                    <p className="text-sm text-gray-400">
+                      <Trans i18nKey="pending" defaults="Pending" />
+                    </p>
+                  )}
+                  <DotIcon className="h-4 w-4"></DotIcon>
+
+                  <p className="text-sm text-muted-foreground">
+                    <time dateTime={createdAt.toDateString()}>
+                      <Trans
+                        i18nKey="createdTime"
+                        values={{ relativeTime: dayjs(createdAt).fromNow() }}
+                      />
+                    </time>
+                  </p>
+                </div>
               </div>
             );
           },
@@ -104,7 +128,7 @@ export function PollsList() {
             return (
               <div className="flex items-center justify-end gap-x-2">
                 <UsersIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">
+                <span className="text-xs">
                   {row.original.participants.length}
                 </span>
               </div>

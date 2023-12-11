@@ -6,12 +6,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useCopyToClipboard } from "react-use";
 
+import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { popCookie } from "@/utils/cookies";
 
 export const InviteDialog = () => {
   const poll = usePoll();
+  const { participants } = useParticipants();
   const { t } = useTranslation();
   const { toast } = useToast();
   const [state, copyToClipboard] = useCopyToClipboard();
@@ -52,15 +54,19 @@ export const InviteDialog = () => {
             handleCopy();
           }}
         >
+          <span className="hidden text-muted-foreground sm:block">
+            {inviteUrl}
+          </span>
           <ShareIcon className="h-4 w-4" />
-          <span className="hidden sm:block">{inviteUrl}</span>
         </Button>
       </TooltipTrigger>
       <TooltipContent align="center">
-        <Trans
-          i18nKey="shareTooltip"
-          defaults="Copy the invite link to your clipboard"
-        />
+        <p>
+          <Trans
+            i18nKey="shareTooltip"
+            defaults="Click to copy and share with participants"
+          />
+        </p>
       </TooltipContent>
     </Tooltip>
   );
