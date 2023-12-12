@@ -98,7 +98,7 @@ export const Table = <
                     }}
                     key={cell.id}
                     className={clsx(
-                      "overflow-hidden align-top border-gray-100 pr-8 py-4",
+                      "overflow-hidden align-middle border-gray-100 pr-8 py-4",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
                         "pt-0": !props.enableTableHeader && i === 0,

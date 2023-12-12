@@ -14,13 +14,15 @@ import {
   UsersIcon,
   VoteIcon,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
+import { UserDropdown } from "@/components/user-dropdown";
 import { IfAuthenticated, IfGuest } from "@/components/user-provider";
-import { IfFreeUser, IfSubscribed, useSubscription } from "@/contexts/plan";
+import { IfFreeUser, IfSubscribed } from "@/contexts/plan";
 import { IconComponent } from "@/types";
 
 function NavItem({
@@ -59,7 +61,7 @@ function NavItem({
 export function Sidebar() {
   const pathname = usePathname();
   return (
-    <nav className="flex flex-1 flex-col">
+    <nav className="flex flex-1 flex-col ">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
           <ul role="list" className="-mx-2 space-y-1">
@@ -99,6 +101,12 @@ export function Sidebar() {
           </ul>
         </li>
         <li className="mt-auto">
+          <ul role="list" className="-mx-2 space-y-1">
+            <li>
+              <UserDropdown className="w-full " />
+            </li>
+          </ul>
+          <hr className="my-4" />
           <ul role="list" className="-mx-2 space-y-1">
             <IfFreeUser>
               <li>

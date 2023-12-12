@@ -44,13 +44,15 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         asChild
         className={cn("group min-w-0", className)}
       >
-        <Button variant="ghost">
-          <CurrentUserAvatar size="sm" className="shrink-0 -ml-1" />
-          <span className="truncate">{user.name}</span>
+        <Button variant="ghost" className="flex justify-between">
+          <span className="flex items-center gap-x-2.5">
+            <CurrentUserAvatar size="sm" className="shrink-0 -ml-1" />
+            <span className="truncate">{user.name}</span>
+          </span>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="start">
         <DropdownMenuLabel className="flex items-center gap-2">
           <div className="grow">
             <div>{user.isGuest ? <Trans i18nKey="guest" /> : user.name}</div>

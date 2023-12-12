@@ -1,6 +1,12 @@
 "use client";
 import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 import { createColumnHelper, PaginationState } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
@@ -155,12 +161,19 @@ export function PollsList() {
           header: () => null,
           cell: ({ row }) => {
             return (
-              <div className="flex items-center justify-end gap-x-2">
-                <UsersIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-xs">
-                  {row.original.participants.length}
-                </span>
-              </div>
+              <Tooltip delayDuration={100}>
+                <TooltipTrigger className="flex items-center text-muted-foreground gap-x-2">
+                  <UsersIcon className="h-4 w-4" />
+                  <span className="text-sm">
+                    {row.original.participants.length}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={20}>
+                  {row.original.participants.map((participant, i) => (
+                    <p key={i}>{participant.name}</p>
+                  ))}
+                </TooltipContent>
+              </Tooltip>
             );
           },
         }),
