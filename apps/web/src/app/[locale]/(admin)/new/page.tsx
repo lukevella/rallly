@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
       <PageHeader>
         <Button asChild variant="ghost">
           <Link href="/polls">
-            <ArrowLeftIcon className="w-4 h-4" />
+            <ArrowLeftIcon className="w-4 h-4 text-muted-foreground" />
             <Trans t={t} i18nKey="back" />
           </Link>
         </Button>

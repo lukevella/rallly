@@ -165,7 +165,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
       <PageHeader>
         <Button variant="ghost" asChild>
           <Link href="/polls">
-            <ArrowLeftIcon className="h-4 w-4" />
+            <ArrowLeftIcon className="h-4 w-4 text-muted-foreground" />
             <Trans i18nKey="back" defaults="Back" />
           </Link>
         </Button>
