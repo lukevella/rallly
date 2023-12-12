@@ -1,11 +1,12 @@
 "use client";
 import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
-import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper, PaginationState } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { DotIcon, InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
+import { InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
-import { ZodNullableType } from "zod";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 
 import { PollStatusBadge } from "@/components/poll-status";
 import { Table } from "@/components/table";
@@ -58,23 +59,45 @@ type Column = {
 const columnHelper = createColumnHelper<Column>();
 
 export function PollsList() {
-  const { data } = trpc.polls.list.useQuery();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const pagination = React.useMemo<PaginationState>(
+    () => ({
+      pageIndex: Number(searchParams?.get("page")) || 0,
+      pageSize: Number(searchParams?.get("pageSize")) || 10,
+    }),
+    [searchParams],
+  );
+
+  const { data } = trpc.polls.paginatedList.useQuery({ pagination });
   const { adjustTimeZone } = useDayjs();
 
   if (!data) return null;
 
-  if (data.length === 0) return <EmptyState />;
+  if (data.total === 0) return <EmptyState />;
 
   return (
     <Table
       layout="auto"
-      data={data as Column[]}
+      paginationState={pagination}
+      data={data.rows as Column[]}
+      pageCount={data.total / pagination.pageSize}
+      onPaginationChange={(updater) => {
+        const newPagination =
+          typeof updater === "function" ? updater(pagination) : updater;
+
+        const current = new URLSearchParams(searchParams ?? undefined);
+        current.set("page", String(newPagination.pageIndex));
+        current.set("pageSize", String(newPagination.pageSize));
+        router.push(`${pathname}?${current.toString()}`);
+      }}
       columns={[
         columnHelper.accessor("status", {
           header: () => null,
           cell: ({ row }) => {
             return (
-              <div className="text-center">
+              <div className="text-right">
                 <PollStatusBadge status={row.getValue("status")} />
               </div>
             );
@@ -83,12 +106,11 @@ export function PollsList() {
         columnHelper.display({
           id: "title",
           header: () => null,
-          size: 99999,
+          size: 5000,
           cell: ({ row }) => {
-            const createdAt = row.original.createdAt;
             return (
               <div className="relative">
-                <h3 className="font-semibold mb-1 text-gray-600 hover:text-gray-900 hover:underline">
+                <h3 className="font-semibold whitespace-nowrap mb-1 text-gray-600 hover:text-gray-900 hover:underline">
                   <Link href={`/poll/${row.original.id}`}>
                     {row.original.title}
                     <span className="absolute inset-0" />
@@ -107,16 +129,25 @@ export function PollsList() {
                       <Trans i18nKey="pending" defaults="Pending" />
                     </p>
                   )}
-                  <p className="text-xs mt-3 text-muted-foreground">
-                    <time dateTime={createdAt.toDateString()}>
-                      <Trans
-                        i18nKey="createdTime"
-                        values={{ relativeTime: dayjs(createdAt).fromNow() }}
-                      />
-                    </time>
-                  </p>
                 </div>
               </div>
+            );
+          },
+        }),
+        columnHelper.accessor("createdAt", {
+          header: () => null,
+          size: 1000,
+          cell: ({ row }) => {
+            const { createdAt } = row.original;
+            return (
+              <p className="text-sm whitespace-nowrap text-muted-foreground">
+                <time dateTime={createdAt.toDateString()}>
+                  <Trans
+                    i18nKey="createdTime"
+                    values={{ relativeTime: dayjs(createdAt).fromNow() }}
+                  />
+                </time>
+              </p>
             );
           },
         }),

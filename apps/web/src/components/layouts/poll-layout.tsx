@@ -143,12 +143,11 @@ const StatusControl = () => {
 };
 
 const AdminControls = () => {
+  const poll = usePoll();
   return (
     <div className="flex justify-between items-center gap-x-2">
-      <div className="flex items-center gap-x-2">
-        <h2 className="font-semibold">
-          <Trans i18nKey="poll" defaults="Poll" />
-        </h2>
+      <div className="flex items-center min-w-0 gap-x-2">
+        <h3 className="font-semibold truncate">{poll.title}</h3>
       </div>
       <div className="flex items-center gap-x-2">
         <InviteDialog />
@@ -172,8 +171,9 @@ const Layout = ({ children }: React.PropsWithChildren) => {
         </Button>
       </PageHeader>
       <PageContent>
-        <div className="space-y-8">
+        <div className="space-y-6">
           <AdminControls />
+          <hr />
           <div>{children}</div>
         </div>
       </PageContent>

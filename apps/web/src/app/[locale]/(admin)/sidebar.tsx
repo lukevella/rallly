@@ -20,7 +20,7 @@ import { usePathname } from "next/navigation";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { IfAuthenticated, IfGuest } from "@/components/user-provider";
-import { IfFreeUser, IfSubscribed } from "@/contexts/plan";
+import { IfFreeUser, IfSubscribed, useSubscription } from "@/contexts/plan";
 import { IconComponent } from "@/types";
 
 function NavItem({

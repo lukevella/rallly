@@ -420,6 +420,77 @@ export const polls = router({
         },
       });
     }),
+  paginatedList: possiblyPublicProcedure
+    .input(
+      z.object({
+        pagination: z.object({
+          pageIndex: z.number(),
+          pageSize: z.number(),
+        }),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const [total, rows] = await prisma.$transaction([
+        prisma.poll.count({
+          where: {
+            userId: ctx.user.id,
+            deleted: false,
+          },
+        }),
+        prisma.poll.findMany({
+          where: {
+            userId: ctx.user.id,
+            deleted: false,
+          },
+          select: {
+            id: true,
+            title: true,
+            location: true,
+            createdAt: true,
+            timeZone: true,
+            adminUrlId: true,
+            participantUrlId: true,
+            status: true,
+            event: {
+              select: {
+                start: true,
+                duration: true,
+              },
+            },
+            options: {
+              select: {
+                id: true,
+                start: true,
+                duration: true,
+              },
+            },
+            closed: true,
+            participants: {
+              select: {
+                id: true,
+                name: true,
+              },
+              orderBy: [
+                {
+                  createdAt: "desc",
+                },
+                { name: "desc" },
+              ],
+            },
+          },
+          orderBy: [
+            {
+              createdAt: "desc",
+            },
+            { title: "asc" },
+          ],
+          skip: input.pagination.pageIndex * input.pagination.pageSize,
+          take: input.pagination.pageSize,
+        }),
+      ]);
+
+      return { total, rows };
+    }),
   list: possiblyPublicProcedure.query(async ({ ctx }) => {
     const polls = await prisma.poll.findMany({
       where: {
