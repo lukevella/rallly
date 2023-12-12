@@ -132,7 +132,6 @@
   "permissionDenied": "Unauthorized",
   "permissionDeniedDescription": "If you are the poll creator, please login to access your poll",
   "loginDifferent": "Switch user",
-  "share": "Share",
   "timeShownIn": "Times shown in {timeZone}",
   "editDetailsDescription": "Change the details of your event.",
   "finalizeDescription": "Select a final date for your event.",
@@ -233,5 +232,11 @@
   "contacts": "Contacts",
   "unlockFeatures": "Unlock all Pro features.",
   "back": "Back",
-  "copiedToClipboard": "Invite link copied to clipboard"
+  "copiedToClipboard": "Invite link copied to clipboard",
+  "pollStatusAll": "All",
+  "pollStatusLive": "Live",
+  "pollStatusFinalized": "Finalized",
+  "pending": "Pending",
+  "shareTooltip": "Click to copy and share with participants",
+  "poll": "Poll"
 }

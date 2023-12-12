@@ -3,6 +3,7 @@ import { PenBoxIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
+import { PollFolders } from "@/app/[locale]/(admin)/polls/polls-folders";
 import {
   PageContainer,
   PageContent,
@@ -33,7 +34,11 @@ export default async function Page({ params }: { params: { locale: string } }) {
         </div>
       </PageHeader>
       <PageContent>
-        <PollsList />
+        <div className="space-y-6">
+          <PollFolders />
+          <hr />
+          <PollsList />
+        </div>
       </PageContent>
     </PageContainer>
   );

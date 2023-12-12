@@ -94,7 +94,7 @@ export function PollsList() {
                     <span className="absolute inset-0" />
                   </Link>
                 </h3>
-                <div className="flex items-center gap-x-0.5">
+                <div className="">
                   {row.original.event ? (
                     <p className="text-sm text-muted-foreground">
                       {adjustTimeZone(
@@ -107,9 +107,7 @@ export function PollsList() {
                       <Trans i18nKey="pending" defaults="Pending" />
                     </p>
                   )}
-                  <DotIcon className="h-4 w-4"></DotIcon>
-
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs mt-3 text-muted-foreground">
                     <time dateTime={createdAt.toDateString()}>
                       <Trans
                         i18nKey="createdTime"

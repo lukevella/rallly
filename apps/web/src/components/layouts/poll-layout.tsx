@@ -146,10 +146,13 @@ const AdminControls = () => {
   return (
     <div className="flex justify-between items-center gap-x-2">
       <div className="flex items-center gap-x-2">
-        <NotificationsToggle />
+        <h2 className="font-semibold">
+          <Trans i18nKey="poll" defaults="Poll" />
+        </h2>
       </div>
       <div className="flex items-center gap-x-2">
         <InviteDialog />
+        <NotificationsToggle />
         <StatusControl />
         <ManagePoll />
       </div>
