@@ -145,8 +145,8 @@ const StatusControl = () => {
 const AdminControls = () => {
   const poll = usePoll();
   return (
-    <div className="flex justify-between items-center gap-x-2">
-      <div className="flex items-center min-w-0 gap-x-2">
+    <div className="flex md:flex-row flex-col md:justify-between items-center gap-4">
+      <div className="flex items-center min-w-0">
         <h3 className="font-semibold truncate">{poll.title}</h3>
       </div>
       <div className="flex items-center gap-x-2">
@@ -171,7 +171,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
         </Button>
       </PageHeader>
       <PageContent>
-        <div className="space-y-6">
+        <div className="space-y-3 sm:space-y-6">
           <AdminControls />
           <hr />
           <div>{children}</div>
