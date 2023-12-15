@@ -1,12 +1,16 @@
 "use client";
 
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
   CheckCircle2Icon,
+  ChevronRight,
+  ChevronRightIcon,
   CreditCardIcon,
+  LifeBuoyIcon,
   LogInIcon,
   Settings2Icon,
   SparklesIcon,
@@ -20,8 +24,9 @@ import { usePathname } from "next/navigation";
 
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
+import { CurrentUserAvatar, UserAvatar } from "@/components/user";
 import { UserDropdown } from "@/components/user-dropdown";
-import { IfAuthenticated, IfGuest } from "@/components/user-provider";
+import { IfAuthenticated, IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser, IfSubscribed } from "@/contexts/plan";
 import { IconComponent } from "@/types";
 
@@ -60,6 +65,7 @@ function NavItem({
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user } = useUser();
   return (
     <nav className="flex flex-1 flex-col ">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -91,22 +97,16 @@ export function Sidebar() {
               <NavItem href="/rsvp" icon={CheckCircle2Icon}>
                 <Trans i18nKey="rspvs" defaults="RSVPs" />
               </NavItem>
-              <NavItem href="/contacts" icon={BlocksIcon}>
-                <Trans i18nKey="integrations" defaults="Integrations" />
-              </NavItem>
               <NavItem href="/contacts" icon={UsersIcon}>
                 <Trans i18nKey="contacts" defaults="Contacts" />
+              </NavItem>
+              <NavItem href="/contacts" icon={BlocksIcon}>
+                <Trans i18nKey="integrations" defaults="Integrations" />
               </NavItem>
             </li>
           </ul>
         </li>
         <li className="mt-auto">
-          <ul role="list" className="-mx-2 space-y-1">
-            <li>
-              <UserDropdown className="w-full " />
-            </li>
-          </ul>
-          <hr className="my-4" />
           <ul role="list" className="-mx-2 space-y-1">
             <IfFreeUser>
               <li>
@@ -131,15 +131,10 @@ export function Sidebar() {
               </li>
             </IfFreeUser>
             <IfSubscribed>
-              <NavItem href="/settings/billing" icon={CreditCardIcon}>
-                <Trans i18nKey="billing" defaults="Billing" />
+              <NavItem href="https://support.rallly.co" icon={LifeBuoyIcon}>
+                <Trans i18nKey="support" defaults="Support" />
               </NavItem>
             </IfSubscribed>
-            <IfAuthenticated>
-              <NavItem href="/settings/profile" icon={UserIcon}>
-                <Trans i18nKey="profile" defaults="Profile" />
-              </NavItem>
-            </IfAuthenticated>
             <IfGuest>
               <li>
                 <NavItem href="/login" icon={LogInIcon}>
@@ -151,6 +146,27 @@ export function Sidebar() {
               <NavItem href="/settings/preferences" icon={Settings2Icon}>
                 <Trans i18nKey="preferences" />
               </NavItem>
+            </li>
+          </ul>
+          <hr className="my-4" />
+          <ul role="list" className="-mx-2 space-y-1">
+            <li>
+              <Button
+                asChild
+                variant="ghost"
+                className="h-auto py-3 w-full justify-start"
+              >
+                <Link href="/settings/profile">
+                  <CurrentUserAvatar />
+                  <span className="grid ml-1 grow">
+                    <span className="font-semibold">{user.name}</span>
+                    <span className="text-muted-foreground text-sm">
+                      {user.email}
+                    </span>
+                  </span>
+                  <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              </Button>
             </li>
           </ul>
         </li>
