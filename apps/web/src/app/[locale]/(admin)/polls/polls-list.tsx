@@ -1,12 +1,7 @@
 "use client";
 import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@rallly/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper, PaginationState } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
@@ -101,6 +96,7 @@ export function PollsList() {
       columns={[
         columnHelper.accessor("status", {
           header: () => null,
+          size: 1000,
           cell: ({ row }) => {
             return (
               <div className="text-right">

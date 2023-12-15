@@ -143,37 +143,35 @@ const StatusControl = () => {
 };
 
 const AdminControls = () => {
-  const poll = usePoll();
   return (
-    <div className="flex md:flex-row flex-col md:justify-between items-center gap-4">
-      <div className="flex items-center min-w-0">
-        <h3 className="font-semibold truncate">{poll.title}</h3>
-      </div>
-      <div className="flex items-center gap-x-2">
-        <InviteDialog />
-        <NotificationsToggle />
-        <StatusControl />
-        <ManagePoll />
-      </div>
+    <div className="flex items-center gap-x-2">
+      <InviteDialog />
+      <NotificationsToggle />
+      <StatusControl />
+      <ManagePoll />
     </div>
   );
 };
 
 const Layout = ({ children }: React.PropsWithChildren) => {
+  const poll = usePoll();
   return (
     <PageContainer>
-      <PageHeader>
-        <Button variant="ghost" asChild>
-          <Link href="/polls">
-            <ArrowLeftIcon className="h-4 w-4 text-muted-foreground" />
-            <Trans i18nKey="back" defaults="Back" />
-          </Link>
-        </Button>
+      <PageHeader className="flex justify-between items-center gap-4">
+        <div className="flex min-w-0 items-center gap-x-2">
+          <Button variant="ghost" asChild>
+            <Link href="/polls">
+              <ArrowLeftIcon className="h-4 w-4 text-muted-foreground" />
+            </Link>
+          </Button>
+          <h2 className="font-semibold min-w-0 truncate">{poll.title}</h2>
+        </div>
+        <div>
+          <AdminControls />
+        </div>
       </PageHeader>
       <PageContent>
         <div className="space-y-3 sm:space-y-6">
-          <AdminControls />
-          <hr />
           <div>{children}</div>
         </div>
       </PageContent>

@@ -11,21 +11,19 @@ export default function Page() {
   const router = useRouter();
   return (
     <div className="fixed bg-gray-100 overflow-auto inset-0">
-      <div className="sticky top-0 flex justify-between px-4 py-3">
-        <div>
-          <Link
-            className="active:translate-y-1 transition-transform inline-block"
-            href="/"
-          >
-            <Image
-              src="/logo-mark.svg"
-              alt="Rallly"
-              width={32}
-              height={32}
-              className="shrink-0"
-            />
-          </Link>
-        </div>
+      <div className="bg-gray-100 border-b flex items-center justify-between px-4 py-3">
+        <Link
+          className="active:translate-y-1 transition-transform inline-block"
+          href="/"
+        >
+          <Image
+            src="/logo-mark.svg"
+            alt="Rallly"
+            width={32}
+            height={32}
+            className="shrink-0"
+          />
+        </Link>
         <Button
           variant="ghost"
           onClick={() => {
