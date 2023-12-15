@@ -11,7 +11,7 @@ export default function Page() {
   const router = useRouter();
   return (
     <div className="fixed bg-gray-100 overflow-auto inset-0">
-      <div className="bg-gray-100 border-b flex items-center justify-between px-4 py-3">
+      <div className="bg-gray-100 flex items-center justify-between px-4 py-3">
         <Link
           className="active:translate-y-1 transition-transform inline-block"
           href="/"
@@ -30,10 +30,10 @@ export default function Page() {
             router.back();
           }}
         >
-          <XIcon className="h-4 w-4" />
+          <XIcon className="h-4 w-4 text-muted-foreground" />
         </Button>
       </div>
-      <div className="px-6 py-5">
+      <div className="px-6 -mx-1 py-5">
         <Sidebar />
       </div>
     </div>

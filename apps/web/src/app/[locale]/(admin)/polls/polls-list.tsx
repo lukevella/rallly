@@ -96,7 +96,7 @@ export function PollsList() {
       columns={[
         columnHelper.accessor("status", {
           header: () => null,
-          size: 1000,
+          size: 200,
           cell: ({ row }) => {
             return (
               <div className="text-right">
@@ -165,9 +165,20 @@ export function PollsList() {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent sideOffset={20}>
-                  {row.original.participants.map((participant, i) => (
-                    <p key={i}>{participant.name}</p>
-                  ))}
+                  {row.original.participants
+                    .slice(0, 10)
+                    .map((participant, i) => (
+                      <p key={i}>{participant.name}</p>
+                    ))}
+                  {row.original.participants.length > 10 ? (
+                    <p>
+                      <Trans
+                        i18nKey="xMore"
+                        defaults="{count} more"
+                        values={{ count: row.original.participants.length - 5 }}
+                      />
+                    </p>
+                  ) : null}
                 </TooltipContent>
               </Tooltip>
             );
