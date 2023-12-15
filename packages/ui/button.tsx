@@ -1,6 +1,6 @@
 "use client";
 import { Slot } from "@radix-ui/react-slot";
-import { SpinnerIcon } from "@rallly/icons";
+import { Loader2Icon } from "lucide-react";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 
@@ -77,7 +77,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {loading ? (
-              <SpinnerIcon className="inline-block h-4 w-4 animate-spin" />
+              <Loader2Icon className="text-muted-foreground h-4 w-4 animate-spin" />
             ) : Icon ? (
               <Icon
                 className={cn(
