@@ -237,6 +237,6 @@
   "pollStatusLive": "Live",
   "pollStatusFinalized": "Finalized",
   "pending": "Pending",
-  "shareTooltip": "Click to copy and share with participants",
+  "shareTooltip": "Copy invite link to clipboard",
   "poll": "Poll"
 }

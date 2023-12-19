@@ -51,17 +51,18 @@ export const InviteDialog = () => {
           onClick={() => {
             handleCopy();
           }}
-          className="text-muted-foreground"
         >
-          <span className="hidden font-normal sm:block">{inviteUrl}</span>
-          <ShareIcon className="h-4 w-4" />
+          <ShareIcon className="h-4 w-4 text-muted-foreground" />
+          <span className="hidden sm:inline">
+            <Trans i18nKey="share" defaults="Share" />
+          </span>
         </Button>
       </TooltipTrigger>
       <TooltipContent align="center">
         <p>
           <Trans
             i18nKey="shareTooltip"
-            defaults="Click to copy and share with participants"
+            defaults="Copy invite link to clipboard"
           />
         </p>
       </TooltipContent>
