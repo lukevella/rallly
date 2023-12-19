@@ -38,12 +38,6 @@ export const InviteDialog = () => {
     });
   }
 
-  const inviteUrl = React.useMemo(() => {
-    // Remove protocol
-    const url = new URL(poll.inviteLink);
-    return url.host + url.pathname;
-  }, [poll.inviteLink]);
-
   return (
     <Tooltip>
       <TooltipTrigger asChild>

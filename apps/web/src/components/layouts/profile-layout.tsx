@@ -18,11 +18,10 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page";
-import { CurrentUserAvatar } from "@/components/user";
 import { IfCloudHosted } from "@/contexts/environment";
 
 import { IconComponent } from "../../types";
-import { IfAuthenticated, useUser } from "../user-provider";
+import { IfAuthenticated } from "../user-provider";
 
 const MenuItem = (props: {
   icon: IconComponent;
@@ -51,7 +50,6 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
   const pathname = usePathname();
 
   const [, toggle] = useToggle(false);
-  const { user } = useUser();
   React.useEffect(() => {
     toggle(false);
   }, [pathname, toggle]);
@@ -60,10 +58,9 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
     <PageContainer>
       <PageHeader>
         <div className="flex items-center justify-between gap-x-4">
-          <div className="flex items-center gap-x-4">
-            <CurrentUserAvatar />
-            <PageTitle>{user.name}</PageTitle>
-          </div>
+          <PageTitle>
+            <Trans i18nKey="settings" />
+          </PageTitle>
           <Button variant="ghost" asChild>
             <Link href="/logout">
               <LogOutIcon className="h-4 w-4 text-muted-foreground" />

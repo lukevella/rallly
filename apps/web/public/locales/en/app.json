@@ -238,5 +238,7 @@
   "pollStatusFinalized": "Finalized",
   "pending": "Pending",
   "shareTooltip": "Copy invite link to clipboard",
-  "poll": "Poll"
+  "xMore": "{count} more",
+  "share": "Share",
+  "pageXOfY": "Page {currentPage} of {pageCount}"
 }

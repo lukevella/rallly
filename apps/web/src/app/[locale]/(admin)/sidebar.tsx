@@ -7,26 +7,21 @@ import {
   BookMarkedIcon,
   CalendarIcon,
   CheckCircle2Icon,
-  ChevronRight,
   ChevronRightIcon,
-  CreditCardIcon,
   LifeBuoyIcon,
   LogInIcon,
   Settings2Icon,
   SparklesIcon,
-  UserIcon,
   UsersIcon,
   VoteIcon,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
-import { CurrentUserAvatar, UserAvatar } from "@/components/user";
-import { UserDropdown } from "@/components/user-dropdown";
-import { IfAuthenticated, IfGuest, useUser } from "@/components/user-provider";
+import { CurrentUserAvatar } from "@/components/user";
+import { IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser, IfSubscribed } from "@/contexts/plan";
 import { IconComponent } from "@/types";
 
@@ -154,7 +149,7 @@ export function Sidebar() {
               <Button
                 asChild
                 variant="ghost"
-                className="h-auto py-3 w-full justify-start"
+                className="group h-auto py-3 w-full justify-start"
               >
                 <Link href="/settings/profile">
                   <CurrentUserAvatar />
@@ -164,7 +159,7 @@ export function Sidebar() {
                       {user.email}
                     </span>
                   </span>
-                  <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
+                  <ChevronRightIcon className="h-4 w-4 opacity-0 group-hover:opacity-100 text-muted-foreground" />
                 </Link>
               </Button>
             </li>
