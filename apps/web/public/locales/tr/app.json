@@ -40,6 +40,7 @@
   "location": "Konum",
   "locationPlaceholder": "Joe'nun Kahve dükkanı",
   "login": "Giriş yap",
+  "loginWith": "{provider} ile giriş yapın",
   "logout": "Çıkış yap",
   "manage": "Yönet",
   "mixedOptionsDescription": "Aynı ankette hem saat hem de tarih seçeneğine sahip olamazsınız. Hangisini korumak istersin?",
@@ -215,6 +216,7 @@
   "pricing": "Fiyatlandırma",
   "pleaseUpgrade": "Bu özelliği kullanmak için lütfen Pro plana yükseltin",
   "pollSettingsDescription": "Anketinizin davranışını özelleştirin",
+  "requireParticipantEmailLabel": "Katılımcılar için email adresi zorunlu hale getir",
   "hideParticipantsLabel": "Katılımcı listesini diğer katılımcılardan gizle",
   "hideScoresLabel": "Katılımcı oylama yaptıktan sonra sonuçları göster",
   "authErrorTitle": "Giriş Hatası",
@@ -222,5 +224,7 @@
   "authErrorCta": "Oturum açma sayfasına git",
   "continueAs": "Olarak devam edin",
   "finalizeFeature": "Sonlandır",
-  "duplicateFeature": "Çoğalt"
+  "duplicateFeature": "Çoğalt",
+  "pageMovedDescription": "<a>{newUrl}</a> linkine yönlendiriliyorsunuz",
+  "notRegistered": "Hesabınız yokmu? <a>Kayıt olun</a>"
 }
