@@ -40,6 +40,7 @@
   "location": "Sted",
   "locationPlaceholder": "Vippetangen konditori",
   "login": "Innlogging",
+  "loginWith": "Logg inn med {provider}",
   "logout": "Logg ut",
   "manage": "Administrer",
   "mixedOptionsDescription": "Du kan ikke ha både tids- og datoalternativer i samme avstemning. Hva vil du beholde?",
@@ -101,6 +102,7 @@
   "timeZoneSelect__defaultValue": "Velg tidssone …",
   "timeZoneSelect__noOption": "Intet alternativ funnet",
   "timeZoneSelect__inputPlaceholder": "Søk …",
+  "timeZonePicker__ignore": "Ignorer tidssone",
   "poweredByRallly": "Drevet av <a>{name}</a>",
   "participants": "Deltakere",
   "language": "Språk",
@@ -137,6 +139,7 @@
   "timeShownIn": "Tider vises i {timeZone}",
   "editDetailsDescription": "Rediger detaljene for arrangementet ditt.",
   "finalizeDescription": "Velg en endelig dato for arrangementet.",
+  "notificationsGuestTooltip": "Opprett en konto eller logg inn for å motta varslinger",
   "planFree": "Gratis",
   "dateAndTimeDescription": "Endre foretrukket dato- og klokkeslettformat",
   "createdTime": "Opprettet for {relativeTime}",
@@ -222,5 +225,8 @@
   "authErrorTitle": "Feil ved innlogging",
   "authErrorDescription": "Det oppstod en feil under påloggingen. Prøv på nytt.",
   "authErrorCta": "Gå til innlogging",
-  "continueAs": "Fortsett som"
+  "continueAs": "Fortsett som",
+  "finalizeFeature": "Ferdigstill",
+  "duplicateFeature": "Dupliser",
+  "pageMovedDescription": "Videresender til <a>{newUrl}</a>"
 }
