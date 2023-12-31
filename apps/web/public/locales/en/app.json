@@ -102,6 +102,7 @@
   "timeZoneSelect__defaultValue": "Select time zone…",
   "timeZoneSelect__noOption": "No option found",
   "timeZoneSelect__inputPlaceholder": "Search…",
+  "timeZonePicker__ignore": "Ignore time zone",
   "poweredByRallly": "Powered by <a>{name}</a>",
   "participants": "Participants",
   "language": "Language",
