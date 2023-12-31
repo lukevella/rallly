@@ -8,6 +8,7 @@ import {
 import { Combobox } from "@headlessui/react";
 import clsx from "clsx";
 import { ChevronDownIcon } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import React from "react";
 import spacetime from "spacetime";
 import soft from "timezone-soft";
@@ -124,6 +125,7 @@ const TimeZonePicker: React.FunctionComponent<{
   style?: React.CSSProperties;
   disabled?: boolean;
 }> = ({ value, onChange, onBlur, className, style, disabled }) => {
+  const { t } = useTranslation();
   const { options, findFuzzyTz } = useTimeZones();
 
   const { reference, floating, x, y, strategy, refs } = useFloating({
@@ -147,12 +149,14 @@ const TimeZonePicker: React.FunctionComponent<{
     () => [
       {
         value: "",
-        label: "Ignore time zone",
+        label: t("timeZonePicker__ignore", {
+          defaultValue: "Ignore time zone",
+        }),
         offset: 0,
       },
       ...options,
     ],
-    [options],
+    [options, t],
   );
 
   const selectedTimeZone = React.useMemo(
