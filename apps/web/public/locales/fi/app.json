@@ -40,6 +40,7 @@
   "location": "Sijainti",
   "locationPlaceholder": "Maijan kahvila",
   "login": "Kirjaudu sisään",
+  "loginWith": "Kirjaudu sisään palvelussa {provider}",
   "logout": "Kirjaudu ulos",
   "manage": "Hallinnoi",
   "mixedOptionsDescription": "Kyselyssä ei voi samaan aikaan olla sekä aika- että päivämäärävaihtoehtoja. Kumman haluaisit säilyttää?",
@@ -226,5 +227,6 @@
   "continueAs": "Jatka käyttäjänä",
   "finalizeFeature": "Sulje",
   "duplicateFeature": "Luo kopio",
-  "pageMovedDescription": "Ohjataan osoitteeseen <a>{newUrl}</a>"
+  "pageMovedDescription": "Ohjataan osoitteeseen <a>{newUrl}</a>",
+  "notRegistered": "Eikö sinulla ole tiliä? <a>Rekisteröidy</a>"
 }

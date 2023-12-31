@@ -15,6 +15,16 @@
   "cancelSubscriptionAnswer": "Pots cancel·lar la teva subscripció quan vulguis, només has d'anar a <a>opcions de facturació</a>. Un cop allà podràs cancel·lar la teva subscripció, continuaràs tenint accés a les prestacions de pagament fins que finalitzi el període de subscripció. En finalitzar la subscripció, tornaràs al pla gratuït.",
   "billingPeriodMonthly": "Mensual",
   "billingPeriodYearly": "Anual",
+  "planFreeDescription": "Per usuaris casuals",
+  "limitedAccess": "Accés a les funcions principals",
+  "pollsDeleted": "Les enquestes s'eliminen automàticament un cop esdevenen inactives",
+  "planProDescription": "Per usuaris avançats i professionals",
+  "accessAllFeatures": "Accés a totes les funcions",
+  "getEarlyAccess": "Accés anticipat a noves funcions",
+  "canUseFreeAnswer2": "Sí, la majoria de les funcions de Rallly són gratuïtes i la molts usuaris no necessitaran mai pagar per res. De totes maneres, hi ha algunes funcions que només estan disponibles pels clients que paguen. Aquestes funcions estan dissenyades per ajudar-te a treure el màxim profit de Rallly.",
+  "whyUpgradeAnswer2": "Actualitzar a un pla de pagament té sentit si uses Rallly sovint o pel treball. El cost de subscripció actual és un preu especial per usuaris pioners i incrementarà en el futur. En actualitzar ara, obtindràs accés avançat a eines de planificació noves i d'alta qualitat tan aviat com es llancin i mantindràs un preu de subscripció fix que no es veurà afectat per increments futurs de preu.",
+  "upgradeNowSaveLater": "Actualitza ara, estalvia més tard",
+  "earlyAdopterDescription": "Com un usuari pioner, el preu de la teva subscripció es mantindrà fix i no es veurà afectat per futurs increments de preu.",
   "planFree": "Gratuït",
   "keepPollsIndefinitely": "Mantenir enquestes indefinides"
 }

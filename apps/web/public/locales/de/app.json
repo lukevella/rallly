@@ -21,7 +21,7 @@
   "deletedPoll": "Umfrage gelöscht",
   "deletedPollInfo": "Diese Umfrage existiert nicht mehr.",
   "deleteParticipant": "{name} löschen?",
-  "deleteParticipantDescription": "Bist du sicher, dass du diesen Teilnehmer löschen möchtest? Dies kann nicht rückgängig gemacht werden.",
+  "deleteParticipantDescription": "Bist du sicher, dass du diesen Teilnehmenden löschen möchtest? Dies kann nicht rückgängig gemacht werden.",
   "deletePoll": "Umfrage löschen",
   "deletePollDescription": "Alle Daten zu dieser Umfrage werden gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
   "deletingOptionsWarning": "Du löschst Optionen, für die bereits Teilnehmer gestimmt haben. Ihre Stimmen werden ebenfalls gelöscht.",
