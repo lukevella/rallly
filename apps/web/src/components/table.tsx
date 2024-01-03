@@ -42,6 +42,7 @@ export const Table = <
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
   return (
     <div>
       <div

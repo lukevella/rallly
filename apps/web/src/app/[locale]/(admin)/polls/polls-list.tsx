@@ -65,7 +65,7 @@ export function PollsList() {
   const pathname = usePathname();
   const pagination = React.useMemo<PaginationState>(
     () => ({
-      pageIndex: Number(searchParams?.get("page")) || 0,
+      pageIndex: (Number(searchParams?.get("page")) || 1) - 1,
       pageSize: Number(searchParams?.get("pageSize")) || 10,
     }),
     [searchParams],
@@ -83,14 +83,14 @@ export function PollsList() {
       layout="auto"
       paginationState={pagination}
       data={data.rows as Column[]}
-      pageCount={data.total / pagination.pageSize}
+      pageCount={Math.ceil(data.total / pagination.pageSize)}
       onPaginationChange={(updater) => {
         const newPagination =
           typeof updater === "function" ? updater(pagination) : updater;
 
         const current = new URLSearchParams(searchParams ?? undefined);
-        current.set("page", String(newPagination.pageIndex));
-        current.set("pageSize", String(newPagination.pageSize));
+        current.set("page", String(newPagination.pageIndex + 1));
+        // current.set("pageSize", String(newPagination.pageSize));
         router.push(`${pathname}?${current.toString()}`);
       }}
       columns={[
