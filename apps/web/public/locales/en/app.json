@@ -240,5 +240,6 @@
   "shareTooltip": "Copy invite link to clipboard",
   "xMore": "{count} more",
   "share": "Share",
-  "pageXOfY": "Page {currentPage} of {pageCount}"
+  "pageXOfY": "Page {currentPage} of {pageCount}",
+  "noParticipants": "No participants"
 }

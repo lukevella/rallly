@@ -164,21 +164,32 @@ export function PollsList() {
                     {row.original.participants.length}
                   </span>
                 </TooltipTrigger>
-                <TooltipContent sideOffset={20}>
-                  {row.original.participants
-                    .slice(0, 10)
-                    .map((participant, i) => (
-                      <p key={i}>{participant.name}</p>
-                    ))}
-                  {row.original.participants.length > 10 ? (
-                    <p>
-                      <Trans
-                        i18nKey="xMore"
-                        defaults="{count} more"
-                        values={{ count: row.original.participants.length - 5 }}
-                      />
-                    </p>
-                  ) : null}
+                <TooltipContent>
+                  {row.original.participants.length > 0 ? (
+                    <>
+                      {row.original.participants
+                        .slice(0, 10)
+                        .map((participant, i) => (
+                          <p key={i}>{participant.name}</p>
+                        ))}
+                      {row.original.participants.length > 10 ? (
+                        <p>
+                          <Trans
+                            i18nKey="xMore"
+                            defaults="{count} more"
+                            values={{
+                              count: row.original.participants.length - 5,
+                            }}
+                          />
+                        </p>
+                      ) : null}
+                    </>
+                  ) : (
+                    <Trans
+                      i18nKey="noParticipants"
+                      defaults="No participants"
+                    />
+                  )}
                 </TooltipContent>
               </Tooltip>
             );
