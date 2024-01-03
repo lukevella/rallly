@@ -102,6 +102,7 @@
   "timeZoneSelect__defaultValue": "Tijdzone selecteren…",
   "timeZoneSelect__noOption": "Geen optie gevonden",
   "timeZoneSelect__inputPlaceholder": "Zoeken…",
+  "timeZonePicker__ignore": "Tijdzone negeren",
   "poweredByRallly": "Mogelijk gemaakt door <a>{name}</a>",
   "participants": "Deelnemers",
   "language": "Taal",

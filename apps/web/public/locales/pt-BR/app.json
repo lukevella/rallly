@@ -102,6 +102,7 @@
   "timeZoneSelect__defaultValue": "Selecione o fuso horário…",
   "timeZoneSelect__noOption": "Nenhuma opção encontrada",
   "timeZoneSelect__inputPlaceholder": "Procurar…",
+  "timeZonePicker__ignore": "Ignorar fuso horário",
   "poweredByRallly": "Tecnologias de <a>{name}</a>",
   "participants": "Participantes",
   "language": "Idioma",

@@ -102,6 +102,7 @@
   "timeZoneSelect__defaultValue": "Válassz időzónát…",
   "timeZoneSelect__noOption": "Nem található lehetőség",
   "timeZoneSelect__inputPlaceholder": "Keresés…",
+  "timeZonePicker__ignore": "Időzóna figyelmen kívül hagyása",
   "poweredByRallly": "Működteti a <a>{name}</a>",
   "participants": "Résztvevők",
   "language": "Nyelv",
