@@ -1,4 +1,3 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { RegistrationTokenPayload } from "@rallly/backend";
 import { decryptToken } from "@rallly/backend/session";
 import { generateOtp, randomid } from "@rallly/backend/utils/nanoid";
@@ -19,6 +18,7 @@ import EmailProvider from "next-auth/providers/email";
 import { Provider } from "next-auth/providers/index";
 
 import { absoluteUrl } from "@/utils/absolute-url";
+import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { isOIDCEnabled, oidcName } from "@/utils/constants";
 import { emailClient } from "@/utils/emails";
@@ -133,7 +133,7 @@ if (isOIDCEnabled) {
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
-    adapter: PrismaAdapter(prisma),
+    adapter: CustomPrismaAdapter(prisma),
     secret: process.env.SECRET_PASSWORD,
     session: {
       strategy: "jwt",
