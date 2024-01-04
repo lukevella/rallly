@@ -40,6 +40,7 @@
   "location": "Kokalekua",
   "locationPlaceholder": "Informatika Fakultatea",
   "login": "Hasi saioa",
+  "loginWith": "Hasi saioa {provider}-rekin",
   "logout": "Saioa itxi",
   "manage": "Kudeatu",
   "mixedOptionsDescription": "Ezin da denbora- eta data-aukerarik izan inkesta berean. Zer gustatuko litzaizueke mantentzea?",
@@ -101,6 +102,7 @@
   "timeZoneSelect__defaultValue": "Hautatu ordu-zona…",
   "timeZoneSelect__noOption": "Ez da aukerarik aurkitu",
   "timeZoneSelect__inputPlaceholder": "Bilatu…",
+  "timeZonePicker__ignore": "Ez ikusi ordu-zona",
   "poweredByRallly": "<a>{name}</a>-(e) k sortua",
   "participants": "Parte-hartzaileak",
   "language": "Hizkuntza",
@@ -226,5 +228,6 @@
   "continueAs": "Jarraitu",
   "finalizeFeature": "Bukatu",
   "duplicateFeature": "Bikoiztu",
-  "pageMovedDescription": "<a>{newUrl}</a> -ra desbideratzen"
+  "pageMovedDescription": "<a>{newUrl}</a> -ra desbideratzen",
+  "notRegistered": "Ez al duzu konturik? <a>Erregistratu</a>"
 }
