@@ -102,6 +102,7 @@
   "timeZoneSelect__defaultValue": "Valitse aikavyöhyke…",
   "timeZoneSelect__noOption": "Vaihtoehtoja ei löytynyt",
   "timeZoneSelect__inputPlaceholder": "Hae…",
+  "timeZonePicker__ignore": "Ohita aikavyöhyke",
   "poweredByRallly": "Palvelun tarjoaa <a>{name}</a>",
   "participants": "Osallistujat",
   "language": "Kieli",
