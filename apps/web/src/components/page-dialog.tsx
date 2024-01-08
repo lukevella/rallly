@@ -26,7 +26,7 @@ export const PageDialogHeader = (props: React.PropsWithChildren) => {
 
 export const PageDialogFooter = (props: React.PropsWithChildren) => {
   return (
-    <div className="mt-6 flex flex-col items-center justify-center gap-x-4 gap-y-4 sm:flex-row">
+    <div className="mt-6 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
       {props.children}
     </div>
   );
