@@ -1,7 +1,7 @@
 {
   "name": "rallly",
   "private": true,
-  "version": "3.4.2",
+  "version": "3.5.0",
   "scripts": {
     "dev": "dotenv -c development -- turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
