@@ -23,7 +23,11 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 
-import { PageContainer, PageContent, PageHeader } from "@/app/components/page";
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+} from "@/app/components/page-layout";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {

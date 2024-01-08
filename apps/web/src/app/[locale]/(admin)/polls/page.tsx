@@ -8,7 +8,7 @@ import {
   PageContent,
   PageHeader,
   PageTitle,
-} from "@/app/components/page";
+} from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
 import { PollsList } from "./polls-list";

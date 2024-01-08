@@ -17,7 +17,7 @@ import {
   PageContent,
   PageHeader,
   PageTitle,
-} from "@/app/components/page";
+} from "@/app/components/page-layout";
 import { IfCloudHosted } from "@/contexts/environment";
 
 import { IconComponent } from "../../types";
