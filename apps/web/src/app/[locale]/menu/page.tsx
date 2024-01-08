@@ -1,14 +1,10 @@
-"use client";
-import { Button } from "@rallly/ui/button";
-import { XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
+import { BackButton } from "@/app/[locale]/menu/back-button";
 
 export default function Page() {
-  const router = useRouter();
   return (
     <div className="fixed bg-gray-100 overflow-auto inset-0">
       <div className="bg-gray-100 flex items-center justify-between px-4 py-3">
@@ -24,14 +20,7 @@ export default function Page() {
             className="shrink-0"
           />
         </Link>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            router.back();
-          }}
-        >
-          <XIcon className="h-4 w-4 text-muted-foreground" />
-        </Button>
+        <BackButton />
       </div>
       <div className="px-6 -mx-1 py-5">
         <Sidebar />
