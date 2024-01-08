@@ -89,7 +89,7 @@ const Teaser = () => {
 
       <div className="space-y-6">
         <div className="space-y-2 text-center">
-          <h2 className="text-center">
+          <h2 className="text-center font-bold text-xl">
             <Trans defaults="Pro Feature" i18nKey="proFeature" />
           </h2>
           <p className="text-muted-foreground mx-auto max-w-xs text-center text-sm leading-relaxed">

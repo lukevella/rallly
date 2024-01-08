@@ -8,7 +8,7 @@ const PollSubheader: React.FunctionComponent = () => {
   const { poll } = usePoll();
   const { t } = useTranslation();
   return (
-    <div className="text-gray-500">
+    <div className="text-gray-500 text-sm">
       <div className="flex gap-1.5">
         <div>
           <Trans

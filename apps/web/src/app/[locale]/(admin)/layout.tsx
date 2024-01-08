@@ -65,6 +65,7 @@ export default async function Layout({
             >
               <Image
                 src="/logo-mark.svg"
+                priority={true}
                 alt="Rallly"
                 width={32}
                 height={32}
