@@ -29,3 +29,14 @@ export default async function Page({ params }: { params: { locale: string } }) {
     </PageContainer>
   );
 }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { t } = await getTranslation(params.locale);
+  return {
+    title: t("newPoll"),
+  };
+}
