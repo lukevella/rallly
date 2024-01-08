@@ -77,7 +77,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {loading ? (
-              <Loader2Icon className="text-muted-foreground h-4 w-4 animate-spin" />
+              <Loader2Icon className="h-4 w-4 animate-spin" />
             ) : Icon ? (
               <Icon
                 className={cn(
