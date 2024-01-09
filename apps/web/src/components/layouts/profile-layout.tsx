@@ -1,4 +1,3 @@
-import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import {
   CreditCardIcon,
@@ -12,16 +11,17 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { useToggle } from "react-use";
 
+import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
   PageContent,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
+import { IfAuthenticated } from "@/components/user-provider";
 import { IfCloudHosted } from "@/contexts/environment";
 
 import { IconComponent } from "../../types";
-import { IfAuthenticated } from "../user-provider";
 
 const MenuItem = (props: {
   icon: IconComponent;
@@ -61,21 +61,19 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
           <PageTitle>
             <Trans i18nKey="settings" />
           </PageTitle>
-          <Button variant="ghost" asChild>
-            <Link href="/logout">
+          <IfAuthenticated>
+            <LogoutButton>
               <LogOutIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="logout" />
-            </Link>
-          </Button>
+            </LogoutButton>
+          </IfAuthenticated>
         </div>
       </PageHeader>
       <PageContent>
         <div className="flex mb-4 gap-x-2">
-          <IfAuthenticated>
-            <MenuItem href="/settings/profile" icon={UserIcon}>
-              <Trans i18nKey="profile" defaults="Profile" />
-            </MenuItem>
-          </IfAuthenticated>
+          <MenuItem href="/settings/profile" icon={UserIcon}>
+            <Trans i18nKey="profile" defaults="Profile" />
+          </MenuItem>
           <MenuItem href="/settings/preferences" icon={Settings2Icon}>
             <Trans i18nKey="preferences" defaults="Preferences" />
           </MenuItem>

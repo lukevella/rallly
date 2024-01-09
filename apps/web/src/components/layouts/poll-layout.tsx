@@ -18,11 +18,11 @@ import {
   RotateCcw,
   ShieldCloseIcon,
 } from "lucide-react";
-import Head from "next/head";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 
+import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
   PageContent,
@@ -218,12 +218,10 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
               </LoginLink>
             </Button>
           ) : (
-            <Button asChild variant="primary">
-              <Link href="/logout">
-                <LogOutIcon className="-ml-1 h-4 w-4" />
-                <Trans i18nKey="loginDifferent" defaults="Switch user" />
-              </Link>
-            </Button>
+            <LogoutButton>
+              <LogOutIcon className="-ml-1 h-4 w-4" />
+              <Trans i18nKey="loginDifferent" defaults="Switch user" />
+            </LogoutButton>
           )}
           <Button asChild>
             <Link href={`/invite/${poll.id}`}>
@@ -237,15 +235,6 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   }
 
   return <>{children}</>;
-};
-
-const Title = () => {
-  const poll = usePoll();
-  return (
-    <Head>
-      <title>{poll.title}</title>
-    </Head>
-  );
 };
 
 const Prefetch = ({ children }: React.PropsWithChildren) => {
@@ -277,7 +266,6 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <Prefetch>
       <LegacyPollContextProvider>
-        <Title />
         <PermissionGuard>
           <Layout>{children}</Layout>
         </PermissionGuard>
