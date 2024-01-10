@@ -78,7 +78,7 @@ export const EventCard = () => {
                   </div>
                 ) : null}
                 <h1
-                  className="text-xl font-bold tracking-tight sm:text-2xl"
+                  className="text-xl font-bold tracking-tight mb-1"
                   data-testid="poll-title"
                 >
                   {preventWidows(poll.title)}
@@ -107,7 +107,7 @@ export const EventCard = () => {
           {poll.description ? (
             <div className="flex gap-4">
               <TextIcon className="h-4 w-4 shrink-0 translate-y-1" />
-              <div className="whitespace-pre-line leading-relaxed">
+              <div className="whitespace-pre-line">
                 <TruncatedLinkify>{poll.description}</TruncatedLinkify>
               </div>
             </div>
