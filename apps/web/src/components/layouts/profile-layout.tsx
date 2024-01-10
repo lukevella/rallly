@@ -32,7 +32,7 @@ const MenuItem = (props: {
   return (
     <Link
       className={clsx(
-        "flex min-w-0 items-center gap-x-2.5 px-3 py-2 text-sm font-medium",
+        "flex min-w-0 items-center gap-x-2 px-3 py-2 text-sm font-medium",
         pathname === props.href
           ? "bg-gray-200"
           : "text-gray-500 hover:text-gray-800",
@@ -70,7 +70,7 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
         </div>
       </PageHeader>
       <PageContent>
-        <div className="flex mb-4 gap-x-2">
+        <div className="inline-flex mb-4 border rounded-md p-0.5 gap-x-2">
           <MenuItem href="/settings/profile" icon={UserIcon}>
             <Trans i18nKey="profile" defaults="Profile" />
           </MenuItem>
@@ -83,8 +83,7 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
             </MenuItem>
           </IfCloudHosted>
         </div>
-        <hr className="my-4" />
-        <div className="max-w-2xl">{children}</div>
+        <div className="max-w-4xl py-4">{children}</div>
       </PageContent>
     </PageContainer>
   );

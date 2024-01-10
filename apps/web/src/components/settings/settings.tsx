@@ -24,12 +24,12 @@ export const SettingsSection = (props: {
   children: React.ReactNode;
 }) => {
   return (
-    <div className="grid gap-3 md:gap-4">
-      <div>
+    <div className="grid lg:grid-cols-10 gap-3 md:gap-8">
+      <div className="col-span-3">
         <h2 className="mb-1 text-base font-semibold">{props.title}</h2>
         <p className="text-muted-foreground text-sm">{props.description}</p>
       </div>
-      <div>{props.children}</div>
+      <div className="col-span-7">{props.children}</div>
     </div>
   );
 };
