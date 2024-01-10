@@ -3,11 +3,7 @@ import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
 import { ProfileSettings } from "@/components/settings/profile-settings";
-import {
-  Settings,
-  SettingsHeader,
-  SettingsSection,
-} from "@/components/settings/settings";
+import { Settings, SettingsSection } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
@@ -23,9 +19,6 @@ export const ProfilePage = () => {
       <Head>
         <title>{t("profile")}</title>
       </Head>
-      <SettingsHeader>
-        <Trans i18nKey="profile" />
-      </SettingsHeader>
       <SettingsSection
         title={<Trans i18nKey="profile" defaults="Profile" />}
         description={

@@ -7,7 +7,6 @@ import { LanguagePreference } from "@/components/settings/language-preference";
 import {
   Settings,
   SettingsContent,
-  SettingsHeader,
   SettingsSection,
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
@@ -17,9 +16,6 @@ export function PreferencesPage() {
 
   return (
     <Settings>
-      <SettingsHeader>
-        <Trans i18nKey="preferences" />
-      </SettingsHeader>
       <SettingsContent>
         <Head>
           <title>{t("settings")}</title>
