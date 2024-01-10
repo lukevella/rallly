@@ -26,6 +26,30 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
   return null;
 };
 
+function MobileNavigation() {
+  return (
+    <div className="lg:hidden bg-gray-100 border-b flex items-center justify-between px-4 py-3">
+      <Link
+        className="active:translate-y-1 transition-transform inline-block"
+        href="/"
+      >
+        <Image
+          src="/logo-mark.svg"
+          alt="Rallly"
+          width={32}
+          height={32}
+          className="shrink-0"
+        />
+      </Link>
+      <Button asChild variant="ghost">
+        <Link href="/menu">
+          <MenuIcon className="h-4 w-4" />
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
 export default async function Layout({
   children,
 }: {
@@ -34,25 +58,7 @@ export default async function Layout({
   function SidebarLayout() {
     return (
       <div className="lg:flex h-full bg-gray-50">
-        <div className="lg:hidden bg-gray-100 border-b flex items-center justify-between px-4 py-3">
-          <Link
-            className="active:translate-y-1 transition-transform inline-block"
-            href="/"
-          >
-            <Image
-              src="/logo-mark.svg"
-              alt="Rallly"
-              width={32}
-              height={32}
-              className="shrink-0"
-            />
-          </Link>
-          <Button asChild variant="ghost">
-            <Link href="/menu">
-              <MenuIcon className="h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
+        <MobileNavigation />
         <div
           className={cn(
             "hidden lg:flex lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-5 px-5 py-3",
