@@ -149,10 +149,10 @@ const StatusControl = () => {
 const AdminControls = () => {
   return (
     <div className="flex items-center gap-x-2">
-      <InviteDialog />
       <NotificationsToggle />
       <StatusControl />
       <ManagePoll />
+      <InviteDialog />
     </div>
   );
 };
