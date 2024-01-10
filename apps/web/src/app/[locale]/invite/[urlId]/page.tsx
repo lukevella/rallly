@@ -61,7 +61,7 @@ const GoToApp = () => {
   const { user } = useUser();
 
   return (
-    <div className="flex items-center justify-between gap-2 lg:p-6 px-4 py-3">
+    <div className="flex items-center justify-between gap-2 z-20 lg:px-6 lg:py-4 px-4 py-3">
       <div>
         <Button
           variant="ghost"
