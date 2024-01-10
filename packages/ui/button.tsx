@@ -79,12 +79,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {loading ? (
               <Loader2Icon className="h-4 w-4 animate-spin" />
             ) : Icon ? (
-              <Icon
-                className={cn(
-                  "-ml-0.5 h-4 w-4",
-                  props.disabled ? "text-gray-400" : "text-muted-foreground",
-                )}
-              />
+              <Icon className={cn("-ml-0.5 h-4 w-4")} />
             ) : null}
             {children}
           </>
