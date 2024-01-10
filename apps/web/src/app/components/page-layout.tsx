@@ -30,7 +30,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "bg-gray-50 z-20 lg:px-6 lg:py-4 border-b px-4 py-3",
+        "sticky top-0 bg-gray-50/90 backdrop-blur-md border-b z-20 lg:px-6 lg:py-4 px-4 py-3",
         className,
       )}
     >
