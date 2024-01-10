@@ -20,10 +20,10 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         ref={ref}
         type="text"
         className={clsx(
-          "appearance-none rounded border text-gray-800 placeholder:text-gray-500",
+          "appearance-none text-sm rounded border text-gray-800 placeholder:text-gray-500",
           className,
           {
-            "px-2 py-1": size === "md",
+            "px-2.5 py-2": size === "md",
             "px-3 py-2 text-xl": size === "lg",
             "input-error": error,
             "bg-gray-50 text-gray-500": forwardProps.disabled,

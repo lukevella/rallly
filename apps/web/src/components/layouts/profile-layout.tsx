@@ -1,24 +1,17 @@
 import clsx from "clsx";
-import {
-  CreditCardIcon,
-  LogOutIcon,
-  Settings2Icon,
-  UserIcon,
-} from "lucide-react";
+import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { Trans } from "react-i18next";
 import { useToggle } from "react-use";
 
-import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
   PageContent,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { IfAuthenticated } from "@/components/user-provider";
 import { IfCloudHosted } from "@/contexts/environment";
 
 import { IconComponent } from "../../types";
@@ -61,12 +54,6 @@ export const ProfileLayout = ({ children }: React.PropsWithChildren) => {
           <PageTitle>
             <Trans i18nKey="settings" />
           </PageTitle>
-          <IfAuthenticated>
-            <LogoutButton>
-              <LogOutIcon className="h-4 w-4 text-muted-foreground" />
-              <Trans i18nKey="logout" />
-            </LogoutButton>
-          </IfAuthenticated>
         </div>
       </PageHeader>
       <PageContent>

@@ -1,9 +1,12 @@
-import { Button } from "@rallly/ui/button";
+import { Button, ButtonProps } from "@rallly/ui/button";
 
-export function LogoutButton({ children }: React.PropsWithChildren) {
+export function LogoutButton({
+  children,
+  ...rest
+}: React.PropsWithChildren<ButtonProps>) {
   return (
     <form action="/auth/logout" method="POST">
-      <Button variant="ghost" type="submit">
+      <Button {...rest} type="submit">
         {children}
       </Button>
     </form>

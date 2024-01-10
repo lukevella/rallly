@@ -36,7 +36,7 @@
 
 @layer components {
   .text-link {
-    @apply text-primary-600 hover:text-primary-600 focus-visible:ring-primary-600 rounded-md font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+    @apply hover:text-gray-800 rounded-md outline-none underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }
   .formField {
     @apply mb-4;
