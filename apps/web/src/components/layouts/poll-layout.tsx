@@ -162,7 +162,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   return (
     <PageContainer>
       <PageHeader className="flex justify-between items-center gap-4">
-        <div className="flex min-w-0 items-center gap-x-2">
+        <div className="flex min-w-0 items-center gap-x-2.5">
           <Button variant="ghost" asChild>
             <Link href="/polls">
               <ArrowLeftIcon className="h-4 w-4 text-muted-foreground" />

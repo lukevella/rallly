@@ -125,11 +125,7 @@ export function Sidebar() {
                 </Link>
               </li>
             </IfFreeUser>
-            <IfSubscribed>
-              <NavItem href="https://support.rallly.co" icon={LifeBuoyIcon}>
-                <Trans i18nKey="support" defaults="Support" />
-              </NavItem>
-            </IfSubscribed>
+
             <IfGuest>
               <li>
                 <NavItem href="/login" icon={LogInIcon}>
@@ -143,7 +139,7 @@ export function Sidebar() {
               </NavItem>
             </li>
           </ul>
-          <hr className="my-4" />
+          <hr className="my-2" />
           <ul role="list" className="-mx-2 space-y-1">
             <li>
               <Button
