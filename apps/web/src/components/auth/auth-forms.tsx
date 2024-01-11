@@ -60,6 +60,7 @@ export const VerifyCode: React.FunctionComponent<{
                 b: <strong className="whitespace-nowrap" />,
                 a: (
                   <button
+                    type="button"
                     role="button"
                     className="text-link"
                     onClick={() => {
