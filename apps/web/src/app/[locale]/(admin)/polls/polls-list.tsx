@@ -94,17 +94,6 @@ export function PollsList() {
         router.push(`${pathname}?${current.toString()}`);
       }}
       columns={[
-        columnHelper.accessor("status", {
-          header: () => null,
-          size: 200,
-          cell: ({ row }) => {
-            return (
-              <div className="text-right">
-                <PollStatusBadge status={row.getValue("status")} />
-              </div>
-            );
-          },
-        }),
         columnHelper.display({
           id: "title",
           header: () => null,
@@ -138,11 +127,22 @@ export function PollsList() {
                           ).format("LT")}`}
                     </p>
                   ) : (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-400">
                       <Trans i18nKey="pending" defaults="Pending" />
                     </p>
                   )}
                 </div>
+              </div>
+            );
+          },
+        }),
+        columnHelper.accessor("status", {
+          header: () => null,
+          size: 200,
+          cell: ({ row }) => {
+            return (
+              <div>
+                <PollStatusBadge status={row.getValue("status")} />
               </div>
             );
           },

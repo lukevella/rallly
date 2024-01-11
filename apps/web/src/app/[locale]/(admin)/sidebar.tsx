@@ -83,19 +83,16 @@ export function Sidebar() {
           </div>
           <ul role="list" className="-mx-2 mt-2 space-y-1">
             <li className="grid gap-1 pointer-events-none opacity-50">
-              <NavItem href="/b" icon={CalendarIcon}>
-                <Trans i18nKey="calendar" defaults="Calendar" />
+              <NavItem href="/events" icon={CalendarIcon}>
+                <Trans i18nKey="events" defaults="Events" />
               </NavItem>
               <NavItem href="/b" icon={BookMarkedIcon}>
-                <Trans i18nKey="registeration" defaults="Registrations" />
-              </NavItem>
-              <NavItem href="/rsvp" icon={CheckCircle2Icon}>
-                <Trans i18nKey="rspvs" defaults="RSVPs" />
+                <Trans i18nKey="registrations" defaults="Registrations" />
               </NavItem>
               <NavItem href="/contacts" icon={UsersIcon}>
                 <Trans i18nKey="contacts" defaults="Contacts" />
               </NavItem>
-              <NavItem href="/contacts" icon={BlocksIcon}>
+              <NavItem href="/integrations" icon={BlocksIcon}>
                 <Trans i18nKey="integrations" defaults="Integrations" />
               </NavItem>
             </li>
@@ -125,7 +122,6 @@ export function Sidebar() {
                 </Link>
               </li>
             </IfFreeUser>
-
             <IfGuest>
               <li>
                 <NavItem href="/login" icon={LogInIcon}>

@@ -59,8 +59,7 @@ export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
         {
           "border-pink-500/50 text-pink-500": status === "live",
           "bg-gray-100 border-gray-200 text-gray-500": status === "paused",
-          "bg-indigo-50 text-indigo-500 border-indigo-500/10":
-            status === "finalized",
+          "text-indigo-500 border-indigo-500/50": status === "finalized",
         },
       )}
       status={status}

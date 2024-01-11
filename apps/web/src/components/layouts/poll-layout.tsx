@@ -161,7 +161,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   return (
     <PageContainer>
-      <PageHeader className="flex justify-between items-center gap-4">
+      <PageHeader className="lg:flex justify-between items-center gap-4">
         <div className="flex min-w-0 items-center gap-x-2.5">
           <Button variant="ghost" asChild>
             <Link href="/polls">

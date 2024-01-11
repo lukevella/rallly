@@ -7,6 +7,7 @@ import { signIn, useSession } from "next-auth/react";
 import React from "react";
 
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
+import { CurrentUserAvatar } from "@/components/user";
 import { isSelfHosted } from "@/utils/constants";
 
 const Auth = ({ children }: { children: React.ReactNode }) => {
@@ -41,11 +42,16 @@ function MobileNavigation() {
           className="shrink-0"
         />
       </Link>
-      <Button asChild variant="ghost">
-        <Link href="/menu">
-          <MenuIcon className="h-4 w-4" />
+      <div className="flex items-center gap-x-4">
+        <Link href="/settings/profile">
+          <CurrentUserAvatar size="sm" />
         </Link>
-      </Button>
+        <Button asChild variant="ghost">
+          <Link href="/menu">
+            <MenuIcon className="h-4 w-4" />
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }
