@@ -1,3 +1,4 @@
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   ColumnDef,
@@ -136,11 +137,15 @@ export const Table = <
       <div className="flex items-center justify-between space-x-2 py-4">
         <Button
           variant="ghost"
-          size="sm"
-          icon={ChevronLeftIcon}
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-        ></Button>
+        >
+          <ChevronLeftIcon
+            className={cn("h-4 w-4", {
+              "text-gray-400": !table.getCanPreviousPage(),
+            })}
+          />
+        </Button>
         <span className="text-sm text-muted-foreground">
           <Trans
             i18nKey="pageXOfY"
@@ -153,11 +158,15 @@ export const Table = <
         </span>
         <Button
           variant="ghost"
-          size="sm"
-          icon={ChevronRightIcon}
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-        ></Button>
+        >
+          <ChevronRightIcon
+            className={cn("h-4 w-4", {
+              "text-gray-400": !table.getCanNextPage(),
+            })}
+          />
+        </Button>
       </div>
     </div>
   );
