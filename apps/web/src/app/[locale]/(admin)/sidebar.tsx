@@ -6,9 +6,7 @@ import {
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
-  CheckCircle2Icon,
   ChevronRightIcon,
-  LifeBuoyIcon,
   LogInIcon,
   Settings2Icon,
   SparklesIcon,
@@ -22,7 +20,7 @@ import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
 import { IfGuest, useUser } from "@/components/user-provider";
-import { IfFreeUser, IfSubscribed } from "@/contexts/plan";
+import { IfFreeUser } from "@/contexts/plan";
 import { IconComponent } from "@/types";
 
 function NavItem({
