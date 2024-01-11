@@ -82,7 +82,7 @@ const PriceTables = () => {
             </BillingPlanPeriod>
           </div>
           <hr />
-          <Button className="w-full">
+          <Button asChild className="w-full">
             <Link href={linkToApp("/")}>
               <Trans i18nKey="common:getStarted" defaults="Get started" />
             </Link>

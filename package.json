@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "dotenv -c development -- turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
+    "dev:landing": "dotenv -c development turbo dev --filter=@rallly/landing",
     "start": "dotenv -c -- turbo run start --filter=@rallly/web",
     "build": "dotenv -c -- turbo run build --filter=@rallly/web",
     "build:test": "turbo build:test",
