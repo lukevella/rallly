@@ -59,6 +59,12 @@ export const EventCard = () => {
                 </div>
               ) : null}
               <div>
+                <h1
+                  className="text-xl font-bold tracking-tight mb-1"
+                  data-testid="poll-title"
+                >
+                  {preventWidows(poll.title)}
+                </h1>
                 {poll.event ? (
                   <div className="text-muted-foreground text-sm">
                     {poll.event.duration === 0
@@ -77,12 +83,6 @@ export const EventCard = () => {
                         ).format("LT")}`}
                   </div>
                 ) : null}
-                <h1
-                  className="text-xl font-bold tracking-tight mb-1"
-                  data-testid="poll-title"
-                >
-                  {preventWidows(poll.title)}
-                </h1>
                 {!poll.event ? (
                   <PollSubheader />
                 ) : (
