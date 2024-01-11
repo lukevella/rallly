@@ -4,7 +4,7 @@ import { resetUser } from "@/app/guest";
 import { absoluteUrl } from "@/utils/absolute-url";
 
 export async function POST() {
-  const res = NextResponse.redirect(absoluteUrl(), 302);
+  const res = NextResponse.redirect(absoluteUrl("/login"), 302);
   await resetUser(res);
   return res;
 }

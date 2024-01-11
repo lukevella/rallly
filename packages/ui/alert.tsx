@@ -32,7 +32,9 @@ const Alert = React.forwardRef<
     className={cn(alertVariants({ variant }), className)}
     {...props}
   >
-    {Icon ? <Icon className="mb-2 -mt-1 h-6 w-6" /> : null}
+    {Icon ? (
+      <Icon className="mb-2 -mt-1 h-6 w-6 text-muted-foreground" />
+    ) : null}
     <div>{children}</div>
   </div>
 ));

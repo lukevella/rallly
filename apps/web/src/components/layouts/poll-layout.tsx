@@ -19,7 +19,7 @@ import {
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
@@ -159,12 +159,15 @@ const AdminControls = () => {
 
 const Layout = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
+  const pollLink = `/poll/${poll.id}`;
+  const pathname = usePathname();
+
   return (
     <PageContainer>
-      <PageHeader className="lg:flex justify-between items-center gap-4">
-        <div className="flex min-w-0 items-center gap-x-2.5">
-          <Button variant="ghost" asChild>
-            <Link href="/polls">
+      <PageHeader className="grid lg:flex justify-between items-center gap-x-4 gap-y-2.5">
+        <div className="flex min-w-0 items-center gap-x-4">
+          <Button asChild>
+            <Link href={pathname !== pollLink ? pollLink : "/polls"}>
               <ArrowLeftIcon className="h-4 w-4 text-muted-foreground" />
             </Link>
           </Button>

@@ -44,10 +44,7 @@ export const EventCard = () => {
         className="h-2 -mx-px rounded-t-md -mt-px"
         style={{ background: generateGradient(poll.id) }}
       />
-      <div className="bg-pattern p-4 sm:flex sm:flex-row-reverse sm:justify-between sm:px-6">
-        <div className="mb-2">
-          <PollStatusBadge status={poll.status} />
-        </div>
+      <div className="bg-pattern p-4 sm:flex grid gap-4 sm:justify-between sm:px-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4 sm:gap-6">
             {poll.event ? (
@@ -101,11 +98,14 @@ export const EventCard = () => {
             </div>
           </div>
         </div>
+        <div>
+          <PollStatusBadge status={poll.status} />
+        </div>
       </div>
       <div className="space-y-4 p-4 sm:px-6">
         {poll.description ? (
           <div className="flex gap-4">
-            <TextIcon className="h-4 w-4 shrink-0 translate-y-1" />
+            <TextIcon className="h-4 w-4 text-muted-foreground shrink-0 translate-y-1" />
             <div className="whitespace-pre-line">
               <TruncatedLinkify>{poll.description}</TruncatedLinkify>
             </div>
@@ -113,12 +113,12 @@ export const EventCard = () => {
         ) : null}
         {poll.location ? (
           <div className="flex gap-4">
-            <MapPinIcon className="h-4 w-4 translate-y-1" />
+            <MapPinIcon className="h-4 w-4 translate-y-1 text-muted-foreground" />
             <TruncatedLinkify>{poll.location}</TruncatedLinkify>
           </div>
         ) : null}
         <div className="flex gap-4">
-          <MousePointerClickIcon className="h-4 w-4 shrink-0 translate-y-0.5" />
+          <MousePointerClickIcon className="h-4 w-4 shrink-0 text-muted-foreground translate-y-0.5" />
           <div>
             <div className="flex gap-2.5">
               <span className="inline-flex items-center space-x-1">

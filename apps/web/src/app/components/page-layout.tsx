@@ -23,14 +23,19 @@ export function PageTitle({
 export function PageHeader({
   children,
   className,
+  variant = "default",
 }: {
   children?: React.ReactNode;
   className?: string;
+  variant?: "default" | "ghost";
 }) {
   return (
     <div
       className={cn(
-        "bg-gray-50 border-b z-20 lg:px-6 lg:py-3 px-4 py-3",
+        "lg:px-6 lg:py-3 px-4 py-4",
+        {
+          "border-b bg-gray-50 sticky z-20 top-0": variant === "default",
+        },
         className,
       )}
     >
@@ -46,7 +51,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <div className={cn("lg:px-6 lg:py-5 px-4 py-3", className)}>{children}</div>
-  );
+  return <div className={cn("lg:px-6 lg:py-5 p-4", className)}>{children}</div>;
 }
