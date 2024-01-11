@@ -6,8 +6,8 @@ import { BackButton } from "@/app/[locale]/menu/back-button";
 
 export default function Page() {
   return (
-    <div className="fixed bg-gray-100 overflow-auto inset-0">
-      <div className="bg-gray-100 flex items-center justify-between px-4 py-3">
+    <div className="bg-gray-100">
+      <div className="flex items-center justify-between px-4 py-3">
         <Link
           className="active:translate-y-1 transition-transform inline-block"
           href="/"
@@ -22,7 +22,7 @@ export default function Page() {
         </Link>
         <BackButton />
       </div>
-      <div className="px-6 -mx-1 py-5">
+      <div className="px-5 py-5">
         <Sidebar />
       </div>
     </div>
