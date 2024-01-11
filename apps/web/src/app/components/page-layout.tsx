@@ -32,7 +32,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "lg:px-6 lg:py-3 px-4 py-4",
+        "lg:px-6 lg:py-3 px-4 py-3",
         {
           "border-b bg-gray-50 sticky z-20 top-0": variant === "default",
         },

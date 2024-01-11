@@ -15,7 +15,7 @@ export const SettingsHeader = ({ children }: React.PropsWithChildren) => {
 };
 
 export const SettingsContent = ({ children }: React.PropsWithChildren) => {
-  return <div className="space-y-8">{children}</div>;
+  return <div className="space-y-6">{children}</div>;
 };
 
 export const SettingsSection = (props: {
@@ -24,7 +24,7 @@ export const SettingsSection = (props: {
   children: React.ReactNode;
 }) => {
   return (
-    <div className="grid lg:grid-cols-10 gap-3 md:gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-10 gap-3 md:gap-8">
       <div className="col-span-3">
         <h2 className="mb-1 text-base font-semibold">{props.title}</h2>
         <p className="text-muted-foreground text-sm">{props.description}</p>

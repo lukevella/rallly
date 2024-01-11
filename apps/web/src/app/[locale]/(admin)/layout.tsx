@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import React from "react";
@@ -28,14 +27,12 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
 
 function MobileNavigation() {
   return (
-    <div className="lg:hidden bg-gray-100 border-b flex items-center justify-between px-4 py-3">
+    <div className="lg:hidden shadow-sm bg-gray-100 border-b flex items-center justify-between px-4 py-3">
       <LogoLink />
       <div className="flex items-center gap-x-4">
-        <Button asChild variant="ghost">
-          <Link href="/menu">
-            <CurrentUserAvatar className="-mx-1" size="sm" />
-          </Link>
-        </Button>
+        <Link href="/menu" className="inline-flex items-center w-7 h-9">
+          <CurrentUserAvatar className="-mx-1" size="sm" />
+        </Link>
       </div>
     </div>
   );
@@ -52,7 +49,7 @@ export default async function Layout({
         <MobileNavigation />
         <div
           className={cn(
-            "hidden lg:flex lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-4 px-5 py-3",
+            "hidden lg:flex lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-4 px-5 py-4",
           )}
         >
           <div>

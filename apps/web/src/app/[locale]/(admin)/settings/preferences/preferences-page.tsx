@@ -31,6 +31,7 @@ export function PreferencesPage() {
         >
           <LanguagePreference />
         </SettingsSection>
+        <hr />
         <SettingsSection
           title={<Trans i18nKey="dateAndTime" defaults="Date & Time" />}
           description={

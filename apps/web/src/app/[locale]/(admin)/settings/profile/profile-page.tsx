@@ -75,6 +75,8 @@ export const ProfilePage = () => {
           >
             <ProfileSettings />
           </SettingsSection>
+          <hr />
+
           <SettingsSection
             title={<Trans i18nKey="logout" />}
             description={

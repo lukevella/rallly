@@ -253,6 +253,7 @@ export function BillingPage() {
         >
           <SubscriptionStatus />
         </SettingsSection>
+        <hr />
         <SettingsSection
           title={<Trans i18nKey="support" defaults="Support" />}
           description={
