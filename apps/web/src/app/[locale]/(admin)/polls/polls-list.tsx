@@ -121,13 +121,24 @@ export function PollsList() {
                 <div className="">
                   {row.original.event ? (
                     <p className="text-sm text-muted-foreground">
-                      {adjustTimeZone(
-                        row.original.event.start,
-                        !row.original.timeZone,
-                      ).format(row.original.event.duration > 0 ? "LLL" : "LL")}
+                      {row.original.event.duration === 0
+                        ? adjustTimeZone(
+                            row.original.event.start,
+                            !row.original.timeZone,
+                          ).format("LL")
+                        : `${adjustTimeZone(
+                            row.original.event.start,
+                            !row.original.timeZone,
+                          ).format("LL LT")} - ${adjustTimeZone(
+                            dayjs(row.original.event.start).add(
+                              row.original.event.duration,
+                              "minutes",
+                            ),
+                            !row.original.timeZone,
+                          ).format("LT")}`}
                     </p>
                   ) : (
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       <Trans i18nKey="pending" defaults="Pending" />
                     </p>
                   )}
