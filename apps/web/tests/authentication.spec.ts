@@ -123,8 +123,6 @@ test.describe.serial(() => {
 
       await page.waitForURL("/polls");
 
-      await page.getByTestId("user-dropdown").click();
-
       await expect(page.getByText("Test User")).toBeVisible();
     });
 
@@ -145,8 +143,6 @@ test.describe.serial(() => {
 
       await page.waitForURL("/polls");
 
-      await page.getByTestId("user-dropdown").click();
-
       await expect(page.getByText("Test User")).toBeVisible();
     });
 
@@ -166,8 +162,6 @@ test.describe.serial(() => {
       await page.getByRole("button", { name: "Continue" }).click();
 
       await page.waitForURL("/polls");
-
-      await page.getByTestId("user-dropdown").click();
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
