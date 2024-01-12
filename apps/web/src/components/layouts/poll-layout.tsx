@@ -27,6 +27,7 @@ import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
   PageContent,
+  PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
 import { CopyInviteLinkButton, InviteDialog } from "@/components/invite-dialog";
@@ -148,12 +149,7 @@ const StatusControl = () => {
 };
 
 const ShareButton = () => {
-  return (
-    <div className="flex grow min-w-0 gap-x-2">
-      <CopyInviteLinkButton />
-      <InviteDialog />
-    </div>
-  );
+  return <div className="flex grow min-w-0 gap-x-2"></div>;
 };
 
 const AdminControls = () => {
@@ -162,6 +158,7 @@ const AdminControls = () => {
       <NotificationsToggle />
       <StatusControl />
       <ManagePoll />
+      <InviteDialog />
     </div>
   );
 };
@@ -173,9 +170,9 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <PageContainer>
-      <div className="sticky top-0 bg-gray-50/90 backdrop-blur-sm z-20 lg:rounded-b-md px-3 lg:px-4 py-3 lg:border-x border-b flex lg:flex-row flex-col lg:items-center gap-x-4 gap-y-2.5">
-        <div className="flex min-w-0 lg:basis-2/3 items-center gap-x-4">
-          <div className="lg:basis-1/2 flex gap-x-4">
+      <PageHeader className="flex md:flex-row flex-col md:items-center gap-x-4 gap-y-2.5">
+        <div className="flex min-w-0 md:basis-2/3 items-center gap-x-4">
+          <div className="md:basis-1/2 flex gap-x-4">
             {pathname === pollLink ? (
               <Button asChild>
                 <Link href="/">
@@ -189,17 +186,14 @@ const Layout = ({ children }: React.PropsWithChildren) => {
                 </Link>
               </Button>
             )}
-            <PageTitle className="hidden lg:block">{poll.title}</PageTitle>
-          </div>
-          <div className="grow basis-1/2 min-w-0 flex justify-center">
-            <ShareButton />
+            <PageTitle>{poll.title}</PageTitle>
           </div>
         </div>
 
-        <div className="flex basis-1/3 lg:justify-end">
+        <div className="flex basis-1/3 md:justify-end">
           <AdminControls />
         </div>
-      </div>
+      </PageHeader>
       <PageContent>{children}</PageContent>
     </PageContainer>
   );

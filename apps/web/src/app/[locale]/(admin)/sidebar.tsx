@@ -102,7 +102,7 @@ export function Sidebar() {
               <li>
                 <Link
                   href="/settings/billing"
-                  className="border rounded-md mb-4 px-4 py-3 bg-gray-50/50 hover:bg-gray-200 active:bg-gray-300 border-gray-200 hover:border-gray-300 grid"
+                  className="border rounded-md mb-4 px-4 py-3 bg-gray-50 hover:bg-gray-200 active:bg-gray-300 border-gray-200 hover:border-gray-300 grid"
                 >
                   <span className="flex mb-2 items-center gap-x-2">
                     <SparklesIcon className="h-5 text-gray-400 w-5" />

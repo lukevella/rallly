@@ -16,7 +16,9 @@ export function PageTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn("font-semibold leading-9", className)}>{children}</h2>
+    <h2 className={cn("font-semibold leading-9 truncate", className)}>
+      {children}
+    </h2>
   );
 }
 

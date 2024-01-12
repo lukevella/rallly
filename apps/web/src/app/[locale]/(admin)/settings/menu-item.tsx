@@ -59,7 +59,7 @@ export function SettingsMenu() {
   }, [t]);
 
   const router = useRouter();
-  const defaultValue = React.useMemo(
+  const value = React.useMemo(
     () => menuItems.find((item) => item.href === pathname),
     [menuItems, pathname],
   );
@@ -75,7 +75,7 @@ export function SettingsMenu() {
         ))}
       </div>
       <Select
-        defaultValue={defaultValue?.title}
+        value={value?.title}
         onValueChange={(value) => {
           const item = menuItems.find((item) => item.title === value);
           if (item) {
