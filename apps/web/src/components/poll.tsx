@@ -34,7 +34,7 @@ export const Poll = () => {
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
 
   return (
-    <div className={cn("space-y-3 sm:space-y-4")}>
+    <div className={cn("space-y-3 sm:space-y-6")}>
       <EventCard />
       <Card fullWidthOnMobile={false}>
         <VotingForm>

@@ -49,7 +49,7 @@ const GuestPollAlert = () => {
 export default function Page() {
   return (
     <div className={cn("max-w-4xl space-y-4 mx-auto")}>
-      <div className="-mx-1 lg:py-4">
+      <div className="-mx-1">
         <GuestPollAlert />
         <Poll />
       </div>

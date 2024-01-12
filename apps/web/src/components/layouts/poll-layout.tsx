@@ -173,7 +173,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <PageContainer>
-      <div className="sticky top-0 bg-gray-50/90 backdrop-blur-sm z-20 lg:rounded-b-md px-3 lgpx-4 py-3 lg:border-x border-b flex lg:flex-row flex-col lg:items-center gap-x-4 gap-y-2.5">
+      <div className="sticky top-0 bg-gray-50/90 backdrop-blur-sm z-20 lg:rounded-b-md px-3 lg:px-4 py-3 lg:border-x border-b flex lg:flex-row flex-col lg:items-center gap-x-4 gap-y-2.5">
         <div className="flex min-w-0 lg:basis-2/3 items-center gap-x-4">
           <div className="lg:basis-1/2 flex gap-x-4">
             {pathname === pollLink ? (
@@ -200,11 +200,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
           <AdminControls />
         </div>
       </div>
-      <PageContent>
-        <div className="space-y-3 sm:space-y-6">
-          <div>{children}</div>
-        </div>
-      </PageContent>
+      <PageContent>{children}</PageContent>
     </PageContainer>
   );
 };

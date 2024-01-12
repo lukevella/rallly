@@ -1,4 +1,6 @@
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
+import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import React from "react";
@@ -29,10 +31,18 @@ function MobileNavigation() {
   return (
     <div className="lg:hidden shadow-sm bg-gray-100 border-b flex items-center justify-between px-4 py-3">
       <LogoLink />
-      <div className="flex items-center gap-x-4">
-        <Link href="/menu" className="inline-flex items-center w-7 h-9">
-          <CurrentUserAvatar className="-mx-1" size="sm" />
+      <div className="flex gap-x-2.5 justify-end">
+        <Link
+          href="/settings/profile"
+          className="inline-flex items-center w-7 h-9"
+        >
+          <CurrentUserAvatar size="sm" />
         </Link>
+        <Button asChild variant="ghost">
+          <Link href="/menu">
+            <MenuIcon className="h-4 w-4 text-muted-foreground" />
+          </Link>
+        </Button>
       </div>
     </div>
   );
