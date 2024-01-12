@@ -11,6 +11,7 @@ import {
   ArrowLeftIcon,
   ArrowUpRight,
   ChevronDownIcon,
+  HomeIcon,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
@@ -26,9 +27,9 @@ import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
   PageContent,
-  PageHeader,
+  PageTitle,
 } from "@/app/components/page-layout";
-import { InviteDialog } from "@/components/invite-dialog";
+import { CopyInviteLinkButton, InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -146,13 +147,21 @@ const StatusControl = () => {
   );
 };
 
+const ShareButton = () => {
+  return (
+    <div className="flex grow min-w-0 gap-x-2">
+      <CopyInviteLinkButton />
+      <InviteDialog />
+    </div>
+  );
+};
+
 const AdminControls = () => {
   return (
     <div className="flex items-center gap-x-2">
       <NotificationsToggle />
       <StatusControl />
       <ManagePoll />
-      <InviteDialog />
     </div>
   );
 };
@@ -164,19 +173,33 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <PageContainer>
-      <PageHeader className="grid lg:flex justify-between items-center gap-x-4 gap-y-2.5">
-        <div className="flex min-w-0 items-center gap-x-4">
-          <Button asChild>
-            <Link href={pathname !== pollLink ? pollLink : "/polls"}>
-              <ArrowLeftIcon className="h-4 w-4 text-muted-foreground" />
-            </Link>
-          </Button>
-          <h2 className="font-semibold min-w-0 truncate">{poll.title}</h2>
+      <div className="sticky top-0 bg-gray-50/90 backdrop-blur-sm z-20 lg:rounded-b-md px-3 lgpx-4 py-3 lg:border-x border-b flex lg:flex-row flex-col lg:items-center gap-x-4 gap-y-2.5">
+        <div className="flex min-w-0 lg:basis-2/3 items-center gap-x-4">
+          <div className="lg:basis-1/2 flex gap-x-4">
+            {pathname === pollLink ? (
+              <Button asChild>
+                <Link href="/">
+                  <HomeIcon className="h-4 w-4" />
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild>
+                <Link href={pollLink}>
+                  <ArrowLeftIcon className="h-4 w-4" />
+                </Link>
+              </Button>
+            )}
+            <PageTitle className="hidden lg:block">{poll.title}</PageTitle>
+          </div>
+          <div className="grow basis-1/2 min-w-0 flex justify-center">
+            <ShareButton />
+          </div>
         </div>
-        <div>
+
+        <div className="flex basis-1/3 lg:justify-end">
           <AdminControls />
         </div>
-      </PageHeader>
+      </div>
       <PageContent>
         <div className="space-y-3 sm:space-y-6">
           <div>{children}</div>

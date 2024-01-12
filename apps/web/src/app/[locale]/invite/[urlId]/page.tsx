@@ -94,23 +94,6 @@ export default function InvitePage() {
             <div className="max-w-4xl mx-auto">
               <div className="-mx-1">
                 <Poll />
-                <div className="mt-4 space-y-4 text-center text-gray-500">
-                  <div className="py-8">
-                    <Trans
-                      defaults="Powered by <a>{name}</a>"
-                      i18nKey="poweredByRallly"
-                      values={{ name: "rallly.co" }}
-                      components={{
-                        a: (
-                          <Link
-                            className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                            href="https://rallly.co"
-                          />
-                        ),
-                      }}
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>

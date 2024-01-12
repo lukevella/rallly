@@ -12,7 +12,7 @@ import { CreatePoll } from "@/components/create-poll";
 export default async function Page() {
   return (
     <PageContainer>
-      <PageHeader variant="ghost" className="flex bg-transparent items-center">
+      <PageHeader className="flex items-center">
         <Button asChild>
           <Link href="/">
             <ArrowLeftIcon className="w-4 h-4 text-muted-foreground" />
