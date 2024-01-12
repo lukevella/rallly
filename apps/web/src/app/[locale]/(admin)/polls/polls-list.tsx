@@ -101,36 +101,36 @@ export function PollsList() {
           cell: ({ row }) => {
             return (
               <div className="relative">
-                <h3 className="font-semibold whitespace-nowrap mb-1 text-gray-600 hover:text-gray-900 hover:underline">
-                  <Link href=`/poll/${row.original.id}`}>
+                <Link className="group" href={`/poll/${row.original.id}`}>
+                  <h3 className="font-semibold whitespace-nowrap mb-1 text-gray-600 group-hover:text-gray-900 group-hover:underline">
                     {row.original.title}
-                  </Link>
-                </h3>
-                <div className="">
-                  {row.original.event ? (
-                    <p className="text-sm text-muted-foreground">
-                      {row.original.event.duration === 0
-                        ? adjustTimeZone(
-                            row.original.event.start,
-                            !row.original.timeZone,
-                          ).format("LL")
-                        : `${adjustTimeZone(
-                            row.original.event.start,
-                            !row.original.timeZone,
-                          ).format("LL LT")} - ${adjustTimeZone(
-                            dayjs(row.original.event.start).add(
-                              row.original.event.duration,
-                              "minutes",
-                            ),
-                            !row.original.timeZone,
-                          ).format("LT")}`}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-gray-400">
-                      <Trans i18nKey="pending" defaults="Pending" />
-                    </p>
-                  )}
-                </div>
+                  </h3>
+                  <div className="">
+                    {row.original.event ? (
+                      <p className="text-sm text-muted-foreground">
+                        {row.original.event.duration === 0
+                          ? adjustTimeZone(
+                              row.original.event.start,
+                              !row.original.timeZone,
+                            ).format("LL")
+                          : `${adjustTimeZone(
+                              row.original.event.start,
+                              !row.original.timeZone,
+                            ).format("LL LT")} - ${adjustTimeZone(
+                              dayjs(row.original.event.start).add(
+                                row.original.event.duration,
+                                "minutes",
+                              ),
+                              !row.original.timeZone,
+                            ).format("LT")}`}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-gray-400">
+                        <Trans i18nKey="pending" defaults="Pending" />
+                      </p>
+                    )}
+                  </div>
+                </Link>
               </div>
             );
           },
