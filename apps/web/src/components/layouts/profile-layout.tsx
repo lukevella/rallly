@@ -1,3 +1,4 @@
+"use client";
 import clsx from "clsx";
 import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import Link from "next/link";

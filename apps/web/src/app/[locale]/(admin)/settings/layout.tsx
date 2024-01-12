@@ -1,10 +1,69 @@
-"use client";
-import { ProfileLayout } from "@/components/layouts/profile-layout";
+import { Button } from "@rallly/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
+import { CreditCardIcon, Settings2Icon, UserIcon, X } from "lucide-react";
+import React from "react";
+import { Trans } from "react-i18next/TransWithoutContext";
 
-export default function SettingsLayout({
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageTitle,
+} from "@/app/components/page-layout";
+import { getTranslation } from "@/app/i18n";
+import { isSelfHosted } from "@/utils/constants";
+
+import { MenuItem, SettingsMenu } from "./menu-item";
+
+export default async function ProfileLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <ProfileLayout>{children}</ProfileLayout>;
+  params,
+}: React.PropsWithChildren<{
+  params: { locale: string };
+}>) {
+  const { t } = await getTranslation(params.locale);
+  const menuItems = [
+    {
+      title: t("profile"),
+      href: "/settings/profile",
+      icon: UserIcon,
+    },
+    {
+      title: t("preferences"),
+      href: "/settings/preferences",
+      icon: Settings2Icon,
+    },
+  ];
+
+  if (!isSelfHosted) {
+    menuItems.push({
+      title: t("billing"),
+      href: "/settings/billing",
+      icon: CreditCardIcon,
+    });
+  }
+
+  return (
+    <PageContainer>
+      <PageHeader>
+        <div className="flex items-center justify-between gap-x-4">
+          <PageTitle>
+            <Trans t={t} i18nKey="settings" />
+          </PageTitle>
+        </div>
+      </PageHeader>
+      <PageContent className="space-y-6">
+        <div>
+          <SettingsMenu />
+        </div>
+        <div className="max-w-4xl">{children}</div>
+      </PageContent>
+    </PageContainer>
+  );
 }
