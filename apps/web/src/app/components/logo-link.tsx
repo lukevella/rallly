@@ -12,6 +12,7 @@ export function LogoLink() {
         alt="Rallly"
         width={32}
         height={32}
+        priority={true}
         className="shrink-0"
       />
     </Link>

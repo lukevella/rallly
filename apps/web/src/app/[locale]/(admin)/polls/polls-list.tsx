@@ -102,9 +102,8 @@ export function PollsList() {
             return (
               <div className="relative">
                 <h3 className="font-semibold whitespace-nowrap mb-1 text-gray-600 hover:text-gray-900 hover:underline">
-                  <Link href={`/poll/${row.original.id}`}>
+                  <Link href=`/poll/${row.original.id}`}>
                     {row.original.title}
-                    <span className="absolute inset-0" />
                   </Link>
                 </h3>
                 <div className="">
