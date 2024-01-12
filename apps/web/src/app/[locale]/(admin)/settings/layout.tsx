@@ -1,12 +1,4 @@
-import { Button } from "@rallly/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@rallly/ui/select";
-import { CreditCardIcon, Settings2Icon, UserIcon, X } from "lucide-react";
+import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -19,7 +11,7 @@ import {
 import { getTranslation } from "@/app/i18n";
 import { isSelfHosted } from "@/utils/constants";
 
-import { MenuItem, SettingsMenu } from "./menu-item";
+import { SettingsMenu } from "./menu-item";
 
 export default async function ProfileLayout({
   children,

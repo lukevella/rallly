@@ -30,7 +30,7 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { CopyInviteLinkButton, InviteDialog } from "@/components/invite-dialog";
+import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -146,10 +146,6 @@ const StatusControl = () => {
       </DropdownMenu>
     </>
   );
-};
-
-const ShareButton = () => {
-  return <div className="flex grow min-w-0 gap-x-2"></div>;
 };
 
 const AdminControls = () => {
