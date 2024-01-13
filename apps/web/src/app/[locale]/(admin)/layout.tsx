@@ -67,11 +67,7 @@ export default async function Layout({
           </div>
           <Sidebar />
         </div>
-        <div
-          className={cn(
-            "grow overflow-auto lg:min-h-screen lg:pl-72 bg-gray-50",
-          )}
-        >
+        <div className={cn("grow min-h-screen lg:pl-72 bg-gray-50")}>
           {children}
         </div>
       </div>

@@ -7,7 +7,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground overflow-y-auto overscroll-none bg-gray-200/50;
+    @apply text-foreground overflow-y-auto bg-gray-200/50;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   html {
