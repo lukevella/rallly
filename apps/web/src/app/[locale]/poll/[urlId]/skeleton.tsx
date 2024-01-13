@@ -3,20 +3,21 @@ import {
   PageContent,
   PageHeader,
 } from "@/app/components/page-layout";
-import { Skeleton } from "@/components/skeleton";
+import { Skeleton, SkeletonCard } from "@/components/skeleton";
 
 export default function Loading() {
   return (
     <PageContainer>
-      <PageHeader>
-        <Skeleton className="w-32 h-9" />
+      <PageHeader className="flex items-center gap-x-4">
+        <Skeleton className="w-9 h-9" />
+        <Skeleton className="w-48 h-5" />
       </PageHeader>
       <PageContent>
         <div className="max-w-4xl mx-auto space-y-6">
-          <Skeleton className="h-72 w-full" />
-          <Skeleton className="h-96 w-full" />
+          <SkeletonCard className="h-72 w-full" />
+          <SkeletonCard className="h-96 w-full" />
           <hr />
-          <Skeleton className="h-64 w-full" />
+          <SkeletonCard className="h-64 w-full" />
         </div>
       </PageContent>
     </PageContainer>
