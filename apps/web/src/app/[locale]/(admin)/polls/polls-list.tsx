@@ -4,7 +4,7 @@ import { Button } from "@rallly/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper, PaginationState } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
+import { ArrowRightIcon, InboxIcon, PlusIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -100,38 +100,37 @@ export function PollsList() {
           size: 5000,
           cell: ({ row }) => {
             return (
-              <div className="relative">
-                <Link className="group" href={`/poll/${row.original.id}`}>
-                  <h3 className="font-semibold whitespace-nowrap mb-1 text-gray-600 group-hover:text-gray-900 group-hover:underline">
+              <Link className="group block" href={`/poll/${row.original.id}`}>
+                <div className="flex items-center gap-x-2 mb-1 min-w-0">
+                  <h3 className="font-semibold truncate text-gray-600 group-hover:text-gray-900">
                     {row.original.title}
                   </h3>
-                  <div className="">
-                    {row.original.event ? (
-                      <p className="text-sm text-muted-foreground">
-                        {row.original.event.duration === 0
-                          ? adjustTimeZone(
-                              row.original.event.start,
-                              !row.original.timeZone,
-                            ).format("LL")
-                          : `${adjustTimeZone(
-                              row.original.event.start,
-                              !row.original.timeZone,
-                            ).format("LL LT")} - ${adjustTimeZone(
-                              dayjs(row.original.event.start).add(
-                                row.original.event.duration,
-                                "minutes",
-                              ),
-                              !row.original.timeZone,
-                            ).format("LT")}`}
-                      </p>
-                    ) : (
-                      <p className="text-sm text-gray-400">
-                        <Trans i18nKey="pending" defaults="Pending" />
-                      </p>
-                    )}
-                  </div>
-                </Link>
-              </div>
+                  <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all group-focus:translate-x-2 group-hover:opacity-100" />
+                </div>
+                {row.original.event ? (
+                  <p className="text-sm text-muted-foreground">
+                    {row.original.event.duration === 0
+                      ? adjustTimeZone(
+                          row.original.event.start,
+                          !row.original.timeZone,
+                        ).format("LL")
+                      : `${adjustTimeZone(
+                          row.original.event.start,
+                          !row.original.timeZone,
+                        ).format("LL LT")} - ${adjustTimeZone(
+                          dayjs(row.original.event.start).add(
+                            row.original.event.duration,
+                            "minutes",
+                          ),
+                          !row.original.timeZone,
+                        ).format("LT")}`}
+                  </p>
+                ) : (
+                  <p className="text-sm text-gray-400">
+                    <Trans i18nKey="pending" defaults="Pending" />
+                  </p>
+                )}
+              </Link>
             );
           },
         }),
