@@ -20,10 +20,10 @@ export function MenuItem(props: { href: string; children: React.ReactNode }) {
   return (
     <Link
       className={clsx(
-        "flex min-w-0 items-center gap-x-2 px-3 py-2 text-sm font-medium",
+        "flex min-w-0 items-center rounded-none gap-x-2 px-3 py-2 text-sm font-medium",
         pathname === props.href
-          ? "bg-gray-200"
-          : "text-gray-500 hover:text-gray-800",
+          ? "bg-white"
+          : "text-gray-500 hover:bg-gray-100 focus:bg-gray-200",
       )}
       href={props.href}
     >
@@ -66,7 +66,7 @@ export function SettingsMenu() {
 
   return (
     <>
-      <div className="hidden lg:inline-flex mb-4 border rounded-md p-0.5 gap-x-2">
+      <div className="hidden overflow-hidden shadow-sm divide-x lg:inline-flex mb-4 border rounded-md bg-gray-50">
         {menuItems.map((item, i) => (
           <MenuItem key={i} href={item.href}>
             <item.icon className="h-4 w-4" />
