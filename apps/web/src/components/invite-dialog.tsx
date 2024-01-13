@@ -16,12 +16,10 @@ import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
-export const InviteDialog = () => {
-  const { participants } = useParticipants();
-  const [isOpen, setIsOpen] = React.useState(participants.length === 0);
-  const poll = usePoll();
-
+export function CopyInviteLinkButton() {
+  const [didCopy, setDidCopy] = React.useState(false);
   const [state, copyToClipboard] = useCopyToClipboard();
+  const poll = usePoll();
 
   React.useEffect(() => {
     if (state.error) {
@@ -29,15 +27,36 @@ export const InviteDialog = () => {
     }
   }, [state]);
 
-  const [didCopy, setDidCopy] = React.useState(false);
+  return (
+    <Button
+      className="grow min-w-0"
+      onClick={() => {
+        copyToClipboard(poll.inviteLink);
+        setDidCopy(true);
+        setTimeout(() => {
+          setDidCopy(false);
+        }, 1000);
+      }}
+    >
+      {didCopy ? (
+        <Trans i18nKey="copied" />
+      ) : (
+        <span className="truncate min-w-0">{`${window.location.hostname}/invite/${poll.id}`}</span>
+      )}
+    </Button>
+  );
+}
+
+export const InviteDialog = () => {
+  const { participants } = useParticipants();
+  const [isOpen, setIsOpen] = React.useState(participants.length === 0);
+  const poll = usePoll();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
         <Button variant="primary" icon={Share2Icon}>
-          <span className="hidden sm:block">
-            <Trans i18nKey="share" defaults="Share" />
-          </span>
+          <Trans i18nKey="share" defaults="Share" />
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -63,22 +82,7 @@ export const InviteDialog = () => {
             <Trans i18nKey="inviteLink" defaults="Invite Link" />
           </label>
           <div className="flex gap-2">
-            <Button
-              className="w-full min-w-0 bg-gray-50 px-2.5"
-              onClick={() => {
-                copyToClipboard(poll.inviteLink);
-                setDidCopy(true);
-                setTimeout(() => {
-                  setDidCopy(false);
-                }, 1000);
-              }}
-            >
-              {didCopy ? (
-                <Trans i18nKey="copied" />
-              ) : (
-                <span className="flex truncate">{poll.inviteLink}</span>
-              )}
-            </Button>
+            <CopyInviteLinkButton />
             <div className="shrink-0">
               <Button asChild>
                 <Link target="_blank" href={`/invite/${poll.id}`}>

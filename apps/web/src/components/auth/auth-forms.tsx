@@ -44,7 +44,7 @@ export const VerifyCode: React.FunctionComponent<{
         })}
       >
         <fieldset>
-          <h1 className="mb-1">{t("verifyYourEmail")}</h1>
+          <h1 className="mb-1 font-bold text-2xl">{t("verifyYourEmail")}</h1>
           <div className="mb-4 text-gray-500">
             {t("stepSummary", {
               current: 2,
@@ -60,6 +60,7 @@ export const VerifyCode: React.FunctionComponent<{
                 b: <strong className="whitespace-nowrap" />,
                 a: (
                   <button
+                    type="button"
                     role="button"
                     className="text-link"
                     onClick={() => {

@@ -205,6 +205,15 @@ export const DayjsProvider: React.FunctionComponent<{
     return await dayjsLocales[l].import();
   }, [l]);
 
+  const preferredTimeZone = config?.timeZone ?? getBrowserTimeZone();
+
+  const adjustTimeZone = React.useCallback(
+    (date: dayjs.ConfigType, keepLocalTime = false) => {
+      return dayjs(date).tz(preferredTimeZone, keepLocalTime);
+    },
+    [preferredTimeZone],
+  );
+
   if (!state.value) {
     // wait for locale to load before rendering
     return null;
@@ -234,16 +243,10 @@ export const DayjsProvider: React.FunctionComponent<{
     dayjs.locale(dayjsLocale);
   }
 
-  const preferredTimeZone = config?.timeZone ?? getBrowserTimeZone();
-
   return (
     <DayjsContext.Provider
       value={{
-        adjustTimeZone: (date, keepLocalTime) => {
-          return keepLocalTime
-            ? dayjs(date).utc()
-            : dayjs(date).tz(preferredTimeZone);
-        },
+        adjustTimeZone,
         dayjs,
         locale: localeConfig, // locale defaults
         timeZone: preferredTimeZone,

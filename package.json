@@ -35,7 +35,7 @@
   "dependencies": {
     "@sentry/nextjs": "^7.77.0",
     "framer-motion": "^10.16.4",
-    "next": "^14.0.1",
+    "next": "^14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2",

@@ -1,8 +1,13 @@
-"use client";
+import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
+import { MenuIcon } from "lucide-react";
+import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import React from "react";
 
-import { StandardLayout } from "@/components/layouts/standard-layout";
+import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
+import { LogoLink } from "@/app/components/logo-link";
+import { CurrentUserAvatar } from "@/components/user";
 import { isSelfHosted } from "@/utils/constants";
 
 const Auth = ({ children }: { children: React.ReactNode }) => {
@@ -22,13 +27,57 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
   return null;
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+function MobileNavigation() {
+  return (
+    <div className="lg:hidden shadow-sm bg-gray-100 border-b flex items-center justify-between px-4 py-3">
+      <LogoLink />
+      <div className="flex gap-x-2.5 justify-end">
+        <Link
+          href="/settings/profile"
+          className="inline-flex items-center w-7 h-9"
+        >
+          <CurrentUserAvatar size="sm" />
+        </Link>
+        <Button asChild variant="ghost">
+          <Link href="/menu">
+            <MenuIcon className="h-4 w-4 text-muted-foreground" />
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  function SidebarLayout() {
+    return (
+      <div className="lg:flex h-full bg-gray-50">
+        <MobileNavigation />
+        <div
+          className={cn(
+            "hidden lg:flex lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-4 px-5 py-4",
+          )}
+        >
+          <div>
+            <LogoLink />
+          </div>
+          <Sidebar />
+        </div>
+        <div className={cn("grow overflow-auto bg-gray-50")}>{children}</div>
+      </div>
+    );
+  }
+
   if (isSelfHosted) {
     return (
       <Auth>
-        <StandardLayout>{children}</StandardLayout>
+        <SidebarLayout />
       </Auth>
     );
   }
-  return <StandardLayout>{children}</StandardLayout>;
+  return <SidebarLayout />;
 }

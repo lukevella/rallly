@@ -11,7 +11,7 @@ import {
   ArrowLeftIcon,
   ArrowUpRight,
   ChevronDownIcon,
-  FileBarChart,
+  ListIcon,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
@@ -19,18 +19,18 @@ import {
   RotateCcw,
   ShieldCloseIcon,
 } from "lucide-react";
-import Head from "next/head";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
-import { Container } from "@/components/container";
-import { InviteDialog } from "@/components/invite-dialog";
-import { StandardLayout } from "@/components/layouts/standard-layout";
+import { LogoutButton } from "@/app/components/logout-button";
 import {
-  TopBar,
-  TopBarTitle,
-} from "@/components/layouts/standard-layout/top-bar";
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageTitle,
+} from "@/app/components/page-layout";
+import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -43,13 +43,10 @@ import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { PollStatusLabel } from "@/components/poll-status";
-import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/utils/trpc/client";
-
-import { NextPageWithLayout } from "../../types";
 
 const StatusControl = () => {
   const poll = usePoll();
@@ -152,41 +149,49 @@ const StatusControl = () => {
 };
 
 const AdminControls = () => {
-  const poll = usePoll();
-  const pollLink = `/poll/${poll.id}`;
-  const pathname = usePathname();
   return (
-    <TopBar>
-      <div className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
-        <div className="flex min-w-0 gap-4">
-          {pathname !== pollLink ? (
-            <Button asChild>
-              <Link href={pollLink}>
-                <ArrowLeftIcon className="h-4 w-4" />
-              </Link>
-            </Button>
-          ) : null}
-          <TopBarTitle title={poll?.title} icon={FileBarChart} />
-        </div>
-        <div className="flex items-center gap-x-2">
-          <NotificationsToggle />
-          <StatusControl />
-          <ManagePoll />
-          <InviteDialog />
-        </div>
-      </div>
-    </TopBar>
+    <div className="flex items-center gap-x-2">
+      <NotificationsToggle />
+      <StatusControl />
+      <ManagePoll />
+      <InviteDialog />
+    </div>
   );
 };
 
 const Layout = ({ children }: React.PropsWithChildren) => {
+  const poll = usePoll();
+  const pollLink = `/poll/${poll.id}`;
+  const pathname = usePathname();
+
   return (
-    <div className="flex min-w-0 grow flex-col">
-      <AdminControls />
-      <div>
-        <Container className="py-3 sm:py-8">{children}</Container>
-      </div>
-    </div>
+    <PageContainer>
+      <PageHeader className="flex md:flex-row flex-col md:items-center gap-x-4 gap-y-2.5">
+        <div className="flex min-w-0 md:basis-2/3 items-center gap-x-4">
+          <div className="md:basis-1/2 flex gap-x-4">
+            {pathname === pollLink ? (
+              <Button asChild>
+                <Link href="/polls">
+                  <ListIcon className="h-4 w-4" />
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild>
+                <Link href={pollLink}>
+                  <ArrowLeftIcon className="h-4 w-4" />
+                </Link>
+              </Button>
+            )}
+            <PageTitle>{poll.title}</PageTitle>
+          </div>
+        </div>
+
+        <div className="flex basis-1/3 md:justify-end">
+          <AdminControls />
+        </div>
+      </PageHeader>
+      <PageContent>{children}</PageContent>
+    </PageContainer>
   );
 };
 
@@ -218,21 +223,19 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
         </PageDialogHeader>
         <PageDialogFooter>
           {user.isGuest ? (
-            <Button asChild variant="primary" size="lg">
+            <Button asChild variant="primary">
               <LoginLink>
-                <LogInIcon className="-ml-1 h-5 w-5" />
+                <LogInIcon className="-ml-1 h-4 w-4" />
                 <Trans i18nKey="login" defaults="Login" />
               </LoginLink>
             </Button>
           ) : (
-            <Button asChild variant="primary" size="lg">
-              <Link href="/logout">
-                <LogOutIcon className="-ml-1 h-5 w-5" />
-                <Trans i18nKey="loginDifferent" defaults="Switch user" />
-              </Link>
-            </Button>
+            <LogoutButton>
+              <LogOutIcon className="-ml-1 h-4 w-4" />
+              <Trans i18nKey="loginDifferent" defaults="Switch user" />
+            </LogoutButton>
           )}
-          <Button asChild size="lg">
+          <Button asChild>
             <Link href={`/invite/${poll.id}`}>
               <Trans i18nKey="goToInvite" defaults="Go to Invite Page" />
               <ArrowUpRight className="h-4 w-4" />
@@ -246,15 +249,6 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
-const Title = () => {
-  const poll = usePoll();
-  return (
-    <Head>
-      <title>{poll.title}</title>
-    </Head>
-  );
-};
-
 const Prefetch = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
@@ -265,18 +259,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
 
   if (!poll.data || !watchers.data || !participants.data) {
-    return (
-      <div>
-        <TopBar className="flex flex-col items-start justify-between gap-x-4 gap-y-2 sm:flex-row">
-          <Skeleton className="my-2 h-5 w-48" />
-          <div className="flex gap-x-2">
-            <Skeleton className="h-9 w-24" />
-            <Skeleton className="h-9 w-24" />
-            <Skeleton className="h-9 w-24" />
-          </div>
-        </TopBar>
-      </div>
-    );
+    return null;
   }
 
   return <>{children}</>;
@@ -295,7 +278,6 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <Prefetch>
       <LegacyPollContextProvider>
-        <Title />
         <PermissionGuard>
           <Layout>{children}</Layout>
         </PermissionGuard>
@@ -303,12 +285,3 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
     </Prefetch>
   );
 };
-
-export const getPollLayout: NextPageWithLayout["getLayout"] =
-  function getLayout(page) {
-    return (
-      <StandardLayout>
-        <PollLayout>{page}</PollLayout>
-      </StandardLayout>
-    );
-  };

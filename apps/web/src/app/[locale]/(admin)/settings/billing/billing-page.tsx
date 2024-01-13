@@ -13,7 +13,6 @@ import { BillingPlans } from "@/components/billing/billing-plans";
 import {
   Settings,
   SettingsContent,
-  SettingsHeader,
   SettingsSection,
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
@@ -239,9 +238,6 @@ export function BillingPage() {
 
   return (
     <Settings>
-      <SettingsHeader>
-        <Trans i18nKey="billing" />
-      </SettingsHeader>
       <Head>
         <title>{t("billing")}</title>
       </Head>
@@ -257,6 +253,7 @@ export function BillingPage() {
         >
           <SubscriptionStatus />
         </SettingsSection>
+        <hr />
         <SettingsSection
           title={<Trans i18nKey="support" defaults="Support" />}
           description={

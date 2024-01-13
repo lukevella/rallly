@@ -51,7 +51,7 @@ export default async function handler(
   });
 
   if (!user) {
-    res.redirect(303, "/logout");
+    res.status(404).end();
     return;
   }
 

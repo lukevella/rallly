@@ -44,9 +44,9 @@ export const IfSubscribed = ({ children }: React.PropsWithChildren) => {
 };
 
 export const IfFreeUser = ({ children }: React.PropsWithChildren) => {
-  const plan = usePlan();
+  const subscription = useSubscription();
 
-  return plan === "free" ? <>{children}</> : null;
+  return subscription?.active === false ? <>{children}</> : null;
 };
 
 export const Plan = () => {

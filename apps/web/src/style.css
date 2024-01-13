@@ -7,27 +7,14 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground overflow-y-scroll overscroll-none bg-gray-200/50;
+    @apply text-foreground bg-gray-100 overscroll-none;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   html {
-    @apply h-full font-sans text-base text-gray-700;
+    @apply h-full font-sans text-base overflow-hidden text-gray-700;
   }
   body #__next {
-    @apply min-h-screen;
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    @apply font-sans font-bold tracking-tight;
-  }
-  h1 {
-    @apply text-2xl;
-  }
-  h2 {
-    @apply text-xl;
+    @apply h-full;
   }
 
   label {
@@ -39,7 +26,7 @@
   input,
   select,
   textarea {
-    @apply rounded outline-none focus-visible:ring-2 focus-visible:ring-gray-300;
+    @apply rounded outline-none focus-visible:ring-1 focus:ring-gray-300;
   }
 
   #floating-ui-root {
@@ -49,7 +36,7 @@
 
 @layer components {
   .text-link {
-    @apply text-primary-600 hover:text-primary-600 focus-visible:ring-primary-600 rounded-md font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+    @apply hover:text-gray-800 rounded-md outline-none underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }
   .formField {
     @apply mb-4;

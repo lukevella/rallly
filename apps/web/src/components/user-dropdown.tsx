@@ -1,3 +1,5 @@
+"use client";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -33,18 +35,21 @@ import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
-export const UserDropdown = () => {
+export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useUser();
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         data-testid="user-dropdown"
         asChild
-        className="group"
+        className={cn("group min-w-0", className)}
       >
-        <Button variant="ghost" className="rounded-full">
-          <CurrentUserAvatar size="sm" className="-ml-1" />
-          <ChevronDown className="h-4 w-4" />
+        <Button variant="ghost" className="flex justify-between">
+          <span className="flex items-center gap-x-2.5">
+            <CurrentUserAvatar size="sm" className="shrink-0 -ml-1 " />
+            <span className="truncate">{user.name}</span>
+          </span>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -62,7 +67,7 @@ export const UserDropdown = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild={true}>
           <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
-            <ListIcon className="h-4 w-4" />
+            <ListIcon className="h-4 w-4 text-muted-foreground" />
             <Trans i18nKey="polls" defaults="Polls" />
           </Link>
         </DropdownMenuItem>
@@ -72,7 +77,7 @@ export const UserDropdown = () => {
               href="/settings/profile"
               className="flex items-center gap-x-2"
             >
-              <UserIcon className="h-4 w-4" />
+              <UserIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="profile" defaults="Profile" />
             </Link>
           </DropdownMenuItem>
@@ -82,7 +87,7 @@ export const UserDropdown = () => {
             href="/settings/preferences"
             className="flex items-center gap-x-2"
           >
-            <Settings2Icon className="h-4 w-4" />
+            <Settings2Icon className="h-4 w-4 text-muted-foreground" />
             <Trans i18nKey="preferences" defaults="Preferences" />
           </Link>
         </DropdownMenuItem>
@@ -92,7 +97,7 @@ export const UserDropdown = () => {
               href="/settings/billing"
               className="flex items-center gap-x-2"
             >
-              <CreditCardIcon className="h-4 w-4" />
+              <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="Billing" defaults="Billing" />
             </Link>
           </DropdownMenuItem>
@@ -104,7 +109,7 @@ export const UserDropdown = () => {
             href="https://support.rallly.co"
             className="flex items-center gap-x-2"
           >
-            <LifeBuoyIcon className="h-4 w-4" />
+            <LifeBuoyIcon className="h-4 w-4 text-muted-foreground" />
             <Trans i18nKey="support" defaults="Support" />
           </Link>
         </DropdownMenuItem>
@@ -115,7 +120,7 @@ export const UserDropdown = () => {
               href="https://support.rallly.co/self-hosting/pricing"
               className="flex items-center gap-x-2"
             >
-              <GemIcon className="h-4 w-4" />
+              <GemIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="pricing" defaults="Pricing" />
             </Link>
           </DropdownMenuItem>
@@ -127,7 +132,7 @@ export const UserDropdown = () => {
               href="https://feedback.rallly.co"
               className="flex items-center gap-x-2"
             >
-              <MegaphoneIcon className="h-4 w-4" />
+              <MegaphoneIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="feedback" defaults="Feedback" />
             </Link>
           </DropdownMenuItem>
@@ -136,13 +141,13 @@ export const UserDropdown = () => {
         <IfGuest>
           <DropdownMenuItem asChild={true}>
             <LoginLink className="flex items-center gap-x-2">
-              <LogInIcon className="h-4 w-4" />
+              <LogInIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="login" defaults="login" />
             </LoginLink>
           </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
             <RegisterLink className="flex items-center gap-x-2">
-              <UserPlusIcon className="h-4 w-4" />
+              <UserPlusIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="createAnAccount" defaults="Register" />
             </RegisterLink>
           </DropdownMenuItem>
@@ -153,7 +158,7 @@ export const UserDropdown = () => {
           >
             {/* Don't use signOut() from next-auth. It doesn't work in vercel-production env. I don't know why. */}
             <a href="/logout">
-              <RefreshCcwIcon className="h-4 w-4" />
+              <RefreshCcwIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="forgetMe" />
             </a>
           </DropdownMenuItem>
@@ -162,7 +167,7 @@ export const UserDropdown = () => {
           <DropdownMenuItem asChild className="flex items-center gap-x-2">
             {/* Don't use signOut() from next-auth. It doesn't work in vercel-production env. I don't know why. */}
             <a href="/logout">
-              <LogOutIcon className="h-4 w-4" />
+              <LogOutIcon className="h-4 w-4 text-muted-foreground" />
               <Trans i18nKey="logout" />
             </a>
           </DropdownMenuItem>

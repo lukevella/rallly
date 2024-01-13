@@ -71,9 +71,9 @@ export const BillingPlans = () => {
           </BillingPlan>
           <div className="space-y-4 rounded-md border p-4">
             <div>
-              <h3>
+              <BillingPlanTitle>
                 <Trans i18nKey="planPro" />
-              </h3>
+              </BillingPlanTitle>
               <p className="text-muted-foreground text-sm">
                 <Trans
                   i18nKey="planProDescription"
@@ -132,7 +132,7 @@ export const BillingPlans = () => {
           <TrendingUpIcon className="text-indigo mr-2 mt-0.5 h-6 w-6 shrink-0" />
         </div>
         <div className="mb-2 flex items-center gap-x-2">
-          <h3 className="text-sm">
+          <h3 className="text-sm font-semibold">
             <Trans
               i18nKey="upgradeNowSaveLater"
               defaults="Upgrade now, save later"

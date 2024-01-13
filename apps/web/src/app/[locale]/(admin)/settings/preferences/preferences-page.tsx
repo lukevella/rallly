@@ -7,7 +7,6 @@ import { LanguagePreference } from "@/components/settings/language-preference";
 import {
   Settings,
   SettingsContent,
-  SettingsHeader,
   SettingsSection,
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
@@ -17,9 +16,6 @@ export function PreferencesPage() {
 
   return (
     <Settings>
-      <SettingsHeader>
-        <Trans i18nKey="preferences" />
-      </SettingsHeader>
       <SettingsContent>
         <Head>
           <title>{t("settings")}</title>
@@ -35,6 +31,7 @@ export function PreferencesPage() {
         >
           <LanguagePreference />
         </SettingsSection>
+        <hr />
         <SettingsSection
           title={<Trans i18nKey="dateAndTime" defaults="Date & Time" />}
           description={

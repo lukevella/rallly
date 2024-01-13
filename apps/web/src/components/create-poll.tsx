@@ -16,6 +16,7 @@ import { useUnmount } from "react-use";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
+import { setCookie } from "@/utils/cookies";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -62,12 +63,16 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   const posthog = usePostHog();
   const queryClient = trpc.useUtils();
-  const createPoll = trpc.polls.create.useMutation();
+  const createPoll = trpc.polls.create.useMutation({
+    networkMode: "always",
+    onSuccess: () => {
+      setCookie("new-poll", "1");
+    },
+  });
 
   return (
     <Form {...form}>
       <form
-        className="pb-16"
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
 
@@ -100,7 +105,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           );
         })}
       >
-        <div className="mx-auto max-w-4xl space-y-4 p-2 sm:p-8">
+        <div className="mx-auto max-w-4xl space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>

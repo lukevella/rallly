@@ -1,22 +1,22 @@
 "use client";
 import { Slot } from "@radix-ui/react-slot";
-import { SpinnerIcon } from "@rallly/icons";
+import { Loader2Icon } from "lucide-react";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex border font-medium disabled:text-muted-foreground focus:ring-1 focus:ring-gray-200 disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",
+  "inline-flex border font-medium disabled:text-muted-foreground focus:ring-1 focus:ring-gray-300 disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",
   {
     variants: {
       variant: {
         primary:
-          "border-transparent bg-primary text-white shadow-sm hover:bg-primary-500 active:bg-primary-700",
+          "border-transparent bg-primary text-white focus:ring-offset-1 shadow-sm hover:bg-primary-500 active:bg-primary-700",
         destructive:
-          "bg-destructive text-destructive-foreground active:bg-destructive hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground focus:ring-offset-1 active:bg-destructive border-destructive hover:bg-destructive/90",
         default:
-          "rounded-md px-3.5 py-2.5 data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-200 hover:bg-gray-100 bg-gray-50",
+          "rounded-md px-3.5 py-2.5 data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-200 focus:border-gray-300 hover:bg-gray-100 bg-gray-50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "border-transparent hover:bg-gray-200 active:bg-gray-300",
@@ -77,9 +77,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {loading ? (
-              <SpinnerIcon className="inline-block h-4 w-4 animate-spin" />
+              <Loader2Icon className="h-4 w-4 animate-spin" />
             ) : Icon ? (
-              <Icon className="-ml-0.5 h-4 w-4" />
+              <Icon className={cn("-ml-0.5 h-4 w-4")} />
             ) : null}
             {children}
           </>

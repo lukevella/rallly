@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 
+import { PageHeader } from "@/app/components/page-layout";
 import { Poll } from "@/components/poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
@@ -61,23 +62,25 @@ const GoToApp = () => {
   const { user } = useUser();
 
   return (
-    <div className="flex items-center justify-between gap-2 p-3">
-      <div>
-        <Button
-          variant="ghost"
-          asChild
-          className={poll.userId !== user.id ? "hidden" : ""}
-        >
-          <Link href={`/poll/${poll.id}`}>
-            <ArrowUpLeftIcon className="h-4 w-4" />
-            <Trans i18nKey="manage" />
-          </Link>
-        </Button>
+    <PageHeader variant="ghost">
+      <div className="flex justify-between">
+        <div>
+          <Button
+            variant="ghost"
+            asChild
+            className={poll.userId !== user.id ? "hidden" : ""}
+          >
+            <Link href={`/poll/${poll.id}`}>
+              <ArrowUpLeftIcon className="h-4 w-4 text-muted-foreground" />
+              <Trans i18nKey="manage" />
+            </Link>
+          </Button>
+        </div>
+        <div>
+          <UserDropdown />
+        </div>
       </div>
-      <div>
-        <UserDropdown />
-      </div>
-    </div>
+    </PageHeader>
   );
 };
 
@@ -87,23 +90,10 @@ export default function InvitePage() {
       <LegacyPollContextProvider>
         <VisibilityProvider>
           <GoToApp />
-          <div className="mx-auto max-w-4xl space-y-4 px-3 sm:py-8">
-            <Poll />
-            <div className="mt-4 space-y-4 text-center text-gray-500">
-              <div className="py-8">
-                <Trans
-                  defaults="Powered by <a>{name}</a>"
-                  i18nKey="poweredByRallly"
-                  values={{ name: "rallly.co" }}
-                  components={{
-                    a: (
-                      <Link
-                        className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                        href="https://rallly.co"
-                      />
-                    ),
-                  }}
-                />
+          <div className="lg:px-6 lg:py-5 p-3">
+            <div className="max-w-4xl mx-auto">
+              <div className="-mx-1">
+                <Poll />
               </div>
             </div>
           </div>

@@ -35,10 +35,10 @@ const GuestPollAlert = () => {
           defaults="<0>Create an account</0> or <1>login</1> to claim this poll."
           components={[
             <RegisterLink
-              className="hover:text-primary underline"
+              className="hover:text-gray-800 underline"
               key="register"
             />,
-            <LoginLink className="hover:text-primary underline" key="login" />,
+            <LoginLink className="hover:text-gray-800 underline" key="login" />,
           ]}
         />
       </AlertDescription>
@@ -48,9 +48,11 @@ const GuestPollAlert = () => {
 
 export default function Page() {
   return (
-    <div className={cn("mx-auto w-full max-w-4xl space-y-3 sm:space-y-4")}>
-      <GuestPollAlert />
-      <Poll />
+    <div className={cn("max-w-4xl space-y-4 mx-auto")}>
+      <div className="-mx-1 space-y-3 sm:space-y-6">
+        <GuestPollAlert />
+        <Poll />
+      </div>
     </div>
   );
 }

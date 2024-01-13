@@ -26,18 +26,18 @@ export const PageDialogHeader = (props: React.PropsWithChildren) => {
 
 export const PageDialogFooter = (props: React.PropsWithChildren) => {
   return (
-    <div className="mt-6 flex flex-col items-center justify-center gap-x-4 gap-y-4 sm:flex-row">
+    <div className="mt-6 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
       {props.children}
     </div>
   );
 };
 export const PageDialogTitle = (props: React.PropsWithChildren) => {
-  return <h1 className="text-3xl">{props.children}</h1>;
+  return <h1 className="text-2xl font-bold">{props.children}</h1>;
 };
 
 export const PageDialogDescription = (props: React.PropsWithChildren) => {
   return (
-    <p className="max-w-xl text-base leading-relaxed text-gray-600">
+    <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
       {props.children}
     </p>
   );

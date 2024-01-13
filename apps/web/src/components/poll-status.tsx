@@ -15,9 +15,9 @@ const LabelWithIcon = ({
   className?: string;
 }) => {
   return (
-    <span className={cn("inline-flex items-center gap-2", className)}>
-      <Icon className="h-4 w-4" />
-      <span>{children}</span>
+    <span className={cn("inline-flex items-center gap-1.5", className)}>
+      <Icon className="h-4 w-4 -ml-0.5" />
+      <span className="font-medium">{children}</span>
     </span>
   );
 };
@@ -54,11 +54,15 @@ export const PollStatusLabel = ({
 export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
     <PollStatusLabel
-      className={cn("rounded-full border py-0.5 pl-1.5 pr-3 text-sm", {
-        "border-blue-500 text-blue-500": status === "live",
-        "border-gray-500 text-gray-500": status === "paused",
-        "border-green-500 text-green-500": status === "finalized",
-      })}
+      className={cn(
+        "rounded-md font-medium whitespace-nowrap border py-1 px-2 text-xs",
+        {
+          "border-pink-200 bg-pink-50 text-pink-600": status === "live",
+          "bg-gray-100 border-gray-200 text-gray-500": status === "paused",
+          "text-indigo-600 bg-indigo-50 border-indigo-200":
+            status === "finalized",
+        },
+      )}
       status={status}
     />
   );

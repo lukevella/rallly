@@ -2,6 +2,7 @@ import "tailwindcss/tailwind.css";
 import "../../style.css";
 
 import languages from "@rallly/languages";
+import { Toaster } from "@rallly/ui/toaster";
 import { Inter } from "next/font/google";
 import React from "react";
 
@@ -26,6 +27,7 @@ export default function Root({
   return (
     <html lang={locale} className={inter.className}>
       <body className="h-screen overflow-y-scroll">
+        <Toaster />
         <Providers>{children}</Providers>
       </body>
     </html>

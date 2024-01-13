@@ -39,102 +39,100 @@ export const EventCard = () => {
   }
 
   return (
-    <Card fullWidthOnMobile={false}>
-      <div className="divide-y">
-        <div
-          className="h-2"
-          style={{ background: generateGradient(poll.id) }}
-        />
-        <div className="bg-pattern p-4 sm:flex sm:flex-row-reverse sm:justify-between sm:px-6">
-          <div className="mb-2">
-            <PollStatusBadge status={poll.status} />
-          </div>
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-4 sm:gap-6">
+    <Card className="overflow-visible" fullWidthOnMobile={false}>
+      <div
+        className="h-2 -mx-px rounded-t-md -mt-px"
+        style={{ background: generateGradient(poll.id) }}
+      />
+      <div className="bg-pattern p-4 sm:flex grid gap-4 sm:justify-between sm:px-6">
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-4 sm:gap-6">
+            {poll.event ? (
+              <div>
+                <DateIcon
+                  date={adjustTimeZone(poll.event.start, !poll.timeZone)}
+                />
+              </div>
+            ) : null}
+            <div>
+              <h1
+                className="text-xl font-bold tracking-tight mb-1"
+                data-testid="poll-title"
+              >
+                {preventWidows(poll.title)}
+              </h1>
               {poll.event ? (
-                <div>
-                  <DateIcon
-                    date={adjustTimeZone(poll.event.start, !poll.timeZone)}
-                  />
+                <div className="text-muted-foreground text-sm">
+                  {poll.event.duration === 0
+                    ? adjustTimeZone(poll.event.start, !poll.timeZone).format(
+                        "LL",
+                      )
+                    : `${adjustTimeZone(
+                        poll.event.start,
+                        !poll.timeZone,
+                      ).format("LL LT")} - ${adjustTimeZone(
+                        dayjs(poll.event.start).add(
+                          poll.event.duration,
+                          "minutes",
+                        ),
+                        !poll.timeZone,
+                      ).format("LT")}`}
                 </div>
               ) : null}
-              <div>
-                {poll.event ? (
+              {!poll.event ? (
+                <PollSubheader />
+              ) : (
+                <div className="mt-4 space-y-2">
                   <div className="text-muted-foreground text-sm">
-                    {poll.event.duration === 0
-                      ? adjustTimeZone(poll.event.start, !poll.timeZone).format(
-                          "LL",
-                        )
-                      : `${adjustTimeZone(
-                          poll.event.start,
-                          !poll.timeZone,
-                        ).format("LL LT")} - ${adjustTimeZone(
-                          dayjs(poll.event.start).add(
-                            poll.event.duration,
-                            "minutes",
-                          ),
-                          !poll.timeZone,
-                        ).format("LT")}`}
+                    <Trans
+                      i18nKey="attendeeCount"
+                      defaults="{count, plural, one {# attendee} other {# attendees}}"
+                      values={{ count: attendees.length }}
+                    />
                   </div>
-                ) : null}
-                <h1
-                  className="text-xl font-bold tracking-tight sm:text-2xl"
-                  data-testid="poll-title"
-                >
-                  {preventWidows(poll.title)}
-                </h1>
-                {!poll.event ? (
-                  <PollSubheader />
-                ) : (
-                  <div className="mt-4 space-y-2">
-                    <div className="text-muted-foreground text-sm">
-                      <Trans
-                        i18nKey="attendeeCount"
-                        defaults="{count, plural, one {# attendee} other {# attendees}}"
-                        values={{ count: attendees.length }}
-                      />
-                    </div>
-                    <IfParticipantsVisible>
-                      <ParticipantAvatarBar participants={attendees} max={10} />
-                    </IfParticipantsVisible>
-                  </div>
-                )}
-              </div>
+                  <IfParticipantsVisible>
+                    <ParticipantAvatarBar participants={attendees} max={10} />
+                  </IfParticipantsVisible>
+                </div>
+              )}
             </div>
           </div>
         </div>
-        <div className="space-y-4 p-4 sm:px-6">
-          {poll.description ? (
-            <div className="flex gap-4">
-              <TextIcon className="h-4 w-4 shrink-0 translate-y-1" />
-              <div className="whitespace-pre-line leading-relaxed">
-                <TruncatedLinkify>{poll.description}</TruncatedLinkify>
-              </div>
-            </div>
-          ) : null}
-          {poll.location ? (
-            <div className="flex gap-4">
-              <MapPinIcon className="h-4 w-4 translate-y-1" />
-              <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-            </div>
-          ) : null}
+        <div>
+          <PollStatusBadge status={poll.status} />
+        </div>
+      </div>
+      <div className="space-y-4 p-4 sm:px-6">
+        {poll.description ? (
           <div className="flex gap-4">
-            <MousePointerClickIcon className="h-4 w-4 shrink-0 translate-y-0.5" />
-            <div>
-              <div className="flex gap-2.5">
-                <span className="inline-flex items-center space-x-1">
-                  <VoteIcon type="yes" />
-                  <span className="text-sm">{t("yes")}</span>
-                </span>
-                <span className="inline-flex items-center space-x-1">
-                  <VoteIcon type="ifNeedBe" />
-                  <span className="text-sm">{t("ifNeedBe")}</span>
-                </span>
-                <span className="inline-flex items-center space-x-1">
-                  <VoteIcon type="no" />
-                  <span className="text-sm">{t("no")}</span>
-                </span>
-              </div>
+            <TextIcon className="h-4 w-4 text-muted-foreground shrink-0 translate-y-1" />
+            <div className="whitespace-pre-line">
+              <TruncatedLinkify>{poll.description}</TruncatedLinkify>
+            </div>
+          </div>
+        ) : null}
+        {poll.location ? (
+          <div className="flex gap-4">
+            <MapPinIcon className="h-4 w-4 translate-y-1 text-muted-foreground" />
+            <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+          </div>
+        ) : null}
+        <div className="flex gap-4">
+          <MousePointerClickIcon className="h-4 w-4 shrink-0 text-muted-foreground translate-y-0.5" />
+          <div>
+            <div className="flex gap-2.5">
+              <span className="inline-flex items-center space-x-1">
+                <VoteIcon type="yes" />
+                <span className="text-sm">{t("yes")}</span>
+              </span>
+              <span className="inline-flex items-center space-x-1">
+                <VoteIcon type="ifNeedBe" />
+                <span className="text-sm">{t("ifNeedBe")}</span>
+              </span>
+              <span className="inline-flex items-center space-x-1">
+                <VoteIcon type="no" />
+                <span className="text-sm">{t("no")}</span>
+              </span>
             </div>
           </div>
         </div>
