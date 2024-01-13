@@ -3,7 +3,6 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import ErrorPage from "@/components/error-page";
-import { getStandardLayout } from "@/components/layouts/standard-layout";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/with-page-translations";
 
@@ -17,8 +16,6 @@ const Custom404: NextPageWithLayout = () => {
     />
   );
 };
-
-Custom404.getLayout = getStandardLayout;
 
 export const getStaticProps = getStaticTranslations;
 
