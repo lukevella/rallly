@@ -73,6 +73,118 @@ export function PollsList() {
 
   const { data } = trpc.polls.paginatedList.useQuery({ pagination });
   const { adjustTimeZone } = useDayjs();
+  const columns = React.useMemo(
+    () => [
+      columnHelper.display({
+        id: "title",
+        header: () => null,
+        size: 5000,
+        cell: ({ row }) => {
+          return (
+            <Link className="group block" href={`/poll/${row.original.id}`}>
+              <div className="flex items-center gap-x-2 mb-1 min-w-0">
+                <h3 className="font-semibold truncate text-gray-600 group-hover:text-gray-900">
+                  {row.original.title}
+                </h3>
+                <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all group-focus:translate-x-2 group-hover:opacity-100" />
+              </div>
+              {row.original.event ? (
+                <p className="text-sm text-muted-foreground">
+                  {row.original.event.duration === 0
+                    ? adjustTimeZone(
+                        row.original.event.start,
+                        !row.original.timeZone,
+                      ).format("LL")
+                    : `${adjustTimeZone(
+                        row.original.event.start,
+                        !row.original.timeZone,
+                      ).format("LL LT")} - ${adjustTimeZone(
+                        dayjs(row.original.event.start).add(
+                          row.original.event.duration,
+                          "minutes",
+                        ),
+                        !row.original.timeZone,
+                      ).format("LT")}`}
+                </p>
+              ) : (
+                <p className="text-sm text-gray-400">
+                  <Trans i18nKey="pending" defaults="Pending" />
+                </p>
+              )}
+            </Link>
+          );
+        },
+      }),
+      columnHelper.accessor("status", {
+        header: () => null,
+        size: 200,
+        cell: ({ row }) => {
+          return (
+            <div>
+              <PollStatusBadge status={row.getValue("status")} />
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor("createdAt", {
+        header: () => null,
+        size: 1000,
+        cell: ({ row }) => {
+          const { createdAt } = row.original;
+          return (
+            <p className="text-sm whitespace-nowrap text-muted-foreground">
+              <time dateTime={createdAt.toDateString()}>
+                <Trans
+                  i18nKey="createdTime"
+                  values={{ relativeTime: dayjs(createdAt).fromNow() }}
+                />
+              </time>
+            </p>
+          );
+        },
+      }),
+      columnHelper.accessor("participants", {
+        header: () => null,
+        cell: ({ row }) => {
+          return (
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger className="flex items-center text-muted-foreground gap-x-2">
+                <UsersIcon className="h-4 w-4" />
+                <span className="text-sm">
+                  {row.original.participants.length}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                {row.original.participants.length > 0 ? (
+                  <>
+                    {row.original.participants
+                      .slice(0, 10)
+                      .map((participant, i) => (
+                        <p key={i}>{participant.name}</p>
+                      ))}
+                    {row.original.participants.length > 10 ? (
+                      <p>
+                        <Trans
+                          i18nKey="xMore"
+                          defaults="{count} more"
+                          values={{
+                            count: row.original.participants.length - 5,
+                          }}
+                        />
+                      </p>
+                    ) : null}
+                  </>
+                ) : (
+                  <Trans i18nKey="noParticipants" defaults="No participants" />
+                )}
+              </TooltipContent>
+            </Tooltip>
+          );
+        },
+      }),
+    ],
+    [adjustTimeZone],
+  );
 
   if (!data) return null;
 
@@ -93,118 +205,7 @@ export function PollsList() {
         // current.set("pageSize", String(newPagination.pageSize));
         router.push(`${pathname}?${current.toString()}`);
       }}
-      columns={[
-        columnHelper.display({
-          id: "title",
-          header: () => null,
-          size: 5000,
-          cell: ({ row }) => {
-            return (
-              <Link className="group block" href={`/poll/${row.original.id}`}>
-                <div className="flex items-center gap-x-2 mb-1 min-w-0">
-                  <h3 className="font-semibold truncate text-gray-600 group-hover:text-gray-900">
-                    {row.original.title}
-                  </h3>
-                  <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all group-focus:translate-x-2 group-hover:opacity-100" />
-                </div>
-                {row.original.event ? (
-                  <p className="text-sm text-muted-foreground">
-                    {row.original.event.duration === 0
-                      ? adjustTimeZone(
-                          row.original.event.start,
-                          !row.original.timeZone,
-                        ).format("LL")
-                      : `${adjustTimeZone(
-                          row.original.event.start,
-                          !row.original.timeZone,
-                        ).format("LL LT")} - ${adjustTimeZone(
-                          dayjs(row.original.event.start).add(
-                            row.original.event.duration,
-                            "minutes",
-                          ),
-                          !row.original.timeZone,
-                        ).format("LT")}`}
-                  </p>
-                ) : (
-                  <p className="text-sm text-gray-400">
-                    <Trans i18nKey="pending" defaults="Pending" />
-                  </p>
-                )}
-              </Link>
-            );
-          },
-        }),
-        columnHelper.accessor("status", {
-          header: () => null,
-          size: 200,
-          cell: ({ row }) => {
-            return (
-              <div>
-                <PollStatusBadge status={row.getValue("status")} />
-              </div>
-            );
-          },
-        }),
-        columnHelper.accessor("createdAt", {
-          header: () => null,
-          size: 1000,
-          cell: ({ row }) => {
-            const { createdAt } = row.original;
-            return (
-              <p className="text-sm whitespace-nowrap text-muted-foreground">
-                <time dateTime={createdAt.toDateString()}>
-                  <Trans
-                    i18nKey="createdTime"
-                    values={{ relativeTime: dayjs(createdAt).fromNow() }}
-                  />
-                </time>
-              </p>
-            );
-          },
-        }),
-        columnHelper.accessor("participants", {
-          header: () => null,
-          cell: ({ row }) => {
-            return (
-              <Tooltip delayDuration={100}>
-                <TooltipTrigger className="flex items-center text-muted-foreground gap-x-2">
-                  <UsersIcon className="h-4 w-4" />
-                  <span className="text-sm">
-                    {row.original.participants.length}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {row.original.participants.length > 0 ? (
-                    <>
-                      {row.original.participants
-                        .slice(0, 10)
-                        .map((participant, i) => (
-                          <p key={i}>{participant.name}</p>
-                        ))}
-                      {row.original.participants.length > 10 ? (
-                        <p>
-                          <Trans
-                            i18nKey="xMore"
-                            defaults="{count} more"
-                            values={{
-                              count: row.original.participants.length - 5,
-                            }}
-                          />
-                        </p>
-                      ) : null}
-                    </>
-                  ) : (
-                    <Trans
-                      i18nKey="noParticipants"
-                      defaults="No participants"
-                    />
-                  )}
-                </TooltipContent>
-              </Tooltip>
-            );
-          },
-        }),
-      ]}
+      columns={columns}
     />
   );
 }
