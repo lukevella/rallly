@@ -55,11 +55,11 @@ export default async function Layout({
 }) {
   function SidebarLayout() {
     return (
-      <div className="lg:flex h-full bg-gray-50">
+      <div className="bg-gray-50">
         <MobileNavigation />
         <div
           className={cn(
-            "hidden lg:flex lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-4 px-5 py-4",
+            "hidden lg:flex z-50 inset-y-0 lg:fixed lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-4 px-5 py-4",
           )}
         >
           <div>
@@ -67,7 +67,9 @@ export default async function Layout({
           </div>
           <Sidebar />
         </div>
-        <div className={cn("grow overflow-auto bg-gray-50")}>{children}</div>
+        <div className={cn("grow overflow-auto lg:pl-72 bg-gray-50")}>
+          {children}
+        </div>
       </div>
     );
   }

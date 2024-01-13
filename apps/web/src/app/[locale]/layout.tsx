@@ -26,7 +26,7 @@ export default function Root({
 }) {
   return (
     <html lang={locale} className={inter.className}>
-      <body className="h-screen overflow-y-scroll">
+      <body>
         <Toaster />
         <Providers>{children}</Providers>
       </body>
