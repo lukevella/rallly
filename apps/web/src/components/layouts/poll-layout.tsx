@@ -11,7 +11,7 @@ import {
   ArrowLeftIcon,
   ArrowUpRight,
   ChevronDownIcon,
-  HomeIcon,
+  ListIcon,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
@@ -171,8 +171,8 @@ const Layout = ({ children }: React.PropsWithChildren) => {
           <div className="md:basis-1/2 flex gap-x-4">
             {pathname === pollLink ? (
               <Button asChild>
-                <Link href="/">
-                  <HomeIcon className="h-4 w-4" />
+                <Link href="/polls">
+                  <ListIcon className="h-4 w-4" />
                 </Link>
               </Button>
             ) : (
