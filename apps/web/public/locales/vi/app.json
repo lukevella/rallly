@@ -109,14 +109,13 @@
   "dates": "Ngày",
   "menu": "Menu",
   "useLocaleDefaults": "Sử dụng định dạng của địa phương",
-  "inviteParticipantsDescription": "Sao chép và chia sẻ liên kết mời này để bắt đầu thu thập phản hồi từ những người tham gia của bạn.",
-  "inviteLink": "Mời liên kết",
-  "inviteParticipantLinkInfo": "Bất kỳ ai có liên kết này đều có thể bỏ phiếu cho cuộc thăm dò ý kiến ​​của bạn.",
   "support": "Hỗ trợ",
   "notificationsOn": "Đã bật thông báo",
-  "share": "Chia sẻ",
   "dateAndTimeDescription": "Thay đổi cài đặt ngày và giờ ưa thích của bạn",
   "calendarHelp": "Bạn không thể tạo bình chọn nếu chưa có lựa chọn nào. Hãy thêm ít nhất một lựa chọn để tiếp tục.",
   "commentPlaceholder": "Để lại một bình luận trên bình chọn này (mọi người đều có thể nhìn thấy)",
-  "duplicateTitleLabel": "Tiêu đề"
+  "duplicateTitleLabel": "Tiêu đề",
+  "share": "Chia sẻ",
+  "inviteLink": "Mời liên kết",
+  "inviteParticipantLinkInfo": "Bất kỳ ai có liên kết này đều có thể bỏ phiếu cho cuộc thăm dò ý kiến ​​của bạn."
 }
