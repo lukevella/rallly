@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@rallly/ui";
 import Link from "next/link";
 import React from "react";

@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
+import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
@@ -259,7 +260,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
 
   if (!poll.data || !watchers.data || !participants.data) {
-    return null;
+    return <Loader />;
   }
 
   return <>{children}</>;

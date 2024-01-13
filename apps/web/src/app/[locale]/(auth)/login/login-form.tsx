@@ -54,7 +54,7 @@ export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
           if (!success) {
             throw new Error("Failed to authenticate user");
           } else {
-            queryClient.invalidate();
+            await queryClient.invalidate();
             const s = await session.update();
             if (s?.user) {
               posthog?.identify(s.user.id, {
