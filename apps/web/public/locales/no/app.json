@@ -216,7 +216,13 @@
   "authErrorCta": "Gå til innlogging",
   "continueAs": "Fortsett som",
   "pageMovedDescription": "Videresender til <a>{newUrl}</a>",
+  "comingSoon": "Kommer Snart",
+  "contacts": "Kontakter",
+  "back": "Tilbake",
+  "xMore": "{count} flere",
   "share": "Del",
+  "pageXOfY": "Side {currentPage} av {pageCount}",
+  "noParticipants": "Ingen deltakere",
   "inviteLink": "Invitasjonskobling",
   "inviteParticipantLinkInfo": "Alle med denne koblingen kan stemme på avstemningen din."
 }
