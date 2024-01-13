@@ -15,6 +15,8 @@ import { Trans } from "@/components/trans";
 import { useDayjs } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
+import Loader from "./loading";
+
 const EmptyState = () => {
   return (
     <div className="py-24">
@@ -186,7 +188,10 @@ export function PollsList() {
     [adjustTimeZone],
   );
 
-  if (!data) return null;
+  if (!data) {
+    // return a table using <Skeleton /> components
+    return <Loader />;
+  }
 
   if (data.total === 0) return <EmptyState />;
 

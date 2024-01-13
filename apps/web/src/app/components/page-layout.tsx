@@ -53,5 +53,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("lg:p-6 p-4", className)}>{children}</div>;
+  return <div className={cn("lg:px-6 lg:py-5 p-4", className)}>{children}</div>;
 }
