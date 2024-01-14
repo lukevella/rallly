@@ -192,6 +192,17 @@
   "hideParticipantsLabel": "Dölj deltagarlistan från andra deltagare",
   "continueAs": "Fortsätt som",
   "notRegistered": "Har du inget konto? <a>Registrera dig</a>",
+  "comingSoon": "Kommer snart",
+  "integrations": "Integrationer",
+  "contacts": "Kontakter",
+  "unlockFeatures": "Lås upp alla Pro-funktioner.",
+  "back": "Tillbaka",
+  "pollStatusAll": "Alla",
   "share": "Dela",
+  "pageXOfY": "Sida {currentPage} av {pageCount}",
+  "noParticipants": "Inga deltagare",
+  "userId": "Användar-ID",
+  "aboutGuest": "Gästanvändare",
+  "aboutGuestDescription": "Profilinställningar är inte tillgängliga för gästanvändare. <0>Logga in</0> på ditt befintliga konto eller <1>skapa ett nytt konto</1> för att anpassa din profil.",
   "inviteLink": "Inbjudningslänk"
 }
