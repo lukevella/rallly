@@ -109,9 +109,6 @@
   "dates": "Datumi",
   "menu": "Izbornik",
   "useLocaleDefaults": "Koristi zadani lokalni format",
-  "inviteParticipantsDescription": "Kopirajte i podijelite poveznicu na anketu kako bi dobili odgovore vaših sudionika.",
-  "inviteLink": "Poveznica s pozivnicom",
-  "inviteParticipantLinkInfo": "Svi koji dobiju ovu poveznicu mogu glasati u vašoj anketi.",
   "support": "Podrška",
   "billing": "Naplata",
   "guestPollAlertDescription": "<0>Otvorite račun</0> ili se <1>prijavite</1> kako bi preuzeli vlasništvo nad anketom.",
@@ -132,7 +129,6 @@
   "permissionDenied": "Neautorizirano",
   "permissionDeniedDescription": "Ako ste autor ankete, molimo prijavite se za pristup istoj",
   "loginDifferent": "Promijeni korisnika",
-  "share": "Podijeli",
   "timeShownIn": "Vrijeme prikazano u {timeZone}",
   "editDetailsDescription": "Uredite detalje vašeg događaja.",
   "finalizeDescription": "Odaberite završni datum vašeg događaja.",
@@ -186,6 +182,8 @@
   "currentPlan": "Trenutna pretplata",
   "accessAllFeatures": "Pristup svim značajkama",
   "earlyAccess": "Rani pristup novim značajkama",
-  "savePercent": "Uštedite {percent}%",
-  "pricing": "Cijene"
+  "pricing": "Cijene",
+  "share": "Podijeli",
+  "inviteLink": "Poveznica s pozivnicom",
+  "inviteParticipantLinkInfo": "Svi koji dobiju ovu poveznicu mogu glasati u vašoj anketi."
 }
