@@ -45,12 +45,20 @@ export const truncateLink = (href: string, text: string, key: number) => {
   }
 };
 
+// TODO (Luke Vella) [2024-01-16]: We need to ditch this package as it does not
+// seemm to be well maintained and it is causing typescript errors.
 const TruncatedLinkify: React.FunctionComponent<{
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }> = ({ children }) => {
-  return (
-    <ReactLinkify componentDecorator={truncateLink}>{children}</ReactLinkify>
+  const res = React.createElement(
+    ReactLinkify,
+    {
+      componentDecorator: truncateLink,
+    } as unknown as React.ComponentProps<typeof ReactLinkify>,
+    children,
   );
+
+  return res;
 };
 
 export default TruncatedLinkify;
