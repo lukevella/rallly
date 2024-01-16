@@ -8,7 +8,7 @@ import { getPortal } from "@/utils/selectors";
 
 import CookiesIllustration from "./cookie-consent/cookies.svg";
 
-const CookieConsentPopover: React.FunctionComponent = () => {
+const CookieConsentPopover = () => {
   const [visible, setVisible] = React.useState(true);
 
   return ReactDOM.createPortal(

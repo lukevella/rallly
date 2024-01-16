@@ -51,10 +51,11 @@ const TruncatedLinkify: React.FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const res = React.createElement(
-    ReactLinkify,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ReactLinkify as any,
     {
       componentDecorator: truncateLink,
-    } as unknown as React.ComponentProps<typeof ReactLinkify>,
+    },
     children,
   );
 
