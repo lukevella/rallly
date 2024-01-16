@@ -1,4 +1,4 @@
-import { useEmailContext } from "./components/email-context";
+import { EmailContext } from "./components/email-context";
 import { EmailLayout } from "./components/email-layout";
 import {
   Button,
@@ -13,21 +13,23 @@ interface LoginEmailProps {
   name: string;
   code: string;
   magicLink: string;
+  ctx: EmailContext;
 }
 
 export const LoginEmail = ({
   name = "Guest",
   code = "123456",
   magicLink = "https://rallly.co",
+  ctx,
 }: LoginEmailProps) => {
-  const { domain } = useEmailContext();
   return (
     <EmailLayout
+      ctx={ctx}
       footNote={
         <>
           You&apos;re receiving this email because a request was made to login
-          to <Domain />. If this wasn&apos;t you, let us know by replying to
-          this email.
+          to <Domain ctx={ctx} />. If this wasn&apos;t you, let us know by
+          replying to this email.
         </>
       }
       recipientName={name}
@@ -40,7 +42,7 @@ export const LoginEmail = ({
         <Heading>Option 1: Magic Link</Heading>
         <Text>Click this magic link to log in on this device.</Text>
         <Button href={magicLink} id="magicLink">
-          Log in to {domain}
+          Log in to {ctx.domain}
         </Button>
         <Text light={true}>This link will expire in 15 minutes.</Text>
       </Card>

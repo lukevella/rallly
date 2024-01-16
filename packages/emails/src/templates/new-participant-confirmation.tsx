@@ -1,4 +1,4 @@
-import { useEmailContext } from "./components/email-context";
+import { EmailContext } from "./components/email-context";
 import { EmailLayout } from "./components/email-layout";
 import { Button, Domain, Section, Text } from "./components/styled-components";
 
@@ -6,19 +6,23 @@ interface NewParticipantConfirmationEmailProps {
   name: string;
   title: string;
   editSubmissionUrl: string;
+  ctx: EmailContext;
 }
 export const NewParticipantConfirmationEmail = ({
   title = "Untitled Poll",
   name = "John",
   editSubmissionUrl = "https://rallly.co",
+  ctx,
 }: NewParticipantConfirmationEmailProps) => {
-  const { domain } = useEmailContext();
+  const { domain } = ctx;
   return (
     <EmailLayout
+      ctx={ctx}
       footNote={
         <>
           You are receiving this email because a response was submitted on{" "}
-          <Domain />. If this wasn&apos;t you, please ignore this email.
+          <Domain ctx={ctx} />. If this wasn&apos;t you, please ignore this
+          email.
         </>
       }
       recipientName={name}

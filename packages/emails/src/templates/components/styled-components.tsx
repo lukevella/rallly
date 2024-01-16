@@ -10,7 +10,7 @@ import {
   TextProps,
 } from "@react-email/components";
 
-import { useEmailContext } from "./email-context";
+import { EmailContext } from "./email-context";
 
 export const borderColor = "#E2E8F0";
 export const Text = (
@@ -32,8 +32,8 @@ export const Text = (
   );
 };
 
-export const Domain = () => {
-  const { baseUrl, domain } = useEmailContext();
+export const Domain = ({ ctx }: { ctx: EmailContext }) => {
+  const { baseUrl, domain } = ctx;
   return <Link href={baseUrl}>{domain}</Link>;
 };
 

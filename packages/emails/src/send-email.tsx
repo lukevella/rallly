@@ -13,8 +13,9 @@ type Templates = typeof templates;
 
 type TemplateName = keyof typeof templates;
 
-type TemplateProps<T extends TemplateName> = React.ComponentProps<
-  TemplateComponent<T>
+type TemplateProps<T extends TemplateName> = Omit<
+  React.ComponentProps<TemplateComponent<T>>,
+  "ctx"
 >;
 type TemplateComponent<T extends TemplateName> = Templates[T];
 
@@ -79,12 +80,11 @@ export class EmailClient {
   ) {
     const Template = templates[templateName] as TemplateComponent<T>;
     const html = render(
-      <EmailContext.Provider value={this.config.context}>
-        <Template
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          {...(options.props as any)}
-        />
-      </EmailContext.Provider>,
+      <Template
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        {...(options.props as any)}
+        ctx={this.config.context}
+      />,
     );
 
     try {

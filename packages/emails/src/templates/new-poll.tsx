@@ -1,4 +1,4 @@
-import { useEmailContext } from "./components/email-context";
+import { EmailContext } from "./components/email-context";
 import { EmailLayout } from "./components/email-layout";
 import { Button, Card, Link, Text } from "./components/styled-components";
 
@@ -7,6 +7,7 @@ export interface NewPollEmailProps {
   name: string;
   adminLink: string;
   participantLink: string;
+  ctx: EmailContext;
 }
 
 const ShareLink = ({
@@ -37,10 +38,12 @@ export const NewPollEmail = ({
   name = "John",
   adminLink = "https://rallly.co/admin/abcdefg123",
   participantLink = "https://rallly.co/invite/wxyz9876",
+  ctx,
 }: NewPollEmailProps) => {
-  const { baseUrl, domain } = useEmailContext();
+  const { baseUrl, domain } = ctx;
   return (
     <EmailLayout
+      ctx={ctx}
       footNote={
         <>
           You are receiving this email because a new poll was created with this
