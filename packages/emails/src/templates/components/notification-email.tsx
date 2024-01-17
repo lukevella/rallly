@@ -1,4 +1,4 @@
-import { useEmailContext } from "./email-context";
+import { EmailContext } from "./email-context";
 import { EmailLayout } from "./email-layout";
 import { Button, Link, Text } from "./styled-components";
 
@@ -7,6 +7,7 @@ export interface NotificationBaseProps {
   title: string;
   pollUrl: string;
   disableNotificationsUrl: string;
+  ctx: EmailContext;
 }
 
 export interface NotificationEmailProps extends NotificationBaseProps {
@@ -19,10 +20,12 @@ export const NotificationEmail = ({
   disableNotificationsUrl,
   preview,
   children,
+  ctx,
 }: React.PropsWithChildren<NotificationEmailProps>) => {
-  const { domain } = useEmailContext();
+  const { domain } = ctx;
   return (
     <EmailLayout
+      ctx={ctx}
       recipientName={name}
       footNote={
         <>

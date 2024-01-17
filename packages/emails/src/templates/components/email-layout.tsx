@@ -8,13 +8,14 @@ import {
   Preview,
 } from "@react-email/components";
 
-import { useEmailContext } from "./email-context";
+import { EmailContext } from "./email-context";
 import { fontFamily, Section, Text } from "./styled-components";
 
 export interface EmailLayoutProps {
   preview: string;
   recipientName: string;
   footNote?: React.ReactNode;
+  ctx: EmailContext;
 }
 
 const containerStyles = {
@@ -42,8 +43,9 @@ export const EmailLayout = ({
   recipientName = "Guest",
   children,
   footNote,
+  ctx,
 }: React.PropsWithChildren<EmailLayoutProps>) => {
-  const { logoUrl, baseUrl } = useEmailContext();
+  const { logoUrl, baseUrl } = ctx;
   return (
     <Html>
       <Head />

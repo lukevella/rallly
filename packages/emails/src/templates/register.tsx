@@ -1,3 +1,4 @@
+import { EmailContext } from "./components/email-context";
 import { EmailLayout } from "./components/email-layout";
 import {
   Domain,
@@ -9,19 +10,22 @@ import {
 interface RegisterEmailProps {
   name: string;
   code: string;
+  ctx: EmailContext;
 }
 
 export const RegisterEmail = ({
   name = "John",
   code = "123456",
+  ctx,
 }: RegisterEmailProps) => {
   return (
     <EmailLayout
+      ctx={ctx}
       footNote={
         <>
           You&apos;re receiving this email because a request was made to
-          register an account on <Domain />. If this wasn&apos;t you, please
-          ignore this email.
+          register an account on <Domain ctx={ctx} />. If this wasn&apos;t you,
+          please ignore this email.
         </>
       }
       recipientName={name}

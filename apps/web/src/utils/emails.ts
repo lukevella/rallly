@@ -21,5 +21,6 @@ export const emailClient = new EmailClient({
   context: {
     logoUrl: absoluteUrl("/logo.png"),
     baseUrl: absoluteUrl(""),
+    domain: absoluteUrl("").replace(/(^\w+:|^)\/\//, ""),
   },
 });
