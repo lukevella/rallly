@@ -124,7 +124,7 @@ if (isOIDCEnabled) {
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
+        name: profile.name || profile.given_name,
         email: profile.email,
       };
     },
