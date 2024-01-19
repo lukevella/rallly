@@ -1,11 +1,20 @@
 {
+  "pricing": "가격",
+  "freeForever": "평생 무료",
   "planPro": "Pro",
+  "monthlyBillingDescription": "매 달",
   "upgrade": "업그레이드",
   "whyUpgrade": "업그레이드는 왜 해야하죠?",
   "howToUpgrade": "유료 요금제로 업그레이드하려면 어떻게 해야 합니까?",
   "howToUpgradeAnswer": "업그레이드하려면 <a>청구 설정</a>으로 이동하여 <b>업그레이드</b>를 클릭하시면 됩니다.",
   "cancelSubscription": "구독 취소는 어떻게 하나요?",
   "cancelSubscriptionAnswer": "언제든지 <a> 청구 설정</a>으로 이동하여 구독을 취소할 수 있습니다. 구독을 취소하면 청구 기간이 끝날 때까지 유료 요금제에 액세스할 수 있습니다. 그 후 무료 요금제로 다운그레이드됩니다.",
+  "billingPeriodMonthly": "매달",
+  "billingPeriodYearly": "연간",
+  "planProDescription": "강력한 사용자 및 전문가용",
+  "accessAllFeatures": "모든 기능 사용",
+  "getEarlyAccess": "신규 기능 미리 보기",
   "upgradeNowSaveLater": "지금 업그레이드해서 돈을 절약하세요",
+  "earlyAdopterDescription": "얼리 어답터로서 구독료를 유지하고 향후 가격 인상에 영향을 받지 않습니다.",
   "planFree": "무료"
 }
