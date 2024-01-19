@@ -217,6 +217,9 @@
   "continueAs": "Continuer comme",
   "pageMovedDescription": "Redirection vers <a>{newUrl}</a>",
   "notRegistered": "Vous n'avez pas de compte ? <a>Créer un compte</a>",
+  "back": "Retour",
+  "pollStatusLive": "En ligne",
+  "pollStatusFinalized": "Finalisé",
   "share": "Partager",
   "inviteLink": "Lien d'invitation",
   "inviteParticipantLinkInfo": "Tous ceux qui ont ce lien pourront voir ce message."
