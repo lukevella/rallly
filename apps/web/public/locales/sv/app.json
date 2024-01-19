@@ -121,6 +121,8 @@
   "pollStatusPaused": "Pausad",
   "resumePoll": "Återuppta",
   "pausePoll": "Pausa",
+  "finishPoll": "Slutför",
+  "finalize": "Slutför",
   "permissionDeniedDescription": "Om du är skaparen av enkäten, vänligen logga in för att komma åt din enkät",
   "timeShownIn": "Tidszon: {timeZone}",
   "notificationsGuestTooltip": "Skapa ett konto eller logga in för att aktivera aviseringar",
