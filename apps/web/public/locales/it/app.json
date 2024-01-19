@@ -195,6 +195,9 @@
   "contactSupport": "Contatta l'assistenza",
   "pricing": "Prezzi",
   "pollSettingsDescription": "Personalizza il comportamento del tuo sondaggio",
+  "back": "Indietro",
+  "pollStatusLive": "Diretta",
+  "pollStatusFinalized": "Completato",
   "share": "Condividi",
   "inviteLink": "Link d'Invito",
   "inviteParticipantLinkInfo": "Chiunque abbia questo link potrà votare nel sondaggio."
