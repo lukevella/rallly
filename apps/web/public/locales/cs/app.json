@@ -216,6 +216,9 @@
   "continueAs": "Pokračovat jako",
   "pageMovedDescription": "Přesměrovávám na <a>{newUrl}</a>",
   "notRegistered": "Nemáte účet? <a>Zaregistrovat</a>",
+  "back": "Zpět",
+  "pollStatusLive": "Probíhá",
+  "pollStatusFinalized": "Dokončeno",
   "share": "Sdílet",
   "inviteLink": "Odkaz s pozvánkou",
   "inviteParticipantLinkInfo": "Každý s tímto odkazem bude moci hlasovat."
