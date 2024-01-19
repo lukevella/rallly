@@ -13,7 +13,7 @@ export function BackButton() {
         router.back();
       }}
     >
-      <XIcon className="text-muted-foreground h-4 w-4" />
+      <XIcon className="text-muted-foreground size-4" />
     </Button>
   );
 }

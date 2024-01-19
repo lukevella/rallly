@@ -43,11 +43,11 @@ const BillingPortal = () => {
               window.location.pathname,
             )}`}
           >
-            <CreditCardIcon className="h-4 w-4" />
+            <CreditCardIcon className="size-4" />
             <span>
               <Trans i18nKey="billingPortal" defaults="Billing Portal" />
             </span>
-            <ArrowUpRight className="h-4 w-4" />
+            <ArrowUpRight className="size-4" />
           </Link>
         </Button>
       </div>
@@ -183,7 +183,7 @@ const LegacyBilling = () => {
               }}
             >
               <Link href={userPaymentData.updateUrl}>
-                <CreditCardIcon className="h-4 w-4" />
+                <CreditCardIcon className="size-4" />
                 <Trans
                   i18nKey="subscriptionUpdatePayment"
                   defaults="Update Payment Details"
@@ -226,7 +226,7 @@ const LegacyBilling = () => {
     </p>
     <Button asChild>
       <Link href="mailto:support@rallly.co">
-        <SendIcon className="h-4 w-4" />
+        <SendIcon className="size-4" />
         <Trans i18nKey="contactSupport" defaults="Contact Support" />
       </Link>
     </Button>
@@ -272,7 +272,7 @@ export function BillingPage() {
             </p>
             <Button asChild>
               <Link href="mailto:support@rallly.co">
-                <SendIcon className="h-4 w-4" />
+                <SendIcon className="size-4" />
                 <Trans i18nKey="contactSupport" defaults="Contact Support" />
               </Link>
             </Button>

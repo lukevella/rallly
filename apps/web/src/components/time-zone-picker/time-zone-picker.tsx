@@ -211,7 +211,7 @@ const TimeZonePicker: React.FunctionComponent<{
             {!query ? selectedTimeZone.label : null}
           </span>
           <span className="pointer-events-none flex">
-            <ChevronDownIcon className="h-5 w-5" />
+            <ChevronDownIcon className="size-5" />
           </span>
         </Combobox.Button>
         <FloatingPortal>

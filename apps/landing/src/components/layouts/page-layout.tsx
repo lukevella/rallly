@@ -108,12 +108,12 @@ const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
               <span>
                 <Trans i18nKey="goToApp" defaults="Go to app" />
               </span>
-              <ChevronRightIcon className="inline-block h-4 w-4 transition-all group-active:translate-x-1" />
+              <ChevronRightIcon className="inline-block size-4 transition-all group-active:translate-x-1" />
             </Link>
             <div className="flex items-center justify-center lg:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <MenuIcon className="h-6 w-6" />
+                  <MenuIcon className="size-6" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" sideOffset={16}>
                   <DropdownMenuItem asChild>

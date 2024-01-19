@@ -47,7 +47,7 @@ export const FeaturebaseChangelog = ({ className }: { className?: string }) => {
             variant="ghost"
             data-featurebase-changelog
           >
-            <HelpCircleIcon className="h-4 w-4" />
+            <HelpCircleIcon className="size-4" />
             <span
               id="fb-update-badge"
               className="bg-primary rounded-full px-2 py-px text-xs text-gray-100 empty:hidden"

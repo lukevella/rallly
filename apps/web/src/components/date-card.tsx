@@ -19,7 +19,7 @@ const DateCard: React.FunctionComponent<DateCardProps> = ({
   return (
     <div
       className={clsx(
-        "relative inline-flex h-14 w-14 items-center justify-center rounded-md border border-gray-200 bg-white p-1 text-center",
+        "relative inline-flex size-14 items-center justify-center rounded-md border border-gray-200 bg-white p-1 text-center",
         className,
       )}
     >

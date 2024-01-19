@@ -38,8 +38,8 @@ const Screenshot = () => {
           defaults="Create a page like this in seconds!"
         />
         <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
-        <span className="absolute -bottom-12 left-1/2 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-        <span className="absolute -bottom-12 left-1/2 z-10 inline-block h-3 w-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
       </m.div>
       <m.div
         transition={{
@@ -95,7 +95,7 @@ export const MarketingHero = ({
               i18nKey="home:selfHostingBlog"
               defaults="Rallly 3.0 Self-Hosting"
             />
-            <ChevronRightIcon className="-mr-1 h-4 w-4" aria-hidden="true" />
+            <ChevronRightIcon className="-mr-1 size-4" aria-hidden="true" />
           </span>
         </Link>
       </div>
@@ -114,7 +114,7 @@ export const MarketingHero = ({
         >
           <Link href={linkToApp("/new")}>
             {callToAction}
-            <ChevronRightIcon className="-ml-1 h-5 w-5 transition-transform group-active:translate-x-1" />
+            <ChevronRightIcon className="-ml-1 size-5 transition-transform group-active:translate-x-1" />
           </Link>
         </Button>
         <div className="whitespace-nowrap text-center text-sm font-medium text-gray-500">

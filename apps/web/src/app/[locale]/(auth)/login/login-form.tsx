@@ -134,7 +134,7 @@ export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
               <IfCloudHosted>
                 <Button size="lg" asChild>
                   <Link href={callbackUrl}>
-                    <UserIcon className="h-4 w-4" />
+                    <UserIcon className="size-4" />
                     <Trans i18nKey="continueAsGuest" />
                   </Link>
                 </Button>

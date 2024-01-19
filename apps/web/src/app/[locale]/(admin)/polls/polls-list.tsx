@@ -22,7 +22,7 @@ const EmptyState = () => {
     <div className="py-24">
       <div className="mx-auto w-full max-w-md rounded-md border-2 border-dashed border-gray-300 p-8 text-center">
         <div className="mb-4">
-          <InboxIcon className="inline-block h-10 w-10 text-gray-400" />
+          <InboxIcon className="inline-block size-10 text-gray-400" />
         </div>
         <h3 className="font-semibold">
           <Trans i18nKey="noPolls" defaults="No polls" />
@@ -36,7 +36,7 @@ const EmptyState = () => {
         <div className="mt-6">
           <Button variant="primary" asChild={true}>
             <Link href="/new">
-              <PlusIcon className="h-5 w-5" />
+              <PlusIcon className="size-5" />
               <Trans defaults="New Poll" i18nKey="newPoll" />
             </Link>
           </Button>
@@ -88,7 +88,7 @@ export function PollsList() {
                 <h3 className="truncate font-semibold text-gray-600 group-hover:text-gray-900">
                   {row.original.title}
                 </h3>
-                <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all group-hover:opacity-100 group-focus:translate-x-2" />
+                <ArrowRightIcon className="size-4 opacity-0 transition-all group-hover:opacity-100 group-focus:translate-x-2" />
               </div>
               {row.original.event ? (
                 <p className="text-muted-foreground text-sm">
@@ -151,7 +151,7 @@ export function PollsList() {
           return (
             <Tooltip delayDuration={100}>
               <TooltipTrigger className="text-muted-foreground flex items-center gap-x-2">
-                <UsersIcon className="h-4 w-4" />
+                <UsersIcon className="size-4" />
                 <span className="text-sm">
                   {row.original.participants.length}
                 </span>

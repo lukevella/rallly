@@ -109,7 +109,7 @@ export const YouAvatar = () => {
   const you = t("you");
   return (
     <span className="inline-flex items-center gap-x-2.5">
-      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold uppercase">
+      <span className="inline-flex size-6 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold uppercase">
         {you[0]}
       </span>
       {t("you")}

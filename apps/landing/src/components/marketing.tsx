@@ -104,7 +104,7 @@ import { Trans } from "@/components/trans";
 //             href="https://www.trustpilot.com/evaluate/rallly.co"
 //           >
 //             <span>Share your experience</span>
-//             <ArrowRight className="h-4 w-4" />
+//             <ArrowRight className="size-4" />
 //           </Link>
 //         </Button>
 //       </div> */}
@@ -119,7 +119,7 @@ import { Trans } from "@/components/trans";
 // }: React.PropsWithChildren<{ author: string; logo?: string }>) => {
 //   return (
 //     <div className="relative flex flex-col space-y-4 rounded-md bg-gray-50 px-4 py-3 shadow-sm">
-//       <QuoteIcon className="h-4 w-4 text-gray-400" />
+//       <QuoteIcon className="size-4 text-gray-400" />
 //       <div className="flex justify-between">
 //         <div className="flex flex-col gap-2">
 //           <div className="font-semibold">{author}</div>
@@ -131,7 +131,7 @@ import { Trans } from "@/components/trans";
 //           />
 //         </div>
 //         {logo ? (
-//           <div className="relative h-16 w-16">
+//           <div className="relative size-16">
 //             <Image src={logo} fill alt="logo" />
 //           </div>
 //         ) : null}
@@ -289,7 +289,7 @@ const BigTestimonial = () => {
             href="https://www.trustpilot.com/reviews/645e1d1976733924e89d8203"
           >
             <Trans i18nKey="home:viaTrustpilot" defaults="via Trustpilot" />
-            <ArrowUpRight className="ml-1 inline h-3 w-3" />
+            <ArrowUpRight className="ml-1 inline size-3" />
           </Link>
         </p>
       </div>

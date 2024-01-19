@@ -24,11 +24,11 @@ const DateNavigationToolbar: React.FunctionComponent<
       <div className="flex items-center space-x-2">
         <div className="flex items-center gap-x-2">
           <Button type="button" onClick={onPrevious}>
-            <ChevronLeftIcon className="h-4 w-4" />
+            <ChevronLeftIcon className="size-4" />
           </Button>
           <Button onClick={onToday}>{t("today")}</Button>
           <Button onClick={onNext}>
-            <ChevronRightIcon className="h-4 w-4" />
+            <ChevronRightIcon className="size-4" />
           </Button>
         </div>
       </div>

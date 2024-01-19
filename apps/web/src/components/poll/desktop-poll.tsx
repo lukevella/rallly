@@ -135,7 +135,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Users2Icon className="h-5 w-5 shrink-0" />
+                  <Users2Icon className="size-5 shrink-0" />
                   <div className="font-semibold">
                     {t("participants", { count: participants.length })} (
                     {participants.length})
@@ -163,7 +163,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button disabled={x === 0} onClick={goToPreviousPage}>
-                        <ArrowLeftIcon className="h-4 w-4" />
+                        <ArrowLeftIcon className="size-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -182,7 +182,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                           goToNextPage();
                         }}
                       >
-                        <ArrowRightIcon className="h-4 w-4" />
+                        <ArrowRightIcon className="size-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>

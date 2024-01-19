@@ -57,7 +57,7 @@ export const ProfilePage = () => {
               </AlertDescription>
             </Alert>
             <LogoutButton className="mt-6" variant="destructive">
-              <UserXIcon className="h-4 w-4" />
+              <UserXIcon className="size-4" />
               <Trans i18nKey="forgetMe" />
             </LogoutButton>
           </SettingsSection>
@@ -87,7 +87,7 @@ export const ProfilePage = () => {
             }
           >
             <LogoutButton>
-              <LogOutIcon className="h-4 w-4" />
+              <LogOutIcon className="size-4" />
               <Trans i18nKey="logout" defaults="Logout" />
             </LogoutButton>
           </SettingsSection>

@@ -47,7 +47,7 @@ function NavItem({
       <Icon
         className={cn(
           current ? "text-gray-500" : "text-gray-400 group-hover:text-gray-500",
-          "h-5 w-5 shrink-0",
+          "size-5 shrink-0",
         )}
         aria-hidden="true"
       />
@@ -105,7 +105,7 @@ export function Sidebar() {
                   className="mb-4 grid rounded-md border border-gray-200 bg-gray-50 px-4 py-3 hover:border-gray-300 hover:bg-gray-200 active:bg-gray-300"
                 >
                   <span className="mb-2 flex items-center gap-x-2">
-                    <SparklesIcon className="h-5 w-5 text-gray-400" />
+                    <SparklesIcon className="size-5 text-gray-400" />
                     <span className="text-sm font-bold">
                       <Trans i18nKey="upgrade" />
                     </span>
@@ -149,7 +149,7 @@ export function Sidebar() {
                       {user.email}
                     </span>
                   </span>
-                  <ChevronRightIcon className="text-muted-foreground h-4 w-4 opacity-0 group-hover:opacity-100" />
+                  <ChevronRightIcon className="text-muted-foreground size-4 opacity-0 group-hover:opacity-100" />
                 </Link>
               </Button>
             </li>

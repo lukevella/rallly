@@ -69,7 +69,7 @@ export function SettingsMenu() {
       <div className="mb-4 hidden divide-x overflow-hidden rounded-md border bg-gray-50 shadow-sm lg:inline-flex">
         {menuItems.map((item, i) => (
           <MenuItem key={i} href={item.href}>
-            <item.icon className="h-4 w-4" />
+            <item.icon className="size-4" />
             {item.title}
           </MenuItem>
         ))}
@@ -90,7 +90,7 @@ export function SettingsMenu() {
           {menuItems.map((item, i) => (
             <SelectItem key={i} value={item.title}>
               <div className="flex items-center gap-x-2.5">
-                <item.icon className="text-muted-foreground h-4 w-4" />
+                <item.icon className="text-muted-foreground size-4" />
                 <span className="font-medium">{item.title}</span>
               </div>
             </SelectItem>

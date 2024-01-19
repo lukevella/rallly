@@ -32,7 +32,7 @@ export function MenuItem({
           isCurrent
             ? "text-indigo-600"
             : "text-gray-400 group-hover:text-indigo-600",
-          "h-5 w-5 shrink-0",
+          "size-5 shrink-0",
         )}
         aria-hidden="true"
       />

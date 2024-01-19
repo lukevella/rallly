@@ -40,7 +40,7 @@ function MobileNavigation() {
         </Link>
         <Button asChild variant="ghost">
           <Link href="/menu">
-            <MenuIcon className="text-muted-foreground h-4 w-4" />
+            <MenuIcon className="text-muted-foreground size-4" />
           </Link>
         </Button>
       </div>

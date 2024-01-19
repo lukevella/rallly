@@ -129,7 +129,7 @@ export const BillingPlans = () => {
       </Tabs>
       <div className="rounded-md border border-cyan-200 bg-cyan-50 px-4 py-3 text-cyan-800">
         <div className="mb-2">
-          <TrendingUpIcon className="text-indigo mr-2 mt-0.5 h-6 w-6 shrink-0" />
+          <TrendingUpIcon className="text-indigo mr-2 mt-0.5 size-6 shrink-0" />
         </div>
         <div className="mb-2 flex items-center gap-x-2">
           <h3 className="text-sm font-semibold">
