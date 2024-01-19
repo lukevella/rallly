@@ -1,1 +1,11 @@
-{}
+{
+  "login": "ลงชื่อเข้าใช้",
+  "common_language": "ภาษา",
+  "common_support": "ช่วยเหลือ",
+  "errors_notFoundTitle": "404 ไม่พบสิ่งที่ค้นหา",
+  "errors_notFoundDescription": "เราไม่พบหน้าที่คุณค้นหา",
+  "errors_goToHome": "ไปยังหน้าหลัก",
+  "language": "ภาษา",
+  "support": "ช่วยเหลือ",
+  "pricing": "แผนราคา"
+}
