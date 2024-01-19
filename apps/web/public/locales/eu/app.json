@@ -217,6 +217,8 @@
   "continueAs": "Jarraitu",
   "pageMovedDescription": "<a>{newUrl}</a> -ra desbideratzen",
   "notRegistered": "Ez al duzu konturik? <a>Erregistratu</a>",
+  "pollStatusLive": "Zuzenean",
+  "pollStatusFinalized": "Bukatuta",
   "share": "Partekatu",
   "inviteLink": "Gonbidapen esteka",
   "inviteParticipantLinkInfo": "Esteka hori duen edonork bozka dezake inkestaren gainean."
