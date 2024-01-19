@@ -217,6 +217,9 @@
   "continueAs": "Continuar como",
   "pageMovedDescription": "Redireccionando a <a>{newUrl}</a>",
   "notRegistered": "¿Todavía no tienes cuenta? <a>Regístrate.</a>",
+  "back": "Volver",
+  "pollStatusLive": "En vivo",
+  "pollStatusFinalized": "Finalizado",
   "share": "Compartir",
   "inviteLink": "Enlace de invitación",
   "inviteParticipantLinkInfo": "Cualquiera con este enlace será capaz de votar en esta encuesta."
