@@ -51,7 +51,7 @@ export const SettingsItemTitle = ({
       {hint ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <InfoIcon className="inline-block h-4 w-4 text-gray-500" />
+            <InfoIcon className="size-4 inline-block text-gray-500" />
           </TooltipTrigger>
           <TooltipContent side="right" className="max-w-sm">
             {hint}

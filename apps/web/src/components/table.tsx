@@ -141,7 +141,7 @@ export const Table = <
           disabled={!table.getCanPreviousPage()}
         >
           <ChevronLeftIcon
-            className={cn("h-4 w-4", {
+            className={cn("size-4", {
               "text-gray-400": !table.getCanPreviousPage(),
             })}
           />
@@ -162,7 +162,7 @@ export const Table = <
           disabled={!table.getCanNextPage()}
         >
           <ChevronRightIcon
-            className={cn("h-4 w-4", {
+            className={cn("size-4", {
               "text-gray-400": !table.getCanNextPage(),
             })}
           />

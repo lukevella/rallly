@@ -102,7 +102,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 }}
               >
                 <div className="absolute right-1.5 top-1.5 flex justify-end opacity-0 group-hover:opacity-100">
-                  <XIcon className="h-3 w-3" />
+                  <XIcon className="size-3" />
                 </div>
                 <div>
                   <div className="font-semibold">{start.format("LT")}</div>

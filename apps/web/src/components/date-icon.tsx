@@ -10,7 +10,7 @@ export const DateIconInner = (props: {
   return (
     <div
       className={clsx(
-        "inline-flex h-12 w-12 flex-col overflow-hidden rounded-md border bg-gray-50 text-center text-slate-800",
+        "inline-flex size-12 flex-col overflow-hidden rounded-md border bg-gray-50 text-center text-slate-800",
         props.className,
       )}
     >

@@ -72,7 +72,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
                 {showClose ? (
                   <button
                     role="button"
-                    className="absolute right-2 top-2 z-10 inline-flex h-7 w-7 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-500/10 hover:text-gray-500 focus:ring-0 focus:ring-offset-0 active:bg-gray-500/20"
+                    className="absolute right-2 top-2 z-10 inline-flex size-7 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-500/10 hover:text-gray-500 focus:ring-0 focus:ring-offset-0 active:bg-gray-500/20"
                     onClick={onCancel}
                   >
                     <XIcon className="h-4" />

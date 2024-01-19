@@ -50,7 +50,7 @@ const SettingTitle = ({
       {hint ? (
         <Tooltip>
           <TooltipTrigger>
-            <InfoIcon className="text-muted-foreground h-4 w-4" />
+            <InfoIcon className="text-muted-foreground size-4" />
           </TooltipTrigger>
           <TooltipContent>{hint}</TooltipContent>
         </Tooltip>
@@ -111,7 +111,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             name="disableComments"
             render={({ field }) => (
               <Setting>
-                <MessageCircleIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
+                <MessageCircleIcon className="size-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
                   <SettingTitle htmlFor="disableComments">
                     <Trans i18nKey="disableComments">Disable Comments</Trans>
@@ -132,7 +132,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             name="requireParticipantEmail"
             render={({ field }) => (
               <Setting disabled={isFree}>
-                <AtSignIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
+                <AtSignIcon className="size-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
                   <SettingTitle pro>
                     <Trans
@@ -156,7 +156,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             name="hideParticipants"
             render={({ field }) => (
               <Setting disabled={isFree}>
-                <EyeIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
+                <EyeIcon className="size-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
                   <SettingTitle pro>
                     <Trans
@@ -180,7 +180,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             name="hideScores"
             render={({ field }) => (
               <Setting disabled={isFree}>
-                <VoteIcon className="h-5 w-5 shrink-0 translate-y-0.5" />
+                <VoteIcon className="size-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
                   <SettingTitle htmlFor={field.name} pro>
                     <Trans

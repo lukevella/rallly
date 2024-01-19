@@ -64,7 +64,7 @@ export const InviteDialog = () => {
         className="bg-gradient-to-b from-gray-100 via-white to-white sm:max-w-md"
       >
         <div className="flex">
-          <Share2Icon className="text-primary h-6 w-6" />
+          <Share2Icon className="text-primary size-6" />
         </div>
         <DialogHeader className="">
           <DialogTitle>
@@ -86,7 +86,7 @@ export const InviteDialog = () => {
             <div className="shrink-0">
               <Button asChild>
                 <Link target="_blank" href={`/invite/${poll.id}`}>
-                  <ArrowUpRightIcon className="h-4 w-4" />
+                  <ArrowUpRightIcon className="size-4" />
                 </Link>
               </Button>
             </div>

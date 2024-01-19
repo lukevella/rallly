@@ -8,7 +8,7 @@ export const PageDialog = (
     <Container className="flex h-[calc(75vh)] items-center justify-center">
       <div className="text-center">
         {props.icon ? (
-          <props.icon className="text-primary inline-block h-14 w-14" />
+          <props.icon className="text-primary inline-block size-14" />
         ) : null}
         {props.children}
       </div>

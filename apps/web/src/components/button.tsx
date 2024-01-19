@@ -44,9 +44,7 @@ export const LegacyButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         role="button"
         disabled={disabled}
       >
-        {icon
-          ? React.cloneElement(icon, { className: "h-5 w-5 mr-1.5" })
-          : null}
+        {icon ? React.cloneElement(icon, { className: "size-5 mr-1.5" }) : null}
         {children}
       </NewButton>
     );

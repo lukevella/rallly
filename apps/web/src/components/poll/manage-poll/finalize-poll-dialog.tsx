@@ -240,7 +240,7 @@ export const FinalizePollForm = ({
               </FormDescription>
               {participantsWithoutEmails.length ? (
                 <Alert>
-                  <AlertCircleIcon className="h-4 w-4" />
+                  <AlertCircleIcon className="size-4" />
                   <AlertDescription>
                     <Trans
                       i18nKey="missingEmailsAlert"

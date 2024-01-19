@@ -15,10 +15,10 @@ const CompactButton = React.forwardRef<HTMLButtonElement, CompactButtonProps>(
       <button
         ref={ref}
         type="button"
-        className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200 active:bg-gray-300 active:text-gray-500"
+        className="inline-flex size-5 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200 active:bg-gray-300 active:text-gray-500"
         onClick={onClick}
       >
-        {Icon ? <Icon className="h-3 w-3" /> : children}
+        {Icon ? <Icon className="size-3" /> : children}
       </button>
     );
   },

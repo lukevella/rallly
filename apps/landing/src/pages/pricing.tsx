@@ -278,7 +278,7 @@ const Page: NextPageWithLayout = () => {
         <PriceTables />
         <div className="rounded-md border bg-gradient-to-b from-cyan-50 to-cyan-50/60 px-5 py-4 text-cyan-800">
           <div className="mb-2">
-            <TrendingUpIcon className="text-indigo mr-2 mt-0.5 h-6 w-6 shrink-0" />
+            <TrendingUpIcon className="text-indigo mr-2 mt-0.5 size-6 shrink-0" />
           </div>
           <div className="mb-1 flex items-center gap-x-2">
             <h3 className="text-sm">

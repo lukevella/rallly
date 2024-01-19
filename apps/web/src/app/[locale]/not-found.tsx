@@ -13,7 +13,7 @@ export default async function Page() {
     <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
       <div className="space-y-8">
         <div className="space-y-4 text-center">
-          <FileSearchIcon className="mb-4 inline-block h-24 w-24 text-gray-400" />
+          <FileSearchIcon className="mb-4 inline-block size-24 text-gray-400" />
           <div className="text-primary-600 mb-2 text-3xl font-bold ">
             {t("errors_notFoundTitle")}
           </div>

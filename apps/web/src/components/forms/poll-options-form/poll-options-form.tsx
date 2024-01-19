@@ -117,11 +117,11 @@ const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
                 <Tabs value={field.value} onValueChange={field.onChange}>
                   <TabsList className="w-full">
                     <TabsTrigger className="grow" value="month">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <CalendarIcon className="size-4 mr-2" />
                       <Trans i18nKey="monthView" />
                     </TabsTrigger>
                     <TabsTrigger className="grow" value="week">
-                      <TableIcon className="mr-2 h-4 w-4" />
+                      <TableIcon className="size-4 mr-2" />
                       <Trans i18nKey="weekView" />
                     </TabsTrigger>
                   </TabsList>

@@ -108,7 +108,7 @@ const StatusControl = () => {
         <DropdownMenuTrigger asChild>
           <Button>
             <PollStatusLabel status={poll.status} />
-            <ChevronDownIcon className="h-4 w-4" />
+            <ChevronDownIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -173,13 +173,13 @@ const Layout = ({ children }: React.PropsWithChildren) => {
             {pathname === pollLink ? (
               <Button asChild>
                 <Link href="/polls">
-                  <ListIcon className="h-4 w-4" />
+                  <ListIcon className="size-4" />
                 </Link>
               </Button>
             ) : (
               <Button asChild>
                 <Link href={pollLink}>
-                  <ArrowLeftIcon className="h-4 w-4" />
+                  <ArrowLeftIcon className="size-4" />
                 </Link>
               </Button>
             )}
@@ -226,20 +226,20 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
           {user.isGuest ? (
             <Button asChild variant="primary">
               <LoginLink>
-                <LogInIcon className="-ml-1 h-4 w-4" />
+                <LogInIcon className="size-4 -ml-1" />
                 <Trans i18nKey="login" defaults="Login" />
               </LoginLink>
             </Button>
           ) : (
             <LogoutButton>
-              <LogOutIcon className="-ml-1 h-4 w-4" />
+              <LogOutIcon className="size-4 -ml-1" />
               <Trans i18nKey="loginDifferent" defaults="Switch user" />
             </LogoutButton>
           )}
           <Button asChild>
             <Link href={`/invite/${poll.id}`}>
               <Trans i18nKey="goToInvite" defaults="Go to Invite Page" />
-              <ArrowUpRight className="h-4 w-4" />
+              <ArrowUpRight className="size-4" />
             </Link>
           </Button>
         </PageDialogFooter>

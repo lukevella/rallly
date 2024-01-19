@@ -11,7 +11,7 @@ export const BlogLayout = ({ children }: React.PropsWithChildren) => {
       <div className="mt-16 overflow-hidden rounded-md border bg-gray-200/50 backdrop-blur-sm">
         <div className="flex flex-col gap-x-4 gap-y-2 p-6  pb-0 sm:flex-row">
           <div>
-            <NewspaperIcon className="h-6 w-6" />
+            <NewspaperIcon className="size-6" />
           </div>
           <div>
             <div className="font-medium">Want to stay up to date?</div>

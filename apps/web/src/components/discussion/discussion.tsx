@@ -88,7 +88,7 @@ const Discussion: React.FunctionComponent = () => {
   return (
     <div className="divide-y">
       <div className="flex items-center gap-2 bg-gray-50 px-4 py-3 font-semibold">
-        <MessageCircleIcon className="h-5 w-5" /> {t("comments")} (
+        <MessageCircleIcon className="size-5" /> {t("comments")} (
         {comments.length})
       </div>
       {comments.length ? (
@@ -114,7 +114,7 @@ const Discussion: React.FunctionComponent = () => {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild={true}>
                             <button className="hover:text-foreground text-gray-500">
-                              <MoreHorizontalIcon className="h-4 w-4" />
+                              <MoreHorizontalIcon className="size-4" />
                             </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="start">
@@ -125,7 +125,7 @@ const Discussion: React.FunctionComponent = () => {
                                 });
                               }}
                             >
-                              <TrashIcon className="mr-2 h-4 w-4" />
+                              <TrashIcon className="mr-2 size-4" />
                               <Trans i18nKey="delete" />
                             </DropdownMenuItem>
                           </DropdownMenuContent>

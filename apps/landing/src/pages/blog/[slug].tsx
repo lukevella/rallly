@@ -56,7 +56,7 @@ const Page: NextPageWithLayout<Props> = ({ post }) => {
           className="text-muted-foreground hover:text-primary inline-flex items-center gap-x-2 text-sm font-medium"
           href="/blog"
         >
-          <ArrowLeftIcon className="h-4 w-4" /> All Posts
+          <ArrowLeftIcon className="size-4" /> All Posts
         </Link>
       </nav>
       <article>

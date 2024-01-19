@@ -55,7 +55,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   if (!watchers) {
-    return <Skeleton className="h-9 w-9" />;
+    return <Skeleton className="size-9" />;
   }
 
   return (

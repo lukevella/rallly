@@ -36,7 +36,7 @@ const Item = ({
         <span
           className={cn("bg-primary rounded-full p-2 text-gray-50", className)}
         >
-          <Icon className="h-4 w-4" />
+          <Icon className="size-4" />
         </span>
         <div className="text-sm font-semibold">{children}</div>
       </div>

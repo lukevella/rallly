@@ -23,7 +23,7 @@ export const Nav = () => {
             className={poll.userId !== user.id ? "hidden" : ""}
           >
             <Link href={`/poll/${poll.id}`}>
-              <ArrowUpLeftIcon className="text-muted-foreground h-4 w-4" />
+              <ArrowUpLeftIcon className="text-muted-foreground size-4" />
               <Trans i18nKey="manage" />
             </Link>
           </Button>

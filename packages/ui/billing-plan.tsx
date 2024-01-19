@@ -71,7 +71,7 @@ export const BillingPlanPerk = ({
     <li className="flex items-start gap-x-2.5">
       <CheckCircle2Icon
         className={cn(
-          "mt-0.5 h-4 w-4 shrink-0",
+          "size-4 mt-0.5 shrink-0",
           !pro ? "text-gray-500" : "text-primary",
         )}
       />

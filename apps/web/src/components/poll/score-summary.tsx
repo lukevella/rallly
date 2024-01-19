@@ -57,7 +57,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
           opacity: Math.max(score / highScore, 0.2),
         }}
       >
-        <User2Icon className="h-3 w-3" />
+        <User2Icon className="size-3" />
         <AnimatePresence initial={false} mode="wait">
           <m.span
             transition={{
@@ -77,7 +77,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
           </m.span>
         </AnimatePresence>
         {highlight && ifNeedBeScore > 0 ? (
-          <span className="absolute -right-1 -top-0.5 h-2 w-2 rounded-full bg-amber-400 ring-2 ring-white" />
+          <span className="absolute -right-1 -top-0.5 size-2 rounded-full bg-amber-400 ring-2 ring-white" />
         ) : null}
       </div>
     );

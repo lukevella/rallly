@@ -422,7 +422,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   onChange(newOptions);
                                 }}
                               >
-                                <SparklesIcon className="mr-2 h-4 w-4" />
+                                <SparklesIcon className="mr-2 size-4" />
                                 <Trans i18nKey="applyToAllDates" />
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -435,7 +435,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   );
                                 }}
                               >
-                                <XIcon className="mr-2 h-4 w-4" />
+                                <XIcon className="mr-2 size-4" />
                                 <Trans i18nKey="deleteDate" />
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -474,7 +474,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           ) : (
             <div className="flex h-full items-center justify-center py-12">
               <div className="text-center font-medium text-gray-400">
-                <CalendarIcon className="mb-2 inline-block h-12 w-12" />
+                <CalendarIcon className="mb-2 inline-block size-12" />
                 <div>{t("noDatesSelected")}</div>
               </div>
             </div>

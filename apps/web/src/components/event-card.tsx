@@ -105,7 +105,7 @@ export const EventCard = () => {
       <div className="space-y-4 p-4 sm:px-6">
         {poll.description ? (
           <div className="flex gap-4">
-            <TextIcon className="text-muted-foreground h-4 w-4 shrink-0 translate-y-1" />
+            <TextIcon className="text-muted-foreground size-4 shrink-0 translate-y-1" />
             <div className="whitespace-pre-line">
               <TruncatedLinkify>{poll.description}</TruncatedLinkify>
             </div>
@@ -113,12 +113,12 @@ export const EventCard = () => {
         ) : null}
         {poll.location ? (
           <div className="flex gap-4">
-            <MapPinIcon className="text-muted-foreground h-4 w-4 translate-y-1" />
+            <MapPinIcon className="text-muted-foreground size-4 translate-y-1" />
             <TruncatedLinkify>{poll.location}</TruncatedLinkify>
           </div>
         ) : null}
         <div className="flex gap-4">
-          <MousePointerClickIcon className="text-muted-foreground h-4 w-4 shrink-0 translate-y-0.5" />
+          <MousePointerClickIcon className="text-muted-foreground size-4 shrink-0 translate-y-0.5" />
           <div>
             <div className="flex gap-2.5">
               <span className="inline-flex items-center space-x-1">

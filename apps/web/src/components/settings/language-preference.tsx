@@ -70,7 +70,7 @@ export const LanguagePreference = () => {
               href="https://support.rallly.co/contribute/translations"
             >
               <Trans i18nKey="becomeATranslator" defaults="Help translate" />
-              <ArrowUpRight className="h-4 w-4" />
+              <ArrowUpRight className="size-4" />
             </Link>
           </Button>
         </div>

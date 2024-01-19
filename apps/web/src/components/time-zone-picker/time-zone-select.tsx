@@ -62,7 +62,7 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
               >
                 <CheckIcon
                   className={cn(
-                    "h-4 w-4 shrink-0",
+                    "size-4 shrink-0",
                     value === option.value ? "opacity-100" : "opacity-0",
                   )}
                 />
@@ -154,7 +154,7 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
             aria-controls={popoverContentId}
             className="bg-input-background flex h-9 w-full min-w-0 items-center gap-x-1.5 rounded-md border px-2 py-2 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <GlobeIcon className="h-4 w-4" />
+            <GlobeIcon className="size-4" />
             <span className="grow truncate text-left">
               {fuzzyValue ? (
                 fuzzyValue.label
@@ -165,7 +165,7 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
                 />
               )}
             </span>
-            <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronDownIcon className="size-4 ml-2 shrink-0 opacity-50" />
           </button>
         </PopoverTrigger>
         <PopoverContent

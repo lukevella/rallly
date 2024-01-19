@@ -13,7 +13,7 @@ const VoteIcon: React.FunctionComponent<{
       return (
         <YesIcon
           className={clsx("text-green-500", className, {
-            "h-5 w-5": size === "md",
+            "size-5": size === "md",
             "h-3": size === "sm",
           })}
         />
@@ -23,7 +23,7 @@ const VoteIcon: React.FunctionComponent<{
       return (
         <IfNeedBeIcon
           className={clsx("text-amber-400", className, {
-            "h-5 w-5": size === "md",
+            "size-5": size === "md",
             "h-3": size === "sm",
           })}
         />
@@ -33,7 +33,7 @@ const VoteIcon: React.FunctionComponent<{
       return (
         <NoIcon
           className={clsx("text-gray-400", className, {
-            "h-5 w-5": size === "md",
+            "size-5": size === "md",
             "h-3": size === "sm",
           })}
         />
@@ -43,7 +43,7 @@ const VoteIcon: React.FunctionComponent<{
       return (
         <PendingIcon
           className={clsx("text-gray-300", className, {
-            "h-5 w-5": size === "md",
+            "size-5": size === "md",
             "h-3": size === "sm",
           })}
         />

@@ -37,9 +37,9 @@ export const UserAvatar = ({
       className={clsx(
         "inline-flex items-center justify-center overflow-hidden rounded-full font-semibold",
         {
-          "h-6 w-6 text-sm": size === "sm",
-          "h-8 w-8 text-base": size === "md",
-          "h-14 w-14 text-2xl": size === "lg",
+          "size-6 text-sm": size === "sm",
+          "size-8 text-base": size === "md",
+          "size-14 text-2xl": size === "lg",
         },
         !name
           ? "bg-gray-200"
@@ -57,9 +57,9 @@ export const UserAvatar = ({
       ) : (
         <UserIcon
           className={clsx({
-            "h-4 w-4": size === "sm",
-            "h-6 w-6": size === "md",
-            "h-8 w-8": size === "lg",
+            "size-4": size === "sm",
+            "size-6": size === "md",
+            "size-8": size === "lg",
           })}
         />
       )}

@@ -95,28 +95,28 @@ const Footer: React.FunctionComponent = () => {
               href="https://twitter.com/ralllyco"
               className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
-              <TwitterIcon className="h-5 w-5" />
+              <TwitterIcon className="size-5" />
             </Link>
             <Link
               target="_blank"
               href="https://discord.gg/uzg4ZcHbuM"
               className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
-              <DiscordIcon className="h-5 w-5" />
+              <DiscordIcon className="size-5" />
             </Link>
             <Link
               target="_blank"
               href="https://www.linkedin.com/company/rallly"
               className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
-              <LinkedinIcon className="h-5 w-5" />
+              <LinkedinIcon className="size-5" />
             </Link>
             <Link
               target="_blank"
               href="https://github.com/lukevella/rallly"
               className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
             >
-              <GithubIcon className="h-5 w-5" />
+              <GithubIcon className="size-5" />
             </Link>
           </div>
         </div>
@@ -219,7 +219,7 @@ const Footer: React.FunctionComponent = () => {
             href="https://support.rallly.co/contribute/translations"
             className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
           >
-            <LanguagesIcon className="mr-2 h-5 w-5" />
+            <LanguagesIcon className="mr-2 size-5" />
             <Trans i18nKey="volunteerTranslator" /> &rarr;
           </Link>
         </div>
