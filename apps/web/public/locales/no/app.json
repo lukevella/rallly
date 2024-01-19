@@ -219,6 +219,8 @@
   "comingSoon": "Kommer Snart",
   "contacts": "Kontakter",
   "back": "Tilbake",
+  "pollStatusLive": "Aktiv",
+  "pollStatusFinalized": "Ferdigstilt",
   "xMore": "{count} flere",
   "share": "Del",
   "pageXOfY": "Side {currentPage} av {pageCount}",
