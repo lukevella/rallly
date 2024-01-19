@@ -217,6 +217,9 @@
   "continueAs": "Продолжить как",
   "pageMovedDescription": "Перенаправление на <a>{newUrl}</a>",
   "notRegistered": "Нет учетной записи? <a>Зарегистрироваться</a>",
+  "back": "Назад",
+  "pollStatusLive": "Активен",
+  "pollStatusFinalized": "Завершен",
   "share": "Поделиться",
   "inviteLink": "Ссылка-приглашение",
   "inviteParticipantLinkInfo": "Кто угодно с этой ссылкой сможет проголосовать в вашем опросе."
