@@ -214,6 +214,9 @@
   "continueAs": "Olarak devam edin",
   "pageMovedDescription": "<a>{newUrl}</a> linkine yönlendiriliyorsunuz",
   "notRegistered": "Hesabınız yokmu? <a>Kayıt olun</a>",
+  "back": "Geri",
+  "pollStatusLive": "Canlı",
+  "pollStatusFinalized": "Tamamlanmış",
   "share": "Paylaş",
   "inviteLink": "Davet Linki",
   "inviteParticipantLinkInfo": "Bu linke sahip kişiler anketinizde oy verebilecek."
