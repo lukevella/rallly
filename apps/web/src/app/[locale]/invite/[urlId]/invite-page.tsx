@@ -73,7 +73,7 @@ const GoToApp = () => {
             className={poll.userId !== user.id ? "hidden" : ""}
           >
             <Link href={`/poll/${poll.id}`}>
-              <ArrowUpLeftIcon className="h-4 w-4 text-muted-foreground" />
+              <ArrowUpLeftIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="manage" />
             </Link>
           </Button>
@@ -92,8 +92,8 @@ export function InvitePage() {
       <LegacyPollContextProvider>
         <VisibilityProvider>
           <GoToApp />
-          <div className="lg:px-6 lg:py-5 p-3">
-            <div className="max-w-4xl mx-auto">
+          <div className="p-3 lg:px-6 lg:py-5">
+            <div className="mx-auto max-w-4xl">
               <div className="-mx-1">
                 <Poll />
               </div>

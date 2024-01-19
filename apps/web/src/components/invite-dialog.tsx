@@ -29,7 +29,7 @@ export function CopyInviteLinkButton() {
 
   return (
     <Button
-      className="grow min-w-0"
+      className="min-w-0 grow"
       onClick={() => {
         copyToClipboard(poll.inviteLink);
         setDidCopy(true);
@@ -41,7 +41,7 @@ export function CopyInviteLinkButton() {
       {didCopy ? (
         <Trans i18nKey="copied" />
       ) : (
-        <span className="truncate min-w-0">{`${window.location.hostname}/invite/${poll.id}`}</span>
+        <span className="min-w-0 truncate">{`${window.location.hostname}/invite/${poll.id}`}</span>
       )}
     </Button>
   );

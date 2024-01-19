@@ -5,8 +5,8 @@ export default function Loading() {
   return (
     <PageContainer>
       <PageHeader className="flex items-center gap-x-4">
-        <Skeleton className="w-9 h-9" />
-        <Skeleton className="w-48 h-5" />
+        <Skeleton className="h-9 w-9" />
+        <Skeleton className="h-5 w-48" />
       </PageHeader>
     </PageContainer>
   );

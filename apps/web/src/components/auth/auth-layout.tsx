@@ -15,7 +15,7 @@ export const AuthCard = ({ children }: { children?: React.ReactNode }) => {
 
 export const AuthFooter = ({ children }: { children?: React.ReactNode }) => {
   return (
-    <div className="flex flex-col gap-2 text-gray-500 text-sm mt-4">
+    <div className="mt-4 flex flex-col gap-2 text-sm text-gray-500">
       {children}
     </div>
   );

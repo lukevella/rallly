@@ -27,7 +27,7 @@ function PollFolder({
       className={cn(
         isActive
           ? "bg-gray-100"
-          : "shadow-sm text-muted-foreground hover:bg-gray-100 active:bg-gray-200",
+          : "text-muted-foreground shadow-sm hover:bg-gray-100 active:bg-gray-200",
       )}
     >
       <Link href={href}>{children}</Link>

@@ -8,7 +8,7 @@ export const Settings = ({ children }: React.PropsWithChildren) => {
 
 export const SettingsHeader = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="mb-4 font-semibold text-lg md:mb-8">
+    <div className="mb-4 text-lg font-semibold md:mb-8">
       <h2>{children}</h2>
     </div>
   );
@@ -24,7 +24,7 @@ export const SettingsSection = (props: {
   children: React.ReactNode;
 }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-10 gap-3 md:gap-8">
+    <div className="grid grid-cols-1 gap-3 md:gap-8 lg:grid-cols-10">
       <div className="col-span-3">
         <h2 className="mb-1 text-base font-semibold">{props.title}</h2>
         <p className="text-muted-foreground text-sm">{props.description}</p>

@@ -23,8 +23,8 @@ export function MenuItem({
       className={cn(
         isCurrent
           ? "bg-gray-200 text-indigo-600"
-          : "text-gray-700 hover:text-primary",
-        "group flex  items-center gap-x-3 rounded-md py-2 px-3 text-sm leading-6 font-semibold",
+          : "hover:text-primary text-gray-700",
+        "group flex  items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
       <Icon

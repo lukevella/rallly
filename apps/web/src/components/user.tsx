@@ -44,8 +44,8 @@ export const UserAvatar = ({
         !name
           ? "bg-gray-200"
           : colors?.requiresDarkText
-          ? "text-gray-800"
-          : "text-white",
+            ? "text-gray-800"
+            : "text-white",
         className,
       )}
       style={{

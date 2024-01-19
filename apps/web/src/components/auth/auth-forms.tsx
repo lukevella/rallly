@@ -44,7 +44,7 @@ export const VerifyCode: React.FunctionComponent<{
         })}
       >
         <fieldset>
-          <h1 className="mb-1 font-bold text-2xl">{t("verifyYourEmail")}</h1>
+          <h1 className="mb-1 text-2xl font-bold">{t("verifyYourEmail")}</h1>
           <div className="mb-4 text-gray-500">
             {t("stepSummary", {
               current: 2,

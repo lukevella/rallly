@@ -29,18 +29,18 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
 
 function MobileNavigation() {
   return (
-    <div className="lg:hidden shadow-sm bg-gray-100 border-b flex items-center justify-between px-4 py-3">
+    <div className="flex items-center justify-between border-b bg-gray-100 px-4 py-3 shadow-sm lg:hidden">
       <LogoLink />
-      <div className="flex gap-x-2.5 justify-end">
+      <div className="flex justify-end gap-x-2.5">
         <Link
           href="/settings/profile"
-          className="inline-flex items-center w-7 h-9"
+          className="inline-flex h-9 w-7 items-center"
         >
           <CurrentUserAvatar size="sm" />
         </Link>
         <Button asChild variant="ghost">
           <Link href="/menu">
-            <MenuIcon className="h-4 w-4 text-muted-foreground" />
+            <MenuIcon className="text-muted-foreground h-4 w-4" />
           </Link>
         </Button>
       </div>
@@ -59,7 +59,7 @@ export default async function Layout({
         <MobileNavigation />
         <div
           className={cn(
-            "hidden lg:flex z-50 inset-y-0 lg:fixed lg:w-72 bg-gray-100 shrink-0 flex-col gap-y-5 overflow-y-auto border-r lg:px-6 lg:py-4 px-5 py-4",
+            "inset-y-0 z-50 hidden shrink-0 flex-col gap-y-5 overflow-y-auto border-r bg-gray-100 px-5 py-4 lg:fixed lg:flex lg:w-72 lg:px-6 lg:py-4",
           )}
         >
           <div>
@@ -67,7 +67,7 @@ export default async function Layout({
           </div>
           <Sidebar />
         </div>
-        <div className={cn("grow min-h-screen lg:pl-72 bg-gray-50")}>
+        <div className={cn("min-h-screen grow bg-gray-50 lg:pl-72")}>
           {children}
         </div>
       </div>

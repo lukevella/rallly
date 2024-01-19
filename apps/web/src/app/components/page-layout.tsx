@@ -16,7 +16,7 @@ export function PageTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn("font-semibold leading-9 truncate", className)}>
+    <h2 className={cn("truncate font-semibold leading-9", className)}>
       {children}
     </h2>
   );
@@ -34,9 +34,9 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "lg:px-6 lg:py-3 px-4 py-3",
+        "px-4 py-3 lg:px-6 lg:py-3",
         {
-          "border-b bg-gray-50 sticky z-20 top-0": variant === "default",
+          "sticky top-0 z-20 border-b bg-gray-50": variant === "default",
         },
         className,
       )}
@@ -53,5 +53,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("lg:px-6 lg:py-5 p-4", className)}>{children}</div>;
+  return <div className={cn("p-4 lg:px-6 lg:py-5", className)}>{children}</div>;
 }

@@ -20,7 +20,7 @@ import Loader from "./loading";
 const EmptyState = () => {
   return (
     <div className="py-24">
-      <div className="mx-auto max-w-md rounded-md border-2 w-full border-dashed border-gray-300 p-8 text-center">
+      <div className="mx-auto w-full max-w-md rounded-md border-2 border-dashed border-gray-300 p-8 text-center">
         <div className="mb-4">
           <InboxIcon className="inline-block h-10 w-10 text-gray-400" />
         </div>
@@ -84,14 +84,14 @@ export function PollsList() {
         cell: ({ row }) => {
           return (
             <Link className="group block" href={`/poll/${row.original.id}`}>
-              <div className="flex items-center gap-x-2 mb-1 min-w-0">
-                <h3 className="font-semibold truncate text-gray-600 group-hover:text-gray-900">
+              <div className="mb-1 flex min-w-0 items-center gap-x-2">
+                <h3 className="truncate font-semibold text-gray-600 group-hover:text-gray-900">
                   {row.original.title}
                 </h3>
-                <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all group-focus:translate-x-2 group-hover:opacity-100" />
+                <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all group-hover:opacity-100 group-focus:translate-x-2" />
               </div>
               {row.original.event ? (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {row.original.event.duration === 0
                     ? adjustTimeZone(
                         row.original.event.start,
@@ -134,7 +134,7 @@ export function PollsList() {
         cell: ({ row }) => {
           const { createdAt } = row.original;
           return (
-            <p className="text-sm whitespace-nowrap text-muted-foreground">
+            <p className="text-muted-foreground whitespace-nowrap text-sm">
               <time dateTime={createdAt.toDateString()}>
                 <Trans
                   i18nKey="createdTime"
@@ -150,7 +150,7 @@ export function PollsList() {
         cell: ({ row }) => {
           return (
             <Tooltip delayDuration={100}>
-              <TooltipTrigger className="flex items-center text-muted-foreground gap-x-2">
+              <TooltipTrigger className="text-muted-foreground flex items-center gap-x-2">
                 <UsersIcon className="h-4 w-4" />
                 <span className="text-sm">
                   {row.original.participants.length}

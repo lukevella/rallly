@@ -20,7 +20,7 @@ export default async function LoginPage({ params }: { params: Params }) {
           oidcConfig={isOIDCEnabled ? { name: oidcName } : undefined}
         />
       </AuthCard>
-      <div className="mt-4 text-center pt-4 text-gray-500 sm:text-base">
+      <div className="mt-4 pt-4 text-center text-gray-500 sm:text-base">
         <Trans
           t={t}
           i18nKey="notRegistered"

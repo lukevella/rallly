@@ -41,7 +41,7 @@ function NavItem({
         current
           ? "bg-gray-200 text-gray-800"
           : "text-gray-700 hover:bg-gray-200 active:bg-gray-300",
-        "group flex  items-center gap-x-3 rounded-md py-2 px-3 text-sm leading-6 font-semibold",
+        "group flex  items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
       <Icon
@@ -80,7 +80,7 @@ export function Sidebar() {
             <Trans i18nKey="comingSoon" defaults="Coming Soon" />
           </div>
           <ul role="list" className="-mx-2 mt-2 space-y-1">
-            <li className="grid gap-1 pointer-events-none opacity-50">
+            <li className="pointer-events-none grid gap-1 opacity-50">
               <NavItem href="/events" icon={CalendarIcon}>
                 <Trans i18nKey="events" defaults="Events" />
               </NavItem>
@@ -102,16 +102,16 @@ export function Sidebar() {
               <li>
                 <Link
                   href="/settings/billing"
-                  className="border rounded-md mb-4 px-4 py-3 bg-gray-50 hover:bg-gray-200 active:bg-gray-300 border-gray-200 hover:border-gray-300 grid"
+                  className="mb-4 grid rounded-md border border-gray-200 bg-gray-50 px-4 py-3 hover:border-gray-300 hover:bg-gray-200 active:bg-gray-300"
                 >
-                  <span className="flex mb-2 items-center gap-x-2">
-                    <SparklesIcon className="h-5 text-gray-400 w-5" />
-                    <span className="font-bold text-sm">
+                  <span className="mb-2 flex items-center gap-x-2">
+                    <SparklesIcon className="h-5 w-5 text-gray-400" />
+                    <span className="text-sm font-bold">
                       <Trans i18nKey="upgrade" />
                     </span>
                     <ProBadge />
                   </span>
-                  <span className="text-gray-500 leading-relaxed text-sm">
+                  <span className="text-sm leading-relaxed text-gray-500">
                     <Trans
                       i18nKey="unlockFeatures"
                       defaults="Unlock all Pro features."
@@ -139,17 +139,17 @@ export function Sidebar() {
               <Button
                 asChild
                 variant="ghost"
-                className="group h-auto py-3 w-full justify-start"
+                className="group h-auto w-full justify-start py-3"
               >
                 <Link href="/settings/profile">
                   <CurrentUserAvatar />
-                  <span className="grid ml-1 grow">
+                  <span className="ml-1 grid grow">
                     <span className="font-semibold">{user.name}</span>
                     <span className="text-muted-foreground text-sm">
                       {user.email}
                     </span>
                   </span>
-                  <ChevronRightIcon className="h-4 w-4 opacity-0 group-hover:opacity-100 text-muted-foreground" />
+                  <ChevronRightIcon className="text-muted-foreground h-4 w-4 opacity-0 group-hover:opacity-100" />
                 </Link>
               </Button>
             </li>

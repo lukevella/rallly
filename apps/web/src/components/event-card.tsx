@@ -41,10 +41,10 @@ export const EventCard = () => {
   return (
     <Card className="overflow-visible" fullWidthOnMobile={false}>
       <div
-        className="h-2 -mx-px rounded-t-md -mt-px"
+        className="-mx-px -mt-px h-2 rounded-t-md"
         style={{ background: generateGradient(poll.id) }}
       />
-      <div className="bg-pattern p-4 sm:flex grid gap-4 sm:justify-between sm:px-6">
+      <div className="bg-pattern grid gap-4 p-4 sm:flex sm:justify-between sm:px-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4 sm:gap-6">
             {poll.event ? (
@@ -56,7 +56,7 @@ export const EventCard = () => {
             ) : null}
             <div>
               <h1
-                className="text-xl font-bold tracking-tight mb-1"
+                className="mb-1 text-xl font-bold tracking-tight"
                 data-testid="poll-title"
               >
                 {preventWidows(poll.title)}
@@ -105,7 +105,7 @@ export const EventCard = () => {
       <div className="space-y-4 p-4 sm:px-6">
         {poll.description ? (
           <div className="flex gap-4">
-            <TextIcon className="h-4 w-4 text-muted-foreground shrink-0 translate-y-1" />
+            <TextIcon className="text-muted-foreground h-4 w-4 shrink-0 translate-y-1" />
             <div className="whitespace-pre-line">
               <TruncatedLinkify>{poll.description}</TruncatedLinkify>
             </div>
@@ -113,12 +113,12 @@ export const EventCard = () => {
         ) : null}
         {poll.location ? (
           <div className="flex gap-4">
-            <MapPinIcon className="h-4 w-4 translate-y-1 text-muted-foreground" />
+            <MapPinIcon className="text-muted-foreground h-4 w-4 translate-y-1" />
             <TruncatedLinkify>{poll.location}</TruncatedLinkify>
           </div>
         ) : null}
         <div className="flex gap-4">
-          <MousePointerClickIcon className="h-4 w-4 shrink-0 text-muted-foreground translate-y-0.5" />
+          <MousePointerClickIcon className="text-muted-foreground h-4 w-4 shrink-0 translate-y-0.5" />
           <div>
             <div className="flex gap-2.5">
               <span className="inline-flex items-center space-x-1">

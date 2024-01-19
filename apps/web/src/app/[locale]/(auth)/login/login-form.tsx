@@ -129,12 +129,12 @@ export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
         </Button>
         {hasAlternativeLoginMethods ? (
           <>
-            <hr className="border-t border-grey-500 my-4" />
+            <hr className="border-grey-500 my-4 border-t" />
             <div className="grid gap-4">
               <IfCloudHosted>
                 <Button size="lg" asChild>
                   <Link href={callbackUrl}>
-                    <UserIcon className="w-4 h-4" />
+                    <UserIcon className="h-4 w-4" />
                     <Trans i18nKey="continueAsGuest" />
                   </Link>
                 </Button>

@@ -13,7 +13,7 @@ export default async function Page({ params }: { params: Params }) {
       <AuthCard>
         <RegisterForm />
       </AuthCard>
-      <div className="mt-4 text-center pt-4 text-gray-500 sm:text-base">
+      <div className="mt-4 pt-4 text-center text-gray-500 sm:text-base">
         <Trans
           t={t}
           i18nKey="alreadyRegistered"

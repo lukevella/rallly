@@ -37,7 +37,7 @@ export const PageDialogTitle = (props: React.PropsWithChildren) => {
 
 export const PageDialogDescription = (props: React.PropsWithChildren) => {
   return (
-    <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+    <p className="text-muted-foreground max-w-xl text-sm leading-relaxed">
       {props.children}
     </p>
   );

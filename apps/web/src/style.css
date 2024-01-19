@@ -8,7 +8,9 @@
   }
   body {
     @apply text-foreground bg-gray-100;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
   html {
     @apply h-full font-sans text-base text-gray-700;
@@ -26,7 +28,7 @@
   input,
   select,
   textarea {
-    @apply rounded outline-none focus-visible:ring-1 focus:ring-gray-300;
+    @apply rounded outline-none focus:ring-gray-300 focus-visible:ring-1;
   }
 
   #floating-ui-root {
@@ -36,7 +38,7 @@
 
 @layer components {
   .text-link {
-    @apply hover:text-gray-800 rounded-md outline-none underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+    @apply rounded-md underline outline-none hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }
   .formField {
     @apply mb-4;

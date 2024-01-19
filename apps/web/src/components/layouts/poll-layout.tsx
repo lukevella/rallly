@@ -167,9 +167,9 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <PageContainer>
-      <PageHeader className="flex md:flex-row flex-col md:items-center gap-x-4 gap-y-2.5">
-        <div className="flex min-w-0 md:basis-2/3 items-center gap-x-4">
-          <div className="md:basis-1/2 flex gap-x-4">
+      <PageHeader className="flex flex-col gap-x-4 gap-y-2.5 md:flex-row md:items-center">
+        <div className="flex min-w-0 items-center gap-x-4 md:basis-2/3">
+          <div className="flex gap-x-4 md:basis-1/2">
             {pathname === pollLink ? (
               <Button asChild>
                 <Link href="/polls">
