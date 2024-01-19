@@ -1,4 +1,4 @@
 {
   "extends": "@rallly/tsconfig/react.json",
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
 }

@@ -23,6 +23,7 @@
     "lint": "turbo lint",
     "i18n:scan": "turbo i18n:scan",
     "lint:tsc": "turbo lint:tsc",
+    "prettier": "prettier --write .",
     "release": "./scripts/create-release.sh"
   },
   "prisma": {
