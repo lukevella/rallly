@@ -189,6 +189,9 @@
   "authErrorCta": "로그인 페이지로 가기",
   "continueAs": "계속하기",
   "notRegistered": "계정이 없으신가요? <a>회원 가입</a>",
+  "back": "뒤로가기",
+  "pollStatusLive": "실시간",
+  "pollStatusFinalized": "완료",
   "share": "공유하기",
   "inviteLink": "초대 링크",
   "inviteParticipantLinkInfo": "이 링크를 가진 사람은 누구나 당신의 투표에 참여할 수 있습니다."
