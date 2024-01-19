@@ -217,6 +217,9 @@
   "continueAs": "Continua com a",
   "pageMovedDescription": "S'està redirigint a <a>{newUrl}</a>",
   "notRegistered": "No teniu un compte? <a>Registreu-vos</a>",
+  "back": "Torna",
+  "pollStatusLive": "En viu",
+  "pollStatusFinalized": "Finalitzada",
   "share": "Compartir",
   "inviteLink": "Enllaç d'invitació",
   "inviteParticipantLinkInfo": "Qualsevol persona amb aquest enllaç podrà votar a la teva enquesta."

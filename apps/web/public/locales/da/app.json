@@ -214,6 +214,9 @@
   "authErrorCta": "Gå til loginsiden",
   "continueAs": "Fortsæt som",
   "pageMovedDescription": "Omdirigerer til <a>{newUrl}</a>",
+  "back": "Tilbage",
+  "pollStatusLive": "Live",
+  "pollStatusFinalized": "Afsluttet",
   "share": "Del",
   "inviteLink": "Invitationslink",
   "inviteParticipantLinkInfo": "Alle med dette link vil kunne stemme i din afstemning."

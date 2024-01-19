@@ -1,12 +1,12 @@
 {
-  "login": "Login",
+  "login": "Anmelden",
   "links": "Links",
   "blog": "Blog",
   "discussions": "Diskussion",
   "footerCredit": "Entwickelt von <a>@imlukevella</a>",
   "footerSponsor": "Dieses Projekt wird von Nutzern finanziert. Bitte unterstütze es durch eine <a>Spende</a>.",
   "language": "Sprache",
-  "poweredBy": "Unterstützt von",
+  "poweredBy": "Unterstützt durch",
   "privacyPolicy": "Datenschutzerklärung",
   "support": "Hilfe",
   "cookiePolicy": "Cookies Richtlinien",
@@ -22,6 +22,6 @@
   "findATime": "Zeit finden",
   "getStarted": "Los geht's",
   "availabilityPoll": "Verfügbarkeitsumfrage",
-  "solutions": "Lösungen",
+  "solutions": "Anwendungen",
   "howItWorks": "So funktioniert's"
 }
