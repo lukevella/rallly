@@ -46,10 +46,10 @@ export const UserDropdown = ({ className }: { className?: string }) => {
       >
         <Button variant="ghost" className="flex justify-between">
           <span className="flex items-center gap-x-2.5">
-            <CurrentUserAvatar size="sm" className="shrink-0 -ml-1 " />
+            <CurrentUserAvatar size="sm" className="-ml-1 shrink-0 " />
             <span className="truncate">{user.name}</span>
           </span>
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          <ChevronDown className="text-muted-foreground h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -67,7 +67,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild={true}>
           <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
-            <ListIcon className="h-4 w-4 text-muted-foreground" />
+            <ListIcon className="text-muted-foreground h-4 w-4" />
             <Trans i18nKey="polls" defaults="Polls" />
           </Link>
         </DropdownMenuItem>
@@ -77,7 +77,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
               href="/settings/profile"
               className="flex items-center gap-x-2"
             >
-              <UserIcon className="h-4 w-4 text-muted-foreground" />
+              <UserIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="profile" defaults="Profile" />
             </Link>
           </DropdownMenuItem>
@@ -87,7 +87,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
             href="/settings/preferences"
             className="flex items-center gap-x-2"
           >
-            <Settings2Icon className="h-4 w-4 text-muted-foreground" />
+            <Settings2Icon className="text-muted-foreground h-4 w-4" />
             <Trans i18nKey="preferences" defaults="Preferences" />
           </Link>
         </DropdownMenuItem>
@@ -97,7 +97,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
               href="/settings/billing"
               className="flex items-center gap-x-2"
             >
-              <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
+              <CreditCardIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="Billing" defaults="Billing" />
             </Link>
           </DropdownMenuItem>
@@ -109,7 +109,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
             href="https://support.rallly.co"
             className="flex items-center gap-x-2"
           >
-            <LifeBuoyIcon className="h-4 w-4 text-muted-foreground" />
+            <LifeBuoyIcon className="text-muted-foreground h-4 w-4" />
             <Trans i18nKey="support" defaults="Support" />
           </Link>
         </DropdownMenuItem>
@@ -120,7 +120,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
               href="https://support.rallly.co/self-hosting/pricing"
               className="flex items-center gap-x-2"
             >
-              <GemIcon className="h-4 w-4 text-muted-foreground" />
+              <GemIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="pricing" defaults="Pricing" />
             </Link>
           </DropdownMenuItem>
@@ -132,7 +132,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
               href="https://feedback.rallly.co"
               className="flex items-center gap-x-2"
             >
-              <MegaphoneIcon className="h-4 w-4 text-muted-foreground" />
+              <MegaphoneIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="feedback" defaults="Feedback" />
             </Link>
           </DropdownMenuItem>
@@ -141,24 +141,24 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         <IfGuest>
           <DropdownMenuItem asChild={true}>
             <LoginLink className="flex items-center gap-x-2">
-              <LogInIcon className="h-4 w-4 text-muted-foreground" />
+              <LogInIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="login" defaults="login" />
             </LoginLink>
           </DropdownMenuItem>
           <DropdownMenuItem asChild={true}>
             <RegisterLink className="flex items-center gap-x-2">
-              <UserPlusIcon className="h-4 w-4 text-muted-foreground" />
+              <UserPlusIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="createAnAccount" defaults="Register" />
             </RegisterLink>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             asChild
-            className="flex text-destructive items-center gap-x-2"
+            className="text-destructive flex items-center gap-x-2"
           >
             {/* Don't use signOut() from next-auth. It doesn't work in vercel-production env. I don't know why. */}
             <a href="/logout">
-              <RefreshCcwIcon className="h-4 w-4 text-muted-foreground" />
+              <RefreshCcwIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="forgetMe" />
             </a>
           </DropdownMenuItem>
@@ -167,7 +167,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           <DropdownMenuItem asChild className="flex items-center gap-x-2">
             {/* Don't use signOut() from next-auth. It doesn't work in vercel-production env. I don't know why. */}
             <a href="/logout">
-              <LogOutIcon className="h-4 w-4 text-muted-foreground" />
+              <LogOutIcon className="text-muted-foreground h-4 w-4" />
               <Trans i18nKey="logout" />
             </a>
           </DropdownMenuItem>

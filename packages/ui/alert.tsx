@@ -33,7 +33,7 @@ const Alert = React.forwardRef<
     {...props}
   >
     {Icon ? (
-      <Icon className="mb-2 -mt-1 h-6 w-6 text-muted-foreground" />
+      <Icon className="text-muted-foreground -mt-1 mb-2 h-6 w-6" />
     ) : null}
     <div>{children}</div>
   </div>
@@ -63,7 +63,7 @@ const AlertDescription = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-sm text-muted-foreground [&_p]:leading-relaxed",
+      "text-muted-foreground text-sm [&_p]:leading-relaxed",
       className,
     )}
     {...props}

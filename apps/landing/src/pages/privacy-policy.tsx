@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
   return (
     <PageLayout>
       <NextSeo title="Privacy Policy" />
-      <div className="prose my-16 mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
+      <div className="prose mx-auto my-16 max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Privacy Policy</h1>
         <p>Last updated: 1 August 2023</p>
         <p>

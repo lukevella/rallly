@@ -2,19 +2,19 @@ import { Skeleton } from "@/components/skeleton";
 
 function Row() {
   return (
-    <div className="flex first:pt-0 py-4 items-center gap-x-4">
+    <div className="flex items-center gap-x-4 py-4 first:pt-0">
       <div className="grow">
-        <Skeleton className="w-48 h-5 mb-2" />
-        <Skeleton className="w-24 h-4" />
+        <Skeleton className="mb-2 h-5 w-48" />
+        <Skeleton className="h-4 w-24" />
       </div>
       <div className="pr-8">
-        <Skeleton className="w-24 h-4" />
+        <Skeleton className="h-4 w-24" />
       </div>
       <div className="pr-8">
-        <Skeleton className="w-24 h-4" />
+        <Skeleton className="h-4 w-24" />
       </div>
       <div className="pr-8">
-        <Skeleton className="w-12 h-4" />
+        <Skeleton className="h-4 w-12" />
       </div>
     </div>
   );

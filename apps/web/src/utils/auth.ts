@@ -222,7 +222,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         return session;
       },
     },
-  } satisfies NextAuthOptions);
+  }) satisfies NextAuthOptions;
 
 type GetServerSessionParams =
   | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]

@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
   return (
     <PageLayout>
       <NextSeo title="Cookie Policy" />
-      <div className="prose my-16 mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
+      <div className="prose mx-auto my-16 max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Cookie Policy</h1>
         <p>Last updated: 19 April 2023</p>
         <p>

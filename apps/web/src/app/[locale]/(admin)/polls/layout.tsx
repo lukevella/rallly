@@ -22,13 +22,13 @@ export default async function Layout({
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex justify-between items-center gap-x-4">
+        <div className="flex items-center justify-between gap-x-4">
           <PageTitle>
             <Trans t={t} i18nKey="polls" />
           </PageTitle>
           <Button asChild>
             <Link href="/new">
-              <PenBoxIcon className="w-4 text-muted-foreground h-4" />
+              <PenBoxIcon className="text-muted-foreground h-4 w-4" />
               <span className="hidden sm:inline">
                 <Trans t={t} i18nKey="newPoll" />
               </span>

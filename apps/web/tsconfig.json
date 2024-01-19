@@ -4,16 +4,16 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "~/*": ["public/*"]
+      "~/*": ["public/*"],
     },
-    "strictNullChecks": true
+    "strictNullChecks": true,
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
     ".next/types/**/*.ts",
-    "src/app/[locale]/p/[participantUrlId]/page.tsx"
+    "src/app/[locale]/p/[participantUrlId]/page.tsx",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

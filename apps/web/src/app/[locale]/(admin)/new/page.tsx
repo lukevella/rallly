@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex justify-between items-center gap-x-4">
+        <div className="flex items-center justify-between gap-x-4">
           <PageTitle>
             <Trans t={t} i18nKey="polls" />
           </PageTitle>

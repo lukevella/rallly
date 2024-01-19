@@ -2,7 +2,7 @@ import { Spinner } from "@/components/spinner";
 
 export default function Loading() {
   return (
-    <div className="flex justify-center items-center h-72">
+    <div className="flex h-72 items-center justify-center">
       <Spinner className="text-muted-foreground" />
     </div>
   );

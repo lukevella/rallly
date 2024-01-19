@@ -4,7 +4,7 @@ import Link from "next/link";
 export function LogoLink() {
   return (
     <Link
-      className="active:translate-y-1 transition-transform inline-block"
+      className="inline-block transition-transform active:translate-y-1"
       href="/"
     >
       <Image

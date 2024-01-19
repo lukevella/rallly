@@ -9,7 +9,7 @@ export default function Page() {
     <div className="bg-gray-100">
       <div className="flex items-center justify-between px-4 py-3">
         <Link
-          className="active:translate-y-1 transition-transform inline-block"
+          className="inline-block transition-transform active:translate-y-1"
           href="/"
         >
           <Image

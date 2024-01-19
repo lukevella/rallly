@@ -49,7 +49,7 @@ export const Table = <
       <div
         className={clsx(
           props.className,
-          "max-w-full  overflow-x-auto scrollbar-thin",
+          "scrollbar-thin  max-w-full overflow-x-auto",
         )}
       >
         <table
@@ -100,7 +100,7 @@ export const Table = <
                     }}
                     key={cell.id}
                     className={clsx(
-                      "overflow-hidden align-middle border-gray-100 pr-8 py-4",
+                      "overflow-hidden border-gray-100 py-4 pr-8 align-middle",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
                         "pt-0": !props.enableTableHeader && i === 0,
@@ -146,7 +146,7 @@ export const Table = <
             })}
           />
         </Button>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-muted-foreground text-sm">
           <Trans
             i18nKey="pageXOfY"
             defaults="Page {currentPage} of {pageCount}"

@@ -8,7 +8,9 @@
   }
   body {
     @apply text-foreground overflow-y-auto bg-gray-200/50;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
   html {
     @apply h-full font-sans text-base;
