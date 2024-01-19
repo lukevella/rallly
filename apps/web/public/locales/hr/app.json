@@ -183,6 +183,9 @@
   "accessAllFeatures": "Pristup svim značajkama",
   "earlyAccess": "Rani pristup novim značajkama",
   "pricing": "Cijene",
+  "back": "Natrag",
+  "pollStatusLive": "Aktivno",
+  "pollStatusFinalized": "Završeno",
   "share": "Podijeli",
   "inviteLink": "Poveznica s pozivnicom",
   "inviteParticipantLinkInfo": "Svi koji dobiju ovu poveznicu mogu glasati u vašoj anketi."
