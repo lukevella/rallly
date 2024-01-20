@@ -201,6 +201,7 @@
   "currentPlan": "Piano corrente",
   "limitedAccess": "Accesso alle funzioni principali",
   "pollsDeleted": "I sondaggi vengono eliminati automaticamente una volta che diventano inattivi",
+  "planProDescription": "Per utenti con esigenze maggiori e professionisti",
   "accessAllFeatures": "Accedi a tutte le funzionalità",
   "earlyAccess": "Accedi in anteprima alle nuove funzionalità",
   "earlyAdopterDescription": "Come primo utilizzatore, bloccherai la tariffa dell'abbonamento così non sarà soggetta ad aumenti futuri.",
@@ -232,6 +233,10 @@
   "userId": "ID utente",
   "aboutGuest": "Utente ospite",
   "aboutGuestDescription": "Le impostazioni del profilo non sono disponibili per gli utenti ospiti. <0>Accedi</0> al tuo profilo esistente o <1>crea un nuovo profilo</1> per personalizzarlo.",
+  "logoutDescription": "Esci dalla sessione attuale",
+  "events": "Eventi",
+  "registrations": "Iscrizioni",
+  "inviteParticipantsDescription": "Copia e condividi questo indirizzo d'invito per iniziare a raccogliere le risposte dei partecipanti.",
   "inviteLink": "Link d'Invito",
   "inviteParticipantLinkInfo": "Chiunque abbia questo link potrà votare nel sondaggio."
 }
