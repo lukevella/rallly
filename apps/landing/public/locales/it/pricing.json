@@ -15,6 +15,16 @@
   "cancelSubscriptionAnswer": "È possibile annullare l'abbonamento in qualsiasi momento accedendo alle <a>billing settings</a>. Una volta annullato l'abbonamento, si avrà ancora accesso al piano a pagamento fino alla fine del periodo di fatturazione. Dopodiché, sarete declassati a un piano gratuito.",
   "billingPeriodMonthly": "Mensile",
   "billingPeriodYearly": "Annuale",
+  "planFreeDescription": "Per utenti occasionali",
+  "limitedAccess": "Accesso alle funzioni principali",
+  "pollsDeleted": "I sondaggi vengono eliminati automaticamente una volta che diventano inattivi",
+  "planProDescription": "Per utenti con esigenze maggiori e professionisti",
+  "accessAllFeatures": "Accedi a tutte le funzionalità",
+  "getEarlyAccess": "Accedi in anteprima alle nuove funzionalità",
+  "canUseFreeAnswer2": "Sì, la maggior parte delle caratteristiche di Rallly sono gratuite e molti utenti non avranno mai bisogno di pagare. Tuttavia, ci sono alcune caratteristiche che sono disponibili solo a pagamento. Queste caratteristiche sono progettate per aiutarti a ottenere il massimo da Rallly.",
+  "whyUpgradeAnswer2": "L'aggiornamento a un piano a pagamento ha senso se si utilizza Rallly spesso o per lavoro. Il piano di abbonamento attuale è un piano speciale per i primi utilizzatori e aumenterà in futuro. Aggiornando il piano ora, otterrai accesso anticipato a nuovi strumenti di programmazione di alta qualità appena verranno rilasciati, e bloccherai il prezzo del piano di abbonamento in modo che non subisca eventuali aumenti futuri.",
+  "upgradeNowSaveLater": "Aggiorna ora per risparmiare dopo",
+  "earlyAdopterDescription": "Come primo utilizzatore, bloccherai il prezzo del tuo abbonamento in modo da non subire aumenti in futuro.",
   "planFree": "Gratis",
   "keepPollsIndefinitely": "Conservare i sondaggi a tempo indeterminato"
 }
