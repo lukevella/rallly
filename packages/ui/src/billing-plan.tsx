@@ -1,6 +1,6 @@
 import { CheckCircle2Icon } from "lucide-react";
 
-import { cn } from "@ui/utils";
+import { cn } from "@rallly/ui";
 
 export const BillingPlan = ({
   children,

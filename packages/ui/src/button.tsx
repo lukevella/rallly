@@ -4,7 +4,7 @@ import { Loader2Icon } from "lucide-react";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 
-import { cn } from "@ui/utils";
+import { cn } from "@rallly/ui";
 
 const buttonVariants = cva(
   "inline-flex border font-medium disabled:text-muted-foreground focus:ring-1 focus:ring-gray-300 disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",

@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@ui/utils";
-import { Button } from "@ui/button";
+import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import dayjs from "dayjs";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
