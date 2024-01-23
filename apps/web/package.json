@@ -64,6 +64,8 @@
     "posthog-js": "^1.102.1",
     "posthog-node": "^3.6.0",
     "react-big-calendar": "^1.8.1",
+    "react-day-picker": "^8.10.0",
+    "date-fns": "^3.2.0",
     "react-hook-form": "^7.42.1",
     "react-hook-form-persist": "^3.0.0",
     "react-hot-toast": "^2.4.0",

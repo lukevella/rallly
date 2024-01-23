@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@rallly/ui";
 import {
   Select,
   SelectContent,
@@ -19,7 +20,7 @@ export function MenuItem(props: { href: string; children: React.ReactNode }) {
   const pathname = usePathname();
   return (
     <Link
-      className={clsx(
+      className={cn(
         "flex min-w-0 items-center gap-x-2 rounded-none px-3 py-2 text-sm font-medium",
         pathname === props.href
           ? "bg-white"

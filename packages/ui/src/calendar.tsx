@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@ui/utils";
-import { Button } from "@ui/button";
+import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import dayjs from "dayjs";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
@@ -181,7 +181,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                     }
                   }}
                   className={cn(
-                    "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 text-xs font-medium tracking-tight focus:z-10 focus:rounded",
+                    "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 text-sm font-medium tracking-tight focus:z-10 focus:rounded",
                     {
                       "text-rose-600": day.today && !day.selected,
                       "bg-gray-50 text-gray-500": day.outOfMonth && !day.isPast,

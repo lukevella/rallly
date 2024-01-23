@@ -27,7 +27,7 @@ export default async function Layout({
             <Trans t={t} i18nKey="polls" />
           </PageTitle>
           <Button asChild>
-            <Link href="/new">
+            <Link href="/create">
               <PenBoxIcon className="text-muted-foreground size-4" />
               <span className="hidden sm:inline">
                 <Trans t={t} i18nKey="newPoll" />
