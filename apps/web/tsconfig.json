@@ -8,12 +8,6 @@
     },
     "strictNullChecks": true,
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    ".next/types/**/*.ts",
-    "src/app/[locale]/p/[participantUrlId]/page.tsx",
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", ".next/types/**/*.ts"],
   "exclude": ["node_modules"],
 }

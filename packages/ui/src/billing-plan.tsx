@@ -1,6 +1,6 @@
 import { CheckCircle2Icon } from "lucide-react";
 
-import { cn } from "./lib/utils";
+import { cn } from "@rallly/ui";
 
 export const BillingPlan = ({
   children,
@@ -71,7 +71,7 @@ export const BillingPlanPerk = ({
     <li className="flex items-start gap-x-2.5">
       <CheckCircle2Icon
         className={cn(
-          "size-4 mt-0.5 shrink-0",
+          "mt-0.5 size-4 shrink-0",
           !pro ? "text-gray-500" : "text-primary",
         )}
       />
