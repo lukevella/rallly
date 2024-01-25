@@ -20,6 +20,7 @@ export function CopyInviteLinkButton() {
   const [didCopy, setDidCopy] = React.useState(false);
   const [state, copyToClipboard] = useCopyToClipboard();
   const poll = usePoll();
+  const inviteLinkWithoutProtocol = poll.inviteLink.replace(/^https?:\/\//, "");
 
   React.useEffect(() => {
     if (state.error) {
@@ -41,7 +42,7 @@ export function CopyInviteLinkButton() {
       {didCopy ? (
         <Trans i18nKey="copied" />
       ) : (
-        <span className="min-w-0 truncate">{`${window.location.hostname}/invite/${poll.id}`}</span>
+        <span className="min-w-0 truncate">{inviteLinkWithoutProtocol}</span>
       )}
     </Button>
   );
