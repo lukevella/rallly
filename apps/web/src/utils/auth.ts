@@ -162,6 +162,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     callbacks: {
       async signIn({ user, email, account, profile }) {
         const posthog = PostHogClient();
+        const distinctId = user.email ?? user.id;
         // prevent sign in if email is not verified
         if (
           profile &&
@@ -169,7 +170,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           profile.email_verified === false
         ) {
           posthog?.capture({
-            distinctId: user.id,
+            distinctId,
             event: "login failed",
             properties: {
               reason: "email not verified",
@@ -209,7 +210,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           }
 
           posthog?.capture({
-            distinctId: user.id,
+            distinctId,
             event: "login",
             properties: {
               method: account?.provider,
