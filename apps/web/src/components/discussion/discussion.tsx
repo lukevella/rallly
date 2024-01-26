@@ -166,7 +166,9 @@ const Discussion: React.FunctionComponent = () => {
                 key={session.user?.id}
                 control={control}
                 rules={{ validate: requiredString }}
-                render={({ field }) => <NameInput {...field} />}
+                render={({ field }) => (
+                  <NameInput error={!!formState.errors.authorName} {...field} />
+                )}
               />
             </div>
             <div className="flex justify-between gap-2">

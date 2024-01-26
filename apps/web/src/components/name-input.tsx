@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
@@ -11,12 +11,13 @@ interface NameInputProps
   > {
   value?: string;
   defaultValue?: string;
+  error?: boolean;
 }
 
 const NameInput: React.ForwardRefRenderFunction<
   HTMLInputElement,
   NameInputProps
-> = ({ value, defaultValue, className, ...forwardProps }, ref) => {
+> = ({ value, defaultValue, className, error, ...forwardProps }, ref) => {
   const { t } = useTranslation();
   return (
     <div className="relative flex items-center">
@@ -28,10 +29,11 @@ const NameInput: React.ForwardRefRenderFunction<
       ) : null}
       <input
         ref={ref}
-        className={clsx(
+        className={cn(
           "input",
           {
             "pl-9": value || defaultValue,
+            "ring-destructive ring-1": error,
           },
           className,
         )}
