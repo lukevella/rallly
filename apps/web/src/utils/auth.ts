@@ -18,6 +18,7 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { Provider } from "next-auth/providers/index";
 
+import { PostHogClient } from "@/app/posthog";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
@@ -159,13 +160,22 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
       error: "/auth/error",
     },
     callbacks: {
-      async signIn({ user, email, profile }) {
+      async signIn({ user, email, account, profile }) {
+        const posthog = PostHogClient();
         // prevent sign in if email is not verified
         if (
           profile &&
           "email_verified" in profile &&
           profile.email_verified === false
         ) {
+          posthog?.capture({
+            distinctId: user.id,
+            event: "login failed",
+            properties: {
+              reason: "email not verified",
+            },
+          });
+          await posthog?.shutdownAsync();
           return false;
         }
         // Make sure email is allowed
@@ -197,6 +207,15 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
+
+          posthog?.capture({
+            distinctId: user.id,
+            event: "login",
+            properties: {
+              method: account?.provider,
+            },
+          });
+          await posthog?.shutdownAsync();
         }
 
         return true;
