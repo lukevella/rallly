@@ -15,12 +15,13 @@ import NextAuth, {
 } from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
+import GoogleProvider from "next-auth/providers/google";
 import { Provider } from "next-auth/providers/index";
 
+import { PostHogClient } from "@/app/posthog";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
-import { isOIDCEnabled, oidcName } from "@/utils/constants";
 import { emailClient } from "@/utils/emails";
 
 const providers: Provider[] = [
@@ -109,10 +110,14 @@ const providers: Provider[] = [
 ];
 
 // If we have an OAuth provider configured, we add it to the list of providers
-if (isOIDCEnabled) {
+if (
+  process.env.OIDC_DISCOVERY_URL &&
+  process.env.OIDC_CLIENT_ID &&
+  process.env.OIDC_CLIENT_SECRET
+) {
   providers.push({
     id: "oidc",
-    name: oidcName,
+    name: process.env.OIDC_NAME ?? "OpenID Connect",
     type: "oauth",
     wellKnown: process.env.OIDC_DISCOVERY_URL,
     authorization: { params: { scope: "openid email profile" } },
@@ -131,6 +136,16 @@ if (isOIDCEnabled) {
   });
 }
 
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
+    }),
+  );
+}
+
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
     adapter: CustomPrismaAdapter(prisma),
@@ -145,7 +160,24 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
       error: "/auth/error",
     },
     callbacks: {
-      async signIn({ user, email }) {
+      async signIn({ user, email, account, profile }) {
+        const posthog = PostHogClient();
+        // prevent sign in if email is not verified
+        if (
+          profile &&
+          "email_verified" in profile &&
+          profile.email_verified === false
+        ) {
+          posthog?.capture({
+            distinctId: user.id,
+            event: "login failed",
+            properties: {
+              reason: "email not verified",
+            },
+          });
+          await posthog?.shutdownAsync();
+          return false;
+        }
         // Make sure email is allowed
         if (user.email) {
           const isBlocked = isEmailBlocked(user.email);
@@ -175,6 +207,15 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
+
+          posthog?.capture({
+            distinctId: user.id,
+            event: "login",
+            properties: {
+              method: account?.provider,
+            },
+          });
+          await posthog?.shutdownAsync();
         }
 
         return true;

@@ -1,28 +1,36 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { LogInIcon, UserIcon } from "lucide-react";
-import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { UserIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { getProviders, signIn, useSession } from "next-auth/react";
 import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import { trpc } from "@/app/providers";
 import { VerifyCode, verifyCode } from "@/components/auth/auth-forms";
+import { Spinner } from "@/components/spinner";
 import { TextInput } from "@/components/text-input";
-import { IfCloudHosted } from "@/contexts/environment";
 import { isSelfHosted } from "@/utils/constants";
 import { validEmail } from "@/utils/form-validation";
 
-export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
+const allowGuestAccess = !isSelfHosted;
+
+export function LoginForm() {
   const { t } = useTranslation();
 
   const { register, handleSubmit, getValues, formState, setError } = useForm<{
     email: string;
   }>({
     defaultValues: { email: "" },
+  });
+
+  const { data: providers } = useQuery(["providers"], getProviders, {
+    cacheTime: Infinity,
+    staleTime: Infinity,
   });
 
   const session = useSession();
@@ -32,9 +40,55 @@ export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
   const router = useRouter();
   const callbackUrl = (useSearchParams()?.get("callbackUrl") as string) ?? "/";
 
-  const hasOIDCProvider = !!oidcConfig;
-  const allowGuestAccess = !isSelfHosted;
-  const hasAlternativeLoginMethods = hasOIDCProvider || allowGuestAccess;
+  const alternativeLoginMethods = React.useMemo(() => {
+    const res: Array<{ login: () => void; icon: JSX.Element; name: string }> =
+      [];
+    if (allowGuestAccess) {
+      res.push({
+        login: () => {
+          router.push(callbackUrl);
+        },
+        icon: <UserIcon className="text-muted-foreground size-5" />,
+        name: t("continueAsGuest"),
+      });
+    }
+
+    if (providers?.oidc) {
+      res.push({
+        login: () => {
+          signIn("oidc", {
+            callbackUrl,
+          });
+        },
+        icon: <UserIcon className="text-muted-foreground size-5" />,
+        name: t("loginWith", { provider: providers.oidc.name }),
+      });
+    }
+
+    if (providers?.google) {
+      res.push({
+        login: () => {
+          signIn("google", {
+            callbackUrl,
+          });
+        },
+        icon: (
+          <Image src="/static/google.svg" width={20} height={20} alt="Google" />
+        ),
+        name: t("loginWith", { provider: providers.google.name }),
+      });
+    }
+    return res;
+  }, [callbackUrl, providers, router, t]);
+
+  if (!providers) {
+    return (
+      <div className="flex h-72 items-center justify-center">
+        <Spinner className="text-muted-foreground" />
+      </div>
+    );
+  }
+
   const sendVerificationEmail = (email: string) => {
     return signIn("email", {
       redirect: false,
@@ -127,30 +181,16 @@ export function LoginForm({ oidcConfig }: { oidcConfig?: { name: string } }) {
         >
           {t("continue")}
         </Button>
-        {hasAlternativeLoginMethods ? (
+        {alternativeLoginMethods.length > 0 ? (
           <>
             <hr className="border-grey-500 my-4 border-t" />
             <div className="grid gap-4">
-              <IfCloudHosted>
-                <Button size="lg" asChild>
-                  <Link href={callbackUrl}>
-                    <UserIcon className="size-4" />
-                    <Trans i18nKey="continueAsGuest" />
-                  </Link>
+              {alternativeLoginMethods.map((method, i) => (
+                <Button size="lg" key={i} onClick={method.login}>
+                  {method.icon}
+                  {method.name}
                 </Button>
-              </IfCloudHosted>
-              {hasOIDCProvider ? (
-                <Button
-                  icon={LogInIcon}
-                  size="lg"
-                  onClick={() => signIn("oidc")}
-                >
-                  <Trans
-                    i18nKey="loginWith"
-                    values={{ provider: oidcConfig.name }}
-                  />
-                </Button>
-              ) : null}
+              ))}
             </div>
           </>
         ) : null}
