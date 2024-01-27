@@ -42,6 +42,7 @@ model User {
   name           String
   email          String      @unique() @db.Citext
   emailVerified  DateTime?   @map("email_verified")
+  image          String?
   timeZone       String?     @map("time_zone")
   weekStart      Int?        @map("week_start")
   timeFormat     TimeFormat? @map("time_format")
