@@ -1,11 +1,11 @@
-import { EmailContext } from "./components/email-context";
-import { EmailLayout } from "./components/email-layout";
+import { defaultEmailContext, EmailContext } from "./_components/email-context";
+import { EmailLayout } from "./_components/email-layout";
 import {
   Domain,
   Heading,
   Text,
   trackingWide,
-} from "./components/styled-components";
+} from "./_components/styled-components";
 
 interface RegisterEmailProps {
   name: string;
@@ -16,7 +16,7 @@ interface RegisterEmailProps {
 export const RegisterEmail = ({
   name = "John",
   code = "123456",
-  ctx,
+  ctx = defaultEmailContext,
 }: RegisterEmailProps) => {
   return (
     <EmailLayout

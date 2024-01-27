@@ -1,6 +1,6 @@
-import { EmailContext } from "./components/email-context";
-import { EmailLayout } from "./components/email-layout";
-import { Button, Card, Link, Text } from "./components/styled-components";
+import { defaultEmailContext, EmailContext } from "./_components/email-context";
+import { EmailLayout } from "./_components/email-layout";
+import { Button, Card, Link, Text } from "./_components/styled-components";
 
 export interface NewPollEmailProps {
   title: string;
@@ -38,7 +38,7 @@ export const NewPollEmail = ({
   name = "John",
   adminLink = "https://rallly.co/admin/abcdefg123",
   participantLink = "https://rallly.co/invite/wxyz9876",
-  ctx,
+  ctx = defaultEmailContext,
 }: NewPollEmailProps) => {
   const { baseUrl, domain } = ctx;
   return (

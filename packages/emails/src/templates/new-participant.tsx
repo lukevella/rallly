@@ -1,7 +1,8 @@
+import { defaultEmailContext } from "./_components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
-} from "./components/notification-email";
-import { Text } from "./components/styled-components";
+} from "./_components/notification-email";
+import { Text } from "./_components/styled-components";
 
 export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;
@@ -13,7 +14,7 @@ export const NewParticipantEmail = ({
   participantName = "Someone",
   pollUrl = "https://rallly.co",
   disableNotificationsUrl = "https://rallly.co",
-  ctx,
+  ctx = defaultEmailContext,
 }: NewParticipantEmailProps) => {
   return (
     <NotificationEmail

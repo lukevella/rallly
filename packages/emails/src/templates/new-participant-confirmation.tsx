@@ -1,6 +1,6 @@
-import { EmailContext } from "./components/email-context";
-import { EmailLayout } from "./components/email-layout";
-import { Button, Domain, Section, Text } from "./components/styled-components";
+import { defaultEmailContext, EmailContext } from "./_components/email-context";
+import { EmailLayout } from "./_components/email-layout";
+import { Button, Domain, Section, Text } from "./_components/styled-components";
 
 interface NewParticipantConfirmationEmailProps {
   name: string;
@@ -12,7 +12,7 @@ export const NewParticipantConfirmationEmail = ({
   title = "Untitled Poll",
   name = "John",
   editSubmissionUrl = "https://rallly.co",
-  ctx,
+  ctx = defaultEmailContext,
 }: NewParticipantConfirmationEmailProps) => {
   const { domain } = ctx;
   return (
