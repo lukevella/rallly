@@ -7,7 +7,7 @@ import previewEmail from "preview-email";
 import React from "react";
 
 import * as templates from "./templates";
-import { EmailContext } from "./templates/components/email-context";
+import { EmailContext } from "./templates/_components/email-context";
 
 type Templates = typeof templates;
 

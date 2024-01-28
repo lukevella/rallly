@@ -4,7 +4,7 @@ import "./rbc-overrides.css";
 import dayjs from "dayjs";
 import { XIcon } from "lucide-react";
 import React from "react";
-import { Calendar } from "react-big-calendar";
+import { Calendar, CalendarProps } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
@@ -16,6 +16,12 @@ import { formatDateWithoutTz } from "./utils";
 const localizer = dayjsLocalizer(dayjs);
 
 const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
+
+/**
+ * Not sure what's wrong with the type definitions for react-big-calendar but it's not working properly.
+ * This is a temporary fix that overrides their types which ideally we wouldn't have to do.
+ */
+const CalendarTempFix = Calendar as React.ComponentType<CalendarProps>;
 
 const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   options,
@@ -36,7 +42,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <div className="relative flex h-[600px]">
-      <Calendar
+      <CalendarTempFix
         className="absolute inset-0"
         events={options.map((option) => {
           if (option.type === "date") {
@@ -61,6 +67,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               (option) =>
                 !(
                   option.type === "timeSlot" &&
+                  event.start &&
                   option.start === formatDateWithoutTz(event.start) &&
                   event.end &&
                   option.end === formatDateWithoutTz(event.end)

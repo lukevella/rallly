@@ -1,5 +1,5 @@
-import { EmailContext } from "./components/email-context";
-import { EmailLayout } from "./components/email-layout";
+import { defaultEmailContext, EmailContext } from "./_components/email-context";
+import { EmailLayout } from "./_components/email-layout";
 import {
   Button,
   Card,
@@ -7,7 +7,7 @@ import {
   Heading,
   Text,
   trackingWide,
-} from "./components/styled-components";
+} from "./_components/styled-components";
 
 interface LoginEmailProps {
   name: string;
@@ -20,7 +20,7 @@ export const LoginEmail = ({
   name = "Guest",
   code = "123456",
   magicLink = "https://rallly.co",
-  ctx,
+  ctx = defaultEmailContext,
 }: LoginEmailProps) => {
   return (
     <EmailLayout

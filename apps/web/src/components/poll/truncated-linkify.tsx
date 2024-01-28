@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import Linkify from "linkify-react";
 import Link from "next/link";
 import * as React from "react";
-import ReactLinkify from "react-linkify";
 
 export const truncateLink = (href: string, text: string, key: number) => {
   const textWithoutProtocol = text.replace(/^https?:\/\//i, "");
@@ -45,11 +45,21 @@ export const truncateLink = (href: string, text: string, key: number) => {
   }
 };
 
-const TruncatedLinkify: React.FunctionComponent<{
-  children?: React.ReactNode;
-}> = ({ children }) => {
+const TruncatedLinkify = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ReactLinkify componentDecorator={truncateLink}>{children}</ReactLinkify>
+    <Linkify
+      options={{
+        render: ({ attributes, content }) => {
+          return truncateLink(
+            attributes.href,
+            content,
+            attributes.key as number,
+          );
+        },
+      }}
+    >
+      {children}
+    </Linkify>
   );
 };
 

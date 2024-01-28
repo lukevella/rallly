@@ -1,6 +1,5 @@
 import {
   Button as UnstyledButton,
-  ButtonProps,
   Heading as UnstyledHeading,
   Link as UnstyledLink,
   LinkProps,
@@ -37,7 +36,7 @@ export const Domain = ({ ctx }: { ctx: EmailContext }) => {
   return <Link href={baseUrl}>{domain}</Link>;
 };
 
-export const Button = (props: ButtonProps) => {
+export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
   return (
     <UnstyledButton
       {...props}
@@ -79,14 +78,9 @@ export const Heading = (
     <UnstyledHeading
       {...props}
       as={as}
+      className="font-sans font-bold text-gray-900"
       style={{
-        marginTop: "16px",
-        marginBottom: "8px",
-        letterSpacing: "-0.75px",
-        fontFamily: "sans-serif",
-        fontWeight: "bold",
         fontSize: fontSize[as],
-        color: "#1E293B",
         ...props.style,
       }}
     />
