@@ -58,7 +58,7 @@ const TruncatedLinkify = ({ children }: { children: React.ReactNode }) => {
         },
       }}
     >
-      {children as string}
+      {children}
     </Linkify>
   );
 };
