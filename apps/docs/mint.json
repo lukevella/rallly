@@ -2,7 +2,8 @@
   "name": "Rallly",
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "dark": "/logo/dark.svg",
+    "href": "https://rallly.co"
   },
   "favicon": "/favicon.png",
   "colors": {
@@ -21,8 +22,8 @@
   },
   "topbarLinks": [
     {
-      "name": "Home",
-      "url": "https://rallly.co"
+      "name": "Contact",
+      "url": "/contact/support"
     }
   ],
   "anchors": [
