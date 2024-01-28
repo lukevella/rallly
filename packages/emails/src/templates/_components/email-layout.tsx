@@ -50,7 +50,13 @@ export const EmailLayout = ({
     <Html>
       <Head />
       <Preview>{preview}</Preview>
-      <Body style={{ backgroundColor: "#F3F4F6", padding: "16px" }}>
+      <Body
+        style={{
+          backgroundColor: "#F3F4F6",
+          paddingTop: 20,
+          paddingBottom: 20,
+        }}
+      >
         <Container style={containerStyles}>
           <Img src={logoUrl} alt="Rallly" width={128} />
           <Section style={sectionStyles}>
@@ -81,13 +87,6 @@ export const EmailLayout = ({
             <span>&nbsp;&bull;&nbsp;</span>
             <Link style={linkStyles} href="https://github.com/lukevella/rallly">
               Github
-            </Link>
-            <span>&nbsp;&bull;&nbsp;</span>
-            <Link
-              style={linkStyles}
-              href="https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E"
-            >
-              Donate
             </Link>
             <span>&nbsp;&bull;&nbsp;</span>
             <Link
