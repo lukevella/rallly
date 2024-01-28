@@ -18,10 +18,10 @@ const localizer = dayjsLocalizer(dayjs);
 const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
 
 /**
- * This hack is needed because since updating the types for react and react-dom,
- * this component  return a TS2786 error.
- * */
-const CalendarComponent = Calendar as React.ComponentType<CalendarProps>;
+ * Not sure what's wrong with the type definitions for react-big-calendar but it's not working properly.
+ * This is a temporary fix that overrides their types which ideally we wouldn't have to do.
+ */
+const CalendarTempFix = Calendar as React.ComponentType<CalendarProps>;
 
 const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   options,
@@ -42,7 +42,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <div className="relative flex h-[600px]">
-      <CalendarComponent
+      <CalendarTempFix
         className="absolute inset-0"
         events={options.map((option) => {
           if (option.type === "date") {
