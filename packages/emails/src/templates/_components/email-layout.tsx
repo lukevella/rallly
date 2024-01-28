@@ -38,7 +38,7 @@ export const EmailLayout = ({
         <Head />
         <Preview>{preview}</Preview>
         <Body className="bg-gray-50 py-5">
-          <Container className="rounded-md border border-solid border-gray-200 bg-white p-4">
+          <Container className="w-full rounded-md border border-solid border-gray-200 bg-white p-4">
             <Img src={logoUrl} alt="Rallly" width={128} />
             <Section style={sectionStyles}>
               <Text>Hi {recipientName},</Text>
