@@ -39,19 +39,10 @@
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.4",
     "@rallly/tsconfig": "*",
-    "@types/accept-language-parser": "^1.5.3",
     "@types/color-hash": "^1.0.2",
     "@types/lodash": "^4.14.178",
-    "@types/react": "^18.0.28",
-    "@types/react-big-calendar": "^0.31.0",
-    "@types/react-dom": "^18.0.11",
-    "@types/react-linkify": "^1.0.1",
-    "@types/smoothscroll-polyfill": "^0.3.1",
-    "cheerio": "^1.0.0-rc.12",
     "cross-env": "^7.0.3",
     "i18next-scanner": "^4.2.0",
-    "i18next-scanner-typescript": "^1.1.1",
-    "smtp-tester": "^2.0.1",
-    "wait-on": "^6.0.1"
+    "i18next-scanner-typescript": "^1.1.1"
   }
 }
