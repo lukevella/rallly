@@ -116,9 +116,6 @@ export function LoginForm() {
                 name: s.user.name,
               });
             }
-            posthog?.capture("login", {
-              method: "verification-code",
-            });
             router.push(callbackUrl);
           }
         }}

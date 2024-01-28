@@ -33,10 +33,6 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
             name: updatedSession.user.name,
           });
 
-          posthog?.capture("login", {
-            method: "magic-link",
-          });
-
           await trpcUtils.invalidate();
         }
       }
