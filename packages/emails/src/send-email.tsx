@@ -97,7 +97,6 @@ export class EmailClient {
         from: this.config.mail.from,
         to: options.to,
         subject: options.subject,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         html,
         text,
         attachments: options.attachments,
