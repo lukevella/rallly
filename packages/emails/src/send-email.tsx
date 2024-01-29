@@ -1,6 +1,6 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
-import { render } from "@react-email/render";
+import { renderAsync } from "@react-email/render";
 import { createTransport, Transporter } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 import previewEmail from "preview-email";
@@ -79,21 +79,26 @@ export class EmailClient {
     options: SendEmailOptions<T>,
   ) {
     const Template = templates[templateName] as TemplateComponent<T>;
-    const html = render(
+    const component = (
       <Template
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(options.props as any)}
         ctx={this.config.context}
-      />,
+      />
     );
+
+    const [html, text] = await Promise.all([
+      renderAsync(component),
+      renderAsync(component, { plainText: true }),
+    ]);
 
     try {
       await this.sendEmail({
         from: this.config.mail.from,
         to: options.to,
         subject: options.subject,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         html,
+        text,
         attachments: options.attachments,
       });
     } catch (e) {
