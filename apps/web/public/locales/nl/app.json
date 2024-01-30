@@ -237,5 +237,8 @@
   "registrations": "Registraties",
   "inviteParticipantsDescription": "Kopieer en deel de uitnodigingslink om antwoorden van deelnemers te verzamelen.",
   "inviteLink": "Uitnodigingslink",
-  "inviteParticipantLinkInfo": "Iedereen met deze link kan deelnemen aan je poll."
+  "inviteParticipantLinkInfo": "Iedereen met deze link kan deelnemen aan je poll.",
+  "accountNotLinkedTitle": "Je account kan niet worden gekoppeld aan een bestaande gebruiker",
+  "accountNotLinkedDescription": "Er bestaat al een gebruiker met dit e-mailadres. Log in met behulp van de oorspronkelijke methode.",
+  "or": "Of"
 }
