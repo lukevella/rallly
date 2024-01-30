@@ -209,7 +209,7 @@
   "pricing": "Priser",
   "pollSettingsDescription": "Tilpass oppførselen til avstemningen din",
   "requireParticipantEmailLabel": "Krev e-postadresse fra deltakere",
-  "hideParticipantsLabel": "Skjul deltakerliste for andre deltakere",
+  "hideParticipantsLabel": "Skjul deltakerliste fra andre deltakere",
   "hideScoresLabel": "Skjul resultater frem til etter deltakere har stemt",
   "authErrorTitle": "Feil ved innlogging",
   "authErrorDescription": "Det oppstod en feil under påloggingen. Prøv på nytt.",
