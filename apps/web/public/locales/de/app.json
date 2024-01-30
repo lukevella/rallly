@@ -237,5 +237,8 @@
   "registrations": "Anmeldungen",
   "inviteParticipantsDescription": "Kopiere und teile den Einladungslink, um Antworten von deinen Teilnehmern zu sammeln.",
   "inviteLink": "Einladungs-Link",
-  "inviteParticipantLinkInfo": "Jeder mit diesem Link kann an der Abstimmung teilnehmen."
+  "inviteParticipantLinkInfo": "Jeder mit diesem Link kann an der Abstimmung teilnehmen.",
+  "accountNotLinkedTitle": "Dein Konto kann nicht mit einem existierenden Benutzer verknüpft werden",
+  "accountNotLinkedDescription": "Ein Benutzer mit dieser E-Mail existiert bereits. Bitte melde dich mit der ursprünglichen Methode an.",
+  "or": "Oder"
 }
