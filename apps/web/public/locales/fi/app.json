@@ -237,5 +237,8 @@
   "registrations": "Ilmoittautumiset",
   "inviteParticipantsDescription": "Kopioi ja jaa kutsulinkki kerätäksesi vastauksia osallistujilta.",
   "inviteLink": "Kutsulinkki",
-  "inviteParticipantLinkInfo": "Kuka tahansa linkin saanut voi äänestää kyselyssäsi."
+  "inviteParticipantLinkInfo": "Kuka tahansa linkin saanut voi äänestää kyselyssäsi.",
+  "accountNotLinkedTitle": "Tiliäsi ei voi linkittää olemassa olevaan käyttäjään",
+  "accountNotLinkedDescription": "Tällä sähköpostiosoitteella on jo käyttäjä. Kirjaudu sisään käyttämällä alkuperäistä kirjautumistapaa.",
+  "or": "Tai"
 }
