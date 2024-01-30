@@ -1,7 +1,8 @@
 "use client";
+import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { UserIcon } from "lucide-react";
+import { AlertTriangleIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getProviders, signIn, useSession } from "next-auth/react";
@@ -21,6 +22,7 @@ const allowGuestAccess = !isSelfHosted;
 
 export function LoginForm() {
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
 
   const { register, handleSubmit, getValues, formState, setError } = useForm<{
     email: string;
@@ -38,21 +40,13 @@ export function LoginForm() {
   const [email, setEmail] = React.useState<string>();
   const posthog = usePostHog();
   const router = useRouter();
-  const callbackUrl = (useSearchParams()?.get("callbackUrl") as string) ?? "/";
+  const callbackUrl = searchParams?.get("callbackUrl") ?? "/";
+
+  const error = searchParams?.get("error");
 
   const alternativeLoginMethods = React.useMemo(() => {
     const res: Array<{ login: () => void; icon: JSX.Element; name: string }> =
       [];
-    if (allowGuestAccess) {
-      res.push({
-        login: () => {
-          router.push(callbackUrl);
-        },
-        icon: <UserIcon className="text-muted-foreground size-5" />,
-        name: t("continueAsGuest"),
-      });
-    }
-
     if (providers?.oidc) {
       res.push({
         login: () => {
@@ -76,6 +70,35 @@ export function LoginForm() {
           <Image src="/static/google.svg" width={20} height={20} alt="Google" />
         ),
         name: t("loginWith", { provider: providers.google.name }),
+      });
+    }
+
+    if (providers?.["azure-ad"]) {
+      res.push({
+        login: () => {
+          signIn("azure-ad", {
+            callbackUrl,
+          });
+        },
+        icon: (
+          <Image
+            src="/static/microsoft.svg"
+            width={20}
+            height={20}
+            alt="Azure AD"
+          />
+        ),
+        name: t("loginWith", { provider: "Microsoft" }),
+      });
+    }
+
+    if (allowGuestAccess) {
+      res.push({
+        login: () => {
+          router.push(callbackUrl);
+        },
+        icon: <UserIcon className="text-muted-foreground size-5" />,
+        name: t("continueAsGuest"),
       });
     }
     return res;
@@ -148,7 +171,7 @@ export function LoginForm() {
           total: 2,
         })}
       </p>
-      <fieldset className="mb-4">
+      <fieldset className="mb-2.5">
         <label htmlFor="email" className="mb-1 text-gray-500">
           {t("email")}
         </label>
@@ -176,12 +199,35 @@ export function LoginForm() {
           variant="primary"
           className=""
         >
-          {t("continue")}
+          {t("loginWith", {
+            provider: t("email"),
+          })}
         </Button>
+        {error === "OAuthAccountNotLinked" ? (
+          <Alert icon={AlertTriangleIcon} variant="destructive">
+            <AlertTitle>
+              {t("accountNotLinkedTitle", {
+                defaultValue:
+                  "Your account cannot be linked to an existing user",
+              })}
+            </AlertTitle>
+            <AlertDescription>
+              {t("accountNotLinkedDescription", {
+                defaultValue:
+                  "A user with this email already exists. Please log in using the original method.",
+              })}
+            </AlertDescription>
+          </Alert>
+        ) : null}
         {alternativeLoginMethods.length > 0 ? (
           <>
-            <hr className="border-grey-500 my-4 border-t" />
-            <div className="grid gap-4">
+            <div className="relative my-4">
+              <hr className="border-grey-500 absolute top-1/2 w-full border-t" />
+              <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transform bg-white px-2 text-center text-xs uppercase text-gray-400">
+                {t("or", { defaultValue: "Or" })}
+              </span>
+            </div>
+            <div className="grid gap-2.5">
               {alternativeLoginMethods.map((method, i) => (
                 <Button size="lg" key={i} onClick={method.login}>
                   {method.icon}

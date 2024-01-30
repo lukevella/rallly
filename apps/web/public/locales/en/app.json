@@ -221,7 +221,6 @@
   "integrations": "Integrations",
   "contacts": "Contacts",
   "unlockFeatures": "Unlock all Pro features.",
-  "back": "Back",
   "pollStatusAll": "All",
   "pollStatusLive": "Live",
   "pollStatusFinalized": "Finalized",
@@ -238,5 +237,8 @@
   "registrations": "Registrations",
   "inviteParticipantsDescription": "Copy and share the invite link to start gathering responses from your participants.",
   "inviteLink": "Invite Link",
-  "inviteParticipantLinkInfo": "Anyone with this link will be able to vote on your poll."
+  "inviteParticipantLinkInfo": "Anyone with this link will be able to vote on your poll.",
+  "accountNotLinkedTitle": "Your account cannot be linked to an existing user",
+  "accountNotLinkedDescription": "A user with this email already exists. Please log in using the original method.",
+  "or": "Or"
 }

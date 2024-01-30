@@ -13,6 +13,7 @@ import { NextAuthOptions, RequestInternal } from "next-auth";
 import NextAuth, {
   getServerSession as getServerSessionWithOptions,
 } from "next-auth/next";
+import AzureADProvider from "next-auth/providers/azure-ad";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
@@ -142,6 +143,20 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
+    }),
+  );
+}
+
+if (
+  process.env.MICROSOFT_TENANT_ID &&
+  process.env.MICROSOFT_CLIENT_ID &&
+  process.env.MICROSOFT_CLIENT_SECRET
+) {
+  providers.push(
+    AzureADProvider({
+      tenantId: process.env.MICROSOFT_TENANT_ID,
+      clientId: process.env.MICROSOFT_CLIENT_ID,
+      clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
     }),
   );
 }
