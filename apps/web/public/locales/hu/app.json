@@ -239,6 +239,6 @@
   "inviteLink": "Meghívó link",
   "inviteParticipantLinkInfo": "Ezen a linken keresztül bárki adhat le szavazatot.",
   "accountNotLinkedTitle": "A fiókod nem köthető egy meglévő felhasználóhoz",
-  "accountNotLinkedDescription": "Egy felhasználó ezzel az email címmel mér létezik. Kérjük, jelentkezz be az eredeti módszerrel.",
+  "accountNotLinkedDescription": "Már létezik felhasználó ezzel az email címmel. Kérjük, jelentkezz be az eredeti módszerrel.",
   "or": "Vagy"
 }
