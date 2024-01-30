@@ -40,9 +40,9 @@ export function LoginForm() {
   const [email, setEmail] = React.useState<string>();
   const posthog = usePostHog();
   const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const callbackUrl = searchParams?.get("callbackUrl") ?? "/";
 
-  const error = searchParams.get("error");
+  const error = searchParams?.get("error");
 
   const alternativeLoginMethods = React.useMemo(() => {
     const res: Array<{ login: () => void; icon: JSX.Element; name: string }> =
