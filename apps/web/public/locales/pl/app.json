@@ -221,7 +221,6 @@
   "integrations": "Integracje",
   "contacts": "Kontakty",
   "unlockFeatures": "Odblokuj wszystkie funkcje Pro.",
-  "back": "Powrót",
   "pollStatusAll": "Wszystko",
   "pollStatusLive": "Trwa",
   "pollStatusFinalized": "Zakończona",
@@ -238,5 +237,8 @@
   "registrations": "Rejestracje",
   "inviteParticipantsDescription": "Skopiuj i udostępnij link, aby rozpocząć zbieranie odpowiedzi od Twoich uczestników.",
   "inviteLink": "Link z zaproszeniem",
-  "inviteParticipantLinkInfo": "Każdy, kto ma ten link, będzie mógł zagłosować w Twojej ankiecie."
+  "inviteParticipantLinkInfo": "Każdy, kto ma ten link, będzie mógł zagłosować w Twojej ankiecie.",
+  "accountNotLinkedTitle": "Twoje konto nie może zostać połączone z istniejącym użytkownikiem",
+  "accountNotLinkedDescription": "Użytkownik z tym adresem e-mail już istnieje. Zaloguj się używając oryginalnej metody.",
+  "or": "Lub"
 }
