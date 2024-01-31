@@ -52,7 +52,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in sm:zoom-in-90 data-[state=open]:fade-in shadow-huge fixed z-50 grid w-full gap-4 overflow-hidden bg-white p-5 sm:rounded-md",
+        "animate-in data-[state=open]:fade-in shadow-huge fixed z-50 mx-4 grid translate-y-4 gap-4 overflow-hidden rounded-md bg-white p-5",
         {
           "sm:max-w-sm": size === "sm",
           "sm:max-w-md": size === "md",
@@ -80,10 +80,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn("flex flex-col text-center sm:text-left", className)}
-    {...props}
-  />
+  <div className={cn("flex flex-col", className)} {...props} />
 );
 DialogHeader.displayName = "DialogHeader";
 
