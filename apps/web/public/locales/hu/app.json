@@ -237,5 +237,8 @@
   "registrations": "Regisztrációk",
   "inviteParticipantsDescription": "Másold ki és oszd meg a meghívólinket, hogy el tudj kezdeni visszajelzéseket gyűjteni a résztvevőidtől.",
   "inviteLink": "Meghívó link",
-  "inviteParticipantLinkInfo": "Ezen a linken keresztül bárki adhat le szavazatot."
+  "inviteParticipantLinkInfo": "Ezen a linken keresztül bárki adhat le szavazatot.",
+  "accountNotLinkedTitle": "A fiókod nem köthető egy meglévő felhasználóhoz",
+  "accountNotLinkedDescription": "Már létezik felhasználó ezzel az email címmel. Kérjük, jelentkezz be az eredeti módszerrel.",
+  "or": "Vagy"
 }
