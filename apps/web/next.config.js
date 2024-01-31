@@ -10,6 +10,8 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output:
+    process.env.NEXT_PUBLIC_SELF_HOSTED === "true" ? "standalone" : undefined,
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/backend",
