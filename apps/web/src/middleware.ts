@@ -60,12 +60,12 @@ export const middleware = withAuth(
             nextUrl.pathname.startsWith("/p")
           )
         ) {
-          // guest users cannot access any page except the invite page
+          // limit which pages guests can access for self-hosted instances
           return false;
         }
 
         return true;
-      }, // needs to be true to allow access to all pages
+      },
     },
   },
 );
