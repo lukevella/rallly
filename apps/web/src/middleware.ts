@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import withAuth from "next-auth/middleware";
 
 import { initGuest } from "@/app/guest";
+import { isSelfHosted } from "@/utils/constants";
 
 const supportedLocales = Object.keys(languages);
 
@@ -45,7 +46,26 @@ export const middleware = withAuth(
   {
     secret: process.env.SECRET_PASSWORD,
     callbacks: {
-      authorized: () => true, // needs to be true to allow access to all pages
+      authorized: ({ token, req }) => {
+        const nextUrl = req.nextUrl;
+
+        if (
+          isSelfHosted &&
+          token?.email === null &&
+          !(
+            nextUrl.pathname.startsWith("/invite") ||
+            nextUrl.pathname.startsWith("/login") ||
+            nextUrl.pathname.startsWith("/register") ||
+            nextUrl.pathname.startsWith("/auth") ||
+            nextUrl.pathname.startsWith("/p")
+          )
+        ) {
+          // limit which pages guests can access for self-hosted instances
+          return false;
+        }
+
+        return true;
+      },
     },
   },
 );
