@@ -28,7 +28,14 @@
   input,
   select,
   textarea {
-    @apply rounded outline-none focus:ring-gray-300 focus-visible:ring-1;
+    @apply rounded outline-none;
+    @apply focus-visible:border-primary-400 focus-visible:ring-1 focus-visible:ring-indigo-100;
+    @apply focus-visible:ring-offset-input-background focus-visible:ring-offset-1;
+  }
+
+  input,
+  textarea {
+    @apply focus:border-primary-400 hover:border-gray-300;
   }
 
   #floating-ui-root {
