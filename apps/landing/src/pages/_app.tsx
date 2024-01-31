@@ -83,7 +83,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
           ratingValue: "4.3",
           bestRating: "5",
           worstRating: "0",
-          ratingCount: "8",
+          ratingCount: "9",
         }}
         price="0"
         priceCurrency="USD"
