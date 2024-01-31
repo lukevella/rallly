@@ -2,30 +2,11 @@ import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
 import React from "react";
 
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
 import { CurrentUserAvatar } from "@/components/user";
-import { isSelfHosted } from "@/utils/constants";
-
-const Auth = ({ children }: { children: React.ReactNode }) => {
-  const session = useSession();
-  const isAuthenticated = !!session.data?.user.email;
-
-  React.useEffect(() => {
-    if (!isAuthenticated) {
-      signIn();
-    }
-  }, [isAuthenticated]);
-
-  if (isAuthenticated) {
-    return <>{children}</>;
-  }
-
-  return null;
-};
 
 function MobileNavigation() {
   return (
@@ -74,12 +55,5 @@ export default async function Layout({
     );
   }
 
-  if (isSelfHosted) {
-    return (
-      <Auth>
-        <SidebarLayout />
-      </Auth>
-    );
-  }
   return <SidebarLayout />;
 }
