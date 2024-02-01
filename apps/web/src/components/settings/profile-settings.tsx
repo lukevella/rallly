@@ -5,10 +5,10 @@ import {
   FormItem,
   FormLabel,
 } from "@rallly/ui/form";
+import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 
 import { LegacyButton } from "@/components/button";
-import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
 import { useUser } from "@/components/user-provider";
@@ -52,7 +52,7 @@ export const ProfileSettings = () => {
                     <Trans i18nKey="name" />
                   </FormLabel>
                   <FormControl>
-                    <TextInput id="name" {...field} />
+                    <Input id="name" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -66,7 +66,7 @@ export const ProfileSettings = () => {
                     <Trans i18nKey="email" />
                   </FormLabel>
                   <FormControl>
-                    <TextInput {...field} disabled={true} />
+                    <Input {...field} disabled={true} />
                   </FormControl>
                 </FormItem>
               )}

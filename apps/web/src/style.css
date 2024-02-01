@@ -29,8 +29,6 @@
   select,
   textarea {
     @apply rounded outline-none;
-    @apply focus-visible:border-primary-400 focus-visible:ring-1 focus-visible:ring-indigo-100;
-    @apply focus-visible:ring-offset-input-background focus-visible:ring-offset-1;
   }
 
   input,

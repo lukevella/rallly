@@ -1,5 +1,6 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
+import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { InfoIcon, LogOutIcon, UserXIcon } from "lucide-react";
 import Head from "next/head";
@@ -13,7 +14,6 @@ import {
   SettingsContent,
   SettingsSection,
 } from "@/components/settings/settings";
-import { TextInput } from "@/components/text-input";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
@@ -35,7 +35,7 @@ export const ProfilePage = () => {
             <Label className="mb-2.5">
               <Trans i18nKey="userId" defaults="User ID" />
             </Label>
-            <TextInput
+            <Input
               className="w-full"
               value={user.id.substring(0, 10)}
               readOnly

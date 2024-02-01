@@ -8,6 +8,7 @@ export type InputProps = Omit<
   "size"
 > & {
   size?: "sm" | "md" | "lg";
+  error?: boolean;
 };
 
 const inputVariants = cva(
@@ -29,11 +30,18 @@ const inputVariants = cva(
 );
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, size, type, ...props }, ref) => {
+  ({ className, size, type, error, ...props }, ref) => {
     return (
       <input
         type={type}
-        className={cn(inputVariants({ size }), className)}
+        className={cn(
+          "focus-visible:ring-offset-input-background focus-visible:ring-1 focus-visible:ring-offset-1",
+          inputVariants({ size }),
+          error
+            ? "focus-visible:border-rose-400  focus-visible:ring-rose-100"
+            : "focus-visible:border-primary-400  focus-visible:ring-primary-100",
+          className,
+        )}
         ref={ref}
         {...props}
       />
