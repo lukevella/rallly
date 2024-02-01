@@ -179,6 +179,7 @@ export function LoginForm() {
           className="w-full"
           id="email"
           size="lg"
+          error={!!formState.errors.email}
           autoFocus={true}
           disabled={formState.isSubmitting}
           placeholder={t("emailPlaceholder")}
