@@ -50,6 +50,8 @@
   }
   .input {
     @apply appearance-none border px-2 text-gray-800 placeholder:text-gray-500;
+    @apply focus-visible:ring-offset-input-background focus-visible:ring-1 focus-visible:ring-offset-1;
+    @apply focus-visible:border-primary-400  focus-visible:ring-primary-100;
   }
   input.input {
     @apply h-9;
