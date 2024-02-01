@@ -7,7 +7,10 @@ import * as React from "react";
 import { cn } from "@rallly/ui";
 
 const buttonVariants = cva(
-  "inline-flex border font-medium disabled:text-muted-foreground focus:ring-1 focus:ring-gray-300 disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",
+  cn(
+    "inline-flex border font-medium disabled:text-muted-foreground disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",
+    "focus-visible:ring-offset-input-background focus-visible:border-primary-400 focus-visible:ring-2 focus-visible:ring-indigo-100",
+  ),
   {
     variants: {
       variant: {

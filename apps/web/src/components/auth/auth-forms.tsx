@@ -1,11 +1,11 @@
 "use client";
 import { Button } from "@rallly/ui/button";
+import { Input } from "@rallly/ui/input";
 import { Trans, useTranslation } from "next-i18next";
 import React from "react";
 import { useForm } from "react-hook-form";
 
 import { requiredString } from "../../utils/form-validation";
-import { TextInput } from "../text-input";
 
 export const verifyCode = async (options: { email: string; token: string }) => {
   const url = `${
@@ -71,10 +71,9 @@ export const VerifyCode: React.FunctionComponent<{
               }}
             />
           </p>
-          <TextInput
+          <Input
             autoFocus={true}
-            proportions="lg"
-            error={!!formState.errors.code}
+            size="lg"
             className="w-full"
             placeholder={t("verificationCodePlaceholder")}
             {...register("code", {

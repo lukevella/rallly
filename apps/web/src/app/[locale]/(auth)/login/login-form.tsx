@@ -1,6 +1,7 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
+import { Input } from "@rallly/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangleIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
@@ -14,7 +15,6 @@ import { useTranslation } from "react-i18next";
 import { trpc } from "@/app/providers";
 import { VerifyCode, verifyCode } from "@/components/auth/auth-forms";
 import { Spinner } from "@/components/spinner";
-import { TextInput } from "@/components/text-input";
 import { isSelfHosted } from "@/utils/constants";
 import { validEmail } from "@/utils/form-validation";
 
@@ -175,12 +175,12 @@ export function LoginForm() {
         <label htmlFor="email" className="mb-1 text-gray-500">
           {t("email")}
         </label>
-        <TextInput
+        <Input
           className="w-full"
           id="email"
-          proportions="lg"
-          autoFocus={true}
+          size="lg"
           error={!!formState.errors.email}
+          autoFocus={true}
           disabled={formState.isSubmitting}
           placeholder={t("emailPlaceholder")}
           {...register("email", { validate: validEmail })}

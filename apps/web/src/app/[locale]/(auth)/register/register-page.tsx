@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
+import { Input } from "@rallly/ui/input";
 import { useParams, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -8,7 +9,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 
 import { VerifyCode } from "@/components/auth/auth-forms";
-import { TextInput } from "@/components/text-input";
 import { useDayjs } from "@/utils/dayjs";
 import { requiredString, validEmail } from "@/utils/form-validation";
 import { trpc } from "@/utils/trpc/client";
@@ -111,10 +111,10 @@ export const RegisterForm = () => {
         <label htmlFor="name" className="mb-1 text-gray-500">
           {t("name")}
         </label>
-        <TextInput
+        <Input
           id="name"
           className="w-full"
-          proportions="lg"
+          size="lg"
           autoFocus={true}
           error={!!formState.errors.name}
           disabled={formState.isSubmitting}
@@ -131,10 +131,10 @@ export const RegisterForm = () => {
         <label htmlFor="email" className="mb-1 text-gray-500">
           {t("email")}
         </label>
-        <TextInput
+        <Input
           className="w-full"
           id="email"
-          proportions="lg"
+          size="lg"
           error={!!formState.errors.email}
           disabled={formState.isSubmitting}
           placeholder={t("emailPlaceholder")}

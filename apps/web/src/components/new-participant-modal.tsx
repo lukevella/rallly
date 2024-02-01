@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VoteType } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import { Input } from "@rallly/ui/input";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
@@ -11,7 +12,6 @@ import { usePoll } from "@/contexts/poll";
 
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
-import { TextInput } from "./text-input";
 
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
@@ -117,7 +117,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         <label htmlFor="name" className="mb-1 text-gray-500">
           {t("name")}
         </label>
-        <TextInput
+        <Input
           className="w-full"
           data-1p-ignore="true"
           error={!!formState.errors.name}
@@ -136,7 +136,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           {t("email")}
           {!isEmailRequired ? ` (${t("optional")})` : null}
         </label>
-        <TextInput
+        <Input
           className="w-full"
           error={!!formState.errors.email}
           disabled={formState.isSubmitting}
