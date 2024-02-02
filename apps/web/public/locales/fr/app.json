@@ -132,7 +132,7 @@
   "permissionDenied": "Non autorisé",
   "permissionDeniedDescription": "Si vous êtes le créateur du sondage, veuillez vous connecter pour accéder à votre sondage",
   "loginDifferent": "Changer d'utilisateur",
-  "timeShownIn": "Temps affichés en {timeZone}",
+  "timeShownIn": "Heures affichées en {timeZone}",
   "editDetailsDescription": "Modifiez les détails de votre événement.",
   "finalizeDescription": "Sélectionnez une date finale pour votre événement.",
   "notificationsGuestTooltip": "Créez un compte ou connectez-vous pour activer les notifications",
@@ -228,7 +228,11 @@
   "noParticipants": "Aucun participant",
   "userId": "ID utilisateur",
   "aboutGuest": "Visiteur",
+  "logoutDescription": "Se déconnecter de votre session existante",
   "events": "Événements",
+  "inviteParticipantsDescription": "Copiez et partagez le lien d'invitation pour commencer à rassembler les réponses de vos participants.",
   "inviteLink": "Lien d'invitation",
-  "inviteParticipantLinkInfo": "Tous ceux qui ont ce lien pourront voir ce message."
+  "inviteParticipantLinkInfo": "Tous ceux qui ont ce lien pourront voir ce message.",
+  "accountNotLinkedTitle": "Votre compte ne peut pas être lié à un utilisateur existant",
+  "or": "Ou"
 }
