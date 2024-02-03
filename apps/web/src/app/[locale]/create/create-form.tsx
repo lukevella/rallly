@@ -77,7 +77,7 @@ function SidebarSection({ children }: { children?: React.ReactNode }) {
 }
 
 function SidebarContent({ children }: { children?: React.ReactNode }) {
-  return <div className="px-5 py-4">{children}</div>;
+  return <div>{children}</div>;
 }
 
 function GeneralForm() {
@@ -346,7 +346,7 @@ function CreateFormInput() {
         }}
         value={searchParams?.get("tab") ?? "event"}
       >
-        <div className="p-4">
+        {/* <div className="p-4">
           <TabsList className="w-full">
             <TabsTrigger
               value="event"
@@ -362,7 +362,7 @@ function CreateFormInput() {
               Form
             </TabsTrigger>
           </TabsList>
-        </div>
+        </div> */}
         <TabsContent value="event">
           <GeneralForm />
         </TabsContent>
@@ -379,7 +379,7 @@ function CreateFormPreview() {
   const { t } = useTranslation();
 
   return (
-    <InviteCard className="mx-auto">
+    <InviteCard className="mx-auto scale-95">
       <InviteCardGeneral
         title={form.watch("event.title") || t("titlePlaceholder")}
         location={form.watch("event.location") || t("locationPlaceholder")}
@@ -422,30 +422,13 @@ export function CreateForm() {
 
   return (
     <Form {...form}>
-      <form className="flex h-screen w-full flex-col" onSubmit={() => {}}>
-        <PageHeader className="flex justify-between">
-          <Button
-            asChild
-            onClick={() => {
-              clear();
-            }}
-          >
-            <Link href="/polls">
-              <ArrowLeftIcon className="text-muted-foreground size-4" />
-            </Link>
-          </Button>
-          <Button variant="primary">Create</Button>
-        </PageHeader>
-
-        <div className="flex grow">
-          <div className="shadow-huge m-4 w-96 rounded-md border bg-gray-50">
-            <CreateFormInput />
-          </div>
-          <PageContainer className="sticky top-0 hidden grow items-center justify-center lg:flex">
-            <PageContent>
-              <CreateFormPreview />
-            </PageContent>
-          </PageContainer>
+      <form className="flex gap-x-16" onSubmit={() => {}}>
+        <div className="max-w-xl grow">
+          <CreateFormInput />
+        </div>
+        <div className="rounded-md border bg-gray-100 px-5 py-4">
+          <h2 className="text-muted-foreground mb-1 text-sm">Preview</h2>
+          <CreateFormPreview />
         </div>
       </form>
     </Form>

@@ -13,13 +13,13 @@ export type InputProps = Omit<
 
 const inputVariants = cva(
   cn(
-    "border-input placeholder:text-muted-foreground flex h-9 w-full rounded border bg-transparent file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
+    "border-input placeholder:text-muted-foreground flex h-9 w-full rounded border bg-white file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
   ),
   {
     variants: {
       size: {
         sm: "h-6 text-sm px-1",
-        md: "h-9 text-base px-2",
+        md: "h-9 text-sm px-2",
         lg: "h-12 text-lg px-3",
       },
     },

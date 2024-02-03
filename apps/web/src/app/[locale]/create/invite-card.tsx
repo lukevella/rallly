@@ -15,11 +15,13 @@ export function InviteCardGeneral({
   return (
     <aside className="border-primary w-72 shrink-0 p-6">
       <LogoLink />
-      <h1 className="my-4 text-xl font-bold">{title}</h1>
+      <h1 className="my-2 text-lg font-bold">{title}</h1>
       {description ? (
-        <p className="text-muted-foreground leading-relaxed">{description}</p>
+        <p className="text-muted-foreground text-sm leading-relaxed">
+          {description}
+        </p>
       ) : null}
-      <ul className="mt-6 space-y-2.5">
+      <ul className="mt-4 space-y-2.5">
         {location ? (
           <li className="text-muted-foreground flex items-center text-sm leading-relaxed">
             <MapPinIcon className="mr-2 inline-block h-4 w-4" />
@@ -59,7 +61,7 @@ export function InviteCard({
   return (
     <div
       className={cn(
-        "shadow-huge flex max-h-full min-h-0 max-w-4xl rounded-lg bg-white",
+        "flex max-h-full min-h-0 max-w-4xl rounded-lg border bg-white shadow-sm",
         className,
       )}
     >
