@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Upgrade nu, bespaar later",
   "earlyAdopterDescription": "Als een early adopter heb je een vaste abonnementsprijs die niet zal worden beïnvloed door toekomstige prijsstijgingen.",
   "planFree": "Gratis",
-  "keepPollsIndefinitely": "Behoud polls voor onbepaalde tijd"
+  "keepPollsIndefinitely": "Behoud polls voor onbepaalde tijd",
+  "whenPollInactive": "Wanneer krijgt een poll de status \"inactief\"?",
+  "whenPollInactiveAnswer": "Polls worden inactief wanneer alle datumopties in het verleden liggen en de poll gedurende meer dan 30 dagen niet is benaderd. Zonder een betaald abonnement worden inactieve polls automatisch verwijderd."
 }
