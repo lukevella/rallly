@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Upgrade now, save later",
   "earlyAdopterDescription": "As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases.",
   "planFree": "Free",
-  "keepPollsIndefinitely": "Keep polls indefinitely"
+  "keepPollsIndefinitely": "Keep polls indefinitely",
+  "whenPollInactive": "When does a poll become inactive?",
+  "whenPollInactiveAnswer": "Polls become inactive when all date options are in the past AND the poll has not been accessed for over 30 days. Inactive polls are automatically deleted if you do not have a paid subscription."
 }
