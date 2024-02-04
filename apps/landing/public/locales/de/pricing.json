@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Jetzt upgraden, später sparen",
   "earlyAdopterDescription": "Als Abonnent der ersten Stunde sichern Sie sich Ihren Abonnementpreis und sind von künftigen Preiserhöhungen nicht betroffen.",
   "planFree": "Kostenlos",
-  "keepPollsIndefinitely": "Umfragen auf unbestimmte Zeit behalten"
+  "keepPollsIndefinitely": "Umfragen auf unbestimmte Zeit behalten",
+  "whenPollInactive": "Wann wird eine Umfrage inaktiv?",
+  "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND die Umfrage seit mehr als 30 Tagen nicht aufgerufen wurde. Inaktive Umfragen werden automatisch gelöscht, wenn du kein kostenpflichtiges Abonnement hast."
 }
