@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Actualizar ahora, guardar más tarde",
   "earlyAdopterDescription": "Como usuario pionero, fijará su tarifa de suscripción y no se verá afectado por futuras subidas de precios.",
   "planFree": "Gratis",
-  "keepPollsIndefinitely": "Mantener encuestas indefinidamente"
+  "keepPollsIndefinitely": "Mantener encuestas indefinidamente",
+  "whenPollInactive": "¿Cuándo una encuesta se vuelve inactiva?",
+  "whenPollInactiveAnswer": "Las encuestas se vuelven inactivas cuando todas las opciones de fecha están en el pasado Y la encuesta no ha sido accedida durante más de 30 días. Las encuestas inactivas se eliminan automáticamente si no tienes una suscripción de pago."
 }
