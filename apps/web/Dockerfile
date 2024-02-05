@@ -53,5 +53,6 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/publ
 
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
+ENV HOSTNAME=0.0.0.0
 
 CMD ["./docker-start.sh"]
