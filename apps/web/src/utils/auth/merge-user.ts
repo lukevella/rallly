@@ -1,9 +1,17 @@
 import { prisma } from "@rallly/database";
 
 export const mergeGuestsIntoUser = async (
-  userId: string,
+  email: string,
   guestIds: string[],
 ) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  const userId = user?.id;
+
   await prisma.poll.updateMany({
     where: {
       userId: {

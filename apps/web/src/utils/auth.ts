@@ -223,7 +223,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           // merge guest user into newly logged in user
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
-            await mergeGuestsIntoUser(user.id, [session.user.id]);
+            await mergeGuestsIntoUser(user.email, [session.user.id]);
           }
 
           posthog?.capture({
