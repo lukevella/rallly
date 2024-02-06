@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import * as Sentry from "@sentry/node";
 
 export const mergeGuestsIntoUser = async (
   email: string,
@@ -11,6 +12,11 @@ export const mergeGuestsIntoUser = async (
   });
 
   const userId = user?.id;
+
+  if (!userId) {
+    Sentry.captureMessage("Could not find user to merge guests into.");
+    return;
+  }
 
   await prisma.poll.updateMany({
     where: {
