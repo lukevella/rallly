@@ -24,5 +24,7 @@
   "upgradeNowSaveLater": "Uppgradera nu, spara senare",
   "earlyAdopterDescription": "Som tidig användare låser du din prenumerationsavgift och påverkas inte av framtida prishöjningar.",
   "planFree": "Gratis",
-  "keepPollsIndefinitely": "Behåll omröstningar på obestämd tid"
+  "keepPollsIndefinitely": "Behåll omröstningar på obestämd tid",
+  "whenPollInactive": "När blir en omröstning inaktiv?",
+  "whenPollInactiveAnswer": "Omröstningar blir inaktiva när alla datumalternativ ligger i det förflutna OCH omröstningen inte har öppnats på över 30 dagar. Inaktiva omröstningar raderas automatiskt om du inte har en betalprenumeration."
 }

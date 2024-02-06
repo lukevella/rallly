@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Atualize agora, economize depois",
   "earlyAdopterDescription": "Como um utilizador antecipado, você bloqueará a taxa de assinatura e não será afetado por futuros aumentos de preços.",
   "planFree": "Grátis",
-  "keepPollsIndefinitely": "Manter enquetes indefinidamente"
+  "keepPollsIndefinitely": "Manter enquetes indefinidamente",
+  "whenPollInactive": "Quando uma enquete fica inativa?",
+  "whenPollInactiveAnswer": "Enquetes ficam inativas quando todas as opções de data estiverem no passado e não tenham sido acessadas há mais de 30 dias. As enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga."
 }

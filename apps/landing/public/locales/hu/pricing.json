@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Fizess elő most, spórolj később",
   "earlyAdopterDescription": "Korai előfizetőként rögzül az előfizetésed ára és nem lesznek rád hatássál a jövőbeni áremelkedések.",
   "planFree": "Ingyenes",
-  "keepPollsIndefinitely": "Szavazások megőrzése örökre"
+  "keepPollsIndefinitely": "Szavazások megőrzése örökre",
+  "whenPollInactive": "Mikor lesz egy szavazás inaktív?",
+  "whenPollInactiveAnswer": "A szavazások inaktívak lesznek, ha az összes dátum lehetőség múltbeli ÉS a szavazás nem volt megtekintve a legutóbbi 30 napban. Inaktív szavazások automatikusan törlődnek, ha nincs fizetett előfizetésed."
 }

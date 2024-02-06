@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Upgradujte dnes a ušetřete",
   "earlyAdopterDescription": "Jako \"early adopter\" vám zůstane aktuální cena předplatného napořád a nedotkne se vás budoucí zvýšení cen.",
   "planFree": "Zdarma",
-  "keepPollsIndefinitely": "Uchovat hlasování neomezeně"
+  "keepPollsIndefinitely": "Uchovat hlasování neomezeně",
+  "whenPollInactive": "Kdy se anketa stane neaktivní?",
+  "whenPollInactiveAnswer": "Anketa se stane neaktivní, když jsou všechny možnosti (data) v minulosti a zároveň nikdo anketu nenavštívil více než 30 dní. Neaktivní ankety jsou automaticky smazány, pokud nemáte placené předplatné."
 }
