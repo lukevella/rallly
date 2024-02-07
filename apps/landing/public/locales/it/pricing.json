@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Aggiorna ora per risparmiare dopo",
   "earlyAdopterDescription": "Come primo utilizzatore, bloccherai il prezzo del tuo abbonamento in modo da non subire aumenti in futuro.",
   "planFree": "Gratis",
-  "keepPollsIndefinitely": "Conservare i sondaggi a tempo indeterminato"
+  "keepPollsIndefinitely": "Conservare i sondaggi a tempo indeterminato",
+  "whenPollInactive": "Quando un sondaggio diventa inattivo?",
+  "whenPollInactiveAnswer": "I sondaggi diventano inattivi quando tutte le opzioni di data sono nel passato E non si accede al sondaggio da oltre 30 giorni. I sondaggi inattivi vengono automaticamente eliminati se non hai un abbonamento a pagamento."
 }
