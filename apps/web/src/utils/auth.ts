@@ -222,8 +222,8 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         } else {
           // merge guest user into newly logged in user
           const session = await getServerSession(...args);
-          if (session && user.email && session.user.email === null) {
-            await mergeGuestsIntoUser(user.email, [session.user.id]);
+          if (session && session.user.email === null) {
+            await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
 
           posthog?.capture({
@@ -238,7 +238,11 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
 
         return true;
       },
-      async jwt({ token, user, trigger, session }) {
+      async jwt({ token, user, trigger, account, session }) {
+        if (trigger === "signUp" && account?.providerAccountId) {
+          // merge accounts assigned to provider account id to the current user id
+          await mergeGuestsIntoUser(user.id, [account.providerAccountId]);
+        }
         if (trigger === "update" && session) {
           if (token.email) {
             // For registered users we want to save the preferences to the database
