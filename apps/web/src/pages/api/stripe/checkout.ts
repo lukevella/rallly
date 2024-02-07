@@ -88,6 +88,11 @@ export default async function handler(
     metadata: {
       userId: userSession.user.id,
     },
+    subscription_data: {
+      metadata: {
+        userId: userSession.user.id,
+      },
+    },
     line_items: [
       {
         price:

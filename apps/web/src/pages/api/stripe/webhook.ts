@@ -1,9 +1,12 @@
 import type { Stripe } from "@rallly/backend/stripe";
 import { stripe } from "@rallly/backend/stripe";
 import { prisma } from "@rallly/database";
+import * as Sentry from "@sentry/node";
 import { buffer } from "micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
+
+import { PostHogClient } from "@/app/posthog";
 
 export const config = {
   api: {
@@ -50,7 +53,7 @@ export default async function handler(
   }
 
   switch (event.type) {
-    case "checkout.session.completed":
+    case "checkout.session.completed": {
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
 
       if (checkoutSession.subscription === null) {
@@ -74,10 +77,31 @@ export default async function handler(
           subscriptionId: checkoutSession.subscription as string,
         },
       });
+
+      const subscription = await stripe.subscriptions.retrieve(
+        checkoutSession.subscription as string,
+      );
+
+      try {
+        const posthog = PostHogClient();
+
+        posthog?.capture({
+          distinctId: userId,
+          event: "upgrade",
+          properties: {
+            interval: subscription.items.data[0].plan.interval,
+          },
+        });
+        await posthog?.shutdownAsync();
+      } catch (e) {
+        Sentry.captureMessage("Failed to track upgrade event");
+      }
+
       break;
+    }
     case "customer.subscription.deleted":
     case "customer.subscription.updated":
-    case "customer.subscription.created":
+    case "customer.subscription.created": {
       const { id } = event.data.object as Stripe.Subscription;
 
       const subscription = await stripe.subscriptions.retrieve(id);
@@ -113,7 +137,9 @@ export default async function handler(
           periodEnd: toDate(subscription.current_period_end),
         },
       });
+
       break;
+    }
     default:
       // Unexpected event type
       res.status(400).json({
