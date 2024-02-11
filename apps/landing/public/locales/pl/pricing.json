@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Ulepsz teraz, oszczędzaj później",
   "earlyAdopterDescription": "Jako wczesny użytkownik zablokujesz swoją cenę subskrypcji i nie będą miały na nią wpływu przyszłe podwyżki cen.",
   "planFree": "Darmowy",
-  "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność"
+  "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność",
+  "whenPollInactive": "Kiedy ankieta staje się nieaktywna?",
+  "whenPollInactiveAnswer": "Ankiety stają się nieaktywne, gdy wszystkie opcje daty znajdują się w przeszłości ORAZ ankieta nie była używana przez ponad 30 dni. Nieaktywne ankiety są automatycznie usuwane, jeśli użytkownik nie posiada płatnej subskrypcji."
 }
