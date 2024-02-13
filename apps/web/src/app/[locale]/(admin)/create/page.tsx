@@ -1,18 +1,14 @@
 import { Button } from "@rallly/ui/button";
-import { ArrowLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";
+import { ChevronRightIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 
-import { CreateForm } from "@/app/[locale]/create/create-form";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-} from "@/app/components/page-layout";
+import { CreateForm } from "@/app/[locale]/(admin)/create/create-form";
+import { PageContainer, PageContent } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
 export default async function Page({ params }: { params: { locale: string } }) {
   return (
-    <PageContainer className="flex flex-col bg-white">
+    <PageContainer className="flex flex-col bg-gray-50">
       <PageContent className="grow">
         <div className="mb-4 flex items-center justify-between">
           <div className="text-muted-foreground flex items-center gap-x-4 text-sm">

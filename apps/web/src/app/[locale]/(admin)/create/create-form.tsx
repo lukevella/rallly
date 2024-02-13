@@ -40,7 +40,7 @@ import {
   InviteCard,
   InviteCardForm,
   InviteCardGeneral,
-} from "@/app/[locale]/create/invite-card";
+} from "@/app/[locale]/(admin)/create/invite-card";
 import {
   PageContainer,
   PageContent,
@@ -426,8 +426,8 @@ export function CreateForm() {
         <div className="max-w-xl grow">
           <CreateFormInput />
         </div>
-        <div className="rounded-md border bg-gray-100 px-5 py-4">
-          <h2 className="text-muted-foreground mb-1 text-sm">Preview</h2>
+        <div className="hidden rounded-md border bg-gray-100 px-5 py-4 lg:block">
+          <div className="text-muted-foreground mb-1 text-sm">Preview</div>
           <CreateFormPreview />
         </div>
       </form>
