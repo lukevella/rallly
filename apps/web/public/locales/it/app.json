@@ -237,5 +237,8 @@
   "registrations": "Iscrizioni",
   "inviteParticipantsDescription": "Copia e condividi questo indirizzo d'invito per iniziare a raccogliere le risposte dei partecipanti.",
   "inviteLink": "Link d'Invito",
-  "inviteParticipantLinkInfo": "Chiunque abbia questo link potrà votare nel sondaggio."
+  "inviteParticipantLinkInfo": "Chiunque abbia questo link potrà votare nel sondaggio.",
+  "accountNotLinkedTitle": "Il tuo account non può essere collegato a un utente esistente",
+  "accountNotLinkedDescription": "Un utente con questa email esiste già. Effettua l'accesso utilizzando il metodo originale.",
+  "or": "Oppure"
 }
