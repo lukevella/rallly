@@ -211,6 +211,7 @@ model SchedulingPoll {
   userId           String     @map("user_id")
   user             User       @relation(fields: [userId], references: [id])
   prompt           String?
+  draft            Boolean    @default(true)
   createdAt        DateTime   @default(now()) @map("created_at")
   updatedAt        DateTime   @updatedAt @map("updated_at")
   eventTitle       String     @map("event_title")

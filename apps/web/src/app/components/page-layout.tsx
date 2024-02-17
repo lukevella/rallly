@@ -5,7 +5,7 @@ export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn("h-screen", className)}>{children}</div>;
+  return <div className={cn("min-h-screen", className)}>{children}</div>;
 }
 
 export function PageTitle({

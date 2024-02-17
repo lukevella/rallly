@@ -41,6 +41,7 @@ import {
   InviteCardForm,
   InviteCardGeneral,
 } from "@/app/[locale]/(admin)/create/invite-card";
+import { VoteSelect } from "@/app/[locale]/(admin)/create/vote-select";
 import {
   PageContainer,
   PageContent,
@@ -299,20 +300,13 @@ function Poll({
           <div className="grid grow gap-2">
             {options.map((option, i) => (
               <div
-                className="flex items-center gap-x-4 rounded-md border bg-white px-4 py-3"
+                className="flex items-center gap-x-4 rounded-md border px-3 py-2"
                 key={i}
               >
-                <Checkbox id={`option${i}`} name={`option${i}`} />
                 <label className="grow font-medium" htmlFor={`option${i}`}>
                   {dayjs(option.start).format("DD MMM YYYY")}
                 </label>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontalIcon className="text-muted-foreground size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                </DropdownMenu>
+                <VoteSelect id={`option${i}`} name={`option${i}`} />
               </div>
             ))}
           </div>
@@ -346,7 +340,7 @@ function CreateFormInput() {
         }}
         value={searchParams?.get("tab") ?? "event"}
       >
-        {/* <div className="p-4">
+        <div className="mb-4">
           <TabsList className="w-full">
             <TabsTrigger
               value="event"
@@ -362,7 +356,7 @@ function CreateFormInput() {
               Form
             </TabsTrigger>
           </TabsList>
-        </div> */}
+        </div>
         <TabsContent value="event">
           <GeneralForm />
         </TabsContent>
@@ -395,17 +389,15 @@ function CreateFormPreview() {
           }}
         >
           <div className="text-muted-foreground">Step 1 of 2</div>
-          {form.watch("form.type") === "poll" && (
-            <Poll
-              prompt={
-                form.watch("form.poll.prompt") ||
-                t("pollPromptPlaceholder", {
-                  defaultValue: "Select as many dates as you can attend",
-                })
-              }
-              options={form.watch("form.poll.options", [])}
-            />
-          )}
+          <Poll
+            prompt={
+              form.watch("form.poll.prompt") ||
+              t("pollPromptPlaceholder", {
+                defaultValue: "Select as many dates as you can attend",
+              })
+            }
+            options={form.watch("form.poll.options", [])}
+          />
         </div>
       </InviteCardForm>
     </InviteCard>
