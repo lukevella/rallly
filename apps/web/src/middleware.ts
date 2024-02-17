@@ -57,7 +57,7 @@ export const middleware = withAuth(
             nextUrl.pathname.startsWith("/login") ||
             nextUrl.pathname.startsWith("/register") ||
             nextUrl.pathname.startsWith("/auth") ||
-            nextUrl.pathname.startsWith("/p")
+            nextUrl.pathname.startsWith("/p/")
           )
         ) {
           // limit which pages guests can access for self-hosted instances
