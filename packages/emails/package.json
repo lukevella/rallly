@@ -14,7 +14,7 @@
     "@aws-sdk/credential-provider-node": "^3.501.0",
     "@react-email/components": "^0.0.14",
     "@react-email/render": "^0.0.12",
-    "nodemailer": "^6.9.8",
+    "nodemailer": "^6.9.9",
     "preview-email": "^3.0.19",
     "react-email": "^2.0.0"
   },
