@@ -225,6 +225,7 @@
   "pollStatusLive": "En ligne",
   "pollStatusFinalized": "Finalisé",
   "pending": "En cours",
+  "xMore": "{count} de plus",
   "share": "Partager",
   "pageXOfY": "Page {currentPage} sur {pageCount}",
   "noParticipants": "Aucun participant",
