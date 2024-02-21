@@ -75,17 +75,15 @@ export const Clock = ({ className }: { className?: string }) => {
 
 export const TimesShownIn = () => {
   const { timeZone } = useDayjs();
-  const timeZoneDisplayFormat = soft(timeZone)[0];
-  const now = spacetime.now(timeZone);
-  const standard = timeZoneDisplayFormat.standard.name;
-  const dst = timeZoneDisplayFormat.daylight?.name;
-  const timeZoneName = now.isDST() ? dst : standard;
 
   return (
     <ClockPreferences>
       <button className="inline-flex items-center gap-x-2 text-sm hover:underline">
         <GlobeIcon className="size-4" />
-        <Trans i18nKey="timeShownIn" values={{ timeZone: timeZoneName }} />
+        <Trans
+          i18nKey="timeShownIn"
+          values={{ timeZone: timeZone.replaceAll("_", " ") }}
+        />
       </button>
     </ClockPreferences>
   );
