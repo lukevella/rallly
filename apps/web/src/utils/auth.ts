@@ -265,14 +265,12 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           }
           token = { ...token, ...session };
         }
-
         if (trigger === "signIn" && user) {
           token.locale = user.locale;
           token.timeFormat = user.timeFormat;
           token.timeZone = user.timeZone;
           token.weekStart = user.weekStart;
         }
-
         return token;
       },
       async session({ session, token }) {

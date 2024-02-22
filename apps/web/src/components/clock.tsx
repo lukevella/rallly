@@ -22,7 +22,7 @@ import { usePreferences } from "@/contexts/preferences";
 import { useDayjs } from "@/utils/dayjs";
 
 export const TimePreferences = () => {
-  const { preferences, updatePreferences } = usePreferences();
+  const { updatePreferences } = usePreferences();
   const { timeFormat, timeZone } = useDayjs();
 
   return (
@@ -32,7 +32,7 @@ export const TimePreferences = () => {
           <Trans i18nKey="timeZone" />
         </Label>
         <TimeZoneSelect
-          value={preferences.timeZone ?? timeZone}
+          value={timeZone}
           onValueChange={(newTimeZone) => {
             updatePreferences({ timeZone: newTimeZone });
           }}
@@ -43,7 +43,7 @@ export const TimePreferences = () => {
           <Trans i18nKey="timeFormat" />
         </Label>
         <TimeFormatPicker
-          value={preferences.timeFormat ?? timeFormat}
+          value={timeFormat}
           onChange={(newTimeFormat) => {
             updatePreferences({ timeFormat: newTimeFormat });
           }}
