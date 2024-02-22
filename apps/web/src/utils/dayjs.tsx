@@ -205,7 +205,10 @@ export const DayjsProvider: React.FunctionComponent<{
     return await dayjsLocales[l].import();
   }, [l]);
 
-  const preferredTimeZone = config?.timeZone ?? getBrowserTimeZone();
+  const preferredTimeZone = React.useMemo(
+    () => config?.timeZone ?? getBrowserTimeZone(),
+    [config?.timeZone],
+  );
 
   const adjustTimeZone = React.useCallback(
     (date: dayjs.ConfigType, keepLocalTime = false) => {

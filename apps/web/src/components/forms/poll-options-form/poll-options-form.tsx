@@ -6,7 +6,7 @@ import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
-import TimeZonePicker from "@/components/time-zone-picker";
+import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { useModal } from "../../modal";
@@ -117,11 +117,11 @@ const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
                 <Tabs value={field.value} onValueChange={field.onChange}>
                   <TabsList className="w-full">
                     <TabsTrigger className="grow" value="month">
-                      <CalendarIcon className="size-4 mr-2" />
+                      <CalendarIcon className="mr-2 size-4" />
                       <Trans i18nKey="monthView" />
                     </TabsTrigger>
                     <TabsTrigger className="grow" value="week">
-                      <TableIcon className="size-4 mr-2" />
+                      <TableIcon className="mr-2 size-4" />
                       <Trans i18nKey="weekView" />
                     </TabsTrigger>
                   </TabsList>
@@ -191,10 +191,10 @@ const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
           control={form.control}
           name="timeZone"
           render={({ field }) => (
-            <TimeZonePicker
+            // TODO (Luke Vella) [2024-02-21]: Allow disabling timezone
+            <TimeZoneSelect
               value={field.value}
-              onBlur={field.onBlur}
-              onChange={(timeZone) => {
+              onValueChange={(timeZone) => {
                 setValue("timeZone", timeZone, { shouldTouch: true });
               }}
               disabled={datesOnly}

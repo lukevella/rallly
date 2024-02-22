@@ -17,32 +17,20 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Trans } from "@/components/trans";
+import { parseIanaTimezone } from "@/utils/date-time-utils";
+import { supportedTimeZones } from "@/utils/supported-time-zones";
 
-const timeZones = Intl.supportedValuesOf("timeZone");
-
-function parseIanaTimezone(timezone: string): {
-  region: string;
-  city: string;
-} {
-  const firstSlash = timezone.indexOf("/");
-  const region = timezone.substring(0, firstSlash);
-  const city = timezone.substring(firstSlash + 1).replaceAll("_", " ");
-
-  return { region, city };
-}
-
-const groupedTimeZones = timeZones.reduce<{
-  [key: string]: { timezone: string; city: string }[];
-}>((acc, timezone) => {
-  // handle cities with different timezone
-  const { region, city } = parseIanaTimezone(timezone);
-
-  if (!acc[region]) {
-    acc[region] = [];
-  }
-  acc[region].push({ timezone, city });
-  return acc;
-}, {});
+export const groupedTimeZones = supportedTimeZones.reduce(
+  (acc, tz) => {
+    const { region, city } = parseIanaTimezone(tz);
+    if (!acc[region]) {
+      acc[region] = [];
+    }
+    acc[region].push({ timezone: tz, city });
+    return acc;
+  },
+  {} as Record<string, { timezone: string; city: string }[]>,
+);
 
 interface TimeZoneCommandProps {
   value?: string;
@@ -68,11 +56,6 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
         {Object.entries(groupedTimeZones).map(([region, timeZones]) => (
           <CommandGroup heading={region} key={region}>
             {timeZones.map(({ timezone, city }) => {
-              const min = dayjs().tz(timezone).utcOffset();
-              const hr =
-                `${(min / 60) ^ 0}:` +
-                (min % 60 === 0 ? "00" : Math.abs(min % 60));
-              const offset = `GMT${hr.includes("-") ? hr : `+${hr}`}`;
               return (
                 <CommandItem
                   key={timezone}
@@ -87,7 +70,7 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
                   />
                   <span className="min-w-0 grow truncate">{city}</span>
                   <span className="whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-                    {offset}
+                    {dayjs().tz(timezone).format("LT")}
                   </span>
                 </CommandItem>
               );
