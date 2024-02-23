@@ -23,6 +23,7 @@ const config: PlaywrightTestConfig = {
     permissions: ["clipboard-read"],
     trace: "retain-on-failure",
   },
+  testDir: "./tests",
   webServer: {
     command: `NODE_ENV=test yarn start --port ${PORT}`,
     url: baseURL,
