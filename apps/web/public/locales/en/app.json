@@ -102,7 +102,6 @@
   "timeZoneSelect__defaultValue": "Select time zone…",
   "timeZoneSelect__noOption": "No option found",
   "timeZoneSelect__inputPlaceholder": "Search…",
-  "timeZonePicker__ignore": "Ignore time zone",
   "poweredByRallly": "Powered by <a>{name}</a>",
   "participants": "Participants",
   "language": "Language",
@@ -240,5 +239,7 @@
   "inviteParticipantLinkInfo": "Anyone with this link will be able to vote on your poll.",
   "accountNotLinkedTitle": "Your account cannot be linked to an existing user",
   "accountNotLinkedDescription": "A user with this email already exists. Please log in using the original method.",
-  "or": "Or"
+  "or": "Or",
+  "autoTimeZone": "Automatic Time Zone Conversion",
+  "autoTimeZoneHelp": "Enable this setting to automatically adjust event times to each participant's local time zone."
 }
