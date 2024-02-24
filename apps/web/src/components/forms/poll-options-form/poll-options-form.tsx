@@ -1,3 +1,4 @@
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@rallly/ui/card";
 import { CommandDialog } from "@rallly/ui/command";
@@ -28,7 +29,10 @@ export type PollOptionsData = {
   options: DateTimeOption[];
 };
 
-const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
+const PollOptionsForm = ({
+  children,
+  disableTimeZoneChange,
+}: React.PropsWithChildren<{ disableTimeZoneChange?: boolean }>) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
 
@@ -199,10 +203,15 @@ const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
             control={form.control}
             name="timeZone"
             render={({ field }) => (
-              <div className="grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex">
+              <div
+                className={cn(
+                  "grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex",
+                )}
+              >
                 <div className="flex h-9 items-center gap-x-2.5 p-2">
                   <Switch
                     id="timeZone"
+                    disabled={disableTimeZoneChange}
                     checked={!!field.value}
                     onCheckedChange={(checked) => {
                       if (checked) {
@@ -233,6 +242,7 @@ const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
                 {field.value ? (
                   <div>
                     <Button
+                      disabled={disableTimeZoneChange}
                       onClick={() => {
                         showTimeZoneCommandModal(true);
                       }}
