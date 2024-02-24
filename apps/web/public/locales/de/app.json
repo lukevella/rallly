@@ -129,7 +129,7 @@
   "finalize": "Finalisieren",
   "allDay": "Ganztägig",
   "permissionDenied": "Nicht autorisiert",
-  "permissionDeniedDescription": "Wenn du die Umfrage erstellt hast, melde dich bitte an, um auf Ihre Umfrage zuzugreifen",
+  "permissionDeniedDescription": "Wenn du die Umfrage erstellt hast, melde dich bitte an, um auf deine Umfrage zuzugreifen.",
   "loginDifferent": "Benutzer wechseln",
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt",
   "editDetailsDescription": "Änder die Details deiner Veranstaltung.",
