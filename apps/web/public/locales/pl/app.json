@@ -102,7 +102,6 @@
   "timeZoneSelect__defaultValue": "Wybierz strefę czasową…",
   "timeZoneSelect__noOption": "Nie znaleziono opcji",
   "timeZoneSelect__inputPlaceholder": "Szukaj…",
-  "timeZonePicker__ignore": "Ignoruj strefę czasową",
   "poweredByRallly": "Obsługiwane przez <a>{name}</a>",
   "participants": "Uczestnicy",
   "language": "Język",
