@@ -17,7 +17,7 @@ import { useUnmount } from "react-use";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
-import { setCookie } from "@/utils/cookies";
+import { useUser } from "@/components/user-provider";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -40,6 +40,8 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
+
+  const { isInternalUser } = useUser();
 
   const form = useForm<NewEventData>({
     defaultValues: {
@@ -64,10 +66,24 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   const posthog = usePostHog();
   const queryClient = trpc.useUtils();
-  const createPoll = trpc.polls.createPoll.useMutation({
-    networkMode: "always",
-    onSuccess: () => {
-      setCookie("new-poll", "1");
+
+  const createPoll = trpc.polls.create.useMutation({
+    onSuccess: (res) => {
+      posthog?.capture("created poll", {
+        pollId: res.id,
+      });
+      queryClient.polls.list.invalidate();
+      router.push(`/poll/${res.id}`);
+    },
+  });
+
+  const createPollNew = trpc.polls.createPoll.useMutation({
+    onSuccess: (res) => {
+      posthog?.capture("created poll", {
+        pollId: res.id,
+      });
+      queryClient.polls.list.invalidate();
+      router.push(`/poll/${res.id}`);
     },
   });
 
@@ -77,8 +93,8 @@ export const CreatePoll: React.FunctionComponent = () => {
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
 
-          await createPoll.mutateAsync(
-            {
+          if (isInternalUser) {
+            await createPollNew.mutateAsync({
               title: title,
               location: formData?.location,
               description: formData?.description,
@@ -91,9 +107,7 @@ export const CreatePoll: React.FunctionComponent = () => {
                 option.type === "timeSlot"
                   ? {
                       startTime: formData.timeZone
-                        ? dayjs(option.start)
-                            .tz(formData.timeZone, true)
-                            .toDate()
+                        ? dayjs.tz(option.start, formData.timeZone).toDate()
                         : dayjs(option.start).utc(true).toDate(),
                       duration: dayjs(option.end).diff(option.start, "minute"),
                     }
@@ -102,19 +116,23 @@ export const CreatePoll: React.FunctionComponent = () => {
                       duration: 0,
                     },
               ),
-            },
-            {
-              onSuccess: (res) => {
-                posthog?.capture("created poll", {
-                  pollId: res.id,
-                  numberOfOptions: formData.options?.length,
-                  optionsView: formData?.view,
-                });
-                queryClient.polls.list.invalidate();
-                router.push(`/poll/${res.id}`);
-              },
-            },
-          );
+            });
+          } else {
+            await createPoll.mutateAsync({
+              title: title,
+              location: formData?.location,
+              description: formData?.description,
+              timeZone: formData?.timeZone,
+              hideParticipants: formData?.hideParticipants,
+              disableComments: formData?.disableComments,
+              hideScores: formData?.hideScores,
+              requireParticipantEmail: formData?.requireParticipantEmail,
+              options: required(formData?.options).map((option) => ({
+                startDate: option.type === "date" ? option.date : option.start,
+                endDate: option.type === "timeSlot" ? option.end : undefined,
+              })),
+            });
+          }
         })}
       >
         <div className="mx-auto max-w-4xl space-y-4">

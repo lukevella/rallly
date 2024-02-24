@@ -27,7 +27,8 @@ export const UserContext = React.createContext<{
 } | null>(null);
 
 export const useUser = () => {
-  return useRequiredContext(UserContext, "UserContext");
+  const value = useRequiredContext(UserContext, "UserContext");
+  return { ...value, isInternalUser: value.user.email?.endsWith("@rallly.co") };
 };
 
 export const useAuthenticatedUser = () => {

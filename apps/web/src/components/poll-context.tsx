@@ -173,23 +173,29 @@ function createOptionsContextValue(
     return {
       pollType: "timeSlot",
       options: pollOptions.map((option) => {
-        const localTime = sourceTimeZone
-          ? dayjs(option.startTime).tz(targetTimeZone)
-          : dayjs(option.startTime).utc();
+        function adjustTimeZone(date: Date) {
+          if (sourceTimeZone) {
+            return dayjs(date).tz(targetTimeZone);
+          }
+          return dayjs(date).utc();
+        }
+        const localStartTime = adjustTimeZone(option.startTime);
+
+        // for some reason, dayjs requires us to do timezone conversion at the end
+        const localEndTime = adjustTimeZone(
+          dayjs(option.startTime).add(option.duration, "minute").toDate(),
+        );
 
         return {
           optionId: option.id,
           type: "timeSlot",
-          startTime: localTime.format("LT"),
-          endTime: localTime.add(option.duration, "minute").format("LT"),
-          duration: getDuration(
-            localTime,
-            localTime.add(option.duration, "minute"),
-          ),
-          month: localTime.format("MMM"),
-          day: localTime.format("D"),
-          dow: localTime.format("ddd"),
-          year: localTime.format("YYYY"),
+          startTime: localStartTime.format("LT"),
+          endTime: localEndTime.format("LT"),
+          duration: getDuration(localStartTime, localEndTime),
+          month: localStartTime.format("MMM"),
+          day: localStartTime.format("D"),
+          dow: localStartTime.format("ddd"),
+          year: localStartTime.format("YYYY"),
         } satisfies ParsedTimeSlotOption;
       }),
     };
@@ -217,15 +223,11 @@ function createOptionsContextValue(
 export const OptionsProvider = (props: React.PropsWithChildren) => {
   const { poll } = usePoll();
   const { timeZone: targetTimeZone, timeFormat } = useDayjs();
-  const { user } = useUser();
-
-  // Testing a new method of storing time zone. For now we will only use it for internal users
-  // to make sure there is no issues with displaying the wrong time.
-  const isInternal = user.email?.endsWith("@rallly.co");
+  const { isInternalUser } = useUser();
 
   const options = React.useMemo(() => {
     let res: OptionsContextValue;
-    if (isInternal) {
+    if (isInternalUser) {
       res = createOptionsContextValue(
         poll.options,
         targetTimeZone,
@@ -241,7 +243,7 @@ export const OptionsProvider = (props: React.PropsWithChildren) => {
       );
     }
     return res;
-  }, [isInternal, poll.options, poll.timeZone, targetTimeZone, timeFormat]);
+  }, [isInternalUser, poll.options, poll.timeZone, targetTimeZone, timeFormat]);
 
   return (
     <OptionsContext.Provider value={options}>
