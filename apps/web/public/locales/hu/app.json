@@ -102,7 +102,6 @@
   "timeZoneSelect__defaultValue": "Válassz időzónát…",
   "timeZoneSelect__noOption": "Nem található lehetőség",
   "timeZoneSelect__inputPlaceholder": "Keresés…",
-  "timeZonePicker__ignore": "Időzóna figyelmen kívül hagyása",
   "poweredByRallly": "Működteti a <a>{name}</a>",
   "participants": "Résztvevők",
   "language": "Nyelv",
@@ -240,5 +239,7 @@
   "inviteParticipantLinkInfo": "Ezen a linken keresztül bárki adhat le szavazatot.",
   "accountNotLinkedTitle": "A fiókod nem köthető egy meglévő felhasználóhoz",
   "accountNotLinkedDescription": "Már létezik felhasználó ezzel az email címmel. Kérjük, jelentkezz be az eredeti módszerrel.",
-  "or": "Vagy"
+  "or": "Vagy",
+  "autoTimeZone": "Automatikus időzóna átalakítása",
+  "autoTimeZoneHelp": "Kapcsold be ezt, hogy automatikus igazodjanak az esemény időpontok minden egyes résztvevő hely időzónájához."
 }

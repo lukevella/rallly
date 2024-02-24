@@ -102,7 +102,6 @@
   "timeZoneSelect__defaultValue": "Vyberte časové pásmo…",
   "timeZoneSelect__noOption": "Nenalezeny žádné možnosti",
   "timeZoneSelect__inputPlaceholder": "Vyhledat…",
-  "timeZonePicker__ignore": "Ignorovat časové pásmo",
   "poweredByRallly": "Běží na <a>{name}</a>",
   "participants": "Účastníků",
   "language": "Jazyk",
