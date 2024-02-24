@@ -102,7 +102,6 @@
   "timeZoneSelect__defaultValue": "Selecciona la zona horària…",
   "timeZoneSelect__noOption": "No s'ha trobat cap opció",
   "timeZoneSelect__inputPlaceholder": "Cerca…",
-  "timeZonePicker__ignore": "Ignora la zona horària",
   "poweredByRallly": "Amb la tecnologia de <a>{name}</a>",
   "participants": "Participants",
   "language": "Idioma",
