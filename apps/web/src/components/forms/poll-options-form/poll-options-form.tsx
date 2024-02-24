@@ -199,7 +199,7 @@ const PollOptionsForm = ({ children }: React.PropsWithChildren) => {
             control={form.control}
             name="timeZone"
             render={({ field }) => (
-              <div className="grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex md:h-14">
+              <div className="grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex">
                 <div className="flex h-9 items-center gap-x-2.5 p-2">
                   <Switch
                     id="timeZone"

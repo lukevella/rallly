@@ -2,7 +2,6 @@ import clsx from "clsx";
 import * as React from "react";
 
 export interface DateCardProps {
-  annotation?: React.ReactNode;
   day: string;
   dow?: string;
   month: string;
@@ -10,32 +9,22 @@ export interface DateCardProps {
 }
 
 const DateCard: React.FunctionComponent<DateCardProps> = ({
-  annotation,
   className,
   day,
-  dow,
   month,
 }) => {
   return (
     <div
       className={clsx(
-        "relative inline-flex size-14 items-center justify-center rounded-md border border-gray-200 bg-white p-1 text-center",
+        "relative inline-flex size-12 flex-col rounded-md border bg-gray-50 text-center text-slate-800",
         className,
       )}
     >
-      {annotation ? (
-        <div className="absolute -right-3 -top-3 z-10">{annotation}</div>
-      ) : null}
-      <div>
-        {dow ? (
-          <div className="-mt-3 bg-white text-center text-xs text-gray-500">
-            {dow}
-          </div>
-        ) : null}
-        <div className="text-center text-xl font-bold leading-none">{day}</div>
-        <div className="text-center text-xs font-semibold uppercase leading-normal text-gray-500">
-          {month}
-        </div>
+      <div className="text-muted-foreground border-b border-gray-200 text-xs font-normal leading-4">
+        {month}
+      </div>
+      <div className="flex grow items-center justify-center rounded-b-md bg-white text-lg font-semibold leading-none tracking-tight">
+        {day}
       </div>
     </div>
   );

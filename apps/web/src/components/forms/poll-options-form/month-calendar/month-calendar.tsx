@@ -264,13 +264,11 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   return (
                     <div
                       key={dateString}
-                      className="space-y-3 p-3 sm:flex sm:space-x-4 sm:space-y-0 sm:p-4"
+                      className="space-y-3 p-3 sm:flex sm:items-start sm:space-x-4 sm:space-y-0 sm:p-4"
                     >
-                      <div>
-                        <DateCard
-                          {...getDateProps(new Date(dateString + "T12:00:00"))}
-                        />
-                      </div>
+                      <DateCard
+                        {...getDateProps(new Date(dateString + "T12:00:00"))}
+                      />
                       <div className="grow space-y-3">
                         {optionsForDay.map(({ option, index }) => {
                           if (option.type === "date") {
@@ -447,7 +445,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 })}
             </div>
           ) : datepicker.selection.length ? (
-            <div className="grid grid-cols-[repeat(auto-fill,54px)] gap-3 p-3 sm:gap-4 sm:p-4">
+            <div className="flex flex-wrap gap-3 p-3 sm:gap-4 sm:p-4">
               {datepicker.selection
                 .sort((a, b) => a.getTime() - b.getTime())
                 .map((selectedDate, i) => {
