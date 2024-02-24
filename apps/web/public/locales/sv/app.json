@@ -101,7 +101,6 @@
   "timeZoneSelect__defaultValue": "Välj tidszon…",
   "timeZoneSelect__noOption": "Inga alternativ hittades",
   "timeZoneSelect__inputPlaceholder": "Sök…",
-  "timeZonePicker__ignore": "Ignorera tidszon",
   "poweredByRallly": "Drivs av <a>{name}</a>",
   "participants": "Deltagare",
   "language": "Språk",
