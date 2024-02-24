@@ -453,18 +453,18 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                     <DateCard
                       key={i}
                       {...getDateProps(selectedDate)}
-                      annotation={
-                        <CompactButton
-                          icon={XIcon}
-                          onClick={() => {
-                            // TODO (Luke Vella) [2022-03-19]: Find cleaner way to manage this state
-                            // Quite tedious right now to remove a single element
-                            onChange(
-                              removeAllOptionsForDay(options, selectedDate),
-                            );
-                          }}
-                        />
-                      }
+                      // annotation={
+                      //   <CompactButton
+                      //     icon={XIcon}
+                      //     onClick={() => {
+                      //       // TODO (Luke Vella) [2022-03-19]: Find cleaner way to manage this state
+                      //       // Quite tedious right now to remove a single element
+                      //       onChange(
+                      //         removeAllOptionsForDay(options, selectedDate),
+                      //       );
+                      //     }}
+                      //   />
+                      // }
                     />
                   );
                 })}
