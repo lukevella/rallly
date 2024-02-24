@@ -133,7 +133,7 @@ const Discussion: React.FunctionComponent = () => {
                       )}
                     </div>
                   </div>
-                  <div className="w-fit whitespace-pre-wrap pl-8 leading-relaxed">
+                  <div className="ml-0.5 w-fit whitespace-pre-wrap pl-8 text-sm leading-relaxed">
                     <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                   </div>
                 </div>
@@ -191,7 +191,7 @@ const Discussion: React.FunctionComponent = () => {
           </form>
         ) : (
           <button
-            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
             onClick={() => setIsWriting(true)}
           >
             <Trans
