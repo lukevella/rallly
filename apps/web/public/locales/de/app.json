@@ -102,7 +102,6 @@
   "timeZoneSelect__defaultValue": "Zeitzone auswählen…",
   "timeZoneSelect__noOption": "Keine Option gefunden",
   "timeZoneSelect__inputPlaceholder": "Suchen…",
-  "timeZonePicker__ignore": "Zeitzonen ignorieren",
   "poweredByRallly": "Betrieben von <a>{name}</a>",
   "participants": "Teilnehmer",
   "language": "Sprache",
