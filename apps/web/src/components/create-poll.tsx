@@ -90,9 +90,11 @@ export const CreatePoll: React.FunctionComponent = () => {
               options: required(formData?.options).map((option) =>
                 option.type === "timeSlot"
                   ? {
-                      startTime: dayjs(option.start)
-                        .tz(formData.timeZone, true)
-                        .toDate(),
+                      startTime: formData.timeZone
+                        ? dayjs(option.start)
+                            .tz(formData.timeZone, true)
+                            .toDate()
+                        : dayjs(option.start).utc(true).toDate(),
                       duration: dayjs(option.end).diff(option.start, "minute"),
                     }
                   : {
