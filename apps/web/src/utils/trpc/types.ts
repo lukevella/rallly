@@ -5,7 +5,7 @@ export type GetPollApiResponse = {
   title: string;
   location: string | null;
   description: string | null;
-  options: { id: string; start: Date; duration: number }[];
+  options: { id: string; start: Date; startTime: Date; duration: number }[];
   user: User | null;
   timeZone: string | null;
   adminUrlId: string;

@@ -49,7 +49,6 @@ export const encodeDateOption = (option: DateTimeOption) => {
 
 export interface ParsedDateOption {
   type: "date";
-  date: Date;
   optionId: string;
   day: string;
   dow: string;
@@ -60,7 +59,6 @@ export interface ParsedDateOption {
 export interface ParsedTimeSlotOption {
   type: "timeSlot";
   optionId: string;
-  date: Date;
   day: string;
   dow: string;
   month: string;
@@ -119,7 +117,6 @@ export const parseDateOption = (option: Option): ParsedDateOption => {
   const date = dayjs(option.start).utc();
   return {
     type: "date",
-    date: date.toDate(),
     optionId: option.id,
     day: date.format("D"),
     dow: date.format("ddd"),
@@ -153,8 +150,6 @@ export const parseTimeSlotOption = (
   return {
     type: "timeSlot",
     optionId: option.id,
-    date: startDate.toDate(),
-
     startTime: startDate.format(timeFormat === "hours12" ? "h:mm A" : "HH:mm"),
     endTime: endDate.format(timeFormat === "hours12" ? "h:mm A" : "HH:mm"),
     day: startDate.format("D"),

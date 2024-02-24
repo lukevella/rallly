@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -63,7 +64,7 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   const posthog = usePostHog();
   const queryClient = trpc.useUtils();
-  const createPoll = trpc.polls.create.useMutation({
+  const createPoll = trpc.polls.createPoll.useMutation({
     networkMode: "always",
     onSuccess: () => {
       setCookie("new-poll", "1");
@@ -86,10 +87,19 @@ export const CreatePoll: React.FunctionComponent = () => {
               disableComments: formData?.disableComments,
               hideScores: formData?.hideScores,
               requireParticipantEmail: formData?.requireParticipantEmail,
-              options: required(formData?.options).map((option) => ({
-                startDate: option.type === "date" ? option.date : option.start,
-                endDate: option.type === "timeSlot" ? option.end : undefined,
-              })),
+              options: required(formData?.options).map((option) =>
+                option.type === "timeSlot"
+                  ? {
+                      startTime: dayjs(option.start)
+                        .tz(formData.timeZone, true)
+                        .toDate(),
+                      duration: dayjs(option.end).diff(option.start, "minute"),
+                    }
+                  : {
+                      startTime: dayjs(option.date).utc(true).toDate(),
+                      duration: 0,
+                    },
+              ),
             },
             {
               onSuccess: (res) => {
