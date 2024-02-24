@@ -204,7 +204,7 @@ export const polls = router({
           options: {
             createMany: {
               data: input.options.map((option) => ({
-                start: dayjs(option.startTime).utc().toDate(),
+                start: dayjs().utc(true).toDate(),
                 startTime: option.startTime,
                 duration: option.duration,
               })),
