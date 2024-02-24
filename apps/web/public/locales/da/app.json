@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Alle med dette link vil kunne stemme i din afstemning.",
   "accountNotLinkedTitle": "Din konto kan ikke tilknyttes en eksisterende bruger",
   "accountNotLinkedDescription": "En bruger med denne e-mail findes allerede. Log venligst ind ved hjælp af den oprindelige metode.",
-  "or": "Eller"
+  "or": "Eller",
+  "autoTimeZone": "Automatisk konvertering af tidszone",
+  "autoTimeZoneHelp": "Aktiver denne indstilling for at justere begivenhedstider til hver deltagers lokale tidszone automatisk."
 }
