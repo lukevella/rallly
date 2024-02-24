@@ -53,7 +53,9 @@ export const PollDetailsForm = () => {
 
       <FormItem>
         <div>
-          <FormLabel className="inline-block">{t("location")}</FormLabel>
+          <FormLabel className="inline-block" htmlFor="location">
+            {t("location")}
+          </FormLabel>
           <span className="text-muted-foreground ml-1 text-sm">
             <Trans i18nKey="optionalLabel" defaults="(Optional)" />
           </span>

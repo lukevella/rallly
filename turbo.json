@@ -24,6 +24,9 @@
       "env": ["CI"],
       "dependsOn": ["^build:test"]
     },
+    "test:unit": {
+      "cache": true
+    },
     "db:generate": {
       "dependsOn": ["^db:generate"]
     },

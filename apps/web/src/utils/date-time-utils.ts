@@ -1,5 +1,8 @@
 import { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
+import soft from "timezone-soft";
+
+import { supportedTimeZones } from "@/utils/supported-time-zones";
 
 import {
   DateTimeOption,
@@ -8,8 +11,35 @@ import {
 
 type Option = { id: string; start: Date; duration: number };
 
-export const getBrowserTimeZone = () =>
-  Intl.DateTimeFormat().resolvedOptions().timeZone;
+export function parseIanaTimezone(timezone: string): {
+  region: string;
+  city: string;
+} {
+  const firstSlash = timezone.indexOf("/");
+  const region = timezone.substring(0, firstSlash);
+  const city = timezone.substring(firstSlash + 1).replaceAll("_", " ");
+
+  return { region, city };
+}
+
+export function getBrowserTimeZone() {
+  const res = soft(Intl.DateTimeFormat().resolvedOptions().timeZone)[0];
+  return resolveGeographicTimeZone(res.iana);
+}
+
+export function resolveGeographicTimeZone(timezone: string) {
+  const tz = supportedTimeZones.find((tz) => tz === timezone);
+
+  if (!tz) {
+    // find nearest timezone with the same offset
+    const offset = dayjs().tz(timezone).utcOffset();
+    return supportedTimeZones.find((tz) => {
+      return dayjs().tz(tz, true).utcOffset() === offset;
+    })!;
+  }
+
+  return tz;
+}
 
 export const encodeDateOption = (option: DateTimeOption) => {
   return option.type === "timeSlot"

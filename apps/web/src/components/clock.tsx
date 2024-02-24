@@ -22,7 +22,7 @@ import { usePreferences } from "@/contexts/preferences";
 import { useDayjs } from "@/utils/dayjs";
 
 export const TimePreferences = () => {
-  const { preferences, updatePreferences } = usePreferences();
+  const { updatePreferences } = usePreferences();
   const { timeFormat, timeZone } = useDayjs();
 
   return (
@@ -32,7 +32,7 @@ export const TimePreferences = () => {
           <Trans i18nKey="timeZone" />
         </Label>
         <TimeZoneSelect
-          value={preferences.timeZone ?? timeZone}
+          value={timeZone}
           onValueChange={(newTimeZone) => {
             updatePreferences({ timeZone: newTimeZone });
           }}
@@ -43,7 +43,7 @@ export const TimePreferences = () => {
           <Trans i18nKey="timeFormat" />
         </Label>
         <TimeFormatPicker
-          value={preferences.timeFormat ?? timeFormat}
+          value={timeFormat}
           onChange={(newTimeFormat) => {
             updatePreferences({ timeFormat: newTimeFormat });
           }}
@@ -75,17 +75,15 @@ export const Clock = ({ className }: { className?: string }) => {
 
 export const TimesShownIn = () => {
   const { timeZone } = useDayjs();
-  const timeZoneDisplayFormat = soft(timeZone)[0];
-  const now = spacetime.now(timeZone);
-  const standard = timeZoneDisplayFormat.standard.name;
-  const dst = timeZoneDisplayFormat.daylight?.name;
-  const timeZoneName = now.isDST() ? dst : standard;
 
   return (
     <ClockPreferences>
       <button className="inline-flex items-center gap-x-2 text-sm hover:underline">
         <GlobeIcon className="size-4" />
-        <Trans i18nKey="timeShownIn" values={{ timeZone: timeZoneName }} />
+        <Trans
+          i18nKey="timeShownIn"
+          values={{ timeZone: timeZone.replaceAll("_", " ") }}
+        />
       </button>
     </ClockPreferences>
   );

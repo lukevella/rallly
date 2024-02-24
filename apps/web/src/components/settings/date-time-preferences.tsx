@@ -33,9 +33,9 @@ const DateTimePreferencesForm = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      timeFormat: preferences.timeFormat ?? timeFormat,
-      weekStart: preferences.weekStart ?? weekStart,
-      timeZone: preferences.timeZone ?? timeZone,
+      timeFormat,
+      weekStart,
+      timeZone,
     },
   });
 

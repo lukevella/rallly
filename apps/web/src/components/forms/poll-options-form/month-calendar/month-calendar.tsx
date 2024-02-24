@@ -254,7 +254,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             </div>
           </div>
         </div>
-        <div className="max-h-[calc(100vh-400px)] min-h-0 grow overflow-auto">
+        <div className="max-h-[calc(100vh-380px)] min-h-0 grow overflow-auto">
           {isTimedEvent ? (
             <div className="divide-y">
               {Object.keys(optionsByDay)
@@ -264,13 +264,11 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   return (
                     <div
                       key={dateString}
-                      className="space-y-3 p-3 sm:flex sm:space-x-4 sm:space-y-0 sm:p-4"
+                      className="space-y-3 p-3 sm:flex sm:items-start sm:space-x-4 sm:space-y-0 sm:p-4"
                     >
-                      <div>
-                        <DateCard
-                          {...getDateProps(new Date(dateString + "T12:00:00"))}
-                        />
-                      </div>
+                      <DateCard
+                        {...getDateProps(new Date(dateString + "T12:00:00"))}
+                      />
                       <div className="grow space-y-3">
                         {optionsForDay.map(({ option, index }) => {
                           if (option.type === "date") {
@@ -447,7 +445,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 })}
             </div>
           ) : datepicker.selection.length ? (
-            <div className="grid grid-cols-[repeat(auto-fill,54px)] gap-3 p-3 sm:gap-4 sm:p-4">
+            <div className="flex flex-wrap gap-3 p-3 sm:gap-4 sm:p-4">
               {datepicker.selection
                 .sort((a, b) => a.getTime() - b.getTime())
                 .map((selectedDate, i) => {
@@ -455,18 +453,18 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                     <DateCard
                       key={i}
                       {...getDateProps(selectedDate)}
-                      annotation={
-                        <CompactButton
-                          icon={XIcon}
-                          onClick={() => {
-                            // TODO (Luke Vella) [2022-03-19]: Find cleaner way to manage this state
-                            // Quite tedious right now to remove a single element
-                            onChange(
-                              removeAllOptionsForDay(options, selectedDate),
-                            );
-                          }}
-                        />
-                      }
+                      // annotation={
+                      //   <CompactButton
+                      //     icon={XIcon}
+                      //     onClick={() => {
+                      //       // TODO (Luke Vella) [2022-03-19]: Find cleaner way to manage this state
+                      //       // Quite tedious right now to remove a single element
+                      //       onChange(
+                      //         removeAllOptionsForDay(options, selectedDate),
+                      //       );
+                      //     }}
+                      //   />
+                      // }
                     />
                   );
                 })}
