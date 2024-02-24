@@ -254,7 +254,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             </div>
           </div>
         </div>
-        <div className="max-h-[calc(100vh-400px)] min-h-0 grow overflow-auto">
+        <div className="max-h-[calc(100vh-380px)] min-h-0 grow overflow-auto">
           {isTimedEvent ? (
             <div className="divide-y">
               {Object.keys(optionsByDay)
