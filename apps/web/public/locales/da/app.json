@@ -102,7 +102,6 @@
   "timeZoneSelect__defaultValue": "Vælg tidszone…",
   "timeZoneSelect__noOption": "Ingen valgmulighed fundet",
   "timeZoneSelect__inputPlaceholder": "Søg…",
-  "timeZonePicker__ignore": "Ignorer tidszone",
   "poweredByRallly": "Drevet af <a>{name}</a>",
   "participants": "Deltagere",
   "language": "Sprog",
