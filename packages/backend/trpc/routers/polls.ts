@@ -45,9 +45,6 @@ export const polls = router({
   comments,
   options,
   // START LEGACY ROUTES
-  /**
-   * @deprecated use createPoll instead. Can delete this method when all clients are updated
-   */
   create: possiblyPublicProcedure
     .input(
       z.object({
@@ -103,7 +100,7 @@ export const polls = router({
           options: {
             createMany: {
               data: input.options.map((option) => ({
-                start: new Date(`${option.startDate}Z`),
+                start: dayjs(option.startDate).utc(true).toDate(),
                 startTime: input.timeZone
                   ? dayjs(option.startDate).tz(input.timeZone, true).toDate()
                   : dayjs(option.startDate).utc(true).toDate(),
@@ -113,105 +110,6 @@ export const polls = router({
                       "minute",
                     )
                   : 0,
-              })),
-            },
-          },
-          hideParticipants: input.hideParticipants,
-          disableComments: input.disableComments,
-          hideScores: input.hideScores,
-          requireParticipantEmail: input.requireParticipantEmail,
-        },
-      });
-
-      const pollLink = ctx.absoluteUrl(`/poll/${pollId}`);
-
-      const participantLink = ctx.shortUrl(`/invite/${pollId}`);
-
-      if (ctx.user.isGuest === false) {
-        const user = await prisma.user.findUnique({
-          select: { email: true, name: true },
-          where: { id: ctx.user.id },
-        });
-
-        if (user) {
-          await ctx.emailClient.sendTemplate("NewPollEmail", {
-            to: user.email,
-            subject: `Let's find a date for ${poll.title}`,
-            props: {
-              title: poll.title,
-              name: user.name,
-              adminLink: pollLink,
-              participantLink,
-            },
-          });
-        }
-      }
-
-      return { id: poll.id };
-    }),
-  createPoll: possiblyPublicProcedure
-    .input(
-      z.object({
-        title: z.string().trim().min(1),
-        timeZone: z.string().optional(),
-        location: z.string().optional(),
-        description: z.string().optional(),
-        hideParticipants: z.boolean().optional(),
-        hideScores: z.boolean().optional(),
-        disableComments: z.boolean().optional(),
-        requireParticipantEmail: z.boolean().optional(),
-        options: z
-          .object({
-            startTime: z.date(),
-            duration: z.number(),
-          })
-          .array(),
-        demo: z.boolean().optional(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const adminToken = nanoid();
-      const participantUrlId = nanoid();
-      const pollId = nanoid();
-
-      const poll = await prisma.poll.create({
-        select: {
-          adminUrlId: true,
-          id: true,
-          title: true,
-          options: {
-            select: {
-              id: true,
-            },
-          },
-        },
-        data: {
-          id: pollId,
-          title: input.title,
-          timeZone: input.timeZone,
-          location: input.location,
-          description: input.description,
-          adminUrlId: adminToken,
-          participantUrlId,
-          userId: ctx.user.id,
-          watchers: !ctx.user.isGuest
-            ? {
-                create: {
-                  userId: ctx.user.id,
-                },
-              }
-            : undefined,
-          options: {
-            createMany: {
-              data: input.options.map((option) => ({
-                start: input.timeZone
-                  ? dayjs(option.startTime)
-                      .tz(input.timeZone)
-                      .utc(true) // convert to UTC but keep local time
-                      .toDate()
-                  : option.startTime,
-                startTime: option.startTime,
-                duration: option.duration,
               })),
             },
           },
