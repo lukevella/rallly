@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Qualquer um com este link poderá votar na sua enquete.",
   "accountNotLinkedTitle": "Sua conta não pode ser vinculada a um usuário existente",
   "accountNotLinkedDescription": "Já existe um usuário com este e-mail. Por favor, faça o login usando o método original.",
-  "or": "Ou"
+  "or": "Ou",
+  "autoTimeZone": "Conversão Automática de Fuso Horário",
+  "autoTimeZoneHelp": "Ative esta configuração para ajustar automaticamente os horários dos eventos de cada participante ao fuso horário local."
 }
