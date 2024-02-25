@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Tous ceux qui ont ce lien pourront voir ce message.",
   "accountNotLinkedTitle": "Votre compte ne peut pas être lié à un utilisateur existant",
   "accountNotLinkedDescription": "Un utilisateur avec cette adresse e-mail existe déjà. Veuillez vous connecter en utilisant la méthode originale.",
-  "or": "Ou"
+  "or": "Ou",
+  "autoTimeZone": "Conversion automatique du fuseau horaire",
+  "autoTimeZoneHelp": "Activer ce paramètre pour ajuster automatiquement les heures de chaque participant au fuseau horaire local."
 }
