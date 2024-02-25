@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Iedereen met deze link kan deelnemen aan je poll.",
   "accountNotLinkedTitle": "Je account kan niet worden gekoppeld aan een bestaande gebruiker",
   "accountNotLinkedDescription": "Er bestaat al een gebruiker met dit e-mailadres. Log in met behulp van de oorspronkelijke methode.",
-  "or": "Of"
+  "or": "Of",
+  "autoTimeZone": "Automatische conversie van tijdzone",
+  "autoTimeZoneHelp": "Schakel deze instelling in om de tijden van de gebeurtenissen automatisch aan te passen aan de tijdzone van de deelnemer."
 }
