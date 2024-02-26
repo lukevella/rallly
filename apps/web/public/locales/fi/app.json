@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Kuka tahansa linkin saanut voi äänestää kyselyssäsi.",
   "accountNotLinkedTitle": "Tiliäsi ei voi linkittää olemassa olevaan käyttäjään",
   "accountNotLinkedDescription": "Tällä sähköpostiosoitteella on jo käyttäjä. Kirjaudu sisään käyttämällä alkuperäistä kirjautumistapaa.",
-  "or": "Tai"
+  "or": "Tai",
+  "autoTimeZone": "Aikavyöhykkeen automaattinen muuntaminen",
+  "autoTimeZoneHelp": "Kun tämä asetus on käytössä, ajankohdat muunnetaan automaattisesti kunkin osallistujan paikalliseen aikaan."
 }
