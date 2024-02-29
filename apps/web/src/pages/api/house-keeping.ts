@@ -29,7 +29,7 @@ export default async function handler(
       SELECT poll_id 
       FROM options 
       WHERE poll_id = p.id
-      AND start > NOW()
+      AND start_time > NOW()
     )
     AND user_id NOT IN (
       SELECT id

@@ -123,7 +123,7 @@ const DesktopPoll: React.FunctionComponent = () => {
           <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4 py-3">
             <div>
               {mode !== "view" ? (
-                <div>
+                <p className="text-sm">
                   <Trans
                     t={t}
                     i18nKey="saveInstruction"
@@ -132,7 +132,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     }}
                     components={{ b: <strong /> }}
                   />
-                </div>
+                </p>
               ) : (
                 <div className="flex items-center gap-2">
                   <Users2Icon className="size-5 shrink-0" />

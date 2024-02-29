@@ -30,7 +30,7 @@ const NameInput: React.ForwardRefRenderFunction<
       <input
         ref={ref}
         className={cn(
-          "input",
+          "input text-sm",
           {
             "pl-9": value || defaultValue,
             "ring-destructive ring-1": error,

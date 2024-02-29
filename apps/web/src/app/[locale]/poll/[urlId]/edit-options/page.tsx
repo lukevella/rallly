@@ -117,7 +117,7 @@ const Page = () => {
           }
         })}
       >
-        <PollOptionsForm>
+        <PollOptionsForm disableTimeZoneChange={true}>
           <CardFooter className="justify-between">
             <Button asChild>
               <Link href={pollLink}>
