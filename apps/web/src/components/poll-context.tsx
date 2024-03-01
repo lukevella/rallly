@@ -5,9 +5,7 @@ import { TrashIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import { useUser } from "@/components/user-provider";
 import {
-  decodeOptions,
   getDuration,
   ParsedDateOption,
   ParsedTimeSlotOption,
@@ -223,27 +221,15 @@ function createOptionsContextValue(
 export const OptionsProvider = (props: React.PropsWithChildren) => {
   const { poll } = usePoll();
   const { timeZone: targetTimeZone, timeFormat } = useDayjs();
-  const { isInternalUser } = useUser();
 
   const options = React.useMemo(() => {
-    let res: OptionsContextValue;
-    if (isInternalUser) {
-      res = createOptionsContextValue(
-        poll.options,
-        targetTimeZone,
-        poll.timeZone,
-      );
-    } else {
-      // @deprecated - Stop using this method and drop the start column from the database in favor of startTime
-      res = decodeOptions(
-        poll.options,
-        poll.timeZone,
-        targetTimeZone,
-        timeFormat,
-      );
-    }
-    return res;
-  }, [isInternalUser, poll.options, poll.timeZone, targetTimeZone, timeFormat]);
+    return createOptionsContextValue(
+      poll.options,
+      targetTimeZone,
+      poll.timeZone,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poll.options, poll.timeZone, targetTimeZone, timeFormat]);
 
   return (
     <OptionsContext.Provider value={options}>

@@ -1,4 +1,3 @@
-import { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
 import soft from "timezone-soft";
 
@@ -8,8 +7,6 @@ import {
   DateTimeOption,
   TimeOption,
 } from "../components/forms/poll-options-form";
-
-type Option = { id: string; start: Date; duration: number };
 
 export function parseIanaTimezone(timezone: string): {
   region: string;
@@ -84,80 +81,6 @@ export const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
     res += `${minutes}m`;
   }
   return res;
-};
-
-export const decodeOptions = (
-  options: Option[],
-  timeZone: string | null,
-  targetTimeZone: string,
-  timeFormat: TimeFormat, // TODO (Luke Vella) [2022-06-28]: Need to pass timeFormat so that we recalculate the options when timeFormat changes. There is definitely a better way to do this
-):
-  | { pollType: "date"; options: ParsedDateOption[] }
-  | { pollType: "timeSlot"; options: ParsedTimeSlotOption[] } => {
-  const pollType = options.some(({ duration }) => duration > 0)
-    ? "timeSlot"
-    : "date";
-
-  if (pollType === "timeSlot") {
-    return {
-      pollType,
-      options: options.map((option) =>
-        parseTimeSlotOption(option, timeZone, targetTimeZone, timeFormat),
-      ),
-    };
-  } else {
-    return {
-      pollType,
-      options: options.map((option) => parseDateOption(option)),
-    };
-  }
-};
-
-export const parseDateOption = (option: Option): ParsedDateOption => {
-  const date = dayjs(option.start).utc();
-  return {
-    type: "date",
-    optionId: option.id,
-    day: date.format("D"),
-    dow: date.format("ddd"),
-    month: date.format("MMM"),
-    year: date.format("YYYY"),
-  };
-};
-
-export const parseTimeSlotOption = (
-  option: Option,
-  timeZone: string | null,
-  targetTimeZone: string,
-  timeFormat: TimeFormat,
-): ParsedTimeSlotOption => {
-  const adjustTimeZone = (date: string) => {
-    if (!timeZone) {
-      return dayjs(date);
-    }
-
-    return dayjs.tz(date, timeZone).tz(targetTimeZone);
-  };
-
-  const start = dayjs(option.start).utc().format("YYYY-MM-DD HH:mm");
-
-  const startDate = adjustTimeZone(start);
-
-  const endDate = adjustTimeZone(
-    dayjs(start).add(option.duration, "minute").format("YYYY-MM-DD HH:mm"),
-  );
-
-  return {
-    type: "timeSlot",
-    optionId: option.id,
-    startTime: startDate.format(timeFormat === "hours12" ? "h:mm A" : "HH:mm"),
-    endTime: endDate.format(timeFormat === "hours12" ? "h:mm A" : "HH:mm"),
-    day: startDate.format("D"),
-    dow: startDate.format("ddd"),
-    month: startDate.format("MMM"),
-    duration: getDuration(startDate, endDate),
-    year: startDate.format("YYYY"),
-  };
 };
 
 export const removeAllOptionsForDay = (

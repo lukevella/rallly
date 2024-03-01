@@ -27,17 +27,7 @@ export const UserContext = React.createContext<{
 } | null>(null);
 
 export const useUser = () => {
-  const value = useRequiredContext(UserContext, "UserContext");
-  return { ...value, isInternalUser: value.user.email?.endsWith("@rallly.co") };
-};
-
-export const useAuthenticatedUser = () => {
-  const { user, ...rest } = useRequiredContext(UserContext, "UserContext");
-  if (user.isGuest) {
-    throw new Error("Forget to prefetch user identity");
-  }
-
-  return { user, ...rest };
+  return useRequiredContext(UserContext, "UserContext");
 };
 
 export const IfAuthenticated = (props: { children?: React.ReactNode }) => {
