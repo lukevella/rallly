@@ -44,6 +44,7 @@ async function createPollsForUser(userId: string) {
                 date.setSeconds(0);
                 return {
                   start: date,
+                  startTime: date,
                   duration,
                 };
               }),
