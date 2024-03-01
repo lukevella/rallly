@@ -90,7 +90,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <div className="overflow-hidden md:flex">
-      <div className="shrink-0 border-b p-3 sm:p-4 md:w-[400px] md:border-b-0 md:border-r">
+      <div className="grow border-b p-3 sm:p-4 md:border-b-0 md:border-r">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -202,7 +202,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           </div>
         </div>
       </div>
-      <div className="flex grow flex-col">
+      <div className="flex  flex-col md:w-[380px]">
         <div
           className={clsx("border-b", {
             hidden: datepicker.selection.length === 0,
@@ -254,7 +254,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             </div>
           </div>
         </div>
-        <div className="max-h-[calc(100vh-380px)] min-h-0 grow overflow-auto">
+        <div className="min-h-0 grow overflow-auto">
           {isTimedEvent ? (
             <div className="divide-y">
               {Object.keys(optionsByDay)
