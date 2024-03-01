@@ -168,21 +168,6 @@ const PollOptionsForm = ({
                   }}
                   onChange={(options) => {
                     field.onChange(options);
-                    if (
-                      length === 0 ||
-                      options.every((option) => option.type === "date")
-                    ) {
-                      // unset the timeZone if we only have date option
-                      setValue("timeZone", "");
-                    }
-                    if (
-                      options.length > 0 &&
-                      !formState.touchedFields.timeZone &&
-                      options.every((option) => option.type === "timeSlot")
-                    ) {
-                      // set timeZone if we are adding time ranges and we haven't touched the timeZone field
-                      setValue("timeZone", getBrowserTimeZone());
-                    }
                   }}
                   duration={watchDuration}
                   onChangeDuration={(duration) => {
