@@ -217,7 +217,7 @@ export const DayjsProvider: React.FunctionComponent<{
   );
 
   const adjustTimeZone = React.useCallback(
-    (date: Date, localTime = false) => {
+    (date: dayjs.ConfigType, localTime = false) => {
       if (!localTime) {
         return dayjs(date).tz(preferredTimeZone);
       } else {
