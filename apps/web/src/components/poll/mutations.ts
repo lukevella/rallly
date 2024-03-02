@@ -19,7 +19,17 @@ export const useAddParticipantMutation = () => {
   const queryClient = trpc.useUtils();
 
   return trpc.polls.participants.add.useMutation({
-    onSuccess: (_, { pollId, name, email }) => {
+    onSuccess: (newParticipant, input) => {
+      const { pollId, name, email } = newParticipant;
+      queryClient.polls.participants.list.setData(
+        { pollId },
+        (existingParticipants = []) => {
+          return [
+            { ...newParticipant, votes: input.votes },
+            ...existingParticipants,
+          ];
+        },
+      );
       queryClient.polls.participants.list.invalidate({ pollId });
       posthog?.capture("add participant", {
         pollId,
