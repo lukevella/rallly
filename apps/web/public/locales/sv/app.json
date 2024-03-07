@@ -206,5 +206,6 @@
   "aboutGuestDescription": "Profilinställningar är inte tillgängliga för gästanvändare. <0>Logga in</0> på ditt befintliga konto eller <1>skapa ett nytt konto</1> för att anpassa din profil.",
   "registrations": "Registreringar",
   "inviteParticipantsDescription": "Kopiera och dela inbjudningslänken för att börja samla in svar från dina deltagare.",
-  "inviteLink": "Inbjudningslänk"
+  "inviteLink": "Inbjudningslänk",
+  "or": "Eller"
 }
