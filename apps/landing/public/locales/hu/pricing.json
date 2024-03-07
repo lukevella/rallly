@@ -28,5 +28,5 @@
   "planFree": "Ingyenes",
   "keepPollsIndefinitely": "Szavazások megőrzése örökre",
   "whenPollInactive": "Mikor lesz egy szavazás inaktív?",
-  "whenPollInactiveAnswer": "A szavazások inaktívak lesznek, ha az összes dátum lehetőség múltbeli ÉS a szavazás nem volt megtekintve a legutóbbi 30 napban. Inaktív szavazások automatikusan törlődnek, ha nincs fizetett előfizetésed."
+  "whenPollInactiveAnswer": "A szavazások inaktívak lesznek, ha az összes dátum lehetőség múltbeli ÉS a szavazás nem volt megtekintve a legutóbbi 30 napban. Az inaktív szavazások automatikusan törlődnek, ha nincs előfizetésed."
 }
