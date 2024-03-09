@@ -237,5 +237,9 @@
   "inviteParticipantsDescription": "Kopiatu eta partekatu gonbidapen-esteka hau, parte-hartzaileen erantzunak biltzen hasteko.",
   "inviteLink": "Gonbidapen esteka",
   "inviteParticipantLinkInfo": "Esteka hori duen edonork bozka dezake inkestaren gainean.",
-  "accountNotLinkedTitle": "Zure kontua ezin da lehendik dagoen erabiltzaile batekin lotu"
+  "accountNotLinkedTitle": "Zure kontua ezin da lehendik dagoen erabiltzaile batekin lotu",
+  "accountNotLinkedDescription": "Badago posta elektroniko hau duen erabiltzaile bat. Mesedez, hasi saioa jatorrizko metodoa erabiliz.",
+  "or": "Edo",
+  "autoTimeZone": "Ordu-eremuaren bihurketa automatikoa",
+  "autoTimeZoneHelp": "Gaitu ezarpen hau gertaeren orduak automatikoki doitzeko parte-hartzaile bakoitzaren tokiko ordu-eremura."
 }
