@@ -225,6 +225,7 @@ model Vote {
   updatedAt     DateTime?   @updatedAt @map("updated_at")
 
   @@index([participantId], type: Hash)
+  @@index([optionId], type: Hash)
   @@map("votes")
 }
 
