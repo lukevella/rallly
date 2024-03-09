@@ -144,7 +144,6 @@ model Poll {
   participants            Participant[]
   watchers                Watcher[]
   comments                Comment[]
-  votes                   Vote[]
 
   @@index([userId], type: Hash)
   @@map("polls")
@@ -220,14 +219,12 @@ model Vote {
   participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
   participantId String      @map("participant_id")
   optionId      String      @map("option_id")
-  poll          Poll        @relation(fields: [pollId], references: [id])
   pollId        String      @map("poll_id")
   type          VoteType    @default(yes)
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime?   @updatedAt @map("updated_at")
 
   @@index([participantId], type: Hash)
-  @@index([pollId], type: Hash)
   @@map("votes")
 }
 
