@@ -38,7 +38,7 @@ const PollOptionsForm = ({
 
   const [isTimeZoneCommandModalOpen, showTimeZoneCommandModal] =
     React.useState(false);
-  const { watch, setValue, formState } = form;
+  const { watch, setValue, getValues, formState } = form;
 
   const views = React.useMemo(() => {
     const res = [
@@ -68,7 +68,10 @@ const PollOptionsForm = ({
   const watchDuration = watch("duration");
   const watchTimeZone = watch("timeZone");
 
-  const datesOnly = watchOptions.every((option) => option.type === "date");
+  const options = getValues("options");
+  const datesOnly =
+    options.length === 0 ||
+    options.some((option) => option.type !== "timeSlot");
 
   const [dateOrTimeRangeModal, openDateOrTimeRangeModal] = useModal({
     title: t("mixedOptionsTitle"),
