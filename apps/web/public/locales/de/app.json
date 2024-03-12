@@ -2,7 +2,7 @@
   "12h": "12 Stunden",
   "24h": "24 Stunden",
   "addTimeOption": "Uhrzeit hinzufügen",
-  "alreadyRegistered": "Bereits registriert? <a>Anmelden</a>",
+  "alreadyRegistered": "Bereits registriert? <a>Anmelden →</a>",
   "applyToAllDates": "Auf alle Termine anwenden",
   "areYouSure": "Bist du sicher?",
   "cancel": "Abbrechen",
@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Jeder mit diesem Link kann an der Abstimmung teilnehmen.",
   "accountNotLinkedTitle": "Dein Konto kann nicht mit einem existierenden Benutzer verknüpft werden",
   "accountNotLinkedDescription": "Ein Benutzer mit dieser E-Mail existiert bereits. Bitte melde dich mit der ursprünglichen Methode an.",
-  "or": "Oder"
+  "or": "Oder",
+  "autoTimeZone": "Automatische Zeitzonen-Konvertierung",
+  "autoTimeZoneHelp": "Aktivieren Sie diese Einstellung, um die Terminzeiten automatisch an die lokale Zeitzone jedes Teilnehmers anzupassen."
 }

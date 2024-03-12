@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Każdy, kto ma ten link, będzie mógł zagłosować w Twojej ankiecie.",
   "accountNotLinkedTitle": "Twoje konto nie może zostać połączone z istniejącym użytkownikiem",
   "accountNotLinkedDescription": "Użytkownik z tym adresem e-mail już istnieje. Zaloguj się używając oryginalnej metody.",
-  "or": "Lub"
+  "or": "Lub",
+  "autoTimeZone": "Automatyczna konwersja strefy czasowej",
+  "autoTimeZoneHelp": "Włącz to ustawienie, aby automatycznie dostosować czas wydarzenia do lokalnej strefy czasowej każdego uczestnika."
 }

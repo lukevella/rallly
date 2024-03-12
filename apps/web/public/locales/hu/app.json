@@ -240,6 +240,6 @@
   "accountNotLinkedTitle": "A fiókod nem köthető egy meglévő felhasználóhoz",
   "accountNotLinkedDescription": "Már létezik felhasználó ezzel az email címmel. Kérjük, jelentkezz be az eredeti módszerrel.",
   "or": "Vagy",
-  "autoTimeZone": "Automatikus időzóna átalakítása",
-  "autoTimeZoneHelp": "Kapcsold be ezt, hogy automatikus igazodjanak az esemény időpontok minden egyes résztvevő hely időzónájához."
+  "autoTimeZone": "Automatikus időzóna",
+  "autoTimeZoneHelp": "Bekapcsolt állapotban az időpontok automatikusan minden egyes résztvevő helyi időzónájához igazodnak."
 }

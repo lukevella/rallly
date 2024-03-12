@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Eguneratu orain, gorde gero",
   "earlyAdopterDescription": "Adoptatzaile goiztiarra zarenez, zure harpidetza-tasa blokeatuko duzu, eta ez duzu prezio-igoerarik izango.",
   "planFree": "Dohakoa",
-  "keepPollsIndefinitely": "Inkestak mugarik gabe mantentzea"
+  "keepPollsIndefinitely": "Inkestak mugarik gabe mantentzea",
+  "whenPollInactive": "Noiz bihurtzen da inkesta bat inaktibo?",
+  "whenPollInactiveAnswer": "Inkestak inaktibo bihurtzen dira data-aukera guztiak iraungitzen direnean ETA 30 egun baino gehiagotan inkestak atzitu ez direnean. Inkesta inaktiboak automatikoki ezabatzen dira ordainpeko harpidetzarik ez baduzu."
 }
