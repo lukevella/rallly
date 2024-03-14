@@ -21,7 +21,7 @@
     "@tailwindcss/typography": "^0.5.9",
     "@vercel/analytics": "^0.1.8",
     "autoprefixer": "^10.4.13",
-    "class-variance-authority": "^0.6.0",
+    "class-variance-authority": "^0.7.0",
     "dayjs": "^1.11.7",
     "gray-matter": "^4.0.3",
     "i18next": "^22.4.9",
