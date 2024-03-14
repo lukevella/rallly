@@ -48,10 +48,10 @@ export const middleware = withAuth(
     callbacks: {
       authorized: ({ token, req }) => {
         const nextUrl = req.nextUrl;
-
+        const isGuest = !token?.email;
         if (
           isSelfHosted &&
-          token?.email === null &&
+          isGuest &&
           !(
             nextUrl.pathname.startsWith("/invite") ||
             nextUrl.pathname.startsWith("/login") ||
