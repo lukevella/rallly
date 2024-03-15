@@ -28,7 +28,7 @@
     "@rallly/icons": "*",
     "@rallly/languages": "*",
     "@rallly/tailwind-config": "*",
-    "class-variance-authority": "^0.6.0",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.1",
     "tailwind-merge": "^1.12.0"
