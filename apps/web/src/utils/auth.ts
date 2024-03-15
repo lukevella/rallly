@@ -2,14 +2,12 @@ import { RegistrationTokenPayload } from "@rallly/backend";
 import { decryptToken } from "@rallly/backend/session";
 import { generateOtp, randomid } from "@rallly/backend/utils/nanoid";
 import { prisma } from "@rallly/database";
-import cookie from "cookie";
-import { IronSession, unsealData } from "iron-session";
 import {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import { NextAuthOptions, RequestInternal } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import NextAuth, {
   getServerSession as getServerSessionWithOptions,
 } from "next-auth/next";
@@ -317,35 +315,4 @@ export const isEmailBlocked = (email: string) => {
     }
   }
   return false;
-};
-
-export const legacySessionConfig = {
-  password: process.env.SECRET_PASSWORD ?? "",
-  cookieName: "rallly-session",
-  cookieOptions: {
-    secure: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://") ?? false,
-  },
-  ttl: 60 * 60 * 24 * 30, // 30 days
-};
-
-export const getUserFromLegacySession = async (
-  req: Pick<RequestInternal, "headers">,
-) => {
-  const parsedCookie = cookie.parse(req.headers?.cookie);
-  if (parsedCookie[legacySessionConfig.cookieName]) {
-    try {
-      const session = await unsealData<IronSession>(
-        parsedCookie[legacySessionConfig.cookieName],
-        {
-          password: process.env.SECRET_PASSWORD,
-        },
-      );
-      if (session.user) {
-        return session.user;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-  return null;
 };
