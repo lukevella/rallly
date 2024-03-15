@@ -18,7 +18,6 @@ import {
   LogInIcon,
   LogOutIcon,
   MegaphoneIcon,
-  RefreshCcwIcon,
   Settings2Icon,
   UserIcon,
   UserPlusIcon,
@@ -35,8 +34,19 @@ import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
+function logout() {
+  // programmtically submit form with name="logout"
+  const form = document.forms.namedItem("logout");
+  if (form && typeof form.submit === "function") {
+    form.submit();
+  } else {
+    console.error("Logout form or submit method not found");
+  }
+}
+
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useUser();
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
@@ -151,25 +161,23 @@ export const UserDropdown = ({ className }: { className?: string }) => {
               <Trans i18nKey="createAnAccount" defaults="Register" />
             </RegisterLink>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            asChild
-            className="text-destructive flex items-center gap-x-2"
-          >
-            {/* Don't use signOut() from next-auth. It doesn't work in vercel-production env. I don't know why. */}
-            <a href="/logout">
-              <RefreshCcwIcon className="text-muted-foreground size-4" />
-              <Trans i18nKey="forgetMe" />
-            </a>
-          </DropdownMenuItem>
         </IfGuest>
         <IfAuthenticated>
-          <DropdownMenuItem asChild className="flex items-center gap-x-2">
+          <DropdownMenuItem
+            onSelect={() => {
+              logout();
+            }}
+            className="flex items-center gap-x-2"
+          >
+            <form
+              className="hidden"
+              action="/auth/logout"
+              name="logout"
+              method="POST"
+            />
             {/* Don't use signOut() from next-auth. It doesn't work in vercel-production env. I don't know why. */}
-            <a href="/logout">
-              <LogOutIcon className="text-muted-foreground size-4" />
-              <Trans i18nKey="logout" />
-            </a>
+            <LogOutIcon className="text-muted-foreground size-4" />
+            <Trans i18nKey="logout" />
           </DropdownMenuItem>
         </IfAuthenticated>
       </DropdownMenuContent>
