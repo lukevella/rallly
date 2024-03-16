@@ -8,7 +8,7 @@ import { cn } from "@rallly/ui";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex shadow-[inset_0_0.5px_0_0.5px_rgb(255,255,255,0.4),_inset_0_-0.5px_0_0.5px_rgb(0,0,0,0.1)] border font-medium disabled:text-muted-foreground disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",
+    "inline-flex border font-medium disabled:text-muted-foreground disabled:bg-muted disabled:pointer-events-none select-none items-center justify-center whitespace-nowrap rounded-md border",
     "focus-visible:ring-offset-input-background focus-visible:border-primary-400 focus-visible:ring-2 focus-visible:ring-indigo-100",
   ),
   {
@@ -19,7 +19,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground focus:ring-offset-1 active:bg-destructive border-destructive hover:bg-destructive/90",
         default:
-          "rounded-md px-3.5 shadow-inner py-2.5 data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-200 focus:border-gray-300 hover:bg-gray-100 bg-gray-50",
+          "rounded-md px-3.5 py-2.5 data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-200 focus:border-gray-300 hover:bg-gray-100 bg-gray-50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "border-transparent hover:bg-gray-200 active:bg-gray-300",
