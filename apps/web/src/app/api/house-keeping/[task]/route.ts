@@ -73,7 +73,7 @@ async function deleteInactivePolls() {
  */
 async function removeDeletedPolls(req: Request) {
   const options = (await req.json()) as { take?: number } | undefined;
-  // First get the ids of all the polls that are to be deleted, limit to 1000
+  // First get the ids of all the polls that have been marked as deleted for at least 7 days
   const deletedPolls = await prisma.poll.findMany({
     select: {
       id: true,
@@ -88,6 +88,14 @@ async function removeDeletedPolls(req: Request) {
   });
 
   const deletedPollIds = deletedPolls.map((poll) => poll.id);
+
+  const { count: deletedWatcherCount } = await prisma.watcher.deleteMany({
+    where: {
+      pollId: {
+        in: deletedPollIds,
+      },
+    },
+  });
 
   const { count: deletedVoteCount } = await prisma.vote.deleteMany({
     where: {
@@ -115,14 +123,6 @@ async function removeDeletedPolls(req: Request) {
   });
 
   const { count: deletedCommentCount } = await prisma.comment.deleteMany({
-    where: {
-      pollId: {
-        in: deletedPollIds,
-      },
-    },
-  });
-
-  const { count: deletedWatcherCount } = await prisma.watcher.deleteMany({
     where: {
       pollId: {
         in: deletedPollIds,
