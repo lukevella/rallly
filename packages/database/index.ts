@@ -1,7 +1,5 @@
 import { PrismaClient } from "@rallly/database";
 
-import { softDeleteMiddleware } from "./middleware/soft-delete-middleware";
-
 export * from "@prisma/client";
 
 declare global {
@@ -11,7 +9,5 @@ declare global {
 }
 
 export const prisma = global.prisma || new PrismaClient();
-
-softDeleteMiddleware(prisma, "Poll");
 
 if (process.env.NODE_ENV !== "production") global.prisma = prisma;

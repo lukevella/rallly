@@ -237,7 +237,10 @@ export const polls = router({
     )
     .mutation(async ({ input: { urlId } }) => {
       const pollId = await getPollIdFromAdminUrlId(urlId);
-      await prisma.poll.delete({ where: { id: pollId } });
+      await prisma.poll.update({
+        where: { id: pollId },
+        data: { deleted: true, deletedAt: new Date() },
+      });
     }),
   touch: publicProcedure
     .input(

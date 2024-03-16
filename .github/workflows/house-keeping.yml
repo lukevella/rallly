@@ -1,21 +1,22 @@
 name: House Keeping
 on:
   workflow_dispatch:
-    inputs:
-      query:
-        description: "Query params for house keeping endpoint"
-        required: false
   schedule:
     - cron: "0 6 * * *" # Every day at 6:00am UTC
-
+env:
+  API_SECRET: ${{ secrets.API_SECRET }}
 jobs:
   clean:
     name: "Clean"
     runs-on: ubuntu-latest
     steps:
-      - name: Call house keeping
-        env:
-          API_SECRET: ${{ secrets.API_SECRET }}
+      - name: Mark inactive polls as deleted
         run: |
-          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping${{ github.event.inputs.query }}" \
-          -H "Authorization: Bearer ${API_SECRET}"
+          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping/delete-inactive-polls" \
+          -H "Authorization: Bearer ${API_SECRET}" \
+      - name: Remove deleted polls
+        run: |
+          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping/remove-deleted-polls" \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${API_SECRET}" \
+          -d '{"take": 1000}'
