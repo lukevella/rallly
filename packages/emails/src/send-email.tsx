@@ -169,13 +169,9 @@ export class EmailClient {
                 pass: process.env["SMTP_PWD"],
               }
             : undefined,
-          tls:
-            process.env["SMTP_TLS_ENABLED"] === "true"
-              ? {
-                  ciphers: "SSLv3",
-                  rejectUnauthorized: false,
-                }
-              : undefined,
+          tls: {
+            rejectUnauthorized: process.env["SMTP_TLS_ENABLED"] === "true",
+          },
         });
         break;
       }
