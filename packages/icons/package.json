@@ -6,6 +6,6 @@
   "types": "src/index.ts",
   "dependencies": {
     "@heroicons/react": "^1.0.6",
-    "lucide-react": "^0.336.0"
+    "lucide-react": "^0.338.0"
   }
 }
