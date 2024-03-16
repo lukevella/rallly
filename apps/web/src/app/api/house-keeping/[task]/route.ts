@@ -7,13 +7,12 @@ export async function POST(req: Request, ctx: { params: { task: string } }) {
   const authorization = headersList.get("authorization");
 
   if (authorization !== `Bearer ${process.env.API_SECRET}`) {
-    NextResponse.json(
+    return NextResponse.json(
       { success: false },
       {
         status: 401,
       },
     );
-    return;
   }
 
   switch (ctx.params.task) {
