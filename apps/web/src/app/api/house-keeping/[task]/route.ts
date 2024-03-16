@@ -2,18 +2,7 @@ import { prisma } from "@rallly/database";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-type DeleteInactivePolls = {
-  type: "deleteInactivePolls";
-};
-
-type RemoveDeletedPolls = {
-  type: "removeDeletedPolls";
-  take?: number;
-};
-
-type HouseKeepingAction = DeleteInactivePolls | RemoveDeletedPolls;
-
-export async function POST(req: Request) {
+export async function POST(req: Request, ctx: { params: { task: string } }) {
   const headersList = headers();
   const authorization = headersList.get("authorization");
 
@@ -27,22 +16,22 @@ export async function POST(req: Request) {
     return;
   }
 
-  const data = (await req.json()) as HouseKeepingAction;
-
-  switch (data.type) {
-    case "deleteInactivePolls": {
-      const count = await deleteInactivePolls();
-      return NextResponse.json({ success: true, count });
+  switch (ctx.params.task) {
+    case "delete-inactive-polls": {
+      return await deleteInactivePolls();
     }
-    case "removeDeletedPolls": {
-      const res = await removeDeletedPolls();
-      return NextResponse.json({ success: true, res });
+    case "remove-deleted-polls": {
+      return await removeDeletedPolls(req);
     }
   }
 }
 
+/**
+ * Marks inactive polls as deleted. Polls are inactive if they have not been
+ * touched in the last 30 days and all dates are in the past.
+ */
 async function deleteInactivePolls() {
-  const deletedPolls = await prisma.$executeRaw`
+  const markedDeleted = await prisma.$executeRaw`
     UPDATE polls p
     SET
       deleted = true,
@@ -71,14 +60,19 @@ async function deleteInactivePolls() {
     );
   `;
 
-  return deletedPolls;
+  return NextResponse.json({
+    success: true,
+    summary: {
+      markedDeleted,
+    },
+  });
 }
 
 /**
- * Delete polls and corresponding options, votes and comments that have been marked deleted
- * for more than 7 days.
+ * Remove polls and corresponding data that have been marked deleted for more than 7 days.
  */
-async function removeDeletedPolls() {
+async function removeDeletedPolls(req: Request) {
+  const options = (await req.json()) as { take?: number } | undefined;
   // First get the ids of all the polls that are to be deleted, limit to 1000
   const deletedPolls = await prisma.poll.findMany({
     select: {
@@ -90,7 +84,7 @@ async function removeDeletedPolls() {
         lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       },
     },
-    take: 1000,
+    take: options?.take ?? 1000,
   });
 
   const deletedPollIds = deletedPolls.map((poll) => poll.id);
@@ -135,13 +129,16 @@ async function removeDeletedPolls() {
     },
   });
 
-  return {
-    deleted: {
-      votes: deletedVoteCount,
-      options: deletedOptionCount,
-      comments: deletedCommentCount,
-      watchers: deletedWatcherCount,
-      polls: deletedPollCount,
+  return NextResponse.json({
+    success: true,
+    summary: {
+      deleted: {
+        votes: deletedVoteCount,
+        options: deletedOptionCount,
+        comments: deletedCommentCount,
+        watchers: deletedWatcherCount,
+        polls: deletedPollCount,
+      },
     },
-  };
+  });
 }

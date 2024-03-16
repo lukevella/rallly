@@ -12,13 +12,11 @@ jobs:
     steps:
       - name: Mark inactive polls as deleted
         run: |
-          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping" \
-          -H "Content-Type: application/json" \
+          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping/delete-inactive-polls" \
           -H "Authorization: Bearer ${API_SECRET}" \
-          -d '{"type":"deleteInactivePolls"}'
       - name: Remove deleted polls
         run: |
-          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping" \
+          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping/remove-deleted-polls" \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${API_SECRET}" \
-          -d '{"type":"removeDeletedPolls"}'
+          -d '{"take": 1000}'
