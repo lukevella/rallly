@@ -97,6 +97,15 @@ async function removeDeletedPolls(req: Request) {
     },
   });
 
+  const { count: deletedParticipantCount } =
+    await prisma.participant.deleteMany({
+      where: {
+        pollId: {
+          in: deletedPollIds,
+        },
+      },
+    });
+
   const { count: deletedOptionCount } = await prisma.option.deleteMany({
     where: {
       pollId: {
@@ -135,6 +144,7 @@ async function removeDeletedPolls(req: Request) {
       deleted: {
         votes: deletedVoteCount,
         options: deletedOptionCount,
+        participants: deletedParticipantCount,
         comments: deletedCommentCount,
         watchers: deletedWatcherCount,
         polls: deletedPollCount,
