@@ -26,11 +26,6 @@ export type OptionScore = {
   no: string[];
 };
 
-export const useCurrentPollOptions = () => {
-  const pollId = useCurrentEventId();
-  return trpc.polls.options.list.useQuery({ pollId });
-};
-
 export const useCreatePollLink = () => {
   const pollId = useCurrentEventId();
   const basePath = `/poll/${pollId}`;

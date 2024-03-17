@@ -195,7 +195,6 @@ model Participant {
 
 model Option {
   id        String   @id @default(cuid())
-  start     DateTime @db.Timestamp(0) // @deprecated - use startTime
   startTime DateTime @db.Timestamp(0) @map("start_time")
   duration  Int      @default(0) @map("duration_minutes")
   pollId    String   @map("poll_id")
