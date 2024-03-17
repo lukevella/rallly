@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Oppgrader nå, spar senere",
   "earlyAdopterDescription": "Som en tidlig bruker, vil du beholde nåværende abonnementspris uten å bli påvirket av fremtidige prisøkninger.",
   "planFree": "Gratis",
-  "keepPollsIndefinitely": "Behold avstemninger på ubestemt tid"
+  "keepPollsIndefinitely": "Behold avstemninger på ubestemt tid",
+  "whenPollInactive": "Når blir en avstemning inaktiv?",
+  "whenPollInactiveAnswer": "Avstemninger blir inaktive når alle datovalgene ligger i fortiden OG avstemningen ikke har blitt åpnet på over 30 dager. Inaktive avstemninger slettes automatisk hvis du ikke har et betalt abonnement."
 }
