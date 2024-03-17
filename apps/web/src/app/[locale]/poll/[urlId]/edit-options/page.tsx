@@ -16,8 +16,16 @@ import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { encodeDateOption } from "@/utils/date-time-utils";
 
-const convertOptionToString = (option: { start: Date; duration: number }) => {
-  const start = dayjs(option.start).utc();
+const convertOptionToString = (
+  option: { startTime: Date; duration: number },
+  timeZone: string | null,
+) => {
+  let start = dayjs(option.startTime);
+  if (timeZone) {
+    start = start.tz(timeZone);
+  } else {
+    start = start.utc();
+  }
   return option.duration === 0
     ? start.format("YYYY-MM-DD")
     : `${start.format("YYYY-MM-DDTHH:mm:ss")}/${start
@@ -37,12 +45,26 @@ const Page = () => {
   const redirectBackToPoll = () => {
     router.push(pollLink);
   };
+
+  let firstDate = dayjs(poll.options[0]?.startTime);
+
+  if (poll.timeZone) {
+    firstDate = firstDate.tz(poll.timeZone);
+  } else {
+    firstDate = firstDate.utc();
+  }
+
   const form = useForm<PollOptionsData>({
     defaultValues: {
-      navigationDate: dayjs(poll.options[0]?.start).utc().format("YYYY-MM-DD"),
+      navigationDate: firstDate.format("YYYY-MM-DD"),
       view: "month",
       options: poll.options.map((option) => {
-        const start = dayjs(option.start).utc();
+        let start = dayjs(option.startTime);
+        if (poll.timeZone) {
+          start = start.tz(poll.timeZone);
+        } else {
+          start = start.utc();
+        }
         return option.duration > 0
           ? {
               type: "timeSlot",
@@ -68,13 +90,16 @@ const Page = () => {
         onSubmit={form.handleSubmit((data) => {
           const encodedOptions = data.options.map(encodeDateOption);
           const optionsToDelete = poll.options.filter((option) => {
-            return !encodedOptions.includes(convertOptionToString(option));
+            return !encodedOptions.includes(
+              convertOptionToString(option, data.timeZone),
+            );
           });
 
           const optionsToAdd = encodedOptions.filter(
             (encodedOption) =>
               !poll.options.find(
-                (o) => convertOptionToString(o) === encodedOption,
+                (o) =>
+                  convertOptionToString(o, data.timeZone) === encodedOption,
               ),
           );
 

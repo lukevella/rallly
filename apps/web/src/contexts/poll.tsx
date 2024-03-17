@@ -1,8 +1,6 @@
-import dayjs, { Dayjs } from "dayjs";
 import { useParams } from "next/navigation";
 import React from "react";
 
-import { useDayjs } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
 export const usePoll = () => {
@@ -22,17 +20,4 @@ export const usePoll = () => {
   }
 
   return pollQuery.data;
-};
-
-export const useDateFormatter = () => {
-  const { timeZone } = usePoll();
-  const { timeZone: preferredTimeZone } = useDayjs();
-
-  return (date: Date | Dayjs) => {
-    if (timeZone) {
-      return dayjs(date).utc().tz(timeZone, true).tz(preferredTimeZone);
-    }
-
-    return dayjs(date).utc();
-  };
 };
