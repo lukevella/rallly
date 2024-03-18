@@ -236,5 +236,10 @@
   "registrations": "Registreringer",
   "inviteParticipantsDescription": "Kopier og del invitasjonskoblingen for å starte å samle inn svar fra deltakerne dine.",
   "inviteLink": "Invitasjonskobling",
-  "inviteParticipantLinkInfo": "Alle med denne koblingen kan stemme på avstemningen din."
+  "inviteParticipantLinkInfo": "Alle med denne koblingen kan stemme på avstemningen din.",
+  "accountNotLinkedTitle": "Kontoen din kan ikke kobles til en eksisterende bruker",
+  "accountNotLinkedDescription": "Det finnes allerede en bruker med denne e-postadressen. Vennligst logg inn med den opprinnelige metoden.",
+  "or": "Eller",
+  "autoTimeZone": "Automatisk tidssonekonvertering",
+  "autoTimeZoneHelp": "Aktiver denne innstillingen for å justere hendelsestider til hver deltakers lokale tidssone automatisk."
 }
