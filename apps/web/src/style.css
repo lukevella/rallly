@@ -7,7 +7,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground overscroll-none bg-gray-100;
+    @apply text-foreground bg-gray-100;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
@@ -29,11 +29,6 @@
   select,
   textarea {
     @apply rounded outline-none;
-  }
-
-  input,
-  textarea {
-    @apply focus:border-primary-400 hover:border-gray-300;
   }
 
   #floating-ui-root {

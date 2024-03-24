@@ -1,5 +1,6 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Flex } from "@rallly/ui/flex";
 import {
   ColumnDef,
   flexRender,
@@ -10,7 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import React from "react";
 
 import { Trans } from "@/components/trans";
@@ -72,7 +73,7 @@ export const Table = <
                             ? header.getSize()
                             : undefined,
                       }}
-                      className="whitespace-nowrap border-b border-gray-100 px-3 py-2.5 text-left align-bottom text-sm font-semibold"
+                      className="whitespace-nowrap border-b bg-gray-50 px-5 py-2 text-left align-bottom text-xs font-semibold"
                     >
                       {header.isPlaceholder
                         ? null
@@ -100,10 +101,9 @@ export const Table = <
                     }}
                     key={cell.id}
                     className={clsx(
-                      "overflow-hidden border-gray-100 py-4 pr-8 align-middle",
+                      "overflow-hidden border-gray-100 px-5 py-4 align-middle",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
-                        "pt-0": !props.enableTableHeader && i === 0,
                       },
                     )}
                   >
@@ -133,40 +133,40 @@ export const Table = <
           ) : null}
         </table>
       </div>
-      <hr className="my-2" />
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <Button
-          variant="ghost"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ChevronLeftIcon
-            className={cn("size-4", {
-              "text-gray-400": !table.getCanPreviousPage(),
-            })}
-          />
-        </Button>
-        <span className="text-muted-foreground text-sm">
-          <Trans
-            i18nKey="pageXOfY"
-            defaults="Page {currentPage} of {pageCount}"
-            values={{
-              currentPage: table.getState().pagination.pageIndex + 1,
-              pageCount: table.getPageCount(),
-            }}
-          />
-        </span>
-        <Button
-          variant="ghost"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ChevronRightIcon
-            className={cn("size-4", {
-              "text-gray-400": !table.getCanNextPage(),
-            })}
-          />
-        </Button>
+      <div className="flex items-center justify-between space-x-2 border-t border-gray-100 bg-gray-50 px-4 py-3 lg:px-5">
+        <div>
+          <span className="text-muted-foreground text-sm">
+            <Trans
+              i18nKey="pageXOfY"
+              defaults="Page {currentPage} of {pageCount}"
+              values={{
+                currentPage: table.getState().pagination.pageIndex + 1,
+                pageCount: table.getPageCount(),
+              }}
+            />
+          </span>
+        </div>
+        <Flex gap="sm">
+          <Button
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ArrowLeftIcon
+              className={cn("size-4", {
+                "text-gray-400": !table.getCanPreviousPage(),
+              })}
+            />
+          </Button>
+
+          <Button
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <ArrowRightIcon className="size-4 text-gray-500" />
+          </Button>
+        </Flex>
       </div>
     </div>
   );

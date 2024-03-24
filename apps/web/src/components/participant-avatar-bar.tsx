@@ -19,7 +19,7 @@ export const ParticipantAvatarBar = ({
       {participants
         .slice(0, hiddenCount === 1 ? max + 1 : max)
         .map((participant, index) => (
-          <Tooltip delayDuration={0} key={index}>
+          <Tooltip key={index}>
             <TooltipTrigger asChild>
               <div
                 className={cn({

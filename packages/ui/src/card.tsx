@@ -23,7 +23,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("grid rounded-t-md border-b p-2 py-3 sm:px-5", className)}
+    className={cn("grid rounded-t-md border-b p-3 sm:px-5", className)}
     {...props}
   />
 ));
@@ -35,7 +35,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn("font-semibold tracking-tight sm:leading-tight", className)}
+    className={cn("font-semibold leading-tight tracking-tight", className)}
     {...props}
   />
 ));

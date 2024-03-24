@@ -5,7 +5,7 @@ export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn("", className)}>{children}</div>;
+  return <div className={cn("lg:pr-4", className)}>{children}</div>;
 }
 
 export function PageTitle({
@@ -16,7 +16,12 @@ export function PageTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn("truncate font-semibold leading-9", className)}>
+    <h2
+      className={cn(
+        "flex items-center gap-x-2.5 truncate text-lg font-semibold leading-9",
+        className,
+      )}
+    >
       {children}
     </h2>
   );
@@ -31,19 +36,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return (
-    <div
-      className={cn(
-        "px-4 py-3 lg:px-6 lg:py-3",
-        {
-          "sticky top-0 z-20 border-b bg-gray-50": variant === "default",
-        },
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn("bg-gray-100 p-4", className)}>{children}</div>;
 }
 
 export function PageContent({
@@ -53,5 +46,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("p-4 lg:px-6 lg:py-5", className)}>{children}</div>;
+  return <div className={cn("px-4 pb-4", className)}>{children}</div>;
 }
