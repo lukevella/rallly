@@ -8,9 +8,9 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@rallly/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
-import { CommandList } from "cmdk";
 import dayjs from "dayjs";
 import { CheckIcon, ChevronDownIcon, GlobeIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
