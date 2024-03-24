@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@rallly/ui";
+import { cn } from "./lib/utils";
 import { cva } from "class-variance-authority";
 
 export type InputProps = Omit<
@@ -13,14 +13,20 @@ export type InputProps = Omit<
 
 const inputVariants = cva(
   cn(
-    "border-input placeholder:text-muted-foreground flex h-9 w-full rounded border bg-transparent file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
+    "focus:visible:border-primary-400 focus:visible:ring-primary-200 focus:visible:ring-2",
+    "border-input placeholder:text-muted-foreground h-9 rounded border bg-gray-50 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
   ),
   {
     variants: {
       size: {
-        sm: "h-6 text-sm px-1",
+        sm: "h-7 text-xs px-1",
         md: "h-9 text-sm px-2",
         lg: "h-12 text-lg px-3",
+      },
+      variant: {
+        default: "border-primary-400 focus-visible:border-primary-400",
+        error: "border-rose-400 focus-visible:border-rose-400",
+        ghost: "border-transparent focus-visible:border-primary-400",
       },
     },
     defaultVariants: {
@@ -35,7 +41,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "focus-visible:ring-offset-input-background focus-visible:ring-1 focus-visible:ring-offset-1",
           inputVariants({ size }),
           error
             ? "focus-visible:border-rose-400  focus-visible:ring-rose-100"

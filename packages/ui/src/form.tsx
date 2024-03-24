@@ -11,7 +11,7 @@ import {
 } from "react-hook-form";
 
 import { Label } from "./label";
-import { cn } from "@rallly/ui";
+import { cn } from "./lib/utils";
 
 const Form = FormProvider;
 
@@ -78,7 +78,7 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("grid gap-y-2.5", className)} {...props} />
+      <div ref={ref} className={cn("space-y-2.5", className)} {...props} />
     </FormItemContext.Provider>
   );
 });
