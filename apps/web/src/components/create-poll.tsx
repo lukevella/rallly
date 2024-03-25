@@ -105,7 +105,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           );
         })}
       >
-        <div className="mx-auto max-w-4xl space-y-4">
+        <div className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>
