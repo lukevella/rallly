@@ -1,5 +1,5 @@
 {
-  "extends": "@rallly/tsconfig/react.json",
+  "extends": "@rallly/tsconfig/next.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

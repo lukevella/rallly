@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@rallly/ui";
+import { cn } from "./lib/utils";
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -23,7 +23,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("grid border-b border-gray-100 p-3 sm:p-4", className)}
+    className={cn("grid rounded-t-md border-b p-2 py-3 sm:px-5", className)}
     {...props}
   />
 ));
@@ -35,10 +35,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn(
-      "mb-1 font-semibold tracking-tight sm:leading-tight",
-      className,
-    )}
+    className={cn("font-semibold tracking-tight sm:leading-tight", className)}
     {...props}
   />
 ));
@@ -50,7 +47,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-muted-foreground text-sm", className)}
+    className={cn("text-muted-foreground mt-1 text-sm", className)}
     {...props}
   />
 ));

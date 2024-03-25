@@ -63,6 +63,7 @@ export const PollDetailsForm = () => {
         <Input
           type="text"
           id="location"
+          className="w-full"
           placeholder={t("locationPlaceholder")}
           {...register("location")}
         />
@@ -77,6 +78,7 @@ export const PollDetailsForm = () => {
           </span>
         </div>
         <Textarea
+          className="w-full"
           id="description"
           placeholder={t("descriptionPlaceholder")}
           rows={5}

@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 
 export const Settings = ({ children }: React.PropsWithChildren) => {
-  return <div className="">{children}</div>;
+  return <div className="space-y-6">{children}</div>;
 };
 
 export const SettingsHeader = ({ children }: React.PropsWithChildren) => {
@@ -51,7 +51,7 @@ export const SettingsItemTitle = ({
       {hint ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <InfoIcon className="size-4 inline-block text-gray-500" />
+            <InfoIcon className="inline-block size-4 text-gray-500" />
           </TooltipTrigger>
           <TooltipContent side="right" className="max-w-sm">
             {hint}

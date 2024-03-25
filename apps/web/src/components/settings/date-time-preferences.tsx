@@ -49,7 +49,7 @@ const DateTimePreferencesForm = () => {
           form.reset(data);
         })}
       >
-        <div className="space-y-4">
+        <div className="space-y-6">
           <FormField
             control={form.control}
             name="timeZone"
