@@ -33,16 +33,6 @@ export default async function Page({
               <Trans t={t} i18nKey="polls" defaults="Polls" />
             </PageTitle>
           </Flex>
-          <div>
-            <Button variant="primary" asChild>
-              <Link href="/new">
-                <Icon>
-                  <SquarePenIcon />
-                </Icon>
-                <Trans t={t} i18nKey="newPoll" defaults="New poll" />
-              </Link>
-            </Button>
-          </div>
         </Flex>
       </PageHeader>
       <PageContent>

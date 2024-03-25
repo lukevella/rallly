@@ -434,6 +434,10 @@ export const polls = router({
   paginatedList: possiblyPublicProcedure
     .input(
       z.object({
+        status: z
+          .enum(["live", "paused", "finalized", "all"])
+          .optional()
+          .default("all"),
         pagination: z.object({
           pageIndex: z.number(),
           pageSize: z.number(),

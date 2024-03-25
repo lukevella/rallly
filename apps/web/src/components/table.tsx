@@ -16,13 +16,10 @@ import React from "react";
 
 import { Trans } from "@/components/trans";
 
-export const Table = <
-  T extends Record<string, unknown>,
+export const Table = <TData extends Record<string, unknown>>(props: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  C extends ColumnDef<T, any>,
->(props: {
-  columns: C[];
-  data: T[];
+  columns: ColumnDef<TData, any>[];
+  data: TData[];
   footer?: React.ReactNode;
   pageCount?: number;
   enableTableFooter?: boolean;
@@ -32,7 +29,7 @@ export const Table = <
   paginationState: PaginationState | undefined;
   className?: string;
 }) => {
-  const table = useReactTable<T>({
+  const table = useReactTable<TData>({
     data: props.data,
     columns: props.columns,
     pageCount: props.pageCount,

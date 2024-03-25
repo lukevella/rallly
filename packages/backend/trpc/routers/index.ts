@@ -1,6 +1,7 @@
 import { mergeRouters, router } from "../trpc";
 import { auth } from "./auth";
 import { polls } from "./polls";
+import { responses } from "./responses";
 import { user } from "./user";
 
 export const appRouter = mergeRouters(
@@ -8,6 +9,7 @@ export const appRouter = mergeRouters(
     auth,
     polls,
     user,
+    responses,
   }),
 );
 

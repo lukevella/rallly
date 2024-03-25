@@ -91,6 +91,10 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       },
+      gap: {
+        DEFAULT: "0.625rem",
+        md: "0.625rem",
+      },
     },
   },
 };

@@ -2,16 +2,19 @@
 
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
+  BarChart2Icon,
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
   ChevronRightIcon,
   LogInIcon,
+  MailIcon,
   Settings2Icon,
   SparklesIcon,
+  SquarePenIcon,
   UsersIcon,
-  VoteIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -40,7 +43,7 @@ function NavItem({
       className={cn(
         current
           ? "bg-gray-200 text-gray-800"
-          : "text-gray-700 hover:bg-gray-200 active:bg-gray-300",
+          : "text-gray-500 hover:bg-gray-200 active:bg-gray-300",
         "group flex  items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
@@ -68,12 +71,31 @@ export function Sidebar() {
               <NavItem
                 current={pathname?.startsWith("/poll")}
                 href="/polls"
-                icon={VoteIcon}
+                icon={BarChart2Icon}
               >
                 <Trans i18nKey="polls" defaults="Polls" />
               </NavItem>
             </li>
+            <li>
+              <NavItem
+                current={pathname?.startsWith("/invites")}
+                href="/invites"
+                icon={MailIcon}
+              >
+                <Trans i18nKey="invites" defaults="Invites" />
+              </NavItem>
+            </li>
           </ul>
+        </li>
+        <li>
+          <Button className="w-full rounded-full" variant="primary" asChild>
+            <Link href="/new">
+              <Icon>
+                <SquarePenIcon />
+              </Icon>
+              <Trans i18nKey="create" defaults="Create" />
+            </Link>
+          </Button>
         </li>
         <li>
           <div className="text-xs font-semibold leading-6 text-gray-400">
