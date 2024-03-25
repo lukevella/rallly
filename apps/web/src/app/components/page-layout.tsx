@@ -40,7 +40,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("bg-gray-100 p-4", className)}>{children}</div>;
+  return <div className={cn("p-4", className)}>{children}</div>;
 }
 
 export function PageContent({
@@ -50,5 +50,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("p-4 lg:grow", className)}>{children}</div>;
+  return <div className={cn("px-4 pb-4 lg:grow", className)}>{children}</div>;
 }

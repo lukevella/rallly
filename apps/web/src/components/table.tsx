@@ -70,7 +70,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                             ? header.getSize()
                             : undefined,
                       }}
-                      className="whitespace-nowrap border-b bg-gray-50 px-5 py-2 text-left align-bottom text-xs font-semibold"
+                      className="whitespace-nowrap border-b bg-white px-5 py-2 text-left align-bottom text-xs font-semibold"
                     >
                       {header.isPlaceholder
                         ? null
