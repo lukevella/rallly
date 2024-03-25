@@ -4,7 +4,7 @@ import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { BarChart2Icon, Clock2Icon } from "lucide-react";
+import { BarChart2Icon, Clock2Icon, MailIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -36,12 +36,17 @@ export const useInviteColumns = () => {
       header: "Name",
       size: 500,
       cell: ({ renderValue, row }) => (
-        <Link
-          href={`/invite/${row.original.pollId}`}
-          className="hover:text-primary gap flex items-center whitespace-nowrap text-sm font-medium hover:underline"
-        >
-          <span className="truncate">{renderValue()}</span>
-        </Link>
+        <div className="flex items-center gap-x-2.5">
+          <Icon>
+            <MailIcon />
+          </Icon>
+          <Link
+            href={`/invite/${row.original.pollId}`}
+            className="hover:text-primary gap flex items-center whitespace-nowrap text-sm font-medium hover:underline"
+          >
+            <span className="truncate">{renderValue()}</span>
+          </Link>
+        </div>
       ),
     }),
     columnHelper.accessor("user.name", {

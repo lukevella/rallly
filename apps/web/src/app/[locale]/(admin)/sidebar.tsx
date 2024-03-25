@@ -64,7 +64,7 @@ export function Sidebar() {
   const { user } = useUser();
   return (
     <nav className="flex flex-1 flex-col ">
-      <ul role="list" className="flex flex-1 flex-col gap-y-7">
+      <ul role="list" className="flex flex-1 flex-col gap-y-6">
         <li>
           <ul role="list" className="-mx-2 space-y-1">
             <li>
@@ -87,8 +87,8 @@ export function Sidebar() {
             </li>
           </ul>
         </li>
-        <li>
-          <Button className="w-full rounded-full" variant="primary" asChild>
+        <li className="-mx-2 space-y-1">
+          <Button className="w-full" variant="primary" asChild>
             <Link href="/new">
               <Icon>
                 <SquarePenIcon />
