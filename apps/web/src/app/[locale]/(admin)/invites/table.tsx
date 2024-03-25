@@ -1,12 +1,15 @@
 "use client";
 
 import { Badge } from "@rallly/ui/badge";
-import { Card, CardDescription, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
+import { MailIcon } from "lucide-react";
 
+import { EmptyState } from "@/app/components/empty-state";
 import { trpc } from "@/app/providers";
 import { Spinner } from "@/components/spinner";
 import { Table } from "@/components/table";
+import { Trans } from "@/components/trans";
 
 import type { Response } from "./columns";
 import { useInviteColumns } from "./columns";
@@ -28,6 +31,23 @@ export function ResponseList() {
     );
   }
 
+  if (data.total === 0) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <EmptyState
+          icon={<MailIcon />}
+          title={<Trans i18nKey="noInvites" defaults="No Invites Found" />}
+          description={
+            <Trans
+              i18nKey="noInvitesDescription"
+              defaults="You have not been invited to any events yet."
+            />
+          }
+        />
+      </div>
+    );
+  }
+
   // Create Column Defition
 
   return (
@@ -37,9 +57,6 @@ export function ResponseList() {
           <CardTitle>My Invites</CardTitle>
           <Badge>{data.total}</Badge>
         </Flex>
-        <CardDescription>
-          Manage the responses you have submitted
-        </CardDescription>
       </CardHeader>
       <Table<Response>
         layout="auto"

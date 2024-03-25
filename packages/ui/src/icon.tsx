@@ -9,7 +9,7 @@ const iconVariants = cva("", {
       default: "text-gray-500",
       success: "text-green-500",
       danger: "text-rose-500",
-      primary: "text-primary-200",
+      primary: "text-primary-600",
     },
     size: {
       md: "w-4 h-4",

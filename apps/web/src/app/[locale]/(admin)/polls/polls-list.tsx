@@ -4,8 +4,9 @@ import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
+import { Icon } from "@rallly/ui/icon";
 import { PaginationState } from "@tanstack/react-table";
-import { BarChart2Icon } from "lucide-react";
+import { BarChart2Icon, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -54,6 +55,29 @@ export function PollsList() {
     );
   }
 
+  if (data.total === 0) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <EmptyState
+          icon={<BarChart2Icon />}
+          title={t("noPollsFound", {
+            defaultValue: "No Polls Found",
+          })}
+          description={t("noPollsDescription")}
+        >
+          <Button variant="primary" asChild>
+            <Link href="/new">
+              <Icon>
+                <SquarePenIcon />
+              </Icon>
+              <Trans i18nKey="createPollAction" defaults="Create Poll" />
+            </Link>
+          </Button>
+        </EmptyState>
+      </div>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -84,17 +108,22 @@ export function PollsList() {
           columns={columns}
         />
       ) : (
-        <EmptyState
-          icon={BarChart2Icon}
-          title={t("noPolls")}
-          description={t("noPollsDescription")}
-        >
-          <Button size="sm" variant="primary" asChild>
-            <Link href="/new">
-              <Trans i18nKey="createPoll" defaults="Create poll" />
-            </Link>
-          </Button>
-        </EmptyState>
+        <div className="flex h-full items-center justify-center">
+          <EmptyState
+            icon={BarChart2Icon}
+            title={t("noPolls")}
+            description={t("noPollsDescription")}
+          >
+            <Button variant="primary" asChild>
+              <Link href="/new">
+                <Icon>
+                  <SquarePenIcon />
+                </Icon>
+                <Trans i18nKey="createPoll" defaults="Create poll" />
+              </Link>
+            </Button>
+          </EmptyState>
+        </div>
       )}
     </Card>
   );

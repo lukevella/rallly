@@ -1,17 +1,5 @@
-import { Button } from "@rallly/ui/button";
-import { Flex } from "@rallly/ui/flex";
-import { Icon } from "@rallly/ui/icon";
-import { SquarePenIcon, UsersIcon } from "lucide-react";
-import Link from "next/link";
-import { Trans } from "react-i18next/TransWithoutContext";
-
 import { PollsList } from "@/app/[locale]/(admin)/polls/polls-list";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
+import { PageContainer, PageContent } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
 export default async function Page({
@@ -23,18 +11,6 @@ export default async function Page({
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
-      <PageHeader>
-        <Flex justify="between">
-          <Flex gap="sm" align="center">
-            <Icon size="lg">
-              <UsersIcon />
-            </Icon>
-            <PageTitle>
-              <Trans t={t} i18nKey="polls" defaults="Polls" />
-            </PageTitle>
-          </Flex>
-        </Flex>
-      </PageHeader>
       <PageContent>
         <PollsList />
       </PageContent>
