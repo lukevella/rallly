@@ -7,7 +7,7 @@ import { IfFreeUser } from "@/contexts/plan";
 export const ProBadge = ({ className }: { className?: string }) => {
   return (
     <IfFreeUser>
-      <Badge className={className}>
+      <Badge variant="primary" className={className}>
         <Trans i18nKey="planPro" />
       </Badge>
     </IfFreeUser>
