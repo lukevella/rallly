@@ -64,7 +64,7 @@ export const ColoredAvatar = (props: {
   return (
     <div
       className={clsx(
-        "inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold uppercase",
+        "inline-flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold uppercase",
         requiresDarkText ? "text-gray-800" : "text-white",
         props.className,
       )}

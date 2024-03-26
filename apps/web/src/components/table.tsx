@@ -88,7 +88,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
           ) : null}
           <tbody>
             {table.getRowModel().rows.map((row, i) => (
-              <tr key={row.id}>
+              <tr className="relative" key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
                     style={{
@@ -100,7 +100,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                     }}
                     key={cell.id}
                     className={clsx(
-                      "relative overflow-hidden border-gray-100 px-5 py-4 align-middle",
+                      "z-20 overflow-hidden border-gray-100 px-5 py-4 align-middle",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
                       },

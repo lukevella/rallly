@@ -1,6 +1,5 @@
 import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import clsx from "clsx";
 
 import { ColoredAvatar } from "@/components/poll/participant-avatar";
 
@@ -40,10 +39,10 @@ export const ParticipantAvatarBar = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <div
-              className={clsx(
+              className={cn(
                 "select-none ring-2 ring-white",
                 "rounded-full bg-gray-200 px-1.5 text-xs font-semibold",
-                "inline-flex h-6 min-w-[24px] items-center justify-center",
+                "inline-flex h-5 min-w-[24px] items-center justify-center",
               )}
             >
               <div>+{hiddenCount}</div>

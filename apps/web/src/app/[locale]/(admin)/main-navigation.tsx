@@ -4,7 +4,6 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   BarChart2Icon,
-  CogIcon,
   InboxIcon,
   LogInIcon,
   Settings2Icon,
@@ -21,7 +20,6 @@ import {
   SidebarSection,
 } from "@/app/[locale]/(admin)/sidebar-layout";
 import { UserMenu } from "@/app/[locale]/(admin)/user-menu";
-import { LogoLink } from "@/app/components/logo-link";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { IfGuest } from "@/components/user-provider";
@@ -30,9 +28,6 @@ import { IfFreeUser } from "@/contexts/plan";
 export function MainSidebar() {
   return (
     <Sidebar>
-      <li>
-        <LogoLink />
-      </li>
       <SidebarSection>
         <SidebarMenu>
           <SidebarMenuLink href="/inbox">
@@ -91,11 +86,11 @@ export function MainSidebar() {
               <Trans i18nKey="login" />
             </SidebarMenuLink>
           </IfGuest>
-          <SidebarMenuLink href="/settings/profile">
+          <SidebarMenuLink href="/settings/preferences">
             <SidebarMenuItemIcon>
-              <CogIcon />
+              <Settings2Icon />
             </SidebarMenuItemIcon>
-            <Trans i18nKey="settings" />
+            <Trans i18nKey="preferences" />
           </SidebarMenuLink>
           <hr />
           <UserMenu />

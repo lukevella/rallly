@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
+import { LogoLink } from "@/app/components/logo-link";
 import { CurrentUserAvatar } from "@/components/user";
 
 export function SidebarLayout({ children }: { children?: React.ReactNode }) {
@@ -104,6 +105,9 @@ export function Sidebar({
 }) {
   return (
     <ul role="list" className="flex h-full flex-1 flex-col gap-y-6">
+      <li>
+        <LogoLink />
+      </li>
       {children}
     </ul>
   );
@@ -143,9 +147,9 @@ export function SidebarMenuLink({
         href={href}
         className={cn(
           isCurrent
-            ? "bg-gray-200 text-gray-800"
-            : "group text-gray-500 hover:bg-gray-200 hover:text-gray-800 active:bg-gray-300",
-          "flex h-9 items-center gap-x-3 rounded-md px-3 text-sm font-semibold",
+            ? "is-active bg-gray-200 text-gray-800"
+            : " text-gray-500 hover:bg-gray-200 hover:text-gray-800 active:bg-gray-300",
+          "group flex h-9 items-center gap-x-3 rounded-md px-3 text-sm font-semibold",
         )}
       >
         {children}
@@ -159,9 +163,5 @@ export function SidebarMenuItemIcon({
 }: {
   children?: React.ReactNode;
 }) {
-  return (
-    <Slot className="group-[.is-active]:text-primary size-5 text-gray-400">
-      {children}
-    </Slot>
-  );
+  return <Slot className="size-5 text-gray-400">{children}</Slot>;
 }
