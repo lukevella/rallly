@@ -1,4 +1,5 @@
-import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import { CogIcon, CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -6,6 +7,7 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
@@ -46,6 +48,9 @@ export default async function ProfileLayout({
       <PageHeader>
         <div className="flex items-center justify-between gap-x-4">
           <PageTitle>
+            <PageIcon>
+              <CogIcon />
+            </PageIcon>
             <Trans t={t} i18nKey="settings" />
           </PageTitle>
         </div>
