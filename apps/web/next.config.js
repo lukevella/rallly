@@ -48,7 +48,7 @@ const nextConfig = {
       },
       {
         source: "/",
-        destination: "/polls",
+        destination: "/inbox",
         permanent: false,
       },
     ];

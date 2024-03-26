@@ -22,7 +22,7 @@ export const CurrentUserAvatar = ({
 
 interface UserAvatarProps {
   name?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   className?: string;
 }
 
@@ -37,6 +37,7 @@ export const UserAvatar = ({
       className={clsx(
         "inline-flex items-center justify-center overflow-hidden rounded-full font-semibold",
         {
+          "size-5 text-[10px]": size === "xs",
           "size-6 text-sm": size === "sm",
           "size-8 text-base": size === "md",
           "size-14 text-2xl": size === "lg",

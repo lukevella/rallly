@@ -4,6 +4,7 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   BarChart2Icon,
+  CogIcon,
   InboxIcon,
   LogInIcon,
   Settings2Icon,
@@ -18,8 +19,9 @@ import {
   SidebarMenuItemIcon,
   SidebarMenuLink,
   SidebarSection,
-} from "@/app/[locale]/(admin)/sidebar-menu";
+} from "@/app/[locale]/(admin)/sidebar-layout";
 import { UserMenu } from "@/app/[locale]/(admin)/user-menu";
+import { LogoLink } from "@/app/components/logo-link";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { IfGuest } from "@/components/user-provider";
@@ -28,19 +30,22 @@ import { IfFreeUser } from "@/contexts/plan";
 export function MainSidebar() {
   return (
     <Sidebar>
+      <li>
+        <LogoLink />
+      </li>
       <SidebarSection>
         <SidebarMenu>
-          <SidebarMenuLink href="/polls">
-            <SidebarMenuItemIcon>
-              <BarChart2Icon />
-            </SidebarMenuItemIcon>
-            <Trans i18nKey="polls" defaults="Polls" />
-          </SidebarMenuLink>
           <SidebarMenuLink href="/inbox">
             <SidebarMenuItemIcon>
               <InboxIcon />
             </SidebarMenuItemIcon>
             <Trans i18nKey="inbox" defaults="Inbox" />
+          </SidebarMenuLink>
+          <SidebarMenuLink href="/polls">
+            <SidebarMenuItemIcon>
+              <BarChart2Icon />
+            </SidebarMenuItemIcon>
+            <Trans i18nKey="polls" defaults="Polls" />
           </SidebarMenuLink>
         </SidebarMenu>
       </SidebarSection>
@@ -86,11 +91,11 @@ export function MainSidebar() {
               <Trans i18nKey="login" />
             </SidebarMenuLink>
           </IfGuest>
-          <SidebarMenuLink href="/settings/preferences">
+          <SidebarMenuLink href="/settings/profile">
             <SidebarMenuItemIcon>
-              <Settings2Icon />
+              <CogIcon />
             </SidebarMenuItemIcon>
-            <Trans i18nKey="preferences" />
+            <Trans i18nKey="settings" />
           </SidebarMenuLink>
           <hr />
           <UserMenu />
