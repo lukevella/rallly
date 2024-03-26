@@ -1,14 +1,11 @@
 import { PollStatus } from "@rallly/database";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper } from "@tanstack/react-table";
-import dayjs from "dayjs";
 import { BarChart2Icon, MailIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
-import { PollStatusBadge } from "@/components/poll-status";
 import { UserAvatar } from "@/components/user";
 import { useDayjs } from "@/utils/dayjs";
 
@@ -51,27 +48,6 @@ export const useInviteColumns = () => {
           </Link>
         </div>
       ),
-    }),
-    columnHelper.accessor("status", {
-      header: t("pollStatus", { defaultValue: "Status" }),
-      cell: ({ row }) => {
-        return (
-          <div className="text-muted-foreground text-sm">
-            {row.original.event ? (
-              <Tooltip>
-                <TooltipTrigger>
-                  <PollStatusBadge status={row.original.status} />
-                </TooltipTrigger>
-                <TooltipContent>
-                  {adjustTimeZone(row.original.event.start).format("LLLL")}
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <PollStatusBadge status={row.original.status} />
-            )}
-          </div>
-        );
-      },
     }),
     columnHelper.accessor("user.name", {
       header: "Host",

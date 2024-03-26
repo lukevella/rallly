@@ -119,7 +119,6 @@
   "notificationsValue": "Notifications: <b>{value}</b>",
   "notificationsOn": "On",
   "notificationsOff": "Off",
-  "pollStatusOpen": "Live",
   "pollStatusPaused": "Paused",
   "pollStatusClosed": "Finalized",
   "reopenPoll": "Reopen Poll",
@@ -243,11 +242,14 @@
   "invites": "Invites",
   "noInvites": "No Invites Found",
   "noInvitesDescription": "You have not been invited to any events yet.",
-  "back": "Back",
   "pollStatus": "Status",
   "created": "Created",
   "createPollAction": "Create Poll",
-  "myPolls": "My Polls",
   "noPollsFound": "No Polls Found",
-  "create": "Create"
+  "create": "Create",
+  "inbox": "Inbox",
+  "new": "New",
+  "pollsCount": "{count, plural, =0 {No Polls} one {# Poll} other {# Polls}}",
+  "pollStatusInProgress": "In Progress",
+  "pollStatusPausedClosed": "Closed"
 }

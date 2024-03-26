@@ -18,14 +18,12 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-center gap-x-2.5">
+        <PageTitle>
           <PageIcon>
             <InboxIcon />
           </PageIcon>
-          <PageTitle>
-            <Trans t={t} i18nKey="inbox" defaults="Inbox" />
-          </PageTitle>
-        </div>
+          <Trans t={t} i18nKey="inbox" defaults="Inbox" />
+        </PageTitle>
       </PageHeader>
       <PageContent>
         <ResponseList />

@@ -9,7 +9,7 @@ export function PageContainer({
   return (
     <div
       className={cn(
-        "max-w-4xl  lg:flex lg:h-screen lg:flex-col lg:pr-4",
+        "max-w-4xl space-y-6 lg:flex lg:flex-col lg:pr-4",
         className,
       )}
     >
@@ -42,7 +42,7 @@ export function PageTitle({
   return (
     <h2
       className={cn(
-        "flex items-center gap-x-2.5 truncate text-lg font-semibold leading-9",
+        "flex h-9 items-center gap-x-2.5 truncate text-sm font-semibold",
         className,
       )}
     >
@@ -59,7 +59,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("p-4", className)}>{children}</div>;
+  return <div className={cn("", className)}>{children}</div>;
 }
 
 export function PageContent({
@@ -69,5 +69,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("px-4 pb-4 lg:grow", className)}>{children}</div>;
+  return <div className={cn("lg:grow", className)}>{children}</div>;
 }

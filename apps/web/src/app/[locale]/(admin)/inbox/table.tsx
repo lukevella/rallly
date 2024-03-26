@@ -1,7 +1,6 @@
 "use client";
 
-import { Badge } from "@rallly/ui/badge";
-import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { MailIcon } from "lucide-react";
 

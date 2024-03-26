@@ -1,7 +1,7 @@
 import { Button } from "@rallly/ui/button";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
-import { ArrowLeftIcon, BarChart2Icon } from "lucide-react";
+import { ArrowLeftIcon, BarChart2Icon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -22,14 +22,25 @@ export default async function Page({ params }: { params: { locale: string } }) {
       <PageHeader>
         <div className="gap-lg flex justify-between">
           <Flex>
-            <Button asChild>
+            <Button size="sm" asChild>
               <Link href="/polls">
                 <Icon>
-                  <BarChart2Icon />
+                  <ArrowLeftIcon />
                 </Icon>
-                <Trans t={t} i18nKey="polls" defaults="polls" />
               </Link>
             </Button>
+            <PageTitle>
+              <PageIcon>
+                <BarChart2Icon />
+              </PageIcon>
+              <Trans t={t} i18nKey="polls" defaults="polls" />
+            </PageTitle>
+            <Icon>
+              <ChevronRightIcon />
+            </Icon>
+            <PageTitle>
+              <Trans t={t} i18nKey="new" defaults="New" />
+            </PageTitle>
           </Flex>
         </div>
       </PageHeader>

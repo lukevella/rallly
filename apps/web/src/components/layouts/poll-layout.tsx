@@ -226,13 +226,13 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
           {user.isGuest ? (
             <Button asChild variant="primary">
               <LoginLink>
-                <LogInIcon className="size-4 -ml-1" />
+                <LogInIcon className="-ml-1 size-4" />
                 <Trans i18nKey="login" defaults="Login" />
               </LoginLink>
             </Button>
           ) : (
             <LogoutButton>
-              <LogOutIcon className="size-4 -ml-1" />
+              <LogOutIcon className="-ml-1 size-4" />
               <Trans i18nKey="loginDifferent" defaults="Switch user" />
             </LogoutButton>
           )}

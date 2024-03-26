@@ -1,17 +1,11 @@
 "use client";
 import { PollStatus } from "@rallly/database";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
 import { PaginationState } from "@tanstack/react-table";
-import {
-  BarChart2Icon,
-  ChevronsUpDownIcon,
-  PlusIcon,
-  SquarePenIcon,
-} from "lucide-react";
+import { BarChart2Icon, ChevronsUpDownIcon, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";

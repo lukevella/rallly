@@ -8,10 +8,8 @@ import {
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
-  ChevronRightIcon,
   InboxIcon,
   LogInIcon,
-  MailIcon,
   Settings2Icon,
   SparklesIcon,
   SquarePenIcon,
@@ -20,10 +18,10 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { UserMenu } from "@/app/[locale]/(admin)/user-menu";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
-import { CurrentUserAvatar } from "@/components/user";
-import { IfGuest, useUser } from "@/components/user-provider";
+import { IfGuest } from "@/components/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
 import { IconComponent } from "@/types";
 
@@ -62,7 +60,6 @@ function NavItem({
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { user } = useUser();
   return (
     <nav className="flex flex-1 flex-col ">
       <ul role="list" className="flex flex-1 flex-col gap-y-6">
@@ -159,22 +156,7 @@ export function Sidebar() {
           <hr className="my-2" />
           <ul role="list" className="-mx-2 space-y-1">
             <li>
-              <Button
-                asChild
-                variant="ghost"
-                className="group h-auto w-full justify-start py-3"
-              >
-                <Link href="/settings/profile">
-                  <CurrentUserAvatar />
-                  <span className="ml-1 grid grow">
-                    <span className="font-semibold">{user.name}</span>
-                    <span className="text-muted-foreground text-sm">
-                      {user.email}
-                    </span>
-                  </span>
-                  <ChevronRightIcon className="text-muted-foreground size-4 opacity-0 group-hover:opacity-100" />
-                </Link>
-              </Button>
+              <UserMenu />
             </li>
           </ul>
         </li>

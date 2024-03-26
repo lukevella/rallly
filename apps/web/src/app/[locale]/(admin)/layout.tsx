@@ -7,7 +7,6 @@ import React from "react";
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
 import { CurrentUserAvatar } from "@/components/user";
-import { UserDropdown } from "@/components/user-dropdown";
 
 function MobileNavigation() {
   return (
@@ -37,11 +36,11 @@ export default async function Layout({
 }) {
   function SidebarLayout() {
     return (
-      <div className="mx-auto max-w-7xl bg-gray-100">
+      <div className="mx-auto max-w-[1440px] bg-gray-100">
         <MobileNavigation />
         <div
           className={cn(
-            "inset-y-0 z-50 hidden shrink-0 flex-col gap-y-5 overflow-y-auto bg-gray-100 px-5 py-4 lg:fixed lg:flex lg:w-72 lg:px-6 lg:py-4",
+            "inset-y-0 z-50 hidden shrink-0 flex-col gap-y-5 bg-gray-100 px-5 py-4 lg:fixed lg:flex lg:w-72 lg:px-6 lg:py-4",
           )}
         >
           <div>
@@ -49,7 +48,9 @@ export default async function Layout({
           </div>
           <Sidebar />
         </div>
-        <div className={cn("min-h-screen grow lg:pl-72")}>{children}</div>
+        <div className={cn("min-h-screen grow space-y-6 p-4 lg:ml-72")}>
+          {children}
+        </div>
       </div>
     );
   }

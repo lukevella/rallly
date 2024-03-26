@@ -25,10 +25,10 @@ export default async function Page({
     <PageContainer>
       <PageHeader className="flex justify-between">
         <div className="flex items-center gap-x-2.5">
-          <PageIcon>
-            <BarChart2Icon />
-          </PageIcon>
           <PageTitle>
+            <PageIcon>
+              <BarChart2Icon />
+            </PageIcon>
             <Trans t={t} i18nKey="polls" />
           </PageTitle>
           <Button size="sm" asChild>

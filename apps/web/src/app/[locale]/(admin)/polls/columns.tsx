@@ -74,19 +74,6 @@ export const usePollColumns = () => {
           );
         },
       }),
-      columnHelper.accessor("participants", {
-        header: t("participants", { defaultValue: "Participants" }),
-        size: 200,
-        cell: ({ row }) => {
-          return (
-            <ParticipantAvatarBar
-              participants={row.original.participants}
-              max={5}
-            />
-          );
-        },
-      }),
-
       columnHelper.accessor("createdAt", {
         header: t("created", {
           defaultValue: "Created",
@@ -99,6 +86,18 @@ export const usePollColumns = () => {
                 {dayjs(createdAt).fromNow()}
               </time>
             </p>
+          );
+        },
+      }),
+      columnHelper.accessor("participants", {
+        header: t("participants", { defaultValue: "Participants" }),
+        size: 200,
+        cell: ({ row }) => {
+          return (
+            <ParticipantAvatarBar
+              participants={row.original.participants}
+              max={5}
+            />
           );
         },
       }),
