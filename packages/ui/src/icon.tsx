@@ -14,6 +14,7 @@ const iconVariants = cva("", {
     size: {
       md: "w-4 h-4",
       lg: "w-5 h-5",
+      xl: "w-7 h-7",
     },
   },
   defaultVariants: {
@@ -31,7 +32,7 @@ export function Icon({ children, size, variant }: IconProps) {
     <Slot
       className={cn(
         iconVariants({ size, variant }),
-        "group-[.bg-primary]:text-primary-200 group shrink-0",
+        "group-[.bg-primary]:text-primary-100 group shrink-0",
       )}
     >
       {children}
