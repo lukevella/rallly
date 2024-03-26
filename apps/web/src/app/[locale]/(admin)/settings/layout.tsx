@@ -1,4 +1,3 @@
-import { Icon } from "@rallly/ui/icon";
 import { CogIcon, CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
