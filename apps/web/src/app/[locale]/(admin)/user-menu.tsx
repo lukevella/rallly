@@ -19,7 +19,6 @@ export function UserMenu() {
         <CurrentUserAvatar />
         <span className="ml-1 grid grow">
           <span className="font-semibold">{user.name}</span>
-          <span className="text-muted-foreground text-sm">{user.email}</span>
         </span>
         <ChevronRightIcon className="text-muted-foreground size-4 opacity-0 group-hover:opacity-100" />
       </Link>

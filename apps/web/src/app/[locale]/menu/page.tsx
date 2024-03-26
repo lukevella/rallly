@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
+import { MainSidebar } from "@/app/[locale]/(admin)/main-navigation";
 import { BackButton } from "@/app/[locale]/menu/back-button";
 
 export default function Page() {
@@ -23,7 +23,7 @@ export default function Page() {
         <BackButton />
       </div>
       <div className="px-5 py-5">
-        <Sidebar />
+        <MainSidebar />
       </div>
     </div>
   );

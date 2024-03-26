@@ -4,7 +4,7 @@ import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
+import { MainSidebar } from "@/app/[locale]/(admin)/main-navigation";
 import { LogoLink } from "@/app/components/logo-link";
 import { CurrentUserAvatar } from "@/components/user";
 
@@ -46,7 +46,7 @@ export default async function Layout({
           <div>
             <LogoLink />
           </div>
-          <Sidebar />
+          <MainSidebar />
         </div>
         <div className={cn("min-h-screen grow space-y-6 p-4 lg:ml-72")}>
           {children}

@@ -42,7 +42,7 @@ export function PageTitle({
   return (
     <h2
       className={cn(
-        "flex h-9 items-center gap-x-2.5 truncate text-sm font-semibold",
+        "flex h-9 items-center gap-x-3 truncate text-base font-semibold",
         className,
       )}
     >
