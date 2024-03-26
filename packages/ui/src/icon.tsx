@@ -12,6 +12,7 @@ const iconVariants = cva("", {
       primary: "text-primary-600",
     },
     size: {
+      sm: "w-3 h-3",
       md: "w-4 h-4",
       lg: "w-5 h-5",
       xl: "w-7 h-7",

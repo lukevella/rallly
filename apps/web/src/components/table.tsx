@@ -70,14 +70,16 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                             ? header.getSize()
                             : undefined,
                       }}
-                      className="whitespace-nowrap border-b bg-white px-5 py-2 text-left align-bottom text-xs font-semibold"
+                      className="border-b bg-gray-50 p-1"
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      <div className="flex h-7 items-center whitespace-nowrap rounded-md px-5 text-left align-bottom text-xs font-semibold hover:bg-gray-200">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </div>
                     </th>
                   ))}
                 </tr>
@@ -98,7 +100,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                     }}
                     key={cell.id}
                     className={clsx(
-                      "overflow-hidden border-gray-100 px-5 py-4 align-middle",
+                      "relative overflow-hidden border-gray-100 px-5 py-4 align-middle",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
                       },
@@ -130,7 +132,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
           ) : null}
         </table>
       </div>
-      <div className="flex items-center justify-between space-x-2 border-t border-gray-100 bg-gray-50 px-4 py-3 lg:px-5">
+      <div className="flex items-center justify-between space-x-2 border-t bg-gray-50 px-4 py-3 lg:px-5">
         <div>
           <span className="text-muted-foreground text-sm">
             <Trans
@@ -143,7 +145,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
             />
           </span>
         </div>
-        <Flex gap="sm">
+        <Flex>
           <Button
             size="sm"
             onClick={() => table.previousPage()}

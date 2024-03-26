@@ -8,6 +8,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
+import { PollStatusBadge } from "@/components/poll-status";
 import { useDayjs } from "@/utils/dayjs";
 
 export type PollData = {
@@ -40,19 +41,39 @@ export const usePollColumns = () => {
         size: 500,
         cell: ({ row }) => {
           return (
-            <div className="flex items-center gap-x-2.5">
+            <Link
+              className="group absolute inset-1 flex items-center gap-x-2.5 px-5 hover:bg-gray-200 active:bg-gray-100"
+              href={`/poll/${row.original.id}`}
+            >
               <BarChart2Icon className="size-4 text-gray-500" />
-              <Link
-                href={`/poll/${row.original.id}`}
-                className="hover:text-primary whitespace-nowrap text-sm font-medium hover:underline"
-              >
+              <span className="truncate whitespace-nowrap text-sm font-medium">
                 {row.original.title}
-              </Link>
+              </span>
+            </Link>
+          );
+        },
+      }),
+      columnHelper.accessor("status", {
+        header: t("pollStatus", { defaultValue: "Status" }),
+        cell: ({ row }) => {
+          return (
+            <div className="text-muted-foreground text-sm">
+              {row.original.event ? (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <PollStatusBadge status={row.original.status} />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {adjustTimeZone(row.original.event.start).format("LLLL")}
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <PollStatusBadge status={row.original.status} />
+              )}
             </div>
           );
         },
       }),
-
       columnHelper.accessor("participants", {
         header: t("participants", { defaultValue: "Participants" }),
         size: 200,
@@ -65,25 +86,7 @@ export const usePollColumns = () => {
           );
         },
       }),
-      columnHelper.accessor("status", {
-        header: t("pollStatus", { defaultValue: "Status" }),
-        cell: ({ row }) => {
-          return (
-            <div className="text-muted-foreground text-sm">
-              {row.original.event ? (
-                <Tooltip>
-                  <TooltipTrigger>{row.original.status}</TooltipTrigger>
-                  <TooltipContent>
-                    {adjustTimeZone(row.original.event.start).format("LLLL")}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                row.original.status
-              )}
-            </div>
-          );
-        },
-      }),
+
       columnHelper.accessor("createdAt", {
         header: t("created", {
           defaultValue: "Created",

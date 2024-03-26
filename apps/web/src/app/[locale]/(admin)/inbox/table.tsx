@@ -52,12 +52,6 @@ export function ResponseList() {
 
   return (
     <Card>
-      <CardHeader>
-        <Flex gap="sm" align="center">
-          <CardTitle>My Invites</CardTitle>
-          <Badge>{data.total}</Badge>
-        </Flex>
-      </CardHeader>
       <Table<Response>
         layout="auto"
         enableTableHeader={true}

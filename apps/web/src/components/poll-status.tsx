@@ -1,23 +1,27 @@
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { CheckCircleIcon, PauseCircleIcon, RadioIcon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import {
+  CalendarCheckIcon,
+  CalendarSearchIcon,
+  CalendarXIcon,
+  CheckIcon,
+  RefreshCw,
+  XIcon,
+} from "lucide-react";
 
 import { Trans } from "@/components/trans";
-import { IconComponent } from "@/types";
 
 const LabelWithIcon = ({
-  icon: Icon,
   children,
   className,
 }: {
-  icon: IconComponent;
   children: React.ReactNode;
   className?: string;
 }) => {
   return (
     <span className={cn("inline-flex items-center gap-1.5", className)}>
-      <Icon className="size-4 -ml-0.5" />
-      <span className="font-medium">{children}</span>
+      {children}
     </span>
   );
 };
@@ -32,19 +36,22 @@ export const PollStatusLabel = ({
   switch (status) {
     case "live":
       return (
-        <LabelWithIcon icon={RadioIcon} className={className}>
-          <Trans i18nKey="pollStatusOpen" defaults="Live" />
+        <LabelWithIcon className={className}>
+          <CalendarSearchIcon className="size-4 opacity-50" />
+          <Trans i18nKey="pollStatusInProgress" defaults="In Progress" />
         </LabelWithIcon>
       );
     case "paused":
       return (
-        <LabelWithIcon icon={PauseCircleIcon} className={className}>
-          <Trans i18nKey="pollStatusPaused" defaults="Paused" />
+        <LabelWithIcon className={className}>
+          <CalendarXIcon className="size-4 opacity-50" />
+          <Trans i18nKey="pollStatusPausedClosed" defaults="Closed" />
         </LabelWithIcon>
       );
     case "finalized":
       return (
-        <LabelWithIcon icon={CheckCircleIcon} className={className}>
+        <LabelWithIcon className={className}>
+          <CalendarCheckIcon className="size-4 opacity-50" />
           <Trans i18nKey="pollStatusClosed" defaults="Finalized" />
         </LabelWithIcon>
       );
@@ -55,12 +62,12 @@ export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
     <PollStatusLabel
       className={cn(
-        "whitespace-nowrap rounded-md border px-2 py-1 text-xs font-medium",
+        "whitespace-nowrap rounded-md border px-1.5 py-1 text-xs font-medium",
         {
-          "border-pink-200 bg-pink-50 text-pink-600": status === "live",
-          "border-gray-200 bg-gray-100 text-gray-500": status === "paused",
-          "border-indigo-200 bg-indigo-50 text-indigo-600":
+          "border-pink-100 bg-pink-50 text-pink-600": status === "live",
+          "border-green-100 bg-green-50 text-green-600 ":
             status === "finalized",
+          "bg-gray-200 text-gray-600 ": status === "paused",
         },
       )}
       status={status}

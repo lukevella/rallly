@@ -7,6 +7,7 @@ import React from "react";
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
 import { CurrentUserAvatar } from "@/components/user";
+import { UserDropdown } from "@/components/user-dropdown";
 
 function MobileNavigation() {
   return (
@@ -36,7 +37,7 @@ export default async function Layout({
 }) {
   function SidebarLayout() {
     return (
-      <div className="bg-gray-100">
+      <div className="mx-auto max-w-7xl bg-gray-100">
         <MobileNavigation />
         <div
           className={cn(

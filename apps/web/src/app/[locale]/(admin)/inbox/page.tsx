@@ -1,5 +1,4 @@
-import { Icon } from "@rallly/ui/icon";
-import { MailIcon } from "lucide-react";
+import { InboxIcon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { Params } from "@/app/[locale]/types";
@@ -7,6 +6,7 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
@@ -19,11 +19,11 @@ export default async function Page({ params }: { params: Params }) {
     <PageContainer>
       <PageHeader>
         <div className="flex items-center gap-x-2.5">
-          <Icon size="lg">
-            <MailIcon />
-          </Icon>
+          <PageIcon>
+            <InboxIcon />
+          </PageIcon>
           <PageTitle>
-            <Trans t={t} i18nKey="invites" defaults="Invites" />
+            <Trans t={t} i18nKey="inbox" defaults="Inbox" />
           </PageTitle>
         </div>
       </PageHeader>

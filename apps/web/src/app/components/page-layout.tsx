@@ -1,13 +1,33 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Icon } from "@rallly/ui/icon";
 
 export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={cn("lg:flex lg:h-screen lg:flex-col lg:pr-4", className)}>
+    <div
+      className={cn(
+        "max-w-4xl  lg:flex lg:h-screen lg:flex-col lg:pr-4",
+        className,
+      )}
+    >
       {children}
+    </div>
+  );
+}
+
+export function PageIcon({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn(className)}>
+      <Icon size="lg">{children}</Icon>
     </div>
   );
 }
@@ -34,7 +54,6 @@ export function PageTitle({
 export function PageHeader({
   children,
   className,
-  variant = "default",
 }: {
   children?: React.ReactNode;
   className?: string;

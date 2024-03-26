@@ -9,6 +9,7 @@ import {
   BookMarkedIcon,
   CalendarIcon,
   ChevronRightIcon,
+  InboxIcon,
   LogInIcon,
   MailIcon,
   Settings2Icon,
@@ -78,17 +79,17 @@ export function Sidebar() {
             </li>
             <li>
               <NavItem
-                current={pathname?.startsWith("/invites")}
-                href="/invites"
-                icon={MailIcon}
+                current={pathname?.startsWith("/inbox")}
+                href="/inbox"
+                icon={InboxIcon}
               >
-                <Trans i18nKey="invites" defaults="Invites" />
+                <Trans i18nKey="inbox" defaults="Inbox" />
               </NavItem>
             </li>
           </ul>
         </li>
         <li className="-mx-2 space-y-1">
-          <Button className="w-full" variant="primary" asChild>
+          <Button className="w-full rounded-full" variant="primary" asChild>
             <Link href="/new">
               <Icon>
                 <SquarePenIcon />
