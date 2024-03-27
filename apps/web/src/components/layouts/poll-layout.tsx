@@ -10,25 +10,41 @@ import {
 import {
   ArrowLeftIcon,
   ArrowUpRight,
+  BarChart2Icon,
+  CalendarIcon,
   ChevronDownIcon,
   ListIcon,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
+  PencilIcon,
   PlayCircleIcon,
   RotateCcw,
+  Settings2Icon,
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarLayout,
+  SidebarMenu,
+  SidebarMenuItemIcon,
+  SidebarMenuLabel,
+  SidebarMenuLink,
+  SidebarNavigation,
+  SidebarSection,
+} from "@/app/[locale]/(admin)/sidebar-layout";
 import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { InviteDialog } from "@/components/invite-dialog";
@@ -250,6 +266,20 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
+function PollPageHeader() {
+  const poll = usePoll();
+  return (
+    <PageHeader>
+      <PageTitle>
+        <PageIcon>
+          <BarChart2Icon />
+        </PageIcon>
+        {poll.title}
+      </PageTitle>
+    </PageHeader>
+  );
+}
+
 const Prefetch = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
@@ -280,7 +310,54 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
     <Prefetch>
       <LegacyPollContextProvider>
         <PermissionGuard>
-          <Layout>{children}</Layout>
+          <SidebarLayout>
+            <SidebarNavigation>
+              <Sidebar>
+                <SidebarSection>
+                  <SidebarMenuLink href="/polls">
+                    <SidebarMenuItemIcon>
+                      <ArrowLeftIcon />
+                    </SidebarMenuItemIcon>
+                    <Trans i18nKey="polls" defaults="Polls" />
+                  </SidebarMenuLink>
+                </SidebarSection>
+                <SidebarSection>
+                  <SidebarMenu>
+                    <SidebarMenuLink href={`/poll/${urlId}`}>
+                      <SidebarMenuItemIcon>
+                        <BarChart2Icon />
+                      </SidebarMenuItemIcon>
+                      <Trans i18nKey="overview" defaults="Overview" />
+                    </SidebarMenuLink>
+                    <SidebarMenuLink href={`/poll/${urlId}/edit-details`}>
+                      <SidebarMenuItemIcon>
+                        <PencilIcon />
+                      </SidebarMenuItemIcon>
+                      <Trans i18nKey="details" defaults="Details" />
+                    </SidebarMenuLink>
+                    <SidebarMenuLink href={`/poll/${urlId}/edit-options`}>
+                      <SidebarMenuItemIcon>
+                        <CalendarIcon />
+                      </SidebarMenuItemIcon>
+                      <Trans i18nKey="dates" defaults="Dates" />
+                    </SidebarMenuLink>
+                    <SidebarMenuLink href={`/poll/${urlId}/edit-settings`}>
+                      <SidebarMenuItemIcon>
+                        <Settings2Icon />
+                      </SidebarMenuItemIcon>
+                      <Trans i18nKey="settings" defaults="Settings" />
+                    </SidebarMenuLink>
+                  </SidebarMenu>
+                </SidebarSection>
+              </Sidebar>
+            </SidebarNavigation>
+            <SidebarContent>
+              <PageContainer>
+                <PollPageHeader />
+                <PageContent>{children}</PageContent>
+              </PageContainer>
+            </SidebarContent>
+          </SidebarLayout>
         </PermissionGuard>
       </LegacyPollContextProvider>
     </Prefetch>

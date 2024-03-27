@@ -39,7 +39,6 @@ const Page = () => {
   return (
     <Form {...form}>
       <form
-        className="mx-auto max-w-3xl"
         onSubmit={form.handleSubmit(async (data) => {
           //submit
           await update.mutateAsync(
