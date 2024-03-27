@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -56,7 +57,7 @@ export const InviteDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
-        <Button variant="primary" icon={Share2Icon}>
+        <Button icon={Share2Icon}>
           <Trans i18nKey="share" defaults="Share" />
         </Button>
       </DialogTrigger>

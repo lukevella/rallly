@@ -92,13 +92,7 @@ export function InvitePage() {
       <LegacyPollContextProvider>
         <VisibilityProvider>
           <GoToApp />
-          <div className="p-3 lg:px-6 lg:py-5">
-            <div className="mx-auto max-w-4xl">
-              <div className="-mx-1">
-                <Poll />
-              </div>
-            </div>
-          </div>
+          <Poll />
         </VisibilityProvider>
       </LegacyPollContextProvider>
     </Prefetch>

@@ -11,6 +11,7 @@ import {
   ArrowLeftIcon,
   ArrowUpRight,
   BarChart2Icon,
+  CalendarCheckIcon,
   CalendarIcon,
   ChevronDownIcon,
   ListIcon,
@@ -321,7 +322,7 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
                     <Trans i18nKey="polls" defaults="Polls" />
                   </SidebarMenuLink>
                 </SidebarSection>
-                <SidebarSection>
+                {/* <SidebarSection>
                   <SidebarMenu>
                     <SidebarMenuLink href={`/poll/${urlId}`}>
                       <SidebarMenuItemIcon>
@@ -341,6 +342,12 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
                       </SidebarMenuItemIcon>
                       <Trans i18nKey="dates" defaults="Dates" />
                     </SidebarMenuLink>
+                    <SidebarMenuLink href={`/poll/${urlId}/finalize`}>
+                      <SidebarMenuItemIcon>
+                        <CalendarCheckIcon />
+                      </SidebarMenuItemIcon>
+                      <Trans i18nKey="finalize" defaults="Finalize" />
+                    </SidebarMenuLink>
                     <SidebarMenuLink href={`/poll/${urlId}/edit-settings`}>
                       <SidebarMenuItemIcon>
                         <Settings2Icon />
@@ -348,7 +355,7 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
                       <Trans i18nKey="settings" defaults="Settings" />
                     </SidebarMenuLink>
                   </SidebarMenu>
-                </SidebarSection>
+                </SidebarSection> */}
               </Sidebar>
             </SidebarNavigation>
             <SidebarContent>

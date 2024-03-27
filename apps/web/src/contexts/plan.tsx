@@ -54,14 +54,14 @@ export const Plan = () => {
 
   if (plan === "paid") {
     return (
-      <Badge>
+      <Badge variant="primary">
         <Trans i18nKey="planPro" defaults="Pro" />
       </Badge>
     );
   }
 
   return (
-    <Badge variant="secondary">
+    <Badge>
       <Trans i18nKey="planFree" defaults="Free" />
     </Badge>
   );

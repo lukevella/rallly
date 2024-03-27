@@ -3,15 +3,14 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
-import { PageContainer } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 import { absoluteUrl } from "@/utils/absolute-url";
 
 export default async function Page() {
   return (
-    <PageContainer>
+    <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-6 lg:px-6 lg:py-5">
       <InvitePage />
-    </PageContainer>
+    </div>
   );
 }
 

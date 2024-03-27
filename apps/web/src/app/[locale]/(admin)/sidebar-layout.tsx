@@ -91,7 +91,7 @@ export function SidebarContent({
   className?: string;
 }) {
   return (
-    <div className={cn("h-screen grow space-y-6 p-4 lg:ml-72", className)}>
+    <div className={cn("min-h-screen grow space-y-6 p-4 lg:ml-72", className)}>
       {children}
     </div>
   );

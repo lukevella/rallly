@@ -56,7 +56,7 @@ export const EventCard = () => {
             ) : null}
             <div>
               <h1
-                className="mb-1 text-xl font-bold tracking-tight"
+                className="mb-1 text-lg font-semibold tracking-tight"
                 data-testid="poll-title"
               >
                 {preventWidows(poll.title)}
@@ -106,13 +106,13 @@ export const EventCard = () => {
         {poll.description ? (
           <div className="flex gap-4">
             <TextIcon className="text-muted-foreground size-4 shrink-0 translate-y-1" />
-            <div className="whitespace-pre-line">
+            <div className="whitespace-pre-line text-sm leading-relaxed">
               <TruncatedLinkify>{poll.description}</TruncatedLinkify>
             </div>
           </div>
         ) : null}
         {poll.location ? (
-          <div className="flex gap-4">
+          <div className="flex gap-4 text-sm">
             <MapPinIcon className="text-muted-foreground size-4 translate-y-1" />
             <TruncatedLinkify>{poll.location}</TruncatedLinkify>
           </div>

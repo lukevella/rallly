@@ -41,15 +41,19 @@ export const usePollColumns = () => {
         size: 500,
         cell: ({ row }) => {
           return (
-            <Link
-              className="group absolute inset-0 z-10 flex items-center gap-x-2.5 px-5 focus:bg-gray-500/10"
-              href={`/poll/${row.original.id}`}
-            >
-              <BarChart2Icon className="size-4 text-gray-500" />
-              <span className="truncate whitespace-nowrap text-sm font-medium group-hover:underline">
-                {row.original.title}
-              </span>
-            </Link>
+            <>
+              <Link
+                className="group absolute inset-0 z-10 flex items-center gap-x-2.5 px-5 focus:bg-gray-500/10"
+                href={`/poll/${row.original.id}`}
+              />
+
+              <Link className="gap flex" href={`/poll/${row.original.id}`}>
+                <BarChart2Icon className="size-4 text-gray-500" />
+                <span className="min-w-0 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
+                  {row.original.title}
+                </span>
+              </Link>
+            </>
           );
         },
       }),

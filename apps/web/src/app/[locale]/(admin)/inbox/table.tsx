@@ -36,7 +36,12 @@ export function ResponseList() {
         <EmptyState
           icon={<InboxIcon />}
           title={<Trans i18nKey="noResponses" defaults="No Responses" />}
-          description={<Trans i18nKey="noResponsesDescription" defaults="" />}
+          description={
+            <Trans
+              i18nKey="noResponsesDescription"
+              defaults="You haven't submitted any responses yet"
+            />
+          }
         />
       </div>
     );
