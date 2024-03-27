@@ -29,12 +29,14 @@ export default async function Layout({
       <SidebarNavigation>
         <Sidebar>
           <SidebarSection>
-            <SidebarMenuLink href="/">
-              <SidebarMenuItemIcon>
-                <ArrowLeftIcon />
-              </SidebarMenuItemIcon>
-              <Trans t-={t} i18nKey="back" defaults="Back" />
-            </SidebarMenuLink>
+            <SidebarMenu>
+              <SidebarMenuLink href="/">
+                <SidebarMenuItemIcon>
+                  <ArrowLeftIcon />
+                </SidebarMenuItemIcon>
+                <Trans t-={t} i18nKey="back" defaults="Back" />
+              </SidebarMenuLink>
+            </SidebarMenu>
           </SidebarSection>
           <SidebarSection>
             <SidebarMenu>
