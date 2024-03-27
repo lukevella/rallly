@@ -133,7 +133,7 @@ const Discussion: React.FunctionComponent = () => {
                       )}
                     </div>
                   </div>
-                  <div className="ml-0.5 w-fit whitespace-pre-wrap pl-8 text-sm leading-relaxed">
+                  <div className="ml-0.5 w-fit whitespace-pre-wrap pl-7 text-sm leading-relaxed">
                     <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                   </div>
                 </div>
@@ -157,6 +157,7 @@ const Discussion: React.FunctionComponent = () => {
                 id="comment"
                 className="w-full"
                 autoFocus={true}
+                className="w-full"
                 placeholder={t("commentPlaceholder")}
                 {...register("content", { validate: requiredString })}
               />
