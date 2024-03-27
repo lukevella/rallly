@@ -133,11 +133,13 @@ export function SidebarSection({
 
 export function SidebarMenuLink({
   href,
+  className,
   children,
 }: {
   asChild?: boolean;
   href: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   const pathname = usePathname();
   const isCurrent = pathname === href;
@@ -150,6 +152,7 @@ export function SidebarMenuLink({
             ? "is-active bg-gray-200 text-gray-800"
             : " text-gray-500 hover:bg-gray-200 hover:text-gray-800 active:bg-gray-300",
           "group flex h-9 items-center gap-x-3 rounded-md px-3 text-sm font-semibold",
+          className,
         )}
       >
         {children}

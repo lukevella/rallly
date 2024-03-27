@@ -4,12 +4,10 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   BarChart2Icon,
-  CalendarCheckIcon,
-  CalendarXIcon,
-  InboxIcon,
+  LifeBuoyIcon,
   LogInIcon,
-  RefreshCw,
   ReplyIcon,
+  Settings2Icon,
   SparklesIcon,
   SquarePenIcon,
 } from "lucide-react";
@@ -19,7 +17,6 @@ import {
   Sidebar,
   SidebarMenu,
   SidebarMenuItemIcon,
-  SidebarMenuLabel,
   SidebarMenuLink,
   SidebarSection,
 } from "@/app/[locale]/(admin)/sidebar-layout";
@@ -49,19 +46,6 @@ export function MainSidebar() {
         </SidebarMenu>
       </SidebarSection>
       <SidebarSection>
-        <SidebarMenu>
-          <UserMenu />
-          <IfGuest>
-            <SidebarMenuLink href="/login">
-              <SidebarMenuItemIcon>
-                <LogInIcon />
-              </SidebarMenuItemIcon>
-              <Trans i18nKey="login" />
-            </SidebarMenuLink>
-          </IfGuest>
-        </SidebarMenu>
-      </SidebarSection>
-      <SidebarSection>
         <Button className="w-full rounded-full" variant="primary" asChild>
           <Link href="/new">
             <Icon>
@@ -71,7 +55,7 @@ export function MainSidebar() {
           </Link>
         </Button>
       </SidebarSection>
-      <SidebarSection>
+      <SidebarSection className="mt-auto">
         <IfFreeUser>
           <li>
             <Link
@@ -94,6 +78,31 @@ export function MainSidebar() {
             </Link>
           </li>
         </IfFreeUser>
+        <SidebarMenu>
+          <IfGuest>
+            <SidebarMenuLink href="/login">
+              <SidebarMenuItemIcon>
+                <LogInIcon />
+              </SidebarMenuItemIcon>
+              <Trans i18nKey="login" />
+            </SidebarMenuLink>
+          </IfGuest>
+          <SidebarMenuLink href="https://support.rallly.co">
+            <SidebarMenuItemIcon>
+              <LifeBuoyIcon />
+            </SidebarMenuItemIcon>
+            <Trans i18nKey="support" defaults="Support" />
+          </SidebarMenuLink>
+          <SidebarMenuLink href="/settings/preferences">
+            <SidebarMenuItemIcon>
+              <Settings2Icon />
+            </SidebarMenuItemIcon>
+            <Trans i18nKey="preferences" defaults="Preferences" />
+          </SidebarMenuLink>
+        </SidebarMenu>
+      </SidebarSection>
+      <SidebarSection>
+        <UserMenu />
       </SidebarSection>
     </Sidebar>
   );

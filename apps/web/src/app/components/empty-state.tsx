@@ -15,8 +15,8 @@ export function EmptyState({
   className?: string;
 }) {
   return (
-    <div className={cn(className)}>
-      <div className="mx-auto flex w-full max-w-md flex-col items-center justify-center rounded-lg border bg-gray-50 p-8 text-center shadow-sm">
+    <div className={cn("w-full", className)}>
+      <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center rounded-lg border p-8 text-center shadow-sm">
         {icon ? (
           <div className="mb-4 inline-flex rounded-full border p-4">
             <Icon size="lg">{icon}</Icon>

@@ -33,7 +33,7 @@ export default async function Layout({
               <SidebarMenuItemIcon>
                 <ArrowLeftIcon />
               </SidebarMenuItemIcon>
-              <Trans t-={t} i18nKey="dashboard" defaults="Dashboard" />
+              <Trans t-={t} i18nKey="back" defaults="Back" />
             </SidebarMenuLink>
           </SidebarSection>
           <SidebarSection>

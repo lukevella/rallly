@@ -2,7 +2,7 @@
 
 import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
-import { InboxIcon, MailIcon } from "lucide-react";
+import { InboxIcon } from "lucide-react";
 
 import { EmptyState } from "@/app/components/empty-state";
 import { trpc } from "@/app/providers";
@@ -36,12 +36,7 @@ export function ResponseList() {
         <EmptyState
           icon={<InboxIcon />}
           title={<Trans i18nKey="noResponses" defaults="No Responses" />}
-          description={
-            <Trans
-              i18nKey="emptyInboxDescription"
-              defaults="When you respond to invites, they will show up here."
-            />
-          }
+          description={<Trans i18nKey="noResponsesDescription" defaults="" />}
         />
       </div>
     );

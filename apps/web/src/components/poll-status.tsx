@@ -4,6 +4,9 @@ import {
   CalendarCheckIcon,
   CalendarSearchIcon,
   CalendarXIcon,
+  CheckIcon,
+  RefreshCw,
+  XIcon,
 } from "lucide-react";
 
 import { Trans } from "@/components/trans";
@@ -33,21 +36,21 @@ export const PollStatusLabel = ({
     case "live":
       return (
         <LabelWithIcon className={className}>
-          <CalendarSearchIcon className="size-4 opacity-75" />
+          <RefreshCw className="size-4 opacity-75" />
           <Trans i18nKey="pollStatusInProgress" defaults="In Progress" />
         </LabelWithIcon>
       );
     case "paused":
       return (
         <LabelWithIcon className={className}>
-          <CalendarXIcon className="size-4 opacity-75" />
+          <XIcon className="size-4 opacity-75" />
           <Trans i18nKey="pollStatusPausedClosed" defaults="Closed" />
         </LabelWithIcon>
       );
     case "finalized":
       return (
         <LabelWithIcon className={className}>
-          <CalendarCheckIcon className="size-4 opacity-75" />
+          <CheckIcon className="size-4 opacity-75" />
           <Trans i18nKey="pollStatusClosed" defaults="Finalized" />
         </LabelWithIcon>
       );
