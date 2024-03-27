@@ -76,7 +76,7 @@ export const useInviteColumns = () => {
       size: 240,
       cell: ({ renderValue }) => (
         <span className="text-muted-foreground whitespace-nowrap text-sm">
-          {dayjs(renderValue()).format("LLL")}
+          {dayjs(renderValue()).fromNow()}
         </span>
       ),
     }),

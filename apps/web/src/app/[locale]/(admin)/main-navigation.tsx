@@ -57,26 +57,28 @@ export function MainSidebar() {
       </SidebarSection>
       <SidebarSection className="mt-auto">
         <IfFreeUser>
-          <li>
-            <Link
-              href="/settings/billing"
-              className="mb-4 grid rounded-md border border-gray-200 bg-gray-50 px-4 py-3 hover:border-gray-300 hover:bg-gray-200 active:bg-gray-300"
-            >
-              <span className="mb-2 flex items-center gap-x-2">
-                <SparklesIcon className="size-5 text-gray-400" />
-                <span className="text-sm font-bold">
-                  <Trans i18nKey="upgrade" />
+          <SidebarMenu>
+            <li>
+              <Link
+                href="/settings/billing"
+                className="mb-4 grid rounded-md border border-gray-200 bg-gray-50 px-4 py-3 hover:border-gray-300 hover:bg-gray-200 active:bg-gray-300"
+              >
+                <span className="mb-2 flex items-center gap-x-2">
+                  <SparklesIcon className="size-5 text-gray-400" />
+                  <span className="text-sm font-bold">
+                    <Trans i18nKey="upgrade" />
+                  </span>
+                  <ProBadge />
                 </span>
-                <ProBadge />
-              </span>
-              <span className="text-sm leading-relaxed text-gray-500">
-                <Trans
-                  i18nKey="unlockFeatures"
-                  defaults="Unlock all Pro features."
-                />
-              </span>
-            </Link>
-          </li>
+                <span className="text-sm leading-relaxed text-gray-500">
+                  <Trans
+                    i18nKey="unlockFeatures"
+                    defaults="Unlock all Pro features."
+                  />
+                </span>
+              </Link>
+            </li>
+          </SidebarMenu>
         </IfFreeUser>
         <SidebarMenu>
           <IfGuest>
@@ -102,7 +104,9 @@ export function MainSidebar() {
         </SidebarMenu>
       </SidebarSection>
       <SidebarSection>
-        <UserMenu />
+        <SidebarMenu>
+          <UserMenu />
+        </SidebarMenu>
       </SidebarSection>
     </Sidebar>
   );

@@ -8,38 +8,21 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import {
-  ArrowLeftIcon,
   ArrowUpRight,
   BarChart2Icon,
-  CalendarCheckIcon,
-  CalendarIcon,
   ChevronDownIcon,
-  ListIcon,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,
-  PencilIcon,
   PlayCircleIcon,
   RotateCcw,
-  Settings2Icon,
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import React from "react";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarLayout,
-  SidebarMenu,
-  SidebarMenuItemIcon,
-  SidebarMenuLabel,
-  SidebarMenuLink,
-  SidebarNavigation,
-  SidebarSection,
-} from "@/app/[locale]/(admin)/sidebar-layout";
-import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
+import Loader from "@/app/[locale]/(admin)/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
 import {
   PageContainer,
@@ -48,7 +31,6 @@ import {
   PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
-import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -57,8 +39,6 @@ import {
   PageDialogHeader,
   PageDialogTitle,
 } from "@/components/page-dialog";
-import ManagePoll from "@/components/poll/manage-poll";
-import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { PollStatusLabel } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
@@ -166,53 +146,6 @@ const StatusControl = () => {
   );
 };
 
-const AdminControls = () => {
-  return (
-    <div className="flex items-center gap-x-2">
-      <NotificationsToggle />
-      <StatusControl />
-      <ManagePoll />
-      <InviteDialog />
-    </div>
-  );
-};
-
-const Layout = ({ children }: React.PropsWithChildren) => {
-  const poll = usePoll();
-  const pollLink = `/poll/${poll.id}`;
-  const pathname = usePathname();
-
-  return (
-    <PageContainer>
-      <PageHeader className="flex flex-col gap-x-4 gap-y-2.5 md:flex-row md:items-center">
-        <div className="flex min-w-0 items-center gap-x-4 md:basis-2/3">
-          <div className="flex gap-x-4 md:basis-1/2">
-            {pathname === pollLink ? (
-              <Button asChild>
-                <Link href="/polls">
-                  <ListIcon className="size-4" />
-                </Link>
-              </Button>
-            ) : (
-              <Button asChild>
-                <Link href={pollLink}>
-                  <ArrowLeftIcon className="size-4" />
-                </Link>
-              </Button>
-            )}
-            <PageTitle>{poll.title}</PageTitle>
-          </div>
-        </div>
-
-        <div className="flex basis-1/3 md:justify-end">
-          <AdminControls />
-        </div>
-      </PageHeader>
-      <PageContent>{children}</PageContent>
-    </PageContainer>
-  );
-};
-
 export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   const { user } = useUser();
@@ -311,60 +244,10 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
     <Prefetch>
       <LegacyPollContextProvider>
         <PermissionGuard>
-          <SidebarLayout>
-            <SidebarNavigation>
-              <Sidebar>
-                <SidebarSection>
-                  <SidebarMenuLink href="/polls">
-                    <SidebarMenuItemIcon>
-                      <ArrowLeftIcon />
-                    </SidebarMenuItemIcon>
-                    <Trans i18nKey="polls" defaults="Polls" />
-                  </SidebarMenuLink>
-                </SidebarSection>
-                {/* <SidebarSection>
-                  <SidebarMenu>
-                    <SidebarMenuLink href={`/poll/${urlId}`}>
-                      <SidebarMenuItemIcon>
-                        <BarChart2Icon />
-                      </SidebarMenuItemIcon>
-                      <Trans i18nKey="overview" defaults="Overview" />
-                    </SidebarMenuLink>
-                    <SidebarMenuLink href={`/poll/${urlId}/edit-details`}>
-                      <SidebarMenuItemIcon>
-                        <PencilIcon />
-                      </SidebarMenuItemIcon>
-                      <Trans i18nKey="details" defaults="Details" />
-                    </SidebarMenuLink>
-                    <SidebarMenuLink href={`/poll/${urlId}/edit-options`}>
-                      <SidebarMenuItemIcon>
-                        <CalendarIcon />
-                      </SidebarMenuItemIcon>
-                      <Trans i18nKey="dates" defaults="Dates" />
-                    </SidebarMenuLink>
-                    <SidebarMenuLink href={`/poll/${urlId}/finalize`}>
-                      <SidebarMenuItemIcon>
-                        <CalendarCheckIcon />
-                      </SidebarMenuItemIcon>
-                      <Trans i18nKey="finalize" defaults="Finalize" />
-                    </SidebarMenuLink>
-                    <SidebarMenuLink href={`/poll/${urlId}/edit-settings`}>
-                      <SidebarMenuItemIcon>
-                        <Settings2Icon />
-                      </SidebarMenuItemIcon>
-                      <Trans i18nKey="settings" defaults="Settings" />
-                    </SidebarMenuLink>
-                  </SidebarMenu>
-                </SidebarSection> */}
-              </Sidebar>
-            </SidebarNavigation>
-            <SidebarContent>
-              <PageContainer>
-                <PollPageHeader />
-                <PageContent>{children}</PageContent>
-              </PageContainer>
-            </SidebarContent>
-          </SidebarLayout>
+          <PageContainer>
+            {/* <PollPageHeader /> */}
+            <PageContent>{children}</PageContent>
+          </PageContainer>
         </PermissionGuard>
       </LegacyPollContextProvider>
     </Prefetch>

@@ -72,7 +72,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                       }}
                       className="border-b bg-gray-50 p-1"
                     >
-                      <div className="flex h-7 items-center whitespace-nowrap rounded-md px-5 text-left align-bottom text-xs font-semibold hover:bg-gray-200">
+                      <div className="flex h-7 items-center whitespace-nowrap rounded-md px-4 text-left align-bottom text-xs font-semibold hover:bg-gray-200">
                         {header.isPlaceholder
                           ? null
                           : flexRender(

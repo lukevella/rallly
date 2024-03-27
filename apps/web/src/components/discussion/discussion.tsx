@@ -1,10 +1,20 @@
+"use client";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@rallly/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import { Textarea } from "@rallly/ui/textarea";
 import dayjs from "dayjs";
 import { MessageCircleIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
@@ -12,6 +22,12 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/app/components/empty-state";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { useRole } from "@/contexts/role";
@@ -86,66 +102,85 @@ const Discussion: React.FunctionComponent = () => {
   }
 
   return (
-    <div className="divide-y">
-      <div className="flex items-center gap-2 bg-gray-50 px-4 py-3 font-semibold">
-        <MessageCircleIcon className="size-5" /> {t("comments")} (
-        {comments.length})
-      </div>
-      {comments.length ? (
-        <div className="space-y-4 p-4">
-          {comments.map((comment) => {
-            const canDelete =
-              role === "admin" || (comment.userId && isUser(comment.userId));
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {t("comments")}
+          <Badge>{comments.length}</Badge>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {comments.length ? (
+          <div className="space-y-4">
+            {comments.map((comment) => {
+              const canDelete =
+                role === "admin" || (comment.userId && isUser(comment.userId));
 
-            return (
-              <div className="" key={comment.id}>
-                <div data-testid="comment">
-                  <div className="mb-1 flex items-center space-x-2">
-                    <UserAvatar
-                      name={comment.authorName}
-                      showName={true}
-                      isYou={session.ownsObject(comment)}
-                    />
-                    <div className="flex items-center gap-2 text-sm ">
-                      <div className="text-gray-500">
-                        {dayjs(comment.createdAt).fromNow()}
+              return (
+                <div className="" key={comment.id}>
+                  <div data-testid="comment">
+                    <div className="mb-1 flex items-center space-x-2">
+                      <UserAvatar
+                        name={comment.authorName}
+                        showName={true}
+                        isYou={session.ownsObject(comment)}
+                      />
+                      <div className="flex items-center gap-2 text-sm ">
+                        <div className="text-gray-500">
+                          {dayjs(comment.createdAt).fromNow()}
+                        </div>
+                        {canDelete && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild={true}>
+                              <button className="hover:text-foreground text-gray-500">
+                                <MoreHorizontalIcon className="size-4" />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  deleteComment.mutate({
+                                    commentId: comment.id,
+                                  });
+                                }}
+                              >
+                                <TrashIcon className="mr-2 size-4" />
+                                <Trans i18nKey="delete" />
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
                       </div>
-                      {canDelete && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild={true}>
-                            <button className="hover:text-foreground text-gray-500">
-                              <MoreHorizontalIcon className="size-4" />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start">
-                            <DropdownMenuItem
-                              onClick={() => {
-                                deleteComment.mutate({
-                                  commentId: comment.id,
-                                });
-                              }}
-                            >
-                              <TrashIcon className="mr-2 size-4" />
-                              <Trans i18nKey="delete" />
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
+                    </div>
+                    <div className="ml-0.5 w-fit whitespace-pre-wrap pl-7 text-sm leading-relaxed">
+                      <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                     </div>
                   </div>
-                  <div className="ml-0.5 w-fit whitespace-pre-wrap pl-7 text-sm leading-relaxed">
-                    <TruncatedLinkify>{comment.content}</TruncatedLinkify>
-                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-      <div className="p-3">
+              );
+            })}
+          </div>
+        ) : (
+          <EmptyState>
+            <EmptyStateIcon>
+              <MessageCircleIcon />
+            </EmptyStateIcon>
+            <EmptyStateTitle>
+              <Trans i18nKey="noComments" defaults="No comments yet" />
+            </EmptyStateTitle>
+            <EmptyStateDescription>
+              <Trans
+                i18nKey="beFirstComment"
+                defaults="Be the first to comment"
+              />
+            </EmptyStateDescription>
+          </EmptyState>
+        )}
+      </CardContent>
+      <CardFooter>
         {isWriting ? (
           <form
-            className="space-y-2.5"
+            className="w-full space-y-2.5"
             onSubmit={handleSubmit(async ({ authorName, content }) => {
               await addComment.mutateAsync({ authorName, content, pollId });
               reset({ authorName, content: "" });
@@ -202,8 +237,8 @@ const Discussion: React.FunctionComponent = () => {
             />
           </button>
         )}
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };
 

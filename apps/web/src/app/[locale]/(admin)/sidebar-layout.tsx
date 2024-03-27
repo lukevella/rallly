@@ -14,7 +14,11 @@ import { LogoLink } from "@/app/components/logo-link";
 import { CurrentUserAvatar } from "@/components/user";
 
 export function SidebarLayout({ children }: { children?: React.ReactNode }) {
-  return <div className="mx-auto max-w-[1440px] bg-gray-100">{children}</div>;
+  return (
+    <div className="mx-auto flex max-w-[1440px] flex-col bg-gray-100 lg:flex-row">
+      {children}
+    </div>
+  );
 }
 
 export function SidebarMenuLabel({
@@ -39,7 +43,7 @@ export function SidebarNavigation({
   return (
     <div
       className={cn(
-        "flex flex-col lg:fixed lg:inset-y-0 lg:w-72 ",
+        "top-0 flex flex-col lg:sticky lg:h-screen lg:w-72",
         open ? "fixed inset-0 z-50 bg-gray-100" : "border-b lg:border-0",
       )}
     >
@@ -91,7 +95,7 @@ export function SidebarContent({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-screen grow space-y-6 p-4 lg:ml-72", className)}>
+    <div className={cn("min-h-screen grow space-y-6 p-4", className)}>
       {children}
     </div>
   );
@@ -105,9 +109,9 @@ export function Sidebar({
 }) {
   return (
     <ul role="list" className="flex h-full flex-1 flex-col gap-y-6">
-      <li>
+      <SidebarSection>
         <LogoLink />
-      </li>
+      </SidebarSection>
       {children}
     </ul>
   );
@@ -115,7 +119,7 @@ export function Sidebar({
 
 export function SidebarMenu({ children }: { children?: React.ReactNode }) {
   return (
-    <ul role="list" className="space-y-1.5">
+    <ul role="list" className="-mx-2 space-y-1.5">
       {children}
     </ul>
   );
@@ -128,7 +132,7 @@ export function SidebarSection({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <li className={cn("-mx-2", className)}>{children}</li>;
+  return <li className={cn("", className)}>{children}</li>;
 }
 
 export function SidebarMenuLink({

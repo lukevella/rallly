@@ -11,7 +11,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { EmptyState } from "@/app/components/empty-state";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateFooter,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/app/components/empty-state";
 import { Spinner } from "@/components/spinner";
 import { Table } from "@/components/table";
 import { Trans } from "@/components/trans";
@@ -19,8 +25,32 @@ import { trpc } from "@/utils/trpc/client";
 
 import { PollData, usePollColumns } from "./columns";
 
-export function PollsList() {
+function PollsEmptyState() {
   const { t } = useTranslation();
+  return (
+    <EmptyState>
+      <EmptyStateIcon>
+        <BarChart2Icon />
+      </EmptyStateIcon>
+      <EmptyStateTitle>
+        {t("noPolls", { defaultValue: "No Polls" })}
+      </EmptyStateTitle>
+      <EmptyStateDescription>{t("noPollsDescription")}</EmptyStateDescription>
+      <EmptyStateFooter>
+        <Button variant="primary" asChild>
+          <Link href="/new">
+            <Icon>
+              <SquarePenIcon />
+            </Icon>
+            <Trans i18nKey="createPoll" defaults="Create poll" />
+          </Link>
+        </Button>
+      </EmptyStateFooter>
+    </EmptyState>
+  );
+}
+
+export function PollsList() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -57,22 +87,7 @@ export function PollsList() {
   if (data.total === 0) {
     return (
       <div className="flex h-full items-center justify-center">
-        <EmptyState
-          icon={<BarChart2Icon />}
-          title={t("noPollsFound", {
-            defaultValue: "No Polls Found",
-          })}
-          description={t("noPollsDescription")}
-        >
-          <Button variant="primary" asChild>
-            <Link href="/new">
-              <Icon>
-                <SquarePenIcon />
-              </Icon>
-              <Trans i18nKey="createPollAction" defaults="Create Poll" />
-            </Link>
-          </Button>
-        </EmptyState>
+        <PollsEmptyState />
       </div>
     );
   }
@@ -117,24 +132,7 @@ export function PollsList() {
             }}
             columns={columns}
           />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <EmptyState
-              icon={<BarChart2Icon />}
-              title={t("noPolls", { defaultValue: "No Polls" })}
-              description={t("noPollsDescription")}
-            >
-              <Button variant="primary" asChild>
-                <Link href="/new">
-                  <Icon>
-                    <SquarePenIcon />
-                  </Icon>
-                  <Trans i18nKey="createPoll" defaults="Create poll" />
-                </Link>
-              </Button>
-            </EmptyState>
-          </div>
-        )}
+        ) : null}
       </Card>
     </div>
   );

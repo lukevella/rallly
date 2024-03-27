@@ -2,32 +2,41 @@ import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 
 export function EmptyState({
-  icon,
-  title,
-  description,
   children,
   className,
 }: {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  icon?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
 }) {
   return (
     <div className={cn("w-full", className)}>
-      <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center rounded-lg border p-8 text-center shadow-sm">
-        {icon ? (
-          <div className="mb-4 inline-flex rounded-full border p-4">
-            <Icon size="lg">{icon}</Icon>
-          </div>
-        ) : null}
-        {title ? <p className="mb-1 text-base font-semibold">{title}</p> : null}
-        {description ? (
-          <p className="text-muted-foreground text-sm">{description}</p>
-        ) : null}
-        {children ? <div className="mt-8">{children}</div> : null}
+      <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center p-8 text-center">
+        {children}
       </div>
     </div>
   );
+}
+
+export function EmptyStateIcon({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-4 inline-flex rounded-full border p-4">
+      <Icon size="lg">{children}</Icon>
+    </div>
+  );
+}
+
+export function EmptyStateTitle({ children }: { children: React.ReactNode }) {
+  return <p className="text-base font-semibold">{children}</p>;
+}
+
+export function EmptyStateDescription({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <p className="text-muted-foreground text-sm">{children}</p>;
+}
+
+export function EmptyStateFooter({ children }: { children: React.ReactNode }) {
+  return <div className="mt-4">{children}</div>;
 }

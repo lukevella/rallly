@@ -4,7 +4,12 @@ import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { InboxIcon } from "lucide-react";
 
-import { EmptyState } from "@/app/components/empty-state";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/app/components/empty-state";
 import { trpc } from "@/app/providers";
 import { Spinner } from "@/components/spinner";
 import { Table } from "@/components/table";
@@ -33,16 +38,20 @@ export function ResponseList() {
   if (data.total === 0) {
     return (
       <div className="flex h-full items-center justify-center">
-        <EmptyState
-          icon={<InboxIcon />}
-          title={<Trans i18nKey="noResponses" defaults="No Responses" />}
-          description={
+        <EmptyState>
+          <EmptyStateIcon>
+            <InboxIcon />
+          </EmptyStateIcon>
+          <EmptyStateTitle>
+            <Trans i18nKey="noResponses" defaults="No Responses" />
+          </EmptyStateTitle>
+          <EmptyStateDescription>
             <Trans
               i18nKey="noResponsesDescription"
               defaults="You haven't submitted any responses yet"
             />
-          }
-        />
+          </EmptyStateDescription>
+        </EmptyState>
       </div>
     );
   }

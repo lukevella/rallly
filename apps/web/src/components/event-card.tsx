@@ -106,7 +106,7 @@ export const EventCard = () => {
         {poll.description ? (
           <div className="flex gap-4">
             <TextIcon className="text-muted-foreground size-4 shrink-0 translate-y-1" />
-            <div className="whitespace-pre-line text-sm leading-relaxed">
+            <div className="text-sm leading-relaxed">
               <TruncatedLinkify>{poll.description}</TruncatedLinkify>
             </div>
           </div>
