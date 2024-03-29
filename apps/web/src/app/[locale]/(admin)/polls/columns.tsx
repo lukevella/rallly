@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusBadge } from "@/components/poll-status";
+import { UserAvatar } from "@/components/user";
 import { useDayjs } from "@/utils/dayjs";
 
 export type PollData = {
@@ -53,25 +54,11 @@ export const usePollColumns = () => {
           );
         },
       }),
-      columnHelper.accessor("status", {
-        header: t("pollStatus", { defaultValue: "Status" }),
-        cell: ({ row }) => {
-          return (
-            <div className="text-muted-foreground text-sm">
-              {row.original.event ? (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <PollStatusBadge status={row.original.status} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {adjustTimeZone(row.original.event.start).format("LLLL")}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <PollStatusBadge status={row.original.status} />
-              )}
-            </div>
-          );
+      columnHelper.accessor("user", {
+        header: t("host", { defaultValue: "Host" }),
+        size: 75,
+        cell: ({ getValue }) => {
+          return <UserAvatar size="sm" name={getValue()?.name} />;
         },
       }),
       columnHelper.accessor("createdAt", {
@@ -89,18 +76,39 @@ export const usePollColumns = () => {
           );
         },
       }),
-      columnHelper.accessor("participants", {
-        header: t("participants", { defaultValue: "Participants" }),
-        size: 200,
+      columnHelper.accessor("status", {
+        header: t("pollStatus", { defaultValue: "Status" }),
         cell: ({ row }) => {
           return (
-            <ParticipantAvatarBar
-              participants={row.original.participants}
-              max={5}
-            />
+            <div className="text-muted-foreground flex text-sm">
+              {row.original.event ? (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <PollStatusBadge status={row.original.status} />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {adjustTimeZone(row.original.event.start).format("LLLL")}
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <PollStatusBadge status={row.original.status} />
+              )}
+            </div>
           );
         },
       }),
+      // columnHelper.accessor("participants", {
+      //   header: t("participants", { defaultValue: "Participants" }),
+      //   size: 200,
+      //   cell: ({ row }) => {
+      //     return (
+      //       <ParticipantAvatarBar
+      //         participants={row.original.participants}
+      //         max={5}
+      //       />
+      //     );
+      //   },
+      // }),
     ],
     [adjustTimeZone, t],
   );

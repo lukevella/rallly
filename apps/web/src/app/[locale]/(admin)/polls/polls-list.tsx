@@ -162,24 +162,6 @@ export function PollsList() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between gap-x-4">
-        <div className="flex items-center gap-x-4">
-          <Button>
-            <span className="text-gray-500">Status:</span> All
-            <Icon>
-              <ChevronsUpDownIcon />
-            </Icon>
-          </Button>
-          <div className="text-sm font-medium">
-            <Trans
-              i18nKey="pollsCount"
-              defaults="{count, plural, =0 {No Polls} one {# Poll} other {# Polls}}"
-              values={{ count: data.total }}
-            />
-          </div>
-        </div>
-      </div>
-
       <PollOwnerSelect
         value={list}
         onChange={(newList) => {
