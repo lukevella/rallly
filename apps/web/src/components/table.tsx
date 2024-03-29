@@ -131,41 +131,43 @@ export const Table = <TData extends Record<string, unknown>>(props: {
           ) : null}
         </table>
       </div>
-      <div className="flex items-center justify-between space-x-2 border-t bg-gray-50 px-4 py-3 lg:px-5">
-        <div>
-          <span className="text-muted-foreground text-sm">
-            <Trans
-              i18nKey="pageXOfY"
-              defaults="Page {currentPage} of {pageCount}"
-              values={{
-                currentPage: table.getState().pagination.pageIndex + 1,
-                pageCount: table.getPageCount(),
-              }}
-            />
-          </span>
-        </div>
-        <Flex>
-          <Button
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ArrowLeftIcon
-              className={cn("size-4", {
-                "text-gray-400": !table.getCanPreviousPage(),
-              })}
-            />
-          </Button>
+      {table.getPageCount() > 1 ? (
+        <div className="flex items-center justify-between space-x-2 border-t bg-gray-50 px-4 py-3 lg:px-5">
+          <div>
+            <span className="text-muted-foreground text-sm">
+              <Trans
+                i18nKey="pageXOfY"
+                defaults="Page {currentPage} of {pageCount}"
+                values={{
+                  currentPage: table.getState().pagination.pageIndex + 1,
+                  pageCount: table.getPageCount(),
+                }}
+              />
+            </span>
+          </div>
+          <Flex>
+            <Button
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <ArrowLeftIcon
+                className={cn("size-4", {
+                  "text-gray-400": !table.getCanPreviousPage(),
+                })}
+              />
+            </Button>
 
-          <Button
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <ArrowRightIcon className="size-4 text-gray-500" />
-          </Button>
-        </Flex>
-      </div>
+            <Button
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <ArrowRightIcon className="size-4 text-gray-500" />
+            </Button>
+          </Flex>
+        </div>
+      ) : null}
     </div>
   );
 };

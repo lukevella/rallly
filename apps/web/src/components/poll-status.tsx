@@ -28,7 +28,7 @@ export const PollStatusLabel = ({
     case "live":
       return (
         <LabelWithIcon className={className}>
-          <span className="inline-block size-2 rounded-full bg-pink-500" />
+          <span className="inline-block size-2 rounded-full bg-indigo-500" />
           <Trans i18nKey="pollStatusInProgress" defaults="In Progress" />
         </LabelWithIcon>
       );
@@ -42,7 +42,7 @@ export const PollStatusLabel = ({
     case "finalized":
       return (
         <LabelWithIcon className={className}>
-          <span className="inline-block size-2 rounded-full bg-indigo-500" />
+          <span className="inline-block size-2 rounded-full bg-green-500" />
           <Trans i18nKey="pollStatusClosed" defaults="Finalized" />
         </LabelWithIcon>
       );
@@ -53,9 +53,9 @@ export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
     <PollStatusLabel
       className={cn("whitespace-nowrap text-xs font-medium", {
-        "text-pink-600": status === "live",
-        "text-gray-800": status === "paused",
-        "text-indigo-600": status === "finalized",
+        "text-indigo-600": status === "live",
+        "text-gray-500": status === "paused",
+        "text-green-600": status === "finalized",
       })}
       status={status}
     />

@@ -1,7 +1,8 @@
 import { Button } from "@rallly/ui/button";
-import { Card, CardContent } from "@rallly/ui/card";
+import { Card, CardContent, CardFooter } from "@rallly/ui/card";
+import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
-import { HomeIcon } from "lucide-react";
+import { BarChart2Icon, HomeIcon, PlusIcon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { Params } from "@/app/[locale]/types";
@@ -21,26 +22,35 @@ export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <PageIcon>
-            <HomeIcon />
-          </PageIcon>
-          <Trans t={t} i18nKey="home" defaults="Home" />
-        </PageTitle>
-      </PageHeader>
       <PageContent className="space-y-6">
         <Input className="w-full rounded-full" />
-        <Card>
-          <CardContent>
-            <CurrentUserAvatar />
-          </CardContent>
-        </Card>
         <div className="grid grid-cols-3 gap-6">
-          <Button>Create Group Poll</Button>
-          {/* <Button>Create 1:1</Button>
-          <Button>Create Booking Page</Button> */}
+          <Card>
+            <CardContent>
+              <CurrentUserAvatar />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Icon size="lg">
+                <BarChart2Icon />
+              </Icon>
+              <div className="text-muted-foreground mb-2 mt-2 text-sm font-semibold">
+                Polls
+              </div>
+              <div className="text-xl font-bold">0</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <div className="text-muted-foreground text-sm font-semibold">
+                Responses
+              </div>
+              <div className="font-bold">0</div>
+            </CardContent>
+          </Card>
         </div>
+
         <hr />
         <ResponseList />
       </PageContent>

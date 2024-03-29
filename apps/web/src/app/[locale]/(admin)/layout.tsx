@@ -7,6 +7,8 @@ import {
   SidebarNavigation,
 } from "@/app/[locale]/(admin)/sidebar-layout";
 
+import { AdminHeader } from "./admin-header";
+
 export default async function Layout({
   children,
 }: {
@@ -17,7 +19,10 @@ export default async function Layout({
       <SidebarNavigation>
         <MainSidebar />
       </SidebarNavigation>
-      <SidebarContent>{children}</SidebarContent>
+      <SidebarContent>
+        <AdminHeader />
+        <div>{children}</div>
+      </SidebarContent>
     </SidebarLayout>
   );
 }
