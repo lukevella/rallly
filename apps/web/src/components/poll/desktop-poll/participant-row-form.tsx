@@ -69,6 +69,7 @@ const ParticipantRowForm = ({
           </td>
         );
       })}
+      <td className="border-l" />
     </tr>
   );
 };

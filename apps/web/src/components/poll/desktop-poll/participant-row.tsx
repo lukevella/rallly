@@ -1,4 +1,5 @@
 import { Participant, VoteType } from "@rallly/database";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import { MoreHorizontalIcon } from "lucide-react";
@@ -48,14 +49,18 @@ export const ParticipantRowView: React.FunctionComponent<{
         return (
           <td
             key={i}
-            className={clsx(
+            className={cn(
               "h-12 border-b border-l",
               !vote || vote === "no" ? "bg-gray-100" : "bg-white",
+              {
+                "bg-gray-100": vote === "no",
+                // "bg-waves": vote === "ifNeedBe",
+              },
             )}
           >
-            <div className="flex items-center justify-center">
+            <div className={cn("flex items-center justify-center")}>
               <div
-                className={clsx(
+                className={cn(
                   "inline-flex h-7 w-7 items-center justify-center rounded-full",
                   {
                     "bg-green-50": vote === "yes",

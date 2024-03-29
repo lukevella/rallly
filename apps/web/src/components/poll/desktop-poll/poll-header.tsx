@@ -2,6 +2,7 @@ import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import * as React from "react";
 
+import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useOptions } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 
@@ -108,16 +109,16 @@ const PollHeader: React.FunctionComponent = () => {
                 top: monthRowHeight,
               }}
               className={cn(
-                "sticky space-y-2 border-b border-b-gray-100 bg-gray-50 p-2.5 align-top",
+                "sticky space-y-2 bg-gray-50 pt-2.5 align-top",
                 firstOfDay ? "z-20 border-l" : "z-10",
               )}
             >
               {firstOfDay ? (
-                <div className="flex items-center justify-center gap-1 font-semibold">
-                  <div className="text-xs">{option.day}</div>
+                <div className="flex flex-col justify-center gap-1 font-semibold">
                   <div className="text-muted-foreground text-xs font-medium uppercase">
                     {option.dow}
                   </div>
+                  <div className="text-sm">{option.day}</div>
                 </div>
               ) : (
                 <Trail end={lastOfDay} />
@@ -132,16 +133,13 @@ const PollHeader: React.FunctionComponent = () => {
             <th
               key={option.optionId}
               style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
-              className="z-20 space-y-2 border-b border-l bg-gray-50 py-2 align-top"
+              className="z-20 border-b border-l bg-gray-50 pb-2 pt-2 align-top"
             >
               <div className="grid justify-center gap-1">
                 {option.type === "timeSlot" ? (
                   <TimeRange start={option.startTime} end={option.endTime} />
-                ) : (
-                  <span className="text-muted-foreground text-xs font-normal">
-                    <Trans i18nKey="allDay" defaults="All-Day" />
-                  </span>
-                )}
+                ) : null}
+                <ConnectedScoreSummary optionId={option.optionId} />
               </div>
             </th>
           );

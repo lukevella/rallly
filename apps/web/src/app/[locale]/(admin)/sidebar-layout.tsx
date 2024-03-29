@@ -22,7 +22,9 @@ export function MainNavigation({ children }: { children?: React.ReactNode }) {
     <div
       className={cn(
         "top-0 flex shrink-0 flex-col lg:sticky lg:h-screen lg:w-72",
-        open ? "fixed inset-0 z-50 bg-gray-100" : "border-b lg:border-0",
+        open
+          ? "fixed inset-0 z-50 bg-gray-100"
+          : "lg:-0 border-b lg:border-b-0",
       )}
     >
       <div
@@ -75,7 +77,7 @@ export function MainContent({
   return (
     <div
       className={cn(
-        "min-h-screen grow space-y-6 overflow-hidden p-6",
+        "min-h-screen max-w-5xl grow space-y-6 overflow-hidden p-3 lg:mx-auto lg:p-6",
         className,
       )}
     >
