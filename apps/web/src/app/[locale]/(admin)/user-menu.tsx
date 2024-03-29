@@ -2,7 +2,7 @@
 
 import { ChevronRightIcon } from "lucide-react";
 
-import { SidebarMenuLink } from "@/app/[locale]/(admin)/sidebar-layout";
+import { SidebarMenuLink } from "@/app/[locale]/(admin)/sidebar-menu";
 import { ProBadge } from "@/components/pro-badge";
 import { CurrentUserAvatar } from "@/components/user";
 import { useUser } from "@/components/user-provider";

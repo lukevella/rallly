@@ -11,16 +11,9 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { PaginationState, SortingState } from "@tanstack/react-table";
-import {
-  BarChart2Icon,
-  ChevronsUpDownIcon,
-  ListIcon,
-  SquarePenIcon,
-  VoteIcon,
-} from "lucide-react";
+import { BarChart2Icon, ListIcon, SquarePenIcon, VoteIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { list } from "postcss";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -41,7 +34,7 @@ import { PollData, usePollColumns } from "./columns";
 function PollsEmptyState() {
   const { t } = useTranslation();
   return (
-    <EmptyState>
+    <EmptyState className="p-16">
       <EmptyStateIcon>
         <BarChart2Icon />
       </EmptyStateIcon>
@@ -137,7 +130,7 @@ export function PollsList() {
     const id = searchParams?.get("sort");
     const desc = searchParams?.get("desc");
     if (!id) {
-      return [];
+      return [{ id: "createdAt", desc: true }];
     }
     return [{ id, desc: desc === "desc" }];
   }, [searchParams]);
@@ -161,14 +154,6 @@ export function PollsList() {
     );
   }
 
-  if (data.total === 0) {
-    return (
-      <div className="flex items-center justify-center">
-        <PollsEmptyState />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       <PollOwnerSelect
@@ -189,8 +174,8 @@ export function PollsList() {
           router.replace(pathname + query);
         }}
       />
-      <Card>
-        {data.total ? (
+      {data.total ? (
+        <Card>
           <Table
             className={isFetching ? "opacity-50" : undefined}
             layout="auto"
@@ -226,8 +211,10 @@ export function PollsList() {
             }}
             columns={columns}
           />
-        ) : null}
-      </Card>
+        </Card>
+      ) : (
+        <PollsEmptyState />
+      )}
     </div>
   );
 }

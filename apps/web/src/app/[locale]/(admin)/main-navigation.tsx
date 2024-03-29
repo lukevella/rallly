@@ -4,7 +4,6 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   BarChart2Icon,
-  HomeIcon,
   LifeBuoyIcon,
   LogInIcon,
   PlusIcon,
@@ -19,7 +18,7 @@ import {
   SidebarMenuItemIcon,
   SidebarMenuLink,
   SidebarSection,
-} from "@/app/[locale]/(admin)/sidebar-layout";
+} from "@/app/[locale]/(admin)/sidebar-menu";
 import { UserMenu } from "@/app/[locale]/(admin)/user-menu";
 import { LogoLink } from "@/app/components/logo-link";
 import { ProBadge } from "@/components/pro-badge";

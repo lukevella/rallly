@@ -1,22 +1,13 @@
 import { PollStatus } from "@rallly/database";
-import { Button } from "@rallly/ui/button";
-import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import {
-  ArrowUpRight,
-  ArrowUpRightIcon,
-  BarChart2Icon,
-  EyeIcon,
-  PencilIcon,
-} from "lucide-react";
+import { BarChart2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusBadge } from "@/components/poll-status";
 import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { UserAvatar } from "@/components/user";

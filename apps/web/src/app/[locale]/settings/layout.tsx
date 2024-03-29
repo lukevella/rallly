@@ -3,17 +3,18 @@ import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import {
+  MainContent,
+  MainLayout,
+  MainNavigation,
+} from "@/app/[locale]/(admin)/sidebar-layout";
+import {
   Sidebar,
-  SidebarContent,
-  SidebarLayout,
   SidebarMenu,
   SidebarMenuItemIcon,
   SidebarMenuLabel,
   SidebarMenuLink,
-  SidebarNavigation,
   SidebarSection,
-} from "@/app/[locale]/(admin)/sidebar-layout";
-import { UserMenu } from "@/app/[locale]/(admin)/user-menu";
+} from "@/app/[locale]/(admin)/sidebar-menu";
 import { getTranslation } from "@/app/i18n";
 import { IfCloudHosted } from "@/contexts/environment";
 
@@ -25,8 +26,8 @@ export default async function Layout({
 }>) {
   const { t } = await getTranslation(params.locale);
   return (
-    <SidebarLayout>
-      <SidebarNavigation>
+    <MainLayout>
+      <MainNavigation>
         <Sidebar>
           <SidebarSection>
             <SidebarMenu>
@@ -66,8 +67,8 @@ export default async function Layout({
             </SidebarMenu>
           </SidebarSection>
         </Sidebar>
-      </SidebarNavigation>
-      <SidebarContent>{children}</SidebarContent>
-    </SidebarLayout>
+      </MainNavigation>
+      <MainContent>{children}</MainContent>
+    </MainLayout>
   );
 }

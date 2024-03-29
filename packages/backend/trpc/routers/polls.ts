@@ -439,6 +439,14 @@ export const polls = router({
           pageIndex: z.number(),
           pageSize: z.number(),
         }),
+        sorting: z
+          .array(
+            z.object({
+              id: z.string(),
+              desc: z.boolean(),
+            }),
+          )
+          .optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -512,12 +520,17 @@ export const polls = router({
               ],
             },
           },
-          orderBy: [
-            {
-              createdAt: "desc",
-            },
-            { title: "asc" },
-          ],
+          orderBy:
+            input.sorting && input
+              ? input.sorting?.map((s) => ({
+                  [s.id]: s.desc ? "desc" : "asc",
+                }))
+              : [
+                  {
+                    createdAt: "desc",
+                  },
+                  { title: "asc" },
+                ],
           skip: input.pagination.pageIndex * input.pagination.pageSize,
           take: input.pagination.pageSize,
         }),

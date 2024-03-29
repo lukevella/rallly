@@ -2,9 +2,9 @@ import React from "react";
 
 import { MainSidebar } from "@/app/[locale]/(admin)/main-navigation";
 import {
-  SidebarContent,
-  SidebarLayout,
-  SidebarNavigation,
+  MainContent,
+  MainLayout,
+  MainNavigation,
 } from "@/app/[locale]/(admin)/sidebar-layout";
 
 export default async function Layout({
@@ -13,13 +13,13 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarLayout>
-      <SidebarNavigation>
+    <MainLayout>
+      <MainNavigation>
         <MainSidebar />
-      </SidebarNavigation>
-      <SidebarContent>
+      </MainNavigation>
+      <MainContent>
         <div>{children}</div>
-      </SidebarContent>
-    </SidebarLayout>
+      </MainContent>
+    </MainLayout>
   );
 }

@@ -98,7 +98,9 @@ function EventCard() {
           <dt className="text-muted-foreground text-sm lg:w-16 lg:shrink-0">
             What
           </dt>
-          <dd className="grow text-sm leading-relaxed">{poll.description}</dd>
+          <dd className="max-w-xl grow text-sm leading-relaxed">
+            {poll.description}
+          </dd>
         </CardContent>
         <CardContent className="flex flex-col gap-y-1 lg:flex-row">
           <dt className="text-muted-foreground text-sm lg:w-16">Where</dt>
