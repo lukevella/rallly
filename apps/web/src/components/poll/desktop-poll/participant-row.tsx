@@ -46,22 +46,31 @@ export const ParticipantRowView: React.FunctionComponent<{
       </td>
       {votes.map((vote, i) => {
         return (
-          <td key={i} className={clsx("h-12 p-1")}>
-            <div
-              className={clsx(
-                "flex h-full items-center justify-center rounded-md border",
-                {
-                  "border-green-200 bg-green-50": vote === "yes",
-                  "border-amber-200 bg-amber-50": vote === "ifNeedBe",
-                  "bg-gray-50": vote === "no" || !vote,
-                },
-              )}
-            >
-              <VoteIcon type={vote} />
+          <td
+            key={i}
+            className={clsx(
+              "h-12 border-b border-l",
+              !vote || vote === "no" ? "bg-gray-100" : "bg-white",
+            )}
+          >
+            <div className="flex items-center justify-center">
+              <div
+                className={clsx(
+                  "inline-flex h-7 w-7 items-center justify-center rounded-full",
+                  {
+                    "bg-green-50": vote === "yes",
+                    "bg-amber-50": vote === "ifNeedBe",
+                    "bg-gray-200": vote === "no",
+                  },
+                )}
+              >
+                <VoteIcon type={vote} />
+              </div>
             </div>
           </td>
         );
       })}
+      <td className="border-b"></td>
     </tr>
   );
 };

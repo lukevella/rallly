@@ -117,7 +117,7 @@ const DesktopPoll: React.FunctionComponent = () => {
       >
         <div
           className={cn(
-            "shadow-huge flex max-h-full flex-col overflow-hidden rounded-md bg-white",
+            "shadow-huge flex max-h-full flex-col overflow-hidden rounded-md bg-gray-50",
           )}
         >
           <div className="flex h-14 shrink-0 items-center justify-between rounded-t-md border-b bg-gradient-to-b from-gray-50 to-gray-100/50 px-4 py-3">
@@ -231,7 +231,7 @@ const DesktopPoll: React.FunctionComponent = () => {
             <div
               aria-hidden="true"
               className={cn(
-                "pointer-events-none absolute bottom-2 left-[240px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
+                "pointer-events-none absolute bottom-0 left-[240px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
                 x > 0 ? "opacity-100" : "opacity-0",
               )}
             />
@@ -239,7 +239,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               enabled={expanded}
               ref={scrollRef}
               className={cn(
-                "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth pb-3 pr-3",
+                "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth",
                 expanded ? "" : "max-h-[calc(75vh)]",
               )}
             >
