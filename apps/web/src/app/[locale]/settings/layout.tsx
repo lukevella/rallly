@@ -39,15 +39,16 @@ export default async function Layout({
             </SidebarMenu>
           </SidebarSection>
           <SidebarSection>
-            <SidebarMenu>
-              <UserMenu />
-            </SidebarMenu>
-          </SidebarSection>
-          <SidebarSection>
             <SidebarMenuLabel>
               <Trans t={t} i18nKey="settings" />
             </SidebarMenuLabel>
             <SidebarMenu>
+              <SidebarMenuLink href="/settings/profile">
+                <SidebarMenuItemIcon>
+                  <Settings2Icon />
+                </SidebarMenuItemIcon>
+                <Trans t={t} i18nKey="profile" defaults="Profile" />
+              </SidebarMenuLink>
               <SidebarMenuLink href="/settings/preferences">
                 <SidebarMenuItemIcon>
                   <Settings2Icon />

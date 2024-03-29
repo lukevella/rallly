@@ -24,7 +24,7 @@ export default async function Page({
   return (
     <PageContainer>
       <PageHeader className="flex justify-between">
-        <div className="flex items-center gap-x-2.5">
+        <div className="flex items-center gap-x-4">
           <PageTitle>
             <PageIcon>
               <BarChart2Icon />

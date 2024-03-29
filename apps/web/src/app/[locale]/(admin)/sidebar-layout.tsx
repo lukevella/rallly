@@ -10,14 +10,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-import { LogoLink } from "@/app/components/logo-link";
 import { CurrentUserAvatar } from "@/components/user";
 
 export function SidebarLayout({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="mx-auto flex max-w-[1440px] flex-col bg-gray-100 lg:flex-row">
-      {children}
-    </div>
+    <div className="flex flex-col bg-gray-100 lg:flex-row">{children}</div>
   );
 }
 
@@ -43,7 +40,7 @@ export function SidebarNavigation({
   return (
     <div
       className={cn(
-        "top-0 flex flex-col lg:sticky lg:h-screen lg:w-72",
+        "top-0 flex shrink-0 flex-col lg:sticky lg:h-screen lg:w-72",
         open ? "fixed inset-0 z-50 bg-gray-100" : "border-b lg:border-0",
       )}
     >
@@ -109,9 +106,6 @@ export function Sidebar({
 }) {
   return (
     <ul role="list" className="flex h-full flex-1 flex-col gap-y-6">
-      <SidebarSection>
-        <LogoLink />
-      </SidebarSection>
       {children}
     </ul>
   );

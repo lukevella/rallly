@@ -1,12 +1,47 @@
+"use client";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
 import { InfoIcon } from "lucide-react";
 
-import { Breadcrumbs } from "@/app/[locale]/(admin)/breadcrumbs";
+import { CurrentUserAvatar } from "@/components/user";
+import { useUser } from "@/components/user-provider";
 
-export function AdminHeader() {
+function WorkspaceSelect() {
+  const { user } = useUser();
   return (
-    <div className="space-y-6">
-      <Breadcrumbs />
-    </div>
+    <Select value="default">
+      <SelectTrigger>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Personal Account</SelectLabel>
+          <SelectItem value="default">
+            <div className="flex items-center gap-x-2.5">
+              <CurrentUserAvatar size="xs" />
+              {user.name}
+            </div>
+          </SelectItem>
+        </SelectGroup>
+        <SelectGroup>
+          <SelectLabel>Teams</SelectLabel>
+          <SelectItem value="mit">
+            <div className="flex items-center gap-x-2.5">
+              <span className="inline-block size-5 rounded-sm bg-gray-800" />
+              MIT
+            </div>
+          </SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 }
 
@@ -26,4 +61,12 @@ function Hint({ children }: { children?: React.ReactNode }) {
 
 function GuestUserAlert() {
   return <Hint>You are using a temporary guest session.</Hint>;
+}
+
+export function AdminHeader() {
+  return (
+    <div>
+      <WorkspaceSelect />
+    </div>
+  );
 }

@@ -65,6 +65,6 @@ export async function generateMetadata({
 }) {
   const { t } = await getTranslation(params.locale);
   return {
-    title: t("invites"),
+    title: t("home", { defaultValue: "Home" }),
   };
 }

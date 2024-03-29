@@ -1,8 +1,17 @@
 import { PollStatus } from "@rallly/database";
+import { Button } from "@rallly/ui/button";
+import { Flex } from "@rallly/ui/flex";
+import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { BarChart2Icon } from "lucide-react";
+import {
+  ArrowUpRight,
+  ArrowUpRightIcon,
+  BarChart2Icon,
+  EyeIcon,
+  PencilIcon,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -10,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusBadge } from "@/components/poll-status";
 import { UserAvatar } from "@/components/user";
+import { useUser } from "@/components/user-provider";
 import { useDayjs } from "@/utils/dayjs";
 
 export type PollData = {
@@ -34,6 +44,7 @@ const columnHelper = createColumnHelper<PollData>();
 export const usePollColumns = () => {
   const { t } = useTranslation();
   const { adjustTimeZone } = useDayjs();
+  const { user } = useUser();
   return React.useMemo(
     () => [
       columnHelper.accessor("title", {
@@ -43,10 +54,16 @@ export const usePollColumns = () => {
         cell: ({ row }) => {
           return (
             <Link
-              href={`/poll/${row.original.id}`}
-              className="gap absolute inset-0 flex items-center px-4 hover:underline"
+              href={
+                user.id === row.original.userId
+                  ? `/poll/${row.original.id}`
+                  : `/invite/${row.original.id}`
+              }
+              className="group absolute inset-0 flex items-center gap-x-2.5 px-4"
             >
-              <BarChart2Icon className="size-4 text-gray-500" />
+              <Icon>
+                <BarChart2Icon />
+              </Icon>
               <span className="min-w-0 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
                 {row.original.title}
               </span>
@@ -55,10 +72,18 @@ export const usePollColumns = () => {
         },
       }),
       columnHelper.accessor("user", {
-        header: t("host", { defaultValue: "Host" }),
+        header: () => (
+          <div className="w-full text-center">
+            {t("host", { defaultValue: "Host" })}
+          </div>
+        ),
         size: 75,
         cell: ({ getValue }) => {
-          return <UserAvatar size="sm" name={getValue()?.name} />;
+          return (
+            <div className="text-center">
+              <UserAvatar size="sm" name={getValue()?.name} />
+            </div>
+          );
         },
       }),
       columnHelper.accessor("createdAt", {
@@ -97,6 +122,7 @@ export const usePollColumns = () => {
           );
         },
       }),
+
       // columnHelper.accessor("participants", {
       //   header: t("participants", { defaultValue: "Participants" }),
       //   size: 200,

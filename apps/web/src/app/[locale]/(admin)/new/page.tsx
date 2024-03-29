@@ -18,7 +18,7 @@ import { CreatePoll } from "@/components/create-poll";
 export default async function Page({ params }: { params: { locale: string } }) {
   const { t } = await getTranslation(params.locale);
   return (
-    <PageContainer className="max-w-4xl">
+    <PageContainer>
       <PageHeader>
         <div className="gap-lg flex justify-between">
           <Flex>

@@ -1,6 +1,6 @@
 "use client";
-import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
+import { Button } from "@rallly/ui/button";
 import {
   Card,
   CardContent,
@@ -9,7 +9,8 @@ import {
   CardTitle,
 } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
-import { BarChart2Icon } from "lucide-react";
+import { ArrowLeftIcon, BarChart2Icon } from "lucide-react";
+import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import {
@@ -113,7 +114,6 @@ export function AdminPage() {
     <PageContainer>
       <PageContent>
         <div className="space-y-6">
-          <GuestPollAlert />
           <EventCard />
           <ParticipantsCard />
           <Discussion />

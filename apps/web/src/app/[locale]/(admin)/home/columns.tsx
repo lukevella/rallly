@@ -41,7 +41,7 @@ export const useInviteColumns = () => {
             <MailIcon />
           </Icon>
           <Link
-            href={`/invite/${row.original.pollId}`}
+            href={`/poll/${row.original.pollId}`}
             className="hover:text-primary gap flex items-center whitespace-nowrap text-sm font-medium hover:underline"
           >
             <span className="truncate">{renderValue()}</span>
