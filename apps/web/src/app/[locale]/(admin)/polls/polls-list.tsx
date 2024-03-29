@@ -1,13 +1,26 @@
 "use client";
-import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
 import { PaginationState } from "@tanstack/react-table";
-import { BarChart2Icon, ChevronsUpDownIcon, SquarePenIcon } from "lucide-react";
+import {
+  BarChart2Icon,
+  ChevronsUpDownIcon,
+  ListIcon,
+  SquarePenIcon,
+  VoteIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { list } from "postcss";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -50,29 +63,84 @@ function PollsEmptyState() {
   );
 }
 
+function useListFilter() {
+  const searchParams = useSearchParams();
+  return searchParams?.get("list") ?? "all";
+}
+
+function PollOwnerSelect({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all" className="">
+            <Flex align="center">
+              <Icon>
+                <ListIcon />
+              </Icon>
+              <Trans i18nKey="listFilterShowAll" defaults="Show All" />
+            </Flex>
+          </SelectItem>
+          <SelectItem value="mine">
+            <Flex align="center">
+              <Icon>
+                <BarChart2Icon />
+              </Icon>
+              <Trans
+                i18nKey="listFilterPollsICreated"
+                defaults="Polls I Created"
+              />
+            </Flex>
+          </SelectItem>
+          <SelectItem value="participated">
+            <Flex align="center">
+              <Icon>
+                <VoteIcon />
+              </Icon>
+              <Trans
+                i18nKey="listFilterPollsIParticipated"
+                defaults="Polls I Participated In"
+              />
+            </Flex>
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
 export function PollsList() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
-  const status = (searchParams?.get("status") ?? "all") as PollStatus | "all";
+  const { t } = useTranslation();
+  const router = useRouter();
+  const list = useListFilter();
   const pagination = React.useMemo<PaginationState>(
     () => ({
       pageIndex: (Number(searchParams?.get("page")) || 1) - 1,
-      pageSize: Number(searchParams?.get("pageSize")) || 15,
+      pageSize: Number(searchParams?.get("pageSize")) || 10,
     }),
     [searchParams],
   );
 
   const { data, isFetching } = trpc.polls.paginatedList.useQuery(
-    { pagination, status: status },
+    { list, pagination },
     {
       staleTime: Infinity,
       cacheTime: Infinity,
       keepPreviousData: true,
     },
   );
-
   const columns = usePollColumns();
 
   if (!data) {
@@ -112,6 +180,24 @@ export function PollsList() {
         </div>
       </div>
 
+      <PollOwnerSelect
+        value={list}
+        onChange={(newList) => {
+          const current = new URLSearchParams(
+            Array.from(searchParams?.entries() ?? []),
+          );
+          if (newList === "all") {
+            current.delete("list");
+          } else {
+            current.set("list", newList);
+          }
+          current.delete("page");
+          const search = current.toString();
+          const query = search ? `?${search}` : "";
+
+          router.replace(pathname + query);
+        }}
+      />
       <Card>
         {data.total ? (
           <Table
