@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@rallly/ui/card";
+import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { InboxIcon } from "lucide-react";
 
@@ -37,7 +37,7 @@ export function ResponseList() {
 
   if (data.total === 0) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex items-center justify-center">
         <EmptyState>
           <EmptyStateIcon>
             <InboxIcon />
@@ -60,6 +60,9 @@ export function ResponseList() {
 
   return (
     <Card>
+      <CardHeader>
+        <CardTitle>Recent Activity</CardTitle>
+      </CardHeader>
       <Table<Response>
         layout="auto"
         enableTableHeader={true}

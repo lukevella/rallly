@@ -19,18 +19,14 @@ export const ParticipantAvatarBar = ({
         .slice(0, hiddenCount === 1 ? max + 1 : max)
         .map((participant, index) => (
           <Tooltip key={index}>
-            <TooltipTrigger asChild>
-              <div
-                className={cn({
+            <TooltipTrigger>
+              <ColoredAvatar
+                className={cn("select-none ring-2 ring-white", {
                   "-mr-1":
                     index !== max - 1 || index !== participants.length - 1,
                 })}
-              >
-                <ColoredAvatar
-                  className="select-none ring-2 ring-white"
-                  name={participant.name}
-                />
-              </div>
+                name={participant.name}
+              />
             </TooltipTrigger>
             <TooltipContent>{participant.name}</TooltipContent>
           </Tooltip>
@@ -45,7 +41,7 @@ export const ParticipantAvatarBar = ({
                 "inline-flex h-5 min-w-[24px] items-center justify-center",
               )}
             >
-              <div>+{hiddenCount}</div>
+              +{hiddenCount}
             </div>
           </TooltipTrigger>
           <TooltipContent>

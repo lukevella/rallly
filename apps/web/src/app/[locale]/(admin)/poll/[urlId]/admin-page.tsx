@@ -24,6 +24,7 @@ import Discussion from "@/components/discussion";
 import { useParticipants } from "@/components/participants-provider";
 import UserAvatar from "@/components/poll/participant-avatar";
 import { PollStatusBadge } from "@/components/poll-status";
+import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { usePoll } from "@/contexts/poll";
 
 import { GuestPollAlert } from "./guest-poll-alert";
@@ -61,7 +62,7 @@ function ParticipantsCard() {
                 <div className="truncate text-sm font-medium">
                   {participant.name}
                 </div>
-                <div className="text-muted-foreground truncate text-sm">
+                <div className="text-muted-foreground truncate text-sm lowercase">
                   {participant.email}
                 </div>
               </div>
@@ -79,10 +80,11 @@ function EventCard() {
 
   return (
     <Card>
+      <RandomGradientBar seed={poll.id} />
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="text-lg">
           {poll.title}
-          <Icon>
+          <Icon size="lg">
             <BarChart2Icon />
           </Icon>
         </CardTitle>

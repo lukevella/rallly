@@ -10,7 +10,6 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import clsx from "clsx";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import React from "react";
 
@@ -45,13 +44,13 @@ export const Table = <TData extends Record<string, unknown>>(props: {
   return (
     <div>
       <div
-        className={clsx(
+        className={cn(
           props.className,
           "scrollbar-thin  max-w-full overflow-x-auto",
         )}
       >
         <table
-          className={clsx(
+          className={cn(
             "border-collapse",
             props.layout === "auto" ? "w-full table-auto" : "table-fixed",
           )}
@@ -88,7 +87,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
           ) : null}
           <tbody>
             {table.getRowModel().rows.map((row, i) => (
-              <tr className="relative" key={row.id}>
+              <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
                     style={{
@@ -99,8 +98,8 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                           : undefined,
                     }}
                     key={cell.id}
-                    className={clsx(
-                      "z-20 overflow-hidden border-gray-100 px-5 py-4 align-middle",
+                    className={cn(
+                      "relative overflow-hidden border-gray-100 px-5 py-4 align-middle",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
                       },

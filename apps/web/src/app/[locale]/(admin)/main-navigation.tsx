@@ -4,9 +4,9 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   BarChart2Icon,
+  HomeIcon,
   LifeBuoyIcon,
   LogInIcon,
-  ReplyIcon,
   Settings2Icon,
   SparklesIcon,
   SquarePenIcon,
@@ -31,17 +31,17 @@ export function MainSidebar() {
     <Sidebar>
       <SidebarSection>
         <SidebarMenu>
+          <SidebarMenuLink href="/home">
+            <SidebarMenuItemIcon>
+              <HomeIcon />
+            </SidebarMenuItemIcon>
+            <Trans i18nKey="home" defaults="Home" />
+          </SidebarMenuLink>
           <SidebarMenuLink href="/polls">
             <SidebarMenuItemIcon>
               <BarChart2Icon />
             </SidebarMenuItemIcon>
             <Trans i18nKey="polls" defaults="Polls" />
-          </SidebarMenuLink>
-          <SidebarMenuLink href="/inbox">
-            <SidebarMenuItemIcon>
-              <ReplyIcon />
-            </SidebarMenuItemIcon>
-            <Trans i18nKey="responses" defaults="Responses" />
           </SidebarMenuLink>
         </SidebarMenu>
       </SidebarSection>

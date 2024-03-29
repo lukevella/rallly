@@ -86,7 +86,7 @@ export function PollsList() {
 
   if (data.total === 0) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex items-center justify-center">
         <PollsEmptyState />
       </div>
     );
