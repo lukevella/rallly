@@ -1,4 +1,9 @@
-import { ArrowLeftIcon, CreditCardIcon, Settings2Icon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  CreditCardIcon,
+  Settings2Icon,
+  UserIcon,
+} from "lucide-react";
 import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -46,7 +51,7 @@ export default async function Layout({
             <SidebarMenu>
               <SidebarMenuLink href="/settings/profile">
                 <SidebarMenuItemIcon>
-                  <Settings2Icon />
+                  <UserIcon />
                 </SidebarMenuItemIcon>
                 <Trans t={t} i18nKey="profile" defaults="Profile" />
               </SidebarMenuLink>
