@@ -37,11 +37,9 @@ export const Poll = () => {
   return (
     <div className={cn("space-y-3 sm:space-y-6")}>
       <EventCard />
-      <Card fullWidthOnMobile={false}>
-        <VotingForm>
-          <PollComponent />
-        </VotingForm>
-      </Card>
+      <VotingForm>
+        <PollComponent />
+      </VotingForm>
       {poll.disableComments ? null : (
         <>
           <hr className="my-4" />

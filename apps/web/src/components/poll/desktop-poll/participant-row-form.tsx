@@ -37,7 +37,10 @@ const ParticipantRowForm = ({
 
   return (
     <tr className={cn(className)}>
-      <td className="sticky left-0 z-10 border-b border-gray-100 bg-gray-50 pl-4 pr-4">
+      <td
+        style={{ minWidth: 240, maxWidth: 240 }}
+        className="sticky left-0 z-10 bg-white px-4"
+      >
         <div className="flex items-center">
           {name ? (
             <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
@@ -48,10 +51,7 @@ const ParticipantRowForm = ({
       </td>
       {optionIds.map((optionId, i) => {
         return (
-          <td
-            key={optionId}
-            className="h-12 border-b border-gray-100 bg-gray-50"
-          >
+          <td key={optionId} className="h-12 border-b border-l">
             <Controller
               control={form.control}
               name={`votes.${i}`}

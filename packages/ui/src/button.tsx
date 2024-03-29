@@ -9,7 +9,8 @@ import { cn } from "./lib/utils";
 const buttonVariants = cva(
   cn(
     "inline-flex border font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap rounded-md border",
-    "focus:ring-offset-input-background focus:border-primary-400 focus:ring-2 focus:ring-indigo-100",
+    "focus:ring-offset-input-background focus-visible:ring-offset-1 focus-visible:ring-2 focus-visible:ring-primary",
+    "active:shadow-none",
   ),
   {
     variants: {

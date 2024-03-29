@@ -39,7 +39,7 @@ const TimelineRow = ({
         className="sticky left-0  z-30 bg-white pl-4 pr-4"
       ></th>
       {children}
-      <th className="w-full" />
+      <th className="-ml-4 w-full border-l" />
     </tr>
   );
 };
@@ -103,22 +103,21 @@ const PollHeader: React.FunctionComponent = () => {
               style={{
                 minWidth: 80,
                 width: 80,
-                maxWidth: 90,
                 height: dayRowHeight,
                 left: firstOfDay ? 240 : 0,
                 top: monthRowHeight,
               }}
               className={cn(
-                "sticky space-y-2 bg-gray-50 pt-4 align-top",
+                "sticky space-y-2 border-b border-b-gray-100 bg-gray-50 p-2.5 align-top",
                 firstOfDay ? "z-20 border-l" : "z-10",
               )}
             >
               {firstOfDay ? (
-                <div className="flex flex-col justify-center gap-1 font-semibold">
-                  <div className="text-muted-foreground text-xs font-normal uppercase">
+                <div className="flex items-center justify-center gap-1 font-semibold">
+                  <div className="text-xs">{option.day}</div>
+                  <div className="text-muted-foreground text-xs font-medium uppercase">
                     {option.dow}
                   </div>
-                  <div className="text-sm">{option.day}</div>
                 </div>
               ) : (
                 <Trail end={lastOfDay} />
@@ -138,7 +137,11 @@ const PollHeader: React.FunctionComponent = () => {
               <div className="grid justify-center gap-1">
                 {option.type === "timeSlot" ? (
                   <TimeRange start={option.startTime} end={option.endTime} />
-                ) : null}
+                ) : (
+                  <span className="text-muted-foreground text-xs font-normal">
+                    <Trans i18nKey="allDay" defaults="All-Day" />
+                  </span>
+                )}
               </div>
             </th>
           );

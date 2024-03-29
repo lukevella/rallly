@@ -13,7 +13,11 @@ async function createPollsForUser(userId: string) {
   const polls = await Promise.all(
     Array.from({ length: 20 }).map(async (_, i) => {
       // create some polls with no duration (all day) and some with a random duration.
-      const duration = i % 2 === 0 ? 15 * randInt(8) : 0;
+      const duration = i % 2 === 0 ? 60 * randInt(8, 1) : 0;
+      let cursor = dayjs().add(randInt(30), "day").second(0).minute(0);
+
+      const numberOfOptions = randInt(30, 2);
+
       const poll = await prisma.poll.create({
         include: {
           participants: true,
@@ -32,22 +36,19 @@ async function createPollsForUser(userId: string) {
           },
           timeZone: duration !== 0 ? "America/New_York" : undefined,
           options: {
-            create: faker.date
-              .betweens(
-                Date.now(),
-                Date.now() + 1000 * 60 * 60 * 24 * 30,
-                randInt(30, 1),
-              )
-              .map((date) => {
-                // rounded to nearest 15 minutes
-                date.setMinutes(Math.round(date.getMinutes() / 15) * 15);
-                date.setSeconds(0);
-                return {
-                  start: date,
-                  startTime: date,
-                  duration,
-                };
-              }),
+            create: Array.from({ length: numberOfOptions }).map(() => {
+              const startTime = cursor.toDate();
+              if (duration !== 0) {
+                cursor = cursor.add(randInt(72, 1), "hour");
+              } else {
+                cursor = cursor.add(randInt(7, 1), "day");
+              }
+              return {
+                startTime,
+                start: startTime,
+                duration,
+              };
+            }),
           },
           participants: {
             create: Array.from({ length: Math.round(Math.random() * 10) }).map(

@@ -73,7 +73,12 @@ export function MainContent({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-screen grow space-y-6 p-6", className)}>
+    <div
+      className={cn(
+        "min-h-screen grow space-y-6 overflow-hidden p-6",
+        className,
+      )}
+    >
       {children}
     </div>
   );

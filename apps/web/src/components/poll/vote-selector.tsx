@@ -1,4 +1,6 @@
 import { VoteType } from "@rallly/database";
+import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import clsx from "clsx";
 import * as React from "react";
 
@@ -29,22 +31,19 @@ export const VoteSelector = React.forwardRef<
   ref,
 ) {
   return (
-    <button
+    <Button
       data-testid="vote-selector"
       type="button"
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}
-      className={clsx(
-        "relative flex h-9 items-center justify-center overflow-hidden rounded-md border hover:bg-gray-50 focus:ring-1 focus:ring-gray-200 active:bg-gray-100",
-        className,
-      )}
+      className={cn("h-7 w-7 p-0", className)}
       onClick={() => {
         onChange?.(value ? getNext(value) : orderedVoteTypes[0]);
       }}
       ref={ref}
     >
       <VoteIcon type={value} />
-    </button>
+    </Button>
   );
 });
