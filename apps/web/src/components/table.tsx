@@ -6,8 +6,10 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   OnChangeFn,
   PaginationState,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
@@ -25,6 +27,8 @@ export const Table = <TData extends Record<string, unknown>>(props: {
   enableTableHeader?: boolean;
   layout?: "fixed" | "auto";
   onPaginationChange?: OnChangeFn<PaginationState>;
+  sortingState?: SortingState;
+  onSortingChange?: OnChangeFn<SortingState>;
   paginationState: PaginationState | undefined;
   className?: string;
 }) => {
@@ -34,7 +38,10 @@ export const Table = <TData extends Record<string, unknown>>(props: {
     pageCount: props.pageCount,
     state: {
       pagination: props.paginationState,
+      sorting: props.sortingState,
     },
+    onSortingChange: props.onSortingChange,
+    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     onPaginationChange: props.onPaginationChange,
     getCoreRowModel: getCoreRowModel(),
@@ -69,16 +76,14 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                             ? header.getSize()
                             : undefined,
                       }}
-                      className="border-b bg-gray-50 p-1"
+                      className="border-b bg-gray-50 px-5 py-2.5 text-left text-xs font-semibold"
                     >
-                      <div className="flex h-7 items-center whitespace-nowrap rounded-md px-4 text-left align-bottom text-xs font-semibold hover:bg-gray-200">
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </div>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </th>
                   ))}
                 </tr>

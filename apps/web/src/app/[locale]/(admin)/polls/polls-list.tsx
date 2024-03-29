@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { PaginationState } from "@tanstack/react-table";
+import { PaginationState, SortingState } from "@tanstack/react-table";
 import {
   BarChart2Icon,
   ChevronsUpDownIcon,
@@ -133,8 +133,17 @@ export function PollsList() {
     [searchParams],
   );
 
+  const sorting = React.useMemo<SortingState>(() => {
+    const id = searchParams?.get("sort");
+    const desc = searchParams?.get("desc");
+    if (!id) {
+      return [];
+    }
+    return [{ id, desc: desc === "desc" }];
+  }, [searchParams]);
+
   const { data, isFetching } = trpc.polls.paginatedList.useQuery(
-    { list, pagination },
+    { list, pagination, sorting },
     {
       staleTime: Infinity,
       cacheTime: Infinity,
@@ -189,6 +198,23 @@ export function PollsList() {
             enableTableHeader={true}
             data={data.rows as PollData[]}
             pageCount={Math.ceil(data.total / pagination.pageSize)}
+            sortingState={sorting}
+            onSortingChange={(updater) => {
+              const newSorting =
+                typeof updater === "function" ? updater(sorting) : updater;
+
+              const current = new URLSearchParams(searchParams ?? undefined);
+              const sortColumn = newSorting[0];
+              if (sortColumn === undefined) {
+                current.delete("sort");
+                current.delete("desc");
+              } else {
+                current.set("sort", sortColumn.id);
+                current.set("desc", sortColumn.desc ? "desc" : "asc");
+              }
+              // current.set("pageSize", String(newPagination.pageSize));
+              router.replace(`${pathname}?${current.toString()}`);
+            }}
             onPaginationChange={(updater) => {
               const newPagination =
                 typeof updater === "function" ? updater(pagination) : updater;

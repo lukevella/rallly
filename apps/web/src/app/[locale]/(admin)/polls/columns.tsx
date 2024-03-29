@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusBadge } from "@/components/poll-status";
+import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { UserAvatar } from "@/components/user";
 import { useUser } from "@/components/user-provider";
 import { useDayjs } from "@/utils/dayjs";
@@ -72,24 +73,25 @@ export const usePollColumns = () => {
         },
       }),
       columnHelper.accessor("user", {
-        header: () => (
-          <div className="w-full text-center">
-            {t("host", { defaultValue: "Host" })}
-          </div>
-        ),
+        header: () => t("host", { defaultValue: "Host" }),
         size: 75,
         cell: ({ getValue }) => {
           return (
-            <div className="text-center">
+            <div>
               <UserAvatar size="sm" name={getValue()?.name} />
             </div>
           );
         },
       }),
       columnHelper.accessor("createdAt", {
-        header: t("created", {
-          defaultValue: "Created",
-        }),
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t("created", {
+              defaultValue: "Created",
+            })}
+          />
+        ),
         cell: ({ row }) => {
           const { createdAt } = row.original;
           return (
@@ -136,6 +138,6 @@ export const usePollColumns = () => {
       //   },
       // }),
     ],
-    [adjustTimeZone, t],
+    [adjustTimeZone, t, user.id],
   );
 };
