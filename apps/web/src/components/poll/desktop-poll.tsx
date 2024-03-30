@@ -2,6 +2,7 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
@@ -9,18 +10,12 @@ import {
   ExpandIcon,
   PlusIcon,
   ShrinkIcon,
-  UsersIcon,
 } from "lucide-react";
 import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
 
-import {
-  EmptyState,
-  EmptyStateIcon,
-  EmptyStateTitle,
-} from "@/app/components/empty-state";
 import { TimesShownIn } from "@/components/clock";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
@@ -130,36 +125,12 @@ const DesktopPoll: React.FunctionComponent = () => {
           >
             <CardHeader className="flex items-center justify-between gap-4">
               <div>
-                {mode !== "view" ? (
-                  <p className="text-sm">
-                    <Trans
-                      t={t}
-                      i18nKey="saveInstruction"
-                      values={{
-                        action: mode === "new" ? t("continue") : t("save"),
-                      }}
-                      components={{ b: <strong /> }}
-                    />
-                  </p>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <CardTitle>
-                      {t("participants", { count: participants.length })}
-                    </CardTitle>
-                    <Badge>{participants.length}</Badge>
-                    {canAddNewParticipant ? (
-                      <Button
-                        className="ml-2"
-                        size="sm"
-                        data-testid="add-participant-button"
-                        icon={PlusIcon}
-                        onClick={() => {
-                          votingForm.newParticipant();
-                        }}
-                      />
-                    ) : null}
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <CardTitle>
+                    {t("participants", { count: participants.length })}
+                  </CardTitle>
+                  <Badge>{participants.length}</Badge>
+                </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-sm font-medium">
@@ -267,6 +238,11 @@ const DesktopPoll: React.FunctionComponent = () => {
                                 votingForm.watch("participantId") ===
                                   participant.id
                               }
+                              className={
+                                i === visibleParticipants.length - 1
+                                  ? "last-row"
+                                  : ""
+                              }
                               onChangeEditMode={(isEditing) => {
                                 if (isEditing) {
                                   votingForm.setEditingParticipantId(
@@ -282,6 +258,23 @@ const DesktopPoll: React.FunctionComponent = () => {
                 </table>
               </RemoveScroll>
             </div>
+            {mode === "view" && canAddNewParticipant ? (
+              <CardFooter>
+                <Button
+                  variant="primary"
+                  className="w-full"
+                  data-testid="add-participant-button"
+                  onClick={() => {
+                    votingForm.newParticipant();
+                  }}
+                >
+                  <Icon>
+                    <PlusIcon />
+                  </Icon>
+                  Join
+                </Button>
+              </CardFooter>
+            ) : null}
             {mode !== "view" ? (
               <CardFooter>
                 <div className="flex w-full items-center justify-between gap-3">

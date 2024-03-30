@@ -1,7 +1,6 @@
 import { Participant, VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import clsx from "clsx";
 import { MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
 
@@ -34,7 +33,7 @@ export const ParticipantRowView: React.FunctionComponent<{
     <tr
       data-testid="participant-row"
       data-participantid={participantId}
-      className={clsx(className)}
+      className={cn("group", className)}
     >
       <td
         style={{ minWidth: 240, maxWidth: 240 }}
@@ -50,7 +49,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           <td
             key={i}
             className={cn(
-              "h-12 border-b border-l",
+              "h-12 border-b border-l group-[.last-row]:border-b-0",
               !vote || vote === "no" ? "bg-gray-100" : "bg-white",
               {
                 "bg-gray-100": vote === "no",

@@ -22,7 +22,6 @@ import { useTranslation } from "@/app/i18n/client";
 import Discussion from "@/components/discussion";
 import { useParticipants } from "@/components/participants-provider";
 import DesktopPoll from "@/components/poll/desktop-poll";
-import UserAvatar from "@/components/poll/participant-avatar";
 import { VotingForm } from "@/components/poll/voting-form";
 import { PollStatusBadge } from "@/components/poll-status";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
@@ -82,9 +81,7 @@ function EventCard() {
           <dt className="text-muted-foreground text-sm lg:w-16 lg:shrink-0">
             What
           </dt>
-          <dd className="max-w-xl grow text-sm leading-relaxed">
-            {poll.description}
-          </dd>
+          <dd className="grow text-sm leading-relaxed">{poll.description}</dd>
         </CardContent>
         <CardContent className="flex flex-col gap-y-1 lg:flex-row">
           <dt className="text-muted-foreground text-sm lg:w-16">Where</dt>

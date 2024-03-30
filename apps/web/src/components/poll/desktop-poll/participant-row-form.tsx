@@ -36,7 +36,7 @@ const ParticipantRowForm = ({
   }, [onCancel]);
 
   return (
-    <tr className={cn(className)}>
+    <tr className={cn("group", className)}>
       <td
         style={{ minWidth: 240, maxWidth: 240 }}
         className="sticky left-0 z-10 bg-white px-4"
@@ -51,7 +51,10 @@ const ParticipantRowForm = ({
       </td>
       {optionIds.map((optionId, i) => {
         return (
-          <td key={optionId} className="h-12 border-b border-l">
+          <td
+            key={optionId}
+            className="relative h-12 border-b border-l bg-white group-[.last-row]:border-b-0"
+          >
             <Controller
               control={form.control}
               name={`votes.${i}`}

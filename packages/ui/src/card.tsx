@@ -24,7 +24,7 @@ const CardHeader = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "grid rounded-t-md border-b bg-gray-50 p-3 sm:p-4",
+      "grid rounded-t-md border-b bg-gray-50 p-3 sm:px-4 sm:py-3",
       className,
     )}
     {...props}
@@ -74,7 +74,7 @@ const CardFooter = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex items-center gap-x-2 rounded-b-md border-t bg-gray-50 p-3 sm:p-4",
+      "flex items-center gap-x-2 rounded-b-md border-t bg-gray-50 p-3 sm:px-4 sm:py-3",
       className,
     )}
     {...props}
