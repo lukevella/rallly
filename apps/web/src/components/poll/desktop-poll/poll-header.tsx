@@ -133,9 +133,9 @@ const PollHeader: React.FunctionComponent = () => {
             <th
               key={option.optionId}
               style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
-              className="sticky z-20 border-b border-l bg-gray-50 pb-2 align-top"
+              className="sticky z-20 border-b border-l bg-gray-50 pb-2.5 align-top"
             >
-              <div className="grid justify-center gap-1">
+              <div className="flex flex-col items-center gap-2.5">
                 {option.type === "timeSlot" ? (
                   <TimeRange start={option.startTime} end={option.endTime} />
                 ) : null}

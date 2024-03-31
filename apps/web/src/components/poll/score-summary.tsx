@@ -45,40 +45,41 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
     const direction = prevScore !== undefined ? score - prevScore : 0;
 
     return (
-      <div
+      <span
+        className="inline-flex h-4 gap-px text-xs font-normal"
         data-testid="popularity-score"
-        className={cn(
-          "relative inline-flex select-none items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-normal tabular-nums",
-          highlight
-            ? "border-green-500 text-green-500"
-            : "border-transparent text-gray-600",
-        )}
-        style={{
-          opacity: Math.max(score / highScore, 0.2),
-        }}
       >
-        <User2Icon className="size-3" />
-        <AnimatePresence initial={false} mode="wait">
-          <m.span
-            transition={{
-              duration: 0.1,
-            }}
-            initial={{
-              y: 10 * direction,
-            }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{
-              y: 10 * direction,
-            }}
-            key={score}
-            className="relative"
-          >
-            {score}
-          </m.span>
-        </AnimatePresence>
+        <span
+          className={cn(
+            "relative inline-flex items-center gap-x-1 rounded-l px-1 text-xs font-normal tabular-nums",
+            highlight ? "bg-green-500  text-green-50" : "",
+            highlight && ifNeedBeScore > 0 ? "rounded-r-none" : "rounded-r",
+          )}
+          style={{
+            opacity: Math.max(score / highScore, 0.2),
+          }}
+        >
+          <AnimatePresence initial={false} mode="wait">
+            <m.span
+              initial={{
+                y: 10 * direction,
+              }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{
+                y: 10 * direction,
+              }}
+              key={score}
+              className="relative"
+            >
+              {yesScore}
+            </m.span>
+          </AnimatePresence>
+        </span>
         {highlight && ifNeedBeScore > 0 ? (
-          <span className="absolute -right-1 -top-0.5 size-2 rounded-full bg-amber-400 ring-2 ring-white" />
+          <span className="rounded-r bg-amber-400 px-1 text-amber-50">
+            {ifNeedBeScore}
+          </span>
         ) : null}
-      </div>
+      </span>
     );
   });
