@@ -123,7 +123,7 @@ const DesktopPoll: React.FunctionComponent = () => {
             )}
           >
             <CardHeader className="flex items-center justify-between gap-4">
-              <div>
+              <div className="flex h-9 items-center">
                 {mode !== "view" ? (
                   <p className="text-sm">
                     <Trans
