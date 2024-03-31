@@ -1,4 +1,3 @@
-"use client";
 import { Badge } from "@rallly/ui/badge";
 import { Trans } from "next-i18next";
 

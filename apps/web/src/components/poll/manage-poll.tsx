@@ -21,7 +21,7 @@ import {
 import Link from "next/link";
 import * as React from "react";
 
-import { ProBadge } from "@/components/pro-badge";
+import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
@@ -78,7 +78,7 @@ const ManagePoll: React.FunctionComponent<{
             <Link href={`/poll/${poll.id}/duplicate`}>
               <DropdownMenuItemIconLabel icon={CopyIcon}>
                 <Trans i18nKey="duplicate" defaults="Duplicate" />
-                <ProBadge />
+                <ProFeatureBadge />
               </DropdownMenuItemIconLabel>
             </Link>
           </DropdownMenuItem>
@@ -86,7 +86,7 @@ const ManagePoll: React.FunctionComponent<{
             <Link href={`/poll/${poll.id}/finalize`}>
               <DropdownMenuItemIconLabel icon={CalendarCheck2Icon}>
                 <Trans i18nKey="finishPoll" defaults="Finalize" />
-                <ProBadge />
+                <ProFeatureBadge />
               </DropdownMenuItemIconLabel>
             </Link>
           </DropdownMenuItem>
