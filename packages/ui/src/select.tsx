@@ -5,7 +5,6 @@ import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
-import { buttonVariants } from "./button";
 import { Icon } from "./icon";
 
 const Select = SelectPrimitive.Root;
@@ -17,7 +16,7 @@ const SelectValue = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value>
 >(({ ...props }, ref) => {
   return (
-    <div className="flex items-center gap-x-2.5">
+    <div className="flex w-full items-center justify-between gap-x-2.5">
       <SelectPrimitive.Value {...props} ref={ref} />
       <SelectPrimitive.Icon asChild>
         <ChevronsUpDownIcon className="size-4 opacity-50" />
@@ -32,7 +31,15 @@ const SelectTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
-    className={cn(buttonVariants(), className)}
+    className={cn(
+      "inline-flex h-9 select-none items-center whitespace-nowrap rounded-md border bg-gray-50 px-2.5 text-sm font-medium shadow-sm",
+      "hover:bg-gray-100",
+      "data-[state=open]:bg-gray-100 data-[state=open]:shadow-none",
+      "disabled:pointer-events-none disabled:opacity-50",
+      "focus:ring-offset-input-background focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1",
+      "active:bg-gray-200 active:shadow-none",
+      className,
+    )}
     {...props}
   >
     {children}

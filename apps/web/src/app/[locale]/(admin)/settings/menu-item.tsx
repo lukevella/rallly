@@ -83,7 +83,7 @@ export function SettingsMenu() {
           }
         }}
       >
-        <SelectTrigger className="lg:hidden">
+        <SelectTrigger className="w-full lg:hidden">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
