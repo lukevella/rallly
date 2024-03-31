@@ -1,6 +1,6 @@
+"use client";
 import { Participant, VoteType } from "@rallly/database";
-import clsx from "clsx";
-import { AnimatePresence, m } from "framer-motion";
+import { cn } from "@rallly/ui";
 import { ChevronDownIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -30,46 +30,7 @@ const CollapsibleContainer: React.FunctionComponent<{
   children?: React.ReactNode;
   className?: string;
 }> = ({ className, children, expanded }) => {
-  return (
-    <AnimatePresence initial={false}>
-      {expanded ? (
-        <m.div
-          variants={{
-            collapsed: {
-              width: 0,
-              opacity: 0,
-            },
-            expanded: {
-              opacity: 1,
-              width: "auto",
-            },
-          }}
-          initial="collapsed"
-          animate="expanded"
-          exit="collapsed"
-          className={className}
-        >
-          {children}
-        </m.div>
-      ) : null}
-    </AnimatePresence>
-  );
-};
-
-const PopInOut: React.FunctionComponent<{
-  children?: React.ReactNode;
-  className?: string;
-}> = ({ children, className }) => {
-  return (
-    <m.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      exit={{ scale: 0 }}
-      className={clsx(className)}
-    >
-      {children}
-    </m.div>
-  );
+  return expanded ? <div className={className}>{children}</div> : null;
 };
 
 const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
@@ -83,15 +44,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   const noVotes =
     participantsWhoVotedYes.length + participantsWhoVotedIfNeedBe.length === 0;
   return (
-    <m.div
-      transition={{
-        duration: 0.1,
-      }}
-      initial={{ height: 0, opacity: 0, y: -10 }}
-      animate={{ height: "auto", opacity: 1, y: 0 }}
-      exit={{ height: 0, opacity: 0, y: -10 }}
-      className="text-sm"
-    >
+    <div className="text-sm">
       <div>
         {noVotes ? (
           <div className="rounded-lg bg-gray-50 p-2 text-center text-gray-500">
@@ -145,7 +98,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
           </div>
         )}
       </div>
-    </m.div>
+    </div>
   );
 };
 
@@ -160,7 +113,7 @@ const SummarizedParticipantList: React.FunctionComponent<{
           return (
             <UserAvatar
               key={i}
-              className="ring-1 ring-white"
+              className="ring-2 ring-white"
               name={participant.name}
             />
           );
@@ -190,7 +143,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 
   return (
     <div
-      className={clsx("space-y-4 overflow-hidden px-4 py-3", {
+      className={cn("space-y-4 px-4 py-3", {
         "bg-gray-500/5": editable && active,
       })}
       onTouchStart={() => setActive(editable)}
@@ -202,34 +155,31 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
     >
       <div className="flex select-none items-center transition duration-75">
         <div className="mr-3 shrink-0 grow">{children}</div>
-        <AnimatePresence initial={false}>
-          {editable ? null : (
-            <m.button
-              exit={{ opacity: 0, x: -10 }}
-              type="button"
-              onTouchStart={(e) => e.stopPropagation()}
-              className="flex min-w-0 justify-end gap-1 overflow-hidden p-1 active:bg-gray-500/10"
-              onClick={(e) => {
-                e.stopPropagation();
-                setExpanded((value) => !value);
-              }}
-            >
-              <IfParticipantsVisible>
-                {participants.length > 0 ? (
-                  <SummarizedParticipantList participants={participants} />
-                ) : null}
-                <ChevronDownIcon
-                  className={clsx(
-                    "h-5 shrink-0 text-gray-500 transition-transform",
-                    {
-                      "-rotate-180": expanded,
-                    },
-                  )}
-                />
-              </IfParticipantsVisible>
-            </m.button>
-          )}
-        </AnimatePresence>
+        {editable ? null : (
+          <button
+            type="button"
+            onTouchStart={(e) => e.stopPropagation()}
+            className="flex min-w-0 justify-end gap-1 overflow-hidden p-1 active:bg-gray-500/10"
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpanded((value) => !value);
+            }}
+          >
+            <IfParticipantsVisible>
+              {participants.length > 0 ? (
+                <SummarizedParticipantList participants={participants} />
+              ) : null}
+              <ChevronDownIcon
+                className={cn(
+                  "h-5 shrink-0 text-gray-500 transition-transform",
+                  {
+                    "-rotate-180": expanded,
+                  },
+                )}
+              />
+            </IfParticipantsVisible>
+          </button>
+        )}
         <div className="mx-3">
           <ConnectedScoreSummary optionId={optionId} />
         </div>
@@ -238,31 +188,26 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           className="relative flex justify-center"
         >
           {editable ? (
-            <div className="flex h-full items-center justify-center">
+            <div className="relative flex h-full w-9 items-center justify-center">
               <VoteSelector
-                className="w-9"
                 ref={selectorRef}
                 value={vote}
                 onChange={onChange}
               />
             </div>
           ) : (
-            <AnimatePresence initial={false} mode="wait">
-              <PopInOut
-                key={vote}
-                className="flex h-full w-9 items-center justify-center"
-              >
-                <VoteIcon type={vote} />
-              </PopInOut>
-            </AnimatePresence>
+            <div
+              key={vote}
+              className="flex h-full w-9 items-center justify-center"
+            >
+              <VoteIcon type={vote} />
+            </div>
           )}
         </CollapsibleContainer>
       </div>
-      <AnimatePresence initial={false}>
-        {expanded && !editable ? (
-          <PollOptionVoteSummary optionId={optionId} />
-        ) : null}
-      </AnimatePresence>
+      {expanded && !editable ? (
+        <PollOptionVoteSummary optionId={optionId} />
+      ) : null}
     </div>
   );
 };
