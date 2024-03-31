@@ -1,7 +1,14 @@
-import { Listbox } from "@headlessui/react";
 import { Button } from "@rallly/ui/button";
+import { Card } from "@rallly/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
 import { AnimatePresence, m } from "framer-motion";
-import { ChevronDownIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
+import { MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
@@ -12,7 +19,6 @@ import { useVotingForm } from "@/components/poll/voting-form";
 import { useOptions, usePoll } from "@/components/poll-context";
 import { usePermissions } from "@/contexts/permissions";
 
-import { styleMenuItem } from "../menu-styles";
 import {
   useParticipants,
   useVisibleParticipants,
@@ -38,7 +44,7 @@ const MobilePoll: React.FunctionComponent = () => {
   const votingForm = useVotingForm();
   const { formState } = votingForm;
 
-  const selectedParticipantId = votingForm.watch("participantId");
+  const selectedParticipantId = votingForm.watch("participantId") ?? "";
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
@@ -52,68 +58,37 @@ const MobilePoll: React.FunctionComponent = () => {
   const isEditing = votingForm.watch("mode") !== "view";
 
   return (
-    <>
+    <Card>
       <div className="flex flex-col space-y-2 border-b bg-gray-50 p-2">
         <div className="flex space-x-2">
           {selectedParticipantId || !isEditing ? (
-            <Listbox
+            <Select
               value={selectedParticipantId}
-              onChange={(participantId) => {
+              onValueChange={(participantId) => {
                 votingForm.setValue("participantId", participantId);
               }}
               disabled={isEditing}
             >
-              <div className="menu min-w-0 grow">
-                <Listbox.Button
-                  as={Button}
-                  className="w-full shadow-none"
-                  data-testid="participant-selector"
-                >
-                  <div className="min-w-0 grow text-left">
-                    {selectedParticipant ? (
-                      <div className="flex items-center space-x-2">
-                        <UserAvatar
-                          name={selectedParticipant.name}
-                          showName={true}
-                          isYou={session.ownsObject(selectedParticipant)}
-                        />
-                      </div>
-                    ) : (
-                      t("participantCount", { count: participants.length })
-                    )}
-                  </div>
-                  <ChevronDownIcon className="h-5 shrink-0" />
-                </Listbox.Button>
-                <Listbox.Options
-                  as={m.div}
-                  transition={{
-                    duration: 0.1,
-                  }}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="menu-items max-h-72 w-full overflow-auto"
-                >
-                  <Listbox.Option value={undefined} className={styleMenuItem}>
-                    {t("participantCount", { count: participants.length })}
-                  </Listbox.Option>
-                  {visibleParticipants.map((participant) => (
-                    <Listbox.Option
-                      key={participant.id}
-                      value={participant.id}
-                      className={styleMenuItem}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <UserAvatar
-                          name={participant.name}
-                          showName={true}
-                          isYou={session.ownsObject(participant)}
-                        />
-                      </div>
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </div>
-            </Listbox>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">
+                  {t("participantCount", { count: participants.length })}
+                </SelectItem>
+                {visibleParticipants.map((participant) => (
+                  <SelectItem key={participant.id} value={participant.id}>
+                    <div className="flex items-center gap-x-2.5">
+                      <UserAvatar
+                        name={participant.name}
+                        showName={true}
+                        isYou={session.ownsObject(participant)}
+                      />
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           ) : (
             <div className="flex grow items-center px-1">
               <YouAvatar />
@@ -198,7 +173,7 @@ const MobilePoll: React.FunctionComponent = () => {
           </m.div>
         ) : null}
       </AnimatePresence>
-    </>
+    </Card>
   );
 };
 
