@@ -1,13 +1,6 @@
 "use client";
 import { Badge } from "@rallly/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
-import { Icon } from "@rallly/ui/icon";
+import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { BarChart2Icon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -23,9 +16,7 @@ import { EventCard } from "@/components/event-card";
 import { useParticipants } from "@/components/participants-provider";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import { VotingForm } from "@/components/poll/voting-form";
-import { PollStatusBadge } from "@/components/poll-status";
-import { RandomGradientBar } from "@/components/random-gradient-bar";
-import { usePoll } from "@/contexts/poll";
+import { PollViz } from "@/components/poll-viz";
 
 function ParticipantsCard() {
   const { participants } = useParticipants();
@@ -97,7 +88,7 @@ export function AdminPage() {
     <div className="space-y-6">
       <EventCard />
       <VotingForm>
-        <DesktopPoll />
+        <PollViz />
       </VotingForm>
       <Discussion />
     </div>
