@@ -53,7 +53,7 @@ const ParticipantRowForm = ({
         return (
           <td
             key={optionId}
-            className="relative h-12 border-b border-l bg-white group-[.last-row]:border-b-0"
+            className="relative h-12 border-b border-l bg-gray-50 group-[.last-row]:border-b-0"
           >
             <Controller
               control={form.control}

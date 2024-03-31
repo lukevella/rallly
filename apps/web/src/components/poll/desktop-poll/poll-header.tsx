@@ -46,7 +46,7 @@ const TimelineRow = ({
 };
 
 const monthRowHeight = 48;
-const dayRowHeight = 36;
+const dayRowHeight = 64;
 
 const scoreRowTop = monthRowHeight + dayRowHeight;
 
@@ -109,7 +109,7 @@ const PollHeader: React.FunctionComponent = () => {
                 top: monthRowHeight,
               }}
               className={cn(
-                "sticky space-y-2 bg-gray-50 pt-2.5 align-top",
+                "sticky space-y-2 bg-gray-50",
                 firstOfDay ? "z-20 border-l" : "z-10",
               )}
             >
@@ -133,7 +133,7 @@ const PollHeader: React.FunctionComponent = () => {
             <th
               key={option.optionId}
               style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
-              className="z-20 border-b border-l bg-gray-50 pb-2 pt-2 align-top"
+              className="sticky z-20 border-b border-l bg-gray-50 pb-2 align-top"
             >
               <div className="grid justify-center gap-1">
                 {option.type === "timeSlot" ? (
