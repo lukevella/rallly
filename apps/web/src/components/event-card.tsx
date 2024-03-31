@@ -1,16 +1,16 @@
+import { Card, CardContent, CardHeader } from "@rallly/ui/card";
 import dayjs from "dayjs";
 import { MapPinIcon, MousePointerClickIcon, TextIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 
-import { Card } from "@/components/card";
 import { DateIcon } from "@/components/date-icon";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
 import { PollStatusBadge } from "@/components/poll-status";
+import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Trans } from "@/components/trans";
 import { IfParticipantsVisible } from "@/components/visibility";
 import { usePoll } from "@/contexts/poll";
-import { generateGradient } from "@/utils/color-hash";
 import { useDayjs } from "@/utils/dayjs";
 import { preventWidows } from "@/utils/prevent-widows";
 
@@ -39,12 +39,9 @@ export const EventCard = () => {
   }
 
   return (
-    <Card className="overflow-visible" fullWidthOnMobile={false}>
-      <div
-        className="-mx-px -mt-px h-2 rounded-t-md"
-        style={{ background: generateGradient(poll.id) }}
-      />
-      <div className="bg-pattern grid gap-4 p-4 sm:flex sm:justify-between sm:px-6">
+    <Card>
+      <RandomGradientBar />
+      <CardHeader className="bg-pattern grid gap-4 sm:flex sm:justify-between">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4 sm:gap-6">
             {poll.event ? (
@@ -101,8 +98,8 @@ export const EventCard = () => {
         <div>
           <PollStatusBadge status={poll.status} />
         </div>
-      </div>
-      <div className="space-y-4 p-4 sm:px-6">
+      </CardHeader>
+      <CardContent className="space-y-4">
         {poll.description ? (
           <div className="flex gap-4">
             <TextIcon className="text-muted-foreground size-4 shrink-0 translate-y-1" />
@@ -136,7 +133,7 @@ export const EventCard = () => {
             </div>
           </div>
         </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };
