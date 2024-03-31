@@ -17,7 +17,6 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/app/components/empty-state";
-import { PageContainer, PageContent } from "@/app/components/page-layout";
 import { useTranslation } from "@/app/i18n/client";
 import Discussion from "@/components/discussion";
 import { useParticipants } from "@/components/participants-provider";
@@ -94,16 +93,12 @@ function EventCard() {
 
 export function AdminPage() {
   return (
-    <PageContainer>
-      <PageContent>
-        <div className="space-y-6">
-          <EventCard />
-          <VotingForm>
-            <DesktopPoll />
-          </VotingForm>
-          <Discussion />
-        </div>
-      </PageContent>
-    </PageContainer>
+    <div className="space-y-6">
+      <EventCard />
+      <VotingForm>
+        <DesktopPoll />
+      </VotingForm>
+      <Discussion />
+    </div>
   );
 }
