@@ -57,7 +57,7 @@ export const InviteDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
-        <Button icon={Share2Icon}>
+        <Button variant="primary" icon={Share2Icon}>
           <Trans i18nKey="share" defaults="Share" />
         </Button>
       </DialogTrigger>
