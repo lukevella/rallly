@@ -146,8 +146,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       className={cn("space-y-4 px-4 py-3", {
         "bg-gray-500/5": editable && active,
       })}
-      onTouchStart={() => setActive(editable)}
-      onTouchEnd={() => setActive(false)}
+      onPointerDown={() => setActive(editable)}
+      onPointerUp={() => setActive(false)}
+      onPointerOut={() => setActive(false)}
       data-testid="poll-option"
       onClick={() => {
         selectorRef.current?.click();
