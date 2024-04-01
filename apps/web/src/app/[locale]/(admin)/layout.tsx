@@ -1,32 +1,9 @@
 import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
-import { MenuIcon } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 
+import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
-import { CurrentUserAvatar } from "@/components/user";
-
-function MobileNavigation() {
-  return (
-    <div className="flex h-12 items-center justify-between border-b bg-gray-100 px-4 lg:hidden">
-      <Button asChild variant="ghost">
-        <Link href="/menu">
-          <MenuIcon className="text-muted-foreground size-4" />
-        </Link>
-      </Button>
-      <div className="flex justify-end gap-x-2.5">
-        <Link
-          href="/settings/profile"
-          className="inline-flex h-9 w-7 items-center"
-        >
-          <CurrentUserAvatar size="sm" />
-        </Link>
-      </div>
-    </div>
-  );
-}
 
 export default async function Layout({
   children,
