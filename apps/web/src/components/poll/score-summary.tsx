@@ -1,5 +1,6 @@
 import { cn } from "@rallly/ui";
 import { AnimatePresence, m } from "framer-motion";
+import { UserIcon } from "lucide-react";
 import * as React from "react";
 import { usePrevious } from "react-use";
 
@@ -81,6 +82,7 @@ export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
             opacity: Math.max(score / highScore, 0.2),
           }}
         >
+          <UserIcon className="size-3 opacity-75" />
           <AnimatedNumber score={yesScore} />
         </span>
         {highlight && ifNeedBeScore > 0 ? (
