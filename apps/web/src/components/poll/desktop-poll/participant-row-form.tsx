@@ -72,7 +72,7 @@ const ParticipantRowForm = ({
           </td>
         );
       })}
-      <td className="border-l" />
+      <td className="border-l bg-gray-100" />
     </tr>
   );
 };

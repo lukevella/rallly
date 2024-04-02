@@ -4,7 +4,6 @@ import * as React from "react";
 
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useOptions } from "@/components/poll-context";
-import { Trans } from "@/components/trans";
 
 const TimeRange: React.FunctionComponent<{
   start: string;
@@ -12,20 +11,10 @@ const TimeRange: React.FunctionComponent<{
   className?: string;
 }> = ({ start, end, className }) => {
   return (
-    <Tooltip>
-      <TooltipTrigger
-        className={cn("text-muted-foreground text-xs font-normal", className)}
-      >
-        {start}
-      </TooltipTrigger>
-      <TooltipContent className="font-normal">
-        <Trans
-          i18nKey="tillTime"
-          defaults="till {{time}}"
-          values={{ time: end }}
-        />
-      </TooltipContent>
-    </Tooltip>
+    <div className="text-muted-foreground text-xs font-normal">
+      <div>{start}</div>
+      <div className="mt-0.5 opacity-50">{end}</div>
+    </div>
   );
 };
 
@@ -40,7 +29,7 @@ const TimelineRow = ({
         className="sticky left-0  z-30 bg-white pl-4 pr-4"
       ></th>
       {children}
-      <th className="-ml-4 w-full border-l" />
+      <th className="-ml-4 w-full min-w-4 border-l bg-gray-100" />
     </tr>
   );
 };
@@ -50,10 +39,6 @@ const dayRowHeight = 64;
 
 const scoreRowTop = monthRowHeight + dayRowHeight;
 
-const Trail = ({ end }: { end?: boolean }) => {
-  return null;
-};
-
 const PollHeader: React.FunctionComponent = () => {
   const { options } = useOptions();
   return (
@@ -62,7 +47,6 @@ const PollHeader: React.FunctionComponent = () => {
         {options.map((option, i) => {
           const firstOfMonth =
             i === 0 || options[i - 1]?.month !== option.month;
-          const lastOfMonth = options[i + 1]?.month !== option.month;
 
           return (
             <th
@@ -74,7 +58,6 @@ const PollHeader: React.FunctionComponent = () => {
               )}
             >
               <div className="flex">
-                {firstOfMonth ? null : <Trail end={lastOfMonth} />}
                 <div
                   className={cn(
                     "inline-flex h-5 gap-1 px-2 py-0.5 text-xs font-medium uppercase",
@@ -95,9 +78,6 @@ const PollHeader: React.FunctionComponent = () => {
             i === 0 ||
             options[i - 1]?.day !== option.day ||
             options[i - 1]?.month !== option.month;
-          const lastOfDay =
-            options[i + 1]?.day !== option.day ||
-            options[i + 1]?.month !== option.month;
           return (
             <th
               key={option.optionId}
@@ -120,9 +100,7 @@ const PollHeader: React.FunctionComponent = () => {
                   </div>
                   <div className="text-sm">{option.day}</div>
                 </div>
-              ) : (
-                <Trail end={lastOfDay} />
-              )}
+              ) : null}
             </th>
           );
         })}

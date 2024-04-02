@@ -25,14 +25,6 @@ export interface PollOptionProps {
   optionId: string;
 }
 
-const CollapsibleContainer: React.FunctionComponent<{
-  expanded?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-}> = ({ className, children, expanded }) => {
-  return expanded ? <div className={className}>{children}</div> : null;
-};
-
 const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   optionId,
 }) => {
@@ -154,8 +146,28 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         selectorRef.current?.click();
       }}
     >
-      <div className="flex select-none items-center transition duration-75">
-        <div className="mr-3 shrink-0 grow">{children}</div>
+      <div className="flex select-none items-center gap-x-4 transition duration-75">
+        {showVotes ? (
+          <div className="relative flex justify-center">
+            {editable ? (
+              <div className="relative flex h-full w-9 items-center justify-center">
+                <VoteSelector
+                  ref={selectorRef}
+                  value={vote}
+                  onChange={onChange}
+                />
+              </div>
+            ) : (
+              <div
+                key={vote}
+                className="flex h-full w-9 items-center justify-center"
+              >
+                <VoteIcon type={vote} />
+              </div>
+            )}
+          </div>
+        ) : null}
+        <div className="shrink-0 grow">{children}</div>
         {editable ? null : (
           <button
             type="button"
@@ -181,30 +193,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             </IfParticipantsVisible>
           </button>
         )}
-        <div className="mx-3">
+        <div>
           <ConnectedScoreSummary optionId={optionId} />
         </div>
-        <CollapsibleContainer
-          expanded={showVotes}
-          className="relative flex justify-center"
-        >
-          {editable ? (
-            <div className="relative flex h-full w-9 items-center justify-center">
-              <VoteSelector
-                ref={selectorRef}
-                value={vote}
-                onChange={onChange}
-              />
-            </div>
-          ) : (
-            <div
-              key={vote}
-              className="flex h-full w-9 items-center justify-center"
-            >
-              <VoteIcon type={vote} />
-            </div>
-          )}
-        </CollapsibleContainer>
       </div>
       {expanded && !editable ? (
         <PollOptionVoteSummary optionId={optionId} />
