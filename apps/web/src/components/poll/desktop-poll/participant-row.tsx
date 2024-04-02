@@ -74,7 +74,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           </td>
         );
       })}
-      <td className="border-l bg-gray-100"></td>
+      <td className="bg-diagonal-lines border-l"></td>
     </tr>
   );
 };
