@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import {
   CalendarCheck2Icon,
   ChevronDownIcon,
@@ -41,7 +42,10 @@ const ManagePoll: React.FunctionComponent<{
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
-          <Button icon={SettingsIcon} disabled={disabled}>
+          <Button disabled={disabled}>
+            <Icon>
+              <SettingsIcon />
+            </Icon>
             <Trans i18nKey="manage" />
             <ChevronDownIcon className="size-4" />
           </Button>
@@ -97,9 +101,8 @@ const ManagePoll: React.FunctionComponent<{
               setShowDeletePollDialog(true);
             }}
           >
-            <DropdownMenuItemIconLabel icon={TrashIcon}>
-              <Trans i18nKey="deletePoll" />
-            </DropdownMenuItemIconLabel>
+            <TrashIcon className="size-4 opacity-75" />
+            <Trans i18nKey="deletePoll" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

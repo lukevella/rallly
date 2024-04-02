@@ -16,7 +16,7 @@ import { usePoll } from "../poll-context";
 const NotificationsToggle: React.FunctionComponent = () => {
   const { poll } = usePoll();
 
-  const { data: watchers, refetch } = trpc.polls.getWatchers.useQuery(
+  const { data: watchers } = trpc.polls.getWatchers.useQuery(
     {
       pollId: poll.id,
     },
@@ -31,6 +31,8 @@ const NotificationsToggle: React.FunctionComponent = () => {
 
   const posthog = usePostHog();
 
+  const queryClient = trpc.useUtils();
+
   const watch = trpc.polls.watch.useMutation({
     onSuccess: () => {
       // TODO (Luke Vella) [2023-04-08]: We should have a separate query for getting watchers
@@ -38,7 +40,16 @@ const NotificationsToggle: React.FunctionComponent = () => {
         pollId: poll.id,
         source: "notifications-toggle",
       });
-      refetch();
+      queryClient.polls.getWatchers.setData(
+        { pollId: poll.id },
+        (oldWatchers) => {
+          if (!oldWatchers) {
+            return;
+          }
+          return [...oldWatchers, { userId: user.id }];
+        },
+      );
+      queryClient.polls.invalidate();
     },
   });
 
@@ -48,7 +59,16 @@ const NotificationsToggle: React.FunctionComponent = () => {
         pollId: poll.id,
         source: "notifications-toggle",
       });
-      refetch();
+      queryClient.polls.getWatchers.setData(
+        { pollId: poll.id },
+        (oldWatchers) => {
+          if (!oldWatchers) {
+            return;
+          }
+          return oldWatchers.filter(({ userId }) => userId !== user.id);
+        },
+      );
+      queryClient.polls.invalidate();
     },
   });
 
@@ -62,7 +82,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          loading={watch.isLoading || unwatch.isLoading}
           icon={isWatching ? BellRingIcon : BellOffIcon}
           data-testid="notifications-toggle"
           disabled={user.isGuest}

@@ -41,7 +41,7 @@ export const EventCard = () => {
   return (
     <Card>
       <RandomGradientBar />
-      <CardHeader className="bg-pattern grid gap-4 sm:flex sm:justify-between">
+      <CardHeader className="grid gap-4 sm:flex sm:justify-between">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4 sm:gap-6">
             {poll.event ? (

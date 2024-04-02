@@ -15,7 +15,7 @@ const LabelWithIcon = ({
   className?: string;
 }) => {
   return (
-    <span className={cn("inline-flex items-center gap-1.5", className)}>
+    <span className={cn("inline-flex items-center gap-1.5 text-sm", className)}>
       <Icon className="-ml-0.5 size-4" />
       <span className="font-medium">{children}</span>
     </span>
