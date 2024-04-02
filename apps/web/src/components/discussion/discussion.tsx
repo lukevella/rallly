@@ -155,6 +155,7 @@ const Discussion: React.FunctionComponent = () => {
             <div>
               <Textarea
                 id="comment"
+                className="w-full"
                 autoFocus={true}
                 placeholder={t("commentPlaceholder")}
                 {...register("content", { validate: requiredString })}
