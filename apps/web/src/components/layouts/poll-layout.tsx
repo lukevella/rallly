@@ -11,7 +11,6 @@ import {
   ArrowLeftIcon,
   ArrowUpRight,
   ChevronDownIcon,
-  ListIcon,
   LogInIcon,
   LogOutIcon,
   PauseCircleIcon,

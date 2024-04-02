@@ -28,7 +28,10 @@ export function Sidebar({
   className?: string;
 }) {
   return (
-    <ul role="list" className="flex h-full flex-1 flex-col gap-y-6">
+    <ul
+      role="list"
+      className={cn("flex h-full flex-1 flex-col gap-y-6", className)}
+    >
       {children}
     </ul>
   );

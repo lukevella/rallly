@@ -115,7 +115,6 @@ export function PollsList() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const { t } = useTranslation();
   const router = useRouter();
   const list = useListFilter();
   const pagination = React.useMemo<PaginationState>(
