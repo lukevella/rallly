@@ -191,7 +191,6 @@ const Discussion: React.FunctionComponent = () => {
                 id="comment"
                 className="w-full"
                 autoFocus={true}
-                className="w-full"
                 placeholder={t("commentPlaceholder")}
                 {...register("content", { validate: requiredString })}
               />
