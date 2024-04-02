@@ -1,10 +1,12 @@
 import { cn } from "@rallly/ui";
+import { Icon } from "@rallly/ui/icon";
 import {
   Tooltip,
   TooltipContent,
   TooltipPortal,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
+import { ClockIcon } from "lucide-react";
 import * as React from "react";
 
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
@@ -13,15 +15,24 @@ import { useOptions } from "@/components/poll-context";
 const TimeRange: React.FunctionComponent<{
   start: string;
   end: string;
+  duration: string;
   className?: string;
-}> = ({ start, end, className }) => {
+}> = ({ start, end, duration, className }) => {
   return (
     <div className={cn("text-muted-foreground text-xs font-normal", className)}>
       <Tooltip>
         <TooltipTrigger>{start}</TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent className="text-xs">
-            {start} - {end}
+          <TooltipContent className="flex gap-x-2.5 text-xs">
+            <span className="text-muted-foreground flex items-center gap-x-1">
+              <Icon>
+                <ClockIcon />
+              </Icon>
+              {duration}
+            </span>
+            <span>
+              {start} - {end}
+            </span>
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
@@ -126,7 +137,11 @@ const PollHeader: React.FunctionComponent = () => {
             >
               <div className="flex flex-col items-center gap-2.5">
                 {option.type === "timeSlot" ? (
-                  <TimeRange start={option.startTime} end={option.endTime} />
+                  <TimeRange
+                    start={option.startTime}
+                    end={option.endTime}
+                    duration={option.duration}
+                  />
                 ) : null}
                 <ConnectedScoreSummary optionId={option.optionId} />
               </div>
