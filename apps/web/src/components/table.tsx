@@ -70,7 +70,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                     <th
                       key={header.id}
                       style={{
-                        width: header.getSize(),
+                        minWidth: header.getSize(),
                         maxWidth:
                           props.layout === "auto"
                             ? header.getSize()

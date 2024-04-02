@@ -42,7 +42,7 @@ export const usePollColumns = () => {
       columnHelper.accessor("title", {
         id: "title",
         header: t("title"),
-        size: 500,
+        size: 300,
         cell: ({ row }) => {
           return (
             <Link

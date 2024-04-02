@@ -2,8 +2,10 @@
 
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
+import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
 import { PollViz } from "@/components/poll-viz";
+import { usePoll } from "@/contexts/poll";
 
 // function ParticipantsCard() {
 //   const { participants } = useParticipants();
@@ -71,6 +73,8 @@ import { PollViz } from "@/components/poll-viz";
 // }
 
 export function AdminPage() {
+  const poll = usePoll();
+  useTouchBeacon(poll.id);
   return (
     <div className="space-y-4 lg:space-y-6">
       <EventCard />
