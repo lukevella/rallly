@@ -1,5 +1,10 @@
 import { cn } from "@rallly/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 import * as React from "react";
 
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
@@ -11,9 +16,15 @@ const TimeRange: React.FunctionComponent<{
   className?: string;
 }> = ({ start, end, className }) => {
   return (
-    <div className="text-muted-foreground text-xs font-normal">
-      <div>{start}</div>
-      <div className="mt-0.5 opacity-50">{end}</div>
+    <div className={cn("text-muted-foreground text-xs font-normal", className)}>
+      <Tooltip>
+        <TooltipTrigger>{start}</TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent className="text-xs">
+            {start} - {end}
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
     </div>
   );
 };
