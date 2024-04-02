@@ -77,7 +77,9 @@ export const usePollColumns = () => {
                 <TooltipTrigger>
                   <UserAvatar size="xs" name={getValue()?.name} />
                 </TooltipTrigger>
-                <TooltipContent>{getValue()?.name}</TooltipContent>
+                <TooltipContent>
+                  {getValue()?.name ?? t("guest")}
+                </TooltipContent>
               </Tooltip>
             </div>
           );

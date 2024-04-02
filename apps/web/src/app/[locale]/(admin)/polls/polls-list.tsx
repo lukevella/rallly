@@ -212,7 +212,9 @@ export function PollsList() {
           />
         </Card>
       ) : (
-        <PollsEmptyState />
+        <Card>
+          <PollsEmptyState />
+        </Card>
       )}
     </div>
   );
