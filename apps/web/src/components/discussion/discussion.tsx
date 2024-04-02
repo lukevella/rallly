@@ -14,7 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { Textarea } from "@rallly/ui/textarea";
 import dayjs from "dayjs";
 import { MessageCircleIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";

@@ -14,6 +14,7 @@ const avatarBackgroundColors: RGBColor[] = [
   [106, 0, 255], // Purple
   [255, 177, 255], // Pink
   [166, 74, 255], // Violet
+  [236, 72, 153], // Pink
   [147, 51, 234], // Teal
   [147, 51, 234], //  Indigo
   [192, 38, 211], // Orchid
