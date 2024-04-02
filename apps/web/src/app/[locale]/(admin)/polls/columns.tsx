@@ -64,12 +64,21 @@ export const usePollColumns = () => {
         },
       }),
       columnHelper.accessor("user", {
-        header: () => t("host", { defaultValue: "Host" }),
+        header: () => (
+          <div className="text-center">
+            {t("host", { defaultValue: "Host" })}
+          </div>
+        ),
         size: 75,
         cell: ({ getValue }) => {
           return (
-            <div>
-              <UserAvatar size="sm" name={getValue()?.name} />
+            <div className="text-center">
+              <Tooltip>
+                <TooltipTrigger>
+                  <UserAvatar size="xs" name={getValue()?.name} />
+                </TooltipTrigger>
+                <TooltipContent>{getValue()?.name}</TooltipContent>
+              </Tooltip>
             </div>
           );
         },
