@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { MobileMenuButton } from "@/app/[locale]/(admin)/menu/menu-button";
-import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { CurrentUserAvatar } from "@/components/user";
 
 export function MobileNavigation() {
@@ -25,11 +24,6 @@ export function MobileNavigation() {
           </Link>
         </div>
       </div>
-      {isOpen ? (
-        <div className="p-4">
-          <Sidebar />
-        </div>
-      ) : null}
     </div>
   );
 }
