@@ -16,17 +16,11 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Textarea } from "@rallly/ui/textarea";
 import dayjs from "dayjs";
-import { MessageCircleIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
+import { MoreHorizontalIcon, TrashIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import {
-  EmptyState,
-  EmptyStateDescription,
-  EmptyStateIcon,
-  EmptyStateTitle,
-} from "@/app/components/empty-state";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { useRole } from "@/contexts/role";
@@ -108,8 +102,8 @@ const Discussion: React.FunctionComponent = () => {
           <Badge>{comments.length}</Badge>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        {comments.length ? (
+      {comments.length ? (
+        <CardContent className="border-b">
           <div className="space-y-4">
             {comments.map((comment) => {
               const canDelete =
@@ -159,24 +153,9 @@ const Discussion: React.FunctionComponent = () => {
               );
             })}
           </div>
-        ) : (
-          <EmptyState>
-            <EmptyStateIcon>
-              <MessageCircleIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans i18nKey="noComments" defaults="No comments yet" />
-            </EmptyStateTitle>
-            <EmptyStateDescription>
-              <Trans
-                i18nKey="beFirstComment"
-                defaults="Be the first to comment"
-              />
-            </EmptyStateDescription>
-          </EmptyState>
-        )}
-      </CardContent>
-      <CardFooter>
+        </CardContent>
+      ) : null}
+      <CardFooter className="border-t-0">
         {isWriting ? (
           <form
             className="w-full space-y-2.5"
@@ -226,7 +205,7 @@ const Discussion: React.FunctionComponent = () => {
           </form>
         ) : (
           <button
-            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-2 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
             onClick={() => setIsWriting(true)}
           >
             <Trans
