@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import {
-  ArrowLeftIcon,
   ArrowUpRight,
   ChevronDownIcon,
   LogInIcon,
@@ -19,7 +18,7 @@ import {
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
@@ -27,7 +26,6 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageTitle,
 } from "@/app/components/page-layout";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
@@ -147,41 +145,25 @@ const StatusControl = () => {
   );
 };
 
-const AdminControls = () => {
+function AdminControls() {
   return (
-    <div className="flex items-center gap-x-2">
+    <div className="flex items-center gap-x-2.5">
       <NotificationsToggle />
       <StatusControl />
       <ManagePoll />
       <InviteDialog />
     </div>
   );
-};
+}
 
 const Layout = ({ children }: React.PropsWithChildren) => {
-  const poll = usePoll();
-  const pollLink = `/poll/${poll.id}`;
-  const pathname = usePathname();
-
   return (
-    <PageContainer>
-      <PageHeader className="flex flex-col gap-x-4 gap-y-2.5 md:flex-row md:items-center">
-        <div className="flex min-w-0 items-center gap-x-4 md:basis-2/3">
-          <div className="flex gap-x-4 md:basis-1/2">
-            {pathname === pollLink ? null : (
-              <Button asChild>
-                <Link href={pollLink}>
-                  <ArrowLeftIcon className="size-4" />
-                </Link>
-              </Button>
-            )}
-            <PageTitle>{poll.title}</PageTitle>
-          </div>
-        </div>
-
-        <div className="flex basis-1/3 md:justify-end">
-          <AdminControls />
-        </div>
+    <PageContainer className="mx-auto max-w-4xl p-4">
+      <PageHeader className="flex items-center justify-between">
+        <Button asChild>
+          <Link href="/polls">Back</Link>
+        </Button>
+        <AdminControls />
       </PageHeader>
       <PageContent>{children}</PageContent>
     </PageContainer>
@@ -248,10 +230,16 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const urlId = params?.urlId as string;
 
   const poll = trpc.polls.get.useQuery({ urlId });
+  const subscription = trpc.user.subscription.useQuery();
   const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
 
-  if (!poll.data || !watchers.data || !participants.data) {
+  if (
+    !poll.data ||
+    !watchers.data ||
+    !participants.data ||
+    !subscription.data
+  ) {
     return null;
   }
 

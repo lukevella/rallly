@@ -7,12 +7,7 @@ export function PageContainer({
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <div
-      className={cn(
-        "h-full grow space-y-4 lg:flex lg:flex-col lg:space-y-6 lg:pr-4",
-        className,
-      )}
-    >
+    <div className={cn("h-full grow space-y-4 lg:flex lg:flex-col", className)}>
       {children}
     </div>
   );

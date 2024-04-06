@@ -24,8 +24,10 @@ export default async function Layout({
           </div>
           <Sidebar />
         </div>
-        <div className={cn("min-h-screen max-w-4xl grow p-4 lg:ml-72")}>
-          {children}
+        <div
+          className={cn("min-h-screen max-w-4xl grow space-y-4 p-4 lg:ml-72")}
+        >
+          <div className="max-w-4xl">{children}</div>
         </div>
       </div>
     );

@@ -25,7 +25,6 @@ import { z } from "zod";
 import { PayWall } from "@/components/pay-wall";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
-import { NextPageWithLayout } from "@/types";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -33,7 +32,7 @@ const formSchema = z.object({
   title: z.string().trim().min(1),
 });
 
-const Page: NextPageWithLayout = () => {
+export function DuplicatePage() {
   const { poll } = usePoll();
   const duplicate = trpc.polls.duplicate.useMutation();
   const router = useRouter();
@@ -121,6 +120,4 @@ const Page: NextPageWithLayout = () => {
       </Form>
     </PayWall>
   );
-};
-
-export default Page;
+}

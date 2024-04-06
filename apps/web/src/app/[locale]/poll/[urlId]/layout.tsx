@@ -6,7 +6,9 @@ import { PollLayout } from "@/components/layouts/poll-layout";
 export default async function Layout({
   children,
   params,
-}: React.PropsWithChildren<{ params: { urlId: string } }>) {
+}: React.PropsWithChildren<{
+  params: { urlId: string };
+}>) {
   const poll = await prisma.poll.findUnique({ where: { id: params.urlId } });
   if (!poll) {
     notFound();

@@ -44,7 +44,7 @@ export const VoteSelector = React.forwardRef<
       }}
       ref={ref}
     >
-      <span className="absolute flex size-6 items-center justify-center rounded-md border bg-white">
+      <span className="absolute flex size-7 items-center justify-center rounded-md border bg-white">
         <VoteIcon type={value} />
       </span>
     </button>
