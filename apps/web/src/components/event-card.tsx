@@ -40,7 +40,7 @@ export const EventCard = () => {
 
   return (
     <Card>
-      <RandomGradientBar />
+      <RandomGradientBar seed={poll.id} />
       <CardHeader className="grid gap-4 sm:flex sm:justify-between">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4 sm:gap-6">
