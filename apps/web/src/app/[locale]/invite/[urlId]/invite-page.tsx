@@ -1,12 +1,13 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { ArrowUpLeftIcon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import { ArrowUpRightIcon, InfoIcon } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 
-import { PageHeader } from "@/app/components/page-layout";
+import { LogoLink } from "@/app/components/logo-link";
 import { Poll } from "@/components/poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
@@ -63,26 +64,32 @@ const GoToApp = () => {
   const poll = usePoll();
   const { user } = useUser();
 
+  if (poll.userId !== user.id) {
+    return null;
+  }
+
   return (
-    <PageHeader variant="ghost">
-      <div className="flex justify-between">
-        <div>
-          <Button
-            variant="ghost"
-            asChild
-            className={poll.userId !== user.id ? "hidden" : ""}
-          >
-            <Link href={`/poll/${poll.id}`}>
-              <ArrowUpLeftIcon className="text-muted-foreground size-4" />
-              <Trans i18nKey="manage" />
-            </Link>
-          </Button>
-        </div>
-        <div>
-          <UserDropdown />
-        </div>
+    <div className="flex items-center gap-x-2.5 rounded-lg border bg-gray-100 px-3 py-2">
+      <Icon>
+        <InfoIcon />
+      </Icon>
+      <div className="grow text-sm">
+        <Trans
+          i18nKey="manageAccess"
+          defaults="You are the creator of this poll"
+        />
       </div>
-    </PageHeader>
+      <div className="-mr-1">
+        <Button variant="ghost" asChild>
+          <Link href={`/poll/${poll.id}`}>
+            <Trans i18nKey="manage" />
+            <Icon>
+              <ArrowUpRightIcon />
+            </Icon>
+          </Link>
+        </Button>
+      </div>
+    </div>
   );
 };
 
@@ -91,8 +98,16 @@ export function InvitePage() {
     <Prefetch>
       <LegacyPollContextProvider>
         <VisibilityProvider>
-          <GoToApp />
-          <Poll />
+          <div className="space-y-4 p-3 lg:px-6 lg:py-4">
+            <div className="flex items-center justify-between">
+              <LogoLink />
+              <UserDropdown />
+            </div>
+            <div className="mx-auto max-w-4xl space-y-4">
+              <GoToApp />
+              <Poll />
+            </div>
+          </div>
         </VisibilityProvider>
       </LegacyPollContextProvider>
     </Prefetch>

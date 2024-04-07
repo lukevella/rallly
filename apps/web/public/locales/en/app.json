@@ -238,19 +238,13 @@
   "or": "Or",
   "autoTimeZone": "Automatic Time Zone Conversion",
   "autoTimeZoneHelp": "Enable this setting to automatically adjust event times to each participant's local time zone.",
-  "inviteType": "Type",
   "pollStatus": "Status",
   "created": "Created",
   "create": "Create",
-  "new": "New",
-  "home": "Home",
-  "noResponses": "No Responses",
-  "noResponsesDescription": "You haven't submitted any responses yet",
   "host": "Host",
   "listFilterShowAll": "All Polls",
   "listFilterPollsICreated": "Polls I Created",
   "listFilterPollsIParticipated": "Polls I Participated In",
-  "noComments": "No comments yet",
-  "beFirstComment": "Be the first to comment",
-  "pollStatusOpen": "Live"
+  "pollStatusOpen": "Live",
+  "manageAccess": "You are the creator of this poll"
 }

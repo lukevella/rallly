@@ -7,11 +7,7 @@ import { getTranslation } from "@/app/i18n";
 import { absoluteUrl } from "@/utils/absolute-url";
 
 export default async function Page() {
-  return (
-    <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-6 lg:px-6 lg:py-5">
-      <InvitePage />
-    </div>
-  );
+  return <InvitePage />;
 }
 
 export async function generateMetadata({

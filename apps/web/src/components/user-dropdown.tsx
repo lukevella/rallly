@@ -55,10 +55,8 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         className={cn("group min-w-0", className)}
       >
         <Button variant="ghost" className="flex justify-between">
-          <span className="flex items-center gap-x-2.5">
-            <CurrentUserAvatar size="sm" className="-ml-1 shrink-0 " />
-            <span className="truncate">{user.name}</span>
-          </span>
+          <CurrentUserAvatar size="xs" className="-ml-1 shrink-0 " />
+          <span className="truncate">{user.name}</span>
           <ChevronDown className="text-muted-foreground size-4" />
         </Button>
       </DropdownMenuTrigger>
