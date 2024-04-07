@@ -21,7 +21,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 
-import { LogoLink } from "@/app/components/logo-link";
 import { LogoutButton } from "@/app/components/logout-button";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
@@ -37,7 +36,6 @@ import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { PollStatusLabel } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
-import { UserDropdown } from "@/components/user-dropdown";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/utils/trpc/client";
@@ -153,15 +151,11 @@ function AdminControls() {
 
 const Layout = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="space-y-4 p-3 lg:px-6 lg:py-4">
-      <div className="flex items-center justify-between">
-        <LogoLink />
-        <UserDropdown />
-      </div>
+    <div>
       <div className="shadow-huge fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-white p-3">
         <AdminControls />
       </div>
-      <div className="mx-auto max-w-4xl space-y-4 pb-24">{children}</div>
+      <div className="space-y-4 pb-24">{children}</div>
     </div>
   );
 };

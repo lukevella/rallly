@@ -1,17 +1,15 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
 import { ArrowUpRightIcon, InfoIcon } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 
-import { LogoLink } from "@/app/components/logo-link";
+import { PollLayout } from "@/components/layouts/poll-layout";
 import { Poll } from "@/components/poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
-import { UserDropdown } from "@/components/user-dropdown";
 import { useUser } from "@/components/user-provider";
 import { VisibilityProvider } from "@/components/visibility";
 import { PermissionsContext } from "@/contexts/permissions";
@@ -69,23 +67,19 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="flex items-center gap-x-2.5 rounded-lg border bg-gray-100 px-3 py-2">
-      <Icon>
-        <InfoIcon />
-      </Icon>
+    <div className="flex items-center gap-x-2.5 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-indigo-600">
+      <InfoIcon className="size-4 opacity-75" />
       <div className="grow text-sm">
         <Trans
           i18nKey="manageAccess"
           defaults="You are the creator of this poll"
         />
       </div>
-      <div className="-mr-1">
-        <Button variant="ghost" asChild>
+      <div className="-mr-2">
+        <Button variant="primary" asChild>
           <Link href={`/poll/${poll.id}`}>
             <Trans i18nKey="manage" />
-            <Icon>
-              <ArrowUpRightIcon />
-            </Icon>
+            <ArrowUpRightIcon className="size-4 opacity-75" />
           </Link>
         </Button>
       </div>
@@ -98,16 +92,12 @@ export function InvitePage() {
     <Prefetch>
       <LegacyPollContextProvider>
         <VisibilityProvider>
-          <div className="space-y-4 p-3 lg:px-6 lg:py-4">
-            <div className="flex items-center justify-between">
-              <LogoLink />
-              <UserDropdown />
-            </div>
-            <div className="mx-auto max-w-4xl space-y-4">
+          <PollLayout>
+            <div className="space-y-4">
               <GoToApp />
               <Poll />
             </div>
-          </div>
+          </PollLayout>
         </VisibilityProvider>
       </LegacyPollContextProvider>
     </Prefetch>
