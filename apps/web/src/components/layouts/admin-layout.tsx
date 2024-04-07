@@ -242,7 +242,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
-export const PollLayout = ({ children }: React.PropsWithChildren) => {
+export const AdminLayout = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
   const urlId = params?.urlId as string;
