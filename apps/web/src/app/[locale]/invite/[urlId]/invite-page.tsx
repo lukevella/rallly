@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { ArrowUpRightIcon, InfoIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
@@ -67,8 +67,7 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="flex items-center gap-x-2.5 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-indigo-600">
-      <InfoIcon className="size-4 opacity-75" />
+    <div className="flex items-center gap-x-2.5 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-gray-600">
       <div className="grow text-sm">
         <Trans
           i18nKey="manageAccess"

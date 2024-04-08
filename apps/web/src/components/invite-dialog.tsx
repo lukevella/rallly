@@ -58,7 +58,9 @@ export const InviteDialog = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
         <Button variant="primary" icon={Share2Icon}>
-          <Trans i18nKey="share" defaults="Share" />
+          <span className="hidden lg:inline-block">
+            <Trans i18nKey="share" defaults="Share" />
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent

@@ -46,7 +46,9 @@ const ManagePoll: React.FunctionComponent<{
             <Icon>
               <SettingsIcon />
             </Icon>
-            <Trans i18nKey="manage" />
+            <span className="hidden md:inline-block">
+              <Trans i18nKey="manage" />
+            </span>
             <ChevronDownIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>

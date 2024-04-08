@@ -47,7 +47,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             <div className="col-span-1 space-y-2">
               {participantsWhoVotedYes.map(({ name }, i) => (
                 <div key={i} className="flex">
-                  <div className="relative mr-2 flex items-center justify-center">
+                  <div className="relative mr-2 flex items-start justify-center">
                     <UserAvatar name={name} />
                     <VoteIcon
                       type="yes"
@@ -62,7 +62,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             <div className="col-span-1 space-y-2">
               {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
                 <div key={i} className="flex">
-                  <div className="relative mr-2 flex items-center justify-center">
+                  <div className="relative mr-2 flex items-start justify-center">
                     <UserAvatar name={name} />
                     <VoteIcon
                       type="ifNeedBe"
@@ -75,7 +75,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               ))}
               {participantsWhoVotedNo.map(({ name }, i) => (
                 <div key={i} className="flex">
-                  <div className="relative mr-2 flex items-center justify-center">
+                  <div className="relative mr-2 flex items-start justify-center">
                     <UserAvatar name={name} />
                     <VoteIcon
                       type="no"
@@ -83,7 +83,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                       className="absolute -right-1 -top-1 rounded-full bg-white"
                     />
                   </div>
-                  <div className="text-gray-500"> {name}</div>
+                  <div className="truncate text-gray-500"> {name}</div>
                 </div>
               ))}
             </div>

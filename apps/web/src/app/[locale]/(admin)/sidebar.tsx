@@ -2,12 +2,14 @@
 
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
   ChevronRightIcon,
   LogInIcon,
+  PlusIcon,
   Settings2Icon,
   SparklesIcon,
   UsersIcon,
@@ -74,6 +76,16 @@ export function Sidebar() {
               </NavItem>
             </li>
           </ul>
+        </li>
+        <li className="-mx-2 space-y-1">
+          <Button className="w-full rounded-full" variant="primary" asChild>
+            <Link href="/new">
+              <Icon>
+                <PlusIcon />
+              </Icon>
+              <Trans i18nKey="newPoll" defaults="New Poll" />
+            </Link>
+          </Button>
         </li>
         <li>
           <div className="text-xs font-semibold leading-6 text-gray-400">

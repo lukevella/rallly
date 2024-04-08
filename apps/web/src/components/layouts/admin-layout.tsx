@@ -101,7 +101,7 @@ const StatusControl = () => {
           <ChevronDownIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="start">
         {poll.event ? (
           <DropdownMenuItem
             onClick={() => {
