@@ -8,7 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
-import { ArrowUpRightIcon, Share2Icon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import { ArrowUpRightIcon, LinkIcon, Share2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
@@ -31,7 +32,7 @@ export function CopyInviteLinkButton() {
 
   return (
     <Button
-      className="min-w-0 grow"
+      className="min-w-0 justify-start"
       onClick={() => {
         copyToClipboard(poll.inviteLink);
         setDidCopy(true);
@@ -40,6 +41,9 @@ export function CopyInviteLinkButton() {
         }, 1000);
       }}
     >
+      <Icon>
+        <LinkIcon />
+      </Icon>
       {didCopy ? (
         <Trans i18nKey="copied" />
       ) : (

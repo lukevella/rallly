@@ -1,20 +1,11 @@
 "use client";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuItemIconLabel,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
-import {
+  ArrowLeftIcon,
   ArrowUpRight,
-  ChevronDownIcon,
   LogInIcon,
   LogOutIcon,
-  PauseCircleIcon,
-  PlayCircleIcon,
-  RotateCcw,
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +13,8 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
-import { InviteDialog } from "@/components/invite-dialog";
+import { PageHeader, PageTitle } from "@/app/components/page-layout";
+import { AdminControls } from "@/components/admin-controls";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -31,134 +23,11 @@ import {
   PageDialogHeader,
   PageDialogTitle,
 } from "@/components/page-dialog";
-import ManagePoll from "@/components/poll/manage-poll";
-import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
-import { PollStatusLabel } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/utils/trpc/client";
-
-const StatusControl = () => {
-  const poll = usePoll();
-  const queryClient = trpc.useUtils();
-  const reopen = trpc.polls.reopen.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          event: null,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-  const pause = trpc.polls.pause.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          closed: true,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
-  const resume = trpc.polls.resume.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          closed: false,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
-  return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button>
-          <PollStatusLabel status={poll.status} />
-          <ChevronDownIcon className="size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        {poll.event ? (
-          <DropdownMenuItem
-            onClick={() => {
-              reopen.mutate({ pollId: poll.id });
-            }}
-          >
-            <DropdownMenuItemIconLabel icon={RotateCcw}>
-              <Trans i18nKey="reopenPoll" defaults="Reopen Poll" />
-            </DropdownMenuItemIconLabel>
-          </DropdownMenuItem>
-        ) : (
-          <>
-            {poll.closed ? (
-              <DropdownMenuItem
-                onClick={() => resume.mutate({ pollId: poll.id })}
-              >
-                <DropdownMenuItemIconLabel icon={PlayCircleIcon}>
-                  <Trans i18nKey="resumePoll" defaults="Resume" />
-                </DropdownMenuItemIconLabel>
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem
-                onClick={() => pause.mutate({ pollId: poll.id })}
-              >
-                <DropdownMenuItemIconLabel icon={PauseCircleIcon}>
-                  <Trans i18nKey="pausePoll" defaults="Pause" />
-                </DropdownMenuItemIconLabel>
-              </DropdownMenuItem>
-            )}
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
-
-function AdminControls() {
-  return (
-    <div className="flex items-center gap-x-2.5">
-      <NotificationsToggle />
-      <StatusControl />
-      <ManagePoll />
-      <InviteDialog />
-    </div>
-  );
-}
-
-const Layout = ({ children }: React.PropsWithChildren) => {
-  return (
-    <div>
-      <div className="shadow-huge fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-white p-3">
-        <AdminControls />
-      </div>
-      <div className="space-y-4 pb-24">{children}</div>
-    </div>
-  );
-};
 
 export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
@@ -214,6 +83,24 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
+function PollHeader() {
+  const poll = usePoll();
+  return (
+    <PageHeader className="flex justify-between">
+      <div className="flex items-center gap-x-2.5">
+        <Button variant="ghost" asChild>
+          <Link href="/polls">
+            <Icon>
+              <ArrowLeftIcon />
+            </Icon>
+          </Link>
+        </Button>
+        <PageTitle>{poll.title}</PageTitle>
+      </div>
+      <AdminControls />
+    </PageHeader>
+  );
+}
 const Prefetch = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
@@ -250,7 +137,10 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
     <Prefetch>
       <LegacyPollContextProvider>
         <PermissionGuard>
-          <Layout>{children}</Layout>
+          <div className="space-y-4">
+            <PollHeader />
+            <div>{children}</div>
+          </div>
         </PermissionGuard>
       </LegacyPollContextProvider>
     </Prefetch>

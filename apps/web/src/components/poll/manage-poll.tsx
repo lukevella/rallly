@@ -10,12 +10,11 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import {
   CalendarCheck2Icon,
-  ChevronDownIcon,
   CopyIcon,
   DownloadIcon,
+  MoreHorizontalIcon,
   PencilIcon,
   Settings2Icon,
-  SettingsIcon,
   TableIcon,
   TrashIcon,
 } from "lucide-react";
@@ -44,12 +43,8 @@ const ManagePoll: React.FunctionComponent<{
         <DropdownMenuTrigger asChild={true}>
           <Button disabled={disabled}>
             <Icon>
-              <SettingsIcon />
+              <MoreHorizontalIcon />
             </Icon>
-            <span className="hidden md:inline-block">
-              <Trans i18nKey="manage" />
-            </span>
-            <ChevronDownIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

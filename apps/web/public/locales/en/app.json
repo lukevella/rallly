@@ -120,7 +120,6 @@
   "notificationsOn": "On",
   "notificationsOff": "Off",
   "pollStatusPaused": "Paused",
-  "pollStatusClosed": "Finalized",
   "reopenPoll": "Reopen Poll",
   "resumePoll": "Resume",
   "pausePoll": "Pause",
@@ -246,5 +245,7 @@
   "listFilterPollsICreated": "Polls I Created",
   "listFilterPollsIParticipated": "Polls I Participated In",
   "pollStatusOpen": "Live",
-  "manageAccess": "You are the creator of this poll"
+  "manageAccess": "You are the creator of this poll",
+  "pollStatusFinalizedDescription": "A final date has been selected",
+  "pollStatusPausedDescription": "The poll has been paused. Votes cannot be submitted or edited."
 }
