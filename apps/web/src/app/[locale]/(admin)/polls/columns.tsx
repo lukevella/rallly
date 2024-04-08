@@ -24,6 +24,7 @@ export type PollData = {
   userId: string;
   user: {
     name: string;
+    id: string;
   } | null;
   event: {
     start: Date;
@@ -71,6 +72,7 @@ export const usePollColumns = () => {
         ),
         size: 75,
         cell: ({ getValue }) => {
+          const isYou = getValue()?.id === user.id;
           return (
             <div className="text-center">
               <Tooltip>
@@ -78,7 +80,7 @@ export const usePollColumns = () => {
                   <UserAvatar size="xs" name={getValue()?.name} />
                 </TooltipTrigger>
                 <TooltipContent>
-                  {getValue()?.name ?? t("guest")}
+                  {isYou ? t("you") : getValue()?.name ?? t("guest")}
                 </TooltipContent>
               </Tooltip>
             </div>
