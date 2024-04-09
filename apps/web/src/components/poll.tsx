@@ -54,8 +54,9 @@ export const Poll = () => {
             components={{
               a: (
                 <Link
+                  prefetch={false}
                   className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                  href="https://rallly.co"
+                  href={`https://rallly.co?utm_source=poll&utm_medium=referral&utm_campaign=poll_referral_${poll.id}`}
                 />
               ),
             }}
