@@ -29,7 +29,7 @@ import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
-import { Plan } from "@/contexts/plan";
+import { Plan, usePlan } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
@@ -46,7 +46,7 @@ function logout() {
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useUser();
-
+  usePlan(); // prefetch plan data
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger

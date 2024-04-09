@@ -14,7 +14,7 @@ export const DateIconInner = (props: {
         props.className,
       )}
     >
-      <div className="text-muted-foreground border-b border-gray-200 text-xs font-normal leading-4">
+      <div className="text-muted-foreground h-4 border-b border-gray-200 text-xs font-normal">
         {props.dow}
       </div>
       <div className="flex grow items-center justify-center bg-white text-lg font-semibold leading-none tracking-tight">

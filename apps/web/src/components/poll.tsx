@@ -1,5 +1,7 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Icon } from "@rallly/ui/icon";
+import { CalendarCheck2Icon, PauseCircleIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next";
@@ -17,7 +19,6 @@ const checkIfWideScreen = () => window.innerWidth > 640;
 
 export const Poll = () => {
   const poll = usePoll();
-
   useTouchBeacon(poll.id);
 
   React.useEffect(() => {
@@ -35,16 +36,53 @@ export const Poll = () => {
 
   return (
     <div className={cn("space-y-3 sm:space-y-6")}>
+      {poll.status === "paused" ? (
+        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-gray-700 px-4 py-3 text-sm lg:flex-row">
+          <div className="flex items-center gap-x-2.5">
+            <PauseCircleIcon className="size-4 text-gray-100" />
+            <div className="font-medium text-gray-50">
+              <Trans i18nKey="pollStatusPaused" />
+            </div>
+          </div>
+          <div className="text-gray-100">
+            <Trans
+              i18nKey="pollStatusPausedDescription"
+              defaults="Votes cannot be submitted or edited."
+            />
+          </div>
+        </div>
+      ) : null}
+      {poll.event ? (
+        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-indigo-600 px-4 py-3 text-sm text-indigo-50 lg:flex-row">
+          <div className="flex items-center gap-x-2.5">
+            <CalendarCheck2Icon className="size-4 text-indigo-100" />
+            <div className="font-medium">
+              <Trans i18nKey="pollStatusFinalized" />
+            </div>
+          </div>
+          <div className="text-indigo-100">
+            <Trans
+              i18nKey="pollStatusFinalizedDescription"
+              defaults="Votes cannot be submitted or edited."
+            />
+          </div>
+        </div>
+      ) : null}
       <EventCard />
-      <VotingForm>
-        <PollComponent />
-      </VotingForm>
-      {poll.disableComments ? null : (
+      {!poll.event ? (
         <>
-          <hr className="my-4" />
-          <Discussion />
+          <VotingForm>
+            <PollComponent />
+          </VotingForm>
+          {poll.disableComments ? null : (
+            <>
+              <hr className="my-4" />
+              <Discussion />
+            </>
+          )}
         </>
-      )}
+      ) : null}
+
       <div className="mt-4 space-y-4 text-center text-gray-500">
         <div className="py-8">
           <Trans

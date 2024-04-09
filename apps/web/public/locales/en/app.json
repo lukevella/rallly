@@ -247,5 +247,5 @@
   "pollStatusOpen": "Live",
   "manageAccess": "You are the creator of this poll",
   "pollStatusFinalizedDescription": "A final date has been selected",
-  "pollStatusPausedDescription": "The poll has been paused. Votes cannot be submitted or edited."
+  "pollStatusPausedDescription": "Votes cannot be submitted or edited."
 }

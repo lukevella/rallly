@@ -16,20 +16,14 @@ import {
   ArrowUpRightIcon,
   CheckCircleIcon,
   LinkIcon,
-  MapPinIcon,
   PauseCircleIcon,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import Discussion from "@/components/discussion";
-import PollSubheader from "@/components/poll/poll-subheader";
-import TruncatedLinkify from "@/components/poll/truncated-linkify";
+import { Poll } from "@/components/poll";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
-import { VotingForm } from "@/components/poll/voting-form";
-import { PollViz } from "@/components/poll-viz";
-import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useDayjs } from "@/utils/dayjs";
@@ -73,38 +67,6 @@ function StatusInfo() {
   }
 
   return null;
-}
-
-function EventCard() {
-  const poll = usePoll();
-  return (
-    <Card>
-      <RandomGradientBar seed={poll.id} />
-      <CardHeader className="space-y-4">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <CardTitle>{poll.title}</CardTitle>
-            {poll.location ? (
-              <CardDescription className="flex items-center gap-x-1">
-                <Icon>
-                  <MapPinIcon />
-                </Icon>
-                <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-              </CardDescription>
-            ) : null}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {poll.description ? (
-          <p className="text-sm">
-            <TruncatedLinkify>{poll.description}</TruncatedLinkify>
-          </p>
-        ) : null}
-        <PollSubheader />
-      </CardContent>
-    </Card>
-  );
 }
 
 export function CopyInviteLinkButton({ className }: { className: string }) {
@@ -183,12 +145,7 @@ export function AdminPage() {
     <div className="space-y-4 lg:space-y-6">
       <ShareCard />
       <hr />
-      <EventCard />
-      <StatusInfo />
-      <VotingForm>
-        <PollViz />
-      </VotingForm>
-      <Discussion />
+      <Poll />
     </div>
   );
 }
