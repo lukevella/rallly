@@ -115,7 +115,6 @@
   "billing": "Billing",
   "guestPollAlertDescription": "<0>Create an account</0> or <1>login</1> to claim this poll.",
   "guestPollAlertTitle": "Your administrator rights can be lost if you clear your cookies",
-  "attendeeCount": "{count, plural, one {# attendee} other {# attendees}}",
   "notificationsValue": "Notifications: <b>{value}</b>",
   "notificationsOn": "On",
   "notificationsOff": "Off",
@@ -247,5 +246,7 @@
   "pollStatusOpen": "Live",
   "manageAccess": "You are the creator of this poll",
   "pollStatusFinalizedDescription": "A final date has been selected",
-  "pollStatusPausedDescription": "Votes cannot be submitted or edited."
+  "pollStatusPausedDescription": "Votes cannot be submitted or edited.",
+  "tba": "To be announced",
+  "addToCalendar": "Add to Calendar"
 }
