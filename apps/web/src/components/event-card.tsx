@@ -1,17 +1,14 @@
 "use client";
-import { Button } from "@rallly/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   CalendarIcon,
-  CalendarPlusIcon,
   CalendarSearchIcon,
   ClockIcon,
   MapPinIcon,
@@ -110,25 +107,6 @@ export function EventCard() {
         ) : null}
         <PollSubheader />
       </CardContent>
-      <EventFooter />
     </Card>
-  );
-}
-
-function EventFooter() {
-  const poll = usePoll();
-  if (!poll.event) {
-    return null;
-  }
-
-  return (
-    <CardFooter>
-      <Button>
-        <Icon>
-          <CalendarPlusIcon />
-        </Icon>
-        <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
-      </Button>
-    </CardFooter>
   );
 }

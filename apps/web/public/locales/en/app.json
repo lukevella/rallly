@@ -217,8 +217,6 @@
   "integrations": "Integrations",
   "contacts": "Contacts",
   "unlockFeatures": "Unlock all Pro features.",
-  "pollStatusAll": "All",
-  "pollStatusLive": "Live",
   "pollStatusFinalized": "Finalized",
   "share": "Share",
   "pageXOfY": "Page {currentPage} of {pageCount}",
@@ -240,13 +238,12 @@
   "created": "Created",
   "create": "Create",
   "host": "Host",
-  "listFilterShowAll": "All Polls",
-  "listFilterPollsICreated": "Polls I Created",
-  "listFilterPollsIParticipated": "Polls I Participated In",
   "pollStatusOpen": "Live",
   "manageAccess": "You are the creator of this poll",
   "pollStatusFinalizedDescription": "A final date has been selected",
   "pollStatusPausedDescription": "Votes cannot be submitted or edited.",
   "tba": "To be announced",
-  "addToCalendar": "Add to Calendar"
+  "pollsListAll": "All Polls",
+  "pollsListMine": "My Polls",
+  "pollsListOther": "Other Polls"
 }
