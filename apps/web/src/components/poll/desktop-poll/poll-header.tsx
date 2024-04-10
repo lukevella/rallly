@@ -24,14 +24,14 @@ const TimeRange: React.FunctionComponent<{
         <TooltipTrigger>{start}</TooltipTrigger>
         <TooltipPortal>
           <TooltipContent className="flex gap-x-2.5 text-xs">
+            <span>
+              {start} - {end}
+            </span>
             <span className="text-muted-foreground flex items-center gap-x-1">
               <Icon>
                 <ClockIcon />
               </Icon>
               {duration}
-            </span>
-            <span>
-              {start} - {end}
             </span>
           </TooltipContent>
         </TooltipPortal>
