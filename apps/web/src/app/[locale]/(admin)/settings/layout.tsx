@@ -8,7 +8,7 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
-import { SettingsMenu } from "./menu-item";
+import { SettingsMenu } from "./settings-menu";
 
 export default async function ProfileLayout({
   children,

@@ -1,4 +1,4 @@
-import { PollsList } from "@/app/[locale]/(admin)/polls/polls-list";
+import { PollFolders } from "@/app/[locale]/(admin)/polls/[[...list]]/polls-folders";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -8,15 +8,26 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
-export default async function Page({ params }: { params: Params }) {
+interface PageParams extends Params {
+  list?: string;
+}
+
+export default async function Layout({
+  children,
+  params,
+}: {
+  children?: React.ReactNode;
+  params: PageParams;
+}) {
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
       <PageHeader>
         <PageTitle>{t("polls")}</PageTitle>
       </PageHeader>
-      <PageContent>
-        <PollsList />
+      <PageContent className="space-y-4">
+        <PollFolders />
+        <div>{children}</div>
       </PageContent>
     </PageContainer>
   );

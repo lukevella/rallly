@@ -451,6 +451,9 @@ export const polls = router({
     )
     .query(async ({ ctx, input }) => {
       const whereParticipated = {
+        userId: {
+          not: ctx.user.id,
+        },
         participants: {
           some: {
             userId: ctx.user.id,
@@ -467,7 +470,7 @@ export const polls = router({
           ? {
               OR: [whereCreated, whereParticipated],
             }
-          : input.list === "participated"
+          : input.list === "other"
             ? whereParticipated
             : whereCreated;
 

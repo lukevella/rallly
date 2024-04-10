@@ -3,15 +3,8 @@ import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@rallly/ui/select";
 import { PaginationState, SortingState } from "@tanstack/react-table";
-import { BarChart2Icon, ListIcon, SquarePenIcon, VoteIcon } from "lucide-react";
+import { BarChart2Icon, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -56,67 +49,11 @@ function PollsEmptyState() {
   );
 }
 
-function useListFilter() {
-  const searchParams = useSearchParams();
-  return searchParams?.get("list") ?? "all";
-}
-
-function PollOwnerSelect({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all" className="">
-            <Flex align="center">
-              <Icon>
-                <ListIcon />
-              </Icon>
-              <Trans i18nKey="listFilterShowAll" defaults="Show All" />
-            </Flex>
-          </SelectItem>
-          <SelectItem value="mine">
-            <Flex align="center">
-              <Icon>
-                <BarChart2Icon />
-              </Icon>
-              <Trans
-                i18nKey="listFilterPollsICreated"
-                defaults="Polls I Created"
-              />
-            </Flex>
-          </SelectItem>
-          <SelectItem value="participated">
-            <Flex align="center">
-              <Icon>
-                <VoteIcon />
-              </Icon>
-              <Trans
-                i18nKey="listFilterPollsIParticipated"
-                defaults="Polls I Participated In"
-              />
-            </Flex>
-          </SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-export function PollsList() {
+export function PollsList({ list }: { list?: string }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const router = useRouter();
-  const list = useListFilter();
   const pagination = React.useMemo<PaginationState>(
     () => ({
       pageIndex: (Number(searchParams?.get("page")) || 1) - 1,
@@ -155,24 +92,6 @@ export function PollsList() {
 
   return (
     <div className="space-y-4">
-      <PollOwnerSelect
-        value={list}
-        onChange={(newList) => {
-          const current = new URLSearchParams(
-            Array.from(searchParams?.entries() ?? []),
-          );
-          if (newList === "all") {
-            current.delete("list");
-          } else {
-            current.set("list", newList);
-          }
-          current.delete("page");
-          const search = current.toString();
-          const query = search ? `?${search}` : "";
-
-          router.replace(pathname + query);
-        }}
-      />
       {data.total ? (
         <Card>
           <Table
