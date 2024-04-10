@@ -1,8 +1,6 @@
 "use client";
 
 import { cn } from "@rallly/ui";
-import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -12,62 +10,14 @@ import {
   CardTitle,
 } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
-import {
-  ArrowUpRightIcon,
-  CheckCircleIcon,
-  LinkIcon,
-  PauseCircleIcon,
-} from "lucide-react";
+import { ArrowUpRightIcon, LinkIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import { Poll } from "@/components/poll";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
-import { useDayjs } from "@/utils/dayjs";
-
-function StatusInfo() {
-  const poll = usePoll();
-  const { adjustTimeZone } = useDayjs();
-  if (poll.event) {
-    return (
-      <Alert icon={CheckCircleIcon}>
-        <AlertTitle>
-          <Trans i18nKey="pollStatusFinalized" />
-        </AlertTitle>
-        <AlertDescription>
-          <Trans
-            i18nKey="pollStatusFinalizedDescription"
-            defaults="A final date has been selected"
-          />
-        </AlertDescription>
-        <div className="mt-4">
-          <Badge>{adjustTimeZone(poll.event.start).format("LLL")}</Badge>
-        </div>
-      </Alert>
-    );
-  }
-
-  if (poll.status === "paused") {
-    return (
-      <Alert icon={PauseCircleIcon}>
-        <AlertTitle>
-          <Trans i18nKey="pollStatusPaused" />
-        </AlertTitle>
-        <AlertDescription>
-          <Trans
-            i18nKey="pollStatusPausedDescription"
-            defaults="The poll has been paused. Votes cannot be submitted or edited."
-          />
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
-  return null;
-}
 
 export function CopyInviteLinkButton({ className }: { className: string }) {
   const [didCopy, setDidCopy] = React.useState(false);
@@ -144,8 +94,6 @@ export function AdminPage() {
   return (
     <div className="space-y-4 lg:space-y-6">
       <ShareCard />
-      <hr />
-      <Poll />
     </div>
   );
 }

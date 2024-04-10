@@ -1,6 +1,5 @@
 "use client";
 import { cn } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 import { CalendarCheck2Icon, PauseCircleIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";

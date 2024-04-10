@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { CircleUserIcon, Wand2Icon } from "lucide-react";
+import { CircleUserIcon } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
