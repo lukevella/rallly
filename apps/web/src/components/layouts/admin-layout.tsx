@@ -4,8 +4,13 @@ import { Icon } from "@rallly/ui/icon";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
+  ArrowUpRightIcon,
+  BarChart2Icon,
+  CalendarIcon,
   LogInIcon,
   LogOutIcon,
+  ReplyIcon,
+  SettingsIcon,
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -14,7 +19,10 @@ import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
 import { PageHeader, PageTitle } from "@/app/components/page-layout";
-import { AdminControls } from "@/components/admin-controls";
+import {
+  ResponsiveMenu,
+  ResponsiveMenuItem,
+} from "@/app/components/responsive-menu";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -86,7 +94,7 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
 function PollHeader() {
   const poll = usePoll();
   return (
-    <PageHeader className="flex justify-between">
+    <PageHeader className="flex items-center justify-between">
       <div className="flex items-center gap-x-2.5">
         <Button variant="ghost" asChild>
           <Link href="/polls">
@@ -97,7 +105,16 @@ function PollHeader() {
         </Button>
         <PageTitle>{poll.title}</PageTitle>
       </div>
-      <AdminControls />
+      <div>
+        <Button asChild>
+          <Link target="_blank" href={`/invite/${poll.id}`}>
+            <Trans i18nKey="invitePage" defaults="Invite Page" />
+            <Icon>
+              <ArrowUpRightIcon />
+            </Icon>
+          </Link>
+        </Button>
+      </div>
     </PageHeader>
   );
 }
@@ -139,6 +156,32 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
         <PermissionGuard>
           <div className="space-y-4">
             <PollHeader />
+            <ResponsiveMenu>
+              <ResponsiveMenuItem href={`/poll/${urlId}`}>
+                <Icon>
+                  <BarChart2Icon />
+                </Icon>
+                <Trans i18nKey="pollMenuOverview" defaults="Overview" />
+              </ResponsiveMenuItem>
+              <ResponsiveMenuItem href={`/poll/${urlId}/responses`}>
+                <Icon>
+                  <ReplyIcon />
+                </Icon>
+                <Trans i18nKey="pollMenuResponses" defaults="Responses" />
+              </ResponsiveMenuItem>
+              <ResponsiveMenuItem href={`/poll/${urlId}/dates`}>
+                <Icon>
+                  <CalendarIcon />
+                </Icon>
+                <Trans i18nKey="pollDates" defaults="Dates" />
+              </ResponsiveMenuItem>
+              <ResponsiveMenuItem href={`/poll/${urlId}/settings`}>
+                <Icon>
+                  <SettingsIcon />
+                </Icon>
+                <Trans i18nKey="pollMenuSettings" defaults="Settings" />
+              </ResponsiveMenuItem>
+            </ResponsiveMenu>
             <div>{children}</div>
           </div>
         </PermissionGuard>

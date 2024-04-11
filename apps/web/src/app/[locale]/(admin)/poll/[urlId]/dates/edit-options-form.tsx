@@ -3,8 +3,6 @@ import { Button } from "@rallly/ui/button";
 import { CardFooter } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import dayjs from "dayjs";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
@@ -33,18 +31,12 @@ const convertOptionToString = (
         .format("YYYY-MM-DDTHH:mm:ss")}`;
 };
 
-const Page = () => {
+export function EditOptionsForm() {
   const { poll, getParticipantsWhoVotedForOption } = usePoll();
   const { mutate: updatePollMutation, isLoading: isUpdating } =
     useUpdatePollMutation();
   const { t } = useTranslation();
   const modalContext = useModalContext();
-  const router = useRouter();
-  const pollLink = `/poll/${poll.id}`;
-
-  const redirectBackToPoll = () => {
-    router.push(pollLink);
-  };
 
   let firstDate = dayjs(poll.options[0]?.startTime);
 
@@ -103,17 +95,12 @@ const Page = () => {
           );
 
           const onOk = () => {
-            updatePollMutation(
-              {
-                urlId: poll.adminUrlId,
-                timeZone: data.timeZone,
-                optionsToDelete: optionsToDelete.map(({ id }) => id),
-                optionsToAdd,
-              },
-              {
-                onSuccess: redirectBackToPoll,
-              },
-            );
+            updatePollMutation({
+              urlId: poll.adminUrlId,
+              timeZone: data.timeZone,
+              optionsToDelete: optionsToDelete.map(({ id }) => id),
+              optionsToAdd,
+            });
           };
 
           const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
@@ -142,12 +129,7 @@ const Page = () => {
         })}
       >
         <PollOptionsForm disableTimeZoneChange={true}>
-          <CardFooter className="justify-between">
-            <Button asChild>
-              <Link href={pollLink}>
-                <Trans i18nKey="cancel" />
-              </Link>
-            </Button>
+          <CardFooter>
             <Button type="submit" loading={isUpdating} variant="primary">
               <Trans i18nKey="save" />
             </Button>
@@ -156,6 +138,4 @@ const Page = () => {
       </form>
     </Form>
   );
-};
-
-export default Page;
+}

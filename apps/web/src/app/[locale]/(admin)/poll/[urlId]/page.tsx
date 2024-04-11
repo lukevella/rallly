@@ -1,5 +1,5 @@
-import { AdminPage } from "./admin-page";
+import { OverviewPage } from "./overview-page";
 
 export default async function Page() {
-  return <AdminPage />;
+  return <OverviewPage />;
 }

@@ -15,6 +15,7 @@ import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
+import { EventCard } from "@/components/event-card";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
@@ -59,36 +60,27 @@ export function CopyInviteLinkButton({ className }: { className: string }) {
 export function ShareCard() {
   const poll = usePoll();
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <Trans i18nKey="share" />
-        </CardTitle>
-        <CardDescription>
-          <Trans i18nKey="inviteParticipantsDescription" />
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div>
-          <div className="flex gap-x-2.5">
-            <div className="grow">
-              <CopyInviteLinkButton className="w-full" />
-            </div>
-            <Button asChild>
-              <Link target="_blank" href={poll.inviteLink}>
-                <Icon>
-                  <ArrowUpRightIcon />
-                </Icon>
-              </Link>
-            </Button>
+    <div className="space-y-4">
+      <EventCard />
+      <div>
+        <div className="flex gap-x-2.5">
+          <div className="grow">
+            <CopyInviteLinkButton className="w-full" />
           </div>
+          <Button asChild>
+            <Link target="_blank" href={poll.inviteLink}>
+              <Icon>
+                <ArrowUpRightIcon />
+              </Icon>
+            </Link>
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
-export function AdminPage() {
+export function OverviewPage() {
   const poll = usePoll();
   useTouchBeacon(poll.id);
   return (

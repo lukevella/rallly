@@ -245,5 +245,10 @@
   "tba": "To be announced",
   "pollsListAll": "All Polls",
   "pollsListMine": "My Polls",
-  "pollsListOther": "Other Polls"
+  "pollsListOther": "Other Polls",
+  "invitePage": "Invite Page",
+  "pollMenuOverview": "Overview",
+  "pollMenuResponses": "Responses",
+  "pollDates": "Dates",
+  "pollMenuSettings": "Settings"
 }
