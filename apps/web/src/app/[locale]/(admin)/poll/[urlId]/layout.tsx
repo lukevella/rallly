@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 import { notFound } from "next/navigation";
 
-import { AdminLayout } from "@/components/layouts/admin-layout";
+import { AdminLayout } from "@/app/[locale]/(admin)/poll/[urlId]/admin-layout";
 
 export default async function Layout({
   children,

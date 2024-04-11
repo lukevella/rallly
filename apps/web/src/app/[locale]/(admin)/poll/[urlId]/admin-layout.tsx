@@ -6,10 +6,11 @@ import {
   ArrowUpRight,
   ArrowUpRightIcon,
   BarChart2Icon,
+  CalendarCheck2Icon,
   CalendarIcon,
+  CrownIcon,
   LogInIcon,
   LogOutIcon,
-  ReplyIcon,
   SettingsIcon,
   ShieldCloseIcon,
 } from "lucide-react";
@@ -163,17 +164,17 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
                 </Icon>
                 <Trans i18nKey="pollMenuOverview" defaults="Overview" />
               </ResponsiveMenuItem>
-              <ResponsiveMenuItem href={`/poll/${urlId}/responses`}>
-                <Icon>
-                  <ReplyIcon />
-                </Icon>
-                <Trans i18nKey="pollMenuResponses" defaults="Responses" />
-              </ResponsiveMenuItem>
               <ResponsiveMenuItem href={`/poll/${urlId}/dates`}>
                 <Icon>
                   <CalendarIcon />
                 </Icon>
                 <Trans i18nKey="pollDates" defaults="Dates" />
+              </ResponsiveMenuItem>
+              <ResponsiveMenuItem href={`/poll/${urlId}/finalize`}>
+                <Icon>
+                  <CrownIcon />
+                </Icon>
+                <Trans i18nKey="outcome" defaults="Outcome" />
               </ResponsiveMenuItem>
               <ResponsiveMenuItem href={`/poll/${urlId}/settings`}>
                 <Icon>

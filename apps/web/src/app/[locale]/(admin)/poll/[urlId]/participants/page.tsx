@@ -1,6 +1,6 @@
 "use client";
 
-import { ExportToCSVButton } from "@/app/[locale]/(admin)/poll/[urlId]/responses/export-to-csv-button";
+import { ExportToCSVButton } from "@/app/[locale]/(admin)/poll/[urlId]/participants/export-to-csv-button";
 import { VotingForm } from "@/components/poll/voting-form";
 import { PollViz } from "@/components/poll-viz";
 
@@ -10,9 +10,7 @@ export default function Page() {
       <VotingForm>
         <PollViz />
       </VotingForm>
-      <div className="flex justify-end">
-        <ExportToCSVButton />
-      </div>
+      <ExportToCSVButton />
     </div>
   );
 }
