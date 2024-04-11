@@ -4,6 +4,7 @@ import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
+  BarChart2Icon,
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
@@ -13,7 +14,6 @@ import {
   Settings2Icon,
   SparklesIcon,
   UsersIcon,
-  VoteIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -70,7 +70,7 @@ export function Sidebar() {
               <NavItem
                 current={pathname?.startsWith("/poll")}
                 href="/polls"
-                icon={VoteIcon}
+                icon={BarChart2Icon}
               >
                 <Trans i18nKey="polls" defaults="Polls" />
               </NavItem>
