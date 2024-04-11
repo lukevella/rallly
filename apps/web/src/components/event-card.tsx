@@ -51,7 +51,7 @@ function When() {
   return (
     <div className="flex items-center gap-x-2.5">
       <Icon>
-        <CalendarSearchIcon />
+        <CalendarIcon />
       </Icon>
       <Trans i18nKey="tba" defaults="To be announced" />
     </div>
