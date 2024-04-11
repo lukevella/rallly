@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { ArrowUpRightIcon, LinkIcon, Share2Icon } from "lucide-react";
+import { ArrowUpRightIcon, UserPlus2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
@@ -31,7 +31,7 @@ export function CopyInviteLinkButton() {
 
   return (
     <Button
-      className="min-w-0 justify-start"
+      className="w-full min-w-0"
       onClick={() => {
         copyToClipboard(poll.inviteLink);
         setDidCopy(true);
@@ -40,9 +40,6 @@ export function CopyInviteLinkButton() {
         }, 1000);
       }}
     >
-      <Icon>
-        <LinkIcon />
-      </Icon>
       {didCopy ? (
         <Trans i18nKey="copied" />
       ) : (
@@ -59,9 +56,15 @@ export const InviteDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
-        <Button variant="primary" icon={Share2Icon}>
+        <Button size="lg">
+          <Icon>
+            <UserPlus2Icon />
+          </Icon>
           <span>
-            <Trans i18nKey="share" defaults="Share" />
+            <Trans
+              i18nKey="inviteParticipants"
+              defaults="Invite Participants"
+            />
           </span>
         </Button>
       </DialogTrigger>
@@ -70,11 +73,14 @@ export const InviteDialog = () => {
         className="bg-gradient-to-b from-gray-100 via-white to-white sm:max-w-md"
       >
         <div className="flex">
-          <Share2Icon className="text-primary size-6" />
+          <UserPlus2Icon className="text-primary size-6" />
         </div>
         <DialogHeader className="">
           <DialogTitle>
-            <Trans i18nKey="share" defaults="Share" />
+            <Trans
+              i18nKey="inviteParticipants"
+              defaults="Invite Participants"
+            />
           </DialogTitle>
           <DialogDescription>
             <Trans

@@ -1,11 +1,5 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   CalendarIcon,
@@ -28,23 +22,27 @@ function When() {
   const { adjustTimeZone, dayjs } = useDayjs();
   if (poll.event) {
     return (
-      <div className="space-y-1.5">
-        <div className="flex items-center gap-x-2.5">
+      <ul className="space-y-1.5">
+        <li className="flex items-center gap-x-2.5">
           <Icon>
             <CalendarIcon />
           </Icon>
           {adjustTimeZone(poll.event.start, !poll.timeZone).format("LL")}
-        </div>
+        </li>
         {poll.event.duration > 0 ? (
-          <div className="flex items-center gap-x-2.5">
+          <li className="flex items-center gap-x-2.5">
             <Icon>
               <ClockIcon />
             </Icon>
             <span>{`${adjustTimeZone(poll.event.start).format("LT")} - ${adjustTimeZone(dayjs(poll.event.start).add(poll.event.duration, "minutes"), !poll.timeZone).format("LT")}`}</span>
-          </div>
+          </li>
         ) : null}
-        {poll.timeZone ? <TimesShownIn /> : null}
-      </div>
+        {poll.timeZone ? (
+          <li>
+            <TimesShownIn />
+          </li>
+        ) : null}
+      </ul>
     );
   }
 
@@ -79,23 +77,25 @@ export function EventCard() {
     <Card>
       <RandomGradientBar seed={poll.id} />
       <CardHeader>
-        <div className="flex items-start gap-x-4 gap-y-2.5">
+        <div className="flex gap-4">
           <div className="shrink-0">
             <EventIcon />
           </div>
-          <div className="space-y-1.5">
+          <div>
             <CardTitle className="text-lg">{poll.title}</CardTitle>
-            {poll.location ? (
-              <CardDescription className="flex items-center gap-x-2.5">
-                <Icon>
-                  <MapPinIcon />
-                </Icon>
-                <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-              </CardDescription>
-            ) : null}
-            <CardDescription>
-              <When />
-            </CardDescription>
+            <ul className="text-muted-foreground mt-1.5 space-y-1.5 text-sm">
+              {poll.location ? (
+                <li className="flex items-center gap-x-2.5">
+                  <Icon>
+                    <MapPinIcon />
+                  </Icon>
+                  <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+                </li>
+              ) : null}
+              <li>
+                <When />
+              </li>
+            </ul>
           </div>
         </div>
       </CardHeader>

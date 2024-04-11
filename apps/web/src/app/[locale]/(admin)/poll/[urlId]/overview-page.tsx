@@ -3,14 +3,21 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { ArrowUpRightIcon, LinkIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  CogIcon,
+  LinkIcon,
+  SettingsIcon,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
 import { ParticipantsCard } from "@/app/[locale]/(admin)/poll/[urlId]/participants";
+import { SettingsDialog } from "@/app/[locale]/(admin)/poll/[urlId]/settings-dialog";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
+import { InviteDialog } from "@/components/invite-dialog";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
 import { ProBadge } from "@/components/pro-badge";
@@ -81,14 +88,12 @@ export function OverviewPage() {
   useTouchBeacon(poll.id);
   return (
     <div className="space-y-4 lg:space-y-6">
-      <div className="grid grid-cols-3 gap-4">
-        <Button size="lg">Share</Button>
-        <Button size="lg">
-          Finalize <ProBadge />
-        </Button>
+      <div className="relative">
+        <EventCard />
+        <SettingsDialog>
+          <Button className="absolute right-4 top-4">Edit</Button>
+        </SettingsDialog>
       </div>
-      <hr />
-      <EventCard />
       <VotingForm>
         <ParticipantsCard />
       </VotingForm>

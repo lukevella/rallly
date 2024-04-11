@@ -73,17 +73,21 @@ export const Poll = () => {
           <VotingForm>
             <PollComponent />
           </VotingForm>
-          {poll.disableComments ? null : (
-            <>
-              <hr className="my-4" />
-              <Discussion />
-            </>
+          {poll.disableComments ? (
+            <p className="text-muted-foreground text-center text-sm">
+              <Trans
+                i18nKey="commentsDisabled"
+                defaults="Comments have been disabled"
+              />
+            </p>
+          ) : (
+            <Discussion />
           )}
         </>
       ) : null}
 
-      <div className="mt-4 space-y-4 text-center text-gray-500">
-        <div className="py-8">
+      <div className="mt-4 space-y-4 text-center text-sm text-gray-500">
+        <div className="pb-8">
           <Trans
             defaults="Powered by <a>{name}</a>"
             i18nKey="poweredByRallly"

@@ -4,14 +4,8 @@ import { Icon } from "@rallly/ui/icon";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
-  ArrowUpRightIcon,
-  BarChart2Icon,
-  CalendarCheck2Icon,
-  CalendarIcon,
-  CrownIcon,
   LogInIcon,
   LogOutIcon,
-  SettingsIcon,
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -20,10 +14,6 @@ import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
 import { PageHeader, PageTitle } from "@/app/components/page-layout";
-import {
-  ResponsiveMenu,
-  ResponsiveMenuItem,
-} from "@/app/components/responsive-menu";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -32,6 +22,7 @@ import {
   PageDialogHeader,
   PageDialogTitle,
 } from "@/components/page-dialog";
+import ManagePoll from "@/components/poll/manage-poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
@@ -105,6 +96,9 @@ function PollHeader() {
           </Link>
         </Button>
         <PageTitle>{poll.title}</PageTitle>
+      </div>
+      <div className="flex gap-x-2.5">
+        <ManagePoll />
       </div>
     </PageHeader>
   );

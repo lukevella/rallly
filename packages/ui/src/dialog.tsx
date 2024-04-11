@@ -43,7 +43,7 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md" | "lg" | "xl";
     hideCloseButton?: boolean;
   }
 >(({ className, children, size = "md", hideCloseButton, ...props }, ref) => (
@@ -52,11 +52,12 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in data-[state=open]:fade-in shadow-huge fixed z-50 mx-4 grid translate-y-4 gap-4 overflow-hidden rounded-md bg-white p-5",
+        "animate-in data-[state=open]:fade-in shadow-huge fixed z-50 mx-4 grid w-full translate-y-4 gap-4 overflow-hidden rounded-md bg-white p-5",
         {
           "sm:max-w-sm": size === "sm",
           "sm:max-w-md": size === "md",
           "sm:max-w-lg": size === "lg",
+          "sm:max-w-xl": size === "xl",
         },
         className,
       )}
@@ -90,7 +91,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "bg-muted-background -mx-5 -mb-5 flex flex-col-reverse gap-2 px-5 py-2.5 sm:flex-row sm:justify-end sm:rounded-b-md",
+      "bg-muted-background -mx-5 -mb-5 flex flex-col-reverse gap-2 border-t px-5 py-2.5 sm:flex-row sm:justify-end sm:rounded-b-md",
       className,
     )}
     {...props}
@@ -117,7 +118,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn(
-      "text-muted-foreground mt-2 text-sm leading-relaxed tracking-wide",
+      "text-muted-foreground mt-2 text-sm tracking-wide",
       className,
     )}
     {...props}
