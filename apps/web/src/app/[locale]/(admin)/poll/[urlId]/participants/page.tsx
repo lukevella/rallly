@@ -2,13 +2,13 @@
 
 import { ExportToCSVButton } from "@/app/[locale]/(admin)/poll/[urlId]/participants/export-to-csv-button";
 import { VotingForm } from "@/components/poll/voting-form";
-import { PollViz } from "@/components/poll-viz";
+import { ParticipantsCard } from "@/app/[locale]/(admin)/poll/[urlId]/participants";
 
 export default function Page() {
   return (
     <div className="space-y-4">
       <VotingForm>
-        <PollViz />
+        <ParticipantsCard />
       </VotingForm>
       <ExportToCSVButton />
     </div>

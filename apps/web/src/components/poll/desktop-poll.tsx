@@ -8,6 +8,7 @@ import {
   ArrowRightIcon,
   ExpandIcon,
   PlusIcon,
+  ShareIcon,
   ShrinkIcon,
 } from "lucide-react";
 import { Trans, useTranslation } from "next-i18next";
@@ -15,7 +16,15 @@ import * as React from "react";
 import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
 
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateFooter,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/app/components/empty-state";
 import { TimesShownIn } from "@/components/clock";
+import { CopyInviteLinkButton, InviteDialog } from "@/components/invite-dialog";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
 

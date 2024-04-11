@@ -106,16 +106,6 @@ function PollHeader() {
         </Button>
         <PageTitle>{poll.title}</PageTitle>
       </div>
-      <div>
-        <Button asChild>
-          <Link target="_blank" href={`/invite/${poll.id}`}>
-            <Trans i18nKey="invitePage" defaults="Invite Page" />
-            <Icon>
-              <ArrowUpRightIcon />
-            </Icon>
-          </Link>
-        </Button>
-      </div>
     </PageHeader>
   );
 }
@@ -157,32 +147,6 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
         <PermissionGuard>
           <div className="space-y-4">
             <PollHeader />
-            <ResponsiveMenu>
-              <ResponsiveMenuItem href={`/poll/${urlId}`}>
-                <Icon>
-                  <BarChart2Icon />
-                </Icon>
-                <Trans i18nKey="pollMenuOverview" defaults="Overview" />
-              </ResponsiveMenuItem>
-              <ResponsiveMenuItem href={`/poll/${urlId}/dates`}>
-                <Icon>
-                  <CalendarIcon />
-                </Icon>
-                <Trans i18nKey="pollDates" defaults="Dates" />
-              </ResponsiveMenuItem>
-              <ResponsiveMenuItem href={`/poll/${urlId}/finalize`}>
-                <Icon>
-                  <CrownIcon />
-                </Icon>
-                <Trans i18nKey="outcome" defaults="Outcome" />
-              </ResponsiveMenuItem>
-              <ResponsiveMenuItem href={`/poll/${urlId}/settings`}>
-                <Icon>
-                  <SettingsIcon />
-                </Icon>
-                <Trans i18nKey="pollMenuSettings" defaults="Settings" />
-              </ResponsiveMenuItem>
-            </ResponsiveMenu>
             <div>{children}</div>
           </div>
         </PermissionGuard>
