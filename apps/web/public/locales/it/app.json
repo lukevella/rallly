@@ -106,7 +106,7 @@
   "participants": "Partecipanti",
   "language": "Lingua",
   "languageDescription": "Cambia la tua lingua preferita",
-  "dateAndTime": "Data E Ora",
+  "dateAndTime": "Data e Ora",
   "profileDescription": "Cambia le impostazioni del tuo profilo",
   "dates": "Date",
   "menu": "Menu",
@@ -158,7 +158,7 @@
   "billingPeriod": "Periodo",
   "billingPeriodMonthly": "Mensile",
   "billingPeriodYearly": "Annuale",
-  "monthlyBillingDescription": "per mese",
+  "monthlyBillingDescription": "al mese",
   "plan_extendedPollLife": "Conservare i sondaggi a tempo indeterminato",
   "becomeATranslator": "Aiuta a tradurre",
   "noPolls": "Nessun sondaggio",
@@ -239,5 +239,7 @@
   "inviteParticipantLinkInfo": "Chiunque abbia questo link potrà votare nel sondaggio.",
   "accountNotLinkedTitle": "Il tuo account non può essere collegato a un utente esistente",
   "accountNotLinkedDescription": "Un utente con questa email esiste già. Effettua l'accesso utilizzando il metodo originale.",
-  "or": "Oppure"
+  "or": "Oppure",
+  "autoTimeZone": "Conversione Automatica Fuso Orario",
+  "autoTimeZoneHelp": "Abilita questa impostazione per impostare automaticamente gli orari dell'evento con il fuso orario dei partecipanti."
 }
