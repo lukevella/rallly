@@ -103,6 +103,7 @@ function PollHeader() {
     </PageHeader>
   );
 }
+
 const Prefetch = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
@@ -138,12 +139,7 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <Prefetch>
       <LegacyPollContextProvider>
-        <PermissionGuard>
-          <div className="space-y-4">
-            <PollHeader />
-            <div>{children}</div>
-          </div>
-        </PermissionGuard>
+        <PermissionGuard>{children}</PermissionGuard>
       </LegacyPollContextProvider>
     </Prefetch>
   );

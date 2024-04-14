@@ -1,8 +1,8 @@
 "use client";
 
-import { ExportToCSVButton } from "@/app/[locale]/(admin)/poll/[urlId]/participants/export-to-csv-button";
+import { ExportToCSVButton } from "@/app/[locale]/poll/[urlId]/participants/export-to-csv-button";
 import { VotingForm } from "@/components/poll/voting-form";
-import { ParticipantsCard } from "@/app/[locale]/(admin)/poll/[urlId]/participants";
+import { ParticipantsCard } from "@/app/[locale]/poll/[urlId]/participants";
 
 export default function Page() {
   return (

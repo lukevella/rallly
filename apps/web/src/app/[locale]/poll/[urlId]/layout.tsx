@@ -1,7 +1,8 @@
 import { prisma } from "@rallly/database";
 import { notFound } from "next/navigation";
 
-import { AdminLayout } from "@/app/[locale]/(admin)/poll/[urlId]/admin-layout";
+import { AdminLayout } from "@/app/[locale]/poll/[urlId]/admin-layout";
+import { PollLayout } from "@/components/layouts/poll-layout";
 
 export default async function Layout({
   children,
@@ -14,7 +15,11 @@ export default async function Layout({
     notFound();
   }
 
-  return <AdminLayout>{children}</AdminLayout>;
+  return (
+    <PollLayout>
+      <AdminLayout>{children}</AdminLayout>
+    </PollLayout>
+  );
 }
 
 export async function generateMetadata({

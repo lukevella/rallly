@@ -3,25 +3,12 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import {
-  ArrowUpRightIcon,
-  CogIcon,
-  LinkIcon,
-  SettingsIcon,
-} from "lucide-react";
+import { ArrowUpRightIcon, LinkIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import { ParticipantsCard } from "@/app/[locale]/(admin)/poll/[urlId]/participants";
-import { SettingsDialog } from "@/app/[locale]/(admin)/poll/[urlId]/settings-dialog";
-import Discussion from "@/components/discussion";
-import { EventCard } from "@/components/event-card";
-import { InviteDialog } from "@/components/invite-dialog";
 import { Poll } from "@/components/poll";
-import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
-import { VotingForm } from "@/components/poll/voting-form";
-import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
