@@ -18,6 +18,7 @@ import { SettingsDialog } from "@/app/[locale]/(admin)/poll/[urlId]/settings-dia
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { InviteDialog } from "@/components/invite-dialog";
+import { Poll } from "@/components/poll";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
 import { ProBadge } from "@/components/pro-badge";
@@ -84,20 +85,5 @@ export function ShareCard() {
 }
 
 export function OverviewPage() {
-  const poll = usePoll();
-  useTouchBeacon(poll.id);
-  return (
-    <div className="space-y-4 lg:space-y-6">
-      <div className="relative">
-        <EventCard />
-        <SettingsDialog>
-          <Button className="absolute right-4 top-4">Edit</Button>
-        </SettingsDialog>
-      </div>
-      <VotingForm>
-        <ParticipantsCard />
-      </VotingForm>
-      <Discussion />
-    </div>
-  );
+  return <Poll />;
 }

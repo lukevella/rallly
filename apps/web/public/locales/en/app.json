@@ -218,7 +218,6 @@
   "contacts": "Contacts",
   "unlockFeatures": "Unlock all Pro features.",
   "pollStatusFinalized": "Finalized",
-  "share": "Share",
   "pageXOfY": "Page {currentPage} of {pageCount}",
   "userId": "User ID",
   "aboutGuest": "Guest User",
@@ -246,9 +245,8 @@
   "pollsListAll": "All Polls",
   "pollsListMine": "My Polls",
   "pollsListOther": "Other Polls",
-  "invitePage": "Invite Page",
-  "pollMenuOverview": "Overview",
-  "pollMenuResponses": "Responses",
-  "pollDates": "Dates",
-  "pollMenuSettings": "Settings"
+  "noParticipants": "No Participants",
+  "noParticipantsDescription": "Share the invite link with your participants to start gathering responses",
+  "inviteParticipants": "Invite Participants",
+  "commentsDisabled": "Comments have been disabled"
 }

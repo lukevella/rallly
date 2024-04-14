@@ -1,6 +1,6 @@
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { CheckCircleIcon, PauseCircleIcon, RadioIcon } from "lucide-react";
+import { CalendarCheckIcon, PauseCircleIcon, RadioIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
 
@@ -40,11 +40,11 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 text-sm font-medium text-indigo-600",
+            "inline-flex items-center gap-x-1.5 text-sm font-medium text-green-600",
             className,
           )}
         >
-          <CheckCircleIcon className="inline-block size-4 opacity-75" />
+          <CalendarCheckIcon className="inline-block size-4 opacity-75" />
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </span>
       );
@@ -59,8 +59,7 @@ export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
         {
           "border-pink-200 bg-pink-50 text-pink-600": status === "live",
           "border-gray-200 bg-gray-100 text-gray-500": status === "paused",
-          "border-indigo-200 bg-indigo-50 text-indigo-600":
-            status === "finalized",
+          "border-green-200 bg-green-50 text-green-600": status === "finalized",
         },
       )}
       status={status}

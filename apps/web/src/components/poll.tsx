@@ -1,10 +1,11 @@
 "use client";
 import { cn } from "@rallly/ui";
-import { CalendarCheck2Icon, PauseCircleIcon } from "lucide-react";
+import { CalendarCheckIcon, PauseCircleIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next";
 
+import { Attendees } from "@/components/attendees";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import DesktopPoll from "@/components/poll/desktop-poll";
@@ -35,31 +36,15 @@ export const Poll = () => {
 
   return (
     <div className={cn("space-y-3 sm:space-y-6")}>
-      {poll.status === "paused" ? (
-        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-gray-700 px-4 py-3 text-sm lg:flex-row">
-          <div className="flex items-center gap-x-2.5">
-            <PauseCircleIcon className="size-4 text-gray-100" />
-            <div className="font-medium text-gray-50">
-              <Trans i18nKey="pollStatusPaused" />
-            </div>
-          </div>
-          <div className="text-gray-100">
-            <Trans
-              i18nKey="pollStatusPausedDescription"
-              defaults="Votes cannot be submitted or edited."
-            />
-          </div>
-        </div>
-      ) : null}
       {poll.event ? (
-        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-indigo-600 px-4 py-3 text-sm text-indigo-50 lg:flex-row">
+        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-green-600 px-4 py-3 text-sm text-green-50 lg:flex-row">
           <div className="flex items-center gap-x-2.5">
-            <CalendarCheck2Icon className="size-4 text-indigo-100" />
+            <CalendarCheckIcon className="size-4 text-green-100" />
             <div className="font-medium">
               <Trans i18nKey="pollStatusFinalized" />
             </div>
           </div>
-          <div className="text-indigo-100">
+          <div className="text-green-50">
             <Trans
               i18nKey="pollStatusFinalizedDescription"
               defaults="Votes cannot be submitted or edited."
@@ -68,6 +53,22 @@ export const Poll = () => {
         </div>
       ) : null}
       <EventCard />
+      {poll.status === "paused" ? (
+        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-gray-200 px-4 py-3 text-sm text-gray-600 lg:flex-row">
+          <div className="flex items-center gap-x-2.5">
+            <PauseCircleIcon className="size-4" />
+            <div className="font-medium ">
+              <Trans i18nKey="pollStatusPaused" />
+            </div>
+          </div>
+          <div className="">
+            <Trans
+              i18nKey="pollStatusPausedDescription"
+              defaults="Votes cannot be submitted or edited."
+            />
+          </div>
+        </div>
+      ) : null}
       {!poll.event ? (
         <>
           <VotingForm>
@@ -84,7 +85,9 @@ export const Poll = () => {
             <Discussion />
           )}
         </>
-      ) : null}
+      ) : (
+        <Attendees optionId={poll.event.optionId} />
+      )}
 
       <div className="mt-4 space-y-4 text-center text-sm text-gray-500">
         <div className="pb-8">

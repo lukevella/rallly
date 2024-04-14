@@ -1,11 +1,10 @@
+import { Badge } from "@rallly/ui/badge";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { ColoredAvatar } from "@/components/poll/participant-avatar";
 import { stringToValue } from "@/utils/string-to-value";
-
-import Badge from "../badge";
 
 export interface UserAvaterProps {
   name: string;

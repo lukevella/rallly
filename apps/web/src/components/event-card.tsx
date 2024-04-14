@@ -37,11 +37,6 @@ function When() {
             <span>{`${adjustTimeZone(poll.event.start).format("LT")} - ${adjustTimeZone(dayjs(poll.event.start).add(poll.event.duration, "minutes"), !poll.timeZone).format("LT")}`}</span>
           </li>
         ) : null}
-        {poll.timeZone ? (
-          <li>
-            <TimesShownIn />
-          </li>
-        ) : null}
       </ul>
     );
   }
@@ -78,12 +73,20 @@ export function EventCard() {
       <RandomGradientBar seed={poll.id} />
       <CardHeader>
         <div className="flex gap-4">
-          <div className="shrink-0">
+          <div>
             <EventIcon />
           </div>
-          <div>
+          <div className="space-y-2.5">
             <CardTitle className="text-lg">{poll.title}</CardTitle>
-            <ul className="text-muted-foreground mt-1.5 space-y-1.5 text-sm">
+            <ul className="text-muted-foreground mt-1.5 space-y-2 text-sm">
+              <li>
+                <When />
+              </li>
+              {poll.timeZone ? (
+                <li>
+                  <TimesShownIn />
+                </li>
+              ) : null}
               {poll.location ? (
                 <li className="flex items-center gap-x-2.5">
                   <Icon>
@@ -92,9 +95,6 @@ export function EventCard() {
                   <TruncatedLinkify>{poll.location}</TruncatedLinkify>
                 </li>
               ) : null}
-              <li>
-                <When />
-              </li>
             </ul>
           </div>
         </div>
