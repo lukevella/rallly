@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
 import {
-  ArrowLeftIcon,
   ArrowUpRight,
   LogInIcon,
   LogOutIcon,
@@ -13,7 +11,8 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
-import { PageHeader, PageTitle } from "@/app/components/page-layout";
+import { InviteDialog } from "@/components/invite-dialog";
+import { PollLayout } from "@/components/layouts/poll-layout";
 import { LoginLink } from "@/components/login-link";
 import {
   PageDialog,
@@ -23,6 +22,7 @@ import {
   PageDialogTitle,
 } from "@/components/page-dialog";
 import ManagePoll from "@/components/poll/manage-poll";
+import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
@@ -84,23 +84,13 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
 };
 
 function PollHeader() {
-  const poll = usePoll();
   return (
-    <PageHeader className="flex items-center justify-between">
-      <div className="flex items-center gap-x-2.5">
-        <Button variant="ghost" asChild>
-          <Link href="/polls">
-            <Icon>
-              <ArrowLeftIcon />
-            </Icon>
-          </Link>
-        </Button>
-        <PageTitle>{poll.title}</PageTitle>
-      </div>
-      <div className="flex gap-x-2.5">
-        <ManagePoll />
-      </div>
-    </PageHeader>
+    <div className="flex items-center gap-x-2.5">
+      <NotificationsToggle />
+      <InviteDialog />
+      <ManagePoll />
+      <Button variant="primary">Finalize</Button>
+    </div>
   );
 }
 
@@ -139,7 +129,14 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <Prefetch>
       <LegacyPollContextProvider>
-        <PermissionGuard>{children}</PermissionGuard>
+        <PermissionGuard>
+          <PollLayout>
+            <div className="shadow-huge fixed bottom-8 left-1/2 z-20 -translate-x-1/2 rounded-lg bg-white p-2.5">
+              <PollHeader />
+            </div>
+            <div className="pb-16">{children}</div>
+          </PollLayout>
+        </PermissionGuard>
       </LegacyPollContextProvider>
     </Prefetch>
   );

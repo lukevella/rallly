@@ -10,9 +10,9 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import {
   CalendarCheck2Icon,
+  ChevronDownIcon,
   CopyIcon,
   DownloadIcon,
-  MoreHorizontalIcon,
   PencilIcon,
   Settings2Icon,
   TableIcon,
@@ -42,8 +42,9 @@ const ManagePoll: React.FunctionComponent<{
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
           <Button disabled={disabled}>
+            <Trans i18nKey="manage" defaults="Manage" />
             <Icon>
-              <MoreHorizontalIcon />
+              <ChevronDownIcon />
             </Icon>
           </Button>
         </DropdownMenuTrigger>

@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import {
   ChevronDown,
   CreditCardIcon,
@@ -54,10 +55,12 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         asChild
         className={cn("group min-w-0", className)}
       >
-        <Button variant="ghost" className="flex justify-between">
+        <Button variant="ghost">
           <CurrentUserAvatar size="xs" className="-ml-1 shrink-0 " />
           <span className="truncate">{user.name}</span>
-          <ChevronDown className="text-muted-foreground size-4" />
+          <Icon>
+            <ChevronDown />
+          </Icon>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
