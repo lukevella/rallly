@@ -1,15 +1,9 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
-import {
-  CalendarIcon,
-  CalendarSearchIcon,
-  ClockIcon,
-  MapPinIcon,
-} from "lucide-react";
+import { CalendarIcon, ClockIcon, MapPinIcon } from "lucide-react";
 
 import { TimesShownIn } from "@/components/clock";
-import { DateIcon } from "@/components/date-icon";
 import PollSubheader from "@/components/poll/poll-subheader";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
@@ -51,21 +45,6 @@ function When() {
   );
 }
 
-function EventIcon() {
-  const poll = usePoll();
-  const { adjustTimeZone } = useDayjs();
-
-  return poll.event ? (
-    <DateIcon date={adjustTimeZone(poll.event.start)} />
-  ) : (
-    <div className="relative inline-flex size-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200">
-      <Icon>
-        <CalendarSearchIcon />
-      </Icon>
-    </div>
-  );
-}
-
 export function EventCard() {
   const poll = usePoll();
   return (
@@ -73,9 +52,6 @@ export function EventCard() {
       <RandomGradientBar seed={poll.id} />
       <CardHeader>
         <div className="flex gap-4">
-          <div>
-            <EventIcon />
-          </div>
           <div className="space-y-2.5">
             <CardTitle className="text-lg">{poll.title}</CardTitle>
             <ul className="text-muted-foreground mt-1.5 space-y-2 text-sm">
