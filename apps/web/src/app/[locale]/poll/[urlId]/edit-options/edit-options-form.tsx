@@ -101,6 +101,7 @@ export function EditOptionsForm() {
               optionsToDelete: optionsToDelete.map(({ id }) => id),
               optionsToAdd,
             });
+            form.reset(data);
           };
 
           const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
@@ -130,7 +131,12 @@ export function EditOptionsForm() {
       >
         <PollOptionsForm disableTimeZoneChange={true}>
           <CardFooter>
-            <Button type="submit" loading={isUpdating} variant="primary">
+            <Button
+              type="submit"
+              disabled={!form.formState.isDirty}
+              loading={isUpdating}
+              variant="primary"
+            >
               <Trans i18nKey="save" />
             </Button>
           </CardFooter>

@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import {
+  ArrowLeftIcon,
   ArrowUpRight,
   LogInIcon,
   LogOutIcon,
@@ -21,7 +22,7 @@ import {
   UndoIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { FinalizeDialog } from "@/app/[locale]/poll/[urlId]/finalize-dialog";
@@ -238,6 +239,25 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
+function Breadcrumbs() {
+  const pathname = usePathname();
+  const poll = usePoll();
+  if (pathname === `/poll/${poll.id}`) {
+    return null;
+  }
+
+  return (
+    <Button variant="ghost" asChild>
+      <Link href={`/poll/${poll.id}`}>
+        <Icon>
+          <ArrowLeftIcon />
+        </Icon>
+        {poll.title}
+      </Link>
+    </Button>
+  );
+}
+
 export const AdminLayout = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
@@ -253,7 +273,10 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
       <LegacyPollContextProvider>
         <PermissionGuard>
           <PollLayout>
-            <div className="mb-4 flex justify-end">
+            <div className="mb-4 flex justify-between">
+              <div>
+                <Breadcrumbs />
+              </div>
               <Menu />
             </div>
             <div className="pb-16">{children}</div>

@@ -2,8 +2,6 @@
 import { Button } from "@rallly/ui/button";
 import { CardFooter } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import {
@@ -16,14 +14,6 @@ import { usePoll } from "@/contexts/poll";
 
 const Page = () => {
   const poll = usePoll();
-
-  const router = useRouter();
-
-  const pollLink = `/poll/${poll.id}`;
-
-  const redirectBackToPoll = () => {
-    router.push(pollLink);
-  };
 
   const update = useUpdatePollMutation();
 
@@ -41,22 +31,17 @@ const Page = () => {
       <form
         onSubmit={form.handleSubmit(async (data) => {
           //submit
-          await update.mutateAsync(
-            { urlId: poll.adminUrlId, ...data },
-            {
-              onSuccess: redirectBackToPoll,
-            },
-          );
+          await update.mutateAsync({ urlId: poll.adminUrlId, ...data });
+          form.reset(data);
         })}
       >
         <PollSettingsForm>
-          <CardFooter className="justify-between">
-            <Button asChild>
-              <Link href={pollLink}>
-                <Trans i18nKey="cancel" />
-              </Link>
-            </Button>
-            <Button type="submit" variant="primary">
+          <CardFooter>
+            <Button
+              disabled={!form.formState.isDirty}
+              type="submit"
+              variant="primary"
+            >
               <Trans i18nKey="save" />
             </Button>
           </CardFooter>
