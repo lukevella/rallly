@@ -54,7 +54,6 @@ export const Poll = () => {
           </div>
         </div>
       ) : null}
-      <EventCard />
       {poll.status === "paused" ? (
         <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-gray-200 px-4 py-3 text-sm text-gray-600 lg:flex-row">
           <div className="flex items-center gap-x-2.5">
@@ -71,6 +70,7 @@ export const Poll = () => {
           </div>
         </div>
       ) : null}
+      <EventCard />
       {!poll.event ? (
         <>
           <VotingForm>
