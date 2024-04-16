@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 
+import { FinalizeDialog } from "@/app/[locale]/poll/[urlId]/finalize-dialog";
 import { LogoutButton } from "@/app/components/logout-button";
 import { InviteDialog } from "@/components/invite-dialog";
 import { PollLayout } from "@/components/layouts/poll-layout";
@@ -83,13 +84,37 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
+function ReopenButton({ pollId }: { pollId: string }) {
+  const queryClient = trpc.useUtils();
+  const reopen = trpc.polls.reopen.useMutation({
+    onSuccess: () => {
+      queryClient.invalidate();
+    },
+  });
+  return (
+    <Button
+      onClick={() => {
+        reopen.mutate({ pollId });
+      }}
+    >
+      <Trans i18nKey="reopenPoll" />
+    </Button>
+  );
+}
+
 function PollHeader() {
+  const poll = usePoll();
   return (
     <div className="flex items-center gap-x-2.5">
+      <span className="text-muted-foreground px-2.5 text-sm">Actions:</span>
       <NotificationsToggle />
       <InviteDialog />
+      {poll.event ? (
+        <ReopenButton pollId={poll.id} />
+      ) : (
+        <FinalizeDialog pollId={poll.id} />
+      )}
       <ManagePoll />
-      <Button variant="primary">Finalize</Button>
     </div>
   );
 }
@@ -131,7 +156,7 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
       <LegacyPollContextProvider>
         <PermissionGuard>
           <PollLayout>
-            <div className="shadow-huge fixed bottom-8 left-1/2 z-20 -translate-x-1/2 rounded-lg bg-white p-2.5">
+            <div className="mb-4 flex justify-end">
               <PollHeader />
             </div>
             <div className="pb-16">{children}</div>

@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
 import {
   Form,
   FormControl,
@@ -58,8 +57,6 @@ const useScoreByOptionId = () => {
   }, [responses, options]);
 };
 
-const pageSize = 5;
-
 export const FinalizePollForm = ({
   name,
   onSubmit,
@@ -68,7 +65,6 @@ export const FinalizePollForm = ({
   onSubmit?: (data: FinalizeFormData) => void;
 }) => {
   const poll = usePoll();
-  const [max, setMax] = React.useState(pageSize);
 
   const { adjustTimeZone } = useDayjs();
   const scoreByOptionId = useScoreByOptionId();
@@ -125,9 +121,9 @@ export const FinalizePollForm = ({
                   <RadioGroup
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="grid gap-2"
+                    className="grid max-h-96 gap-2 overflow-y-auto"
                   >
-                    {options.slice(0, max).map((option) => {
+                    {options.map((option) => {
                       const start = adjustTimeZone(
                         option.startTime,
                         !poll.timeZone,
@@ -192,19 +188,6 @@ export const FinalizePollForm = ({
                     })}
                   </RadioGroup>
                 </FormControl>
-                {max < options.length ? (
-                  <div className="absolute bottom-0 mt-2 w-full bg-gradient-to-t from-white via-white to-white/10 px-3 py-8">
-                    <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={() => {
-                        setMax((oldMax) => oldMax + pageSize);
-                      }}
-                    >
-                      <Trans i18nKey="showMore" />
-                    </Button>
-                  </div>
-                ) : null}
               </FormItem>
             );
           }}

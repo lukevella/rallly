@@ -10,9 +10,9 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import {
   CalendarCheck2Icon,
-  ChevronDownIcon,
   CopyIcon,
   DownloadIcon,
+  MoreHorizontalIcon,
   PencilIcon,
   Settings2Icon,
   TableIcon,
@@ -42,9 +42,8 @@ const ManagePoll: React.FunctionComponent<{
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
           <Button disabled={disabled}>
-            <Trans i18nKey="manage" defaults="Manage" />
             <Icon>
-              <ChevronDownIcon />
+              <MoreHorizontalIcon />
             </Icon>
           </Button>
         </DropdownMenuTrigger>
@@ -80,14 +79,6 @@ const ManagePoll: React.FunctionComponent<{
             <Link href={`/poll/${poll.id}/duplicate`}>
               <DropdownMenuItemIconLabel icon={CopyIcon}>
                 <Trans i18nKey="duplicate" defaults="Duplicate" />
-                <ProFeatureBadge />
-              </DropdownMenuItemIconLabel>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild disabled={!!poll.event}>
-            <Link href={`/poll/${poll.id}/finalize`}>
-              <DropdownMenuItemIconLabel icon={CalendarCheck2Icon}>
-                <Trans i18nKey="finishPoll" defaults="Finalize" />
                 <ProFeatureBadge />
               </DropdownMenuItemIconLabel>
             </Link>

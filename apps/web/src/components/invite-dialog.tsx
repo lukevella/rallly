@@ -56,16 +56,10 @@ export const InviteDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
-        <Button size="lg">
+        <Button>
           <Icon>
             <UserPlus2Icon />
           </Icon>
-          <span>
-            <Trans
-              i18nKey="inviteParticipants"
-              defaults="Invite Participants"
-            />
-          </span>
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -90,9 +84,6 @@ export const InviteDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <div className="min-w-0">
-          <label className="mb-2">
-            <Trans i18nKey="inviteLink" defaults="Invite Link" />
-          </label>
           <div className="flex gap-2">
             <CopyInviteLinkButton />
             <div className="shrink-0">
