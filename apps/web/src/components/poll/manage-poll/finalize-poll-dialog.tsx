@@ -140,7 +140,7 @@ export const FinalizePollForm = ({
                           className={cn(
                             "group flex select-none items-center gap-4 rounded-md border bg-white p-3 text-base",
                             field.value === option.id
-                              ? "bg-primary-50 border-primary"
+                              ? "border-gray-300 bg-gray-100"
                               : "hover:bg-gray-50",
                           )}
                         >
