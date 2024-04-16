@@ -4,11 +4,13 @@ import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
+  ArrowUpRightIcon,
   BarChart2Icon,
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
   ChevronRightIcon,
+  LifeBuoyIcon,
   LogInIcon,
   PlusIcon,
   Settings2Icon,
@@ -28,10 +30,12 @@ import { IconComponent } from "@/types";
 function NavItem({
   href,
   children,
+  target,
   icon: Icon,
   current,
 }: {
   href: string;
+  target?: string;
   icon: IconComponent;
   children: React.ReactNode;
   current?: boolean;
@@ -39,11 +43,12 @@ function NavItem({
   return (
     <Link
       href={href}
+      target={target}
       className={cn(
         current
           ? "bg-gray-200 text-gray-800"
           : "text-gray-700 hover:bg-gray-200 active:bg-gray-300",
-        "group flex  items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
+        "group flex items-center gap-x-2.5 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
       <Icon
@@ -139,6 +144,18 @@ export function Sidebar() {
                 </NavItem>
               </li>
             </IfGuest>
+            <li>
+              <NavItem
+                target="_blank"
+                href="https://support.rallly.co"
+                icon={LifeBuoyIcon}
+              >
+                <Trans i18nKey="support" />
+                <Icon>
+                  <ArrowUpRightIcon />
+                </Icon>
+              </NavItem>
+            </li>
             <li>
               <NavItem href="/settings/preferences" icon={Settings2Icon}>
                 <Trans i18nKey="preferences" />
