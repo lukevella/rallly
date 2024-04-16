@@ -16,7 +16,7 @@ function When() {
   const { adjustTimeZone, dayjs } = useDayjs();
   if (poll.event) {
     return (
-      <ul className="space-y-1.5">
+      <ul className="space-y-2">
         <li className="flex items-center gap-x-2.5">
           <Icon>
             <CalendarIcon />
