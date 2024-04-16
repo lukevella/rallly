@@ -13,7 +13,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { DateIcon } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
@@ -147,9 +146,6 @@ export const FinalizePollForm = ({
                         >
                           <div className="hidden">
                             <RadioGroupItem id={option.id} value={option.id} />
-                          </div>
-                          <div>
-                            <DateIcon date={start} />
                           </div>
                           <div className="grow">
                             <div className="flex">
