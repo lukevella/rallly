@@ -200,15 +200,15 @@ function ReopenButton({ pollId }: { pollId: string }) {
   );
 }
 
-function PollHeader() {
+function Menu() {
   const poll = usePoll();
   if (poll.event) {
     return <ReopenButton pollId={poll.id} />;
   }
   return (
     <div className="flex items-center gap-x-2.5">
-      <NotificationsToggle />
       <InviteDialog />
+      <NotificationsToggle />
       <PauseResumeToggle />
       <FinalizeDialog pollId={poll.id} />
       <ManagePoll />
@@ -254,7 +254,7 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
         <PermissionGuard>
           <PollLayout>
             <div className="mb-4 flex justify-end">
-              <PollHeader />
+              <Menu />
             </div>
             <div className="pb-16">{children}</div>
           </PollLayout>

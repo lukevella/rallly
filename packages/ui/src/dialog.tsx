@@ -5,6 +5,7 @@ import { XIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
+export type { DialogProps } from "@radix-ui/react-dialog";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -117,14 +118,41 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn(
-      "text-muted-foreground mt-2 text-sm tracking-wide",
-      className,
-    )}
+    className={cn("text-muted-foreground mt-2 text-sm", className)}
     {...props}
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+function useDialog() {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>();
+
+  function trigger() {
+    setIsOpen(true);
+  }
+
+  function dismiss() {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  }
+
+  return {
+    triggerProps: {
+      ref: triggerRef,
+      onClick: trigger,
+    },
+    dialogProps: {
+      open: isOpen,
+      onOpenChange: (open: boolean) => {
+        if (open) trigger();
+        else dismiss();
+      },
+    },
+    trigger,
+    dismiss,
+  };
+}
 
 export {
   Dialog,
@@ -135,4 +163,5 @@ export {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  useDialog,
 };

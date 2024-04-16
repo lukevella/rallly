@@ -1,6 +1,5 @@
 "use client";
 import { Slot } from "@radix-ui/react-slot";
-import { Loader2Icon } from "lucide-react";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 

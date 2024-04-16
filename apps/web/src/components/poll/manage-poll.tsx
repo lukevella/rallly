@@ -1,4 +1,5 @@
 import { Button } from "@rallly/ui/button";
+import { useDialog } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ import {
 import Link from "next/link";
 import * as React from "react";
 
+import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
 import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
@@ -33,7 +35,7 @@ const ManagePoll: React.FunctionComponent<{
   const poll = usePoll();
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
-
+  const duplicateDialog = useDialog();
   const { exportToCsv } = useCsvExporter();
 
   return (
@@ -74,13 +76,15 @@ const ManagePoll: React.FunctionComponent<{
               <Trans i18nKey="exportToCsv" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/poll/${poll.id}/duplicate`}>
-              <DropdownMenuItemIconLabel icon={CopyIcon}>
-                <Trans i18nKey="duplicate" defaults="Duplicate" />
-                <ProFeatureBadge />
-              </DropdownMenuItemIconLabel>
-            </Link>
+          <DropdownMenuItem
+            onSelect={() => {
+              duplicateDialog.trigger();
+            }}
+          >
+            <DropdownMenuItemIconLabel icon={CopyIcon}>
+              <Trans i18nKey="duplicate" defaults="Duplicate" />
+              <ProFeatureBadge />
+            </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -90,7 +94,7 @@ const ManagePoll: React.FunctionComponent<{
             }}
           >
             <TrashIcon className="size-4 opacity-75" />
-            <Trans i18nKey="deletePoll" />
+            <Trans i18nKey="delete" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -98,6 +102,11 @@ const ManagePoll: React.FunctionComponent<{
         urlId={poll.adminUrlId}
         open={showDeletePollDialog}
         onOpenChange={setShowDeletePollDialog}
+      />
+      <DuplicateDialog
+        pollId={poll.id}
+        pollTitle={poll.title}
+        {...duplicateDialog.dialogProps}
       />
     </>
   );
