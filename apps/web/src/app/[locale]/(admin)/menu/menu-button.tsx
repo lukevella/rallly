@@ -27,7 +27,7 @@ export function MobileMenuButton({ open }: { open?: boolean }) {
 
   return (
     <Button asChild variant="ghost">
-      <Link href="/menu">
+      <Link prefetch={true} href="/menu">
         <Icon>
           <MenuIcon />
         </Icon>
