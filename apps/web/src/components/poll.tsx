@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@rallly/ui";
-import { CalendarCheckIcon, PauseCircleIcon } from "lucide-react";
+import { CalendarCheckIcon, PauseIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next";
@@ -45,10 +45,7 @@ export const Poll = () => {
             </div>
           </div>
           <div className="text-green-50">
-            <Trans
-              i18nKey="pollStatusFinalizedDescription"
-              defaults="Votes cannot be submitted or edited."
-            />
+            <Trans i18nKey="pollStatusFinalizedDescription" />
           </div>
         </div>
       ) : null}
@@ -56,7 +53,7 @@ export const Poll = () => {
       {poll.status === "paused" ? (
         <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-gray-200 px-4 py-3 text-sm text-gray-600 lg:flex-row">
           <div className="flex items-center gap-x-2.5">
-            <PauseCircleIcon className="size-4" />
+            <PauseIcon className="size-4" />
             <div className="font-medium ">
               <Trans i18nKey="pollStatusPaused" />
             </div>

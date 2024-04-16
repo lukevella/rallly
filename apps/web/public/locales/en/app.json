@@ -236,7 +236,7 @@
   "pollStatusOpen": "Live",
   "manageAccess": "You are the creator of this poll",
   "pollStatusFinalizedDescription": "A final date has been selected",
-  "pollStatusPausedDescription": "Votes cannot be submitted or edited.",
+  "pollStatusPausedDescription": "The host has paused this poll. Votes cannot be submitted or edited.",
   "tba": "To be announced",
   "pollsListAll": "All Polls",
   "pollsListMine": "My Polls",

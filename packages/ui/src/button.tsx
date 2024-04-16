@@ -70,7 +70,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           "group",
           buttonVariants({ variant, size }),
           {
-            "pointer-events-none": loading,
+            "pointer-events-none animate-pulse duration-500": loading,
           },
           className,
         )}
@@ -82,11 +82,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           children
         ) : (
           <>
-            {loading ? (
-              <Loader2Icon className="size-4 animate-spin" />
-            ) : Icon ? (
-              <Icon className={cn("-ml-0.5 size-4")} />
-            ) : null}
+            {Icon ? <Icon className={cn("-ml-0.5 size-4")} /> : null}
             {children}
           </>
         )}
