@@ -1,6 +1,11 @@
 "use client";
 import { cn } from "@rallly/ui";
-import { CalendarCheckIcon, PauseIcon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import {
+  CalendarCheckIcon,
+  MessageSquareOffIcon,
+  PauseIcon,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next";
@@ -73,6 +78,9 @@ export const Poll = () => {
           </VotingForm>
           {poll.disableComments ? (
             <p className="text-muted-foreground text-center text-sm">
+              <Icon>
+                <MessageSquareOffIcon className="mr-2 inline-block" />
+              </Icon>
               <Trans
                 i18nKey="commentsDisabled"
                 defaults="Comments have been disabled"
