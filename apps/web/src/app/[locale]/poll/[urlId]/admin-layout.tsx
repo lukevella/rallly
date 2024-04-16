@@ -207,7 +207,7 @@ function Menu() {
     return <ReopenButton pollId={poll.id} />;
   }
   return (
-    <div className="flex items-center gap-x-2.5">
+    <div className="flex items-center gap-x-2">
       <InviteDialog />
       <NotificationsToggle />
       <PauseResumeToggle />
@@ -247,12 +247,12 @@ function Breadcrumbs() {
   }
 
   return (
-    <Button variant="ghost" asChild>
+    <Button variant="ghost" className="max-w-full" asChild>
       <Link href={`/poll/${poll.id}`}>
         <Icon>
           <ArrowLeftIcon />
         </Icon>
-        {poll.title}
+        <span className="truncate">{poll.title}</span>
       </Link>
     </Button>
   );
@@ -273,8 +273,8 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
       <LegacyPollContextProvider>
         <PermissionGuard>
           <PollLayout>
-            <div className="mb-4 flex justify-between">
-              <div>
+            <div className="mb-4 flex flex-col justify-between gap-2.5 lg:flex-row">
+              <div className="min-w-0">
                 <Breadcrumbs />
               </div>
               <Menu />

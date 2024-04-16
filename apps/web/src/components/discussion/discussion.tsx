@@ -41,7 +41,13 @@ interface CommentForm {
   content: string;
 }
 
-const Discussion: React.FunctionComponent = () => {
+function NewCommentForm({
+  onSubmit,
+  onCancel,
+}: {
+  onSubmit?: () => void;
+  onCancel?: () => void;
+}) {
   const { t } = useTranslation();
   const { poll } = usePoll();
   const { user } = useUser();
@@ -58,12 +64,6 @@ const Discussion: React.FunctionComponent = () => {
 
   const pollId = poll.id;
 
-  const { data: comments } = trpc.polls.comments.list.useQuery(
-    { pollId },
-    {
-      staleTime: 1000 * 5,
-    },
-  );
   const posthog = usePostHog();
 
   const queryClient = trpc.useUtils();
@@ -74,6 +74,86 @@ const Discussion: React.FunctionComponent = () => {
       posthog?.capture("created comment");
     },
   });
+
+  const session = useUser();
+
+  const { register, reset, control, handleSubmit, formState } =
+    useForm<CommentForm>({
+      defaultValues: {
+        authorName,
+        content: "",
+      },
+    });
+
+  return (
+    <form
+      className="w-full space-y-2.5"
+      onSubmit={handleSubmit(async ({ authorName, content }) => {
+        await addComment.mutateAsync({ authorName, content, pollId });
+        reset({ authorName, content: "" });
+        onSubmit?.();
+      })}
+    >
+      <div>
+        <Textarea
+          id="comment"
+          className="w-full"
+          autoFocus={true}
+          placeholder={t("commentPlaceholder")}
+          {...register("content", { validate: requiredString })}
+        />
+      </div>
+      <div
+        className={cn("mb-2", {
+          hidden: !user.isGuest,
+        })}
+      >
+        <Controller
+          name="authorName"
+          key={session.user?.id}
+          control={control}
+          rules={{ validate: requiredString }}
+          render={({ field }) => (
+            <NameInput error={!!formState.errors.authorName} {...field} />
+          )}
+        />
+      </div>
+      <div className="flex justify-between gap-2.5">
+        <Button
+          onClick={() => {
+            reset();
+            onCancel?.();
+          }}
+        >
+          {t("cancel")}
+        </Button>
+        <Button
+          type="submit"
+          variant="primary"
+          loading={formState.isSubmitting}
+        >
+          <Trans defaults="Add Comment" i18nKey="addComment" />
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function Discussion() {
+  const { t } = useTranslation();
+  const { poll } = usePoll();
+
+  const pollId = poll.id;
+
+  const { data: comments } = trpc.polls.comments.list.useQuery(
+    { pollId },
+    {
+      staleTime: 1000 * 5,
+    },
+  );
+  const posthog = usePostHog();
+
+  const queryClient = trpc.useUtils();
 
   const deleteComment = trpc.polls.comments.delete.useMutation({
     onMutate: ({ commentId }) => {
@@ -90,14 +170,6 @@ const Discussion: React.FunctionComponent = () => {
   });
 
   const session = useUser();
-
-  const { register, reset, control, handleSubmit, formState } =
-    useForm<CommentForm>({
-      defaultValues: {
-        authorName,
-        content: "",
-      },
-    });
 
   const [isWriting, setIsWriting] = React.useState(false);
   const role = useRole();
@@ -170,56 +242,14 @@ const Discussion: React.FunctionComponent = () => {
       ) : null}
       <CardFooter className="border-t-0">
         {isWriting ? (
-          <form
-            className="w-full space-y-2.5"
-            onSubmit={handleSubmit(async ({ authorName, content }) => {
-              await addComment.mutateAsync({ authorName, content, pollId });
-              reset({ authorName, content: "" });
+          <NewCommentForm
+            onSubmit={() => {
               setIsWriting(false);
-            })}
-          >
-            <div>
-              <Textarea
-                id="comment"
-                className="w-full"
-                autoFocus={true}
-                placeholder={t("commentPlaceholder")}
-                {...register("content", { validate: requiredString })}
-              />
-            </div>
-            <div
-              className={cn("mb-2", {
-                hidden: !user.isGuest,
-              })}
-            >
-              <Controller
-                name="authorName"
-                key={session.user?.id}
-                control={control}
-                rules={{ validate: requiredString }}
-                render={({ field }) => (
-                  <NameInput error={!!formState.errors.authorName} {...field} />
-                )}
-              />
-            </div>
-            <div className="flex justify-between gap-2.5">
-              <Button
-                onClick={() => {
-                  reset();
-                  setIsWriting(false);
-                }}
-              >
-                {t("cancel")}
-              </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                loading={formState.isSubmitting}
-              >
-                <Trans defaults="Add Comment" i18nKey="addComment" />
-              </Button>
-            </div>
-          </form>
+            }}
+            onCancel={() => {
+              setIsWriting(false);
+            }}
+          />
         ) : (
           <button
             className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-2 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
@@ -234,6 +264,6 @@ const Discussion: React.FunctionComponent = () => {
       </CardFooter>
     </Card>
   );
-};
+}
 
 export default React.memo(Discussion);
