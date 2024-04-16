@@ -9,7 +9,6 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import {
-  CalendarCheck2Icon,
   CopyIcon,
   DownloadIcon,
   MoreHorizontalIcon,

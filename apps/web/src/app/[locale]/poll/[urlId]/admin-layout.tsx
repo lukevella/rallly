@@ -1,10 +1,22 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@rallly/ui/dialog";
+import { Icon } from "@rallly/ui/icon";
+import {
   ArrowUpRight,
   LogInIcon,
   LogOutIcon,
   ShieldCloseIcon,
+  UndoIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -92,27 +104,63 @@ function ReopenButton({ pollId }: { pollId: string }) {
     },
   });
   return (
-    <Button
-      onClick={() => {
-        reopen.mutate({ pollId });
-      }}
-    >
-      <Trans i18nKey="reopenPoll" />
-    </Button>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>
+          <Icon>
+            <UndoIcon />
+          </Icon>
+          <Trans i18nKey="reopen" defaults="Reopen" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            <Trans i18nKey="reopenPoll" />
+          </DialogTitle>
+          <DialogDescription>
+            <Trans
+              i18nKey="reopenPollDescription"
+              defaults="Open this poll back up for voting"
+            />
+          </DialogDescription>
+        </DialogHeader>
+        <p className="text-sm">
+          <Trans
+            i18nKey="reopenPollDialogContent"
+            defaults="Are you sure you want to reopen this poll?"
+          />
+        </p>
+
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button>Cancel</Button>
+          </DialogClose>
+          <Button
+            loading={reopen.isLoading}
+            onClick={() => {
+              reopen.mutate({ pollId });
+            }}
+            variant="primary"
+          >
+            Reopen
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 function PollHeader() {
   const poll = usePoll();
+  if (poll.event) {
+    return <ReopenButton pollId={poll.id} />;
+  }
   return (
     <div className="flex items-center gap-x-2.5">
       <NotificationsToggle />
       <InviteDialog />
-      {poll.event ? (
-        <ReopenButton pollId={poll.id} />
-      ) : (
-        <FinalizeDialog pollId={poll.id} />
-      )}
+      <FinalizeDialog pollId={poll.id} />
       <ManagePoll />
     </div>
   );

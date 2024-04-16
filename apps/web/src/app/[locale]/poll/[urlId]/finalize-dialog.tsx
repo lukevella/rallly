@@ -10,7 +10,6 @@ import {
   DialogTrigger,
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CalendarCheckIcon } from "lucide-react";
 
 import { trpc } from "@/app/providers";
