@@ -15,6 +15,7 @@ import { CalendarCheckIcon } from "lucide-react";
 import { PayWallDialogContent } from "@/app/[locale]/poll/[urlId]/pay-wall-dialog-content";
 import { trpc } from "@/app/providers";
 import { FinalizePollForm } from "@/components/poll/manage-poll/finalize-poll-dialog";
+import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
 
 export function FinalizeDialog({ pollId }: { pollId: string }) {
@@ -27,6 +28,7 @@ export function FinalizeDialog({ pollId }: { pollId: string }) {
             <CalendarCheckIcon />
           </Icon>
           <Trans i18nKey="finalize" />
+          <ProFeatureBadge />
         </Button>
       </DialogTrigger>
       <PayWallDialogContent>
