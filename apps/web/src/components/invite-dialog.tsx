@@ -60,6 +60,7 @@ export const InviteDialog = () => {
           <Icon>
             <UserPlus2Icon />
           </Icon>
+          <Trans i18nKey="inviteParticipants" />
         </Button>
       </DialogTrigger>
       <DialogContent

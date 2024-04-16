@@ -21,20 +21,14 @@ export function FinalizeDialog({ pollId }: { pollId: string }) {
   const finalize = trpc.polls.book.useMutation();
   return (
     <Dialog>
-      <Tooltip>
-        <DialogTrigger asChild>
-          <TooltipTrigger asChild>
-            <Button>
-              <Icon>
-                <CalendarCheckIcon />
-              </Icon>
-            </Button>
-          </TooltipTrigger>
-        </DialogTrigger>
-        <TooltipContent className="flex gap-x-2.5">
+      <DialogTrigger asChild>
+        <Button>
+          <Icon>
+            <CalendarCheckIcon />
+          </Icon>
           <Trans i18nKey="finalize" />
-        </TooltipContent>
-      </Tooltip>
+        </Button>
+      </DialogTrigger>
       <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle>

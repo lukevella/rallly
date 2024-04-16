@@ -108,6 +108,22 @@ const NotificationsToggle: React.FunctionComponent = () => {
               <BellOffIcon />
             </Icon>
           )}
+          <Trans
+            i18nKey="notificationsValue"
+            defaults="Notifications: <b>{value}</b>"
+            components={{
+              b: <span className="font-semibold" />,
+            }}
+            values={{
+              value: isWatching
+                ? t("notificationsOn", {
+                    defaultValue: "On",
+                  })
+                : t("notificationsOff", {
+                    defaultValue: "Off",
+                  }),
+            }}
+          />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="bottom">

@@ -106,7 +106,6 @@ function PollHeader() {
   const poll = usePoll();
   return (
     <div className="flex items-center gap-x-2.5">
-      <span className="text-muted-foreground px-2.5 text-sm">Actions:</span>
       <NotificationsToggle />
       <InviteDialog />
       {poll.event ? (
