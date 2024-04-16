@@ -52,9 +52,9 @@ export function EventCard() {
       <RandomGradientBar seed={poll.id} />
       <CardHeader>
         <div className="flex gap-4">
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             <CardTitle className="text-lg">{poll.title}</CardTitle>
-            <ul className="text-muted-foreground mt-1.5 space-y-2 text-sm">
+            <ul className="text-muted-foreground space-y-2 text-sm">
               <li>
                 <When />
               </li>

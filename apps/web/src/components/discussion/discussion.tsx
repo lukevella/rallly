@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
@@ -21,6 +22,7 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { useRole } from "@/contexts/role";
@@ -42,6 +44,17 @@ interface CommentForm {
 const Discussion: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const { poll } = usePoll();
+  const { user } = useUser();
+  const { participants } = useParticipants();
+
+  const authorName = React.useMemo(() => {
+    if (user.isGuest) {
+      const participant = participants.find((p) => p.userId === user.id);
+      return participant?.name ?? "";
+    } else {
+      return user.name;
+    }
+  }, [user, participants]);
 
   const pollId = poll.id;
 
@@ -81,7 +94,7 @@ const Discussion: React.FunctionComponent = () => {
   const { register, reset, control, handleSubmit, formState } =
     useForm<CommentForm>({
       defaultValues: {
-        authorName: "",
+        authorName,
         content: "",
       },
     });
@@ -174,7 +187,11 @@ const Discussion: React.FunctionComponent = () => {
                 {...register("content", { validate: requiredString })}
               />
             </div>
-            <div className="mb-2">
+            <div
+              className={cn("mb-2", {
+                hidden: !user.isGuest,
+              })}
+            >
               <Controller
                 name="authorName"
                 key={session.user?.id}
@@ -185,7 +202,7 @@ const Discussion: React.FunctionComponent = () => {
                 )}
               />
             </div>
-            <div className="flex justify-between gap-2">
+            <div className="flex justify-between gap-2.5">
               <Button
                 onClick={() => {
                   reset();
