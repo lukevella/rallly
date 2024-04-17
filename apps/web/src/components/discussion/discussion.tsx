@@ -216,13 +216,14 @@ function Discussion() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
                               <DropdownMenuItem
-                                onClick={() => {
+                                className="text-destructive"
+                                onSelect={() => {
                                   deleteComment.mutate({
                                     commentId: comment.id,
                                   });
                                 }}
                               >
-                                <TrashIcon className="mr-2 size-4" />
+                                <TrashIcon className="size-4" />
                                 <Trans i18nKey="delete" />
                               </DropdownMenuItem>
                             </DropdownMenuContent>

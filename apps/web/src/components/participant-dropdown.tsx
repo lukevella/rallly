@@ -91,12 +91,11 @@ export const ParticipantDropdown = ({
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-rose-600"
+            className="text-destructive"
             onClick={() => setIsDeleteParticipantModalVisible(true)}
           >
-            <DropdownMenuItemIconLabel icon={TrashIcon}>
-              <Trans i18nKey="delete" />
-            </DropdownMenuItemIconLabel>
+            <TrashIcon className="size-4" />
+            <Trans i18nKey="delete" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
