@@ -16,8 +16,6 @@ import {
   ArrowUpRight,
   LogInIcon,
   LogOutIcon,
-  PauseIcon,
-  PlayIcon,
   ShieldCloseIcon,
   UndoIcon,
 } from "lucide-react";
@@ -99,51 +97,6 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
-function PauseResumeToggle() {
-  const poll = usePoll();
-  const queryClient = trpc.useUtils();
-  const resume = trpc.polls.resume.useMutation({
-    onSuccess: () => {
-      queryClient.invalidate();
-    },
-  });
-  const pause = trpc.polls.pause.useMutation({
-    onSuccess: () => {
-      queryClient.invalidate();
-    },
-  });
-
-  if (poll.status === "paused") {
-    return (
-      <Button
-        loading={resume.isLoading}
-        onClick={() => {
-          resume.mutate({ pollId: poll.id });
-        }}
-      >
-        <Icon>
-          <PlayIcon />
-        </Icon>
-        <Trans i18nKey="resumePoll" />
-      </Button>
-    );
-  } else {
-    return (
-      <Button
-        loading={pause.isLoading}
-        onClick={() => {
-          pause.mutate({ pollId: poll.id });
-        }}
-      >
-        <Icon>
-          <PauseIcon />
-        </Icon>
-        <Trans i18nKey="pausePoll" />
-      </Button>
-    );
-  }
-}
-
 function ReopenButton({ pollId }: { pollId: string }) {
   const queryClient = trpc.useUtils();
   const reopen = trpc.polls.reopen.useMutation({
@@ -210,7 +163,6 @@ function Menu() {
     <div className="flex items-center gap-x-2">
       <InviteDialog />
       <NotificationsToggle />
-      <PauseResumeToggle />
       <FinalizeDialog pollId={poll.id} />
       <ManagePoll />
     </div>

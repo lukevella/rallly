@@ -13,7 +13,9 @@ import {
   CopyIcon,
   DownloadIcon,
   MoreHorizontalIcon,
+  PauseIcon,
   PencilIcon,
+  PlayIcon,
   Settings2Icon,
   TableIcon,
   TrashIcon,
@@ -22,12 +24,82 @@ import Link from "next/link";
 import * as React from "react";
 
 import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
+import { trpc } from "@/app/providers";
 import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
+
+function PauseResumeToggle() {
+  const poll = usePoll();
+  const queryClient = trpc.useUtils();
+  const resume = trpc.polls.resume.useMutation({
+    onSuccess: () => {
+      queryClient.invalidate();
+    },
+  });
+  const pause = trpc.polls.pause.useMutation({
+    onSuccess: () => {
+      queryClient.invalidate();
+    },
+  });
+
+  if (poll.status === "paused") {
+    return (
+      <DropdownMenuItem
+        onSelect={() => {
+          resume.mutate(
+            { pollId: poll.id },
+            {
+              onSuccess: () => {
+                queryClient.polls.get.setData({ urlId: poll.id }, (oldData) => {
+                  if (!oldData) return oldData;
+                  return {
+                    ...oldData,
+                    status: "live",
+                  };
+                });
+              },
+            },
+          );
+        }}
+      >
+        <Icon>
+          <PlayIcon />
+        </Icon>
+        <Trans i18nKey="resumePoll" />
+      </DropdownMenuItem>
+    );
+  } else {
+    return (
+      <DropdownMenuItem
+        onSelect={() => {
+          pause.mutate(
+            { pollId: poll.id },
+            {
+              onSuccess: () => {
+                queryClient.polls.get.setData({ urlId: poll.id }, (oldData) => {
+                  if (!oldData) return oldData;
+                  return {
+                    ...oldData,
+                    status: "paused",
+                  };
+                });
+              },
+            },
+          );
+        }}
+      >
+        <Icon>
+          <PauseIcon />
+        </Icon>
+        <Trans i18nKey="pausePoll" />
+      </DropdownMenuItem>
+    );
+  }
+}
 
 const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
@@ -70,6 +142,8 @@ const ManagePoll: React.FunctionComponent<{
               </DropdownMenuItemIconLabel>
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <PauseResumeToggle />
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DropdownMenuItemIconLabel icon={DownloadIcon}>
