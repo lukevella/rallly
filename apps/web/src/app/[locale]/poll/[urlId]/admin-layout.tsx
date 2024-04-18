@@ -161,8 +161,8 @@ function Menu() {
   }
   return (
     <div className="flex items-center gap-x-2">
-      <InviteDialog />
       <NotificationsToggle />
+      <InviteDialog />
       <FinalizeDialog pollId={poll.id} />
       <ManagePoll />
     </div>
