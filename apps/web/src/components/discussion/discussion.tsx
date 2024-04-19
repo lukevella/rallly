@@ -15,9 +15,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import { Textarea } from "@rallly/ui/textarea";
 import dayjs from "dayjs";
-import { MoreHorizontalIcon, TrashIcon } from "lucide-react";
+import {
+  MessageSquareOffIcon,
+  MoreHorizontalIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -25,6 +30,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
+import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
@@ -33,7 +39,6 @@ import { requiredString } from "../../utils/form-validation";
 import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import UserAvatar from "../poll/user-avatar";
-import { usePoll } from "../poll-context";
 import { useUser } from "../user-provider";
 
 interface CommentForm {
@@ -49,7 +54,7 @@ function NewCommentForm({
   onCancel?: () => void;
 }) {
   const { t } = useTranslation();
-  const { poll } = usePoll();
+  const poll = usePoll();
   const { user } = useUser();
   const { participants } = useParticipants();
 
@@ -139,9 +144,9 @@ function NewCommentForm({
   );
 }
 
-function Discussion() {
+function DiscussionInner() {
   const { t } = useTranslation();
-  const { poll } = usePoll();
+  const poll = usePoll();
 
   const pollId = poll.id;
 
@@ -241,30 +246,46 @@ function Discussion() {
           </div>
         </CardContent>
       ) : null}
-      <CardFooter className="border-t-0">
-        {isWriting ? (
-          <NewCommentForm
-            onSubmit={() => {
-              setIsWriting(false);
-            }}
-            onCancel={() => {
-              setIsWriting(false);
-            }}
-          />
-        ) : (
-          <button
-            className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-2 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
-            onClick={() => setIsWriting(true)}
-          >
-            <Trans
-              i18nKey="commentPlaceholder"
-              defaults="Leave a comment on this poll (visible to everyone)"
+      {!poll.event ? (
+        <CardFooter className="border-t-0">
+          {isWriting ? (
+            <NewCommentForm
+              onSubmit={() => {
+                setIsWriting(false);
+              }}
+              onCancel={() => {
+                setIsWriting(false);
+              }}
             />
-          </button>
-        )}
-      </CardFooter>
+          ) : (
+            <button
+              className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-2 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+              onClick={() => setIsWriting(true)}
+            >
+              <Trans
+                i18nKey="commentPlaceholder"
+                defaults="Leave a comment on this poll (visible to everyone)"
+              />
+            </button>
+          )}
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }
 
-export default React.memo(Discussion);
+export default function Discussion() {
+  const poll = usePoll();
+  if (poll.disableComments) {
+    <p className="text-muted-foreground text-center text-sm">
+      <Icon>
+        <MessageSquareOffIcon className="mr-2 inline-block" />
+      </Icon>
+      <Trans
+        i18nKey="commentsDisabled"
+        defaults="Comments have been disabled"
+      />
+    </p>;
+  }
+  return <DiscussionInner />;
+}

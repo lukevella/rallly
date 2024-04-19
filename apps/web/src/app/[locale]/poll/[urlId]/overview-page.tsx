@@ -1,76 +1,74 @@
 "use client";
-
 import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
-import { ArrowUpRightIcon, LinkIcon } from "lucide-react";
+import { CalendarCheckIcon, PauseIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import { useCopyToClipboard } from "react-use";
+import { Trans } from "react-i18next";
 
-import { Poll } from "@/components/poll";
-import { Trans } from "@/components/trans";
+import Discussion from "@/components/discussion";
+import { EventCard } from "@/components/event-card";
+import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { usePoll } from "@/contexts/poll";
 
-export function CopyInviteLinkButton({ className }: { className: string }) {
-  const [didCopy, setDidCopy] = React.useState(false);
-  const [state, copyToClipboard] = useCopyToClipboard();
-  const poll = usePoll();
-  const inviteLinkWithoutProtocol = poll.inviteLink.replace(/^https?:\/\//, "");
+import { Participants } from "./participants";
 
-  React.useEffect(() => {
-    if (state.error) {
-      console.error(`Unable to copy value: ${state.error.message}`);
-    }
-  }, [state]);
+export const OverviewPage = () => {
+  const poll = usePoll();
+  useTouchBeacon(poll.id);
 
   return (
-    <Button
-      className={cn("min-w-0", className)}
-      onClick={() => {
-        copyToClipboard(poll.inviteLink);
-        setDidCopy(true);
-        setTimeout(() => {
-          setDidCopy(false);
-        }, 1000);
-      }}
-    >
-      {didCopy ? (
-        <Trans i18nKey="copied" />
-      ) : (
-        <>
-          <Icon>
-            <LinkIcon />
-          </Icon>
-          <span className="min-w-0 truncate">{inviteLinkWithoutProtocol}</span>
-        </>
-      )}
-    </Button>
-  );
-}
-
-export function ShareCard() {
-  const poll = usePoll();
-  return (
-    <div className="space-y-4">
-      <div>
-        <div className="flex gap-x-2.5">
-          <div className="grow">
-            <CopyInviteLinkButton className="w-full" />
+    <div className={cn("space-y-3 sm:space-y-6")}>
+      {poll.event ? (
+        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-green-600 px-4 py-3 text-sm text-green-50 lg:flex-row">
+          <div className="flex items-center gap-x-2.5">
+            <CalendarCheckIcon className="size-4 text-green-100" />
+            <div className="font-medium">
+              <Trans i18nKey="pollStatusFinalized" />
+            </div>
           </div>
-          <Button asChild>
-            <Link target="_blank" href={poll.inviteLink}>
-              <Icon>
-                <ArrowUpRightIcon />
-              </Icon>
-            </Link>
-          </Button>
+          <div className="text-green-50">
+            <Trans i18nKey="pollStatusFinalizedDescription" />
+          </div>
+        </div>
+      ) : null}
+      {poll.status === "paused" ? (
+        <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-gray-200 px-4 py-3 text-sm text-gray-600 lg:flex-row">
+          <div className="flex items-center gap-x-2.5">
+            <PauseIcon className="size-4" />
+            <div className="font-medium ">
+              <Trans i18nKey="pollStatusPaused" />
+            </div>
+          </div>
+          <div className="">
+            <Trans
+              i18nKey="pollStatusPausedDescription"
+              defaults="Votes cannot be submitted or edited."
+            />
+          </div>
+        </div>
+      ) : null}
+
+      <EventCard />
+      <Participants />
+      <Discussion />
+
+      <div className="mt-4 space-y-4 text-center text-sm text-gray-500">
+        <div className="pb-8">
+          <Trans
+            defaults="Powered by <a>{name}</a>"
+            i18nKey="poweredByRallly"
+            values={{ name: "rallly.co" }}
+            components={{
+              a: (
+                <Link
+                  prefetch={false}
+                  className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
+                  href={`https://rallly.co?utm_source=poll&utm_medium=referral&utm_campaign=poll_referral_${poll.id}`}
+                />
+              ),
+            }}
+          />
         </div>
       </div>
     </div>
   );
-}
-
-export function OverviewPage() {
-  return <Poll />;
-}
+};

@@ -16,9 +16,7 @@ import {
   useUpdateParticipantMutation,
 } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
-import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
-import { useRole } from "@/contexts/role";
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
@@ -31,7 +29,7 @@ const formSchema = z.object({
   ),
 });
 
-type VotingFormValues = z.infer<typeof formSchema>;
+export type VotingFormValues = z.infer<typeof formSchema>;
 
 export const useVotingForm = () => {
   const { options } = usePoll();
@@ -76,17 +74,13 @@ export const useVotingForm = () => {
   };
 };
 
-export const VotingForm = ({ children }: React.PropsWithChildren) => {
+export const VotingForm = ({
+  children,
+  defaultValues,
+}: React.PropsWithChildren<{ defaultValues?: Partial<VotingFormValues> }>) => {
   const { id: pollId, options } = usePoll();
   const updateParticipant = useUpdateParticipantMutation();
-  const { participants } = useParticipants();
 
-  const { canAddNewParticipant, canEditParticipant } = usePermissions();
-  const userAlreadyVoted = participants.some((participant) =>
-    canEditParticipant(participant.id),
-  );
-
-  const role = useRole();
   const optionIds = options.map((option) => option.id);
 
   const [isNewParticipantModalOpen, setIsNewParticipantModalOpen] =
@@ -94,14 +88,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
 
   const form = useForm<VotingFormValues>({
     defaultValues: {
-      mode:
-        canAddNewParticipant && !userAlreadyVoted && role === "participant"
-          ? "new"
-          : "view",
-      participantId:
-        role === "participant"
-          ? participants.find((p) => canEditParticipant(p.id))?.id
-          : undefined,
+      ...defaultValues,
       votes: options.map((option) => ({
         optionId: option.id,
       })),
@@ -139,7 +126,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         open={isNewParticipantModalOpen}
         onOpenChange={setIsNewParticipantModalOpen}
       >
-        <DialogContent size="sm">
+        <DialogContent size="md">
           <DialogHeader>
             <DialogTitle>
               <Trans i18nKey="newParticipant" />

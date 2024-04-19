@@ -25,7 +25,6 @@ import React from "react";
 
 import { FinalizeDialog } from "@/app/[locale]/poll/[urlId]/finalize-dialog";
 import { LogoutButton } from "@/app/components/logout-button";
-import { InviteDialog } from "@/components/invite-dialog";
 import { PollLayout } from "@/components/layouts/poll-layout";
 import { LoginLink } from "@/components/login-link";
 import {
@@ -162,7 +161,6 @@ function Menu() {
   return (
     <div className="flex items-center gap-x-2">
       <NotificationsToggle />
-      <InviteDialog />
       <FinalizeDialog pollId={poll.id} />
       <ManagePoll />
     </div>

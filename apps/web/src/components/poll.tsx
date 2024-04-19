@@ -1,18 +1,16 @@
 "use client";
 import { cn } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
-import {
-  CalendarCheckIcon,
-  MessageSquareOffIcon,
-  PauseIcon,
-} from "lucide-react";
+import { CalendarCheckIcon, PauseIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next";
 
-import { PollViz } from "@/app/components/poll-viz";
+import { Participants } from "@/app/components/participants";
 import { Attendees } from "@/components/attendees";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
+import { useParticipants } from "@/components/participants-provider";
+import { VotingForm } from "@/components/poll/voting-form";
+import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 
 import { useTouchBeacon } from "./poll/use-touch-beacon";
@@ -20,6 +18,14 @@ import { useTouchBeacon } from "./poll/use-touch-beacon";
 export const Poll = () => {
   const poll = usePoll();
   useTouchBeacon(poll.id);
+
+  const { participants } = useParticipants();
+  const { canAddNewParticipant, canEditParticipant } = usePermissions();
+  const participant = participants.find((participant) =>
+    canEditParticipant(participant.id),
+  );
+
+  const userAlreadyVoted = !!participant;
 
   return (
     <div className={cn("space-y-3 sm:space-y-6")}>
@@ -53,26 +59,21 @@ export const Poll = () => {
         </div>
       ) : null}
       <EventCard />
+
       {!poll.event ? (
-        <>
-          <PollViz />
-          {poll.disableComments ? (
-            <p className="text-muted-foreground text-center text-sm">
-              <Icon>
-                <MessageSquareOffIcon className="mr-2 inline-block" />
-              </Icon>
-              <Trans
-                i18nKey="commentsDisabled"
-                defaults="Comments have been disabled"
-              />
-            </p>
-          ) : (
-            <Discussion />
-          )}
-        </>
+        <VotingForm
+          defaultValues={{
+            participantId: participant?.id,
+            mode: canAddNewParticipant && !userAlreadyVoted ? "new" : "view",
+          }}
+        >
+          <Participants />
+        </VotingForm>
       ) : (
         <Attendees optionId={poll.event.optionId} />
       )}
+
+      <Discussion />
 
       <div className="mt-4 space-y-4 text-center text-sm text-gray-500">
         <div className="pb-8">

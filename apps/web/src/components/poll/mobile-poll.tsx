@@ -1,5 +1,4 @@
 import { Button } from "@rallly/ui/button";
-import { Card } from "@rallly/ui/card";
 import {
   Select,
   SelectContent,
@@ -53,7 +52,7 @@ const MobilePoll: React.FunctionComponent = () => {
   const isEditing = votingForm.watch("mode") !== "view";
 
   return (
-    <Card>
+    <div>
       <div className="flex flex-col space-y-2 border-b bg-gray-50 p-2">
         <div className="flex space-x-2">
           {selectedParticipantId || !isEditing ? (
@@ -158,7 +157,7 @@ const MobilePoll: React.FunctionComponent = () => {
           </m.div>
         ) : null}
       </AnimatePresence>
-    </Card>
+    </div>
   );
 };
 

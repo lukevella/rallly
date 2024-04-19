@@ -7,12 +7,15 @@ import { Icon } from "@rallly/ui/icon";
 import { PlusIcon } from "lucide-react";
 import React from "react";
 
+import { Attendees } from "@/components/attendees";
 import { useParticipants } from "@/components/participants-provider";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { useVotingForm, VotingForm } from "@/components/poll/voting-form";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
+import { usePoll } from "@/contexts/poll";
+import { useRole } from "@/contexts/role";
 
 function AddParticipantButton() {
   const form = useVotingForm();
@@ -64,40 +67,43 @@ export function PollComp() {
 
   return <PollComponent />;
 }
-export function PollViz() {
-  const { participants } = useParticipants();
+
+function Responses() {
   return (
     <VotingForm>
-      <Card>
-        <CardHeader className="flex h-14 items-center justify-between">
-          <div className="flex items-center gap-x-2.5">
-            <CardTitle>
-              <Trans i18nKey="participants" />
-            </CardTitle>
-            <Badge>{participants.length}</Badge>
-            <AddParticipantButton />
-          </div>
-        </CardHeader>
-        <PollComp />
-        {/* {participants.length > 0 ? (
-          <PollComponent />
-        ) : (
-          <CardContent>
-            <EmptyState className="p-16">
-              <EmptyStateIcon>
-                <UsersIcon />
-              </EmptyStateIcon>
-              <EmptyStateTitle>No Participants</EmptyStateTitle>
-              <EmptyStateDescription>
-                Your poll has no participants yet
-              </EmptyStateDescription>
-              <EmptyStateFooter>
-                <InviteDialog />
-              </EmptyStateFooter>
-            </EmptyState>
-          </CardContent>
-        )} */}
-      </Card>
+      <PollComp />
     </VotingForm>
+  );
+}
+
+function ParticipantsInner() {
+  const poll = usePoll();
+
+  const role = useRole();
+  if (poll.event) {
+    return <Attendees optionId={poll.event.optionId} />;
+  }
+
+  if (role === "admin") {
+    return <Responses />;
+  }
+
+  return <PollComp />;
+}
+export function Participants() {
+  const { participants } = useParticipants();
+
+  return (
+    <Card>
+      <CardHeader className="flex h-14 items-center justify-between">
+        <div className="flex items-center gap-x-2.5">
+          <CardTitle>
+            <Trans i18nKey="participants" />
+          </CardTitle>
+          <Badge>{participants.length}</Badge>
+        </div>
+      </CardHeader>
+      <ParticipantsInner />
+    </Card>
   );
 }

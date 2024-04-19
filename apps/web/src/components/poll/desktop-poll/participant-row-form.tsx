@@ -7,7 +7,7 @@ import {
   TooltipPortal,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import { CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, UndoIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller } from "react-hook-form";
@@ -30,7 +30,6 @@ const ParticipantRowForm = ({
   name,
   isYou,
   className,
-  onCancel,
 }: ParticipantRowFormProps) => {
   const { t } = useTranslation();
 
@@ -38,12 +37,16 @@ const ParticipantRowForm = ({
   const form = useVotingForm();
 
   React.useEffect(() => {
-    window.addEventListener("keydown", (e) => {
+    function cancel(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        onCancel?.();
+        form.cancel();
       }
-    });
-  }, [onCancel]);
+    }
+    window.addEventListener("keydown", cancel);
+    return () => {
+      window.removeEventListener("keydown", cancel);
+    };
+  }, [form]);
 
   return (
     <tr className={cn("group", className)}>
@@ -57,7 +60,7 @@ const ParticipantRowForm = ({
           ) : (
             <YouAvatar />
           )}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -68,7 +71,7 @@ const ParticipantRowForm = ({
                   size="sm"
                 >
                   <Icon>
-                    <XIcon />
+                    <UndoIcon />
                   </Icon>
                 </Button>
               </TooltipTrigger>
@@ -81,7 +84,7 @@ const ParticipantRowForm = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="primary"
+                  variant="ghost"
                   size="sm"
                   form="voting-form"
                   type="submit"
