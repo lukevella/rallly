@@ -63,8 +63,10 @@ const MobilePoll: React.FunctionComponent = () => {
               }}
               disabled={isEditing}
             >
-              <SelectTrigger className="w-full">
-                <SelectValue />
+              <SelectTrigger asChild className="w-full">
+                <Button>
+                  <SelectValue />
+                </Button>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">

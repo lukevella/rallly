@@ -29,19 +29,7 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "inline-flex h-9 select-none items-center whitespace-nowrap rounded-md border bg-gray-50 px-2.5 text-sm font-medium shadow-sm",
-      "hover:bg-gray-100",
-      "data-[state=open]:bg-gray-100 data-[state=open]:shadow-none",
-      "disabled:pointer-events-none disabled:opacity-50",
-      "focus-visible:ring-offset-input-background focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1",
-      "active:bg-gray-200 active:shadow-none",
-      className,
-    )}
-    {...props}
-  >
+  <SelectPrimitive.Trigger ref={ref} className={cn(className)} {...props}>
     {children}
   </SelectPrimitive.Trigger>
 ));

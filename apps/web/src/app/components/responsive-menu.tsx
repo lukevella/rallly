@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   Select,
   SelectContent,
@@ -96,8 +97,10 @@ function MobileMenu({ children }: { children: React.ReactNode }) {
           router.push(destination);
         }}
       >
-        <SelectTrigger className="w-full">
-          <SelectValue />
+        <SelectTrigger asChild className="w-full">
+          <Button>
+            <SelectValue />
+          </Button>
         </SelectTrigger>
         <SelectContent>{children}</SelectContent>
       </Select>

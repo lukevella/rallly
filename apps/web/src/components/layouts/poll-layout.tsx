@@ -1,4 +1,5 @@
 import { LogoLink } from "@/app/components/logo-link";
+import { TimeFormatControl } from "@/components/layouts/timeformat";
 import { TimezoneControl } from "@/components/layouts/timezone-control";
 import { UserDropdown } from "@/components/user-dropdown";
 
@@ -8,6 +9,7 @@ export function PollLayout({ children }: React.PropsWithChildren) {
       <div className="flex justify-between">
         <LogoLink />
         <div className="flex gap-x-2.5">
+          <TimeFormatControl />
           <TimezoneControl />
           <UserDropdown />
         </div>
