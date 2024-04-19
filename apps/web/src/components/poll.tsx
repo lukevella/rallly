@@ -7,37 +7,19 @@ import {
   PauseIcon,
 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { Trans } from "react-i18next";
 
+import { PollViz } from "@/app/components/poll-viz";
 import { Attendees } from "@/components/attendees";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
-import DesktopPoll from "@/components/poll/desktop-poll";
-import MobilePoll from "@/components/poll/mobile-poll";
-import { VotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/contexts/poll";
 
 import { useTouchBeacon } from "./poll/use-touch-beacon";
 
-const checkIfWideScreen = () => window.innerWidth > 640;
-
 export const Poll = () => {
   const poll = usePoll();
   useTouchBeacon(poll.id);
-
-  React.useEffect(() => {
-    const listener = () => setIsWideScreen(checkIfWideScreen());
-
-    window.addEventListener("resize", listener);
-
-    return () => {
-      window.removeEventListener("resize", listener);
-    };
-  }, []);
-
-  const [isWideScreen, setIsWideScreen] = React.useState(checkIfWideScreen);
-  const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
 
   return (
     <div className={cn("space-y-3 sm:space-y-6")}>
@@ -73,9 +55,7 @@ export const Poll = () => {
       <EventCard />
       {!poll.event ? (
         <>
-          <VotingForm>
-            <PollComponent />
-          </VotingForm>
+          <PollViz />
           {poll.disableComments ? (
             <p className="text-muted-foreground text-center text-sm">
               <Icon>

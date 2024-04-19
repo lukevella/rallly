@@ -8,21 +8,17 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { AnimatePresence, m } from "framer-motion";
-import { MoreHorizontalIcon, PlusIcon } from "lucide-react";
+import { MoreHorizontalIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
-import { TimesShownIn } from "@/components/clock";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { useOptions, usePoll } from "@/components/poll-context";
 import { usePermissions } from "@/contexts/permissions";
 
-import {
-  useParticipants,
-  useVisibleParticipants,
-} from "../participants-provider";
+import { useVisibleParticipants } from "../participants-provider";
 import { useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import UserAvatar, { YouAvatar } from "./user-avatar";
@@ -34,10 +30,9 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();
 
-  const { poll, getParticipantById } = pollContext;
+  const { getParticipantById } = pollContext;
 
   const { options } = useOptions();
-  const { participants } = useParticipants();
 
   const session = useUser();
 
@@ -51,7 +46,7 @@ const MobilePoll: React.FunctionComponent = () => {
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
-  const { canEditParticipant, canAddNewParticipant } = usePermissions();
+  const { canEditParticipant } = usePermissions();
 
   const { t } = useTranslation();
 
@@ -74,7 +69,9 @@ const MobilePoll: React.FunctionComponent = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">
-                  {t("participantCount", { count: participants.length })}
+                  {t("selectParticipant", {
+                    defaultValue: "Select Participant…",
+                  })}
                 </SelectItem>
                 {visibleParticipants.map((participant) => (
                   <SelectItem key={participant.id} value={participant.id}>
@@ -117,21 +114,9 @@ const MobilePoll: React.FunctionComponent = () => {
             >
               <Button icon={MoreHorizontalIcon} />
             </ParticipantDropdown>
-          ) : canAddNewParticipant ? (
-            <Button
-              icon={PlusIcon}
-              onClick={() => {
-                votingForm.newParticipant();
-              }}
-            />
           ) : null}
         </div>
       </div>
-      {poll.options[0].duration !== 0 && poll.timeZone ? (
-        <div className="flex border-b bg-gray-50 p-3">
-          <TimesShownIn />
-        </div>
-      ) : null}
       <GroupedOptions
         selectedParticipantId={selectedParticipantId}
         options={options}

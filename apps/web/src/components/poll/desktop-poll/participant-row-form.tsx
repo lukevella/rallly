@@ -1,9 +1,19 @@
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
+import { CheckIcon, XIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller } from "react-hook-form";
 
 import { useVotingForm } from "@/components/poll/voting-form";
+import { Trans } from "@/components/trans";
 
 import { usePoll } from "../../poll-context";
 import UserAvatar, { YouAvatar } from "../user-avatar";
@@ -41,12 +51,53 @@ const ParticipantRowForm = ({
         style={{ minWidth: 240, maxWidth: 240 }}
         className="sticky left-0 z-10 bg-white px-4"
       >
-        <div className="flex items-center">
+        <div className="flex items-center justify-between gap-x-2.5">
           {name ? (
             <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
           ) : (
             <YouAvatar />
           )}
+          <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    form.cancel();
+                  }}
+                  size="sm"
+                >
+                  <Icon>
+                    <XIcon />
+                  </Icon>
+                </Button>
+              </TooltipTrigger>
+              <TooltipPortal>
+                <TooltipContent>
+                  <Trans i18nKey="cancel" />
+                </TooltipContent>
+              </TooltipPortal>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  form="voting-form"
+                  type="submit"
+                >
+                  <Icon>
+                    <CheckIcon />
+                  </Icon>
+                </Button>
+              </TooltipTrigger>
+              <TooltipPortal>
+                <TooltipContent>
+                  <Trans i18nKey="save" />
+                </TooltipContent>
+              </TooltipPortal>
+            </Tooltip>
+          </div>
         </div>
       </td>
       {optionIds.map((optionId, i) => {
