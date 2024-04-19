@@ -43,7 +43,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in relative z-50 max-h-[300px] min-w-[8rem] overflow-hidden rounded border bg-white shadow-md",
+        "animate-in relative z-50 max-h-[300px] min-w-[8rem] overflow-hidden rounded-lg border bg-white shadow-md",
         position === "popper" && "translate-y-1",
         className,
       )}

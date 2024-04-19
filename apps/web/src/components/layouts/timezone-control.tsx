@@ -2,6 +2,8 @@
 import { Button } from "@rallly/ui/button";
 import { CommandDialog } from "@rallly/ui/command";
 import { useDialog } from "@rallly/ui/dialog";
+import { Icon } from "@rallly/ui/icon";
+import { GlobeIcon } from "lucide-react";
 
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
 import { usePreferences } from "@/contexts/preferences";
@@ -19,6 +21,9 @@ export function TimezoneControl() {
           dialog.trigger();
         }}
       >
+        <Icon>
+          <GlobeIcon />
+        </Icon>
         {timeZone}
       </Button>
       <CommandDialog {...dialog.dialogProps}>

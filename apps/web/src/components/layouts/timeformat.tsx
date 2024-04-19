@@ -2,6 +2,7 @@
 
 import { TimeFormat } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
   Select,
   SelectContent,
@@ -9,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
+import { ClockIcon } from "lucide-react";
 
 import { usePreferences } from "@/contexts/preferences";
 import { useDayjs } from "@/utils/dayjs";
@@ -26,6 +28,9 @@ export function TimeFormatControl() {
     >
       <SelectTrigger asChild>
         <Button variant="ghost">
+          <Icon>
+            <ClockIcon />
+          </Icon>
           <SelectValue />
         </Button>
       </SelectTrigger>

@@ -8,7 +8,7 @@ import { cn } from "./lib/utils";
 const buttonVariants = cva(
   cn(
     "inline-flex border font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap rounded-md border",
-    "focus:ring-offset-input-background focus-visible:ring-offset-1 focus-visible:ring-2 focus-visible:ring-primary",
+    "focus-visible:ring-offset-input-background focus-visible:ring-offset-1 focus-visible:ring-2 focus-visible:ring-gray-200",
     "active:shadow-none",
   ),
   {
@@ -17,7 +17,7 @@ const buttonVariants = cva(
         primary:
           "border-primary-700 shadow-sm bg-primary disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm hover:bg-primary-500 active:bg-primary-700",
         destructive:
-          "bg-destructive shadow-sm text-destructive-foreground focus:ring-offset-1 active:bg-destructive border-destructive hover:bg-destructive/90",
+          "bg-destructive shadow-sm text-destructive-foreground focus-visible:ring-offset-1 active:bg-destructive border-destructive hover:bg-destructive/90",
         default:
           "rounded-md shadow-sm px-3.5 py-2.5 data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-200 hover:bg-gray-100 bg-gray-50",
         secondary:
