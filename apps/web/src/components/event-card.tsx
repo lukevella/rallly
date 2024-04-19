@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import { CalendarIcon, ClockIcon, MapPinIcon } from "lucide-react";
 
-import { TimesShownIn } from "@/components/clock";
 import PollSubheader from "@/components/poll/poll-subheader";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
@@ -58,11 +57,6 @@ export function EventCard() {
               <li>
                 <When />
               </li>
-              {poll.timeZone ? (
-                <li>
-                  <TimesShownIn />
-                </li>
-              ) : null}
               {poll.location ? (
                 <li className="flex items-center gap-x-2.5">
                   <Icon>

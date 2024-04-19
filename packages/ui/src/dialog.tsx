@@ -18,7 +18,7 @@ const DialogPortal = ({
   ...props
 }: DialogPrimitive.DialogPortalProps) => (
   <DialogPrimitive.Portal className={cn(className)} {...props}>
-    <div className="fixed inset-0 z-50 flex items-start justify-center sm:items-center">
+    <div className="fixed inset-0 z-50 flex items-start justify-center px-2 sm:items-center">
       {children}
     </div>
   </DialogPrimitive.Portal>
@@ -53,7 +53,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in data-[state=open]:fade-in shadow-huge fixed z-50 mx-4 grid w-full translate-y-4 gap-4 overflow-hidden rounded-md bg-white p-5",
+        "animate-in data-[state=open]:fade-in shadow-huge z-50 grid w-full translate-y-4 gap-4 overflow-hidden rounded-md bg-white p-5",
         {
           "sm:max-w-sm": size === "sm",
           "sm:max-w-md": size === "md",
