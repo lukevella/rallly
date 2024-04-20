@@ -33,7 +33,7 @@ export function EventCard() {
         <div className="mb-4 flex gap-4">
           <div className="space-y-2">
             <CardTitle className="text-lg">{poll.title}</CardTitle>
-            <ul className="text-muted-foreground flex flex-col flex-wrap gap-x-4 gap-y-2 whitespace-nowrap text-sm lg:flex-row">
+            <ul className="text-muted-foreground flex flex-col gap-x-4 gap-y-2 whitespace-nowrap text-sm">
               {poll.location ? (
                 <li className="flex items-center gap-x-2.5">
                   <Icon>

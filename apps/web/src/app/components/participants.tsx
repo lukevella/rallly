@@ -92,6 +92,7 @@ function ParticipantsInner() {
 }
 export function Participants() {
   const { participants } = useParticipants();
+  const votingForm = useVotingForm();
 
   return (
     <Card>
@@ -101,6 +102,24 @@ export function Participants() {
             <Trans i18nKey="participants" />
           </CardTitle>
           <Badge>{participants.length}</Badge>
+          <FormField
+            control={votingForm.control}
+            name="mode"
+            render={({ field }) => {
+              return (
+                <Button
+                  disabled={field.value === "new"}
+                  className={field.value === "new" ? "hidden" : ""}
+                  size="sm"
+                  onClick={() => votingForm.newParticipant()}
+                >
+                  <Icon>
+                    <PlusIcon />
+                  </Icon>
+                </Button>
+              );
+            }}
+          />
         </div>
       </CardHeader>
       <ParticipantsInner />

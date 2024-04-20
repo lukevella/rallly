@@ -10,7 +10,7 @@ const PollSubheader: React.FunctionComponent = () => {
   const { poll } = usePoll();
   const { t } = useTranslation();
   return (
-    <div className="flex items-center gap-1 text-xs text-gray-500">
+    <div className="flex items-center gap-1 text-sm text-gray-500">
       <div>
         <Trans
           i18nKey="createdBy"

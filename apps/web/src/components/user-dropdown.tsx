@@ -9,7 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import {
+  ChevronDownIcon,
   CreditCardIcon,
   GemIcon,
   LifeBuoyIcon,
@@ -56,6 +58,9 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         <Button variant="ghost">
           <CurrentUserAvatar size="xs" className="-ml-1 shrink-0 " />
           <span className="hidden truncate sm:block">{user.name}</span>
+          <Icon>
+            <ChevronDownIcon />
+          </Icon>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
