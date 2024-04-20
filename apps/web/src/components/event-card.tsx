@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Card, CardContent, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import { CalendarIcon, ClockIcon, MapPinIcon } from "lucide-react";
 
@@ -10,37 +10,17 @@ import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useDayjs } from "@/utils/dayjs";
 
-function When() {
+function FinalDate({ start }: { start: Date }) {
+  const poll = usePoll();
+  const { adjustTimeZone } = useDayjs();
+  return <span>{adjustTimeZone(start, !poll.timeZone).format("LL")}</span>;
+}
+
+function FinalTime({ start, duration }: { start: Date; duration: number }) {
   const poll = usePoll();
   const { adjustTimeZone, dayjs } = useDayjs();
-  if (poll.event) {
-    return (
-      <ul className="space-y-2">
-        <li className="flex items-center gap-x-2.5">
-          <Icon>
-            <CalendarIcon />
-          </Icon>
-          {adjustTimeZone(poll.event.start, !poll.timeZone).format("LL")}
-        </li>
-        {poll.event.duration > 0 ? (
-          <li className="flex items-center gap-x-2.5">
-            <Icon>
-              <ClockIcon />
-            </Icon>
-            <span>{`${adjustTimeZone(poll.event.start).format("LT")} - ${adjustTimeZone(dayjs(poll.event.start).add(poll.event.duration, "minutes"), !poll.timeZone).format("LT")}`}</span>
-          </li>
-        ) : null}
-      </ul>
-    );
-  }
-
   return (
-    <div className="flex items-center gap-x-2.5">
-      <Icon>
-        <CalendarIcon />
-      </Icon>
-      <Trans i18nKey="tba" defaults="To be announced" />
-    </div>
+    <span>{`${adjustTimeZone(start).format("LT")} - ${adjustTimeZone(dayjs(start).add(duration, "minutes"), !poll.timeZone).format("LT")}`}</span>
   );
 }
 
@@ -49,14 +29,11 @@ export function EventCard() {
   return (
     <Card>
       <RandomGradientBar seed={poll.id} />
-      <CardHeader>
-        <div className="flex gap-4">
+      <CardContent>
+        <div className="mb-4 flex gap-4">
           <div className="space-y-2">
             <CardTitle className="text-lg">{poll.title}</CardTitle>
-            <ul className="text-muted-foreground space-y-2 text-sm">
-              <li>
-                <When />
-              </li>
+            <ul className="text-muted-foreground flex flex-col flex-wrap gap-x-4 gap-y-2 whitespace-nowrap text-sm lg:flex-row">
               {poll.location ? (
                 <li className="flex items-center gap-x-2.5">
                   <Icon>
@@ -65,13 +42,37 @@ export function EventCard() {
                   <TruncatedLinkify>{poll.location}</TruncatedLinkify>
                 </li>
               ) : null}
+              {poll.event ? (
+                <>
+                  <li className="flex items-center gap-x-2.5">
+                    <Icon>
+                      <CalendarIcon />
+                    </Icon>
+                    <FinalDate start={poll.event.start} />
+                  </li>
+                  <li className="flex items-center gap-x-2.5">
+                    <Icon>
+                      <ClockIcon />
+                    </Icon>
+                    <FinalTime
+                      start={poll.event.start}
+                      duration={poll.event.duration}
+                    />
+                  </li>
+                </>
+              ) : (
+                <li className="flex items-center gap-x-2.5">
+                  <Icon>
+                    <CalendarIcon />
+                  </Icon>
+                  <Trans i18nKey="tba" defaults="To be announced" />
+                </li>
+              )}
             </ul>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
         {poll.description ? (
-          <p className="text-sm">
+          <p className="mb-4 text-sm">
             <TruncatedLinkify>{poll.description}</TruncatedLinkify>
           </p>
         ) : null}

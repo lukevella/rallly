@@ -223,13 +223,12 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
       <LegacyPollContextProvider>
         <PermissionGuard>
           <PollLayout>
-            <div className="mb-4 flex flex-col justify-between gap-2.5 lg:flex-row">
+            {/* <div className="mb-4 flex flex-col justify-between gap-2.5 lg:flex-row">
               <div className="min-w-0">
                 <Breadcrumbs />
               </div>
-              <Menu />
-            </div>
-            <div className="pb-16">{children}</div>
+            </div> */}
+            <div>{children}</div>
           </PollLayout>
         </PermissionGuard>
       </LegacyPollContextProvider>

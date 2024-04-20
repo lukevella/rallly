@@ -84,6 +84,7 @@ const ParticipantRowForm = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                  loading={form.formState.isSubmitting}
                   variant="ghost"
                   size="sm"
                   form="voting-form"

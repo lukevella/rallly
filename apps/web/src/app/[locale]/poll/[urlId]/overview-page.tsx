@@ -16,7 +16,7 @@ export const OverviewPage = () => {
   useTouchBeacon(poll.id);
 
   return (
-    <div className={cn("space-y-3 sm:space-y-6")}>
+    <div className={cn("space-y-3 sm:space-y-4")}>
       {poll.event ? (
         <div className="flex flex-col gap-x-4 gap-y-1.5 rounded-lg bg-green-600 px-4 py-3 text-sm text-green-50 lg:flex-row">
           <div className="flex items-center gap-x-2.5">

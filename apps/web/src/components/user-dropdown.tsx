@@ -58,7 +58,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           <span className="hidden truncate sm:block">{user.name}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="end">
         <DropdownMenuLabel className="flex items-center gap-2">
           <div className="grow">
             <div>{user.isGuest ? <Trans i18nKey="guest" /> : user.name}</div>

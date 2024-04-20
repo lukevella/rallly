@@ -28,7 +28,7 @@ export function Attendees({ optionId }: { optionId: string }) {
               className="flex items-center gap-2 rounded-full border bg-gray-100 p-1 text-sm"
             >
               <UserAvatar size="xs" name={participant.name} />
-              <span className="text-sm">{participant.name}</span>
+              <span className="text-sm font-medium">{participant.name}</span>
               {user.id === participant.userId ? (
                 <Badge>
                   <Trans i18nKey="you" />

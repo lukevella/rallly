@@ -2,7 +2,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
-
+import { Loader2Icon } from "lucide-react";
 import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
@@ -69,7 +69,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           "group",
           buttonVariants({ variant, size }),
           {
-            "pointer-events-none animate-pulse duration-500": loading,
+            "pointer-events-none": loading,
           },
           className,
         )}
@@ -77,13 +77,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         {...props}
       >
-        {asChild ? (
-          children
+        {loading ? (
+          <Loader2Icon className="size-4 animate-spin opacity-50" />
         ) : (
-          <>
-            {Icon ? <Icon className={cn("-ml-0.5 size-4")} /> : null}
-            {children}
-          </>
+          children
         )}
       </Comp>
     );
