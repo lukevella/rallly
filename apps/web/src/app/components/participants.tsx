@@ -34,7 +34,6 @@ function AddParticipantButton() {
           <Button
             disabled={field.value === "new"}
             className={field.value === "new" ? "hidden" : ""}
-            size="sm"
             onClick={() => {
               form.newParticipant();
             }}
@@ -42,6 +41,7 @@ function AddParticipantButton() {
             <Icon>
               <PlusIcon />
             </Icon>
+            <Trans i18nKey="newParticipant" />
           </Button>
         );
       }}
@@ -92,8 +92,6 @@ function ParticipantsInner() {
 }
 export function Participants() {
   const { participants } = useParticipants();
-  const votingForm = useVotingForm();
-
   return (
     <Card>
       <CardHeader className="flex h-14 items-center justify-between">
@@ -102,25 +100,8 @@ export function Participants() {
             <Trans i18nKey="participants" />
           </CardTitle>
           <Badge>{participants.length}</Badge>
-          <FormField
-            control={votingForm.control}
-            name="mode"
-            render={({ field }) => {
-              return (
-                <Button
-                  disabled={field.value === "new"}
-                  className={field.value === "new" ? "hidden" : ""}
-                  size="sm"
-                  onClick={() => votingForm.newParticipant()}
-                >
-                  <Icon>
-                    <PlusIcon />
-                  </Icon>
-                </Button>
-              );
-            }}
-          />
         </div>
+        <AddParticipantButton />
       </CardHeader>
       <ParticipantsInner />
     </Card>
