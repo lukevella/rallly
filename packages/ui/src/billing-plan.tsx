@@ -9,7 +9,7 @@ export const BillingPlan = ({
   return (
     <div
       className={cn(
-        "space-y-4 rounded-md border bg-gradient-to-b from-white to-white/75 px-5 py-4 backdrop-blur-sm",
+        "space-y-4 rounded-md border bg-white px-5 py-4 shadow-sm backdrop-blur-sm",
         className,
       )}
     >
@@ -75,7 +75,7 @@ export const BillingPlanPerk = ({
           !pro ? "text-gray-500" : "text-primary",
         )}
       />
-      <div className="text-sm">{children}</div>
+      <div className="text-muted-foreground text-sm">{children}</div>
     </li>
   );
 };

@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import {
   CalendarCheck2Icon,
   ChevronDownIcon,
@@ -14,7 +15,6 @@ import {
   DownloadIcon,
   PencilIcon,
   Settings2Icon,
-  SettingsIcon,
   TableIcon,
   TrashIcon,
 } from "lucide-react";
@@ -41,9 +41,14 @@ const ManagePoll: React.FunctionComponent<{
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
-          <Button icon={SettingsIcon} disabled={disabled}>
+          <Button disabled={disabled}>
+            <Icon>
+              <Settings2Icon />
+            </Icon>
             <Trans i18nKey="manage" />
-            <ChevronDownIcon className="size-4" />
+            <Icon>
+              <ChevronDownIcon />
+            </Icon>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

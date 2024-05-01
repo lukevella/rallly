@@ -1,5 +1,6 @@
 import { Participant, VoteType } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import clsx from "clsx";
 import { MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
@@ -105,7 +106,11 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
             align="start"
             onEdit={() => onChangeEditMode?.(true)}
           >
-            <Button size="sm" icon={MoreHorizontalIcon} />
+            <Button size="sm">
+              <Icon>
+                <MoreHorizontalIcon />
+              </Icon>
+            </Button>
           </ParticipantDropdown>
         ) : null
       }

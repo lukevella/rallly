@@ -1,4 +1,5 @@
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellOffIcon, BellRingIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -63,7 +64,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
       <TooltipTrigger asChild>
         <Button
           loading={watch.isLoading || unwatch.isLoading}
-          icon={isWatching ? BellRingIcon : BellOffIcon}
           data-testid="notifications-toggle"
           disabled={user.isGuest}
           className="flex items-center gap-2 px-2.5"
@@ -79,7 +79,9 @@ const NotificationsToggle: React.FunctionComponent = () => {
               await watch.mutateAsync({ pollId: poll.id });
             }
           }}
-        />
+        >
+          <Icon>{isWatching ? <BellRingIcon /> : <BellOffIcon />}</Icon>
+        </Button>
       </TooltipTrigger>
       <TooltipContent side="bottom">
         {user.isGuest ? (
