@@ -42,14 +42,7 @@ export const Poll = () => {
           <PollComponent />
         </VotingForm>
       </Card>
-      {poll.disableComments ? null : (
-        <>
-          <hr className="my-4" />
-          <Card fullWidthOnMobile={false}>
-            <Discussion />
-          </Card>
-        </>
-      )}
+      {poll.disableComments ? null : <Discussion />}
       <div className="mt-4 space-y-4 text-center text-gray-500">
         <div className="py-8">
           <Trans
