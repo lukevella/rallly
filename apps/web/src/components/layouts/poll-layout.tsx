@@ -25,12 +25,6 @@ import React from "react";
 
 import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
@@ -166,37 +160,34 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pathname = usePathname();
 
   return (
-    <PageContainer>
-      <PageHeader className="flex flex-col gap-x-4 gap-y-2.5 md:flex-row md:items-center">
-        <div className="flex min-w-0 items-center gap-x-4 md:basis-2/3">
-          <div className="flex gap-x-4 md:basis-1/2">
-            {pathname === pollLink ? (
-              <Button asChild>
-                <Link href="/polls">
-                  <ListIcon className="size-4" />
-                </Link>
-              </Button>
-            ) : (
-              <Button asChild>
-                <Link href={pollLink}>
-                  <ArrowLeftIcon className="size-4" />
-                </Link>
-              </Button>
-            )}
-            <PageTitle>{poll.title}</PageTitle>
-          </div>
+    <div>
+      <div className="mb-4 flex items-center justify-between gap-4 border-b p-3">
+        <div className="flex items-center gap-x-4">
+          {pathname === pollLink ? (
+            <Button asChild>
+              <Link href="/polls">
+                <ListIcon className="size-4" />
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild>
+              <Link href={pollLink}>
+                <ArrowLeftIcon className="size-4" />
+              </Link>
+            </Button>
+          )}
+          <h1 className="font-semibold">{poll.title}</h1>
         </div>
-
-        <div className="flex basis-1/3 md:justify-end">
+        <div>
           <AdminControls />
         </div>
-      </PageHeader>
-      <PageContent>{children}</PageContent>
-    </PageContainer>
+      </div>
+      <div>{children}</div>
+    </div>
   );
 };
 
-export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
+const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   const { user } = useUser();
   if (!poll.adminUrlId) {
@@ -226,13 +217,13 @@ export const PermissionGuard = ({ children }: React.PropsWithChildren) => {
           {user.isGuest ? (
             <Button asChild variant="primary">
               <LoginLink>
-                <LogInIcon className="size-4 -ml-1" />
+                <LogInIcon className="-ml-1 size-4" />
                 <Trans i18nKey="login" defaults="Login" />
               </LoginLink>
             </Button>
           ) : (
             <LogoutButton>
-              <LogOutIcon className="size-4 -ml-1" />
+              <LogOutIcon className="-ml-1 size-4" />
               <Trans i18nKey="loginDifferent" defaults="Switch user" />
             </LogoutButton>
           )}
