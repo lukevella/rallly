@@ -1,10 +1,9 @@
+import { Badge } from "@rallly/ui/badge";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { getRandomAvatarColor } from "@/utils/color-hash";
-
-import Badge from "../badge";
 
 export interface UserAvaterProps {
   name: string;
@@ -46,7 +45,7 @@ const UserAvatar: React.FunctionComponent<UserAvaterProps> = ({
       <span className="min-w-0 truncate font-medium">
         {forwardedProps.name}
       </span>
-      {isYou ? <Badge>{t("you")}</Badge> : null}
+      {isYou ? <Badge size="sm">{t("you")}</Badge> : null}
     </span>
   );
 };
@@ -64,7 +63,7 @@ export const ColoredAvatar = (props: {
   return (
     <div
       className={clsx(
-        "inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold uppercase",
+        "inline-flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold uppercase",
         requiresDarkText ? "text-gray-800" : "text-white",
         props.className,
       )}
