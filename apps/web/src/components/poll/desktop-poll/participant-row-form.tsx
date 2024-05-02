@@ -129,7 +129,7 @@ const ParticipantRowForm = ({
                       type: toggleVote(field.value.type),
                     });
                   }}
-                  className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:ring-2 active:ring-inset active:ring-gray-200"
+                  className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-inset active:ring-gray-200"
                 >
                   <VoteSelector
                     value={field.value.type}

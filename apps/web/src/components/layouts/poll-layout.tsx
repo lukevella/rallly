@@ -187,7 +187,9 @@ const Layout = ({ children }: React.PropsWithChildren) => {
           <AdminControls />
         </div>
       </div>
-      <div className="p-3 lg:p-4">{children}</div>
+      <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:p-4">
+        {children}
+      </div>
     </div>
   );
 };
