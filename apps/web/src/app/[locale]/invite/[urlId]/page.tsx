@@ -3,16 +3,11 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
-import { PageContainer } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 import { absoluteUrl } from "@/utils/absolute-url";
 
 export default async function Page() {
-  return (
-    <PageContainer>
-      <InvitePage />
-    </PageContainer>
-  );
+  return <InvitePage />;
 }
 
 export async function generateMetadata({

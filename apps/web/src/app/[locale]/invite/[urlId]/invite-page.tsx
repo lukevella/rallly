@@ -63,23 +63,21 @@ const GoToApp = () => {
   const { user } = useUser();
 
   return (
-    <div>
-      <div className="flex justify-between p-3 lg:px-5">
-        <div>
-          <Button
-            variant="ghost"
-            asChild
-            className={poll.userId !== user.id ? "hidden" : ""}
-          >
-            <Link href={`/poll/${poll.id}`}>
-              <ArrowUpLeftIcon className="text-muted-foreground size-4" />
-              <Trans i18nKey="manage" />
-            </Link>
-          </Button>
-        </div>
-        <div>
-          <UserDropdown />
-        </div>
+    <div className="flex justify-between gap-x-4">
+      <div>
+        <Button
+          variant="ghost"
+          asChild
+          className={poll.userId !== user.id ? "hidden" : ""}
+        >
+          <Link href={`/poll/${poll.id}`}>
+            <ArrowUpLeftIcon className="text-muted-foreground size-4" />
+            <Trans i18nKey="manage" />
+          </Link>
+        </Button>
+      </div>
+      <div>
+        <UserDropdown />
       </div>
     </div>
   );
@@ -90,13 +88,9 @@ export function InvitePage() {
     <Prefetch>
       <LegacyPollContextProvider>
         <VisibilityProvider>
-          <GoToApp />
-          <div className="p-3 lg:px-6 lg:py-5">
-            <div className="mx-auto max-w-4xl">
-              <div className="-mx-1">
-                <Poll />
-              </div>
-            </div>
+          <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:p-4">
+            <GoToApp />
+            <Poll />
           </div>
         </VisibilityProvider>
       </LegacyPollContextProvider>
