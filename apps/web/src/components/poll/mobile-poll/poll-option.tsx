@@ -10,7 +10,7 @@ import { useToggle } from "react-use";
 import { useTranslation } from "@/app/i18n/client";
 import { useParticipants } from "@/components/participants-provider";
 import { UserAvatar } from "@/components/user";
-import { IfParticipantsVisible } from "@/components/visibility";
+import { usePoll } from "@/contexts/poll";
 
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
@@ -103,6 +103,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   editable = false,
   optionId,
 }) => {
+  const poll = usePoll();
   const showVotes = !!(selectedParticipantId || editable);
   const selectorRef = React.useRef<HTMLButtonElement>(null);
   const [active, setActive] = React.useState(false);
@@ -122,9 +123,10 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
     >
       <div className="flex h-7 items-center justify-between gap-x-4">
         <div className="shrink-0">{children}</div>
-        <div className="flex gap-x-2.5">
-          <ConnectedScoreSummary optionId={optionId} />
-          <IfParticipantsVisible>
+        <div className="flex items-center gap-x-2.5">
+          {poll.hideParticipants ? (
+            <ConnectedScoreSummary optionId={optionId} />
+          ) : (
             <Button
               size="sm"
               variant="ghost"
@@ -133,11 +135,13 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
                 toggle();
               }}
             >
+              <ConnectedScoreSummary optionId={optionId} />
               <Icon>
                 {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
               </Icon>
             </Button>
-          </IfParticipantsVisible>
+          )}
+
           {showVotes ? (
             <div className="relative flex size-7 items-center justify-center">
               {editable ? (
