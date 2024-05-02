@@ -1,8 +1,5 @@
-import { Button } from "@rallly/ui/button";
-import { PenBoxIcon } from "lucide-react";
-import Link from "next/link";
-import { Trans } from "react-i18next/TransWithoutContext";
-
+import { PollFolders } from "@/app/[locale]/(admin)/polls/[[...list]]/polls-folders";
+import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
@@ -11,32 +8,27 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
+interface PageParams extends Params {
+  list?: string;
+}
+
 export default async function Layout({
-  params,
   children,
+  params,
 }: {
-  children: React.ReactNode;
-  params: { locale: string };
+  children?: React.ReactNode;
+  params: PageParams;
 }) {
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-center justify-between gap-x-4">
-          <PageTitle>
-            <Trans t={t} i18nKey="polls" />
-          </PageTitle>
-          <Button asChild>
-            <Link href="/new">
-              <PenBoxIcon className="text-muted-foreground size-4" />
-              <span className="hidden sm:inline">
-                <Trans t={t} i18nKey="newPoll" />
-              </span>
-            </Link>
-          </Button>
-        </div>
+        <PageTitle>{t("polls")}</PageTitle>
       </PageHeader>
-      <PageContent>{children}</PageContent>
+      <PageContent className="space-y-4">
+        <PollFolders />
+        <div>{children}</div>
+      </PageContent>
     </PageContainer>
   );
 }
