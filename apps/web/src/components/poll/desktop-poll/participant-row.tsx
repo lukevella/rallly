@@ -119,7 +119,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
             align="start"
             onEdit={() => onChangeEditMode?.(true)}
           >
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost">
               <Icon>
                 <MoreHorizontalIcon />
               </Icon>
