@@ -109,7 +109,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   const [isExpanded, toggle] = useToggle(false);
   return (
     <div
-      className={cn("relative flex items-start bg-white", {
+      className={cn("space-y-4 bg-white p-4", {
         "bg-gray-500/5": editable && active,
       })}
       onPointerDown={() => setActive(editable)}
@@ -120,50 +120,45 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         selectorRef.current?.click();
       }}
     >
-      <div className="grow space-y-4 p-4">
-        <div className="flex items-center">
-          <div className="flex h-7 grow items-center gap-x-4">
-            <div className="shrink-0 grow ">{children}</div>
-            {showVotes ? (
-              <div className="relative flex size-7 items-center justify-center">
-                {editable ? (
-                  <VoteSelector
-                    ref={selectorRef}
-                    value={vote}
-                    onChange={onChange}
-                  />
-                ) : (
-                  <div
-                    key={vote}
-                    className="flex h-full items-center justify-center"
-                  >
-                    <VoteIcon type={vote} />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center gap-x-2.5">
-                <ConnectedScoreSummary optionId={optionId} />
-                <IfParticipantsVisible>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggle();
-                    }}
-                  >
-                    <Icon>
-                      {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                    </Icon>
-                  </Button>
-                </IfParticipantsVisible>
-              </div>
-            )}
-          </div>
+      <div className="flex h-7 items-center justify-between gap-x-4">
+        <div className="shrink-0">{children}</div>
+        <div className="flex gap-x-2.5">
+          <ConnectedScoreSummary optionId={optionId} />
+          <IfParticipantsVisible>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggle();
+              }}
+            >
+              <Icon>
+                {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
+              </Icon>
+            </Button>
+          </IfParticipantsVisible>
+          {showVotes ? (
+            <div className="relative flex size-7 items-center justify-center">
+              {editable ? (
+                <VoteSelector
+                  ref={selectorRef}
+                  value={vote}
+                  onChange={onChange}
+                />
+              ) : (
+                <div
+                  key={vote}
+                  className="flex h-full items-center justify-center"
+                >
+                  <VoteIcon type={vote} />
+                </div>
+              )}
+            </div>
+          ) : null}
         </div>
-        {isExpanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
       </div>
+      {isExpanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
     </div>
   );
 };
