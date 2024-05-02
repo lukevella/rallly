@@ -8,6 +8,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   ExpandIcon,
+  PlusIcon,
   ShrinkIcon,
 } from "lucide-react";
 import { Trans } from "next-i18next";
@@ -15,9 +16,11 @@ import * as React from "react";
 import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
 
+import { useTranslation } from "@/app/i18n/client";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { IfScoresVisible } from "@/components/visibility";
+import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 
 import { useVisibleParticipants } from "../participants-provider";
@@ -68,6 +71,7 @@ const DesktopPoll: React.FunctionComponent = () => {
     }
   };
 
+  const { canAddNewParticipant } = usePermissions();
   const [expanded, setExpanded] = React.useState(false);
 
   const expand = () => {
@@ -85,6 +89,7 @@ const DesktopPoll: React.FunctionComponent = () => {
       scrollRef.current.scrollLeft -= 240;
     }
   };
+  const { t } = useTranslation();
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
 
@@ -213,12 +218,38 @@ const DesktopPoll: React.FunctionComponent = () => {
             )}
           >
             <CardHeader className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-x-2.5">
-                <CardTitle>
-                  <Trans i18nKey="participants" />
-                </CardTitle>
-                <Badge>{visibleParticipants.length}</Badge>
-              </div>
+              {mode !== "view" ? (
+                <p className="text-sm">
+                  <Trans
+                    i18nKey="saveInstruction"
+                    values={{
+                      action: mode === "new" ? t("continue") : t("save"),
+                    }}
+                    components={{ b: <strong /> }}
+                  />
+                </p>
+              ) : (
+                <div className="flex items-center gap-x-2.5">
+                  <CardTitle>
+                    <Trans i18nKey="participants" />
+                  </CardTitle>
+                  <Badge>{visibleParticipants.length}</Badge>
+                  {canAddNewParticipant ? (
+                    <Button
+                      className="ml-2"
+                      size="sm"
+                      data-testid="add-participant-button"
+                      onClick={() => {
+                        votingForm.newParticipant();
+                      }}
+                    >
+                      <Icon>
+                        <PlusIcon />
+                      </Icon>
+                    </Button>
+                  ) : null}
+                </div>
+              )}
               <TableControls />
             </CardHeader>
             <div className="relative flex min-h-0 flex-col">

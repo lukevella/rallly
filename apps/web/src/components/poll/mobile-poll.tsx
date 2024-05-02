@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { AnimatePresence, m } from "framer-motion";
-import { MoreHorizontalIcon, UsersIcon } from "lucide-react";
+import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
@@ -49,7 +49,7 @@ const MobilePoll: React.FunctionComponent = () => {
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
-  const { canEditParticipant } = usePermissions();
+  const { canEditParticipant, canAddNewParticipant } = usePermissions();
 
   const { t } = useTranslation();
 
@@ -66,7 +66,7 @@ const MobilePoll: React.FunctionComponent = () => {
         </div>
       </CardHeader>
       <div className="sticky top-0 z-20 flex flex-col space-y-2 border-b bg-gray-50 p-2">
-        <div className="flex space-x-2">
+        <div className="flex gap-x-2.5">
           {selectedParticipantId || !isEditing ? (
             <Select
               value={selectedParticipantId}
@@ -140,6 +140,16 @@ const MobilePoll: React.FunctionComponent = () => {
                 </Icon>
               </Button>
             </ParticipantDropdown>
+          ) : canAddNewParticipant ? (
+            <Button
+              onClick={() => {
+                votingForm.newParticipant();
+              }}
+            >
+              <Icon>
+                <PlusIcon />
+              </Icon>
+            </Button>
           ) : null}
         </div>
       </div>
