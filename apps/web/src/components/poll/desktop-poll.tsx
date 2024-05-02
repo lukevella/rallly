@@ -105,7 +105,7 @@ const DesktopPoll: React.FunctionComponent = () => {
             values={{ count: poll.options.length }}
           />
         </div>
-        <div className="flex gap-x-2.5">
+        <div className="flex gap-x-1">
           {isOverflowing ? (
             <>
               <Tooltip>
