@@ -4,7 +4,6 @@ import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next";
 
-import { Card } from "@/components/card";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import DesktopPoll from "@/components/poll/desktop-poll";
@@ -37,11 +36,9 @@ export const Poll = () => {
   return (
     <div className={cn("space-y-3 sm:space-y-6")}>
       <EventCard />
-      <Card fullWidthOnMobile={false}>
-        <VotingForm>
-          <PollComponent />
-        </VotingForm>
-      </Card>
+      <VotingForm>
+        <PollComponent />
+      </VotingForm>
       {poll.disableComments ? null : <Discussion />}
       <div className="mt-4 space-y-4 text-center text-gray-500">
         <div className="py-8">
