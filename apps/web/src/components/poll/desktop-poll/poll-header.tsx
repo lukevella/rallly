@@ -20,14 +20,14 @@ const TimeRange: React.FunctionComponent<{
 }> = ({ start, end, duration, className }) => {
   return (
     <div className={cn("text-muted-foreground text-xs font-normal", className)}>
-      <Tooltip>
+      <Tooltip delayDuration={0}>
         <TooltipTrigger>{start}</TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent className="flex gap-x-2.5 text-sm">
+          <TooltipContent className="flex gap-x-2.5 text-xs">
             <span>
               {start} - {end}
             </span>
-            <span className="flex items-center gap-x-1 text-gray-400">
+            <span className="flex items-center gap-x-1 text-gray-500">
               <Icon>
                 <ClockIcon />
               </Icon>
