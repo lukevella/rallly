@@ -90,7 +90,7 @@ const Page: NextPageWithLayout = () => {
                       <FormLabel>
                         <Trans i18nKey="duplicateTitleLabel" defaults="Title" />
                       </FormLabel>
-                      <Input {...field} />
+                      <Input className="w-full" {...field} />
                       <FormDescription>
                         <Trans
                           i18nKey="duplicateTitleDescription"
