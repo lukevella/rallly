@@ -2,7 +2,11 @@ const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-  content: ["./src/**/*.{ts,tsx}", "../../packages/ui/**/*.{ts,tsx}"],
+  content: [
+    "./src/**/*.{ts,tsx}",
+    "../../packages/ui/**/*.{ts,tsx}",
+    "../../packages/tailwind-config/tailwind.config.js",
+  ],
   plugins: [
     require("@tailwindcss/typography"),
     require("tailwindcss-animate"),
@@ -17,7 +21,7 @@ module.exports = {
         primary: {
           ...colors.indigo,
           DEFAULT: colors.indigo["600"],
-          foreground: colors.white,
+          foreground: colors.indigo["50"],
           background: colors.indigo["50"],
         },
         secondary: {
@@ -90,6 +94,10 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+      },
+      gap: {
+        DEFAULT: "0.625rem",
+        md: "0.625rem",
       },
     },
   },

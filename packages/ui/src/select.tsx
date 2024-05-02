@@ -5,28 +5,32 @@ import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
-import { buttonVariants } from "./button";
 import { Icon } from "./icon";
 
 const Select = SelectPrimitive.Root;
 
 const SelectGroup = SelectPrimitive.Group;
 
-const SelectValue = SelectPrimitive.Value;
+const SelectValue = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Value>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value>
+>(({ ...props }, ref) => {
+  return (
+    <div className="flex w-full items-center justify-between gap-x-2.5">
+      <SelectPrimitive.Value {...props} ref={ref} />
+      <SelectPrimitive.Icon asChild>
+        <ChevronsUpDownIcon className="size-4 opacity-50" />
+      </SelectPrimitive.Icon>
+    </div>
+  );
+});
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(buttonVariants(), className)}
-    {...props}
-  >
+  <SelectPrimitive.Trigger ref={ref} className={cn(className)} {...props}>
     {children}
-    <SelectPrimitive.Icon asChild>
-      <ChevronsUpDownIcon className="ml-2 size-4 opacity-50" />
-    </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
@@ -39,7 +43,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in relative z-50 max-h-[300px] min-w-[8rem] overflow-hidden rounded border bg-white shadow-md",
+        "animate-in relative z-50 max-h-[300px] min-w-[8rem] overflow-hidden rounded-lg border bg-white shadow-md",
         position === "popper" && "translate-y-1",
         className,
       )}
@@ -66,7 +70,10 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn("py-1.5 pl-8 pr-2 font-semibold", className)}
+    className={cn(
+      "text-muted-foreground px-2 py-1.5 text-xs font-semibold",
+      className,
+    )}
     {...props}
   />
 ));
@@ -79,7 +86,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-2 pl-8 pr-2 text-sm outline-none focus:bg-gray-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-md py-2 pl-8 pr-2 text-sm outline-none focus-visible:bg-gray-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}

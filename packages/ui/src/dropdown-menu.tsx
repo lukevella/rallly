@@ -212,7 +212,7 @@ export const DropdownMenuItemIconLabel = ({
 }) => {
   return (
     <span className="flex items-center gap-2">
-      <Icon className="size-4" />
+      <Icon className="text-muted-foreground size-4" />
       {children}
     </span>
   );
