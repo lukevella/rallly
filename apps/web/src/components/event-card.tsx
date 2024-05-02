@@ -76,7 +76,7 @@ export function EventCard() {
               <Icon>
                 <TextIcon className="translate-y-0.5" />
               </Icon>
-              <p className="text-foreground min-w-0 text-wrap text-sm">
+              <p className="min-w-0 text-wrap text-sm">
                 <TruncatedLinkify>{poll.description}</TruncatedLinkify>
               </p>
             </li>
