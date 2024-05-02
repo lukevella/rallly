@@ -162,7 +162,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4 border-b p-3 lg:px-5">
+      <div className="flex flex-col justify-between gap-x-4 gap-y-2.5 border-b p-3 lg:items-center lg:px-5">
         <div className="flex items-center gap-x-4">
           {pathname === pollLink ? (
             <Button variant="ghost" asChild>
