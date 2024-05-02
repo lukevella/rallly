@@ -8,27 +8,19 @@ export const colorHash = new ColorHash({
 
 type RGBColor = [number, number, number];
 
+// Define an array of avatar background colors
 const avatarBackgroundColors: RGBColor[] = [
-  [255, 135, 160],
-  [255, 179, 71],
-  [255, 95, 95],
-  [240, 128, 128],
-  [255, 160, 122],
-  [255, 192, 203],
-  [230, 230, 250],
-  [173, 216, 230],
-  [176, 224, 230],
-  [106, 90, 205],
-  [123, 104, 238],
-  [147, 112, 219],
-  [138, 43, 226],
-  [148, 0, 211],
-  [153, 50, 204],
-  [139, 0, 139],
-  [75, 0, 130],
-  [72, 61, 139],
-  [219, 39, 119],
-  [236, 72, 153],
+  [147, 51, 234], //  Indigo
+  [106, 0, 255], // Purple
+  [255, 177, 255], // Pink
+  [166, 74, 255], // Violet
+  [236, 72, 153], // Pink
+  [147, 51, 234], // Teal
+  [147, 51, 234], //  Indigo
+  [192, 38, 211], // Orchid
+  [34, 211, 238], // Sky Blue
+  [14, 165, 233], // Blue
+  [37, 99, 235], // Royal Blue
 ];
 
 function isBright(color: RGBColor): boolean {

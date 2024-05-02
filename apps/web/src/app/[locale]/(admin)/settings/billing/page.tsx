@@ -1,9 +1,17 @@
-import { BillingPage } from "@/app/[locale]/(admin)/settings/billing/billing-page";
 import { Params } from "@/app/[locale]/types";
+import { PageContainer, PageContent } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
-export default function Page() {
-  return <BillingPage />;
+import { BillingPage } from "./billing-page";
+
+export default async function Page() {
+  return (
+    <PageContainer>
+      <PageContent>
+        <BillingPage />
+      </PageContent>
+    </PageContainer>
+  );
 }
 
 export async function generateMetadata({ params }: { params: Params }) {

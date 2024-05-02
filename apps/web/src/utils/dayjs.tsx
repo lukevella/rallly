@@ -1,5 +1,6 @@
 import { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
@@ -169,11 +170,12 @@ dayjs.extend(timezone);
 dayjs.extend(duration);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(updateLocale);
+dayjs.extend(advancedFormat);
 
 const DayjsContext = React.createContext<{
   adjustTimeZone: (
     date: dayjs.ConfigType,
-    keepLocalTime?: boolean,
+    keepLocalTime: boolean,
   ) => dayjs.Dayjs;
   dayjs: (date?: dayjs.ConfigType) => dayjs.Dayjs;
   locale: {

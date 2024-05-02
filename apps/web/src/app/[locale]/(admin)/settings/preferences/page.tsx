@@ -1,9 +1,17 @@
-import { PreferencesPage } from "@/app/[locale]/(admin)/settings/preferences/preferences-page";
 import { Params } from "@/app/[locale]/types";
+import { PageContainer, PageContent } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
-export default function Page() {
-  return <PreferencesPage />;
+import { PreferencesPage } from "./preferences-page";
+
+export default async function Page() {
+  return (
+    <PageContainer>
+      <PageContent>
+        <PreferencesPage />
+      </PageContent>
+    </PageContainer>
+  );
 }
 
 export async function generateMetadata({ params }: { params: Params }) {

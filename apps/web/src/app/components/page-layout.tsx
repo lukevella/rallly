@@ -1,11 +1,30 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Icon } from "@rallly/ui/icon";
 
 export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn("", className)}>{children}</div>;
+  return (
+    <div className={cn("h-full grow space-y-4 lg:flex lg:flex-col", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function PageIcon({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn(className)}>
+      <Icon size="lg">{children}</Icon>
+    </div>
+  );
 }
 
 export function PageTitle({
@@ -16,7 +35,12 @@ export function PageTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn("truncate font-semibold leading-9", className)}>
+    <h2
+      className={cn(
+        "flex h-9 items-center gap-x-3 truncate text-base font-semibold",
+        className,
+      )}
+    >
       {children}
     </h2>
   );
@@ -25,25 +49,12 @@ export function PageTitle({
 export function PageHeader({
   children,
   className,
-  variant = "default",
 }: {
   children?: React.ReactNode;
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return (
-    <div
-      className={cn(
-        "px-4 py-3 lg:px-6 lg:py-3",
-        {
-          "sticky top-0 z-20 border-b bg-gray-50": variant === "default",
-        },
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn("", className)}>{children}</div>;
 }
 
 export function PageContent({
@@ -53,5 +64,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("p-4 lg:px-6 lg:py-5", className)}>{children}</div>;
+  return <div className={cn("lg:grow", className)}>{children}</div>;
 }

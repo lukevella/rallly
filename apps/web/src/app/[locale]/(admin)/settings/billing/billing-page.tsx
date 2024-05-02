@@ -67,16 +67,21 @@ const SubscriptionStatus = () => {
   return (
     <div className="space-y-6">
       {!data.active ? (
-        <div>
-          <Label className="mb-4">
-            <Trans i18nKey="upgrade" />
-          </Label>
-          <BillingPlans />
-        </div>
+        <BillingPlans />
       ) : data.legacy ? (
         <LegacyBilling />
       ) : (
-        <BillingPortal />
+        <SettingsSection
+          title={<Trans i18nKey="billingStatus" defaults="Billing Status" />}
+          description={
+            <Trans
+              i18nKey="billingStatusDescription"
+              defaults="Manage your subscription and billing details."
+            />
+          }
+        >
+          <BillingPortal />
+        </SettingsSection>
       )}
     </div>
   );
@@ -242,17 +247,7 @@ export function BillingPage() {
         <title>{t("billing")}</title>
       </Head>
       <SettingsContent>
-        <SettingsSection
-          title={<Trans i18nKey="billingStatus" defaults="Billing Status" />}
-          description={
-            <Trans
-              i18nKey="billingStatusDescription"
-              defaults="Manage your subscription and billing details."
-            />
-          }
-        >
-          <SubscriptionStatus />
-        </SettingsSection>
+        <SubscriptionStatus />
         <hr />
         <SettingsSection
           title={<Trans i18nKey="support" defaults="Support" />}
