@@ -1,23 +1,20 @@
 import { cn } from "@rallly/ui";
+import { Input, InputProps } from "@rallly/ui/input";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import UserAvatar from "./poll/user-avatar";
 
-interface NameInputProps
-  extends React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  > {
+interface NameInputProps extends InputProps {
   value?: string;
   defaultValue?: string;
   error?: boolean;
 }
 
-const NameInput: React.ForwardRefRenderFunction<
-  HTMLInputElement,
-  NameInputProps
-> = ({ value, defaultValue, className, error, ...forwardProps }, ref) => {
+const NameInput = React.forwardRef<HTMLInputElement, NameInputProps>(function (
+  { value, defaultValue, className, error, ...forwardProps },
+  ref,
+) {
   const { t } = useTranslation();
   return (
     <div className="relative flex items-center">
@@ -27,7 +24,7 @@ const NameInput: React.ForwardRefRenderFunction<
           className="absolute left-2"
         />
       ) : null}
-      <input
+      <Input
         ref={ref}
         className={cn(
           "input text-sm",
@@ -43,6 +40,8 @@ const NameInput: React.ForwardRefRenderFunction<
       />
     </div>
   );
-};
+});
 
-export default React.forwardRef(NameInput);
+NameInput.displayName = "NameInput";
+
+export default NameInput;

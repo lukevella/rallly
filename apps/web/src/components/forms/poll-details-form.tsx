@@ -1,7 +1,6 @@
 import { FormField, FormItem, FormLabel, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { Textarea } from "@rallly/ui/textarea";
-import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useFormContext } from "react-hook-form";
 
@@ -40,10 +39,9 @@ export const PollDetailsForm = () => {
             <Input
               {...field}
               type="text"
+              error={!!errors.title}
               id="title"
-              className={clsx("w-full", {
-                "input-error": errors.title,
-              })}
+              className="w-full"
               placeholder={t("titlePlaceholder")}
             />
             <FormMessage />

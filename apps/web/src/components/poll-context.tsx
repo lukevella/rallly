@@ -25,7 +25,12 @@ type PollContextValue = {
   optionIds: string[];
   // TODO (Luke Vella) [2022-05-18]: Move this stuff to participants provider
   getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
-  getScore: (optionId: string) => { yes: number; ifNeedBe: number };
+  getScore: (optionId: string) => {
+    yes: number;
+    ifNeedBe: number;
+    no: number;
+    skip: number;
+  };
   getParticipantById: (
     participantId: string,
   ) => (Participant & { votes: Vote[] }) | undefined;
@@ -60,17 +65,17 @@ export const PollContextProvider: React.FunctionComponent<{
             }
             if (vote.type === "yes") {
               acc.yes += 1;
-            }
-            if (vote.type === "ifNeedBe") {
+            } else if (vote.type === "ifNeedBe") {
               acc.ifNeedBe += 1;
-            }
-            if (vote.type === "no") {
+            } else if (vote.type === "no") {
               acc.no += 1;
+            } else {
+              acc.skip += 1;
             }
           });
           return acc;
         },
-        { yes: 0, ifNeedBe: 0, no: 0 },
+        { yes: 0, ifNeedBe: 0, no: 0, skip: 0 },
       );
     },
     [participants],

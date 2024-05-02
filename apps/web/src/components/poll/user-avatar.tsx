@@ -1,11 +1,10 @@
+import { Badge } from "@rallly/ui/badge";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { ColoredAvatar } from "@/components/poll/participant-avatar";
 import { stringToValue } from "@/utils/string-to-value";
-
-import Badge from "../badge";
 
 export interface UserAvaterProps {
   name: string;
@@ -99,7 +98,7 @@ const UserAvatar: React.FunctionComponent<UserAvaterProps> = ({
       <div className="min-w-0 truncate text-sm font-medium">
         {forwardedProps.name}
       </div>
-      {isYou ? <Badge>{t("you")}</Badge> : null}
+      {isYou ? <Badge size="sm">{t("you")}</Badge> : null}
     </div>
   );
 };
@@ -110,8 +109,8 @@ export const YouAvatar = () => {
   const { t } = useTranslation();
   const you = t("you");
   return (
-    <span className="inline-flex items-center gap-x-2.5">
-      <span className="inline-flex size-6 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold uppercase">
+    <span className="inline-flex items-center gap-x-2.5 text-sm">
+      <span className="inline-flex size-5 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold uppercase">
         {you[0]}
       </span>
       {t("you")}
