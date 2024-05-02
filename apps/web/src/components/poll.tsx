@@ -39,7 +39,7 @@ export const Poll = () => {
       <VotingForm>
         <PollComponent />
       </VotingForm>
-      {poll.disableComments ? null : <Discussion />}
+      <Discussion />
       <div className="py-4 text-center text-sm text-gray-500">
         <Trans
           defaults="Powered by <a>{name}</a>"
