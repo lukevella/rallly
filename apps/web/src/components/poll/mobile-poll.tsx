@@ -1,23 +1,25 @@
-import { Listbox } from "@headlessui/react";
 import { Button } from "@rallly/ui/button";
+import { CardFooter } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
 import { AnimatePresence, m } from "framer-motion";
-import { ChevronDownIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
+import { MoreHorizontalIcon, UsersIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
-import { TimesShownIn } from "@/components/clock";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { useOptions, usePoll } from "@/components/poll-context";
 import { usePermissions } from "@/contexts/permissions";
 
-import { styleMenuItem } from "../menu-styles";
-import {
-  useParticipants,
-  useVisibleParticipants,
-} from "../participants-provider";
+import { useVisibleParticipants } from "../participants-provider";
 import { useUser } from "../user-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 import UserAvatar, { YouAvatar } from "./user-avatar";
@@ -29,92 +31,73 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();
 
-  const { poll, getParticipantById } = pollContext;
+  const { getParticipantById } = pollContext;
 
   const { options } = useOptions();
-  const { participants } = useParticipants();
 
   const session = useUser();
 
   const votingForm = useVotingForm();
   const { formState } = votingForm;
 
-  const selectedParticipantId = votingForm.watch("participantId");
+  const selectedParticipantId = votingForm.watch("participantId") ?? "";
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
     ? getParticipantById(selectedParticipantId)
     : undefined;
 
-  const { canEditParticipant, canAddNewParticipant } = usePermissions();
+  const { canEditParticipant } = usePermissions();
 
   const { t } = useTranslation();
 
   const isEditing = votingForm.watch("mode") !== "view";
 
   return (
-    <>
-      <div className="flex flex-col space-y-2 border-b bg-gray-50 p-2">
+    <div>
+      <div className="sticky top-0 z-20 flex flex-col space-y-2 border-b bg-gray-50 p-2">
         <div className="flex space-x-2">
           {selectedParticipantId || !isEditing ? (
-            <Listbox
+            <Select
               value={selectedParticipantId}
-              onChange={(participantId) => {
+              onValueChange={(participantId) => {
                 votingForm.setValue("participantId", participantId);
               }}
               disabled={isEditing}
             >
-              <div className="menu min-w-0 grow">
-                <Listbox.Button
-                  as={Button}
-                  className="w-full shadow-none"
-                  data-testid="participant-selector"
-                >
-                  <div className="min-w-0 grow text-left">
-                    {selectedParticipant ? (
-                      <div className="flex items-center space-x-2">
-                        <UserAvatar
-                          name={selectedParticipant.name}
-                          showName={true}
-                          isYou={session.ownsObject(selectedParticipant)}
-                        />
-                      </div>
-                    ) : (
-                      t("participantCount", { count: participants.length })
-                    )}
+              <SelectTrigger asChild className="w-full">
+                <Button>
+                  <SelectValue />
+                </Button>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">
+                  <div className="flex items-center gap-x-2.5">
+                    <div className="flex w-5 justify-center">
+                      <Icon>
+                        <UsersIcon />
+                      </Icon>
+                    </div>
+                    <span className="font-medium">
+                      {t("allParticipants", {
+                        defaultValue: "All Participants",
+                      })}
+                    </span>
                   </div>
-                  <ChevronDownIcon className="h-5 shrink-0" />
-                </Listbox.Button>
-                <Listbox.Options
-                  as={m.div}
-                  transition={{
-                    duration: 0.1,
-                  }}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="menu-items max-h-72 w-full overflow-auto"
-                >
-                  <Listbox.Option value={undefined} className={styleMenuItem}>
-                    {t("participantCount", { count: participants.length })}
-                  </Listbox.Option>
-                  {visibleParticipants.map((participant) => (
-                    <Listbox.Option
-                      key={participant.id}
-                      value={participant.id}
-                      className={styleMenuItem}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <UserAvatar
-                          name={participant.name}
-                          showName={true}
-                          isYou={session.ownsObject(participant)}
-                        />
-                      </div>
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </div>
-            </Listbox>
+                </SelectItem>
+                {visibleParticipants.map((participant) => (
+                  <SelectItem key={participant.id} value={participant.id}>
+                    <div className="flex items-center gap-x-2.5">
+                      <UserAvatar
+                        name={participant.name}
+                        showName={true}
+                        isYou={session.ownsObject(participant)}
+                      />
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           ) : (
             <div className="flex grow items-center px-1">
               <YouAvatar />
@@ -147,24 +130,9 @@ const MobilePoll: React.FunctionComponent = () => {
                 </Icon>
               </Button>
             </ParticipantDropdown>
-          ) : canAddNewParticipant ? (
-            <Button
-              onClick={() => {
-                votingForm.newParticipant();
-              }}
-            >
-              <Icon>
-                <PlusIcon />
-              </Icon>
-            </Button>
           ) : null}
         </div>
       </div>
-      {poll.options[0].duration !== 0 && poll.timeZone ? (
-        <div className="flex border-b bg-gray-50 p-3">
-          <TimesShownIn />
-        </div>
-      ) : null}
       <GroupedOptions
         selectedParticipantId={selectedParticipantId}
         options={options}
@@ -192,7 +160,7 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <div className="space-y-3 border-t bg-gray-50 p-3">
+            <CardFooter>
               <Button
                 form="voting-form"
                 className="w-full"
@@ -202,11 +170,11 @@ const MobilePoll: React.FunctionComponent = () => {
               >
                 {selectedParticipantId ? t("save") : t("continue")}
               </Button>
-            </div>
+            </CardFooter>
           </m.div>
         ) : null}
       </AnimatePresence>
-    </>
+    </div>
   );
 };
 

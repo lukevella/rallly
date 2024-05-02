@@ -29,7 +29,7 @@ const GroupedOptions: React.FunctionComponent<GroupedOptionsProps> = ({
           <div key={day}>
             <div
               className={clsx(
-                "flex border-b bg-gray-50 px-4 py-2 text-sm font-semibold",
+                "flex border-b bg-gray-50 px-4 py-2 text-xs font-medium uppercase",
                 groupClassName,
               )}
             >
