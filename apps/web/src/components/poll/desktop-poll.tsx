@@ -1,5 +1,6 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
@@ -145,11 +146,14 @@ const DesktopPoll: React.FunctionComponent = () => {
                       className="ml-2"
                       size="sm"
                       data-testid="add-participant-button"
-                      icon={PlusIcon}
                       onClick={() => {
                         votingForm.newParticipant();
                       }}
-                    />
+                    >
+                      <Icon>
+                        <PlusIcon />
+                      </Icon>
+                    </Button>
                   ) : null}
                 </div>
               )}
@@ -193,11 +197,14 @@ const DesktopPoll: React.FunctionComponent = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
-                          icon={ShrinkIcon}
                           onClick={() => {
                             collapse();
                           }}
-                        />
+                        >
+                          <Icon>
+                            <ShrinkIcon />
+                          </Icon>
+                        </Button>
                       </TooltipTrigger>
                       <TooltipContent>
                         <Trans i18nKey="shrink" defaults="Shrink" />
@@ -207,11 +214,14 @@ const DesktopPoll: React.FunctionComponent = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
-                          icon={ExpandIcon}
                           onClick={() => {
                             expand();
                           }}
-                        />
+                        >
+                          <Icon>
+                            <ExpandIcon />
+                          </Icon>
+                        </Button>
                       </TooltipTrigger>
                       <TooltipContent>
                         <Trans i18nKey="expand" defaults="Expand" />

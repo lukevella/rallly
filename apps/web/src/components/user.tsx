@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
-import { User2Icon, UserIcon } from "lucide-react";
+import { User2Icon } from "lucide-react";
 
 import { useUser } from "@/components/user-provider";
 import { getRandomAvatarColor } from "@/utils/color-hash";

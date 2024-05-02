@@ -1,5 +1,6 @@
 import { Listbox } from "@headlessui/react";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import { AnimatePresence, m } from "framer-motion";
 import { ChevronDownIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
@@ -140,15 +141,22 @@ const MobilePoll: React.FunctionComponent = () => {
                 votingForm.setEditingParticipantId(selectedParticipant.id);
               }}
             >
-              <Button icon={MoreHorizontalIcon} />
+              <Button>
+                <Icon>
+                  <MoreHorizontalIcon />
+                </Icon>
+              </Button>
             </ParticipantDropdown>
           ) : canAddNewParticipant ? (
             <Button
-              icon={PlusIcon}
               onClick={() => {
                 votingForm.newParticipant();
               }}
-            />
+            >
+              <Icon>
+                <PlusIcon />
+              </Icon>
+            </Button>
           ) : null}
         </div>
       </div>
