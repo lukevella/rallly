@@ -1,5 +1,6 @@
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { CardFooter } from "@rallly/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   Select,
@@ -17,6 +18,7 @@ import smoothscroll from "smoothscroll-polyfill";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { useOptions, usePoll } from "@/components/poll-context";
+import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 
 import { useVisibleParticipants } from "../participants-provider";
@@ -54,7 +56,15 @@ const MobilePoll: React.FunctionComponent = () => {
   const isEditing = votingForm.watch("mode") !== "view";
 
   return (
-    <div>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-x-2.5">
+          <CardTitle>
+            <Trans i18nKey="participants" />
+          </CardTitle>
+          <Badge>{visibleParticipants.length}</Badge>
+        </div>
+      </CardHeader>
       <div className="sticky top-0 z-20 flex flex-col space-y-2 border-b bg-gray-50 p-2">
         <div className="flex space-x-2">
           {selectedParticipantId || !isEditing ? (
@@ -174,7 +184,7 @@ const MobilePoll: React.FunctionComponent = () => {
           </m.div>
         ) : null}
       </AnimatePresence>
-    </div>
+    </Card>
   );
 };
 

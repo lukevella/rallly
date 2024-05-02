@@ -7,6 +7,7 @@ import {
   DropdownMenuItemIconLabel,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
@@ -161,28 +162,32 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between gap-4 border-b p-3">
+      <div className="flex items-center justify-between gap-4 border-b p-3 lg:px-5">
         <div className="flex items-center gap-x-4">
           {pathname === pollLink ? (
-            <Button asChild>
+            <Button variant="ghost" asChild>
               <Link href="/polls">
-                <ListIcon className="size-4" />
+                <Icon>
+                  <ListIcon />
+                </Icon>
               </Link>
             </Button>
           ) : (
-            <Button asChild>
+            <Button variant="ghost" asChild>
               <Link href={pollLink}>
-                <ArrowLeftIcon className="size-4" />
+                <Icon>
+                  <ArrowLeftIcon />
+                </Icon>
               </Link>
             </Button>
           )}
-          <h1 className="font-semibold">{poll.title}</h1>
+          <h1 className="text-sm font-medium">{poll.title}</h1>
         </div>
         <div>
           <AdminControls />
         </div>
       </div>
-      <div>{children}</div>
+      <div className="p-3 lg:p-4">{children}</div>
     </div>
   );
 };

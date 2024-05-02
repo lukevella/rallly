@@ -34,28 +34,26 @@ export const Poll = () => {
   const PollComponent = isWideScreen ? DesktopPoll : MobilePoll;
 
   return (
-    <div className={cn("space-y-3 sm:space-y-6")}>
+    <div className={cn("space-y-3 lg:space-y-4")}>
       <EventCard />
       <VotingForm>
         <PollComponent />
       </VotingForm>
       {poll.disableComments ? null : <Discussion />}
-      <div className="mt-4 space-y-4 text-center text-gray-500">
-        <div className="py-8">
-          <Trans
-            defaults="Powered by <a>{name}</a>"
-            i18nKey="poweredByRallly"
-            values={{ name: "rallly.co" }}
-            components={{
-              a: (
-                <Link
-                  className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
-                  href="https://rallly.co"
-                />
-              ),
-            }}
-          />
-        </div>
+      <div className="py-4 text-center text-sm text-gray-500">
+        <Trans
+          defaults="Powered by <a>{name}</a>"
+          i18nKey="poweredByRallly"
+          values={{ name: "rallly.co" }}
+          components={{
+            a: (
+              <Link
+                className="hover:text-primary-600 rounded-none border-b border-b-gray-500 font-semibold"
+                href="https://rallly.co"
+              />
+            ),
+          }}
+        />
       </div>
     </div>
   );
