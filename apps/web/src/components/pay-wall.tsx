@@ -37,7 +37,11 @@ const Teaser = () => {
           className="text-center"
           aria-hidden="true"
         >
-          <Badge className="translate-y-0 px-4 py-0.5 text-lg">
+          <Badge
+            size="lg"
+            variant="primary"
+            className="translate-y-0 px-4 py-0.5"
+          >
             <Trans i18nKey="planPro" />
           </Badge>
         </m.div>
