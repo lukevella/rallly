@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 
-import { PageHeader } from "@/app/components/page-layout";
 import { Poll } from "@/components/poll";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
@@ -64,8 +63,8 @@ const GoToApp = () => {
   const { user } = useUser();
 
   return (
-    <PageHeader variant="ghost">
-      <div className="flex justify-between">
+    <div>
+      <div className="flex justify-between p-3 lg:px-5">
         <div>
           <Button
             variant="ghost"
@@ -82,7 +81,7 @@ const GoToApp = () => {
           <UserDropdown />
         </div>
       </div>
-    </PageHeader>
+    </div>
   );
 };
 
