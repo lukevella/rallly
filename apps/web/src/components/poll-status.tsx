@@ -55,6 +55,7 @@ export const PollStatusLabel = ({
 export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
     <Badge
+      size="lg"
       variant={
         status === "finalized"
           ? "primary"

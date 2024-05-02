@@ -83,9 +83,7 @@ const ScoreSummary: React.FunctionComponent<PopularityScoreProps> = React.memo(
         {highlight ? (
           ifNeedBeScore > 0 ? (
             <span className="inline-block size-1.5 rounded-full bg-amber-400" />
-          ) : (
-            <span className="inline-block size-1.5 rounded-full bg-green-500" />
-          )
+          ) : null
         ) : null}
       </span>
     );
