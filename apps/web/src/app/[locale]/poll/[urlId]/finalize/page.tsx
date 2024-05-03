@@ -38,7 +38,7 @@ const FinalizationForm = () => {
   });
 
   return (
-    <Card className="mx-auto max-w-3xl">
+    <Card>
       <CardHeader>
         <CardTitle>
           <Trans i18nKey="finalize" />

@@ -51,7 +51,6 @@ const Page: NextPageWithLayout = () => {
     <PayWall>
       <Form {...form}>
         <form
-          className="mx-auto max-w-3xl"
           onSubmit={form.handleSubmit((data) => {
             //submit
             duplicate.mutate(
