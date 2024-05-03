@@ -10,12 +10,19 @@ import {
   ExpandIcon,
   PlusIcon,
   ShrinkIcon,
+  Users2Icon,
 } from "lucide-react";
 import { Trans } from "next-i18next";
 import * as React from "react";
 import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
 
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/app/components/empty-state";
 import { useTranslation } from "@/app/i18n/client";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useVotingForm } from "@/components/poll/voting-form";
@@ -211,122 +218,140 @@ const DesktopPoll: React.FunctionComponent = () => {
         >
           <div
             className={cn(
-              "flex max-h-full flex-col overflow-hidden rounded-md bg-white",
+              "flex max-h-full max-w-7xl flex-col overflow-hidden rounded-md bg-white",
               {
                 "shadow-huge": expanded,
               },
             )}
           >
             <CardHeader className="flex items-center justify-between gap-4">
-              {mode !== "view" ? (
+              <div className="flex items-center gap-x-2.5">
+                <CardTitle>
+                  <Trans i18nKey="participants" />
+                </CardTitle>
+                <Badge>{visibleParticipants.length}</Badge>
+                {canAddNewParticipant ? (
+                  <Button
+                    className="ml-2"
+                    size="sm"
+                    data-testid="add-participant-button"
+                    onClick={() => {
+                      votingForm.newParticipant();
+                    }}
+                  >
+                    <Icon>
+                      <PlusIcon />
+                    </Icon>
+                  </Button>
+                ) : null}
+              </div>
+              <TableControls />
+            </CardHeader>
+            {mode !== "view" ? (
+              <CardHeader>
                 <p className="text-sm">
                   <Trans
                     i18nKey="saveInstruction"
                     values={{
                       action: mode === "new" ? t("continue") : t("save"),
                     }}
-                    components={{ b: <strong /> }}
+                    components={{ b: <strong className="font-semibold" /> }}
                   />
                 </p>
-              ) : (
-                <div className="flex items-center gap-x-2.5">
-                  <CardTitle>
-                    <Trans i18nKey="participants" />
-                  </CardTitle>
-                  <Badge>{visibleParticipants.length}</Badge>
-                  {canAddNewParticipant ? (
-                    <Button
-                      className="ml-2"
-                      size="sm"
-                      data-testid="add-participant-button"
-                      onClick={() => {
-                        votingForm.newParticipant();
-                      }}
-                    >
-                      <Icon>
-                        <PlusIcon />
-                      </Icon>
-                    </Button>
-                  ) : null}
-                </div>
-              )}
-              <TableControls />
-            </CardHeader>
-            <div className="relative flex min-h-0 flex-col">
-              <div
-                aria-hidden="true"
-                className={cn(
-                  "pointer-events-none absolute bottom-0 left-[240px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
-                  x > 0 ? "opacity-100" : "opacity-0",
-                )}
-              />
+              </CardHeader>
+            ) : null}
+            {visibleParticipants.length > 0 || mode !== "view" ? (
+              <div className="relative flex min-h-0 flex-col">
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    "pointer-events-none absolute bottom-0 left-[240px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
+                    x > 0 ? "opacity-100" : "opacity-0",
+                  )}
+                />
 
-              <RemoveScroll
-                enabled={expanded}
-                ref={scrollRef}
-                className={cn(
-                  "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth",
-                )}
-              >
-                <table className="w-full table-auto border-separate border-spacing-0 ">
-                  <thead>
-                    <PollHeader />
-                  </thead>
-                  <tbody>
-                    {mode === "new" ? (
-                      <ParticipantRowForm isNew={true} />
-                    ) : null}
-                    {visibleParticipants.length > 0
-                      ? visibleParticipants.map((participant, i) => {
-                          return (
-                            <ParticipantRow
-                              key={i}
-                              participant={participant}
-                              editMode={
-                                votingForm.watch("mode") === "edit" &&
-                                votingForm.watch("participantId") ===
-                                  participant.id
-                              }
-                              className={
-                                i === visibleParticipants.length - 1
-                                  ? "last-row"
-                                  : ""
-                              }
-                              onChangeEditMode={(isEditing) => {
-                                if (isEditing) {
-                                  votingForm.setEditingParticipantId(
-                                    participant.id,
-                                  );
+                <RemoveScroll
+                  enabled={expanded}
+                  ref={scrollRef}
+                  className={cn(
+                    "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth",
+                  )}
+                >
+                  <table className="w-full table-auto border-separate border-spacing-0 ">
+                    <thead>
+                      <PollHeader />
+                    </thead>
+                    <tbody>
+                      {mode === "new" ? (
+                        <ParticipantRowForm isNew={true} />
+                      ) : null}
+                      {visibleParticipants.length > 0
+                        ? visibleParticipants.map((participant, i) => {
+                            return (
+                              <ParticipantRow
+                                key={i}
+                                participant={participant}
+                                editMode={
+                                  votingForm.watch("mode") === "edit" &&
+                                  votingForm.watch("participantId") ===
+                                    participant.id
                                 }
-                              }}
-                            />
-                          );
-                        })
-                      : null}
-                  </tbody>
-                  <IfScoresVisible>
-                    <tfoot>
-                      <tr>
-                        <th className="sticky bottom-0 left-0 z-20 h-12 bg-white"></th>
-                        {poll.options.map((option) => {
-                          return (
-                            <th
-                              className="sticky bottom-0 border-l border-t bg-gray-50 p-2"
-                              key={option.id}
-                            >
-                              <div className="flex justify-center">
-                                <ConnectedScoreSummary optionId={option.id} />
-                              </div>
-                            </th>
-                          );
-                        })}
-                        <th className="bg-diagonal-lines -ml-4 w-full min-w-4 border-l"></th>
-                      </tr>
-                    </tfoot>
-                  </IfScoresVisible>
-                </table>
-              </RemoveScroll>
-            </div>
+                                className={
+                                  i === visibleParticipants.length - 1
+                                    ? "last-row"
+                                    : ""
+                                }
+                                onChangeEditMode={(isEditing) => {
+                                  if (isEditing) {
+                                    votingForm.setEditingParticipantId(
+                                      participant.id,
+                                    );
+                                  }
+                                }}
+                              />
+                            );
+                          })
+                        : null}
+                    </tbody>
+                    <IfScoresVisible>
+                      <tfoot>
+                        <tr>
+                          <th className="sticky bottom-0 left-0 z-20 h-12 bg-white"></th>
+                          {poll.options.map((option) => {
+                            return (
+                              <th
+                                className="sticky bottom-0 border-l border-t bg-gray-50 p-2"
+                                key={option.id}
+                              >
+                                <div className="flex justify-center">
+                                  <ConnectedScoreSummary optionId={option.id} />
+                                </div>
+                              </th>
+                            );
+                          })}
+                          <th className="bg-diagonal-lines -ml-4 w-full min-w-4 border-l"></th>
+                        </tr>
+                      </tfoot>
+                    </IfScoresVisible>
+                  </table>
+                </RemoveScroll>
+              </div>
+            ) : (
+              <EmptyState className="p-16">
+                <EmptyStateIcon>
+                  <Users2Icon />
+                </EmptyStateIcon>
+                <EmptyStateTitle>
+                  <Trans i18nKey="noParticipants" defaults="No participants" />
+                </EmptyStateTitle>
+                <EmptyStateDescription>
+                  <Trans
+                    i18nKey="noParticipantsDescription"
+                    defaults="No one has responded to this poll"
+                  />
+                </EmptyStateDescription>
+              </EmptyState>
+            )}
             {mode === "new" ? (
               <CardFooter className="flex items-center justify-between">
                 <Button
