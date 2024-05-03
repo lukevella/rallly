@@ -70,13 +70,13 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                     <th
                       key={header.id}
                       style={{
-                        minWidth: header.getSize(),
+                        width: header.getSize(),
                         maxWidth:
                           props.layout === "auto"
                             ? header.getSize()
                             : undefined,
                       }}
-                      className="border-b bg-gray-50 px-5 py-2.5 text-left text-xs font-semibold"
+                      className="text-muted-foreground h-9 border-b px-2.5 text-left text-xs font-normal"
                     >
                       {header.isPlaceholder
                         ? null
@@ -104,7 +104,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                     }}
                     key={cell.id}
                     className={cn(
-                      "relative overflow-hidden border-gray-100 px-5 py-4 align-middle",
+                      "relative h-14 overflow-hidden border-gray-100 px-2.5 align-middle",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
                       },
@@ -121,7 +121,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
               {table.getFooterGroups().map((footerGroup) => (
                 <tr key={footerGroup.id} className="relative">
                   {footerGroup.headers.map((header) => (
-                    <th className="border-t bg-gray-50" key={header.id}>
+                    <th className="border-t" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -137,7 +137,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
         </table>
       </div>
       {table.getPageCount() > 1 ? (
-        <div className="flex items-center justify-between space-x-2 border-t bg-gray-50 px-4 py-3 lg:px-5">
+        <div className="flex items-center justify-between space-x-2 border-t px-4 py-3 lg:px-5">
           <div>
             <span className="text-muted-foreground text-sm">
               <Trans

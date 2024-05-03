@@ -1,3 +1,5 @@
+import { Card, CardContent } from "@rallly/ui/card";
+
 import { PollFolders } from "@/app/[locale]/(admin)/polls/[[...list]]/polls-folders";
 import { Params } from "@/app/[locale]/types";
 import {
@@ -25,21 +27,10 @@ export default async function Layout({
       <PageHeader>
         <PageTitle>{t("polls")}</PageTitle>
       </PageHeader>
-      <PageContent className="space-y-4">
+      <PageContent className="space-y-3 lg:space-y-4">
         <PollFolders />
-        <div>{children}</div>
+        <Card>{children}</Card>
       </PageContent>
     </PageContainer>
   );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
-  return {
-    title: t("polls"),
-  };
 }

@@ -5,28 +5,27 @@ import { ColoredAvatar } from "@/components/poll/participant-avatar";
 
 interface ParticipantAvatarBarProps {
   participants: { name: string }[];
-  max: number;
+  max?: number;
 }
 
 export const ParticipantAvatarBar = ({
   participants,
   max = Infinity,
 }: ParticipantAvatarBarProps) => {
-  const hiddenCount = participants.length - max;
+  const visibleCount = participants.length > max ? max - 1 : max;
+  const hiddenCount = participants.length - visibleCount;
   return (
     <ul className="flex items-center -space-x-1 rounded-full border p-0.5">
-      {participants
-        .slice(0, hiddenCount === 1 ? max + 1 : max)
-        .map((participant, index) => (
-          <Tooltip key={index}>
-            <TooltipTrigger asChild>
-              <li className="inline-flex items-center justify-center rounded-full ring-2 ring-white">
-                <ColoredAvatar name={participant.name} />
-              </li>
-            </TooltipTrigger>
-            <TooltipContent>{participant.name}</TooltipContent>
-          </Tooltip>
-        ))}
+      {participants.slice(0, visibleCount).map((participant, index) => (
+        <Tooltip key={index}>
+          <TooltipTrigger asChild>
+            <li className="inline-flex items-center justify-center rounded-full ring-2 ring-white">
+              <ColoredAvatar name={participant.name} />
+            </li>
+          </TooltipTrigger>
+          <TooltipContent>{participant.name}</TooltipContent>
+        </Tooltip>
+      ))}
       {hiddenCount > 1 ? (
         <li className="inline-flex items-center justify-center rounded-full ring-2 ring-white">
           <Tooltip>
@@ -43,9 +42,11 @@ export const ParticipantAvatarBar = ({
             </TooltipTrigger>
             <TooltipContent>
               <ul>
-                {participants.slice(max, 10).map((participant, index) => (
-                  <li key={index}>{participant.name}</li>
-                ))}
+                {participants
+                  .slice(visibleCount, 10)
+                  .map((participant, index) => (
+                    <li key={index}>{participant.name}</li>
+                  ))}
               </ul>
             </TooltipContent>
           </Tooltip>

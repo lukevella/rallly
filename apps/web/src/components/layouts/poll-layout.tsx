@@ -161,7 +161,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pathname = usePathname();
 
   return (
-    <div>
+    <div className="bg-gray-100">
       <div className="sticky top-0 z-30 flex flex-col justify-between gap-x-4 gap-y-2.5 border-b bg-gray-100 p-3 shadow-sm sm:flex-row lg:items-center lg:px-5">
         <div className="flex min-w-0 items-center gap-x-4">
           {pathname === pollLink ? (
@@ -187,7 +187,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
           <AdminControls />
         </div>
       </div>
-      <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:p-4">
+      <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
         {children}
       </div>
     </div>

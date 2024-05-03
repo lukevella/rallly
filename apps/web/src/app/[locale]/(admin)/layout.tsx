@@ -23,7 +23,7 @@ export default async function Layout({
         </div>
         <Sidebar />
       </div>
-      <div className={cn("min-h-screen max-w-4xl grow space-y-4 p-3 lg:ml-72")}>
+      <div className={cn("min-h-screen grow space-y-4 lg:ml-72")}>
         {children}
       </div>
     </div>

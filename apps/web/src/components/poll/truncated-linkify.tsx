@@ -37,7 +37,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
             {finalText}
           </Link>
         </TooltipTrigger>
-        <TooltipContent className="max-w-md break-all font-mono text-xs">
+        <TooltipContent className="max-w-md break-all text-xs">
           {href}
         </TooltipContent>
       </Tooltip>

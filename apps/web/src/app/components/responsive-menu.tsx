@@ -30,10 +30,10 @@ function DesktopMenuItem({
     <li>
       <Link
         className={cn(
-          "flex min-w-0 items-center gap-x-2 rounded-none px-3 py-2 text-sm font-medium",
+          "flex h-9 min-w-0 grow items-center gap-x-2.5 rounded-md border px-2.5 text-sm font-medium",
           pathname === href
-            ? "bg-white"
-            : "text-gray-500 hover:bg-gray-100 focus:bg-gray-200",
+            ? "bg-gray-50"
+            : "text-gray-500 hover:shadow-sm active:bg-gray-200 active:shadow-none",
         )}
         href={href}
       >
@@ -74,9 +74,7 @@ export function ResponsiveMenuItem(props: {
 function DesktopMenu({ children }: { children: React.ReactNode }) {
   return (
     <ResponsiveMenuContext.Provider value="desktop">
-      <ul className="inline-flex divide-x overflow-hidden rounded-md border bg-gray-50 shadow-sm">
-        {children}
-      </ul>
+      <ul className="inline-flex gap-2.5">{children}</ul>
     </ResponsiveMenuContext.Provider>
   );
 }

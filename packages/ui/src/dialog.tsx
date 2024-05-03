@@ -53,7 +53,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in data-[state=open]:fade-in shadow-huge z-50 grid w-full translate-y-4 gap-4 overflow-hidden bg-white p-5 sm:rounded-md",
+        "animate-in data-[state=open]:fade-in shadow-huge z-50 grid w-full translate-y-4 gap-4 overflow-hidden bg-gray-50 p-5 sm:rounded-md",
         {
           "sm:max-w-sm": size === "sm",
           "sm:max-w-md": size === "md",
@@ -122,7 +122,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-muted-foreground mt-2 text-sm", className)}
+    className={cn("text-muted-foreground mt-2.5 text-sm", className)}
     {...props}
   />
 ));

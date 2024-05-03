@@ -17,7 +17,7 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "text-muted-foreground inline-flex items-center gap-x-1.5 text-sm font-medium",
+            "inline-flex items-center gap-x-1.5 text-sm font-medium text-gray-800",
             className,
           )}
         >

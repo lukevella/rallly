@@ -1,32 +1,10 @@
-import { Button } from "@rallly/ui/button";
-import Link from "next/link";
-import { Trans } from "react-i18next/TransWithoutContext";
-
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
+import { PageContainer, PageContent } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 import { CreatePoll } from "@/components/create-poll";
 
-export default async function Page({ params }: { params: { locale: string } }) {
-  const { t } = await getTranslation(params.locale);
+export default async function Page() {
   return (
     <PageContainer>
-      <PageHeader>
-        <div className="flex items-center justify-between gap-x-4">
-          <PageTitle>
-            <Trans t={t} i18nKey="polls" />
-          </PageTitle>
-          <Button asChild>
-            <Link href="/polls">
-              <Trans t={t} i18nKey="cancel" defaults="Cancel" />
-            </Link>
-          </Button>
-        </div>
-      </PageHeader>
       <PageContent>
         <CreatePoll />
       </PageContent>

@@ -64,10 +64,7 @@ export const InviteDialog = () => {
           <Trans i18nKey="share" defaults="Share" />
         </Button>
       </DialogTrigger>
-      <DialogContent
-        data-testid="invite-participant-dialog"
-        className="bg-gradient-to-b from-gray-100 via-white to-white sm:max-w-md"
-      >
+      <DialogContent data-testid="invite-participant-dialog">
         <div className="flex">
           <Share2Icon className="text-primary size-6" />
         </div>

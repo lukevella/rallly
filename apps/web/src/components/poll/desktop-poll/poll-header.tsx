@@ -122,11 +122,11 @@ const PollHeader: React.FunctionComponent = () => {
               )}
             >
               {firstOfDay ? (
-                <div className="mt-1 flex flex-col gap-1 font-medium">
-                  <div className="text-muted-foreground text-xs font-medium uppercase">
+                <div className="mt-1 flex flex-col gap-1">
+                  <div className="text-muted-foreground text-xs font-normal">
                     {option.dow}
                   </div>
-                  <div className="text-sm">{option.day}</div>
+                  <div className="text-sm font-medium">{option.day}</div>
                 </div>
               ) : null}
             </th>
