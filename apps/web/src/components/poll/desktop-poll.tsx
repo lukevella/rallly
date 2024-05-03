@@ -347,7 +347,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <EmptyStateDescription>
                   <Trans
                     i18nKey="noParticipantsDescription"
-                    defaults="No one has responded to this poll"
+                    defaults="Invite participants to start gathering responses"
                   />
                 </EmptyStateDescription>
               </EmptyState>

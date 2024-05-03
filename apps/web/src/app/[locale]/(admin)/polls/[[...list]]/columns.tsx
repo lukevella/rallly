@@ -50,9 +50,9 @@ export const usePollColumns = () => {
                   ? `/poll/${row.original.id}`
                   : `/invite/${row.original.id}`
               }
-              className="group absolute inset-0 flex items-center gap-x-2.5 px-2.5"
+              className="group absolute inset-0 flex items-center gap-x-2.5 px-4"
             >
-              <span className="min-w-0 truncate whitespace-nowrap text-sm group-hover:underline">
+              <span className="min-w-0 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
                 {row.original.title}
               </span>
             </Link>

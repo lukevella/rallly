@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Card, CardContent } from "@rallly/ui/card";
 import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next";
@@ -9,6 +10,7 @@ import { EventCard } from "@/components/event-card";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { VotingForm } from "@/components/poll/voting-form";
+import { ScheduledEvent } from "@/components/scheduled-event";
 import { usePoll } from "@/contexts/poll";
 
 import { useTouchBeacon } from "./poll/use-touch-beacon";
@@ -36,6 +38,13 @@ export const Poll = () => {
   return (
     <div className={cn("space-y-3 lg:space-y-4")}>
       <EventCard />
+      {poll.event ? (
+        <Card className="bg-gray-50">
+          <CardContent>
+            <ScheduledEvent />
+          </CardContent>
+        </Card>
+      ) : null}
       <VotingForm>
         <PollComponent />
       </VotingForm>

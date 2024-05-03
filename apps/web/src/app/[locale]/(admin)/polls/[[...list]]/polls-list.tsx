@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
+import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
 import { PaginationState, SortingState } from "@tanstack/react-table";
@@ -26,7 +27,7 @@ import { PollData, usePollColumns } from "./columns";
 function PollsEmptyState() {
   const { t } = useTranslation();
   return (
-    <EmptyState className="p-16">
+    <EmptyState className="h-96 rounded-lg border-2 border-dashed">
       <EmptyStateIcon>
         <BarChart2Icon />
       </EmptyStateIcon>
@@ -92,41 +93,43 @@ export function PollsList({ list }: { list?: string }) {
   return (
     <div className="space-y-4">
       {data.total ? (
-        <Table
-          className={isFetching ? "opacity-50" : undefined}
-          layout="auto"
-          paginationState={pagination}
-          enableTableHeader={true}
-          data={data.rows as PollData[]}
-          pageCount={Math.ceil(data.total / pagination.pageSize)}
-          sortingState={sorting}
-          onSortingChange={(updater) => {
-            const newSorting =
-              typeof updater === "function" ? updater(sorting) : updater;
+        <Card>
+          <Table
+            className={isFetching ? "opacity-50" : undefined}
+            layout="auto"
+            paginationState={pagination}
+            enableTableHeader={true}
+            data={data.rows as PollData[]}
+            pageCount={Math.ceil(data.total / pagination.pageSize)}
+            sortingState={sorting}
+            onSortingChange={(updater) => {
+              const newSorting =
+                typeof updater === "function" ? updater(sorting) : updater;
 
-            const current = new URLSearchParams(searchParams ?? undefined);
-            const sortColumn = newSorting[0];
-            if (sortColumn === undefined) {
-              current.delete("sort");
-              current.delete("desc");
-            } else {
-              current.set("sort", sortColumn.id);
-              current.set("desc", sortColumn.desc ? "desc" : "asc");
-            }
-            // current.set("pageSize", String(newPagination.pageSize));
-            router.replace(`${pathname}?${current.toString()}`);
-          }}
-          onPaginationChange={(updater) => {
-            const newPagination =
-              typeof updater === "function" ? updater(pagination) : updater;
+              const current = new URLSearchParams(searchParams ?? undefined);
+              const sortColumn = newSorting[0];
+              if (sortColumn === undefined) {
+                current.delete("sort");
+                current.delete("desc");
+              } else {
+                current.set("sort", sortColumn.id);
+                current.set("desc", sortColumn.desc ? "desc" : "asc");
+              }
+              // current.set("pageSize", String(newPagination.pageSize));
+              router.replace(`${pathname}?${current.toString()}`);
+            }}
+            onPaginationChange={(updater) => {
+              const newPagination =
+                typeof updater === "function" ? updater(pagination) : updater;
 
-            const current = new URLSearchParams(searchParams ?? undefined);
-            current.set("page", String(newPagination.pageIndex + 1));
-            // current.set("pageSize", String(newPagination.pageSize));
-            router.replace(`${pathname}?${current.toString()}`);
-          }}
-          columns={columns}
-        />
+              const current = new URLSearchParams(searchParams ?? undefined);
+              current.set("page", String(newPagination.pageIndex + 1));
+              // current.set("pageSize", String(newPagination.pageSize));
+              router.replace(`${pathname}?${current.toString()}`);
+            }}
+            columns={columns}
+          />
+        </Card>
       ) : (
         <PollsEmptyState />
       )}
