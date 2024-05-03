@@ -230,7 +230,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   <Trans i18nKey="participants" />
                 </CardTitle>
                 <Badge>{visibleParticipants.length}</Badge>
-                {canAddNewParticipant ? (
+                {canAddNewParticipant && mode !== "new" ? (
                   <Button
                     className="ml-2"
                     size="sm"
