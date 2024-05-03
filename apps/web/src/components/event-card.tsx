@@ -65,8 +65,8 @@ export function EventCard() {
           <div>
             <CardTitle className="text-lg">{poll.title}</CardTitle>
             <CardDescription>
-              <div className="flex items-center gap-1 text-sm text-gray-500">
-                <div>
+              <span className="flex items-center gap-1 text-sm text-gray-500">
+                <span>
                   <Trans
                     i18nKey="createdBy"
                     values={{
@@ -76,7 +76,7 @@ export function EventCard() {
                       b: <span />,
                     }}
                   />
-                </div>
+                </span>
                 <Icon>
                   <DotIcon />
                 </Icon>
@@ -86,12 +86,11 @@ export function EventCard() {
                     values={{ relativeTime: dayjs(poll.createdAt).fromNow() }}
                   />
                 </span>
-              </div>
+              </span>
             </CardDescription>
           </div>
           <PollStatusBadge status={poll.status} />
         </div>
-
         {poll.description ? (
           <p className="mb-4 min-w-0 text-wrap text-sm leading-relaxed">
             <TruncatedLinkify>{poll.description}</TruncatedLinkify>
