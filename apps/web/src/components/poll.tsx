@@ -1,16 +1,20 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import { Card, CardContent } from "@rallly/ui/card";
 import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next";
 
+import { LogoLink } from "@/app/components/logo-link";
+import { Clock, ClockPreferences } from "@/components/clock";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { VotingForm } from "@/components/poll/voting-form";
 import { ScheduledEvent } from "@/components/scheduled-event";
+import { UserDropdown } from "@/components/user-dropdown";
 import { usePoll } from "@/contexts/poll";
 
 import { useTouchBeacon } from "./poll/use-touch-beacon";
@@ -37,6 +41,19 @@ export const Poll = () => {
 
   return (
     <div className={cn("space-y-3 lg:space-y-4")}>
+      <div className="flex items-center justify-between gap-x-2.5 rounded-lg border bg-gray-50 p-2 shadow-sm">
+        <div className="flex items-center gap-x-2.5">
+          <LogoLink />
+        </div>
+        <div className="flex items-center gap-x-2.5">
+          <ClockPreferences>
+            <Button variant="ghost">
+              <Clock />
+            </Button>
+          </ClockPreferences>
+          <UserDropdown />
+        </div>
+      </div>
       <EventCard />
       {poll.event ? (
         <Card className="bg-gray-50">

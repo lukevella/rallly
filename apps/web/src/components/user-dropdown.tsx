@@ -58,7 +58,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
       >
         <Button variant="ghost">
           <CurrentUserAvatar size="xs" className="shrink-0 " />
-          <span className="hidden truncate sm:block">{user.name}</span>
+          <span className="truncate">{user.name}</span>
           <Icon>
             <ChevronDownIcon />
           </Icon>

@@ -76,9 +76,6 @@ const GoToApp = () => {
           </Link>
         </Button>
       </div>
-      <div>
-        <UserDropdown />
-      </div>
     </div>
   );
 };
