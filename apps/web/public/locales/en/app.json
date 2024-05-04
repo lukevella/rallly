@@ -215,11 +215,7 @@
   "integrations": "Integrations",
   "contacts": "Contacts",
   "unlockFeatures": "Unlock all Pro features.",
-  "pollStatusAll": "All",
-  "pollStatusLive": "Live",
   "pollStatusFinalized": "Finalized",
-  "pending": "Pending",
-  "xMore": "{count} more",
   "share": "Share",
   "pageXOfY": "Page {currentPage} of {pageCount}",
   "noParticipants": "No participants",
@@ -238,6 +234,12 @@
   "autoTimeZone": "Automatic Time Zone Conversion",
   "autoTimeZoneHelp": "Enable this setting to automatically adjust event times to each participant's local time zone.",
   "commentsDisabled": "Comments have been disabled",
-  "tba": "To be announced",
-  "allParticipants": "All Participants"
+  "allParticipants": "All Participants",
+  "host": "Host",
+  "created": "Created",
+  "pollStatus": "Status",
+  "pollsListAll": "All Polls",
+  "pollsListMine": "My Polls",
+  "pollsListOther": "Other Polls",
+  "noParticipantsDescription": "Invite participants to start gathering responses"
 }
