@@ -1,23 +1,12 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuItemIconLabel,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
-  ChevronDownIcon,
   ListIcon,
   LogInIcon,
   LogOutIcon,
-  PauseCircleIcon,
-  PlayCircleIcon,
-  RotateCcw,
   ShieldCloseIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -38,117 +27,16 @@ import {
 import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
-import { PollStatusLabel } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/utils/trpc/client";
-
-const StatusControl = () => {
-  const poll = usePoll();
-  const queryClient = trpc.useUtils();
-  const reopen = trpc.polls.reopen.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          event: null,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-  const pause = trpc.polls.pause.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          closed: true,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
-  const resume = trpc.polls.resume.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          closed: false,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
-  return (
-    <>
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button>
-            <PollStatusLabel status={poll.status} />
-            <ChevronDownIcon className="size-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {poll.event ? (
-            <DropdownMenuItem
-              onClick={() => {
-                reopen.mutate({ pollId: poll.id });
-              }}
-            >
-              <DropdownMenuItemIconLabel icon={RotateCcw}>
-                <Trans i18nKey="reopenPoll" defaults="Reopen Poll" />
-              </DropdownMenuItemIconLabel>
-            </DropdownMenuItem>
-          ) : (
-            <>
-              {poll.closed ? (
-                <DropdownMenuItem
-                  onClick={() => resume.mutate({ pollId: poll.id })}
-                >
-                  <DropdownMenuItemIconLabel icon={PlayCircleIcon}>
-                    <Trans i18nKey="resumePoll" defaults="Resume" />
-                  </DropdownMenuItemIconLabel>
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  onClick={() => pause.mutate({ pollId: poll.id })}
-                >
-                  <DropdownMenuItemIconLabel icon={PauseCircleIcon}>
-                    <Trans i18nKey="pausePoll" defaults="Pause" />
-                  </DropdownMenuItemIconLabel>
-                </DropdownMenuItem>
-              )}
-            </>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </>
-  );
-};
 
 const AdminControls = () => {
   return (
     <div className="flex items-center gap-x-2">
       <NotificationsToggle />
-      <StatusControl />
       <ManagePoll />
       <InviteDialog />
     </div>
@@ -256,7 +144,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const poll = trpc.polls.get.useQuery({ urlId });
   const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
-
+  usePlan(); // prefetch plan
   if (!poll.data || !watchers.data || !participants.data) {
     return <Loader />;
   }
