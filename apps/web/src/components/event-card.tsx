@@ -18,7 +18,7 @@ export function EventCard() {
     <Card className="bg-gray-50">
       <RandomGradientBar seed={poll.id} />
       <CardContent>
-        <div className="mb-4 flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
+        <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
           <div>
             <CardTitle className="text-lg">{poll.title}</CardTitle>
             <CardDescription>
@@ -49,20 +49,20 @@ export function EventCard() {
           <PollStatusBadge status={poll.status} />
         </div>
         {poll.description ? (
-          <p className="mb-4 min-w-0 text-wrap text-sm leading-relaxed">
+          <p className="mt-4 min-w-0 text-wrap text-sm leading-relaxed">
             <TruncatedLinkify>{poll.description}</TruncatedLinkify>
           </p>
         ) : null}
-        <ul className="text-muted-foreground flex flex-col gap-x-4 gap-y-2.5 whitespace-nowrap text-sm">
-          {poll.location ? (
+        {poll.location ? (
+          <ul className="text-muted-foreground mt-4 flex flex-col gap-x-4 gap-y-2.5 whitespace-nowrap text-sm">
             <li className="flex items-center gap-x-2.5">
               <Icon>
                 <MapPinIcon />
               </Icon>
               <TruncatedLinkify>{poll.location}</TruncatedLinkify>
             </li>
-          ) : null}
-        </ul>
+          </ul>
+        ) : null}
       </CardContent>
     </Card>
   );

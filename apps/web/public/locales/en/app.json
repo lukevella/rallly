@@ -241,5 +241,6 @@
   "pollsListAll": "All",
   "pollsListMine": "Mine",
   "pollsListOther": "Other",
-  "noParticipantsDescription": "Invite participants to start gathering responses"
+  "noParticipantsDescription": "Invite participants to start gathering responses",
+  "back": "Back"
 }
