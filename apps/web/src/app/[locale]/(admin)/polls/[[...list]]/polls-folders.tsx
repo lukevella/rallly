@@ -10,13 +10,13 @@ export function PollFolders() {
   return (
     <ResponsiveMenu>
       <ResponsiveMenuItem href="/polls">
-        <Trans i18nKey="pollsListAll" defaults="All Polls" />
+        <Trans i18nKey="pollsListAll" defaults="All" />
       </ResponsiveMenuItem>
-      <ResponsiveMenuItem href="/polls/created">
-        <Trans i18nKey="pollsListMine" defaults="My Polls" />
+      <ResponsiveMenuItem href="/polls/mine">
+        <Trans i18nKey="pollsListMine" defaults="Mine" />
       </ResponsiveMenuItem>
       <ResponsiveMenuItem href="/polls/other">
-        <Trans i18nKey="pollsListOther" defaults="Other Polls" />
+        <Trans i18nKey="pollsListOther" defaults="Other" />
       </ResponsiveMenuItem>
     </ResponsiveMenu>
   );

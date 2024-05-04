@@ -238,8 +238,8 @@
   "host": "Host",
   "created": "Created",
   "pollStatus": "Status",
-  "pollsListAll": "All Polls",
-  "pollsListMine": "My Polls",
-  "pollsListOther": "Other Polls",
+  "pollsListAll": "All",
+  "pollsListMine": "Mine",
+  "pollsListOther": "Other",
   "noParticipantsDescription": "Invite participants to start gathering responses"
 }

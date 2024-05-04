@@ -3,7 +3,7 @@ import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
-import { PaginationState, SortingState } from "@tanstack/react-table";
+import { PaginationState } from "@tanstack/react-table";
 import { BarChart2Icon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -62,17 +62,17 @@ export function PollsList({ list }: { list?: string }) {
     [searchParams],
   );
 
-  const sorting = React.useMemo<SortingState>(() => {
-    const id = searchParams?.get("sort");
-    const desc = searchParams?.get("desc");
-    if (!id) {
-      return [{ id: "createdAt", desc: true }];
-    }
-    return [{ id, desc: desc === "desc" }];
-  }, [searchParams]);
+  // const sorting = React.useMemo<SortingState>(() => {
+  //   const id = searchParams?.get("sort");
+  //   const desc = searchParams?.get("desc");
+  //   if (!id) {
+  //     return [{ id: "createdAt", desc: true }];
+  //   }
+  //   return [{ id, desc: desc === "desc" }];
+  // }, [searchParams]);
 
   const { data, isFetching } = trpc.polls.paginatedList.useQuery(
-    { list, pagination, sorting },
+    { list, pagination },
     {
       staleTime: Infinity,
       cacheTime: Infinity,
@@ -101,23 +101,23 @@ export function PollsList({ list }: { list?: string }) {
             enableTableHeader={true}
             data={data.rows as PollData[]}
             pageCount={Math.ceil(data.total / pagination.pageSize)}
-            sortingState={sorting}
-            onSortingChange={(updater) => {
-              const newSorting =
-                typeof updater === "function" ? updater(sorting) : updater;
+            // sortingState={sorting}
+            // onSortingChange={(updater) => {
+            //   const newSorting =
+            //     typeof updater === "function" ? updater(sorting) : updater;
 
-              const current = new URLSearchParams(searchParams ?? undefined);
-              const sortColumn = newSorting[0];
-              if (sortColumn === undefined) {
-                current.delete("sort");
-                current.delete("desc");
-              } else {
-                current.set("sort", sortColumn.id);
-                current.set("desc", sortColumn.desc ? "desc" : "asc");
-              }
-              // current.set("pageSize", String(newPagination.pageSize));
-              router.replace(`${pathname}?${current.toString()}`);
-            }}
+            //   const current = new URLSearchParams(searchParams ?? undefined);
+            //   const sortColumn = newSorting[0];
+            //   if (sortColumn === undefined) {
+            //     current.delete("sort");
+            //     current.delete("desc");
+            //   } else {
+            //     current.set("sort", sortColumn.id);
+            //     current.set("desc", sortColumn.desc ? "desc" : "asc");
+            //   }
+            //   // current.set("pageSize", String(newPagination.pageSize));
+            //   router.replace(`${pathname}?${current.toString()}`);
+            // }}
             onPaginationChange={(updater) => {
               const newPagination =
                 typeof updater === "function" ? updater(pagination) : updater;

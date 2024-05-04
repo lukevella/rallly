@@ -472,7 +472,16 @@ export const polls = router({
             }
           : input.list === "other"
             ? whereParticipated
-            : whereCreated;
+            : input.list === "mine"
+              ? whereCreated
+              : null;
+
+      if (!where) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid list",
+        });
+      }
 
       const [total, rows] = await prisma.$transaction([
         prisma.poll.count({

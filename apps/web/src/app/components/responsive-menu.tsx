@@ -33,7 +33,7 @@ function DesktopMenuItem({
           "flex h-9 min-w-0 grow items-center gap-x-2.5 rounded-md border px-2.5 text-sm font-medium",
           pathname === href
             ? "bg-gray-50"
-            : "text-gray-500 hover:shadow-sm active:bg-gray-200 active:shadow-none",
+            : "text-gray-500 hover:bg-gray-100 active:bg-gray-200",
         )}
         href={href}
       >
@@ -52,7 +52,7 @@ function MobileMenuItem({
 }) {
   return (
     <SelectItem value={href}>
-      <div className="flex items-center gap-x-2.5">{children}</div>
+      <div className="flex items-center gap-x-2">{children}</div>
     </SelectItem>
   );
 }

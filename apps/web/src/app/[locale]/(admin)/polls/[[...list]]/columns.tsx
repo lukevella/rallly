@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import { PollStatusBadge } from "@/components/poll-status";
 import { DataTableColumnHeader } from "@/components/table/table-column-header";
+import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
 import { useUser } from "@/components/user-provider";
 import { useDayjs } from "@/utils/dayjs";
@@ -83,14 +84,7 @@ export const usePollColumns = () => {
         },
       }),
       columnHelper.accessor("createdAt", {
-        header: ({ column }) => (
-          <DataTableColumnHeader
-            column={column}
-            title={t("created", {
-              defaultValue: "Created",
-            })}
-          />
-        ),
+        header: () => <Trans i18nKey="created" defaults="Created" />,
         cell: ({ row }) => {
           const { createdAt } = row.original;
           return (
