@@ -13,7 +13,6 @@ import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
@@ -50,8 +49,7 @@ export function CopyInviteLinkButton() {
 }
 
 export const InviteDialog = () => {
-  const { participants } = useParticipants();
-  const [isOpen, setIsOpen] = React.useState(participants.length === 0);
+  const [isOpen, setIsOpen] = React.useState(false);
   const poll = usePoll();
 
   return (

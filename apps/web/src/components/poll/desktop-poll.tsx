@@ -20,11 +20,13 @@ import { useMeasure, useScroll } from "react-use";
 import {
   EmptyState,
   EmptyStateDescription,
+  EmptyStateFooter,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/app/components/empty-state";
 import { useTranslation } from "@/app/i18n/client";
 import { TimesShownIn } from "@/components/clock";
+import { InviteDialog } from "@/components/invite-dialog";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { IfScoresVisible } from "@/components/visibility";
@@ -340,7 +342,8 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <EmptyStateDescription>
                   <Trans
                     i18nKey="noParticipantsDescription"
-                    defaults="Invite participants to start gathering responses"
+                    components={{ b: <strong className="font-semibold" /> }}
+                    defaults="Click <b>Share</b> to invite participants"
                   />
                 </EmptyStateDescription>
               </EmptyState>

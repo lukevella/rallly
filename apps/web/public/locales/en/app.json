@@ -241,7 +241,7 @@
   "pollsListAll": "All",
   "pollsListMine": "Mine",
   "pollsListOther": "Other",
-  "noParticipantsDescription": "Invite participants to start gathering responses",
+  "noParticipantsDescription": "Click <b>Share</b> to invite participants",
   "back": "Back",
   "timeShownIn": "Times shown in {timeZone}"
 }

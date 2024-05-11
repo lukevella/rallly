@@ -37,7 +37,7 @@ export function EmptyStateDescription({
 }: {
   children: React.ReactNode;
 }) {
-  return <p className="text-muted-foreground text-sm">{children}</p>;
+  return <p className="text-muted-foreground mt-1 text-sm">{children}</p>;
 }
 
 export function EmptyStateFooter({ children }: { children: React.ReactNode }) {
