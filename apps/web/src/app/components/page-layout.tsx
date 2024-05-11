@@ -9,7 +9,7 @@ export function PageContainer({
   return (
     <div
       className={cn(
-        "mx-auto h-full max-w-4xl grow px-3 py-4 lg:px-4 lg:py-6",
+        "h-full max-w-4xl grow px-3 py-4 lg:px-4 lg:py-6",
         className,
       )}
     >

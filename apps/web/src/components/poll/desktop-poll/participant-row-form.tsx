@@ -7,7 +7,7 @@ import {
   TooltipPortal,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import { ArrowRightIcon, CheckIcon, UndoIcon } from "lucide-react";
+import { CheckIcon, UndoIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller } from "react-hook-form";
@@ -60,12 +60,7 @@ const ParticipantRowForm = ({
           {name ? (
             <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
           ) : (
-            <div className="flex items-center gap-x-2.5">
-              <YouAvatar />
-              <Icon>
-                <ArrowRightIcon />
-              </Icon>
-            </div>
+            <YouAvatar />
           )}
           {!isNew ? (
             <div className="flex items-center gap-1">
