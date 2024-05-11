@@ -20,7 +20,9 @@ export function EventCard() {
       <CardContent>
         <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
           <div>
-            <CardTitle className="text-lg">{poll.title}</CardTitle>
+            <CardTitle data-testid="poll-title" className="text-lg">
+              {poll.title}
+            </CardTitle>
             <CardDescription>
               <span className="flex items-center gap-1 text-sm text-gray-500">
                 <span>
