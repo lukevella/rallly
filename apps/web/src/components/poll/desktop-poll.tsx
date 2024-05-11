@@ -24,6 +24,7 @@ import {
   EmptyStateTitle,
 } from "@/app/components/empty-state";
 import { useTranslation } from "@/app/i18n/client";
+import { TimesShownIn } from "@/components/clock";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { IfScoresVisible } from "@/components/visibility";
@@ -247,17 +248,9 @@ const DesktopPoll: React.FunctionComponent = () => {
               </div>
               <TableControls />
             </CardHeader>
-            {mode !== "view" ? (
+            {poll.options[0]?.duration !== 0 && poll.timeZone ? (
               <CardHeader>
-                <p className="text-sm">
-                  <Trans
-                    i18nKey="saveInstruction"
-                    values={{
-                      action: mode === "new" ? t("continue") : t("save"),
-                    }}
-                    components={{ b: <strong className="font-semibold" /> }}
-                  />
-                </p>
+                <TimesShownIn />
               </CardHeader>
             ) : null}
             {visibleParticipants.length > 0 || mode !== "view" ? (
@@ -361,6 +354,15 @@ const DesktopPoll: React.FunctionComponent = () => {
                 >
                   <Trans i18nKey="cancel" />
                 </Button>
+                <p className="text-sm">
+                  <Trans
+                    i18nKey="saveInstruction"
+                    values={{
+                      action: mode === "new" ? t("continue") : t("save"),
+                    }}
+                    components={{ b: <strong className="font-semibold" /> }}
+                  />
+                </p>
                 <Button type="submit" variant="primary" form="voting-form">
                   <Trans i18nKey="continue" />
                 </Button>

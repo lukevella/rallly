@@ -80,7 +80,11 @@ export const TimesShownIn = () => {
     <ClockPreferences>
       <button className="inline-flex items-center gap-x-2.5 text-sm hover:underline">
         <GlobeIcon className="size-4" />
-        {timeZone}
+        <Trans
+          i18nKey="timeShownIn"
+          defaults="Times shown in {timeZone}"
+          values={{ timeZone: timeZone.replaceAll("_", " ") }}
+        />
       </button>
     </ClockPreferences>
   );

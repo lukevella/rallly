@@ -15,6 +15,7 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
+import { TimesShownIn } from "@/components/clock";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { useOptions, usePoll } from "@/components/poll-context";
@@ -33,7 +34,7 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();
 
-  const { getParticipantById } = pollContext;
+  const { poll, getParticipantById } = pollContext;
 
   const { options } = useOptions();
 
@@ -65,6 +66,7 @@ const MobilePoll: React.FunctionComponent = () => {
           <Badge>{visibleParticipants.length}</Badge>
         </div>
       </CardHeader>
+
       <div className="sticky top-0 z-20 flex flex-col space-y-2 border-b bg-gray-50 p-2">
         <div className="flex gap-x-2.5">
           {selectedParticipantId || !isEditing ? (
@@ -153,6 +155,11 @@ const MobilePoll: React.FunctionComponent = () => {
           ) : null}
         </div>
       </div>
+      {poll.options[0]?.duration !== 0 && poll.timeZone ? (
+        <CardHeader>
+          <TimesShownIn />
+        </CardHeader>
+      ) : null}
       <GroupedOptions
         selectedParticipantId={selectedParticipantId}
         options={options}
