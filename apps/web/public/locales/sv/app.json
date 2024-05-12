@@ -203,5 +203,8 @@
   "inviteParticipantsDescription": "Kopiera och dela inbjudningslänken för att börja samla in svar från dina deltagare.",
   "inviteLink": "Inbjudningslänk",
   "or": "Eller",
+  "pollStatus": "Status",
+  "pollsListAll": "Alla",
+  "back": "Tillbaka",
   "timeShownIn": "Tidszon: {timeZone}"
 }
