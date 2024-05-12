@@ -233,5 +233,8 @@
   "or": "Ou",
   "autoTimeZone": "Conversão Automática de Fuso Horário",
   "autoTimeZoneHelp": "Ative esta configuração para ajustar automaticamente os horários dos eventos de cada participante ao fuso horário local.",
+  "pollStatus": "Status",
+  "pollsListAll": "Todos",
+  "back": "Voltar",
   "timeShownIn": "Horários exibidos em {timeZone}"
 }
