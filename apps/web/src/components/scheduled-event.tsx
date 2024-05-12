@@ -5,6 +5,7 @@ import { Card, CardContent } from "@rallly/ui/card";
 import { DateIconInner } from "@/components/date-icon";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
+import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useDayjs } from "@/utils/dayjs";
 
@@ -24,6 +25,9 @@ function DateIcon({ start }: { start: Date }) {
 function FinalTime({ start, duration }: { start: Date; duration: number }) {
   const poll = usePoll();
   const { adjustTimeZone, dayjs } = useDayjs();
+  if (duration === 0) {
+    return <Trans i18nKey="allDay" />;
+  }
   return (
     <span>{`${adjustTimeZone(start, !poll.timeZone).format("LT")} - ${adjustTimeZone(dayjs(start).add(duration, "minutes"), !poll.timeZone).format("LT")}`}</span>
   );
