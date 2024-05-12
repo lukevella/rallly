@@ -233,5 +233,8 @@
   "or": "Eller",
   "autoTimeZone": "Automatisk tidssonekonvertering",
   "autoTimeZoneHelp": "Aktiver denne innstillingen for å justere hendelsestider til hver deltakers lokale tidssone automatisk.",
+  "pollStatus": "Status",
+  "pollsListAll": "Alle",
+  "back": "Tilbake",
   "timeShownIn": "Tider vises i {timeZone}"
 }
