@@ -119,6 +119,10 @@ export const usePollColumns = () => {
       columnHelper.accessor("participants", {
         header: () => null,
         cell: ({ row }) => {
+          if (row.original.userId !== user.id) {
+            return null;
+          }
+
           return (
             <Link
               className="text-link text-sm"
