@@ -233,5 +233,8 @@
   "or": "Ou",
   "autoTimeZone": "Conversion automatique du fuseau horaire",
   "autoTimeZoneHelp": "Activer ce paramètre pour ajuster automatiquement les heures de chaque participant au fuseau horaire local.",
+  "pollStatus": "Statut",
+  "pollsListAll": "Tout",
+  "back": "Retour",
   "timeShownIn": "Heures affichées en {timeZone}"
 }
