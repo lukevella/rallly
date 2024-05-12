@@ -1,26 +1,41 @@
 import { cn } from "@rallly/ui";
-import clsx from "clsx";
+import { Icon } from "@rallly/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
+import { ClockIcon } from "lucide-react";
 import * as React from "react";
 
-import { DateIconInner } from "@/components/date-icon";
 import { useOptions } from "@/components/poll-context";
-
-import { ConnectedScoreSummary } from "../score-summary";
+import { Trans } from "@/components/trans";
 
 const TimeRange: React.FunctionComponent<{
   start: string;
   end: string;
+  duration: string;
   className?: string;
-}> = ({ start, end, className }) => {
+}> = ({ start, end, duration, className }) => {
   return (
-    <div
-      className={clsx(
-        "relative -mr-2 inline-block whitespace-nowrap pr-2 text-right text-xs font-normal after:absolute after:right-0 after:top-2 after:h-4 after:w-1 after:border-b after:border-r after:border-t after:border-gray-300 after:content-['']",
-        className,
-      )}
-    >
-      <div className="font-medium tabular-nums">{start}</div>
-      <div className="text-muted-foreground tabular-nums">{end}</div>
+    <div className={cn("text-muted-foreground text-xs font-normal", className)}>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger>{start}</TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent className="flex gap-x-2.5 text-xs">
+            <span>
+              {start} - {end}
+            </span>
+            <span className="flex items-center gap-x-1 text-gray-500">
+              <Icon>
+                <ClockIcon />
+              </Icon>
+              {duration}
+            </span>
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
     </div>
   );
 };
@@ -36,32 +51,15 @@ const TimelineRow = ({
         className="sticky left-0 z-30 bg-white pl-4 pr-4"
       ></th>
       {children}
-      <th className="w-full" />
+      <th className="bg-diagonal-lines -ml-4 w-full min-w-4 border-l" />
     </tr>
   );
 };
 
 const monthRowHeight = 48;
-const dayRowHeight = 64;
+const dayRowHeight = 60;
 
 const scoreRowTop = monthRowHeight + dayRowHeight;
-
-const Trail = ({ end }: { end?: boolean }) => {
-  return end ? (
-    <div aria-hidden="true" className="absolute left-0 top-6 z-10 h-full w-1/2">
-      <div className="h-px bg-gray-200" />
-      <div className="absolute right-0 top-0 h-5 w-px bg-gray-200" />
-    </div>
-  ) : (
-    <div
-      aria-hidden="true"
-      className={cn("absolute left-0 top-6 z-10 h-full w-full")}
-    >
-      <div className="h-px bg-gray-200" />
-      <div className={cn("absolute right-1/2 top-0 h-2 w-px bg-gray-200")} />
-    </div>
-  );
-};
 
 const PollHeader: React.FunctionComponent = () => {
   const { options } = useOptions();
@@ -71,26 +69,25 @@ const PollHeader: React.FunctionComponent = () => {
         {options.map((option, i) => {
           const firstOfMonth =
             i === 0 || options[i - 1]?.month !== option.month;
-          const lastOfMonth = options[i + 1]?.month !== option.month;
 
           return (
             <th
               key={option.optionId}
               style={{ height: monthRowHeight }}
               className={cn(
-                "sticky top-0 space-y-3 bg-white",
-                firstOfMonth ? "left-[240px] z-20" : "z-10",
+                "sticky top-0 space-y-3 bg-gray-50",
+                firstOfMonth ? "left-[240px] z-20 border-l" : "z-10",
               )}
             >
-              <div className="flex items-center justify-center">
-                {firstOfMonth ? null : <Trail end={lastOfMonth} />}
+              <div className="flex">
                 <div
                   className={cn(
-                    "h-5 px-2 py-0.5 text-sm font-semibold",
+                    "inline-flex h-5 gap-1 px-2 py-0.5 text-xs font-medium uppercase",
                     firstOfMonth ? "opacity-100" : "opacity-0",
                   )}
                 >
-                  {option.month}
+                  <span>{option.month}</span>
+                  <span className="text-muted-foreground">{option.year}</span>
                 </div>
               </div>
             </th>
@@ -103,31 +100,35 @@ const PollHeader: React.FunctionComponent = () => {
             i === 0 ||
             options[i - 1]?.day !== option.day ||
             options[i - 1]?.month !== option.month;
+
           const lastOfDay =
-            options[i + 1]?.day !== option.day ||
-            options[i + 1]?.month !== option.month;
+            i === options.length - 1 || options[i + 1]?.day !== option.day;
           return (
             <th
               key={option.optionId}
               style={{
                 minWidth: 80,
                 width: 80,
-                maxWidth: 90,
                 height: dayRowHeight,
                 left: firstOfDay && !lastOfDay ? 240 : 0,
                 top: monthRowHeight,
               }}
               className={cn(
-                "sticky space-y-2 bg-white align-top",
+                "sticky space-y-2 border-t bg-gray-50",
                 firstOfDay ? "z-20" : "z-10",
+                {
+                  "border-l": firstOfDay,
+                },
               )}
             >
-              {firstOfDay ? null : <Trail end={lastOfDay} />}
-              <DateIconInner
-                className={firstOfDay ? "opacity-100" : "opacity-0"}
-                day={option.day}
-                dow={option.dow}
-              />
+              {firstOfDay ? (
+                <div className="mt-1 flex flex-col gap-1">
+                  <div className="text-muted-foreground text-xs font-normal">
+                    {option.dow}
+                  </div>
+                  <div className="text-sm font-medium">{option.day}</div>
+                </div>
+              ) : null}
             </th>
           );
         })}
@@ -138,13 +139,20 @@ const PollHeader: React.FunctionComponent = () => {
             <th
               key={option.optionId}
               style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
-              className="sticky z-20 space-y-2 bg-white pb-3 pt-2"
+              className="sticky z-20 border-l bg-gray-50 pb-2.5 align-top"
             >
-              {option.type === "timeSlot" ? (
-                <TimeRange start={option.startTime} end={option.endTime} />
-              ) : null}
-              <div>
-                <ConnectedScoreSummary optionId={option.optionId} />
+              <div className="flex flex-col items-center gap-2.5">
+                {option.type === "timeSlot" ? (
+                  <TimeRange
+                    start={option.startTime}
+                    end={option.endTime}
+                    duration={option.duration}
+                  />
+                ) : (
+                  <p className="text-muted-foreground text-xs font-normal">
+                    <Trans i18nKey="allDay" defaults="All-Day" />
+                  </p>
+                )}
               </div>
             </th>
           );

@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import { Switch } from "@rallly/ui/switch";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -99,19 +100,19 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
-              <Button
-                icon={ChevronLeftIcon}
-                title={t("previousMonth")}
-                onClick={datepicker.prev}
-              />
+              <Button title={t("previousMonth")} onClick={datepicker.prev}>
+                <Icon>
+                  <ChevronLeftIcon />
+                </Icon>
+              </Button>
               <div className="grow text-center font-semibold tracking-tight">
                 {datepicker.label}
               </div>
-              <Button
-                title={t("nextMonth")}
-                icon={ChevronRightIcon}
-                onClick={datepicker.next}
-              />
+              <Button title={t("nextMonth")} onClick={datepicker.next}>
+                <Icon>
+                  <ChevronRightIcon />
+                </Icon>
+              </Button>
             </div>
             <div className="grid grid-cols-7">
               {datepicker.daysOfWeek.map((dayOfWeek) => {
@@ -343,7 +344,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         })}
                         <div className="flex items-center space-x-3">
                           <Button
-                            icon={PlusIcon}
                             onClick={() => {
                               const lastOption = expectTimeOption(
                                 optionsForDay[optionsForDay.length - 1].option,
@@ -373,6 +373,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                               ]);
                             }}
                           >
+                            <Icon>
+                              <PlusIcon />
+                            </Icon>
                             {t("addTimeOption")}
                           </Button>
                           <DropdownMenu>

@@ -32,7 +32,9 @@ const Alert = React.forwardRef<
     className={cn(alertVariants({ variant }), className)}
     {...props}
   >
-    {Icon ? <Icon className="text-muted-foreground -mt-1 mb-2 size-6" /> : null}
+    {Icon ? (
+      <Icon className="text-muted-foreground -mt-0.5 mb-2 size-5" />
+    ) : null}
     <div>{children}</div>
   </div>
 ));
@@ -60,7 +62,10 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
+    className={cn(
+      "text-muted-foreground text-sm [&_p]:leading-relaxed",
+      className,
+    )}
     {...props}
   />
 ));

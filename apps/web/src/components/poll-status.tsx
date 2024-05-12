@@ -1,26 +1,9 @@
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { CheckCircleIcon, PauseCircleIcon, RadioIcon } from "lucide-react";
+import { Badge } from "@rallly/ui/badge";
+import { CalendarCheckIcon, PauseIcon, RadioIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
-import { IconComponent } from "@/types";
-
-const LabelWithIcon = ({
-  icon: Icon,
-  children,
-  className,
-}: {
-  icon: IconComponent;
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <span className={cn("inline-flex items-center gap-1.5", className)}>
-      <Icon className="size-4 -ml-0.5" />
-      <span className="font-medium">{children}</span>
-    </span>
-  );
-};
 
 export const PollStatusLabel = ({
   status,
@@ -32,38 +15,56 @@ export const PollStatusLabel = ({
   switch (status) {
     case "live":
       return (
-        <LabelWithIcon icon={RadioIcon} className={className}>
+        <span
+          className={cn(
+            "inline-flex items-center gap-x-1.5 text-sm font-medium text-gray-800",
+            className,
+          )}
+        >
+          <RadioIcon className="inline-block size-4 opacity-75" />
           <Trans i18nKey="pollStatusOpen" defaults="Live" />
-        </LabelWithIcon>
+        </span>
       );
     case "paused":
       return (
-        <LabelWithIcon icon={PauseCircleIcon} className={className}>
+        <span
+          className={cn(
+            "text-muted-foreground inline-flex items-center gap-x-1.5 text-sm font-medium",
+            className,
+          )}
+        >
+          <PauseIcon className="inline-block size-4 opacity-75" />
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
-        </LabelWithIcon>
+        </span>
       );
     case "finalized":
       return (
-        <LabelWithIcon icon={CheckCircleIcon} className={className}>
-          <Trans i18nKey="pollStatusClosed" defaults="Finalized" />
-        </LabelWithIcon>
+        <span
+          className={cn(
+            "text-primary-50 inline-flex items-center gap-x-1.5 text-sm font-medium",
+            className,
+          )}
+        >
+          <CalendarCheckIcon className="inline-block size-4 opacity-75" />
+          <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
+        </span>
       );
   }
 };
 
 export const PollStatusBadge = ({ status }: { status: PollStatus }) => {
   return (
-    <PollStatusLabel
-      className={cn(
-        "whitespace-nowrap rounded-md border px-2 py-1 text-xs font-medium",
-        {
-          "border-pink-200 bg-pink-50 text-pink-600": status === "live",
-          "border-gray-200 bg-gray-100 text-gray-500": status === "paused",
-          "border-indigo-200 bg-indigo-50 text-indigo-600":
-            status === "finalized",
-        },
-      )}
-      status={status}
-    />
+    <Badge
+      size="lg"
+      variant={
+        status === "finalized"
+          ? "primary"
+          : status === "paused"
+            ? "default"
+            : "outline"
+      }
+    >
+      <PollStatusLabel status={status} />
+    </Badge>
   );
 };

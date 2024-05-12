@@ -1,7 +1,7 @@
 import { createTRPCContext } from "@rallly/backend/trpc/context";
 import { AppRouter, appRouter } from "@rallly/backend/trpc/routers";
 import * as Sentry from "@sentry/nextjs";
-import * as trpcNext from "@trpc/server/adapters/next";
+import { createNextApiHandler } from "@trpc/server/adapters/next";
 
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
 import { getServerSession, isEmailBlocked } from "@/utils/auth";
@@ -14,7 +14,7 @@ export const config = {
   },
 };
 
-export default trpcNext.createNextApiHandler<AppRouter>({
+export default createNextApiHandler<AppRouter>({
   router: appRouter,
   createContext: async (opts) => {
     return createTRPCContext(opts, {

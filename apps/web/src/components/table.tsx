@@ -1,43 +1,47 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Flex } from "@rallly/ui/flex";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   OnChangeFn,
   PaginationState,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import clsx from "clsx";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import React from "react";
 
 import { Trans } from "@/components/trans";
 
-export const Table = <
-  T extends Record<string, unknown>,
+export const Table = <TData extends Record<string, unknown>>(props: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  C extends ColumnDef<T, any>,
->(props: {
-  columns: C[];
-  data: T[];
+  columns: ColumnDef<TData, any>[];
+  data: TData[];
   footer?: React.ReactNode;
   pageCount?: number;
   enableTableFooter?: boolean;
   enableTableHeader?: boolean;
   layout?: "fixed" | "auto";
   onPaginationChange?: OnChangeFn<PaginationState>;
+  sortingState?: SortingState;
+  onSortingChange?: OnChangeFn<SortingState>;
   paginationState: PaginationState | undefined;
   className?: string;
 }) => {
-  const table = useReactTable<T>({
+  const table = useReactTable<TData>({
     data: props.data,
     columns: props.columns,
     pageCount: props.pageCount,
     state: {
       pagination: props.paginationState,
+      sorting: props.sortingState,
     },
+    onSortingChange: props.onSortingChange,
+    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     onPaginationChange: props.onPaginationChange,
     getCoreRowModel: getCoreRowModel(),
@@ -47,13 +51,13 @@ export const Table = <
   return (
     <div>
       <div
-        className={clsx(
+        className={cn(
           props.className,
           "scrollbar-thin  max-w-full overflow-x-auto",
         )}
       >
         <table
-          className={clsx(
+          className={cn(
             "border-collapse",
             props.layout === "auto" ? "w-full table-auto" : "table-fixed",
           )}
@@ -72,7 +76,7 @@ export const Table = <
                             ? header.getSize()
                             : undefined,
                       }}
-                      className="whitespace-nowrap border-b border-gray-100 px-3 py-2.5 text-left align-bottom text-sm font-semibold"
+                      className="text-muted-foreground h-9 border-b px-2.5 text-left text-xs font-normal"
                     >
                       {header.isPlaceholder
                         ? null
@@ -99,11 +103,10 @@ export const Table = <
                           : undefined,
                     }}
                     key={cell.id}
-                    className={clsx(
-                      "overflow-hidden border-gray-100 py-4 pr-8 align-middle",
+                    className={cn(
+                      "relative h-14 overflow-hidden border-gray-100 px-2.5 align-middle",
                       {
                         "border-b": table.getRowModel().rows.length !== i + 1,
-                        "pt-0": !props.enableTableHeader && i === 0,
                       },
                     )}
                   >
@@ -118,7 +121,7 @@ export const Table = <
               {table.getFooterGroups().map((footerGroup) => (
                 <tr key={footerGroup.id} className="relative">
                   {footerGroup.headers.map((header) => (
-                    <th className="border-t bg-gray-50" key={header.id}>
+                    <th className="border-t" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -133,41 +136,43 @@ export const Table = <
           ) : null}
         </table>
       </div>
-      <hr className="my-2" />
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <Button
-          variant="ghost"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ChevronLeftIcon
-            className={cn("size-4", {
-              "text-gray-400": !table.getCanPreviousPage(),
-            })}
-          />
-        </Button>
-        <span className="text-muted-foreground text-sm">
-          <Trans
-            i18nKey="pageXOfY"
-            defaults="Page {currentPage} of {pageCount}"
-            values={{
-              currentPage: table.getState().pagination.pageIndex + 1,
-              pageCount: table.getPageCount(),
-            }}
-          />
-        </span>
-        <Button
-          variant="ghost"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ChevronRightIcon
-            className={cn("size-4", {
-              "text-gray-400": !table.getCanNextPage(),
-            })}
-          />
-        </Button>
-      </div>
+      {table.getPageCount() > 1 ? (
+        <div className="flex items-center justify-between space-x-2 border-t px-4 py-3 lg:px-5">
+          <div>
+            <span className="text-muted-foreground text-sm">
+              <Trans
+                i18nKey="pageXOfY"
+                defaults="Page {currentPage} of {pageCount}"
+                values={{
+                  currentPage: table.getState().pagination.pageIndex + 1,
+                  pageCount: table.getPageCount(),
+                }}
+              />
+            </span>
+          </div>
+          <Flex>
+            <Button
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <ArrowLeftIcon
+                className={cn("size-4", {
+                  "text-gray-400": !table.getCanPreviousPage(),
+                })}
+              />
+            </Button>
+
+            <Button
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <ArrowRightIcon className="size-4 text-gray-500" />
+            </Button>
+          </Flex>
+        </div>
+      ) : null}
     </div>
   );
 };

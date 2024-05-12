@@ -39,13 +39,13 @@ const flexVariants = cva("box-border flex justify-start", {
     },
     gap: {
       none: "gap-0",
-      sm: "gap-2.5",
-      md: "gap-4",
+      md: "gap-2.5",
+      lg: "gap-4",
     },
   },
   defaultVariants: {
     direction: "row",
-    align: "start",
+    align: "center",
     justify: "start",
     wrap: "noWrap",
     gap: "md",

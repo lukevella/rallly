@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
+import { Icon } from "@rallly/ui/icon";
 import { ArrowUpRightIcon, Share2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -56,14 +57,14 @@ export const InviteDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild={true}>
-        <Button variant="primary" icon={Share2Icon}>
+        <Button variant="primary">
+          <Icon>
+            <Share2Icon />
+          </Icon>
           <Trans i18nKey="share" defaults="Share" />
         </Button>
       </DialogTrigger>
-      <DialogContent
-        data-testid="invite-participant-dialog"
-        className="bg-gradient-to-b from-gray-100 via-white to-white sm:max-w-md"
-      >
+      <DialogContent data-testid="invite-participant-dialog">
         <div className="flex">
           <Share2Icon className="text-primary size-6" />
         </div>

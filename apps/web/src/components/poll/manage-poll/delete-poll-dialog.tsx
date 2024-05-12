@@ -2,7 +2,6 @@ import { Button } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -38,10 +37,10 @@ export const DeletePollDialog: React.FunctionComponent<{
           <DialogTitle>
             <Trans i18nKey="deletePoll" />
           </DialogTitle>
-          <DialogDescription>
-            <Trans i18nKey="deletePollDescription" />
-          </DialogDescription>
         </DialogHeader>
+        <p className="text-sm">
+          <Trans i18nKey="deletePollDescription" />
+        </p>
         <DialogFooter>
           <Button
             onClick={() => {

@@ -51,7 +51,6 @@ const Page: NextPageWithLayout = () => {
     <PayWall>
       <Form {...form}>
         <form
-          className="mx-auto max-w-3xl"
           onSubmit={form.handleSubmit((data) => {
             //submit
             duplicate.mutate(
@@ -90,7 +89,7 @@ const Page: NextPageWithLayout = () => {
                       <FormLabel>
                         <Trans i18nKey="duplicateTitleLabel" defaults="Title" />
                       </FormLabel>
-                      <Input {...field} />
+                      <Input className="w-full" {...field} />
                       <FormDescription>
                         <Trans
                           i18nKey="duplicateTitleDescription"

@@ -7,6 +7,7 @@ import * as React from "react";
 
 import { Dialog, DialogContent } from "./dialog";
 import { cn } from "./lib/utils";
+import { Icon } from "@rallly/ui/icon";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -41,8 +42,13 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-    <SearchIcon className="mr-2 size-4 shrink-0 opacity-50" />
+  <div
+    className="flex items-center gap-x-2.5 border-b px-3"
+    cmdk-input-wrapper=""
+  >
+    <Icon>
+      <SearchIcon className="shrink-0" />
+    </Icon>
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
@@ -75,7 +81,7 @@ const CommandEmpty = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className="py-6 text-center text-sm"
+    className="text-muted-foreground py-6 text-center text-sm"
     {...props}
   />
 ));
@@ -117,7 +123,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex h-10 cursor-default select-none items-center rounded-md px-2 text-sm outline-none aria-selected:bg-gray-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex h-9 cursor-default select-none items-center rounded-md px-2 text-sm outline-none aria-selected:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}

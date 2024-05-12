@@ -20,65 +20,72 @@ export const ConnectedScoreSummary: React.FunctionComponent<{
   const { getScore, highScore } = usePoll();
   const { yes, ifNeedBe } = getScore(optionId);
   const score = yes + ifNeedBe;
+  const highlight = score === highScore && score > 1;
   return (
     <IfScoresVisible>
       <ScoreSummary
         yesScore={yes}
         ifNeedBeScore={ifNeedBe}
         highScore={highScore}
-        highlight={score === highScore && score > 1}
+        highlight={highlight}
       />
     </IfScoresVisible>
   );
 };
 
-export const ScoreSummary: React.FunctionComponent<PopularityScoreProps> =
-  React.memo(function PopularityScore({
-    yesScore,
+function AnimatedNumber({ score }: { score: number }) {
+  const prevScore = usePrevious(score);
+  const direction = prevScore !== undefined ? score - prevScore : 0;
+
+  return (
+    <AnimatePresence initial={false} mode="wait">
+      <m.span
+        initial={{
+          y: 10 * direction,
+        }}
+        transition={{
+          duration: 0.1,
+        }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{
+          y: 10 * direction,
+        }}
+        key={score}
+        className="relative"
+      >
+        {score}
+      </m.span>
+    </AnimatePresence>
+  );
+}
+
+const ScoreSummary: React.FunctionComponent<PopularityScoreProps> = React.memo(
+  function PopularityScore({
+    yesScore = 0,
     ifNeedBeScore = 0,
-    highScore,
     highlight,
+    highScore,
   }) {
     const score = yesScore + ifNeedBeScore;
-    const prevScore = usePrevious(score);
-
-    const direction = prevScore !== undefined ? score - prevScore : 0;
 
     return (
-      <div
-        data-testid="popularity-score"
+      <span
         className={cn(
-          "relative inline-flex select-none items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-normal tabular-nums",
-          highlight
-            ? "border-green-500 text-green-500"
-            : "border-transparent text-gray-600",
+          "relative inline-flex items-center gap-x-1 text-xs",
+          highlight ? "font-medium text-gray-800" : "font-normal text-gray-500",
         )}
         style={{
           opacity: Math.max(score / highScore, 0.2),
         }}
       >
-        <User2Icon className="size-3" />
-        <AnimatePresence initial={false} mode="wait">
-          <m.span
-            transition={{
-              duration: 0.1,
-            }}
-            initial={{
-              y: 10 * direction,
-            }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{
-              y: 10 * direction,
-            }}
-            key={score}
-            className="relative"
-          >
-            {score}
-          </m.span>
-        </AnimatePresence>
-        {highlight && ifNeedBeScore > 0 ? (
-          <span className="absolute -right-1 -top-0.5 size-2 rounded-full bg-amber-400 ring-2 ring-white" />
+        <User2Icon className="size-4 opacity-75" />
+        <AnimatedNumber score={score} />
+        {highlight ? (
+          ifNeedBeScore > 0 ? (
+            <span className="inline-block size-1.5 rounded-full bg-amber-400" />
+          ) : null
         ) : null}
-      </div>
+      </span>
     );
-  });
+  },
+);

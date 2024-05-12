@@ -1,8 +1,9 @@
-import { PreferencesPage } from "@/app/[locale]/(admin)/settings/preferences/preferences-page";
 import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 
-export default function Page() {
+import { PreferencesPage } from "./preferences-page";
+
+export default async function Page() {
   return <PreferencesPage />;
 }
 

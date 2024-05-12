@@ -85,9 +85,9 @@ export const MarketingHero = ({
         <Link
           locale="en"
           href="/blog/rallly-3-0-self-hosting"
-          className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
+          className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
         >
-          <Badge className="bg-green-500">
+          <Badge variant="green">
             <Trans i18nKey="home:new" defaults="New" />
           </Badge>
           <span className="flex items-center gap-x-1">

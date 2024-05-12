@@ -1,6 +1,4 @@
-import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import React from "react";
-import { Trans } from "react-i18next/TransWithoutContext";
 
 import {
   PageContainer,
@@ -9,9 +7,8 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
-import { isSelfHosted } from "@/utils/constants";
 
-import { SettingsMenu } from "./menu-item";
+import { SettingsMenu } from "./settings-menu";
 
 export default async function ProfileLayout({
   children,
@@ -20,41 +17,16 @@ export default async function ProfileLayout({
   params: { locale: string };
 }>) {
   const { t } = await getTranslation(params.locale);
-  const menuItems = [
-    {
-      title: t("profile"),
-      href: "/settings/profile",
-      icon: UserIcon,
-    },
-    {
-      title: t("preferences"),
-      href: "/settings/preferences",
-      icon: Settings2Icon,
-    },
-  ];
-
-  if (!isSelfHosted) {
-    menuItems.push({
-      title: t("billing"),
-      href: "/settings/billing",
-      icon: CreditCardIcon,
-    });
-  }
-
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-center justify-between gap-x-4">
-          <PageTitle>
-            <Trans t={t} i18nKey="settings" />
-          </PageTitle>
-        </div>
+        <PageTitle>{t("settings")}</PageTitle>
       </PageHeader>
-      <PageContent className="space-y-6">
+      <PageContent className="space-y-3 lg:space-y-4">
         <div>
           <SettingsMenu />
         </div>
-        <div className="max-w-4xl">{children}</div>
+        <div>{children}</div>
       </PageContent>
     </PageContainer>
   );

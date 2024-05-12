@@ -86,7 +86,6 @@ const Page = () => {
   return (
     <Form {...form}>
       <form
-        className="mx-auto max-w-3xl"
         onSubmit={form.handleSubmit((data) => {
           const encodedOptions = data.options.map(encodeDateOption);
           const optionsToDelete = poll.options.filter((option) => {

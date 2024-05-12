@@ -1,5 +1,5 @@
 import { VoteType } from "@rallly/database";
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import * as React from "react";
 
 import VoteIcon from "./vote-icon";
@@ -15,7 +15,8 @@ export interface VoteSelectorProps {
 
 const orderedVoteTypes: VoteType[] = ["yes", "ifNeedBe", "no"];
 
-const getNext = (value: VoteType) => {
+export const toggleVote = (value?: VoteType) => {
+  if (!value) return orderedVoteTypes[0];
   return orderedVoteTypes[
     (orderedVoteTypes.indexOf(value) + 1) % orderedVoteTypes.length
   ];
@@ -35,12 +36,12 @@ export const VoteSelector = React.forwardRef<
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}
-      className={clsx(
-        "relative flex h-9 items-center justify-center overflow-hidden rounded-md border hover:bg-gray-50 focus:ring-1 focus:ring-gray-200 active:bg-gray-100",
+      className={cn(
+        "flex size-7 items-center justify-center rounded-md border bg-white ring-gray-200 focus:ring-2",
         className,
       )}
       onClick={() => {
-        onChange?.(value ? getNext(value) : orderedVoteTypes[0]);
+        onChange?.(value ? toggleVote(value) : orderedVoteTypes[0]);
       }}
       ref={ref}
     >

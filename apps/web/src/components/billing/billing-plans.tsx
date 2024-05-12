@@ -21,16 +21,18 @@ export const BillingPlans = () => {
   const [tab, setTab] = React.useState("yearly");
 
   return (
-    <div className="space-y-4">
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="mb-4">
-          <TabsTrigger value="monthly">
-            <Trans i18nKey="billingPeriodMonthly" />
-          </TabsTrigger>
-          <TabsTrigger value="yearly">
-            <Trans i18nKey="billingPeriodYearly" />
-          </TabsTrigger>
-        </TabsList>
+    <Tabs value={tab} onValueChange={setTab}>
+      <div className="space-y-4">
+        <div>
+          <TabsList>
+            <TabsTrigger value="monthly">
+              <Trans i18nKey="billingPeriodMonthly" />
+            </TabsTrigger>
+            <TabsTrigger value="yearly">
+              <Trans i18nKey="billingPeriodYearly" />
+            </TabsTrigger>
+          </TabsList>
+        </div>
         <div className="grid gap-4 rounded-md md:grid-cols-2">
           <BillingPlan>
             <BillingPlanHeader>
@@ -69,7 +71,7 @@ export const BillingPlans = () => {
               </BillingPlanPerk>
             </BillingPlanPerks>
           </BillingPlan>
-          <div className="space-y-4 rounded-md border p-4">
+          <div className="space-y-4 rounded-md border bg-white p-4 shadow-sm">
             <div>
               <BillingPlanTitle>
                 <Trans i18nKey="planPro" />
@@ -126,26 +128,26 @@ export const BillingPlans = () => {
             </BillingPlanPerks>
           </div>
         </div>
-      </Tabs>
-      <div className="rounded-md border border-cyan-200 bg-cyan-50 px-4 py-3 text-cyan-800">
-        <div className="mb-2">
-          <TrendingUpIcon className="text-indigo mr-2 mt-0.5 size-6 shrink-0" />
-        </div>
-        <div className="mb-2 flex items-center gap-x-2">
-          <h3 className="text-sm font-semibold">
+        <div className="rounded-lg border border-cyan-800/10 bg-cyan-50 px-4 py-3 text-cyan-800 shadow-sm">
+          <div className="mb-2">
+            <TrendingUpIcon className="text-indigo mr-2 mt-0.5 size-6 shrink-0" />
+          </div>
+          <div className="mb-2 flex items-center gap-x-2">
+            <h3 className="text-sm font-semibold">
+              <Trans
+                i18nKey="upgradeNowSaveLater"
+                defaults="Upgrade now, save later"
+              />
+            </h3>
+          </div>
+          <p className="text-sm">
             <Trans
-              i18nKey="upgradeNowSaveLater"
-              defaults="Upgrade now, save later"
+              i18nKey="earlyAdopterDescription"
+              defaults="As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases."
             />
-          </h3>
+          </p>
         </div>
-        <p className="text-sm">
-          <Trans
-            i18nKey="earlyAdopterDescription"
-            defaults="As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases."
-          />
-        </p>
       </div>
-    </div>
+    </Tabs>
   );
 };

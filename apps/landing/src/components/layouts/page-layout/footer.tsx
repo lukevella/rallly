@@ -1,5 +1,6 @@
 import { DiscordIcon } from "@rallly/icons";
 import languages from "@rallly/languages";
+import { Button } from "@rallly/ui/button";
 import {
   Select,
   SelectContent,
@@ -36,8 +37,10 @@ export const LanguageSelect = () => {
         });
       }}
     >
-      <SelectTrigger>
-        <SelectValue />
+      <SelectTrigger asChild>
+        <Button className="w-full">
+          <SelectValue />
+        </Button>
       </SelectTrigger>
       <SelectContent>
         {Object.entries(languages).map(([code, name]) => (

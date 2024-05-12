@@ -98,14 +98,14 @@ export const CreatePoll: React.FunctionComponent = () => {
                   numberOfOptions: formData.options?.length,
                   optionsView: formData?.view,
                 });
-                queryClient.polls.list.invalidate();
+                queryClient.invalidate();
                 router.push(`/poll/${res.id}`);
               },
             },
           );
         })}
       >
-        <div className="mx-auto max-w-4xl space-y-4">
+        <div className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>

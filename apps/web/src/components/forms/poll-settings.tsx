@@ -20,7 +20,7 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";
 
-import { ProBadge } from "@/components/pro-badge";
+import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { usePlan } from "@/contexts/plan";
 
 export type PollSettingsFormData = {
@@ -46,7 +46,7 @@ const SettingTitle = ({
   return (
     <div className="flex min-w-0 items-center gap-x-2.5">
       <div className="text-sm font-medium">{children}</div>
-      {pro ? <ProBadge /> : null}
+      {pro ? <ProFeatureBadge /> : null}
       {hint ? (
         <Tooltip>
           <TooltipTrigger>

@@ -5,6 +5,7 @@ import { XIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
+export type { DialogProps } from "@radix-ui/react-dialog";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -17,7 +18,7 @@ const DialogPortal = ({
   ...props
 }: DialogPrimitive.DialogPortalProps) => (
   <DialogPrimitive.Portal className={cn(className)} {...props}>
-    <div className="fixed inset-0 z-50 flex items-start justify-center sm:items-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center pb-4 sm:items-center">
       {children}
     </div>
   </DialogPrimitive.Portal>
@@ -43,7 +44,7 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
     hideCloseButton?: boolean;
   }
 >(({ className, children, size = "md", hideCloseButton, ...props }, ref) => (
@@ -52,11 +53,16 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in data-[state=open]:fade-in shadow-huge fixed z-50 mx-4 grid translate-y-4 gap-4 overflow-hidden rounded-md bg-white p-5",
+        "animate-in data-[state=open]:fade-in shadow-huge z-50 grid w-full translate-y-4 gap-4 overflow-hidden bg-gray-50 p-5 sm:rounded-md",
         {
           "sm:max-w-sm": size === "sm",
           "sm:max-w-md": size === "md",
           "sm:max-w-lg": size === "lg",
+          "sm:max-w-xl": size === "xl",
+          "sm:max-w-2xl": size === "2xl",
+          "sm:max-w-3xl": size === "3xl",
+          "sm:max-w-4xl": size === "4xl",
+          "sm:max-w-5xl": size === "5xl",
         },
         className,
       )}
@@ -90,7 +96,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "bg-muted-background -mx-5 -mb-5 flex flex-col-reverse gap-2 px-5 py-2.5 sm:flex-row sm:justify-end sm:rounded-b-md",
+      "bg-muted-background -mx-5 -mb-5 flex flex-col-reverse gap-2 border-t px-3 py-2.5 sm:flex-row sm:justify-end sm:rounded-b-md",
       className,
     )}
     {...props}
@@ -116,14 +122,41 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn(
-      "text-muted-foreground mt-2 text-sm leading-relaxed tracking-wide",
-      className,
-    )}
+    className={cn("text-muted-foreground mt-2.5 text-sm", className)}
     {...props}
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+function useDialog() {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>();
+
+  function trigger() {
+    setIsOpen(true);
+  }
+
+  function dismiss() {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  }
+
+  return {
+    triggerProps: {
+      ref: triggerRef,
+      onClick: trigger,
+    },
+    dialogProps: {
+      open: isOpen,
+      onOpenChange: (open: boolean) => {
+        if (open) trigger();
+        else dismiss();
+      },
+    },
+    trigger,
+    dismiss,
+  };
+}
 
 export {
   Dialog,
@@ -134,4 +167,5 @@ export {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  useDialog,
 };

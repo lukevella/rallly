@@ -1,6 +1,7 @@
 "use client";
-import clsx from "clsx";
-import { UserIcon } from "lucide-react";
+import { cn } from "@rallly/ui";
+import { Icon } from "@rallly/ui/icon";
+import { User2Icon } from "lucide-react";
 
 import { useUser } from "@/components/user-provider";
 import { getRandomAvatarColor } from "@/utils/color-hash";
@@ -22,7 +23,7 @@ export const CurrentUserAvatar = ({
 
 interface UserAvatarProps {
   name?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   className?: string;
 }
 
@@ -34,9 +35,10 @@ export const UserAvatar = ({
   const colors = name ? getRandomAvatarColor(name) : null;
   return (
     <span
-      className={clsx(
+      className={cn(
         "inline-flex items-center justify-center overflow-hidden rounded-full font-semibold",
         {
+          "size-5 text-[10px]": size === "xs",
           "size-6 text-sm": size === "sm",
           "size-8 text-base": size === "md",
           "size-14 text-2xl": size === "lg",
@@ -55,13 +57,9 @@ export const UserAvatar = ({
       {name ? (
         name[0].toUpperCase()
       ) : (
-        <UserIcon
-          className={clsx({
-            "size-4": size === "sm",
-            "size-6": size === "md",
-            "size-8": size === "lg",
-          })}
-        />
+        <Icon>
+          <User2Icon />
+        </Icon>
       )}
     </span>
   );

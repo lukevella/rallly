@@ -46,7 +46,6 @@ const Page: NextPageWithLayout = () => {
   return (
     <Form {...form}>
       <form
-        className="mx-auto max-w-3xl"
         onSubmit={form.handleSubmit((data) => {
           //submit
           updatePollMutation(

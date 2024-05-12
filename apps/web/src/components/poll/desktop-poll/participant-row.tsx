@@ -1,6 +1,7 @@
 import { Participant, VoteType } from "@rallly/database";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import clsx from "clsx";
+import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
 
@@ -33,35 +34,48 @@ export const ParticipantRowView: React.FunctionComponent<{
     <tr
       data-testid="participant-row"
       data-participantid={participantId}
-      className={clsx(className)}
+      className={cn("group", className)}
     >
       <td
         style={{ minWidth: 240, maxWidth: 240 }}
         className="sticky left-0 z-10 bg-white px-4"
       >
-        <div className="flex max-w-full items-center justify-between gap-x-4 ">
+        <div className="flex max-w-full items-center justify-between gap-x-4">
           <UserAvatar name={name} showName={true} isYou={isYou} />
           {action}
         </div>
       </td>
       {votes.map((vote, i) => {
         return (
-          <td key={i} className={clsx("h-12 p-1")}>
-            <div
-              className={clsx(
-                "flex h-full items-center justify-center rounded-md border",
-                {
-                  "border-green-200 bg-green-50": vote === "yes",
-                  "border-amber-200 bg-amber-50": vote === "ifNeedBe",
-                  "bg-gray-50": vote === "no" || !vote,
-                },
-              )}
-            >
-              <VoteIcon type={vote} />
+          <td
+            key={i}
+            className={cn(
+              "h-12 border-l border-t",
+              !vote || vote === "no" ? "bg-gray-100" : "bg-white",
+              {
+                "bg-gray-100": vote === "no",
+                // "bg-waves": vote === "ifNeedBe",
+              },
+            )}
+          >
+            <div className={cn("flex items-center justify-center")}>
+              <div
+                className={cn(
+                  "inline-flex h-7 w-7 items-center justify-center rounded-full",
+                  {
+                    "bg-green-50": vote === "yes",
+                    "bg-amber-50": vote === "ifNeedBe",
+                    "bg-gray-200": vote === "no",
+                  },
+                )}
+              >
+                <VoteIcon type={vote} />
+              </div>
             </div>
           </td>
         );
       })}
+      <td className="bg-diagonal-lines border-l"></td>
     </tr>
   );
 };
@@ -105,7 +119,11 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
             align="start"
             onEdit={() => onChangeEditMode?.(true)}
           >
-            <Button size="sm" icon={MoreHorizontalIcon} />
+            <Button size="sm" variant="ghost">
+              <Icon>
+                <MoreHorizontalIcon />
+              </Icon>
+            </Button>
           </ParticipantDropdown>
         ) : null
       }

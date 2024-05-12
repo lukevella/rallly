@@ -1,31 +1,31 @@
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
+import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 import { CreatePoll } from "@/components/create-poll";
 
-export default async function Page({ params }: { params: { locale: string } }) {
+export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-center justify-between gap-x-4">
-          <PageTitle>
-            <Trans t={t} i18nKey="polls" />
-          </PageTitle>
-          <Button asChild>
-            <Link href="/polls">
-              <Trans t={t} i18nKey="cancel" defaults="Cancel" />
-            </Link>
-          </Button>
-        </div>
+        <Button asChild>
+          <Link href="/polls">
+            <Icon>
+              <ArrowLeftIcon />
+            </Icon>
+            <Trans i18nKey="back" t={t} defaults="Back" />
+          </Link>
+        </Button>
       </PageHeader>
       <PageContent>
         <CreatePoll />

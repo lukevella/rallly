@@ -9,8 +9,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import {
-  ChevronDown,
+  ArrowUpRight,
+  ChevronDownIcon,
   CreditCardIcon,
   GemIcon,
   LifeBuoyIcon,
@@ -29,7 +31,7 @@ import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { CurrentUserAvatar } from "@/components/user";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
-import { Plan } from "@/contexts/plan";
+import { Plan, usePlan } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
@@ -46,7 +48,7 @@ function logout() {
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useUser();
-
+  usePlan(); // prefetch plan data
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
@@ -54,12 +56,12 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         asChild
         className={cn("group min-w-0", className)}
       >
-        <Button variant="ghost" className="flex justify-between">
-          <span className="flex items-center gap-x-2.5">
-            <CurrentUserAvatar size="sm" className="-ml-1 shrink-0 " />
-            <span className="truncate">{user.name}</span>
-          </span>
-          <ChevronDown className="text-muted-foreground size-4" />
+        <Button variant="ghost">
+          <CurrentUserAvatar size="xs" className="shrink-0 " />
+          <span className="truncate">{user.name}</span>
+          <Icon>
+            <ChevronDownIcon />
+          </Icon>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -112,7 +114,6 @@ export const UserDropdown = ({ className }: { className?: string }) => {
             </Link>
           </DropdownMenuItem>
         </IfCloudHosted>
-        <DropdownMenuSeparator />
         <DropdownMenuItem asChild={true}>
           <Link
             target="_blank"
@@ -121,6 +122,9 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           >
             <LifeBuoyIcon className="text-muted-foreground size-4" />
             <Trans i18nKey="support" defaults="Support" />
+            <Icon>
+              <ArrowUpRight />
+            </Icon>
           </Link>
         </DropdownMenuItem>
         <IfSelfHosted>

@@ -434,6 +434,125 @@ export const polls = router({
   paginatedList: possiblyPublicProcedure
     .input(
       z.object({
+        list: z.string().optional(),
+        pagination: z.object({
+          pageIndex: z.number(),
+          pageSize: z.number(),
+        }),
+        sorting: z
+          .array(
+            z.object({
+              id: z.string(),
+              desc: z.boolean(),
+            }),
+          )
+          .optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const whereParticipated = {
+        userId: {
+          not: ctx.user.id,
+        },
+        participants: {
+          some: {
+            userId: ctx.user.id,
+          },
+        },
+      };
+
+      const whereCreated = {
+        userId: ctx.user.id,
+      };
+
+      const where =
+        input.list === "all"
+          ? {
+              OR: [whereCreated, whereParticipated],
+            }
+          : input.list === "other"
+            ? whereParticipated
+            : input.list === "mine"
+              ? whereCreated
+              : null;
+
+      if (!where) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid list",
+        });
+      }
+
+      const [total, rows] = await prisma.$transaction([
+        prisma.poll.count({
+          where: { deleted: false, ...where },
+        }),
+        prisma.poll.findMany({
+          where: { deleted: false, ...where },
+          select: {
+            id: true,
+            title: true,
+            location: true,
+            userId: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            createdAt: true,
+            timeZone: true,
+            adminUrlId: true,
+            participantUrlId: true,
+            status: true,
+            event: {
+              select: {
+                start: true,
+                duration: true,
+              },
+            },
+            options: {
+              select: {
+                id: true,
+                start: true,
+                duration: true,
+              },
+            },
+            closed: true,
+            participants: {
+              select: {
+                id: true,
+                name: true,
+              },
+              orderBy: [
+                {
+                  createdAt: "desc",
+                },
+                { name: "desc" },
+              ],
+            },
+          },
+          orderBy:
+            input.sorting && input
+              ? input.sorting?.map((s) => ({
+                  [s.id]: s.desc ? "desc" : "asc",
+                }))
+              : [
+                  {
+                    createdAt: "desc",
+                  },
+                  { title: "asc" },
+                ],
+          skip: input.pagination.pageIndex * input.pagination.pageSize,
+          take: input.pagination.pageSize,
+        }),
+      ]);
+
+      return { total, rows };
+    }),
+  getParticipating: possiblyPublicProcedure
+    .input(
+      z.object({
         pagination: z.object({
           pageIndex: z.number(),
           pageSize: z.number(),
@@ -441,17 +560,24 @@ export const polls = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const [total, rows] = await prisma.$transaction([
+      const [total, rows] = await Promise.all([
         prisma.poll.count({
           where: {
-            userId: ctx.user.id,
-            deleted: false,
+            participants: {
+              some: {
+                userId: ctx.user.id,
+              },
+            },
           },
         }),
         prisma.poll.findMany({
           where: {
-            userId: ctx.user.id,
             deleted: false,
+            participants: {
+              some: {
+                userId: ctx.user.id,
+              },
+            },
           },
           select: {
             id: true,

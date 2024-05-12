@@ -2,16 +2,20 @@
 
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
+  ArrowUpRightIcon,
+  BarChart2Icon,
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
   ChevronRightIcon,
+  LifeBuoyIcon,
   LogInIcon,
+  PlusIcon,
   Settings2Icon,
   SparklesIcon,
   UsersIcon,
-  VoteIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,10 +30,12 @@ import { IconComponent } from "@/types";
 function NavItem({
   href,
   children,
+  target,
   icon: Icon,
   current,
 }: {
   href: string;
+  target?: string;
   icon: IconComponent;
   children: React.ReactNode;
   current?: boolean;
@@ -37,11 +43,12 @@ function NavItem({
   return (
     <Link
       href={href}
+      target={target}
       className={cn(
         current
           ? "bg-gray-200 text-gray-800"
           : "text-gray-700 hover:bg-gray-200 active:bg-gray-300",
-        "group flex  items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
+        "group flex items-center gap-x-2.5 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
       <Icon
@@ -63,23 +70,33 @@ export function Sidebar() {
     <nav className="flex flex-1 flex-col ">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul role="list" className="space-y-1 lg:-mx-2">
             <li>
               <NavItem
                 current={pathname?.startsWith("/poll")}
                 href="/polls"
-                icon={VoteIcon}
+                icon={BarChart2Icon}
               >
                 <Trans i18nKey="polls" defaults="Polls" />
               </NavItem>
             </li>
           </ul>
         </li>
+        <li className="space-y-1 lg:-mx-2">
+          <Button className="w-full rounded-full" variant="primary" asChild>
+            <Link href="/new">
+              <Icon>
+                <PlusIcon />
+              </Icon>
+              <Trans i18nKey="newPoll" defaults="New Poll" />
+            </Link>
+          </Button>
+        </li>
         <li>
           <div className="text-xs font-semibold leading-6 text-gray-400">
             <Trans i18nKey="comingSoon" defaults="Coming Soon" />
           </div>
-          <ul role="list" className="-mx-2 mt-2 space-y-1">
+          <ul role="list" className="mt-2 space-y-1 lg:-mx-2">
             <li className="pointer-events-none grid gap-1 opacity-50">
               <NavItem href="/events" icon={CalendarIcon}>
                 <Trans i18nKey="events" defaults="Events" />
@@ -97,7 +114,7 @@ export function Sidebar() {
           </ul>
         </li>
         <li className="mt-auto">
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul role="list" className="space-y-1 lg:-mx-2">
             <IfFreeUser>
               <li>
                 <Link
@@ -128,13 +145,25 @@ export function Sidebar() {
               </li>
             </IfGuest>
             <li>
+              <NavItem
+                target="_blank"
+                href="https://support.rallly.co"
+                icon={LifeBuoyIcon}
+              >
+                <Trans i18nKey="support" />
+                <Icon>
+                  <ArrowUpRightIcon />
+                </Icon>
+              </NavItem>
+            </li>
+            <li>
               <NavItem href="/settings/preferences" icon={Settings2Icon}>
                 <Trans i18nKey="preferences" />
               </NavItem>
             </li>
           </ul>
           <hr className="my-2" />
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul role="list" className="space-y-1 lg:-mx-2">
             <li>
               <Button
                 asChild

@@ -11,6 +11,8 @@ const Tooltip = TooltipPrimitive.Root;
 
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
+const TooltipPortal = TooltipPrimitive.Portal;
+
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
@@ -20,7 +22,7 @@ const TooltipContent = React.forwardRef<
     sideOffset={sideOffset}
     side={side}
     className={cn(
-      "z-50 overflow-hidden rounded-md bg-gray-800 px-2 py-1.5 text-sm text-gray-50 shadow-md",
+      "z-50 overflow-hidden rounded-md bg-gray-800 px-2 py-1.5 text-sm text-gray-50 shadow-sm",
       className,
     )}
     {...props}
@@ -30,4 +32,10 @@ const TooltipContent = React.forwardRef<
 ));
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipProvider,
+  TooltipTrigger,
+};

@@ -1,8 +1,9 @@
-import { ProfilePage } from "@/app/[locale]/(admin)/settings/profile/profile-page";
 import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 
-export default function Page() {
+import { ProfilePage } from "./profile-page";
+
+export default async function Page() {
   return <ProfilePage />;
 }
 

@@ -1,8 +1,9 @@
-import { BillingPage } from "@/app/[locale]/(admin)/settings/billing/billing-page";
 import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 
-export default function Page() {
+import { BillingPage } from "./billing-page";
+
+export default async function Page() {
   return <BillingPage />;
 }
 
