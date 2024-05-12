@@ -244,5 +244,7 @@
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
   "back": "Back",
   "timeShownIn": "Times shown in {timeZone}",
-  "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time"
+  "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time",
+  "eventHostTitle": "Manage Access",
+  "eventHostDescription": "You are the creator of this poll"
 }

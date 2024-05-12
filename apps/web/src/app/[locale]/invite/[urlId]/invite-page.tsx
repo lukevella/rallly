@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@rallly/ui/button";
-import { ArrowUpLeftIcon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import { ArrowUpRightIcon, UserCircle2Icon } from "lucide-react";
 import Link from "next/link";
 
 import Discussion from "@/components/discussion";
@@ -23,15 +23,30 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="flex justify-between gap-x-4">
-      <div>
-        <Button variant="ghost" asChild>
-          <Link href={`/poll/${poll.id}`}>
-            <ArrowUpLeftIcon className="text-muted-foreground size-4" />
-            <Trans i18nKey="manage" />
-          </Link>
-        </Button>
+    <div className="flex gap-2.5 rounded-md border p-2.5 text-sm">
+      <Icon>
+        <UserCircle2Icon />
+      </Icon>
+      <div className="flex grow flex-col gap-x-2.5 sm:flex-row">
+        <h4 className="font-semibold">
+          <Trans i18nKey="eventHostTitle" defaults="Manage Access" />
+        </h4>
+        <p className="text-muted-foreground">
+          <Trans
+            i18nKey="eventHostDescription"
+            defaults="You are the creator of this poll"
+          />
+        </p>
       </div>
+      <Link
+        className="text-link inline-flex items-center gap-x-2.5 lg:px-2.5"
+        href={`/poll/${poll.id}`}
+      >
+        <Trans i18nKey="manage" />
+        <Icon>
+          <ArrowUpRightIcon />
+        </Icon>
+      </Link>
     </div>
   );
 };
