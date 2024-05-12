@@ -215,5 +215,7 @@
   "share": "分享",
   "inviteLink": "邀請連結",
   "inviteParticipantLinkInfo": "任何收到此連結的人都可以參與你的投票。",
+  "pollStatus": "狀態",
+  "back": "返回",
   "timeShownIn": "目前以 {timeZone} 時區顯示"
 }
