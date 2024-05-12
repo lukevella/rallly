@@ -1,5 +1,7 @@
 "use client";
 
+import { Card, CardContent } from "@rallly/ui/card";
+
 import { DateIconInner } from "@/components/date-icon";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
@@ -47,24 +49,28 @@ export function ScheduledEvent() {
     return null;
   }
   return (
-    <div className="flex justify-between gap-4">
-      <div className="flex items-center gap-x-4">
-        <DateIcon start={poll.event.start} />
-        <div>
-          <div className="text-sm font-medium">
-            <FinalDate start={poll.event.start} />
+    <Card className="bg-gray-50">
+      <CardContent>
+        <div className="flex justify-between gap-4">
+          <div className="flex items-center gap-x-4">
+            <DateIcon start={poll.event.start} />
+            <div>
+              <div className="text-sm font-medium">
+                <FinalDate start={poll.event.start} />
+              </div>
+              <div className="text-muted-foreground text-sm">
+                <FinalTime
+                  start={poll.event.start}
+                  duration={poll.event.duration}
+                />
+              </div>
+            </div>
           </div>
-          <div className="text-muted-foreground text-sm">
-            <FinalTime
-              start={poll.event.start}
-              duration={poll.event.duration}
-            />
+          <div>
+            <Attendees />
           </div>
         </div>
-      </div>
-      <div>
-        <Attendees />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

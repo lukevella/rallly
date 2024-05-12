@@ -1,7 +1,7 @@
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
-import { CalendarCheckIcon, PauseCircleIcon, RadioIcon } from "lucide-react";
+import { CalendarCheckIcon, PauseIcon, RadioIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
 
@@ -33,7 +33,7 @@ export const PollStatusLabel = ({
             className,
           )}
         >
-          <PauseCircleIcon className="inline-block size-4 opacity-75" />
+          <PauseIcon className="inline-block size-4 opacity-75" />
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
         </span>
       );

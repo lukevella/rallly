@@ -243,5 +243,6 @@
   "pollsListOther": "Other",
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
   "back": "Back",
-  "timeShownIn": "Times shown in {timeZone}"
+  "timeShownIn": "Times shown in {timeZone}",
+  "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time"
 }

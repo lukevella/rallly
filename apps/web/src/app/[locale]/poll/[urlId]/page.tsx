@@ -1,12 +1,5 @@
-import { Poll } from "@/components/poll";
+import { AdminPage } from "@/app/[locale]/poll/[urlId]/admin-page";
 
-import { GuestPollAlert } from "./guest-poll-alert";
-
-export default async function Page() {
-  return (
-    <>
-      <GuestPollAlert />
-      <Poll />
-    </>
-  );
+export default function Page() {
+  return <AdminPage />;
 }
