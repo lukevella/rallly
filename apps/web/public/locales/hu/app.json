@@ -233,5 +233,18 @@
   "or": "Vagy",
   "autoTimeZone": "Automatikus időzóna",
   "autoTimeZoneHelp": "Bekapcsolt állapotban az időpontok automatikusan minden egyes résztvevő helyi időzónájához igazodnak.",
-  "timeShownIn": "Megjelenítési időzóna: {timeZone}"
+  "commentsDisabled": "Hozzászólások kikapcsolva",
+  "allParticipants": "Összes résztvevő",
+  "host": "Létrehozó",
+  "created": "Létrehozva",
+  "pollStatus": "Státusz",
+  "pollsListAll": "Összes",
+  "pollsListMine": "Saját",
+  "pollsListOther": "Egyéb",
+  "noParticipantsDescription": "Kattints a <b>Megosztás</b>ra a résztvevők meghívásához",
+  "back": "Vissza",
+  "timeShownIn": "Megjelenítési időzóna: {timeZone}",
+  "pollStatusPausedDescription": "A szavazatok jelenleg nem lehet beküldeni vagy szerkeszteni",
+  "eventHostTitle": "Hozzáférés kezelése",
+  "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak"
 }
