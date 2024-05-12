@@ -45,11 +45,7 @@ export const usePollColumns = () => {
         cell: ({ row }) => {
           return (
             <Link
-              href={
-                user.id === row.original.userId
-                  ? `/poll/${row.original.id}`
-                  : `/invite/${row.original.id}`
-              }
+              href={`/invite/${row.original.id}`}
               className="group absolute inset-0 flex items-center gap-x-2.5 px-4"
             >
               <span className="min-w-0 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
@@ -120,18 +116,19 @@ export const usePollColumns = () => {
         },
       }),
 
-      // columnHelper.accessor("participants", {
-      //   header: t("participants", { defaultValue: "Participants" }),
-      //   size: 200,
-      //   cell: ({ row }) => {
-      //     return (
-      //       <ParticipantAvatarBar
-      //         participants={row.original.participants}
-      //         max={5}
-      //       />
-      //     );
-      //   },
-      // }),
+      columnHelper.accessor("participants", {
+        header: () => null,
+        cell: ({ row }) => {
+          return (
+            <Link
+              className="text-link text-sm"
+              href={`/poll/${row.original.id}`}
+            >
+              <Trans i18nKey="manage" />
+            </Link>
+          );
+        },
+      }),
     ],
     [adjustTimeZone, t, user.id],
   );

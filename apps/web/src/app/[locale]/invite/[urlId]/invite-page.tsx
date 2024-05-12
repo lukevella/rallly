@@ -23,7 +23,7 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="flex gap-2.5 rounded-md border p-2.5 text-sm">
+    <div className="flex gap-2.5 rounded-md border p-2.5 text-sm sm:items-center">
       <Icon>
         <UserCircle2Icon />
       </Icon>
