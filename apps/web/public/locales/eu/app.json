@@ -233,5 +233,7 @@
   "or": "Edo",
   "autoTimeZone": "Ordu-eremuaren bihurketa automatikoa",
   "autoTimeZoneHelp": "Gaitu ezarpen hau gertaeren orduak automatikoki doitzeko parte-hartzaile bakoitzaren tokiko ordu-eremura.",
+  "pollStatus": "Egoera",
+  "pollsListAll": "Guztiak",
   "timeShownIn": "{timeZone} kokalekuko ordua"
 }
