@@ -231,5 +231,8 @@
   "accountNotLinkedTitle": "Váš účet nelze propojit s existujícím uživatelem",
   "accountNotLinkedDescription": "Uživatel s tímto e-mailem již existuje. Přihlaste se prosím pomocí původní metody.",
   "or": "nebo",
+  "pollStatus": "Stav",
+  "pollsListAll": "Všechny",
+  "back": "Zpět",
   "timeShownIn": "Časy zobrazené v {timeZone}"
 }
