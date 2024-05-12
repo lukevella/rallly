@@ -238,9 +238,11 @@
   "created": "Criado",
   "pollStatus": "Status",
   "pollsListAll": "Todos",
+  "pollsListOther": "Outros",
   "noParticipantsDescription": "Clique em <b>Compartilhar</b> para convidar participantes",
   "back": "Voltar",
   "timeShownIn": "Horários exibidos em {timeZone}",
   "pollStatusPausedDescription": "Votos não podem ser enviados ou editados neste momento",
-  "eventHostTitle": "Gerenciar Acesso"
+  "eventHostTitle": "Gerenciar Acesso",
+  "eventHostDescription": "Você é o criador desta enquete"
 }
