@@ -233,5 +233,8 @@
   "or": "Veya",
   "autoTimeZone": "Otomatik Zaman Dilimi Dönüşümü",
   "autoTimeZoneHelp": "Bu ayarı etkinleştirerek, etkinlik saatlerini her katılımcının yerel saat dilimine otomatik olarak ayarlayın.",
+  "pollStatus": "Durum",
+  "pollsListAll": "Tümü",
+  "back": "Geri",
   "timeShownIn": "Zamanlar {timeZone} bölgesine göredir"
 }
