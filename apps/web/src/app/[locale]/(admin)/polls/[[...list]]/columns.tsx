@@ -1,7 +1,9 @@
 import { PollStatus } from "@rallly/database";
+import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { BarChart2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -44,14 +46,18 @@ export const usePollColumns = () => {
         size: 1000,
         cell: ({ row }) => {
           return (
-            <Link
-              href={`/invite/${row.original.id}`}
-              className="group absolute inset-0 flex items-center gap-x-2.5 px-4"
-            >
-              <span className="min-w-0 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
+            <div>
+              <Link
+                href={`/invite/${row.original.id}`}
+                className="group absolute inset-0 flex items-center gap-x-2.5"
+              />
+              <span className="flex items-center gap-x-2.5 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
+                <Icon>
+                  <BarChart2Icon />
+                </Icon>
                 {row.original.title}
               </span>
-            </Link>
+            </div>
           );
         },
       }),
