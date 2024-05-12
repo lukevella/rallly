@@ -83,7 +83,6 @@
   "errors_notFoundDescription": "Não conseguimos encontrar a página que procuras.",
   "errors_goToHome": "Ir para a página inicial",
   "optionCount": "{count, plural, one {# opção} other {# opções}}",
-  "participantCount": "{count, plural, one {# participante} other {# participantes}}",
   "language": "Idioma",
   "menu": "Menu",
   "support": "Ajuda",
