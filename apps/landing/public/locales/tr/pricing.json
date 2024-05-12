@@ -7,7 +7,7 @@
   "monthlyBillingDescription": "aylık",
   "upgrade": "Yükselt",
   "faq": "Sıkça Sorulan Sorular",
-  "canUseFree": "Rally'i ücretsiz kullanabilir miyim?",
+  "canUseFree": "Rallly'yi ücretsiz kullanabilir miyim?",
   "whyUpgrade": "Neden hesabımı yükseltmeliyim?",
   "howToUpgrade": "Ücretli bir plana nasıl yükseltirim?",
   "howToUpgradeAnswer": "Yükseltmek için, <a>faturalandırma ayarları</a> kısmına gidin ve <b>Yükselt</b> seçeneğine tıklayın.",
@@ -21,7 +21,12 @@
   "planProDescription": "Uzmanlar ve profesyoneller için",
   "accessAllFeatures": "Tüm Özelliklere Erişin",
   "getEarlyAccess": "Yeni özelliklere erken erişin",
-  "canUseFreeAnswer2": "Evet, Rally'nin özelliklerinin çoğu ücretsizdir ve çoğu kullanıcının hiçbir zaman hiçbir şey için ödeme yapması gerekmeyecektir. Ancak yalnızca ödeme yapan müşterilerin kullanabileceği bazı özellikler vardır. Bu özellikler Rally'den en iyi şekilde yararlanmanıza yardımcı olmak için tasarlanmıştır.",
+  "canUseFreeAnswer2": "Evet, Rallly'nin özelliklerinin çoğu ücretsizdir ve çoğu kullanıcının hiçbir zaman hiçbir şey için ödeme yapması gerekmeyecektir. Ancak yalnızca ödeme yapan müşterilerin kullanabileceği bazı özellikler vardır. Bu özellikler Rally'den en iyi şekilde yararlanmanıza yardımcı olmak için tasarlanmıştır.",
+  "whyUpgradeAnswer2": "Rallly'yi sık ​​kullanıyorsanız veya iş için kullanıyorsanız, ücretli bir plana yükseltmek mantıklı olabilir. Mevcut abonelik ücreti, erken kayıt için özel bir tekliftir ve gelecekte artacaktır. Şimdi yükseltirseniz, yeni, yüksek kaliteli zamanlama araçlarına erken erişim elde edecek ve bunlar piyasaya sürüldüğünde abonelik ücretinizi kilitleyerek gelecekteki fiyat artışlarından etkilenmeyeceksiniz.",
+  "upgradeNowSaveLater": "Şimdi yükseltin, sonrası için tasarruf edin",
+  "earlyAdopterDescription": "Erken abonelik avantajı olarak, ücretinizi sabitleyecek ve gelecekteki fiyat artışlarından etkilenmeyeceksiniz.",
   "planFree": "Ücretsiz",
-  "keepPollsIndefinitely": "Anketleri süresiz olarak sakla"
+  "keepPollsIndefinitely": "Anketleri süresiz olarak sakla",
+  "whenPollInactive": "Bir anket ne zaman etkisiz hale gelir?",
+  "whenPollInactiveAnswer": "Anketler, tüm tarih seçenekleri geçmişte kaldığında VE anket 30 günden fazla süredir erişilmediğinde pasif hale gelir. Eğer ücretli bir aboneliğiniz yoksa, pasif hale gelen anketler otomatik olarak silinir."
 }
