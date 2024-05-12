@@ -233,5 +233,8 @@
   "or": "Of",
   "autoTimeZone": "Automatische conversie van tijdzone",
   "autoTimeZoneHelp": "Schakel deze instelling in om de tijden van de gebeurtenissen automatisch aan te passen aan de tijdzone van de deelnemer.",
+  "pollStatus": "Status",
+  "pollsListAll": "Alles",
+  "back": "Terug",
   "timeShownIn": "Tijdzone: {timeZone}"
 }
