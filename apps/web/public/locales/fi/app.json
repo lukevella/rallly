@@ -233,5 +233,8 @@
   "or": "Tai",
   "autoTimeZone": "Aikavyöhykkeen automaattinen muuntaminen",
   "autoTimeZoneHelp": "Kun tämä asetus on käytössä, ajankohdat muunnetaan automaattisesti kunkin osallistujan paikalliseen aikaan.",
+  "pollStatus": "Tila",
+  "pollsListAll": "Kaikki",
+  "back": "Takaisin",
   "timeShownIn": "Aikavyöhyke: {timeZone}"
 }
