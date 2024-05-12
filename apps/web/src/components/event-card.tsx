@@ -26,7 +26,7 @@ export function EventCard() {
                 {poll.title}
               </CardTitle>
               <CardDescription>
-                <span className="flex items-center gap-1 text-sm text-gray-500">
+                <span className="flex items-center gap-0.5 whitespace-nowrap text-sm text-gray-500">
                   <span>
                     <Trans
                       i18nKey="createdBy"
@@ -58,14 +58,12 @@ export function EventCard() {
             </p>
           ) : null}
           {poll.location ? (
-            <ul className="text-muted-foreground mt-4 flex flex-col gap-x-4 gap-y-2.5 whitespace-nowrap text-sm">
-              <li className="flex items-center gap-x-2.5">
-                <Icon>
-                  <MapPinIcon />
-                </Icon>
-                <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-              </li>
-            </ul>
+            <p className="text-muted-foregroun mt-4 text-sm">
+              <Icon>
+                <MapPinIcon className="-mt-0.5 mr-2 inline-block" />
+              </Icon>
+              <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+            </p>
           ) : null}
         </CardContent>
       </Card>
