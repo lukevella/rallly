@@ -1,5 +1,4 @@
 "use client";
-import { Icon } from "@rallly/ui/icon";
 import { ArrowUpRightIcon, UserCircle2Icon } from "lucide-react";
 import Link from "next/link";
 
@@ -23,30 +22,30 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="flex gap-2.5 rounded-md border p-2.5 text-sm sm:items-center">
-      <Icon>
-        <UserCircle2Icon />
-      </Icon>
-      <div className="flex grow flex-col gap-x-2.5 sm:flex-row">
-        <h4 className="font-semibold">
-          <Trans i18nKey="eventHostTitle" defaults="Manage Access" />
-        </h4>
-        <p className="text-muted-foreground">
-          <Trans
-            i18nKey="eventHostDescription"
-            defaults="You are the creator of this poll"
-          />
-        </p>
+    <div className="border-primary-200 bg-primary-50/75 rounded-lg border p-2.5 text-sm lg:py-1 lg:pr-1">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2.5 sm:items-center">
+          <UserCircle2Icon className="text-primary-600 size-4" />
+          <div className="flex grow flex-col gap-x-2.5 sm:flex-row">
+            <h4 className="text-primary-600 font-medium">
+              <Trans i18nKey="eventHostTitle" defaults="Manage Access" />
+            </h4>
+            <p className="text-primary-600/75">
+              <Trans
+                i18nKey="eventHostDescription"
+                defaults="You are the creator of this poll"
+              />
+            </p>
+          </div>
+        </div>
+        <Link
+          className="text-primary-600/75 hover:bg-primary-100 active:bg-primary-200 inline-flex h-9 items-center gap-x-2.5 rounded-md px-3 font-medium"
+          href={`/poll/${poll.id}`}
+        >
+          <Trans i18nKey="manage" />
+          <ArrowUpRightIcon className="size-4" />
+        </Link>
       </div>
-      <Link
-        className="text-link inline-flex items-center gap-x-2.5 lg:px-2.5"
-        href={`/poll/${poll.id}`}
-      >
-        <Trans i18nKey="manage" />
-        <Icon>
-          <ArrowUpRightIcon />
-        </Icon>
-      </Link>
     </div>
   );
 };
