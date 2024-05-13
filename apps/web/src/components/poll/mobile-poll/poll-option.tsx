@@ -41,9 +41,9 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   return (
     <div>
       {noVotes ? (
-        <div className="rounded-lg bg-gray-50 p-2 text-center text-gray-500">
+        <p className="rounded-lg bg-gray-50 p-2 text-center text-sm text-gray-500">
           {t("noVotes")}
-        </div>
+        </p>
       ) : (
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-1 space-y-2.5">
