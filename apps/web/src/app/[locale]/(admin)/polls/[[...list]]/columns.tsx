@@ -111,7 +111,7 @@ export const usePollColumns = () => {
                     {adjustTimeZone(
                       row.original.event.start,
                       !row.original.timeZone,
-                    ).format("LLLL")}
+                    ).format(row.original.event.duration === 0 ? "LL" : "LLLL")}
                   </TooltipContent>
                 </Tooltip>
               ) : (
