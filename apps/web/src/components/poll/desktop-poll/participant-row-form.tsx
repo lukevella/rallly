@@ -7,7 +7,7 @@ import {
   TooltipPortal,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import { CheckIcon, UndoIcon } from "lucide-react";
+import { UndoIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller } from "react-hook-form";
@@ -84,25 +84,15 @@ const ParticipantRowForm = ({
                   </TooltipContent>
                 </TooltipPortal>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    loading={form.formState.isSubmitting}
-                    size="sm"
-                    form="voting-form"
-                    type="submit"
-                  >
-                    <Icon>
-                      <CheckIcon />
-                    </Icon>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipPortal>
-                  <TooltipContent>
-                    <Trans i18nKey="save" />
-                  </TooltipContent>
-                </TooltipPortal>
-              </Tooltip>
+              <Button
+                variant="primary"
+                loading={form.formState.isSubmitting}
+                size="sm"
+                form="voting-form"
+                type="submit"
+              >
+                <Trans i18nKey="save" />
+              </Button>
             </div>
           ) : null}
         </div>
