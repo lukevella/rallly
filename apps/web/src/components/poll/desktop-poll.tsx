@@ -25,9 +25,7 @@ import {
 } from "@/app/components/empty-state";
 import { useTranslation } from "@/app/i18n/client";
 import { TimesShownIn } from "@/components/clock";
-import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useVotingForm } from "@/components/poll/voting-form";
-import { IfScoresVisible } from "@/components/visibility";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 
@@ -306,26 +304,6 @@ const DesktopPoll: React.FunctionComponent = () => {
                           })
                         : null}
                     </tbody>
-                    <IfScoresVisible>
-                      <tfoot>
-                        <tr>
-                          <th className="sticky bottom-0 left-0 z-20 h-12 bg-white"></th>
-                          {poll.options.map((option) => {
-                            return (
-                              <th
-                                className="sticky bottom-0 border-l border-t bg-gray-50 p-2"
-                                key={option.id}
-                              >
-                                <div className="flex justify-center">
-                                  <ConnectedScoreSummary optionId={option.id} />
-                                </div>
-                              </th>
-                            );
-                          })}
-                          <th className="bg-diagonal-lines -ml-4 w-full min-w-4 border-l"></th>
-                        </tr>
-                      </tfoot>
-                    </IfScoresVisible>
                   </table>
                 </RemoveScroll>
               </div>

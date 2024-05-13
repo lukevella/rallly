@@ -9,6 +9,7 @@ import {
 import { ClockIcon } from "lucide-react";
 import * as React from "react";
 
+import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useOptions } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 
@@ -141,7 +142,7 @@ const PollHeader: React.FunctionComponent = () => {
               style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
               className="sticky z-20 border-l bg-gray-50 pb-2.5 align-top"
             >
-              <div className="flex flex-col items-center gap-2.5">
+              <div className="flex flex-col items-center gap-3">
                 {option.type === "timeSlot" ? (
                   <TimeRange
                     start={option.startTime}
@@ -153,6 +154,7 @@ const PollHeader: React.FunctionComponent = () => {
                     <Trans i18nKey="allDay" defaults="All-Day" />
                   </p>
                 )}
+                <ConnectedScoreSummary optionId={option.optionId} />
               </div>
             </th>
           );
