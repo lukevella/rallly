@@ -182,5 +182,7 @@
   "share": "Podijeli",
   "inviteLink": "Poveznica s pozivnicom",
   "inviteParticipantLinkInfo": "Svi koji dobiju ovu poveznicu mogu glasati u vašoj anketi.",
+  "pollStatus": "Stanje",
+  "back": "Natrag",
   "timeShownIn": "Vrijeme prikazano u {timeZone}"
 }

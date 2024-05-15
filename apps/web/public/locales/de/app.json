@@ -233,5 +233,8 @@
   "or": "Oder",
   "autoTimeZone": "Automatische Zeitzonen-Konvertierung",
   "autoTimeZoneHelp": "Aktivieren Sie diese Einstellung, um die Terminzeiten automatisch an die lokale Zeitzone jedes Teilnehmers anzupassen.",
+  "pollStatus": "Status",
+  "pollsListAll": "Alle",
+  "back": "Zurück",
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt"
 }

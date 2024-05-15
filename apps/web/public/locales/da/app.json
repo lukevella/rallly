@@ -233,5 +233,18 @@
   "or": "Eller",
   "autoTimeZone": "Automatisk konvertering af tidszone",
   "autoTimeZoneHelp": "Aktiver denne indstilling for at justere begivenhedstider til hver deltagers lokale tidszone automatisk.",
-  "timeShownIn": "Tider vises i {timeZone}"
+  "commentsDisabled": "Kommentarer er deaktiveret",
+  "allParticipants": "Alle deltagere",
+  "host": "Vært",
+  "created": "Oprettet",
+  "pollStatus": "Status",
+  "pollsListAll": "Alle",
+  "pollsListMine": "Mine",
+  "pollsListOther": "Andre",
+  "noParticipantsDescription": "Klik på <b>Del</b> for at invitere deltagere",
+  "back": "Tilbage",
+  "timeShownIn": "Tider vises i {timeZone}",
+  "pollStatusPausedDescription": "Stemmer kan ikke indsendes eller redigeres på dette tidspunkt",
+  "eventHostTitle": "Administrer adgang",
+  "eventHostDescription": "Du er opretteren af denne afstemning"
 }

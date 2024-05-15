@@ -203,5 +203,18 @@
   "inviteParticipantsDescription": "Kopiera och dela inbjudningslänken för att börja samla in svar från dina deltagare.",
   "inviteLink": "Inbjudningslänk",
   "or": "Eller",
-  "timeShownIn": "Tidszon: {timeZone}"
+  "commentsDisabled": "Kommentarer har inaktiverats",
+  "allParticipants": "Alla deltagare",
+  "host": "Värd",
+  "created": "Skapad",
+  "pollStatus": "Status",
+  "pollsListAll": "Alla",
+  "pollsListMine": "Mina",
+  "pollsListOther": "Andra",
+  "noParticipantsDescription": "Klicka på <b>Dela</b> för att bjuda in deltagare",
+  "back": "Tillbaka",
+  "timeShownIn": "Tidszon: {timeZone}",
+  "pollStatusPausedDescription": "Röster kan inte lämnas in eller redigeras just nu",
+  "eventHostTitle": "Hantera åtkomst",
+  "eventHostDescription": "Du är skaparen av denna enkät"
 }

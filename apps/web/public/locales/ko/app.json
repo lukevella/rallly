@@ -188,5 +188,6 @@
   "pollStatusFinalized": "완료",
   "share": "공유하기",
   "inviteLink": "초대 링크",
-  "inviteParticipantLinkInfo": "이 링크를 가진 사람은 누구나 당신의 투표에 참여할 수 있습니다."
+  "inviteParticipantLinkInfo": "이 링크를 가진 사람은 누구나 당신의 투표에 참여할 수 있습니다.",
+  "back": "뒤로가기"
 }

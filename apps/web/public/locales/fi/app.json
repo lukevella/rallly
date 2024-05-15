@@ -233,5 +233,18 @@
   "or": "Tai",
   "autoTimeZone": "Aikavyöhykkeen automaattinen muuntaminen",
   "autoTimeZoneHelp": "Kun tämä asetus on käytössä, ajankohdat muunnetaan automaattisesti kunkin osallistujan paikalliseen aikaan.",
-  "timeShownIn": "Aikavyöhyke: {timeZone}"
+  "commentsDisabled": "Kommentit on poistettu käytöstä",
+  "allParticipants": "Kaikki osallistujat",
+  "host": "Isäntä",
+  "created": "Luotu",
+  "pollStatus": "Tila",
+  "pollsListAll": "Kaikki",
+  "pollsListMine": "Omat",
+  "pollsListOther": "Muut",
+  "noParticipantsDescription": "Klikkaa <b>Jaa</b> kutsuaksesi osallistujia",
+  "back": "Takaisin",
+  "timeShownIn": "Aikavyöhyke: {timeZone}",
+  "pollStatusPausedDescription": "Ääniä ei voi tällä hetkellä lähettää tai muokata",
+  "eventHostTitle": "Hallinnoi pääsyä",
+  "eventHostDescription": "Olet tämän kyselyn luoja"
 }

@@ -233,5 +233,8 @@
   "or": "Lub",
   "autoTimeZone": "Automatyczna konwersja strefy czasowej",
   "autoTimeZoneHelp": "Włącz to ustawienie, aby automatycznie dostosować czas wydarzenia do lokalnej strefy czasowej każdego uczestnika.",
+  "pollStatus": "Status",
+  "pollsListAll": "Wszystko",
+  "back": "Powrót",
   "timeShownIn": "Godziny wyświetlane w {timeZone}"
 }

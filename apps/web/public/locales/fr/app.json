@@ -4,7 +4,7 @@
   "addTimeOption": "Ajouter une option de temps",
   "alreadyRegistered": "Déjà inscrit? <a>Connexion</a>",
   "applyToAllDates": "Appliquer à toutes les dates",
-  "areYouSure": "Vous êtes sûr ?",
+  "areYouSure": "Êtes-vous sûr ?",
   "cancel": "Annuler",
   "changeName": "Changer de nom",
   "settings": "Réglages",
@@ -233,5 +233,18 @@
   "or": "Ou",
   "autoTimeZone": "Conversion automatique du fuseau horaire",
   "autoTimeZoneHelp": "Activer ce paramètre pour ajuster automatiquement les heures de chaque participant au fuseau horaire local.",
-  "timeShownIn": "Heures affichées en {timeZone}"
+  "commentsDisabled": "Les commentaires ont été désactivés",
+  "allParticipants": "Tous les participants",
+  "host": "Créateur",
+  "created": "Date de création",
+  "pollStatus": "Statut",
+  "pollsListAll": "Tout",
+  "pollsListMine": "Miens",
+  "pollsListOther": "Autres",
+  "noParticipantsDescription": "Cliquez sur <b>Partager</b> pour inviter les participants",
+  "back": "Retour",
+  "timeShownIn": "Heures affichées en {timeZone}",
+  "pollStatusPausedDescription": "Les votes ne peuvent pas être soumis ou modifiés pour le moment",
+  "eventHostTitle": "Accès Gestionnaire",
+  "eventHostDescription": "Vous êtes le créateur de ce sondage"
 }

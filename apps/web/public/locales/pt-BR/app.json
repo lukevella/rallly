@@ -233,5 +233,16 @@
   "or": "Ou",
   "autoTimeZone": "Conversão Automática de Fuso Horário",
   "autoTimeZoneHelp": "Ative esta configuração para ajustar automaticamente os horários dos eventos de cada participante ao fuso horário local.",
-  "timeShownIn": "Horários exibidos em {timeZone}"
+  "commentsDisabled": "Os comentários foram desabilitados",
+  "allParticipants": "Todos os participantes",
+  "created": "Criado",
+  "pollStatus": "Status",
+  "pollsListAll": "Todos",
+  "pollsListOther": "Outros",
+  "noParticipantsDescription": "Clique em <b>Compartilhar</b> para convidar participantes",
+  "back": "Voltar",
+  "timeShownIn": "Horários exibidos em {timeZone}",
+  "pollStatusPausedDescription": "Votos não podem ser enviados ou editados neste momento",
+  "eventHostTitle": "Gerenciar Acesso",
+  "eventHostDescription": "Você é o criador desta enquete"
 }

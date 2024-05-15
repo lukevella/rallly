@@ -215,5 +215,7 @@
   "share": "Compartir",
   "inviteLink": "Enllaç d'invitació",
   "inviteParticipantLinkInfo": "Qualsevol persona amb aquest enllaç podrà votar a la teva enquesta.",
+  "pollStatus": "Estat",
+  "back": "Torna",
   "timeShownIn": "Hores mostrades per {timeZone}"
 }

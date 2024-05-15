@@ -233,5 +233,18 @@
   "or": "Of",
   "autoTimeZone": "Automatische conversie van tijdzone",
   "autoTimeZoneHelp": "Schakel deze instelling in om de tijden van de gebeurtenissen automatisch aan te passen aan de tijdzone van de deelnemer.",
-  "timeShownIn": "Tijdzone: {timeZone}"
+  "commentsDisabled": "Reacties zijn uitgeschakeld",
+  "allParticipants": "Alle deelnemers",
+  "host": "Gastheer",
+  "created": "Aangemaakt",
+  "pollStatus": "Status",
+  "pollsListAll": "Alles",
+  "pollsListMine": "Van mij",
+  "pollsListOther": "Ander",
+  "noParticipantsDescription": "Klik op <b>Delen</b> om deelnemers uit te nodigen",
+  "back": "Terug",
+  "timeShownIn": "Tijdzone: {timeZone}",
+  "pollStatusPausedDescription": "Stemmen kunnen op dit moment niet ingediend of bewerkt worden",
+  "eventHostTitle": "Toegang beheren",
+  "eventHostDescription": "Je bent de maker van deze poll"
 }
