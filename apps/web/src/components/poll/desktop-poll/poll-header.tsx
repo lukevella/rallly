@@ -150,8 +150,7 @@ const PollHeader: React.FunctionComponent = () => {
                     duration={option.duration}
                   />
                 ) : (
-                  <p className="text-muted-foreground flex items-center gap-x-1 text-xs font-normal opacity-50">
-                    <ClockIcon className="size-3" />
+                  <p className="text-muted-foreground text-xs font-normal opacity-50">
                     <Trans i18nKey="allDay" defaults="All-Day" />
                   </p>
                 )}
