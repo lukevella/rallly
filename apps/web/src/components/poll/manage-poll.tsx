@@ -67,7 +67,7 @@ function PauseResumeToggle() {
   if (poll.status === "paused") {
     return (
       <DropdownMenuItem
-        onSelect={() => {
+        onClick={() => {
           resume.mutate(
             { pollId: poll.id },
             {
@@ -93,7 +93,7 @@ function PauseResumeToggle() {
   } else {
     return (
       <DropdownMenuItem
-        onSelect={() => {
+        onClick={() => {
           pause.mutate(
             { pollId: poll.id },
             {
@@ -164,7 +164,7 @@ const ManagePoll: React.FunctionComponent<{
           <>
             {poll.status === "finalized" ? (
               <DropdownMenuItem
-                onSelect={() => {
+                onClick={() => {
                   reopen.mutate({ pollId: poll.id });
                 }}
               >
@@ -177,7 +177,7 @@ const ManagePoll: React.FunctionComponent<{
               <>
                 <DropdownMenuItem
                   disabled={!!poll.event}
-                  onSelect={() => {
+                  onClick={() => {
                     finalizeDialog.trigger();
                   }}
                 >
@@ -221,7 +221,7 @@ const ManagePoll: React.FunctionComponent<{
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onSelect={() => {
+            onClick={() => {
               duplicateDialog.trigger();
             }}
           >

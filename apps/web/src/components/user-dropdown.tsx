@@ -168,7 +168,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         </IfGuest>
         <IfAuthenticated>
           <DropdownMenuItem
-            onSelect={() => {
+            onClick={() => {
               logout();
             }}
             className="flex items-center gap-x-2"
