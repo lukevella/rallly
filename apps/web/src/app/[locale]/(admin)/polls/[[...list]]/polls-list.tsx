@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
-import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
 import { PaginationState } from "@tanstack/react-table";
 import { BarChart2Icon, PlusIcon } from "lucide-react";
@@ -84,9 +83,9 @@ export function PollsList({ list }: { list?: string }) {
   if (!data) {
     // return a table using <Skeleton /> components
     return (
-      <Flex className="h-screen" align="center" justify="center">
+      <div className="flex h-96 items-center justify-center">
         <Spinner className="text-muted-foreground" />
-      </Flex>
+      </div>
     );
   }
 
