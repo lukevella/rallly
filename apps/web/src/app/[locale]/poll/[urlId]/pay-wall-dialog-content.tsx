@@ -17,7 +17,6 @@ export function PayWallDialogContent({
   if (plan === "free") {
     return (
       <DialogContent size="sm">
-        {children}
         <div>
           <m.div
             transition={{
