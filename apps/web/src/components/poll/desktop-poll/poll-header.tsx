@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 import {
   Tooltip,
   TooltipContent,
@@ -20,20 +19,21 @@ const TimeRange: React.FunctionComponent<{
   className?: string;
 }> = ({ start, end, duration, className }) => {
   return (
-    <div className={cn("text-muted-foreground text-xs font-normal", className)}>
+    <div
+      className={cn(
+        "text-muted-foreground relative flex flex-col items-center gap-1.5 text-xs font-normal",
+        className,
+      )}
+    >
+      <span>{start}</span>
       <Tooltip delayDuration={0}>
-        <TooltipTrigger>{start}</TooltipTrigger>
+        <TooltipTrigger className="flex items-center gap-x-1 opacity-50">
+          <ClockIcon className="size-3" />
+          {duration}
+        </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent className="flex gap-x-2.5 text-xs">
-            <span>
-              {start} - {end}
-            </span>
-            <span className="flex items-center gap-x-1 text-gray-500">
-              <Icon>
-                <ClockIcon />
-              </Icon>
-              {duration}
-            </span>
+          <TooltipContent className="text-xs">
+            {start} - {end}
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
@@ -150,7 +150,8 @@ const PollHeader: React.FunctionComponent = () => {
                     duration={option.duration}
                   />
                 ) : (
-                  <p className="text-muted-foreground text-xs font-normal">
+                  <p className="text-muted-foreground flex items-center gap-x-1 text-xs font-normal opacity-50">
+                    <ClockIcon className="size-3" />
                     <Trans i18nKey="allDay" defaults="All-Day" />
                   </p>
                 )}
