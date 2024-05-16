@@ -31,7 +31,7 @@ export const VoteSummaryProgressBar = (props: {
       <Tooltip>
         <TooltipTrigger asChild>
           <div
-            className="h-full bg-green-500 hover:opacity-75"
+            className="h-full bg-green-500 opacity-75 hover:opacity-100"
             style={{
               width: (props.yes.length / props.total) * 100 + "%",
             }}
@@ -44,7 +44,7 @@ export const VoteSummaryProgressBar = (props: {
       <Tooltip>
         <TooltipTrigger asChild>
           <div
-            className="h-full bg-amber-400 hover:opacity-75"
+            className="h-full bg-amber-400 opacity-75 hover:opacity-100"
             style={{
               width: (props.ifNeedBe.length / props.total) * 100 + "%",
             }}
@@ -57,7 +57,7 @@ export const VoteSummaryProgressBar = (props: {
       <Tooltip>
         <TooltipTrigger asChild>
           <div
-            className="h-full bg-gray-300 hover:opacity-75"
+            className="h-full bg-gray-300 opacity-75 hover:opacity-100"
             style={{
               width: (props.no.length / props.total) * 100 + "%",
             }}

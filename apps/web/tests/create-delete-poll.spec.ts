@@ -35,7 +35,7 @@ test.describe.serial(() => {
     const manageButton = page.getByText("Manage");
     await manageButton.waitFor();
     await manageButton.click();
-    await page.click("text=Delete poll");
+    await page.click("text=Delete");
 
     const deletePollDialog = page.getByRole("dialog");
 

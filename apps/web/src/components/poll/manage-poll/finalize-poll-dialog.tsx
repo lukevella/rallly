@@ -1,6 +1,16 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogProps,
+  DialogTitle,
+} from "@rallly/ui/dialog";
+import {
   Form,
   FormControl,
   FormField,
@@ -14,7 +24,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { DateIcon } from "@/components/date-icon";
+import { PayWallDialogContent } from "@/app/[locale]/poll/[urlId]/pay-wall-dialog-content";
+import { trpc } from "@/app/providers";
+import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
@@ -58,7 +70,12 @@ const useScoreByOptionId = () => {
   }, [responses, options]);
 };
 
-const pageSize = 5;
+function DateIcon({ start }: { start: Date }) {
+  const poll = usePoll();
+  const { adjustTimeZone } = useDayjs();
+  const d = adjustTimeZone(start, !poll.timeZone);
+  return <DateIconInner dow={d.format("ddd")} day={d.format("D")} />;
+}
 
 export const FinalizePollForm = ({
   name,
@@ -68,7 +85,6 @@ export const FinalizePollForm = ({
   onSubmit?: (data: FinalizeFormData) => void;
 }) => {
   const poll = usePoll();
-  const [max, setMax] = React.useState(pageSize);
 
   const { adjustTimeZone } = useDayjs();
   const scoreByOptionId = useScoreByOptionId();
@@ -110,7 +126,9 @@ export const FinalizePollForm = ({
       <form
         id={name}
         className="space-y-4"
-        onSubmit={form.handleSubmit((data) => onSubmit?.(data))}
+        onSubmit={form.handleSubmit((data) => {
+          onSubmit?.(data);
+        })}
       >
         <FormField
           control={form.control}
@@ -125,9 +143,9 @@ export const FinalizePollForm = ({
                   <RadioGroup
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="grid gap-2"
+                    className="grid max-h-96 gap-2 overflow-y-auto rounded-lg border bg-gray-100 p-2"
                   >
-                    {options.slice(0, max).map((option) => {
+                    {options.map((option) => {
                       const start = adjustTimeZone(
                         option.startTime,
                         !poll.timeZone,
@@ -143,25 +161,17 @@ export const FinalizePollForm = ({
                           key={option.id}
                           htmlFor={option.id}
                           className={cn(
-                            "group flex select-none items-center gap-4 rounded-md border bg-white p-3 text-base",
-                            field.value === option.id
-                              ? "bg-primary-50 border-primary"
-                              : "hover:bg-gray-50",
+                            "group flex select-none items-start gap-4 rounded-lg border bg-white p-3 text-base",
+                            field.value === option.id ? "" : "",
                           )}
                         >
-                          <div className="hidden">
-                            <RadioGroupItem id={option.id} value={option.id} />
-                          </div>
-                          <div>
-                            <DateIcon date={start} />
-                          </div>
+                          <RadioGroupItem id={option.id} value={option.id} />
                           <div className="grow">
-                            <div className="flex">
+                            <div className="flex gap-x-4">
+                              <DateIcon start={option.start} />
                               <div className="grow whitespace-nowrap">
-                                <div className="text-sm font-semibold">
-                                  {option.duration > 0
-                                    ? start.format("LL")
-                                    : start.format("LL")}
+                                <div className="text-sm font-medium">
+                                  {start.format("LL")}
                                 </div>
                                 <div className="text-muted-foreground text-sm">
                                   {option.duration > 0 ? (
@@ -180,7 +190,7 @@ export const FinalizePollForm = ({
                                 <ConnectedScoreSummary optionId={option.id} />
                               </div>
                             </div>
-                            <div className="mt-2">
+                            <div className="mt-4">
                               <VoteSummaryProgressBar
                                 {...scoreByOptionId[option.id]}
                                 total={participants.length}
@@ -192,19 +202,6 @@ export const FinalizePollForm = ({
                     })}
                   </RadioGroup>
                 </FormControl>
-                {max < options.length ? (
-                  <div className="absolute bottom-0 mt-2 w-full bg-gradient-to-t from-white via-white to-white/10 px-3 py-8">
-                    <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={() => {
-                        setMax((oldMax) => oldMax + pageSize);
-                      }}
-                    >
-                      <Trans i18nKey="showMore" />
-                    </Button>
-                  </div>
-                ) : null}
               </FormItem>
             );
           }}
@@ -268,3 +265,58 @@ export const FinalizePollForm = ({
     </Form>
   );
 };
+
+export function FinalizePollDialog(props: DialogProps) {
+  const poll = usePoll();
+  const queryClient = trpc.useUtils();
+  const scheduleEvent = trpc.polls.book.useMutation({
+    onSuccess: () => {
+      queryClient.invalidate();
+    },
+  });
+  return (
+    <Dialog {...props}>
+      <PayWallDialogContent>
+        <DialogContent size="2xl">
+          <DialogHeader>
+            <DialogTitle>
+              <Trans i18nKey="finalize" />
+            </DialogTitle>
+            <DialogDescription>
+              <Trans
+                i18nKey="finalizeDescription"
+                defaults="Select a final date for your event."
+              />
+            </DialogDescription>
+          </DialogHeader>
+          <FinalizePollForm
+            name="finalize-form"
+            onSubmit={(data) => {
+              scheduleEvent.mutate({
+                pollId: poll.id,
+                optionId: data.selectedOptionId,
+                notify: data.notify,
+              });
+              props.onOpenChange?.(false);
+            }}
+          />
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button>
+                <Trans i18nKey="cancel" />
+              </Button>
+            </DialogClose>
+            <Button
+              loading={scheduleEvent.isLoading}
+              type="submit"
+              form="finalize-form"
+              variant="primary"
+            >
+              <Trans i18nKey="finalize" />
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </PayWallDialogContent>
+    </Dialog>
+  );
+}

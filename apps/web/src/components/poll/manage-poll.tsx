@@ -1,4 +1,5 @@
 import { Button } from "@rallly/ui/button";
+import { useDialog } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,13 +26,98 @@ import {
 import Link from "next/link";
 import * as React from "react";
 
+import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
+import { trpc } from "@/app/providers";
+import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
-import { trpc } from "@/utils/trpc/client";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
+
+function PauseResumeToggle() {
+  const poll = usePoll();
+  const queryClient = trpc.useUtils();
+  const resume = trpc.polls.resume.useMutation({
+    onSuccess: (_data, vars) => {
+      queryClient.polls.get.setData({ urlId: vars.pollId }, (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          status: "live",
+        };
+      });
+      queryClient.polls.invalidate();
+    },
+  });
+  const pause = trpc.polls.pause.useMutation({
+    onSuccess: (_data, vars) => {
+      queryClient.polls.get.setData({ urlId: vars.pollId }, (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          status: "paused",
+        };
+      });
+      queryClient.polls.invalidate();
+    },
+  });
+
+  if (poll.status === "paused") {
+    return (
+      <DropdownMenuItem
+        onClick={() => {
+          resume.mutate(
+            { pollId: poll.id },
+            {
+              onSuccess: () => {
+                queryClient.polls.get.setData({ urlId: poll.id }, (oldData) => {
+                  if (!oldData) return oldData;
+                  return {
+                    ...oldData,
+                    status: "live",
+                  };
+                });
+              },
+            },
+          );
+        }}
+      >
+        <Icon>
+          <PlayIcon />
+        </Icon>
+        <Trans i18nKey="resumePoll" />
+      </DropdownMenuItem>
+    );
+  } else {
+    return (
+      <DropdownMenuItem
+        onClick={() => {
+          pause.mutate(
+            { pollId: poll.id },
+            {
+              onSuccess: () => {
+                queryClient.polls.get.setData({ urlId: poll.id }, (oldData) => {
+                  if (!oldData) return oldData;
+                  return {
+                    ...oldData,
+                    status: "paused",
+                  };
+                });
+              },
+            },
+          );
+        }}
+      >
+        <Icon>
+          <PauseIcon />
+        </Icon>
+        <Trans i18nKey="pausePoll" />
+      </DropdownMenuItem>
+    );
+  }
+}
 
 const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
@@ -54,42 +140,10 @@ const ManagePoll: React.FunctionComponent<{
       queryClient.polls.invalidate();
     },
   });
-  const pause = trpc.polls.pause.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          closed: true,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
-
-  const resume = trpc.polls.resume.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          closed: false,
-        };
-      });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
-    },
-  });
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
-
+  const duplicateDialog = useDialog();
+  const finalizeDialog = useDialog();
   const { exportToCsv } = useCsvExporter();
 
   return (
@@ -101,14 +155,16 @@ const ManagePoll: React.FunctionComponent<{
               <SettingsIcon />
             </Icon>
             <Trans i18nKey="manage" />
-            <ChevronDownIcon className="size-4" />
+            <Icon>
+              <ChevronDownIcon />
+            </Icon>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <>
             {poll.status === "finalized" ? (
               <DropdownMenuItem
-                onSelect={() => {
+                onClick={() => {
                   reopen.mutate({ pollId: poll.id });
                 }}
               >
@@ -119,37 +175,19 @@ const ManagePoll: React.FunctionComponent<{
               </DropdownMenuItem>
             ) : (
               <>
-                <DropdownMenuItem asChild disabled={!!poll.event}>
-                  <Link href={`/poll/${poll.id}/finalize`}>
-                    <DropdownMenuItemIconLabel icon={CalendarCheck2Icon}>
-                      <Trans i18nKey="finishPoll" defaults="Finalize" />
-                      <ProFeatureBadge />
-                    </DropdownMenuItemIconLabel>
-                  </Link>
+                <DropdownMenuItem
+                  disabled={!!poll.event}
+                  onClick={() => {
+                    finalizeDialog.trigger();
+                  }}
+                >
+                  <Icon>
+                    <CalendarCheck2Icon />
+                  </Icon>
+                  <Trans i18nKey="finishPoll" defaults="Finalize" />
+                  <ProFeatureBadge />
                 </DropdownMenuItem>
-                {poll.status === "live" ? (
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      pause.mutate({ pollId: poll.id });
-                    }}
-                  >
-                    <Icon>
-                      <PauseIcon />
-                    </Icon>
-                    <Trans i18nKey="pausePoll" defaults="Pause" />
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      resume.mutate({ pollId: poll.id });
-                    }}
-                  >
-                    <Icon>
-                      <PlayIcon />
-                    </Icon>
-                    <Trans i18nKey="resumePoll" defaults="Resume" />
-                  </DropdownMenuItem>
-                )}
+                <PauseResumeToggle />
               </>
             )}
           </>
@@ -176,18 +214,21 @@ const ManagePoll: React.FunctionComponent<{
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DropdownMenuItemIconLabel icon={DownloadIcon}>
               <Trans i18nKey="exportToCsv" />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/poll/${poll.id}/duplicate`}>
-              <DropdownMenuItemIconLabel icon={CopyIcon}>
-                <Trans i18nKey="duplicate" defaults="Duplicate" />
-                <ProFeatureBadge />
-              </DropdownMenuItemIconLabel>
-            </Link>
+          <DropdownMenuItem
+            onClick={() => {
+              duplicateDialog.trigger();
+            }}
+          >
+            <DropdownMenuItemIconLabel icon={CopyIcon}>
+              <Trans i18nKey="duplicate" defaults="Duplicate" />
+              <ProFeatureBadge />
+            </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -196,8 +237,8 @@ const ManagePoll: React.FunctionComponent<{
               setShowDeletePollDialog(true);
             }}
           >
-            <TrashIcon className="size-4" />
-            <Trans i18nKey="deletePoll" />
+            <TrashIcon className="size-4 opacity-75" />
+            <Trans i18nKey="delete" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -206,6 +247,12 @@ const ManagePoll: React.FunctionComponent<{
         open={showDeletePollDialog}
         onOpenChange={setShowDeletePollDialog}
       />
+      <DuplicateDialog
+        pollId={poll.id}
+        pollTitle={poll.title}
+        {...duplicateDialog.dialogProps}
+      />
+      <FinalizePollDialog {...finalizeDialog.dialogProps} />
     </>
   );
 };

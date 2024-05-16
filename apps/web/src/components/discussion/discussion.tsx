@@ -222,7 +222,7 @@ function DiscussionInner() {
                             <DropdownMenuContent align="start">
                               <DropdownMenuItem
                                 className="text-destructive"
-                                onSelect={() => {
+                                onClick={() => {
                                   deleteComment.mutate({
                                     commentId: comment.id,
                                   });
