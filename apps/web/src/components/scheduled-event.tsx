@@ -6,6 +6,7 @@ import { DateIconInner } from "@/components/date-icon";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
+import { IfParticipantsVisible } from "@/components/visibility";
 import { usePoll } from "@/contexts/poll";
 import { useDayjs } from "@/utils/dayjs";
 
@@ -71,7 +72,9 @@ export function ScheduledEvent() {
             </div>
           </div>
           <div>
-            <Attendees />
+            <IfParticipantsVisible>
+              <Attendees />
+            </IfParticipantsVisible>
           </div>
         </div>
       </CardContent>

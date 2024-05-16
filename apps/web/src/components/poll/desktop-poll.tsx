@@ -29,7 +29,10 @@ import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 
-import { useVisibleParticipants } from "../participants-provider";
+import {
+  useParticipants,
+  useVisibleParticipants,
+} from "../participants-provider";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import PollHeader from "./desktop-poll/poll-header";
@@ -99,6 +102,7 @@ const DesktopPoll: React.FunctionComponent = () => {
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
 
+  const { participants } = useParticipants();
   const visibleParticipants = useVisibleParticipants();
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -228,7 +232,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <CardTitle>
                   <Trans i18nKey="participants" />
                 </CardTitle>
-                <Badge>{visibleParticipants.length}</Badge>
+                <Badge>{participants.length}</Badge>
                 {canAddNewParticipant && mode !== "new" ? (
                   <Button
                     className="ml-2"
@@ -251,7 +255,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <TimesShownIn />
               </CardHeader>
             ) : null}
-            {visibleParticipants.length > 0 || mode !== "view" ? (
+            {participants.length > 0 || mode !== "view" ? (
               <div className="relative flex min-h-0 flex-col">
                 <div
                   aria-hidden="true"
