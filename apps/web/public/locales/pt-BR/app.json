@@ -235,6 +235,7 @@
   "autoTimeZoneHelp": "Ative esta configuração para ajustar automaticamente os horários dos eventos de cada participante ao fuso horário local.",
   "commentsDisabled": "Os comentários foram desabilitados",
   "allParticipants": "Todos os participantes",
+  "host": "Anfitrião",
   "created": "Criado",
   "pollStatus": "Status",
   "pollsListAll": "Todos",
