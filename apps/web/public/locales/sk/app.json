@@ -231,8 +231,13 @@
   "accountNotLinkedTitle": "Vaše konto nemôže byť prepojené s existujúcim používateľom",
   "accountNotLinkedDescription": "Používateľ s týmto e-mailom už existuje. Prihláste sa s heslom.",
   "or": "Alebo",
+  "created": "Vytvorené",
   "pollStatus": "Stav",
   "pollsListAll": "Všetko",
+  "pollsListMine": "Moje",
+  "pollsListOther": "Ostatné",
   "back": "Späť",
-  "timeShownIn": "Časy sú zobrazené v časovej zóne {timeZone}"
+  "timeShownIn": "Časy sú zobrazené v časovej zóne {timeZone}",
+  "eventHostTitle": "Spravovať prístup",
+  "eventHostDescription": "Ste tvorcom tejto ankety"
 }
