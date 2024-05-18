@@ -53,7 +53,7 @@ export function EventCard() {
             <PollStatusBadge status={poll.status} />
           </div>
           {poll.description ? (
-            <p className="mt-4 min-w-0 text-wrap text-sm leading-relaxed">
+            <p className="mt-4 min-w-0 whitespace-pre-wrap text-pretty text-sm leading-relaxed">
               <TruncatedLinkify>{poll.description}</TruncatedLinkify>
             </p>
           ) : null}
