@@ -3,10 +3,9 @@ import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
-import { ColoredAvatar } from "@/components/poll/participant-avatar";
-import { stringToValue } from "@/utils/string-to-value";
+import { getRandomAvatarColor } from "@/utils/color-hash";
 
-export interface UserAvaterProps {
+interface UserAvatarProps {
   name: string;
   className?: string;
   size?: "default" | "large";
@@ -15,68 +14,38 @@ export interface UserAvaterProps {
   isYou?: boolean;
 }
 
-const UserAvatarContext = React.createContext<
-  ((name: string) => string) | null
->(null);
-
-const colors = [
-  "bg-violet-500",
-  "bg-sky-500",
-  "bg-cyan-500",
-  "bg-blue-500",
-  "bg-indigo-500",
-  "bg-purple-500",
-  "bg-fuchsia-500",
-  "bg-pink-500",
-];
-
-const defaultColor = "bg-gray-400";
-
-export const UserAvatarProvider: React.FunctionComponent<{
-  children?: React.ReactNode;
-  names: string[];
-  seed: string;
-}> = ({ seed, children, names }) => {
-  const seedValue = React.useMemo(() => stringToValue(seed), [seed]);
-
-  const colorByName = React.useMemo(() => {
-    const res: Record<string, string> = {
-      "": defaultColor,
-    };
-    for (let i = names.length - 1; i >= 0; i--) {
-      const name = names[i].trim().toLowerCase();
-      const color = colors[(seedValue + names.length - i) % colors.length];
-      res[name] = color;
-    }
-    return res;
-  }, [names, seedValue]);
-
-  const getColor = React.useCallback(
-    (name: string) => {
-      const cachedColor = colorByName[name.toLowerCase()];
-      if (cachedColor) {
-        return cachedColor;
-      }
-      return defaultColor;
-    },
-    [colorByName],
+export const ColoredAvatar = (props: {
+  seed?: string;
+  name: string;
+  className?: string;
+}) => {
+  const { color, requiresDarkText } = getRandomAvatarColor(
+    props.seed ?? props.name,
   );
-
   return (
-    <UserAvatarContext.Provider value={getColor}>
-      {children}
-    </UserAvatarContext.Provider>
+    <div
+      className={clsx(
+        "inline-flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold uppercase",
+        requiresDarkText ? "text-gray-800" : "text-white",
+        props.className,
+      )}
+      style={{
+        backgroundColor: color,
+      }}
+    >
+      {props.name[0]}
+    </div>
   );
 };
 
-const UserAvatarInner: React.FunctionComponent<UserAvaterProps> = ({
+const UserAvatarInner: React.FunctionComponent<UserAvatarProps> = ({
   name,
   className,
 }) => {
   return <ColoredAvatar name={name} className={className} />;
 };
 
-const UserAvatar: React.FunctionComponent<UserAvaterProps> = ({
+const UserAvatar: React.FunctionComponent<UserAvatarProps> = ({
   showName,
   isYou,
   className,

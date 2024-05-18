@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -31,6 +32,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";
+import { z } from "zod";
 
 import { useDeleteParticipantMutation } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
@@ -172,6 +174,10 @@ type ChangeNameForm = {
   name: string;
 };
 
+const changeNameSchema = z.object({
+  name: z.string().trim().min(1),
+});
+
 const ChangeNameModal = (props: {
   oldName: string;
   participantId: string;
@@ -194,6 +200,7 @@ const ChangeNameModal = (props: {
     defaultValues: {
       name: props.oldName,
     },
+    resolver: zodResolver(changeNameSchema),
   });
 
   const { control, reset, handleSubmit, setFocus, formState } = form;
