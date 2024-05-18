@@ -1,7 +1,7 @@
 import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 
-import { ColoredAvatar } from "@/components/poll/participant-avatar";
+import { ColoredAvatar } from "@/components/poll/user-avatar";
 
 interface ParticipantAvatarBarProps {
   participants: { name: string }[];
