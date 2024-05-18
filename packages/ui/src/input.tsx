@@ -13,7 +13,7 @@ export type InputProps = Omit<
 
 const inputVariants = cva(
   cn(
-    "focus-visible:border-primary-400 focus-visible:ring-offset-1 focus-visible:outline-none focus-visible:ring-primary-200 focus-visible:ring-1",
+    "w-full focus-visible:border-primary-400 focus-visible:ring-offset-1 focus-visible:outline-none focus-visible:ring-primary-200 focus-visible:ring-1",
     "border-input placeholder:text-muted-foreground h-9 rounded border bg-gray-50 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
   ),
   {

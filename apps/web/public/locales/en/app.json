@@ -97,7 +97,6 @@
   "addComment": "Add Comment",
   "profile": "Profile",
   "polls": "Polls",
-  "showMore": "Show more…",
   "timeZoneSelect__noOption": "No option found",
   "timeZoneSelect__inputPlaceholder": "Search…",
   "poweredByRallly": "Powered by <a>{name}</a>",
@@ -246,5 +245,10 @@
   "timeShownIn": "Times shown in {timeZone}",
   "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time",
   "eventHostTitle": "Manage Access",
-  "eventHostDescription": "You are the creator of this poll"
+  "eventHostDescription": "You are the creator of this poll",
+  "deleteAccount": "Delete Account",
+  "deleteAccountDialogTitle": "Delete Account",
+  "deleteAccountDialogDescription": "Are you sure you want to delete your account?",
+  "deleteAccountInstruction": "Please confirm your email address to delete your account",
+  "emailMismatch": "Email does not match the account email"
 }
