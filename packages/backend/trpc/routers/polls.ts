@@ -17,7 +17,6 @@ import {
   router,
 } from "../trpc";
 import { comments } from "./polls/comments";
-import { options } from "./polls/options";
 import { participants } from "./polls/participants";
 
 dayjs.extend(toArray);
@@ -44,7 +43,6 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
-  options,
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
     .input(
@@ -101,7 +99,6 @@ export const polls = router({
           options: {
             createMany: {
               data: input.options.map((option) => ({
-                start: dayjs(option.startDate).utc(true).toDate(),
                 startTime: input.timeZone
                   ? dayjs(option.startDate).tz(input.timeZone, true).toDate()
                   : dayjs(option.startDate).utc(true).toDate(),
@@ -375,12 +372,11 @@ export const polls = router({
           options: {
             select: {
               id: true,
-              start: true,
               startTime: true,
               duration: true,
             },
             orderBy: {
-              start: "asc",
+              startTime: "asc",
             },
           },
           user: true,
@@ -514,13 +510,6 @@ export const polls = router({
                 duration: true,
               },
             },
-            options: {
-              select: {
-                id: true,
-                start: true,
-                duration: true,
-              },
-            },
             closed: true,
             participants: {
               select: {
@@ -597,13 +586,6 @@ export const polls = router({
                 duration: true,
               },
             },
-            options: {
-              select: {
-                id: true,
-                start: true,
-                duration: true,
-              },
-            },
             closed: true,
             participants: {
               select: {
@@ -631,58 +613,6 @@ export const polls = router({
 
       return { total, rows };
     }),
-  list: possiblyPublicProcedure.query(async ({ ctx }) => {
-    const polls = await prisma.poll.findMany({
-      where: {
-        userId: ctx.user.id,
-        deleted: false,
-      },
-      select: {
-        id: true,
-        title: true,
-        location: true,
-        createdAt: true,
-        timeZone: true,
-        adminUrlId: true,
-        participantUrlId: true,
-        status: true,
-        event: {
-          select: {
-            start: true,
-            duration: true,
-          },
-        },
-        options: {
-          select: {
-            id: true,
-            start: true,
-            duration: true,
-          },
-        },
-        closed: true,
-        participants: {
-          select: {
-            id: true,
-            name: true,
-          },
-          orderBy: [
-            {
-              createdAt: "desc",
-            },
-            { name: "desc" },
-          ],
-        },
-      },
-      orderBy: [
-        {
-          createdAt: "desc",
-        },
-        { title: "asc" },
-      ],
-    });
-
-    return polls;
-  }),
   book: proProcedure
     .input(
       z.object({
@@ -743,7 +673,7 @@ export const polls = router({
           id: input.optionId,
         },
         select: {
-          start: true,
+          startTime: true,
           duration: true,
         },
       });
@@ -755,10 +685,12 @@ export const polls = router({
         });
       }
 
-      let eventStart = dayjs(option.start).utc();
+      let eventStart = dayjs(option.startTime);
 
       if (poll.timeZone) {
-        eventStart = eventStart.tz(poll.timeZone, true);
+        eventStart = eventStart.tz(poll.timeZone);
+      } else {
+        eventStart = eventStart.utc();
       }
 
       await prisma.poll.update({
@@ -992,7 +924,6 @@ export const polls = router({
           disableComments: true,
           options: {
             select: {
-              start: true,
               startTime: true,
               duration: true,
             },

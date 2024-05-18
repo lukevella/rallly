@@ -30,7 +30,7 @@ function FinalTime({ start, duration }: { start: Date; duration: number }) {
     return <Trans i18nKey="allDay" />;
   }
   return (
-    <span>{`${adjustTimeZone(start, !poll.timeZone).format("LT")} - ${adjustTimeZone(dayjs(start).add(duration, "minutes"), !poll.timeZone).format("LT")}`}</span>
+    <span>{`${adjustTimeZone(start, !poll.timeZone).format("LT")} - ${adjustTimeZone(dayjs(start).add(duration, "minutes"), !poll.timeZone).format(poll.timeZone ? "LT z" : "LT")}`}</span>
   );
 }
 
