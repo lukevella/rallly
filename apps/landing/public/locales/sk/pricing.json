@@ -26,5 +26,7 @@
   "upgradeNowSaveLater": "Upgrade-ujte dnes, ušetrite zajtra",
   "earlyAdopterDescription": "Ako užívateľ s prednostným prístupom k novým funkciám si chytíte výhodnú cenu predplatného a budúci nárast cien vás neovplyvní.",
   "planFree": "Voľný",
-  "keepPollsIndefinitely": "Udržiavanie ankiet bez časového limitu"
+  "keepPollsIndefinitely": "Udržiavanie ankiet bez časového limitu",
+  "whenPollInactive": "Kedy sa anketa stáva neaktívnou?",
+  "whenPollInactiveAnswer": "Ankety sa stávajú neaktívnymi, keď sú všetky možnosti dátumu minulé A anketa nebola zobrazená viac ako 30 dní. Neaktívne ankety sú automaticky odstránené, ak nemáte platené členstvo."
 }
