@@ -32,10 +32,12 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
     pollId: urlId,
   });
 
+  const comments = trpc.polls.comments.list.useQuery({ pollId: urlId });
+
   if (error?.data?.code === "NOT_FOUND") {
     return <div>Not found</div>;
   }
-  if (!poll || !participants) {
+  if (!poll || !participants || !comments.isFetched) {
     return <Loader />;
   }
 
