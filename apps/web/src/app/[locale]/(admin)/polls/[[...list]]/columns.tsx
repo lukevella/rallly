@@ -1,4 +1,5 @@
 import { PollStatus } from "@rallly/database";
+import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -130,12 +131,11 @@ export const usePollColumns = () => {
           }
 
           return (
-            <Link
-              className="text-link text-sm"
-              href={`/poll/${row.original.id}`}
-            >
-              <Trans i18nKey="manage" />
-            </Link>
+            <Button size="sm" variant="link" asChild>
+              <Link href={`/poll/${row.original.id}`}>
+                <Trans i18nKey="manage" />
+              </Link>
+            </Button>
           );
         },
       }),
