@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { getRandomAvatarColor } from "@/utils/color-hash";
 
-interface UserAvaterProps {
+interface UserAvatarProps {
   name: string;
   className?: string;
   size?: "default" | "large";
@@ -38,14 +38,14 @@ export const ColoredAvatar = (props: {
   );
 };
 
-const UserAvatarInner: React.FunctionComponent<UserAvaterProps> = ({
+const UserAvatarInner: React.FunctionComponent<UserAvatarProps> = ({
   name,
   className,
 }) => {
   return <ColoredAvatar name={name} className={className} />;
 };
 
-const UserAvatar: React.FunctionComponent<UserAvaterProps> = ({
+const UserAvatar: React.FunctionComponent<UserAvatarProps> = ({
   showName,
   isYou,
   className,
