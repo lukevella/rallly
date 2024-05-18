@@ -250,5 +250,7 @@
   "deleteAccountDialogTitle": "Delete Account",
   "deleteAccountDialogDescription": "Are you sure you want to delete your account?",
   "deleteAccountInstruction": "Please confirm your email address to delete your account",
-  "emailMismatch": "Email does not match the account email"
+  "emailMismatch": "Email does not match the account email",
+  "dangerZone": "Danger Zone",
+  "dangerZoneAccount": "Delete your account permanently. This action cannot be undone."
 }

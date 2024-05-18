@@ -99,8 +99,13 @@ export const ProfilePage = () => {
             <>
               <hr />
               <SettingsSection
-                title="Danger Zone"
-                description="Delete your account permanently. This action cannot be undone."
+                title={<Trans i18nKey="dangerZone" defaults="Danger Zone" />}
+                description={
+                  <Trans
+                    i18nKey="dangerZoneAccount"
+                    defaults="Delete your account permanently. This action cannot be undone."
+                  />
+                }
               >
                 <DeleteAccountDialog email={user.email}>
                   <DialogTrigger asChild>
