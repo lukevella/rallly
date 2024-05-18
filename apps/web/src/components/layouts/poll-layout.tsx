@@ -144,8 +144,16 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const poll = trpc.polls.get.useQuery({ urlId });
   const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
   const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
+  const comments = trpc.polls.comments.list.useQuery({ pollId: urlId });
+
   usePlan(); // prefetch plan
-  if (!poll.data || !watchers.data || !participants.data) {
+
+  if (
+    !poll.isFetched ||
+    !watchers.isFetched ||
+    !participants.isFetched ||
+    !comments.isFetched
+  ) {
     return <Loader />;
   }
 
