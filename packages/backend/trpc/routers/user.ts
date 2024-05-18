@@ -38,6 +38,47 @@ export const user = router({
         },
       });
     }),
+  delete: privateProcedure.mutation(async ({ ctx }) => {
+    await prisma.$transaction(async (tx) => {
+      const polls = await tx.poll.findMany({
+        select: { id: true },
+        where: { userId: ctx.user.id },
+      });
+      const pollIds = polls.map((poll) => poll.id);
+      await tx.comment.deleteMany({
+        where: { pollId: { in: pollIds } },
+      });
+      await tx.option.deleteMany({
+        where: { pollId: { in: pollIds } },
+      });
+      await tx.participant.deleteMany({
+        where: { OR: [{ pollId: { in: pollIds } }, { userId: ctx.user.id }] },
+      });
+      await tx.watcher.deleteMany({
+        where: { OR: [{ pollId: { in: pollIds } }, { userId: ctx.user.id }] },
+      });
+      await tx.vote.deleteMany({
+        where: { pollId: { in: pollIds } },
+      });
+      await tx.event.deleteMany({
+        where: { userId: ctx.user.id },
+      });
+      await tx.poll.deleteMany({
+        where: { userId: ctx.user.id },
+      });
+      await tx.account.deleteMany({
+        where: { userId: ctx.user.id },
+      });
+      await tx.userPaymentData.deleteMany({
+        where: { userId: ctx.user.id },
+      });
+      await tx.user.delete({
+        where: {
+          id: ctx.user.id,
+        },
+      });
+    });
+  }),
   subscription: possiblyPublicProcedure.query(
     async ({ ctx }): Promise<{ legacy?: boolean; active: boolean }> => {
       if (ctx.user.isGuest) {
