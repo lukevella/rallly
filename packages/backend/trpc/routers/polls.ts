@@ -511,13 +511,6 @@ export const polls = router({
                 duration: true,
               },
             },
-            options: {
-              select: {
-                id: true,
-                start: true,
-                duration: true,
-              },
-            },
             closed: true,
             participants: {
               select: {

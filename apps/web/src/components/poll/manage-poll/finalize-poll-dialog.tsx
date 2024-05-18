@@ -168,7 +168,7 @@ export const FinalizePollForm = ({
                           <RadioGroupItem id={option.id} value={option.id} />
                           <div className="grow">
                             <div className="flex gap-x-4">
-                              <DateIcon start={option.start} />
+                              <DateIcon start={option.startTime} />
                               <div className="grow whitespace-nowrap">
                                 <div className="text-sm font-medium">
                                   {start.format("LL")}
