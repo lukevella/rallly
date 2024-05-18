@@ -9,7 +9,18 @@ import { Icon } from "./icon";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+const DropdownMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>
+>(({ ...props }, ref) => (
+  <DropdownMenuPrimitive.Trigger
+    ref={ref}
+    {...props}
+    onFocusCapture={(e) => {
+      e.stopPropagation();
+    }}
+  />
+));
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
