@@ -237,12 +237,20 @@
   "host": "Anfitrião",
   "created": "Criado",
   "pollStatus": "Status",
-  "pollsListAll": "Todos",
-  "pollsListOther": "Outros",
+  "pollsListAll": "Todas",
+  "pollsListMine": "Minhas",
+  "pollsListOther": "Outras",
   "noParticipantsDescription": "Clique em <b>Compartilhar</b> para convidar participantes",
   "back": "Voltar",
   "timeShownIn": "Horários exibidos em {timeZone}",
   "pollStatusPausedDescription": "Votos não podem ser enviados ou editados neste momento",
   "eventHostTitle": "Gerenciar Acesso",
-  "eventHostDescription": "Você é o criador desta enquete"
+  "eventHostDescription": "Você é o criador desta enquete",
+  "deleteAccount": "Excluir conta",
+  "deleteAccountDialogTitle": "Excluir conta",
+  "deleteAccountDialogDescription": "Tem certeza de que deseja excluir sua conta?",
+  "deleteAccountInstruction": "Por favor, confirme seu endereço de e-mail para excluir sua conta",
+  "emailMismatch": "O e-mail não corresponde ao e-mail da conta",
+  "dangerZone": "Zona de Perigo",
+  "dangerZoneAccount": "Excluir permanentemente sua conta. Esta ação não pode ser desfeita."
 }
