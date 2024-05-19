@@ -1,3 +1,4 @@
+"use client";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 
@@ -16,11 +17,7 @@ const magicLinkParams = z.object({
   token: z.string(),
 });
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default function Page({ searchParams }: { searchParams: SearchParams }) {
   const parse = searchParamsSchema.safeParse(searchParams);
 
   if (!parse.success) {
