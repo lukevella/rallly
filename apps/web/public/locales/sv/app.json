@@ -215,5 +215,10 @@
   "timeShownIn": "Tidszon: {timeZone}",
   "pollStatusPausedDescription": "Röster kan inte lämnas in eller redigeras just nu",
   "eventHostTitle": "Hantera åtkomst",
-  "eventHostDescription": "Du är skaparen av denna enkät"
+  "eventHostDescription": "Du är skaparen av denna enkät",
+  "deleteAccount": "Radera konto",
+  "deleteAccountDialogTitle": "Radera konto",
+  "deleteAccountDialogDescription": "Är du säker på att du vill radera ditt konto?",
+  "deleteAccountInstruction": "Bekräfta din e-postadress för att radera ditt konto",
+  "dangerZone": "Farozon"
 }

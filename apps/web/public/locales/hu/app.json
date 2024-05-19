@@ -30,7 +30,7 @@
   "editDetails": "Részletek módosítása",
   "editOptions": "Lehetőségek módosítása",
   "editVotes": "Szavazatok szerkesztése",
-  "email": "E-mail",
+  "email": "Email",
   "emailNotAllowed": "Ez a email nem engedélyezett.",
   "emailPlaceholder": "kovacs.anna@pelda.hu",
   "exportToCsv": "Exportálás CSV fájlba",
@@ -77,7 +77,7 @@
   "today": "Ma",
   "userAlreadyExists": "Már létezik felhasználó ezzel az email címmel",
   "userNotFound": "Nem létezik felhasználó ezzel az email címmel",
-  "validEmail": "Kérjük adj meg egy érvényes e-mail címet",
+  "validEmail": "Kérjük adj meg egy érvényes email címet",
   "verificationCodeHelp": "Nem kaptad meg az emailt? Ellenőrizd a spam mappádat is.",
   "verificationCodePlaceholder": "Írd be a hatjegyű kódot",
   "verificationCodeSent": "A hitelesítő kód ki lett küldve <b>{email}</b> címre <a>Módosít</a>",
@@ -245,5 +245,12 @@
   "timeShownIn": "Megjelenítési időzóna: {timeZone}",
   "pollStatusPausedDescription": "A szavazatok jelenleg nem lehet beküldeni vagy szerkeszteni",
   "eventHostTitle": "Hozzáférés kezelése",
-  "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak"
+  "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak",
+  "deleteAccount": "Fiók törlése",
+  "deleteAccountDialogTitle": "Fiók törlése",
+  "deleteAccountDialogDescription": "Biztos vagy benne, hogy törölni szeretnéd a fiókod?",
+  "deleteAccountInstruction": "Kérjük, erősítsd meg email címed a fiókod törléséhez",
+  "emailMismatch": "A megadott email nem egyezik a fiók email címével",
+  "dangerZone": "Veszélyes terület",
+  "dangerZoneAccount": "Töröld véglegesen a fiókodat. Ez a művelet nem vonható vissza."
 }

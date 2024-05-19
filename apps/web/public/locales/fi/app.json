@@ -245,5 +245,7 @@
   "timeShownIn": "Aikavyöhyke: {timeZone}",
   "pollStatusPausedDescription": "Ääniä ei voi tällä hetkellä lähettää tai muokata",
   "eventHostTitle": "Hallinnoi pääsyä",
-  "eventHostDescription": "Olet tämän kyselyn luoja"
+  "eventHostDescription": "Olet tämän kyselyn luoja",
+  "dangerZone": "Vaaravyöhyke",
+  "dangerZoneAccount": "Poista tilisi pysyvästi. Tätä toimintoa ei voi peruuttaa."
 }

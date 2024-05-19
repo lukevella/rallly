@@ -245,5 +245,12 @@
   "timeShownIn": "Tijdzone: {timeZone}",
   "pollStatusPausedDescription": "Stemmen kunnen op dit moment niet ingediend of bewerkt worden",
   "eventHostTitle": "Toegang beheren",
-  "eventHostDescription": "Je bent de maker van deze poll"
+  "eventHostDescription": "Je bent de maker van deze poll",
+  "deleteAccount": "Account verwijderen",
+  "deleteAccountDialogTitle": "Account verwijderen",
+  "deleteAccountDialogDescription": "Weet je zeker dat je je account wilt verwijderen?",
+  "deleteAccountInstruction": "Bevestig je e-mailadres om je account te verwijderen",
+  "emailMismatch": "E-mail komt niet overeen met het e-mailadres van het account",
+  "dangerZone": "Gevarenzone",
+  "dangerZoneAccount": "Verwijder je account permanent. Deze actie kan niet ongedaan worden gemaakt."
 }
