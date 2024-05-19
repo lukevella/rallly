@@ -172,6 +172,12 @@ function createOptionsContextValue(
   targetTimeZone: string,
   sourceTimeZone: string | null,
 ): OptionsContextValue {
+  if (pollOptions.length === 0) {
+    return {
+      pollType: "date",
+      options: [],
+    };
+  }
   if (pollOptions[0].duration > 0) {
     return {
       pollType: "timeSlot",

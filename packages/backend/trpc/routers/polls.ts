@@ -193,7 +193,6 @@ export const polls = router({
 
             if (end) {
               return {
-                start: new Date(`${start}Z`),
                 startTime: input.timeZone
                   ? dayjs(start).tz(input.timeZone, true).toDate()
                   : dayjs(start).utc(true).toDate(),
@@ -202,7 +201,6 @@ export const polls = router({
               };
             } else {
               return {
-                start: new Date(start.substring(0, 10) + "T00:00:00Z"),
                 startTime: dayjs(start).utc(true).toDate(),
                 pollId,
               };
