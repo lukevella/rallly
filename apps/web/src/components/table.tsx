@@ -76,7 +76,7 @@ export const Table = <TData extends Record<string, unknown>>(props: {
                             ? header.getSize()
                             : undefined,
                       }}
-                      className="text-muted-foreground h-9 border-b px-2.5 text-left text-xs font-normal"
+                      className="text-muted-foreground h-9 whitespace-nowrap border-b px-2.5 text-left text-xs font-normal"
                     >
                       {header.isPlaceholder
                         ? null
