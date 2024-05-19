@@ -232,6 +232,8 @@
   "or": "Lub",
   "autoTimeZone": "Automatyczna konwersja strefy czasowej",
   "autoTimeZoneHelp": "Włącz to ustawienie, aby automatycznie dostosować czas wydarzenia do lokalnej strefy czasowej każdego uczestnika.",
+  "commentsDisabled": "Komentarze zostały wyłączone",
+  "allParticipants": "Wszyscy uczestnicy",
   "pollStatus": "Status",
   "pollsListAll": "Wszystko",
   "back": "Powrót",
