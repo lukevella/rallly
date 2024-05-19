@@ -1,10 +1,11 @@
-"use client";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 
 import { getTranslation } from "@/app/i18n";
 
 import { LoginPage } from "./login-page";
+
+export const dynamic = "force-dynamic";
 
 const searchParamsSchema = z.object({
   magicLink: z.string().url(),
