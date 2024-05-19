@@ -5,6 +5,8 @@ import { getTranslation } from "@/app/i18n";
 
 import { LoginPage } from "./login-page";
 
+export const dynamic = "force-dynamic";
+
 const searchParamsSchema = z.object({
   magicLink: z.string().url(),
 });
@@ -16,11 +18,7 @@ const magicLinkParams = z.object({
   token: z.string(),
 });
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default function Page({ searchParams }: { searchParams: SearchParams }) {
   const parse = searchParamsSchema.safeParse(searchParams);
 
   if (!parse.success) {
