@@ -54,7 +54,7 @@ const ParticipantRowForm = ({
     <tr className={cn("group", className)}>
       <td
         style={{ minWidth: 240, maxWidth: 240 }}
-        className="sticky left-0 z-10 bg-white px-4"
+        className="sticky left-0 z-10 h-12 bg-white px-4"
       >
         <div className="flex items-center justify-between gap-x-2.5">
           {name ? (
