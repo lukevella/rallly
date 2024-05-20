@@ -220,5 +220,7 @@
   "deleteAccountDialogTitle": "Radera konto",
   "deleteAccountDialogDescription": "Är du säker på att du vill radera ditt konto?",
   "deleteAccountInstruction": "Bekräfta din e-postadress för att radera ditt konto",
-  "dangerZone": "Farozon"
+  "emailMismatch": "E-postadressen matchar inte kontots e-postadress",
+  "dangerZone": "Farozon",
+  "dangerZoneAccount": "Radera ditt konto permanent. Denna åtgärd kan inte ångras."
 }
