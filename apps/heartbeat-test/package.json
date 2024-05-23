@@ -1,0 +1,12 @@
+{
+  "name": "@rallly/heartbeat-test",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Rallly using Playwright",
+  "main": "index.js",
+  "author": "RJT, Huy Le, Levi Miller",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "playwright": "^1.44.1"
+  }
+}
