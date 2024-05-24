@@ -8,5 +8,8 @@
   "private": true,
   "dependencies": {
     "playwright": "^1.44.1"
+  },
+  "scripts": {
+    "test": "npx playwright test --config ./heartbeat.config.ts"
   }
 }
