@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 test('has title', async ({ page }) => {
     await page.goto('/demo');
 
-    // Expect a title "to contain" a substring.
+    // Expect the title to contain the string "Polls".
     await expect(page).toHaveTitle(/Polls/);
 });
 
