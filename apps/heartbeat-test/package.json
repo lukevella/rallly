@@ -6,7 +6,7 @@
   "author": "RJT, Huy Le, Levi Miller",
   "license": "MIT",
   "private": true,
-  "dependencies": {
+  "peerDependencies": {
     "playwright": "^1.44.1"
   },
   "scripts": {
