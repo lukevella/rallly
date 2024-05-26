@@ -26,7 +26,8 @@ test.describe("edit options", () => {
     editOptionsPage.switchToSpecifyTimes();
 
     await page.click("text='12:00 PM'");
-    await page.click("text='1:00 PM'");
+    const listbox = page.getByRole("listbox");
+    listbox.getByText("1:00 PM", { exact: true }).click();
     await page.getByRole("button", { name: "Save" }).click();
     await expect(page.locator('text="Are you sure?"')).toBeVisible();
     await page.click("text='Delete'");
