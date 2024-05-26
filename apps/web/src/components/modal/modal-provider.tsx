@@ -70,7 +70,6 @@ const ModalProvider: React.FunctionComponent<ModalProviderProps> = ({
           visible={true}
           {...modal.config}
           content={modal.content}
-          footer={null}
           onCancel={() => {
             remove(id);
           }}
