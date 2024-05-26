@@ -34,7 +34,6 @@ import {
   getDateProps,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
-import CompactButton from "../../../compact-button";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
 import { DateTimeOption } from "..";
@@ -330,15 +329,20 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   );
                                 }}
                               />
-                              <CompactButton
-                                icon={XIcon}
+                              <Button
+                                size="sm"
+                                variant="ghost"
                                 onClick={() => {
                                   onChange([
                                     ...options.slice(0, index),
                                     ...options.slice(index + 1),
                                   ]);
                                 }}
-                              />
+                              >
+                                <Icon>
+                                  <XIcon />
+                                </Icon>
+                              </Button>
                             </div>
                           );
                         })}

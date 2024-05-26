@@ -12,10 +12,10 @@ import * as React from "react";
 import { getDuration } from "@/utils/date-time-utils";
 
 export interface TimePickerProps {
-  value?: string;
-  after?: string;
+  value?: Date;
+  after?: Date;
   className?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: Date) => void;
 }
 
 const TimePicker: React.FunctionComponent<TimePickerProps> = ({
@@ -27,7 +27,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   const [open, setOpen] = React.useState(false);
   const getOptions = React.useCallback(() => {
     if (!open) {
-      return [dayjs(value).format("YYYY-MM-DDTHH:mm:ss")];
+      return [dayjs(value).toISOString()];
     }
     let cursor = after
       ? dayjs(after).add(15, "minutes")
@@ -35,7 +35,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
 
     const res: string[] = [];
     while (cursor.isSame(value, "day")) {
-      res.push(cursor.format("YYYY-MM-DDTHH:mm:ss"));
+      res.push(cursor.toISOString());
       cursor = cursor.add(15, "minutes");
     }
     return res;
@@ -43,17 +43,17 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
 
   return (
     <Select
-      value={value}
+      value={value?.toISOString()}
       onValueChange={(newValue) => {
         if (newValue) {
-          onChange?.(newValue);
+          onChange?.(new Date(newValue));
         }
       }}
       open={open}
       onOpenChange={setOpen}
     >
       <SelectTrigger asChild>
-        <Button size="sm" className={className}>
+        <Button className={className}>
           <SelectValue placeholder="Select time" />
         </Button>
       </SelectTrigger>
@@ -61,10 +61,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
         {open ? (
           getOptions().map((option, i) => {
             return (
-              <SelectItem
-                key={i}
-                value={dayjs(option).format("YYYY-MM-DDTHH:mm:ss")}
-              >
+              <SelectItem key={i} value={dayjs(option).toISOString()}>
                 <div className="flex items-center gap-2">
                   <span>{dayjs(option).format("LT")}</span>
                   {after ? (
@@ -77,7 +74,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
             );
           })
         ) : (
-          <SelectItem value={dayjs(value).format("YYYY-MM-DDTHH:mm:ss")}>
+          <SelectItem value={dayjs(value).toISOString()}>
             <div className="flex items-center gap-2">
               <span>{dayjs(value).format("LT")}</span>
               {after ? (
