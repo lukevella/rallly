@@ -123,7 +123,7 @@ const Page = () => {
           if (optionsToDeleteThatHaveVotes.length > 0) {
             modalContext.render({
               title: t("areYouSure"),
-              description: (
+              content: (
                 <Trans
                   i18nKey="deletingOptionsWarning"
                   components={{ b: <strong /> }}
@@ -131,7 +131,7 @@ const Page = () => {
               ),
               onOk,
               okButtonProps: {
-                type: "danger",
+                variant: "destructive",
               },
               okText: t("delete"),
               cancelText: t("cancel"),

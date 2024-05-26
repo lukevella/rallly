@@ -75,7 +75,7 @@ const PollOptionsForm = ({
 
   const [dateOrTimeRangeModal, openDateOrTimeRangeModal] = useModal({
     title: t("mixedOptionsTitle"),
-    description: t("mixedOptionsDescription"),
+    content: t("mixedOptionsDescription"),
     okText: t("mixedOptionsKeepTimes"),
     onOk: () => {
       setValue(

@@ -4,8 +4,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
@@ -14,6 +12,7 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import {
   CalendarIcon,
+  CalendarXIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   MoreHorizontalIcon,
@@ -384,15 +383,13 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild={true}>
-                              <button className="text-gray-500 hover:text-gray-800">
-                                <MoreHorizontalIcon className="h4 w-4" />
-                              </button>
+                              <Button variant="ghost" size="sm">
+                                <Icon>
+                                  <MoreHorizontalIcon />
+                                </Icon>
+                              </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
-                              <DropdownMenuLabel>
-                                <Trans i18nKey="menu" defaults="Menu" />
-                              </DropdownMenuLabel>
-                              <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 onClick={() => {
                                   const times = optionsForDay.map(
@@ -434,7 +431,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   onChange(newOptions);
                                 }}
                               >
-                                <SparklesIcon className="mr-2 size-4" />
+                                <Icon>
+                                  <SparklesIcon />
+                                </Icon>
                                 <Trans i18nKey="applyToAllDates" />
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -447,7 +446,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   );
                                 }}
                               >
-                                <XIcon className="mr-2 size-4" />
+                                <Icon>
+                                  <CalendarXIcon />
+                                </Icon>
                                 <Trans i18nKey="deleteDate" />
                               </DropdownMenuItem>
                             </DropdownMenuContent>
