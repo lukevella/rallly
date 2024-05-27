@@ -3,6 +3,10 @@
 # writes a report on failure
 
 name: Heartbeat Tests
+
+env:
+  PLAYWRIGHT_BASE_URL: https://app.rally.co
+
 on:
   schedule:
     - cron: "0 * * * *"
