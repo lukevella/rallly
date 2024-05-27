@@ -22,7 +22,7 @@ jobs:
     - name: run yarn
       run: yarn
     - name: Run Playwright tests
-      run: yarn workspace @rallly/heartbeat-test test
+      run: yarn workspace @rallly/heartbeat-test e2e_test
     - uses: actions/upload-artifact@v4
       if: ${{ failure() }}
       with:

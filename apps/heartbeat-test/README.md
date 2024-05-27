@@ -1,7 +1,7 @@
 # App:  @rallly/heartbeat-test
 
 ## Usage
-* Run `yarn workspace @rallly/heartbeat-test test` to execute the script from the project root
+* Run `yarn workspace @rallly/heartbeat-test e2e_test` to execute the script from the project root
 
     * heartbeat-test runs all tests in the `apps/heartbeat-test/tests` directory.
 
