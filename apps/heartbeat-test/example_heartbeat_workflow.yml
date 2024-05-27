@@ -21,6 +21,8 @@ jobs:
         node-version: 18
     - name: run yarn
       run: yarn
+    - name: run yarn playwright install
+      run: yarn playwright install
     - name: Run Playwright tests
       run: yarn workspace @rallly/heartbeat-test e2e_test
     - uses: actions/upload-artifact@v4
