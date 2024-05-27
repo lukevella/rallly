@@ -1,0 +1,27 @@
+# potential simple workflow file for heartbeat tests
+# does a simple CI, then runs the heartbeat-test app hourly.
+# writes a report on failure
+
+name: Heartbeat Tests
+on:
+  schedule:
+    - cron: "0 * * * *"
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: run yarn
+      run: yarn
+    - name: Run Playwright tests
+      run: yarn workflow @rallly/heartbeat-test test
+    - uses: actions/upload-artifact@v4
+      if: ${{ failure() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
