@@ -243,7 +243,7 @@
   "noParticipantsDescription": "Kattints a <b>Megosztás</b>ra a résztvevők meghívásához",
   "back": "Vissza",
   "timeShownIn": "Megjelenítési időzóna: {timeZone}",
-  "pollStatusPausedDescription": "A szavazatok jelenleg nem lehet beküldeni vagy szerkeszteni",
+  "pollStatusPausedDescription": "Jelenleg nem lehet szavazni vagy korábbi választ módosítani",
   "eventHostTitle": "Hozzáférés kezelése",
   "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak",
   "deleteAccount": "Fiók törlése",
@@ -252,5 +252,5 @@
   "deleteAccountInstruction": "Kérjük, erősítsd meg email címed a fiókod törléséhez",
   "emailMismatch": "A megadott email nem egyezik a fiók email címével",
   "dangerZone": "Veszélyes terület",
-  "dangerZoneAccount": "Töröld véglegesen a fiókodat. Ez a művelet nem vonható vissza."
+  "dangerZoneAccount": "Fiók végleges törlése. Ez a művelet nem vonható vissza."
 }

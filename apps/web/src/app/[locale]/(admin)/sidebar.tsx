@@ -171,10 +171,12 @@ export function Sidebar() {
                 className="group h-auto w-full justify-start py-3"
               >
                 <Link href="/settings/profile">
-                  <CurrentUserAvatar />
+                  <div>
+                    <CurrentUserAvatar />
+                  </div>
                   <span className="ml-1 grid grow">
                     <span className="font-semibold">{user.name}</span>
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-muted-foreground truncate text-sm">
                       {user.email}
                     </span>
                   </span>
