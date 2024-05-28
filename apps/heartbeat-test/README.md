@@ -9,7 +9,8 @@
 
 ## Configuration
 Define the environment variable:
-* `PLAYWRIGHT_BASE_URL` -- Defines Playwrights baseUrl variable. This is the base address that tests will use. For example, in the case of setting baseUrl to `https://www.google.com`, a test with `await goto.page('/search')` would point the test to `https://www.google.com/search`.
+* `PLAYWRIGHT_BASE_URL`: Defines Playwrights baseUrl variable. This is the base address that tests will use.
+  * For example, in the case of setting baseUrl to `https://www.google.com`, a test with `await goto.page('/search')` would point the test to `https://www.google.com/search`.
    
 
 ## Usage
