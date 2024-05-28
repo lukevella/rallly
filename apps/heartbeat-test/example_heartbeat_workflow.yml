@@ -19,8 +19,6 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 18
-    # - name: run npm i
-    #   run: npm i
     - name: run yarn
       run: yarn
     - name: run Playwright install
