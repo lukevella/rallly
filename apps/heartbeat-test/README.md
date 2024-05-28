@@ -8,8 +8,8 @@
   ```
 
 ## Configuration
-* Define the environment variable:
-`PLAYWRIGHT_BASE_URL` can be defined to point at a certain URL to test against.
+Define the environment variable:
+* `PLAYWRIGHT_BASE_URL` can be defined to point at a certain URL to test against.
    * When undefined, this will default to `http://localhost:3000`
 
 ## Usage
