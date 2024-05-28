@@ -10,7 +10,7 @@ import { test, expect } from '@playwright/test';
 test('/demo has title', async ({ page }) => {
     await page.goto('/demo');
 
-    // Expect the title to contain the string "Polls".
+    // Expect the title to contain an empty string
     await expect(page).toHaveTitle("");
 });
 
