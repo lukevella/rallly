@@ -1,6 +1,6 @@
 // Original source: https://gist.github.com/dsumer/3594cda57e84a93a9019cddc71831882
 import { prisma } from "@rallly/database";
-import crypto from "crypto";
+import * as crypto from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Serialize from "php-serialize";
 
