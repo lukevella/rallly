@@ -13,7 +13,9 @@ Environment variable must define `PLAYWRIGHT_BASE_URL`.
     * heartbeat-test runs all [Playwright](https://wwww.playwright.dev) tests in the `apps/heartbeat-test/tests` directory.
 
  * For example, from a POSIX command line this could be accomplished for the original prod server with the following:
-```PLAYWRIGHT_BASE_URL=https://app.rallly.co yarn workspace @rallly/heartbeat-test e2e_test```
+```
+PLAYWRIGHT_BASE_URL=https://app.rallly.co yarn workspace @rallly/heartbeat-test e2e_test
+```
 
 ## Configuring Workflows
 * A sample workflow has been provided in `example_heartbeat_workflow.yml`
@@ -21,7 +23,8 @@ Environment variable must define `PLAYWRIGHT_BASE_URL`.
 * At a minimum, running `yarn` and `yarn playwright install --with-deps` will run the program.
 
 For example, this will get hearbeat-test running with minimum specs:
-```name: Heartbeat Tests
+```
+name: Heartbeat Tests
 
 env:
   PLAYWRIGHT_BASE_URL: https://www.example.com
