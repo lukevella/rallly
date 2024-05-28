@@ -18,6 +18,33 @@ Environment variable must define `PLAYWRIGHT_BASE_URL`.
 ## Configuring Workflows
 * A sample workflow has been provided in `example_heartbeat_workflow.yml`
    * Workflow will run tests with example data that needs to be filled in (testing example.com)
+* At a minimum, running `yarn` and `yarn playwright install --with-deps` will run the program.
+
+For example, this will get hearbeat-test running with minimum specs:
+```name: Heartbeat Tests
+
+env:
+  PLAYWRIGHT_BASE_URL: https://www.example.com
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: run yarn
+      run: yarn
+    - name: run Playwright install
+      run: yarn playwright install --with-deps
+    - name: Run Playwright tests
+      run: yarn workspace @rallly/heartbeat-test e2e_test
+```
 
 
 ---
