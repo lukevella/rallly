@@ -1,11 +1,16 @@
 # App:  @rallly/heartbeat-test
 
 ## Installation
-* Run `yarn && yarn playwright install --with-deps` from the project root directory.
+* Run install from the project root directory
+  ```
+  yarn
+  yarn playwright install --with-deps
+  ```
 
 ## Configuration
-Environment variable must define `PLAYWRIGHT_BASE_URL`.
-* This will default to http://localhost:3000
+* Define the environment variable:
+`PLAYWRIGHT_BASE_URL` can be defined to point at a certain URL to test against.
+   * When undefined, this will default to `http://localhost:3000`
 
 ## Usage
 * Run `yarn workspace @rallly/heartbeat-test e2e_test` to execute the script from the project root. 
