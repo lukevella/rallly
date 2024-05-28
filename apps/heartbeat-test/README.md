@@ -1,5 +1,8 @@
 # App:  @rallly/heartbeat-test
 
+## Installation
+* Run `yarn && yarn playwright install --with-deps` from the project root directory.
+
 ## Configuration
 Environment variable must define `PLAYWRIGHT_BASE_URL`.
 * This will default to http://localhost:3000
@@ -14,6 +17,7 @@ Environment variable must define `PLAYWRIGHT_BASE_URL`.
 
 ## Configuring Workflows
 * A sample workflow has been provided in `example_heartbeat_workflow.yml`
+   * Workflow will run tests with example data that needs to be filled in (testing example.com)
 
 
 ---
