@@ -8,6 +8,7 @@
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
     "tailwind-scrollbar": "^3.0.4",
     "tailwindcss-animate": "^1.0.5"
   }
