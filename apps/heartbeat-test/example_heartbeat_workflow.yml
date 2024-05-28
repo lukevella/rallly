@@ -5,7 +5,7 @@
 name: Heartbeat Tests
 
 env:
-  PLAYWRIGHT_BASE_URL: https://www.example.com
+  PLAYWRIGHT_BASE_URL: https://app.rallly.co
 
 on:
   schedule:
@@ -19,15 +19,42 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 18
+    # - name: run npm i
+    #   run: npm i
     - name: run yarn
       run: yarn
-    - name: run yarn playwright install
-      run: yarn playwright install
+    - name: run Playwright install
+      run: yarn playwright install --with-deps
     - name: Run Playwright tests
       run: yarn workspace @rallly/heartbeat-test e2e_test
-    - uses: actions/upload-artifact@v4
-      if: ${{ failure() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+
+- name: Send mail notification
+  uses: dawidd6/action-send-mail@v3
+  if: ${{ failure() }}
+  with:
+    # Specify connection via URL (replaces server_address, server_port, secure,
+    # username and password)
+    #
+    # Format:
+    #
+    #  * smtp://user:password@server:port
+    #  * smtp+starttls://user:password@server:port
+    connection_url: ${{secrets.MAIL_CONNECTION}}
+    # Required mail server address if not connection_url:
+    server_address: smtp.gmail.com
+    # Server port, default 25:
+    server_port: 465
+    # Optional (recommended) mail server username:
+    username: ${{secrets.MAIL_USERNAME}}
+    # Optional (recommended) mail server password:
+    password: ${{secrets.MAIL_PASSWORD}}
+    # Required mail subject:
+    subject: Heatbeat test failed in ${{github.repository}} 
+    # Required recipients' addresses:
+    to: example.recipient@example.com
+    # Required sender full name (address can be skipped):
+    from: ExampleFirst ExampleLast
+    # Optional plain body:
+    body: Heatbeat test failed in ${{github.repository}} 
+    # Optional priority: 'high', 'normal' (default) or 'low'
+    priority: high
