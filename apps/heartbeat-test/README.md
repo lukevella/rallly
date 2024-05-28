@@ -9,8 +9,8 @@
 
 ## Configuration
 Define the environment variable:
-* `PLAYWRIGHT_BASE_URL` can be defined to point at a certain URL to test against.
-   * When undefined, this will default to `http://localhost:3000`
+* `PLAYWRIGHT_BASE_URL` -- Defines Playwrights baseUrl variable. This is the base address that tests will use. For example, in the case of setting baseUrl to `https://www.google.com`, a test with `await goto.page('/search')` would point the test to `https://www.google.com/search`.
+   
 
 ## Usage
 * Run `yarn workspace @rallly/heartbeat-test e2e_test` to execute the script from the project root. 
