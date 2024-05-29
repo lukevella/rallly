@@ -30,10 +30,6 @@
   textarea {
     @apply rounded outline-none;
   }
-
-  #floating-ui-root {
-    @apply absolute z-50 w-full;
-  }
 }
 
 @layer components {
