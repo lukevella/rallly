@@ -9,7 +9,6 @@ import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
-import { DefaultSeo } from "next-seo";
 import React from "react";
 
 import { I18nProvider } from "@/app/i18n/client";
@@ -19,7 +18,6 @@ import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
 import { NextPageWithLayout } from "../types";
-import { absoluteUrl } from "../utils/absolute-url";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,25 +56,6 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
   return (
     <SessionProvider>
       <LazyMotion features={domMax}>
-        <DefaultSeo
-          openGraph={{
-            siteName: "Rallly",
-            type: "website",
-            url: absoluteUrl(),
-            images: [
-              {
-                url: absoluteUrl("/og-image-1200.png"),
-                width: 1200,
-                height: 630,
-                alt: "Rallly | Schedule group meetings",
-                type: "image/png",
-              },
-            ],
-          }}
-          facebook={{
-            appId: "920386682263077",
-          }}
-        />
         <Head>
           <meta
             name="viewport"

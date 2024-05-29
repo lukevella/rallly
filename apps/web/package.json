@@ -57,7 +57,6 @@
     "nanoid": "^4.0.0",
     "next-auth": "^4.24.5",
     "next-i18next": "^13.0.3",
-    "next-seo": "^5.15.0",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.31",
     "posthog-js": "^1.102.1",

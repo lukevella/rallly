@@ -9467,11 +9467,6 @@ next-i18next@^13.0.3:
     hoist-non-react-statics "^3.3.2"
     i18next-fs-backend "^2.1.1"
 
-next-seo@^5.15.0:
-  version "5.15.0"
-  resolved "https://registry.npmjs.org/next-seo/-/next-seo-5.15.0.tgz"
-  integrity sha512-LGbcY91yDKGMb7YI+28n3g+RuChUkt6pXNpa8FkfKkEmNiJkeRDEXTnnjVtwT9FmMhG6NH8qwHTelGrlYm9rgg==
-
 next-seo@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmjs.org/next-seo/-/next-seo-6.1.0.tgz"
