@@ -43,10 +43,6 @@
   textarea {
     @apply rounded outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-gray-300;
   }
-
-  #floating-ui-root {
-    @apply absolute z-50 w-full;
-  }
 }
 
 @layer components {
