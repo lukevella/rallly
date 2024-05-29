@@ -59,9 +59,9 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
       </SelectTrigger>
       <SelectContent>
         {open ? (
-          getOptions().map((option, i) => {
+          getOptions().map((option) => {
             return (
-              <SelectItem key={i} value={dayjs(option).toISOString()}>
+              <SelectItem key={option} value={dayjs(option).toISOString()}>
                 <div className="flex items-center gap-2">
                   <span>{dayjs(option).format("LT")}</span>
                   {after ? (
