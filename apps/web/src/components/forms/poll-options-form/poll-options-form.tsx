@@ -2,6 +2,14 @@ import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@rallly/ui/card";
 import { CommandDialog } from "@rallly/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  useDialog,
+} from "@rallly/ui/dialog";
 import { FormField, FormMessage } from "@rallly/ui/form";
 import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
@@ -15,7 +23,6 @@ import { useFormContext } from "react-hook-form";
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
-import { useModal } from "../../modal";
 import { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar";
 import { DateTimeOption } from "./types";
@@ -73,38 +80,17 @@ const PollOptionsForm = ({
     options.length === 0 ||
     options.some((option) => option.type !== "timeSlot");
 
-  const [dateOrTimeRangeModal, openDateOrTimeRangeModal] = useModal({
-    title: t("mixedOptionsTitle"),
-    description: t("mixedOptionsDescription"),
-    okText: t("mixedOptionsKeepTimes"),
-    onOk: () => {
-      setValue(
-        "options",
-        watchOptions.filter((option) => option.type === "timeSlot"),
-      );
-      if (!watchTimeZone) {
-        setValue("timeZone", getBrowserTimeZone());
-      }
-    },
-    cancelText: t("mixedOptionsKeepDates"),
-    onCancel: () => {
-      setValue(
-        "options",
-        watchOptions.filter((option) => option.type === "date"),
-      );
-      setValue("timeZone", "");
-    },
-  });
+  const dateOrTimeRangeDialog = useDialog();
 
   React.useEffect(() => {
     if (watchOptions.length > 1) {
       const optionType = watchOptions[0].type;
       // all options needs to be the same type
       if (watchOptions.some((option) => option.type !== optionType)) {
-        openDateOrTimeRangeModal();
+        dateOrTimeRangeDialog.trigger();
       }
     }
-  }, [watchOptions, openDateOrTimeRangeModal]);
+  }, [watchOptions, dateOrTimeRangeDialog]);
 
   const watchNavigationDate = watch("navigationDate");
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
@@ -146,7 +132,47 @@ const PollOptionsForm = ({
             </div>
           </div>
         </CardHeader>
-        {dateOrTimeRangeModal}
+        <Dialog {...dateOrTimeRangeDialog.dialogProps}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                <Trans i18nKey="mixedOptionsTitle" />
+              </DialogTitle>
+            </DialogHeader>
+            <p className="text-sm">
+              <Trans i18nKey="mixedOptionsDescription" />
+            </p>
+            <DialogFooter>
+              <Button
+                onClick={() => {
+                  setValue(
+                    "options",
+                    watchOptions.filter((option) => option.type === "date"),
+                  );
+                  setValue("timeZone", "");
+                  dateOrTimeRangeDialog.dismiss();
+                }}
+              >
+                <Trans i18nKey="mixedOptionsKeepDates" />
+              </Button>
+              <Button
+                onClick={() => {
+                  setValue(
+                    "options",
+                    watchOptions.filter((option) => option.type === "timeSlot"),
+                  );
+                  if (!watchTimeZone) {
+                    setValue("timeZone", getBrowserTimeZone());
+                  }
+                  dateOrTimeRangeDialog.dismiss();
+                }}
+                variant="primary"
+              >
+                <Trans i18nKey="mixedOptionsKeepTimes" />
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <div>
           <FormField
             control={form.control}
