@@ -221,7 +221,7 @@
   "userId": "ID użytkownika",
   "aboutGuest": "Konto gościa",
   "aboutGuestDescription": "Ustawienia profilu nie są dostępne dla kont gości. <0>Zaloguj się</0> na istniejące konto lub <1>utwórz nowe</1>, aby dostosować swój profil.",
-  "logoutDescription": "Wyloguj się z istniejącej sesji",
+  "logoutDescription": "Wyloguj się z obecnej sesji",
   "events": "Wydarzenia",
   "registrations": "Rejestracje",
   "inviteParticipantsDescription": "Skopiuj i udostępnij link, aby rozpocząć zbieranie odpowiedzi od Twoich uczestników.",
