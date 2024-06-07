@@ -1,4 +1,5 @@
 import { cn } from "@rallly/ui";
+import { BarChart2Icon } from "lucide-react";
 import React from "react";
 
 import { Squircle } from "@/app/components/squircle";
@@ -24,11 +25,28 @@ export function AppCard({
 
 export function AppCardContent({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="mt-2 flex flex-col items-center text-center">
+    <div className="flex flex-col items-center pt-2.5 text-center">
       {children}
     </div>
   );
 }
+
+export function GroupPollIcon() {
+  return (
+    <Squircle className="bg-purple-200 p-px">
+      <Squircle className="bg-purple-50 p-1">
+        <Squircle
+          className={cn(
+            "inline-flex size-10 items-center justify-center bg-purple-600 text-purple-100",
+          )}
+        >
+          <BarChart2Icon className="size-6" />
+        </Squircle>
+      </Squircle>
+    </Squircle>
+  );
+}
+
 export function AppCardIcon({
   children,
   className,
@@ -37,14 +55,18 @@ export function AppCardIcon({
   className?: string;
 }) {
   return (
-    <div className="relative mb-2 inline-flex size-12 items-center justify-center">
-      <Squircle
-        className={cn(
-          "inline-flex size-10 items-center justify-center bg-purple-600 text-purple-100",
-          className,
-        )}
-      >
-        {children}
+    <div className="relative mb-4 inline-flex size-12 items-center justify-center">
+      <Squircle className="bg-purple-200 p-px">
+        <Squircle className="bg-purple-50 p-1">
+          <Squircle
+            className={cn(
+              "inline-flex size-10 items-center justify-center bg-purple-600 text-purple-100",
+              className,
+            )}
+          >
+            {children}
+          </Squircle>
+        </Squircle>
       </Squircle>
     </div>
   );
@@ -57,11 +79,7 @@ export function AppCardName({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <h2 className={cn("text-center text-lg font-semibold", className)}>
-      {children}
-    </h2>
-  );
+  return <h2 className={cn("text-lg font-semibold", className)}>{children}</h2>;
 }
 
 export function AppCardDescription({
@@ -72,12 +90,7 @@ export function AppCardDescription({
   className?: string;
 }) {
   return (
-    <p
-      className={cn(
-        "text-muted-foreground mx-auto mt-2 max-w-80 px-2.5 text-center text-sm",
-        className,
-      )}
-    >
+    <p className={cn("text-muted-foreground mt-2 text-sm", className)}>
       {children}
     </p>
   );

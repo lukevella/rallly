@@ -1,6 +1,6 @@
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { BarChart2Icon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -11,6 +11,7 @@ import {
   AppCardFooter,
   AppCardIcon,
   AppCardName,
+  GroupPollIcon,
 } from "@/app/[locale]/(admin)/app-card";
 import { Params } from "@/app/[locale]/types";
 import {
@@ -37,7 +38,7 @@ export default async function Page({ params }: { params: Params }) {
           <AppCard>
             <AppCardContent>
               <AppCardIcon>
-                <BarChart2Icon className="size-6" />
+                <GroupPollIcon />
               </AppCardIcon>
               <AppCardName>
                 <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
