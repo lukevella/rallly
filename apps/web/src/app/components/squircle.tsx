@@ -23,16 +23,19 @@ export function Squircle({
         }}
       >
         {children}
-        <svg className="absolute" width="20" height="20" viewBox="0 0 20 20">
-          <clipPath id="squircleClip" clipPathUnits="objectBoundingBox">
-            <path
-              fill="red"
-              stroke="none"
-              d="M 0,0.5 C 0,0 0,0 0.5,0 S 1,0 1,0.5 1,1 0.5,1 0,1 0,0.5"
-            />
-          </clipPath>
-        </svg>
       </Comp>
     </>
+  );
+}
+
+export function SquircleClipPath() {
+  return (
+    <svg width="0" height="0" className="pointer-events-none absolute">
+      <defs>
+        <clipPath id="squircleClip" clipPathUnits="objectBoundingBox">
+          <path d="M 0,0.5 C 0,0 0,0 0.5,0 S 1,0 1,0.5 1,1 0.5,1 0,1 0,0.5" />
+        </clipPath>
+      </defs>
+    </svg>
   );
 }

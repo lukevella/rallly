@@ -19,6 +19,7 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
+import { SquircleClipPath } from "@/app/components/squircle";
 import { getTranslation } from "@/app/i18n";
 
 export default async function Page({ params }: { params: Params }) {
@@ -32,6 +33,7 @@ export default async function Page({ params }: { params: Params }) {
       </PageHeader>
       <PageContent>
         <div className="flex flex-wrap gap-4">
+          <SquircleClipPath />
           <AppCard>
             <AppCardContent>
               <AppCardIcon>
