@@ -10,6 +10,7 @@ import {
   BookMarkedIcon,
   CalendarIcon,
   ChevronRightIcon,
+  HomeIcon,
   LifeBuoyIcon,
   LogInIcon,
   PlusIcon,
@@ -46,18 +47,12 @@ function NavItem({
       target={target}
       className={cn(
         current
-          ? "bg-gray-200 text-gray-800"
-          : "text-gray-700 hover:bg-gray-200 active:bg-gray-300",
-        "group flex items-center gap-x-2.5 rounded-md px-3 py-2 text-sm font-semibold leading-6",
+          ? "text-primary bg-gray-200"
+          : "text-muted-foreground  border-transparent hover:bg-gray-200 focus:bg-gray-200",
+        "group flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
-      <Icon
-        className={cn(
-          current ? "text-gray-500" : "text-gray-400 group-hover:text-gray-500",
-          "size-5 shrink-0",
-        )}
-        aria-hidden="true"
-      />
+      <Icon className={cn("size-5 shrink-0")} aria-hidden="true" />
       {children}
     </Link>
   );
@@ -71,6 +66,11 @@ export function Sidebar() {
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
           <ul role="list" className="space-y-1 lg:-mx-2">
+            <li>
+              <NavItem current={pathname === "/"} href="/" icon={HomeIcon}>
+                <Trans i18nKey="home" defaults="Home" />
+              </NavItem>
+            </li>
             <li>
               <NavItem
                 current={pathname?.startsWith("/poll")}
