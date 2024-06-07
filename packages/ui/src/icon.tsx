@@ -33,7 +33,7 @@ export function Icon({ children, size, variant }: IconProps) {
     <Slot
       className={cn(
         iconVariants({ size, variant }),
-        "group-[.bg-primary]:text-primary-100 group-[.bg-destructive]:text-destructive-foreground group shrink-0",
+        "group-[.bg-primary]:text-primary-50 group-[.bg-destructive]:text-destructive-foreground group shrink-0",
       )}
     >
       {children}
