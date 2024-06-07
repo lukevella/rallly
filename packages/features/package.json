@@ -1,0 +1,6 @@
+{
+  "name": "@rallly/features",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.0"
+}
