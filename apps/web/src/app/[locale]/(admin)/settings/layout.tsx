@@ -22,7 +22,7 @@ export default async function ProfileLayout({
       <PageHeader>
         <PageTitle>{t("settings")}</PageTitle>
       </PageHeader>
-      <PageContent className="space-y-3 lg:space-y-4">
+      <PageContent className="space-y-3 sm:space-y-4">
         <div>
           <SettingsMenu />
         </div>

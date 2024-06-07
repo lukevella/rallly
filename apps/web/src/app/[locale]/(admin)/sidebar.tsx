@@ -5,7 +5,6 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   ArrowUpRightIcon,
-  BarChart2Icon,
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
@@ -65,7 +64,7 @@ export function Sidebar() {
     <nav className="flex flex-1 flex-col ">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
-          <ul role="list" className="space-y-1 lg:-mx-2">
+          <ul role="list" className="-mx-2 space-y-1">
             <li>
               <NavItem current={pathname === "/"} href="/" icon={HomeIcon}>
                 <Trans i18nKey="home" defaults="Home" />
@@ -73,17 +72,17 @@ export function Sidebar() {
             </li>
             <li>
               <NavItem
-                current={pathname?.startsWith("/poll")}
-                href="/polls"
-                icon={BarChart2Icon}
+                current={pathname?.startsWith("/events")}
+                href="/events"
+                icon={CalendarIcon}
               >
-                <Trans i18nKey="polls" defaults="Polls" />
+                <Trans i18nKey="events" defaults="Events" />
               </NavItem>
             </li>
           </ul>
         </li>
-        <li className="space-y-1 lg:-mx-2">
-          <Button className="w-full rounded-full" variant="primary" asChild>
+        {/* <li className="-mx-2 space-y-1">
+          <Button variant="primary" className="w-full rounded-full" asChild>
             <Link href="/new">
               <Icon>
                 <PlusIcon />
@@ -91,16 +90,13 @@ export function Sidebar() {
               <Trans i18nKey="newPoll" defaults="New Poll" />
             </Link>
           </Button>
-        </li>
+        </li> */}
         <li>
           <div className="text-xs font-semibold leading-6 text-gray-400">
             <Trans i18nKey="comingSoon" defaults="Coming Soon" />
           </div>
-          <ul role="list" className="mt-2 space-y-1 lg:-mx-2">
+          <ul role="list" className="-mx-2 mt-2 space-y-1">
             <li className="pointer-events-none grid gap-1 opacity-50">
-              <NavItem href="/events" icon={CalendarIcon}>
-                <Trans i18nKey="events" defaults="Events" />
-              </NavItem>
               <NavItem href="/b" icon={BookMarkedIcon}>
                 <Trans i18nKey="registrations" defaults="Registrations" />
               </NavItem>
@@ -114,12 +110,12 @@ export function Sidebar() {
           </ul>
         </li>
         <li className="mt-auto">
-          <ul role="list" className="space-y-1 lg:-mx-2">
+          <ul role="list" className="-mx-2 space-y-1">
             <IfFreeUser>
               <li>
                 <Link
                   href="/settings/billing"
-                  className="mb-4 grid rounded-md border border-gray-200 bg-gray-50 px-4 py-3 hover:border-gray-300 hover:bg-gray-200 active:bg-gray-300"
+                  className="mb-4 grid rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200"
                 >
                   <span className="mb-2 flex items-center gap-x-2">
                     <SparklesIcon className="size-5 text-gray-400" />
@@ -157,13 +153,17 @@ export function Sidebar() {
               </NavItem>
             </li>
             <li>
-              <NavItem href="/settings/preferences" icon={Settings2Icon}>
+              <NavItem
+                href="/settings/preferences"
+                current={pathname === "/settings/preferences"}
+                icon={Settings2Icon}
+              >
                 <Trans i18nKey="preferences" />
               </NavItem>
             </li>
           </ul>
           <hr className="my-2" />
-          <ul role="list" className="space-y-1 lg:-mx-2">
+          <ul role="list" className="-mx-2 space-y-1">
             <li>
               <Button
                 asChild
