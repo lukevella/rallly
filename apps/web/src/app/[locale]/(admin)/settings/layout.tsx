@@ -23,7 +23,7 @@ export default async function ProfileLayout({
         <PageTitle>{t("settings")}</PageTitle>
       </PageHeader>
       <PageContent className="space-y-3 sm:space-y-4">
-        <div>
+        <div className="scrollbar-none sticky top-0 -mx-3 overflow-auto border-b bg-gray-100 p-3">
           <SettingsMenu />
         </div>
         <div>{children}</div>

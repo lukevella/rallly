@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-export function ResponsiveMenuItem({
+export function TabMenuItem({
   href,
   children,
 }: {
@@ -29,10 +29,6 @@ export function ResponsiveMenuItem({
   );
 }
 
-export function ResponsiveMenu({ children }: { children: React.ReactNode }) {
-  return (
-    <ul className="scrollbar-none -mx-3 flex gap-2.5 overflow-x-auto px-3">
-      {children}
-    </ul>
-  );
+export function TabMenu({ children }: { children: React.ReactNode }) {
+  return <ul className="flex gap-2.5">{children}</ul>;
 }

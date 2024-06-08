@@ -5,10 +5,7 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import {
-  ResponsiveMenu,
-  ResponsiveMenuItem,
-} from "@/app/components/responsive-menu";
+import { TabMenu, TabMenuItem } from "@/app/components/tab-menu";
 import { getTranslation } from "@/app/i18n";
 
 export default async function Layout({
@@ -30,15 +27,11 @@ export default async function Layout({
                   defaultValue: "Events",
                 })}
               </PageTitle>
-              <ResponsiveMenu>
-                <ResponsiveMenuItem href="/events">Upcoming</ResponsiveMenuItem>
-                <ResponsiveMenuItem href="/events/pending">
-                  Pending
-                </ResponsiveMenuItem>
-                <ResponsiveMenuItem href="/events/past">
-                  Past
-                </ResponsiveMenuItem>
-              </ResponsiveMenu>
+              <TabMenu>
+                <TabMenuItem href="/events">Upcoming</TabMenuItem>
+                <TabMenuItem href="/events/pending">Pending</TabMenuItem>
+                <TabMenuItem href="/events/past">Past</TabMenuItem>
+              </TabMenu>
             </div>
           </PageHeader>
           <PageContent>{children}</PageContent>
