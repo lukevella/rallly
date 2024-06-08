@@ -27,29 +27,30 @@ export function AppCardContent({ children }: { children?: React.ReactNode }) {
   return <div className="">{children}</div>;
 }
 
-export function GroupPollIcon({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
+export function GroupPollIcon({
+  size = "md",
+}: {
+  size?: "xs" | "sm" | "md" | "lg";
+}) {
   return (
-    <Squircle className="bg-purple-600 p-px">
-      <Squircle className="bg-purple-500 p-px">
-        <Squircle
-          className={cn(
-            "inline-flex items-center justify-center bg-purple-600 text-purple-50",
-            {
-              "size-8": size === "sm",
-              "size-9": size === "md",
-              "size-10": size === "lg",
-            },
-          )}
-        >
-          <BarChart2Icon
-            className={cn({
-              "size-4": size === "sm",
-              "size-5": size === "md",
-              "size-6": size === "lg",
-            })}
-          />
-        </Squircle>
-      </Squircle>
+    <Squircle
+      className={cn(
+        "inline-flex shrink-0 items-center justify-center bg-purple-600 text-purple-50",
+        {
+          "size-6": size === "xs",
+          "size-8": size === "sm",
+          "size-9": size === "md",
+          "size-10": size === "lg",
+        },
+      )}
+    >
+      <BarChart2Icon
+        className={cn({
+          "size-4": size === "sm" || size === "xs",
+          "size-5": size === "md",
+          "size-6": size === "lg",
+        })}
+      />
     </Squircle>
   );
 }

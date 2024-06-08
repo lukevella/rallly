@@ -1,15 +1,16 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { Card, CardContent, CardDescription, CardTitle } from "@rallly/ui/card";
+import { Card } from "@rallly/ui/card";
+import { Checkbox } from "@rallly/ui/checkbox";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import dayjs from "dayjs";
 import {
   CalendarPlusIcon,
   CopyIcon,
-  MapPinIcon,
   MoreHorizontalIcon,
   SquareArrowOutUpRightIcon,
+  UserIcon,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -23,8 +24,6 @@ import {
   EmptyStateTitle,
 } from "@/app/components/empty-state";
 import { trpc } from "@/app/providers";
-import TruncatedLinkify from "@/components/poll/truncated-linkify";
-import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 
@@ -79,26 +78,36 @@ export function PendingEvents() {
         {data.map((poll) => (
           <li
             key={poll.id}
-            className="group relative flex flex-col gap-8 p-3 focus-within:bg-gray-50 "
+            className="group relative flex justify-between gap-4 p-3 focus-within:bg-gray-50"
             onClick={() => {
               setSelectedId(poll.id);
             }}
           >
             <Link className="absolute inset-0" href={`/poll/${poll.id}`} />
             <div className="flex items-center gap-4">
+              {/* <Checkbox
+                className="relative z-20 cursor-default"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              /> */}
               <GroupPollIcon size="sm" />
-              <div className="flex min-w-0 grow items-center gap-x-4">
-                {/* <Checkbox
-            className="relative z-20 cursor-default"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          /> */}
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-medium">
-                    {poll.title}
-                  </div>
-                </div>
+              <div className="min-w-0 truncate text-sm font-medium">
+                {poll.title}
+              </div>
+            </div>
+            <div className="flex items-center gap-6 px-2.5">
+              <div className="flex items-center gap-x-1.5 text-sm">
+                <Icon>
+                  <UserIcon />
+                </Icon>
+                {poll.participants.length}
+              </div>
+              <div className="text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="createdTime"
+                  values={{ relativeTime: dayjs(poll.createdAt).fromNow() }}
+                />
               </div>
               <div className="flex gap-x-2.5">
                 <Tooltip>
@@ -135,20 +144,6 @@ export function PendingEvents() {
                   </Icon>
                 </Button>
               </div>
-              {/* <div className="flex flex-col items-end space-y-1">
-          <div className="flex items-center gap-x-2 text-xs font-medium">
-            <Icon>
-              <UserIcon />
-            </Icon>
-            {poll.participants.length}
-          </div>
-          <div className="text-muted-foreground text-sm">
-            <Trans
-              i18nKey="createdTime"
-              values={{ relativeTime: dayjs(poll.createdAt).fromNow() }}
-            />
-          </div>
-        </div> */}
             </div>
           </li>
         ))}
