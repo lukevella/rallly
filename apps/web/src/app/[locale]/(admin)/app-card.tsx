@@ -31,23 +31,25 @@ export function GroupPollIcon({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   return (
     <Squircle className="bg-purple-200 p-px">
       <Squircle className="bg-purple-50 p-1">
-        <Squircle
-          className={cn(
-            "inline-flex items-center justify-center bg-purple-600 text-purple-50",
-            {
-              "size-8": size === "sm",
-              "size-9": size === "md",
-              "size-10": size === "lg",
-            },
-          )}
-        >
-          <BarChart2Icon
-            className={cn({
-              "size-4": size === "sm",
-              "size-5": size === "md",
-              "size-6": size === "lg",
-            })}
-          />
+        <Squircle className="bg-purple-500 p-0.5">
+          <Squircle
+            className={cn(
+              "inline-flex items-center justify-center bg-purple-600 text-purple-50",
+              {
+                "size-8": size === "sm",
+                "size-9": size === "md",
+                "size-10": size === "lg",
+              },
+            )}
+          >
+            <BarChart2Icon
+              className={cn({
+                "size-4": size === "sm",
+                "size-5": size === "md",
+                "size-6": size === "lg",
+              })}
+            />
+          </Squircle>
         </Squircle>
       </Squircle>
     </Squircle>
