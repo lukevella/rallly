@@ -15,10 +15,7 @@ import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import {
-  GroupPollIcon,
-  GroupPollIconFrame,
-} from "@/app/[locale]/(admin)/app-card";
+import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -37,7 +34,6 @@ function CopyLinkButton({ pollId }: { pollId: string }) {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          size="sm"
           className="relative z-20"
           onClick={(e) => {
             e.stopPropagation();
@@ -54,61 +50,6 @@ function CopyLinkButton({ pollId }: { pollId: string }) {
         <Trans i18nKey="copyLink" defaults="Copy Link" />
       </TooltipContent>
     </Tooltip>
-  );
-}
-
-function GroupPoll({ pollId }: { pollId: string }) {
-  const { data: poll } = trpc.polls.get.useQuery({ urlId: pollId });
-
-  if (!poll) {
-    return <Spinner />;
-  }
-
-  return (
-    <div className="space-y-4">
-      <Card className="bg-gray-50">
-        <RandomGradientBar seed={poll.id} />
-        <CardContent>
-          <div className="flex flex-col items-center gap-4 lg:flex-row lg:justify-between">
-            <div>
-              <CardTitle data-testid="poll-title" className="text-lg">
-                {poll.title}
-              </CardTitle>
-              <CardDescription>
-                <span className="flex items-center gap-0.5 whitespace-nowrap text-sm text-gray-500">
-                  <span className="whitespace-nowrap">
-                    <Trans
-                      i18nKey="createdTime"
-                      values={{ relativeTime: dayjs(poll.createdAt).fromNow() }}
-                    />
-                  </span>
-                </span>
-              </CardDescription>
-            </div>
-          </div>
-          {poll.location ? (
-            <p className="text-muted-foregroun mt-4 text-sm">
-              <Icon>
-                <MapPinIcon className="-mt-0.5 mr-2 inline-block" />
-              </Icon>
-              <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-            </p>
-          ) : null}
-        </CardContent>
-      </Card>
-      {poll.description ? (
-        <Card>
-          <CardContent>
-            <p className="text-sm leading-relaxed">{poll.description}</p>
-          </CardContent>
-        </Card>
-      ) : null}
-      <Card>
-        <CardContent>
-          <h3 className="text-muted-background text-sm">Results</h3>
-        </CardContent>
-      </Card>
-    </div>
   );
 }
 
@@ -134,15 +75,16 @@ export function PendingEvents() {
 
   return (
     <Card>
-      <ol className="divide-y divide-gray-100">
+      <ol className="divide-y">
         {data.map((poll) => (
           <li
             key={poll.id}
-            className="relative flex flex-col gap-8 p-4 focus-within:bg-gray-50 "
+            className="group relative flex flex-col gap-8 p-3 focus-within:bg-gray-50 "
             onClick={() => {
               setSelectedId(poll.id);
             }}
           >
+            <Link className="absolute inset-0" href={`/poll/${poll.id}`} />
             <div className="flex items-center gap-4">
               <GroupPollIcon size="sm" />
               <div className="flex min-w-0 grow items-center gap-x-4">
@@ -153,13 +95,8 @@ export function PendingEvents() {
             }}
           /> */}
                 <div className="min-w-0">
-                  <div className="truncate">
-                    <Link
-                      className="font-medium hover:underline focus:underline"
-                      href={`/poll/${poll.id}`}
-                    >
-                      {poll.title}
-                    </Link>
+                  <div className="truncate text-sm font-medium">
+                    {poll.title}
                   </div>
                 </div>
               </div>
@@ -167,7 +104,6 @@ export function PendingEvents() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      size="sm"
                       className="relative z-20"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -188,7 +124,6 @@ export function PendingEvents() {
                 </Tooltip>
                 <CopyLinkButton pollId={poll.id} />
                 <Button
-                  size="sm"
                   className="relative z-20"
                   onClick={(e) => {
                     e.stopPropagation();
