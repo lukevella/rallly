@@ -8,11 +8,13 @@ import {
   LogInIcon,
   LogOutIcon,
   ShieldCloseIcon,
+  XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import React from "react";
 
+import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
 import { InviteDialog } from "@/components/invite-dialog";
@@ -47,18 +49,21 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
-
+  const router = useRouter();
   return (
     <div className="bg-gray-100">
       <div className="sticky top-0 z-30 flex flex-col justify-between gap-x-4 gap-y-2.5 border-b bg-gray-100 p-3 sm:flex-row lg:items-center lg:px-5">
         <div className="flex min-w-0 items-center gap-x-4">
           {pathname === pollLink ? (
-            <Button variant="ghost" asChild>
-              <Link href="/polls">
-                <Icon>
-                  <ListIcon />
-                </Icon>
-              </Link>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                router.back();
+              }}
+            >
+              <Icon>
+                <ArrowLeftIcon />
+              </Icon>
             </Button>
           ) : (
             <Button variant="ghost" asChild>
@@ -69,7 +74,8 @@ const Layout = ({ children }: React.PropsWithChildren) => {
               </Link>
             </Button>
           )}
-          <h1 className="truncate text-sm font-medium">{poll.title}</h1>
+          <GroupPollIcon size="sm" />
+          <h1 className="truncate font-medium">{poll.title}</h1>
         </div>
         <div>
           <AdminControls />

@@ -16,6 +16,10 @@ import React from "react";
 import { useCopyToClipboard } from "react-use";
 
 import {
+  GroupPollIcon,
+  GroupPollIconFrame,
+} from "@/app/[locale]/(admin)/app-card";
+import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateIcon,
@@ -139,30 +143,23 @@ export function PendingEvents() {
               setSelectedId(poll.id);
             }}
           >
-            <div className="flex items-center  justify-between gap-8">
-              <div className="flex min-w-0 items-center gap-x-4">
+            <div className="flex items-center gap-4">
+              <GroupPollIcon size="sm" />
+              <div className="flex min-w-0 grow items-center gap-x-4">
                 {/* <Checkbox
             className="relative z-20 cursor-default"
             onClick={(e) => {
               e.stopPropagation();
             }}
           /> */}
-                <div className="min-w-0 space-y-1">
-                  <div className="truncate text-sm font-medium">
+                <div className="min-w-0">
+                  <div className="truncate">
                     <Link
-                      className="hover:underline focus:underline"
+                      className="font-medium hover:underline focus:underline"
                       href={`/poll/${poll.id}`}
                     >
                       {poll.title}
                     </Link>
-                  </div>
-                  <div className="text-muted-foreground text-sm">
-                    <Trans
-                      i18nKey="createdTime"
-                      values={{
-                        relativeTime: dayjs(poll.createdAt).fromNow(),
-                      }}
-                    />
                   </div>
                 </div>
               </div>

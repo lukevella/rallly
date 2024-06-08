@@ -12,6 +12,7 @@ import {
   AppCardIcon,
   AppCardName,
   GroupPollIcon,
+  GroupPollIconFrame,
 } from "@/app/[locale]/(admin)/app-card";
 import { Params } from "@/app/[locale]/types";
 import {
@@ -20,7 +21,6 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { SquircleClipPath } from "@/app/components/squircle";
 import { getTranslation } from "@/app/i18n";
 
 export default async function Page({ params }: { params: Params }) {
@@ -34,25 +34,26 @@ export default async function Page({ params }: { params: Params }) {
       </PageHeader>
       <PageContent>
         <div className="flex flex-wrap gap-4">
-          <SquircleClipPath />
           <AppCard>
             <AppCardContent>
               <AppCardIcon>
-                <GroupPollIcon />
+                <GroupPollIcon size="lg" />
               </AppCardIcon>
-              <AppCardName>
-                <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
-              </AppCardName>
-              <AppCardDescription>
-                <Trans
-                  t={t}
-                  i18nKey="groupPollDescription"
-                  defaults="Share your availability with a group of people and find the best time to meet."
-                />
-              </AppCardDescription>
+              <div>
+                <AppCardName>
+                  <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
+                </AppCardName>
+                <AppCardDescription>
+                  <Trans
+                    t={t}
+                    i18nKey="groupPollDescription"
+                    defaults="Share your availability with a group of people and find the best time to meet."
+                  />
+                </AppCardDescription>
+              </div>
             </AppCardContent>
             <AppCardFooter>
-              <Button asChild>
+              <Button variant="primary" asChild>
                 <Link href="/new">
                   <Icon>
                     <PlusIcon />
@@ -67,6 +68,7 @@ export default async function Page({ params }: { params: Params }) {
     </PageContainer>
   );
 }
+
 export async function generateMetadata({
   params,
 }: {
@@ -74,8 +76,6 @@ export async function generateMetadata({
 }) {
   const { t } = await getTranslation(params.locale);
   return {
-    title: t("home", {
-      defaultValue: "Home",
-    }),
+    title: t("home"),
   };
 }

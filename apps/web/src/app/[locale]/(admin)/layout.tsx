@@ -4,6 +4,7 @@ import React from "react";
 import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
+import { SquircleClipPath } from "@/app/components/squircle";
 
 export default async function Layout({
   children,
@@ -12,6 +13,7 @@ export default async function Layout({
 }) {
   return (
     <div className="flex flex-col bg-gray-100 pb-16 sm:pb-0">
+      <SquircleClipPath />
       <div
         className={cn(
           "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-5 overflow-y-auto px-6 py-5 sm:flex",

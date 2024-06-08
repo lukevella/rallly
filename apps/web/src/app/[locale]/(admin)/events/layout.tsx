@@ -47,3 +47,14 @@ export default async function Layout({
     </div>
   );
 }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { t } = await getTranslation(params.locale);
+  return {
+    title: t("events"),
+  };
+}

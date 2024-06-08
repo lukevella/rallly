@@ -14,7 +14,7 @@ export function AppCard({
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-between rounded-xl border bg-gray-50 p-4 shadow-sm ring-1 ring-inset ring-white/75 sm:w-80",
+        "flex w-full flex-col justify-between rounded-xl border bg-white p-4 shadow-sm ring-1 ring-inset ring-white/75 sm:w-80",
         className,
       )}
     >
@@ -24,23 +24,30 @@ export function AppCard({
 }
 
 export function AppCardContent({ children }: { children?: React.ReactNode }) {
-  return (
-    <div className="flex flex-col items-center pt-2.5 text-center">
-      {children}
-    </div>
-  );
+  return <div className="">{children}</div>;
 }
 
-export function GroupPollIcon() {
+export function GroupPollIcon({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   return (
     <Squircle className="bg-purple-200 p-px">
       <Squircle className="bg-purple-50 p-1">
         <Squircle
           className={cn(
-            "inline-flex size-10 items-center justify-center bg-purple-600 text-purple-100",
+            "inline-flex items-center justify-center bg-purple-600 text-purple-50",
+            {
+              "size-8": size === "sm",
+              "size-9": size === "md",
+              "size-10": size === "lg",
+            },
           )}
         >
-          <BarChart2Icon className="size-6" />
+          <BarChart2Icon
+            className={cn({
+              "size-4": size === "sm",
+              "size-5": size === "md",
+              "size-6": size === "lg",
+            })}
+          />
         </Squircle>
       </Squircle>
     </Squircle>
@@ -55,19 +62,13 @@ export function AppCardIcon({
   className?: string;
 }) {
   return (
-    <div className="relative mb-4 inline-flex size-12 items-center justify-center">
-      <Squircle className="bg-purple-200 p-px">
-        <Squircle className="bg-purple-50 p-1">
-          <Squircle
-            className={cn(
-              "inline-flex size-10 items-center justify-center bg-purple-600 text-purple-100",
-              className,
-            )}
-          >
-            {children}
-          </Squircle>
-        </Squircle>
-      </Squircle>
+    <div
+      className={cn(
+        "relative mb-4 inline-flex size-12 items-center justify-center",
+        className,
+      )}
+    >
+      {children}
     </div>
   );
 }
@@ -90,7 +91,7 @@ export function AppCardDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("text-muted-foreground mt-2 text-sm", className)}>
+    <p className={cn("text-muted-foreground mt-1 text-sm", className)}>
       {children}
     </p>
   );
@@ -103,5 +104,9 @@ export function AppCardFooter({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("mt-8 grid gap-2.5", className)}>{children}</div>;
+  return (
+    <div className={cn("mt-6 grid gap-2.5 border-t pt-4", className)}>
+      {children}
+    </div>
+  );
 }
