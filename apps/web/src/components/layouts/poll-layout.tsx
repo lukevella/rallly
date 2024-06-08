@@ -4,11 +4,9 @@ import { Icon } from "@rallly/ui/icon";
 import {
   ArrowLeftIcon,
   ArrowUpRight,
-  ListIcon,
   LogInIcon,
   LogOutIcon,
   ShieldCloseIcon,
-  XIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
