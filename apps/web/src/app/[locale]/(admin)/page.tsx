@@ -12,7 +12,6 @@ import {
   AppCardIcon,
   AppCardName,
   GroupPollIcon,
-  GroupPollIconFrame,
 } from "@/app/[locale]/(admin)/app-card";
 import { Params } from "@/app/[locale]/types";
 import {
