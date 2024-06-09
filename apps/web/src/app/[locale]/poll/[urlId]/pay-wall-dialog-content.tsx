@@ -116,8 +116,8 @@ export function PayWallDialogContent({
                 </h3>
                 <p className="text-muted-foreground mt-0.5 text-pretty text-sm">
                   <Trans
-                    i18nKey="keepPollsIndefinitely"
-                    defaults="Polls will not be auto-deleted due to inactivity."
+                    i18nKey="keepPollsIndefinitelyDescription"
+                    defaults="Inactive polls will not be auto-deleted."
                   />
                 </p>
               </div>
