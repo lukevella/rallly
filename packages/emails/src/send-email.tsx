@@ -44,10 +44,6 @@ type EmailClientConfig = {
    */
   openPreviews?: boolean;
   /**
-   * Whether to send emails to the test server
-   */
-  useTestServer: boolean;
-  /**
    * Email provider config
    */
   provider: EmailProviderConfig;
@@ -129,13 +125,6 @@ export class EmailClient {
   private get transport() {
     if (this.cachedTransport) {
       // Reuse the transport if it exists
-      return this.cachedTransport;
-    }
-
-    if (this.config.useTestServer) {
-      this.cachedTransport = createTransport({
-        port: 4025,
-      });
       return this.cachedTransport;
     }
 

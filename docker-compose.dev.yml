@@ -15,23 +15,6 @@ services:
       timeout: 5s
       retries: 5
 
-  rallly_selfhosted:
-    build:
-      args:
-        - SELF_HOSTED=true
-      context: .
-      dockerfile: ./apps/web/Dockerfile
-    restart: always
-    depends_on:
-      rallly_db:
-        condition: service_healthy
-    ports:
-      - 3000:3000
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@rallly_db:5450/rallly
-    env_file:
-      - .env
-
 volumes:
   db-data:
     driver: local

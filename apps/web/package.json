@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:test": "NODE_ENV=test next dev --port 3002",
     "build": "next build",
     "build:test": "dotenv -e .env.test -- next build",
     "analyze": "cross-env ANALYZE=true next build",
@@ -12,7 +13,7 @@
     "lint:tsc": "tsc --noEmit",
     "i18n:scan": "i18next-scanner --config i18next-scanner.config.js",
     "prettier": "prettier --write ./src",
-    "test:e2e": "playwright test",
+    "test:integration": "playwright test",
     "test:unit": "vitest run",
     "test": "yarn test:unit && yarn test:e2e",
     "test:codegen": "playwright codegen http://localhost:3000",
