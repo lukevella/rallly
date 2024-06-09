@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: Params }) {
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <Trans t={t} i18nKey="more" defaults="More" />
+          <Trans t={t} i18nKey="menu" defaults="Menu" />
         </PageTitle>
       </PageHeader>
       <PageContent className="px-2">
