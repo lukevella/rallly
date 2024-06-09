@@ -252,5 +252,14 @@
   "deleteAccountInstruction": "Vahvista sähköpostiosoitteesi tilisi poistamiseksi",
   "emailMismatch": "Sähköposti ei vastaa tilin sähköpostia",
   "dangerZone": "Vaaravyöhyke",
-  "dangerZoneAccount": "Poista tilisi pysyvästi. Tätä toimintoa ei voi peruuttaa."
+  "dangerZoneAccount": "Poista tilisi pysyvästi. Tätä toimintoa ei voi peruuttaa.",
+  "upgradePromptTitle": "Vaihda Pro-sopimukseen",
+  "upgradeOverlaySubtitle3": "Avaa nämä ominaisuudet vaihtamalla Pro-sopimukseen.",
+  "finalizeFeatureDescription": "Valitse lopullinen päivämäärä tapahtumallesi ja ilmoita osallistujille.",
+  "duplicateTitle": "Luo kopio",
+  "duplicateFeatureDescription": "Käytä kyselyn päivämääriä ja asetuksia uudelleen uudessa kyselyssä.",
+  "advancedSettingsTitle": "Edistyneet asetukset",
+  "advancedSettingsDescription": "Piilota osallistujat, piilota pisteet, vaadi osallistujan sähköpostiosoite.",
+  "keepPollsIndefinitely": "Säilytä kyselyt pysyvästi",
+  "keepPollsIndefinitelyDescription": "Passiivisia kyselyitä ei poisteta automaattisesti."
 }
