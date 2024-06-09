@@ -252,5 +252,13 @@
   "deleteAccountInstruction": "Potwierdź swój adres e-mail, aby usunąć konto",
   "emailMismatch": "Adres e-mail nie jest zgodny z adresem e-mail konta",
   "dangerZone": "Strefa zagrożenia",
-  "dangerZoneAccount": "Trwale usuń swoje konto. Tego działania nie można cofnąć."
+  "dangerZoneAccount": "Trwale usuń swoje konto. Tego działania nie można cofnąć.",
+  "upgradePromptTitle": "Ulepsz do Pro",
+  "upgradeOverlaySubtitle3": "Odblokuj te funkcje, przechodząc na plan Pro.",
+  "finalizeFeatureDescription": "Wybierz ostateczną datę Twojego wydarzenia i powiadom uczestników.",
+  "duplicateTitle": "Duplikuj",
+  "duplicateFeatureDescription": "Ponownie wykorzystaj daty i ustawienia ankiety, aby utworzyć nową.",
+  "advancedSettingsTitle": "Ustawienia zaawansowane",
+  "advancedSettingsDescription": "Ukryj uczestników, ukryj wyniki, wymagaj adresu e-mail uczestnika.",
+  "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność"
 }
