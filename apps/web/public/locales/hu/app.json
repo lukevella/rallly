@@ -260,5 +260,6 @@
   "duplicateFeatureDescription": "Másold le a dátumokat és beállítások egy új szavazás létrehozásához.",
   "advancedSettingsTitle": "Speciális beállítások",
   "advancedSettingsDescription": "Résztvevők elrejtése, eredmény elrejtése, kötelező email megadása.",
-  "keepPollsIndefinitely": "Szavazások megőrzése örökre"
+  "keepPollsIndefinitely": "Szavazások megőrzése örökre",
+  "keepPollsIndefinitelyDescription": "Inaktív szavazások nem fognak automatikusan törlődni."
 }
