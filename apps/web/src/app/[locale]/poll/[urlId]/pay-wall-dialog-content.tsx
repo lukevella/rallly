@@ -4,7 +4,6 @@ import { DialogClose, DialogContent } from "@rallly/ui/dialog";
 import { m } from "framer-motion";
 import {
   CalendarCheck2Icon,
-  CalendarCheckIcon,
   ClockIcon,
   CopyIcon,
   Settings2Icon,
@@ -34,7 +33,7 @@ export function PayWallDialogContent({
             }}
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
-            className=""
+            className="text-center"
             aria-hidden="true"
           >
             <Badge size="lg" variant="primary">
@@ -42,12 +41,12 @@ export function PayWallDialogContent({
             </Badge>
           </m.div>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-8">
           <div>
-            <h2 className=" text-xl font-bold">
+            <h2 className=" text-center text-xl font-bold">
               <Trans defaults="Upgrade to Pro" i18nKey="upgradePromptTitle" />
             </h2>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+            <p className="text-muted-foreground text-center text-sm leading-relaxed">
               <Trans
                 i18nKey="upgradeOverlaySubtitle3"
                 defaults="Unlock these feature by upgrading to a Pro plan."
