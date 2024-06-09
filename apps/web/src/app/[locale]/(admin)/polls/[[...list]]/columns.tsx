@@ -50,14 +50,15 @@ export const usePollColumns = () => {
             <div>
               <Link
                 href={`/invite/${row.original.id}`}
-                className="group absolute inset-0 flex items-center gap-x-2.5"
-              />
-              <span className="flex items-center gap-x-2.5 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
-                <Icon>
-                  <BarChart2Icon />
-                </Icon>
-                {row.original.title}
-              </span>
+                className="focus:text-primary group absolute inset-0 flex items-center gap-x-2.5 px-4 group-hover:underline"
+              >
+                <span className="flex items-center gap-x-2.5 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
+                  <Icon>
+                    <BarChart2Icon />
+                  </Icon>
+                  {row.original.title}
+                </span>
+              </Link>
             </div>
           );
         },
@@ -131,8 +132,11 @@ export const usePollColumns = () => {
           }
 
           return (
-            <Button size="sm" variant="link" asChild>
-              <Link href={`/poll/${row.original.id}`}>
+            <Button size="sm" asChild>
+              <Link
+                className="focus:bg-gray-200"
+                href={`/poll/${row.original.id}`}
+              >
                 <Trans i18nKey="manage" />
               </Link>
             </Button>
