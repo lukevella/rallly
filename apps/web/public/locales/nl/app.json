@@ -252,5 +252,14 @@
   "deleteAccountInstruction": "Bevestig je e-mailadres om je account te verwijderen",
   "emailMismatch": "E-mail komt niet overeen met het e-mailadres van het account",
   "dangerZone": "Gevarenzone",
-  "dangerZoneAccount": "Verwijder je account permanent. Deze actie kan niet ongedaan worden gemaakt."
+  "dangerZoneAccount": "Verwijder je account permanent. Deze actie kan niet ongedaan worden gemaakt.",
+  "upgradePromptTitle": "Upgrade naar Pro",
+  "upgradeOverlaySubtitle3": "Ontgrendel deze functies door te upgraden naar een Pro-abonnement.",
+  "finalizeFeatureDescription": "Selecteer een uiteindelijke datum voor je evenement en stel de deelnemers op de hoogte.",
+  "duplicateTitle": "Dupliceren",
+  "duplicateFeatureDescription": "Hergebruik data en instellingen van een poll om een nieuwe te maken.",
+  "advancedSettingsTitle": "Geavanceerde instellingen",
+  "advancedSettingsDescription": "Verberg deelnemers, verberg scores, vereis e-mailadres van deelnemer.",
+  "keepPollsIndefinitely": "Polls voor onbepaalde tijd behouden",
+  "keepPollsIndefinitelyDescription": "Inactieve polls worden niet automatisch verwijderd."
 }
