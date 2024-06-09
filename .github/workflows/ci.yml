@@ -40,7 +40,7 @@ jobs:
   type-check:
     name: Type check
     runs-on: ubuntu-latest
-    needs: changes
+    needs: [changes, setup]
     if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
     steps:
       - uses: actions/checkout@v4
@@ -53,8 +53,7 @@ jobs:
   linting:
     name: Linting
     runs-on: ubuntu-latest
-
-    needs: changes
+    needs: [changes, setup]
     if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
     steps:
       - uses: actions/checkout@v4
@@ -66,7 +65,7 @@ jobs:
 
   unit-tests:
     name: Unit tests
-    needs: changes
+    needs: [setup, changes]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -79,7 +78,7 @@ jobs:
   # Label of the container job
   integration-tests:
     name: Integration tests
-    needs: changes
+    needs: [setup, changes]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -98,7 +97,7 @@ jobs:
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5450/rallly" >> $GITHUB_ENV
 
       - name: Create production build
-        run: yarn turbo build --filter=@rallly/web
+        run: yarn turbo build:test --filter=@rallly/web
 
       - name: Generate Prisma Client
         run: yarn db:generate
@@ -108,7 +107,7 @@ jobs:
           yarn dx
 
       - name: Run tests
-        run: yarn test
+        run: yarn test:integration
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}
