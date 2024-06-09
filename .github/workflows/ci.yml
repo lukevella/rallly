@@ -27,6 +27,15 @@ jobs:
           filters: |
             has-files-requiring-all-checks:
               - "!(**.md|.github)"
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/yarn-install
 
   type-check:
     name: Type check
@@ -36,17 +45,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
+
       - name: Check types
         run: yarn lint:tsc
 
   linting:
     name: Linting
     runs-on: ubuntu-latest
+
     needs: changes
     if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/yarn-install
+
       - name: Check linting rules
         run: yarn lint
 
@@ -57,8 +70,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - uses: ./.github/actions/yarn-install
+
       - name: Run tests
         run: yarn test:unit
 
@@ -70,6 +83,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/yarn-install
 
       - name: Install system dependencies
         run: |
@@ -77,9 +91,6 @@ jobs:
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
 
       - name: Set environment variables
         run: |
