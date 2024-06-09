@@ -23,11 +23,15 @@ const config: PlaywrightTestConfig = {
   },
   testDir: "./tests",
   webServer: ci
-    ? undefined
+    ? {
+        command: `NODE_ENV=test next start --port ${port}`,
+        url: baseURL,
+        reuseExistingServer: false,
+      }
     : {
         command: `NODE_ENV=test next dev --port ${port}`,
         url: baseURL,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: true,
       },
   reporter: [
     [ci ? "github" : "list"],

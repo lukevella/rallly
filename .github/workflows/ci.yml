@@ -85,6 +85,12 @@ jobs:
         run: |
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5450/rallly" >> $GITHUB_ENV
 
+      - name: Create production build
+        run: yarn turbo build --filter=@rallly/web
+
+      - name: Generate Prisma Client
+        run: yarn db:generate
+
       - name: Set up database
         run: |
           yarn dx
