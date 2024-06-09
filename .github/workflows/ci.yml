@@ -35,7 +35,7 @@ jobs:
     if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./github/actions/setup-node
+      - uses: ./.github/actions/setup-node
       - name: Check types
         run: yarn lint:tsc
 
@@ -46,7 +46,7 @@ jobs:
     if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./github/actions/setup-node
+      - uses: ./.github/actions/setup-node
       - name: Check linting rules
         run: yarn lint
 
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./github/actions/setup-node
+      - uses: ./.github/actions/setup-node
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Run tests
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./github/actions/setup-node
+      - uses: ./.github/actions/setup-node
 
       - name: Install system dependencies
         run: |
