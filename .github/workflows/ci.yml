@@ -64,7 +64,7 @@ jobs:
 
   # Label of the container job
   integration-tests:
-    name: Run tests
+    name: Integration tests
     needs: changes
     runs-on: ubuntu-latest
     steps:
