@@ -27,20 +27,11 @@ jobs:
           filters: |
             has-files-requiring-all-checks:
               - "!(**.md|.github)"
-  setup:
-    name: Setup
-    runs-on: ubuntu-latest
-    needs: changes
-    if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/yarn-install
 
   type-check:
     name: Type check
     runs-on: ubuntu-latest
-    needs: [changes, setup]
+    needs: changes
     if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +44,7 @@ jobs:
   linting:
     name: Linting
     runs-on: ubuntu-latest
-    needs: [changes, setup]
+    needs: changes
     if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
     steps:
       - uses: actions/checkout@v4
@@ -65,7 +56,7 @@ jobs:
 
   unit-tests:
     name: Unit tests
-    needs: [setup, changes]
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +69,7 @@ jobs:
   # Label of the container job
   integration-tests:
     name: Integration tests
-    needs: [setup, changes]
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
