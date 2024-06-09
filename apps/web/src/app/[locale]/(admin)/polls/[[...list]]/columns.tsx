@@ -44,22 +44,18 @@ export const usePollColumns = () => {
       columnHelper.accessor("title", {
         id: "title",
         header: t("title"),
-        size: 1000,
+        size: 250,
         cell: ({ row }) => {
           return (
-            <div>
-              <Link
-                href={`/invite/${row.original.id}`}
-                className="focus:text-primary group absolute inset-0 flex items-center gap-x-2.5 px-4 group-hover:underline"
-              >
-                <span className="flex items-center gap-x-2.5 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
-                  <Icon>
-                    <BarChart2Icon />
-                  </Icon>
-                  {row.original.title}
-                </span>
-              </Link>
-            </div>
+            <Link
+              href={`/invite/${row.original.id}`}
+              className="focus:text-primary group inset-0 flex h-9 min-w-0 items-center gap-x-2.5 whitespace-nowrap rounded-md px-2.5 text-sm font-medium hover:underline focus:bg-gray-200"
+            >
+              <Icon>
+                <BarChart2Icon />
+              </Icon>
+              <span className="min-w-0 truncate">{row.original.title}</span>
+            </Link>
           );
         },
       }),
