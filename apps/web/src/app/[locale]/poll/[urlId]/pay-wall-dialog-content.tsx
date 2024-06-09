@@ -2,6 +2,12 @@ import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { DialogClose, DialogContent } from "@rallly/ui/dialog";
 import { m } from "framer-motion";
+import {
+  CalendarCheck2Icon,
+  ClockIcon,
+  CopyIcon,
+  Settings2Icon,
+} from "lucide-react";
 import Link from "next/link";
 
 import { Trans } from "@/components/trans";
@@ -30,34 +36,104 @@ export function PayWallDialogContent({
             className="text-center"
             aria-hidden="true"
           >
-            <Badge variant="primary">
+            <Badge size="lg" variant="primary">
               <Trans i18nKey="planPro" />
             </Badge>
           </m.div>
-          <div className="mt-4 space-y-6">
-            <div className="space-y-2 text-center">
-              <h2 className="text-center text-xl font-bold">
-                <Trans defaults="Pro Feature" i18nKey="proFeature" />
-              </h2>
-              <p className="text-muted-foreground mx-auto max-w-xs text-center text-sm leading-relaxed">
-                <Trans
-                  i18nKey="upgradeOverlaySubtitle2"
-                  defaults="Please upgrade to a paid plan to use this feature. This is how we keep the lights on :)"
-                />
-              </p>
-            </div>
-            <div className="grid gap-2.5">
-              <Button variant="primary" asChild>
-                <Link href="/settings/billing">
-                  <Trans i18nKey="upgrade" defaults="Upgrade" />
-                </Link>
+        </div>
+        <div className="space-y-8">
+          <div>
+            <h2 className=" text-center text-xl font-bold">
+              <Trans defaults="Upgrade to Pro" i18nKey="upgradePromptTitle" />
+            </h2>
+            <p className="text-muted-foreground text-center text-sm leading-relaxed">
+              <Trans
+                i18nKey="upgradeOverlaySubtitle3"
+                defaults="Unlock these feature by upgrading to a Pro plan."
+              />
+            </p>
+          </div>
+          <ul className="grid grid-cols-1 gap-4 text-left">
+            <li className="flex items-start gap-x-3">
+              <div>
+                <CalendarCheck2Icon className="size-5 text-purple-600" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold">
+                  <Trans defaults="Finalize" i18nKey="finalize" />
+                </h3>
+                <p className="text-muted-foreground mt-0.5 text-pretty text-sm">
+                  <Trans
+                    i18nKey="finalizeFeatureDescription"
+                    defaults="Select a final date for your event and notify participants."
+                  />
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-x-3">
+              <CopyIcon className="size-5 text-purple-600" />
+              <div>
+                <h3 className="text-sm font-semibold">
+                  <Trans defaults="Duplicate" i18nKey="duplicateTitle" />
+                </h3>
+                <p className="text-muted-foreground mt-0.5 text-pretty text-sm">
+                  <Trans
+                    i18nKey="duplicateFeatureDescription"
+                    defaults="Reuse dates and settings of a poll to create a new one."
+                  />
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-x-3">
+              <div>
+                <Settings2Icon className="size-5 text-purple-600" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold">
+                  <Trans
+                    defaults="Advanced Settings"
+                    i18nKey="advancedSettingsTitle"
+                  />
+                </h3>
+                <p className="text-muted-foreground mt-0.5 text-pretty text-sm">
+                  <Trans
+                    i18nKey="advancedSettingsDescription"
+                    defaults="Hide participants, hide scores, require participant email address."
+                  />
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-x-3">
+              <div>
+                <ClockIcon className="size-5 text-purple-600" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold">
+                  <Trans
+                    defaults="Keep Polls Indefinitely"
+                    i18nKey="keepPollsIndefinitely"
+                  />
+                </h3>
+                <p className="text-muted-foreground mt-0.5 text-pretty text-sm">
+                  <Trans
+                    i18nKey="keepPollsIndefinitely"
+                    defaults="Polls will not be auto-deleted due to inactivity."
+                  />
+                </p>
+              </div>
+            </li>
+          </ul>
+          <div className="grid gap-2.5">
+            <Button variant="primary" asChild>
+              <Link href="/settings/billing">
+                <Trans i18nKey="upgrade" defaults="Upgrade" />
+              </Link>
+            </Button>
+            <DialogClose asChild>
+              <Button>
+                <Trans i18nKey="notToday" defaults="Not Today" />
               </Button>
-              <DialogClose asChild>
-                <Button>
-                  <Trans i18nKey="notToday" defaults="Not Today" />
-                </Button>
-              </DialogClose>
-            </div>
+            </DialogClose>
           </div>
         </div>
       </DialogContent>
