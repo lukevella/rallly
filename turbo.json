@@ -27,6 +27,9 @@
     "test:unit": {
       "cache": true
     },
+    "test:integration": {
+      "cache": true
+    },
     "db:generate": {
       "dependsOn": ["^db:generate"]
     },

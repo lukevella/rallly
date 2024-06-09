@@ -1,0 +1,8 @@
+name: "Yarn Install"
+description: "Runs yarn install with --frozen-lockfile"
+runs:
+  using: "composite"
+  steps:
+    - name: Run yarn install
+      run: yarn install --frozen-lockfile
+      shell: bash

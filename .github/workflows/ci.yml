@@ -7,76 +7,98 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  linting:
-    name: Linting
+  changes:
+    name: Check for changes
     runs-on: ubuntu-latest
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    permissions:
+      pull-requests: read
+    outputs:
+      has-files-requiring-all-checks: ${{ steps.filter.outputs.has-files-requiring-all-checks }}
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-
-      - name: Setup node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
         with:
-          node-version: 18
-          cache: yarn
+          filters: |
+            has-files-requiring-all-checks:
+              - "!(**.md|.github)"
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Check linting rules
-        run: yarn lint
+  type-check:
+    name: Type check
+    runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/yarn-install
 
       - name: Check types
         run: yarn lint:tsc
 
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.has-files-requiring-all-checks == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/yarn-install
+
+      - name: Check linting rules
+        run: yarn lint
+
+  unit-tests:
+    name: Unit tests
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/yarn-install
+
+      - name: Run tests
+        run: yarn test:unit
+
   # Label of the container job
   integration-tests:
-    name: Run tests
-    # Containers must run in Linux based operating systems
+    name: Integration tests
+    needs: changes
     runs-on: ubuntu-latest
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
-      # Downloads a copy of the code in your repository before running CI tests
-      - name: Check out repository code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/yarn-install
 
       - name: Install system dependencies
         run: |
           sudo apt-get update
 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Set environment variables
-        run: |
-          echo "DATABASE_URL=postgresql://postgres:password@localhost:5450/db" >> $GITHUB_ENV
-
-      - name: Run db
-        run: |
-          docker pull postgres:14.2
-          docker run -d -p 5450:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=rallly postgres:14.2
-          yarn wait-on --timeout 60000 tcp:localhost:5450
-
-      - name: Deploy migrations
-        run: yarn db:setup
-
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium
 
+      - name: Set environment variables
+        run: |
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5450/rallly" >> $GITHUB_ENV
+
+      - name: Create production build
+        run: yarn turbo build:test --filter=@rallly/web
+
+      - name: Generate Prisma Client
+        run: yarn db:generate
+
+      - name: Set up database
+        run: |
+          yarn dx
+
       - name: Run tests
-        run: yarn test
+        run: yarn test:integration
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}

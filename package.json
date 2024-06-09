@@ -3,6 +3,7 @@
   "private": true,
   "version": "3.7.0",
   "scripts": {
+    "dx": "run-s docker:up db:setup",
     "dev": "dotenv -c development -- turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
     "dev:landing": "dotenv -c development turbo dev --filter=@rallly/landing",
@@ -14,12 +15,11 @@
     "db:generate": "turbo db:generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "db:up": "docker compose up -d rallly_db && wait-on --timeout 60000 tcp:localhost:5450",
     "db:seed": "yarn workspace @rallly/database db:seed",
-    "db:down": "docker compose down --volumes --remove-orphans rallly_db",
+    "docker:up": "docker compose -f docker-compose.dev.yml up -d && wait-on --timeout 60000 tcp:localhost:5450",
+    "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "db:setup": "run-s db:deploy db:generate db:seed",
-    "dx": "run-s db:up db:setup",
-    "test": "turbo build:test && turbo test",
+    "test:integration": "turbo test:integration",
     "test:unit": "turbo test:unit",
     "lint": "turbo lint",
     "i18n:scan": "turbo i18n:scan",
@@ -35,6 +35,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@prisma/client": "^5.3.1",
     "@sentry/nextjs": "^7.77.0",
     "framer-motion": "^10.16.4",
     "next": "^14.0.4",
@@ -44,6 +45,7 @@
     "zod": "^3.22.3"
   },
   "devDependencies": {
+    "tailwindcss": "^3.4.4",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "dotenv-cli": "^7.1.0",
