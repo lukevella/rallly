@@ -11,6 +11,9 @@
   },
   "main": "./index.ts",
   "types": "./index.ts",
+  "dependencies": {
+    "@prisma/client": "^5.3.1"
+  },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@rallly/tsconfig": "*",
