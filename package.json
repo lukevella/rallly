@@ -20,7 +20,6 @@
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "db:setup": "run-s db:deploy db:generate db:seed",
     "test:integration": "turbo test:integration",
-    "test": "turbo build:test && turbo test",
     "test:unit": "turbo test:unit",
     "lint": "turbo lint",
     "i18n:scan": "turbo i18n:scan",
