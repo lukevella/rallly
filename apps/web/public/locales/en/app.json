@@ -252,5 +252,13 @@
   "deleteAccountInstruction": "Please confirm your email address to delete your account",
   "emailMismatch": "Email does not match the account email",
   "dangerZone": "Danger Zone",
-  "dangerZoneAccount": "Delete your account permanently. This action cannot be undone."
+  "dangerZoneAccount": "Delete your account permanently. This action cannot be undone.",
+  "upgradePromptTitle": "Upgrade to Pro",
+  "upgradeOverlaySubtitle3": "Unlock these feature by upgrading to a Pro plan.",
+  "finalizeFeatureDescription": "Select a final date for your event and notify participants.",
+  "duplicateTitle": "Duplicate",
+  "duplicateFeatureDescription": "Reuse dates and settings of a poll to create a new one.",
+  "advancedSettingsTitle": "Advanced Settings",
+  "advancedSettingsDescription": "Hide participants, hide scores, require participant email address.",
+  "keepPollsIndefinitely": "Keep Polls Indefinitely"
 }
