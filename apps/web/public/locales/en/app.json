@@ -260,5 +260,6 @@
   "duplicateFeatureDescription": "Reuse dates and settings of a poll to create a new one.",
   "advancedSettingsTitle": "Advanced Settings",
   "advancedSettingsDescription": "Hide participants, hide scores, require participant email address.",
-  "keepPollsIndefinitely": "Keep Polls Indefinitely"
+  "keepPollsIndefinitely": "Keep Polls Indefinitely",
+  "keepPollsIndefinitelyDescription": "Inactive polls will not be auto-deleted."
 }
