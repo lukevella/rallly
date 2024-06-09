@@ -245,5 +245,21 @@
   "timeShownIn": "Tider vises i {timeZone}",
   "pollStatusPausedDescription": "Stemmer kan ikke indsendes eller redigeres på dette tidspunkt",
   "eventHostTitle": "Administrer adgang",
-  "eventHostDescription": "Du er opretteren af denne afstemning"
+  "eventHostDescription": "Du er opretteren af denne afstemning",
+  "deleteAccount": "Slet konto",
+  "deleteAccountDialogTitle": "Slet konto",
+  "deleteAccountDialogDescription": "Er du helt sikker på, at du vil slette din konto?",
+  "deleteAccountInstruction": "Bekræft venligst din e-mailadresse for at slette din konto",
+  "emailMismatch": "E-mail matcher ikke konto-mailen",
+  "dangerZone": "Farezone",
+  "dangerZoneAccount": "Slet din konto permanent. Denne handling kan ikke fortrydes.",
+  "upgradePromptTitle": "Opgrader til Pro",
+  "upgradeOverlaySubtitle3": "Lås op for disse funktioner ved at opgradere til Pro-planen.",
+  "finalizeFeatureDescription": "Vælg en slut-dato for din begivenhed og underret deltagerne.",
+  "duplicateTitle": "Dupliker",
+  "duplicateFeatureDescription": "Genbrug datoer og indstillinger for en afstemning for at oprette en ny.",
+  "advancedSettingsTitle": "Avancerede indstillinger",
+  "advancedSettingsDescription": "Skjul deltagere, resultater og kræv deltagernes e-mailadresser.",
+  "keepPollsIndefinitely": "Behold afstemninger på ubestemt tid",
+  "keepPollsIndefinitelyDescription": "Inaktive afstemninger vil ikke blive slettet automatisk."
 }
