@@ -39,3 +39,7 @@ tsconfig.tsbuildinfo
 
 # Jetbrains IDE
 .idea
+
+# Playwright
+playwright-report
+test-results
