@@ -16,8 +16,8 @@ export const posthog = PostHogClient();
 
 export function posthogApiHandler() {
   try {
-    waitUntil(Promise.all([posthog?.flushAsync()]));
+    waitUntil(Promise.all([posthog?.shutdownAsync()]));
   } catch (error) {
-    console.error('Failed to flush PostHog events:', error);
+    console.error("Failed to flush PostHog events:", error);
   }
 }
