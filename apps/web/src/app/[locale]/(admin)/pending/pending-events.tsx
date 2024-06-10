@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
-import { Checkbox } from "@rallly/ui/checkbox";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import dayjs from "dayjs";

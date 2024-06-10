@@ -6,6 +6,7 @@ import { Button } from "@rallly/ui/button";
 import {
   CalendarIcon,
   HomeIcon,
+  InboxIcon,
   MoreHorizontalIcon,
   PlusIcon,
   Settings2Icon,
@@ -62,9 +63,9 @@ export function MobileNavigation() {
           <PlusIcon className="size-5 text-white" />
         </Link>
       </Button>
-      <MobileNavigationItem href="/settings/preferences">
+      <MobileNavigationItem href="/pending">
         <MobileNavigationIcon>
-          <Settings2Icon />
+          <InboxIcon />
         </MobileNavigationIcon>
       </MobileNavigationItem>
       <MobileNavigationItem href="/menu">

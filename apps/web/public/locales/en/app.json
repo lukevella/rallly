@@ -15,7 +15,6 @@
   "copied": "Copied",
   "createAnAccount": "Create an account",
   "createdBy": "by <b>{name}</b>",
-  "createPoll": "Create poll",
   "delete": "Delete",
   "deleteDate": "Delete date",
   "deletedPoll": "Deleted poll",
@@ -240,7 +239,6 @@
   "pollsListMine": "Mine",
   "pollsListOther": "Other",
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
-  "back": "Back",
   "timeShownIn": "Times shown in {timeZone}",
   "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time",
   "eventHostTitle": "Manage Access",
@@ -265,5 +263,11 @@
   "home": "Home",
   "groupPoll": "Group Poll",
   "groupPollDescription": "Share your availability with a group of people and find the best time to meet.",
-  "create": "Create"
+  "create": "Create",
+  "upcoming": "Upcoming",
+  "pending": "Pending",
+  "past": "Past",
+  "copyLink": "Copy Link",
+  "preview": "Preview",
+  "groupPolls": "Group Polls"
 }

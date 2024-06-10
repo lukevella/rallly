@@ -8,8 +8,10 @@ import {
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
+  CalendarSearchIcon,
   ChevronRightIcon,
   HomeIcon,
+  InboxIcon,
   LifeBuoyIcon,
   LogInIcon,
   PlusIcon,
@@ -77,6 +79,15 @@ export function Sidebar() {
                 icon={CalendarIcon}
               >
                 <Trans i18nKey="events" defaults="Events" />
+              </NavItem>
+            </li>
+            <li>
+              <NavItem
+                current={pathname?.startsWith("/pending")}
+                href="/pending"
+                icon={InboxIcon}
+              >
+                <Trans i18nKey="pending" defaults="Pending" />
               </NavItem>
             </li>
           </ul>

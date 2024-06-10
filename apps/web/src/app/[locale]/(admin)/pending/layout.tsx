@@ -1,3 +1,4 @@
+import { EventPeriodFilter } from "@/app/[locale]/(admin)/events/event-period-filter";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -5,7 +6,6 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { TabMenu, TabMenuItem } from "@/app/components/tab-menu";
 import { getTranslation } from "@/app/i18n";
 
 export default async function Layout({
@@ -23,15 +23,11 @@ export default async function Layout({
           <PageHeader>
             <div className="flex items-center justify-between gap-x-4">
               <PageTitle>
-                {t("events", {
-                  defaultValue: "Events",
+                {t("pending", {
+                  defaultValue: "Pending",
                 })}
               </PageTitle>
-              <TabMenu>
-                <TabMenuItem href="/events">Upcoming</TabMenuItem>
-                <TabMenuItem href="/events/pending">Pending</TabMenuItem>
-                <TabMenuItem href="/events/past">Past</TabMenuItem>
-              </TabMenu>
+              {/* <EventPeriodFilter /> */}
             </div>
           </PageHeader>
           <PageContent>{children}</PageContent>
