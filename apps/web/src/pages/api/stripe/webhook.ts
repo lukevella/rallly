@@ -6,7 +6,8 @@ import { buffer } from "micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
-import { PostHogClient } from "@/app/posthog";
+import { posthog, posthogApiHandler } from "@/app/posthog";
+import { composeApiHandlers } from "@/utils/next";
 
 export const config = {
   api: {
@@ -33,10 +34,7 @@ const metadataSchema = z.object({
   userId: z.string(),
 });
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     res.status(405).end();
     return;
@@ -83,8 +81,6 @@ export default async function handler(
       );
 
       try {
-        const posthog = PostHogClient();
-
         posthog?.capture({
           distinctId: userId,
           event: "upgrade",
@@ -92,7 +88,6 @@ export default async function handler(
             interval: subscription.items.data[0].plan.interval,
           },
         });
-        await posthog?.shutdownAsync();
       } catch (e) {
         Sentry.captureMessage("Failed to track upgrade event");
       }
@@ -149,3 +144,5 @@ export default async function handler(
 
   res.end();
 }
+
+export default composeApiHandlers(stripeApiHandler, posthogApiHandler);
