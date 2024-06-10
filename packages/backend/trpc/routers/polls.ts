@@ -864,9 +864,11 @@ export const polls = router({
           distinctId: ctx.user.id,
           event: "finalize poll",
           properties: {
+            poll_id: poll.id,
+            poll_time_zone: poll.timeZone,
             number_of_participants: poll.participants.length,
             number_of_attendees: attendees.length,
-            dayjs_since_created: dayjs().diff(poll.createdAt, "day"),
+            days_since_created: dayjs().diff(poll.createdAt, "day"),
           },
         });
 
