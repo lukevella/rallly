@@ -28,6 +28,7 @@
       "cache": true
     },
     "test:integration": {
+      "dependsOn": ["@rallly/database#db:generate"],
       "cache": true
     },
     "db:generate": {
