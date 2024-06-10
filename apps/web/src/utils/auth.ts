@@ -224,6 +224,14 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
             await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
 
+          posthog?.identify({
+            distinctId,
+            properties: {
+              name: user.name,
+              email: user.email,
+            },
+          });
+
           posthog?.capture({
             distinctId,
             event: "login",
@@ -231,6 +239,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
               method: account?.provider,
             },
           });
+
           await posthog?.shutdownAsync();
         }
 
