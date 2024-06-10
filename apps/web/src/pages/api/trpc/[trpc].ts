@@ -3,11 +3,12 @@ import { AppRouter, appRouter } from "@rallly/backend/trpc/routers";
 import * as Sentry from "@sentry/nextjs";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-import { PostHogClient } from "@/app/posthog";
+import { posthog, posthogApiHandler } from "@/app/posthog";
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
 import { getServerSession, isEmailBlocked } from "@/utils/auth";
 import { isSelfHosted } from "@/utils/constants";
 import { emailClient } from "@/utils/emails";
+import { composeApiHandlers } from "@/utils/next";
 
 export const config = {
   api: {
@@ -15,10 +16,10 @@ export const config = {
   },
 };
 
-export default createNextApiHandler<AppRouter>({
+const trpcApiHandler = createNextApiHandler<AppRouter>({
   router: appRouter,
   createContext: async (opts) => {
-    return createTRPCContext(opts, {
+    const res = createTRPCContext(opts, {
       async getUser({ req, res }) {
         const session = await getServerSession(req, res);
 
@@ -31,13 +32,15 @@ export default createNextApiHandler<AppRouter>({
           isGuest: session.user.email === null,
         };
       },
-      posthogClient: PostHogClient() || undefined,
+      posthogClient: posthog || undefined,
       emailClient,
       isSelfHosted,
       isEmailBlocked,
       absoluteUrl,
       shortUrl,
     });
+
+    return res;
   },
   onError({ error }) {
     if (error.code === "INTERNAL_SERVER_ERROR") {
@@ -45,3 +48,5 @@ export default createNextApiHandler<AppRouter>({
     }
   },
 });
+
+export default composeApiHandlers(trpcApiHandler, posthogApiHandler);

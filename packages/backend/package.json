@@ -12,7 +12,6 @@
     "@rallly/database": "*",
     "@rallly/emails": "*",
     "@rallly/utils": "*",
-    "@vercel/functions": "^1.0.2",
     "@trpc/server": "^10.13.0",
     "iron-session": "^6.3.1",
     "spacetime": "^7.4.7",

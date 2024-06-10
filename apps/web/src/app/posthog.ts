@@ -1,6 +1,7 @@
+import { waitUntil } from "@vercel/functions";
 import { PostHog } from "posthog-node";
 
-export function PostHogClient() {
+function PostHogClient() {
   if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) return null;
 
   const posthogClient = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
@@ -9,4 +10,10 @@ export function PostHogClient() {
     flushInterval: 0,
   });
   return posthogClient;
+}
+
+export const posthog = PostHogClient();
+
+export function posthogApiHandler() {
+  waitUntil(Promise.all([posthog?.flushAsync()]));
 }
