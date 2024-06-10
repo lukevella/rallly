@@ -28,7 +28,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@rallly_db:5450/rallly
+      - DATABASE_URL=postgres://postgres:postgres@rallly_db/rallly
     env_file:
       - .env
 
