@@ -36,6 +36,7 @@
     "@trpc/client": "^10.13.0",
     "@trpc/next": "^10.13.0",
     "@trpc/react-query": "^10.13.0",
+    "@vercel/functions": "^1.0.2",
     "accept-language-parser": "^1.5.0",
     "autoprefixer": "^10.4.13",
     "class-variance-authority": "^0.7.0",

@@ -1,6 +1,7 @@
 import { EmailClient } from "@rallly/emails";
 import { inferAsyncReturnType, TRPCError } from "@trpc/server";
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
+import type { PostHog } from "posthog-node";
 
 export type GetUserFn = (opts: CreateNextContextOptions) => Promise<{
   id: string;
@@ -12,6 +13,7 @@ export interface TRPCContextParams {
   emailClient: EmailClient;
   isSelfHosted: boolean;
   isEmailBlocked?: (email: string) => boolean;
+  posthogClient?: PostHog;
   /**
    * Takes a relative path and returns an absolute URL to the app
    * @param path

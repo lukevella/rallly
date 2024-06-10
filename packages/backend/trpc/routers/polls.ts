@@ -626,6 +626,7 @@ export const polls = router({
         },
         select: {
           id: true,
+          createdAt: true,
           timeZone: true,
           title: true,
           location: true,
@@ -859,7 +860,23 @@ export const polls = router({
           });
         });
 
-        waitUntil(Promise.all([emailToHost, ...emailsToParticipants]));
+        ctx.posthogClient?.capture({
+          distinctId: ctx.user.id,
+          event: "finalize poll",
+          properties: {
+            number_of_participants: poll.participants.length,
+            number_of_attendees: attendees.length,
+            dayjs_since_created: dayjs().diff(poll.createdAt, "day"),
+          },
+        });
+
+        waitUntil(
+          Promise.all([
+            emailToHost,
+            ...emailsToParticipants,
+            ctx.posthogClient?.flushAsync(),
+          ]),
+        );
       }
     }),
   reopen: possiblyPublicProcedure
