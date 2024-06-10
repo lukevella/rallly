@@ -52,7 +52,7 @@ const TimelineRow = ({
         className="sticky left-0 z-30 bg-white pl-4 pr-4"
       ></th>
       {children}
-      <th className="bg-diagonal-lines -ml-4 w-full min-w-4 border-l" />
+      <th className="w-full min-w-4 border-l"></th>
     </tr>
   );
 };
