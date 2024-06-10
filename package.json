@@ -3,7 +3,6 @@
   "private": true,
   "version": "3.7.0",
   "scripts": {
-    "dx": "run-s docker:up db:setup",
     "dev": "dotenv -c development -- turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
     "dev:landing": "dotenv -c development turbo dev --filter=@rallly/landing",
@@ -15,10 +14,8 @@
     "db:generate": "turbo db:generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "db:seed": "yarn workspace @rallly/database db:seed",
     "docker:up": "docker compose -f docker-compose.dev.yml up -d && wait-on --timeout 60000 tcp:localhost:5450",
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
-    "db:setup": "run-s db:deploy db:generate db:seed",
     "test:integration": "turbo test:integration",
     "test:unit": "turbo test:unit",
     "lint": "turbo lint",

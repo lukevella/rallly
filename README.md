@@ -24,9 +24,11 @@ Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://githu
 
 Check out the [self-hosting docs](https://support.rallly.co/self-hosting) for more information on running your own instance of Rallly.
 
-## Get started
+## Local Installation
 
-1. Clone the repository switch to the project directory
+The following instructions are for running the project locally for development.
+
+1. Clone the repository and switch to the project directory
 
    ```bash
    git clone https://github.com/lukevella/rallly.git
@@ -41,29 +43,34 @@ Check out the [self-hosting docs](https://support.rallly.co/self-hosting) for mo
 
 3. Setup environment variables
 
+   Create a `.env` file by copying `.env.development`. This will be were you can set your [configuration options](https://support.rallly.co/self-hosting/configuration-options).
+
    ```bash
-   cp sample.env .env
+   cp .env.development .env
    ```
 
-   Create a `.env` file by copying `sample.env` then open it and set the required [configuration options](https://support.rallly.co/self-hosting/configuration-options).
+   **Note:** `.env.development` is preconfigured with default values for development. You can leave these as is for local development.
 
-4. Setup the database
+4. Setup database
 
-   If you don't have a postgres database running locally, you can spin up a new database using docker by running:
+   You will need to have [Docker](https://docs.docker.com/get-docker/) installed and running to run the database using the provided docker-compose file.
 
-   ```
-   yarn dx
-   ```
-
-   If you already have a postgres database, you can run the migrations and seed the database by running:
+   To start the database, run:
 
    ```
-   yarn db:setup
+   yarn docker:up
+   ```
+
+   Next run the following command to setup the database:
+
+   ```
+   yarn db:reset
    ```
 
    This will:
 
-   - run migrations to create the database schema
+   - delete the existing database (if it exists)
+   - run migrations to create a new database schema
    - seed the database with test users and random data
 
 5. Start the Next.js server
