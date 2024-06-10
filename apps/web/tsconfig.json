@@ -8,6 +8,12 @@
     },
     "strictNullChecks": true,
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", ".next/types/**/*.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    ".next/types/**/*.ts",
+    "vitest.config.mts",
+  ],
   "exclude": ["node_modules", ".next/**/*"],
 }

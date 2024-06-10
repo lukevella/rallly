@@ -222,5 +222,14 @@
   "deleteAccountInstruction": "Bekräfta din e-postadress för att radera ditt konto",
   "emailMismatch": "E-postadressen matchar inte kontots e-postadress",
   "dangerZone": "Farozon",
-  "dangerZoneAccount": "Radera ditt konto permanent. Denna åtgärd kan inte ångras."
+  "dangerZoneAccount": "Radera ditt konto permanent. Denna åtgärd kan inte ångras.",
+  "upgradePromptTitle": "Uppgradera till Pro",
+  "upgradeOverlaySubtitle3": "Lås upp dessa funktioner genom att uppgradera till ett Pro-abonnemang.",
+  "finalizeFeatureDescription": "Välj ett slutdatum för ditt evenemang och meddela deltagarna.",
+  "duplicateTitle": "Duplicera",
+  "duplicateFeatureDescription": "Återanvänd datum och inställningar för en omröstning för att skapa en ny.",
+  "advancedSettingsTitle": "Avancerade inställningar",
+  "advancedSettingsDescription": "Dölj deltagare, dölj poäng, kräv deltagarens e-postadress.",
+  "keepPollsIndefinitely": "Behåll omröstningar på obestämd tid",
+  "keepPollsIndefinitelyDescription": "Inaktiva omröstningar kommer inte att raderas automatiskt."
 }

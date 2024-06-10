@@ -252,5 +252,14 @@
   "deleteAccountInstruction": "Por favor, confirme seu endereço de e-mail para excluir sua conta",
   "emailMismatch": "O e-mail não corresponde ao e-mail da conta",
   "dangerZone": "Zona de Perigo",
-  "dangerZoneAccount": "Excluir permanentemente sua conta. Esta ação não pode ser desfeita."
+  "dangerZoneAccount": "Excluir permanentemente sua conta. Esta ação não pode ser desfeita.",
+  "upgradePromptTitle": "Atualize para o plano Pro",
+  "upgradeOverlaySubtitle3": "Desbloqueie esses recursos atualizando para um plano Pro.",
+  "finalizeFeatureDescription": "Selecione uma data final para seu evento e notifique os participantes.",
+  "duplicateTitle": "Duplicar",
+  "duplicateFeatureDescription": "Reutilize datas e configurações de uma enquete para criar uma nova.",
+  "advancedSettingsTitle": "Configurações Avançadas",
+  "advancedSettingsDescription": "Oculte participantes, oculte pontuações, exija o endereço de e-mail do participante.",
+  "keepPollsIndefinitely": "Mantenha Enquetes Indefinidamente",
+  "keepPollsIndefinitelyDescription": "Enquetes inativas não serão excluídas automaticamente."
 }

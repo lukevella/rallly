@@ -216,5 +216,7 @@
   "inviteParticipantLinkInfo": "Qualsevol persona amb aquest enllaç podrà votar a la teva enquesta.",
   "pollStatus": "Estat",
   "back": "Torna",
-  "timeShownIn": "Hores mostrades per {timeZone}"
+  "timeShownIn": "Hores mostrades per {timeZone}",
+  "keepPollsIndefinitely": "Mantenir enquestes indefinidament",
+  "keepPollsIndefinitelyDescription": "Les enquestes inactives no s'esborraran automàticament."
 }

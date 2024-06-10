@@ -1,0 +1,19 @@
+name: "Setup Node.js"
+description: "Sets up a consistent Node.js environment"
+inputs:
+  node-version:
+    description: "Node.js version"
+    required: true
+    default: "18"
+  cache:
+    description: "Package manager for caching"
+    required: false
+    default: "yarn"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.cache }}

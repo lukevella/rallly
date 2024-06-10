@@ -245,5 +245,10 @@
   "timeShownIn": "Heures affichées en {timeZone}",
   "pollStatusPausedDescription": "Les votes ne peuvent pas être soumis ou modifiés pour le moment",
   "eventHostTitle": "Accès Gestionnaire",
-  "eventHostDescription": "Vous êtes le créateur de ce sondage"
+  "eventHostDescription": "Vous êtes le créateur de ce sondage",
+  "upgradePromptTitle": "Passer à la version Pro",
+  "upgradeOverlaySubtitle3": "Débloquez ces fonctionnalités en passant à la version Pro.",
+  "duplicateTitle": "Dupliquer",
+  "advancedSettingsTitle": "Paramètres avancés",
+  "keepPollsIndefinitely": "Conserver les sondages indéfiniment"
 }

@@ -252,5 +252,14 @@
   "deleteAccountInstruction": "Kérjük, erősítsd meg email címed a fiókod törléséhez",
   "emailMismatch": "A megadott email nem egyezik a fiók email címével",
   "dangerZone": "Veszélyes terület",
-  "dangerZoneAccount": "Fiók végleges törlése. Ez a művelet nem vonható vissza."
+  "dangerZoneAccount": "Fiók végleges törlése. Ez a művelet nem vonható vissza.",
+  "upgradePromptTitle": "Frissítés Pro-ra",
+  "upgradeOverlaySubtitle3": "Old fel ezeket a funkciókat Pro előfizetéssel.",
+  "finalizeFeatureDescription": "Válassz egy végső dátumot az eseményedhez és értesítsd a résztvevőket.",
+  "duplicateTitle": "Duplikálás",
+  "duplicateFeatureDescription": "Másold le a dátumokat és beállítások egy új szavazás létrehozásához.",
+  "advancedSettingsTitle": "Speciális beállítások",
+  "advancedSettingsDescription": "Résztvevők elrejtése, eredmény elrejtése, kötelező email megadása.",
+  "keepPollsIndefinitely": "Szavazások megőrzése örökre",
+  "keepPollsIndefinitelyDescription": "Inaktív szavazások nem fognak automatikusan törlődni."
 }

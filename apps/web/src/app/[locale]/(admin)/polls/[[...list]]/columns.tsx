@@ -44,21 +44,18 @@ export const usePollColumns = () => {
       columnHelper.accessor("title", {
         id: "title",
         header: t("title"),
-        size: 1000,
+        size: 400,
         cell: ({ row }) => {
           return (
-            <div>
-              <Link
-                href={`/invite/${row.original.id}`}
-                className="group absolute inset-0 flex items-center gap-x-2.5"
-              />
-              <span className="flex items-center gap-x-2.5 truncate whitespace-nowrap text-sm font-medium group-hover:underline">
-                <Icon>
-                  <BarChart2Icon />
-                </Icon>
-                {row.original.title}
-              </span>
-            </div>
+            <Link
+              href={`/invite/${row.original.id}`}
+              className="focus:text-primary group inset-0 flex h-9 min-w-0 items-center gap-x-2.5 whitespace-nowrap rounded-md px-2.5 text-sm font-medium hover:underline focus:bg-gray-200"
+            >
+              <Icon>
+                <BarChart2Icon />
+              </Icon>
+              <span className="min-w-0 truncate">{row.original.title}</span>
+            </Link>
           );
         },
       }),
@@ -131,8 +128,11 @@ export const usePollColumns = () => {
           }
 
           return (
-            <Button size="sm" variant="link" asChild>
-              <Link href={`/poll/${row.original.id}`}>
+            <Button size="sm" asChild>
+              <Link
+                className="focus:bg-gray-200"
+                href={`/poll/${row.original.id}`}
+              >
                 <Trans i18nKey="manage" />
               </Link>
             </Button>
