@@ -90,12 +90,11 @@ jobs:
       - name: Create production build
         run: yarn turbo build:test --filter=@rallly/web
 
-      - name: Generate Prisma Client
-        run: yarn db:generate
+      - name: Start services
+        run: yarn docker:up
 
-      - name: Set up database
-        run: |
-          yarn dx
+      - name: Setup database
+        run: yarn db:deploy
 
       - name: Run tests
         run: yarn test:integration
