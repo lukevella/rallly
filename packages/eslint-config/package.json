@@ -6,7 +6,7 @@
   "devDependencies": {
     "eslint": "^8.52.0",
     "eslint-config-next": "^14.0.1",
-    "eslint-config-turbo": "^1.10.16",
+    "eslint-config-turbo": "^2.0.3",
     "eslint-import-resolver-typescript": "^2.7.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2",
