@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDotEnv": [".env"],
-  "pipeline": {
+  "globalDependencies": [".env"],
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
@@ -31,7 +31,7 @@
       "cache": true
     },
     "db:generate": {
-      "dependsOn": ["^db:generate"]
+      "cache": true
     },
     "lint": {
       "outputs": []
@@ -40,7 +40,7 @@
       "outputs": []
     },
     "dev": {
-      "dotEnv": [".env.development"],
+      "dependsOn": ["@rallly/database#db:generate"],
       "cache": false
     },
     "start": {
