@@ -860,6 +860,11 @@ export const polls = router({
         });
 
         waitUntil(Promise.all([emailToHost, ...emailsToParticipants]));
+
+        ctx.posthogClient?.capture({
+          distinctId: ctx.user.id,
+          event: "finalize poll",
+        });
       }
     }),
   reopen: possiblyPublicProcedure

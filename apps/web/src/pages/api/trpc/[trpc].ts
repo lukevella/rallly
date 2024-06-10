@@ -3,6 +3,7 @@ import { AppRouter, appRouter } from "@rallly/backend/trpc/routers";
 import * as Sentry from "@sentry/nextjs";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
+import { PostHogClient } from "@/app/posthog";
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
 import { getServerSession, isEmailBlocked } from "@/utils/auth";
 import { isSelfHosted } from "@/utils/constants";
@@ -30,6 +31,7 @@ export default createNextApiHandler<AppRouter>({
           isGuest: session.user.email === null,
         };
       },
+      posthogClient: PostHogClient() || undefined,
       emailClient,
       isSelfHosted,
       isEmailBlocked,
