@@ -1,6 +1,6 @@
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { PlusIcon } from "lucide-react";
+import { HomeIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -18,6 +18,7 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
@@ -25,56 +26,52 @@ import { getTranslation } from "@/app/i18n";
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <Trans t={t} i18nKey="home" defaults="Home" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent>
-        <div className="flex flex-wrap gap-4">
-          <AppCard>
-            <AppCardContent>
+    <div>
+      <PageContainer>
+        <PageHeader>
+          <div className="flex items-center gap-x-3">
+            <PageIcon>
+              <HomeIcon />
+            </PageIcon>
+            <PageTitle>
+              <Trans t={t} i18nKey="home" defaults="Home" />
+            </PageTitle>
+          </div>
+        </PageHeader>
+        <PageContent>
+          <div className="mb-6 flex flex-wrap gap-4">
+            <AppCard>
               <AppCardIcon>
                 <GroupPollIcon size="lg" />
               </AppCardIcon>
-              <div>
-                <AppCardName>
-                  <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
-                </AppCardName>
-                <AppCardDescription>
-                  <Trans
-                    t={t}
-                    i18nKey="groupPollDescription"
-                    defaults="Share your availability with a group of people and find the best time to meet."
-                  />
-                </AppCardDescription>
-              </div>
-            </AppCardContent>
-            <AppCardFooter>
-              <Button variant="primary" asChild>
-                <Link href="/new">
-                  <Icon>
-                    <PlusIcon />
-                  </Icon>
-                  <Trans t={t} i18nKey="create" defaults="Create" />
-                </Link>
-              </Button>
-            </AppCardFooter>
-          </AppCard>
-        </div>
-      </PageContent>
-    </PageContainer>
+              <AppCardContent>
+                <div>
+                  <AppCardName>
+                    <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
+                  </AppCardName>
+                  <AppCardDescription>
+                    <Trans
+                      t={t}
+                      i18nKey="groupPollDescription"
+                      defaults="Share your availability with a group of people and find the best time to meet."
+                    />
+                  </AppCardDescription>
+                </div>
+              </AppCardContent>
+              <AppCardFooter>
+                <Button asChild>
+                  <Link href="/new">
+                    <Icon>
+                      <PlusIcon />
+                    </Icon>
+                    <Trans t={t} i18nKey="create" defaults="Create" />
+                  </Link>
+                </Button>
+              </AppCardFooter>
+            </AppCard>
+          </div>
+        </PageContent>
+      </PageContainer>
+    </div>
   );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
-  return {
-    title: t("home"),
-  };
 }

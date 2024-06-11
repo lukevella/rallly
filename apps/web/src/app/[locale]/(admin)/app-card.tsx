@@ -14,7 +14,7 @@ export function AppCard({
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-between rounded-xl border bg-white p-4 shadow-sm ring-1 ring-inset ring-white/75 sm:w-80",
+        "flex w-full flex-col justify-between rounded-lg border bg-gray-50 p-4 shadow-sm ring-1 ring-inset ring-white/50 sm:w-80",
         className,
       )}
     >
@@ -35,7 +35,7 @@ export function GroupPollIcon({
   return (
     <Squircle
       className={cn(
-        "inline-flex shrink-0 items-center justify-center bg-purple-600 text-purple-50",
+        "inline-flex items-center justify-center bg-purple-600 text-purple-50",
         {
           "size-6": size === "xs",
           "size-8": size === "sm",
@@ -81,7 +81,7 @@ export function AppCardName({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <h2 className={cn("text-lg font-semibold", className)}>{children}</h2>;
+  return <h2 className={cn("font-semibold", className)}>{children}</h2>;
 }
 
 export function AppCardDescription({
@@ -105,9 +105,5 @@ export function AppCardFooter({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <div className={cn("mt-6 grid gap-2.5 border-t pt-4", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("mt-6 grid gap-2.5", className)}>{children}</div>;
 }

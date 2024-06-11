@@ -25,7 +25,7 @@ async function createPollsForUser(userId: string) {
         },
         data: {
           id: faker.random.alpha(10),
-          title: `${faker.animal.cat()} meetup - ${faker.date.month()}`,
+          title: `${faker.animal.cat()} Meetup ${faker.date.month()}`,
           description: faker.lorem.paragraph(),
           location: faker.address.streetAddress(),
           deadline: faker.date.future(),

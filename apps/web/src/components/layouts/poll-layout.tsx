@@ -51,7 +51,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="bg-gray-100">
       <div className="sticky top-0 z-30 flex flex-col justify-between gap-x-4 gap-y-2.5 border-b bg-gray-100 p-3 sm:flex-row lg:items-center lg:px-5">
-        <div className="flex min-w-0 items-center gap-x-4">
+        <div className="flex min-w-0 items-center gap-x-2.5">
           {pathname === pollLink ? (
             <Button
               variant="ghost"
@@ -72,8 +72,8 @@ const Layout = ({ children }: React.PropsWithChildren) => {
               </Link>
             </Button>
           )}
-          <GroupPollIcon size="sm" />
-          <h1 className="truncate font-medium">{poll.title}</h1>
+          <GroupPollIcon size="xs" />
+          <h1 className="truncate text-sm font-medium">{poll.title}</h1>
         </div>
         <div>
           <AdminControls />

@@ -23,7 +23,7 @@ export default async function Layout({
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-center gap-x-2.5">
+        <div className="flex items-center gap-x-3">
           <PageTitle>
             {t("groupPolls", {
               defaultValue: "Group Polls",

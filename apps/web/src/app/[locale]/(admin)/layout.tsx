@@ -16,7 +16,7 @@ export default async function Layout({
       <SquircleClipPath />
       <div
         className={cn(
-          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-5 overflow-y-auto px-6 py-5 sm:flex",
+          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-4 overflow-y-auto p-6 py-5 sm:flex",
         )}
       >
         <div>
@@ -24,7 +24,9 @@ export default async function Layout({
         </div>
         <Sidebar />
       </div>
-      <div className={cn("grow space-y-4 sm:ml-72")}>{children}</div>
+      <div className={cn("grow space-y-4 p-3 sm:ml-72 sm:p-4 lg:pr-8")}>
+        <div>{children}</div>
+      </div>
       <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md sm:hidden">
         <MobileNavigation />
       </div>

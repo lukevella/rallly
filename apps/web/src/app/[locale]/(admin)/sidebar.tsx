@@ -5,13 +5,12 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   ArrowUpRightIcon,
+  BarChart2Icon,
   BlocksIcon,
   BookMarkedIcon,
   CalendarIcon,
-  CalendarSearchIcon,
   ChevronRightIcon,
   HomeIcon,
-  InboxIcon,
   LifeBuoyIcon,
   LogInIcon,
   PlusIcon,
@@ -48,8 +47,8 @@ function NavItem({
       target={target}
       className={cn(
         current
-          ? "text-primary bg-gray-200"
-          : "text-muted-foreground  border-transparent hover:bg-gray-200 focus:bg-gray-200",
+          ? "text-primary"
+          : "text-muted-foreground  border-transparent focus:bg-gray-200",
         "group flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
@@ -74,6 +73,15 @@ export function Sidebar() {
             </li>
             <li>
               <NavItem
+                current={pathname?.startsWith("/pages")}
+                href="/pages"
+                icon={BarChart2Icon}
+              >
+                <Trans i18nKey="polls" defaults="Polls" />
+              </NavItem>
+            </li>
+            <li>
+              <NavItem
                 current={pathname?.startsWith("/events")}
                 href="/events"
                 icon={CalendarIcon}
@@ -81,27 +89,18 @@ export function Sidebar() {
                 <Trans i18nKey="events" defaults="Events" />
               </NavItem>
             </li>
-            <li>
-              <NavItem
-                current={pathname?.startsWith("/pending")}
-                href="/pending"
-                icon={InboxIcon}
-              >
-                <Trans i18nKey="pending" defaults="Pending" />
-              </NavItem>
-            </li>
           </ul>
         </li>
-        {/* <li className="-mx-2 space-y-1">
+        <li className="-mx-2 space-y-1">
           <Button variant="primary" className="w-full rounded-full" asChild>
             <Link href="/new">
               <Icon>
                 <PlusIcon />
               </Icon>
-              <Trans i18nKey="newPoll" defaults="New Poll" />
+              <Trans i18nKey="create" defaults="create" />
             </Link>
           </Button>
-        </li> */}
+        </li>
         <li>
           <div className="text-xs font-semibold leading-6 text-gray-400">
             <Trans i18nKey="comingSoon" defaults="Coming Soon" />

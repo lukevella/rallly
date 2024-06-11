@@ -1,12 +1,12 @@
 import { mergeRouters, router } from "../trpc";
 import { auth } from "./auth";
-import { events } from "./events";
 import { polls } from "./polls";
+import { scheduledEvents } from "./scheduled-events";
 import { user } from "./user";
 
 export const appRouter = mergeRouters(
   router({
-    events,
+    scheduledEvents,
     auth,
     polls,
     user,

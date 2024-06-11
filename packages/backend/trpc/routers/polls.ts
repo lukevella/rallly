@@ -43,6 +43,59 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
+  list: possiblyPublicProcedure.query(async ({ ctx }) => {
+    return await prisma.poll.findMany({
+      where: {
+        userId: ctx.user.id,
+        deleted: false,
+        status: "live",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        title: true,
+        location: true,
+        timeZone: true,
+        createdAt: true,
+        adminUrlId: true,
+        participantUrlId: true,
+        closed: true,
+        status: true,
+        hideParticipants: true,
+        disableComments: true,
+        hideScores: true,
+        requireParticipantEmail: true,
+        options: {
+          select: {
+            id: true,
+            startTime: true,
+            duration: true,
+          },
+          orderBy: {
+            startTime: "asc",
+          },
+        },
+        user: true,
+        userId: true,
+        deleted: true,
+        event: {
+          select: {
+            start: true,
+            duration: true,
+            optionId: true,
+          },
+        },
+        watchers: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+  }),
+
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
     .input(

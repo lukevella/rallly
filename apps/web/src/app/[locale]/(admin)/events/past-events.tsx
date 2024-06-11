@@ -12,8 +12,10 @@ import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/utils/trpc/client";
 
-export function UpcomingEvents() {
-  const { data } = trpc.scheduledEvents.list.useQuery({ period: "upcoming" });
+export function PastEvents() {
+  const { data } = trpc.scheduledEvents.list.useQuery({
+    period: "past",
+  });
 
   if (!data) {
     return <Spinner />;
@@ -27,13 +29,13 @@ export function UpcomingEvents() {
         </EmptyStateIcon>
         <EmptyStateTitle>
           <Trans
-            i18nKey="upcomingEventsEmptyStateTitle"
-            defaults="No Upcoming Events"
+            i18nKey="pastEventsEmptyStateTitle"
+            defaults="No Past Events"
           />
         </EmptyStateTitle>
         <EmptyStateDescription>
           <Trans
-            i18nKey="upcomingEventsEmptyStateDescription"
+            i18nKey="pastEventsEmptyStateDescription"
             defaults="When you schedule events, they will appear here."
           />
         </EmptyStateDescription>

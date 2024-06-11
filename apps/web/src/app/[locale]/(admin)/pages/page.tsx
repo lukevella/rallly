@@ -1,6 +1,6 @@
-import { CalendarIcon } from "lucide-react";
+import { BarChart2Icon } from "lucide-react";
 
-import { UserScheduledEvents } from "@/app/[locale]/(admin)/events/user-scheduled-events";
+import { PendingEventsTable } from "@/app/[locale]/(admin)/pages/pending-events-table";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -11,24 +11,29 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page({
+  params,
+}: {
+  params: Params;
+  children?: React.ReactNode;
+}) {
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
       <PageHeader>
         <div className="flex items-center gap-x-3">
           <PageIcon>
-            <CalendarIcon />
+            <BarChart2Icon />
           </PageIcon>
           <PageTitle>
-            {t("events", {
-              defaultValue: "Events",
+            {t("polls", {
+              defaultValue: "Polls",
             })}
           </PageTitle>
         </div>
       </PageHeader>
       <PageContent>
-        <UserScheduledEvents />
+        <PendingEventsTable />
       </PageContent>
     </PageContainer>
   );
@@ -41,8 +46,8 @@ export async function generateMetadata({
 }) {
   const { t } = await getTranslation(params.locale);
   return {
-    title: t("events", {
-      defaultValue: "Events",
+    title: t("polls", {
+      defaultValue: "Polls",
     }),
   };
 }

@@ -2,9 +2,6 @@
   "extends": "@rallly/tsconfig/next.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {
-      "@rallly/ui/*": ["./src/*"],
-    },
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],

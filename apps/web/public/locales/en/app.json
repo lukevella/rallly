@@ -265,9 +265,11 @@
   "groupPollDescription": "Share your availability with a group of people and find the best time to meet.",
   "create": "Create",
   "upcoming": "Upcoming",
-  "pending": "Pending",
   "past": "Past",
   "copyLink": "Copy Link",
-  "preview": "Preview",
-  "groupPolls": "Group Polls"
+  "groupPolls": "Group Polls",
+  "upcomingEventsEmptyStateTitle": "No Upcoming Events",
+  "upcomingEventsEmptyStateDescription": "When you schedule events, they will appear here.",
+  "pastEventsEmptyStateTitle": "No Past Events",
+  "pastEventsEmptyStateDescription": "When you schedule events, they will appear here."
 }

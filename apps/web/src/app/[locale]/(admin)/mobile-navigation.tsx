@@ -4,12 +4,11 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
+  BarChart2Icon,
   CalendarIcon,
   HomeIcon,
-  InboxIcon,
-  MoreHorizontalIcon,
+  MenuIcon,
   PlusIcon,
-  Settings2Icon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -53,9 +52,9 @@ export function MobileNavigation() {
           <HomeIcon />
         </MobileNavigationIcon>
       </MobileNavigationItem>
-      <MobileNavigationItem href="/events">
+      <MobileNavigationItem href="/pages">
         <MobileNavigationIcon>
-          <CalendarIcon />
+          <BarChart2Icon />
         </MobileNavigationIcon>
       </MobileNavigationItem>
       <Button asChild variant="primary">
@@ -63,14 +62,14 @@ export function MobileNavigation() {
           <PlusIcon className="size-5 text-white" />
         </Link>
       </Button>
-      <MobileNavigationItem href="/pending">
+      <MobileNavigationItem href="/events">
         <MobileNavigationIcon>
-          <InboxIcon />
+          <CalendarIcon />
         </MobileNavigationIcon>
       </MobileNavigationItem>
       <MobileNavigationItem href="/menu">
         <MobileNavigationIcon>
-          <MoreHorizontalIcon />
+          <MenuIcon />
         </MobileNavigationIcon>
       </MobileNavigationItem>
     </div>

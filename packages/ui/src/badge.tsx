@@ -16,7 +16,7 @@ const badgeVariants = cva(
         green: "border-transparent bg-green-500 text-green-50",
       },
       size: {
-        md: "h-5 min-w-5 text-xs px-1.5",
+        md: "h-6 min-w-5 text-xs px-2",
         lg: "h-7 text-sm min-w-7 px-2.5",
       },
     },

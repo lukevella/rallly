@@ -27,14 +27,14 @@ module.exports = {
         secondary: {
           background: colors.gray["100"],
           DEFAULT: colors.gray["100"],
-          foreground: colors.gray["800"],
+          foreground: colors.gray["700"],
         },
         gray: colors.gray,
         border: colors.gray["200"],
         input: {
           DEFAULT: colors.gray["200"],
           background: colors.white,
-          foreground: colors.gray["800"],
+          foreground: colors.gray["700"],
         },
         ring: {
           DEFAULT: colors.gray["300"],
@@ -45,7 +45,7 @@ module.exports = {
           foreground: colors.rose["50"],
         },
         background: colors.white,
-        foreground: colors.gray["800"],
+        foreground: colors.gray["700"],
         accent: {
           DEFAULT: colors.gray["100"],
         },
@@ -56,12 +56,12 @@ module.exports = {
         },
         popover: {
           DEFAULT: colors.white,
-          foreground: colors.gray["800"],
+          foreground: colors.gray["700"],
         },
         card: {
           DEFAULT: colors.white,
           background: colors.white,
-          foreground: colors.gray["800"],
+          foreground: colors.gray["700"],
         },
       },
       keyframes: {
