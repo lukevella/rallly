@@ -260,5 +260,6 @@
   "duplicateFeatureDescription": "Ponownie wykorzystaj daty i ustawienia ankiety, aby utworzyć nową.",
   "advancedSettingsTitle": "Ustawienia zaawansowane",
   "advancedSettingsDescription": "Ukryj uczestników, ukryj wyniki, wymagaj adresu e-mail uczestnika.",
-  "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność"
+  "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność",
+  "keepPollsIndefinitelyDescription": "Nieaktywne ankiety nie zostaną automatycznie usunięte."
 }
