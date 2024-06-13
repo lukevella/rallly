@@ -234,6 +234,7 @@
   "autoTimeZoneHelp": "Activa esta opción para ajustar automáticamente la hora del evento a la zona horaria local de cada participante.",
   "commentsDisabled": "Los comentarios han sido deshabilitados",
   "allParticipants": "Todos los participantes",
+  "host": "Anfitrión",
   "pollStatus": "Estado",
   "pollsListAll": "Todos",
   "back": "Volver",
