@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: Params }) {
           <BackButton />
           <GroupPollIcon size="xs" />
           <div className="flex items-baseline gap-x-8">
-            <h1 className="text-sm font-medium">
+            <h1 className="text-sm font-semibold">
               <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
             </h1>
           </div>

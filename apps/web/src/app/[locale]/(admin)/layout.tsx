@@ -12,11 +12,11 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto flex max-w-[1650px] flex-col pb-16 sm:pb-0">
+    <div className="mx-auto flex max-w-[1650px] flex-col pb-16 md:pb-0">
       <SquircleClipPath />
       <div
         className={cn(
-          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-4 overflow-y-auto p-6 py-5 sm:flex",
+          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-4 overflow-y-auto p-6 py-5 md:flex",
         )}
       >
         <div>
@@ -24,10 +24,10 @@ export default async function Layout({
         </div>
         <Sidebar />
       </div>
-      <div className={cn("grow space-y-4 p-3 sm:ml-72 sm:p-4 lg:pr-8")}>
-        <div>{children}</div>
+      <div className={cn("grow space-y-4 p-3 md:ml-72 md:p-4 lg:pb-8 lg:pr-8")}>
+        {children}
       </div>
-      <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md sm:hidden">
+      <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md md:hidden">
         <MobileNavigation />
       </div>
     </div>

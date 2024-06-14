@@ -50,11 +50,11 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("mb-4 sm:mt-2", className)}>{children}</div>;
+  return <div className={cn("mb-4 md:mt-2", className)}>{children}</div>;
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {
-  return <div className="space-y-4 sm:space-y-6">{children}</div>;
+  return <div className="space-y-4 md:space-y-6">{children}</div>;
 }
 
 export function PageSectionTitle({ children }: { children?: React.ReactNode }) {
@@ -68,5 +68,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("sm:grow", className)}>{children}</div>;
+  return <div className={cn("md:grow", className)}>{children}</div>;
 }

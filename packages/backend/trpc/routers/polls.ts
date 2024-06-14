@@ -63,37 +63,12 @@ export const polls = router({
           location: true,
           timeZone: true,
           createdAt: true,
-          adminUrlId: true,
-          participantUrlId: true,
-          closed: true,
           status: true,
-          hideParticipants: true,
-          disableComments: true,
-          hideScores: true,
-          requireParticipantEmail: true,
-          options: {
+          userId: true,
+          participants: {
             select: {
               id: true,
-              startTime: true,
-              duration: true,
-            },
-            orderBy: {
-              startTime: "asc",
-            },
-          },
-          user: true,
-          userId: true,
-          deleted: true,
-          event: {
-            select: {
-              start: true,
-              duration: true,
-              optionId: true,
-            },
-          },
-          watchers: {
-            select: {
-              userId: true,
+              name: true,
             },
           },
         },

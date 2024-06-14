@@ -23,7 +23,7 @@ const RadioCardsItem = React.forwardRef<
   <Primitive.Item
     ref={ref}
     className={cn(
-      "text-muted-foreground data-[state=checked]:text-primary data-[state=checked]:border-primary h-8 rounded-full border px-3 text-sm font-medium",
+      "text-muted-foreground data-[state=checked]:text-primary data-[state=checked]:border-primary data-[state=unchecked]:hover:text-foreground h-8 rounded-full border px-3 text-sm font-medium",
       className,
     )}
     {...props}

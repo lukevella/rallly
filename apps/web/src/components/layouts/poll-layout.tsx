@@ -70,7 +70,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
             </Button>
           )}
           <GroupPollIcon size="xs" />
-          <h1 className="truncate text-sm font-medium">{poll.title}</h1>
+          <h1 className="truncate text-sm font-semibold">{poll.title}</h1>
         </div>
         <div>
           <AdminControls />
