@@ -160,7 +160,7 @@ function PollsListView({ data }: { data: PendingEvent[] }) {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {table.getRowModel().rows.map((row) => (
         <div
           className={cn("overflow-hidden rounded-lg border bg-white p-1")}
