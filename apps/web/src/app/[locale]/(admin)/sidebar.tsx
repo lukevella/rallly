@@ -6,8 +6,6 @@ import { Icon } from "@rallly/ui/icon";
 import {
   ArrowUpRightIcon,
   BarChart2Icon,
-  BlocksIcon,
-  BookMarkedIcon,
   CalendarIcon,
   ChevronRightIcon,
   HomeIcon,
@@ -16,7 +14,6 @@ import {
   PlusIcon,
   Settings2Icon,
   SparklesIcon,
-  UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -73,8 +70,8 @@ export function Sidebar() {
             </li>
             <li>
               <NavItem
-                current={pathname?.startsWith("/pages")}
-                href="/pages"
+                current={pathname?.startsWith("/polls")}
+                href="/polls"
                 icon={BarChart2Icon}
               >
                 <Trans i18nKey="polls" defaults="Polls" />
@@ -100,24 +97,6 @@ export function Sidebar() {
               <Trans i18nKey="create" defaults="create" />
             </Link>
           </Button>
-        </li>
-        <li>
-          <div className="text-xs font-semibold leading-6 text-gray-400">
-            <Trans i18nKey="comingSoon" defaults="Coming Soon" />
-          </div>
-          <ul role="list" className="-mx-2 mt-2 space-y-1">
-            <li className="pointer-events-none grid gap-1 opacity-50">
-              <NavItem href="/b" icon={BookMarkedIcon}>
-                <Trans i18nKey="registrations" defaults="Registrations" />
-              </NavItem>
-              <NavItem href="/contacts" icon={UsersIcon}>
-                <Trans i18nKey="contacts" defaults="Contacts" />
-              </NavItem>
-              <NavItem href="/integrations" icon={BlocksIcon}>
-                <Trans i18nKey="integrations" defaults="Integrations" />
-              </NavItem>
-            </li>
-          </ul>
         </li>
         <li className="mt-auto">
           <ul role="list" className="-mx-2 space-y-1">

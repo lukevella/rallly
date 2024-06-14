@@ -1,6 +1,6 @@
 import { BarChart2Icon } from "lucide-react";
 
-import { UserPolls } from "@/app/[locale]/(admin)/pages/user-polls";
+import { UserPolls } from "@/app/[locale]/(admin)/polls/user-polls";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,

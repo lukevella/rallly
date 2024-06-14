@@ -34,7 +34,7 @@ async function createPollsForUser(userId: string) {
               id: userId,
             },
           },
-          timeZone: duration !== 0 ? "America/New_York" : undefined,
+          timeZone: duration !== 0 ? "Europe/London" : undefined,
           options: {
             create: Array.from({ length: numberOfOptions }).map(() => {
               const startTime = cursor.toDate();

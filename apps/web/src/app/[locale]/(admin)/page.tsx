@@ -1,6 +1,7 @@
 import { Button } from "@rallly/ui/button";
+import { Card, CardContent } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
-import { HomeIcon, PlusIcon } from "lucide-react";
+import { HomeIcon, InfinityIcon, PlusIcon, SlashIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -13,6 +14,7 @@ import {
   AppCardName,
   GroupPollIcon,
 } from "@/app/[locale]/(admin)/app-card";
+import Dashboard from "@/app/[locale]/(admin)/dashboard";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -22,6 +24,8 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
+import { CurrentUserAvatar } from "@/components/user";
+import { Plan } from "@/contexts/plan";
 
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
@@ -39,66 +43,7 @@ export default async function Page({ params }: { params: Params }) {
           </div>
         </PageHeader>
         <PageContent>
-          <div className="grid gap-4 lg:grid-cols-2">
-            <AppCard>
-              <AppCardIcon>
-                <GroupPollIcon size="lg" />
-              </AppCardIcon>
-              <AppCardContent>
-                <div>
-                  <AppCardName>
-                    <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
-                  </AppCardName>
-                  <AppCardDescription>
-                    <Trans
-                      t={t}
-                      i18nKey="groupPollDescription"
-                      defaults="Share your availability with a group of people and find the best time to meet."
-                    />
-                  </AppCardDescription>
-                </div>
-              </AppCardContent>
-              <AppCardFooter>
-                <Button asChild>
-                  <Link href="/new">
-                    <Icon>
-                      <PlusIcon />
-                    </Icon>
-                    <Trans t={t} i18nKey="create" defaults="Create" />
-                  </Link>
-                </Button>
-              </AppCardFooter>
-            </AppCard>
-            <AppCard>
-              <AppCardIcon>
-                <GroupPollIcon size="lg" />
-              </AppCardIcon>
-              <AppCardContent>
-                <div>
-                  <AppCardName>
-                    <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
-                  </AppCardName>
-                  <AppCardDescription>
-                    <Trans
-                      t={t}
-                      i18nKey="groupPollDescription"
-                      defaults="Share your availability with a group of people and find the best time to meet."
-                    />
-                  </AppCardDescription>
-                </div>
-              </AppCardContent>
-              <AppCardFooter>
-                <Button asChild>
-                  <Link href="/new">
-                    <Icon>
-                      <PlusIcon />
-                    </Icon>
-                    <Trans t={t} i18nKey="create" defaults="Create" />
-                  </Link>
-                </Button>
-              </AppCardFooter>
-            </AppCard>
-          </div>
+          <Dashboard />
         </PageContent>
       </PageContainer>
     </div>

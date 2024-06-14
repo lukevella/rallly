@@ -52,7 +52,7 @@ export function MobileNavigation() {
           <HomeIcon />
         </MobileNavigationIcon>
       </MobileNavigationItem>
-      <MobileNavigationItem href="/pages">
+      <MobileNavigationItem href="/polls">
         <MobileNavigationIcon>
           <BarChart2Icon />
         </MobileNavigationIcon>

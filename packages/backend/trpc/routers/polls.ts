@@ -2,9 +2,6 @@ import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import toArray from "dayjs/plugin/toArray";
-import utc from "dayjs/plugin/utc";
 import * as ics from "ics";
 import { z } from "zod";
 
@@ -18,10 +15,6 @@ import {
 } from "../trpc";
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
-
-dayjs.extend(toArray);
-dayjs.extend(timezone);
-dayjs.extend(utc);
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {
   const res = await prisma.poll.findUnique({

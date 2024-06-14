@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { z } from "zod";
 
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
-import { PendingEvent } from "@/app/[locale]/(admin)/pages/columns";
+import { PendingEvent } from "@/app/[locale]/(admin)/polls/columns";
 import {
   EmptyState,
   EmptyStateDescription,

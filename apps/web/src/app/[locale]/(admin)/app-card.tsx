@@ -35,7 +35,7 @@ export function GroupPollIcon({
   return (
     <Squircle
       className={cn(
-        "inline-flex items-center justify-center bg-purple-500 text-purple-50",
+        "inline-flex items-center justify-center bg-gradient-to-br from-purple-500 to-violet-500 text-purple-100",
         {
           "size-6": size === "xs",
           "size-8": size === "sm",
@@ -92,7 +92,12 @@ export function AppCardDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("text-muted-foreground mt-1 text-sm", className)}>
+    <p
+      className={cn(
+        "text-muted-foreground mt-1 text-sm leading-relaxed",
+        className,
+      )}
+    >
       {children}
     </p>
   );
@@ -105,5 +110,5 @@ export function AppCardFooter({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("mt-6 grid gap-2.5", className)}>{children}</div>;
+  return <div className={cn("mt-6 border-t pt-3", className)}>{children}</div>;
 }
