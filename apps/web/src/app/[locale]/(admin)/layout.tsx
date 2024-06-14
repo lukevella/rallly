@@ -12,7 +12,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto flex max-w-[1650px] flex-col bg-gray-100 pb-16 sm:pb-0">
+    <div className="mx-auto flex max-w-[1650px] flex-col pb-16 sm:pb-0">
       <SquircleClipPath />
       <div
         className={cn(

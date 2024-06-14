@@ -1,6 +1,6 @@
 import { BarChart2Icon } from "lucide-react";
 
-import { PendingEventsTable } from "@/app/[locale]/(admin)/pages/pending-events-table";
+import { UserPolls } from "@/app/[locale]/(admin)/pages/user-polls";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -33,7 +33,7 @@ export default async function Page({
         </div>
       </PageHeader>
       <PageContent>
-        <PendingEventsTable />
+        <UserPolls />
       </PageContent>
     </PageContainer>
   );

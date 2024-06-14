@@ -1,3 +1,4 @@
+import { PollStatus } from "@prisma/client";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
@@ -16,10 +17,9 @@ import { useUser } from "@/components/user-provider";
 
 export type PendingEvent = {
   id: string;
-  paused: boolean;
+  status: PollStatus;
   title: string;
   createdAt: Date;
-  participants: { name: string }[];
   userId: string;
   user: {
     name: string;

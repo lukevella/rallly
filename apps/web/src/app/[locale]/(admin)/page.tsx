@@ -104,3 +104,16 @@ export default async function Page({ params }: { params: Params }) {
     </div>
   );
 }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { t } = await getTranslation(params.locale);
+  return {
+    title: t("home", {
+      defaultValue: "Home",
+    }),
+  };
+}
