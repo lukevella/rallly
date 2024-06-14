@@ -24,7 +24,7 @@ export default async function Layout({
         </div>
         <Sidebar />
       </div>
-      <div className={cn("grow space-y-4 p-3 sm:ml-72 sm:p-4 lg:px-8")}>
+      <div className={cn("grow space-y-4 p-3 sm:ml-72 sm:p-4 lg:pr-8")}>
         <div>{children}</div>
       </div>
       <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md sm:hidden">

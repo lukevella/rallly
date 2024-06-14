@@ -90,10 +90,10 @@ function PollsListView({ data }: { data: PendingEvent[] }) {
   }
 
   return (
-    <div className="-mx-3 divide-y overflow-hidden border-y bg-white sm:rounded-lg sm:border-x sm:shadow-sm">
+    <div className="-mx-3 divide-y overflow-hidden border-y bg-white sm:mx-0 sm:rounded-lg sm:border-x sm:shadow-sm">
       {table.getRowModel().rows.map((row) => (
         <div
-          className="relative p-5 focus-within:bg-gray-50"
+          className="relative p-4 focus-within:bg-gray-50"
           key={row.id}
           data-state={row.getIsSelected() && "selected"}
         >
