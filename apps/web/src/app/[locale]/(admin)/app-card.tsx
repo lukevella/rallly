@@ -14,7 +14,7 @@ export function AppCard({
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-between rounded-lg border bg-white p-4 shadow-sm ring-1 ring-inset ring-white/50 sm:w-80",
+        "flex w-full flex-col justify-between rounded-lg border bg-white p-4 shadow-sm ring-1 ring-inset ring-white/50",
         className,
       )}
     >
@@ -35,7 +35,7 @@ export function GroupPollIcon({
   return (
     <Squircle
       className={cn(
-        "inline-flex items-center justify-center bg-purple-600 text-purple-50",
+        "inline-flex items-center justify-center bg-purple-500 text-purple-50",
         {
           "size-6": size === "xs",
           "size-8": size === "sm",

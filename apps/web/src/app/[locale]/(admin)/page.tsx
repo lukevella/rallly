@@ -39,7 +39,36 @@ export default async function Page({ params }: { params: Params }) {
           </div>
         </PageHeader>
         <PageContent>
-          <div className="mb-6 flex flex-wrap gap-4">
+          <div className="grid gap-4 lg:grid-cols-2">
+            <AppCard>
+              <AppCardIcon>
+                <GroupPollIcon size="lg" />
+              </AppCardIcon>
+              <AppCardContent>
+                <div>
+                  <AppCardName>
+                    <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
+                  </AppCardName>
+                  <AppCardDescription>
+                    <Trans
+                      t={t}
+                      i18nKey="groupPollDescription"
+                      defaults="Share your availability with a group of people and find the best time to meet."
+                    />
+                  </AppCardDescription>
+                </div>
+              </AppCardContent>
+              <AppCardFooter>
+                <Button asChild>
+                  <Link href="/new">
+                    <Icon>
+                      <PlusIcon />
+                    </Icon>
+                    <Trans t={t} i18nKey="create" defaults="Create" />
+                  </Link>
+                </Button>
+              </AppCardFooter>
+            </AppCard>
             <AppCard>
               <AppCardIcon>
                 <GroupPollIcon size="lg" />
