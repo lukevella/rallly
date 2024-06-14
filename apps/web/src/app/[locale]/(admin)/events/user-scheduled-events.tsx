@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  QueryTabs,
-  QueryTabsContent,
-  QueryTabsList,
-  QueryTabsTrigger,
-} from "@rallly/ui/query-tabs";
+import { RadioCards, RadioCardsItem } from "@rallly/ui/radio-pills";
 import { useSearchParams } from "next/navigation";
 import { z } from "zod";
 
@@ -21,30 +16,28 @@ export function UserScheduledEvents() {
   const period = eventPeriodSchema.parse(searchParams?.get("period"));
 
   return (
-    <QueryTabs
-      value={period}
-      onValueChange={(value) => {
-        const newParams = new URLSearchParams(searchParams?.toString());
-        newParams.set("period", value);
-        window.history.pushState(null, "", `?${newParams.toString()}`);
-      }}
-    >
-      <div className="space-y-4">
-        <QueryTabsList>
-          <QueryTabsTrigger value="upcoming">
+    <div className="space-y-4">
+      <div>
+        <RadioCards
+          value={period}
+          onValueChange={(value) => {
+            const newParams = new URLSearchParams(searchParams?.toString());
+            newParams.set("period", value);
+            window.history.pushState(null, "", `?${newParams.toString()}`);
+          }}
+        >
+          <RadioCardsItem value="upcoming">
             <Trans i18nKey="upcoming" defaults="Upcoming" />
-          </QueryTabsTrigger>
-          <QueryTabsTrigger value="past">
+          </RadioCardsItem>
+          <RadioCardsItem value="past">
             <Trans i18nKey="past" defaults="Past" />
-          </QueryTabsTrigger>
-        </QueryTabsList>
-        <QueryTabsContent value="upcoming">
-          <UpcomingEvents />
-        </QueryTabsContent>
-        <QueryTabsContent value="past">
-          <PastEvents />
-        </QueryTabsContent>
+          </RadioCardsItem>
+        </RadioCards>
       </div>
-    </QueryTabs>
+      <div>
+        {period === "upcoming" && <UpcomingEvents />}
+        {period === "past" && <PastEvents />}
+      </div>
+    </div>
   );
 }

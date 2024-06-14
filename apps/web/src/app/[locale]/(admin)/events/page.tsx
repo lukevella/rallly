@@ -1,12 +1,9 @@
-import { CalendarIcon } from "lucide-react";
-
 import { UserScheduledEvents } from "@/app/[locale]/(admin)/events/user-scheduled-events";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
@@ -17,9 +14,6 @@ export default async function Page({ params }: { params: Params }) {
     <PageContainer>
       <PageHeader>
         <div className="flex items-center gap-x-3">
-          <PageIcon>
-            <CalendarIcon />
-          </PageIcon>
           <PageTitle>
             {t("events", {
               defaultValue: "Events",
