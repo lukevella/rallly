@@ -14,7 +14,7 @@ export function AppCard({
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-between rounded-lg border bg-gray-50 p-4 shadow-sm ring-1 ring-inset ring-white/50 sm:w-80",
+        "flex w-full flex-col justify-between rounded-lg border bg-white p-4 shadow-sm ring-1 ring-inset ring-white/50 sm:w-80",
         className,
       )}
     >
