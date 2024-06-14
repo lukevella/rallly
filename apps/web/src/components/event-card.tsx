@@ -1,6 +1,6 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { Card, CardContent, CardDescription, CardTitle } from "@rallly/ui/card";
+import { Card, CardContent, CardDescription } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { DotIcon, MapPinIcon, PauseIcon } from "lucide-react";

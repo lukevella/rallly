@@ -1,7 +1,6 @@
 "use client";
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
 import { Icon } from "@rallly/ui/icon";
 import { RadioCards, RadioCardsItem } from "@rallly/ui/radio-pills";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -59,9 +58,14 @@ export function UserPolls() {
   const [pollStatus, setPollStatus] = useQueryParam(pollStatusQueryKey);
   const parsedPollStatus = pollStatusSchema.parse(pollStatus);
 
-  const { data } = trpc.polls.list.useQuery({
-    status: parsedPollStatus,
-  });
+  const { data, isFetching } = trpc.polls.list.useQuery(
+    {
+      status: parsedPollStatus,
+    },
+    {
+      keepPreviousData: true,
+    },
+  );
 
   return (
     <div className="space-y-4">
@@ -79,7 +83,13 @@ export function UserPolls() {
           <Trans i18nKey="pollStatusFinalized" />
         </RadioCardsItem>
       </RadioCards>
-      {data ? <PollsListView data={data} /> : <Spinner />}
+      <div
+        className={cn({
+          "opacity-50 transition-opacity delay-100": isFetching,
+        })}
+      >
+        {data ? <PollsListView data={data} /> : <Spinner />}
+      </div>
     </div>
   );
 }
