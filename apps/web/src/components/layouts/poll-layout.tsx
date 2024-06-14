@@ -10,7 +10,7 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
