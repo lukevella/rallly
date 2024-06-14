@@ -48,7 +48,7 @@ function NavItem({
       className={cn(
         current
           ? "text-primary"
-          : "text-muted-foreground  border-transparent focus:bg-gray-200",
+          : "text-muted-foreground border-transparent hover:bg-gray-200 focus:bg-gray-200",
         "group flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
