@@ -34,6 +34,7 @@ export function GroupPollIcon({
 }) {
   return (
     <Squircle
+      aria-label="Group Poll"
       className={cn(
         "inline-flex items-center justify-center bg-gradient-to-br from-purple-500 to-violet-500 text-purple-100",
         {

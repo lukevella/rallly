@@ -43,7 +43,7 @@ function useQueryParam(name: string) {
     function (value: string) {
       const newParams = new URLSearchParams(searchParams?.toString());
       newParams.set(name, value);
-      window.history.pushState(null, "", `?${newParams.toString()}`);
+      window.history.replaceState(null, "", `?${newParams.toString()}`);
     },
   ] as const;
 }

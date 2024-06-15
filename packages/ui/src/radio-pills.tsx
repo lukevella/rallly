@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { cn } from "./lib/utils";
 
-const RadioCards = React.forwardRef<
+const RadioPills = React.forwardRef<
   React.ElementRef<typeof Primitive.Root>,
   React.ComponentPropsWithoutRef<typeof Primitive.Root>
 >(({ className, ...props }, ref) => (
@@ -16,7 +16,7 @@ const RadioCards = React.forwardRef<
   />
 ));
 
-const RadioCardsItem = React.forwardRef<
+const RadioPillsItem = React.forwardRef<
   React.ElementRef<typeof Primitive.Item>,
   React.ComponentPropsWithoutRef<typeof Primitive.Item>
 >(({ className, ...props }, ref) => (
@@ -29,6 +29,6 @@ const RadioCardsItem = React.forwardRef<
     {...props}
   />
 ));
-RadioCardsItem.displayName = Primitive.Item.displayName;
+RadioPillsItem.displayName = Primitive.Item.displayName;
 
-export { RadioCards, RadioCardsItem };
+export { RadioPills as RadioCards, RadioPillsItem as RadioCardsItem };

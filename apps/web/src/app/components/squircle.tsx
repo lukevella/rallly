@@ -30,7 +30,12 @@ export function Squircle({
 
 export function SquircleClipPath() {
   return (
-    <svg width="0" height="0" className="pointer-events-none absolute">
+    <svg
+      width="0"
+      height="0"
+      aria-hidden="true"
+      className="pointer-events-none absolute"
+    >
       <defs>
         <clipPath id="squircleClip" clipPathUnits="objectBoundingBox">
           <path d="M 0,0.5 C 0,0 0,0 0.5,0 S 1,0 1,0.5 1,1 0.5,1 0,1 0,0.5" />

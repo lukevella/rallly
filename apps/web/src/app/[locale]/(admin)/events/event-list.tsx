@@ -19,7 +19,7 @@ export function EventList({ data }: { data: ScheduledEvent[] }) {
   const { adjustTimeZone } = useDayjs();
   return (
     <Card>
-      <ul role="list" className="divide-y divide-gray-100">
+      <ul className="divide-y divide-gray-100">
         {table.getRowModel().rows.map((row) => {
           const start = adjustTimeZone(
             row.original.start,
@@ -31,7 +31,7 @@ export function EventList({ data }: { data: ScheduledEvent[] }) {
             !row.original.timeZone,
           );
           return (
-            <li role="listitem" key={row.id}>
+            <li key={row.id}>
               <CardContent>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-8">
                   <div className="flex shrink-0 justify-between gap-1 sm:w-24 sm:flex-col sm:text-right">
