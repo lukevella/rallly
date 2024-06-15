@@ -82,14 +82,9 @@ export function UserPolls() {
         <RadioCardsItem value="finalized">
           <Trans i18nKey="pollStatusFinalized" />
         </RadioCardsItem>
+        {isFetching && <Spinner />}
       </RadioCards>
-      <div
-        className={cn({
-          "opacity-50 transition-opacity delay-100": isFetching,
-        })}
-      >
-        {data ? <PollsListView data={data} /> : <Spinner />}
-      </div>
+      <div>{data ? <PollsListView data={data} /> : <Spinner />}</div>
     </div>
   );
 }
