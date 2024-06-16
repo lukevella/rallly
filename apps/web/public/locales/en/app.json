@@ -262,5 +262,6 @@
   "upcomingEventsEmptyStateDescription": "When you schedule events, they will appear here.",
   "pastEventsEmptyStateTitle": "No Past Events",
   "pastEventsEmptyStateDescription": "When you schedule events, they will appear here.",
-  "activePollCount": "{{activePollCount}} Live"
+  "activePollCount": "{{activePollCount}} Live",
+  "createPoll": "Create poll"
 }

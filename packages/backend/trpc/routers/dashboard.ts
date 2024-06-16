@@ -8,6 +8,7 @@ export const dashboard = router({
       where: {
         userId: ctx.user.id,
         status: "live",
+        deleted: false, // TODO (Luke Vella) [2024-06-16]: We should add deleted/cancelled to the status enum
       },
     });
 
