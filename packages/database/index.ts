@@ -1,19 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
-const prismaClientSingleton = () => {
-  return new PrismaClient().$extends({
-    query: {
-      poll: {
-        findMany: ({ args, query }) => {
-          if (args.where?.deleted === undefined) {
-            args.where = { ...args.where, deleted: false };
-          }
+export type * from "@prisma/client";
 
-          return query(args);
-        },
-      },
-    },
-  });
+const prismaClientSingleton = () => {
+  return new PrismaClient();
 };
 
 declare const globalThis: {

@@ -15,5 +15,10 @@
     ".next/types/**/*.ts",
     "vitest.config.mts",
   ],
-  "exclude": ["node_modules", ".next/**/*"],
+  "exclude": [
+    "node_modules",
+    ".next/**/*",
+    "playwright-report",
+    "test-results",
+  ],
 }

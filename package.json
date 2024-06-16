@@ -32,7 +32,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@prisma/client": "^5.3.1",
+    "@prisma/client": "^5.15.0",
     "@sentry/nextjs": "^7.77.0",
     "framer-motion": "^10.16.4",
     "next": "^14.2.4",
