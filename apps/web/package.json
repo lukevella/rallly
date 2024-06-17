@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e ../../.env -- next dev",
+    "dev": "next dev",
     "build": "next build",
     "build:test": "dotenv -e .env.test -- next build",
     "analyze": "cross-env ANALYZE=true next build",
