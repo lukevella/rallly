@@ -80,7 +80,6 @@
   "validEmail": "Wprowadź prawidłowy adres e-mail",
   "verificationCodeHelp": "Nie otrzymałeś wiadomości e-mail? Sprawdź spam/śmieci.",
   "verificationCodePlaceholder": "Wpisz 6-cyfrowy kod",
-  "verificationCodeSent": "Kod weryfikacyjny został wysłany na adres <b>{email}</b> <a>Zmień</a>",
   "verifyYourEmail": "Zweryfikuj swój e-mail",
   "startOfWeek": "Początek tygodnia",
   "weekView": "Widok tygodniowy",
