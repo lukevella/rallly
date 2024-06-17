@@ -80,7 +80,6 @@
   "validEmail": "Sartu baliozko helbide elektronikoa",
   "verificationCodeHelp": "Ez duzu emaila jaso? Begiratu spam-a.",
   "verificationCodePlaceholder": "Sartu 6 digituko kodea",
-  "verificationCodeSent": "Berifikazio kode bat bidali da <b>{email}</b> posta elektronikora <a>Change</a>",
   "verifyYourEmail": "Egiaztatu zure posta",
   "startOfWeek": "Astearen hasiera",
   "weekView": "Asteko ikuspegia",
