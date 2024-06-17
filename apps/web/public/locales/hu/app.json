@@ -80,7 +80,6 @@
   "validEmail": "Kérjük adj meg egy érvényes email címet",
   "verificationCodeHelp": "Nem kaptad meg az emailt? Ellenőrizd a spam mappádat is.",
   "verificationCodePlaceholder": "Írd be a hatjegyű kódot",
-  "verificationCodeSent": "A hitelesítő kód ki lett küldve <b>{email}</b> címre <a>Módosít</a>",
   "verifyYourEmail": "Hitelesítsd az email címed",
   "startOfWeek": "Hét kezdőnapja",
   "weekView": "Heti nézet",
