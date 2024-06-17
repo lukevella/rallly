@@ -80,7 +80,6 @@
   "validEmail": "Gelieve een geldig e-mailadres in te vullen",
   "verificationCodeHelp": "Geen e-mail ontvangen? Controleer je spam/junk.",
   "verificationCodePlaceholder": "Voer je 6-cijferige code in",
-  "verificationCodeSent": "Een verificatiecode is verzonden naar <b>{email}</b> <a>Wijzigen</a>",
   "verifyYourEmail": "Verifieer je e-mailadres",
   "startOfWeek": "Week begint op",
   "weekView": "Weekweergave",
