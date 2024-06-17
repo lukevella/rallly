@@ -80,7 +80,6 @@
   "validEmail": "Please enter a valid email",
   "verificationCodeHelp": "Didn't get the email? Check your spam/junk.",
   "verificationCodePlaceholder": "Enter your 6-digit code",
-  "verificationCodeSent": "A verification code has been sent to <b>{email}</b> <a>Change</a>",
   "verifyYourEmail": "Verify your email",
   "startOfWeek": "Start of week",
   "weekView": "Week view",
@@ -261,5 +260,6 @@
   "advancedSettingsTitle": "Advanced Settings",
   "advancedSettingsDescription": "Hide participants, hide scores, require participant email address.",
   "keepPollsIndefinitely": "Keep Polls Indefinitely",
-  "keepPollsIndefinitelyDescription": "Inactive polls will not be auto-deleted."
+  "keepPollsIndefinitelyDescription": "Inactive polls will not be auto-deleted.",
+  "verificationCodeSentTo": "We sent a verification code to <b>{{ email }}</b>"
 }
