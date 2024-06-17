@@ -24,7 +24,7 @@ Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://githu
 
 Check out the [self-hosting docs](https://support.rallly.co/self-hosting) for more information on running your own instance of Rallly.
 
-## Local Development
+## Local Installation
 
 The following instructions are for running the project locally for development.
 
@@ -41,7 +41,17 @@ The following instructions are for running the project locally for development.
    yarn
    ```
 
-3. Setup database
+3. Setup environment variables
+
+   Create a `.env` file by copying `.env.development`. This will be were you can set your [configuration options](https://support.rallly.co/self-hosting/configuration-options).
+
+   ```bash
+   cp .env.development .env
+   ```
+
+   **Note:** `.env.development` is preconfigured with default values for development. You can leave these as is for local development.
+
+4. Setup database
 
    You will need to have [Docker](https://docs.docker.com/get-docker/) installed and running to run the database using the provided docker-compose file.
 
@@ -63,7 +73,7 @@ The following instructions are for running the project locally for development.
    - run migrations to create a new database schema
    - seed the database with test users and random data
 
-4. Start the Next.js server
+5. Start the Next.js server
 
    ```
    yarn dev
