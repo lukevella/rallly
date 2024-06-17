@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@rallly/ui/button";
 import { Input } from "@rallly/ui/input";
 import { Trans, useTranslation } from "next-i18next";
@@ -22,8 +21,7 @@ export const verifyCode = async (options: { email: string; token: string }) => {
 export const VerifyCode: React.FunctionComponent<{
   email: string;
   onSubmit: (code: string) => Promise<void>;
-  onChangeEmail?: () => void;
-}> = ({ onSubmit, onChangeEmail, email }) => {
+}> = ({ onSubmit, email }) => {
   const { register, handleSubmit, setError, formState } = useForm<{
     code: string;
   }>();
@@ -54,20 +52,11 @@ export const VerifyCode: React.FunctionComponent<{
           <p className="mb-4">
             <Trans
               t={t}
-              i18nKey="verificationCodeSent"
+              i18nKey="verificationCodeSentTo"
+              defaults="We sent a verification code to <b>{{ email }}</b>"
               values={{ email }}
               components={{
                 b: <strong className="whitespace-nowrap" />,
-                a: (
-                  <button
-                    type="button"
-                    role="button"
-                    className="text-link"
-                    onClick={() => {
-                      onChangeEmail?.();
-                    }}
-                  />
-                ),
               }}
             />
           </p>

@@ -68,9 +68,6 @@ export const RegisterForm = () => {
           });
         }}
         email={getValues("email")}
-        onChangeEmail={() => {
-          setToken(undefined);
-        }}
       />
     );
   }

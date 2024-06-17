@@ -143,9 +143,6 @@ export function LoginForm() {
           }
         }}
         email={getValues("email")}
-        onChangeEmail={() => {
-          setEmail(undefined);
-        }}
       />
     );
   }
