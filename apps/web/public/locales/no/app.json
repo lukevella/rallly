@@ -80,7 +80,6 @@
   "validEmail": "Skriv inn en gyldig e-postadresse",
   "verificationCodeHelp": "Fikk du ikke e-posten? Sjekk søppelposten.",
   "verificationCodePlaceholder": "Skriv inn den sekssifrede koden",
-  "verificationCodeSent": "En verifiseringskode er sendt til <b>{email}</b> <a>Endre</a>",
   "verifyYourEmail": "Bekreft e-postadressen din",
   "startOfWeek": "Første dag i uken",
   "weekView": "Ukesvisning",
