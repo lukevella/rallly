@@ -3,7 +3,6 @@
   "globalDependencies": [".env"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "build:test": {
@@ -28,11 +27,11 @@
       "cache": true
     },
     "test:integration": {
-      "dependsOn": ["@rallly/database#db:generate"],
+      "inputs": ["playwright.config.ts", ".env.test", "src/**/*", "tests/**/*"],
       "cache": true
     },
     "db:generate": {
-      "cache": true
+      "cache": false
     },
     "lint": {
       "outputs": []
@@ -41,7 +40,6 @@
       "outputs": []
     },
     "dev": {
-      "dependsOn": ["@rallly/database#db:generate"],
       "cache": false
     },
     "start": {
@@ -68,32 +66,14 @@
     "AWS_ACCESS_KEY_ID",
     "AWS_REGION",
     "AWS_SECRET_ACCESS_KEY",
+    "DATABASE_URL",
     "DISABLE_LANDING_PAGE",
     "EMAIL_PROVIDER",
     "MAINTENANCE_MODE",
     "MICROSOFT_CLIENT_ID",
     "MICROSOFT_CLIENT_SECRET",
     "MICROSOFT_TENANT_ID",
-    "NEXT_PUBLIC_ABOUT_PAGE_URL",
-    "NEXT_PUBLIC_APP_BASE_URL",
-    "NEXT_PUBLIC_APP_VERSION",
-    "NEXT_PUBLIC_BASE_URL",
-    "NEXT_PUBLIC_BETA",
-    "NEXT_PUBLIC_CRISP_WEBSITE_ID",
-    "NEXT_PUBLIC_ENABLE_ANALYTICS",
-    "NEXT_PUBLIC_ENABLE_FINALIZATION",
-    "NEXT_PUBLIC_LANDING_PAGE_URL",
-    "NEXT_PUBLIC_MAINTENANCE_MODE",
-    "NEXT_PUBLIC_PADDLE_SANDBOX",
-    "NEXT_PUBLIC_PADDLE_VENDOR_ID",
-    "NEXT_PUBLIC_POSTHOG_API_HOST",
-    "NEXT_PUBLIC_POSTHOG_API_KEY",
-    "NEXT_PUBLIC_PRO_PLAN_ID_MONTHLY",
-    "NEXT_PUBLIC_PRO_PLAN_ID_YEARLY",
-    "NEXT_PUBLIC_SELF_HOSTED",
-    "NEXT_PUBLIC_SENTRY_DSN",
-    "NEXT_PUBLIC_SHORT_BASE_URL",
-    "NEXT_PUBLIC_VERCEL_URL",
+    "NEXT_PUBLIC_*",
     "NODE_ENV",
     "NOREPLY_EMAIL",
     "NOREPLY_EMAIL_NAME",

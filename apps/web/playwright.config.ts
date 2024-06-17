@@ -1,12 +1,11 @@
+import { loadEnvConfig } from "@next/env";
 import { devices, PlaywrightTestConfig } from "@playwright/test";
-import dotenv from "dotenv";
-import path from "path";
 
 const ci = process.env.CI === "true";
 
-dotenv.config({ path: path.resolve(__dirname, ".env.test") });
+loadEnvConfig(process.cwd());
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL = `http://localhost:${port}`;
 
