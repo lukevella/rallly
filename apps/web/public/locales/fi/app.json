@@ -80,7 +80,6 @@
   "validEmail": "Anna kelvollinen sähköpostiosoite",
   "verificationCodeHelp": "Etkö saanut viestiä? Tarkista roskaposti.",
   "verificationCodePlaceholder": "Anna 6-numeroinen koodisi",
-  "verificationCodeSent": "Vahvistuskoodi on lähetetty osoitteeseen <b>{email}</b> <a>Vaihda</a>",
   "verifyYourEmail": "Vahvista sähköpostiosoitteesi",
   "startOfWeek": "Viikon aloituspäivä",
   "weekView": "Viikkonäkymä",
