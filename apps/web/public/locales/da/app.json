@@ -80,7 +80,6 @@
   "validEmail": "Indtast en gyldig e-mail",
   "verificationCodeHelp": "Har du ikke fået e-mailen? Tjek din spam-mappe.",
   "verificationCodePlaceholder": "Indtast den sekscifrede kode",
-  "verificationCodeSent": "En bekræftelseskode er blevet sendt til <b>{email}</b> <a>Ret</a>",
   "verifyYourEmail": "Bekræft din e-mail",
   "startOfWeek": "Start på ugen",
   "weekView": "Ugevisning",
