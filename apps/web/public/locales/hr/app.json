@@ -78,7 +78,6 @@
   "validEmail": "Molimo unesite valjanu adresu e-pošte",
   "verificationCodeHelp": "Niste dobili poruku e-pošte? Provjerite svoju mapu s neželjenom poštom (SPAM).",
   "verificationCodePlaceholder": "Unesite 6-znamenkasti kôd",
-  "verificationCodeSent": "Kôd za potvrdu je poslan na adresu <b>{email}</b> <a>Promijenite</a>",
   "verifyYourEmail": "Potvrdite svoju adresu e-pošte",
   "startOfWeek": "Početak tjedna",
   "weekView": "Tjedni pregled",
