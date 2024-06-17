@@ -80,7 +80,6 @@
   "validEmail": "유효한 이메일을 입력해주세요",
   "verificationCodeHelp": "이메일을 받지 못하셨나요? 스팸메일함을 확인해보세요.",
   "verificationCodePlaceholder": "6자리 인증코드를 입력해주세요",
-  "verificationCodeSent": "인증 코드가 <b>{email}</b> 로 전송되었습니다. <a>변경하기</a>",
   "verifyYourEmail": "이메일을 확인하세요",
   "startOfWeek": "시작 요일",
   "weekView": "주간 보기",
