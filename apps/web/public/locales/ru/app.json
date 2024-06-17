@@ -80,7 +80,6 @@
   "validEmail": "Пожалуйста, введите действительный адрес электронной почты",
   "verificationCodeHelp": "Не получили письмо? Проверьте папку СПАМ.",
   "verificationCodePlaceholder": "Введите код из 6 цифр",
-  "verificationCodeSent": "Код подтверждения был отправлен на <b>{email}</b> <a>Изменить</a>",
   "verifyYourEmail": "Подтвердите ваш адрес электронной почты",
   "startOfWeek": "Начало недели",
   "weekView": "Неделя",
