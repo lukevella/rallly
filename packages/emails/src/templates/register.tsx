@@ -8,13 +8,11 @@ import {
 } from "./_components/styled-components";
 
 interface RegisterEmailProps {
-  name: string;
   code: string;
   ctx: EmailContext;
 }
 
 export const RegisterEmail = ({
-  name = "John",
   code = "123456",
   ctx = defaultEmailContext,
 }: RegisterEmailProps) => {
@@ -28,7 +26,6 @@ export const RegisterEmail = ({
           please ignore this email.
         </>
       }
-      recipientName={name}
       preview={`Your 6-digit code is: ${code}`}
     >
       <Text>

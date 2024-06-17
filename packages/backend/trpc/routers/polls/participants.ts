@@ -64,6 +64,14 @@ export const participants = router({
       }),
     )
     .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
+      const { success } = await ctx.ratelimit(ctx.user.id);
+
+      if (!success) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "You are doing that too much",
+        });
+      }
       const { user } = ctx;
 
       const poll = await prisma.poll.findUnique({

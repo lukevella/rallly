@@ -36,6 +36,8 @@
     "@trpc/client": "^10.13.0",
     "@trpc/next": "^10.13.0",
     "@trpc/react-query": "^10.13.0",
+    "@upstash/ratelimit": "^1.2.1",
+    "@vercel/kv": "^2.0.0",
     "@vercel/functions": "^1.0.2",
     "accept-language-parser": "^1.5.0",
     "autoprefixer": "^10.4.13",

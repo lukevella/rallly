@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createToken, decryptToken } from "../../session";
@@ -23,6 +24,16 @@ export const auth = router({
         | { ok: true; token: string }
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
+        if (process.env.KV_REST_API_URL) {
+          const { success } = await ctx.ratelimit(ctx.user.id);
+          if (!success) {
+            throw new TRPCError({
+              code: "TOO_MANY_REQUESTS",
+              message: "Too many requests",
+            });
+          }
+        }
+
         if (ctx.isEmailBlocked?.(input.email)) {
           return { ok: false, reason: "emailNotAllowed" };
         }
@@ -50,10 +61,9 @@ export const auth = router({
 
         await ctx.emailClient.sendTemplate("RegisterEmail", {
           to: input.email,
-          subject: `${input.name}, please verify your email address`,
+          subject: "Please verify your email address",
           props: {
             code,
-            name: input.name,
           },
         });
 

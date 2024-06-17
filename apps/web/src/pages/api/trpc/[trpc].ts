@@ -2,6 +2,8 @@ import { createTRPCContext } from "@rallly/backend/trpc/context";
 import { AppRouter, appRouter } from "@rallly/backend/trpc/routers";
 import * as Sentry from "@sentry/nextjs";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
+import { Ratelimit } from "@upstash/ratelimit";
+import { kv } from "@vercel/kv";
 
 import { posthog, posthogApiHandler } from "@/app/posthog";
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
@@ -9,6 +11,12 @@ import { getServerSession, isEmailBlocked } from "@/utils/auth";
 import { isSelfHosted } from "@/utils/constants";
 import { emailClient } from "@/utils/emails";
 import { composeApiHandlers } from "@/utils/next";
+
+const ratelimit = new Ratelimit({
+  redis: kv,
+  // 5 requests from the same user in 10 seconds
+  limiter: Ratelimit.slidingWindow(5, "10 s"),
+});
 
 export const config = {
   api: {
@@ -38,6 +46,12 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
       isEmailBlocked,
       absoluteUrl,
       shortUrl,
+      ratelimit: async (key: string) => {
+        if (!process.env.KV_REST_API_URL) {
+          return { success: true };
+        }
+        return ratelimit.limit(key);
+      },
     });
 
     return res;

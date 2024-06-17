@@ -4715,6 +4715,27 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@upstash/core-analytics@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@upstash/core-analytics/-/core-analytics-0.0.9.tgz#59f29a920099084e049726c0aca67be1c1ecfc1f"
+  integrity sha512-9NXXxZ5y1/A/zqKLlVT7NsAWSggJfOjB0hG6Ffx29b4jbzHOiQVWB55h5+j2clT9Ib+mNPXn0iB5zN3aWLkICw==
+  dependencies:
+    "@upstash/redis" "^1.28.3"
+
+"@upstash/ratelimit@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@upstash/ratelimit/-/ratelimit-1.2.1.tgz#835a33ce715e999d646431f70a71a69de7d439ee"
+  integrity sha512-o01lV1yFS5Fzj5KONZmNyVch/Qrlj785B2ob+kStUmxn8F6xXk7IHTQqVcHE+Ce3CmT/qQIwvMxDZftyJ5wYpQ==
+  dependencies:
+    "@upstash/core-analytics" "^0.0.9"
+
+"@upstash/redis@^1.28.3", "@upstash/redis@^1.31.3":
+  version "1.31.5"
+  resolved "https://registry.yarnpkg.com/@upstash/redis/-/redis-1.31.5.tgz#8d5fe439a2a28638b3a354a23680ecf7f7eb4f54"
+  integrity sha512-2MatqeqftroSJ9Q+pqbyGAIwXX6KEPtUTUna2c/fq09h12ffwvltDTgfppeF+NzJo/SyZfHY8e1RoflduMbz1A==
+  dependencies:
+    crypto-js "^4.2.0"
+
 "@vercel/analytics@^0.1.8":
   version "0.1.11"
   resolved "https://registry.npmjs.org/@vercel/analytics/-/analytics-0.1.11.tgz"
@@ -4724,6 +4745,13 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@vercel/functions/-/functions-1.0.2.tgz#c26ed4e3b0ed701e28c4ebd71c76b1bfe14db02a"
   integrity sha512-j3udyHOv/05Y8o3WQ/ANMWa1aYagsY5B3ouImiwgYsz5z4CBUHTY5dk74oQAXYr+bgoVDpdDlmxkpnxGzKEdLQ==
+
+"@vercel/kv@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@vercel/kv/-/kv-2.0.0.tgz#a0baa12563946cb35cee23d638b68f0fbbf76172"
+  integrity sha512-zdVrhbzZBYo5d1Hfn4bKtqCeKf0FuzW8rSHauzQVMUgv1+1JOwof2mWcBuI+YMJy8s0G0oqAUfQ7HgUDzb8EbA==
+  dependencies:
+    "@upstash/redis" "^1.31.3"
 
 "@vitest/expect@1.3.1":
   version "1.3.1"
@@ -5990,6 +6018,11 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 crypto@^1.0.1:
   version "1.0.1"
