@@ -80,7 +80,6 @@
   "validEmail": "Bitte trage eine gültige E-Mail-Adresse ein",
   "verificationCodeHelp": "E-Mail nicht erhalten? Überprüfe deinen Spamordner.",
   "verificationCodePlaceholder": "6-stelligen Code eingeben",
-  "verificationCodeSent": "Ein Bestätigungscode wurde an <b>{email}</b> gesendet<a>Ändern</a>",
   "verifyYourEmail": "Bestätige Deine E-Mail-Adresse",
   "startOfWeek": "Wochenbeginn",
   "weekView": "Wochenansicht",
