@@ -21,7 +21,7 @@ export interface TRPCContextParams {
    */
   absoluteUrl: (path?: string) => string;
   shortUrl: (path?: string) => string;
-  ratelimit: (key: string) => Promise<{ success: boolean }>;
+  ratelimit: () => Promise<{ success: boolean }>;
 }
 
 export const createTRPCContext = async (

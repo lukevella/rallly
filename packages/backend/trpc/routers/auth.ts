@@ -24,14 +24,12 @@ export const auth = router({
         | { ok: true; token: string }
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
-        if (process.env.KV_REST_API_URL) {
-          const { success } = await ctx.ratelimit(ctx.user.id);
-          if (!success) {
-            throw new TRPCError({
-              code: "TOO_MANY_REQUESTS",
-              message: "Too many requests",
-            });
-          }
+        const { success } = await ctx.ratelimit();
+        if (!success) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Too many requests",
+          });
         }
 
         if (ctx.isEmailBlocked?.(input.email)) {

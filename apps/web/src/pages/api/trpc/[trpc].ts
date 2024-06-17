@@ -4,6 +4,7 @@ import * as Sentry from "@sentry/nextjs";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
+import requestIp from "request-ip";
 
 import { posthog, posthogApiHandler } from "@/app/posthog";
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
@@ -46,11 +47,18 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
       isEmailBlocked,
       absoluteUrl,
       shortUrl,
-      ratelimit: async (key: string) => {
+      ratelimit: async () => {
         if (!process.env.KV_REST_API_URL) {
           return { success: true };
         }
-        return ratelimit.limit(key);
+
+        const clientIp = requestIp.getClientIp(opts.req);
+
+        if (!clientIp) {
+          return { success: false };
+        }
+
+        return ratelimit.limit(clientIp);
       },
     });
 

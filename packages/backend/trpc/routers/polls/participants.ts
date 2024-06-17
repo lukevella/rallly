@@ -64,7 +64,7 @@ export const participants = router({
       }),
     )
     .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
-      const { success } = await ctx.ratelimit(ctx.user.id);
+      const { success } = await ctx.ratelimit();
 
       if (!success) {
         throw new TRPCError({
