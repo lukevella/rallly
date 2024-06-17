@@ -80,7 +80,6 @@
   "validEmail": "Si us plau, introdueix un correu vàlid",
   "verificationCodeHelp": "No has rebut el correu? Revisa el correu brossa.",
   "verificationCodePlaceholder": "Introdueix el codi de 6 dígits",
-  "verificationCodeSent": "Un codi de verificació s'ha enviat a <b>{email}</b> <a>Modifica'l</a>",
   "verifyYourEmail": "Verifica el teu correu",
   "startOfWeek": "Inici de la setmana",
   "weekView": "Vista setmanal",
