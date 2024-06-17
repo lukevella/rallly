@@ -260,5 +260,6 @@
   "advancedSettingsTitle": "Speciális beállítások",
   "advancedSettingsDescription": "Résztvevők elrejtése, eredmény elrejtése, kötelező email megadása.",
   "keepPollsIndefinitely": "Szavazások megőrzése örökre",
-  "keepPollsIndefinitelyDescription": "Inaktív szavazások nem fognak automatikusan törlődni."
+  "keepPollsIndefinitelyDescription": "Inaktív szavazások nem fognak automatikusan törlődni.",
+  "verificationCodeSentTo": "Az ellenőrző kódot elküldtük a következő címre: <b>{{ email }}</b>"
 }
