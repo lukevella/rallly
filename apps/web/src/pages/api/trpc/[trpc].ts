@@ -46,7 +46,12 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
       isEmailBlocked,
       absoluteUrl,
       shortUrl,
-      ratelimit,
+      ratelimit: async (key: string) => {
+        if (!process.env.KV_REST_API_URL) {
+          return { success: true };
+        }
+        return ratelimit.limit(key);
+      },
     });
 
     return res;

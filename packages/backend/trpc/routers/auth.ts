@@ -25,7 +25,7 @@ export const auth = router({
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
         if (process.env.KV_REST_API_URL) {
-          const { success } = await ctx.ratelimit.limit(ctx.user.id);
+          const { success } = await ctx.ratelimit(ctx.user.id);
           if (!success) {
             throw new TRPCError({
               code: "TOO_MANY_REQUESTS",

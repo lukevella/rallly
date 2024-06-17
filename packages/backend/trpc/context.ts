@@ -1,7 +1,6 @@
 import { EmailClient } from "@rallly/emails";
 import { inferAsyncReturnType, TRPCError } from "@trpc/server";
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
-import type { Ratelimit } from "@upstash/ratelimit";
 import type { PostHog } from "posthog-node";
 
 export type GetUserFn = (opts: CreateNextContextOptions) => Promise<{
@@ -22,7 +21,7 @@ export interface TRPCContextParams {
    */
   absoluteUrl: (path?: string) => string;
   shortUrl: (path?: string) => string;
-  ratelimit: Ratelimit;
+  ratelimit: (key: string) => Promise<{ success: boolean }>;
 }
 
 export const createTRPCContext = async (
