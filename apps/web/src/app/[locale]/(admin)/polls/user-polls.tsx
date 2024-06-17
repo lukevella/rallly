@@ -1,4 +1,5 @@
 "use client";
+import { Slot } from "@radix-ui/react-slot";
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
@@ -24,17 +25,67 @@ import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/utils/trpc/client";
 
-type PendingEvent = {
-  id: string;
-  status: PollStatus;
-  title: string;
-  createdAt: Date;
-  userId: string;
-  participants: {
-    id: string;
-    name: string;
-  }[];
-};
+function PollCount({ count }: { count?: number }) {
+  return <span className="font-semibold">{count || 0}</span>;
+}
+
+function FilteredPolls({ status }: { status: PollStatus }) {
+  const { data, isFetching } = trpc.polls.list.useQuery(
+    {
+      status,
+    },
+    {
+      keepPreviousData: true,
+    },
+  );
+
+  if (!data) {
+    return <Spinner />;
+  }
+
+  return (
+    <div
+      className={cn({
+        "animate-pulse": isFetching,
+      })}
+    >
+      <PollsListView data={data} />
+    </div>
+  );
+}
+
+function PollStatusMenu({
+  status,
+  onStatusChange,
+}: {
+  status?: PollStatus;
+  onStatusChange?: (status: PollStatus) => void;
+}) {
+  const { data: countByStatus, isFetching } =
+    trpc.polls.getCountByStatus.useQuery();
+
+  if (!countByStatus) {
+    return null;
+  }
+
+  return (
+    <RadioCards value={status} onValueChange={onStatusChange}>
+      <RadioCardsItem className="flex items-center gap-2.5" value="live">
+        <Trans i18nKey="pollStatusOpen" />
+        <PollCount count={countByStatus.live} />
+      </RadioCardsItem>
+      <RadioCardsItem className="flex items-center gap-2.5" value="paused">
+        <Trans i18nKey="pollStatusPaused" />
+        <PollCount count={countByStatus.paused} />
+      </RadioCardsItem>
+      <RadioCardsItem className="flex items-center gap-2.5" value="finalized">
+        <Trans i18nKey="pollStatusFinalized" />
+        <PollCount count={countByStatus.finalized} />
+      </RadioCardsItem>
+      {isFetching && <Spinner />}
+    </RadioCards>
+  );
+}
 
 function useQueryParam(name: string) {
   const searchParams = useSearchParams();
@@ -48,9 +99,7 @@ function useQueryParam(name: string) {
   ] as const;
 }
 
-const pollStatusSchema = z
-  .enum(["all", "live", "paused", "finalized"])
-  .catch("all");
+const pollStatusSchema = z.enum(["live", "paused", "finalized"]).catch("live");
 
 const pollStatusQueryKey = "status";
 
@@ -58,33 +107,13 @@ export function UserPolls() {
   const [pollStatus, setPollStatus] = useQueryParam(pollStatusQueryKey);
   const parsedPollStatus = pollStatusSchema.parse(pollStatus);
 
-  const { data, isFetching } = trpc.polls.list.useQuery(
-    {
-      status: parsedPollStatus,
-    },
-    {
-      keepPreviousData: true,
-    },
-  );
-
   return (
     <div className="space-y-4">
-      <RadioCards value={parsedPollStatus} onValueChange={setPollStatus}>
-        <RadioCardsItem value="all">
-          <Trans i18nKey="pollsListAll" />
-        </RadioCardsItem>
-        <RadioCardsItem value="live">
-          <Trans i18nKey="pollStatusOpen" />
-        </RadioCardsItem>
-        <RadioCardsItem value="paused">
-          <Trans i18nKey="pollStatusPaused" />
-        </RadioCardsItem>
-        <RadioCardsItem value="finalized">
-          <Trans i18nKey="pollStatusFinalized" />
-        </RadioCardsItem>
-        {isFetching && <Spinner />}
-      </RadioCards>
-      <div>{data ? <PollsListView data={data} /> : <Spinner />}</div>
+      <PollStatusMenu
+        status={parsedPollStatus}
+        onStatusChange={setPollStatus}
+      />
+      <FilteredPolls status={parsedPollStatus} />
     </div>
   );
 }
@@ -132,7 +161,21 @@ function ParticipantCount({ count }: { count: number }) {
   );
 }
 
-function PollsListView({ data }: { data: PendingEvent[] }) {
+function PollsListView({
+  data,
+}: {
+  data: {
+    id: string;
+    status: PollStatus;
+    title: string;
+    createdAt: Date;
+    userId: string;
+    participants: {
+      id: string;
+      name: string;
+    }[];
+  }[];
+}) {
   const table = useReactTable({
     columns: [],
     data,

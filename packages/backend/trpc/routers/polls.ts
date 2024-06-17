@@ -1,4 +1,4 @@
-import { prisma } from "@rallly/database";
+import { PollStatus, prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import dayjs from "dayjs";
@@ -36,6 +36,22 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
+  getCountByStatus: possiblyPublicProcedure.query(async () => {
+    const res = await prisma.poll.groupBy({
+      by: ["status"],
+      _count: {
+        status: true,
+      },
+    });
+
+    return res.reduce(
+      (acc, { status, _count }) => {
+        acc[status] = _count.status;
+        return acc;
+      },
+      {} as Record<PollStatus, number>,
+    );
+  }),
   list: possiblyPublicProcedure
     .input(
       z.object({
