@@ -1,19 +1,11 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
-import { Ratelimit } from "@upstash/ratelimit";
-import { kv } from "@vercel/kv";
 import { z } from "zod";
 
 import { createToken, decryptToken } from "../../session";
 import { generateOtp } from "../../utils/nanoid";
 import { publicProcedure, router } from "../trpc";
 import { RegistrationTokenPayload } from "../types";
-
-const ratelimit = new Ratelimit({
-  redis: kv,
-  // 5 requests from the same IP in 10 seconds
-  limiter: Ratelimit.slidingWindow(3, "10 s"),
-});
 
 export const auth = router({
   // @deprecated
@@ -33,7 +25,7 @@ export const auth = router({
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
         if (process.env.KV_REST_API_URL) {
-          const { success } = await ratelimit.limit(ctx.user.id);
+          const { success } = await ctx.ratelimit.limit(ctx.user.id);
           if (!success) {
             throw new TRPCError({
               code: "TOO_MANY_REQUESTS",
