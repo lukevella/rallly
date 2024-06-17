@@ -80,7 +80,6 @@
   "validEmail": "Vänligen ange en giltig e-postadress",
   "verificationCodeHelp": "Fick du inte e-postmeddelandet? Kontrollera din skräppost.",
   "verificationCodePlaceholder": "Ange din 6-siffriga kod",
-  "verificationCodeSent": "En verifieringskod har skickats till <b>{email}</b> <a>Byt</a>",
   "verifyYourEmail": "Verifiera din e-postadress",
   "weekView": "Veckovy",
   "wrongVerificationCode": "Din verifieringskod är felaktig eller har upphört",
