@@ -78,7 +78,6 @@
   "validEmail": "Vui lòng nhập email hợp lệ",
   "verificationCodeHelp": "Không nhận được email? Kiểm tra hộp thư rác của bạn.",
   "verificationCodePlaceholder": "Nhập mã 6 ký tự",
-  "verificationCodeSent": "Mã xác minh đã được gửi đến <b>{email}</b> <a>Thay đổi</a>",
   "verifyYourEmail": "Xác minh địa chỉ email của bạn",
   "startOfWeek": "Đầu tuần",
   "weekView": "Hiển thị theo Tuần",
