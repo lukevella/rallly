@@ -13,7 +13,7 @@ import { fontFamily, Section, Text } from "./styled-components";
 
 export interface EmailLayoutProps {
   preview: string;
-  recipientName: string;
+  recipientName?: string;
   footNote?: React.ReactNode;
   ctx: EmailContext;
 }
@@ -40,7 +40,7 @@ const linkStyles = {
 
 export const EmailLayout = ({
   preview,
-  recipientName = "Guest",
+  recipientName,
   children,
   footNote,
   ctx,
@@ -60,7 +60,7 @@ export const EmailLayout = ({
         <Container style={containerStyles}>
           <Img src={logoUrl} alt="Rallly" width={128} />
           <Section style={sectionStyles}>
-            <Text>Hi {recipientName},</Text>
+            {recipientName ? <Text>Hi {recipientName},</Text> : null}
             {children}
             {footNote ? (
               <Text
