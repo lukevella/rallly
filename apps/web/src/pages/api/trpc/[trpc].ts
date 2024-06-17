@@ -14,7 +14,7 @@ import { composeApiHandlers } from "@/utils/next";
 
 const ratelimit = new Ratelimit({
   redis: kv,
-  // 5 requests from the same IP in 10 seconds
+  // 5 requests from the same user in 10 seconds
   limiter: Ratelimit.slidingWindow(5, "10 s"),
 });
 
