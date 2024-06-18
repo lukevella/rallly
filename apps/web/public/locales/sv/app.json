@@ -230,5 +230,6 @@
   "advancedSettingsTitle": "Avancerade inställningar",
   "advancedSettingsDescription": "Dölj deltagare, dölj poäng, kräv deltagarens e-postadress.",
   "keepPollsIndefinitely": "Behåll omröstningar på obestämd tid",
-  "keepPollsIndefinitelyDescription": "Inaktiva omröstningar kommer inte att raderas automatiskt."
+  "keepPollsIndefinitelyDescription": "Inaktiva omröstningar kommer inte att raderas automatiskt.",
+  "verificationCodeSentTo": "Vi har skickat en verifieringskod till <b>{{ email }}</b>"
 }
