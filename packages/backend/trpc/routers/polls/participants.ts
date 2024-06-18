@@ -54,7 +54,7 @@ export const participants = router({
       z.object({
         pollId: z.string(),
         name: z.string().min(1, "Participant name is required").max(100),
-        email: z.string().email().optional(),
+        email: z.string().optional(),
         votes: z
           .object({
             optionId: z.string(),
