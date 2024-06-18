@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { TRPCClientError } from "@trpc/client";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -38,7 +39,7 @@ export const RegisterForm = () => {
   const params = useParams<{ locale: string }>();
   const searchParams = useSearchParams();
   const form = useForm<RegisterFormData>({
-    defaultValues: { email: "" },
+    defaultValues: { email: "", name: "" },
     resolver: zodResolver(registerFormSchema),
   });
 
@@ -95,25 +96,39 @@ export const RegisterForm = () => {
         <Form {...form}>
           <form
             onSubmit={handleSubmit(async (data) => {
-              const res = await requestRegistration.mutateAsync({
-                email: data.email,
-                name: data.name,
-              });
-
-              if (!res.ok) {
-                switch (res.reason) {
-                  case "userAlreadyExists":
-                    setError("email", {
-                      message: t("userAlreadyExists"),
-                    });
-                    break;
-                  case "emailNotAllowed":
-                    setError("email", {
-                      message: t("emailNotAllowed"),
-                    });
+              try {
+                await requestRegistration.mutateAsync(
+                  {
+                    email: data.email,
+                    name: data.name,
+                  },
+                  {
+                    onSuccess: (res) => {
+                      if (!res.ok) {
+                        switch (res.reason) {
+                          case "userAlreadyExists":
+                            setError("email", {
+                              message: t("userAlreadyExists"),
+                            });
+                            break;
+                          case "emailNotAllowed":
+                            setError("email", {
+                              message: t("emailNotAllowed"),
+                            });
+                            break;
+                        }
+                      } else {
+                        setToken(res.token);
+                      }
+                    },
+                  },
+                );
+              } catch (error) {
+                if (error instanceof TRPCClientError) {
+                  setError("root", {
+                    message: error.shape.message,
+                  });
                 }
-              } else {
-                setToken(res.token);
               }
             })}
           >
@@ -179,10 +194,15 @@ export const RegisterForm = () => {
                 {t("continue")}
               </Button>
             </div>
+            {formState.errors.root ? (
+              <FormMessage className="mt-6">
+                {formState.errors.root.message}
+              </FormMessage>
+            ) : null}
           </form>
         </Form>
       </AuthCard>
-      {!getValues("email") ? (
+      {!form.formState.isSubmitSuccessful ? (
         <div className="mt-4 pt-4 text-center text-gray-500 sm:text-base">
           <Trans
             i18nKey="alreadyRegistered"
