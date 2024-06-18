@@ -840,7 +840,7 @@ export const polls = router({
             to: p.email,
             props: {
               name: p.name,
-              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
+              pollUrl: ctx.absoluteUrl(`/invite/${poll.id}`),
               location: poll.location,
               title: poll.title,
               hostName: poll.user?.name ?? "",
