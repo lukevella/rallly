@@ -161,6 +161,14 @@ const Footer: React.FunctionComponent = () => {
                 <Trans i18nKey="support" defaults="Support" />
               </Link>
             </li>
+            <li>
+              <Link
+                href="https://rallly.openstatus.dev"
+                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans i18nKey="status" defaults="Status" />
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="lg:w-1/6">
