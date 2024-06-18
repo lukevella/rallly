@@ -237,5 +237,6 @@
   "pollStatus": "Estado",
   "pollsListAll": "Todos",
   "back": "Volver",
-  "timeShownIn": "Horarios mostrados en {timeZone}"
+  "timeShownIn": "Horarios mostrados en {timeZone}",
+  "verificationCodeSentTo": "Enviamos código de verificación a <b>{{ email }}</b>"
 }
