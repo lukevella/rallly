@@ -12,8 +12,8 @@ export const auth = router({
   requestRegistration: publicProcedure
     .input(
       z.object({
-        name: z.string(),
-        email: z.string(),
+        name: z.string().nonempty().max(100),
+        email: z.string().email(),
       }),
     )
     .mutation(
