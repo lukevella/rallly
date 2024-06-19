@@ -4,7 +4,7 @@ inputs:
   node-version:
     description: "Node.js version"
     required: true
-    default: "18"
+    default: "20"
   cache:
     description: "Package manager for caching"
     required: false
