@@ -36,9 +36,13 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
-  getCountByStatus: possiblyPublicProcedure.query(async () => {
+  getCountByStatus: possiblyPublicProcedure.query(async ({ ctx }) => {
     const res = await prisma.poll.groupBy({
       by: ["status"],
+      where: {
+        userId: ctx.user.id,
+        deleted: false,
+      },
       _count: {
         status: true,
       },
