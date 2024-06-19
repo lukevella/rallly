@@ -11,7 +11,6 @@
   "copied": "Copiado",
   "createAnAccount": "Crie uma conta",
   "createdBy": "por <b>{name}</b>",
-  "createPoll": "Criar sondagem",
   "delete": "Eliminar",
   "deleteDate": "Apagar data",
   "deletedPoll": "Sondagem eliminada",
@@ -70,7 +69,6 @@
   "validEmail": "Por favor, introduza um e-mail válido",
   "verificationCodeHelp": "Não recebeu o e-mail? Verifique se não recebeu na sua caixa de Spam/Junk.",
   "verificationCodePlaceholder": "Insira o código de 6 algarismos",
-  "verificationCodeSent": "Um código de verificação foi enviado para <b>{email}</b> <a>Alterar</a>",
   "verifyYourEmail": "Verifique o seu e-mail",
   "weekView": "Vista semanal",
   "wrongVerificationCode": "O seu código de verificação está incorreto ou expirou",
@@ -92,5 +90,5 @@
   "duplicateTitleLabel": "Título",
   "pricing": "Preço",
   "share": "Partilhar",
-  "back": "Voltar"
+  "createPoll": "Criar sondagem"
 }
