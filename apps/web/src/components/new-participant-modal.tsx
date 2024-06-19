@@ -2,7 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { VoteType } from "@rallly/database";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
+import { FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { TRPCClientError } from "@trpc/client";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
@@ -16,13 +18,13 @@ import VoteIcon from "./poll/vote-icon";
 
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
-  name: z.string().trim().min(1),
+  name: z.string().nonempty().max(100),
   email: z.string().email(),
 });
 
 const optionalEmailSchema = z.object({
   requireEmail: z.literal(false),
-  name: z.string().trim().min(1),
+  name: z.string().nonempty().max(100),
   email: z.string().email().or(z.literal("")),
 });
 
@@ -87,7 +89,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const isEmailRequired = poll.requireParticipantEmail;
 
-  const { register, formState, setFocus, handleSubmit } =
+  const { register, setError, formState, setFocus, handleSubmit } =
     useForm<NewParticipantFormData>({
       resolver: zodResolver(schema),
       defaultValues: {
@@ -102,13 +104,21 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        const newParticipant = await addParticipant.mutateAsync({
-          name: data.name,
-          votes: props.votes,
-          email: data.email,
-          pollId: poll.id,
-        });
-        props.onSubmit?.(newParticipant);
+        try {
+          const newParticipant = await addParticipant.mutateAsync({
+            name: data.name,
+            votes: props.votes,
+            email: data.email,
+            pollId: poll.id,
+          });
+          props.onSubmit?.(newParticipant);
+        } catch (error) {
+          if (error instanceof TRPCClientError) {
+            setError("root", {
+              message: error.shape.message,
+            });
+          }
+        }
       })}
       className="space-y-4"
     >
@@ -152,6 +162,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         <label className="mb-1 text-gray-500">{t("response")}</label>
         <VoteSummary votes={props.votes} />
       </fieldset>
+      {formState.errors.root ? (
+        <FormMessage>{formState.errors.root.message}</FormMessage>
+      ) : null}
       <div className="flex gap-2">
         <Button onClick={props.onCancel}>{t("cancel")}</Button>
         <Button

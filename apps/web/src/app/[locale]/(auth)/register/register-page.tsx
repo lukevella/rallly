@@ -1,6 +1,16 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { TRPCClientError } from "@trpc/client";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -8,29 +18,32 @@ import { useTranslation } from "next-i18next";
 import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { VerifyCode } from "@/components/auth/auth-forms";
 import { AuthCard } from "@/components/auth/auth-layout";
 import { Trans } from "@/components/trans";
 import { useDayjs } from "@/utils/dayjs";
-import { requiredString, validEmail } from "@/utils/form-validation";
 import { trpc } from "@/utils/trpc/client";
 
-type RegisterFormData = {
-  name: string;
-  email: string;
-};
+const registerFormSchema = z.object({
+  name: z.string().nonempty().max(100),
+  email: z.string().email(),
+});
+
+type RegisterFormData = z.infer<typeof registerFormSchema>;
 
 export const RegisterForm = () => {
   const { t } = useTranslation();
   const { timeZone } = useDayjs();
   const params = useParams<{ locale: string }>();
   const searchParams = useSearchParams();
-  const { register, handleSubmit, getValues, setError, formState } =
-    useForm<RegisterFormData>({
-      defaultValues: { email: "" },
-    });
+  const form = useForm<RegisterFormData>({
+    defaultValues: { email: "", name: "" },
+    resolver: zodResolver(registerFormSchema),
+  });
 
+  const { handleSubmit, control, getValues, setError, formState } = form;
   const queryClient = trpc.useUtils();
   const requestRegistration = trpc.auth.requestRegistration.useMutation();
   const authenticateRegistration =
@@ -80,87 +93,116 @@ export const RegisterForm = () => {
   return (
     <div>
       <AuthCard>
-        <form
-          onSubmit={handleSubmit(async (data) => {
-            const res = await requestRegistration.mutateAsync({
-              email: data.email,
-              name: data.name,
-            });
-
-            if (!res.ok) {
-              switch (res.reason) {
-                case "userAlreadyExists":
-                  setError("email", {
-                    message: t("userAlreadyExists"),
+        <Form {...form}>
+          <form
+            onSubmit={handleSubmit(async (data) => {
+              try {
+                await requestRegistration.mutateAsync(
+                  {
+                    email: data.email,
+                    name: data.name,
+                  },
+                  {
+                    onSuccess: (res) => {
+                      if (!res.ok) {
+                        switch (res.reason) {
+                          case "userAlreadyExists":
+                            setError("email", {
+                              message: t("userAlreadyExists"),
+                            });
+                            break;
+                          case "emailNotAllowed":
+                            setError("email", {
+                              message: t("emailNotAllowed"),
+                            });
+                            break;
+                        }
+                      } else {
+                        setToken(res.token);
+                      }
+                    },
+                  },
+                );
+              } catch (error) {
+                if (error instanceof TRPCClientError) {
+                  setError("root", {
+                    message: error.shape.message,
                   });
-                  break;
-                case "emailNotAllowed":
-                  setError("email", {
-                    message: t("emailNotAllowed"),
-                  });
+                }
               }
-            } else {
-              setToken(res.token);
-            }
-          })}
-        >
-          <div className="mb-1 text-2xl font-bold">{t("createAnAccount")}</div>
-          <p className="mb-4 text-gray-500">
-            {t("stepSummary", {
-              current: 1,
-              total: 2,
             })}
-          </p>
-          <fieldset className="mb-4">
-            <label htmlFor="name" className="mb-1 text-gray-500">
-              {t("name")}
-            </label>
-            <Input
-              id="name"
-              className="w-full"
-              size="lg"
-              autoFocus={true}
-              error={!!formState.errors.name}
-              disabled={formState.isSubmitting}
-              placeholder={t("namePlaceholder")}
-              {...register("name", { validate: requiredString })}
-            />
-            {formState.errors.name?.message ? (
-              <div className="mt-2 text-sm text-rose-500">
-                {formState.errors.name.message}
-              </div>
-            ) : null}
-          </fieldset>
-          <fieldset className="mb-4">
-            <label htmlFor="email" className="mb-1 text-gray-500">
-              {t("email")}
-            </label>
-            <Input
-              className="w-full"
-              id="email"
-              size="lg"
-              error={!!formState.errors.email}
-              disabled={formState.isSubmitting}
-              placeholder={t("emailPlaceholder")}
-              {...register("email", { validate: validEmail })}
-            />
-            {formState.errors.email?.message ? (
-              <div className="mt-1 text-sm text-rose-500">
-                {formState.errors.email.message}
-              </div>
-            ) : null}
-          </fieldset>
-          <Button
-            loading={formState.isSubmitting}
-            type="submit"
-            variant="primary"
-            size="lg"
           >
-            {t("continue")}
-          </Button>
-        </form>
+            <div className="mb-1 text-2xl font-bold">
+              {t("createAnAccount")}
+            </div>
+            <p className="mb-6 text-gray-500">
+              {t("stepSummary", {
+                current: 1,
+                total: 2,
+              })}
+            </p>
+            <div className="space-y-4">
+              <FormField
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="name">{t("name")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        id="name"
+                        size="lg"
+                        autoFocus={true}
+                        error={!!formState.errors.name}
+                        placeholder={t("namePlaceholder")}
+                        disabled={formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="email">{t("email")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        id="email"
+                        size="lg"
+                        error={!!formState.errors.email}
+                        placeholder={t("emailPlaceholder")}
+                        disabled={formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="mt-6">
+              <Button
+                loading={formState.isSubmitting}
+                type="submit"
+                variant="primary"
+                size="lg"
+              >
+                {t("continue")}
+              </Button>
+            </div>
+            {formState.errors.root ? (
+              <FormMessage className="mt-6">
+                {formState.errors.root.message}
+              </FormMessage>
+            ) : null}
+          </form>
+        </Form>
       </AuthCard>
-      {!getValues("email") ? (
+      {!form.formState.isSubmitSuccessful ? (
         <div className="mt-4 pt-4 text-center text-gray-500 sm:text-base">
           <Trans
             i18nKey="alreadyRegistered"
