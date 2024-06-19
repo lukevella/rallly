@@ -80,7 +80,6 @@
   "validEmail": "Por favor, insira um e-mail válido",
   "verificationCodeHelp": "Não recebeu o e-mail? Verifique seu spam/lixeira.",
   "verificationCodePlaceholder": "Insira o seu código de 6 dígitos",
-  "verificationCodeSent": "Um código de verificação foi enviado para <b>{email}</b> <a>Alterar</a>",
   "verifyYourEmail": "Verifique seu e-mail",
   "startOfWeek": "Início da semana",
   "weekView": "Visão semanal",
@@ -261,5 +260,6 @@
   "advancedSettingsTitle": "Configurações Avançadas",
   "advancedSettingsDescription": "Oculte participantes, oculte pontuações, exija o endereço de e-mail do participante.",
   "keepPollsIndefinitely": "Mantenha Enquetes Indefinidamente",
-  "keepPollsIndefinitelyDescription": "Enquetes inativas não serão excluídas automaticamente."
+  "keepPollsIndefinitelyDescription": "Enquetes inativas não serão excluídas automaticamente.",
+  "verificationCodeSentTo": "Enviamos um código de verificação para <b>{{ email }}</b>"
 }
