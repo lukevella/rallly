@@ -1,11 +1,11 @@
-FROM node:18 AS builder
+FROM node:20 AS builder
 
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
 RUN turbo prune --scope=@rallly/web --docker
 
-FROM node:18 AS installer
+FROM node:20 AS installer
 
 WORKDIR /app
 COPY .gitignore .gitignore
@@ -26,7 +26,7 @@ ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 
 RUN yarn build
 
-FROM node:18 AS runner
+FROM node:20 AS runner
 
 WORKDIR /app
 
