@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint .",
-    "lint:tsc": "tsc --noEmit"
+    "type-check": "tsc --pretty --noEmit"
   },
   "main": "src/index.ts",
   "types": "src/index.ts",

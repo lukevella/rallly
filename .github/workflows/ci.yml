@@ -21,7 +21,7 @@ jobs:
       - uses: ./.github/actions/yarn-install
 
       - name: Check types
-        run: yarn lint:tsc
+        run: yarn type-check
 
   linting:
     name: Linting
