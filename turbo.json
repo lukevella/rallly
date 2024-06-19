@@ -36,7 +36,7 @@
     "lint": {
       "outputs": []
     },
-    "lint:tsc": {
+    "type-check": {
       "outputs": []
     },
     "dev": {

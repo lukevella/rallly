@@ -20,7 +20,7 @@
     "test:unit": "turbo test:unit",
     "lint": "turbo lint",
     "i18n:scan": "turbo i18n:scan",
-    "lint:tsc": "turbo lint:tsc",
+    "type-check": "turbo type-check",
     "prettier": "prettier --write .",
     "release": "./scripts/create-release.sh"
   },
