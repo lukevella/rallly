@@ -34,9 +34,19 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
       : dayjs(value).startOf("day");
 
     const res: string[] = [];
-    while (cursor.isSame(value, "day")) {
-      res.push(cursor.toISOString());
-      cursor = cursor.add(15, "minutes");
+
+    if (after) {
+      let cursor = dayjs(after).add(15, "minutes");
+      while (cursor.diff(after, "hours") < 24) {
+        res.push(cursor.toISOString());
+        cursor = cursor.add(15, "minutes");
+      }
+    } else {
+      cursor = dayjs(value).startOf("day");
+      while (cursor.isSame(value, "day")) {
+        res.push(cursor.toISOString());
+        cursor = cursor.add(15, "minutes");
+      }
     }
     return res;
   }, [after, open, value]);
