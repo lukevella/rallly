@@ -1,5 +1,4 @@
 "use client";
-import { Slot } from "@radix-ui/react-slot";
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
