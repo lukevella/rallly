@@ -74,7 +74,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      await page.waitForURL("/polls");
+      await page.waitForURL("/");
     });
   });
 
@@ -121,7 +121,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      await page.waitForURL("/polls");
+      await page.waitForURL("/");
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
@@ -141,7 +141,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      await page.waitForURL("/polls");
+      await page.waitForURL("/");
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
@@ -161,7 +161,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      await page.waitForURL("/polls");
+      await page.waitForURL("/");
 
       await expect(page.getByText("Test User")).toBeVisible();
     });

@@ -6,7 +6,7 @@
     "dev": "dotenv -c development -- turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
     "dev:landing": "dotenv -c development turbo dev --filter=@rallly/landing",
-    "start": "dotenv -c -- turbo run start --filter=@rallly/web",
+    "start": "turbo run start --filter=@rallly/web",
     "build": "dotenv -c -- turbo run build --filter=@rallly/web",
     "build:test": "turbo build:test",
     "docs:dev": "turbo dev --filter=@rallly/docs...",
@@ -32,10 +32,10 @@
     "packages/*"
   ],
   "dependencies": {
-    "@prisma/client": "^5.3.1",
+    "@prisma/client": "^5.15.0",
     "@sentry/nextjs": "^7.77.0",
     "framer-motion": "^10.16.4",
-    "next": "^14.0.4",
+    "next": "^14.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2",

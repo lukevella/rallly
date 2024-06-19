@@ -159,7 +159,7 @@ model Event {
   duration  Int      @default(0) @map("duration_minutes")
   createdAt DateTime @default(now()) @map("created_at")
 
-  Poll      Poll?
+  poll      Poll?
 
   @@index([userId], type: Hash)
   @@map("events")

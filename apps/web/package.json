@@ -12,7 +12,7 @@
     "lint:tsc": "tsc --noEmit",
     "i18n:scan": "i18next-scanner --config i18next-scanner.config.js",
     "prettier": "prettier --write ./src",
-    "test:integration": "playwright test",
+    "test:integration": "NODE_ENV=test playwright test",
     "test:unit": "vitest run",
     "test": "yarn test:unit && yarn test:e2e",
     "test:codegen": "playwright codegen http://localhost:3000",

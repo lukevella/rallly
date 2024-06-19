@@ -10,6 +10,7 @@
   "types": "src/index.ts",
   "dependencies": {
     "@rallly/database": "*",
+    "@rallly/features": "*",
     "@rallly/emails": "*",
     "@rallly/utils": "*",
     "@trpc/server": "^10.13.0",

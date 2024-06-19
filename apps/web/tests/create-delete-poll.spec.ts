@@ -22,12 +22,6 @@ test.describe.serial(() => {
     await newPollPage.createPollAndCloseDialog();
 
     await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
-
-    // const { email } = await mailServer.captureOne("john.doe@example.com", {
-    //   wait: 5000,
-    // });
-
-    // expect(email.headers.subject).toBe("Let's find a date for Monthly Meetup");
   });
 
   // delete the poll we just created

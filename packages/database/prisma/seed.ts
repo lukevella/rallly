@@ -11,7 +11,7 @@ const randInt = (max = 1, floor = 0) => {
 async function createPollsForUser(userId: string) {
   // Create some polls
   const polls = await Promise.all(
-    Array.from({ length: 20 }).map(async (_, i) => {
+    Array.from({ length: 5 }).map(async (_, i) => {
       // create some polls with no duration (all day) and some with a random duration.
       const duration = i % 2 === 0 ? 60 * randInt(8, 1) : 0;
       let cursor = dayjs().add(randInt(30), "day").second(0).minute(0);
@@ -25,7 +25,7 @@ async function createPollsForUser(userId: string) {
         },
         data: {
           id: faker.random.alpha(10),
-          title: `${faker.animal.cat()} meetup - ${faker.date.month()}`,
+          title: `${faker.animal.cat()} Meetup ${faker.date.month()}`,
           description: faker.lorem.paragraph(),
           location: faker.address.streetAddress(),
           deadline: faker.date.future(),
@@ -34,7 +34,7 @@ async function createPollsForUser(userId: string) {
               id: userId,
             },
           },
-          timeZone: duration !== 0 ? "America/New_York" : undefined,
+          timeZone: duration !== 0 ? "Europe/London" : undefined,
           options: {
             create: Array.from({ length: numberOfOptions }).map(() => {
               const startTime = cursor.toDate();

@@ -1,27 +1,77 @@
 "use client";
 
+import { Slot } from "@radix-ui/react-slot";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import {
+  BarChart2Icon,
+  CalendarIcon,
+  HomeIcon,
+  MenuIcon,
+  PlusIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { MobileMenuButton } from "@/app/[locale]/(admin)/menu/menu-button";
-import { CurrentUserAvatar } from "@/components/user";
+function MobileNavigationIcon({ children }: { children: React.ReactNode }) {
+  return (
+    <Slot className="group-[.is-active]:text-primary group-focus:text-primary group-hover:text-foreground size-5 text-gray-500">
+      {children}
+    </Slot>
+  );
+}
+
+function MobileNavigationItem({
+  children,
+  href,
+}: {
+  href: string;
+  children?: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  return (
+    <Link
+      className={cn(
+        "group flex grow basis-1/5 flex-col items-center gap-1 rounded-lg",
+        {
+          "is-active pointer-events-none": pathname === href,
+        },
+      )}
+      href={href}
+    >
+      {children}
+    </Link>
+  );
+}
 
 export function MobileNavigation() {
-  const pathname = usePathname();
-
-  const isOpen = pathname === "/menu";
-
   return (
-    <div className="sticky top-0 z-20 flex h-12 items-center justify-between border-b bg-gray-100 px-2 lg:hidden lg:px-4">
-      <MobileMenuButton open={isOpen} />
-      <div className="flex justify-end gap-x-2.5">
-        <Button asChild variant="ghost">
-          <Link href="/settings/profile">
-            <CurrentUserAvatar size="xs" />
-          </Link>
-        </Button>
-      </div>
+    <div className="flex items-center justify-between gap-x-4">
+      <MobileNavigationItem href="/">
+        <MobileNavigationIcon>
+          <HomeIcon />
+        </MobileNavigationIcon>
+      </MobileNavigationItem>
+      <MobileNavigationItem href="/polls">
+        <MobileNavigationIcon>
+          <BarChart2Icon />
+        </MobileNavigationIcon>
+      </MobileNavigationItem>
+      <Button asChild variant="primary">
+        <Link href="/new">
+          <PlusIcon className="size-5 text-white" />
+        </Link>
+      </Button>
+      <MobileNavigationItem href="/events">
+        <MobileNavigationIcon>
+          <CalendarIcon />
+        </MobileNavigationIcon>
+      </MobileNavigationItem>
+      <MobileNavigationItem href="/menu">
+        <MobileNavigationIcon>
+          <MenuIcon />
+        </MobileNavigationIcon>
+      </MobileNavigationItem>
     </div>
   );
 }

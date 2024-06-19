@@ -1,6 +1,6 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { Card, CardContent, CardDescription, CardTitle } from "@rallly/ui/card";
+import { Card, CardContent, CardDescription } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { DotIcon, MapPinIcon, PauseIcon } from "lucide-react";
@@ -22,9 +22,9 @@ export function EventCard() {
         <CardContent>
           <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
             <div>
-              <CardTitle data-testid="poll-title" className="text-lg">
+              <h1 data-testid="poll-title" className="text-lg font-semibold">
                 {poll.title}
-              </CardTitle>
+              </h1>
               <CardDescription>
                 <span className="flex items-center gap-0.5 whitespace-nowrap text-sm text-gray-500">
                   <span>

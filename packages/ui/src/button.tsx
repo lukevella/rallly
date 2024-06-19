@@ -7,27 +7,27 @@ import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex border font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap rounded-md border",
-    "focus-visible:ring-offset-input-background focus-visible:ring-offset-1 focus-visible:ring-2 focus-visible:ring-gray-200",
-    "active:shadow-none",
+    "inline-flex border font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
+    "focus-visible:ring-offset-input-background",
+    "focus:shadow-none",
   ),
   {
     variants: {
       variant: {
         primary:
-          "border-primary-700 shadow-sm bg-primary disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm hover:bg-primary-500 active:bg-primary-700",
+          "border-primary-700 bg-primary disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm focus:bg-primary-500",
         destructive:
           "bg-destructive shadow-sm text-destructive-foreground focus-visible:ring-offset-1 active:bg-destructive border-destructive hover:bg-destructive/90",
         default:
-          "rounded-md px-3.5 py-2.5 data-[state=open]:shadow-none data-[state=open]:bg-gray-100 active:bg-gray-200 hover:bg-gray-100 bg-gray-50",
+          "ring-1 ring-inset ring-white/25 data-[state=open]:bg-gray-100 focus:border-gray-300 focus:bg-gray-200 hover:bg-gray-100 bg-gray-50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "border-transparent bg-transparent hover:bg-gray-200 active:bg-gray-300",
+          "border-transparent bg-transparent text-gray-800 focus:border-gray-300 focus:bg-gray-200",
         link: "underline-offset-4 border-transparent hover:underline text-primary",
       },
       size: {
-        default: "h-9 px-2.5 gap-x-2.5 text-sm",
+        default: "h-9 px-2.5 pr-3 gap-x-2 text-sm rounded-md",
         sm: "h-7 text-sm px-1.5 gap-x-1.5 rounded-md",
         lg: "h-11 text-base gap-x-3 px-4 rounded-md",
       },

@@ -136,7 +136,7 @@ export const CreatePoll: React.FunctionComponent = () => {
             className="w-full"
             variant="primary"
           >
-            <Trans i18nKey="createPoll" />
+            <Trans i18nKey="createPoll" defaults="Create poll" />
           </Button>
         </div>
       </form>

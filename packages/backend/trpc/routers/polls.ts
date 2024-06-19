@@ -1,10 +1,7 @@
-import { prisma } from "@rallly/database";
+import { PollStatus, prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import toArray from "dayjs/plugin/toArray";
-import utc from "dayjs/plugin/utc";
 import * as ics from "ics";
 import { z } from "zod";
 
@@ -18,10 +15,6 @@ import {
 } from "../trpc";
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
-
-dayjs.extend(toArray);
-dayjs.extend(timezone);
-dayjs.extend(utc);
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {
   const res = await prisma.poll.findUnique({
@@ -43,6 +36,64 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
+  getCountByStatus: possiblyPublicProcedure.query(async ({ ctx }) => {
+    const res = await prisma.poll.groupBy({
+      by: ["status"],
+      where: {
+        userId: ctx.user.id,
+        deleted: false,
+      },
+      _count: {
+        status: true,
+      },
+    });
+
+    return res.reduce(
+      (acc, { status, _count }) => {
+        acc[status] = _count.status;
+        return acc;
+      },
+      {} as Record<PollStatus, number>,
+    );
+  }),
+  list: possiblyPublicProcedure
+    .input(
+      z.object({
+        status: z.enum(["all", "live", "paused", "finalized"]),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await prisma.poll.findMany({
+        where: {
+          userId: ctx.user.id,
+          status: input.status === "all" ? undefined : input.status,
+        },
+        orderBy: [
+          {
+            createdAt: "desc",
+          },
+          {
+            title: "asc",
+          },
+        ],
+        select: {
+          id: true,
+          title: true,
+          location: true,
+          timeZone: true,
+          createdAt: true,
+          status: true,
+          userId: true,
+          participants: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+    }),
+
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
     .input(

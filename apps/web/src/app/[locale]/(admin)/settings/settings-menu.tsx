@@ -4,35 +4,32 @@ import { Icon } from "@rallly/ui/icon";
 import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { Trans } from "react-i18next";
 
-import {
-  ResponsiveMenu,
-  ResponsiveMenuItem,
-} from "@/app/components/responsive-menu";
+import { TabMenu, TabMenuItem } from "@/app/components/tab-menu";
 import { IfCloudHosted } from "@/contexts/environment";
 
 export function SettingsMenu() {
   return (
-    <ResponsiveMenu>
-      <ResponsiveMenuItem href="/settings/profile">
+    <TabMenu>
+      <TabMenuItem href="/settings/profile">
         <Icon>
           <UserIcon />
         </Icon>
         <Trans i18nKey="profile" />
-      </ResponsiveMenuItem>
-      <ResponsiveMenuItem href="/settings/preferences">
+      </TabMenuItem>
+      <TabMenuItem href="/settings/preferences">
         <Icon>
           <Settings2Icon />
         </Icon>
         <Trans i18nKey="preferences" />
-      </ResponsiveMenuItem>
+      </TabMenuItem>
       <IfCloudHosted>
-        <ResponsiveMenuItem href="/settings/billing">
+        <TabMenuItem href="/settings/billing">
           <Icon>
             <CreditCardIcon />
           </Icon>
           <Trans i18nKey="billing" />
-        </ResponsiveMenuItem>
+        </TabMenuItem>
       </IfCloudHosted>
-    </ResponsiveMenu>
+    </TabMenu>
   );
 }

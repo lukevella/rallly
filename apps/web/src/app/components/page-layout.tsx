@@ -1,21 +1,12 @@
 "use client";
+import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 
 export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return (
-    <div
-      className={cn(
-        "h-full max-w-4xl grow px-3 py-4 lg:px-4 lg:py-6",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn(className)}>{children}</div>;
 }
 
 export function PageIcon({
@@ -26,8 +17,8 @@ export function PageIcon({
   className?: string;
 }) {
   return (
-    <div className={cn(className)}>
-      <Icon size="lg">{children}</Icon>
+    <div className={cn("hidden", className)}>
+      <Slot className="size-4">{children}</Slot>
     </div>
   );
 }
@@ -40,9 +31,14 @@ export function PageTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn("truncate text-base font-semibold", className)}>
+    <h1
+      className={cn(
+        "inline-flex items-center truncate text-xl font-bold tracking-tight text-gray-700",
+        className,
+      )}
+    >
       {children}
-    </h2>
+    </h1>
   );
 }
 
@@ -54,7 +50,15 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("mb-4 lg:mb-6", className)}>{children}</div>;
+  return <div className={cn("mb-4 md:mt-2", className)}>{children}</div>;
+}
+
+export function PageSection({ children }: { children?: React.ReactNode }) {
+  return <div className="space-y-4 md:space-y-6">{children}</div>;
+}
+
+export function PageSectionTitle({ children }: { children?: React.ReactNode }) {
+  return <h2 className="text-muted-foreground text-sm">{children}</h2>;
 }
 
 export function PageContent({
@@ -64,5 +68,5 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("lg:grow", className)}>{children}</div>;
+  return <div className={cn("md:grow", className)}>{children}</div>;
 }

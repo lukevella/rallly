@@ -1,34 +1,28 @@
-import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
-import { ArrowLeftIcon } from "lucide-react";
-import Link from "next/link";
-import { Trans } from "react-i18next/TransWithoutContext";
-
+import { UserScheduledEvents } from "@/app/[locale]/(admin)/events/user-scheduled-events";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
-import { CreatePoll } from "@/components/create-poll";
 
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
       <PageHeader>
-        <Button asChild>
-          <Link href="/polls">
-            <Icon>
-              <ArrowLeftIcon />
-            </Icon>
-            <Trans i18nKey="back" t={t} defaults="Back" />
-          </Link>
-        </Button>
+        <div className="flex items-center gap-x-3">
+          <PageTitle>
+            {t("events", {
+              defaultValue: "Events",
+            })}
+          </PageTitle>
+        </div>
       </PageHeader>
       <PageContent>
-        <CreatePoll />
+        <UserScheduledEvents />
       </PageContent>
     </PageContainer>
   );
@@ -41,6 +35,8 @@ export async function generateMetadata({
 }) {
   const { t } = await getTranslation(params.locale);
   return {
-    title: t("newPoll"),
+    title: t("events", {
+      defaultValue: "Events",
+    }),
   };
 }

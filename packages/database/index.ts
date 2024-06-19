@@ -1,13 +1,31 @@
-import { PrismaClient } from "@rallly/database";
+import { PrismaClient } from "@prisma/client";
 
-export * from "@prisma/client";
+export type * from "@prisma/client";
 
-declare global {
-  // allow global `var` declarations
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
-}
+const prismaClientSingleton = () => {
+  return new PrismaClient().$extends({
+    query: {
+      poll: {
+        findMany: ({ args, query }) => {
+          if (!args.where?.deleted) {
+            args.where = { ...args.where, deleted: false };
+          }
 
-export const prisma = global.prisma || new PrismaClient();
+          return query(args);
+        },
+      },
+    },
+  });
+};
 
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
+export type ExtendedPrismaClient = ReturnType<typeof prismaClientSingleton>;
+
+declare const globalThis: {
+  prismaGlobal: ExtendedPrismaClient;
+} & typeof global;
+
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+
+export { prisma };
+
+if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;

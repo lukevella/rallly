@@ -46,11 +46,6 @@ const nextConfig = {
         destination: "/settings/profile",
         permanent: true,
       },
-      {
-        source: "/",
-        destination: "/polls",
-        permanent: false,
-      },
     ];
   },
 };
