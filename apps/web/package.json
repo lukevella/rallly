@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:test": "dotenv -e .env.test -- next build",
+    "build:test": "NODE_ENV=test next build",
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint .",
