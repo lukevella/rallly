@@ -124,7 +124,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
 
             form.reset({
               mode: "view",
-              participantId: undefined,
+              participantId: data.participantId,
               votes: options.map((option) => ({
                 optionId: option.id,
               })),
