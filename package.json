@@ -12,7 +12,7 @@
     "build:test": "turbo build:test",
     "docs:dev": "turbo dev --filter=@rallly/docs...",
     "db:deploy": "prisma migrate deploy",
-    "db:generate": "turbo db:generate",
+    "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "docker:up": "docker compose -f docker-compose.dev.yml up -d && wait-on --timeout 60000 tcp:localhost:5450",
