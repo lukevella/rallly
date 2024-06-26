@@ -14,10 +14,7 @@ export const middleware = withAuth(
     const newUrl = nextUrl.clone();
 
     // if the user is already logged in, don't let them access the login page
-    if (
-      /^\/(login|register)/.test(newUrl.pathname) &&
-      req.nextauth.token?.email
-    ) {
+    if (/^\/(login)/.test(newUrl.pathname) && req.nextauth.token?.email) {
       newUrl.pathname = "/";
       return NextResponse.redirect(newUrl);
     }
