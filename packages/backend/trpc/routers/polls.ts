@@ -860,30 +860,28 @@ export const polls = router({
           });
         }
 
-        const emailToHost = waitUntil(
-          ctx.emailClient.sendTemplate("FinalizeHostEmail", {
-            subject: `Date booked for ${poll.title}`,
-            to: poll.user.email,
-            props: {
-              name: poll.user.name,
-              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
-              location: poll.location,
-              title: poll.title,
-              attendees: poll.participants
-                .filter((p) =>
-                  p.votes.some(
-                    (v) => v.optionId === input.optionId && v.type !== "no",
-                  ),
-                )
-                .map((p) => p.name),
-              date,
-              day,
-              dow,
-              time,
-            },
-            attachments: [{ filename: "event.ics", content: event.value }],
-          }),
-        );
+        const emailToHost = ctx.emailClient.sendTemplate("FinalizeHostEmail", {
+          subject: `Date booked for ${poll.title}`,
+          to: poll.user.email,
+          props: {
+            name: poll.user.name,
+            pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
+            location: poll.location,
+            title: poll.title,
+            attendees: poll.participants
+              .filter((p) =>
+                p.votes.some(
+                  (v) => v.optionId === input.optionId && v.type !== "no",
+                ),
+              )
+              .map((p) => p.name),
+            date,
+            day,
+            dow,
+            time,
+          },
+          attachments: [{ filename: "event.ics", content: event.value }],
+        });
 
         const emailsToParticipants = participantsToEmail.map((p) => {
           return ctx.emailClient.sendTemplate("FinalizeParticipantEmail", {
@@ -923,13 +921,7 @@ export const polls = router({
           },
         });
 
-        waitUntil(
-          Promise.all([
-            emailToHost,
-            ...emailsToParticipants,
-            ctx.posthogClient?.flushAsync(),
-          ]),
-        );
+        waitUntil(Promise.all([emailToHost, ...emailsToParticipants]));
       }
     }),
   reopen: possiblyPublicProcedure
