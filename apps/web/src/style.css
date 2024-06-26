@@ -23,6 +23,10 @@
     @apply block text-sm;
   }
 
+  p {
+    @apply leading-normal;
+  }
+
   a,
   button,
   input,

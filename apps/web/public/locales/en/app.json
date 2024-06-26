@@ -207,7 +207,6 @@
   "authErrorCta": "Go to login page",
   "continueAs": "Continue as",
   "pageMovedDescription": "Redirecting to <a>{newUrl}</a>",
-  "notRegistered": "Don't have an account? <a>Register</a>",
   "unlockFeatures": "Unlock all Pro features.",
   "pollStatusFinalized": "Finalized",
   "share": "Share",
@@ -228,7 +227,6 @@
   "autoTimeZoneHelp": "Enable this setting to automatically adjust event times to each participant's local time zone.",
   "commentsDisabled": "Comments have been disabled",
   "allParticipants": "All Participants",
-  "pollsListAll": "All",
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
   "timeShownIn": "Times shown in {timeZone}",
   "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time",
@@ -263,5 +261,12 @@
   "pastEventsEmptyStateTitle": "No Past Events",
   "pastEventsEmptyStateDescription": "When you schedule events, they will appear here.",
   "activePollCount": "{{activePollCount}} Live",
-  "createPoll": "Create poll"
+  "createPoll": "Create poll",
+  "continueWith": "Continue with {provider}",
+  "loginOrSignup": "Login or sign up in seconds",
+  "loginDescription": "Use your email or another service to log in.",
+  "Finish logging in": "__STRING_NOT_TRANSLATED__",
+  "enterCode": "Enter the code we sent to {email}",
+  "finishLoggingIn": "Finish logging in",
+  "verificationCode": "Code"
 }

@@ -8,6 +8,21 @@ import { publicProcedure, router } from "../trpc";
 import { RegistrationTokenPayload } from "../types";
 
 export const auth = router({
+  getUserInfo: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const count = await prisma.user.count({
+        where: {
+          email: input.email,
+        },
+      });
+
+      return { isRegistered: count > 0 };
+    }),
   // @deprecated
   requestRegistration: publicProcedure
     .input(
