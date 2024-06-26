@@ -25,7 +25,7 @@ export const UserAvatar = ({
           "size-5 text-[10px]": size === "xs",
           "size-6 text-sm": size === "sm",
           "size-8 text-base": size === "md",
-          "size-10 text-lg": size === "lg",
+          "size-12 text-lg": size === "lg",
         },
         !name
           ? "bg-gray-200"
