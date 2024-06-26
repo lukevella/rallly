@@ -152,6 +152,7 @@ if (
 ) {
   providers.push(
     AzureADProvider({
+      name: "Microsoft",
       tenantId: process.env.MICROSOFT_TENANT_ID,
       clientId: process.env.MICROSOFT_CLIENT_ID,
       clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
