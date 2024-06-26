@@ -98,7 +98,13 @@ This command will:
 
 ## Using a Reverse Proxy
 
-By default the app will run unencrypted on port 3000. If you want to serve the app over HTTPS you will need to use a reverse proxy.
+By default the app will run unencrypted on port 3000. If you want to serve the app over HTTPS you will need to use a reverse proxy. For example, using Apache you would put something similar to the following in your web site's configuration:
+
+```
+ ProxyPreserveHost On
+ ProxyPass / http://localhost:3000/
+ ProxyPassReverse / http://localhost:3000/
+```
 
 After setting up a reverse proxy be sure to change this line `- 3000:3000` to - `127.0.0.1:3000:3000` in `docker-compose.yml` and restart the container for it to apply the changes. This prevents Rallly from being accessed remotely using HTTP on port 3000 which is a security concern.
 
