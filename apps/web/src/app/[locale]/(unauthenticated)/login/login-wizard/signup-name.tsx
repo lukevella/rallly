@@ -24,7 +24,7 @@ import { useTranslation } from "@/app/i18n/client";
 import { Trans } from "@/components/trans";
 
 const registerNameFormSchema = z.object({
-  name: z.string().max(100),
+  name: z.string().min(1).max(100),
   email: z.string().email(),
 });
 

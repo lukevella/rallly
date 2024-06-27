@@ -15,7 +15,8 @@
   html {
     @apply h-full font-sans text-base text-gray-700;
   }
-  body #__next {
+  body,
+  #__next {
     @apply h-full;
   }
 

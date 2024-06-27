@@ -42,32 +42,28 @@ test.describe.serial(() => {
     mailServer.stop(() => {});
   });
 
+  test("should redirect to login page if not logged in", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForURL("/login");
+  });
+
   test.describe("new user", () => {
-    test("shows that user doesn't exist yet", async ({ page }) => {
+    test("user registration", async ({ page }) => {
       await page.goto("/login");
 
-      // your login page test logic
+      await page.getByText("Login or sign up in seconds").waitFor();
+
       await page
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page
+        .getByRole("button", { name: "Continue with Email", exact: true })
+        .click();
 
-      // Make sure the user doesn't exist yet and that logging in is not possible
-      await expect(
-        page.getByText("A user with that email doesn't exist"),
-      ).toBeVisible();
-    });
-
-    test("user registration", async ({ page }) => {
-      await page.goto("/register");
-
-      await page.getByText("Create an account").waitFor();
+      await page.getByText("Create your account").waitFor();
 
       await page.getByPlaceholder("Jessie Smith").fill("Test User");
-      await page
-        .getByPlaceholder("jessie.smith@example.com")
-        .fill(testUserEmail);
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
@@ -76,8 +72,6 @@ test.describe.serial(() => {
       const code = await getCode();
 
       await codeInput.fill(code);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
 
       await page.waitForURL("/");
     });
@@ -108,7 +102,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       const { email } = await mailServer.captureOne(testUserEmail, {
         wait: 5000,
@@ -142,13 +136,11 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       const code = await getCode();
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
 
       await page.waitForURL("/");
 
@@ -162,13 +154,11 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill("Test@example.com");
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       const code = await getCode();
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
 
       await page.waitForURL("/");
 

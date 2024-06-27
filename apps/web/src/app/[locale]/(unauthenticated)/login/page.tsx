@@ -6,11 +6,9 @@ import { getTranslation } from "@/app/i18n";
 
 export default async function LoginPage() {
   return (
-    <div className="h-screen p-3">
-      <Card className="mx-auto w-full max-w-sm p-6 sm:mt-[25vh]">
-        <NextLoginWizard />
-      </Card>
-    </div>
+    <Card className="mx-auto w-full max-w-sm p-6">
+      <NextLoginWizard />
+    </Card>
   );
 }
 
