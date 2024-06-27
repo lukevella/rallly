@@ -1,3 +1,7 @@
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import { PlusIcon } from "lucide-react";
+import Image from "next/image";
 import { redirect, RedirectType } from "next/navigation";
 
 import { getServerSession } from "@/utils/auth";
@@ -14,7 +18,7 @@ export default async function Layout({
   }
 
   return (
-    <div className="relative h-screen pt-[20vh]">
+    <div className="relative h-screen">
       <div className="absolute inset-0">
         <svg
           className="absolute inset-0 z-10 h-screen w-full stroke-gray-200 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)]"
@@ -41,7 +45,19 @@ export default async function Layout({
         </svg>
       </div>
 
-      <div className="relative z-20">{children}</div>
+      <div className="relative z-20">
+        <div className="pt-[10vh]">
+          <div className="mb-8 flex justify-center">
+            <Image
+              src="/static/logo.svg"
+              width={130}
+              height={50}
+              alt="Rallly"
+            />
+          </div>
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

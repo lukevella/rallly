@@ -78,6 +78,7 @@ export function LoginWithEmailForm() {
         />
         <div>
           <Button
+            variant="primary"
             loading={form.formState.isSubmitting}
             type="submit"
             className="w-full"
