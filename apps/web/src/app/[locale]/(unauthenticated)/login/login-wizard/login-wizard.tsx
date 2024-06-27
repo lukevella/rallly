@@ -2,8 +2,8 @@ import React from "react";
 
 import { LoginMenu } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-menu";
 import { LoginOtp } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-otp";
-import { SignUpName } from "@/app/[locale]/(unauthenticated)/login/signup/signup-name";
-import { SignUpOtp } from "@/app/[locale]/(unauthenticated)/login/signup/signup-otp";
+import { SignUpName } from "@/app/[locale]/(unauthenticated)/login/login-wizard/signup-name";
+import { SignUpOtp } from "@/app/[locale]/(unauthenticated)/login/login-wizard/signup-otp";
 
 type LoginWizardStep = "menu" | "login-otp" | "signup-name" | "signup-otp";
 
@@ -75,8 +75,10 @@ type LoginWizardProps = {
     id: string;
     name: string;
   }[];
+  initiateSignUp: (data: { name: string; email: string }) => Promise<void>;
+  finishSignUp: (data: { otp: string }) => Promise<void>;
   onLogin: (email: string, otp: string) => Promise<{ error?: string } | void>;
-  onLoginRequest: (email: string) => Promise<{ error?: string } | void>;
+  checkUserExists: (email: string) => Promise<boolean>;
 };
 
 const LoginWizardPropsContext = React.createContext<LoginWizardProps | null>(

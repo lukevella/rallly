@@ -32,7 +32,7 @@ type LoginWithEmailValues = z.infer<ReturnType<typeof useLoginWithEmailSchema>>;
 
 export function LoginWithEmailForm() {
   const { state, dispatch } = useLoginWizard();
-  const { onLoginRequest } = useLoginWizardProps();
+  const { checkUserExists } = useLoginWizardProps();
   const loginWithEmailSchema = useLoginWithEmailSchema();
   const form = useForm<LoginWithEmailValues>({
     defaultValues: {
@@ -48,23 +48,10 @@ export function LoginWithEmailForm() {
       <form
         className="space-y-4"
         onSubmit={handleSubmit(async ({ email }) => {
-          const res = await onLoginRequest(email);
-          if (res?.error) {
-            // We need to wait for the form to be submitted before we can set the error
-            setTimeout(() => {
-              form.setError(
-                "email",
-                {
-                  type: "manual",
-                  message: t("userNotFound"),
-                },
-                {
-                  shouldFocus: true,
-                },
-              );
-            });
-          } else {
+          if (await checkUserExists(email)) {
             dispatch({ type: "login", email });
+          } else {
+            dispatch({ type: "signup", email });
           }
         })}
       >

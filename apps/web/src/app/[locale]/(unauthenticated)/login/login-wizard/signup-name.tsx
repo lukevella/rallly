@@ -14,13 +14,18 @@ import { ChevronLeftIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useLoginWizard } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-wizard";
+import { LoginWizardError } from "@/app/[locale]/(unauthenticated)/login/login-wizard/errors";
+import {
+  useLoginWizard,
+  useLoginWizardProps,
+} from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-wizard";
 import { SSOMenu } from "@/app/[locale]/(unauthenticated)/login/login-wizard/sso-menu";
 import { useTranslation } from "@/app/i18n/client";
 import { Trans } from "@/components/trans";
 
 const registerNameFormSchema = z.object({
   name: z.string().max(100),
+  email: z.string().email(),
 });
 
 type RegisterNameFormValues = z.infer<typeof registerNameFormSchema>;
@@ -28,10 +33,12 @@ type RegisterNameFormValues = z.infer<typeof registerNameFormSchema>;
 export function SignUpName() {
   const { state, dispatch } = useLoginWizard();
 
+  const { initiateSignUp } = useLoginWizardProps();
   const { t } = useTranslation();
   const form = useForm<RegisterNameFormValues>({
     defaultValues: {
       name: state.name,
+      email: state.email,
     },
     resolver: zodResolver(registerNameFormSchema),
   });
@@ -50,18 +57,14 @@ export function SignUpName() {
             </Icon>
           </button>
           <h1 className="text-lg font-bold tracking-tight">
-            <Trans
-              i18nKey="createANewAccount"
-              defaults="Create a New Account"
-            />
+            <Trans i18nKey="signUpTitle" defaults="Create your account" />
           </h1>
         </div>
 
-        <p className="text-muted-foreground break-words text-sm">
+        <p className="text-muted-foreground break-all text-sm">
           <Trans
-            i18nKey="createANewAccountDescription"
-            values={{ email: state.email }}
-            defaults="You are creating an account with {email}"
+            i18nKey="signUpDescription"
+            defaults="Enter your details to continue"
           />
         </p>
       </div>
@@ -69,9 +72,46 @@ export function SignUpName() {
         <form
           className="space-y-4"
           onSubmit={form.handleSubmit(async (data) => {
-            dispatch({ type: "setName", name: data.name });
+            try {
+              await initiateSignUp(data);
+              dispatch({ type: "setName", name: data.name });
+            } catch (error) {
+              if (error instanceof LoginWizardError) {
+                switch (error.code) {
+                  case "emailNotAllowed":
+                    form.setError("email", {
+                      message: t("emailNotAllowed"),
+                    });
+                    break;
+                  case "userAlreadyExists":
+                    form.setError("email", {
+                      message: t("userAlreadyExists"),
+                    });
+                    break;
+                }
+              }
+            }
           })}
         >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans i18nKey="email" defaults="Email" />
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder={t("emailPlaceholder")}
+                    disabled={true}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="name"
@@ -83,9 +123,11 @@ export function SignUpName() {
                   </FormLabel>
                   <FormControl>
                     <Input
+                      {...field}
+                      data-1p-ignore
+                      disabled={form.formState.isSubmitting}
                       placeholder={t("namePlaceholder")}
                       autoFocus={true}
-                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -93,7 +135,6 @@ export function SignUpName() {
               );
             }}
           />
-
           <div>
             <Button
               loading={

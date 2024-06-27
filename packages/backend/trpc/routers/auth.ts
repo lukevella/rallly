@@ -27,7 +27,7 @@ export const auth = router({
   requestRegistration: publicProcedure
     .input(
       z.object({
-        name: z.string().nonempty().max(100),
+        name: z.string().min(1).max(100),
         email: z.string().email(),
       }),
     )

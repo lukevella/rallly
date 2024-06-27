@@ -19,7 +19,6 @@ import {
   useLoginWizard,
   useLoginWizardProps,
 } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-wizard";
-import { SSOMenu } from "@/app/[locale]/(unauthenticated)/login/login-wizard/sso-menu";
 import { useTranslation } from "@/app/i18n/client";
 import { Trans } from "@/components/trans";
 
@@ -125,7 +124,6 @@ export function LoginOtp() {
           </div>
         </form>
       </Form>
-      <SSOMenu />
     </div>
   );
 }

@@ -29,8 +29,8 @@ export function LoginMenu() {
       <div className="space-y-4">
         <div className="space-y-0.5">
           <h1 className="text-lg font-bold tracking-tight">
-            {t("login", {
-              defaultValue: "Login",
+            {t("loginOrSignUp", {
+              defaultValue: "Login or sign up in seconds",
             })}
           </h1>
           <p className="text-sm text-gray-500">
