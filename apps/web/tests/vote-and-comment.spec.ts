@@ -1,6 +1,6 @@
 import { expect, Page, Request, test } from "@playwright/test";
 import { load } from "cheerio";
-import smtpTester, { SmtpTester } from "smtp-tester";
+import smtpTester, { MailServer } from "smtp-tester";
 import { PollPage } from "tests/poll-page";
 
 import { NewPollPage } from "./new-poll-page";
@@ -11,7 +11,7 @@ test.describe(() => {
   let touchRequest: Promise<Request>;
   let editSubmissionUrl: string;
 
-  let mailServer: SmtpTester;
+  let mailServer: MailServer;
   test.beforeAll(async ({ browser }) => {
     mailServer = smtpTester.init(4025);
     page = await browser.newPage();
@@ -26,7 +26,7 @@ test.describe(() => {
   });
 
   test.afterAll(async () => {
-    mailServer.stop();
+    mailServer.stop(() => {});
   });
 
   test("should call touch endpoint", async () => {
@@ -62,7 +62,7 @@ test.describe(() => {
       "Thanks for responding to Monthly Meetup",
     );
 
-    const $ = load(email.html);
+    const $ = load(email.html as string);
     const href = $("#editSubmissionUrl").attr("href");
 
     if (!href) {

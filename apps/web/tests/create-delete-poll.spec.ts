@@ -1,18 +1,18 @@
 import { expect, Page, test } from "@playwright/test";
-import smtpTester, { SmtpTester } from "smtp-tester";
+import smtpTester, { MailServer } from "smtp-tester";
 import { NewPollPage } from "tests/new-poll-page";
 
 test.describe.serial(() => {
   let page: Page;
 
-  let mailServer: SmtpTester;
+  let mailServer: MailServer;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     mailServer = smtpTester.init(4025);
   });
 
   test.afterAll(async () => {
-    mailServer.stop();
+    mailServer.stop(() => {});
   });
 
   test("create a new poll", async () => {
