@@ -5060,6 +5060,14 @@
     "@types/node" "*"
     iconv-lite "^0.6.3"
 
+"@types/mailparser@^3.4.0":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@types/mailparser/-/mailparser-3.4.4.tgz#0bd71e205573b9dd9a445e10a8b8cb0e45420998"
+  integrity sha512-C6Znp2QVS25JqtuPyxj38Qh+QoFcLycdxsvcc6IZCGekhaMBzbdTXzwGzhGoYb3TfKu8IRCNV0sV1o3Od97cEQ==
+  dependencies:
+    "@types/node" "*"
+    iconv-lite "^0.6.3"
+
 "@types/mdast@^3.0.0":
   version "3.0.11"
   resolved "https://registry.npmjs.org/@types/mdast/-/mdast-3.0.11.tgz"
@@ -5269,6 +5277,14 @@
   version "0.3.1"
   resolved "https://registry.npmjs.org/@types/smoothscroll-polyfill/-/smoothscroll-polyfill-0.3.1.tgz"
   integrity sha512-+KkHw4y+EyeCtVXET7woHUhIbfWFCflc0E0mZnSV+ZdjPQeHt/9KPEuT7gSW/kFQ8O3EG30PLO++YhChDt8+Ag==
+
+"@types/smtp-server@^3.5.7":
+  version "3.5.10"
+  resolved "https://registry.yarnpkg.com/@types/smtp-server/-/smtp-server-3.5.10.tgz#06d0338aea519469529847a12b0903678fdd6bea"
+  integrity sha512-i3Jx7sJ2qF52vjaOf3HguulXlWRFf6BSfsRLsIdmytDyVGv7KkhSs+gR9BXJnJWg1Ljkh/56Fh1Xqwa6u6X7zw==
+  dependencies:
+    "@types/node" "*"
+    "@types/nodemailer" "*"
 
 "@types/unist@*", "@types/unist@^2.0.0":
   version "2.0.6"
@@ -12335,11 +12351,13 @@ smtp-server@^3.11.0:
     ipv6-normalize "1.0.1"
     nodemailer "6.7.3"
 
-smtp-tester@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/smtp-tester/-/smtp-tester-2.0.1.tgz"
-  integrity sha512-mJicx4trPmlS2PY/ELG4LIKi8JdOGxnvm0/4oQxXErjwBT/crBUlyiMVzeliu69HHWeWRSOdTcNtlc34+1LodA==
+smtp-tester@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/smtp-tester/-/smtp-tester-2.1.0.tgz#ed67ef933767cacb8defcbf0683f29d75335a1ca"
+  integrity sha512-HfOBdHkdwoBO+Qb06H8ShVEc08nnvDbtYWzdT5iQMIeInBdLKu17XOhuaC79uM24zPApRfN3JAg627TIy3y/Ww==
   dependencies:
+    "@types/mailparser" "^3.4.0"
+    "@types/smtp-server" "^3.5.7"
     mailparser "^3.5.0"
     smtp-server "^3.11.0"
 

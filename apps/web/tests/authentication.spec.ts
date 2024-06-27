@@ -4,7 +4,7 @@ import { load } from "cheerio";
 import smtpTester from "smtp-tester";
 
 const testUserEmail = "test@example.com";
-let mailServer: smtpTester.SmtpTester;
+let mailServer: smtpTester.MailServer;
 /**
  * Get the 6-digit code from the email
  * @returns 6-digit code
@@ -13,6 +13,10 @@ const getCode = async () => {
   const { email } = await mailServer.captureOne(testUserEmail, {
     wait: 5000,
   });
+
+  if (!email.html) {
+    throw new Error("Email doesn't contain HTML");
+  }
 
   const $ = load(email.html);
 
@@ -34,7 +38,8 @@ test.describe.serial(() => {
     } catch {
       // User doesn't exist
     }
-    mailServer.stop();
+
+    mailServer.stop(() => {});
   });
 
   test.describe("new user", () => {
@@ -108,6 +113,10 @@ test.describe.serial(() => {
       const { email } = await mailServer.captureOne(testUserEmail, {
         wait: 5000,
       });
+
+      if (!email.html) {
+        throw new Error("Email doesn't contain HTML");
+      }
 
       const $ = load(email.html);
 

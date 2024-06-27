@@ -1,12 +1,12 @@
 import { expect, Page, test } from "@playwright/test";
-import smtpTester, { SmtpTester } from "smtp-tester";
+import smtpTester, { MailServer } from "smtp-tester";
 import { EditOptionsPage } from "tests/edit-options-page";
 import { NewPollPage } from "tests/new-poll-page";
 
 test.describe("edit options", () => {
   let page: Page;
   let editOptionsPage: EditOptionsPage;
-  let mailServer: SmtpTester;
+  let mailServer: MailServer;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -19,7 +19,7 @@ test.describe("edit options", () => {
   });
 
   test.afterAll(async () => {
-    mailServer.stop();
+    mailServer.stop(() => {});
   });
 
   test("should show warning when deleting options with votes in them", async () => {
