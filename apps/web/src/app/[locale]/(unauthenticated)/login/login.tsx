@@ -18,7 +18,7 @@ import { useDayjs } from "@/utils/dayjs";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
-export function NextLoginWizard() {
+export function Login() {
   const router = useRouter();
   const { data: oAuthProviders } = useOAuthProviders();
   const searchParams = useSearchParams();
