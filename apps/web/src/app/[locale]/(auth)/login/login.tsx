@@ -64,11 +64,12 @@ export function Login() {
         providers={oAuthProviders}
         initiateSignUp={async (data) => {
           const res = await initiateSignUp.mutateAsync(data);
-          if (res.ok) {
-            setToken(res.token);
-          } else {
+
+          if (!res.ok) {
             throw new LoginWizardError(res.reason);
           }
+
+          setToken(res.token);
         }}
         finishSignUp={async ({ otp }) => {
           if (!token) {
@@ -115,19 +116,19 @@ export function Login() {
 
           if (hasError) {
             return { error: "Invalid OTP" };
-          } else {
-            await queryClient.invalidate();
-            const s = await session.update();
-
-            if (s?.user) {
-              posthog?.identify(s.user.id, {
-                email: s.user.email,
-                name: s.user.name,
-              });
-            }
-
-            router.push(searchParams?.get("callbackUrl") ?? "/");
           }
+
+          await queryClient.invalidate();
+          const s = await session.update();
+
+          if (s?.user) {
+            posthog?.identify(s.user.id, {
+              email: s.user.email,
+              name: s.user.name,
+            });
+          }
+
+          router.push(searchParams?.get("callbackUrl") ?? "/");
         }}
         onContinueWithOAuth={async (providerId) => {
           const callbackUrl = searchParams?.get("callbackUrl");
