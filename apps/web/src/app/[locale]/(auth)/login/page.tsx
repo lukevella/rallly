@@ -1,6 +1,6 @@
 import { Card } from "@rallly/ui/card";
 
-import { Login } from "@/app/[locale]/(unauthenticated)/login/login";
+import { Login } from "@/app/[locale]/(auth)/login/login";
 import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 

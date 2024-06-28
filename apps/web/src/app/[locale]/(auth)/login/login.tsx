@@ -8,10 +8,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import React from "react";
 
-import { AuthErrors } from "@/app/[locale]/(unauthenticated)/login/auth-errors";
-import { LoginWizardError } from "@/app/[locale]/(unauthenticated)/login/login-wizard/errors";
-import { LoginWizard } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-wizard";
-import { useOAuthProviders } from "@/app/[locale]/(unauthenticated)/login/oauth-providers";
+import { AuthErrors } from "@/app/[locale]/(auth)/login/auth-errors";
+import { LoginWizardError } from "@/app/[locale]/(auth)/login/login-wizard/errors";
+import { LoginWizard } from "@/app/[locale]/(auth)/login/login-wizard/login-wizard";
+import { useOAuthProviders } from "@/app/[locale]/(auth)/login/oauth-providers";
 import { useTranslation } from "@/app/i18n/client";
 import { Spinner } from "@/components/spinner";
 import { useDayjs } from "@/utils/dayjs";

@@ -1,23 +1,15 @@
 import { cn } from "@rallly/ui";
-import { redirect, RedirectType } from "next/navigation";
 import React from "react";
 
 import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
-import { getServerSession } from "@/utils/auth";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
-
-  if (!session?.user.email) {
-    redirect("/login", RedirectType.replace);
-  }
-
   return (
     <div className="flex flex-col pb-16 md:pb-0">
       <div

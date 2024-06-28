@@ -4,7 +4,7 @@ import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
 
-import { useLoginWizardProps } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-wizard";
+import { useLoginWizardProps } from "@/app/[locale]/(auth)/login/login-wizard/login-wizard";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 

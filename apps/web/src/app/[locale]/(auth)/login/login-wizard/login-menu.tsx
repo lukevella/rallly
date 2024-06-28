@@ -2,8 +2,8 @@
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
-import { SSOMenu } from "@/app/[locale]/(unauthenticated)/login/login-wizard/sso-menu";
-import { useOAuthProviders } from "@/app/[locale]/(unauthenticated)/login/oauth-providers";
+import { SSOMenu } from "@/app/[locale]/(auth)/login/login-wizard/sso-menu";
+import { useOAuthProviders } from "@/app/[locale]/(auth)/login/oauth-providers";
 import { Spinner } from "@/components/spinner";
 
 import { LoginWithEmailForm } from "./login-email-form";

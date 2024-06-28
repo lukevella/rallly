@@ -14,13 +14,13 @@ import { ChevronLeftIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { InputOTP } from "@/app/[locale]/(unauthenticated)/login/components/input-otp";
-import { LoginWizardError } from "@/app/[locale]/(unauthenticated)/login/login-wizard/errors";
+import { InputOTP } from "@/app/[locale]/(auth)/login/components/input-otp";
+import { LoginWizardError } from "@/app/[locale]/(auth)/login/login-wizard/errors";
 import {
   useLoginWizard,
   useLoginWizardProps,
-} from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-wizard";
-import { SSOMenu } from "@/app/[locale]/(unauthenticated)/login/login-wizard/sso-menu";
+} from "@/app/[locale]/(auth)/login/login-wizard/login-wizard";
+import { SSOMenu } from "@/app/[locale]/(auth)/login/login-wizard/sso-menu";
 import { useTranslation } from "@/app/i18n/client";
 import { Trans } from "@/components/trans";
 

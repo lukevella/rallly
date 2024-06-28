@@ -18,7 +18,7 @@ import { z } from "zod";
 import {
   useLoginWizard,
   useLoginWizardProps,
-} from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-wizard";
+} from "@/app/[locale]/(auth)/login/login-wizard/login-wizard";
 import { Trans } from "@/components/trans";
 
 function useLoginWithEmailSchema() {

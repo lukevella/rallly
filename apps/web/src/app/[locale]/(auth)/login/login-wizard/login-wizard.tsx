@@ -1,9 +1,9 @@
 import React from "react";
 
-import { LoginMenu } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-menu";
-import { LoginOtp } from "@/app/[locale]/(unauthenticated)/login/login-wizard/login-otp";
-import { SignUpName } from "@/app/[locale]/(unauthenticated)/login/login-wizard/signup-name";
-import { SignUpOtp } from "@/app/[locale]/(unauthenticated)/login/login-wizard/signup-otp";
+import { LoginMenu } from "@/app/[locale]/(auth)/login/login-wizard/login-menu";
+import { LoginOtp } from "@/app/[locale]/(auth)/login/login-wizard/login-otp";
+import { SignUpName } from "@/app/[locale]/(auth)/login/login-wizard/signup-name";
+import { SignUpOtp } from "@/app/[locale]/(auth)/login/login-wizard/signup-otp";
 
 type LoginWizardStep = "menu" | "login-otp" | "signup-name" | "signup-otp";
 
