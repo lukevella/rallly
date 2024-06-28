@@ -66,10 +66,12 @@ export function SSOMenu() {
             }}
           >
             <SSOImage provider={provider.id} />
-            <Trans
-              i18nKey="continueWith"
-              values={{ provider: provider.name }}
-            />
+            <span className="grow">
+              <Trans
+                i18nKey="continueWith"
+                values={{ provider: provider.name }}
+              />
+            </span>
           </Button>
         ))}
       </div>

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const sizes = {
   sm: {
-    width: 120,
+    width: 140,
     height: 22,
   },
   md: {

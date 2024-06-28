@@ -81,7 +81,6 @@ export function LoginWithEmailForm() {
         />
         <div>
           <Button
-            variant="primary"
             loading={form.formState.isSubmitting}
             type="submit"
             className="w-full"
@@ -89,11 +88,13 @@ export function LoginWithEmailForm() {
             <Icon>
               <MailIcon />
             </Icon>
-            <Trans
-              i18nKey="continueWith"
-              defaults="Continue with {provider}"
-              values={{ provider: t("email") }}
-            />
+            <span className="grow">
+              <Trans
+                i18nKey="continueWith"
+                defaults="Continue with {provider}"
+                values={{ provider: t("email") }}
+              />
+            </span>
           </Button>
         </div>
       </form>
