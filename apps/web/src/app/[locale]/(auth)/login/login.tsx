@@ -37,7 +37,11 @@ export function Login() {
   const [token, setToken] = React.useState<string>();
 
   if (!oAuthProviders) {
-    return <Spinner />;
+    return (
+      <div className="flex justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   return (

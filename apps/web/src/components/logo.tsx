@@ -17,8 +17,12 @@ export const Logo = ({ size = "md" }: { size?: keyof typeof sizes }) => {
       priority={true}
       className="mx"
       src="/static/logo.svg"
-      width={sizes[size].width}
-      height={sizes[size].height}
+      style={{
+        width: sizes[size].width,
+        height: "auto",
+      }}
+      width={0}
+      height={0}
       alt="Rallly"
     />
   );

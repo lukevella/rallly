@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { redirect, RedirectType } from "next/navigation";
 
+import { Logo } from "@/components/logo";
 import { getServerSession } from "@/utils/auth";
 
 export default async function Layout({
@@ -23,12 +23,7 @@ export default async function Layout({
       <div className="relative z-20">
         <div className="space-y-8 py-8 sm:pt-[10vh]">
           <div className="flex justify-center">
-            <Image
-              src="/static/logo.svg"
-              width={130}
-              height={50}
-              alt="Rallly"
-            />
+            <Logo />
           </div>
           <div>{children}</div>
         </div>

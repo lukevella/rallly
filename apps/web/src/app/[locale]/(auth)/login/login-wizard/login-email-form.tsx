@@ -11,6 +11,7 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import { MailIcon } from "lucide-react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -23,9 +24,11 @@ import { Trans } from "@/components/trans";
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
-  return z.object({
-    email: z.string().email(t("validEmail")),
-  });
+  return React.useMemo(() => {
+    return z.object({
+      email: z.string().email(t("validEmail")),
+    });
+  }, [t]);
 }
 
 type LoginWithEmailValues = z.infer<ReturnType<typeof useLoginWithEmailSchema>>;
