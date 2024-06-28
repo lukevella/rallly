@@ -42,9 +42,10 @@ test.describe.serial(() => {
     mailServer.stop(() => {});
   });
 
-  test("should redirect to login page if not logged in", async ({ page }) => {
-    await page.goto("/");
-    await page.waitForURL("/login");
+  test("register should redirect to login page", async ({ page }) => {
+    await page.goto("/register");
+    await page.waitForURL("/login?from=register");
+    expect(await page.title()).toBe("Login");
   });
 
   test.describe("new user", () => {
@@ -78,24 +79,7 @@ test.describe.serial(() => {
   });
 
   test.describe("existing user", () => {
-    test("can't register with the same email", async ({ page }) => {
-      await page.goto("/register");
-
-      await page.getByText("Create an account").waitFor();
-
-      await page.getByPlaceholder("Jessie Smith").fill("Test User");
-      await page
-        .getByPlaceholder("jessie.smith@example.com")
-        .fill(testUserEmail);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      await expect(
-        page.getByText("A user with that email already exists"),
-      ).toBeVisible();
-    });
-
-    test("can login with magic link", async ({ page }) => {
+    test("can login with magic link", async ({ browser, page }) => {
       await page.goto("/login");
 
       await page
@@ -120,13 +104,17 @@ test.describe.serial(() => {
         throw new Error("Magic link not found");
       }
 
-      await page.goto(magicLink);
+      const newPage = await browser.newPage();
 
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
+      await newPage.goto(magicLink);
 
-      await page.waitForURL("/");
+      await newPage
+        .getByRole("button", { name: "Continue", exact: true })
+        .click();
 
-      await expect(page.getByText("Test User")).toBeVisible();
+      await newPage.waitForURL("/");
+
+      await expect(newPage.getByText("Test User")).toBeVisible();
     });
 
     test("can login with verification code", async ({ page }) => {
