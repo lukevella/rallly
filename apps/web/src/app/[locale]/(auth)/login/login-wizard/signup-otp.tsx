@@ -63,7 +63,8 @@ export function SignUpOtp() {
       <div className="space-y-0.5">
         <div className="flex items-start gap-2">
           <button
-            className="inlie-block h-7"
+            type="button"
+            className="inline-block h-7"
             onClick={() => {
               dispatch({ type: "setStep", step: "signup-name" });
             }}
