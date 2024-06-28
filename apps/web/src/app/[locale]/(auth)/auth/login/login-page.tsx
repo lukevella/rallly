@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-import { Logo } from "@/components/logo";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
