@@ -21,8 +21,8 @@ export default async function Layout({
       </div>
 
       <div className="relative z-20">
-        <div className="sm:pt-[10vh]">
-          <div className="flex justify-center py-8">
+        <div className="space-y-8 py-8 sm:pt-[10vh]">
+          <div className="flex justify-center">
             <Image
               src="/static/logo.svg"
               width={130}
@@ -30,7 +30,7 @@ export default async function Layout({
               alt="Rallly"
             />
           </div>
-          {children}
+          <div>{children}</div>
         </div>
       </div>
     </div>

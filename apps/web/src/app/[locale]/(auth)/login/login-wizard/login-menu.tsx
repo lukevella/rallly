@@ -1,5 +1,3 @@
-"use client";
-import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 import { SSOMenu } from "@/app/[locale]/(auth)/login/login-wizard/sso-menu";
@@ -9,9 +7,6 @@ import { Spinner } from "@/components/spinner";
 import { LoginWithEmailForm } from "./login-email-form";
 
 export function LoginMenu() {
-  const searchParams = useSearchParams();
-  const error = searchParams?.get("error");
-
   const { t } = useTranslation();
 
   const { isFetched } = useOAuthProviders();
@@ -42,14 +37,6 @@ export function LoginMenu() {
       </div>
       <LoginWithEmailForm />
       <SSOMenu />
-      {error === "OAuthAccountNotLinked" ? (
-        <p className="text-rose-600">
-          {t("accountNotLinkedDescription", {
-            defaultValue:
-              "A user with this email already exists. Please log in using the original method.",
-          })}
-        </p>
-      ) : null}
     </div>
   );
 }
