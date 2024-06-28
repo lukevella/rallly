@@ -22,7 +22,7 @@ export function LoginMenu() {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <div className="space-y-0.5">
+        <div className="space-y-2">
           <h1 className="text-lg font-bold tracking-tight">
             {t("loginOrSignUp", {
               defaultValue: "Login or sign up in seconds",

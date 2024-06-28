@@ -44,7 +44,7 @@ export function SignUpName() {
   });
   return (
     <div className="space-y-4">
-      <div className="space-y-0.5">
+      <div className="space-y-2">
         <div className="flex items-start gap-2">
           <button
             type="button"

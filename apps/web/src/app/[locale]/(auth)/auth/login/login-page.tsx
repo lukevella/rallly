@@ -43,31 +43,32 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
   const { data } = trpc.user.getByEmail.useQuery({ email });
   const router = useRouter();
   return (
-    <Card className="mx-auto w-72 space-y-4 p-6">
-      <h2 className="text-center font-semibold">
-        <Trans i18nKey="continueAs" defaults="Continue as" />
-      </h2>
-      <div className="text-center">
-        <UserAvatar size="lg" name={data?.name} />
-        <div className="py-4 text-center">
-          <div className="mb-1 h-6 font-medium">
-            {data?.name ?? <Skeleton className="inline-block h-5 w-16" />}
-          </div>
-          <div className="text-muted-foreground h-5 truncate text-sm">
-            {data?.email ?? <Skeleton className="inline-block h-full w-20" />}
+    <Card className="mx-auto w-56">
+      <div className="space-y-4 p-6">
+        <div className="text-center">
+          <UserAvatar size="lg" name={data?.name} />
+          <div className="mt-4 text-center">
+            <div className="mb-1 h-6 font-medium">
+              {data?.name ?? <Skeleton className="inline-block h-5 w-16" />}
+            </div>
+            <div className="text-muted-foreground h-5 truncate text-sm">
+              {data?.email ?? <Skeleton className="inline-block h-full w-20" />}
+            </div>
           </div>
         </div>
       </div>
-      <Button
-        loading={magicLinkFetch.isLoading}
-        onClick={async () => {
-          await magicLinkFetch.mutateAsync();
-        }}
-        variant="primary"
-        className="mt-4 w-full"
-      >
-        <Trans i18nKey="continue" />
-      </Button>
+      <div className="border-t bg-gray-50 p-4">
+        <Button
+          loading={magicLinkFetch.isLoading}
+          onClick={async () => {
+            await magicLinkFetch.mutateAsync();
+          }}
+          variant="primary"
+          className="w-full"
+        >
+          <Trans i18nKey="login" />
+        </Button>
+      </div>
     </Card>
   );
 };

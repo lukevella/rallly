@@ -1,11 +1,14 @@
+import Image from "next/image";
 import { redirect, RedirectType } from "next/navigation";
 
+import { Params } from "@/app/[locale]/types";
 import { getServerSession } from "@/utils/auth";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
+  params: Params;
 }) {
   const session = await getServerSession();
 
@@ -14,13 +17,23 @@ export default async function Layout({
   }
 
   return (
-    <div className="relative h-screen p-3">
+    <div className="relative h-screen">
       <div className="absolute inset-0 hidden sm:block">
         <GridPattern />
       </div>
 
-      <div className="relative z-20">
-        <div className="py-8 sm:pt-[10vh]">{children}</div>
+      <div className="relative z-20 flex flex-col sm:h-full">
+        <div className="mb-4 p-4 backdrop-blur-sm">
+          <Image
+            src="/logo-mark.svg"
+            alt="Rallly"
+            width={32}
+            height={32}
+            priority={true}
+            className="shrink-0"
+          />
+        </div>
+        <div className="grow p-3 sm:pt-[10vh]">{children}</div>
       </div>
     </div>
   );
