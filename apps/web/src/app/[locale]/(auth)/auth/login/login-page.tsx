@@ -66,7 +66,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
           variant="primary"
           className="w-full"
         >
-          <Trans i18nKey="login" />
+          <Trans i18nKey="continue" />
         </Button>
       </div>
     </Card>
