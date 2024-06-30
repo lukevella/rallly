@@ -9,9 +9,9 @@ import { LoginWithEmailForm } from "./login-email-form";
 export function LoginMenu() {
   const { t } = useTranslation();
 
-  const { data, isFetched } = useOAuthProviders();
+  const { data } = useOAuthProviders();
 
-  if (!isFetched) {
+  if (!data) {
     return (
       <div className="flex justify-center">
         <Spinner />
@@ -36,7 +36,7 @@ export function LoginMenu() {
         </div>
       </div>
       <LoginWithEmailForm />
-      {data?.length > 0 ? (
+      {data.length > 0 ? (
         <div className="flex items-center gap-x-2.5">
           <hr className="grow" />
           <div className="text-muted-foreground text-xs uppercase">
