@@ -49,32 +49,23 @@ export function SSOMenu() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-x-2.5">
-        <hr className="grow" />
-        <div className="text-muted-foreground text-xs uppercase">
-          <Trans i18nKey="or" />
-        </div>
-        <hr className="grow" />
-      </div>
-      <div className="grid gap-2.5">
-        {providers.map((provider) => (
-          <Button
-            key={provider.id}
-            onClick={() => {
-              onContinueWithOAuth(provider.id);
-            }}
-          >
-            <SSOImage provider={provider.id} />
-            <span className="grow">
-              <Trans
-                i18nKey="continueWith"
-                values={{ provider: provider.name }}
-              />
-            </span>
-          </Button>
-        ))}
-      </div>
+    <div className="grid gap-2.5">
+      {providers.map((provider) => (
+        <Button
+          key={provider.id}
+          onClick={() => {
+            onContinueWithOAuth(provider.id);
+          }}
+        >
+          <SSOImage provider={provider.id} />
+          <span className="grow">
+            <Trans
+              i18nKey="continueWith"
+              values={{ provider: provider.name }}
+            />
+          </span>
+        </Button>
+      ))}
     </div>
   );
 }

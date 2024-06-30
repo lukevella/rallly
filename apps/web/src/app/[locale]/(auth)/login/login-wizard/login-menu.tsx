@@ -9,7 +9,7 @@ import { LoginWithEmailForm } from "./login-email-form";
 export function LoginMenu() {
   const { t } = useTranslation();
 
-  const { isFetched } = useOAuthProviders();
+  const { data, isFetched } = useOAuthProviders();
 
   if (!isFetched) {
     return (
@@ -36,6 +36,15 @@ export function LoginMenu() {
         </div>
       </div>
       <LoginWithEmailForm />
+      {data?.length > 0 ? (
+        <div className="flex items-center gap-x-2.5">
+          <hr className="grow" />
+          <div className="text-muted-foreground text-xs uppercase">
+            {t("or")}
+          </div>
+          <hr className="grow" />
+        </div>
+      ) : null}
       <SSOMenu />
     </div>
   );

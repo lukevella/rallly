@@ -23,17 +23,21 @@ export default async function Layout({
       </div>
 
       <div className="relative z-20 flex flex-col sm:h-full">
-        <div className="mb-4 p-4 backdrop-blur-sm">
-          <Image
-            src="/logo-mark.svg"
-            alt="Rallly"
-            width={32}
-            height={32}
-            priority={true}
-            className="shrink-0"
-          />
+        <div className="sm:pt-29 grow sm:pt-20">
+          <div className="m-6 flex justify-center">
+            <div className="rounded-xl border border-white bg-gradient-to-b from-white to-gray-50 p-3 shadow-md">
+              <Image
+                src="/logo-mark.svg"
+                alt="Rallly"
+                width={32}
+                height={32}
+                priority={true}
+                className="shrink-0"
+              />
+            </div>
+          </div>
+          {children}
         </div>
-        <div className="grow p-3 sm:pt-[10vh]">{children}</div>
       </div>
     </div>
   );

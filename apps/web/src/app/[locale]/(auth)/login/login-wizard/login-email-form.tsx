@@ -5,7 +5,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
 import { Icon } from "@rallly/ui/icon";
@@ -63,9 +62,6 @@ export function LoginWithEmailForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                <Trans i18nKey="email" />
-              </FormLabel>
               <FormControl>
                 <Input
                   {...field}
