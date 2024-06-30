@@ -26,21 +26,14 @@
       "url": "/contact/support"
     }
   ],
-  "anchors": [
+  "tabs": [
     {
       "name": "Self-Hosting",
-      "icon": "server",
       "url": "self-hosting"
     },
     {
-      "name": "Contributing Guide",
-      "icon": "hand-holding-heart",
+      "name": "Contribute",
       "url": "contribute"
-    },
-    {
-      "name": "Contact",
-      "icon": "messages",
-      "url": "contact"
     }
   ],
   "navigation": [
@@ -74,7 +67,7 @@
       ]
     },
     {
-      "group": "Contributing Guide",
+      "group": "Contribute",
       "pages": ["contribute/introduction"]
     },
     {
