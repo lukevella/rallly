@@ -310,7 +310,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     </tbody>
                   </table>
                   {mode === "new" ? (
-                    <div className="relative sticky left-[240px] flex w-[calc(100%-240px)] items-center justify-between border-l border-t bg-gray-50 p-3">
+                    <div className="sticky left-[240px] flex w-[calc(100%-240px)] items-center justify-between gap-4 border-l border-t bg-gray-50 p-3">
                       <Button
                         onClick={() => {
                           votingForm.cancel();
@@ -318,7 +318,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                       >
                         <Trans i18nKey="cancel" />
                       </Button>
-                      <p className="text-sm">
+                      <p className="hidden min-w-0 truncate text-sm md:block">
                         <Trans
                           i18nKey="saveInstruction"
                           values={{
