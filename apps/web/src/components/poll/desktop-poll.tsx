@@ -1,7 +1,7 @@
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardFooter, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
@@ -309,6 +309,35 @@ const DesktopPoll: React.FunctionComponent = () => {
                         : null}
                     </tbody>
                   </table>
+                  {mode === "new" ? (
+                    <div className="sticky left-[240px] flex w-[calc(100%-240px)] items-center justify-between gap-4 border-l border-t bg-gray-50 p-3">
+                      <Button
+                        onClick={() => {
+                          votingForm.cancel();
+                        }}
+                      >
+                        <Trans i18nKey="cancel" />
+                      </Button>
+                      <p className="hidden min-w-0 truncate text-sm md:block">
+                        <Trans
+                          i18nKey="saveInstruction"
+                          values={{
+                            action: mode === "new" ? t("continue") : t("save"),
+                          }}
+                          components={{
+                            b: <strong className="font-semibold" />,
+                          }}
+                        />
+                      </p>
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        form="voting-form"
+                      >
+                        <Trans i18nKey="continue" />
+                      </Button>
+                    </div>
+                  ) : null}
                 </RemoveScroll>
               </div>
             ) : (
@@ -328,29 +357,6 @@ const DesktopPoll: React.FunctionComponent = () => {
                 </EmptyStateDescription>
               </EmptyState>
             )}
-            {mode === "new" ? (
-              <CardFooter className="flex items-center justify-between">
-                <Button
-                  onClick={() => {
-                    votingForm.cancel();
-                  }}
-                >
-                  <Trans i18nKey="cancel" />
-                </Button>
-                <p className="text-sm">
-                  <Trans
-                    i18nKey="saveInstruction"
-                    values={{
-                      action: mode === "new" ? t("continue") : t("save"),
-                    }}
-                    components={{ b: <strong className="font-semibold" /> }}
-                  />
-                </p>
-                <Button type="submit" variant="primary" form="voting-form">
-                  <Trans i18nKey="continue" />
-                </Button>
-              </CardFooter>
-            ) : null}
           </div>
         </div>
       </div>
