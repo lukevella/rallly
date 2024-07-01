@@ -25,7 +25,7 @@ export default async function Layout({
       <div className="relative z-20 flex flex-col sm:h-full">
         <div className="sm:pt-29 grow sm:pt-20">
           <div className="m-6 flex justify-center">
-            <div className="rounded-xl border border-white bg-gradient-to-b from-white to-gray-50 p-3 shadow-md">
+            <div className="inline-flex size-12 items-center justify-center rounded-lg border border-white bg-gradient-to-b from-white to-gray-50 shadow">
               <Image
                 src="/logo-mark.svg"
                 alt="Rallly"
