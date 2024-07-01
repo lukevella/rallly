@@ -1,7 +1,7 @@
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardFooter, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
