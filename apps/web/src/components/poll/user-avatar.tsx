@@ -64,7 +64,7 @@ const UserAvatar: React.FunctionComponent<UserAvatarProps> = ({
       )}
     >
       <UserAvatarInner {...forwardedProps} />
-      <div className="min-w-0 truncate text-sm font-medium">
+      <div className="min-w-0 text-sm font-medium">
         {forwardedProps.name}
       </div>
       {isYou ? <Badge>{t("you")}</Badge> : null}
