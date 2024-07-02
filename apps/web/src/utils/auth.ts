@@ -176,7 +176,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     },
     callbacks: {
       async signIn({ user, email, account, profile }) {
-        const distinctId = user.email ?? user.id;
+        const distinctId = user.id;
         // prevent sign in if email is not verified
         if (
           profile &&
