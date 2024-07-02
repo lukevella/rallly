@@ -174,8 +174,41 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
       signOut: "/logout",
       error: "/auth/error",
     },
+    events: {
+      signIn({ user, account }) {
+        posthog?.capture({
+          distinctId: user.id,
+          event: "login",
+          properties: {
+            method: account?.provider,
+            $set: {
+              name: user.name,
+              email: user.email,
+            },
+          },
+        });
+      },
+      signOut({ session }) {
+        posthog?.capture({
+          distinctId: session.user.id,
+          event: "logout",
+        });
+      },
+      createUser({ user }) {
+        posthog?.capture({
+          distinctId: user.id,
+          event: "register",
+          properties: {
+            $set: {
+              name: user.name,
+              email: user.email,
+            },
+          },
+        });
+      },
+    },
     callbacks: {
-      async signIn({ user, email, account, profile }) {
+      async signIn({ user, email, profile }) {
         const distinctId = user.id;
         // prevent sign in if email is not verified
         if (
@@ -221,22 +254,6 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
-
-          posthog?.identify({
-            distinctId,
-            properties: {
-              name: user.name,
-              email: user.email,
-            },
-          });
-
-          posthog?.capture({
-            distinctId,
-            event: "login",
-            properties: {
-              method: account?.provider,
-            },
-          });
         }
 
         return true;
