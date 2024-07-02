@@ -5,6 +5,7 @@ import React from "react";
 import { z } from "zod";
 
 import { useTranslation } from "@/app/i18n/client";
+import { useSubscription } from "@/contexts/plan";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
 
@@ -15,6 +16,7 @@ const userSchema = z.object({
   name: z.string(),
   email: z.string().email().nullable(),
   isGuest: z.boolean(),
+  tier: z.enum(["guest", "hobby", "pro"]),
   timeZone: z.string().nullish(),
   timeFormat: z.enum(["hours12", "hours24"]).nullish(),
   weekStart: z.number().min(0).max(6).nullish(),
@@ -50,6 +52,7 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const session = useSession();
+  const subscription = useSubscription();
 
   const user = session.data?.user;
 
@@ -59,6 +62,8 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     return null;
   }
 
+  const tier = user?.email ? "guest" : subscription?.active ? "pro" : "hobby";
+
   return (
     <UserContext.Provider
       value={{
@@ -66,7 +71,8 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           id: user.id as string,
           name: user.name ?? t("guest"),
           email: user.email || null,
-          isGuest: user.email === null,
+          isGuest: tier === "guest",
+          tier,
         },
         refresh: session.update,
         ownsObject: ({ userId }) => {
