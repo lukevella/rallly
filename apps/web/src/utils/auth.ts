@@ -184,6 +184,8 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
             $set: {
               name: user.name,
               email: user.email,
+              timeZone: user.timeZone,
+              locale: user.locale,
             },
           },
         });
