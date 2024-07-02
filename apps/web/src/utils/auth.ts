@@ -194,18 +194,6 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           event: "logout",
         });
       },
-      createUser({ user }) {
-        posthog?.capture({
-          distinctId: user.id,
-          event: "register",
-          properties: {
-            $set: {
-              name: user.name,
-              email: user.email,
-            },
-          },
-        });
-      },
     },
     callbacks: {
       async signIn({ user, email, profile }) {
