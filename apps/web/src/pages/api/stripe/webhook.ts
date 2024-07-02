@@ -30,7 +30,11 @@ const validatedWebhook = async (req: NextApiRequest) => {
   }
 };
 
-const metadataSchema = z.object({
+const checkoutMetadataSchema = z.object({
+  userId: z.string(),
+});
+
+const subscriptionMetadataSchema = z.object({
   userId: z.string(),
 });
 
@@ -59,7 +63,7 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
         break;
       }
 
-      const { userId } = metadataSchema.parse(checkoutSession.metadata);
+      const { userId } = checkoutMetadataSchema.parse(checkoutSession.metadata);
 
       if (!userId) {
         res.status(400).send("Missing client reference ID");
@@ -86,6 +90,9 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
           event: "upgrade",
           properties: {
             interval: subscription.items.data[0].plan.interval,
+            $set: {
+              tier: "pro",
+            },
           },
         });
       } catch (e) {
@@ -132,6 +139,21 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
           periodEnd: toDate(subscription.current_period_end),
         },
       });
+
+      const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
+
+      if (res.success) {
+        posthog?.capture({
+          event: "subscription change",
+          distinctId: res.data.userId,
+          properties: {
+            type: event.type,
+            $set: {
+              tier: isActive ? "pro" : "hobby",
+            },
+          },
+        });
+      }
 
       break;
     }

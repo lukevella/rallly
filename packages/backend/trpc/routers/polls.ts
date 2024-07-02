@@ -923,13 +923,7 @@ export const polls = router({
           },
         });
 
-        waitUntil(
-          Promise.all([
-            emailToHost,
-            ...emailsToParticipants,
-            ctx.posthogClient?.flushAsync(),
-          ]),
-        );
+        waitUntil(Promise.all([emailToHost, ...emailsToParticipants]));
       }
     }),
   reopen: possiblyPublicProcedure

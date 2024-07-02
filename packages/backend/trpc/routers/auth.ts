@@ -77,7 +77,7 @@ export const auth = router({
         locale: z.string().optional(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const payload = await decryptToken<RegistrationTokenPayload>(input.token);
 
       if (!payload) {
@@ -96,6 +96,19 @@ export const auth = router({
           email,
           timeZone: input.timeZone,
           locale: input.locale,
+        },
+      });
+
+      ctx.posthogClient?.capture({
+        event: "register",
+        distinctId: user.id,
+        properties: {
+          $set: {
+            email: user.email,
+            name: user.name,
+            timeZone: input.timeZone,
+            locale: input.locale,
+          },
         },
       });
 
