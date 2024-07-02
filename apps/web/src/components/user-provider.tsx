@@ -1,6 +1,7 @@
 "use client";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { z } from "zod";
 
@@ -53,7 +54,7 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const session = useSession();
   const subscription = useSubscription();
-
+  const posthog = usePostHog();
   const user = session.data?.user;
 
   const { t } = useTranslation();
@@ -89,6 +90,9 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
         }}
         onUpdate={async (newPreferences) => {
           await session.update(newPreferences);
+          posthog?.capture("update preferences", {
+            $set: newPreferences,
+          });
         }}
       >
         <PostHogProvider>{props.children}</PostHogProvider>
