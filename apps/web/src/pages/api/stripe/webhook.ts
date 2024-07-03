@@ -96,7 +96,7 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
           },
         });
       } catch (e) {
-        Sentry.captureMessage("Failed to track upgrade event");
+        Sentry.captureException(e);
       }
 
       break;
@@ -140,12 +140,11 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
         },
       });
 
-      const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
-
-      if (res.success) {
+      try {
+        const data = subscriptionMetadataSchema.parse(subscription.metadata);
         posthog?.capture({
           event: "subscription change",
-          distinctId: res.data.userId,
+          distinctId: data.userId,
           properties: {
             type: event.type,
             $set: {
@@ -153,6 +152,8 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
             },
           },
         });
+      } catch (e) {
+        Sentry.captureException(e);
       }
 
       break;
