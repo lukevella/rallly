@@ -1,12 +1,10 @@
 "use client";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { z } from "zod";
 
 import { useTranslation } from "@/app/i18n/client";
-import { Spinner } from "@/components/spinner";
 import { useSubscription } from "@/contexts/plan";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
@@ -54,21 +52,17 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const session = useSession();
-  const subscription = useSubscription();
-  const posthog = usePostHog();
   const user = session.data?.user;
+  const subscription = useSubscription();
 
   const { t } = useTranslation();
 
-  if (!user || !subscription) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Spinner />
-      </div>
-    );
+  if (!user) {
+    return null;
   }
 
-  const tier = user?.email ? "guest" : subscription?.active ? "pro" : "hobby";
+  const isGuest = !user.email;
+  const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
 
   return (
     <UserContext.Provider
@@ -77,7 +71,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           id: user.id as string,
           name: user.name ?? t("guest"),
           email: user.email || null,
-          isGuest: tier === "guest",
+          isGuest: !user.email,
           tier,
         },
         refresh: session.update,
@@ -95,9 +89,6 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
         }}
         onUpdate={async (newPreferences) => {
           await session.update(newPreferences);
-          posthog?.capture("update preferences", {
-            $set: newPreferences,
-          });
         }}
       >
         <PostHogProvider>{props.children}</PostHogProvider>
