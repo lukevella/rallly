@@ -8,12 +8,14 @@ import { Logo } from "@/components/logo";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { UserAvatar } from "@/components/user";
+import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
 type PageProps = { magicLink: string; email: string };
 
 export const LoginPage = ({ magicLink, email }: PageProps) => {
   const session = useSession();
+  const posthog = usePostHog();
   const trpcUtils = trpc.useUtils();
   const magicLinkFetch = useMutation({
     mutationFn: async () => {
@@ -26,6 +28,8 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
         const updatedSession = await session.update();
         if (updatedSession) {
           // identify the user in posthog
+          posthog?.identify(updatedSession.user.id);
+
           await trpcUtils.invalidate();
         }
       }

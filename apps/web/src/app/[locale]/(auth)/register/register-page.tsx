@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useTranslation } from "next-i18next";
+import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -48,6 +49,7 @@ export const RegisterForm = () => {
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();
   const [token, setToken] = React.useState<string>();
+  const posthog = usePostHog();
   if (token) {
     return (
       <AuthCard>
@@ -67,6 +69,8 @@ export const RegisterForm = () => {
             }
 
             queryClient.invalidate();
+
+            posthog?.identify(res.user.id);
 
             signIn("registration-token", {
               token,
