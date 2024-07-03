@@ -59,7 +59,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
 
   const { t } = useTranslation();
 
-  if (!user) {
+  if (!user || !subscription) {
     return null;
   }
 
