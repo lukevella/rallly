@@ -126,14 +126,15 @@ export function LoginForm() {
             email,
             token: code,
           });
+
           if (!success) {
             throw new Error("Failed to authenticate user");
-          } else {
-            await queryClient.invalidate();
-            await session.update();
-
-            router.push(callbackUrl);
           }
+
+          await queryClient.invalidate();
+          await session.update();
+
+          router.push(callbackUrl);
         }}
         email={getValues("email")}
       />
