@@ -95,6 +95,7 @@ Rallly is open-source under the GNU Affero General Public License Version 3 (AGP
 
 Thank you to our sponsors for making this project possible.
 
+<a href="https://github.com/coderabbitai" target="_blank"><img src="https://avatars.githubusercontent.com/u/132028505?s=200&v=4" width="48" height="48" /></a>&nbsp;
 <a href="https://github.com/cpnielsen" target="_blank"><img src="https://avatars.githubusercontent.com/u/1258576?v=4" width="48" height="48" /></a>&nbsp;
 <a href="https://github.com/iamericfletcher" target="_blank"><img src="https://avatars.githubusercontent.com/u/64165327?v=4" width="48" height="48" /></a>&nbsp;
 <a href="https://github.com/arcticFox-git" target="_blank"><img src="https://avatars.githubusercontent.com/u/86988982?v=4" width="48" height="48" /></a>&nbsp;
