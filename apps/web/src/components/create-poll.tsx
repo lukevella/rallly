@@ -16,6 +16,7 @@ import { useUnmount } from "react-use";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
+import { useUser } from "@/components/user-provider";
 import { setCookie } from "@/utils/cookies";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
@@ -39,7 +40,7 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
-
+  const { user } = useUser();
   const form = useForm<NewEventData>({
     defaultValues: {
       title: "",
@@ -97,6 +98,7 @@ export const CreatePoll: React.FunctionComponent = () => {
                   pollId: res.id,
                   numberOfOptions: formData.options?.length,
                   optionsView: formData?.view,
+                  tier: user.tier,
                 });
                 queryClient.invalidate();
                 router.push(`/poll/${res.id}`);
