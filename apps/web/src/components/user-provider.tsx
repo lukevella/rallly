@@ -6,6 +6,7 @@ import React from "react";
 import { z } from "zod";
 
 import { useTranslation } from "@/app/i18n/client";
+import { Spinner } from "@/components/spinner";
 import { useSubscription } from "@/contexts/plan";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
@@ -60,7 +61,11 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const { t } = useTranslation();
 
   if (!user || !subscription) {
-    return null;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   const tier = user?.email ? "guest" : subscription?.active ? "pro" : "hobby";
