@@ -7,7 +7,6 @@ import { AlertTriangleIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getProviders, signIn, useSession } from "next-auth/react";
-import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -38,7 +37,6 @@ export function LoginForm() {
   const session = useSession();
   const queryClient = trpc.useUtils();
   const [email, setEmail] = React.useState<string>();
-  const posthog = usePostHog();
   const router = useRouter();
   const callbackUrl = searchParams?.get("callbackUrl") ?? "/";
 
@@ -128,19 +126,15 @@ export function LoginForm() {
             email,
             token: code,
           });
+
           if (!success) {
             throw new Error("Failed to authenticate user");
-          } else {
-            await queryClient.invalidate();
-            const s = await session.update();
-            if (s?.user) {
-              posthog?.identify(s.user.id, {
-                email: s.user.email,
-                name: s.user.name,
-              });
-            }
-            router.push(callbackUrl);
           }
+
+          await queryClient.invalidate();
+          await session.update();
+
+          router.push(callbackUrl);
         }}
         email={getValues("email")}
       />

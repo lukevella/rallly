@@ -70,14 +70,7 @@ export const RegisterForm = () => {
 
             queryClient.invalidate();
 
-            posthog?.identify(res.user.id, {
-              email: res.user.email,
-              name: res.user.name,
-              timeZone,
-              locale,
-            });
-
-            posthog?.capture("register");
+            posthog?.identify(res.user.id);
 
             signIn("registration-token", {
               token,

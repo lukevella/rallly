@@ -3,26 +3,17 @@ import { Badge } from "@rallly/ui/badge";
 import React from "react";
 
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
 import { isSelfHosted } from "@/utils/constants";
 import { trpc } from "@/utils/trpc/client";
 
 export const useSubscription = () => {
-  const { user } = useUser();
-
   const { data } = trpc.user.subscription.useQuery(undefined, {
-    enabled: !isSelfHosted && user.isGuest === false,
+    enabled: !isSelfHosted,
   });
 
   if (isSelfHosted) {
     return {
       active: true,
-    };
-  }
-
-  if (user.isGuest) {
-    return {
-      active: false,
     };
   }
 
