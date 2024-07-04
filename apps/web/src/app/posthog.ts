@@ -1,11 +1,13 @@
 import { waitUntil } from "@vercel/functions";
 import { PostHog } from "posthog-node";
 
-function PostHogClient() {
-  if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) return null;
+import { env } from "@/env";
 
-  const posthogClient = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
-    host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+function PostHogClient() {
+  if (!env.NEXT_PUBLIC_POSTHOG_API_KEY) return null;
+
+  const posthogClient = new PostHog(env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+    host: env.NEXT_PUBLIC_POSTHOG_API_HOST,
     flushAt: 1,
     flushInterval: 0,
   });
