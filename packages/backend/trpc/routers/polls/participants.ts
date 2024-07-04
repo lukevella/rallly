@@ -18,6 +18,7 @@ export const participants = router({
       const participants = await prisma.participant.findMany({
         where: {
           pollId,
+          deleted: false,
         },
         include: {
           votes: {
@@ -43,9 +44,13 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId } }) => {
-      await prisma.participant.delete({
+      await prisma.participant.update({
         where: {
           id: participantId,
+        },
+        data: {
+          deleted: true,
+          deletedAt: new Date(),
         },
       });
     }),
