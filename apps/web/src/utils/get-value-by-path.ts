@@ -6,7 +6,7 @@ export function getValueByPath<O extends Record<string, unknown>>(
   let curr = obj;
   for (const part of pathArray) {
     if (curr[part] === undefined) {
-      return;
+      return undefined;
     }
     curr = curr[part];
   }
