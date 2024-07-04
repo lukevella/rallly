@@ -188,6 +188,8 @@ model Participant {
   votes     Vote[]
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
+  deleted   Boolean   @default(false)
+  deletedAt DateTime? @map("deleted_at")
 
   @@index([pollId], type: Hash)
   @@map("participants")
