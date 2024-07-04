@@ -1,4 +1,3 @@
-// src/env.mjs
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -54,16 +53,8 @@ export const env = createEnv({
    * 💡 You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
    */
   client: {
-    /**
-     * Base URL of the application
-     */
-    NEXT_PUBLIC_BASE_URL: z.string().url(),
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
-    NEXT_PUBLIC_POSTHOG_API_HOST: z
-      .string()
-      .url()
-      .optional()
-      .default("https://eu.posthog.com"),
+    NEXT_PUBLIC_POSTHOG_API_HOST: z.string().url().optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -89,7 +80,6 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
     ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
   },
