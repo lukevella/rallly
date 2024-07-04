@@ -4750,6 +4750,18 @@
   resolved "https://registry.yarnpkg.com/@swc/types/-/types-0.1.5.tgz#043b731d4f56a79b4897a3de1af35e75d56bc63a"
   integrity sha512-myfUej5naTBWnqOCc/MdVOLVjXUXtIA+NpDrDBKJtLLg2shUjBu3cZmB/85RyitKc55+lUUyl7oRfLOvkr2hsw==
 
+"@t3-oss/env-core@0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-core/-/env-core-0.10.1.tgz#388da647053063f7d9a7b6830537939daf697fa2"
+  integrity sha512-GcKZiCfWks5CTxhezn9k5zWX3sMDIYf6Kaxy2Gx9YEQftFcz8hDRN56hcbylyAO3t4jQnQ5ifLawINsNgCDpOg==
+
+"@t3-oss/env-nextjs@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-nextjs/-/env-nextjs-0.10.1.tgz#abe50e7063fcfdecb7da4371172480c99e9c6dc0"
+  integrity sha512-iy2qqJLnFh1RjEWno2ZeyTu0ufomkXruUsOZludzDIroUabVvHsrSjtkHqwHp1/pgPUzN3yBRHMILW162X7x2Q==
+  dependencies:
+    "@t3-oss/env-core" "0.10.1"
+
 "@tailwindcss/typography@^0.5.13":
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/@tailwindcss/typography/-/typography-0.5.13.tgz#cd788a4fa4d0ca2506e242d512f377b22c1f7932"
