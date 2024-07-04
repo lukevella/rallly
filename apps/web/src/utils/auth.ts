@@ -7,7 +7,7 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 import NextAuth, {
   getServerSession as getServerSessionWithOptions,
 } from "next-auth/next";
@@ -18,10 +18,12 @@ import GoogleProvider from "next-auth/providers/google";
 import { Provider } from "next-auth/providers/index";
 
 import { posthog } from "@/app/posthog";
+import { env } from "@/env";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { emailClient } from "@/utils/emails";
+import { getValueByPath } from "@/utils/get-value-by-path";
 
 const providers: Provider[] = [
   // When a user registers, we don't want to go through the email verification process
@@ -128,9 +130,10 @@ if (
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-      };
+        name: getValueByPath(profile, env.OIDC_NAME_CLAIM_PATH),
+        email: getValueByPath(profile, env.OIDC_EMAIL_CLAIM_PATH),
+        image: getValueByPath(profile, env.OIDC_PICTURE_CLAIM_PATH),
+      } as User;
     },
   });
 }
