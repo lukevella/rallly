@@ -3,7 +3,8 @@ export function getValueByPath<O extends Record<string, unknown>>(
   path: string,
 ): unknown {
   const pathArray = path.split(".");
-  let curr = obj;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let curr: any = obj;
   for (const part of pathArray) {
     if (curr[part] === undefined) {
       return undefined;
