@@ -89,4 +89,5 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
   },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
