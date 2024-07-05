@@ -1,7 +1,7 @@
 {
   "name": "rallly",
   "private": true,
-  "version": "3.8.1",
+  "version": "3.9.0",
   "scripts": {
     "postinstall": "yarn db:generate",
     "dev": "turbo dev --filter=@rallly/web",
