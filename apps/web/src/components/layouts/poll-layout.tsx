@@ -69,7 +69,9 @@ const Layout = ({ children }: React.PropsWithChildren) => {
               </Link>
             </Button>
           )}
-          <GroupPollIcon size="xs" />
+          <div>
+            <GroupPollIcon size="xs" />
+          </div>
           <h1 className="truncate text-sm font-semibold">{poll.title}</h1>
         </div>
         <div>
