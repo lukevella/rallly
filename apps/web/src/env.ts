@@ -19,6 +19,9 @@ export const env = createEnv({
     OIDC_DISCOVERY_URL: z.string().optional(),
     OIDC_CLIENT_ID: z.string().optional(),
     OIDC_CLIENT_SECRET: z.string().optional(),
+    OIDC_EMAIL_CLAIM_PATH: z.string().default("email"),
+    OIDC_NAME_CLAIM_PATH: z.string().default("name"),
+    OIDC_PICTURE_CLAIM_PATH: z.string().default("picture"),
     /**
      * Email Provider
      * Choose which service provider to use for sending emails.
@@ -70,6 +73,9 @@ export const env = createEnv({
     OIDC_DISCOVERY_URL: process.env.OIDC_DISCOVERY_URL,
     OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
     OIDC_CLIENT_SECRET: process.env.OIDC_CLIENT_SECRET,
+    OIDC_EMAIL_CLAIM_PATH: process.env.OIDC_EMAIL_CLAIM_PATH,
+    OIDC_NAME_CLAIM_PATH: process.env.OIDC_NAME_CLAIM_PATH,
+    OIDC_PICTURE_CLAIM_PATH: process.env.OIDC_PICTURE_CLAIM_PATH,
     EMAIL_PROVIDER: process.env.EMAIL_PROVIDER,
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_USER: process.env.SMTP_USER,

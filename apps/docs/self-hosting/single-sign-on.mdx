@@ -7,12 +7,8 @@ description: How to use your own identity provider
 <Info>Available in v3.4.0 and later.</Info>
 
 <Warning>
-#### Account Linking
-
-Accounts using the same email are linked together. This assumes
-that you are using a trusted identity provider that uses verified email
-addresses.
-
+  Accounts using the same email are linked together. This assumes that you are
+  using a trusted identity provider that uses verified email addresses.
 </Warning>
 
 ## OpenID Connect (OIDC)
@@ -29,7 +25,7 @@ Your OAuth 2.0 application needs to be configured with the following scopes:
 
 ### Callback URL / Redirect URI
 
-Your identity provider will redirect the user back to the following URL:
+Your identity provider should redirect the user back to the following URL:
 
 ```
 {BASE_URL}/api/auth/callback/oidc
@@ -46,7 +42,7 @@ The following configuration options are available for OIDC.
 All required fields must be set for OIDC to be enabled.
 
 <ParamField path="OIDC_NAME" default="OpenID Connect">
-  The user-facing name of your provider as it will be shown on the login page
+  The display name of your provider as it will be shown on the login page
 </ParamField>
 
 <ParamField path="OIDC_DISCOVERY_URL" required>
@@ -60,3 +56,17 @@ All required fields must be set for OIDC to be enabled.
 <ParamField path="OIDC_CLIENT_SECRET" required>
   The client secret of your OIDC application
 </ParamField>
+
+<ParamField path="OIDC_NAME_CLAIM_PATH" default="name">
+  The path to the claim that contains the user's name
+</ParamField>
+
+<ParamField path="OIDC_EMAIL_CLAIM_PATH" default="email">
+  The path to the claim that contains the user's email address
+</ParamField>
+
+<ParamField path="OIDC_PICTURE_CLAIM_PATH" default="picture">
+  The path to the claim that contains the user's profile picture
+</ParamField>
+
+<Info>Use dot notation in `_CLAIM_PATH` fields to access nested objects.</Info>
