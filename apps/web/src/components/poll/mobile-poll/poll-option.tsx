@@ -11,6 +11,7 @@ import { useTranslation } from "@/app/i18n/client";
 import { useParticipants } from "@/components/participants-provider";
 import { UserAvatar } from "@/components/user";
 import { usePoll } from "@/contexts/poll";
+import { useRole } from "@/contexts/role";
 
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
@@ -105,6 +106,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 }) => {
   const poll = usePoll();
   const showVotes = !!(selectedParticipantId || editable);
+  const role = useRole();
   const selectorRef = React.useRef<HTMLButtonElement>(null);
   const [active, setActive] = React.useState(false);
   const [isExpanded, toggle] = useToggle(false);
@@ -123,8 +125,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
     >
       <div className="flex h-7 items-center justify-between gap-x-4">
         <div className="shrink-0">{children}</div>
-        <div className="flex items-center gap-x-2.5">
-          {poll.hideParticipants ? (
+        <div className="flex items-center gap-x-4">
+          {role === "participant" && poll.hideParticipants ? (
             <ConnectedScoreSummary optionId={optionId} />
           ) : (
             <Button
