@@ -23,20 +23,24 @@ import { PollStatusBadge } from "@/components/poll-status";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/utils/trpc/client";
+import VisibilityTrigger from "@/components/visibility-trigger";
 
 function PollCount({ count }: { count?: number }) {
   return <span className="font-semibold">{count || 0}</span>;
 }
 
 function FilteredPolls({ status }: { status: PollStatus }) {
-  const { data, isFetching } = trpc.polls.list.useQuery(
-    {
-      status,
-    },
-    {
-      keepPreviousData: true,
-    },
-  );
+  const { data, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.polls.infiniteList.useInfiniteQuery(
+      {
+        status,
+        limit: 30,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        keepPreviousData: true,
+      },
+    );
 
   if (!data) {
     return <Spinner />;
@@ -48,7 +52,14 @@ function FilteredPolls({ status }: { status: PollStatus }) {
         "animate-pulse": isFetching,
       })}
     >
-      <PollsListView data={data} />
+      <div className="space-y-6">
+        {data.pages.map((page, i) => (
+          <PollsListView data={page.polls} key={i} />
+        ))}
+      </div>
+      {!isFetchingNextPage && hasNextPage ? (
+        <VisibilityTrigger onVisible={fetchNextPage} />
+      ) : null}
     </div>
   );
 }

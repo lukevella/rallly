@@ -7,62 +7,64 @@ const prisma = new PrismaClient();
 const randInt = (max = 1, floor = 0) => {
   return Math.round(Math.random() * max) + floor;
 };
+async function createPollForUser(userId: string) {
+  // create some polls with no duration (all day) and some with a random duration.
+  const duration = 60 * randInt(8);
+  let cursor = dayjs().add(randInt(30), "day").second(0).minute(0);
+
+  const numberOfOptions = randInt(30, 2);
+
+  const poll = await prisma.poll.create({
+    include: {
+      participants: true,
+      options: true,
+    },
+    data: {
+      id: faker.random.alpha(10),
+      title: `${faker.animal.cat()} Meetup ${faker.date.month()}`,
+      description: faker.lorem.paragraph(),
+      location: faker.address.streetAddress(),
+      deadline: faker.date.future(),
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+      timeZone: duration !== 0 ? "Europe/London" : undefined,
+      options: {
+        create: Array.from({ length: numberOfOptions }).map(() => {
+          const startTime = cursor.toDate();
+          if (duration !== 0) {
+            cursor = cursor.add(randInt(72, 1), "hour");
+          } else {
+            cursor = cursor.add(randInt(7, 1), "day");
+          }
+          return {
+            startTime,
+            duration,
+          };
+        }),
+      },
+      participants: {
+        create: Array.from({ length: Math.round(Math.random() * 10) }).map(
+          () => ({
+            name: faker.name.fullName(),
+            email: faker.internet.email(),
+          }),
+        ),
+      },
+      adminUrlId: faker.random.alpha(10),
+      participantUrlId: faker.random.alpha(10),
+    },
+  });
+
+  return poll;
+}
 
 async function createPollsForUser(userId: string) {
   // Create some polls
   const polls = await Promise.all(
-    Array.from({ length: 5 }).map(async (_, i) => {
-      // create some polls with no duration (all day) and some with a random duration.
-      const duration = i % 2 === 0 ? 60 * randInt(8, 1) : 0;
-      let cursor = dayjs().add(randInt(30), "day").second(0).minute(0);
-
-      const numberOfOptions = randInt(30, 2);
-
-      const poll = await prisma.poll.create({
-        include: {
-          participants: true,
-          options: true,
-        },
-        data: {
-          id: faker.random.alpha(10),
-          title: `${faker.animal.cat()} Meetup ${faker.date.month()}`,
-          description: faker.lorem.paragraph(),
-          location: faker.address.streetAddress(),
-          deadline: faker.date.future(),
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
-          timeZone: duration !== 0 ? "Europe/London" : undefined,
-          options: {
-            create: Array.from({ length: numberOfOptions }).map(() => {
-              const startTime = cursor.toDate();
-              if (duration !== 0) {
-                cursor = cursor.add(randInt(72, 1), "hour");
-              } else {
-                cursor = cursor.add(randInt(7, 1), "day");
-              }
-              return {
-                startTime,
-                duration,
-              };
-            }),
-          },
-          participants: {
-            create: Array.from({ length: Math.round(Math.random() * 10) }).map(
-              () => ({
-                name: faker.name.fullName(),
-                email: faker.internet.email(),
-              }),
-            ),
-          },
-          adminUrlId: faker.random.alpha(10),
-          participantUrlId: faker.random.alpha(10),
-        },
-      });
-      return poll;
-    }),
+    Array.from({ length: 100 }).map(() => createPollForUser(userId)),
   );
 
   // Create some votes

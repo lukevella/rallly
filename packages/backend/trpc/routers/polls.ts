@@ -93,6 +93,58 @@ export const polls = router({
         },
       });
     }),
+  infiniteList: possiblyPublicProcedure
+    .input(
+      z.object({
+        status: z.enum(["all", "live", "paused", "finalized"]),
+        cursor: z.string().optional(),
+        limit: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit, status } = input;
+      const polls = await prisma.poll.findMany({
+        where: {
+          userId: ctx.user.id,
+          status: status === "all" ? undefined : status,
+        },
+        orderBy: [
+          {
+            createdAt: "desc",
+          },
+          {
+            title: "asc",
+          },
+        ],
+        cursor: cursor ? { id: cursor } : undefined,
+        take: limit + 1,
+        select: {
+          id: true,
+          title: true,
+          location: true,
+          timeZone: true,
+          createdAt: true,
+          status: true,
+          userId: true,
+          participants: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (polls.length > input.limit) {
+        const nextItem = polls.pop();
+        nextCursor = nextItem!.id;
+      }
+      return {
+        polls,
+        nextCursor,
+      };
+    }),
 
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
