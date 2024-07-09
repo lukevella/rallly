@@ -102,8 +102,6 @@ export const polls = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      // sleep for 1 second to simulate slow connection
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const { cursor, limit, status } = input;
       const polls = await prisma.poll.findMany({
         where: {

@@ -1,10 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 
-interface VisibilityTriggerProps {
-  onVisible: () => void;
-}
+export function useVisibilityTrigger<T extends Element>(onVisible: () => void) {
+  const triggerRef = React.useRef<T | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const currentTriggerRef = triggerRef.current;
     if (!currentTriggerRef) return;
 
@@ -29,6 +28,24 @@ interface VisibilityTriggerProps {
       }
     };
   }, [onVisible]);
-};
 
-export default VisibilityTrigger;
+  return triggerRef;
+}
+
+export function VisibilityTrigger({
+  children,
+  onVisible,
+  className,
+}: {
+  children: React.ReactNode;
+  onVisible: () => void;
+  className?: string;
+}) {
+  const triggerRef = useVisibilityTrigger<HTMLDivElement>(onVisible);
+
+  return (
+    <div className={className} ref={triggerRef}>
+      {children}
+    </div>
+  );
+}

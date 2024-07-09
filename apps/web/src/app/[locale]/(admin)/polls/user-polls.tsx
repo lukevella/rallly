@@ -22,15 +22,15 @@ import {
 import { PollStatusBadge } from "@/components/poll-status";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
+import { VisibilityTrigger } from "@/components/visibility-trigger";
 import { trpc } from "@/utils/trpc/client";
-import VisibilityTrigger from "@/components/visibility-trigger";
 
 function PollCount({ count }: { count?: number }) {
   return <span className="font-semibold">{count || 0}</span>;
 }
 
 function FilteredPolls({ status }: { status: PollStatus }) {
-  const { data, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage } =
     trpc.polls.infiniteList.useInfiniteQuery(
       {
         status,
@@ -47,16 +47,18 @@ function FilteredPolls({ status }: { status: PollStatus }) {
   }
 
   return (
-    <div className="space-y-4">
-      {data.pages.map((page, i) => (
-        <PollsListView data={page.polls} key={i} />
-      ))}
-      {isFetchingNextPage ? (
-        <div className="mt-6 flex justify-center">
+    <div className="space-y-6">
+      <ol className="space-y-4">
+        {data.pages.map((page, i) => (
+          <li key={i}>
+            <PollsListView data={page.polls} />
+          </li>
+        ))}
+      </ol>
+      {hasNextPage ? (
+        <VisibilityTrigger onVisible={fetchNextPage} className="mt-6">
           <Spinner />
-        </div>
-      ) : hasNextPage ? (
-        <VisibilityTrigger onVisible={fetchNextPage} />
+        </VisibilityTrigger>
       ) : null}
     </div>
   );
