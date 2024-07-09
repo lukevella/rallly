@@ -47,17 +47,15 @@ function FilteredPolls({ status }: { status: PollStatus }) {
   }
 
   return (
-    <div
-      className={cn({
-        "animate-pulse": isFetching,
-      })}
-    >
-      <div className="space-y-6">
-        {data.pages.map((page, i) => (
-          <PollsListView data={page.polls} key={i} />
-        ))}
-      </div>
-      {!isFetchingNextPage && hasNextPage ? (
+    <div className="space-y-4">
+      {data.pages.map((page, i) => (
+        <PollsListView data={page.polls} key={i} />
+      ))}
+      {isFetchingNextPage ? (
+        <div className="mt-6 flex justify-center">
+          <Spinner />
+        </div>
+      ) : hasNextPage ? (
         <VisibilityTrigger onVisible={fetchNextPage} />
       ) : null}
     </div>
