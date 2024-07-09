@@ -4,11 +4,9 @@ interface VisibilityTriggerProps {
   onVisible: () => void;
 }
 
-const VisibilityTrigger: React.FC<VisibilityTriggerProps> = ({ onVisible }) => {
-  const triggerRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
-    if (!triggerRef.current) return;
+    const currentTriggerRef = triggerRef.current;
+    if (!currentTriggerRef) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -23,16 +21,14 @@ const VisibilityTrigger: React.FC<VisibilityTriggerProps> = ({ onVisible }) => {
       },
     );
 
-    observer.observe(triggerRef.current);
+    observer.observe(currentTriggerRef);
 
     return () => {
-      if (triggerRef.current) {
-        observer.unobserve(triggerRef.current);
+      if (currentTriggerRef) {
+        observer.unobserve(currentTriggerRef);
       }
     };
   }, [onVisible]);
-
-  return <div ref={triggerRef} />;
 };
 
 export default VisibilityTrigger;
