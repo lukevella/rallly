@@ -8,14 +8,7 @@ import {
 } from "@rallly/ui/card";
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import {
-  AtSignIcon,
-  EyeIcon,
-  InfoIcon,
-  MessageCircleIcon,
-  VoteIcon,
-} from "lucide-react";
+import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";
@@ -37,23 +30,17 @@ const SettingContent = ({ children }: React.PropsWithChildren) => {
 const SettingTitle = ({
   children,
   pro,
-  hint,
 }: React.PropsWithChildren<{
   pro?: boolean;
   htmlFor?: string;
-  hint?: React.ReactNode;
 }>) => {
   return (
     <div className="flex min-w-0 items-center gap-x-2.5">
       <div className="text-sm font-medium">{children}</div>
-      {pro ? <ProFeatureBadge /> : null}
-      {hint ? (
-        <Tooltip>
-          <TooltipTrigger>
-            <InfoIcon className="text-muted-foreground size-4" />
-          </TooltipTrigger>
-          <TooltipContent>{hint}</TooltipContent>
-        </Tooltip>
+      {pro ? (
+        <div>
+          <ProFeatureBadge />
+        </div>
       ) : null}
     </div>
   );
