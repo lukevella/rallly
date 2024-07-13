@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useUnmount } from "react-use";
+import { useMount, useUnmount } from "react-use";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
@@ -61,6 +61,10 @@ export const CreatePoll: React.FunctionComponent = () => {
   });
 
   useUnmount(clear);
+
+  useMount(() => {
+    posthog?.startSessionRecording();
+  });
 
   const posthog = usePostHog();
   const queryClient = trpc.useUtils();
