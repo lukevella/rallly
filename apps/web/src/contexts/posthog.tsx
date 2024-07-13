@@ -17,11 +17,11 @@ export function PostHogProvider(props: PostHogProviderProps) {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
         opt_out_capturing_by_default: false,
         capture_pageview: true,
+        capture_pageleave: true,
         // we use session recordings to offer support and
         // improve the product for our pro users
         disable_session_recording: true,
         persistence: "memory",
-        capture_pageleave: false,
         autocapture: false,
         opt_in_site_apps: true,
         bootstrap: {
