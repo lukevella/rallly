@@ -64,7 +64,7 @@
     "next-i18next": "^13.0.3",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.31",
-    "posthog-js": "^1.102.1",
+    "posthog-js": "^1.147.0",
     "posthog-node": "^3.6.0",
     "react-big-calendar": "^1.8.1",
     "react-hook-form": "^7.42.1",
