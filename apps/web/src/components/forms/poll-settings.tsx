@@ -21,6 +21,7 @@ export type PollSettingsFormData = {
   hideParticipants: boolean;
   hideScores: boolean;
   disableComments: boolean;
+  bccAttendees: boolean;
 };
 
 const SettingContent = ({ children }: React.PropsWithChildren) => {
@@ -173,6 +174,31 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                     <Trans
                       i18nKey="hideScoresLabel"
                       defaults="Hide scores until after a participant has voted"
+                    />
+                  </SettingTitle>
+                </SettingContent>
+                <Switch
+                  id={field.name}
+                  disabled={isFree}
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+              </Setting>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bccAttendees"
+            render={({ field }) => (
+              <Setting disabled={isFree}>
+                <EyeIcon className="size-5 shrink-0 translate-y-0.5" />
+                <SettingContent>
+                  <SettingTitle htmlFor={field.name} pro>
+                    <Trans
+                      i18nKey="bccAttendeesLabel"
+                      defaults="Hide attendee list from finalized email"
                     />
                   </SettingTitle>
                 </SettingContent>

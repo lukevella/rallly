@@ -33,6 +33,7 @@ const Page = () => {
       hideScores: poll.hideScores,
       disableComments: poll.disableComments,
       requireParticipantEmail: poll.requireParticipantEmail,
+      bccAttendees: poll.bccAttendees,
     },
   });
 

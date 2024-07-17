@@ -1,6 +1,6 @@
 services:
   rallly_db:
-    image: postgres:14.2
+    image: docker.io/library/postgres:14.2
     restart: always
     ports:
       - "5450:5432"

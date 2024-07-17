@@ -202,6 +202,7 @@
   "requireParticipantEmailLabel": "Make email address required for participants",
   "hideParticipantsLabel": "Hide participant list from other participants",
   "hideScoresLabel": "Hide scores until after a participant has voted",
+  "bccAttendeesLabel": "Hide attendee list from finalized email",
   "authErrorTitle": "Login Error",
   "authErrorDescription": "There was an error logging you in. Please try again.",
   "authErrorCta": "Go to login page",

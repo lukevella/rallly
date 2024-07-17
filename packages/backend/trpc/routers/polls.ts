@@ -156,6 +156,7 @@ export const polls = router({
         description: z.string().optional(),
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
+        bccAttendees: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
         options: z
@@ -217,6 +218,7 @@ export const polls = router({
           hideParticipants: input.hideParticipants,
           disableComments: input.disableComments,
           hideScores: input.hideScores,
+          bccAttendees: input.bccAttendees,
           requireParticipantEmail: input.requireParticipantEmail,
         },
       });
@@ -263,6 +265,7 @@ export const polls = router({
         hideParticipants: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         hideScores: z.boolean().optional(),
+        bccAttendees: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
       }),
     )
@@ -324,6 +327,7 @@ export const polls = router({
           timeZone: input.timeZone,
           closed: input.closed,
           hideScores: input.hideScores,
+          bccAttendees: input.bccAttendees,
           hideParticipants: input.hideParticipants,
           disableComments: input.disableComments,
           requireParticipantEmail: input.requireParticipantEmail,
@@ -469,6 +473,7 @@ export const polls = router({
           hideParticipants: true,
           disableComments: true,
           hideScores: true,
+          bccAttendees: true,
           requireParticipantEmail: true,
           options: {
             select: {
@@ -734,6 +739,7 @@ export const polls = router({
           title: true,
           location: true,
           description: true,
+          bccAttendees: true,
           user: {
             select: {
               name: true,
@@ -838,7 +844,7 @@ export const polls = router({
           name: poll.user.name,
           email: poll.user.email,
         },
-        attendees: icsAttendees,
+        attendees: poll.bccAttendees ? [] : icsAttendees,
         ...(option.duration > 0
           ? {
               start: [
@@ -1035,6 +1041,7 @@ export const polls = router({
           timeZone: true,
           hideParticipants: true,
           hideScores: true,
+          bccAttendees: true,
           disableComments: true,
           options: {
             select: {
@@ -1062,6 +1069,7 @@ export const polls = router({
           description: poll.description,
           hideParticipants: poll.hideParticipants,
           hideScores: poll.hideScores,
+          bccAttendees: poll.bccAttendees,
           disableComments: poll.disableComments,
           adminUrlId: nanoid(),
           participantUrlId: nanoid(),

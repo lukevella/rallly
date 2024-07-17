@@ -116,34 +116,35 @@ enum PollStatus {
 }
 
 model Poll {
-  id                      String        @id @unique @map("id")
-  createdAt               DateTime      @default(now()) @map("created_at")
-  updatedAt               DateTime      @updatedAt @map("updated_at")
+  id                      String     @id @unique @map("id")
+  createdAt               DateTime   @default(now()) @map("created_at")
+  updatedAt               DateTime   @updatedAt @map("updated_at")
   deadline                DateTime?
   title                   String
   description             String?
   location                String?
-  userId                  String        @map("user_id")
-  timeZone                String?       @map("time_zone")
-  closed                  Boolean       @default(false) // @deprecated
-  status                  PollStatus    @default(live)
-  deleted                 Boolean       @default(false)
-  deletedAt               DateTime?     @map("deleted_at")
-  touchedAt               DateTime      @default(now()) @map("touched_at")
-  participantUrlId        String        @unique @map("participant_url_id")
-  adminUrlId              String        @unique @map("admin_url_id")
-  eventId                 String?       @unique @map("event_id")
-  hideParticipants        Boolean       @default(false) @map("hide_participants")
-  hideScores              Boolean       @default(false) @map("hide_scores")
-  disableComments         Boolean       @default(false) @map("disable_comments")
-  requireParticipantEmail Boolean       @default(false) @map("require_participant_email")
+  userId                  String     @map("user_id")
+  timeZone                String?    @map("time_zone")
+  closed                  Boolean    @default(false) // @deprecated
+  status                  PollStatus @default(live)
+  deleted                 Boolean    @default(false)
+  deletedAt               DateTime?  @map("deleted_at")
+  touchedAt               DateTime   @default(now()) @map("touched_at")
+  participantUrlId        String     @unique @map("participant_url_id")
+  adminUrlId              String     @unique @map("admin_url_id")
+  eventId                 String?    @unique @map("event_id")
+  hideParticipants        Boolean    @default(false) @map("hide_participants")
+  hideScores              Boolean    @default(false) @map("hide_scores")
+  bccAttendees            Boolean    @default(false) @map("bccAttendees")
+  disableComments         Boolean    @default(false) @map("disable_comments")
+  requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
 
-  user                    User?         @relation(fields: [userId], references: [id])
-  event                   Event?        @relation(fields: [eventId], references: [id])
-  options                 Option[]
-  participants            Participant[]
-  watchers                Watcher[]
-  comments                Comment[]
+  user         User?         @relation(fields: [userId], references: [id])
+  event        Event?        @relation(fields: [eventId], references: [id])
+  options      Option[]
+  participants Participant[]
+  watchers     Watcher[]
+  comments     Comment[]
 
   @@index([userId], type: Hash)
   @@map("polls")
@@ -159,7 +160,7 @@ model Event {
   duration  Int      @default(0) @map("duration_minutes")
   createdAt DateTime @default(now()) @map("created_at")
 
-  poll      Poll?
+  poll Poll?
 
   @@index([userId], type: Hash)
   @@map("events")
@@ -197,7 +198,7 @@ model Participant {
 
 model Option {
   id        String   @id @default(cuid())
-  startTime DateTime @db.Timestamp(0) @map("start_time")
+  startTime DateTime @map("start_time") @db.Timestamp(0)
   duration  Int      @default(0) @map("duration_minutes")
   pollId    String   @map("poll_id")
   poll      Poll     @relation(fields: [pollId], references: [id])
