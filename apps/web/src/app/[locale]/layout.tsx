@@ -7,7 +7,6 @@ import { Viewport } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
 
-import { SquircleClipPath } from "@/app/components/squircle";
 import { Providers } from "@/app/providers";
 
 const inter = Inter({
@@ -37,7 +36,6 @@ export default function Root({
     <html lang={locale} className={inter.className}>
       <body>
         <Toaster />
-        <SquircleClipPath />
         <Providers>{children}</Providers>
       </body>
     </html>

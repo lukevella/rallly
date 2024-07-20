@@ -2,8 +2,6 @@ import { cn } from "@rallly/ui";
 import { BarChart2Icon } from "lucide-react";
 import React from "react";
 
-import { Squircle } from "@/app/components/squircle";
-
 export function AppCard({
   children,
   className,
@@ -33,15 +31,16 @@ export function GroupPollIcon({
   size?: "xs" | "sm" | "md" | "lg";
 }) {
   return (
-    <Squircle
-      aria-label="Group Poll"
+    <div
+      role="img"
+      aria-label="Group Poll Icon"
       className={cn(
         "inline-flex items-center justify-center bg-gradient-to-br from-purple-500 to-violet-500 text-purple-100",
         {
-          "size-6": size === "xs",
-          "size-8": size === "sm",
-          "size-9": size === "md",
-          "size-10": size === "lg",
+          "size-6 rounded": size === "xs",
+          "size-8 rounded-md": size === "sm",
+          "size-9 rounded-md": size === "md",
+          "size-10 rounded-lg": size === "lg",
         },
       )}
     >
@@ -52,7 +51,7 @@ export function GroupPollIcon({
           "size-6": size === "lg",
         })}
       />
-    </Squircle>
+    </div>
   );
 }
 
