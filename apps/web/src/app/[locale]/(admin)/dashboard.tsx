@@ -26,8 +26,8 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 lg:grid-cols-3">
-        <AppCard>
+      <div className="grid md:flex">
+        <AppCard className="basis-96">
           <AppCardIcon>
             <GroupPollIcon size="lg" />
           </AppCardIcon>
