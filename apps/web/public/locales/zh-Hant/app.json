@@ -15,7 +15,6 @@
   "copied": "複製成功",
   "createAnAccount": "建立帳戶",
   "createdBy": "由 <b>{name}</b> 發起",
-  "createPoll": "建立投票",
   "delete": "刪除",
   "deleteDate": "刪除日期",
   "deletedPoll": "已刪除投票",
@@ -80,7 +79,6 @@
   "validEmail": "請輸入有效的電子郵件地址",
   "verificationCodeHelp": "沒有收到電子郵件？請檢查您的垃圾信箱。",
   "verificationCodePlaceholder": "輸入6位驗證碼",
-  "verificationCodeSent": "驗證碼已發送至 <b>{email}</b> <a>更改電子郵件地址</a>",
   "verifyYourEmail": "驗證您的電子郵件地址",
   "startOfWeek": "每週開始日",
   "weekView": "週",
@@ -141,7 +139,6 @@
   "billingStatus": "帳單狀態",
   "billingStatusDescription": "管理您的訂閱和帳單詳情",
   "freeForever": "永久免費",
-  "annualBillingDescription": "每月，按年計費",
   "billingStatusState": "狀態",
   "billingStatusActive": "啟用中",
   "billingStatusPaused": "暫停中",
@@ -214,6 +211,6 @@
   "share": "分享",
   "inviteLink": "邀請連結",
   "inviteParticipantLinkInfo": "任何收到此連結的人都可以參與你的投票。",
-  "pollStatus": "狀態",
-  "timeShownIn": "目前以 {timeZone} 時區顯示"
+  "timeShownIn": "目前以 {timeZone} 時區顯示",
+  "createPoll": "建立投票"
 }
