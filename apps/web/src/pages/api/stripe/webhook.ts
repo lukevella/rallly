@@ -125,7 +125,7 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
           id: subscription.id,
           active: isActive,
           priceId: price.id,
-          currency: price.currency ?? null,
+          currency: subscription.currency ?? null,
           createdAt: toDate(subscription.created),
           periodStart: toDate(subscription.current_period_start),
           periodEnd: toDate(subscription.current_period_end),
@@ -133,7 +133,7 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
         update: {
           active: isActive,
           priceId: price.id,
-          currency: price.currency ?? null,
+          currency: subscription.currency ?? null,
           createdAt: toDate(subscription.created),
           periodStart: toDate(subscription.current_period_start),
           periodEnd: toDate(subscription.current_period_end),
