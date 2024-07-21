@@ -1,10 +1,12 @@
+import { getProPricing } from "@rallly/billing";
+
+import { BillingPage } from "@/app/[locale]/(admin)/settings/billing/billing-page";
 import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 
-import { BillingPage } from "./billing-page";
-
 export default async function Page() {
-  return <BillingPage />;
+  const prices = await getProPricing();
+  return <BillingPage pricingData={prices} />;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {

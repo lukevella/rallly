@@ -4,12 +4,9 @@ import { Card } from "@rallly/ui/card";
 import { Label } from "@rallly/ui/label";
 import dayjs from "dayjs";
 import { ArrowUpRight, CreditCardIcon, SendIcon } from "lucide-react";
-import Head from "next/head";
 import Link from "next/link";
 import Script from "next/script";
-import { useTranslation } from "next-i18next";
 
-import { BillingPlans } from "@/components/billing/billing-plans";
 import {
   Settings,
   SettingsContent,
@@ -18,6 +15,8 @@ import {
 import { Trans } from "@/components/trans";
 import { useSubscription } from "@/contexts/plan";
 import { trpc } from "@/utils/trpc/client";
+
+import { BillingPlans, PricingData } from "./billing-plans";
 
 declare global {
   interface Window {
@@ -57,7 +56,7 @@ const BillingPortal = () => {
 
 const proPlanIdMonthly = process.env.NEXT_PUBLIC_PRO_PLAN_ID_MONTHLY as string;
 
-const SubscriptionStatus = () => {
+const SubscriptionStatus = ({ pricingData }: { pricingData: PricingData }) => {
   const data = useSubscription();
 
   if (!data) {
@@ -67,7 +66,7 @@ const SubscriptionStatus = () => {
   return (
     <div className="space-y-6">
       {!data.active ? (
-        <BillingPlans />
+        <BillingPlans pricingData={pricingData} />
       ) : data.legacy ? (
         <LegacyBilling />
       ) : (
@@ -238,16 +237,11 @@ const LegacyBilling = () => {
   </div>
 </SettingsSection>;
 
-export function BillingPage() {
-  const { t } = useTranslation();
-
+export function BillingPage({ pricingData }: { pricingData: PricingData }) {
   return (
     <Settings>
-      <Head>
-        <title>{t("billing")}</title>
-      </Head>
       <SettingsContent>
-        <SubscriptionStatus />
+        <SubscriptionStatus pricingData={pricingData} />
         <hr />
         <SettingsSection
           title={<Trans i18nKey="support" defaults="Support" />}

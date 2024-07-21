@@ -139,7 +139,6 @@
   "billingStatus": "Billing Status",
   "billingStatusDescription": "Manage your subscription and billing details",
   "freeForever": "free forever",
-  "annualBillingDescription": "per month, billed annually",
   "billingStatusState": "Status",
   "billingStatusActive": "Active",
   "billingStatusPaused": "Paused",
@@ -228,7 +227,6 @@
   "autoTimeZoneHelp": "Enable this setting to automatically adjust event times to each participant's local time zone.",
   "commentsDisabled": "Comments have been disabled",
   "allParticipants": "All Participants",
-  "pollsListAll": "All",
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
   "timeShownIn": "Times shown in {timeZone}",
   "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time",
@@ -263,5 +261,7 @@
   "pastEventsEmptyStateTitle": "No Past Events",
   "pastEventsEmptyStateDescription": "When you schedule events, they will appear here.",
   "activePollCount": "{{activePollCount}} Live",
-  "createPoll": "Create poll"
+  "createPoll": "Create poll",
+  "yearlyDiscount": "Save {amount}",
+  "yearlyBillingDescription": "per year"
 }
