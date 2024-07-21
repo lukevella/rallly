@@ -8,7 +8,4 @@ export const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === "true";
 
 export const isFeedbackEnabled = false;
 
-export const monthlyPriceUsd = 7;
-
-export const annualPriceUsd = 42;
 export const appVersion = process.env.NEXT_PUBLIC_APP_VERSION;

@@ -1,3 +1,6 @@
+import type { PricingData } from "@rallly/billing";
+import { getProPricing } from "@rallly/billing";
+import { Badge } from "@rallly/ui/badge";
 import {
   BillingPlan,
   BillingPlanDescription,
@@ -11,6 +14,7 @@ import {
 import { Button } from "@rallly/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { TrendingUpIcon } from "lucide-react";
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import { NextSeo } from "next-seo";
@@ -21,9 +25,6 @@ import { Trans } from "@/components/trans";
 import { linkToApp } from "@/lib/linkToApp";
 import { NextPageWithLayout } from "@/types";
 import { getStaticTranslations } from "@/utils/page-translations";
-
-const monthlyPriceUsd = 7;
-const annualPriceUsd = 42;
 
 export const UpgradeButton = ({
   children,
@@ -48,7 +49,7 @@ export const UpgradeButton = ({
   );
 };
 
-const PriceTables = () => {
+const PriceTables = ({ pricingData }: { pricingData: PricingData }) => {
   const [tab, setTab] = React.useState("yearly");
   return (
     <Tabs value={tab} onValueChange={setTab}>
@@ -57,8 +58,17 @@ const PriceTables = () => {
           <TabsTrigger value="monthly">
             <Trans i18nKey="pricing:billingPeriodMonthly" defaults="Monthly" />
           </TabsTrigger>
-          <TabsTrigger value="yearly">
+          <TabsTrigger value="yearly" className="inline-flex gap-x-2.5">
             <Trans i18nKey="pricing:billingPeriodYearly" defaults="Yearly" />
+            <Badge variant="green" className="inline-flex gap-2">
+              <Trans
+                i18nKey="pricing:discount"
+                defaults="Save {amount}"
+                values={{
+                  amount: `$${(pricingData.monthly.amount * 12 - pricingData.yearly.amount) / 100}`,
+                }}
+              />
+            </Badge>
           </TabsTrigger>
         </TabsList>
       </div>
@@ -115,18 +125,20 @@ const PriceTables = () => {
             </BillingPlanDescription>
           </BillingPlanHeader>
           <TabsContent value="yearly">
-            <BillingPlanPrice discount={`$${(annualPriceUsd / 12).toFixed(2)}`}>
-              ${monthlyPriceUsd}
+            <BillingPlanPrice>
+              ${pricingData.yearly.amount / 100}
             </BillingPlanPrice>
             <BillingPlanPeriod>
               <Trans
-                i18nKey="pricing:annualBillingDescription"
-                defaults="per month, billed annually"
+                i18nKey="pricing:yearlyBillingDescription"
+                defaults="per year"
               />
             </BillingPlanPeriod>
           </TabsContent>
           <TabsContent value="monthly">
-            <BillingPlanPrice>${monthlyPriceUsd}</BillingPlanPrice>
+            <BillingPlanPrice>
+              ${pricingData.monthly.amount / 100}
+            </BillingPlanPrice>
             <BillingPlanPeriod>
               <Trans
                 i18nKey="pricing:monthlyBillingDescription"
@@ -266,7 +278,9 @@ const FAQ = () => {
   );
 };
 
-const Page: NextPageWithLayout = () => {
+const Page: NextPageWithLayout<{ pricingData: PricingData }> = ({
+  pricingData,
+}) => {
   const { t } = useTranslation(["pricing"]);
   return (
     <div className="mx-auto max-w-3xl">
@@ -286,7 +300,7 @@ const Page: NextPageWithLayout = () => {
         </p>
       </div>
       <div className="space-y-4 sm:space-y-6">
-        <PriceTables />
+        <PriceTables pricingData={pricingData} />
         <div className="rounded-md border bg-gradient-to-b from-cyan-50 to-cyan-50/60 px-5 py-4 text-cyan-800">
           <div className="mb-2">
             <TrendingUpIcon className="text-indigo mr-2 mt-0.5 size-6 shrink-0" />
@@ -317,4 +331,16 @@ Page.getLayout = getPageLayout;
 
 export default Page;
 
-export const getStaticProps = getStaticTranslations(["pricing"]);
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const pricingData = await getProPricing();
+  const res = await getStaticTranslations(["pricing"])(ctx);
+  if ("props" in res) {
+    return {
+      props: {
+        ...res.props,
+        pricingData,
+      },
+    };
+  }
+  return res;
+};

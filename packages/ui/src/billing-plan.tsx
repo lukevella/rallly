@@ -37,20 +37,10 @@ export const BillingPlanDescription = ({
 
 export const BillingPlanPrice = ({
   children,
-  discount,
 }: React.PropsWithChildren<{ discount?: React.ReactNode }>) => {
   return (
-    <div>
-      {discount ? (
-        <>
-          <span className="mr-2 text-xl font-bold line-through">
-            {children}
-          </span>
-          <span className="text-3xl font-bold">{discount}</span>
-        </>
-      ) : (
-        <span className="text-3xl font-bold">{children}</span>
-      )}
+    <div className="flex items-center gap-4">
+      <span className="text-3xl font-bold">{children}</span>
     </div>
   );
 };

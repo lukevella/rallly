@@ -58,6 +58,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_API_HOST: z.string().url().optional(),
+    NEXT_PUBLIC_SELF_HOSTED: z.enum(["true", "false"]).optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -88,6 +89,7 @@ export const env = createEnv({
     ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    NEXT_PUBLIC_SELF_HOSTED: process.env.NEXT_PUBLIC_SELF_HOSTED,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

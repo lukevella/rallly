@@ -27,6 +27,7 @@
     "@rallly/backend": "*",
     "@rallly/database": "*",
     "@rallly/icons": "*",
+    "@rallly/billing": "*",
     "@rallly/languages": "*",
     "@rallly/tailwind-config": "*",
     "@rallly/ui": "*",

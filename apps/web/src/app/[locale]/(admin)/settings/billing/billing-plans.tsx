@@ -1,3 +1,4 @@
+import { Badge } from "@rallly/ui/badge";
 import {
   BillingPlan,
   BillingPlanDescription,
@@ -15,9 +16,21 @@ import React from "react";
 
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
-import { annualPriceUsd, monthlyPriceUsd } from "@/utils/constants";
 
-export const BillingPlans = () => {
+export type PricingData = {
+  monthly: {
+    id: string;
+    amount: number;
+    currency: string;
+  };
+  yearly: {
+    id: string;
+    amount: number;
+    currency: string;
+  };
+};
+
+export const BillingPlans = ({ pricingData }: { pricingData: PricingData }) => {
   const [tab, setTab] = React.useState("yearly");
 
   return (
@@ -28,8 +41,21 @@ export const BillingPlans = () => {
             <TabsTrigger value="monthly">
               <Trans i18nKey="billingPeriodMonthly" />
             </TabsTrigger>
-            <TabsTrigger value="yearly">
+            <TabsTrigger value="yearly" className="inline-flex gap-x-2.5">
               <Trans i18nKey="billingPeriodYearly" />
+              <Badge variant="green">
+                <Trans
+                  i18nKey="yearlyDiscount"
+                  defaults="Save {amount}"
+                  values={{
+                    amount: `$${
+                      (pricingData.monthly.amount * 12 -
+                        pricingData.yearly.amount) /
+                      100
+                    }`,
+                  }}
+                />
+              </Badge>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -85,20 +111,20 @@ export const BillingPlans = () => {
             </div>
             <div className="flex">
               <TabsContent value="yearly">
-                <BillingPlanPrice
-                  discount={`$${(annualPriceUsd / 12).toFixed(2)}`}
-                >
-                  ${monthlyPriceUsd}
+                <BillingPlanPrice>
+                  ${pricingData.yearly.amount / 100}
                 </BillingPlanPrice>
                 <BillingPlanPeriod>
                   <Trans
-                    i18nKey="annualBillingDescription"
-                    defaults="per month, billed annually"
+                    i18nKey="yearlyBillingDescription"
+                    defaults="per year"
                   />
                 </BillingPlanPeriod>
               </TabsContent>
               <TabsContent value="monthly">
-                <BillingPlanPrice>${monthlyPriceUsd}</BillingPlanPrice>
+                <BillingPlanPrice>
+                  ${pricingData.monthly.amount / 100}
+                </BillingPlanPrice>
                 <BillingPlanPeriod>
                   <Trans
                     i18nKey="monthlyBillingDescription"

@@ -1,0 +1,16 @@
+{
+  "name": "@rallly/billing",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./server/*": "./src/server/*.tsx",
+    "./next": "./src/next/index.ts",
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@rallly/ui": "*",
+    "stripe": "^13.2.0",
+    "@radix-ui/react-radio-group": "^1.2.0",
+    "next": "*"
+  }
+}
