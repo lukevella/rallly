@@ -15,7 +15,6 @@
   "copied": "복사됨",
   "createAnAccount": "계정 만들기",
   "createdBy": "<b>{name}</b> 에 의해 생성됨",
-  "createPoll": "투표 만들기",
   "delete": "삭제하기",
   "deleteDate": "날짜 삭제하기",
   "deletedPoll": "삭제된 투표",
@@ -80,7 +79,6 @@
   "validEmail": "유효한 이메일을 입력해주세요",
   "verificationCodeHelp": "이메일을 받지 못하셨나요? 스팸메일함을 확인해보세요.",
   "verificationCodePlaceholder": "6자리 인증코드를 입력해주세요",
-  "verificationCodeSent": "인증 코드가 <b>{email}</b> 로 전송되었습니다. <a>변경하기</a>",
   "verifyYourEmail": "이메일을 확인하세요",
   "startOfWeek": "시작 요일",
   "weekView": "주간 보기",
@@ -188,5 +186,5 @@
   "share": "공유하기",
   "inviteLink": "초대 링크",
   "inviteParticipantLinkInfo": "이 링크를 가진 사람은 누구나 당신의 투표에 참여할 수 있습니다.",
-  "back": "뒤로가기"
+  "createPoll": "투표 만들기"
 }
