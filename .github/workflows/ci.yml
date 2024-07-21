@@ -64,6 +64,7 @@ jobs:
       - name: Set environment variables
         run: |
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5450/rallly" >> $GITHUB_ENV
+          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> $GITHUB_ENV
 
       - name: Create production build
         run: yarn turbo build:test --filter=@rallly/web
