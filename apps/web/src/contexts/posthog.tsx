@@ -13,7 +13,7 @@ type PostHogProviderProps = React.PropsWithChildren;
 
 if (typeof window !== "undefined" && env.NEXT_PUBLIC_POSTHOG_API_KEY) {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_API_KEY, {
-    debug: true,
+    debug: false,
     api_host: env.NEXT_PUBLIC_POSTHOG_API_HOST,
     capture_pageview: false,
     capture_pageleave: true,
