@@ -1,4 +1,4 @@
-import { stripe } from "@rallly/backend/stripe";
+import { getProPricing, stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
@@ -61,6 +61,8 @@ export default async function handler(
     return;
   }
 
+  const proPricingData = await getProPricing();
+
   const session = await stripe.checkout.sessions.create({
     success_url: absoluteUrl(
       return_path ?? "/api/stripe/portal?session_id={CHECKOUT_SESSION_ID}",
@@ -97,8 +99,8 @@ export default async function handler(
       {
         price:
           period === "yearly"
-            ? (process.env.STRIPE_YEARLY_PRICE as string)
-            : (process.env.STRIPE_MONTHLY_PRICE as string),
+            ? proPricingData.yearly.id
+            : proPricingData.monthly.id,
         quantity: 1,
       },
     ],
