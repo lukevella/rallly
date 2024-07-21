@@ -16,6 +16,7 @@ import { VerifyCode, verifyCode } from "@/components/auth/auth-forms";
 import { Spinner } from "@/components/spinner";
 import { isSelfHosted } from "@/utils/constants";
 import { validEmail } from "@/utils/form-validation";
+import { usePostHog } from "@/utils/posthog";
 
 const allowGuestAccess = !isSelfHosted;
 
@@ -41,6 +42,8 @@ export function LoginForm() {
   const callbackUrl = searchParams?.get("callbackUrl") ?? "/";
 
   const error = searchParams?.get("error");
+
+  const posthog = usePostHog();
 
   const alternativeLoginMethods = React.useMemo(() => {
     const res: Array<{ login: () => void; icon: JSX.Element; name: string }> =
@@ -94,13 +97,14 @@ export function LoginForm() {
       res.push({
         login: () => {
           router.push(callbackUrl);
+          posthog?.capture("click continue as guest");
         },
         icon: <UserIcon className="text-muted-foreground size-5" />,
         name: t("continueAsGuest"),
       });
     }
     return res;
-  }, [callbackUrl, providers, router, t]);
+  }, [callbackUrl, posthog, providers, router, t]);
 
   if (!providers) {
     return (
