@@ -63,6 +63,9 @@ export const user = router({
       await tx.event.deleteMany({
         where: { userId: ctx.user.id },
       });
+      await tx.comment.deleteMany({
+        where: { userId: ctx.user.id },
+      });
       await tx.poll.deleteMany({
         where: { userId: ctx.user.id },
       });
