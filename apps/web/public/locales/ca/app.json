@@ -15,7 +15,6 @@
   "copied": "Copiat",
   "createAnAccount": "Crea un compte",
   "createdBy": "per <b>{name}</b>",
-  "createPoll": "Crea l'enquesta",
   "delete": "Suprimeix",
   "deleteDate": "Suprimeix la data",
   "deletedPoll": "Enquesta suprimida",
@@ -80,7 +79,6 @@
   "validEmail": "Si us plau, introdueix un correu vàlid",
   "verificationCodeHelp": "No has rebut el correu? Revisa el correu brossa.",
   "verificationCodePlaceholder": "Introdueix el codi de 6 dígits",
-  "verificationCodeSent": "Un codi de verificació s'ha enviat a <b>{email}</b> <a>Modifica'l</a>",
   "verifyYourEmail": "Verifica el teu correu",
   "startOfWeek": "Inici de la setmana",
   "weekView": "Vista setmanal",
@@ -141,7 +139,6 @@
   "billingStatus": "Estat de la facturació",
   "billingStatusDescription": "Gestiona les teves subscripcions i les dades de facturació",
   "freeForever": "gratuït per sempre",
-  "annualBillingDescription": "mensual amb facturació anual",
   "billingStatusState": "Estat",
   "billingStatusActive": "Actiu",
   "billingStatusPaused": "Pausat",
@@ -214,9 +211,8 @@
   "share": "Compartir",
   "inviteLink": "Enllaç d'invitació",
   "inviteParticipantLinkInfo": "Qualsevol persona amb aquest enllaç podrà votar a la teva enquesta.",
-  "pollStatus": "Estat",
-  "back": "Torna",
   "timeShownIn": "Hores mostrades per {timeZone}",
   "keepPollsIndefinitely": "Mantenir enquestes indefinidament",
-  "keepPollsIndefinitelyDescription": "Les enquestes inactives no s'esborraran automàticament."
+  "keepPollsIndefinitelyDescription": "Les enquestes inactives no s'esborraran automàticament.",
+  "createPoll": "Crea l'enquesta"
 }
