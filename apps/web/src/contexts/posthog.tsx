@@ -52,10 +52,9 @@ export function PostHogProvider(props: PostHogProviderProps) {
 
   useMount(() => {
     if (user.email) {
-      posthog.identify(user.id);
-      posthog.people.set({
-        $email: user.email,
-        $name: user.name,
+      posthog.identify(user.id, {
+        email: user.email,
+        name: user.name,
       });
     }
   });
