@@ -27,5 +27,7 @@
   "planFree": "Gratis",
   "keepPollsIndefinitely": "Behoud polls voor onbepaalde tijd",
   "whenPollInactive": "Wanneer krijgt een poll de status \"inactief\"?",
-  "whenPollInactiveAnswer": "Polls worden inactief wanneer alle datumopties in het verleden liggen en de poll gedurende meer dan 30 dagen niet is benaderd. Zonder een betaald abonnement worden inactieve polls automatisch verwijderd."
+  "whenPollInactiveAnswer": "Polls worden inactief wanneer alle datumopties in het verleden liggen en de poll gedurende meer dan 30 dagen niet is benaderd. Zonder een betaald abonnement worden inactieve polls automatisch verwijderd.",
+  "discount": "Bespaar {amount}",
+  "yearlyBillingDescription": "per jaar"
 }
