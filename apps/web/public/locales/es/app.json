@@ -244,5 +244,7 @@
   "upcomingEventsEmptyStateDescription": "Cuando programes eventos, aparecerán aquí.",
   "pastEventsEmptyStateDescription": "Cuando programes eventos, aparecerán aquí.",
   "activePollCount": "{{activePollCount}} Activa",
-  "createPoll": "Crear encuesta"
+  "createPoll": "Crear encuesta",
+  "yearlyDiscount": "Ahorre {amount}",
+  "yearlyBillingDescription": "por año"
 }
