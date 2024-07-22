@@ -15,7 +15,6 @@
   "copied": "Đã sao chép",
   "createAnAccount": "Tạo tài khoản mới",
   "createdBy": "bởi <b>{name}</b>",
-  "createPoll": "Tạo bình chọn",
   "delete": "Xóa",
   "deleteDate": "Xoá ngày",
   "deletedPoll": "Bình chọn đã xoá",
@@ -78,7 +77,6 @@
   "validEmail": "Vui lòng nhập email hợp lệ",
   "verificationCodeHelp": "Không nhận được email? Kiểm tra hộp thư rác của bạn.",
   "verificationCodePlaceholder": "Nhập mã 6 ký tự",
-  "verificationCodeSent": "Mã xác minh đã được gửi đến <b>{email}</b> <a>Thay đổi</a>",
   "verifyYourEmail": "Xác minh địa chỉ email của bạn",
   "startOfWeek": "Đầu tuần",
   "weekView": "Hiển thị theo Tuần",
@@ -115,5 +113,5 @@
   "share": "Chia sẻ",
   "inviteLink": "Mời liên kết",
   "inviteParticipantLinkInfo": "Bất kỳ ai có liên kết này đều có thể bỏ phiếu cho cuộc thăm dò ý kiến ​​của bạn.",
-  "back": "Quay lại"
+  "createPoll": "Tạo bình chọn"
 }

@@ -3,7 +3,6 @@
   "pricingDescription": "Comece grátis. Nenhum login é necessário.",
   "freeForever": "gratuito para sempre",
   "planPro": "Pro",
-  "annualBillingDescription": "por mês, cobrado anualmente",
   "monthlyBillingDescription": "por mês",
   "upgrade": "Upgrade",
   "faq": "Preguntas frequentes",
@@ -28,5 +27,7 @@
   "planFree": "Grátis",
   "keepPollsIndefinitely": "Manter enquetes indefinidamente",
   "whenPollInactive": "Quando uma enquete fica inativa?",
-  "whenPollInactiveAnswer": "Enquetes ficam inativas quando todas as opções de data estiverem no passado e não tenham sido acessadas há mais de 30 dias. As enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga."
+  "whenPollInactiveAnswer": "Enquetes ficam inativas quando todas as opções de data estiverem no passado e não tenham sido acessadas há mais de 30 dias. As enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga.",
+  "discount": "Economize {amount}",
+  "yearlyBillingDescription": "por ano"
 }

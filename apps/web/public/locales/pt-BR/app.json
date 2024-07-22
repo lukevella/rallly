@@ -139,7 +139,6 @@
   "billingStatus": "Status da Cobrança",
   "billingStatusDescription": "Gerencie sua assinatura e detalhes de cobrança",
   "freeForever": "gratuito para sempre",
-  "annualBillingDescription": "por mês, cobrado anualmente",
   "billingStatusState": "Status",
   "billingStatusActive": "Ativa",
   "billingStatusPaused": "Pausada",
@@ -228,7 +227,6 @@
   "autoTimeZoneHelp": "Ative esta configuração para ajustar automaticamente os horários dos eventos de cada participante ao fuso horário local.",
   "commentsDisabled": "Os comentários foram desabilitados",
   "allParticipants": "Todos os participantes",
-  "pollsListAll": "Todas",
   "noParticipantsDescription": "Clique em <b>Compartilhar</b> para convidar participantes",
   "timeShownIn": "Horários exibidos em {timeZone}",
   "pollStatusPausedDescription": "Votos não podem ser enviados ou editados neste momento",
@@ -263,5 +261,7 @@
   "pastEventsEmptyStateTitle": "Nenhum Evento Anterior",
   "pastEventsEmptyStateDescription": "Quando você agendar eventos, eles aparecerão aqui.",
   "activePollCount": "{{activePollCount}} Ao Vivo",
-  "createPoll": "Criar enquete"
+  "createPoll": "Criar enquete",
+  "yearlyDiscount": "Economize {amount}",
+  "yearlyBillingDescription": "por ano"
 }

@@ -15,7 +15,6 @@
   "copied": "Kopirano",
   "createAnAccount": "Stvorite račun",
   "createdBy": "napravio/la <b>{name}</b>",
-  "createPoll": "Stvori anketu",
   "delete": "Brisanje",
   "deleteDate": "Brisanje datuma",
   "deletedPoll": "Izbrisana anketa",
@@ -78,7 +77,6 @@
   "validEmail": "Molimo unesite valjanu adresu e-pošte",
   "verificationCodeHelp": "Niste dobili poruku e-pošte? Provjerite svoju mapu s neželjenom poštom (SPAM).",
   "verificationCodePlaceholder": "Unesite 6-znamenkasti kôd",
-  "verificationCodeSent": "Kôd za potvrdu je poslan na adresu <b>{email}</b> <a>Promijenite</a>",
   "verifyYourEmail": "Potvrdite svoju adresu e-pošte",
   "startOfWeek": "Početak tjedna",
   "weekView": "Tjedni pregled",
@@ -138,7 +136,6 @@
   "billingStatus": "Stanje plaćanja",
   "billingStatusDescription": "Upravljajte svojom pretplatom i pojedinostima o naplati",
   "freeForever": "besplatno zauvijek",
-  "annualBillingDescription": "mjesečno, plaćanje jednom godišnje",
   "billingStatusState": "Stanje",
   "billingStatusActive": "Aktivno",
   "billingStatusPaused": "Pauzirano",
@@ -181,7 +178,6 @@
   "share": "Podijeli",
   "inviteLink": "Poveznica s pozivnicom",
   "inviteParticipantLinkInfo": "Svi koji dobiju ovu poveznicu mogu glasati u vašoj anketi.",
-  "pollStatus": "Stanje",
-  "back": "Natrag",
-  "timeShownIn": "Vrijeme prikazano u {timeZone}"
+  "timeShownIn": "Vrijeme prikazano u {timeZone}",
+  "createPoll": "Stvori anketu"
 }
