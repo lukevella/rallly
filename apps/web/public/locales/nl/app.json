@@ -261,5 +261,7 @@
   "pastEventsEmptyStateTitle": "Geen afgelopen evenementen",
   "pastEventsEmptyStateDescription": "Wanneer je evenementen inplant, zullen ze hier verschijnen.",
   "activePollCount": "{{activePollCount}} actief",
-  "createPoll": "Poll maken"
+  "createPoll": "Poll maken",
+  "yearlyDiscount": "Bespaar {amount}",
+  "yearlyBillingDescription": "per jaar"
 }
