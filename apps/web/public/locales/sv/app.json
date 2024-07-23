@@ -231,5 +231,7 @@
   "pastEventsEmptyStateTitle": "Inga tidigare händelser",
   "pastEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
   "activePollCount": "{{activePollCount}} Live",
-  "createPoll": "Skapa omröstning"
+  "createPoll": "Skapa omröstning",
+  "yearlyDiscount": "Spara {amount}",
+  "yearlyBillingDescription": "per år"
 }
