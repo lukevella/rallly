@@ -7,7 +7,7 @@ import { trpc } from "@/utils/trpc/client";
 export type PollStatus = "live" | "paused" | "finalized";
 
 export function PollStatusFilter({
-  status,
+  status = "live",
   onStatusChange,
 }: {
   status?: PollStatus;
