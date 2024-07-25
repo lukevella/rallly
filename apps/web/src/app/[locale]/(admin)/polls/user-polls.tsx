@@ -1,5 +1,4 @@
 "use client";
-import { PollStatus } from "@rallly/database";
 import { RadioCards, RadioCardsItem } from "@rallly/ui/radio-pills";
 import { GridIcon, ListIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -11,49 +10,6 @@ import { PollStatusFilter } from "@/app/[locale]/(admin)/polls/poll-status-filte
 import { Spinner } from "@/components/spinner";
 import { VisibilityTrigger } from "@/components/visibility-trigger";
 import { trpc } from "@/utils/trpc/client";
-
-type PollListView = "grid" | "list";
-
-function FilteredPolls({
-  status = "live",
-  view = "list",
-}: {
-  status?: PollStatus;
-  view?: PollListView;
-}) {
-  const { data, fetchNextPage, hasNextPage } =
-    trpc.polls.infiniteList.useInfiniteQuery(
-      {
-        status,
-        limit: 30,
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        keepPreviousData: true,
-      },
-    );
-
-  if (!data) {
-    return <Spinner />;
-  }
-
-  const Component = view === "list" ? PollsListView : PollsGridView;
-
-  return (
-    <ol className="space-y-4">
-      {data.pages.map((page, i) => (
-        <li key={i}>
-          <Component data={page.polls} />
-        </li>
-      ))}
-      {hasNextPage ? (
-        <VisibilityTrigger onVisible={fetchNextPage}>
-          <Spinner />
-        </VisibilityTrigger>
-      ) : null}
-    </ol>
-  );
-}
 
 function useQueryParam(name: string) {
   const searchParams = useSearchParams();
@@ -77,6 +33,24 @@ export function UserPolls() {
   const [view, setView] = useQueryParam("view");
   const parsedView = pollViewScheme.parse(view);
 
+  const { data, fetchNextPage, hasNextPage } =
+    trpc.polls.infiniteList.useInfiniteQuery(
+      {
+        status: parsedPollStatus,
+        limit: 30,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        keepPreviousData: true,
+      },
+    );
+
+  if (!data) {
+    return <Spinner />;
+  }
+
+  const Component = parsedView === "list" ? PollsListView : PollsGridView;
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between gap-4">
@@ -84,7 +58,7 @@ export function UserPolls() {
           status={parsedPollStatus}
           onStatusChange={setPollStatus}
         />
-        <RadioCards value={view ?? "list"} onValueChange={setView}>
+        <RadioCards value={parsedView} onValueChange={setView}>
           <RadioCardsItem value="list">
             <ListIcon className="size-4" />
           </RadioCardsItem>
@@ -93,7 +67,18 @@ export function UserPolls() {
           </RadioCardsItem>
         </RadioCards>
       </div>
-      <FilteredPolls status={parsedPollStatus} view={parsedView} />
+      <ol className="space-y-4">
+        {data.pages.map((page, i) => (
+          <li key={i}>
+            <Component data={page.polls} />
+          </li>
+        ))}
+        {hasNextPage ? (
+          <VisibilityTrigger onVisible={fetchNextPage}>
+            <Spinner />
+          </VisibilityTrigger>
+        ) : null}
+      </ol>
     </div>
   );
 }

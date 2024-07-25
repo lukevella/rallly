@@ -1,13 +1,13 @@
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
+import { Icon } from "@rallly/ui/icon";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { CalendarPlusIcon } from "lucide-react";
+import { CalendarPlusIcon, MessageCircleIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import { CopyLinkButton } from "@/app/[locale]/(admin)/polls/copy-invite-link-button";
-import { ParticipantCount } from "@/app/[locale]/(admin)/polls/participant-count";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -30,6 +30,10 @@ export function PollsGridView({
       id: string;
       name: string;
     }[];
+    _count: {
+      participants: number;
+      comments: number;
+    };
   }[];
 }) {
   const table = useReactTable({
@@ -73,7 +77,20 @@ export function PollsGridView({
                 />
                 {row.original.title}
               </h2>
-              <ParticipantCount count={row.original.participants.length} />
+              <div className="flex items-center gap-x-4">
+                <div className="inline-flex items-center gap-x-1.5 text-sm font-medium">
+                  <Icon>
+                    <UserIcon />
+                  </Icon>
+                  <span>{row.original._count.participants}</span>
+                </div>
+                <div className="inline-flex items-center gap-x-1.5 text-sm font-medium">
+                  <Icon>
+                    <MessageCircleIcon />
+                  </Icon>
+                  <span>{row.original._count.comments}</span>
+                </div>
+              </div>{" "}
             </div>
           </div>
           <div className="flex items-end justify-between p-3">

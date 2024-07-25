@@ -132,6 +132,12 @@ export const polls = router({
               name: true,
             },
           },
+          _count: {
+            select: {
+              participants: true,
+              comments: true,
+            },
+          },
         },
       });
 
@@ -623,6 +629,12 @@ export const polls = router({
                 },
                 { name: "desc" },
               ],
+            },
+            _count: {
+              select: {
+                participants: true,
+                comments: true,
+              },
             },
           },
           orderBy:
