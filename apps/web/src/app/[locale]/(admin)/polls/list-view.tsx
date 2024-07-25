@@ -82,7 +82,7 @@ export function PollsListView({
                   <Icon>
                     <UserIcon />
                   </Icon>
-                  <span>{row.original._count.comments}</span>
+                  <span>{row.original._count.participants}</span>
                 </div>
                 <div className="inline-flex items-center gap-x-1.5 text-sm font-medium">
                   <Icon>
