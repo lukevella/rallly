@@ -22,14 +22,11 @@ import {
 } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
-import { useFormContext } from "react-hook-form";
 
-import { NewEventData } from "@/components/forms";
 import { Trans } from "@/components/trans";
 
 import {
   expectTimeOption,
-  getBrowserTimeZone,
   getDateProps,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
@@ -50,8 +47,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 }) => {
   const { t } = useTranslation();
   const isTimedEvent = options.some((option) => option.type === "timeSlot");
-
-  const form = useFormContext<NewEventData>();
 
   const optionsByDay = React.useMemo(() => {
     const res: Record<
@@ -225,7 +220,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 checked={isTimedEvent}
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    form.setValue("timeZone", getBrowserTimeZone());
                     // convert dates to time slots
                     onChange(
                       options.map<DateTimeOption>((option) => {
@@ -247,7 +241,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       }),
                     );
                   } else {
-                    form.setValue("timeZone", "");
                     onChange(
                       datepicker.selection.map((date) => ({
                         type: "date",

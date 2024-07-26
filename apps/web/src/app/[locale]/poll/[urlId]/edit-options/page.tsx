@@ -14,7 +14,7 @@ import { useModalContext } from "@/components/modal/modal-provider";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
-import { encodeDateOption } from "@/utils/date-time-utils";
+import { encodeDateOption, getBrowserTimeZone } from "@/utils/date-time-utils";
 
 const convertOptionToString = (
   option: { startTime: Date; duration: number },
@@ -79,7 +79,8 @@ const Page = () => {
               date: start.format("YYYY-MM-DD"),
             };
       }),
-      timeZone: poll.timeZone ?? "",
+      timeZone: poll.timeZone || getBrowserTimeZone(),
+      autoTimeZone: !!poll.timeZone,
       duration: poll.options[0]?.duration || 60,
     },
   });
@@ -106,7 +107,6 @@ const Page = () => {
             updatePollMutation(
               {
                 urlId: poll.adminUrlId,
-                timeZone: data.timeZone,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),
                 optionsToAdd,
               },
