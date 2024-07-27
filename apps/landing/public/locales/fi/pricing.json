@@ -27,5 +27,7 @@
   "planFree": "Ilmainen",
   "keepPollsIndefinitely": "Umpeutumattomat kyselyt",
   "whenPollInactive": "Milloin kyselystä tulee toimeton?",
-  "whenPollInactiveAnswer": "Kyselystä tulee toimeton, kun kaikki päivämäärävaihtoehdot ovat menneisyydessä eikä kyselyä ole käytetty yli 30 päivään. Toimettomat kyselyt poistetaan automaattisesti, jos sinulla ei ole maksullista tilausta."
+  "whenPollInactiveAnswer": "Kyselystä tulee toimeton, kun kaikki päivämäärävaihtoehdot ovat menneisyydessä eikä kyselyä ole käytetty yli 30 päivään. Toimettomat kyselyt poistetaan automaattisesti, jos sinulla ei ole maksullista tilausta.",
+  "discount": "Säästä {amount}",
+  "yearlyBillingDescription": "vuodessa"
 }

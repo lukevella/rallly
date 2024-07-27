@@ -261,5 +261,7 @@
   "pastEventsEmptyStateTitle": "Ei menneitä tapahtumia",
   "pastEventsEmptyStateDescription": "Ajoittamasi tapahtumat näkyvät tässä.",
   "activePollCount": "{{activePollCount}} käynnissä",
-  "createPoll": "Luo kysely"
+  "createPoll": "Luo kysely",
+  "yearlyDiscount": "Säästä {amount}",
+  "yearlyBillingDescription": "vuodessa"
 }
