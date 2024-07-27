@@ -18,6 +18,7 @@ import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { setCookie } from "@/utils/cookies";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -47,6 +48,8 @@ export const CreatePoll: React.FunctionComponent = () => {
       description: "",
       location: "",
       view: "month",
+      autoTimeZone: true,
+      timeZone: user.timeZone || getBrowserTimeZone(),
       options: [],
       hideScores: false,
       hideParticipants: false,
@@ -76,13 +79,13 @@ export const CreatePoll: React.FunctionComponent = () => {
       <form
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
-
+          const isFullDay = formData?.options?.[0]?.type === "date";
           await createPoll.mutateAsync(
             {
               title: title,
               location: formData?.location,
               description: formData?.description,
-              timeZone: formData?.timeZone,
+              timeZone: !isFullDay ? formData?.timeZone : undefined,
               hideParticipants: formData?.hideParticipants,
               disableComments: formData?.disableComments,
               hideScores: formData?.hideScores,

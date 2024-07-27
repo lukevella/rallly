@@ -22,7 +22,6 @@ import { useFormContext } from "react-hook-form";
 
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
 
-import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar";
 import { DateTimeOption } from "./types";
@@ -32,6 +31,7 @@ export type PollOptionsData = {
   navigationDate: string; // used to navigate to the right part of the calendar
   duration: number; // duration of the event in minutes
   timeZone: string;
+  autoTimeZone: boolean;
   view: string;
   options: DateTimeOption[];
 };
@@ -73,7 +73,6 @@ const PollOptionsForm = ({
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const watchOptions = watch("options", [])!;
   const watchDuration = watch("duration");
-  const watchTimeZone = watch("timeZone");
 
   const options = getValues("options");
   const datesOnly =
@@ -149,7 +148,6 @@ const PollOptionsForm = ({
                     "options",
                     watchOptions.filter((option) => option.type === "date"),
                   );
-                  setValue("timeZone", "");
                   dateOrTimeRangeDialog.dismiss();
                 }}
               >
@@ -161,9 +159,6 @@ const PollOptionsForm = ({
                     "options",
                     watchOptions.filter((option) => option.type === "timeSlot"),
                   );
-                  if (!watchTimeZone) {
-                    setValue("timeZone", getBrowserTimeZone());
-                  }
                   dateOrTimeRangeDialog.dismiss();
                 }}
                 variant="primary"
@@ -215,7 +210,7 @@ const PollOptionsForm = ({
         {!datesOnly ? (
           <FormField
             control={form.control}
-            name="timeZone"
+            name="autoTimeZone"
             render={({ field }) => (
               <div
                 className={cn(
@@ -224,24 +219,24 @@ const PollOptionsForm = ({
               >
                 <div className="flex h-9 items-center gap-x-2.5 p-2">
                   <Switch
-                    id="timeZone"
+                    id="autoTimeZone"
                     disabled={disableTimeZoneChange}
                     checked={!!field.value}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        field.onChange(getBrowserTimeZone());
+                        field.onChange(true);
                       } else {
-                        field.onChange("");
+                        field.onChange(false);
                       }
                     }}
                   />
-                  <Label htmlFor="timeZone">
+                  <Label htmlFor="autoTimeZone">
                     <Trans
                       i18nKey="autoTimeZone"
                       defaults="Automatic Time Zone Conversion"
                     />
                   </Label>
-                  <Tooltip>
+                  <Tooltip delayDuration={0}>
                     <TooltipTrigger type="button">
                       <InfoIcon className="text-muted-foreground size-4" />
                     </TooltipTrigger>
@@ -254,30 +249,36 @@ const PollOptionsForm = ({
                   </Tooltip>
                 </div>
                 {field.value ? (
-                  <div>
-                    <Button
-                      disabled={disableTimeZoneChange}
-                      onClick={() => {
-                        showTimeZoneCommandModal(true);
-                      }}
-                      variant="ghost"
-                    >
-                      <GlobeIcon className="text-muted-foreground size-4" />
-                      {field.value}
-                    </Button>
-                    <CommandDialog
-                      open={isTimeZoneCommandModalOpen}
-                      onOpenChange={showTimeZoneCommandModal}
-                    >
-                      <TimeZoneCommand
-                        value={field.value}
-                        onSelect={(newValue) => {
-                          field.onChange(newValue);
-                          showTimeZoneCommandModal(false);
-                        }}
-                      />
-                    </CommandDialog>
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="timeZone"
+                    render={({ field }) => (
+                      <div>
+                        <Button
+                          disabled={disableTimeZoneChange}
+                          onClick={() => {
+                            showTimeZoneCommandModal(true);
+                          }}
+                          variant="ghost"
+                        >
+                          <GlobeIcon className="text-muted-foreground size-4" />
+                          {field.value}
+                        </Button>
+                        <CommandDialog
+                          open={isTimeZoneCommandModalOpen}
+                          onOpenChange={showTimeZoneCommandModal}
+                        >
+                          <TimeZoneCommand
+                            value={field.value}
+                            onSelect={(newValue) => {
+                              field.onChange(newValue);
+                              showTimeZoneCommandModal(false);
+                            }}
+                          />
+                        </CommandDialog>
+                      </div>
+                    )}
+                  />
                 ) : null}
               </div>
             )}
