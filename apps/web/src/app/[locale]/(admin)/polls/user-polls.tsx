@@ -7,6 +7,7 @@ import { z } from "zod";
 import { PollsGridView } from "@/app/[locale]/(admin)/polls/grid-view";
 import { PollsListView } from "@/app/[locale]/(admin)/polls/list-view";
 import { PollStatusFilter } from "@/app/[locale]/(admin)/polls/poll-status-filter";
+import { useTranslation } from "@/app/i18n/client";
 import { Spinner } from "@/components/spinner";
 import { VisibilityTrigger } from "@/components/visibility-trigger";
 import { trpc } from "@/utils/trpc/client";
@@ -33,6 +34,7 @@ export function UserPolls() {
   const [view, setView] = useQueryParam("view");
   const parsedView = pollViewScheme.parse(view);
 
+  const { t } = useTranslation();
   const { data, fetchNextPage, hasNextPage } =
     trpc.polls.infiniteList.useInfiniteQuery(
       {
@@ -58,14 +60,29 @@ export function UserPolls() {
           status={parsedPollStatus}
           onStatusChange={setPollStatus}
         />
-        <RadioCards value={parsedView} onValueChange={setView}>
-          <RadioCardsItem value="list">
-            <ListIcon className="size-4" />
-          </RadioCardsItem>
-          <RadioCardsItem value="grid">
-            <GridIcon className="size-4" />
-          </RadioCardsItem>
-        </RadioCards>
+        <fieldset>
+          <legend className="sr-only">
+            {t("viewMode", { defaultValue: "View Mode" })}
+          </legend>
+          <RadioCards value={parsedView} onValueChange={setView}>
+            <RadioCardsItem
+              value="list"
+              aria-label={t("listView", {
+                defaultValue: "List View",
+              })}
+            >
+              <ListIcon className="size-4" />
+            </RadioCardsItem>
+            <RadioCardsItem
+              value="grid"
+              aria-label={t("gridView", {
+                defaultValue: "Grid View",
+              })}
+            >
+              <GridIcon className="size-4" />
+            </RadioCardsItem>
+          </RadioCards>
+        </fieldset>
       </div>
       <ol className="space-y-4">
         {data.pages.map((page, i) => (

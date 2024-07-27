@@ -263,5 +263,8 @@
   "activePollCount": "{{activePollCount}} Live",
   "createPoll": "Create poll",
   "yearlyDiscount": "Save {amount}",
-  "yearlyBillingDescription": "per year"
+  "yearlyBillingDescription": "per year",
+  "viewMode": "View Mode",
+  "listView": "List View",
+  "gridView": "Grid View"
 }
