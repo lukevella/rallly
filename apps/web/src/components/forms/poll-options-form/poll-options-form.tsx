@@ -208,18 +208,18 @@ const PollOptionsForm = ({
           />
         </div>
         {!datesOnly ? (
-          <div
-            className={cn(
-              "grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex",
-            )}
-          >
-            <FormField
-              control={form.control}
-              name="autoTimeZone"
-              render={({ field }) => (
+          <FormField
+            control={form.control}
+            name="autoTimeZone"
+            render={({ field }) => (
+              <div
+                className={cn(
+                  "flex items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex",
+                )}
+              >
                 <div className="flex h-9 items-center gap-x-2.5 p-2">
                   <Switch
-                    id="timeZone"
+                    id="autoTimeZone"
                     disabled={disableTimeZoneChange}
                     checked={!!field.value}
                     onCheckedChange={(checked) => {
@@ -230,13 +230,13 @@ const PollOptionsForm = ({
                       }
                     }}
                   />
-                  <Label htmlFor="timeZone">
+                  <Label htmlFor="autoTimeZone">
                     <Trans
                       i18nKey="autoTimeZone"
                       defaults="Automatic Time Zone Conversion"
                     />
                   </Label>
-                  <Tooltip>
+                  <Tooltip delayDuration={0}>
                     <TooltipTrigger type="button">
                       <InfoIcon className="text-muted-foreground size-4" />
                     </TooltipTrigger>
@@ -248,40 +248,41 @@ const PollOptionsForm = ({
                     </TooltipContent>
                   </Tooltip>
                 </div>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="timeZone"
-              render={({ field }) => (
-                <div>
-                  <Button
-                    disabled={disableTimeZoneChange}
-                    onClick={() => {
-                      showTimeZoneCommandModal(true);
-                    }}
-                    variant="ghost"
-                  >
-                    <GlobeIcon className="text-muted-foreground size-4" />
-                    {field.value}
-                  </Button>
-                  <CommandDialog
-                    open={isTimeZoneCommandModalOpen}
-                    onOpenChange={showTimeZoneCommandModal}
-                  >
-                    <TimeZoneCommand
-                      value={field.value}
-                      onSelect={(newValue) => {
-                        field.onChange(newValue);
-                        showTimeZoneCommandModal(false);
-                      }}
-                    />
-                  </CommandDialog>
-                </div>
-              )}
-            />
-          </div>
+                {field.value ? (
+                  <FormField
+                    control={form.control}
+                    name="timeZone"
+                    render={({ field }) => (
+                      <div>
+                        <Button
+                          disabled={disableTimeZoneChange}
+                          onClick={() => {
+                            showTimeZoneCommandModal(true);
+                          }}
+                          variant="ghost"
+                        >
+                          <GlobeIcon className="text-muted-foreground size-4" />
+                          {field.value}
+                        </Button>
+                        <CommandDialog
+                          open={isTimeZoneCommandModalOpen}
+                          onOpenChange={showTimeZoneCommandModal}
+                        >
+                          <TimeZoneCommand
+                            value={field.value}
+                            onSelect={(newValue) => {
+                              field.onChange(newValue);
+                              showTimeZoneCommandModal(false);
+                            }}
+                          />
+                        </CommandDialog>
+                      </div>
+                    )}
+                  />
+                ) : null}
+              </div>
+            )}
+          />
         ) : null}
         {children}
       </Card>

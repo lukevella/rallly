@@ -79,7 +79,7 @@ const Page = () => {
               date: start.format("YYYY-MM-DD"),
             };
       }),
-      timeZone: poll.timeZone || getBrowserTimeZone(),
+      timeZone: poll.timeZone || undefined,
       autoTimeZone: !!poll.timeZone,
       duration: poll.options[0]?.duration || 60,
     },
