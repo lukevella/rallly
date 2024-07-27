@@ -14,7 +14,7 @@ import { useModalContext } from "@/components/modal/modal-provider";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
-import { encodeDateOption, getBrowserTimeZone } from "@/utils/date-time-utils";
+import { encodeDateOption } from "@/utils/date-time-utils";
 
 const convertOptionToString = (
   option: { startTime: Date; duration: number },
