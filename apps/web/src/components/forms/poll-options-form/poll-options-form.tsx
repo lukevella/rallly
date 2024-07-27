@@ -214,7 +214,7 @@ const PollOptionsForm = ({
             render={({ field }) => (
               <div
                 className={cn(
-                  "flex items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex",
+                  "grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex",
                 )}
               >
                 <div className="flex h-9 items-center gap-x-2.5 p-2">
