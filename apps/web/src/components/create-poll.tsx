@@ -85,7 +85,7 @@ export const CreatePoll: React.FunctionComponent = () => {
               title: title,
               location: formData?.location,
               description: formData?.description,
-              timeZone: isFullDay ? formData?.timeZone : undefined,
+              timeZone: !isFullDay ? formData?.timeZone : undefined,
               hideParticipants: formData?.hideParticipants,
               disableComments: formData?.disableComments,
               hideScores: formData?.hideScores,
