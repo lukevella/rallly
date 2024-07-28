@@ -1,7 +1,14 @@
 "use client";
 
-import { Card, CardContent } from "@rallly/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@rallly/ui/card";
 
+import { AddToCalendarButton } from "@/components/add-to-calendar-button";
 import { DateIconInner } from "@/components/date-icon";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useParticipants } from "@/components/participants-provider";
@@ -50,34 +57,43 @@ function Attendees() {
 
 export function ScheduledEvent() {
   const poll = usePoll();
-  if (!poll.event) {
+  const { event } = poll;
+  if (!event) {
     return null;
   }
+
   return (
-    <Card className="bg-gray-50">
-      <CardContent>
+    <Card>
+      <CardHeader>
+        <CardTitle>Scheduled</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <div className="flex justify-between gap-4">
           <div className="flex items-center gap-x-4">
-            <DateIcon start={poll.event.start} />
+            <DateIcon start={event.start} />
             <div>
               <div className="text-sm font-medium">
-                <FinalDate start={poll.event.start} />
+                <FinalDate start={event.start} />
               </div>
               <div className="text-muted-foreground text-sm">
-                <FinalTime
-                  start={poll.event.start}
-                  duration={poll.event.duration}
-                />
+                <FinalTime start={event.start} duration={event.duration} />
               </div>
             </div>
           </div>
-          <div>
-            <IfParticipantsVisible>
-              <Attendees />
-            </IfParticipantsVisible>
-          </div>
         </div>
       </CardContent>
+      <CardFooter className="flex items-center gap-4">
+        <AddToCalendarButton
+          title={poll.title}
+          description={poll.description ?? undefined}
+          start={event.start}
+          duration={event.duration}
+          location={poll.location ?? undefined}
+        />
+        <IfParticipantsVisible>
+          <Attendees />
+        </IfParticipantsVisible>
+      </CardFooter>
     </Card>
   );
 }

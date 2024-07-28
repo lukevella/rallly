@@ -6,7 +6,7 @@ import { PollHeader } from "@/components/poll/poll-header";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
-import { ScheduledEvent } from "@/components/scheduled-event";
+import { ScheduledEvent } from "@/components/poll/scheduled-event";
 
 import { GuestPollAlert } from "./guest-poll-alert";
 
