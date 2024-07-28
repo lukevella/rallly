@@ -28,12 +28,19 @@ export function AddToCalendarButton({
   location,
   start,
   duration,
+  organizer,
+  guests,
 }: {
   title: string;
   description?: string;
   location?: string;
   start: Date;
   duration: number;
+  organizer?: {
+    name: string;
+    email: string;
+  };
+  guests?: string[];
 }) {
   const calendarEvent: CalendarEvent = {
     title,
@@ -41,7 +48,9 @@ export function AddToCalendarButton({
     start,
     allDay: duration === 0,
     duration: duration > 0 ? [duration, "minutes"] : undefined,
-    location: location,
+    location,
+    organizer,
+    guests,
     busy: true,
   };
 
