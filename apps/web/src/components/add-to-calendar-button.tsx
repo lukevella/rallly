@@ -81,7 +81,7 @@ export function AddToCalendarButton({
           <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent forceMount={true} align="start">
         <DropdownMenuItem
           onClick={() => {
             const res = google(calendarEvent);
