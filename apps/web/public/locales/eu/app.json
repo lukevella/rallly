@@ -67,7 +67,7 @@
   "sendFeedback": "Iritziak bidali",
   "specifyTimes": "Orduak espezifikatu",
   "specifyTimesDescription": "Aukera bakoitzaren hasiera- eta amaiera-denborak barne",
-  "stepSummary": "{current} pausotik {total}-(e)ra",
+  "stepSummary": "{current} pauso {total}-tik",
   "submit": "Bidali",
   "timeFormat": "Ordu formatua",
   "timeZone": "Ordu zona",
@@ -261,5 +261,7 @@
   "pastEventsEmptyStateTitle": "Ez dago iraganeko gertakaririk",
   "pastEventsEmptyStateDescription": "Ekitaldiak programatzen dituzunean, hemen agertuko dira.",
   "activePollCount": "{{activePollCount}} zuzenean",
-  "createPoll": "Sortu inkesta bat"
+  "createPoll": "Sortu inkesta bat",
+  "yearlyDiscount": "Gorde {amount}",
+  "yearlyBillingDescription": "urteko"
 }
