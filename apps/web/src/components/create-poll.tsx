@@ -99,6 +99,9 @@ export const CreatePoll: React.FunctionComponent = () => {
                   numberOfOptions: formData.options?.length,
                   optionsView: formData?.view,
                   tier: user.tier,
+                  $set: {
+                    last_poll_created_at: new Date().toISOString(),
+                  },
                 });
                 queryClient.invalidate();
                 router.push(`/poll/${res.id}`);
