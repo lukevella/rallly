@@ -71,10 +71,8 @@ export const RegisterForm = () => {
             queryClient.invalidate();
 
             posthog?.identify(res.user.id, {
-              $set: {
-                email: res.user.email,
-                name: res.user.name,
-              },
+              email: res.user.email,
+              name: res.user.name,
             });
 
             signIn("registration-token", {
