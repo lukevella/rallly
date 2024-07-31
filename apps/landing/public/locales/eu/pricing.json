@@ -27,5 +27,7 @@
   "planFree": "Dohakoa",
   "keepPollsIndefinitely": "Inkestak mugarik gabe mantentzea",
   "whenPollInactive": "Noiz bihurtzen da inkesta bat inaktibo?",
-  "whenPollInactiveAnswer": "Inkestak inaktibo bihurtzen dira data-aukera guztiak iraungitzen direnean ETA 30 egun baino gehiagotan inkestak atzitu ez direnean. Inkesta inaktiboak automatikoki ezabatzen dira ordainpeko harpidetzarik ez baduzu."
+  "whenPollInactiveAnswer": "Inkestak inaktibo bihurtzen dira data-aukera guztiak iraungitzen direnean ETA 30 egun baino gehiagotan inkestak atzitu ez direnean. Inkesta inaktiboak automatikoki ezabatzen dira ordainpeko harpidetzarik ez baduzu.",
+  "discount": "Gorde {amount}",
+  "yearlyBillingDescription": "urteko"
 }
