@@ -1,4 +1,5 @@
 import { getProPricing } from "@rallly/billing";
+import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { BillingPage } from "@/app/[locale]/(admin)/settings/billing/billing-page";
@@ -6,11 +7,13 @@ import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 import { env } from "@/env";
 
+const getCachedProPricing = unstable_cache(getProPricing, ["pricing-data"]);
+
 export default async function Page() {
   if (env.NEXT_PUBLIC_SELF_HOSTED === "true") {
     notFound();
   }
-  const prices = await getProPricing();
+  const prices = await getCachedProPricing();
   return <BillingPage pricingData={prices} />;
 }
 
