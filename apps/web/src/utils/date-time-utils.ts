@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import soft from "timezone-soft";
 
 import { supportedTimeZones } from "@/utils/supported-time-zones";
 
@@ -20,8 +19,8 @@ export function parseIanaTimezone(timezone: string): {
 }
 
 export function getBrowserTimeZone() {
-  const res = soft(Intl.DateTimeFormat().resolvedOptions().timeZone)[0];
-  return resolveGeographicTimeZone(res.iana);
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return resolveGeographicTimeZone(timeZone);
 }
 
 export function resolveGeographicTimeZone(timezone: string) {
@@ -29,7 +28,12 @@ export function resolveGeographicTimeZone(timezone: string) {
 
   if (!tz) {
     // find nearest timezone with the same offset
-    const offset = dayjs().tz(timezone).utcOffset();
+    let offset = 0;
+    try {
+      offset = dayjs().tz(timezone).utcOffset();
+    } catch (e) {
+      console.error(`Failed to resolve timezone ${timezone}`);
+    }
     return supportedTimeZones.find((tz) => {
       return dayjs().tz(tz, true).utcOffset() === offset;
     })!;
