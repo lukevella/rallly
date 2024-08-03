@@ -268,5 +268,6 @@
   "microsoft365": "Microsoft 365",
   "outlook": "Outlook",
   "yahoo": "Yahoo",
-  "downloadICSFile": "Download ICS File"
+  "downloadICSFile": "Download ICS File",
+  "schedulateDate": "Scheduled Date"
 }
