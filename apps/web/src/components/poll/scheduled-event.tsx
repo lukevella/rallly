@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
+import { CalendarCheckIcon } from "lucide-react";
 
 import { AddToCalendarButton } from "@/components/add-to-calendar-button";
 import { DateIconInner } from "@/components/date-icon";
@@ -27,7 +21,15 @@ function DateIcon({ start }: { start: Date }) {
   const poll = usePoll();
   const { adjustTimeZone } = useDayjs();
   const d = adjustTimeZone(start, !poll.timeZone);
-  return <DateIconInner dow={d.format("ddd")} day={d.format("D")} />;
+  return (
+    <time
+      className="inline-flex size-10 flex-col items-center justify-center text-green-800"
+      dateTime={d.toISOString()}
+    >
+      <div className="text-xs uppercase opacity-75">{d.format("ddd")}</div>
+      <div className="text-base font-bold">{d.format("D")}</div>
+    </time>
+  );
 }
 
 function FinalTime({ start, duration }: { start: Date; duration: number }) {
@@ -63,37 +65,39 @@ export function ScheduledEvent() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Scheduled</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex justify-between gap-4">
-          <div className="flex items-center gap-x-4">
-            <DateIcon start={event.start} />
+    <div className="rounded-lg border border-green-400/20 bg-gradient-to-r from-green-200/15 p-0.5 shadow-sm">
+      <div className="flex items-center gap-x-2 rounded-md border-b bg-green-500/10 p-3">
+        <h2 className="text-sm font-medium text-green-700">
+          <Trans i18nKey="schedulateDate" defaults="Scheduled Date" />
+        </h2>
+      </div>
+      <div className="flex justify-between p-4">
+        <div className="flex gap-4">
+          <DateIcon start={event.start} />
+          <div className="items-center gap-x-4 text-green-700">
             <div>
               <div className="text-sm font-medium">
                 <FinalDate start={event.start} />
               </div>
-              <div className="text-muted-foreground text-sm">
+              <div className="text-sm opacity-75">
                 <FinalTime start={event.start} duration={event.duration} />
               </div>
             </div>
           </div>
         </div>
-      </CardContent>
-      <CardFooter className="flex items-center gap-4">
-        <AddToCalendarButton
-          title={poll.title}
-          description={poll.description ?? undefined}
-          start={event.start}
-          duration={event.duration}
-          location={poll.location ?? undefined}
-        />
-        <IfParticipantsVisible>
-          <Attendees />
-        </IfParticipantsVisible>
-      </CardFooter>
-    </Card>
+        <div className="flex items-center gap-4">
+          <IfParticipantsVisible>
+            <Attendees />
+          </IfParticipantsVisible>
+          <AddToCalendarButton
+            title={poll.title}
+            description={poll.description ?? undefined}
+            start={event.start}
+            duration={event.duration}
+            location={poll.location ?? undefined}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
