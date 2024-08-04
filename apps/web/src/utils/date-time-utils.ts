@@ -27,7 +27,6 @@ export function resolveGeographicTimeZone(timeZone: string) {
   const tz = supportedTimeZones.find((tz) => tz === timeZone);
 
   if (!tz) {
-    let equivalentTimeZone;
     let timeZoneOffset = 0;
     try {
       timeZoneOffset = dayjs().tz(timeZone).utcOffset();
@@ -46,13 +45,11 @@ export function resolveGeographicTimeZone(timeZone: string) {
       return sameContinentTimeZones.find((tz) => {
         return dayjs().tz(tz, true).utcOffset() === timeZoneOffset;
       });
-    } else {
-      return supportedTimeZones.find((tz) => {
-        return dayjs().tz(tz, true).utcOffset() === timeZoneOffset;
-      })!;
     }
 
-    return equivalentTimeZone;
+    return supportedTimeZones.find((tz) => {
+      return dayjs().tz(tz, true).utcOffset() === timeZoneOffset;
+    })!;
   }
 
   return tz;
