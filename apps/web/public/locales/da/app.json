@@ -248,5 +248,11 @@
   "advancedSettingsDescription": "Skjul deltagere, resultater og kræv deltagernes e-mailadresser.",
   "keepPollsIndefinitely": "Behold afstemninger på ubestemt tid",
   "keepPollsIndefinitelyDescription": "Inaktive afstemninger vil ikke blive slettet automatisk.",
-  "createPoll": "Opret afstemning"
+  "createPoll": "Opret afstemning",
+  "addToCalendar": "Tilføj til kalender",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "Hent ICS-fil",
+  "schedulateDate": "Planlagt dato"
 }
