@@ -263,5 +263,11 @@
   "activePollCount": "{{activePollCount}} Live",
   "createPoll": "Create poll",
   "yearlyDiscount": "Save {amount}",
-  "yearlyBillingDescription": "per year"
+  "yearlyBillingDescription": "per year",
+  "addToCalendar": "Add to Calendar",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "Download ICS File",
+  "schedulateDate": "Scheduled Date"
 }
