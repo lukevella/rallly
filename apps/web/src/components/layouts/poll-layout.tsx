@@ -49,8 +49,8 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
   return (
-    <div className="bg-gray-100">
-      <div className="sticky top-0 z-30 flex flex-col justify-between gap-x-4 gap-y-2.5 bg-gray-100 p-3 sm:flex-row lg:items-center lg:px-5">
+    <div className="flex h-screen flex-col">
+      <div className="sticky top-0 z-30 flex flex-col justify-between gap-x-4 gap-y-2.5 border-b bg-gray-100 p-3 sm:flex-row lg:items-center lg:px-5">
         <div className="flex min-w-0 items-center gap-x-2.5">
           {pathname === pollLink ? (
             <Button variant="ghost" asChild>
@@ -78,7 +78,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
           <AdminControls />
         </div>
       </div>
-      <div className="p-3 sm:p-6">{children}</div>
+      <div className="grow p-4">{children}</div>
     </div>
   );
 };

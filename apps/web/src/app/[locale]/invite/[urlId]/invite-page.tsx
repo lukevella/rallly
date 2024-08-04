@@ -2,14 +2,9 @@
 import { ArrowUpRightIcon, UserCircle2Icon } from "lucide-react";
 import Link from "next/link";
 
-import Discussion from "@/components/discussion";
-import { EventCard } from "@/components/event-card";
-import { PollFooter } from "@/components/poll/poll-footer";
+import { GroupPollInvite } from "@/components/group-poll-invite/group-poll-invite";
 import { PollHeader } from "@/components/poll/poll-header";
-import { ResponsiveResults } from "@/components/poll/responsive-results";
-import { ScheduledEvent } from "@/components/poll/scheduled-event";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
-import { VotingForm } from "@/components/poll/voting-form";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
@@ -53,16 +48,10 @@ const GoToApp = () => {
 export function InvitePage() {
   useTouchBeacon();
   return (
-    <div className="space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
+    <div className="space-y-3 p-3 sm:p-6 lg:space-y-4">
       <PollHeader />
       <GoToApp />
-      <EventCard />
-      <ScheduledEvent />
-      <VotingForm>
-        <ResponsiveResults />
-      </VotingForm>
-      <Discussion />
-      <PollFooter />
+      <GroupPollInvite />
     </div>
   );
 }
