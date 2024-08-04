@@ -17,10 +17,7 @@ import * as React from "react";
 import { useAsync } from "react-use";
 
 import { usePreferences } from "@/contexts/preferences";
-import {
-  getBrowserTimeZone,
-  resolveGeographicTimeZone,
-} from "@/utils/date-time-utils";
+import { getBrowserTimeZone, normalizeTimeZone } from "@/utils/date-time-utils";
 
 import { useRequiredContext } from "../components/use-required-context";
 
@@ -213,7 +210,7 @@ export const DayjsProvider: React.FunctionComponent<{
   const preferredTimeZone = React.useMemo(
     () =>
       config?.timeZone
-        ? resolveGeographicTimeZone(config?.timeZone)
+        ? normalizeTimeZone(config?.timeZone)
         : getBrowserTimeZone(),
     [config?.timeZone],
   );
