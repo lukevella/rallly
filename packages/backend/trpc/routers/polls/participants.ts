@@ -91,22 +91,26 @@ export const participants = router({
         throw new TRPCError({ code: "BAD_REQUEST", message: "Poll not found" });
       }
 
-      const participant = await prisma.participant.create({
-        data: {
-          pollId: pollId,
-          name: name,
-          email,
-          userId: user.id,
-          votes: {
-            createMany: {
-              data: votes.map(({ optionId, type }) => ({
-                optionId,
-                type,
-                pollId: pollId,
-              })),
-            },
+      const participant = await prisma.$transaction(async (prisma) => {
+        const participant = await prisma.participant.create({
+          data: {
+            pollId: pollId,
+            name: name,
+            email,
+            userId: user.id,
           },
-        },
+        });
+
+        await prisma.vote.createMany({
+          data: votes.map(({ optionId, type }) => ({
+            optionId,
+            type,
+            pollId,
+            participantId: participant.id,
+          })),
+        });
+
+        return participant;
       });
 
       const emailsToSend: Promise<void>[] = [];

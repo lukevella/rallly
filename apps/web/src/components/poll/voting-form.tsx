@@ -24,10 +24,12 @@ const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
   participantId: z.string().optional(),
   votes: z.array(
-    z.object({
-      optionId: z.string(),
-      type: z.enum(["yes", "no", "ifNeedBe"]).optional(),
-    }),
+    z
+      .object({
+        optionId: z.string(),
+        type: z.enum(["yes", "no", "ifNeedBe"]).optional(),
+      })
+      .optional(),
   ),
 });
 

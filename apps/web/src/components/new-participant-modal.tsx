@@ -162,7 +162,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         <label className="mb-1 text-gray-500">{t("response")}</label>
         <VoteSummary votes={props.votes} />
       </fieldset>
-      {formState.errors.root ? (
+      {formState.errors.root?.message ? (
         <FormMessage>{formState.errors.root.message}</FormMessage>
       ) : null}
       <div className="flex gap-2">

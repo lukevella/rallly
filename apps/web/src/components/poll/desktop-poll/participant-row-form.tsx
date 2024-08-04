@@ -111,13 +111,13 @@ const ParticipantRowForm = ({
                   onClick={() => {
                     field.onChange({
                       optionId,
-                      type: toggleVote(field.value.type),
+                      type: toggleVote(field.value?.type),
                     });
                   }}
                   className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-inset active:ring-gray-200"
                 >
                   <VoteSelector
-                    value={field.value.type}
+                    value={field.value?.type}
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });
                     }}
