@@ -270,4 +270,5 @@
   "yahoo": "Yahoo",
   "downloadICSFile": "Download ICS File",
   "schedulateDate": "Scheduled Date"
++  "scheduledDate": "Scheduled Date"
 }
