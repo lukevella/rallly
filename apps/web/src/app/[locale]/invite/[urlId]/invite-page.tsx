@@ -53,7 +53,7 @@ const GoToApp = () => {
 export function InvitePage() {
   useTouchBeacon();
   return (
-    <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
+    <div className="space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
       <PollHeader />
       <GoToApp />
       <EventCard />
