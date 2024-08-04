@@ -23,20 +23,36 @@ export function getBrowserTimeZone() {
   return resolveGeographicTimeZone(timeZone);
 }
 
-export function resolveGeographicTimeZone(timezone: string) {
-  const tz = supportedTimeZones.find((tz) => tz === timezone);
+export function resolveGeographicTimeZone(timeZone: string) {
+  const tz = supportedTimeZones.find((tz) => tz === timeZone);
 
   if (!tz) {
-    // find nearest timezone with the same offset
-    let offset = 0;
+    let equivalentTimeZone;
+    let timeZoneOffset = 0;
     try {
-      offset = dayjs().tz(timezone).utcOffset();
+      timeZoneOffset = dayjs().tz(timeZone).utcOffset();
     } catch (e) {
-      console.error(`Failed to resolve timezone ${timezone}`);
+      console.error(`Failed to resolve timezone ${timeZone}`);
     }
-    return supportedTimeZones.find((tz) => {
-      return dayjs().tz(tz, true).utcOffset() === offset;
-    })!;
+    const isGeographic =
+      timeZone.includes("/") && !timeZone.toLowerCase().startsWith("etc/");
+
+    if (isGeographic) {
+      // Find a timezone in the same continent with the same offset
+      const [continent] = timeZone.split("/");
+      const sameContinentTimeZones = supportedTimeZones.filter((tz) =>
+        tz.startsWith(continent),
+      );
+      return sameContinentTimeZones.find((tz) => {
+        return dayjs().tz(tz, true).utcOffset() === timeZoneOffset;
+      });
+    } else {
+      return supportedTimeZones.find((tz) => {
+        return dayjs().tz(tz, true).utcOffset() === timeZoneOffset;
+      })!;
+    }
+
+    return equivalentTimeZone;
   }
 
   return tz;

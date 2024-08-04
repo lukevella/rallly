@@ -35,4 +35,16 @@ describe("resolveGeographicTimezone", () => {
     // Assert that the browser time zone is one of the supported time zones
     expect(supportedTimeZones.includes(browserTimeZone)).toBe(true);
   });
+
+  it("should return the same timezone when given a supported timezone", () => {
+    const browserTimeZone = resolveGeographicTimeZone("America/Ciudad_Juarez");
+
+    expect(browserTimeZone).toBe("America/Ciudad_Juarez");
+  });
+
+  it("should return a timezone in the same continent when not supported", () => {
+    const browserTimeZone = resolveGeographicTimeZone("Asia/Kolkata");
+
+    expect(browserTimeZone).toBe("Asia/Calcutta");
+  });
 });
