@@ -19,7 +19,7 @@ export function parseIanaTimezone(timezone: string): {
 }
 
 export function getBrowserTimeZone() {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timeZone = dayjs.tz.guess();
   return resolveGeographicTimeZone(timeZone);
 }
 
