@@ -263,5 +263,11 @@
   "activePollCount": "{{activePollCount}} actief",
   "createPoll": "Poll maken",
   "yearlyDiscount": "Bespaar {amount}",
-  "yearlyBillingDescription": "per jaar"
+  "yearlyBillingDescription": "per jaar",
+  "addToCalendar": "Toevoegen aan Agenda",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "ICS-bestand downloaden",
+  "schedulateDate": "Geplande datum"
 }
