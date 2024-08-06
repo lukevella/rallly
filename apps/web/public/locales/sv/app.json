@@ -233,5 +233,10 @@
   "activePollCount": "{{activePollCount}} Live",
   "createPoll": "Skapa omröstning",
   "yearlyDiscount": "Spara {amount}",
-  "yearlyBillingDescription": "per år"
+  "yearlyBillingDescription": "per år",
+  "addToCalendar": "Lägg till i kalender",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "Ladda ner ICS-fil"
 }
