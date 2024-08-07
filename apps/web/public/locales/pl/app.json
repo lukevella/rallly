@@ -261,5 +261,13 @@
   "pastEventsEmptyStateTitle": "Brak poprzednich wydarzeń",
   "pastEventsEmptyStateDescription": "Po zaplanowaniu wydarzeń pojawią się one tutaj.",
   "activePollCount": "Aktywnych: {{activePollCount}}",
-  "createPoll": "Utwórz ankietę"
+  "createPoll": "Utwórz ankietę",
+  "yearlyDiscount": "Oszczędź {amount}",
+  "yearlyBillingDescription": "rocznie",
+  "addToCalendar": "Dodaj do kalendarza",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "Pobierz plik ICS",
+  "schedulateDate": "Zaplanowana data"
 }

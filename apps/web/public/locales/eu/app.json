@@ -263,5 +263,11 @@
   "activePollCount": "{{activePollCount}} zuzenean",
   "createPoll": "Sortu galdetegi bat",
   "yearlyDiscount": "Gorde {amount}",
-  "yearlyBillingDescription": "urteko"
+  "yearlyBillingDescription": "urteko",
+  "addToCalendar": "Gehitu egutegira",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "Deskargatu ICS fitxategia",
+  "schedulateDate": "Programatutako data"
 }
