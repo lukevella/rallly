@@ -269,5 +269,9 @@
   "outlook": "Outlook",
   "yahoo": "Yahoo",
   "downloadICSFile": "Download ICS File",
-  "schedulateDate": "Scheduled Date"
+  "schedulateDate": "Scheduled Date",
+  "timeZoneChangeDetectorTitle": "Timezone Change Detected",
+  "timeZoneChangeDetectorMessage": "Your timezone has changed to {currentTimeZone}. Do you want to update your preferences?",
+  "yesUpdateTimezone": "Yes, update my timezone",
+  "noKeepCurrentTimezone": "No, keep the current timezone"
 }

@@ -78,6 +78,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           email: user.email || null,
           isGuest: !user.email,
           tier,
+          timeZone: user.timeZone ?? null,
         },
         refresh: session.update,
         ownsObject: ({ userId }) => {
