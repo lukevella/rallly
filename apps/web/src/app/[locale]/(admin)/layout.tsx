@@ -2,6 +2,7 @@ import { cn } from "@rallly/ui";
 import React from "react";
 
 import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
+import { ProBadge } from "@/app/[locale]/(admin)/pro-badge";
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
 
@@ -17,8 +18,9 @@ export default async function Layout({
           "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-4 overflow-y-auto p-6 py-5 md:flex",
         )}
       >
-        <div>
+        <div className="flex w-full items-center justify-between gap-4">
           <LogoLink />
+          <ProBadge />
         </div>
         <Sidebar />
       </div>
