@@ -57,4 +57,25 @@ test.describe("Timezone change", () => {
       state: "detached",
     });
   });
+
+  test.describe("when localStorage is not available", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.evaluate(() => {
+        Object.defineProperty(window, "localStorage", {
+          value: undefined,
+          writable: true,
+        });
+      });
+    });
+
+    test("should not show a dialog when the timezone changes", async ({
+      page,
+    }) => {
+      await page.goto("/");
+      await page.reload();
+      await page.waitForSelector("text=Timezone Change Detected", {
+        state: "detached",
+      });
+    });
+  });
 });
