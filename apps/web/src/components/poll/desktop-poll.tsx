@@ -37,6 +37,24 @@ import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import PollHeader from "./desktop-poll/poll-header";
 
+function EscapeListener({ onEscape }: { onEscape: () => void }) {
+  React.useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onEscape();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [onEscape]);
+
+  return null;
+}
+
 const useIsOverflowing = <E extends Element | null>(
   ref: React.RefObject<E>,
 ) => {
@@ -204,6 +222,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               </TooltipContent>
             </Tooltip>
           )}
+          {expanded ? <EscapeListener onEscape={collapse} /> : null}
         </div>
       </div>
     );
