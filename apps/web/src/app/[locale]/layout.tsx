@@ -7,6 +7,7 @@ import { Viewport } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
 
+import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { Providers } from "@/app/providers";
 
 const inter = Inter({
@@ -36,7 +37,10 @@ export default function Root({
     <html lang={locale} className={inter.className}>
       <body>
         <Toaster />
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <TimeZoneChangeDetector />
+        </Providers>
       </body>
     </html>
   );
