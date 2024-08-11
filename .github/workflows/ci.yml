@@ -49,6 +49,9 @@ jobs:
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
@@ -60,11 +63,6 @@ jobs:
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium
-
-      - name: Set environment variables
-        run: |
-          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5450/rallly" >> $GITHUB_ENV
-          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> $GITHUB_ENV
 
       - name: Create production build
         run: yarn turbo build:test --filter=@rallly/web
