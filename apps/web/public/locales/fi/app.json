@@ -263,5 +263,9 @@
   "activePollCount": "{{activePollCount}} käynnissä",
   "createPoll": "Luo kysely",
   "yearlyDiscount": "Säästä {amount}",
-  "yearlyBillingDescription": "vuodessa"
+  "yearlyBillingDescription": "vuodessa",
+  "timeZoneChangeDetectorTitle": "Aikavyöhykkeen muutos havaittu",
+  "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt {currentTimeZone}. Haluatko päivittää asetuksesi?",
+  "yesUpdateTimezone": "Kyllä, päivitä aikavyöhykkeeni",
+  "noKeepCurrentTimezone": "Ei, säilytä nykyinen aikavyöhyke"
 }
