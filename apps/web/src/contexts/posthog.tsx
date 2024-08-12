@@ -54,13 +54,17 @@ export function PostHogProvider(props: PostHogProviderProps) {
   usePostHogPageView();
 
   useMount(() => {
-    posthog.identify(user.id, {
-      email: user.email,
-      name: user.name,
-      tier: user.tier,
-      timeZone: user.timeZone,
-      locale: i18n.language,
-    });
+    if (user.email) {
+      posthog.identify(user.id, {
+        email: user.email,
+        name: user.name,
+        tier: user.tier,
+        timeZone: user.timeZone,
+        locale: i18n.language,
+      });
+    } else {
+      posthog.alias(user.id);
+    }
   });
 
   return <Provider client={posthog}>{props.children}</Provider>;
