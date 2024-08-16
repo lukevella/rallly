@@ -261,5 +261,17 @@
   "pastEventsEmptyStateTitle": "Aucun événement passé",
   "pastEventsEmptyStateDescription": "Lorsque vous planifiez des événements, ils apparaîtront ici.",
   "activePollCount": "{{activePollCount}} en direct",
-  "createPoll": "Créer un sondage"
+  "createPoll": "Créer un sondage",
+  "yearlyDiscount": "Économisez {amount}",
+  "yearlyBillingDescription": "par an",
+  "addToCalendar": "Ajouter au calendrier",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "Télécharger le fichier ICS",
+  "schedulateDate": "Date programmée",
+  "timeZoneChangeDetectorTitle": "Changement de fuseau horaire détecté",
+  "timeZoneChangeDetectorMessage": "Votre fuseau horaire a été modifié en {currentTimeZone}. Souhaitez-vous mettre à jour vos préférences ?",
+  "yesUpdateTimezone": "Oui, mettez à jour mon fuseau horaire",
+  "noKeepCurrentTimezone": "Non, conserver le fuseau horaire actuel"
 }
