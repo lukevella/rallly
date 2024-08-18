@@ -269,5 +269,9 @@
   "outlook": "Outlook",
   "yahoo": "Yahoo",
   "downloadICSFile": "Pobierz plik ICS",
-  "schedulateDate": "Zaplanowana data"
+  "schedulateDate": "Zaplanowana data",
+  "timeZoneChangeDetectorTitle": "Wykryto zmianę strefy czasowej",
+  "timeZoneChangeDetectorMessage": "Twoja strefa czasowa została zmieniona na {currentTimeZone}. Czy chcesz zaktualizować swoje preferencje?",
+  "yesUpdateTimezone": "Tak, zaktualizuj moją strefę czasową",
+  "noKeepCurrentTimezone": "Nie, zachowaj bieżącą strefę czasową"
 }
