@@ -261,5 +261,17 @@
   "pastEventsEmptyStateTitle": "Keine vergangenen Termine",
   "pastEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
   "activePollCount": "{{activePollCount}} Live",
-  "createPoll": "Umfrage erstellen"
+  "createPoll": "Umfrage erstellen",
+  "yearlyDiscount": "Spare {amount}",
+  "yearlyBillingDescription": "pro Jahr",
+  "addToCalendar": "Zum Kalender hinzufügen",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "ICS-Datei herunterladen",
+  "schedulateDate": "Geplantes Datum",
+  "timeZoneChangeDetectorTitle": "Zeitzonenänderung erkannt",
+  "timeZoneChangeDetectorMessage": "Ihre Zeitzone wurde auf {currentTimeZone} geändert. Möchten Sie Ihre Einstellungen aktualisieren?",
+  "yesUpdateTimezone": "Ja, aktualisiere meine Zeitzone",
+  "noKeepCurrentTimezone": "Nein, behalte die aktuelle Zeitzone"
 }

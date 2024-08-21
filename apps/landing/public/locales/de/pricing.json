@@ -27,5 +27,7 @@
   "planFree": "Kostenlos",
   "keepPollsIndefinitely": "Umfragen auf unbestimmte Zeit behalten",
   "whenPollInactive": "Wann wird eine Umfrage inaktiv?",
-  "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND die Umfrage seit mehr als 30 Tagen nicht aufgerufen wurde. Inaktive Umfragen werden automatisch gelöscht, wenn du kein kostenpflichtiges Abonnement hast."
+  "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND die Umfrage seit mehr als 30 Tagen nicht aufgerufen wurde. Inaktive Umfragen werden automatisch gelöscht, wenn du kein kostenpflichtiges Abonnement hast.",
+  "discount": "Spare {amount}",
+  "yearlyBillingDescription": "pro Jahr"
 }

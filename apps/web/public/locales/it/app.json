@@ -234,5 +234,9 @@
   "outlook": "Outlook",
   "yahoo": "Yahoo",
   "downloadICSFile": "Scarica file ICS",
-  "schedulateDate": "Data programmata"
+  "schedulateDate": "Data programmata",
+  "timeZoneChangeDetectorTitle": "Rilevato Cambio Fuso Orario",
+  "timeZoneChangeDetectorMessage": "Il tuo fuso orario è cambiato in {currentTimeZone}. Vuoi aggiornare le tue preferenze?",
+  "yesUpdateTimezone": "Sì, aggiorna il mio fuso orario",
+  "noKeepCurrentTimezone": "No, mantieni il fuso orario attuale"
 }
