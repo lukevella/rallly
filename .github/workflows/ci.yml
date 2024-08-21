@@ -51,7 +51,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
-      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
@@ -66,6 +65,8 @@ jobs:
 
       - name: Create production build
         run: yarn turbo build:test --filter=@rallly/web
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
 
       - name: Start services
         run: yarn docker:up
