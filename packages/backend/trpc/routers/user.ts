@@ -64,7 +64,7 @@ export const user = router({
         where: { userId: ctx.user.id },
       });
       await tx.comment.deleteMany({
-        where: { userId: ctx.user.id },
+        where: { OR: [{ pollId: { in: pollIds } }, { userId: ctx.user.id }] },
       });
       await tx.poll.deleteMany({
         where: { userId: ctx.user.id },
