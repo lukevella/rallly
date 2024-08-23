@@ -80,10 +80,10 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
       <SoftwareAppJsonLd
         name="Rallly"
         aggregateRating={{
-          ratingValue: "4.3",
+          ratingValue: "4.4",
           bestRating: "5",
           worstRating: "0",
-          ratingCount: "9",
+          ratingCount: "11",
         }}
         price="0"
         priceCurrency="USD"
