@@ -39,6 +39,7 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
         return {
           id: session.user.id,
           isGuest: session.user.email === null,
+          locale: session.user.locale ?? undefined,
         };
       },
       posthogClient: posthog || undefined,

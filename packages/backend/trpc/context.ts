@@ -6,6 +6,7 @@ import type { PostHog } from "posthog-node";
 export type GetUserFn = (opts: CreateNextContextOptions) => Promise<{
   id: string;
   isGuest: boolean;
+  locale?: string;
 } | null>;
 
 export interface TRPCContextParams {
