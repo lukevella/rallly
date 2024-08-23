@@ -1,5 +1,5 @@
-import type { Stripe } from "@rallly/backend/stripe";
-import { stripe } from "@rallly/backend/stripe";
+import type { Stripe } from "@rallly/billing";
+import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import * as Sentry from "@sentry/node";
 import { buffer } from "micro";
