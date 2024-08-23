@@ -269,5 +269,9 @@
   "outlook": "Outlook",
   "yahoo": "Yahoo",
   "downloadICSFile": "Deskargatu ICS fitxategia",
-  "schedulateDate": "Programatutako data"
+  "schedulateDate": "Programatutako data",
+  "timeZoneChangeDetectorTitle": "Ordu-eremu aldaketa detektatu da",
+  "timeZoneChangeDetectorMessage": "Zure ordu-eremua {currentTimeZone} -ra aldatu da. Zure hobespenak eguneratu nahi dituzu?",
+  "yesUpdateTimezone": "Bai, eguneratu nire ordu-eremua",
+  "noKeepCurrentTimezone": "Ez, mantendu uneko ordu-eremua"
 }
