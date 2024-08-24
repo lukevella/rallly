@@ -33,7 +33,7 @@
     "@rallly/ui": "*",
     "@sentry/nextjs": "^8",
     "@svgr/webpack": "^6.5.1",
-    "@t3-oss/env-nextjs": "^0.10.1",
+    "@t3-oss/env-nextjs": "^0.11.0",
     "@tanstack/react-query": "^4.0.0",
     "@tanstack/react-table": "^8.9.1",
     "@trpc/client": "^10.13.0",
