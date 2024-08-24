@@ -8,6 +8,10 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
+require("dotenv").config({
+  path: "../../.env",
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output:
