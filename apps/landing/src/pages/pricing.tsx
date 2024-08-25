@@ -1,5 +1,4 @@
-import type { PricingData } from "@rallly/billing";
-import { getProPricing } from "@rallly/billing";
+import { pricingData } from "@rallly/billing/pricing";
 import { Badge } from "@rallly/ui/badge";
 import {
   BillingPlan,
@@ -49,7 +48,20 @@ export const UpgradeButton = ({
   );
 };
 
-const PriceTables = ({ pricingData }: { pricingData: PricingData }) => {
+const PriceTables = ({
+  pricingData,
+}: {
+  pricingData: {
+    monthly: {
+      amount: number;
+      currency: string;
+    };
+    yearly: {
+      amount: number;
+      currency: string;
+    };
+  };
+}) => {
   const [tab, setTab] = React.useState("yearly");
   return (
     <Tabs value={tab} onValueChange={setTab}>
@@ -278,9 +290,7 @@ const FAQ = () => {
   );
 };
 
-const Page: NextPageWithLayout<{ pricingData: PricingData }> = ({
-  pricingData,
-}) => {
+const Page: NextPageWithLayout = () => {
   const { t } = useTranslation(["pricing"]);
   return (
     <div className="mx-auto max-w-3xl">
@@ -332,13 +342,11 @@ Page.getLayout = getPageLayout;
 export default Page;
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const pricingData = await getProPricing();
   const res = await getStaticTranslations(["pricing"])(ctx);
   if ("props" in res) {
     return {
       props: {
         ...res.props,
-        pricingData,
       },
     };
   }
