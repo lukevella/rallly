@@ -5,7 +5,8 @@
   "exports": {
     "./server/*": "./src/server/*.tsx",
     "./next": "./src/next/index.ts",
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
   },
   "scripts": {
     "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts"

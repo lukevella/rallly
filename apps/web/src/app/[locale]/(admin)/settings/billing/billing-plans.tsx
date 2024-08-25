@@ -19,12 +19,10 @@ import { UpgradeButton } from "@/components/upgrade-button";
 
 export type PricingData = {
   monthly: {
-    id: string;
     amount: number;
     currency: string;
   };
   yearly: {
-    id: string;
     amount: number;
     currency: string;
   };

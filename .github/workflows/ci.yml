@@ -65,8 +65,6 @@ jobs:
 
       - name: Create production build
         run: yarn turbo build:test --filter=@rallly/web
-        env:
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
 
       - name: Start services
         run: yarn docker:up
