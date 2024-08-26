@@ -235,7 +235,6 @@ export const polls = router({
           waitUntil(
             ctx.emailClient.sendTemplate("NewPollEmail", {
               to: user.email,
-              subject: `Let's find a date for ${poll.title}`,
               props: {
                 title: poll.title,
                 name: user.name,
@@ -914,7 +913,6 @@ export const polls = router({
 
         const emailToHost = waitUntil(
           ctx.emailClient.sendTemplate("FinalizeHostEmail", {
-            subject: `Date booked for ${poll.title}`,
             to: poll.user.email,
             props: {
               name: poll.user.name,
@@ -939,7 +937,6 @@ export const polls = router({
 
         const emailsToParticipants = participantsToEmail.map((p) => {
           return ctx.emailClient.sendTemplate("FinalizeParticipantEmail", {
-            subject: `Date booked for ${poll.title}`,
             to: p.email,
             props: {
               name: p.name,

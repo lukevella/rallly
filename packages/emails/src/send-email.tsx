@@ -17,11 +17,12 @@ type TemplateProps<T extends TemplateName> = Omit<
   React.ComponentProps<TemplateComponent<T>>,
   "ctx"
 >;
-type TemplateComponent<T extends TemplateName> = Templates[T];
+type TemplateComponent<T extends TemplateName> = Templates[T] & {
+  getSubject?: (props: TemplateProps<T>, ctx: EmailContext) => string;
+};
 
 type SendEmailOptions<T extends TemplateName> = {
   to: string;
-  subject: string;
   props: TemplateProps<T>;
   attachments?: Mail.Options["attachments"];
 };
@@ -75,6 +76,7 @@ export class EmailClient {
     options: SendEmailOptions<T>,
   ) {
     const Template = templates[templateName] as TemplateComponent<T>;
+    const subject = Template.getSubject?.(options.props, this.config.context);
     const component = (
       <Template
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,7 +94,7 @@ export class EmailClient {
       await this.sendEmail({
         from: this.config.mail.from,
         to: options.to,
-        subject: options.subject,
+        subject,
         html,
         text,
         attachments: options.attachments,

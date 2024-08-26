@@ -59,7 +59,6 @@ export const auth = router({
 
         await ctx.emailClient.sendTemplate("RegisterEmail", {
           to: input.email,
-          subject: "Please verify your email address",
           props: {
             code,
           },

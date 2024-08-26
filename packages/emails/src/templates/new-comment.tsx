@@ -1,4 +1,4 @@
-import { defaultEmailContext } from "./_components/email-context";
+import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
 } from "./_components/notification-email";
@@ -30,6 +30,13 @@ export const NewCommentEmail = ({
       </Text>
     </NotificationEmail>
   );
+};
+
+NewCommentEmail.getSubject = (
+  props: NewCommentEmailProps,
+  _ctx: EmailContext,
+) => {
+  return `${props.authorName} has commented on ${props.title}`;
 };
 
 export default NewCommentEmail;
