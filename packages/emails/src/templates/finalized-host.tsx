@@ -80,4 +80,11 @@ export const FinalizeHostEmail = ({
   );
 };
 
+FinalizeHostEmail.getSubject = (
+  props: FinalizeHostEmailProps,
+  _ctx: EmailContext,
+) => {
+  return `Date booked for ${props.title}`;
+};
+
 export default FinalizeHostEmail;

@@ -58,4 +58,8 @@ export const LoginEmail = ({
   );
 };
 
+LoginEmail.getSubject = (props: LoginEmailProps, _ctx: EmailContext) => {
+  return `${props.code} is your 6-digit code`;
+};
+
 export default LoginEmail;

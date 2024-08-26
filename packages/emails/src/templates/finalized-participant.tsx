@@ -81,4 +81,11 @@ export const FinalizeParticipantEmail = ({
   );
 };
 
+FinalizeParticipantEmail.getSubject = (
+  props: FinalizeParticipantEmailProps,
+  _ctx: EmailContext,
+) => {
+  return `Date booked for ${props.title}`;
+};
+
 export default FinalizeParticipantEmail;
