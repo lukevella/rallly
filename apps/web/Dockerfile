@@ -42,7 +42,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/packages/database/prisma ./prisma
 COPY --from=installer /app/apps/web/next.config.js .
 COPY --from=installer /app/apps/web/package.json .
 
-ENV PORT 3000
+ENV PORT=3000
 EXPOSE 3000
 
 # Automatically leverage output traces to reduce image size
