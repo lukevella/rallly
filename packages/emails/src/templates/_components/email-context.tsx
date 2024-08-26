@@ -3,6 +3,7 @@ export type EmailContext = {
   baseUrl: string;
   domain: string;
   supportEmail: string;
+  locale: string;
 };
 
 export const defaultEmailContext = {
@@ -10,4 +11,5 @@ export const defaultEmailContext = {
   baseUrl: "https://rallly.co",
   domain: "rallly.co",
   supportEmail: "support@rallly.co",
+  locale: "en",
 };
