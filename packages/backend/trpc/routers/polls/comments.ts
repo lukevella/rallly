@@ -64,6 +64,7 @@ export const comments = router({
             select: {
               email: true,
               name: true,
+              locale: true,
             },
           },
         },
@@ -82,6 +83,7 @@ export const comments = router({
         emailsToSend.push(
           ctx.emailClient.sendTemplate("NewCommentEmail", {
             to: email,
+            locale: watcher.user.locale ?? undefined,
             props: {
               name: watcher.user.name,
               authorName,
