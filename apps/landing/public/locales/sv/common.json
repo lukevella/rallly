@@ -15,9 +15,14 @@
   "notFoundTitle": "404 hittades inte",
   "notFoundDescription": "Vi kunde inte hitta sidan du letade efter.",
   "goToHome": "Gå till startsidan",
+  "goToApp": "Gå till App",
   "pricing": "Priser",
   "bestDoodleAlternative": "Det bästa Doodle-alternativet",
+  "freeSchedulingPoll": "Gratis schemaläggningsomröstning",
+  "findATime": "Hitta en tid",
   "getStarted": "Kom igång",
+  "availabilityPoll": "Tillgänglighetsundersökning",
   "solutions": "Lösningar",
+  "howItWorks": "Hur det fungerar",
   "status": "Status"
 }
