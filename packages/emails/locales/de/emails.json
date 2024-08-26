@@ -1,2 +1,4 @@
 {
+    "newComment_subject": "{{authorName}} hat \"{{title}}\" kommentiert",
+    "newComment_content": "<b>{{authorName}}</b> hat <b>{{title}}</b> kommentiert."
 }

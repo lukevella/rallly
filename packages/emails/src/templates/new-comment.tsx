@@ -3,6 +3,8 @@ import NotificationEmail, {
   NotificationBaseProps,
 } from "./_components/notification-email";
 import { Text } from "./_components/styled-components";
+import { Trans } from "next-i18next";
+import { i18nInstance } from "../i18n";
 
 export interface NewCommentEmailProps extends NotificationBaseProps {
   authorName: string;
@@ -26,7 +28,18 @@ export const NewCommentEmail = ({
       preview="Go to your poll to see what they said."
     >
       <Text>
-        <strong>{authorName}</strong> has commented on <strong>{title}</strong>.
+        <Trans
+          i18n={i18nInstance}
+          lang={ctx.locale}
+          i18nKey="newComment_content"
+          values={{
+            authorName,
+            title,
+          }}
+          components={{
+            b: <strong className="font-semibold" />,
+          }}
+        />
       </Text>
     </NotificationEmail>
   );
@@ -34,9 +47,13 @@ export const NewCommentEmail = ({
 
 NewCommentEmail.getSubject = (
   props: NewCommentEmailProps,
-  _ctx: EmailContext,
+  ctx: EmailContext,
 ) => {
-  return `${props.authorName} has commented on ${props.title}`;
+  const t = i18nInstance.getFixedT(ctx.locale);
+  return t("newComment_subject", {
+    authorName: props.authorName,
+    title: props.title,
+  });
 };
 
 export default NewCommentEmail;
