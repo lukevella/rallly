@@ -52,4 +52,8 @@ export const RegisterEmail = ({
   );
 };
 
+RegisterEmail.getSubject = (_props: RegisterEmailProps, _ctx: EmailContext) => {
+  return `Please verify your email address`;
+};
+
 export default RegisterEmail;

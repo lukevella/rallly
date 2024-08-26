@@ -35,4 +35,11 @@ export const NewParticipantEmail = ({
   );
 };
 
+NewParticipantEmail.getSubject = (
+  props: NewParticipantEmailProps,
+  _ctx: any,
+) => {
+  return `${props.participantName} has responded to ${props.title}`;
+};
+
 export default NewParticipantEmail;

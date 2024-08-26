@@ -42,4 +42,8 @@ export const NewPollEmail = ({
   );
 };
 
+NewPollEmail.getSubject = (props: NewPollEmailProps, _ctx: EmailContext) => {
+  return `Let's find a date for ${props.title}!`;
+};
+
 export default NewPollEmail;

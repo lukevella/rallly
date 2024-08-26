@@ -43,4 +43,11 @@ export const NewParticipantConfirmationEmail = ({
   );
 };
 
+NewParticipantConfirmationEmail.getSubject = (
+  props: NewParticipantConfirmationEmailProps,
+  _ctx: EmailContext,
+) => {
+  return `Thanks for responding to ${props.title}`;
+};
+
 export default NewParticipantConfirmationEmail;
