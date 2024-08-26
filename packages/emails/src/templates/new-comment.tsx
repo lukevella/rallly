@@ -3,7 +3,7 @@ import NotificationEmail, {
   NotificationBaseProps,
 } from "./_components/notification-email";
 import { Text } from "./_components/styled-components";
-import { Trans } from "next-i18next";
+import { Trans } from "react-i18next/TransWithoutContext";
 import { i18nInstance } from "../i18n";
 
 export interface NewCommentEmailProps extends NotificationBaseProps {
