@@ -24,6 +24,7 @@ type TemplateComponent<T extends TemplateName> = Templates[T] & {
 type SendEmailOptions<T extends TemplateName> = {
   to: string;
   props: TemplateProps<T>;
+  locale?: string;
   attachments?: Mail.Options["attachments"];
 };
 
@@ -75,13 +76,19 @@ export class EmailClient {
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
+
+    const ctx = {
+      ...this.config.context,
+      locale: options.locale ?? this.config.context.locale,
+    }
+
     const Template = templates[templateName] as TemplateComponent<T>;
-    const subject = Template.getSubject?.(options.props, this.config.context);
+    const subject = Template.getSubject?.(options.props, ctx);
     const component = (
       <Template
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(options.props as any)}
-        ctx={this.config.context}
+        ctx={ctx}
       />
     );
 
