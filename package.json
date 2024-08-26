@@ -1,9 +1,8 @@
 {
   "name": "rallly",
   "private": true,
-  "version": "3.9.0",
+  "version": "3.9.1",
   "scripts": {
-    "postinstall": "yarn db:generate",
     "dev": "turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
     "dev:landing": "dotenv -c development turbo dev --filter=@rallly/landing",
