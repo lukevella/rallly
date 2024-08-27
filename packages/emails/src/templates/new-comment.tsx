@@ -1,7 +1,6 @@
-import type { TFunction } from "i18next";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { getTranslation } from "../i18n";
+import { i18nInstance } from "../i18n";
 import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
@@ -10,7 +9,6 @@ import { Text } from "./_components/styled-components";
 
 export interface NewCommentEmailProps extends NotificationBaseProps {
   authorName: string;
-  t: TFunction;
 }
 
 export const NewCommentEmail = ({
@@ -20,7 +18,6 @@ export const NewCommentEmail = ({
   pollUrl = "https://rallly.co",
   disableNotificationsUrl = "https://rallly.co",
   ctx = defaultEmailContext,
-  t,
 }: NewCommentEmailProps) => {
   return (
     <NotificationEmail
@@ -33,7 +30,7 @@ export const NewCommentEmail = ({
     >
       <Text>
         <Trans
-          t={t}
+          i18n={i18nInstance}
           defaultValue={`{{authorName}} commented on your poll "{{title}}"`}
           i18nKey="newComment_content"
           values={{
@@ -49,12 +46,11 @@ export const NewCommentEmail = ({
   );
 };
 
-NewCommentEmail.getSubject = async (
+NewCommentEmail.getSubject = (
   props: NewCommentEmailProps,
   ctx: EmailContext,
 ) => {
-  const { t } = await getTranslation(ctx.locale, "emails");
-  return t("newComment_subject", {
+  return i18nInstance.t("newComment_subject", {
     authorName: props.authorName,
     title: props.title,
   });
