@@ -1,5 +1,10 @@
 {
   "extends": "@rallly/tsconfig/react.json",
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
+  "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "i18next.d.ts"],
   "exclude": ["node_modules", ".react-email"],
 }
