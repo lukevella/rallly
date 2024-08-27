@@ -1,33 +1,31 @@
-import { createInstance, Namespace } from "i18next";
+import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
-import { initReactI18next } from "react-i18next/initReactI18next";
+import languages from "@rallly/languages";
 
-const initI18next = async (lng: string, ns: Namespace) => {
-  const i18nInstance = createInstance();
-  await i18nInstance
-    .use(initReactI18next)
-    .use(
-      resourcesToBackend(
-        (language: string, namespace: string) =>
-          import(`../locales/${language}/${namespace}.json`),
-      ),
-    )
-    .init({
-      // debug: true,
-      supportedLngs: ["en", "de"],
-      fallbackLng: "en",
-      lng,
-      fallbackNS: "emails",
-      defaultNS: "emails",
-      ns,
-    });
-  return i18nInstance;
-};
+// on the react-email dev server use an env var to control the language
+const isDevServer = process.argv[1].endsWith("node_modules/.bin/email")
+const initialLng = isDevServer ? (process.env.REACT_EMAIL_LANG ?? 'en') : 'en'
 
-export async function getTranslation(locale: string, ns: Namespace = "en") {
-  const i18nextInstance = await initI18next(locale, ns);
-  return {
-    t: i18nextInstance.getFixedT(locale, Array.isArray(ns) ? ns[0] : ns),
-    i18n: i18nextInstance,
-  };
-}
+const instance = createInstance();
+
+instance
+  .use(
+    resourcesToBackend(
+      (language: string, namespace: string) =>
+        import(`../locales/${language}/${namespace}.json`),
+    ),
+  )
+  .init({
+    // this flag is crutial so translations are loaded synchronously
+    // on the server this would not matter because it's unlikely that an email
+    // gets triggered before initizialization is done
+    // but on the react-email dev server components are rendered completely synchronously
+    // and translations would not work without this flag
+    initImmediate: false,
+    supportedLngs: Object.keys(languages),
+    fallbackLng: "en",
+    lng: initialLng,
+    ns: "emails",
+  });
+
+export const i18nInstance = instance
