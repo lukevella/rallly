@@ -20,24 +20,25 @@ export const NewParticipantConfirmationEmail = ({
       ctx={ctx}
       footNote={
         <>
-          You are receiving this email because a response was submitted on{" "}
-          <Domain ctx={ctx} />. If this wasn&apos;t you, please ignore this
-          email.
+          Du erhältst diese E-Mail, da eine Antwort auf <Domain ctx={ctx} />{" "}
+          eingegangen ist. Wenn Du das nicht warst, ignoriere bitte diese
+          E-Mail.
         </>
       }
       recipientName={name}
       preview="To edit your response use the link below"
     >
       <Text>
-        Your response to <strong>{title}</strong> has been submitted.
+        Deine Antwort auf <strong>{title}</strong> wurde erfolgreich
+        übermittelt.
       </Text>
       <Text>
-        While the poll is still open you can change your response using the link
-        below.
+        Solange die Umfrage noch läuft, kannst Du Deine Antwort über den
+        folgenden Link ändern oder anschauen:
       </Text>
       <Section>
         <Button id="editSubmissionUrl" href={editSubmissionUrl}>
-          Review response on {domain}
+          Ansehen auf {domain}
         </Button>
       </Section>
     </EmailLayout>

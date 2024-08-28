@@ -27,32 +27,37 @@ export const LoginEmail = ({
       ctx={ctx}
       footNote={
         <>
-          You&apos;re receiving this email because a request was made to login
-          to <Domain ctx={ctx} />. If this wasn&apos;t you, let us know by
-          replying to this email.
+          Du hast diese E-Mail erhalten, da ein Login-Versuch bei{" "}
+          <Domain ctx={ctx} /> stattgefunden hat. Wenn Du das nicht warst, lass
+          es uns bitte wissen und antworte auf diese E-Mail.
         </>
       }
       recipientName={name}
       preview="Use this link to log in on this device."
     >
       <Text>
-        To log in to your account, please choose one of the following options:
+        um Dich in Deinen Account einzuloggen, wähle bitte eine der folgenden
+        Optionen:
       </Text>
       <Card>
-        <Heading>Option 1: Magic Link</Heading>
-        <Text>Click this magic link to log in on this device.</Text>
+        <Heading>Option 1: Magischer Link</Heading>
+        <Text>
+          Klicke auf den magischen Link um Dich auf diesem Gerät anzumelden.
+        </Text>
         <Button href={magicLink} id="magicLink">
-          Log in to {ctx.domain}
+          Logge Dich ein auf {ctx.domain}
         </Button>
-        <Text light={true}>This link will expire in 15 minutes.</Text>
+        <Text light={true}>Dieser Link ist nur für 15 Minuten gültig. </Text>
       </Card>
       <Card>
-        <Heading>Option 2: Verification Code</Heading>
-        <Text>Enter this one-time 6-digit verification code.</Text>
+        <Heading>Option 2: Verifizierungscode</Heading>
+        <Text>
+          Gib diesen sechsstelligen Einmal-Code für die Verifizierung ein.
+        </Text>
         <Heading as="h1" style={trackingWide} id="code">
           {code}
         </Heading>
-        <Text light={true}>This code will expire in 15 minutes.</Text>
+        <Text light={true}>Dieser Code ist nur für 15 Minuten gültig.</Text>
       </Card>
     </EmailLayout>
   );

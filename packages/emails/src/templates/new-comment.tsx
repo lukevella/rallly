@@ -26,7 +26,7 @@ export const NewCommentEmail = ({
       preview="Go to your poll to see what they said."
     >
       <Text>
-        <strong>{authorName}</strong> has commented on <strong>{title}</strong>.
+        <strong>{authorName}</strong> hat <strong>{title}</strong> kommentiert.
       </Text>
     </NotificationEmail>
   );

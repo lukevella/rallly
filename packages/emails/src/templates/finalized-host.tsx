@@ -30,7 +30,7 @@ export const FinalizeHostEmail = ({
   return (
     <EmailLayout ctx={ctx} recipientName={name} preview="Final date booked!">
       <Text>
-        <strong>{title}</strong> has been booked for:
+        Es wurde ein Termin vereinbart für <strong>{title}</strong>:
       </Text>
       <Section>
         <Row>
@@ -71,10 +71,11 @@ export const FinalizeHostEmail = ({
         </Row>
       </Section>
       <Text>
-        We&apos;ve notified participants and sent them calendar invites.
+        Wir haben die Teilnehmer*innen benachrichtigt und ihnen
+        Kalendereinladungen zugeschickt.
       </Text>
       <Text>
-        <Button href={pollUrl}>View Event</Button>
+        <Button href={pollUrl}>Termin anzeigen</Button>
       </Text>
     </EmailLayout>
   );

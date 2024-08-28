@@ -11,12 +11,14 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
+import { TermiteAlert } from "@/app/[locale]/(admin)/termite-alert";
 
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   return (
     <div>
       <PageContainer>
+        <TermiteAlert />
         <PageHeader>
           <div className="flex items-center gap-x-3">
             <PageIcon>

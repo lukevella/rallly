@@ -23,9 +23,9 @@ const ShareLink = ({
   return (
     <Link
       href={`mailto:?subject=${encodeURIComponent(
-        `Availability for ${title}`,
+        `Terminfindung für ${title}`,
       )}&body=${encodeURIComponent(
-        `Hi all,\nI'm trying to find the best date for ${title}.\nCan you please use the link below to choose your preferred dates:\n${participantLink}\nThank you.\n${name}`,
+        `Hallo,\nIch versuche einen passenden Termin für ${title} zu finden.\nKannst du bitte den Link unten benutzen um deine bevorzugten Termine anzugeben:\n${participantLink}\nDankeschön.\n${name}`,
       )}`}
     >
       {children}
@@ -46,22 +46,21 @@ export const NewPollEmail = ({
       ctx={ctx}
       footNote={
         <>
-          You are receiving this email because a new poll was created with this
-          email address on <Link href={baseUrl}>{domain}</Link>. If this
-          wasn&apos;t you, please ignore this email.
+          Du erhältst diese E-Mail, weil eine neue Umfrage unter Angabe dieser
+          E-Mail-Adresse auf <Link href={baseUrl}>{domain}</Link> erstellt
+          wurde. Falls dies nicht von dir veranlasst wurde, ignoriere bitte
+          diese E-Mail.
         </>
       }
       recipientName={name}
       preview="Share your participant link to start collecting responses."
     >
-      <Text>
-        Your poll has been successfully created! Here are the details:
-      </Text>
+      <Text>Deine Umfrage wurde erfolgreich angelegt!</Text>
       <Card>
         <Text>
-          <strong>Title:</strong> {title}
+          <strong>Titel:</strong> {title}
           <br />
-          <strong>Invite Link:</strong>{" "}
+          <strong>Einladungslink:</strong>{" "}
           <Link href={participantLink}>{participantLink}</Link>
         </Text>
         <Text>
@@ -70,18 +69,19 @@ export const NewPollEmail = ({
             name={name}
             participantLink={participantLink}
           >
-            Share via email
+            Per E-Mail teilen
           </ShareLink>
         </Text>
       </Card>
       <Text>
-        To invite participants to your poll, simply share the{" "}
-        <strong>Invite Link</strong> above with them. They&apos;ll be able to
-        vote on their preferred meeting times and dates.
+        Um Teilnehmer*innen zu deiner Umfrage einzuladen, teile einfach den oben
+        genannten <strong>Einladungslink</strong> mit ihnen. Sie können dann für
+        ihre bevorzugten Termine und Zeiten abstimmen.
       </Text>
       <Text>
-        If you need to make any changes to your poll, or if you want to see the
-        results so far, just click on the button below:
+        Wenn du Änderungen an deiner Umfrage vornehmen möchtest oder die
+        bisherigen Ergebnisse einsehen willst, klicke einfach auf den folgenden
+        Button:
       </Text>
       <Text>
         <Button href={adminLink}>Manage Poll &rarr;</Button>
