@@ -17,7 +17,7 @@ export interface EmailLayoutProps {
 }
 
 const containerStyles = {
-  maxWidth: "500px",
+  maxWidth: "480px",
   margin: "0 auto",
   background: "white",
   fontFamily,
@@ -38,8 +38,8 @@ export const EmailLayout = ({
         <Container style={containerStyles}>
           <Img
             src={logoUrl}
-            width="128"
-            height="24"
+            width="32"
+            height="32"
             style={{
               marginBottom: 32,
             }}
