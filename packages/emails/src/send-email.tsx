@@ -1,15 +1,13 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { renderAsync } from "@react-email/render";
-import type { TFunction } from "i18next";
 import { createTransport, Transporter } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 import previewEmail from "preview-email";
 import React from "react";
-
-import { getTranslation } from "./i18n";
 import * as templates from "./templates";
 import { EmailContext } from "./templates/_components/email-context";
+import { i18nInstance } from "./i18n";
 
 type Templates = typeof templates;
 
@@ -20,7 +18,7 @@ type TemplateProps<T extends TemplateName> = Omit<
   "ctx"
 >;
 type TemplateComponent<T extends TemplateName> = Templates[T] & {
-  getSubject?: (props: TemplateProps<T>, t: TFunction) => string;
+  getSubject?: (props: TemplateProps<T>, ctx: EmailContext) => string;
 };
 
 type SendEmailOptions<T extends TemplateName> = {
@@ -83,15 +81,15 @@ export class EmailClient {
       locale: options.locale ?? this.config.context.locale,
     };
 
+    await i18nInstance.changeLanguage(ctx.locale)
+
     const Template = templates[templateName] as TemplateComponent<T>;
-    const { t } = await getTranslation(ctx.locale, "emails");
-    const subject = Template.getSubject?.(options.props, t);
+    const subject = Template.getSubject?.(options.props, ctx);
     const component = (
       <Template
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(options.props as any)}
         ctx={ctx}
-        t={t}
       />
     );
 
