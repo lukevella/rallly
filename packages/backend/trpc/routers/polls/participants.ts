@@ -125,7 +125,7 @@ export const participants = router({
         emailsToSend.push(
           ctx.emailClient.sendTemplate("NewParticipantConfirmationEmail", {
             to: email,
-            subject: `Thanks for responding to ${poll.title}`,
+            subject: `Danke für Deine Beteiligung an ${poll.title}`,
             props: {
               name,
               title: poll.title,
@@ -162,7 +162,7 @@ export const participants = router({
         emailsToSend.push(
           ctx.emailClient.sendTemplate("NewParticipantEmail", {
             to: email,
-            subject: `${participant.name} has responded to ${poll.title}`,
+            subject: `${participant.name} hat in ${poll.title} geantwortet`,
             props: {
               name: watcher.user.name,
               participantName: participant.name,

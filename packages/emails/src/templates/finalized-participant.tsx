@@ -32,8 +32,8 @@ export const FinalizeParticipantEmail = ({
   return (
     <EmailLayout ctx={ctx} recipientName={name} preview="Final date booked!">
       <Text>
-        <strong>{hostName}</strong> has booked <strong>{title}</strong> for the
-        following date:
+        <strong>{hostName}</strong> hat für <strong>{title}</strong> folgendes
+        Datum festgelegt:
       </Text>
       <Section>
         <Row>
@@ -73,9 +73,9 @@ export const FinalizeParticipantEmail = ({
           </Column>
         </Row>
       </Section>
-      <Text>Please find attached a calendar invite for this event.</Text>
+      <Text>Anbei findest Du die Kalendereinladung für diesen Termin.</Text>
       <Text>
-        <Button href={pollUrl}>View Event</Button>
+        <Button href={pollUrl}>Termin anzeigen</Button>
       </Text>
     </EmailLayout>
   );

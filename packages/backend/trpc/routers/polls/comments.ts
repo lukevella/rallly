@@ -82,7 +82,7 @@ export const comments = router({
         emailsToSend.push(
           ctx.emailClient.sendTemplate("NewCommentEmail", {
             to: email,
-            subject: `${authorName} has commented on ${poll.title}`,
+            subject: `${authorName} hat ${poll.title} kommentiert`,
             props: {
               name: watcher.user.name,
               authorName,

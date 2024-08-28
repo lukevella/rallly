@@ -29,9 +29,10 @@ export const NotificationEmail = ({
       recipientName={name}
       footNote={
         <>
-          If you would like to stop receiving updates you can{" "}
+          Wenn Du nicht mehr über Neuigkeiten informiert werden möchtest, kannst
+          Du die Benachrichtigungen in den Einstellungen{" "}
           <Link className="whitespace-nowrap" href={disableNotificationsUrl}>
-            turn notifications off
+            deaktivieren
           </Link>
           .
         </>
@@ -40,7 +41,7 @@ export const NotificationEmail = ({
     >
       {children}
       <Text>
-        <Button href={pollUrl}>View on {domain}</Button>
+        <Button href={pollUrl}>Du findest die Umfrage unter {domain}</Button>
       </Text>
     </EmailLayout>
   );

@@ -26,8 +26,8 @@ export const NewParticipantEmail = ({
       preview="Go to your poll to see the new response."
     >
       <Text>
-        <strong>{participantName}</strong> has responded to{" "}
-        <strong>{title}</strong>.
+        <strong>{participantName}</strong> hat an Deiner Umfrage{" "}
+        <strong>{title}</strong> teilgenommen.
       </Text>
     </NotificationEmail>
   );

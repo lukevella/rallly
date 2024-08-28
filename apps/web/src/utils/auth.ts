@@ -96,7 +96,7 @@ const providers: Provider[] = [
       if (user) {
         await emailClient.sendTemplate("LoginEmail", {
           to: email,
-          subject: `${token} is your 6-digit code`,
+          subject: `${token} ist Dein sechsstelliger Eingabecode`,
           props: {
             name: user.name,
             magicLink: absoluteUrl("/auth/login", {

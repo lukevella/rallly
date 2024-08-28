@@ -60,7 +60,7 @@ export const EmailLayout = ({
         <Container style={containerStyles}>
           <Img src={logoUrl} alt="Rallly" width={128} />
           <Section style={sectionStyles}>
-            {recipientName ? <Text>Hi {recipientName},</Text> : null}
+            {recipientName ? <Text>Hallo {recipientName},</Text> : null}
             {children}
             {footNote ? (
               <Text
@@ -81,19 +81,29 @@ export const EmailLayout = ({
               Home
             </Link>
             <span>&nbsp;&bull;&nbsp;</span>
-            <Link style={linkStyles} href="https://twitter.com/ralllyco">
-              Twitter
-            </Link>
-            <span>&nbsp;&bull;&nbsp;</span>
-            <Link style={linkStyles} href="https://github.com/lukevella/rallly">
-              Github
+            <Link
+              style={linkStyles}
+              href="https://www.gruene.de/service/impressum"
+            >
+              Impressum
             </Link>
             <span>&nbsp;&bull;&nbsp;</span>
             <Link
               style={linkStyles}
-              href={`mailto:${process.env["SUPPORT_EMAIL"]}`}
+              href="https://www.gruene.de/service/datenschutz"
             >
-              Contact
+              Datenschutz
+            </Link>
+            <span>&nbsp;&bull;&nbsp;</span>
+            <Link
+              style={linkStyles}
+              href="https://netz.gruene.de/de/wissenswerk/2024-08/die-neue-termite"
+            >
+              Hilfe
+            </Link>
+            <span>&nbsp;&bull;&nbsp;</span>
+            <Link style={linkStyles} href="https://rallly.co">
+              Diese Anwendung basiert auf Rallly
             </Link>
           </Section>
         </Container>
