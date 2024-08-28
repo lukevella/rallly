@@ -23,7 +23,7 @@ export const Text = (
         margin: "16px 0",
         fontFamily,
         fontSize: small ? "14px" : "16px",
-        color: light ? "#64748B" : "#334155",
+        color: light ? "#4B5563" : "#111827",
         lineHeight: "1.5",
         ...props.style,
       }}
@@ -65,20 +65,16 @@ export const Link = (props: LinkProps) => {
 export const Heading = (
   props: React.ComponentProps<typeof UnstyledHeading>,
 ) => {
-  const { as = "h3" } = props;
+  const { as = "h1" } = props;
   const fontSize = {
-    h1: "32px",
-    h2: "24px",
-    h3: "20px",
-    h4: "16px",
-    h5: "14px",
-    h6: "12px",
+    h1: "24px",
+    h2: "20px",
+    h3: "18px",
   };
   return (
     <UnstyledHeading
       {...props}
       as={as}
-      className="font-sans font-bold text-gray-900"
       style={{
         fontSize: fontSize[as],
         ...props.style,
@@ -146,3 +142,5 @@ export const trackingWide = {
 
 export const fontFamily =
   "'Inter UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
+
+export const primaryColor = "#4F46E5";

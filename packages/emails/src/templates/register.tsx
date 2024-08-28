@@ -28,13 +28,21 @@ export const RegisterEmail = ({
       }
       preview={`Your 6-digit code is: ${code}`}
     >
+      <Heading>Verify your email address</Heading>
       <Text>
         Please use the following 6-digit verification code to verify your email:
       </Text>
-      <Heading as="h1" style={{ ...trackingWide }} id="code">
+      <Text
+        style={{
+          ...trackingWide,
+          fontSize: "24px",
+          fontWeight: "bold",
+        }}
+        id="code"
+      >
         {code}
-      </Heading>
-      <Text>This code is valid for 15 minutes</Text>
+      </Text>
+      <Text light={true}>This code is valid for 15 minutes</Text>
     </EmailLayout>
   );
 };

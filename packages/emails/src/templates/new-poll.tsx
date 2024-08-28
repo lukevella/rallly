@@ -1,6 +1,15 @@
+import { Section } from "@react-email/components";
+import { Hr } from "@react-email/hr";
+
 import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import { EmailLayout } from "./_components/email-layout";
-import { Button, Card, Link, Text } from "./_components/styled-components";
+import {
+  Button,
+  Card,
+  Heading,
+  Link,
+  Text,
+} from "./_components/styled-components";
 
 export interface NewPollEmailProps {
   title: string;
@@ -25,7 +34,7 @@ const ShareLink = ({
       href={`mailto:?subject=${encodeURIComponent(
         `Availability for ${title}`,
       )}&body=${encodeURIComponent(
-        `Hi all,\nI'm trying to find the best date for ${title}.\nCan you please use the link below to choose your preferred dates:\n${participantLink}\nThank you.\n${name}`,
+        `Hi all,\n\nI'm trying to find the best date for ${title}.\n\nCan you please use the link below to choose your preferred dates:\n\n${participantLink}\n\nThank you.\n\n${name}`,
       )}`}
     >
       {children}
@@ -51,41 +60,36 @@ export const NewPollEmail = ({
           wasn&apos;t you, please ignore this email.
         </>
       }
-      recipientName={name}
       preview="Share your participant link to start collecting responses."
     >
+      <Heading>New Poll Created</Heading>
       <Text>
         Your poll has been successfully created! Here are the details:
       </Text>
-      <Card>
-        <Text>
-          <strong>Title:</strong> {title}
-          <br />
-          <strong>Invite Link:</strong>{" "}
-          <Link href={participantLink}>{participantLink}</Link>
-        </Text>
-        <Text>
-          <ShareLink
-            title={title}
-            name={name}
-            participantLink={participantLink}
-          >
-            Share via email
-          </ShareLink>
-        </Text>
-      </Card>
+      <Text>
+        <strong>Title:</strong> {title}
+        <br />
+        <strong>Invite Link:</strong>{" "}
+        <Link href={participantLink}>{participantLink}</Link>
+      </Text>
+      <Text>
+        <ShareLink title={title} name={name} participantLink={participantLink}>
+          Share via email
+        </ShareLink>
+      </Text>
       <Text>
         To invite participants to your poll, simply share the{" "}
         <strong>Invite Link</strong> above with them. They&apos;ll be able to
         vote on their preferred meeting times and dates.
       </Text>
+      <Hr />
       <Text>
         If you need to make any changes to your poll, or if you want to see the
         results so far, just click on the button below:
       </Text>
-      <Text>
+      <Section style={{ marginTop: 32 }}>
         <Button href={adminLink}>Manage Poll &rarr;</Button>
-      </Text>
+      </Section>
     </EmailLayout>
   );
 };

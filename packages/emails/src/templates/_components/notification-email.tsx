@@ -1,3 +1,5 @@
+import { Section } from "@react-email/section";
+
 import { EmailContext } from "./email-context";
 import { EmailLayout } from "./email-layout";
 import { Button, Link, Text } from "./styled-components";
@@ -26,7 +28,6 @@ export const NotificationEmail = ({
   return (
     <EmailLayout
       ctx={ctx}
-      recipientName={name}
       footNote={
         <>
           If you would like to stop receiving updates you can{" "}
@@ -39,9 +40,9 @@ export const NotificationEmail = ({
       preview={preview}
     >
       {children}
-      <Text>
+      <Section style={{ marginTop: 32 }}>
         <Button href={pollUrl}>View on {domain}</Button>
-      </Text>
+      </Section>
     </EmailLayout>
   );
 };

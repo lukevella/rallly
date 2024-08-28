@@ -1,3 +1,5 @@
+import { Hr, Section } from "@react-email/components";
+
 import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import { EmailLayout } from "./_components/email-layout";
 import {
@@ -5,6 +7,7 @@ import {
   Card,
   Domain,
   Heading,
+  primaryColor,
   Text,
   trackingWide,
 } from "./_components/styled-components";
@@ -17,7 +20,6 @@ interface LoginEmailProps {
 }
 
 export const LoginEmail = ({
-  name = "Guest",
   code = "123456",
   magicLink = "https://rallly.co",
   ctx = defaultEmailContext,
@@ -32,28 +34,26 @@ export const LoginEmail = ({
           replying to this email.
         </>
       }
-      recipientName={name}
       preview="Use this link to log in on this device."
     >
-      <Text>
-        To log in to your account, please choose one of the following options:
+      <Heading>Login</Heading>
+      <Text>Enter this one-time 6-digit verification code:</Text>
+      <Text
+        style={{
+          ...trackingWide,
+          fontSize: "24px",
+          fontWeight: "bold",
+        }}
+        id="code"
+      >
+        {code}
       </Text>
-      <Card>
-        <Heading>Option 1: Magic Link</Heading>
-        <Text>Click this magic link to log in on this device.</Text>
+      <Section style={{ marginTop: 32 }}>
         <Button href={magicLink} id="magicLink">
           Log in to {ctx.domain}
         </Button>
-        <Text light={true}>This link will expire in 15 minutes.</Text>
-      </Card>
-      <Card>
-        <Heading>Option 2: Verification Code</Heading>
-        <Text>Enter this one-time 6-digit verification code.</Text>
-        <Heading as="h1" style={trackingWide} id="code">
-          {code}
-        </Heading>
         <Text light={true}>This code will expire in 15 minutes.</Text>
-      </Card>
+      </Section>
     </EmailLayout>
   );
 };

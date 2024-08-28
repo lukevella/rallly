@@ -2,7 +2,7 @@ import { defaultEmailContext } from "./_components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
 } from "./_components/notification-email";
-import { Text } from "./_components/styled-components";
+import { Heading, Text } from "./_components/styled-components";
 
 export interface NewCommentEmailProps extends NotificationBaseProps {
   authorName: string;
@@ -25,6 +25,7 @@ export const NewCommentEmail = ({
       disableNotificationsUrl={disableNotificationsUrl}
       preview="Go to your poll to see what they said."
     >
+      <Heading>New Comment</Heading>
       <Text>
         <strong>{authorName}</strong> has commented on <strong>{title}</strong>.
       </Text>
