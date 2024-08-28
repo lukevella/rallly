@@ -11,6 +11,8 @@ import {
 
 import { EmailContext } from "./email-context";
 
+export const lightTextColor = "#6B7280";
+export const darkTextColor = "#111827";
 export const borderColor = "#E2E8F0";
 export const Text = (
   props: TextProps & { light?: boolean; small?: boolean },
@@ -23,7 +25,7 @@ export const Text = (
         margin: "16px 0",
         fontFamily,
         fontSize: small ? "14px" : "16px",
-        color: light ? "#4B5563" : "#111827",
+        color: light ? lightTextColor : darkTextColor,
         lineHeight: "1.5",
         ...props.style,
       }}
@@ -46,6 +48,11 @@ export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
         borderRadius: "4px",
         padding: "12px 14px",
         fontFamily,
+        boxSizing: "border-box",
+        display: "block",
+        width: "100%",
+        maxWidth: "100%",
+        textAlign: "center",
         fontSize: "16px",
         color: "white",
       }}
@@ -62,15 +69,20 @@ export const Link = (props: LinkProps) => {
   );
 };
 
+const fontSize = {
+  h1: "20px",
+  h2: "20px",
+  h3: "18px",
+  h4: "16px",
+  h5: "14px",
+  h6: "12px",
+};
+
 export const Heading = (
   props: React.ComponentProps<typeof UnstyledHeading>,
 ) => {
   const { as = "h1" } = props;
-  const fontSize = {
-    h1: "24px",
-    h2: "20px",
-    h3: "18px",
-  };
+
   return (
     <UnstyledHeading
       {...props}

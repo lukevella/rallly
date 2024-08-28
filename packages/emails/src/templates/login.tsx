@@ -1,13 +1,11 @@
-import { Hr, Section } from "@react-email/components";
+import { Section } from "@react-email/components";
 
 import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import { EmailLayout } from "./_components/email-layout";
 import {
   Button,
-  Card,
   Domain,
   Heading,
-  primaryColor,
   Text,
   trackingWide,
 } from "./_components/styled-components";

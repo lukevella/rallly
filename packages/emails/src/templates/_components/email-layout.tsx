@@ -21,7 +21,7 @@ const containerStyles = {
   margin: "0 auto",
   background: "white",
   fontFamily,
-  padding: "24px",
+  padding: "32px 8px",
 };
 
 export const EmailLayout = ({
