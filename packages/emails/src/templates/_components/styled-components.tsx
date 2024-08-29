@@ -11,8 +11,8 @@ import {
 
 import { EmailContext } from "./email-context";
 
-export const lightTextColor = "#6B7280";
-export const darkTextColor = "#111827";
+export const lightTextColor = "#4B5563";
+export const darkTextColor = "#1F2937";
 export const borderColor = "#E2E8F0";
 export const Text = (
   props: TextProps & { light?: boolean; small?: boolean },
@@ -71,8 +71,8 @@ export const Link = (props: LinkProps) => {
 
 const fontSize = {
   h1: "20px",
-  h2: "20px",
-  h3: "18px",
+  h2: "18px",
+  h3: "16px",
   h4: "16px",
   h5: "14px",
   h6: "12px",

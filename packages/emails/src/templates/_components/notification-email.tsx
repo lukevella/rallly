@@ -17,7 +17,6 @@ export interface NotificationEmailProps extends NotificationBaseProps {
 }
 
 export const NotificationEmail = ({
-  name,
   pollUrl,
   disableNotificationsUrl,
   preview,
@@ -26,23 +25,18 @@ export const NotificationEmail = ({
 }: React.PropsWithChildren<NotificationEmailProps>) => {
   const { domain } = ctx;
   return (
-    <EmailLayout
-      ctx={ctx}
-      footNote={
-        <>
-          If you would like to stop receiving updates you can{" "}
-          <Link className="whitespace-nowrap" href={disableNotificationsUrl}>
-            turn notifications off
-          </Link>
-          .
-        </>
-      }
-      preview={preview}
-    >
+    <EmailLayout ctx={ctx} preview={preview}>
       {children}
-      <Section style={{ marginTop: 32 }}>
+      <Section style={{ marginTop: 32, marginBottom: 32 }}>
         <Button href={pollUrl}>View on {domain}</Button>
       </Section>
+      <Text light={true}>
+        If you would like to stop receiving updates you can{" "}
+        <Link className="whitespace-nowrap" href={disableNotificationsUrl}>
+          turn notifications off
+        </Link>
+        .
+      </Text>
     </EmailLayout>
   );
 };

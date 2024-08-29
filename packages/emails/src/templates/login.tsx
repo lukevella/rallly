@@ -4,6 +4,7 @@ import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import { EmailLayout } from "./_components/email-layout";
 import {
   Button,
+  Card,
   Domain,
   Heading,
   Text,
@@ -23,35 +24,35 @@ export const LoginEmail = ({
   ctx = defaultEmailContext,
 }: LoginEmailProps) => {
   return (
-    <EmailLayout
-      ctx={ctx}
-      footNote={
-        <>
-          You&apos;re receiving this email because a request was made to login
-          to <Domain ctx={ctx} />. If this wasn&apos;t you, let us know by
-          replying to this email.
-        </>
-      }
-      preview="Use this link to log in on this device."
-    >
+    <EmailLayout ctx={ctx} preview="Use this link to log in on this device.">
       <Heading>Login</Heading>
       <Text>Enter this one-time 6-digit verification code:</Text>
-      <Text
-        style={{
-          ...trackingWide,
-          fontSize: "24px",
-          fontWeight: "bold",
-        }}
-        id="code"
-      >
-        {code}
-      </Text>
-      <Section style={{ marginTop: 32 }}>
+      <Card style={{ textAlign: "center" }}>
+        <Text
+          style={{
+            ...trackingWide,
+            textAlign: "center",
+            fontSize: "32px",
+            fontWeight: "bold",
+          }}
+          id="code"
+        >
+          {code}
+        </Text>
+        <Text style={{ textAlign: "center" }} light={true}>
+          This code is valid for 15 minutes
+        </Text>
+      </Card>
+      <Section style={{ marginBottom: 32 }}>
         <Button href={magicLink} id="magicLink">
           Log in to {ctx.domain}
         </Button>
-        <Text light={true}>This code will expire in 15 minutes.</Text>
       </Section>
+      <Text light>
+        You&apos;re receiving this email because a request was made to login to{" "}
+        <Domain ctx={ctx} />. If this wasn&apos;t you, let us know by replying
+        to this email.
+      </Text>
     </EmailLayout>
   );
 };

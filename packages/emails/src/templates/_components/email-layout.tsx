@@ -5,14 +5,14 @@ import {
   Html,
   Img,
   Preview,
+  Section,
 } from "@react-email/components";
 
 import { EmailContext } from "./email-context";
-import { fontFamily } from "./styled-components";
+import { darkTextColor, fontFamily, Link, Text } from "./styled-components";
 
 export interface EmailLayoutProps {
   preview: string;
-  footNote?: React.ReactNode;
   ctx: EmailContext;
 }
 
@@ -22,6 +22,7 @@ const containerStyles = {
   background: "white",
   fontFamily,
   padding: "32px 8px",
+  color: darkTextColor,
 };
 
 export const EmailLayout = ({
@@ -46,6 +47,14 @@ export const EmailLayout = ({
             alt="Rallly Logo"
           />
           {children}
+          <Section style={{ marginTop: 32 }}>
+            <Text light={true} style={{ fontSize: 14, textAlign: "center" }}>
+              Powered by{" "}
+              <Link href="https://rallly.co?utm_source=email&utm_medium=transactional">
+                rallly.co
+              </Link>
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>
