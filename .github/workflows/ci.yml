@@ -62,6 +62,8 @@ jobs:
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium
+        env:
+          DEBUG: pw:api
 
       - name: Create production build
         run: yarn turbo build:test --filter=@rallly/web
