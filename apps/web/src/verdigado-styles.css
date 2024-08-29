@@ -15,7 +15,7 @@ a {
 
 /* buttons */
 button.bg-primary,
-button.bg-gray-50,
+button.bg-gray-50:not(.rounded-none),
 a.bg-primary {
     border-radius: 2rem !important;
     padding-left: 1.5rem !important;
@@ -62,7 +62,7 @@ a.bg-primary:active svg {
     stroke: #002216;
 }
 
-button.bg-gray-50 {
+button.bg-gray-50:not(.rounded-none) {
     background: none;
     border-color: #005437;
     color: #005437;
@@ -73,9 +73,9 @@ button.bg-gray-50 svg {
     stroke: #005437;
 }
 
-button.bg-gray-50:hover,
-button.bg-gray-50:focus,
-button.bg-gray-50:active{
+button.bg-gray-50:not(.rounded-none):hover,
+button.bg-gray-50:not(.rounded-none):focus,
+button.bg-gray-50:not(.rounded-none):active{
     background-color: #005437;
     color: white !important;
 }
