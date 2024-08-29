@@ -42,7 +42,7 @@ module.exports = {
         gray: {
           ...colors.gray,
           '50': colors.white,
-          '100': "#E5F3EB",
+          '100': "#f5faf7",
           '200': "#E5F3EB",
         },
         border: colors.gray["200"],
