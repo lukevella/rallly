@@ -42,7 +42,7 @@ export default async function handler(req: NextRequest) {
             <div tw="flex justify-between items-center w-full">
               <img
                 alt="Rallly"
-                src="https://rallly.co/logo-color.svg"
+                src="https://rallly.co/static/images/logo-color.svg"
                 height={64}
               />
               <div tw="flex text-gray-800 text-3xl tracking-tight font-bold">

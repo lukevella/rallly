@@ -20,9 +20,6 @@ import { useRouter } from "next/router";
 import * as React from "react";
 
 import { Trans } from "@/components/trans";
-import DigitalOcean from "~/digitalocean.svg";
-import Sentry from "~/sentry.svg";
-import Vercel from "~/vercel-logotype-dark.svg";
 
 export const LanguageSelect = () => {
   const router = useRouter();
@@ -273,7 +270,12 @@ const Footer: React.FunctionComponent = () => {
                 href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
                 className="inline-block text-white"
               >
-                <Vercel className="h-5" />
+                <Image
+                  src="/static/images/third-party/vercel-logotype-dark.svg"
+                  alt="Vercel"
+                  width={100}
+                  height={24}
+                />
               </Link>
             </div>
             <div>
@@ -282,7 +284,12 @@ const Footer: React.FunctionComponent = () => {
                 className="inline-block"
                 href="https://m.do.co/c/f91efc9c9e50"
               >
-                <DigitalOcean className="h-7" />
+                <Image
+                  src="/static/images/third-party/digitalocean.svg"
+                  alt="DigitalOcean"
+                  width={150}
+                  height={25}
+                />
               </Link>
             </div>
             <div>
@@ -291,7 +298,12 @@ const Footer: React.FunctionComponent = () => {
                 className="inline-block"
                 href="https://sentry.io"
               >
-                <Sentry className="h-6" />
+                <Image
+                  src="/static/images/third-party/sentry.svg"
+                  alt="Sentry"
+                  width={105}
+                  height={24}
+                />
               </Link>
             </div>
           </div>
