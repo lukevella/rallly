@@ -49,6 +49,12 @@ export const env = createEnv({
      * Example: "user@example.com, *@example.com, *@*.example.com"
      */
     ALLOWED_EMAILS: z.string().optional(),
+    /**
+     * Email addresses for support and no-reply emails.
+     */
+    SUPPORT_EMAIL: z.string().email(),
+    NOREPLY_EMAIL: z.string().email().optional(),
+    NOREPLY_EMAIL_NAME: z.string().default("Rallly"),
   },
   /*
    * Environment variables available on the client (and server).
@@ -90,6 +96,9 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
     NEXT_PUBLIC_SELF_HOSTED: process.env.NEXT_PUBLIC_SELF_HOSTED,
+    SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
+    NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,
+    NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

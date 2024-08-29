@@ -50,8 +50,8 @@ export const LoginEmail = ({
       </Section>
       <Text light>
         You&apos;re receiving this email because a request was made to login to{" "}
-        <Domain ctx={ctx} />. If this wasn&apos;t you, let us know by replying
-        to this email.
+        <Domain ctx={ctx} />. If this wasn&apos;t you contact{" "}
+        <a href={`mailto:${ctx.supportEmail}`}>{ctx.supportEmail}</a>.
       </Text>
     </EmailLayout>
   );
