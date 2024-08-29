@@ -45,6 +45,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/third-party/digitalocean",
+        destination: "https://m.do.co/c/f91efc9c9e50",
+        permanent: true,
+      },
+      {
         source: "/p/:path*",
         destination: createAppUrl("/p/:path*"),
         permanent: true,
