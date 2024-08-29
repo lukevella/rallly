@@ -125,6 +125,7 @@ body:has(.mx-auto.max-w-lg) {
 /* sidebar */
 .w-72 {
     background: white;
+    box-shadow: 5px 5px 8px rgba(32, 29, 27, 0.1)
 }
 
 .hover\:bg-gray-200 {
