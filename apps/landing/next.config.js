@@ -44,6 +44,12 @@ const nextConfig = {
         destination: "https://support.rallly.co",
         permanent: true,
       },
+      // Ad-Blockers block the DigitalOcean logo, when we use our referral link
+      {
+        source: "/partners/digitalocean",
+        destination: "https://m.do.co/c/f91efc9c9e50",
+        permanent: true,
+      },
       {
         source: "/p/:path*",
         destination: createAppUrl("/p/:path*"),

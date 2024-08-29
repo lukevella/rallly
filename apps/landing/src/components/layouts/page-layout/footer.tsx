@@ -265,46 +265,46 @@ const Footer: React.FunctionComponent = () => {
           </div>
           <div className="flex flex-wrap items-center gap-x-8 gap-y-2 md:justify-end">
             <div>
-              <Link
+              <a
                 target="_blank"
                 href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
                 className="inline-block text-white"
               >
                 <Image
-                  src="/static/images/third-party/vercel-logotype-dark.svg"
+                  src="/static/images/partners/vercel-logotype-dark.svg"
                   alt="Vercel"
                   width={100}
                   height={24}
                 />
-              </Link>
+              </a>
             </div>
             <div>
-              <Link
+              <a
                 target="_blank"
                 className="inline-block"
-                href="https://m.do.co/c/f91efc9c9e50"
+                href="/partners/digitalocean"
               >
                 <Image
-                  src="/static/images/third-party/digitalocean.svg"
+                  src="/static/images/partners/digitalocean-logo.svg"
                   alt="DigitalOcean"
                   width={150}
                   height={25}
                 />
-              </Link>
+              </a>
             </div>
             <div>
-              <Link
+              <a
                 target="_blank"
                 className="inline-block"
                 href="https://sentry.io"
               >
                 <Image
-                  src="/static/images/third-party/sentry.svg"
+                  src="/static/images/partners/sentry.svg"
                   alt="Sentry"
                   width={105}
                   height={24}
                 />
-              </Link>
+              </a>
             </div>
           </div>
         </div>
