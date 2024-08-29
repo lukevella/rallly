@@ -1,6 +1,7 @@
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import "../style.css";
+import "../verdigado-styles.css"
 
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domMax, LazyMotion } from "framer-motion";

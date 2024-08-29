@@ -1,0 +1,184 @@
+/* GENERIC STYLES */
+body {
+    color: #003221;
+    background: #E5F3EB;
+}
+
+.bg-gray-200 {
+    background: #E5F3EB;
+}
+
+button,
+a {
+    transition: all .3s;
+}
+
+/* buttons */
+button.bg-primary,
+button.bg-gray-50,
+a.bg-primary {
+    border-radius: 2rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+button:focus,
+button:active,
+a.bg-primary:focus,
+a.bg-primary:active,
+input:focus-visible {
+    box-shadow: 0 0 1px 2px #0BA1DD !important;
+}
+
+button.bg-primary,
+a.bg-primary {
+    color: white;
+}
+
+button.bg-primary svg,
+a.bg-primary svg {
+    fill: white;
+    stroke: white;
+}
+
+button.bg-primary:hover,
+button.bg-primary:focus,
+button.bg-primary:active,
+a.bg-primary:hover,
+a.bg-primary:focus,
+a.bg-primary:active {
+    border-color: #FFF17A;
+    background-color: #FFF17A;
+    color: #002216;
+}
+
+button.bg-primary:hover svg,
+button.bg-primary:focus svg,
+button.bg-primary:active svg,
+a.bg-primary:hover svg,
+a.bg-primary:focus svg,
+a.bg-primary:active svg {
+    fill: #002216;
+    stroke: #002216;
+}
+
+button.bg-gray-50 {
+    background: none;
+    border-color: #005437;
+    color: #005437;
+}
+
+button.bg-gray-50 svg {
+    fill: #005437;
+    stroke: #005437;
+}
+
+button.bg-gray-50:hover,
+button.bg-gray-50:focus,
+button.bg-gray-50:active{
+    background-color: #005437;
+    color: white !important;
+}
+
+button.bg-gray-50:hover svg,
+button.bg-gray-50:focus svg,
+button.bg-gray-50:active svg {
+    fill: white;
+    stroke: white;
+}
+
+/* links */
+.text-link {
+    color: #005437;
+}
+
+/* alert */
+.termite-alert .lucide-info {
+    color: #005437;
+}
+
+/* LOGIN PAGE */
+
+/* login page body */
+body:has(.mx-auto.max-w-lg) {
+    background: #008939;
+}
+
+/* login page card */
+.mx-auto.max-w-lg .rounded-lg .bg-pattern {
+    display: none;
+}
+
+/* login page footer */
+.rounded-lg + .text-center,
+.rounded-lg + .text-center .text-link {
+    color: white;
+}
+
+.rounded-lg + .text-center .text-link:hover,
+.rounded-lg + .text-center .text-link:focus {
+    color: #FFF17A;
+}
+
+/* DASHBOARD */
+
+/* sidebar */
+.w-72 {
+    background: white;
+}
+
+.hover\:bg-gray-200 {
+    color: #003221;
+}
+
+.hover\:bg-gray-200:hover,
+.hover\:bg-gray-200:focus,
+.hover\:bg-gray-200:active {
+    background-color: #E5F3EB;
+}
+
+/* main */
+.w-72 + .grow a.bg-gray-50 {
+    border-radius: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    background: none;
+    border-color: #005437;
+    color: #005437;
+}
+
+.w-72 + .grow a.bg-gray-50:hover,
+.w-72 + .grow a.bg-gray-50:focus,
+.w-72 + .grow a.bg-gray-50:active {
+    background-color: #005437;
+    color: white;
+}
+
+.w-72 + .grow a.bg-gray-50:hover svg,
+.w-72 + .grow a.bg-gray-50:focus svg,
+.w-72 + .grow a.bg-gray-50:active svg {
+    fill: white;
+    stroke: white;
+}
+
+.w-72 + .grow a.bg-gray-50:focus,
+.w-72 + .grow a.bg-gray-50:active {
+    box-shadow: 0 0 1px 2px #0BA1DD;
+}
+
+/* navbar */
+.sticky {
+    background-color: #005437;
+    color: white;
+}
+
+.sticky button {
+    background: none !important;
+    box-shadow: none !important;
+    color: white !important;
+}
+
+.sticky svg {
+    fill: white !important;
+    stroke: white !important;
+}

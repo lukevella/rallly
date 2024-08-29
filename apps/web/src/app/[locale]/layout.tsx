@@ -1,5 +1,6 @@
 import "tailwindcss/tailwind.css";
 import "../../style.css";
+import "../../verdigado-styles.css";
 
 import languages from "@rallly/languages";
 import { Toaster } from "@rallly/ui/toaster";
