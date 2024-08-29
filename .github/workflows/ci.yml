@@ -51,6 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
+      CI: true
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
@@ -73,7 +74,7 @@ jobs:
         run: yarn db:deploy
 
       - name: Run tests
-        run: yarn test:integration
+        run: yarn turbo test:integration
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}
