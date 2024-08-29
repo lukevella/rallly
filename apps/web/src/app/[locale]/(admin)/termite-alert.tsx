@@ -13,7 +13,7 @@ export function TermiteAlert() {
   }
 
   return (
-    <Alert className="my-4 termite-alert" icon={InfoIcon}>
+    <Alert className="termite-alert my-4" icon={InfoIcon}>
       <AlertTitle>Herzlich Willkommen bei der neuen Termite! 🎉</AlertTitle>
       <AlertDescription>
         <p className="mt-4">
@@ -31,7 +31,11 @@ export function TermiteAlert() {
         <p>
           Eure bisherigen Umfragen wurden archiviert. Ihr könnt sie noch bis zum
           15.09.2024{" "}
-          <a href="https://framadate.gruene.verdigado.net/" target="_blank">
+          <a
+            className="text-link"
+            href="https://framadate.gruene.verdigado.net/"
+            target="_blank"
+          >
             hier
           </a>{" "}
           einsehen und herunterladen.
