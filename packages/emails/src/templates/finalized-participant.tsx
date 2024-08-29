@@ -24,7 +24,6 @@ export interface FinalizeParticipantEmailProps {
 }
 
 export const FinalizeParticipantEmail = ({
-  name = "Guest",
   title = "Untitled Poll",
   hostName = "Host",
   pollUrl = "https://rallly.co",

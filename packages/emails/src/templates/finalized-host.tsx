@@ -23,7 +23,6 @@ export interface FinalizeHostEmailProps {
 }
 
 export const FinalizeHostEmail = ({
-  name = "Guest",
   title = "Untitled Poll",
   pollUrl = "https://rallly.co",
   day = "12",
