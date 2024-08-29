@@ -168,18 +168,18 @@ body:has(.mx-auto.max-w-lg) {
 }
 
 /* navbar */
-.sticky {
+body > div > div.sticky {
     background-color: #005437;
     color: white;
 }
 
-.sticky button {
+body > div > div.sticky button {
     background: none !important;
     box-shadow: none !important;
     color: white !important;
 }
 
-.sticky svg {
+body > div > div.sticky svg {
     fill: white !important;
     stroke: white !important;
 }
