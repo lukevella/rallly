@@ -271,7 +271,7 @@ const Footer: React.FunctionComponent = () => {
                 className="inline-block text-white"
               >
                 <Image
-                  src="/static/images/third-party/vercel-logotype-dark.svg"
+                  src="/static/images/partners/vercel-logotype-dark.svg"
                   alt="Vercel"
                   width={100}
                   height={24}
@@ -282,10 +282,10 @@ const Footer: React.FunctionComponent = () => {
               <a
                 target="_blank"
                 className="inline-block"
-                href="/third-party/digitalocean"
+                href="/partners/digitalocean"
               >
                 <Image
-                  src="/static/images/third-party/digitalocean-logo.svg"
+                  src="/static/images/partners/digitalocean-logo.svg"
                   alt="DigitalOcean"
                   width={150}
                   height={25}
@@ -299,7 +299,7 @@ const Footer: React.FunctionComponent = () => {
                 href="https://sentry.io"
               >
                 <Image
-                  src="/static/images/third-party/sentry.svg"
+                  src="/static/images/partners/sentry.svg"
                   alt="Sentry"
                   width={105}
                   height={24}

@@ -45,7 +45,7 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: "/third-party/digitalocean",
+        source: "/partners/digitalocean",
         destination: "https://m.do.co/c/f91efc9c9e50",
         permanent: true,
       },
