@@ -285,7 +285,7 @@ const Footer: React.FunctionComponent = () => {
                 href="https://m.do.co/c/f91efc9c9e50"
               >
                 <Image
-                  src="/static/images/third-party/digitalocean.svg"
+                  src="/static/images/third-party/digitalocean-logo.svg"
                   alt="DigitalOcean"
                   width={150}
                   height={25}
