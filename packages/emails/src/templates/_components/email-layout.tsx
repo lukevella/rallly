@@ -47,8 +47,8 @@ export const EmailLayout = ({
             alt="Rallly Logo"
           />
           {children}
-          <Section style={{ marginTop: 32 }}>
-            <Text light={true} style={{ fontSize: 14, textAlign: "center" }}>
+          <Section style={{ marginTop: 32, textAlign: "center" }}>
+            <Text light={true}>
               Powered by{" "}
               <Link href="https://rallly.co?utm_source=email&utm_medium=transactional">
                 rallly.co
