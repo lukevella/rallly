@@ -2,7 +2,12 @@ import { Column, Row, Section } from "@react-email/components";
 
 import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import { EmailLayout } from "./_components/email-layout";
-import { borderColor, Button, Text } from "./_components/styled-components";
+import {
+  borderColor,
+  Button,
+  Heading,
+  Text,
+} from "./_components/styled-components";
 
 export interface FinalizeParticipantEmailProps {
   date: string;
@@ -19,7 +24,6 @@ export interface FinalizeParticipantEmailProps {
 }
 
 export const FinalizeParticipantEmail = ({
-  name = "Guest",
   title = "Untitled Poll",
   hostName = "Host",
   pollUrl = "https://rallly.co",
@@ -30,12 +34,13 @@ export const FinalizeParticipantEmail = ({
   ctx = defaultEmailContext,
 }: FinalizeParticipantEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} recipientName={name} preview="Final date booked!">
+    <EmailLayout ctx={ctx} preview="Final date booked!">
+      <Heading>Final date booked!</Heading>
       <Text>
         <strong>{hostName}</strong> has booked <strong>{title}</strong> for the
         following date:
       </Text>
-      <Section>
+      <Section data-testid="date-section">
         <Row>
           <Column style={{ width: 48 }}>
             <Section
@@ -74,9 +79,9 @@ export const FinalizeParticipantEmail = ({
         </Row>
       </Section>
       <Text>Please find attached a calendar invite for this event.</Text>
-      <Text>
+      <Section style={{ marginTop: 32 }}>
         <Button href={pollUrl}>View Event</Button>
-      </Text>
+      </Section>
     </EmailLayout>
   );
 };

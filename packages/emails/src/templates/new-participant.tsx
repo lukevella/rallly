@@ -2,7 +2,7 @@ import { defaultEmailContext } from "./_components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
 } from "./_components/notification-email";
-import { Text } from "./_components/styled-components";
+import { Heading, Text } from "./_components/styled-components";
 
 export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;
@@ -25,10 +25,12 @@ export const NewParticipantEmail = ({
       disableNotificationsUrl={disableNotificationsUrl}
       preview="Go to your poll to see the new response."
     >
+      <Heading>New Response</Heading>
       <Text>
         <strong>{participantName}</strong> has responded to{" "}
         <strong>{title}</strong>.
       </Text>
+      <Text>Go to your poll to see the new response.</Text>
     </NotificationEmail>
   );
 };

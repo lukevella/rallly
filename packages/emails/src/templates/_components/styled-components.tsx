@@ -11,6 +11,8 @@ import {
 
 import { EmailContext } from "./email-context";
 
+export const lightTextColor = "#4B5563";
+export const darkTextColor = "#1F2937";
 export const borderColor = "#E2E8F0";
 export const Text = (
   props: TextProps & { light?: boolean; small?: boolean },
@@ -23,7 +25,7 @@ export const Text = (
         margin: "16px 0",
         fontFamily,
         fontSize: small ? "14px" : "16px",
-        color: light ? "#64748B" : "#334155",
+        color: light ? lightTextColor : darkTextColor,
         lineHeight: "1.5",
         ...props.style,
       }}
@@ -46,6 +48,11 @@ export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
         borderRadius: "4px",
         padding: "12px 14px",
         fontFamily,
+        boxSizing: "border-box",
+        display: "block",
+        width: "100%",
+        maxWidth: "100%",
+        textAlign: "center",
         fontSize: "16px",
         color: "white",
       }}
@@ -62,23 +69,24 @@ export const Link = (props: LinkProps) => {
   );
 };
 
+const fontSize = {
+  h1: "20px",
+  h2: "18px",
+  h3: "16px",
+  h4: "16px",
+  h5: "14px",
+  h6: "12px",
+};
+
 export const Heading = (
   props: React.ComponentProps<typeof UnstyledHeading>,
 ) => {
-  const { as = "h3" } = props;
-  const fontSize = {
-    h1: "32px",
-    h2: "24px",
-    h3: "20px",
-    h4: "16px",
-    h5: "14px",
-    h6: "12px",
-  };
+  const { as = "h1" } = props;
+
   return (
     <UnstyledHeading
       {...props}
       as={as}
-      className="font-sans font-bold text-gray-900"
       style={{
         fontSize: fontSize[as],
         ...props.style,
@@ -146,3 +154,5 @@ export const trackingWide = {
 
 export const fontFamily =
   "'Inter UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
+
+export const primaryColor = "#4F46E5";

@@ -2,7 +2,12 @@ import { Column, Row, Section } from "@react-email/components";
 
 import { defaultEmailContext, EmailContext } from "./_components/email-context";
 import { EmailLayout } from "./_components/email-layout";
-import { borderColor, Button, Text } from "./_components/styled-components";
+import {
+  borderColor,
+  Button,
+  Heading,
+  Text,
+} from "./_components/styled-components";
 
 export interface FinalizeHostEmailProps {
   date: string;
@@ -18,7 +23,6 @@ export interface FinalizeHostEmailProps {
 }
 
 export const FinalizeHostEmail = ({
-  name = "Guest",
   title = "Untitled Poll",
   pollUrl = "https://rallly.co",
   day = "12",
@@ -28,7 +32,8 @@ export const FinalizeHostEmail = ({
   ctx = defaultEmailContext,
 }: FinalizeHostEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} recipientName={name} preview="Final date booked!">
+    <EmailLayout ctx={ctx} preview="Final date booked!">
+      <Heading>Final date booked!</Heading>
       <Text>
         <strong>{title}</strong> has been booked for:
       </Text>
@@ -73,9 +78,9 @@ export const FinalizeHostEmail = ({
       <Text>
         We&apos;ve notified participants and sent them calendar invites.
       </Text>
-      <Text>
+      <Section style={{ marginTop: 32 }}>
         <Button href={pollUrl}>View Event</Button>
-      </Text>
+      </Section>
     </EmailLayout>
   );
 };
