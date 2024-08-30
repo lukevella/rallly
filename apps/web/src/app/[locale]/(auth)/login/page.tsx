@@ -13,16 +13,6 @@ export default async function LoginPage({ params }: { params: Params }) {
       <AuthCard>
         <LoginForm />
       </AuthCard>
-      <div className="mt-4 pt-4 text-center text-gray-500 sm:text-base">
-        <Trans
-          t={t}
-          i18nKey="notRegistered"
-          defaults="Don't have an account? <a>Register</a>"
-          components={{
-            a: <Link href="/register" className="text-link" />,
-          }}
-        />
-      </div>
     </div>
   );
 }

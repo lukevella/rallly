@@ -11,7 +11,7 @@ export const LoginLink = React.forwardRef<
     <Link
       ref={ref}
       {...props}
-      href={`/login?callbackUrl=${encodeURIComponent(pathname)}`}
+      href={`/login?callbackUrl=${encodeURIComponent(pathname)}&autoOidcRedirect=1`}
     >
       {children}
     </Link>
