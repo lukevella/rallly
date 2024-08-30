@@ -20,7 +20,7 @@ export default async function Layout({
       >
         <div className="flex w-full items-center justify-start gap-4">
           <LogoLinkTermite />
-          <h1 className="gruene-type text-3xl">Termite</h1>
+          <h1 className="gruene-type text-3xl">TERMITE</h1>
           <div className="flex-grow" />
           <ProBadge />
         </div>
