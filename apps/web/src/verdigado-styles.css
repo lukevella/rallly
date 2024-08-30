@@ -1,3 +1,23 @@
+/* FONTS */
+@font-face {
+    font-family: 'GrueneType';
+    src: url('/fonts/GrueneType/GrueneType.eot');
+    src:
+      url('/static/fonts/GrueneType/GrueneType.eot?#iefix') format('embedded-opentype'),
+      url('/static/fonts/GrueneType/GrueneType.woff2') format('woff2'),
+      url('/static/fonts/GrueneType/GrueneType.woff') format('woff'),
+      url('/static/fonts/GrueneType/GrueneType.ttf') format('truetype'),
+      url('/static/fonts/GrueneType/GrueneType.svg#GrueneType-BlackCondensedItalic') format('svg');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+.gruene-type {
+    font-family: "GrueneType", sans-serif;
+    font-style: italic;
+}
+
 /* GENERIC STYLES */
 body {
     color: #003221;
@@ -183,3 +203,4 @@ body > div > div.sticky svg {
     fill: white !important;
     stroke: white !important;
 }
+
