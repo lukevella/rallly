@@ -17,7 +17,7 @@ export const emailClient = new EmailClient({
   },
   context: {
     logoUrl: isSelfHosted
-      ? absoluteUrl("/logo.png")
+      ? absoluteUrl("/images/rallly-logo-mark.png")
       : "https://rallly-public.s3.amazonaws.com/images/rallly-logo-mark.png",
     baseUrl: absoluteUrl(""),
     domain: absoluteUrl("").replace(/(^\w+:|^)\/\//, ""),
