@@ -262,7 +262,6 @@
   "pastEventsEmptyStateDescription": "Ajoittamasi tapahtumat näkyvät tässä.",
   "activePollCount": "{{activePollCount}} käynnissä",
   "createPoll": "Luo kysely",
-  "yearlyDiscount": "Säästä {amount}",
   "yearlyBillingDescription": "vuodessa",
   "timeZoneChangeDetectorTitle": "Aikavyöhykkeen muutos havaittu",
   "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt {currentTimeZone}. Haluatko päivittää asetuksesi?",
