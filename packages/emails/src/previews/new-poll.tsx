@@ -1,4 +1,4 @@
-import { defaultEmailContext } from "../components/email-context";
+import { previewEmailContext } from "../components/email-context";
 import NewPollEmail from "../templates/new-poll";
 
 export default function NewPollPreview() {
@@ -8,7 +8,7 @@ export default function NewPollPreview() {
       name="John Doe"
       adminLink="https://rallly.co"
       participantLink="https://rallly.co/invite/abc123"
-      ctx={defaultEmailContext}
+      ctx={previewEmailContext}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { defaultEmailContext } from "../components/email-context";
+import { previewEmailContext } from "../components/email-context";
 import { LoginEmail } from "../templates/login";
 
 export default function LoginPreview() {
@@ -6,7 +6,7 @@ export default function LoginPreview() {
     <LoginEmail
       code="123456"
       magicLink="https://rallly.co"
-      ctx={defaultEmailContext}
+      ctx={previewEmailContext}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { defaultEmailContext } from "../components/email-context";
+import { previewEmailContext } from "../components/email-context";
 import { FinalizeHostEmail } from "../templates/finalized-host";
 
 export default function FinalizedHostPreview() {
@@ -13,7 +13,7 @@ export default function FinalizedHostPreview() {
       dow="Fri"
       date="Friday, 12th June 2020"
       time="6:00 PM to 11:00 PM BST"
-      ctx={defaultEmailContext}
+      ctx={previewEmailContext}
     />
   );
 }

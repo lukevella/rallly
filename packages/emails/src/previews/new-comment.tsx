@@ -1,4 +1,4 @@
-import { defaultEmailContext } from "../components/email-context";
+import { previewEmailContext } from "../components/email-context";
 import { NewCommentEmail } from "../templates/new-comment";
 
 function NewCommentEmailPreview() {
@@ -8,7 +8,7 @@ function NewCommentEmailPreview() {
       authorName="Someone"
       pollUrl="https://rallly.co"
       disableNotificationsUrl="https://rallly.co"
-      ctx={defaultEmailContext}
+      ctx={previewEmailContext}
     />
   );
 }
