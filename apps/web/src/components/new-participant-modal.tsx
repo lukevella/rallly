@@ -4,6 +4,7 @@ import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import * as Sentry from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
@@ -115,9 +116,10 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         } catch (error) {
           if (error instanceof TRPCClientError) {
             setError("root", {
-              message: error.shape.message,
+              message: error.message,
             });
           }
+          Sentry.captureException(error);
         }
       })}
       className="space-y-4"
