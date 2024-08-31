@@ -28,6 +28,5 @@
   "keepPollsIndefinitely": "无限期保留投票",
   "whenPollInactive": "投票何时不活跃？",
   "whenPollInactiveAnswer": "当所有日期选项过去并且投票未访问超过30天时，投票变为不活动状态。如果您没有付费订阅，不活动的投票将被自动删除。",
-  "discount": "省下 {amount}",
   "yearlyBillingDescription": "每年"
 }
