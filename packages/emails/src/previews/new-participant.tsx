@@ -1,16 +1,14 @@
 import { defaultEmailContext } from "../components/email-context";
-import { NewCommentEmail } from "../templates/new-comment";
+import { NewParticipantEmail } from "../templates/new-participant";
 
-function NewCommentEmailPreview() {
+export default function NewParticipantPreview() {
   return (
-    <NewCommentEmail
+    <NewParticipantEmail
+      participantName="John Doe"
       title="Untitled Poll"
-      authorName="Someone"
       pollUrl="https://rallly.co"
       disableNotificationsUrl="https://rallly.co"
       ctx={defaultEmailContext}
     />
   );
 }
-
-export default NewCommentEmailPreview;

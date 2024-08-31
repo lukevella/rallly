@@ -1,13 +1,13 @@
 import { Column, Row, Section } from "@react-email/components";
 
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
-import { EmailLayout } from "./_components/email-layout";
+import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailLayout } from "../components/email-layout";
 import {
   borderColor,
   Button,
   Heading,
   Text,
-} from "./_components/styled-components";
+} from "../components/styled-components";
 
 export interface FinalizeParticipantEmailProps {
   date: string;
@@ -90,7 +90,8 @@ FinalizeParticipantEmail.getSubject = (
   props: FinalizeParticipantEmailProps,
   ctx: EmailContext,
 ) => {
-  return ctx.t("Date booked for {{title}}", {
+  return ctx.t("finalizeParticipant_subject", {
+    defaultValue: "Date booked for {{title}}",
     title: props.title,
   });
 };

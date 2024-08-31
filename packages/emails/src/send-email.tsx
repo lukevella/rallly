@@ -6,8 +6,8 @@ import type Mail from "nodemailer/lib/mailer";
 import previewEmail from "preview-email";
 import React from "react";
 
+import { EmailContext } from "./components/email-context";
 import { i18nInstance } from "./i18n";
-import { EmailContext } from "./previews/_components/email-context";
 import * as templates from "./templates";
 
 type Templates = typeof templates;
@@ -79,10 +79,9 @@ export class EmailClient {
   ) {
     const ctx = {
       ...this.config.context,
-      locale: options.locale ?? this.config.context.locale,
+      i18n: i18nInstance,
+      t: i18nInstance.getFixedT(options.locale ?? "en"),
     };
-
-    await i18nInstance.changeLanguage(ctx.locale);
 
     const Template = templates[templateName] as TemplateComponent<T>;
     const subject = Template.getSubject?.(options.props, ctx);

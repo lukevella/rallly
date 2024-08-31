@@ -21,7 +21,7 @@ i18nInstance
     supportedLngs: Object.keys(languages),
     fallbackLng: "en",
     lng: "en",
-    ns: "emails",
+    ns: ["emails"],
   });
 
 export { i18nInstance };

@@ -1,15 +1,14 @@
-import { defaultEmailContext } from "./_components/email-context";
+import { defaultEmailContext, EmailContext } from "../components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
-} from "./_components/notification-email";
-import { Heading, Text } from "./_components/styled-components";
+} from "../components/notification-email";
+import { Heading, Text } from "../components/styled-components";
 
 export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;
 }
 
-export const NewParticipantEmail = ({
-  name = "John",
+const NewParticipantEmail = ({
   title = "Untitled Poll",
   participantName = "Someone",
   pollUrl = "https://rallly.co",
@@ -19,7 +18,6 @@ export const NewParticipantEmail = ({
   return (
     <NotificationEmail
       ctx={ctx}
-      name={name}
       title={title}
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
@@ -37,9 +35,13 @@ export const NewParticipantEmail = ({
 
 NewParticipantEmail.getSubject = (
   props: NewParticipantEmailProps,
-  _ctx: any,
+  ctx: EmailContext,
 ) => {
-  return `${props.participantName} has responded to ${props.title}`;
+  return ctx.t("newParticipant_subject", {
+    defaultValue: "{{name}} has responded to {{title}}",
+    name: props.participantName,
+    title: props.title,
+  });
 };
 
-export default NewParticipantEmail;
+export { NewParticipantEmail };

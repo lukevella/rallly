@@ -1,15 +1,14 @@
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
-import { EmailLayout } from "./_components/email-layout";
+import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailLayout } from "../components/email-layout";
 import {
   Button,
   Domain,
   Heading,
   Section,
   Text,
-} from "./_components/styled-components";
+} from "../components/styled-components";
 
 interface NewParticipantConfirmationEmailProps {
-  name: string;
   title: string;
   editSubmissionUrl: string;
   ctx: EmailContext;
@@ -45,9 +44,12 @@ export const NewParticipantConfirmationEmail = ({
 
 NewParticipantConfirmationEmail.getSubject = (
   props: NewParticipantConfirmationEmailProps,
-  _ctx: EmailContext,
+  ctx: EmailContext,
 ) => {
-  return `Thanks for responding to ${props.title}`;
+  return ctx.t("newParticipantConfirmation_subject", {
+    defaultValue: "Thanks for responding to {{title}}",
+    title: props.title,
+  });
 };
 
 export default NewParticipantConfirmationEmail;

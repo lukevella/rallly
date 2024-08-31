@@ -1,12 +1,10 @@
 const typescriptTransform = require("i18next-scanner-typescript");
 
 module.exports = {
-  input: ["src/previews/_templates/**/*.{ts,tsx}"],
+  input: ["src/templates/**/*.{ts,tsx}"],
   options: {
-    nsSeparator: ":",
-    defaultNs: "common",
-    lngs: ["en"],
-    ns: ["common", "new-comment"],
+    defaultNs: "emails",
+    ns: ["emails"],
     plural: false,
     removeUnusedKeys: true,
     func: {

@@ -89,7 +89,8 @@ FinalizeHostEmail.getSubject = (
   props: FinalizeHostEmailProps,
   ctx: EmailContext,
 ) => {
-  return ctx.t("Date booked for {{title}}", {
+  return ctx.t("finalizeHost_subject", {
+    defaultValue: "Date booked for {{title}}",
     title: props.title,
   });
 };

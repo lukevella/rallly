@@ -10,8 +10,7 @@ export interface NewCommentEmailProps extends NotificationBaseProps {
   authorName: string;
 }
 
-export const NewCommentEmail = ({
-  name,
+const NewCommentEmail = ({
   title,
   authorName,
   pollUrl,
@@ -21,25 +20,24 @@ export const NewCommentEmail = ({
   return (
     <NotificationEmail
       ctx={ctx}
-      name={name}
       title={title}
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
-      preview={ctx.t("new-comment:preview", {
+      preview={ctx.t("newComment_preview", {
         defaultValue: "Go to your poll to see what they said.",
       })}
     >
       <Heading>
         <Trans
           i18n={ctx.i18n}
-          i18nKey="new-comment:heading"
+          i18nKey="newComment_heading"
           defaults="New Comment"
         />
       </Heading>
       <Text>
         <Trans
           i18n={ctx.i18n}
-          i18nKey="new-comment:content"
+          i18nKey="newComment_content"
           defaults="<b>{{authorName}}</b> has commented on <b>{{title}}</b>."
           components={{
             b: <strong />,
@@ -58,11 +56,11 @@ NewCommentEmail.getSubject = (
   props: NewCommentEmailProps,
   ctx: EmailContext,
 ) => {
-  return ctx.t("new-comment:subject", {
+  return ctx.t("newComment_subject", {
     defaultValue: "{{authorName}} has commented on {{title}}",
     authorName: props.authorName,
     title: props.title,
   });
 };
 
-export default NewCommentEmail;
+export { NewCommentEmail };

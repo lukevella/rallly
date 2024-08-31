@@ -1,0 +1,13 @@
+{
+  "newComment_heading": "New Comment",
+  "newComment_content": "<b>{{authorName}}</b> has commented on <b>{{title}}</b>.",
+  "newComment_preview": "Go to your poll to see what they said.",
+  "newComment_subject": "{{authorName}} has commented on {{title}}",
+  "login_preview": "Use this link to log in on this device.",
+  "login_subject": "{{code}} is your 6-digit code",
+  "newParticipantConfirmation_subject": "Thanks for responding to {{title}}",
+  "newParticipant_subject": "{{name}} has responded to {{title}}",
+  "finalizeHost_subject": "Date booked for {{title}}",
+  "finalizeParticipant_subject": "Date booked for {{title}}",
+  "newPoll_subject": "Let's find a date for {{title}}!"
+}

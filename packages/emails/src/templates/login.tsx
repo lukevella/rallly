@@ -1,7 +1,7 @@
 import { Section } from "@react-email/components";
 
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
-import { EmailLayout } from "./_components/email-layout";
+import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailLayout } from "../components/email-layout";
 import {
   Button,
   Card,
@@ -9,10 +9,9 @@ import {
   Heading,
   Text,
   trackingWide,
-} from "./_components/styled-components";
+} from "../components/styled-components";
 
 interface LoginEmailProps {
-  name: string;
   code: string;
   magicLink: string;
   ctx: EmailContext;
@@ -24,7 +23,12 @@ export const LoginEmail = ({
   ctx = defaultEmailContext,
 }: LoginEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} preview="Use this link to log in on this device.">
+    <EmailLayout
+      ctx={ctx}
+      preview={ctx.t("login_preview", {
+        defaultValue: "Use this link to log in on this device.",
+      })}
+    >
       <Heading>Login</Heading>
       <Text>Enter this one-time 6-digit verification code:</Text>
       <Card style={{ textAlign: "center" }}>
@@ -57,8 +61,11 @@ export const LoginEmail = ({
   );
 };
 
-LoginEmail.getSubject = (props: LoginEmailProps, _ctx: EmailContext) => {
-  return `${props.code} is your 6-digit code`;
+LoginEmail.getSubject = (props: LoginEmailProps, ctx: EmailContext) => {
+  return ctx.t("login_subject", {
+    defaultValue: "{{code}} is your 6-digit code",
+    code: props.code,
+  });
 };
 
 export default LoginEmail;

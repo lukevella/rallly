@@ -1,14 +1,14 @@
 import { Section } from "@react-email/section";
 
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
-import { EmailLayout } from "./_components/email-layout";
+import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailLayout } from "../components/email-layout";
 import {
   Card,
   Domain,
   Heading,
   Text,
   trackingWide,
-} from "./_components/styled-components";
+} from "../components/styled-components";
 
 interface RegisterEmailProps {
   code: string;

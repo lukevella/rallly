@@ -1,12 +1,12 @@
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
-import { EmailLayout } from "./_components/email-layout";
+import { EmailContext } from "../components/email-context";
+import { EmailLayout } from "../components/email-layout";
 import {
   Button,
   Card,
   Heading,
   Link,
   Text,
-} from "./_components/styled-components";
+} from "../components/styled-components";
 
 export interface NewPollEmailProps {
   title: string;
@@ -17,10 +17,10 @@ export interface NewPollEmailProps {
 }
 
 export const NewPollEmail = ({
-  title = "Untitled Poll",
-  adminLink = "https://rallly.co/admin/abcdefg123",
-  participantLink = "https://rallly.co/invite/wxyz9876",
-  ctx = defaultEmailContext,
+  title,
+  adminLink,
+  participantLink,
+  ctx,
 }: NewPollEmailProps) => {
   return (
     <EmailLayout
@@ -42,8 +42,11 @@ export const NewPollEmail = ({
   );
 };
 
-NewPollEmail.getSubject = (props: NewPollEmailProps, _ctx: EmailContext) => {
-  return `Let's find a date for ${props.title}!`;
+NewPollEmail.getSubject = (props: NewPollEmailProps, ctx: EmailContext) => {
+  return ctx.t("newPoll_subject", {
+    defaultValue: "Let's find a date for {{title}}!",
+    title: props.title,
+  });
 };
 
 export default NewPollEmail;

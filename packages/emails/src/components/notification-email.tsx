@@ -5,7 +5,6 @@ import { EmailLayout } from "./email-layout";
 import { Button, Link, Text } from "./styled-components";
 
 export interface NotificationBaseProps {
-  name: string;
   title: string;
   pollUrl: string;
   disableNotificationsUrl: string;
