@@ -262,6 +262,5 @@
   "pastEventsEmptyStateDescription": "当您安排活动时，它们将出现在这里。",
   "activePollCount": "{{activePollCount}} 有效",
   "createPoll": "建立投票",
-  "yearlyDiscount": "省下 {amount}",
   "yearlyBillingDescription": "每年"
 }
