@@ -23,7 +23,7 @@ export interface FinalizeParticipantEmailProps {
   ctx: EmailContext;
 }
 
-export const FinalizeParticipantEmail = ({
+const FinalizeParticipantEmail = ({
   title = "Untitled Poll",
   hostName = "Host",
   pollUrl = "https://rallly.co",
@@ -88,9 +88,11 @@ export const FinalizeParticipantEmail = ({
 
 FinalizeParticipantEmail.getSubject = (
   props: FinalizeParticipantEmailProps,
-  _ctx: EmailContext,
+  ctx: EmailContext,
 ) => {
-  return `Date booked for ${props.title}`;
+  return ctx.t("Date booked for {{title}}", {
+    title: props.title,
+  });
 };
 
-export default FinalizeParticipantEmail;
+export { FinalizeParticipantEmail };
