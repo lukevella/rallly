@@ -1,4 +1,5 @@
 import { Section } from "@react-email/section";
+import { Trans } from "react-i18next/TransWithoutContext";
 
 import { defaultEmailContext, EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
@@ -20,10 +21,23 @@ export const RegisterEmail = ({
   ctx = defaultEmailContext,
 }: RegisterEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} preview={`Your 6-digit code is: ${code}`}>
-      <Heading>Verify your email address</Heading>
+    <EmailLayout
+      ctx={ctx}
+      preview={ctx.t("register_preview", {
+        defaultValue: "Your 6-digit code is: {{code}}",
+        code,
+      })}
+    >
+      <Heading>
+        {ctx.t("register_heading", {
+          defaultValue: "Verify your email address",
+        })}
+      </Heading>
       <Text>
-        Please use the following 6-digit verification code to verify your email:
+        {ctx.t("register_text", {
+          defaultValue:
+            "Please use the following 6-digit verification code to verify your email",
+        })}
       </Text>
       <Card style={{ textAlign: "center" }}>
         <Text
@@ -38,22 +52,33 @@ export const RegisterEmail = ({
           {code}
         </Text>
         <Text style={{ textAlign: "center" }} light={true}>
-          This code is valid for 15 minutes
+          {ctx.t("register_codeValid", {
+            defaultValue: "This code is valid for 15 minutes",
+          })}
         </Text>
       </Card>
       <Section>
         <Text light={true}>
-          You&apos;re receiving this email because a request was made to
-          register an account on <Domain ctx={ctx} />. If this wasn&apos;t you,
-          please ignore this email.
+          <Trans
+            i18n={ctx.i18n}
+            t={ctx.t}
+            i18nKey="register_footer"
+            values={{ domain: ctx.domain }}
+            components={{
+              domain: <Domain ctx={ctx} />,
+            }}
+            defaults="You're receiving this email because a request was made to register an account on <domain />. If this wasn't you, please ignore this email."
+          />
         </Text>
       </Section>
     </EmailLayout>
   );
 };
 
-RegisterEmail.getSubject = (_props: RegisterEmailProps, _ctx: EmailContext) => {
-  return `Please verify your email address`;
+RegisterEmail.getSubject = (_props: RegisterEmailProps, ctx: EmailContext) => {
+  return ctx.t("register_subject", {
+    defaultValue: "Please verify your email address",
+  });
 };
 
 export default RegisterEmail;

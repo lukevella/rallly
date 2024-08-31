@@ -9,5 +9,14 @@
   "newParticipant_subject": "{{name}} has responded to {{title}}",
   "finalizeHost_subject": "Date booked for {{title}}",
   "finalizeParticipant_subject": "Date booked for {{title}}",
-  "newPoll_subject": "Let's find a date for {{title}}!"
+  "newPoll_subject": "Let's find a date for {{title}}!",
+  "newPoll_body": "Your meeting poll titled <b>{{title}}</b> is ready! Share it using the link below:",
+  "newPoll_heading": "New Poll Created",
+  "newPoll_button": "Manage Poll",
+  "register_footer": "You're receiving this email because a request was made to register an account on <domain />. If this wasn't you, please ignore this email.",
+  "register_preview": "Your 6-digit code is: {{code}}",
+  "register_heading": "Verify your email address",
+  "register_text": "Please use the following 6-digit verification code to verify your email",
+  "register_codeValid": "This code is valid for 15 minutes",
+  "register_subject": "Please verify your email address"
 }

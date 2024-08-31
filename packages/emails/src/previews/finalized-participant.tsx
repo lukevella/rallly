@@ -1,13 +1,11 @@
 import { defaultEmailContext } from "../components/email-context";
-import { FinalizeHostEmail } from "../templates/finalized-host";
+import { FinalizeParticipantEmail } from "../templates/finalized-participant";
 
-export default function FinalizedHostPreview() {
+export default function FinaalizedParticipantPreview() {
   return (
-    <FinalizeHostEmail
-      name="John Doe"
-      location="Zoom"
-      attendees={["johndoe@example.com", "janedoe@example.com"]}
+    <FinalizeParticipantEmail
       title="Untitled Poll"
+      hostName="Host"
       pollUrl="https://rallly.co"
       day="12"
       dow="Fri"

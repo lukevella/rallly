@@ -14,12 +14,9 @@ export interface FinalizeParticipantEmailProps {
   day: string;
   dow: string;
   time: string;
-  name: string;
   title: string;
   hostName: string;
-  location: string | null;
   pollUrl: string;
-  attendees: string[];
   ctx: EmailContext;
 }
 
