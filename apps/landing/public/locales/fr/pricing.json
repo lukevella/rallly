@@ -28,6 +28,5 @@
   "keepPollsIndefinitely": "Conserver les sondages indéfiniment",
   "whenPollInactive": "Quand un sondage est-il devenu inactif ?",
   "whenPollInactiveAnswer": "Les sondages deviennent inactifs lorsque toutes les options de date sont passées ET que le sondage n'a pas été consulté depuis plus de 30 jours. Les sondages inactifs sont automatiquement supprimés si vous n'avez pas d'abonnement payant.",
-  "discount": "Économisez {amount}",
   "yearlyBillingDescription": "par an"
 }
