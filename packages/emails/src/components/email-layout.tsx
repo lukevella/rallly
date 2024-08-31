@@ -7,6 +7,7 @@ import {
   Preview,
   Section,
 } from "@react-email/components";
+import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailContext } from "../types";
 import { darkTextColor, fontFamily, Link, Text } from "./styled-components";
@@ -47,12 +48,20 @@ export const EmailLayout = ({
             alt="Rallly Logo"
           />
           {children}
-          <Section style={{ marginTop: 32, textAlign: "center" }}>
+          <Section style={{ marginTop: 32 }}>
             <Text light={true}>
-              Powered by{" "}
-              <Link href="https://rallly.co?utm_source=email&utm_medium=transactional">
-                rallly.co
-              </Link>
+              <Trans
+                i18n={ctx.i18n}
+                t={ctx.t}
+                i18nKey="common_poweredBy"
+                defaults="Powered by <a>{{domain}}</a>"
+                values={{ domain: "rallly.co" }}
+                components={{
+                  a: (
+                    <Link href="https://rallly.co?utm_source=email&utm_medium=transactional" />
+                  ),
+                }}
+              />
             </Text>
           </Section>
         </Container>

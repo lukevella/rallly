@@ -1,7 +1,7 @@
 const typescriptTransform = require("i18next-scanner-typescript");
 
 module.exports = {
-  input: ["src/templates/**/*.{ts,tsx}"],
+  input: ["src/templates/**/*.{ts,tsx}", "src/components/**/*.{ts,tsx}"],
   options: {
     nsSeparator: false,
     defaultNs: "emails",

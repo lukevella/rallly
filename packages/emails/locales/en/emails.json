@@ -41,5 +41,6 @@
   "newParticipant_content": "<b>{{name}}</b> has responded to <b>{{title}}</b>.",
   "newParticipant_content2": "Go to your poll to see the new response.",
   "newParticipant_preview": "Go to your poll to see the new response.",
-  "newParticipant_heading": "New Response"
+  "newParticipant_heading": "New Response",
+  "common_poweredBy": "Powered by <a>{{domain}}</a>"
 }
