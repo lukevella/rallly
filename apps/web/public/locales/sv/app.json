@@ -272,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Tidszonsändring upptäckt",
   "timeZoneChangeDetectorMessage": "Din tidszon har ändrats till {currentTimeZone}. Vill du uppdatera dina inställningar?",
   "yesUpdateTimezone": "Ja, uppdatera min tidszon",
-  "noKeepCurrentTimezone": "Nej, behåll den aktuella tidszonen"
+  "noKeepCurrentTimezone": "Nej, behåll den aktuella tidszonen",
+  "annualBenefit": "{count} månader gratis"
 }
