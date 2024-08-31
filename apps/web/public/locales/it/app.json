@@ -227,7 +227,6 @@
   "autoTimeZoneHelp": "Abilita questa impostazione per impostare automaticamente gli orari dell'evento con il fuso orario dei partecipanti.",
   "timeShownIn": "Le date sono mostrate in {timeZone}",
   "createPoll": "Crea sondaggio",
-  "yearlyDiscount": "Risparmia {amount}",
   "yearlyBillingDescription": "all'anno",
   "addToCalendar": "Aggiungi al Calendario",
   "microsoft365": "Microsoft 365",
