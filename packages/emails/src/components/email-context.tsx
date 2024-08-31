@@ -1,15 +1,5 @@
-import type { TFunction } from "i18next";
-
 import { i18nInstance } from "../i18n";
-
-export type EmailContext = {
-  logoUrl: string;
-  baseUrl: string;
-  domain: string;
-  supportEmail: string;
-  i18n: typeof i18nInstance;
-  t: TFunction;
-};
+import { EmailContext } from "../types";
 
 export const defaultEmailContext: EmailContext = {
   logoUrl: "https://rallly-public.s3.amazonaws.com/images/rallly-logo-mark.png",

@@ -1,7 +1,6 @@
 import { Column, Row, Section } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
 import {
   borderColor,
@@ -9,6 +8,7 @@ import {
   Heading,
   Text,
 } from "../components/styled-components";
+import type { EmailContext } from "../types";
 
 export interface FinalizeParticipantEmailProps {
   date: string;

@@ -1,10 +1,10 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import type { EmailContext } from "../components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
 } from "../components/notification-email";
 import { Heading, Text } from "../components/styled-components";
+import type { EmailContext } from "../types";
 
 export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;

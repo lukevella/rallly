@@ -1,6 +1,6 @@
 import { Section } from "@react-email/section";
 
-import { EmailContext } from "./email-context";
+import type { EmailContext } from "../types";
 import { EmailLayout } from "./email-layout";
 import { Button, Link, Text } from "./styled-components";
 

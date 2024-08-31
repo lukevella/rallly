@@ -8,7 +8,7 @@ import {
   Section,
 } from "@react-email/components";
 
-import { EmailContext } from "./email-context";
+import { EmailContext } from "../types";
 import { darkTextColor, fontFamily, Link, Text } from "./styled-components";
 
 export interface EmailLayoutProps {

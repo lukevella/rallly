@@ -1,7 +1,6 @@
 import { Section } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
 import {
   Button,
@@ -11,6 +10,7 @@ import {
   Text,
   trackingWide,
 } from "../components/styled-components";
+import type { EmailContext } from "../types";
 
 interface LoginEmailProps {
   code: string;

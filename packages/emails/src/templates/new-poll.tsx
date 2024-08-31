@@ -1,6 +1,5 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
 import {
   Button,
@@ -9,6 +8,7 @@ import {
   Link,
   Text,
 } from "../components/styled-components";
+import type { EmailContext } from "../types";
 
 export interface NewPollEmailProps {
   title: string;

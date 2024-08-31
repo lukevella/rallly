@@ -9,7 +9,7 @@ import {
   TextProps,
 } from "@react-email/components";
 
-import { EmailContext } from "./email-context";
+import type { EmailContext } from "../types";
 
 export const lightTextColor = "#4B5563";
 export const darkTextColor = "#1F2937";

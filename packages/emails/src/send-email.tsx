@@ -6,9 +6,9 @@ import type Mail from "nodemailer/lib/mailer";
 import previewEmail from "preview-email";
 import React from "react";
 
-import { EmailContext } from "./components/email-context";
 import { i18nInstance } from "./i18n";
 import * as templates from "./templates";
+import type { EmailContext } from "./types";
 
 type Templates = typeof templates;
 

@@ -24,4 +24,6 @@ i18nInstance
     ns: ["emails"],
   });
 
+export type I18nInstance = typeof i18nInstance;
+
 export { i18nInstance };
