@@ -1,6 +1,7 @@
 import { Column, Row, Section } from "@react-email/components";
+import { Trans } from "react-i18next/TransWithoutContext";
 
-import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
 import {
   borderColor,
@@ -23,19 +24,39 @@ export interface FinalizeHostEmailProps {
 }
 
 const FinalizeHostEmail = ({
-  title = "Untitled Poll",
-  pollUrl = "https://rallly.co",
-  day = "12",
-  dow = "Fri",
-  date = "Friday, 12th June 2020",
-  time = "6:00 PM to 11:00 PM BST",
-  ctx = defaultEmailContext,
+  title,
+  pollUrl,
+  day,
+  dow,
+  date,
+  time,
+  ctx,
 }: FinalizeHostEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} preview="Final date booked!">
-      <Heading>Final date booked!</Heading>
+    <EmailLayout
+      ctx={ctx}
+      preview={ctx.t("finalizeHost_preview", {
+        defaultValue:
+          "Final date booked! We've notified participants and sent them calendar invites.",
+        title,
+      })}
+    >
+      <Heading>
+        {ctx.t("finalizeHost_heading", {
+          defaultValue: "Final date booked!",
+        })}
+      </Heading>
       <Text>
-        <strong>{title}</strong> has been booked for:
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="finalizeHost_content"
+          values={{ title }}
+          components={{
+            b: <strong />,
+          }}
+          defaults="<b>{{title}}</b> has been booked for:"
+        />
       </Text>
       <Section>
         <Row>
@@ -76,10 +97,17 @@ const FinalizeHostEmail = ({
         </Row>
       </Section>
       <Text>
-        We&apos;ve notified participants and sent them calendar invites.
+        {ctx.t("finalizeHost_content2", {
+          defaultValue:
+            "We've notified participants and sent them calendar invites.",
+        })}
       </Text>
       <Section style={{ marginTop: 32 }}>
-        <Button href={pollUrl}>View Event</Button>
+        <Button href={pollUrl}>
+          {ctx.t("finalizeHost_button", {
+            defaultValue: "View Event",
+          })}
+        </Button>
       </Section>
     </EmailLayout>
   );

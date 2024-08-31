@@ -1,6 +1,6 @@
 import { Section } from "@react-email/components";
 
-import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
 import {
   Button,
@@ -17,11 +17,7 @@ interface LoginEmailProps {
   ctx: EmailContext;
 }
 
-export const LoginEmail = ({
-  code = "123456",
-  magicLink = "https://rallly.co",
-  ctx = defaultEmailContext,
-}: LoginEmailProps) => {
+export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
   return (
     <EmailLayout
       ctx={ctx}
@@ -29,8 +25,12 @@ export const LoginEmail = ({
         defaultValue: "Use this link to log in on this device.",
       })}
     >
-      <Heading>Login</Heading>
-      <Text>Enter this one-time 6-digit verification code:</Text>
+      <Heading>{ctx.t("login_heading", { defaultValue: "Login" })}</Heading>
+      <Text>
+        {ctx.t("login_content", {
+          defaultValue: "Enter this one-time 6-digit verification code:",
+        })}
+      </Text>
       <Card style={{ textAlign: "center" }}>
         <Text
           style={{
@@ -44,18 +44,34 @@ export const LoginEmail = ({
           {code}
         </Text>
         <Text style={{ textAlign: "center" }} light={true}>
-          This code is valid for 15 minutes
+          {ctx.t("login_codeValid", {
+            defaultValue: "This code is valid for 15 minutes",
+          })}
         </Text>
       </Card>
       <Section style={{ marginBottom: 32 }}>
         <Button href={magicLink} id="magicLink">
-          Log in to {ctx.domain}
+          <Trans
+            i18n={ctx.i18n}
+            t={ctx.t}
+            i18nKey="login_button"
+            defaults="Log in to {domain}"
+            values={{ domain: ctx.domain }}
+          />
         </Button>
       </Section>
       <Text light>
-        You&apos;re receiving this email because a request was made to login to{" "}
-        <Domain ctx={ctx} />. If this wasn&apos;t you contact{" "}
-        <a href={`mailto:${ctx.supportEmail}`}>{ctx.supportEmail}</a>.
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="login_content2"
+          defaults="You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{supportEmail}</a>."
+          values={{ supportEmail: ctx.supportEmail }}
+          components={{
+            domain: <Domain ctx={ctx} />,
+            a: <a href={`mailto:${ctx.supportEmail}`} />,
+          }}
+        />
       </Text>
     </EmailLayout>
   );

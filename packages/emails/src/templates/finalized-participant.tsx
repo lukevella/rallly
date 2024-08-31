@@ -1,6 +1,6 @@
 import { Column, Row, Section } from "@react-email/components";
 
-import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
 import {
   borderColor,
@@ -21,21 +21,38 @@ export interface FinalizeParticipantEmailProps {
 }
 
 const FinalizeParticipantEmail = ({
-  title = "Untitled Poll",
-  hostName = "Host",
-  pollUrl = "https://rallly.co",
-  day = "12",
-  dow = "Fri",
-  date = "Friday, 12th June 2020",
-  time = "6:00 PM to 11:00 PM BST",
-  ctx = defaultEmailContext,
+  title,
+  hostName,
+  pollUrl,
+  day,
+  dow,
+  date,
+  time,
+  ctx,
 }: FinalizeParticipantEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} preview="Final date booked!">
-      <Heading>Final date booked!</Heading>
+    <EmailLayout
+      ctx={ctx}
+      preview={ctx.t("finalizeParticipant_preview", {
+        defaultValue: "Final date booked!",
+      })}
+    >
+      <Heading>
+        {ctx.t("finalizeParticipant_heading", {
+          defaultValue: "Final date booked!",
+        })}
+      </Heading>
       <Text>
-        <strong>{hostName}</strong> has booked <strong>{title}</strong> for the
-        following date:
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="finalizeParticipant_content"
+          defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
+          values={{ hostName, title }}
+          components={{
+            b: <strong />,
+          }}
+        />
       </Text>
       <Section data-testid="date-section">
         <Row>
@@ -75,7 +92,12 @@ const FinalizeParticipantEmail = ({
           </Column>
         </Row>
       </Section>
-      <Text>Please find attached a calendar invite for this event.</Text>
+      <Text>
+        {ctx.t("finalizeParticipant_content", {
+          defaultValue:
+            "Please find attached a calendar invite for this event.",
+        })}
+      </Text>
       <Section style={{ marginTop: 32 }}>
         <Button href={pollUrl}>View Event</Button>
       </Section>

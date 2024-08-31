@@ -36,7 +36,7 @@ export const NewPollEmail = ({
         <Trans
           i18n={ctx.i18n}
           t={ctx.t}
-          i18nKey="newPoll_body"
+          i18nKey="newPoll_content"
           values={{ title }}
           components={{
             b: <strong />,

@@ -1,4 +1,4 @@
-import { defaultEmailContext, EmailContext } from "../components/email-context";
+import type { EmailContext } from "../components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
 } from "../components/notification-email";
@@ -9,11 +9,11 @@ export interface NewParticipantEmailProps extends NotificationBaseProps {
 }
 
 const NewParticipantEmail = ({
-  title = "Untitled Poll",
-  participantName = "Someone",
-  pollUrl = "https://rallly.co",
-  disableNotificationsUrl = "https://rallly.co",
-  ctx = defaultEmailContext,
+  title,
+  participantName,
+  pollUrl,
+  disableNotificationsUrl,
+  ctx,
 }: NewParticipantEmailProps) => {
   return (
     <NotificationEmail
@@ -21,14 +21,35 @@ const NewParticipantEmail = ({
       title={title}
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
-      preview="Go to your poll to see the new response."
+      preview={ctx.t("newParticipant_preview", {
+        defaultValue: "Go to your poll to see the new response.",
+      })}
     >
-      <Heading>New Response</Heading>
+      <Heading>
+        {ctx.t("newParticipant_heading", {
+          defaultValue: "New Response",
+        })}
+      </Heading>
       <Text>
-        <strong>{participantName}</strong> has responded to{" "}
-        <strong>{title}</strong>.
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="newParticipant_content"
+          defaults="<b>{{name}}</b> has responded to <b>{{title}}</b>."
+          components={{
+            b: <strong />,
+          }}
+          values={{ name: participantName, title }}
+        />
       </Text>
-      <Text>Go to your poll to see the new response.</Text>
+      <Text>
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="newParticipant_content2"
+          defaults="Go to your poll to see the new response."
+        />
+      </Text>
     </NotificationEmail>
   );
 };
