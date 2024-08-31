@@ -43,14 +43,10 @@ export const BillingPlans = ({ pricingData }: { pricingData: PricingData }) => {
               <Trans i18nKey="billingPeriodYearly" />
               <Badge variant="green">
                 <Trans
-                  i18nKey="yearlyDiscount"
-                  defaults="Save {amount}"
+                  i18nKey="annualBenefit"
+                  defaults="{count} months free"
                   values={{
-                    amount: `$${
-                      (pricingData.monthly.amount * 12 -
-                        pricingData.yearly.amount) /
-                      100
-                    }`,
+                    count: 4,
                   }}
                 />
               </Badge>

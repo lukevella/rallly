@@ -74,10 +74,10 @@ const PriceTables = ({
             <Trans i18nKey="pricing:billingPeriodYearly" defaults="Yearly" />
             <Badge variant="green" className="inline-flex gap-2">
               <Trans
-                i18nKey="pricing:discount"
-                defaults="Save {amount}"
+                i18nKey="pricing:annualBenefit"
+                defaults="{count} months free"
                 values={{
-                  amount: `$${(pricingData.monthly.amount * 12 - pricingData.yearly.amount) / 100}`,
+                  count: 4,
                 }}
               />
             </Badge>
