@@ -262,6 +262,5 @@
   "pastEventsEmptyStateDescription": "Amikor eseményeket ütemezel be, itt fognak megjelenni.",
   "activePollCount": "{{activePollCount}} aktív",
   "createPoll": "Szavazás létrehozása",
-  "yearlyDiscount": "Spórolj {amount}-ot",
   "yearlyBillingDescription": "évente"
 }
