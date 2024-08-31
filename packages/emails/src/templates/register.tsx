@@ -1,7 +1,7 @@
 import { Section } from "@react-email/section";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { defaultEmailContext, EmailContext } from "../components/email-context";
+import { EmailContext } from "../components/email-context";
 import { EmailLayout } from "../components/email-layout";
 import {
   Card,
@@ -16,10 +16,7 @@ interface RegisterEmailProps {
   ctx: EmailContext;
 }
 
-export const RegisterEmail = ({
-  code = "123456",
-  ctx = defaultEmailContext,
-}: RegisterEmailProps) => {
+export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
   return (
     <EmailLayout
       ctx={ctx}
