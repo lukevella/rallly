@@ -74,7 +74,7 @@ export const participants = router({
       if (!success) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
-          message: "You are doing that too much",
+          message: "Rate limit exceeded. Please try again later.",
         });
       }
       const { user } = ctx;
