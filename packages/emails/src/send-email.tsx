@@ -6,7 +6,7 @@ import type Mail from "nodemailer/lib/mailer";
 import previewEmail from "preview-email";
 import React from "react";
 
-import { i18nInstance } from "./i18n";
+import { i18nDefaultConfig, i18nInstance } from "./i18n";
 import * as templates from "./templates";
 import type { EmailContext } from "./types";
 
@@ -62,7 +62,12 @@ type EmailClientConfig = {
   /**
    * Context to pass to each email
    */
-  context: EmailContext;
+  config: {
+    logoUrl: string;
+    baseUrl: string;
+    domain: string;
+    supportEmail: string;
+  };
 };
 
 export class EmailClient {
@@ -77,10 +82,17 @@ export class EmailClient {
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
+    const locale = options.locale ?? "en";
+
+    await i18nInstance.init({
+      ...i18nDefaultConfig,
+      lng: locale,
+    });
+
     const ctx = {
-      ...this.config.context,
+      ...this.config.config,
       i18n: i18nInstance,
-      t: i18nInstance.getFixedT(options.locale ?? "en"),
+      t: i18nInstance.getFixedT(locale),
     };
 
     const Template = templates[templateName] as TemplateComponent<T>;

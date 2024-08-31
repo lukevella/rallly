@@ -126,7 +126,6 @@ export const participants = router({
           ctx.emailClient.sendTemplate("NewParticipantConfirmationEmail", {
             to: email,
             props: {
-              name,
               title: poll.title,
               editSubmissionUrl: ctx.absoluteUrl(
                 `/invite/${poll.id}?token=${token}`,
@@ -162,7 +161,6 @@ export const participants = router({
           ctx.emailClient.sendTemplate("NewParticipantEmail", {
             to: email,
             props: {
-              name: watcher.user.name,
               participantName: participant.name,
               pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
               disableNotificationsUrl: ctx.absoluteUrl(

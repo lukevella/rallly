@@ -20,5 +20,6 @@
     ".next/**/*",
     "playwright-report",
     "test-results",
+    "../../packages/**/*",
   ],
 }

@@ -85,7 +85,6 @@ export const comments = router({
             to: email,
             locale: watcher.user.locale ?? undefined,
             props: {
-              name: watcher.user.name,
               authorName,
               pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
               disableNotificationsUrl: ctx.absoluteUrl(

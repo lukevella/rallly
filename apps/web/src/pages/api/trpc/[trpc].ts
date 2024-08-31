@@ -10,7 +10,7 @@ import { posthog, posthogApiHandler } from "@/app/posthog";
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
 import { getServerSession, isEmailBlocked } from "@/utils/auth";
 import { isSelfHosted } from "@/utils/constants";
-import { emailClient } from "@/utils/emails";
+import { getEmailClient } from "@/utils/emails";
 import { composeApiHandlers } from "@/utils/next";
 
 const ratelimit = new Ratelimit({
@@ -43,7 +43,7 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
         };
       },
       posthogClient: posthog || undefined,
-      emailClient,
+      emailClient: getEmailClient(),
       isSelfHosted,
       isEmailBlocked,
       absoluteUrl,

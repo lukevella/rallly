@@ -22,7 +22,7 @@ import { env } from "@/env";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
-import { emailClient } from "@/utils/emails";
+import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
 const providers: Provider[] = [
@@ -94,10 +94,10 @@ const providers: Provider[] = [
       });
 
       if (user) {
+        const emailClient = getEmailClient();
         await emailClient.sendTemplate("LoginEmail", {
           to: email,
           props: {
-            name: user.name,
             magicLink: absoluteUrl("/auth/login", {
               magicLink: url,
             }),

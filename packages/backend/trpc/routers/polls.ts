@@ -939,18 +939,9 @@ export const polls = router({
           return ctx.emailClient.sendTemplate("FinalizeParticipantEmail", {
             to: p.email,
             props: {
-              name: p.name,
               pollUrl: ctx.absoluteUrl(`/invite/${poll.id}`),
-              location: poll.location,
               title: poll.title,
               hostName: poll.user?.name ?? "",
-              attendees: poll.participants
-                .filter((p) =>
-                  p.votes.some(
-                    (v) => v.optionId === input.optionId && v.type !== "no",
-                  ),
-                )
-                .map((p) => p.name),
               date,
               day,
               dow,
