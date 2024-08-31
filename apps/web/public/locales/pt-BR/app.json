@@ -262,12 +262,15 @@
   "pastEventsEmptyStateDescription": "Quando você agendar eventos, eles aparecerão aqui.",
   "activePollCount": "{{activePollCount}} Ao Vivo",
   "createPoll": "Criar enquete",
-  "yearlyDiscount": "Economize {amount}",
   "yearlyBillingDescription": "por ano",
   "addToCalendar": "Adicionar ao Calendário",
   "microsoft365": "Microsoft 365",
   "outlook": "Outlook",
   "yahoo": "Yahoo",
   "downloadICSFile": "Baixar arquivo ICS",
-  "schedulateDate": "Data Agendada"
+  "schedulateDate": "Data Agendada",
+  "timeZoneChangeDetectorTitle": "Alteração de Fuso Horário Detectada",
+  "timeZoneChangeDetectorMessage": "Seu fuso horário mudou para {currentTimeZone}. Você deseja atualizar suas preferências?",
+  "yesUpdateTimezone": "Sim, atualize meu fuso horário",
+  "noKeepCurrentTimezone": "Não, mantenha o fuso horário atual"
 }
