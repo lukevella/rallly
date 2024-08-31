@@ -48,7 +48,7 @@ const FinalizeParticipantEmail = ({
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="finalizeParticipant_content"
-          defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
+          defaults="<b>{{hostName}}</b> has booked <b>{{title}}</b> for the following date:"
           values={{ hostName, title }}
           components={{
             b: <strong />,
@@ -94,7 +94,7 @@ const FinalizeParticipantEmail = ({
         </Row>
       </Section>
       <Text>
-        {ctx.t("finalizeParticipant_content", {
+        {ctx.t("finalizeParticipant_content2", {
           defaultValue:
             "Please find attached a calendar invite for this event.",
         })}
