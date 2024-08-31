@@ -41,19 +41,6 @@ export const BillingPlans = ({ pricingData }: { pricingData: PricingData }) => {
             </TabsTrigger>
             <TabsTrigger value="yearly" className="inline-flex gap-x-2.5">
               <Trans i18nKey="billingPeriodYearly" />
-              <Badge variant="green">
-                <Trans
-                  i18nKey="yearlyDiscount"
-                  defaults="Save {amount}"
-                  values={{
-                    amount: `$${
-                      (pricingData.monthly.amount * 12 -
-                        pricingData.yearly.amount) /
-                      100
-                    }`,
-                  }}
-                />
-              </Badge>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -109,9 +96,21 @@ export const BillingPlans = ({ pricingData }: { pricingData: PricingData }) => {
             </div>
             <div className="flex">
               <TabsContent value="yearly">
-                <BillingPlanPrice>
-                  ${pricingData.yearly.amount / 100}
-                </BillingPlanPrice>
+                <div className="flex items-center gap-x-2">
+                  <BillingPlanPrice>
+                    ${pricingData.yearly.amount / 100}
+                  </BillingPlanPrice>
+                  <Badge variant="green">
+                    <Trans
+                      i18nKey="annualBenefit"
+                      defaults="{count} months free"
+                      values={{
+                        count: 4,
+                      }}
+                    />
+                  </Badge>
+                </div>
+
                 <BillingPlanPeriod>
                   <Trans
                     i18nKey="yearlyBillingDescription"

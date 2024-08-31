@@ -262,7 +262,6 @@
   "pastEventsEmptyStateDescription": "When you schedule events, they will appear here.",
   "activePollCount": "{{activePollCount}} Live",
   "createPoll": "Create poll",
-  "yearlyDiscount": "Save {amount}",
   "yearlyBillingDescription": "per year",
   "addToCalendar": "Add to Calendar",
   "microsoft365": "Microsoft 365",
@@ -273,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Timezone Change Detected",
   "timeZoneChangeDetectorMessage": "Your timezone has changed to {currentTimeZone}. Do you want to update your preferences?",
   "yesUpdateTimezone": "Yes, update my timezone",
-  "noKeepCurrentTimezone": "No, keep the current timezone"
+  "noKeepCurrentTimezone": "No, keep the current timezone",
+  "annualBenefit": "{count} months free"
 }
