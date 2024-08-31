@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "email dev --port 3333 --dir ./src/templates",
+    "dev": "email dev --port 3333 --dir ./src/previews",
     "lint": "eslint ./src",
-    "type-check": "tsc --pretty --noEmit"
+    "type-check": "tsc --pretty --noEmit",
+    "i18n:scan": "i18next-scanner --config i18next-scanner.config.js"
   },
   "main": "./src/index.ts",
   "types": "./src/index.ts",

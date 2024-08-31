@@ -5,6 +5,7 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "i18next.d.ts"],
+  "files": ["i18next.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
   "exclude": ["node_modules", ".react-email"],
 }

@@ -5,9 +5,10 @@ import { createTransport, Transporter } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 import previewEmail from "preview-email";
 import React from "react";
-import * as templates from "./templates";
-import { EmailContext } from "./templates/_components/email-context";
+
 import { i18nInstance } from "./i18n";
+import { EmailContext } from "./previews/_components/email-context";
+import * as templates from "./templates";
 
 type Templates = typeof templates;
 
@@ -81,7 +82,7 @@ export class EmailClient {
       locale: options.locale ?? this.config.context.locale,
     };
 
-    await i18nInstance.changeLanguage(ctx.locale)
+    await i18nInstance.changeLanguage(ctx.locale);
 
     const Template = templates[templateName] as TemplateComponent<T>;
     const subject = Template.getSubject?.(options.props, ctx);

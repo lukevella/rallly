@@ -1,14 +1,10 @@
+import languages from "@rallly/languages";
 import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
-import languages from "@rallly/languages";
 
-// on the react-email dev server use an env var to control the language
-const isDevServer = process.argv[1].endsWith("node_modules/.bin/email")
-const initialLng = isDevServer ? (process.env.REACT_EMAIL_LANG ?? 'en') : 'en'
+const i18nInstance = createInstance();
 
-const instance = createInstance();
-
-instance
+i18nInstance
   .use(
     resourcesToBackend(
       (language: string, namespace: string) =>
@@ -24,8 +20,8 @@ instance
     initImmediate: false,
     supportedLngs: Object.keys(languages),
     fallbackLng: "en",
-    lng: initialLng,
+    lng: "en",
     ns: "emails",
   });
 
-export const i18nInstance = instance
+export { i18nInstance };

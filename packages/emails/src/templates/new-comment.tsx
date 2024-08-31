@@ -1,20 +1,22 @@
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
+import { Trans } from "react-i18next/TransWithoutContext";
+
+import { EmailContext } from "../components/email-context";
 import NotificationEmail, {
   NotificationBaseProps,
-} from "./_components/notification-email";
-import { Heading, Text } from "./_components/styled-components";
+} from "../components/notification-email";
+import { Heading, Text } from "../components/styled-components";
 
 export interface NewCommentEmailProps extends NotificationBaseProps {
   authorName: string;
 }
 
 export const NewCommentEmail = ({
-  name = "Guest",
-  title = "Untitled Poll",
-  authorName = "Someone",
-  pollUrl = "https://rallly.co",
-  disableNotificationsUrl = "https://rallly.co",
-  ctx = defaultEmailContext,
+  name,
+  title,
+  authorName,
+  pollUrl,
+  disableNotificationsUrl,
+  ctx,
 }: NewCommentEmailProps) => {
   return (
     <NotificationEmail
@@ -23,11 +25,30 @@ export const NewCommentEmail = ({
       title={title}
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
-      preview="Go to your poll to see what they said."
+      preview={ctx.t("new-comment:preview", {
+        defaultValue: "Go to your poll to see what they said.",
+      })}
     >
-      <Heading>New Comment</Heading>
+      <Heading>
+        <Trans
+          i18n={ctx.i18n}
+          i18nKey="new-comment:heading"
+          defaults="New Comment"
+        />
+      </Heading>
       <Text>
-        <strong>{authorName}</strong> has commented on <strong>{title}</strong>.
+        <Trans
+          i18n={ctx.i18n}
+          i18nKey="new-comment:content"
+          defaults="<b>{{authorName}}</b> has commented on <b>{{title}}</b>."
+          components={{
+            b: <strong />,
+          }}
+          values={{
+            authorName,
+            title,
+          }}
+        />
       </Text>
     </NotificationEmail>
   );
@@ -35,9 +56,13 @@ export const NewCommentEmail = ({
 
 NewCommentEmail.getSubject = (
   props: NewCommentEmailProps,
-  _ctx: EmailContext,
+  ctx: EmailContext,
 ) => {
-  return `${props.authorName} has commented on ${props.title}`;
+  return ctx.t("new-comment:subject", {
+    defaultValue: "{{authorName}} has commented on {{title}}",
+    authorName: props.authorName,
+    title: props.title,
+  });
 };
 
 export default NewCommentEmail;

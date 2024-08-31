@@ -1,0 +1,6 @@
+{
+  "heading": "New Comment",
+  "content": "<b>{{authorName}}</b> has commented on <b>{{title}}</b>.",
+  "preview": "Go to your poll to see what they said.",
+  "subject": "{{authorName}} has commented on {{title}}"
+}
