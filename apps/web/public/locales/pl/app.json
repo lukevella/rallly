@@ -272,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Wykryto zmianę strefy czasowej",
   "timeZoneChangeDetectorMessage": "Twoja strefa czasowa została zmieniona na {currentTimeZone}. Czy chcesz zaktualizować swoje preferencje?",
   "yesUpdateTimezone": "Tak, zaktualizuj moją strefę czasową",
-  "noKeepCurrentTimezone": "Nie, zachowaj bieżącą strefę czasową"
+  "noKeepCurrentTimezone": "Nie, zachowaj bieżącą strefę czasową",
+  "annualBenefit": "{count} miesiące gratis"
 }
