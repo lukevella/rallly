@@ -1,4 +1,5 @@
 import { Section } from "@react-email/section";
+import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { EmailContext } from "../types";
 import { EmailLayout } from "./email-layout";
@@ -27,14 +28,28 @@ export const NotificationEmail = ({
     <EmailLayout ctx={ctx} preview={preview}>
       {children}
       <Section style={{ marginTop: 32, marginBottom: 32 }}>
-        <Button href={pollUrl}>View on {domain}</Button>
+        <Button href={pollUrl}>
+          {ctx.t("emails:common_viewOn", {
+            defaultValue: "View on {{domain}}",
+            domain,
+          })}
+        </Button>
       </Section>
       <Text light={true}>
-        If you would like to stop receiving updates you can{" "}
-        <Link className="whitespace-nowrap" href={disableNotificationsUrl}>
-          turn notifications off
-        </Link>
-        .
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="common_disableNotifications"
+          defaults="If you would like to stop receiving updates you can <a>turn notifications off</a>."
+          components={{
+            a: (
+              <Link
+                className="whitespace-nowrap"
+                href={disableNotificationsUrl}
+              />
+            ),
+          }}
+        />
       </Text>
     </EmailLayout>
   );
