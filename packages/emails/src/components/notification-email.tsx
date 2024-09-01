@@ -29,7 +29,7 @@ export const NotificationEmail = ({
       {children}
       <Section style={{ marginTop: 32, marginBottom: 32 }}>
         <Button href={pollUrl}>
-          {ctx.t("emails:common_viewOn", {
+          {ctx.t("common_viewOn", {
             defaultValue: "View on {{domain}}",
             domain,
           })}

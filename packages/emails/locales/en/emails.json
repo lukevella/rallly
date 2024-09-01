@@ -1,7 +1,6 @@
 {
   "common_poweredBy": "Powered by <a>{{domain}}</a>",
   "common_disableNotifications": "If you would like to stop receiving updates you can <link>turn notifications off</link>.",
-  "common_viewOn": "View on {{domain}}",
   "finalizeHost_content": "<b>{{title}}</b> has been booked for:",
   "finalizeHost_preview": "Final date booked! We've notified participants and sent them calendar invites.",
   "finalizeHost_heading": "Final date booked!",
@@ -20,9 +19,7 @@
   "login_content": "Enter this one-time 6-digit verification code:",
   "login_codeValid": "This code is valid for 15 minutes",
   "login_subject": "{{code}} is your 6-digit code",
-  "newComment_heading": "New Comment",
   "newComment_content": "<b>{{authorName}}</b> has commented on <b>{{title}}</b>.",
-  "newComment_preview": "Go to your poll to see what they said.",
   "newComment_subject": "{{authorName}} has commented on {{title}}",
   "newParticipantConfirmation_content": "Your response to <b>{{title}}</b> has been submitted.",
   "newParticipantConfirmation_content2": "While the poll is still open you can change your response using the link below.",
@@ -45,5 +42,8 @@
   "register_heading": "Verify your email address",
   "register_text": "Please use the following 6-digit verification code to verify your email",
   "register_codeValid": "This code is valid for 15 minutes",
-  "register_subject": "Please verify your email address"
+  "register_subject": "Please verify your email address",
+  "common_viewOn": "View on {{domain}}",
+  "newComment_preview": "Go to your poll to see what they said.",
+  "newComment_heading": "New Comment"
 }
