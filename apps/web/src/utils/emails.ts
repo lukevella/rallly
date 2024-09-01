@@ -1,4 +1,5 @@
 import { EmailClient, SupportedEmailProviders } from "@rallly/emails";
+import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
 import { absoluteUrl } from "@/utils/absolute-url";
@@ -25,5 +26,9 @@ export const getEmailClient = (locale?: string) => {
       supportEmail: env.SUPPORT_EMAIL,
     },
     locale,
+    onError: (e) => {
+      console.error(e);
+      Sentry.captureException(e);
+    },
   });
 };

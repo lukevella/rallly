@@ -70,6 +70,7 @@ type EmailClientConfig = {
   };
 
   locale?: string;
+  onError?: (error: Error) => void;
 };
 
 export class EmailClient {
@@ -124,7 +125,18 @@ export class EmailClient {
             attachments: options.attachments,
           });
         } catch (e) {
-          console.error("Error sending email", templateName, e);
+          const enhancedError = new Error(
+            `Failed to send email template: ${templateName}`,
+            {
+              cause: e instanceof Error ? e : new Error(String(e)),
+            },
+          );
+          Object.assign(enhancedError, {
+            templateName,
+            recipient: options.to,
+            subject,
+          });
+          this.config.onError?.(enhancedError);
         }
       })(),
     );
