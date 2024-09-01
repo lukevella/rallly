@@ -4,7 +4,7 @@ import { env } from "@/env";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { isSelfHosted } from "@/utils/constants";
 
-export const getEmailClient = () => {
+export const getEmailClient = (locale?: string) => {
   return new EmailClient({
     openPreviews: env.NODE_ENV === "development",
     provider: {
@@ -24,5 +24,6 @@ export const getEmailClient = () => {
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
       supportEmail: env.SUPPORT_EMAIL,
     },
+    locale,
   });
 };

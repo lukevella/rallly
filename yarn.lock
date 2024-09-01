@@ -5988,6 +5988,11 @@
   resolved "https://registry.npmjs.org/@vercel/analytics/-/analytics-0.1.11.tgz"
   integrity sha512-mj5CPR02y0BRs1tN3oZcBNAX9a8NxsIUl9vElDPcqxnMfP0RbRc9fI9Ud7+QDg/1Izvt5uMumsr+6YsmVHcyuw==
 
+"@vercel/functions@*":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@vercel/functions/-/functions-1.4.1.tgz#d1a81c27f7eb5b5b2ca412a8a4e682e4cfbea32d"
+  integrity sha512-987mKpoDCI18x2rDjrDbiuGOtxDMK/UhfhDZoN3A2SAt40BMaj8HEKwVqL6fOian5j/3RZcOuJnMOpatQGgpjw==
+
 "@vercel/functions@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@vercel/functions/-/functions-1.0.2.tgz#c26ed4e3b0ed701e28c4ebd71c76b1bfe14db02a"

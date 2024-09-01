@@ -1,6 +1,7 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { renderAsync } from "@react-email/render";
+import { waitUntil } from "@vercel/functions";
 import { createTransport, Transporter } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 import previewEmail from "preview-email";
@@ -25,7 +26,6 @@ type TemplateComponent<T extends TemplateName> = Templates[T] & {
 type SendEmailOptions<T extends TemplateName> = {
   to: string;
   props: TemplateProps<T>;
-  locale?: string;
   attachments?: Mail.Options["attachments"];
 };
 
@@ -68,6 +68,8 @@ type EmailClientConfig = {
     domain: string;
     supportEmail: string;
   };
+
+  locale?: string;
 };
 
 export class EmailClient {
@@ -78,50 +80,54 @@ export class EmailClient {
     this.config = config;
   }
 
-  async sendTemplate<T extends TemplateName>(
+  sendTemplate<T extends TemplateName>(
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
-    const locale = options.locale ?? "en";
+    waitUntil(
+      (async () => {
+        const locale = this.config.locale ?? "en";
 
-    await i18nInstance.init({
-      ...i18nDefaultConfig,
-      lng: locale,
-    });
+        await i18nInstance.init({
+          ...i18nDefaultConfig,
+          lng: locale,
+        });
 
-    const ctx = {
-      ...this.config.config,
-      i18n: i18nInstance,
-      t: i18nInstance.getFixedT(locale),
-    };
+        const ctx = {
+          ...this.config.config,
+          i18n: i18nInstance,
+          t: i18nInstance.getFixedT(locale),
+        };
 
-    const Template = templates[templateName] as TemplateComponent<T>;
-    const subject = Template.getSubject?.(options.props, ctx);
-    const component = (
-      <Template
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {...(options.props as any)}
-        ctx={ctx}
-      />
+        const Template = templates[templateName] as TemplateComponent<T>;
+        const subject = Template.getSubject?.(options.props, ctx);
+        const component = (
+          <Template
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            {...(options.props as any)}
+            ctx={ctx}
+          />
+        );
+
+        const [html, text] = await Promise.all([
+          renderAsync(component),
+          renderAsync(component, { plainText: true }),
+        ]);
+
+        try {
+          await this.sendEmail({
+            from: this.config.mail.from,
+            to: options.to,
+            subject,
+            html,
+            text,
+            attachments: options.attachments,
+          });
+        } catch (e) {
+          console.error("Error sending email", templateName, e);
+        }
+      })(),
     );
-
-    const [html, text] = await Promise.all([
-      renderAsync(component),
-      renderAsync(component, { plainText: true }),
-    ]);
-
-    try {
-      await this.sendEmail({
-        from: this.config.mail.from,
-        to: options.to,
-        subject,
-        html,
-        text,
-        attachments: options.attachments,
-      });
-    } catch (e) {
-      console.error("Error sending email", templateName, e);
-    }
   }
 
   async sendEmail(options: Mail.Options) {

@@ -40,13 +40,15 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
           id: session.user.id,
           isGuest: session.user.email === null,
           locale: session.user.locale ?? undefined,
+          getEmailClient: () =>
+            getEmailClient(session.user.locale ?? undefined),
         };
       },
       posthogClient: posthog || undefined,
-      emailClient: getEmailClient(),
       isSelfHosted,
       isEmailBlocked,
       absoluteUrl,
+      getEmailClient,
       shortUrl,
       ratelimit: async () => {
         if (!process.env.KV_REST_API_URL) {

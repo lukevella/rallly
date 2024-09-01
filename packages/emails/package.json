@@ -19,7 +19,8 @@
     "@react-email/render": "^0.0.12",
     "nodemailer": "^6.9.9",
     "preview-email": "^3.0.19",
-    "react-email": "^2.0.0"
+    "react-email": "^2.0.0",
+    "@vercel/functions": "*"
   },
   "devDependencies": {
     "@rallly/tailwind-config": "*",

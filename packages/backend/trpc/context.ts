@@ -7,14 +7,15 @@ export type GetUserFn = (opts: CreateNextContextOptions) => Promise<{
   id: string;
   isGuest: boolean;
   locale?: string;
+  getEmailClient: (locale?: string) => EmailClient;
 } | null>;
 
 export interface TRPCContextParams {
   getUser: GetUserFn;
-  emailClient: EmailClient;
   isSelfHosted: boolean;
   isEmailBlocked?: (email: string) => boolean;
   posthogClient?: PostHog;
+  getEmailClient: (locale?: string) => EmailClient;
   /**
    * Takes a relative path and returns an absolute URL to the app
    * @param path

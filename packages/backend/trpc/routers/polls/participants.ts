@@ -98,6 +98,7 @@ export const participants = router({
             name: name,
             email,
             userId: user.id,
+            locale: user.locale ?? undefined,
           },
         });
 
@@ -122,8 +123,9 @@ export const participants = router({
           },
         );
 
-        emailsToSend.push(
-          ctx.emailClient.sendTemplate("NewParticipantConfirmationEmail", {
+        ctx.user
+          .getEmailClient()
+          .sendTemplate("NewParticipantConfirmationEmail", {
             to: email,
             props: {
               title: poll.title,
@@ -131,8 +133,7 @@ export const participants = router({
                 `/invite/${poll.id}?token=${token}`,
               ),
             },
-          }),
-        );
+          });
       }
 
       const watchers = await prisma.watcher.findMany({
@@ -157,19 +158,17 @@ export const participants = router({
           { watcherId: watcher.id, pollId },
           { ttl: 0 },
         );
-        emailsToSend.push(
-          ctx.emailClient.sendTemplate("NewParticipantEmail", {
-            to: email,
-            props: {
-              participantName: participant.name,
-              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
-              disableNotificationsUrl: ctx.absoluteUrl(
-                `/auth/disable-notifications?token=${token}`,
-              ),
-              title: poll.title,
-            },
-          }),
-        );
+        ctx.user.getEmailClient().sendTemplate("NewParticipantEmail", {
+          to: email,
+          props: {
+            participantName: participant.name,
+            pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
+            disableNotificationsUrl: ctx.absoluteUrl(
+              `/auth/disable-notifications?token=${token}`,
+            ),
+            title: poll.title,
+          },
+        });
       }
 
       waitUntil(Promise.all(emailsToSend));

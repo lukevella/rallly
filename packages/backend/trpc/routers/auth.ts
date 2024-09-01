@@ -57,7 +57,7 @@ export const auth = router({
           code,
         });
 
-        await ctx.emailClient.sendTemplate("RegisterEmail", {
+        ctx.user.getEmailClient().sendTemplate("RegisterEmail", {
           to: input.email,
           props: {
             code,

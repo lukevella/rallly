@@ -72,18 +72,16 @@ export const comments = router({
 
       const poll = newComment.poll;
 
-      const emailsToSend: Promise<void>[] = [];
-
       for (const watcher of watchers) {
         const email = watcher.user.email;
         const token = await createToken<DisableNotificationsPayload>(
           { watcherId: watcher.id, pollId },
           { ttl: 0 },
         );
-        emailsToSend.push(
-          ctx.emailClient.sendTemplate("NewCommentEmail", {
+        ctx
+          .getEmailClient(watcher.user.locale ?? undefined)
+          .sendTemplate("NewCommentEmail", {
             to: email,
-            locale: watcher.user.locale ?? undefined,
             props: {
               authorName,
               pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
@@ -92,8 +90,7 @@ export const comments = router({
               ),
               title: poll.title,
             },
-          }),
-        );
+          });
       }
 
       return newComment;

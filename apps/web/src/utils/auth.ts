@@ -90,11 +90,12 @@ const providers: Provider[] = [
         },
         select: {
           name: true,
+          locale: true,
         },
       });
 
       if (user) {
-        const emailClient = getEmailClient();
+        const emailClient = getEmailClient(user.locale ?? undefined);
         await emailClient.sendTemplate("LoginEmail", {
           to: email,
           props: {
