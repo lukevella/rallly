@@ -95,8 +95,7 @@ const providers: Provider[] = [
       });
 
       if (user) {
-        const emailClient = getEmailClient(user.locale ?? undefined);
-        emailClient.sendTemplate("LoginEmail", {
+        getEmailClient(user.locale ?? undefined).sendTemplate("LoginEmail", {
           to: email,
           props: {
             magicLink: absoluteUrl("/auth/login", {
