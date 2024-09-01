@@ -24,12 +24,16 @@ export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
       ctx={ctx}
       preview={ctx.t("login_preview", {
         defaultValue: "Use this link to log in on this device.",
+        ns: "emails",
       })}
     >
-      <Heading>{ctx.t("login_heading", { defaultValue: "Login" })}</Heading>
+      <Heading>
+        {ctx.t("login_heading", { defaultValue: "Login", ns: "emails" })}
+      </Heading>
       <Text>
         {ctx.t("login_content", {
           defaultValue: "Enter this one-time 6-digit verification code:",
+          ns: "emails",
         })}
       </Text>
       <Card style={{ textAlign: "center" }}>
@@ -47,6 +51,7 @@ export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
         <Text style={{ textAlign: "center" }} light={true}>
           {ctx.t("login_codeValid", {
             defaultValue: "This code is valid for 15 minutes",
+            ns: "emails",
           })}
         </Text>
       </Card>
@@ -58,6 +63,7 @@ export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
             i18nKey="login_button"
             defaults="Log in to {domain}"
             values={{ domain: ctx.domain }}
+            ns="emails"
           />
         </Button>
       </Section>
@@ -72,6 +78,7 @@ export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
             domain: <Domain ctx={ctx} />,
             a: <a href={`mailto:${ctx.supportEmail}`} />,
           }}
+          ns="emails"
         />
       </Text>
     </EmailLayout>
@@ -82,6 +89,7 @@ LoginEmail.getSubject = (props: LoginEmailProps, ctx: EmailContext) => {
   return ctx.t("login_subject", {
     defaultValue: "{{code}} is your 6-digit code",
     code: props.code,
+    ns: "emails",
   });
 };
 

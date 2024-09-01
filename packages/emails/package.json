@@ -9,7 +9,8 @@
     "i18n:scan": "i18next-scanner --config i18next-scanner.config.js"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./locales/*": "./locales/en/*.json"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.501.0",

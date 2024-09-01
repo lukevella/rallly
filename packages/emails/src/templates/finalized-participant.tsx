@@ -36,11 +36,13 @@ const FinalizeParticipantEmail = ({
       ctx={ctx}
       preview={ctx.t("finalizeParticipant_preview", {
         defaultValue: "Final date booked!",
+        ns: "emails",
       })}
     >
       <Heading>
         {ctx.t("finalizeParticipant_heading", {
           defaultValue: "Final date booked!",
+          ns: "emails",
         })}
       </Heading>
       <Text>
@@ -48,6 +50,7 @@ const FinalizeParticipantEmail = ({
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="finalizeParticipant_content"
+          ns="emails"
           defaults="<b>{{hostName}}</b> has booked <b>{{title}}</b> for the following date:"
           values={{ hostName, title }}
           components={{
@@ -113,6 +116,7 @@ FinalizeParticipantEmail.getSubject = (
   return ctx.t("finalizeParticipant_subject", {
     defaultValue: "Date booked for {{title}}",
     title: props.title,
+    ns: "emails",
   });
 };
 

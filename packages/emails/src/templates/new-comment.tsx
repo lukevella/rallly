@@ -24,12 +24,14 @@ const NewCommentEmail = ({
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
       preview={ctx.t("newComment_preview", {
+        ns: "emails",
         defaultValue: "Go to your poll to see what they said.",
       })}
     >
       <Heading>
         <Trans
           i18n={ctx.i18n}
+          ns="emails"
           i18nKey="newComment_heading"
           defaults="New Comment"
         />
@@ -37,6 +39,7 @@ const NewCommentEmail = ({
       <Text>
         <Trans
           i18n={ctx.i18n}
+          ns="emails"
           i18nKey="newComment_content"
           defaults="<b>{{authorName}}</b> has commented on <b>{{title}}</b>."
           components={{
@@ -57,6 +60,7 @@ NewCommentEmail.getSubject = (
   ctx: EmailContext,
 ) => {
   return ctx.t("newComment_subject", {
+    ns: "emails",
     defaultValue: "{{authorName}} has commented on {{title}}",
     authorName: props.authorName,
     title: props.title,

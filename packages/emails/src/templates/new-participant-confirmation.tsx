@@ -26,11 +26,13 @@ export const NewParticipantConfirmationEmail = ({
       ctx={ctx}
       preview={ctx.t("newParticipantConfirmation_preview", {
         defaultValue: "To edit your response use the link below",
+        ns: "emails",
       })}
     >
       <Heading>
         {ctx.t("newParticipantConfirmation_heading", {
           defaultValue: "Poll Response Confirmation",
+          ns: "emails",
         })}
       </Heading>
       <Text>
@@ -43,6 +45,7 @@ export const NewParticipantConfirmationEmail = ({
             b: <strong />,
           }}
           values={{ title }}
+          ns="emails"
         />
       </Text>
       <Text>
@@ -51,6 +54,7 @@ export const NewParticipantConfirmationEmail = ({
           t={ctx.t}
           i18nKey="newParticipantConfirmation_content2"
           defaults="While the poll is still open you can change your response using the link below."
+          ns="emails"
         />
       </Text>
       <Section style={{ marginTop: 32 }}>
@@ -61,6 +65,7 @@ export const NewParticipantConfirmationEmail = ({
             i18nKey="newParticipantConfirmation_button"
             defaults="Review response on {domain}"
             values={{ domain }}
+            ns="emails"
           />
         </Button>
       </Section>
@@ -73,6 +78,7 @@ export const NewParticipantConfirmationEmail = ({
           components={{
             domain: <Domain ctx={ctx} />,
           }}
+          ns="emails"
         />
       </Text>
     </EmailLayout>
@@ -86,6 +92,7 @@ NewParticipantConfirmationEmail.getSubject = (
   return ctx.t("newParticipantConfirmation_subject", {
     defaultValue: "Thanks for responding to {{title}}",
     title: props.title,
+    ns: "emails",
   });
 };
 

@@ -30,6 +30,7 @@ export const NotificationEmail = ({
       <Section style={{ marginTop: 32, marginBottom: 32 }}>
         <Button href={pollUrl}>
           {ctx.t("common_viewOn", {
+            ns: "emails",
             defaultValue: "View on {{domain}}",
             domain,
           })}
@@ -40,6 +41,7 @@ export const NotificationEmail = ({
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="common_disableNotifications"
+          ns="emails"
           defaults="If you would like to stop receiving updates you can <a>turn notifications off</a>."
           components={{
             a: (

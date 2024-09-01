@@ -25,11 +25,13 @@ const NewParticipantEmail = ({
       disableNotificationsUrl={disableNotificationsUrl}
       preview={ctx.t("newParticipant_preview", {
         defaultValue: "Go to your poll to see the new response.",
+        ns: "emails",
       })}
     >
       <Heading>
         {ctx.t("newParticipant_heading", {
           defaultValue: "New Response",
+          ns: "emails",
         })}
       </Heading>
       <Text>
@@ -37,6 +39,7 @@ const NewParticipantEmail = ({
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="newParticipant_content"
+          ns="emails"
           defaults="<b>{{name}}</b> has responded to <b>{{title}}</b>."
           components={{
             b: <strong />,
@@ -50,6 +53,7 @@ const NewParticipantEmail = ({
           t={ctx.t}
           i18nKey="newParticipant_content2"
           defaults="Go to your poll to see the new response."
+          ns="emails"
         />
       </Text>
     </NotificationEmail>
@@ -64,6 +68,7 @@ NewParticipantEmail.getSubject = (
     defaultValue: "{{name}} has responded to {{title}}",
     name: props.participantName,
     title: props.title,
+    ns: "emails",
   });
 };
 

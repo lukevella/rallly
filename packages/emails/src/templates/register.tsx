@@ -21,6 +21,7 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
     <EmailLayout
       ctx={ctx}
       preview={ctx.t("register_preview", {
+        ns: "emails",
         defaultValue: "Your 6-digit code is: {{code}}",
         code,
       })}
@@ -28,12 +29,14 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
       <Heading>
         {ctx.t("register_heading", {
           defaultValue: "Verify your email address",
+          ns: "emails",
         })}
       </Heading>
       <Text>
         {ctx.t("register_text", {
           defaultValue:
             "Please use the following 6-digit verification code to verify your email",
+          ns: "emails",
         })}
       </Text>
       <Card style={{ textAlign: "center" }}>
@@ -51,6 +54,7 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
         <Text style={{ textAlign: "center" }} light={true}>
           {ctx.t("register_codeValid", {
             defaultValue: "This code is valid for 15 minutes",
+            ns: "emails",
           })}
         </Text>
       </Card>
@@ -60,6 +64,7 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
             i18n={ctx.i18n}
             t={ctx.t}
             i18nKey="register_footer"
+            ns="emails"
             values={{ domain: ctx.domain }}
             components={{
               domain: <Domain ctx={ctx} />,
@@ -75,6 +80,7 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
 RegisterEmail.getSubject = (_props: RegisterEmailProps, ctx: EmailContext) => {
   return ctx.t("register_subject", {
     defaultValue: "Please verify your email address",
+    ns: "emails",
   });
 };
 

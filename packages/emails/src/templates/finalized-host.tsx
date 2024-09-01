@@ -36,6 +36,7 @@ const FinalizeHostEmail = ({
     <EmailLayout
       ctx={ctx}
       preview={ctx.t("finalizeHost_preview", {
+        ns: "emails",
         defaultValue:
           "Final date booked! We've notified participants and sent them calendar invites.",
         title,
@@ -44,6 +45,7 @@ const FinalizeHostEmail = ({
       <Heading>
         {ctx.t("finalizeHost_heading", {
           defaultValue: "Final date booked!",
+          ns: "emails",
         })}
       </Heading>
       <Text>
@@ -51,6 +53,7 @@ const FinalizeHostEmail = ({
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="finalizeHost_content"
+          ns="emails"
           values={{ title }}
           components={{
             b: <strong />,
@@ -100,12 +103,14 @@ const FinalizeHostEmail = ({
         {ctx.t("finalizeHost_content2", {
           defaultValue:
             "We've notified participants and sent them calendar invites.",
+          ns: "emails",
         })}
       </Text>
       <Section style={{ marginTop: 32 }}>
         <Button href={pollUrl}>
           {ctx.t("finalizeHost_button", {
             defaultValue: "View Event",
+            ns: "emails",
           })}
         </Button>
       </Section>
@@ -120,6 +125,7 @@ FinalizeHostEmail.getSubject = (
   return ctx.t("finalizeHost_subject", {
     defaultValue: "Date booked for {{title}}",
     title: props.title,
+    ns: "emails",
   });
 };
 

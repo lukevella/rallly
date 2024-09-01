@@ -27,16 +27,24 @@ export const NewPollEmail = ({
   return (
     <EmailLayout
       ctx={ctx}
-      preview="Share your participant link to start collecting responses."
+      preview={ctx.t("newPoll_preview", {
+        defaultValue:
+          "Share your participant link to start collecting responses.",
+        ns: "emails",
+      })}
     >
       <Heading>
-        {ctx.t("newPoll_heading", { defaultValue: "New Poll Created" })}
+        {ctx.t("newPoll_heading", {
+          defaultValue: "New Poll Created",
+          ns: "emails",
+        })}
       </Heading>
       <Text>
         <Trans
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="newPoll_content"
+          ns="emails"
           values={{ title }}
           components={{
             b: <strong />,
@@ -50,7 +58,11 @@ export const NewPollEmail = ({
         </Text>
       </Card>
       <Button href={adminLink}>
-        {ctx.t("newPoll_button", { defaultValue: "Manage Poll" })} &rarr;
+        {ctx.t("newPoll_button", {
+          defaultValue: "Manage Poll",
+          ns: "emails",
+        })}
+        &rarr;
       </Button>
     </EmailLayout>
   );
@@ -60,6 +72,7 @@ NewPollEmail.getSubject = (props: NewPollEmailProps, ctx: EmailContext) => {
   return ctx.t("newPoll_subject", {
     defaultValue: "Let's find a date for {{title}}!",
     title: props.title,
+    ns: "emails",
   });
 };
 
