@@ -1,6 +1,5 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
-import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
 import { createToken } from "../../../session";
@@ -114,7 +113,6 @@ export const participants = router({
         return participant;
       });
 
-      const emailsToSend: Promise<void>[] = [];
       if (email) {
         const token = await createToken(
           { userId: user.id },
@@ -170,8 +168,6 @@ export const participants = router({
           },
         });
       }
-
-      waitUntil(Promise.all(emailsToSend));
 
       return participant;
     }),
