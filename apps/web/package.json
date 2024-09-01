@@ -31,6 +31,7 @@
     "@rallly/languages": "*",
     "@rallly/tailwind-config": "*",
     "@rallly/ui": "*",
+    "@rallly/emails": "*",
     "@sentry/nextjs": "^8",
     "@svgr/webpack": "^6.5.1",
     "@t3-oss/env-nextjs": "^0.11.0",

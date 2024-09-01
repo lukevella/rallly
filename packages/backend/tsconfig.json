@@ -1,5 +1,5 @@
 {
-  "extends": "@rallly/tsconfig/react.json",
+  "extends": "@rallly/tsconfig/next.json",
   "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
   "exclude": ["node_modules"],
 }
