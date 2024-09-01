@@ -9,7 +9,7 @@ i18nInstance
   .use(
     resourcesToBackend(
       (language: string, namespace: string) =>
-        import(`locales/${language}/${namespace}.json`),
+        import(`../locales/${language}/${namespace}.json`),
     ),
   );
 
