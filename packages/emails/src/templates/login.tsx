@@ -7,6 +7,7 @@ import {
   Card,
   Domain,
   Heading,
+  Link,
   Text,
   trackingWide,
 } from "../components/styled-components";
@@ -76,7 +77,7 @@ export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
           values={{ supportEmail: ctx.supportEmail }}
           components={{
             domain: <Domain ctx={ctx} />,
-            a: <a href={`mailto:${ctx.supportEmail}`} />,
+            a: <Link href={`mailto:${ctx.supportEmail}`} />,
           }}
           ns="emails"
         />
