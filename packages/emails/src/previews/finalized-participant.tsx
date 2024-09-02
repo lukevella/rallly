@@ -1,7 +1,7 @@
 import { previewEmailContext } from "../components/email-context";
 import { FinalizeParticipantEmail } from "../templates/finalized-participant";
 
-export default function FinaalizedParticipantPreview() {
+export default function FinalizedParticipantPreview() {
   return (
     <FinalizeParticipantEmail
       title="Untitled Poll"
