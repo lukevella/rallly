@@ -15,6 +15,7 @@ import { usePoll } from "@/contexts/poll";
 
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
+import { useUser } from "@/components/user-provider";
 
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
@@ -86,14 +87,15 @@ const VoteSummary = ({
 export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { t } = useTranslation();
   const poll = usePoll();
-
+  const { user } = useUser();
   const isEmailRequired = poll.requireParticipantEmail;
-
   const { register, setError, formState, setFocus, handleSubmit } =
     useForm<NewParticipantFormData>({
       resolver: zodResolver(schema),
       defaultValues: {
         requireEmail: isEmailRequired,
+        name: user.name,
+        email: user.email ?? '',
       },
     });
   const addParticipant = useAddParticipantMutation();

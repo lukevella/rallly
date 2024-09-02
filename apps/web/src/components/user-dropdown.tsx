@@ -159,12 +159,6 @@ export const UserDropdown = ({ className }: { className?: string }) => {
               <Trans i18nKey="login" defaults="login" />
             </LoginLink>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild={true}>
-            <RegisterLink className="flex items-center gap-x-2">
-              <UserPlusIcon className="text-muted-foreground size-4" />
-              <Trans i18nKey="createAnAccount" defaults="Register" />
-            </RegisterLink>
-          </DropdownMenuItem>
         </IfGuest>
         <IfAuthenticated>
           <DropdownMenuItem
