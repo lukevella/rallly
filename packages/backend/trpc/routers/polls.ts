@@ -11,6 +11,7 @@ import {
   possiblyPublicProcedure,
   proProcedure,
   publicProcedure,
+  rateLimitMiddleware,
   router,
 } from "../trpc";
 import { comments } from "./polls/comments";
@@ -148,6 +149,7 @@ export const polls = router({
 
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
+    .use(rateLimitMiddleware)
     .input(
       z.object({
         title: z.string().trim().min(1),

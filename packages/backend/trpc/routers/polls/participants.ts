@@ -4,7 +4,7 @@ import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
 import { createToken } from "../../../session";
-import { publicProcedure, router } from "../../trpc";
+import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
 import { DisableNotificationsPayload } from "../../types";
 
 export const participants = router({
@@ -55,6 +55,7 @@ export const participants = router({
       });
     }),
   add: publicProcedure
+    .use(rateLimitMiddleware)
     .input(
       z.object({
         pollId: z.string(),
@@ -69,14 +70,6 @@ export const participants = router({
       }),
     )
     .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
-      const { success } = await ctx.ratelimit();
-
-      if (!success) {
-        throw new TRPCError({
-          code: "TOO_MANY_REQUESTS",
-          message: "Rate limit exceeded. Please try again later.",
-        });
-      }
       const { user } = ctx;
 
       const poll = await prisma.poll.findUnique({
