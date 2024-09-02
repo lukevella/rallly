@@ -19,5 +19,7 @@
   "findATimeDescription": "Stvorite događaj i pozovite sudionike na glasanje o terminu koji im najviše odgovara.",
   "createASchedulingPoll": "Stvori anketu za sastanak",
   "new": "Novo",
+  "metaTitle": "Rallly - zakazivanje termina sastanaka",
+  "metaDescription": "Napravite ankete i glasajte kako biste pronašli najbolji dan ili vrijeme. Besplatna alternativa Doodleu.",
   "selfHostingBlog": "Rallly 3.0 samostalni hosting"
 }
