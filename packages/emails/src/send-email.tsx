@@ -81,65 +81,72 @@ export class EmailClient {
     this.config = config;
   }
 
-  sendTemplate<T extends TemplateName>(
+  queueTemplate<T extends TemplateName>(
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
-    waitUntil(
+    return waitUntil(
       (async () => {
-        const locale = this.config.locale ?? "en";
-
-        await i18nInstance.init({
-          ...i18nDefaultConfig,
-          lng: locale,
-        });
-
-        const ctx = {
-          ...this.config.config,
-          i18n: i18nInstance,
-          t: i18nInstance.getFixedT(locale),
-        };
-
-        const Template = templates[templateName] as TemplateComponent<T>;
-        const subject = Template.getSubject?.(options.props, ctx);
-        const component = (
-          <Template
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {...(options.props as any)}
-            ctx={ctx}
-          />
-        );
-
-        const [html, text] = await Promise.all([
-          renderAsync(component),
-          renderAsync(component, { plainText: true }),
-        ]);
-
-        try {
-          await this.sendEmail({
-            from: this.config.mail.from,
-            to: options.to,
-            subject,
-            html,
-            text,
-            attachments: options.attachments,
-          });
-        } catch (e) {
-          const enhancedError = new Error(
-            `Failed to send email template: ${templateName}`,
-            {
-              cause: e instanceof Error ? e : new Error(String(e)),
-            },
-          );
-          Object.assign(enhancedError, {
-            templateName,
-            recipient: options.to,
-            subject,
-          });
-          this.config.onError?.(enhancedError);
-        }
+        this.sendTemplate(templateName, options);
       })(),
     );
+  }
+
+  async sendTemplate<T extends TemplateName>(
+    templateName: T,
+    options: SendEmailOptions<T>,
+  ) {
+    const locale = this.config.locale ?? "en";
+
+    await i18nInstance.init({
+      ...i18nDefaultConfig,
+      lng: locale,
+    });
+
+    const ctx = {
+      ...this.config.config,
+      i18n: i18nInstance,
+      t: i18nInstance.getFixedT(locale),
+    };
+
+    const Template = templates[templateName] as TemplateComponent<T>;
+    const subject = Template.getSubject?.(options.props, ctx);
+    const component = (
+      <Template
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        {...(options.props as any)}
+        ctx={ctx}
+      />
+    );
+
+    const [html, text] = await Promise.all([
+      renderAsync(component),
+      renderAsync(component, { plainText: true }),
+    ]);
+
+    try {
+      await this.sendEmail({
+        from: this.config.mail.from,
+        to: options.to,
+        subject,
+        html,
+        text,
+        attachments: options.attachments,
+      });
+    } catch (e) {
+      const enhancedError = new Error(
+        `Failed to send email template: ${templateName}`,
+        {
+          cause: e instanceof Error ? e : new Error(String(e)),
+        },
+      );
+      Object.assign(enhancedError, {
+        templateName,
+        recipient: options.to,
+        subject,
+      });
+      this.config.onError?.(enhancedError);
+    }
   }
 
   async sendEmail(options: Mail.Options) {

@@ -123,7 +123,7 @@ export const participants = router({
 
         ctx.user
           .getEmailClient()
-          .sendTemplate("NewParticipantConfirmationEmail", {
+          .queueTemplate("NewParticipantConfirmationEmail", {
             to: email,
             props: {
               title: poll.title,
@@ -156,7 +156,7 @@ export const participants = router({
           { watcherId: watcher.id, pollId },
           { ttl: 0 },
         );
-        ctx.user.getEmailClient().sendTemplate("NewParticipantEmail", {
+        ctx.user.getEmailClient().queueTemplate("NewParticipantEmail", {
           to: email,
           props: {
             participantName: participant.name,

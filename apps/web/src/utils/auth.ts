@@ -95,15 +95,18 @@ const providers: Provider[] = [
       });
 
       if (user) {
-        getEmailClient(user.locale ?? undefined).sendTemplate("LoginEmail", {
-          to: email,
-          props: {
-            magicLink: absoluteUrl("/auth/login", {
-              magicLink: url,
-            }),
-            code: token,
+        await getEmailClient(user.locale ?? undefined).sendTemplate(
+          "LoginEmail",
+          {
+            to: email,
+            props: {
+              magicLink: absoluteUrl("/auth/login", {
+                magicLink: url,
+              }),
+              code: token,
+            },
           },
-        });
+        );
       }
     },
   }),

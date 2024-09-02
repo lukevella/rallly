@@ -80,7 +80,7 @@ export const comments = router({
         );
         ctx
           .getEmailClient(watcher.user.locale ?? undefined)
-          .sendTemplate("NewCommentEmail", {
+          .queueTemplate("NewCommentEmail", {
             to: email,
             props: {
               authorName,

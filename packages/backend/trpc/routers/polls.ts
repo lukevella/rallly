@@ -231,7 +231,7 @@ export const polls = router({
         });
 
         if (user) {
-          ctx.user.getEmailClient().sendTemplate("NewPollEmail", {
+          ctx.user.getEmailClient().queueTemplate("NewPollEmail", {
             to: user.email,
             props: {
               title: poll.title,
@@ -915,7 +915,7 @@ export const polls = router({
           });
         }
 
-        ctx.user.getEmailClient().sendTemplate("FinalizeHostEmail", {
+        ctx.user.getEmailClient().queueTemplate("FinalizeHostEmail", {
           to: poll.user.email,
           props: {
             name: poll.user.name,
@@ -940,7 +940,7 @@ export const polls = router({
         for (const p of participantsToEmail) {
           ctx
             .getEmailClient(p.locale ?? undefined)
-            .sendTemplate("FinalizeParticipantEmail", {
+            .queueTemplate("FinalizeParticipantEmail", {
               to: p.email,
               props: {
                 pollUrl: ctx.absoluteUrl(`/invite/${poll.id}`),
