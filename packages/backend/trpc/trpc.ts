@@ -70,4 +70,15 @@ export const privateProcedure = t.procedure.use(
   }),
 );
 
+export const rateLimitMiddleware = middleware(async ({ ctx, next }) => {
+  const { success } = await ctx.ratelimit();
+  if (!success) {
+    throw new TRPCError({
+      code: "TOO_MANY_REQUESTS",
+      message: "Too many requests",
+    });
+  }
+  return next();
+});
+
 export const mergeRouters = t.mergeRouters;
