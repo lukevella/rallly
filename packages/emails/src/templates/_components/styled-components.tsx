@@ -42,7 +42,7 @@ export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
       {...props}
       className={props.className}
       style={{
-        backgroundColor: "#4F46E5",
+        backgroundColor: "#005437",
         borderRadius: "4px",
         padding: "12px 14px",
         fontFamily,
@@ -57,7 +57,7 @@ export const Link = (props: LinkProps) => {
   return (
     <UnstyledLink
       {...props}
-      style={{ color: "#4F46E5", fontFamily, ...props.style }}
+      style={{ color: "#005437", fontFamily, ...props.style }}
     />
   );
 };
