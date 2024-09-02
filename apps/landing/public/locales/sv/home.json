@@ -34,5 +34,7 @@
   "freeSchedulingPollTitle": "Letar du efter en gratis schemaläggningsundersökning?",
   "freeSchedulingPollDescription": "Rally låter dig skapa vackra och lättanvända schemaläggningsundersökningar så att du kan hitta den bästa tiden för ditt nästa evenemang.",
   "new": "Ny",
+  "metaTitle": "Rallly - Schemalägg gruppmöten",
+  "metaDescription": "Skapa omröstningar och rösta för att hitta den bästa dagen eller tiden. Ett kostnadsfritt alternativ till Doodle.",
   "selfHostingBlog": "Egen drift av Rally 3.0"
 }
