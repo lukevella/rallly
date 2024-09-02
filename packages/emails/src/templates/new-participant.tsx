@@ -1,38 +1,75 @@
-import { defaultEmailContext } from "./_components/email-context";
+import { Trans } from "react-i18next/TransWithoutContext";
+
 import NotificationEmail, {
   NotificationBaseProps,
-} from "./_components/notification-email";
-import { Heading, Text } from "./_components/styled-components";
+} from "../components/notification-email";
+import { Heading, Text } from "../components/styled-components";
+import type { EmailContext } from "../types";
 
 export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;
 }
 
-export const NewParticipantEmail = ({
-  name = "John",
-  title = "Untitled Poll",
-  participantName = "Someone",
-  pollUrl = "https://rallly.co",
-  disableNotificationsUrl = "https://rallly.co",
-  ctx = defaultEmailContext,
+const NewParticipantEmail = ({
+  title,
+  participantName,
+  pollUrl,
+  disableNotificationsUrl,
+  ctx,
 }: NewParticipantEmailProps) => {
   return (
     <NotificationEmail
       ctx={ctx}
-      name={name}
       title={title}
       pollUrl={pollUrl}
       disableNotificationsUrl={disableNotificationsUrl}
-      preview="Go to your poll to see the new response."
+      preview={ctx.t("newParticipant_preview", {
+        defaultValue: "Go to your poll to see the new response.",
+        ns: "emails",
+      })}
     >
-      <Heading>New Response</Heading>
+      <Heading>
+        {ctx.t("newParticipant_heading", {
+          defaultValue: "New Response",
+          ns: "emails",
+        })}
+      </Heading>
       <Text>
-        <strong>{participantName}</strong> has responded to{" "}
-        <strong>{title}</strong>.
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="newParticipant_content"
+          ns="emails"
+          defaults="<b>{{name}}</b> has responded to <b>{{title}}</b>."
+          components={{
+            b: <strong />,
+          }}
+          values={{ name: participantName, title }}
+        />
       </Text>
-      <Text>Go to your poll to see the new response.</Text>
+      <Text>
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="newParticipant_content2"
+          defaults="Go to your poll to see the new response."
+          ns="emails"
+        />
+      </Text>
     </NotificationEmail>
   );
 };
 
-export default NewParticipantEmail;
+NewParticipantEmail.getSubject = (
+  props: NewParticipantEmailProps,
+  ctx: EmailContext,
+) => {
+  return ctx.t("newParticipant_subject", {
+    defaultValue: "{{name}} has responded to {{title}}",
+    name: props.participantName,
+    title: props.title,
+    ns: "emails",
+  });
+};
+
+export { NewParticipantEmail };

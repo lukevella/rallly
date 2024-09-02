@@ -6,3 +6,5 @@ files:
     translation: /apps/web/public/locales/%two_letters_code%/%original_file_name%
   - source: /apps/landing/public/locales/en/*.json
     translation: /apps/landing/public/locales/%two_letters_code%/%original_file_name%
+  - source: /packages/emails/locales/en/*.json
+    translation: /packages/emails/locales/%two_letters_code%/%original_file_name%

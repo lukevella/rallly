@@ -1,6 +1,5 @@
 import { PollStatus, prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
-import { waitUntil } from "@vercel/functions";
 import dayjs from "dayjs";
 import * as ics from "ics";
 import { z } from "zod";
@@ -234,18 +233,15 @@ export const polls = router({
         });
 
         if (user) {
-          waitUntil(
-            ctx.emailClient.sendTemplate("NewPollEmail", {
-              to: user.email,
-              subject: `Let's find a date for ${poll.title}`,
-              props: {
-                title: poll.title,
-                name: user.name,
-                adminLink: pollLink,
-                participantLink,
-              },
-            }),
-          );
+          ctx.user.getEmailClient().queueTemplate("NewPollEmail", {
+            to: user.email,
+            props: {
+              title: poll.title,
+              name: user.name,
+              adminLink: pollLink,
+              participantLink,
+            },
+          });
         }
       }
 
@@ -746,6 +742,7 @@ export const polls = router({
             select: {
               name: true,
               email: true,
+              locale: true,
               votes: {
                 select: {
                   optionId: true,
@@ -890,7 +887,11 @@ export const polls = router({
             ? `${startTime} - ${endTime} ${timeZoneAbbrev}`
             : "All-day";
 
-        const participantsToEmail: Array<{ name: string; email: string }> = [];
+        const participantsToEmail: Array<{
+          name: string;
+          email: string;
+          locale: string | undefined;
+        }> = [];
 
         if (input.notify === "all") {
           poll.participants.forEach((p) => {
@@ -898,6 +899,7 @@ export const polls = router({
               participantsToEmail.push({
                 name: p.name,
                 email: p.email,
+                locale: p.locale ?? undefined,
               });
             }
           });
@@ -909,61 +911,51 @@ export const polls = router({
               participantsToEmail.push({
                 name: p.name,
                 email: p.email,
+                locale: p.locale ?? undefined,
               });
             }
           });
         }
 
-        const emailToHost = waitUntil(
-          ctx.emailClient.sendTemplate("FinalizeHostEmail", {
-            subject: `Date booked for ${poll.title}`,
-            to: poll.user.email,
-            props: {
-              name: poll.user.name,
-              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
-              location: poll.location,
-              title: poll.title,
-              attendees: poll.participants
-                .filter((p) =>
-                  p.votes.some(
-                    (v) => v.optionId === input.optionId && v.type !== "no",
-                  ),
-                )
-                .map((p) => p.name),
-              date,
-              day,
-              dow,
-              time,
-            },
-            attachments: [{ filename: "event.ics", content: event.value }],
-          }),
-        );
-
-        const emailsToParticipants = participantsToEmail.map((p) => {
-          return ctx.emailClient.sendTemplate("FinalizeParticipantEmail", {
-            subject: `Date booked for ${poll.title}`,
-            to: p.email,
-            props: {
-              name: p.name,
-              pollUrl: ctx.absoluteUrl(`/invite/${poll.id}`),
-              location: poll.location,
-              title: poll.title,
-              hostName: poll.user?.name ?? "",
-              attendees: poll.participants
-                .filter((p) =>
-                  p.votes.some(
-                    (v) => v.optionId === input.optionId && v.type !== "no",
-                  ),
-                )
-                .map((p) => p.name),
-              date,
-              day,
-              dow,
-              time,
-            },
-            attachments: [{ filename: "event.ics", content: event.value }],
-          });
+        ctx.user.getEmailClient().queueTemplate("FinalizeHostEmail", {
+          to: poll.user.email,
+          props: {
+            name: poll.user.name,
+            pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
+            location: poll.location,
+            title: poll.title,
+            attendees: poll.participants
+              .filter((p) =>
+                p.votes.some(
+                  (v) => v.optionId === input.optionId && v.type !== "no",
+                ),
+              )
+              .map((p) => p.name),
+            date,
+            day,
+            dow,
+            time,
+          },
+          attachments: [{ filename: "event.ics", content: event.value }],
         });
+
+        for (const p of participantsToEmail) {
+          ctx
+            .getEmailClient(p.locale ?? undefined)
+            .queueTemplate("FinalizeParticipantEmail", {
+              to: p.email,
+              props: {
+                pollUrl: ctx.absoluteUrl(`/invite/${poll.id}`),
+                title: poll.title,
+                hostName: poll.user?.name ?? "",
+                date,
+                day,
+                dow,
+                time,
+              },
+              attachments: [{ filename: "event.ics", content: event.value }],
+            });
+        }
 
         ctx.posthogClient?.capture({
           distinctId: ctx.user.id,
@@ -976,8 +968,6 @@ export const polls = router({
             days_since_created: dayjs().diff(poll.createdAt, "day"),
           },
         });
-
-        waitUntil(Promise.all([emailToHost, ...emailsToParticipants]));
       }
     }),
   reopen: possiblyPublicProcedure

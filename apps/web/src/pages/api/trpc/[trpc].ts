@@ -10,7 +10,7 @@ import { posthog, posthogApiHandler } from "@/app/posthog";
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
 import { getServerSession, isEmailBlocked } from "@/utils/auth";
 import { isSelfHosted } from "@/utils/constants";
-import { emailClient } from "@/utils/emails";
+import { getEmailClient } from "@/utils/emails";
 import { composeApiHandlers } from "@/utils/next";
 
 const ratelimit = new Ratelimit({
@@ -39,13 +39,15 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
           id: session.user.id,
           isGuest: session.user.email === null,
           locale: session.user.locale ?? undefined,
+          getEmailClient: () =>
+            getEmailClient(session.user.locale ?? undefined),
         };
       },
       posthogClient: posthog || undefined,
-      emailClient,
       isSelfHosted,
       isEmailBlocked,
       absoluteUrl,
+      getEmailClient,
       shortUrl,
       ratelimit: async () => {
         if (!process.env.KV_REST_API_URL) {

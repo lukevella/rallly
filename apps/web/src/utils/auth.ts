@@ -22,7 +22,7 @@ import { env } from "@/env";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
-import { emailClient } from "@/utils/emails";
+import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
 const providers: Provider[] = [
@@ -90,21 +90,23 @@ const providers: Provider[] = [
         },
         select: {
           name: true,
+          locale: true,
         },
       });
 
       if (user) {
-        await emailClient.sendTemplate("LoginEmail", {
-          to: email,
-          subject: `${token} is your 6-digit code`,
-          props: {
-            name: user.name,
-            magicLink: absoluteUrl("/auth/login", {
-              magicLink: url,
-            }),
-            code: token,
+        await getEmailClient(user.locale ?? undefined).sendTemplate(
+          "LoginEmail",
+          {
+            to: email,
+            props: {
+              magicLink: absoluteUrl("/auth/login", {
+                magicLink: url,
+              }),
+              code: token,
+            },
           },
-        });
+        );
       }
     },
   }),

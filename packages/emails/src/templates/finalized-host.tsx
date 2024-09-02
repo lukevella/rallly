@@ -1,13 +1,14 @@
 import { Column, Row, Section } from "@react-email/components";
+import { Trans } from "react-i18next/TransWithoutContext";
 
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
-import { EmailLayout } from "./_components/email-layout";
+import { EmailLayout } from "../components/email-layout";
 import {
   borderColor,
   Button,
   Heading,
   Text,
-} from "./_components/styled-components";
+} from "../components/styled-components";
+import type { EmailContext } from "../types";
 
 export interface FinalizeHostEmailProps {
   date: string;
@@ -22,20 +23,43 @@ export interface FinalizeHostEmailProps {
   ctx: EmailContext;
 }
 
-export const FinalizeHostEmail = ({
-  title = "Untitled Poll",
-  pollUrl = "https://rallly.co",
-  day = "12",
-  dow = "Fri",
-  date = "Friday, 12th June 2020",
-  time = "6:00 PM to 11:00 PM BST",
-  ctx = defaultEmailContext,
+const FinalizeHostEmail = ({
+  title,
+  pollUrl,
+  day,
+  dow,
+  date,
+  time,
+  ctx,
 }: FinalizeHostEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} preview="Final date booked!">
-      <Heading>Final date booked!</Heading>
+    <EmailLayout
+      ctx={ctx}
+      preview={ctx.t("finalizeHost_preview", {
+        ns: "emails",
+        defaultValue:
+          "Final date booked! We've notified participants and sent them calendar invites.",
+        title,
+      })}
+    >
+      <Heading>
+        {ctx.t("finalizeHost_heading", {
+          defaultValue: "Final date booked!",
+          ns: "emails",
+        })}
+      </Heading>
       <Text>
-        <strong>{title}</strong> has been booked for:
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="finalizeHost_content"
+          ns="emails"
+          values={{ title }}
+          components={{
+            b: <strong />,
+          }}
+          defaults="<b>{{title}}</b> has been booked for:"
+        />
       </Text>
       <Section>
         <Row>
@@ -76,13 +100,33 @@ export const FinalizeHostEmail = ({
         </Row>
       </Section>
       <Text>
-        We&apos;ve notified participants and sent them calendar invites.
+        {ctx.t("finalizeHost_content2", {
+          defaultValue:
+            "We've notified participants and sent them calendar invites.",
+          ns: "emails",
+        })}
       </Text>
       <Section style={{ marginTop: 32 }}>
-        <Button href={pollUrl}>View Event</Button>
+        <Button href={pollUrl}>
+          {ctx.t("finalizeHost_button", {
+            defaultValue: "View Event",
+            ns: "emails",
+          })}
+        </Button>
       </Section>
     </EmailLayout>
   );
 };
 
-export default FinalizeHostEmail;
+FinalizeHostEmail.getSubject = (
+  props: FinalizeHostEmailProps,
+  ctx: EmailContext,
+) => {
+  return ctx.t("finalizeHost_subject", {
+    defaultValue: "Date booked for {{title}}",
+    title: props.title,
+    ns: "emails",
+  });
+};
+
+export { FinalizeHostEmail };

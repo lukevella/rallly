@@ -4,7 +4,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "~/*": ["public/*"],
     },
     "strictNullChecks": true,
   },
@@ -20,5 +19,6 @@
     ".next/**/*",
     "playwright-report",
     "test-results",
+    "../../packages/emails/src/templates/*.tsx",
   ],
 }

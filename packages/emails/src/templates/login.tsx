@@ -1,32 +1,42 @@
 import { Section } from "@react-email/components";
+import { Trans } from "react-i18next/TransWithoutContext";
 
-import { defaultEmailContext, EmailContext } from "./_components/email-context";
-import { EmailLayout } from "./_components/email-layout";
+import { EmailLayout } from "../components/email-layout";
 import {
   Button,
   Card,
   Domain,
   Heading,
+  Link,
   Text,
   trackingWide,
-} from "./_components/styled-components";
+} from "../components/styled-components";
+import type { EmailContext } from "../types";
 
 interface LoginEmailProps {
-  name: string;
   code: string;
   magicLink: string;
   ctx: EmailContext;
 }
 
-export const LoginEmail = ({
-  code = "123456",
-  magicLink = "https://rallly.co",
-  ctx = defaultEmailContext,
-}: LoginEmailProps) => {
+export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
   return (
-    <EmailLayout ctx={ctx} preview="Use this link to log in on this device.">
-      <Heading>Login</Heading>
-      <Text>Enter this one-time 6-digit verification code:</Text>
+    <EmailLayout
+      ctx={ctx}
+      preview={ctx.t("login_preview", {
+        defaultValue: "Use this link to log in on this device.",
+        ns: "emails",
+      })}
+    >
+      <Heading>
+        {ctx.t("login_heading", { defaultValue: "Login", ns: "emails" })}
+      </Heading>
+      <Text>
+        {ctx.t("login_content", {
+          defaultValue: "Enter this one-time 6-digit verification code:",
+          ns: "emails",
+        })}
+      </Text>
       <Card style={{ textAlign: "center" }}>
         <Text
           style={{
@@ -40,21 +50,48 @@ export const LoginEmail = ({
           {code}
         </Text>
         <Text style={{ textAlign: "center" }} light={true}>
-          This code is valid for 15 minutes
+          {ctx.t("login_codeValid", {
+            defaultValue: "This code is valid for 15 minutes",
+            ns: "emails",
+          })}
         </Text>
       </Card>
       <Section style={{ marginBottom: 32 }}>
         <Button href={magicLink} id="magicLink">
-          Log in to {ctx.domain}
+          <Trans
+            i18n={ctx.i18n}
+            t={ctx.t}
+            i18nKey="login_button"
+            defaults="Log in to {domain}"
+            values={{ domain: ctx.domain }}
+            ns="emails"
+          />
         </Button>
       </Section>
       <Text light>
-        You&apos;re receiving this email because a request was made to login to{" "}
-        <Domain ctx={ctx} />. If this wasn&apos;t you contact{" "}
-        <a href={`mailto:${ctx.supportEmail}`}>{ctx.supportEmail}</a>.
+        <Trans
+          i18n={ctx.i18n}
+          t={ctx.t}
+          i18nKey="login_content2"
+          defaults="You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{supportEmail}</a>."
+          values={{ supportEmail: ctx.supportEmail }}
+          components={{
+            domain: <Domain ctx={ctx} />,
+            a: <Link href={`mailto:${ctx.supportEmail}`} />,
+          }}
+          ns="emails"
+        />
       </Text>
     </EmailLayout>
   );
+};
+
+LoginEmail.getSubject = (props: LoginEmailProps, ctx: EmailContext) => {
+  return ctx.t("login_subject", {
+    defaultValue: "{{code}} is your 6-digit code",
+    code: props.code,
+    ns: "emails",
+  });
 };
 
 export default LoginEmail;
