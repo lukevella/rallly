@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /api
+Disallow: /locales
+Allow: /api/og-image-poll
