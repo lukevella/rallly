@@ -1,6 +1,6 @@
 {
   "common_poweredBy": "Powered by <a>{{domain}}</a>",
-  "common_disableNotifications": "If you would like to stop receiving updates you can <link>turn notifications off</link>.",
+  "common_disableNotifications": "If you would like to stop receiving updates you can <a>turn notifications off</a>.",
   "finalizeHost_content": "<b>{{title}}</b> has been booked for:",
   "finalizeHost_preview": "Final date booked! We've notified participants and sent them calendar invites.",
   "finalizeHost_heading": "Final date booked!",
