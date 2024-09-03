@@ -262,7 +262,6 @@
   "pastEventsEmptyStateDescription": "Når du planlægger begivenheder, vil de vises her.",
   "activePollCount": "{{activePollCount}} aktive",
   "createPoll": "Opret afstemning",
-  "yearlyDiscount": "Spar {amount}",
   "yearlyBillingDescription": "pr. år",
   "addToCalendar": "Tilføj til kalender",
   "microsoft365": "Microsoft 365",
@@ -273,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Tidszoneændring registreret",
   "timeZoneChangeDetectorMessage": "Din tidszone er ændret til {currentTimeZone}. Vil du opdatere dine indstillinger?",
   "yesUpdateTimezone": "Ja, opdater min tidszone",
-  "noKeepCurrentTimezone": "Nej, behold den aktuelle tidszone"
+  "noKeepCurrentTimezone": "Nej, behold den aktuelle tidszone",
+  "annualBenefit": "{count} måneder gratis"
 }

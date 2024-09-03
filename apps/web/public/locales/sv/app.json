@@ -262,7 +262,6 @@
   "pastEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
   "activePollCount": "{{activePollCount}} Publik(a)",
   "createPoll": "Skapa omröstning",
-  "yearlyDiscount": "Spara {amount}",
   "yearlyBillingDescription": "per år",
   "addToCalendar": "Lägg till i kalender",
   "microsoft365": "Microsoft 365",
@@ -273,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Tidszonsändring upptäckt",
   "timeZoneChangeDetectorMessage": "Din tidszon har ändrats till {currentTimeZone}. Vill du uppdatera dina inställningar?",
   "yesUpdateTimezone": "Ja, uppdatera min tidszon",
-  "noKeepCurrentTimezone": "Nej, behåll den aktuella tidszonen"
+  "noKeepCurrentTimezone": "Nej, behåll den aktuella tidszonen",
+  "annualBenefit": "{count} månader gratis"
 }

@@ -262,10 +262,15 @@
   "pastEventsEmptyStateDescription": "Ajoittamasi tapahtumat näkyvät tässä.",
   "activePollCount": "{{activePollCount}} käynnissä",
   "createPoll": "Luo kysely",
-  "yearlyDiscount": "Säästä {amount}",
   "yearlyBillingDescription": "vuodessa",
+  "addToCalendar": "Lisää kalenteriin",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "Lataa ICS-tiedosto",
   "timeZoneChangeDetectorTitle": "Aikavyöhykkeen muutos havaittu",
   "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt {currentTimeZone}. Haluatko päivittää asetuksesi?",
   "yesUpdateTimezone": "Kyllä, päivitä aikavyöhykkeeni",
-  "noKeepCurrentTimezone": "Ei, säilytä nykyinen aikavyöhyke"
+  "noKeepCurrentTimezone": "Ei, säilytä nykyinen aikavyöhyke",
+  "annualBenefit": "{count} kuukautta ilmaiseksi"
 }

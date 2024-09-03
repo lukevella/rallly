@@ -35,7 +35,7 @@
   "exportToCsv": "Als CSV exporteren",
   "forgetMe": "Vergeet mij",
   "guest": "Gast",
-  "ifNeedBe": "Indien nodig",
+  "ifNeedBe": "Optioneel",
   "location": "Locatie",
   "locationPlaceholder": "Koffiehuis Joe's",
   "login": "Inloggen",
@@ -262,12 +262,16 @@
   "pastEventsEmptyStateDescription": "Wanneer je evenementen inplant, zullen ze hier verschijnen.",
   "activePollCount": "{{activePollCount}} actief",
   "createPoll": "Poll maken",
-  "yearlyDiscount": "Bespaar {amount}",
   "yearlyBillingDescription": "per jaar",
   "addToCalendar": "Toevoegen aan Agenda",
   "microsoft365": "Microsoft 365",
   "outlook": "Outlook",
   "yahoo": "Yahoo",
   "downloadICSFile": "ICS-bestand downloaden",
-  "schedulateDate": "Geplande datum"
+  "schedulateDate": "Geplande datum",
+  "timeZoneChangeDetectorTitle": "Verandering van tijdzone gedetecteerd",
+  "timeZoneChangeDetectorMessage": "Je tijdzone is veranderd naar {currentTimeZone}. Wil je je voorkeuren bijwerken?",
+  "yesUpdateTimezone": "Ja, werk mijn tijdzone bij",
+  "noKeepCurrentTimezone": "Nee, behoud de huidige tijdzone",
+  "annualBenefit": "{count} maanden gratis"
 }

@@ -262,7 +262,6 @@
   "pastEventsEmptyStateDescription": "Po zaplanowaniu wydarzeń pojawią się one tutaj.",
   "activePollCount": "Aktywnych: {{activePollCount}}",
   "createPoll": "Utwórz ankietę",
-  "yearlyDiscount": "Oszczędź {amount}",
   "yearlyBillingDescription": "rocznie",
   "addToCalendar": "Dodaj do kalendarza",
   "microsoft365": "Microsoft 365",
@@ -273,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Wykryto zmianę strefy czasowej",
   "timeZoneChangeDetectorMessage": "Twoja strefa czasowa została zmieniona na {currentTimeZone}. Czy chcesz zaktualizować swoje preferencje?",
   "yesUpdateTimezone": "Tak, zaktualizuj moją strefę czasową",
-  "noKeepCurrentTimezone": "Nie, zachowaj bieżącą strefę czasową"
+  "noKeepCurrentTimezone": "Nie, zachowaj bieżącą strefę czasową",
+  "annualBenefit": "{count} miesiące gratis"
 }

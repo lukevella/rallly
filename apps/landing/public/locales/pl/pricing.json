@@ -28,6 +28,6 @@
   "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność",
   "whenPollInactive": "Kiedy ankieta staje się nieaktywna?",
   "whenPollInactiveAnswer": "Ankiety stają się nieaktywne, gdy wszystkie opcje daty znajdują się w przeszłości ORAZ ankieta nie była używana przez ponad 30 dni. Nieaktywne ankiety są automatycznie usuwane, jeśli użytkownik nie posiada płatnej subskrypcji.",
-  "discount": "Oszczędź {amount}",
-  "yearlyBillingDescription": "rocznie"
+  "yearlyBillingDescription": "rocznie",
+  "annualBenefit": "{count} miesiące gratis"
 }

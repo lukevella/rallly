@@ -262,6 +262,16 @@
   "pastEventsEmptyStateDescription": "Amikor eseményeket ütemezel be, itt fognak megjelenni.",
   "activePollCount": "{{activePollCount}} aktív",
   "createPoll": "Szavazás létrehozása",
-  "yearlyDiscount": "Spórolj {amount}-ot",
-  "yearlyBillingDescription": "évente"
+  "yearlyBillingDescription": "évente",
+  "addToCalendar": "Hozzáadás a naptárhoz",
+  "microsoft365": "Microsoft 365",
+  "outlook": "Outlook",
+  "yahoo": "Yahoo",
+  "downloadICSFile": "ICS fájl letöltése",
+  "schedulateDate": "Tervezett időpont",
+  "timeZoneChangeDetectorTitle": "Időzóna változás észlelve",
+  "timeZoneChangeDetectorMessage": "Az időzónád megváltozott {currentTimeZone}-ra. Szeretnéd frissíteni a beállításaidat?",
+  "yesUpdateTimezone": "Igen, frissítsd az időzónám",
+  "noKeepCurrentTimezone": "Nem, tartsd meg a jelenlegi időzónát",
+  "annualBenefit": "{count} hónapig ingyenes"
 }
