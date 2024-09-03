@@ -1,1 +1,18 @@
-{}
+{
+  "common_poweredBy": "Működteti a <a>{{domain}}</a>",
+  "common_disableNotifications": "Ha nem szeretnél további fejleményeket kapni, akkor <a>kapcsold ki az értesítéseket</a>.",
+  "finalizeHost_content": "<b>{{title}}</b> véglegesítve lett:",
+  "finalizeHost_preview": "A dátum véglegesítve lett! Értesítettük a résztvevőket és küldtük nekik naptár meghívókat.",
+  "finalizeHost_heading": "Végleges dátum rögzítve!",
+  "finalizeHost_content2": "Értesítettük a résztvevőket és küldtük nekik naptár meghívókat.",
+  "finalizeHost_button": "Esemény megtekintése",
+  "finalizeHost_subject": "Dátum véglegesítve {{title}} számára",
+  "finalizeParticipant_content": "<b>{{hostName}}</b> véglegeítette <b>{{title}}</b> szavazást a következő dátumra:",
+  "finalizeParticipant_preview": "Végleges dátum rögzítve!",
+  "finalizeParticipant_heading": "Végleges dátum rögzítve!",
+  "finalizeParticipant_content2": "Kérjük fogadd el a mellékelt naptár meghívót ehhez az eseményhez.",
+  "finalizeParticipant_subject": "Dátum véglegesítve {{title}} számára",
+  "login_button": "Jelentkezz be a(z) {{domain}}",
+  "login_content2": "Ezt az e-mailt azért kaptad, mert bejelentkezési kísérlet történt a(z) <domain />-ra. Ha ez nem te voltál, lépj kapcsolatba a(z) <a>{{supportEmail}}</a> címmel.",
+  "login_preview": "Használd ezt a linket, hogy bejelentkezz ezen az eszközön."
+}
