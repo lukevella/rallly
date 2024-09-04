@@ -35,5 +35,6 @@
   "freeSchedulingPollDescription": "Ralllyn avulla luot kauniita ja helppokäyttöisiä aikataulukyselyitä, joilla löydät parhaan ajankohdat seuraavaa tapahtumaasi varten.",
   "new": "Uutta",
   "metaTitle": "Rallly - Suunnittele ryhmätapaamisia",
-  "metaDescription": "Luo kyselyitä ja äänestä parhaasta päivästä tai ajankohdasta. Ilmainen vaihtoehto Doodlelle."
+  "metaDescription": "Luo kyselyitä ja äänestä parhaasta päivästä tai ajankohdasta. Ilmainen vaihtoehto Doodlelle.",
+  "selfHostingBlog": "Rallly 3.0 Itseisännöinti"
 }
