@@ -272,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Ordu-eremu aldaketa detektatu da",
   "timeZoneChangeDetectorMessage": "Zure ordu-eremua {currentTimeZone} -ra aldatu da. Zure hobespenak eguneratu nahi dituzu?",
   "yesUpdateTimezone": "Bai, eguneratu nire ordu-eremua",
-  "noKeepCurrentTimezone": "Ez, mantendu uneko ordu-eremua"
+  "noKeepCurrentTimezone": "Ez, mantendu uneko ordu-eremua",
+  "annualBenefit": "{count} hilabete doan"
 }

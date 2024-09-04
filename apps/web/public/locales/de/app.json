@@ -272,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Zeitzonenänderung erkannt",
   "timeZoneChangeDetectorMessage": "Ihre Zeitzone wurde auf {currentTimeZone} geändert. Möchten Sie Ihre Einstellungen aktualisieren?",
   "yesUpdateTimezone": "Ja, aktualisiere meine Zeitzone",
-  "noKeepCurrentTimezone": "Nein, behalte die aktuelle Zeitzone"
+  "noKeepCurrentTimezone": "Nein, behalte die aktuelle Zeitzone",
+  "annualBenefit": "{count} Monate kostenlos"
 }
