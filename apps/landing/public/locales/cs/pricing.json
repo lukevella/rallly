@@ -27,5 +27,7 @@
   "planFree": "Zdarma",
   "keepPollsIndefinitely": "Uchovat hlasování neomezeně",
   "whenPollInactive": "Kdy se anketa stane neaktivní?",
-  "whenPollInactiveAnswer": "Anketa se stane neaktivní, když jsou všechny možnosti (data) v minulosti a zároveň nikdo anketu nenavštívil více než 30 dní. Neaktivní ankety jsou automaticky smazány, pokud nemáte placené předplatné."
+  "whenPollInactiveAnswer": "Anketa se stane neaktivní, když jsou všechny možnosti (data) v minulosti a zároveň nikdo anketu nenavštívil více než 30 dní. Neaktivní ankety jsou automaticky smazány, pokud nemáte placené předplatné.",
+  "yearlyBillingDescription": "za rok",
+  "annualBenefit": "{count} měsíců zdarma"
 }
