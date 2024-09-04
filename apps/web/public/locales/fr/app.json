@@ -272,5 +272,6 @@
   "timeZoneChangeDetectorTitle": "Changement de fuseau horaire détecté",
   "timeZoneChangeDetectorMessage": "Votre fuseau horaire a été modifié en {currentTimeZone}. Souhaitez-vous mettre à jour vos préférences ?",
   "yesUpdateTimezone": "Oui, mettez à jour mon fuseau horaire",
-  "noKeepCurrentTimezone": "Non, conserver le fuseau horaire actuel"
+  "noKeepCurrentTimezone": "Non, conserver le fuseau horaire actuel",
+  "annualBenefit": "{count} mois gratuits"
 }
