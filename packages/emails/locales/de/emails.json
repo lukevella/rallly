@@ -1,1 +1,5 @@
-{}
+{
+  "common_poweredBy": "Betrieben von <a>{{domain}}</a>",
+  "common_disableNotifications": "Wenn Sie keine Updates mehr erhalten möchten, können Sie <a>Benachrichtigungen deaktivieren</a>.",
+  "finalizeHost_content": "<b>{{title}}</b> wurde gebucht für:"
+}
