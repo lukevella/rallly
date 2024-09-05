@@ -29,5 +29,5 @@
   "whenPollInactive": "When does a poll become inactive?",
   "whenPollInactiveAnswer": "Polls become inactive when all date options are in the past AND the poll has not been accessed for over 30 days. Inactive polls are automatically deleted if you do not have a paid subscription.",
   "yearlyBillingDescription": "per year",
-  "annualBenefit": "{count} months free"
+  "annualBenefit": "{{count}} months free"
 }
