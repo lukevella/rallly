@@ -1,8 +1,9 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
-import { createToken, decryptToken } from "../../session";
-import { generateOtp } from "../../utils/nanoid";
+import { generateOtp } from "@/utils/nanoid";
+import { createToken, decryptToken } from "@/utils/session";
+
 import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
 import { RegistrationTokenPayload } from "../types";
 

@@ -1,7 +1,8 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
-import { createToken } from "../../../session";
+import { createToken } from "@/utils/session";
+
 import { publicProcedure, router } from "../../trpc";
 import { DisableNotificationsPayload } from "../../types";
 

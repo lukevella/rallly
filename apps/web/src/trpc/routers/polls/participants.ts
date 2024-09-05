@@ -2,7 +2,8 @@ import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createToken } from "../../../session";
+import { createToken } from "@/utils/session";
+
 import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
 import { DisableNotificationsPayload } from "../../types";
 

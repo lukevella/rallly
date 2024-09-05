@@ -1,8 +1,8 @@
-import { randomid } from "@rallly/backend/utils/nanoid";
 import { NextRequest, NextResponse } from "next/server";
 import { encode, JWT } from "next-auth/jwt";
 
 import { absoluteUrl } from "@/utils/absolute-url";
+import { randomid } from "@/utils/nanoid";
 
 function getCookieSettings() {
   const secure = absoluteUrl().startsWith("https://");

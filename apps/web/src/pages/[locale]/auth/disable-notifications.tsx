@@ -1,9 +1,9 @@
-import { DisableNotificationsPayload } from "@rallly/backend";
-import { decryptToken } from "@rallly/backend/session";
 import { prisma } from "@rallly/database";
 import { GetServerSideProps } from "next";
 
+import type { DisableNotificationsPayload } from "@/trpc/types";
 import { getServerSession } from "@/utils/auth";
+import { decryptToken } from "@/utils/session";
 
 const Page = () => {
   return null;

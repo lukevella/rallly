@@ -1,5 +1,3 @@
-import { createTRPCContext } from "@rallly/backend/trpc/context";
-import { AppRouter, appRouter } from "@rallly/backend/trpc/routers";
 import * as Sentry from "@sentry/nextjs";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { Ratelimit } from "@upstash/ratelimit";
@@ -7,6 +5,8 @@ import { kv } from "@vercel/kv";
 import requestIp from "request-ip";
 
 import { posthog, posthogApiHandler } from "@/app/posthog";
+import { createTRPCContext } from "@/trpc/context";
+import { AppRouter, appRouter } from "@/trpc/routers";
 import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
 import { getServerSession, isEmailBlocked } from "@/utils/auth";
 import { isSelfHosted } from "@/utils/constants";
