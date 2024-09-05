@@ -1,6 +1,5 @@
 import { prisma } from "@rallly/database";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
 import { getTranslation } from "@/app/i18n";
@@ -36,7 +35,7 @@ export async function generateMetadata({
   const { t } = await getTranslation(locale);
 
   if (!poll) {
-    return notFound();
+    return null;
   }
 
   const { title, id, user } = poll;
