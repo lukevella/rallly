@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Skjul deltakere, skjul resultater, kreve deltakerens e-postadresse.",
   "keepPollsIndefinitely": "Behold avstemninger på ubestemt tid",
   "keepPollsIndefinitelyDescription": "Inaktive avstemninger vil ikke bli automatisk slettet.",
-  "verificationCodeSentTo": "Vi sendte en bekreftelseskode til <b>{{email}}</b>",
+  "verificationCodeSentTo": "Vi sendte en bekreftelseskode til <b>{{ email }}</b>",
   "home": "Hjem",
   "groupPoll": "Gruppeavstemning",
   "groupPollDescription": "Del tilgjengeligheten din med en gruppe mennesker og finn den beste tiden å møtes.",
