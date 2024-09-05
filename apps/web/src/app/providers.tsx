@@ -1,5 +1,4 @@
 "use client";
-import { AppRouter } from "@rallly/backend/trpc/routers";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
@@ -9,6 +8,7 @@ import { useState } from "react";
 
 import { I18nProvider } from "@/app/i18n/client";
 import { UserProvider } from "@/components/user-provider";
+import { AppRouter } from "@/trpc/routers";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpcConfig } from "@/utils/trpc/config";
 

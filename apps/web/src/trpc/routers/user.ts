@@ -1,7 +1,8 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
-import { getSubscriptionStatus } from "../../utils/auth";
+import { getSubscriptionStatus } from "@/utils/subscription";
+
 import {
   possiblyPublicProcedure,
   privateProcedure,

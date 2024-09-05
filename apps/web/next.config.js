@@ -18,7 +18,6 @@ const nextConfig = {
     process.env.NEXT_PUBLIC_SELF_HOSTED === "true" ? "standalone" : undefined,
   productionBrowserSourceMaps: true,
   transpilePackages: [
-    "@rallly/backend",
     "@rallly/database",
     "@rallly/icons",
     "@rallly/ui",
