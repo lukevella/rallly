@@ -68,7 +68,7 @@ jobs:
         run: yarn turbo build:test --filter=@rallly/web
 
       - name: Start services
-        run: yarn docker:up
+        run: docker compose -f docker-compose.dev.yml up -d rallly_db && wait-on --timeout 60000 tcp:localhost:5450
 
       - name: Setup database
         run: yarn db:deploy
