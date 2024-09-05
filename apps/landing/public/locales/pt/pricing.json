@@ -29,5 +29,5 @@
   "whenPollInactive": "Quando uma enquete se torna inativa?",
   "whenPollInactiveAnswer": "As enquetes se tornam inativas quando todas as opções de data estão no passado E a enquete não foi acessada por mais de 30 dias. Enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga.",
   "yearlyBillingDescription": "por ano",
-  "annualBenefit": "{count} meses grátis"
+  "annualBenefit": "{{count}} meses grátis"
 }
