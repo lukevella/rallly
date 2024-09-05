@@ -1,5 +1,5 @@
 "use client";
-import { useParams, useSearchParams } from "next/navigation";
+import { notFound, useParams, useSearchParams } from "next/navigation";
 import React from "react";
 
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
@@ -35,7 +35,7 @@ const Prefetch = ({ children }: React.PropsWithChildren) => {
   const comments = trpc.polls.comments.list.useQuery({ pollId: urlId });
 
   if (error?.data?.code === "NOT_FOUND") {
-    return <div>Not found</div>;
+    notFound();
   }
   if (!poll || !participants || !comments.isFetched) {
     return <Loader />;
