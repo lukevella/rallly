@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
+import * as Sentry from "@sentry/nextjs";
 import { usePostHog } from "posthog-js/react";
 import React, { useState } from "react";
 
@@ -25,7 +26,7 @@ export function TimeZoneChangeDetector() {
         return cachedPreviousTimeZone;
       }
     } catch (e) {
-      console.error(e);
+      Sentry.captureException(e);
     }
 
     const timeZone = preferences.timeZone ?? getBrowserTimeZone();
@@ -33,7 +34,7 @@ export function TimeZoneChangeDetector() {
     try {
       localStorage.setItem("previousTimeZone", timeZone);
     } catch (e) {
-      console.error(e);
+      Sentry.captureException(e);
     }
 
     return timeZone;
@@ -61,10 +62,11 @@ export function TimeZoneChangeDetector() {
             />
           </DialogTitle>
         </DialogHeader>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-sm leading-relaxed">
           <Trans
             i18nKey="timeZoneChangeDetectorMessage"
-            defaults="Your timezone has changed to {currentTimeZone}. Do you want to update your preferences?"
+            defaults="Your timezone has changed to <b>{currentTimeZone}</b>. Do you want to update your preferences?"
+            components={{ b: <b className="text-foreground font-medium" /> }}
             values={{ currentTimeZone }}
           />
         </p>
