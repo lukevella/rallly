@@ -53,7 +53,7 @@ export const VerifyCode: React.FunctionComponent<{
             <Trans
               t={t}
               i18nKey="verificationCodeSentTo"
-              defaults="We sent a verification code to <b>{{ email }}</b>"
+              defaults="We sent a verification code to <b>{email}</b>"
               values={{ email }}
               components={{
                 b: <strong className="whitespace-nowrap" />,
