@@ -1,6 +1,8 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
+import { posthog } from "@/app/posthog";
+import { isEmailBlocked } from "@/utils/auth";
 import { generateOtp } from "@/utils/nanoid";
 import { createToken, decryptToken } from "@/utils/session";
 
@@ -24,7 +26,7 @@ export const auth = router({
         | { ok: true; token: string }
         | { ok: false; reason: "userAlreadyExists" | "emailNotAllowed" }
       > => {
-        if (ctx.isEmailBlocked?.(input.email)) {
+        if (isEmailBlocked?.(input.email)) {
           return { ok: false, reason: "emailNotAllowed" };
         }
 
@@ -68,7 +70,7 @@ export const auth = router({
         locale: z.string().optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const payload = await decryptToken<RegistrationTokenPayload>(input.token);
 
       if (!payload) {
@@ -90,7 +92,7 @@ export const auth = router({
         },
       });
 
-      ctx.posthogClient?.capture({
+      posthog?.capture({
         event: "register",
         distinctId: user.id,
         properties: {

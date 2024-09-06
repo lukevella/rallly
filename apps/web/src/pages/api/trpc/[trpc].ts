@@ -1,22 +1,12 @@
 import * as Sentry from "@sentry/nextjs";
+import { TRPCError } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
-import { Ratelimit } from "@upstash/ratelimit";
-import { kv } from "@vercel/kv";
-import requestIp from "request-ip";
 
-import { posthog, posthogApiHandler } from "@/app/posthog";
-import { createTRPCContext } from "@/trpc/context";
+import { posthogApiHandler } from "@/app/posthog";
 import { AppRouter, appRouter } from "@/trpc/routers";
-import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
-import { getServerSession, isEmailBlocked } from "@/utils/auth";
-import { isSelfHosted } from "@/utils/constants";
+import { getServerSession } from "@/utils/auth";
 import { getEmailClient } from "@/utils/emails";
 import { composeApiHandlers } from "@/utils/next";
-
-const ratelimit = new Ratelimit({
-  redis: kv,
-  limiter: Ratelimit.slidingWindow(5, "1 m"),
-});
 
 export const config = {
   api: {
@@ -27,42 +17,25 @@ export const config = {
 const trpcApiHandler = createNextApiHandler<AppRouter>({
   router: appRouter,
   createContext: async (opts) => {
-    const res = createTRPCContext(opts, {
-      async getUser({ req, res }) {
-        const session = await getServerSession(req, res);
+    const session = await getServerSession(opts.req, opts.res);
 
-        if (!session) {
-          return null;
-        }
+    if (!session) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Unauthorized",
+      });
+    }
 
-        return {
-          id: session.user.id,
-          isGuest: session.user.email === null,
-          locale: session.user.locale ?? undefined,
-          getEmailClient: () =>
-            getEmailClient(session.user.locale ?? undefined),
-        };
+    const res = {
+      user: {
+        id: session.user.id,
+        isGuest: session.user.email === null,
+        locale: session.user.locale ?? undefined,
+        getEmailClient: () => getEmailClient(session.user.locale ?? undefined),
       },
-      posthogClient: posthog || undefined,
-      isSelfHosted,
-      isEmailBlocked,
-      absoluteUrl,
-      getEmailClient,
-      shortUrl,
-      ratelimit: async () => {
-        if (!process.env.KV_REST_API_URL) {
-          return { success: true };
-        }
-
-        const clientIp = requestIp.getClientIp(opts.req);
-
-        if (!clientIp) {
-          return { success: false };
-        }
-
-        return ratelimit.limit(clientIp);
-      },
-    });
+      req: opts.req,
+      res: opts.res,
+    };
 
     return res;
   },
