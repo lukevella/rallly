@@ -8,7 +8,7 @@ export function LogoLink() {
       href="/"
     >
       <Image
-        src="/logo-mark.svg"
+        src="/images/logo-mark.svg"
         alt="Rallly"
         width={32}
         height={32}
