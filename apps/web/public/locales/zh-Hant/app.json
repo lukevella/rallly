@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "隱藏參與者，隱藏分數，要求提供參與者電子郵件地址。",
   "keepPollsIndefinitely": "無限期保留投票",
   "keepPollsIndefinitelyDescription": "不活躍的投票將不會自動刪除。",
-  "verificationCodeSentTo": "我們已向 <b>{{ email }}</b> 發送驗證碼",
+  "verificationCodeSentTo": "我們已向 <b>{email}</b> 發送驗證碼",
   "home": "主頁",
   "groupPoll": "群組投票",
   "groupPollDescription": "與一組人員分享您的可用時間，並找到最佳會面時間。",

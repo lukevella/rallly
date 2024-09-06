@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Ocultar participantes, ocultar pontuações, exigir endereço de e-mail do participante.",
   "keepPollsIndefinitely": "Manter sondagens indefinidamente",
   "keepPollsIndefinitelyDescription": "Sondagens inativas não serão excluídas automaticamente.",
-  "verificationCodeSentTo": "Enviamos um código de verificação para <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Enviamos um código de verificação para <b>{email}</b>",
   "home": "Início",
   "groupPoll": "Sondagem em Grupo",
   "groupPollDescription": "Compartilhe sua disponibilidade com um grupo de pessoas e encontre o melhor horário para se encontrar.",

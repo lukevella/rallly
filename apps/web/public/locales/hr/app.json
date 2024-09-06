@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Sakrijte sudionike, sakrijte rezultate, zahtijevajte email adresu sudionika.",
   "keepPollsIndefinitely": "Zadržite ankete neodređeno",
   "keepPollsIndefinitelyDescription": "Neaktivne ankete neće se automatski brisati.",
-  "verificationCodeSentTo": "Poslali smo verifikacijski kod na <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Poslali smo verifikacijski kod na <b>{email}</b>",
   "home": "Početna",
   "groupPoll": "Grupna anketa",
   "groupPollDescription": "Podijelite svoju dostupnost s grupom ljudi i pronađite najbolje vrijeme za sastanak.",

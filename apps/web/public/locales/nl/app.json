@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Verberg deelnemers, verberg scores, vereis e-mailadres van deelnemer.",
   "keepPollsIndefinitely": "Polls voor onbepaalde tijd behouden",
   "keepPollsIndefinitelyDescription": "Inactieve polls worden niet automatisch verwijderd.",
-  "verificationCodeSentTo": "We hebben een verificatiecode naar <b>{{ email }}</b> gestuurd",
+  "verificationCodeSentTo": "We hebben een verificatiecode naar <b>{email}</b> gestuurd",
   "home": "Home",
   "groupPoll": "Groepsenquête",
   "groupPollDescription": "Deel je beschikbaarheid met een groep mensen en vind de beste tijd om elkaar te ontmoeten.",

@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Skrýt účastníky, skrýt skóre, vyžadovat e-mailovou adresu účastníka.",
   "keepPollsIndefinitely": "Uchovat hlasování neomezeně",
   "keepPollsIndefinitelyDescription": "Neaktivní hlasování nebudou automaticky smazána.",
-  "verificationCodeSentTo": "Odeslali jsme verifikační kód na <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Odeslali jsme verifikační kód na <b>{email}</b>",
   "home": "Domů",
   "groupPoll": "Hlasování skupiny",
   "groupPollDescription": "Sdílejte svou dostupnost se skupinou lidí a najděte nejlepší čas na setkání.",

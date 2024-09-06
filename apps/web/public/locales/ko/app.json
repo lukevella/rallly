@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "참여자 숨기기, 점수 숨기기, 참여자 이메일 주소 요구.",
   "keepPollsIndefinitely": "설문조사를 무제한으로 유지",
   "keepPollsIndefinitelyDescription": "비활성 설문조사는 자동으로 삭제되지 않습니다.",
-  "verificationCodeSentTo": "<b>{{ email }}</b>로 인증 코드를 보냈습니다.",
+  "verificationCodeSentTo": "<b>{email}</b>로 인증 코드를 보냈습니다.",
   "home": "홈",
   "groupPoll": "그룹 설문조사",
   "groupPollDescription": "한 그룹의 사람들과 가용성을 공유하고 만날 최적의 시간을 찾으세요.",

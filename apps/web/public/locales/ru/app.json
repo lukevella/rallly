@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Скрыть участников, скрыть результаты, потребовать адрес электронной почты участника.",
   "keepPollsIndefinitely": "Сохраняйте опросы бессрочно",
   "keepPollsIndefinitelyDescription": "Неактивные опросы не будут автоматически удалены.",
-  "verificationCodeSentTo": "Мы отправили код подтверждения на <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Мы отправили код подтверждения на <b>{email}</b>",
   "home": "Главная",
   "groupPoll": "Групповой опрос",
   "groupPollDescription": "Поделитесь своей доступностью с группой людей и найдите лучшее время для встречи.",

@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Ezkutatu partaideak, ezkutatu puntuazioak, eskatu partaideen helbide elektronikoa.",
   "keepPollsIndefinitely": "Mantendu inkestak mugarik gabe",
   "keepPollsIndefinitelyDescription": "Aktibitaterik gabeko inkestak ez dira automatikoki ezabatuko.",
-  "verificationCodeSentTo": "Egiaztapen-kode bat bidali dugu <b>{{ email }}</b> helbidera",
+  "verificationCodeSentTo": "Egiaztapen-kode bat bidali dugu <b>{email}</b> helbidera",
   "home": "Hasiera",
   "groupPoll": "Taldeko galdetegia",
   "groupPollDescription": "Partekatu zure prestasuna talde batekin eta aurkitu elkartzeko momenturik onena.",

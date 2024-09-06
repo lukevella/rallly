@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Nascondi partecipanti, nascondi punteggi, richiedi indirizzo email del partecipante.",
   "keepPollsIndefinitely": "Mantieni i Sondaggi Indefinitamente",
   "keepPollsIndefinitelyDescription": "I sondaggi inattivi non verranno eliminati automaticamente.",
-  "verificationCodeSentTo": "Abbiamo inviato un codice di verifica a <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Abbiamo inviato un codice di verifica a <b>{email}</b>",
   "home": "Home",
   "groupPoll": "Sondaggio di Gruppo",
   "groupPollDescription": "Condividi la tua disponibilità con un gruppo di persone e trova il miglior momento per incontrarti.",

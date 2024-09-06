@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Piilota osallistujat, piilota pisteet, vaadi osallistujan sähköpostiosoite.",
   "keepPollsIndefinitely": "Säilytä kyselyt pysyvästi",
   "keepPollsIndefinitelyDescription": "Passiivisia kyselyitä ei poisteta automaattisesti.",
-  "verificationCodeSentTo": "Lähetimme vahvistuskoodin osoitteeseen <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Lähetimme vahvistuskoodin osoitteeseen <b>{email}</b>",
   "home": "Kotisivu",
   "groupPoll": "Ryhmäkysely",
   "groupPollDescription": "Ilmoita sinulle sopivat ajankohdat ryhmälle ja etsi paras aika tapaamiselle.",

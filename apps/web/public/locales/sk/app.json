@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Skryť účastníkov, skryť skóre, požadovať emailovú adresu účastníka.",
   "keepPollsIndefinitely": "Udržiavať ankety bez časového limitu",
   "keepPollsIndefinitelyDescription": "Neaktívne ankety nebudú automaticky vymazané.",
-  "verificationCodeSentTo": "Poslali sme overovací kód na <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Poslali sme overovací kód na <b>{email}</b>",
   "home": "Domov",
   "groupPoll": "Skupinová anketa",
   "groupPollDescription": "Zdieľajte svoju dostupnosť so skupinou a nájdite najlepší čas na stretnutie.",

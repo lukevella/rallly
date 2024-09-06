@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Ukryj uczestników, ukryj wyniki, wymagaj adresu e-mail uczestnika.",
   "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność",
   "keepPollsIndefinitelyDescription": "Nieaktywne ankiety nie zostaną automatycznie usunięte.",
-  "verificationCodeSentTo": "Wysłaliśmy kod weryfikacyjny na adres <b>{{ email }}</b>",
+  "verificationCodeSentTo": "Wysłaliśmy kod weryfikacyjny na adres <b>{email}</b>",
   "home": "Strona główna",
   "groupPoll": "Ankieta grupowa",
   "groupPollDescription": "Podziel się swoją dostępnością z grupą osób i znajdź najlepszy czas na spotkanie.",
