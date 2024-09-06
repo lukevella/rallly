@@ -8,39 +8,32 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import * as Sentry from "@sentry/nextjs";
 import { usePostHog } from "posthog-js/react";
 import React, { useState } from "react";
 
 import { Trans } from "@/components/trans";
 import { usePreferences } from "@/contexts/preferences";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
+import { safeLocalStorage } from "@/utils/local-storage";
 
 export function TimeZoneChangeDetector() {
+  const [open, setOpen] = useState(false);
+
   const { preferences, updatePreferences } = usePreferences();
+  const currentTimeZone = getBrowserTimeZone();
 
   const [previousTimeZone, setPreviousTimeZone] = useState(() => {
-    try {
-      const cachedPreviousTimeZone = localStorage.getItem("previousTimeZone");
-      if (cachedPreviousTimeZone) {
-        return cachedPreviousTimeZone;
-      }
-    } catch (e) {
-      Sentry.captureException(e);
+    const cachedPreviousTimeZone = safeLocalStorage.getItem("previousTimeZone");
+    if (cachedPreviousTimeZone) {
+      return cachedPreviousTimeZone;
     }
 
-    const timeZone = preferences.timeZone ?? getBrowserTimeZone();
+    const timeZone = preferences.timeZone ?? currentTimeZone;
 
-    try {
-      localStorage.setItem("previousTimeZone", timeZone);
-    } catch (e) {
-      Sentry.captureException(e);
-    }
+    safeLocalStorage.setItem("previousTimeZone", timeZone);
 
     return timeZone;
   });
-  const currentTimeZone = getBrowserTimeZone();
-  const [open, setOpen] = useState(false);
 
   const posthog = usePostHog();
 
