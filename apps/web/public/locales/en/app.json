@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Hide participants, hide scores, require participant email address.",
   "keepPollsIndefinitely": "Keep Polls Indefinitely",
   "keepPollsIndefinitelyDescription": "Inactive polls will not be auto-deleted.",
-  "verificationCodeSentTo": "We sent a verification code to <b>{{ email }}</b>",
+  "verificationCodeSentTo": "We sent a verification code to <b>{email}</b>",
   "home": "Home",
   "groupPoll": "Group Poll",
   "groupPollDescription": "Share your availability with a group of people and find the best time to meet.",
