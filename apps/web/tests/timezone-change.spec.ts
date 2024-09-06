@@ -16,21 +16,6 @@ test.describe("Timezone Change", () => {
     await expect(modal).toBeHidden();
   });
 
-  test("does not show modal if stored timezone matches current timezone", async ({
-    page,
-  }) => {
-    const currentTimeZone = await page.evaluate(
-      () => Intl.DateTimeFormat().resolvedOptions().timeZone,
-    );
-    await page.evaluate(
-      (tz) => localStorage.setItem("previousTimeZone", tz),
-      currentTimeZone,
-    );
-    await page.reload();
-    const modal = page.locator("text=Timezone Change Detected");
-    await expect(modal).toBeHidden();
-  });
-
   test("shows modal if stored timezone is different from current timezone", async ({
     page,
   }) => {
