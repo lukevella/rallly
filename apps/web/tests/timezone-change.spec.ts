@@ -1,78 +1,84 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("Timezone change", () => {
-  test("should show a dialog when the timezone changes", async ({ page }) => {
+test.describe("Timezone Change", () => {
+  test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await page.evaluate(() => {
-      localStorage.setItem("previousTimeZone", "some other timezone");
+      localStorage.clear();
     });
-    await page.reload();
-    const dialog = page.locator("text=Timezone Change Detected");
-    await expect(dialog).toBeVisible();
   });
 
-  test("should not show a dialog when the timezone does not change", async ({
+  test("does not show modal on initial load with no previous timezone", async ({
     page,
   }) => {
-    await page.goto("/");
-    await page.evaluate(() => {
-      localStorage.setItem(
-        "previousTimeZone",
-        Intl.DateTimeFormat().resolvedOptions().timeZone,
-      );
-    });
     await page.reload();
-    const dialog = page.locator("text=Timezone Change Detected");
-    await expect(dialog).toBeHidden();
+    const modal = page.locator("text=Timezone Change Detected");
+    await expect(modal).toBeHidden();
   });
 
-  test("should not show dialog after user accepts a change", async ({
+  test("does not show modal if stored timezone matches current timezone", async ({
     page,
   }) => {
-    await page.goto("/");
-    await page.evaluate(() => {
-      localStorage.setItem("previousTimeZone", "some other timezone");
-    });
+    const currentTimeZone = await page.evaluate(
+      () => Intl.DateTimeFormat().resolvedOptions().timeZone,
+    );
+    await page.evaluate(
+      (tz) => localStorage.setItem("previousTimeZone", tz),
+      currentTimeZone,
+    );
     await page.reload();
-    await page.waitForSelector("text=Timezone Change Detected");
+    const modal = page.locator("text=Timezone Change Detected");
+    await expect(modal).toBeHidden();
+  });
+
+  test("shows modal if stored timezone is different from current timezone", async ({
+    page,
+  }) => {
+    await page.evaluate(() =>
+      localStorage.setItem("previousTimeZone", "Fake/Timezone"),
+    );
+    await page.reload();
+    const modal = page.locator("text=Timezone Change Detected");
+    await expect(modal).toBeVisible();
+  });
+
+  test("accepting timezone change updates preferences and does not show modal again", async ({
+    page,
+  }) => {
+    await page.evaluate(() =>
+      localStorage.setItem("previousTimeZone", "Fake/Timezone"),
+    );
+    await page.reload();
     await page.click("text=Yes, update my timezone");
     await page.reload();
-    const dialog = page.locator("text=Timezone Change Detected");
-    await expect(dialog).toBeHidden();
+    const modal = page.locator("text=Timezone Change Detected");
+    await expect(modal).toBeHidden();
   });
 
-  test("should not show dialog after user declines a change", async ({
+  test("declining timezone change updates localStorage but does not change preferences", async ({
     page,
   }) => {
-    await page.goto("/");
-    await page.evaluate(() => {
-      localStorage.setItem("previousTimeZone", "some other timezone");
-    });
+    await page.evaluate(() =>
+      localStorage.setItem("previousTimeZone", "Fake/Timezone"),
+    );
     await page.reload();
-    await page.waitForSelector("text=Timezone Change Detected");
     await page.click("text=No, keep the current timezone");
     await page.reload();
-    const dialog = page.locator("text=Timezone Change Detected");
-    await expect(dialog).toBeHidden();
+    const modal = page.locator("text=Timezone Change Detected");
+    await expect(modal).toBeHidden();
   });
 
-  test.describe("when localStorage is not available", () => {
-    test.beforeEach(async ({ page }) => {
-      await page.evaluate(() => {
-        Object.defineProperty(window, "localStorage", {
-          value: undefined,
-          writable: true,
-        });
+  test("does not show modal if localStorage is not available", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "localStorage", {
+        value: undefined,
+        writable: true,
       });
     });
-
-    test("should not show a dialog when the timezone changes", async ({
-      page,
-    }) => {
-      await page.goto("/");
-      await page.reload();
-      const dialog = page.locator("text=Timezone Change Detected");
-      await expect(dialog).toBeHidden();
-    });
+    await page.reload();
+    const modal = page.locator("text=Timezone Change Detected");
+    await expect(modal).toBeHidden();
   });
 });
