@@ -1,6 +1,8 @@
 import { prisma } from "@rallly/database";
 import { z } from "zod";
 
+import { absoluteUrl } from "@/utils/absolute-url";
+import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import { publicProcedure, router } from "../../trpc";
@@ -79,19 +81,21 @@ export const comments = router({
           { watcherId: watcher.id, pollId },
           { ttl: 0 },
         );
-        ctx
-          .getEmailClient(watcher.user.locale ?? undefined)
-          .queueTemplate("NewCommentEmail", {
+
+        getEmailClient(watcher.user.locale ?? undefined).queueTemplate(
+          "NewCommentEmail",
+          {
             to: email,
             props: {
               authorName,
-              pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
-              disableNotificationsUrl: ctx.absoluteUrl(
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
+              disableNotificationsUrl: absoluteUrl(
                 `/auth/disable-notifications?token=${token}`,
               ),
               title: poll.title,
             },
-          });
+          },
+        );
       }
 
       return newComment;

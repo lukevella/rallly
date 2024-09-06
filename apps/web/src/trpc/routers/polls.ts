@@ -4,6 +4,10 @@ import dayjs from "dayjs";
 import * as ics from "ics";
 import { z } from "zod";
 
+import { posthog } from "@/app/posthog";
+import { absoluteUrl, shortUrl } from "@/utils/absolute-url";
+import { getEmailClient } from "@/utils/emails";
+
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import { nanoid } from "../../utils/nanoid";
 import {
@@ -222,9 +226,9 @@ export const polls = router({
         },
       });
 
-      const pollLink = ctx.absoluteUrl(`/poll/${pollId}`);
+      const pollLink = absoluteUrl(`/poll/${pollId}`);
 
-      const participantLink = ctx.shortUrl(`/invite/${pollId}`);
+      const participantLink = shortUrl(`/invite/${pollId}`);
 
       if (ctx.user.isGuest === false) {
         const user = await prisma.user.findUnique({
@@ -505,7 +509,7 @@ export const polls = router({
           message: "Poll not found",
         });
       }
-      const inviteLink = ctx.shortUrl(`/invite/${res.id}`);
+      const inviteLink = shortUrl(`/invite/${res.id}`);
 
       if (ctx.user.id === res.userId || res.adminUrlId === input.adminToken) {
         return { ...res, inviteLink };
@@ -921,7 +925,7 @@ export const polls = router({
           to: poll.user.email,
           props: {
             name: poll.user.name,
-            pollUrl: ctx.absoluteUrl(`/poll/${poll.id}`),
+            pollUrl: absoluteUrl(`/poll/${poll.id}`),
             location: poll.location,
             title: poll.title,
             attendees: poll.participants
@@ -940,12 +944,12 @@ export const polls = router({
         });
 
         for (const p of participantsToEmail) {
-          ctx
-            .getEmailClient(p.locale ?? undefined)
-            .queueTemplate("FinalizeParticipantEmail", {
+          getEmailClient(p.locale ?? undefined).queueTemplate(
+            "FinalizeParticipantEmail",
+            {
               to: p.email,
               props: {
-                pollUrl: ctx.absoluteUrl(`/invite/${poll.id}`),
+                pollUrl: absoluteUrl(`/invite/${poll.id}`),
                 title: poll.title,
                 hostName: poll.user?.name ?? "",
                 date,
@@ -954,10 +958,11 @@ export const polls = router({
                 time,
               },
               attachments: [{ filename: "event.ics", content: event.value }],
-            });
+            },
+          );
         }
 
-        ctx.posthogClient?.capture({
+        posthog?.capture({
           distinctId: ctx.user.id,
           event: "finalize poll",
           properties: {
