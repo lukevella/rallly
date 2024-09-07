@@ -27,5 +27,7 @@
   "planFree": "Gratis",
   "keepPollsIndefinitely": "Behold avstemninger på ubestemt tid",
   "whenPollInactive": "Når blir en avstemning inaktiv?",
-  "whenPollInactiveAnswer": "Avstemninger blir inaktive når alle datovalgene ligger i fortiden OG avstemningen ikke har blitt åpnet på over 30 dager. Inaktive avstemninger slettes automatisk hvis du ikke har et betalt abonnement."
+  "whenPollInactiveAnswer": "Avstemninger blir inaktive når alle datovalgene ligger i fortiden OG avstemningen ikke har blitt åpnet på over 30 dager. Inaktive avstemninger slettes automatisk hvis du ikke har et betalt abonnement.",
+  "yearlyBillingDescription": "per år",
+  "annualBenefit": "{count} måneder gratis"
 }

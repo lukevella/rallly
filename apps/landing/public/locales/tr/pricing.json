@@ -27,5 +27,7 @@
   "planFree": "Ücretsiz",
   "keepPollsIndefinitely": "Anketleri süresiz olarak sakla",
   "whenPollInactive": "Bir anket ne zaman etkisiz hale gelir?",
-  "whenPollInactiveAnswer": "Anketler, tüm tarih seçenekleri geçmişte kaldığında VE anket 30 günden fazla süredir erişilmediğinde pasif hale gelir. Eğer ücretli bir aboneliğiniz yoksa, pasif hale gelen anketler otomatik olarak silinir."
+  "whenPollInactiveAnswer": "Anketler, tüm tarih seçenekleri geçmişte kaldığında VE anket 30 günden fazla süredir erişilmediğinde pasif hale gelir. Eğer ücretli bir aboneliğiniz yoksa, pasif hale gelen anketler otomatik olarak silinir.",
+  "yearlyBillingDescription": "yılda",
+  "annualBenefit": "{count} ay ücretsiz"
 }

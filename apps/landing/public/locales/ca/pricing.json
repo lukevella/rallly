@@ -25,5 +25,9 @@
   "upgradeNowSaveLater": "Actualitza ara, estalvia més tard",
   "earlyAdopterDescription": "Com un usuari pioner, el preu de la teva subscripció es mantindrà fix i no es veurà afectat per futurs increments de preu.",
   "planFree": "Gratuït",
-  "keepPollsIndefinitely": "Mantenir enquestes indefinides"
+  "keepPollsIndefinitely": "Mantenir enquestes indefinides",
+  "whenPollInactive": "Quan es converteix un sondeig en inactiu?",
+  "whenPollInactiveAnswer": "Els sondejos esdevenen inactius quan totes les opcions de data són en el passat I el sondeig no ha estat accessible durant més de 30 dies. Els sondejos inactius s'eliminen automàticament si no teniu una subscripció de pagament.",
+  "yearlyBillingDescription": "per any",
+  "annualBenefit": "{count} mesos gratuïts"
 }

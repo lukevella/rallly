@@ -17,6 +17,12 @@
   "goToHome": "홈으로 돌아가기",
   "goToApp": "앱으로 이동",
   "pricing": "가격",
+  "bestDoodleAlternative": "최고의 Doodle 대안",
+  "freeSchedulingPoll": "무료 일정 투표",
+  "findATime": "시간 찾기",
   "getStarted": "시작하기",
-  "howItWorks": "이용 방법"
+  "availabilityPoll": "가능한 시간 투표",
+  "solutions": "해결책",
+  "howItWorks": "이용 방법",
+  "status": "상태"
 }

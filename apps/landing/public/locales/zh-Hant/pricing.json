@@ -25,5 +25,9 @@
   "upgradeNowSaveLater": "現在就升級，未來省一筆",
   "earlyAdopterDescription": "作為早期支持者，您將保有現在的定價且不會被未來的定價調整影響。",
   "planFree": "免費",
-  "keepPollsIndefinitely": "無限期保留投票"
+  "keepPollsIndefinitely": "無限期保留投票",
+  "whenPollInactive": "投票何時變為不活躍？",
+  "whenPollInactiveAnswer": "當所有日期選項都已過去且該投票超過 30 天未被訪問時，投票將變為不活躍。如果您沒有付費訂閱，不活躍的投票將自動刪除。",
+  "yearlyBillingDescription": "每年",
+  "annualBenefit": "{count} 個月免費"
 }

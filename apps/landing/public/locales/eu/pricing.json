@@ -28,5 +28,6 @@
   "keepPollsIndefinitely": "Mantendu galdetegiak mugarik gabe",
   "whenPollInactive": "Noiz bihurtzen da inkesta bat inaktibo?",
   "whenPollInactiveAnswer": "Inkestak inaktibo bihurtzen dira data-aukera guztiak iraungitzen direnean ETA 30 egun baino gehiagotan galdetegia atzitu ez denean. Galdetegi inaktiboak automatikoki ezabatzen dira ordainpeko harpidetzarik ez baduzu.",
-  "yearlyBillingDescription": "urteko"
+  "yearlyBillingDescription": "urteko",
+  "annualBenefit": "{count} hilabete doan"
 }

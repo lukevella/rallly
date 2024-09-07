@@ -97,7 +97,7 @@
   "polls": "투표",
   "timeZoneSelect__noOption": "옵션을 찾을 수 없음",
   "timeZoneSelect__inputPlaceholder": "검색...",
-  "poweredByRallly": "Powered by <a>{name}</a>",
+  "poweredByRallly": "<a>{name}</a>에 의해 제공됨",
   "participants": "참여자",
   "language": "언어",
   "languageDescription": "원하는 언어 선택",
