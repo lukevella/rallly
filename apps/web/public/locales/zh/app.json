@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "隐藏参与者，隐藏得票率，要求参与者填写电子邮件地址。",
   "keepPollsIndefinitely": "无限期保留投票",
   "keepPollsIndefinitelyDescription": "不活跃的投票将不会被自动删除。",
-  "verificationCodeSentTo": "我们已向<b>{email}</b>发送了验证码",
   "home": "主页",
   "groupPoll": "群组投票",
   "groupPollDescription": "与一群人分享您的空闲时间段并找到最好的时间会面。",
@@ -270,7 +269,6 @@
   "downloadICSFile": "下载 ICS 文件",
   "schedulateDate": "预定日期",
   "timeZoneChangeDetectorTitle": "检测到时区更改",
-  "timeZoneChangeDetectorMessage": "您的时区已更改为 {currentTimeZone}。您想要更新您的偏好设置吗？",
   "yesUpdateTimezone": "是的，更新我的时区",
   "noKeepCurrentTimezone": "否，保留当前时区",
   "annualBenefit": "{count} 个月免费"
