@@ -110,7 +110,6 @@
   "billing": "Facturation",
   "guestPollAlertDescription": "<0>Créez un compte</0> ou <1>connectez-vous</1> pour réclamer ce vote.",
   "guestPollAlertTitle": "Vos droits d'administrateur peuvent être perdus si vous effacez vos cookies",
-  "notificationsValue": "Notifications: <b>{value}</b>",
   "notificationsOn": "Les notifications sont activées",
   "notificationsOff": "Les notifications sont désactivées",
   "pollStatusOpen": "En ligne",
@@ -270,7 +269,6 @@
   "downloadICSFile": "Télécharger le fichier ICS",
   "schedulateDate": "Date programmée",
   "timeZoneChangeDetectorTitle": "Changement de fuseau horaire détecté",
-  "timeZoneChangeDetectorMessage": "Votre fuseau horaire a été modifié en {currentTimeZone}. Souhaitez-vous mettre à jour vos préférences ?",
   "yesUpdateTimezone": "Oui, mettez à jour mon fuseau horaire",
   "noKeepCurrentTimezone": "Non, conserver le fuseau horaire actuel",
   "annualBenefit": "{count} mois gratuits"
