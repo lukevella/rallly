@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Verberg deelnemers, verberg scores, vereis e-mailadres van deelnemer.",
   "keepPollsIndefinitely": "Polls voor onbepaalde tijd behouden",
   "keepPollsIndefinitelyDescription": "Inactieve polls worden niet automatisch verwijderd.",
-  "verificationCodeSentTo": "We hebben een verificatiecode naar <b>{email}</b> gestuurd",
   "home": "Home",
   "groupPoll": "Groepsenquête",
   "groupPollDescription": "Deel je beschikbaarheid met een groep mensen en vind de beste tijd om elkaar te ontmoeten.",
@@ -270,7 +269,7 @@
   "downloadICSFile": "ICS-bestand downloaden",
   "schedulateDate": "Geplande datum",
   "timeZoneChangeDetectorTitle": "Verandering van tijdzone gedetecteerd",
-  "timeZoneChangeDetectorMessage": "Je tijdzone is veranderd naar {currentTimeZone}. Wil je je voorkeuren bijwerken?",
+  "timeZoneChangeDetectorMessage": "Je tijdzone is veranderd naar <b>{currentTimeZone}</b>. Wil je je voorkeuren bijwerken?",
   "yesUpdateTimezone": "Ja, werk mijn tijdzone bij",
   "noKeepCurrentTimezone": "Nee, behoud de huidige tijdzone",
   "annualBenefit": "{count} maanden gratis"
