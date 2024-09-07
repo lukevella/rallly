@@ -97,7 +97,6 @@
   "polls": "Sondaggi",
   "timeZoneSelect__noOption": "Nessuna opzione trovata",
   "timeZoneSelect__inputPlaceholder": "Ricerca…",
-  "poweredByRallly": "Powered by <a>{name}</a>",
   "participants": "Partecipanti",
   "language": "Lingua",
   "languageDescription": "Cambia la tua lingua preferita",
@@ -248,7 +247,6 @@
   "advancedSettingsDescription": "Nascondi partecipanti, nascondi punteggi, richiedi indirizzo email del partecipante.",
   "keepPollsIndefinitely": "Mantieni i Sondaggi Indefinitamente",
   "keepPollsIndefinitelyDescription": "I sondaggi inattivi non verranno eliminati automaticamente.",
-  "verificationCodeSentTo": "Abbiamo inviato un codice di verifica a <b>{email}</b>",
   "home": "Home",
   "groupPoll": "Sondaggio di Gruppo",
   "groupPollDescription": "Condividi la tua disponibilità con un gruppo di persone e trova il miglior momento per incontrarti.",
@@ -270,7 +268,6 @@
   "downloadICSFile": "Scarica file ICS",
   "schedulateDate": "Data programmata",
   "timeZoneChangeDetectorTitle": "Rilevato Cambio Fuso Orario",
-  "timeZoneChangeDetectorMessage": "Il tuo fuso orario è cambiato in {currentTimeZone}. Vuoi aggiornare le tue preferenze?",
   "yesUpdateTimezone": "Sì, aggiorna il mio fuso orario",
   "noKeepCurrentTimezone": "No, mantieni il fuso orario attuale",
   "annualBenefit": "{count} mesi gratis"
