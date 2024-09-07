@@ -62,7 +62,7 @@ export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
             i18n={ctx.i18n}
             t={ctx.t}
             i18nKey="login_button"
-            defaults="Log in to {domain}"
+            defaults="Log in to {{domain}}"
             values={{ domain: ctx.domain }}
             ns="emails"
           />
@@ -73,7 +73,7 @@ export const LoginEmail = ({ code, magicLink, ctx }: LoginEmailProps) => {
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="login_content2"
-          defaults="You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{supportEmail}</a>."
+          defaults="You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{{supportEmail}}</a>."
           values={{ supportEmail: ctx.supportEmail }}
           components={{
             domain: <Domain ctx={ctx} />,

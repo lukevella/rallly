@@ -63,7 +63,7 @@ export const NewParticipantConfirmationEmail = ({
             i18n={ctx.i18n}
             t={ctx.t}
             i18nKey="newParticipantConfirmation_button"
-            defaults="Review response on {domain}"
+            defaults="Review response on {{domain}}"
             values={{ domain }}
             ns="emails"
           />
