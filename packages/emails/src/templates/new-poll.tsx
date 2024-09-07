@@ -62,7 +62,6 @@ export const NewPollEmail = ({
           defaultValue: "Manage Poll",
           ns: "emails",
         })}
-        &rarr;
       </Button>
     </EmailLayout>
   );
