@@ -21,6 +21,7 @@ const userSchema = z.object({
   timeZone: z.string().nullish(),
   timeFormat: z.enum(["hours12", "hours24"]).nullish(),
   weekStart: z.number().min(0).max(6).nullish(),
+  image: z.string().nullish(),
 });
 
 export const UserContext = React.createContext<{
@@ -76,9 +77,10 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           id: user.id as string,
           name: user.name ?? t("guest"),
           email: user.email || null,
-          isGuest: !user.email,
+          isGuest,
           tier,
           timeZone: user.timeZone ?? null,
+          image: user.image ?? null,
         },
         refresh: session.update,
         ownsObject: ({ userId }) => {

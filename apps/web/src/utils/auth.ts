@@ -54,6 +54,7 @@ const providers: Provider[] = [
               locale: true,
               timeFormat: true,
               timeZone: true,
+              image: true,
             },
           });
 
@@ -265,6 +266,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
                   timeZone: session.timeZone,
                   weekStart: session.weekStart,
                   name: session.name,
+                  image: session.image,
                 },
               });
             } catch (e) {
@@ -278,6 +280,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           token.timeFormat = user.timeFormat;
           token.timeZone = user.timeZone;
           token.weekStart = user.weekStart;
+          token.picture = user.image;
         }
         return token;
       },
@@ -288,6 +291,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         session.user.timeZone = token.timeZone;
         session.user.locale = token.locale;
         session.user.weekStart = token.weekStart;
+        session.user.image = token.picture;
         return session;
       },
     },

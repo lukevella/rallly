@@ -18,9 +18,9 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
-import { CurrentUserAvatar } from "@/components/user";
 import { IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
 import { IconComponent } from "@/types";
