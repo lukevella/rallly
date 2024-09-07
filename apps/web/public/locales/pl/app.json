@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Ukryj uczestników, ukryj wyniki, wymagaj adresu e-mail uczestnika.",
   "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność",
   "keepPollsIndefinitelyDescription": "Nieaktywne ankiety nie zostaną automatycznie usunięte.",
-  "verificationCodeSentTo": "Wysłaliśmy kod weryfikacyjny na adres <b>{email}</b>",
   "home": "Strona główna",
   "groupPoll": "Ankieta grupowa",
   "groupPollDescription": "Podziel się swoją dostępnością z grupą osób i znajdź najlepszy czas na spotkanie.",
@@ -270,7 +269,6 @@
   "downloadICSFile": "Pobierz plik ICS",
   "schedulateDate": "Zaplanowana data",
   "timeZoneChangeDetectorTitle": "Wykryto zmianę strefy czasowej",
-  "timeZoneChangeDetectorMessage": "Twoja strefa czasowa została zmieniona na {currentTimeZone}. Czy chcesz zaktualizować swoje preferencje?",
   "yesUpdateTimezone": "Tak, zaktualizuj moją strefę czasową",
   "noKeepCurrentTimezone": "Nie, zachowaj bieżącą strefę czasową",
   "annualBenefit": "{count} miesiące gratis"
