@@ -19,6 +19,5 @@
     ".next/**/*",
     "playwright-report",
     "test-results",
-    "../../packages/emails/src/templates/*.tsx",
   ],
 }
