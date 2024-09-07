@@ -55,6 +55,8 @@ export const env = createEnv({
     SUPPORT_EMAIL: z.string().email(),
     NOREPLY_EMAIL: z.string().email().optional(),
     NOREPLY_EMAIL_NAME: z.string().default("Rallly"),
+
+    AWS_S3_BUCKET_NAME: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -92,6 +94,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
+    AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
     ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,

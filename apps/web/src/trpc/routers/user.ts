@@ -1,12 +1,18 @@
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { prisma } from "@rallly/database";
+import { TRPCError } from "@trpc/server";
+import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
+import { env } from "@/env";
 import { getSubscriptionStatus } from "@/utils/subscription";
 
 import {
   possiblyPublicProcedure,
   privateProcedure,
   publicProcedure,
+  rateLimitMiddleware,
   router,
 } from "../trpc";
 
@@ -121,13 +127,80 @@ export const user = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (ctx.user.isGuest === false) {
-        await prisma.user.update({
-          where: {
-            id: ctx.user.id,
-          },
-          data: input,
+      if (ctx.user.isGuest) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Guest users cannot update preferences",
         });
       }
+
+      await prisma.user.update({
+        where: {
+          id: ctx.user.id,
+        },
+        data: input,
+      });
+
+      return { success: true };
+    }),
+  getAvatarUploadUrl: privateProcedure
+    .use(rateLimitMiddleware)
+    .input(z.object({ fileType: z.string(), fileSize: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (
+        !env.AWS_S3_BUCKET_NAME ||
+        !env.AWS_REGION ||
+        !env.AWS_ACCESS_KEY_ID ||
+        !env.AWS_SECRET_ACCESS_KEY
+      ) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Avatar upload is not enabled",
+        });
+      }
+
+      const s3Client = new S3Client({
+        region: env.AWS_REGION,
+        forcePathStyle: true,
+      });
+
+      const userId = ctx.user.id;
+      const key = `avatars/${userId}-${Date.now()}.jpg`;
+
+      if (input.fileSize > 10 * 1024 * 1024) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "File size too large",
+        });
+      }
+
+      const command = new PutObjectCommand({
+        Bucket: env.AWS_S3_BUCKET_NAME,
+        Key: key,
+        ContentType: input.fileType,
+        ContentLength: input.fileSize,
+      });
+
+      const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+
+      return {
+        url,
+        fields: {
+          key,
+        },
+      };
+    }),
+  updateAvatar: privateProcedure
+    .input(z.object({ imageKey: z.string().max(255) }))
+    .use(rateLimitMiddleware)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user.id;
+
+      await prisma.user.update({
+        where: { id: userId },
+        data: { image: input.imageKey },
+      });
+
+      return { success: true };
     }),
 });

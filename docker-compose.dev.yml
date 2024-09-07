@@ -34,9 +34,21 @@ services:
       SRH_MODE: env
       SRH_TOKEN: dev_fake_token_123456789abcdefghijklmnop
       SRH_CONNECTION_STRING: "redis://redis:6379"
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    environment:
+      - MINIO_ACCESS_KEY=minio
+      - MINIO_SECRET_KEY=minio123
 
 volumes:
   db-data:
     driver: local
   redis-data:
+    driver: local
+  minio-data:
     driver: local

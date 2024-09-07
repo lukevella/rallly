@@ -7,7 +7,7 @@ export const CurrentUserAvatar = ({ className }: { className?: string }) => {
   const { user } = useUser();
   return (
     <Avatar className={className}>
-      <AvatarImage src={user.image ?? undefined} />
+      <AvatarImage src={user.image ? `/api/avatar/${user.image}` : undefined} />
       <AvatarFallback>{user.name[0]}</AvatarFallback>
     </Avatar>
   );

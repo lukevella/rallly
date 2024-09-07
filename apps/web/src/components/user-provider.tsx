@@ -9,6 +9,7 @@ import { Spinner } from "@/components/spinner";
 import { useSubscription } from "@/contexts/plan";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
+import { trpc } from "@/utils/trpc/client";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -56,7 +57,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const session = useSession();
   const user = session.data?.user;
   const subscription = useSubscription();
-
+  const updatePreferences = trpc.user.updatePreferences.useMutation();
   const { t } = useTranslation();
 
   if (!user) {
@@ -96,6 +97,14 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           weekStart: user.weekStart ?? undefined,
         }}
         onUpdate={async (newPreferences) => {
+          if (!isGuest) {
+            await updatePreferences.mutateAsync({
+              locale: newPreferences.locale ?? undefined,
+              timeZone: newPreferences.timeZone ?? undefined,
+              timeFormat: newPreferences.timeFormat ?? undefined,
+              weekStart: newPreferences.weekStart ?? undefined,
+            });
+          }
           await session.update(newPreferences);
         }}
       >

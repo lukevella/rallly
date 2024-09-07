@@ -31,6 +31,7 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
         id: session.user.id,
         isGuest: session.user.email === null,
         locale: session.user.locale ?? undefined,
+        image: session.user.image ?? undefined,
         getEmailClient: () => getEmailClient(session.user.locale ?? undefined),
       },
       req: opts.req,
