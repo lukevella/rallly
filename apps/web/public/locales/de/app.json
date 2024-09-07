@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Blende Teilnehmer aus, blende Ergebnisse aus, erfordere E-Mail-Adresse von Teilnehmern.",
   "keepPollsIndefinitely": "Behalte Abstimmung auf unbegrenzte Zeit",
   "keepPollsIndefinitelyDescription": "Inaktive Abstimmungen werden nicht automatisch gelöscht.",
-  "verificationCodeSentTo": "Wir haben einen Bestätigungscode an <b>{email}</b> gesendet",
   "home": "Home",
   "groupPoll": "Gruppenabstimmung",
   "groupPollDescription": "Teile deine Verfügbarkeit mit einer Gruppe von Personen, und findet die beste Zeit um sich zu treffen.",
@@ -270,7 +269,6 @@
   "downloadICSFile": "ICS-Datei herunterladen",
   "schedulateDate": "Geplantes Datum",
   "timeZoneChangeDetectorTitle": "Zeitzonenänderung erkannt",
-  "timeZoneChangeDetectorMessage": "Ihre Zeitzone wurde auf {currentTimeZone} geändert. Möchten Sie Ihre Einstellungen aktualisieren?",
   "yesUpdateTimezone": "Ja, aktualisiere meine Zeitzone",
   "noKeepCurrentTimezone": "Nein, behalte die aktuelle Zeitzone",
   "annualBenefit": "{count} Monate kostenlos"
