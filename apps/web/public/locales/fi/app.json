@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Piilota osallistujat, piilota pisteet, vaadi osallistujan sähköpostiosoite.",
   "keepPollsIndefinitely": "Säilytä kyselyt pysyvästi",
   "keepPollsIndefinitelyDescription": "Passiivisia kyselyitä ei poisteta automaattisesti.",
-  "verificationCodeSentTo": "Lähetimme vahvistuskoodin osoitteeseen <b>{email}</b>",
   "home": "Kotisivu",
   "groupPoll": "Ryhmäkysely",
   "groupPollDescription": "Ilmoita sinulle sopivat ajankohdat ryhmälle ja etsi paras aika tapaamiselle.",
@@ -270,7 +269,6 @@
   "downloadICSFile": "Lataa ICS-tiedosto",
   "schedulateDate": "Aikataulutettu päivämäärä",
   "timeZoneChangeDetectorTitle": "Aikavyöhykkeen muutos havaittu",
-  "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt {currentTimeZone}. Haluatko päivittää asetuksesi?",
   "yesUpdateTimezone": "Kyllä, päivitä aikavyöhykkeeni",
   "noKeepCurrentTimezone": "Ei, säilytä nykyinen aikavyöhyke",
   "annualBenefit": "{count} kuukautta ilmaiseksi"
