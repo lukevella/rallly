@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Skryť účastníkov, skryť skóre, požadovať emailovú adresu účastníka.",
   "keepPollsIndefinitely": "Udržiavať ankety bez časového limitu",
   "keepPollsIndefinitelyDescription": "Neaktívne ankety nebudú automaticky vymazané.",
-  "verificationCodeSentTo": "Poslali sme overovací kód na <b>{email}</b>",
   "home": "Domov",
   "groupPoll": "Skupinová anketa",
   "groupPollDescription": "Zdieľajte svoju dostupnosť so skupinou a nájdite najlepší čas na stretnutie.",
@@ -270,7 +269,6 @@
   "downloadICSFile": "Stiahnuť súbor ICS",
   "schedulateDate": "Naplánovaný dátum",
   "timeZoneChangeDetectorTitle": "Zistená zmena časového pásma",
-  "timeZoneChangeDetectorMessage": "Vaše časové pásmo sa zmenilo na {currentTimeZone}. Chcete aktualizovať svoje preferencie?",
   "yesUpdateTimezone": "Áno, aktualizovať moje časové pásmo",
   "noKeepCurrentTimezone": "Nie, ponechať aktuálne časové pásmo",
   "annualBenefit": "{count} mesiacov zadarmo"
