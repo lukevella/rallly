@@ -9,8 +9,8 @@ import {
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 
+import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { Trans } from "@/components/trans";
-import { UserAvatar } from "@/components/user";
 import { useUser } from "@/components/user-provider";
 
 export const ProfileSettings = () => {
@@ -26,9 +26,7 @@ export const ProfileSettings = () => {
     },
   });
 
-  const { control, watch, handleSubmit, formState, reset } = form;
-
-  const watchName = watch("name");
+  const { control, handleSubmit, formState, reset } = form;
 
   return (
     <div className="grid gap-y-4">
@@ -41,7 +39,7 @@ export const ProfileSettings = () => {
         >
           <div className="flex flex-col gap-y-4">
             <div>
-              <UserAvatar name={watchName} size="lg" />
+              <CurrentUserAvatar className="size-14" />
             </div>
             <FormField
               control={control}
