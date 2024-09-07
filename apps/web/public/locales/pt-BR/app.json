@@ -248,6 +248,7 @@
   "advancedSettingsDescription": "Oculte participantes, oculte pontuações, exija o endereço de e-mail do participante.",
   "keepPollsIndefinitely": "Mantenha Enquetes Indefinidamente",
   "keepPollsIndefinitelyDescription": "Enquetes inativas não serão excluídas automaticamente.",
+  "verificationCodeSentTo": "Enviamos um código de verificação para <b>{email}</b>",
   "home": "Início",
   "groupPoll": "Enquete de grupo",
   "groupPollDescription": "Compartilhe sua disponibilidade com um grupo de pessoas e encontre o melhor horário para se encontrar.",
@@ -269,6 +270,7 @@
   "downloadICSFile": "Baixar arquivo ICS",
   "schedulateDate": "Data Agendada",
   "timeZoneChangeDetectorTitle": "Alteração de Fuso Horário Detectada",
+  "timeZoneChangeDetectorMessage": "Seu fuso horário mudou para <b>{currentTimeZone}</b>. Você deseja atualizar suas preferências?",
   "yesUpdateTimezone": "Sim, atualize meu fuso horário",
   "noKeepCurrentTimezone": "Não, mantenha o fuso horário atual",
   "annualBenefit": "{count} meses grátis"

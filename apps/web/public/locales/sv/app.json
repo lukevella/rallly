@@ -270,6 +270,7 @@
   "downloadICSFile": "Ladda ner ICS-fil",
   "schedulateDate": "Schemalagt datum",
   "timeZoneChangeDetectorTitle": "Tidszonsändring upptäckt",
+  "timeZoneChangeDetectorMessage": "Din tidszon har ändrats till <b>{currentTimeZone}</b>. Vill du uppdatera dina inställningar?",
   "yesUpdateTimezone": "Ja, uppdatera min tidszon",
   "noKeepCurrentTimezone": "Nej, behåll den aktuella tidszonen",
   "annualBenefit": "{count} månader gratis"

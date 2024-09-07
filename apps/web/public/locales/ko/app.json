@@ -97,6 +97,7 @@
   "polls": "투표",
   "timeZoneSelect__noOption": "옵션을 찾을 수 없음",
   "timeZoneSelect__inputPlaceholder": "검색...",
+  "poweredByRallly": "Powered by <a>{name}</a>",
   "participants": "참여자",
   "language": "언어",
   "languageDescription": "원하는 언어 선택",
@@ -247,6 +248,7 @@
   "advancedSettingsDescription": "참여자 숨기기, 점수 숨기기, 참여자 이메일 주소 요구.",
   "keepPollsIndefinitely": "설문조사를 무제한으로 유지",
   "keepPollsIndefinitelyDescription": "비활성 설문조사는 자동으로 삭제되지 않습니다.",
+  "verificationCodeSentTo": "<b>{email}</b>로 인증 코드를 보냈습니다.",
   "home": "홈",
   "groupPoll": "그룹 설문조사",
   "groupPollDescription": "한 그룹의 사람들과 가용성을 공유하고 만날 최적의 시간을 찾으세요.",
@@ -268,6 +270,7 @@
   "downloadICSFile": "ICS 파일 다운로드",
   "schedulateDate": "예정 날짜",
   "timeZoneChangeDetectorTitle": "시간대 변경 감지됨",
+  "timeZoneChangeDetectorMessage": "귀하의 시간대가 <b>{currentTimeZone}</b>로 변경되었습니다. 설정을 업데이트하시겠습니까?",
   "yesUpdateTimezone": "예, 시간대를 업데이트합니다.",
   "noKeepCurrentTimezone": "아니요, 현재 시간대를 유지합니다.",
   "annualBenefit": "{count}개월 무료"

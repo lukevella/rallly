@@ -248,6 +248,7 @@
   "advancedSettingsDescription": "Sakrijte sudionike, sakrijte rezultate, zahtijevajte email adresu sudionika.",
   "keepPollsIndefinitely": "Zadržite ankete neodređeno",
   "keepPollsIndefinitelyDescription": "Neaktivne ankete neće se automatski brisati.",
+  "verificationCodeSentTo": "Poslali smo verifikacijski kod na <b>{email}</b>",
   "home": "Početna",
   "groupPoll": "Grupna anketa",
   "groupPollDescription": "Podijelite svoju dostupnost s grupom ljudi i pronađite najbolje vrijeme za sastanak.",
@@ -269,6 +270,7 @@
   "downloadICSFile": "Preuzmite ICS datoteku",
   "schedulateDate": "Zakazani datum",
   "timeZoneChangeDetectorTitle": "Otkrivena promjena vremenske zone",
+  "timeZoneChangeDetectorMessage": "Vaša vremenska zona se promijenila na <b>{currentTimeZone}</b>. Želite li ažurirati svoje postavke?",
   "yesUpdateTimezone": "Da, ažuriraj svoju vremensku zonu",
   "noKeepCurrentTimezone": "Ne, zadrži trenutnu vremensku zonu",
   "annualBenefit": "{count} mjeseci besplatno"

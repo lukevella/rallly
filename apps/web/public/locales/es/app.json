@@ -248,6 +248,7 @@
   "advancedSettingsDescription": "Ocultar participantes, ocultar puntajes, requerir dirección de correo electrónico del participante.",
   "keepPollsIndefinitely": "Mantener encuestas indefinidamente",
   "keepPollsIndefinitelyDescription": "Las encuestas inactivas no se eliminarán automáticamente.",
+  "verificationCodeSentTo": "Enviamos código de verificación a <b>{email}</b>",
   "home": "Inicio",
   "groupPoll": "Encuesta de Grupo",
   "groupPollDescription": "Comparte tu disponibilidad con un grupo de personas y encuentra el mejor momento para reunirte.",
@@ -269,6 +270,7 @@
   "downloadICSFile": "Descargar archivo ICS",
   "schedulateDate": "Fecha programada",
   "timeZoneChangeDetectorTitle": "Cambio de zona horaria detectado",
+  "timeZoneChangeDetectorMessage": "Tu zona horaria ha cambiado a <b>{currentTimeZone}</b>. ¿Quieres actualizar tus preferencias?",
   "yesUpdateTimezone": "Sí, actualizar mi zona horaria",
   "noKeepCurrentTimezone": "No, mantener la zona horaria actual",
   "annualBenefit": "{count} meses gratis"

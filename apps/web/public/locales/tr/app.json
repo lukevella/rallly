@@ -248,6 +248,7 @@
   "advancedSettingsDescription": "Katılımcıları gizle, puanları gizle, katılımcı e-posta adresini zorunlu kıl.",
   "keepPollsIndefinitely": "Anketleri Süresiz Olarak Sakla",
   "keepPollsIndefinitelyDescription": "Pasif anketler otomatik olarak silinmeyecek.",
+  "verificationCodeSentTo": "Bir doğrulama kodu <b>{email}</b> adresine gönderdik",
   "home": "Ana sayfa",
   "groupPoll": "Grup Anketi",
   "groupPollDescription": "Bir grup insanla uygun olduğunuz zamanları paylaşın ve buluşmak için en iyi zamanı bulun.",
@@ -269,6 +270,7 @@
   "downloadICSFile": "ICS Dosyasını İndir",
   "schedulateDate": "Planlanan Tarih",
   "timeZoneChangeDetectorTitle": "Saat Dilimi Değişikliği Tespit Edildi",
+  "timeZoneChangeDetectorMessage": "Saat diliminiz <b>{currentTimeZone}</b> olarak değişti. Tercihlerinizi güncellemek ister misiniz?",
   "yesUpdateTimezone": "Evet, saat dilimimi güncelle",
   "noKeepCurrentTimezone": "Hayır, mevcut saat diliminde kal",
   "annualBenefit": "{count} ay ücretsiz"
