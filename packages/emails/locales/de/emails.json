@@ -13,7 +13,7 @@
   "finalizeParticipant_content2": "Im Anhang finden Sie eine Kalendereinladung für diesen Termin.",
   "finalizeParticipant_subject": "Datum für {{title}}",
   "login_button": "Login bei {{domain}}",
-  "login_content2": "Sie erhalten diese E-Mail, weil eine Anfrage gestellt wurde, sich bei <domain />anzumelden. Wenn dies nicht der Fall war, kontaktieren Sie <a>{{supportEmail}}</a>.",
+  "login_content2": "Sie erhalten diese E-Mail, weil eine Anfrage gestellt wurde, sich bei <domain /> anzumelden. Wenn dies nicht der Fall war, kontaktieren Sie <a>{{supportEmail}}</a>.",
   "login_preview": "Verwenden Sie diesen Link, um sich auf diesem Gerät anzumelden.",
   "login_heading": "Einloggen",
   "login_content": "Geben Sie diesen 6-stelligen Bestätigungscode ein:",

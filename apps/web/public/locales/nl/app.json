@@ -270,7 +270,7 @@
   "downloadICSFile": "ICS-bestand downloaden",
   "schedulateDate": "Geplande datum",
   "timeZoneChangeDetectorTitle": "Verandering van tijdzone gedetecteerd",
-  "timeZoneChangeDetectorMessage": "Je tijdzone is veranderd naar {currentTimeZone}. Wil je je voorkeuren bijwerken?",
+  "timeZoneChangeDetectorMessage": "Je tijdzone is veranderd naar <b>{currentTimeZone}</b>. Wil je je voorkeuren bijwerken?",
   "yesUpdateTimezone": "Ja, werk mijn tijdzone bij",
   "noKeepCurrentTimezone": "Nee, behoud de huidige tijdzone",
   "annualBenefit": "{count} maanden gratis"

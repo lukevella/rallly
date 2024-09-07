@@ -270,7 +270,7 @@
   "downloadICSFile": "Preuzmite ICS datoteku",
   "schedulateDate": "Zakazani datum",
   "timeZoneChangeDetectorTitle": "Otkrivena promjena vremenske zone",
-  "timeZoneChangeDetectorMessage": "Vaša vremenska zona se promijenila na {currentTimeZone}. Želite li ažurirati svoje postavke?",
+  "timeZoneChangeDetectorMessage": "Vaša vremenska zona se promijenila na <b>{currentTimeZone}</b>. Želite li ažurirati svoje postavke?",
   "yesUpdateTimezone": "Da, ažuriraj svoju vremensku zonu",
   "noKeepCurrentTimezone": "Ne, zadrži trenutnu vremensku zonu",
   "annualBenefit": "{count} mjeseci besplatno"

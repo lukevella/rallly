@@ -270,7 +270,7 @@
   "downloadICSFile": "ICS Dosyasını İndir",
   "schedulateDate": "Planlanan Tarih",
   "timeZoneChangeDetectorTitle": "Saat Dilimi Değişikliği Tespit Edildi",
-  "timeZoneChangeDetectorMessage": "Saat diliminiz {currentTimeZone} olarak değişti. Tercihlerinizi güncellemek ister misiniz?",
+  "timeZoneChangeDetectorMessage": "Saat diliminiz <b>{currentTimeZone}</b> olarak değişti. Tercihlerinizi güncellemek ister misiniz?",
   "yesUpdateTimezone": "Evet, saat dilimimi güncelle",
   "noKeepCurrentTimezone": "Hayır, mevcut saat diliminde kal",
   "annualBenefit": "{count} ay ücretsiz"

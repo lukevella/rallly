@@ -270,7 +270,7 @@
   "downloadICSFile": "Baixar arquivo ICS",
   "schedulateDate": "Data Agendada",
   "timeZoneChangeDetectorTitle": "Alteração de Fuso Horário Detectada",
-  "timeZoneChangeDetectorMessage": "Seu fuso horário mudou para {currentTimeZone}. Você deseja atualizar suas preferências?",
+  "timeZoneChangeDetectorMessage": "Seu fuso horário mudou para <b>{currentTimeZone}</b>. Você deseja atualizar suas preferências?",
   "yesUpdateTimezone": "Sim, atualize meu fuso horário",
   "noKeepCurrentTimezone": "Não, mantenha o fuso horário atual",
   "annualBenefit": "{count} meses grátis"

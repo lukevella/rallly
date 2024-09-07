@@ -270,7 +270,7 @@
   "downloadICSFile": "ICS 파일 다운로드",
   "schedulateDate": "예정 날짜",
   "timeZoneChangeDetectorTitle": "시간대 변경 감지됨",
-  "timeZoneChangeDetectorMessage": "귀하의 시간대가 {currentTimeZone}로 변경되었습니다. 설정을 업데이트하시겠습니까?",
+  "timeZoneChangeDetectorMessage": "귀하의 시간대가 <b>{currentTimeZone}</b>로 변경되었습니다. 설정을 업데이트하시겠습니까?",
   "yesUpdateTimezone": "예, 시간대를 업데이트합니다.",
   "noKeepCurrentTimezone": "아니요, 현재 시간대를 유지합니다.",
   "annualBenefit": "{count}개월 무료"

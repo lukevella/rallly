@@ -270,7 +270,7 @@
   "downloadICSFile": "下載 ICS 文件",
   "schedulateDate": "排定日期",
   "timeZoneChangeDetectorTitle": "檢測到時區變更",
-  "timeZoneChangeDetectorMessage": "您的時區已更改為 {currentTimeZone}。您想更新您的偏好設置嗎？",
+  "timeZoneChangeDetectorMessage": "您的時區已更改為 <b>{currentTimeZone}</b>。您想更新您的偏好設置嗎？",
   "yesUpdateTimezone": "是的，更新我的時區",
   "noKeepCurrentTimezone": "不，保持當前時區",
   "annualBenefit": "{count} 個月免費"

@@ -270,7 +270,7 @@
   "downloadICSFile": "ICS fájl letöltése",
   "schedulateDate": "Tervezett időpont",
   "timeZoneChangeDetectorTitle": "Időzóna változás észlelve",
-  "timeZoneChangeDetectorMessage": "Az időzónád megváltozott erre: {currentTimeZone}. Szeretnéd frissíteni a beállításaidat?",
+  "timeZoneChangeDetectorMessage": "Az időzónád megváltozott erre: <b>{currentTimeZone}</b>. Szeretnéd frissíteni a beállításaidat?",
   "yesUpdateTimezone": "Igen, frissítsd az időzónám",
   "noKeepCurrentTimezone": "Nem, tartsd meg a jelenlegi időzónát",
   "annualBenefit": "{count} hónapig ingyenes"

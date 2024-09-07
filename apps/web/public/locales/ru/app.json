@@ -270,7 +270,7 @@
   "downloadICSFile": "Скачать файл ICS",
   "schedulateDate": "Запланированная дата",
   "timeZoneChangeDetectorTitle": "Обнаружено изменение часового пояса",
-  "timeZoneChangeDetectorMessage": "Ваш часовой пояс изменился на {currentTimeZone}. Хотите обновить ваши предпочтения?",
+  "timeZoneChangeDetectorMessage": "Ваш часовой пояс изменился на <b>{currentTimeZone}</b>. Хотите обновить ваши предпочтения?",
   "yesUpdateTimezone": "Да, обновить мой часовой пояс",
   "noKeepCurrentTimezone": "Нет, оставить текущий часовой пояс",
   "annualBenefit": "{count} месяцев бесплатно"

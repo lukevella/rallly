@@ -270,7 +270,7 @@
   "downloadICSFile": "Stáhnout soubor ICS",
   "schedulateDate": "Naplánovaný termín",
   "timeZoneChangeDetectorTitle": "Změna časového pásma byla detekována",
-  "timeZoneChangeDetectorMessage": "Vaše časové pásmo se změnilo na {currentTimeZone}. Chcete aktualizovat svá nastavení?",
+  "timeZoneChangeDetectorMessage": "Vaše časové pásmo se změnilo na <b>{currentTimeZone}</b>. Chcete aktualizovat svá nastavení?",
   "yesUpdateTimezone": "Ano, aktualizovat mé časové pásmo",
   "noKeepCurrentTimezone": "Ne, zachovat aktuální časové pásmo",
   "annualBenefit": "{count} měsíců zdarma"

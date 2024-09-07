@@ -270,7 +270,7 @@
   "downloadICSFile": "Descarregar fitxer ICS",
   "schedulateDate": "Data Programada",
   "timeZoneChangeDetectorTitle": "Canvi de Zona Horària Detectat",
-  "timeZoneChangeDetectorMessage": "La teva zona horària ha canviat a {currentTimeZone}. Vols actualitzar les teves preferències?",
+  "timeZoneChangeDetectorMessage": "La teva zona horària ha canviat a <b>{currentTimeZone}</b>. Vols actualitzar les teves preferències?",
   "yesUpdateTimezone": "Sí, actualitza la meva zona horària",
   "noKeepCurrentTimezone": "No, mantingues la zona horària actual",
   "annualBenefit": "{count} mesos gratuïts"

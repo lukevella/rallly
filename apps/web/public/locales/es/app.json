@@ -270,7 +270,7 @@
   "downloadICSFile": "Descargar archivo ICS",
   "schedulateDate": "Fecha programada",
   "timeZoneChangeDetectorTitle": "Cambio de zona horaria detectado",
-  "timeZoneChangeDetectorMessage": "Tu zona horaria ha cambiado a {currentTimeZone}. ¿Quieres actualizar tus preferencias?",
+  "timeZoneChangeDetectorMessage": "Tu zona horaria ha cambiado a <b>{currentTimeZone}</b>. ¿Quieres actualizar tus preferencias?",
   "yesUpdateTimezone": "Sí, actualizar mi zona horaria",
   "noKeepCurrentTimezone": "No, mantener la zona horaria actual",
   "annualBenefit": "{count} meses gratis"

@@ -270,7 +270,7 @@
   "downloadICSFile": "Lataa ICS-tiedosto",
   "schedulateDate": "Aikataulutettu päivämäärä",
   "timeZoneChangeDetectorTitle": "Aikavyöhykkeen muutos havaittu",
-  "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt {currentTimeZone}. Haluatko päivittää asetuksesi?",
+  "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt <b>{currentTimeZone}</b>. Haluatko päivittää asetuksesi?",
   "yesUpdateTimezone": "Kyllä, päivitä aikavyöhykkeeni",
   "noKeepCurrentTimezone": "Ei, säilytä nykyinen aikavyöhyke",
   "annualBenefit": "{count} kuukautta ilmaiseksi"

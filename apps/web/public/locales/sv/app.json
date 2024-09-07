@@ -248,7 +248,7 @@
   "advancedSettingsDescription": "Dölj deltagare, dölj poäng, kräv deltagarens e-postadress.",
   "keepPollsIndefinitely": "Behåll omröstningar på obestämd tid",
   "keepPollsIndefinitelyDescription": "Inaktiva omröstningar kommer inte att raderas automatiskt.",
-  "verificationCodeSentTo": "Vi har skickat en verifieringskod till <b>{email}</b>",
+  "verificationCodeSentTo": "Vi skickade en verifieringskod till <b>{email}</b>",
   "home": "Startsidan",
   "groupPoll": "Gruppenkät",
   "groupPollDescription": "Dela din tillgänglighet med en grupp människor och hitta bästa tidpunkten för att träffas.",
@@ -270,7 +270,7 @@
   "downloadICSFile": "Ladda ner ICS-fil",
   "schedulateDate": "Schemalagt datum",
   "timeZoneChangeDetectorTitle": "Tidszonsändring upptäckt",
-  "timeZoneChangeDetectorMessage": "Din tidszon har ändrats till {currentTimeZone}. Vill du uppdatera dina inställningar?",
+  "timeZoneChangeDetectorMessage": "Din tidszon har ändrats till <b>{currentTimeZone}</b>. Vill du uppdatera dina inställningar?",
   "yesUpdateTimezone": "Ja, uppdatera min tidszon",
   "noKeepCurrentTimezone": "Nej, behåll den aktuella tidszonen",
   "annualBenefit": "{count} månader gratis"

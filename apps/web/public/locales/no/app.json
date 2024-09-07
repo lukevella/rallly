@@ -270,7 +270,7 @@
   "downloadICSFile": "Last ned ICS-fil",
   "schedulateDate": "Planlagt dato",
   "timeZoneChangeDetectorTitle": "Tidssoneendring oppdaget",
-  "timeZoneChangeDetectorMessage": "Tidssonen din har endret seg til {currentTimeZone}. Ønsker du å oppdatere innstillingene dine?",
+  "timeZoneChangeDetectorMessage": "Tidssonen din har endret seg til <b>{currentTimeZone}</b>. Ønsker du å oppdatere innstillingene dine?",
   "yesUpdateTimezone": "Ja, oppdater tidssonen min",
   "noKeepCurrentTimezone": "Nei, behold den nåværende tidssonen",
   "annualBenefit": "{count} måneder gratis"
