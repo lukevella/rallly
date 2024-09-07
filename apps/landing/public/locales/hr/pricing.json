@@ -14,8 +14,20 @@
   "cancelSubscriptionAnswer": "Svoju pretplatu možete otkazati u bilo kojem trenutku u <a>postavkama naplate</a>. Nakon što otkažete pretplatu, i dalje ćete imati pristup svojoj plaćenoj pretplati do kraja obračunskog razdoblja. Nakon toga bit ćete vraćeni na besplatnu pretplatu.",
   "billingPeriodMonthly": "Mjesečno",
   "billingPeriodYearly": "Godišnje",
+  "planFreeDescription": "Za povremene korisnike",
+  "limitedAccess": "Pristup osnovnim značajkama",
+  "pollsDeleted": "Ankete se automatski brišu kada postanu neaktivne",
+  "planProDescription": "Za napredne korisnike i profesionalce",
   "accessAllFeatures": "Pristup svim značajkama",
   "getEarlyAccess": "Rani pristup novim značajkama",
+  "canUseFreeAnswer2": "Da, većina Ralllyjevih značajki je besplatna i mnogi korisnici nikada neće morati platiti ništa. Međutim, postoje neke značajke koje su dostupne samo plaćanjem. Ove značajke su dizajnirane kako bi vam pomogle da najbolje iskoristite Rallly.",
+  "whyUpgradeAnswer2": "Nadogradnja na plaćeni plan ima smisla ako često koristite Rallly ili ga koristite za rad. Trenutna cijena pretplate je posebna cijena za rane korisnike i povećat će se u budućnosti. Nadogradnjom sada, dobit ćete rani pristup novim, visokokvalitetnim alatima za raspoređivanje čim budu objavljeni i osigurati svoju cijenu pretplate kako ne biste bili pogođeni budućim povećanjima cijena.",
+  "upgradeNowSaveLater": "Nadogradite sada, uštedite kasnije",
+  "earlyAdopterDescription": "Kao rani korisnik, osigurat ćete svoju cijenu pretplate i nećete biti pogođeni budućim povećanjima cijena.",
   "planFree": "Besplatno",
-  "keepPollsIndefinitely": "Zadržite ankete zauvijek"
+  "keepPollsIndefinitely": "Zadržite ankete zauvijek",
+  "whenPollInactive": "Kada anketa postaje neaktivna?",
+  "whenPollInactiveAnswer": "Ankete postaju neaktivne kada su sve opcije datuma prošle I anketa nije pristupljena više od 30 dana. Neaktivne ankete se automatski brišu ako nemate plaćenu pretplatu.",
+  "yearlyBillingDescription": "godišnje",
+  "annualBenefit": "{count} mjeseci besplatno"
 }
