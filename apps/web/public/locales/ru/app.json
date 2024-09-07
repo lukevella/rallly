@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Скрыть участников, скрыть результаты, потребовать адрес электронной почты участника.",
   "keepPollsIndefinitely": "Сохраняйте опросы бессрочно",
   "keepPollsIndefinitelyDescription": "Неактивные опросы не будут автоматически удалены.",
-  "verificationCodeSentTo": "Мы отправили код подтверждения на <b>{email}</b>",
   "home": "Главная",
   "groupPoll": "Групповой опрос",
   "groupPollDescription": "Поделитесь своей доступностью с группой людей и найдите лучшее время для встречи.",
@@ -270,7 +269,6 @@
   "downloadICSFile": "Скачать файл ICS",
   "schedulateDate": "Запланированная дата",
   "timeZoneChangeDetectorTitle": "Обнаружено изменение часового пояса",
-  "timeZoneChangeDetectorMessage": "Ваш часовой пояс изменился на {currentTimeZone}. Хотите обновить ваши предпочтения?",
   "yesUpdateTimezone": "Да, обновить мой часовой пояс",
   "noKeepCurrentTimezone": "Нет, оставить текущий часовой пояс",
   "annualBenefit": "{count} месяцев бесплатно"
