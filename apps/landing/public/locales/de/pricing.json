@@ -28,5 +28,6 @@
   "keepPollsIndefinitely": "Umfragen auf unbestimmte Zeit behalten",
   "whenPollInactive": "Wann wird eine Umfrage inaktiv?",
   "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND die Umfrage seit mehr als 30 Tagen nicht aufgerufen wurde. Inaktive Umfragen werden automatisch gelöscht, wenn du kein kostenpflichtiges Abonnement hast.",
-  "yearlyBillingDescription": "pro Jahr"
+  "yearlyBillingDescription": "pro Jahr",
+  "annualBenefit": "{count} Monate kostenlos"
 }
