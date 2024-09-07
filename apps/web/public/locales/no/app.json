@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Skjul deltakere, skjul resultater, kreve deltakerens e-postadresse.",
   "keepPollsIndefinitely": "Behold avstemninger på ubestemt tid",
   "keepPollsIndefinitelyDescription": "Inaktive avstemninger vil ikke bli automatisk slettet.",
-  "verificationCodeSentTo": "Vi sendte en bekreftelseskode til <b>{email}</b>",
   "home": "Hjem",
   "groupPoll": "Gruppeavstemning",
   "groupPollDescription": "Del tilgjengeligheten din med en gruppe mennesker og finn den beste tiden å møtes.",
@@ -270,7 +269,6 @@
   "downloadICSFile": "Last ned ICS-fil",
   "schedulateDate": "Planlagt dato",
   "timeZoneChangeDetectorTitle": "Tidssoneendring oppdaget",
-  "timeZoneChangeDetectorMessage": "Tidssonen din har endret seg til {currentTimeZone}. Ønsker du å oppdatere innstillingene dine?",
   "yesUpdateTimezone": "Ja, oppdater tidssonen min",
   "noKeepCurrentTimezone": "Nei, behold den nåværende tidssonen",
   "annualBenefit": "{count} måneder gratis"
