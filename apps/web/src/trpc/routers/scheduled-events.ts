@@ -1,4 +1,4 @@
-import { listScheduledEvents } from "@rallly/features/scheduled-events/api";
+import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import toArray from "dayjs/plugin/toArray";
@@ -19,9 +19,39 @@ export const scheduledEvents = router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      const events = await listScheduledEvents({
-        userId: ctx.user.id,
-        period: input.period,
+      const events = await prisma.event.findMany({
+        select: {
+          id: true,
+          title: true,
+          start: true,
+          duration: true,
+          poll: {
+            select: {
+              timeZone: true,
+              participants: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        where: {
+          userId: ctx.user.id,
+          start:
+            input.period === "upcoming"
+              ? { gte: new Date() }
+              : { lt: new Date() },
+        },
+        orderBy: [
+          {
+            start: "desc",
+          },
+          {
+            title: "asc",
+          },
+        ],
       });
 
       return events.map(({ poll, ...event }) => ({
