@@ -248,7 +248,6 @@
   "advancedSettingsDescription": "Amaga participants, amaga puntuacions, requereix l'adreça de correu electrònic del participant.",
   "keepPollsIndefinitely": "Mantenir enquestes indefinidament",
   "keepPollsIndefinitelyDescription": "Les enquestes inactives no s'esborraran automàticament.",
-  "verificationCodeSentTo": "Hem enviat un codi de verificació a <b>{email}</b>",
   "home": "Inici",
   "groupPoll": "Enquesta de Grup",
   "groupPollDescription": "Comparteix la teva disponibilitat amb un grup de persones i troba el millor moment per reunir-te.",
@@ -270,7 +269,6 @@
   "downloadICSFile": "Descarregar fitxer ICS",
   "schedulateDate": "Data Programada",
   "timeZoneChangeDetectorTitle": "Canvi de Zona Horària Detectat",
-  "timeZoneChangeDetectorMessage": "La teva zona horària ha canviat a {currentTimeZone}. Vols actualitzar les teves preferències?",
   "yesUpdateTimezone": "Sí, actualitza la meva zona horària",
   "noKeepCurrentTimezone": "No, mantingues la zona horària actual",
   "annualBenefit": "{count} mesos gratuïts"
