@@ -4,6 +4,15 @@ import Image from "next/image";
 
 import { useUser } from "@/components/user-provider";
 
+function getAvatarUrl(imageKey: string) {
+  // Some users have avatars that come from external providers (e.g. Google).
+  if (imageKey.startsWith("https://")) {
+    return imageKey;
+  }
+
+  return `/api/storage/${imageKey}`;
+}
+
 export const CurrentUserAvatar = ({
   size,
   className,
@@ -16,7 +25,7 @@ export const CurrentUserAvatar = ({
     <Avatar className={className} style={{ width: size, height: size }}>
       {user.image ? (
         <Image
-          src={`/api/storage/${user.image}`}
+          src={getAvatarUrl(user.image)}
           width={128}
           height={128}
           alt={user.name}
