@@ -45,5 +45,6 @@
   "register_subject": "Vahvista sähköpostiosoitteesi",
   "common_viewOn": "Näytä osoitteessa {{domain}}",
   "newComment_preview": "Siirry kyselyysi nähdäksesi mitä he sanoivat.",
-  "newComment_heading": "Uusi kommentti"
+  "newComment_heading": "Uusi kommentti",
+  "newPoll_preview": "Jaa osallistujalinkkisi aloittaaksesi vastausten keräämisen."
 }
