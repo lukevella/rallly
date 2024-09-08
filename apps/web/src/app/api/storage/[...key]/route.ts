@@ -1,4 +1,5 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import * as Sentry from "@sentry/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 import { env } from "@/env";
@@ -49,6 +50,7 @@ export async function GET(
       },
     });
   } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: "Failed to fetch object" },
       { status: 500 },
