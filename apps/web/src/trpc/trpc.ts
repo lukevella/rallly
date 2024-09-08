@@ -76,14 +76,14 @@ export const privateProcedure = t.procedure.use(
 );
 
 export const rateLimitMiddleware = middleware(async ({ ctx, next }) => {
+  if (!process.env.KV_REST_API_URL) {
+    return next();
+  }
+
   const ratelimit = new Ratelimit({
     redis: kv,
     limiter: Ratelimit.slidingWindow(5, "1 m"),
   });
-
-  if (!process.env.KV_REST_API_URL) {
-    return next();
-  }
 
   const clientIp = requestIp.getClientIp(ctx.req);
 
