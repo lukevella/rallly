@@ -6,10 +6,12 @@ import {
   FormItem,
   FormLabel,
 } from "@rallly/ui/form";
+import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Input } from "@rallly/ui/input";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useTranslation } from "@/app/i18n/client";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
@@ -22,6 +24,8 @@ function ChangeAvatarButton({
 }: {
   onSuccess: (imageKey: string) => void;
 }) {
+  const { t } = useTranslation();
+  const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
   const getAvatarUploadUrlMutation = trpc.user.getAvatarUploadUrl.useMutation();
   const updateAvatarMutation = trpc.user.updateAvatar.useMutation({
@@ -47,10 +51,27 @@ function ChangeAvatarButton({
     setIsUploading(true);
     try {
       // Get pre-signed URL
-      const { url, fields } = await getAvatarUploadUrlMutation.mutateAsync({
+      const res = await getAvatarUploadUrlMutation.mutateAsync({
         fileType,
         fileSize: file.size,
       });
+
+      if (!res.success) {
+        if (res.cause === "object-storage-not-enabled") {
+          toast({
+            title: t("featureNotAvailable", {
+              defaultValue: "Feature not available",
+            }),
+            description: t("featureNotAvailableDescription", {
+              defaultValue:
+                "This feature requires object storage to be enabled.",
+            }),
+          });
+          return;
+        }
+      }
+
+      const { url, fields } = res;
 
       await fetch(url, {
         method: "PUT",
@@ -65,7 +86,7 @@ function ChangeAvatarButton({
         imageKey: fields.key,
       });
     } catch (error) {
-      console.error("Error uploading avatar:", error);
+      console.error(error);
     } finally {
       setIsUploading(false);
     }
@@ -76,11 +97,10 @@ function ChangeAvatarButton({
       <Button
         loading={isUploading}
         onClick={() => {
-          // trigger file input
           document.getElementById("avatar-upload")?.click();
         }}
       >
-        <Trans i18nKey="changeAvatar" defaults="Change Avatar" />
+        <Trans i18nKey="uploadProfilePicture" defaults="Upload" />
       </Button>
       <input
         id="avatar-upload"

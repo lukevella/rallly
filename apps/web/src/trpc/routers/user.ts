@@ -162,10 +162,10 @@ export const user = router({
         !env.AWS_ACCESS_KEY_ID ||
         !env.AWS_SECRET_ACCESS_KEY
       ) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Avatar upload is not enabled",
-        });
+        return {
+          success: false,
+          cause: "object-storage-not-enabled",
+        } as const;
       }
 
       const userId = ctx.user.id;
@@ -188,11 +188,12 @@ export const user = router({
       const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
 
       return {
+        success: true,
         url,
         fields: {
           key,
         },
-      };
+      } as const;
     }),
   updateAvatar: privateProcedure
     .input(z.object({ imageKey: z.string().max(255) }))

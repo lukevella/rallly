@@ -274,6 +274,8 @@
   "yesUpdateTimezone": "Yes, update my timezone",
   "noKeepCurrentTimezone": "No, keep the current timezone",
   "annualBenefit": "{count} months free",
-  "changeAvatar": "Change Avatar",
-  "removeAvatar": "Remove"
+  "removeAvatar": "Remove",
+  "featureNotAvailable": "Feature not available",
+  "featureNotAvailableDescription": "This feature requires object storage to be enabled.",
+  "uploadProfilePicture": "Upload"
 }
