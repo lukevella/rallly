@@ -6,5 +6,11 @@
   "finalizeHost_heading": "Azken data erreserbatu da!",
   "finalizeHost_content2": "Parte-hartzaileei jakinarazi diegu eta egutegiko gonbidapenak bidali dizkiegu.",
   "finalizeHost_button": "Ikusi ekitaldia",
-  "finalizeHost_subject": "{{title}}-k erreserbatu du data"
+  "finalizeHost_subject": "{{title}}-k erreserbatu du data",
+  "finalizeParticipant_content": "<b>{{hostName}}</b>-k <b>{{title}}</b> erreserbatu du data honetarako:",
+  "finalizeParticipant_preview": "Azken data erreserbatu da!",
+  "finalizeParticipant_heading": "Azken data erreserbatu da!",
+  "finalizeParticipant_content2": "Ekitaldi honetarako egutegiko gonbidapena erantsita aurkituko duzu.",
+  "finalizeParticipant_subject": "{{title}}-k erreserbatu du data",
+  "login_button": "Hasi saioa {{domain}}-n"
 }
