@@ -8,6 +8,7 @@ import {
 } from "@rallly/ui/form";
 import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Input } from "@rallly/ui/input";
+import * as Sentry from "@sentry/nextjs";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -52,6 +53,12 @@ function ChangeAvatarButton({
           defaultValue: "Please upload a JPG or PNG file.",
         }),
       });
+      Sentry.captureMessage("Invalid file type", {
+        level: "info",
+        extra: {
+          fileType,
+        },
+      });
       return;
     }
 
@@ -63,6 +70,12 @@ function ChangeAvatarButton({
         description: t("fileTooLargeDescription", {
           defaultValue: "Please upload a file smaller than 2MB.",
         }),
+      });
+      Sentry.captureMessage("File too large", {
+        level: "info",
+        extra: {
+          fileSize: file.size,
+        },
       });
       return;
     }
