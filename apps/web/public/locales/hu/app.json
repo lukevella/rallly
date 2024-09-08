@@ -273,5 +273,14 @@
   "timeZoneChangeDetectorMessage": "Az időzónád megváltozott erre: <b>{currentTimeZone}</b>. Szeretnéd frissíteni a beállításaidat?",
   "yesUpdateTimezone": "Igen, frissítsd az időzónám",
   "noKeepCurrentTimezone": "Nem, tartsd meg a jelenlegi időzónát",
-  "annualBenefit": "{count} hónapig ingyenes"
+  "annualBenefit": "{count} hónapig ingyenes",
+  "removeAvatar": "Törlés",
+  "featureNotAvailable": "Funkció nem elérhető",
+  "featureNotAvailableDescription": "Ehhez a funkcióhoz engedélyezned kell az objektum tárolást.",
+  "uploadProfilePicture": "Feltöltés",
+  "profilePictureDescription": "2MB-ig, JPG vagy PNG",
+  "invalidFileType": "Érvénytelen fájltípus",
+  "invalidFileTypeDescription": "Kérjük, tölts fel egy JPG vagy PNG fájlt.",
+  "fileTooLarge": "A fájl túl nagy",
+  "fileTooLargeDescription": "Kérjük, tölts fel egy 2MB-nál kisebb fájlt."
 }
