@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { Logo } from "@/components/logo";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
-import { UserAvatar } from "@/components/user";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -53,9 +53,13 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
           <div className="mb-4 font-semibold">
             <Trans i18nKey="continueAs" defaults="Continue as" />
           </div>
-          <div className="text-center">
-            <UserAvatar size="lg" name={data?.name} />
-            <div className="py-4 text-center">
+          <div className="flex flex-col items-center gap-2">
+            <OptimizedAvatarImage
+              src={data?.image ?? undefined}
+              name={data?.name ?? ""}
+              size={56}
+            />
+            <div className="text-center">
               <div className="mb-1 h-6 font-medium">
                 {data?.name ?? <Skeleton className="inline-block h-5 w-16" />}
               </div>
@@ -71,9 +75,8 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
             onClick={async () => {
               await magicLinkFetch.mutateAsync();
             }}
-            size="lg"
             variant="primary"
-            className="mt-4 w-full"
+            className="mt-6 w-full"
           >
             <Trans i18nKey="continue" />
           </Button>

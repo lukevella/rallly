@@ -43,6 +43,7 @@ export const user = router({
         select: {
           name: true,
           email: true,
+          image: true,
         },
       });
     }),
