@@ -1,1 +1,10 @@
-{}
+{
+  "common_poweredBy": "<a>{{domain}}</a>ren eskutik",
+  "common_disableNotifications": "Eguneratzeak jasotzeari utzi nahi badiozu, <a>jakinarazpenak desaktibatu ditzakezu</a>.",
+  "finalizeHost_content": "<b>{{title}}</b> erreserbatu du:",
+  "finalizeHost_preview": "Azken data erreserbatu! Parte-hartzaileei jakinarazi diegu eta egutegiko gonbidapenak bidali dizkiegu.",
+  "finalizeHost_heading": "Azken data erreserbatu da!",
+  "finalizeHost_content2": "Parte-hartzaileei jakinarazi diegu eta egutegiko gonbidapenak bidali dizkiegu.",
+  "finalizeHost_button": "Ikusi ekitaldia",
+  "finalizeHost_subject": "{{title}}-k erreserbatu du data"
+}
