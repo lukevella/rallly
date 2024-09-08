@@ -24,22 +24,18 @@ export const OptimizedAvatarImage = ({
 }) => {
   return (
     <Avatar className={className} style={{ width: size, height: size }}>
-      {src ? (
-        src.startsWith("http") ? (
-          <AvatarImage src={src} alt={name} />
-        ) : (
-          <Image
-            src={getAvatarUrl(src)}
-            width={128}
-            height={128}
-            alt={name}
-            style={{ objectFit: "cover" }}
-            objectFit="cover"
-          />
-        )
+      {!src || src.startsWith("https") ? (
+        <AvatarImage src={src} alt={name} />
       ) : (
-        <AvatarFallback>{name[0]}</AvatarFallback>
+        <Image
+          src={getAvatarUrl(src)}
+          width={128}
+          height={128}
+          alt={name}
+          style={{ objectFit: "cover" }}
+        />
       )}
+      <AvatarFallback>{name[0]}</AvatarFallback>
     </Avatar>
   );
 };
