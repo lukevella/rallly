@@ -199,11 +199,23 @@ export const user = router({
     .use(rateLimitMiddleware)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
+      const oldImageKey = ctx.user.image;
 
       await prisma.user.update({
         where: { id: userId },
         data: { image: input.imageKey },
       });
+
+      if (oldImageKey) {
+        waitUntil(
+          s3Client.send(
+            new DeleteObjectCommand({
+              Bucket: env.AWS_S3_BUCKET_NAME,
+              Key: oldImageKey,
+            }),
+          ),
+        );
+      }
 
       return { success: true };
     }),
