@@ -22,7 +22,7 @@ export interface ParticipantRowProps {
   participant: {
     id: string;
     name: string;
-    userId: string;
+    userId?: string;
     email?: string;
     votes: Vote[];
   };
