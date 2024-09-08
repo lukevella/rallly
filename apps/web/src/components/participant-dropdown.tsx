@@ -40,8 +40,6 @@ import { useFormValidation } from "@/utils/form-validation";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
-import { Participant } from ".prisma/client";
-
 export const ParticipantDropdown = ({
   participant,
   onEdit,
@@ -50,7 +48,12 @@ export const ParticipantDropdown = ({
   align,
 }: {
   disabled?: boolean;
-  participant: Participant;
+  participant: {
+    name: string;
+    userId?: string;
+    email?: string;
+    id: string;
+  };
   align?: "start" | "end";
   onEdit: () => void;
   children: React.ReactNode;

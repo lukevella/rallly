@@ -8,8 +8,8 @@ import * as React from "react";
 import { useToggle } from "react-use";
 
 import { useTranslation } from "@/app/i18n/client";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useParticipants } from "@/components/participants-provider";
-import { UserAvatar } from "@/components/user";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 
@@ -51,7 +51,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             {participantsWhoVotedYes.map(({ name }, i) => (
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
-                  <UserAvatar size="xs" name={name} />
+                  <OptimizedAvatarImage size={20} name={name} />
                   <VoteIcon
                     type="yes"
                     size="sm"
@@ -66,7 +66,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
-                  <UserAvatar size="xs" name={name} />
+                  <OptimizedAvatarImage size={20} name={name} />
                   <VoteIcon
                     type="ifNeedBe"
                     size="sm"
@@ -79,7 +79,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             {participantsWhoVotedNo.map(({ name }, i) => (
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
-                  <UserAvatar size="xs" name={name} />
+                  <OptimizedAvatarImage size={20} name={name} />
                   <VoteIcon
                     type="no"
                     size="sm"

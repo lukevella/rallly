@@ -1,7 +1,7 @@
 import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 
-import { ColoredAvatar } from "@/components/poll/user-avatar";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 
 interface ParticipantAvatarBarProps {
   participants: { name: string }[];
@@ -19,15 +19,15 @@ export const ParticipantAvatarBar = ({
       {participants.slice(0, visibleCount).map((participant, index) => (
         <Tooltip key={index}>
           <TooltipTrigger asChild>
-            <li className="inline-flex items-center justify-center rounded-full ring-2 ring-white">
-              <ColoredAvatar name={participant.name} />
+            <li className="z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
+              <OptimizedAvatarImage size={20} name={participant.name} />
             </li>
           </TooltipTrigger>
           <TooltipContent>{participant.name}</TooltipContent>
         </Tooltip>
       ))}
       {hiddenCount > 1 ? (
-        <li className="inline-flex items-center justify-center rounded-full ring-2 ring-white">
+        <li className="relative z-20 inline-flex items-center justify-center rounded-full ring-2 ring-white">
           <Tooltip>
             <TooltipTrigger asChild>
               <span
