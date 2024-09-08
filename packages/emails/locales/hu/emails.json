@@ -45,5 +45,6 @@
   "register_subject": "Hitelesítsd az e-mail címed",
   "common_viewOn": "Nézd meg itt: {{domain}}",
   "newComment_preview": "Irány a szavazásod, hogy lásd a hozzászólásokat.",
-  "newComment_heading": "Új hozzászólás"
+  "newComment_heading": "Új hozzászólás",
+  "newPoll_preview": "Oszd meg a résztvevői linked, hogy elkezdhess a válaszok gyűjteni."
 }
