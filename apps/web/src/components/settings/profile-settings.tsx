@@ -16,6 +16,7 @@ import { useTranslation } from "@/app/i18n/client";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
 const allowedMimeTypes = ["image/jpeg", "image/png"];
@@ -144,11 +145,12 @@ function ChangeAvatarButton({
   );
 }
 
-function RemoveAvatarButton() {
+function RemoveAvatarButton({ onSuccess }: { onSuccess?: () => void }) {
   const { refresh } = useUser();
   const removeAvatarMutation = trpc.user.removeAvatar.useMutation({
     onSuccess: () => {
       refresh({ image: null });
+      onSuccess?.();
     },
   });
 
@@ -179,6 +181,7 @@ export const ProfileSettings = () => {
   });
 
   const { control, handleSubmit, formState, reset } = form;
+  const posthog = usePostHog();
   return (
     <div className="grid gap-y-4">
       <Form {...form}>
@@ -196,9 +199,16 @@ export const ProfileSettings = () => {
                   <ChangeAvatarButton
                     onSuccess={(imageKey) => {
                       refresh({ image: imageKey });
+                      posthog?.capture("upload profile picture");
                     }}
                   />
-                  {user.image ? <RemoveAvatarButton /> : null}
+                  {user.image ? (
+                    <RemoveAvatarButton
+                      onSuccess={() => {
+                        posthog?.capture("remove profile picture");
+                      }}
+                    />
+                  ) : null}
                 </div>
                 <p className="text-muted-foreground text-xs">
                   <Trans
