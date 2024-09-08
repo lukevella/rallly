@@ -39,7 +39,10 @@ export function TimeZoneChangeDetector() {
 
   React.useEffect(() => {
     if (previousTimeZone !== currentTimeZone) {
-      posthog?.capture("timezone change detected");
+      posthog?.capture("timezone change detected", {
+        previousTimeZone,
+        currentTimeZone,
+      });
       setOpen(true);
     }
   }, [previousTimeZone, currentTimeZone, posthog]);
@@ -70,7 +73,10 @@ export function TimeZoneChangeDetector() {
               localStorage.setItem("previousTimeZone", currentTimeZone);
               updatePreferences({ timeZone: currentTimeZone });
               setOpen(false);
-              posthog?.capture("timezone change accepted");
+              posthog?.capture("timezone change accepted", {
+                previousTimeZone,
+                currentTimeZone,
+              });
             }}
           >
             <Trans
@@ -83,7 +89,10 @@ export function TimeZoneChangeDetector() {
               setPreviousTimeZone(currentTimeZone);
               localStorage.setItem("previousTimeZone", currentTimeZone);
               setOpen(false);
-              posthog?.capture("timezone change rejected");
+              posthog?.capture("timezone change rejected", {
+                previousTimeZone,
+                currentTimeZone,
+              });
             }}
           >
             <Trans
