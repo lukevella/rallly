@@ -18,6 +18,7 @@ export function getS3Client() {
       accessKeyId: env.S3_ACCESS_KEY_ID,
       secretAccessKey: env.S3_SECRET_ACCESS_KEY,
     },
+    // S3 compatible storage requires path style
     forcePathStyle: true,
   });
 
