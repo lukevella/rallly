@@ -7,6 +7,7 @@ export type TRPCContext = {
     isGuest: boolean;
     locale?: string;
     getEmailClient: (locale?: string) => EmailClient;
+    image?: string;
   };
   req: NextApiRequest;
   res: NextApiResponse;

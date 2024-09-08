@@ -34,9 +34,35 @@ services:
       SRH_MODE: env
       SRH_TOKEN: dev_fake_token_123456789abcdefghijklmnop
       SRH_CONNECTION_STRING: "redis://redis:6379"
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    volumes:
+      - s3-data:/data
+  # This service just make sure a bucket with the right policies is created
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      /usr/bin/mc config host add minio http://minio:9000 minio minio123;
+      /usr/bin/mc mb minio/rallly;
+      /usr/bin/mc anonymous set public minio/rallly/public;
+      exit 0;
+      "
 
 volumes:
   db-data:
     driver: local
   redis-data:
+    driver: local
+  s3-data:
     driver: local

@@ -1,12 +1,19 @@
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { prisma } from "@rallly/database";
+import { TRPCError } from "@trpc/server";
+import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
+import { env } from "@/env";
+import { getS3Client } from "@/utils/s3";
 import { getSubscriptionStatus } from "@/utils/subscription";
 
 import {
   possiblyPublicProcedure,
   privateProcedure,
   publicProcedure,
+  rateLimitMiddleware,
   router,
 } from "../trpc";
 
@@ -121,13 +128,116 @@ export const user = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      if (ctx.user.isGuest === false) {
-        await prisma.user.update({
-          where: {
-            id: ctx.user.id,
-          },
-          data: input,
+      if (ctx.user.isGuest) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Guest users cannot update preferences",
         });
       }
+
+      await prisma.user.update({
+        where: {
+          id: ctx.user.id,
+        },
+        data: input,
+      });
+
+      return { success: true };
     }),
+  getAvatarUploadUrl: privateProcedure
+    .use(rateLimitMiddleware)
+    .input(z.object({ fileType: z.string(), fileSize: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const s3Client = getS3Client();
+
+      if (!s3Client) {
+        return {
+          success: false,
+          cause: "object-storage-not-enabled",
+        } as const;
+      }
+
+      const userId = ctx.user.id;
+      const key = `avatars/${userId}-${Date.now()}.jpg`;
+
+      if (input.fileSize > 2 * 1024 * 1024) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "File size too large",
+        });
+      }
+
+      const command = new PutObjectCommand({
+        Bucket: env.S3_BUCKET_NAME,
+        Key: key,
+        ContentType: input.fileType,
+        ContentLength: input.fileSize,
+      });
+
+      const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+
+      return {
+        success: true,
+        url,
+        fields: {
+          key,
+        },
+      } as const;
+    }),
+  updateAvatar: privateProcedure
+    .input(z.object({ imageKey: z.string().max(255) }))
+    .use(rateLimitMiddleware)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user.id;
+      const oldImageKey = ctx.user.image;
+
+      await prisma.user.update({
+        where: { id: userId },
+        data: { image: input.imageKey },
+      });
+
+      const s3Client = getS3Client();
+
+      if (oldImageKey && s3Client) {
+        waitUntil(
+          s3Client?.send(
+            new DeleteObjectCommand({
+              Bucket: env.S3_BUCKET_NAME,
+              Key: oldImageKey,
+            }),
+          ),
+        );
+      }
+
+      return { success: true };
+    }),
+  removeAvatar: privateProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.user.id;
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { image: null },
+    });
+
+    // Delete the avatar from storage if it's an internal avatar
+    const isInternalAvatar =
+      ctx.user.image && !ctx.user.image.startsWith("https://");
+
+    if (isInternalAvatar) {
+      const s3Client = getS3Client();
+
+      if (s3Client) {
+        waitUntil(
+          s3Client.send(
+            new DeleteObjectCommand({
+              Bucket: env.S3_BUCKET_NAME,
+              Key: ctx.user.image,
+            }),
+          ),
+        );
+      }
+
+      return { success: true };
+    }
+  }),
 });

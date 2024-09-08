@@ -13,7 +13,7 @@ type Preferences = {
 
 type PreferencesContextValue = {
   preferences: Preferences;
-  updatePreferences: (preferences: Partial<Preferences>) => void;
+  updatePreferences: (preferences: Partial<Preferences>) => Promise<void>;
 };
 
 const PreferencesContext = React.createContext<PreferencesContextValue | null>(
@@ -27,7 +27,7 @@ export const PreferencesProvider = ({
 }: {
   children?: React.ReactNode;
   initialValue: Partial<Preferences>;
-  onUpdate?: (preferences: Partial<Preferences>) => void;
+  onUpdate?: (preferences: Partial<Preferences>) => Promise<void>;
 }) => {
   const [preferences, setPreferences] = useSetState<Preferences>(initialValue);
 
@@ -35,9 +35,9 @@ export const PreferencesProvider = ({
     <PreferencesContext.Provider
       value={{
         preferences,
-        updatePreferences: (newPreferences) => {
+        updatePreferences: async (newPreferences) => {
           setPreferences(newPreferences);
-          onUpdate?.(newPreferences);
+          await onUpdate?.(newPreferences);
         },
       }}
     >

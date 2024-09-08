@@ -252,36 +252,23 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           // merge accounts assigned to provider account id to the current user id
           await mergeGuestsIntoUser(user.id, [account.providerAccountId]);
         }
-        if (trigger === "update" && session) {
-          if (token.email) {
-            // For registered users we want to save the preferences to the database
-            try {
-              await prisma.user.update({
-                where: {
-                  id: token.sub,
-                },
-                data: {
-                  locale: session.locale,
-                  timeFormat: session.timeFormat,
-                  timeZone: session.timeZone,
-                  weekStart: session.weekStart,
-                  name: session.name,
-                  image: session.image,
-                },
-              });
-            } catch (e) {
-              console.error("Failed to update user preferences", session);
-            }
-          }
-          token = { ...token, ...session };
-        }
-        if (trigger === "signIn" && user) {
+
+        if (user) {
           token.locale = user.locale;
           token.timeFormat = user.timeFormat;
           token.timeZone = user.timeZone;
           token.weekStart = user.weekStart;
           token.picture = user.image;
         }
+
+        if (session) {
+          token.locale = session.locale;
+          token.timeFormat = session.timeFormat;
+          token.timeZone = session.timeZone;
+          token.weekStart = session.weekStart;
+          token.picture = session.image;
+        }
+
         return token;
       },
       async session({ session, token }) {
