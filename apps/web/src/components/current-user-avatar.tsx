@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, AvatarFallback } from "@rallly/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import Image from "next/image";
 
 import { useUser } from "@/components/user-provider";
@@ -24,14 +24,18 @@ export const CurrentUserAvatar = ({
   return (
     <Avatar className={className} style={{ width: size, height: size }}>
       {user.image ? (
-        <Image
-          src={getAvatarUrl(user.image)}
-          width={128}
-          height={128}
-          alt={user.name}
-          style={{ objectFit: "cover" }}
-          objectFit="cover"
-        />
+        user.image.startsWith("http") ? (
+          <AvatarImage src={user.image} />
+        ) : (
+          <Image
+            src={getAvatarUrl(user.image)}
+            width={128}
+            height={128}
+            alt={user.name}
+            style={{ objectFit: "cover" }}
+            objectFit="cover"
+          />
+        )
       ) : (
         <AvatarFallback>{user.name[0]}</AvatarFallback>
       )}
