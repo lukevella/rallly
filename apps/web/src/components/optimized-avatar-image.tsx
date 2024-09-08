@@ -8,7 +8,7 @@ function getAvatarUrl(imageKey: string) {
     return imageKey;
   }
 
-  return `/api/storage/${imageKey}`;
+  return `/api/storage?key=${encodeURIComponent(imageKey)}`;
 }
 
 export const OptimizedAvatarImage = ({
