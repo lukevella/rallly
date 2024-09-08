@@ -17,6 +17,9 @@ const nextConfig = {
   output:
     process.env.NEXT_PUBLIC_SELF_HOSTED === "true" ? "standalone" : undefined,
   productionBrowserSourceMaps: true,
+  images: {
+    domains: [process.env.NEXT_PUBLIC_BASE_URL || "localhost:3000"],
+  },
   transpilePackages: [
     "@rallly/database",
     "@rallly/icons",
