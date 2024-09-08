@@ -2,15 +2,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import Image from "next/image";
 
-function getAvatarUrl(imageKey: string) {
-  // Some users have avatars that come from external providers (e.g. Google).
-  if (imageKey.startsWith("https://")) {
-    return imageKey;
-  }
-
-  return `/api/storage?key=${encodeURIComponent(imageKey)}`;
-}
-
 export const OptimizedAvatarImage = ({
   size,
   className,
@@ -28,7 +19,7 @@ export const OptimizedAvatarImage = ({
         <AvatarImage src={src} alt={name} />
       ) : (
         <Image
-          src={getAvatarUrl(src)}
+          src={`/api/storage/${src}`}
           width={128}
           height={128}
           alt={name}
