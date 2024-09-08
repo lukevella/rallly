@@ -273,5 +273,14 @@
   "timeZoneChangeDetectorMessage": "Je tijdzone is veranderd naar <b>{currentTimeZone}</b>. Wil je je voorkeuren bijwerken?",
   "yesUpdateTimezone": "Ja, werk mijn tijdzone bij",
   "noKeepCurrentTimezone": "Nee, behoud de huidige tijdzone",
-  "annualBenefit": "{count} maanden gratis"
+  "annualBenefit": "{count} maanden gratis",
+  "removeAvatar": "Verwijderen",
+  "featureNotAvailable": "Functie niet beschikbaar",
+  "featureNotAvailableDescription": "Deze functie vereist dat objectopslag is ingeschakeld.",
+  "uploadProfilePicture": "Uploaden",
+  "profilePictureDescription": "Tot 2MB, JPG of PNG",
+  "invalidFileType": "Ongeldig bestandstype",
+  "invalidFileTypeDescription": "Upload een JPG- of PNG-bestand.",
+  "fileTooLarge": "Bestand te groot",
+  "fileTooLargeDescription": "Upload een bestand kleiner dan 2MB."
 }
