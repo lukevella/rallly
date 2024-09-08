@@ -1,8 +1,4 @@
-import {
-  DeleteObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
@@ -10,6 +6,7 @@ import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
 import { env } from "@/env";
+import { getS3Client } from "@/utils/s3";
 import { getSubscriptionStatus } from "@/utils/subscription";
 
 import {
@@ -19,11 +16,6 @@ import {
   rateLimitMiddleware,
   router,
 } from "../trpc";
-
-const s3Client = new S3Client({
-  region: env.AWS_REGION,
-  forcePathStyle: true,
-});
 
 export const user = router({
   getBilling: possiblyPublicProcedure.query(async ({ ctx }) => {
@@ -156,12 +148,9 @@ export const user = router({
     .use(rateLimitMiddleware)
     .input(z.object({ fileType: z.string(), fileSize: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      if (
-        !env.AWS_S3_BUCKET_NAME ||
-        !env.AWS_REGION ||
-        !env.AWS_ACCESS_KEY_ID ||
-        !env.AWS_SECRET_ACCESS_KEY
-      ) {
+      const s3Client = getS3Client();
+
+      if (!s3Client) {
         return {
           success: false,
           cause: "object-storage-not-enabled",
@@ -179,7 +168,7 @@ export const user = router({
       }
 
       const command = new PutObjectCommand({
-        Bucket: env.AWS_S3_BUCKET_NAME,
+        Bucket: env.S3_BUCKET_NAME,
         Key: key,
         ContentType: input.fileType,
         ContentLength: input.fileSize,
@@ -207,11 +196,13 @@ export const user = router({
         data: { image: input.imageKey },
       });
 
-      if (oldImageKey) {
+      const s3Client = getS3Client();
+
+      if (oldImageKey && s3Client) {
         waitUntil(
-          s3Client.send(
+          s3Client?.send(
             new DeleteObjectCommand({
-              Bucket: env.AWS_S3_BUCKET_NAME,
+              Bucket: env.S3_BUCKET_NAME,
               Key: oldImageKey,
             }),
           ),
@@ -233,16 +224,20 @@ export const user = router({
       ctx.user.image && !ctx.user.image.startsWith("https://");
 
     if (isInternalAvatar) {
-      waitUntil(
-        s3Client.send(
-          new DeleteObjectCommand({
-            Bucket: env.AWS_S3_BUCKET_NAME,
-            Key: ctx.user.image,
-          }),
-        ),
-      );
-    }
+      const s3Client = getS3Client();
 
-    return { success: true };
+      if (s3Client) {
+        waitUntil(
+          s3Client.send(
+            new DeleteObjectCommand({
+              Bucket: env.S3_BUCKET_NAME,
+              Key: ctx.user.image,
+            }),
+          ),
+        );
+      }
+
+      return { success: true };
+    }
   }),
 });

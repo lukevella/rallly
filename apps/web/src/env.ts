@@ -56,7 +56,14 @@ export const env = createEnv({
     NOREPLY_EMAIL: z.string().email().optional(),
     NOREPLY_EMAIL_NAME: z.string().default("Rallly"),
 
-    AWS_S3_BUCKET_NAME: z.string().optional(),
+    /**
+     * S3 Configuration
+     */
+    S3_BUCKET_NAME: z.string().optional(),
+    S3_ENDPOINT: z.string().optional(),
+    S3_ACCESS_KEY_ID: z.string().optional(),
+    S3_SECRET_ACCESS_KEY: z.string().optional(),
+    S3_REGION: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -91,11 +98,15 @@ export const env = createEnv({
     SMTP_PWD: process.env.SMTP_PWD,
     SMTP_SECURE: process.env.SMTP_SECURE,
     SMTP_PORT: process.env.SMTP_PORT,
+    ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
-    AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
-    ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
+    S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+    S3_ENDPOINT: process.env.S3_ENDPOINT,
+    S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
+    S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
+    S3_REGION: process.env.S3_REGION,
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
     NEXT_PUBLIC_SELF_HOSTED: process.env.NEXT_PUBLIC_SELF_HOSTED,

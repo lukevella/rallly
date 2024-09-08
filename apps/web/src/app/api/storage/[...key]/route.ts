@@ -1,16 +1,18 @@
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from "next/server";
 
 import { env } from "@/env";
+import { getS3Client } from "@/utils/s3";
 
 async function getAvatar(key: string) {
-  const s3Client = new S3Client({
-    region: env.AWS_REGION,
-    forcePathStyle: true,
-  });
+  const s3Client = getS3Client();
+
+  if (!s3Client) {
+    throw new Error("S3 client not initialized");
+  }
 
   const command = new GetObjectCommand({
-    Bucket: env.AWS_S3_BUCKET_NAME,
+    Bucket: env.S3_BUCKET_NAME,
     Key: key,
   });
 
