@@ -44,10 +44,28 @@ function ChangeAvatarButton({
     const fileType = file.type;
 
     if (!allowedMimeTypes.includes(fileType)) {
-      alert("Invalid file type");
+      toast({
+        title: t("invalidFileType", {
+          defaultValue: "Invalid file type",
+        }),
+        description: t("invalidFileTypeDescription", {
+          defaultValue: "Please upload a JPG or PNG file.",
+        }),
+      });
       return;
     }
 
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: t("fileTooLarge", {
+          defaultValue: "File too large",
+        }),
+        description: t("fileTooLargeDescription", {
+          defaultValue: "Please upload a file smaller than 2MB.",
+        }),
+      });
+      return;
+    }
     setIsUploading(true);
     try {
       // Get pre-signed URL
@@ -160,13 +178,21 @@ export const ProfileSettings = () => {
           <div className="flex flex-col gap-y-4">
             <div className="flex items-center gap-x-4">
               <CurrentUserAvatar size={56} />
-              <div className="flex gap-2">
-                <ChangeAvatarButton
-                  onSuccess={(imageKey) => {
-                    refresh({ image: imageKey });
-                  }}
-                />
-                {user.image ? <RemoveAvatarButton /> : null}
+              <div className="flex flex-col gap-y-2">
+                <div className="flex gap-2">
+                  <ChangeAvatarButton
+                    onSuccess={(imageKey) => {
+                      refresh({ image: imageKey });
+                    }}
+                  />
+                  {user.image ? <RemoveAvatarButton /> : null}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  <Trans
+                    i18nKey="profilePictureDescription"
+                    defaults="Up to 2MB, JPG or PNG"
+                  />
+                </p>
               </div>
             </div>
             <FormField

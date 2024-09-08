@@ -277,5 +277,10 @@
   "removeAvatar": "Remove",
   "featureNotAvailable": "Feature not available",
   "featureNotAvailableDescription": "This feature requires object storage to be enabled.",
-  "uploadProfilePicture": "Upload"
+  "uploadProfilePicture": "Upload",
+  "profilePictureDescription": "Up to 2MB, JPG or PNG",
+  "invalidFileType": "Invalid file type",
+  "invalidFileTypeDescription": "Please upload a JPG or PNG file.",
+  "fileTooLarge": "File too large",
+  "fileTooLargeDescription": "Please upload a file smaller than 2MB."
 }
