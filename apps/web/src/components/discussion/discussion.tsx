@@ -120,7 +120,13 @@ function NewCommentForm({
           control={control}
           rules={{ validate: requiredString }}
           render={({ field }) => (
-            <Input error={!!formState.errors.authorName} {...field} />
+            <Input
+              placeholder={t("yourName")}
+              className="lg:w-48"
+              data-1p-ignore="true"
+              error={!!formState.errors.authorName}
+              {...field}
+            />
           )}
         />
       </div>
