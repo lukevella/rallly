@@ -273,5 +273,10 @@
   "timeZoneChangeDetectorMessage": "Din tidszon har ändrats till <b>{currentTimeZone}</b>. Vill du uppdatera dina inställningar?",
   "yesUpdateTimezone": "Ja, uppdatera min tidszon",
   "noKeepCurrentTimezone": "Nej, behåll den aktuella tidszonen",
-  "annualBenefit": "{count} månader gratis"
+  "annualBenefit": "{count} månader gratis",
+  "uploadProfilePicture": "Ladda upp",
+  "profilePictureDescription": "Upp till 2 MB, JPG eller PNG",
+  "invalidFileType": "Ogiltig filtyp",
+  "invalidFileTypeDescription": "Ladda upp en JPG- eller PNG-fil.",
+  "fileTooLargeDescription": "Ladda upp en fil som är mindre än 2 MB."
 }

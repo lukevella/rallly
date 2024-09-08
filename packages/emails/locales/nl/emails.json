@@ -45,5 +45,6 @@
   "register_subject": "Verifieer je e-mailadres",
   "common_viewOn": "Bekijken op {{domain}}",
   "newComment_preview": "Ga naar je poll om de reactie te bekijken.",
-  "newComment_heading": "Nieuwe reactie"
+  "newComment_heading": "Nieuwe reactie",
+  "newPoll_preview": "Deel de uitnodigingslink om te beginnen met het verzamelen van reacties."
 }

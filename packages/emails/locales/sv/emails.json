@@ -45,5 +45,6 @@
   "register_subject": "Bekräfta din e-postadress",
   "common_viewOn": "Visa på {{domain}}",
   "newComment_preview": "Gå till din omröstning för att se vad de sa.",
-  "newComment_heading": "Ny kommentar"
+  "newComment_heading": "Ny kommentar",
+  "newPoll_preview": "Dela din deltagarlänk för att börja samla in svar."
 }

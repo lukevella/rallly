@@ -273,5 +273,14 @@
   "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt <b>{currentTimeZone}</b>. Haluatko päivittää asetuksesi?",
   "yesUpdateTimezone": "Kyllä, päivitä aikavyöhykkeeni",
   "noKeepCurrentTimezone": "Ei, säilytä nykyinen aikavyöhyke",
-  "annualBenefit": "{count} kuukautta ilmaiseksi"
+  "annualBenefit": "{count} kuukautta ilmaiseksi",
+  "removeAvatar": "Poista",
+  "featureNotAvailable": "Ominaisuus ei ole saatavilla",
+  "featureNotAvailableDescription": "Tämä ominaisuus edellyttää objektivaraston olevan käytössä.",
+  "uploadProfilePicture": "Lataa",
+  "profilePictureDescription": "Korkeintaan 2 Mt, JPG tai PNG",
+  "invalidFileType": "Tiedostomuoto ei kelpaa",
+  "invalidFileTypeDescription": "Lataa JPG- tai PNG-tiedosto.",
+  "fileTooLarge": "Tiedosto on liian suuri",
+  "fileTooLargeDescription": "Lataa tiedosto, joka on korkeintaan 2 Mt."
 }
