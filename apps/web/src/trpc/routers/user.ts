@@ -160,7 +160,7 @@ export const user = router({
       const userId = ctx.user.id;
       const key = `avatars/${userId}-${Date.now()}.jpg`;
 
-      if (input.fileSize > 10 * 1024 * 1024) {
+      if (input.fileSize > 2 * 1024 * 1024) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "File size too large",
