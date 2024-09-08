@@ -273,5 +273,7 @@
   "timeZoneChangeDetectorMessage": "Your timezone has changed to <b>{currentTimeZone}</b>. Do you want to update your preferences?",
   "yesUpdateTimezone": "Yes, update my timezone",
   "noKeepCurrentTimezone": "No, keep the current timezone",
-  "annualBenefit": "{count} months free"
+  "annualBenefit": "{count} months free",
+  "changeAvatar": "Change Avatar",
+  "removeAvatar": "Remove"
 }

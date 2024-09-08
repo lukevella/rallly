@@ -1,4 +1,8 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
@@ -15,6 +19,11 @@ import {
   rateLimitMiddleware,
   router,
 } from "../trpc";
+
+const s3Client = new S3Client({
+  region: env.AWS_REGION,
+  forcePathStyle: true,
+});
 
 export const user = router({
   getBilling: possiblyPublicProcedure.query(async ({ ctx }) => {
@@ -159,11 +168,6 @@ export const user = router({
         });
       }
 
-      const s3Client = new S3Client({
-        region: env.AWS_REGION,
-        forcePathStyle: true,
-      });
-
       const userId = ctx.user.id;
       const key = `avatars/${userId}-${Date.now()}.jpg`;
 
@@ -203,4 +207,23 @@ export const user = router({
 
       return { success: true };
     }),
+  removeAvatar: privateProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.user.id;
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { image: null },
+    });
+
+    waitUntil(
+      s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: env.AWS_S3_BUCKET_NAME,
+          Key: ctx.user.image,
+        }),
+      ),
+    );
+
+    return { success: true };
+  }),
 });

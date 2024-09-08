@@ -93,6 +93,27 @@ function ChangeAvatarButton({
   );
 }
 
+function RemoveAvatarButton() {
+  const { refresh } = useUser();
+  const removeAvatarMutation = trpc.user.removeAvatar.useMutation({
+    onSuccess: () => {
+      refresh({ image: null });
+    },
+  });
+
+  return (
+    <Button
+      loading={removeAvatarMutation.isLoading}
+      variant="ghost"
+      onClick={() => {
+        removeAvatarMutation.mutate();
+      }}
+    >
+      <Trans i18nKey="removeAvatar" defaults="Remove" />
+    </Button>
+  );
+}
+
 export const ProfileSettings = () => {
   const { user, refresh } = useUser();
 
@@ -118,12 +139,15 @@ export const ProfileSettings = () => {
         >
           <div className="flex flex-col gap-y-4">
             <div className="flex items-center gap-x-4">
-              <CurrentUserAvatar className="size-14" />
-              <ChangeAvatarButton
-                onSuccess={(imageKey) => {
-                  refresh({ image: imageKey });
-                }}
-              />
+              <CurrentUserAvatar size={56} />
+              <div className="flex gap-2">
+                <ChangeAvatarButton
+                  onSuccess={(imageKey) => {
+                    refresh({ image: imageKey });
+                  }}
+                />
+                {user.image ? <RemoveAvatarButton /> : null}
+              </div>
             </div>
             <FormField
               control={control}

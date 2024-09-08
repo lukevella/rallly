@@ -57,7 +57,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         className={cn("group min-w-0", className)}
       >
         <Button variant="ghost">
-          <CurrentUserAvatar className="size-6" />
+          <CurrentUserAvatar size={24} />
           <span className="truncate">{user.name}</span>
           <Icon>
             <ChevronDownIcon />

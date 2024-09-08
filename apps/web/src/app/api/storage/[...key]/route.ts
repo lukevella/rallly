@@ -17,7 +17,7 @@ async function getAvatar(key: string) {
   const response = await s3Client.send(command);
 
   if (!response.Body) {
-    throw new Error("Avatar not found");
+    throw new Error("Object not found");
   }
 
   const arrayBuffer = await response.Body.transformToByteArray();
@@ -48,7 +48,7 @@ export async function GET(
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch avatar" },
+      { error: "Failed to fetch object" },
       { status: 500 },
     );
   }

@@ -161,7 +161,7 @@ export function Sidebar() {
               >
                 <Link href="/settings/profile">
                   <div>
-                    <CurrentUserAvatar />
+                    <CurrentUserAvatar size={40} />
                   </div>
                   <span className="ml-1 grid grow">
                     <span className="font-semibold">{user.name}</span>
