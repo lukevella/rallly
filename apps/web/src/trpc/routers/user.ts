@@ -227,14 +227,20 @@ export const user = router({
       data: { image: null },
     });
 
-    waitUntil(
-      s3Client.send(
-        new DeleteObjectCommand({
-          Bucket: env.AWS_S3_BUCKET_NAME,
-          Key: ctx.user.image,
-        }),
-      ),
-    );
+    // Delete the avatar from storage if it's an internal avatar
+    const isInternalAvatar =
+      ctx.user.image && !ctx.user.image.startsWith("https://");
+
+    if (isInternalAvatar) {
+      waitUntil(
+        s3Client.send(
+          new DeleteObjectCommand({
+            Bucket: env.AWS_S3_BUCKET_NAME,
+            Key: ctx.user.image,
+          }),
+        ),
+      );
+    }
 
     return { success: true };
   }),
