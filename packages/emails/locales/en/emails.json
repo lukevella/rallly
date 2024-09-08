@@ -45,5 +45,6 @@
   "register_subject": "Please verify your email address",
   "common_viewOn": "View on {{domain}}",
   "newComment_preview": "Go to your poll to see what they said.",
-  "newComment_heading": "New Comment"
+  "newComment_heading": "New Comment",
+  "newPoll_preview": "Share your participant link to start collecting responses."
 }
