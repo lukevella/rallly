@@ -9,7 +9,7 @@ import {
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 
-import { AvatarUpload } from "@/app/[locale]/(admin)/settings/profile/avatar-upload";
+import { ProfilePicture } from "@/app/[locale]/(admin)/settings/profile/profile-picture";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
@@ -37,7 +37,7 @@ export const ProfileSettings = () => {
           })}
         >
           <div className="flex flex-col gap-y-4">
-            <AvatarUpload />
+            <ProfilePicture />
             <FormField
               control={control}
               name="name"

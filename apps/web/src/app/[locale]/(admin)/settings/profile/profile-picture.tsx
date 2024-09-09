@@ -12,6 +12,7 @@ import { useTranslation } from "@/app/i18n/client";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { useAvatarsEnabled } from "@/features/avatars";
 import { usePostHog } from "@/utils/posthog";
 
 const allowedMimeTypes = ["image/jpeg", "image/png"];
@@ -142,37 +143,49 @@ function RemoveAvatarButton({ onSuccess }: { onSuccess?: () => void }) {
   );
 }
 
-export const AvatarUpload = () => {
+function Upload() {
   const { user, refresh } = useUser();
+  const isAvatarsEnabled = useAvatarsEnabled();
 
   const posthog = usePostHog();
+
+  if (!isAvatarsEnabled) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col gap-y-2">
+      <div className="flex gap-2">
+        <ChangeAvatarButton
+          onSuccess={() => {
+            refresh();
+            posthog?.capture("upload profile picture");
+          }}
+        />
+        {user.image ? (
+          <RemoveAvatarButton
+            onSuccess={() => {
+              refresh();
+              posthog?.capture("remove profile picture");
+            }}
+          />
+        ) : null}
+      </div>
+      <p className="text-muted-foreground text-xs">
+        <Trans
+          i18nKey="profilePictureDescription"
+          defaults="Up to 2MB, JPG or PNG"
+        />
+      </p>
+    </div>
+  );
+}
+
+export function ProfilePicture() {
   return (
     <div className="flex items-center gap-x-4">
       <CurrentUserAvatar size={56} />
-      <div className="flex flex-col gap-y-2">
-        <div className="flex gap-2">
-          <ChangeAvatarButton
-            onSuccess={() => {
-              refresh();
-              posthog?.capture("upload profile picture");
-            }}
-          />
-          {user.image ? (
-            <RemoveAvatarButton
-              onSuccess={() => {
-                refresh();
-                posthog?.capture("remove profile picture");
-              }}
-            />
-          ) : null}
-        </div>
-        <p className="text-muted-foreground text-xs">
-          <Trans
-            i18nKey="profilePictureDescription"
-            defaults="Up to 2MB, JPG or PNG"
-          />
-        </p>
-      </div>
+      <Upload />
     </div>
   );
-};
+}
