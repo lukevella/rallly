@@ -60,7 +60,7 @@ export const env = createEnv({
      * S3 Configuration
      */
     S3_BUCKET_NAME: z.string().optional(),
-    S3_ENDPOINT: z.string().optional(),
+    S3_ENDPOINT: z.string().default("s3.amazonaws.com"),
     S3_ACCESS_KEY_ID: z.string().optional(),
     S3_SECRET_ACCESS_KEY: z.string().optional(),
     S3_REGION: z.string().optional(),
