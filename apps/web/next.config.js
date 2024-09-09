@@ -51,6 +51,10 @@ const nextConfig = {
       },
     ];
   },
+  experimental: {
+    // necessary for server actions using aws-sdk
+    serverComponentsExternalPackages: ["@aws-sdk"],
+  },
 };
 
 const sentryWebpackPluginOptions = {
