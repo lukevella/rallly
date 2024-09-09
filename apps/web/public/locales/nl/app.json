@@ -275,8 +275,6 @@
   "noKeepCurrentTimezone": "Nee, behoud de huidige tijdzone",
   "annualBenefit": "{count} maanden gratis",
   "removeAvatar": "Verwijderen",
-  "featureNotAvailable": "Functie niet beschikbaar",
-  "featureNotAvailableDescription": "Deze functie vereist dat objectopslag is ingeschakeld.",
   "uploadProfilePicture": "Uploaden",
   "profilePictureDescription": "Tot 2MB, JPG of PNG",
   "invalidFileType": "Ongeldig bestandstype",
