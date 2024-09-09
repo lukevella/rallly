@@ -2,6 +2,7 @@ import { Button } from "@rallly/ui/button";
 import { useToast } from "@rallly/ui/hooks/use-toast";
 import * as Sentry from "@sentry/nextjs";
 import React, { useState } from "react";
+import { z } from "zod";
 
 import {
   getPresignedUrl,
@@ -15,7 +16,7 @@ import { useUser } from "@/components/user-provider";
 import { useAvatarsEnabled } from "@/features/avatars";
 import { usePostHog } from "@/utils/posthog";
 
-const allowedMimeTypes = ["image/jpeg", "image/png"];
+const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 
 function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
   const { user } = useUser();
@@ -30,9 +31,9 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
 
     if (!file) return;
 
-    const fileType = file.type;
+    const parsedFileType = allowedMimeTypes.safeParse(file.type);
 
-    if (!allowedMimeTypes.includes(fileType)) {
+    if (!parsedFileType.success) {
       toast({
         title: t("invalidFileType", {
           defaultValue: "Invalid file type",
@@ -44,11 +45,13 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
       Sentry.captureMessage("Invalid file type", {
         level: "info",
         extra: {
-          fileType,
+          fileType: file.type,
         },
       });
       return;
     }
+
+    const fileType = parsedFileType.data;
 
     if (file.size > 2 * 1024 * 1024) {
       toast({
@@ -72,7 +75,7 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
       // Get pre-signed URL
       const res = await getPresignedUrl({
         userId: user.id,
-        fileType: fileType as "image/jpeg" | "image/png",
+        fileType,
         fileSize: file.size,
       });
 
@@ -94,7 +97,16 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
 
       onSuccess();
     } catch (error) {
-      console.error(error);
+      toast({
+        title: t("errorUploadPicture", {
+          defaultValue: "Failed to upload",
+        }),
+        description: t("errorUploadPictureDescription", {
+          defaultValue:
+            "There was an issue uploading your picture. Please try again later.",
+        }),
+      });
+      Sentry.captureException(error);
     } finally {
       setIsUploading(false);
     }
