@@ -1,5 +1,4 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import * as Sentry from "@sentry/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 import { env } from "@/env";
@@ -37,6 +36,7 @@ export async function GET(
   context: { params: { key: string[] } },
 ) {
   const imageKey = context.params.key.join("/");
+
   if (!imageKey) {
     return new Response("No key provided", { status: 400 });
   }
@@ -50,7 +50,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    Sentry.captureException(error);
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch object" },
       { status: 500 },

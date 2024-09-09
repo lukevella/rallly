@@ -10,8 +10,8 @@ import Link from "next/link";
 import { useTranslation } from "next-i18next";
 
 import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
+import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
 import { LogoutButton } from "@/app/components/logout-button";
-import { ProfileSettings } from "@/components/settings/profile-settings";
 import {
   Settings,
   SettingsContent,

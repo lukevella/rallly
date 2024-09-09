@@ -275,12 +275,12 @@
   "noKeepCurrentTimezone": "No, keep the current timezone",
   "annualBenefit": "{count} months free",
   "removeAvatar": "Remove",
-  "featureNotAvailable": "Feature not available",
-  "featureNotAvailableDescription": "This feature requires object storage to be enabled.",
   "uploadProfilePicture": "Upload",
   "profilePictureDescription": "Up to 2MB, JPG or PNG",
   "invalidFileType": "Invalid file type",
   "invalidFileTypeDescription": "Please upload a JPG or PNG file.",
   "fileTooLarge": "File too large",
-  "fileTooLargeDescription": "Please upload a file smaller than 2MB."
+  "fileTooLargeDescription": "Please upload a file smaller than 2MB.",
+  "errorUploadPicture": "Failed to upload",
+  "errorUploadPictureDescription": "There was an issue uploading your picture. Please try again later."
 }

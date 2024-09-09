@@ -1,17 +1,11 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import Image from "next/image";
+import React from "react";
 
-function getAvatarUrl(imageKey: string) {
-  // Some users have avatars that come from external providers (e.g. Google).
-  if (imageKey.startsWith("https://")) {
-    return imageKey;
-  }
+import { useAvatarsEnabled } from "@/features/avatars";
 
-  return `/api/storage?key=${encodeURIComponent(imageKey)}`;
-}
-
-export const OptimizedAvatarImage = ({
+export function OptimizedAvatarImage({
   size,
   className,
   src,
@@ -21,21 +15,28 @@ export const OptimizedAvatarImage = ({
   src?: string;
   name: string;
   className?: string;
-}) => {
+}) {
+  const isAvatarsEnabled = useAvatarsEnabled();
+  const [isLoaded, setLoaded] = React.useState(false);
   return (
     <Avatar className={className} style={{ width: size, height: size }}>
-      {!src || src.startsWith("https") ? (
-        <AvatarImage src={src} alt={name} />
-      ) : (
-        <Image
-          src={getAvatarUrl(src)}
-          width={128}
-          height={128}
-          alt={name}
-          style={{ objectFit: "cover" }}
-        />
-      )}
-      <AvatarFallback>{name[0]}</AvatarFallback>
+      {src ? (
+        src.startsWith("https") ? (
+          <AvatarImage src={src} alt={name} />
+        ) : isAvatarsEnabled ? (
+          <Image
+            src={`/api/storage/${src}`}
+            width={128}
+            height={128}
+            alt={name}
+            style={{ objectFit: "cover" }}
+            onLoad={() => {
+              setLoaded(true);
+            }}
+          />
+        ) : null
+      ) : null}
+      {!src || !isLoaded ? <AvatarFallback>{name[0]}</AvatarFallback> : null}
     </Avatar>
   );
-};
+}

@@ -17,6 +17,11 @@ import {
   router,
 } from "../trpc";
 
+const mimeToExtension = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+} as const;
+
 export const user = router({
   getBilling: possiblyPublicProcedure.query(async ({ ctx }) => {
     return await prisma.userPaymentData.findUnique({
@@ -147,19 +152,24 @@ export const user = router({
     }),
   getAvatarUploadUrl: privateProcedure
     .use(rateLimitMiddleware)
-    .input(z.object({ fileType: z.string(), fileSize: z.number() }))
+    .input(
+      z.object({
+        fileType: z.enum(["image/jpeg", "image/png"]),
+        fileSize: z.number(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const s3Client = getS3Client();
 
       if (!s3Client) {
-        return {
-          success: false,
-          cause: "object-storage-not-enabled",
-        } as const;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "S3 storage has not been configured",
+        });
       }
 
       const userId = ctx.user.id;
-      const key = `avatars/${userId}-${Date.now()}.jpg`;
+      const key = `avatars/${userId}-${Date.now()}.${mimeToExtension[input.fileType]}`;
 
       if (input.fileSize > 2 * 1024 * 1024) {
         throw new TRPCError({
