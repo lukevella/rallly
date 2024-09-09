@@ -280,5 +280,7 @@
   "invalidFileType": "Ongeldig bestandstype",
   "invalidFileTypeDescription": "Upload een JPG- of PNG-bestand.",
   "fileTooLarge": "Bestand te groot",
-  "fileTooLargeDescription": "Upload een bestand kleiner dan 2MB."
+  "fileTooLargeDescription": "Upload een bestand kleiner dan 2MB.",
+  "errorUploadPicture": "Uploaden is mislukt",
+  "errorUploadPictureDescription": "Er is een probleem opgetreden bij het uploaden van je afbeelding. Probeer het later opnieuw."
 }
