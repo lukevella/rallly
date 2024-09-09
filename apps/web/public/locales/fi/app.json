@@ -275,8 +275,6 @@
   "noKeepCurrentTimezone": "Ei, säilytä nykyinen aikavyöhyke",
   "annualBenefit": "{count} kuukautta ilmaiseksi",
   "removeAvatar": "Poista",
-  "featureNotAvailable": "Ominaisuus ei ole saatavilla",
-  "featureNotAvailableDescription": "Tämä ominaisuus edellyttää objektivaraston olevan käytössä.",
   "uploadProfilePicture": "Lataa",
   "profilePictureDescription": "Korkeintaan 2 Mt, JPG tai PNG",
   "invalidFileType": "Tiedostomuoto ei kelpaa",
