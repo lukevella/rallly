@@ -20,6 +20,7 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: "app.rallly.co",
+        pathname: "/api/storage/**",
       },
     ],
   },
