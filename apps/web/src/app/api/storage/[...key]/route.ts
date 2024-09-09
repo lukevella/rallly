@@ -38,7 +38,7 @@ export async function GET(
   const imageKey = context.params.key.join("/");
 
   if (!imageKey) {
-    return new Response("No key provided", { status: 400 });
+    return new NextResponse("No key provided", { status: 400 });
   }
 
   try {

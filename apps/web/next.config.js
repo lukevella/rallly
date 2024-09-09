@@ -22,6 +22,9 @@ const nextConfig = {
         hostname: "app.rallly.co",
         pathname: "/api/storage/**",
       },
+      {
+        hostname: "rallly-public.s3.amazonaws.com",
+      },
     ],
   },
   productionBrowserSourceMaps: true,
