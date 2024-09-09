@@ -278,7 +278,7 @@
   "featureNotAvailable": "Funkció nem elérhető",
   "featureNotAvailableDescription": "Ehhez a funkcióhoz engedélyezned kell az objektum tárolást.",
   "uploadProfilePicture": "Feltöltés",
-  "profilePictureDescription": "2MB-ig, JPG vagy PNG",
+  "profilePictureDescription": "Max. 2 MB, JPG vagy PNG",
   "invalidFileType": "Érvénytelen fájltípus",
   "invalidFileTypeDescription": "Kérjük, tölts fel egy JPG vagy PNG fájlt.",
   "fileTooLarge": "A fájl túl nagy",
