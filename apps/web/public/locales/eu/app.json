@@ -275,8 +275,6 @@
   "noKeepCurrentTimezone": "Ez, mantendu uneko ordu-eremua",
   "annualBenefit": "{count} hilabete doan",
   "removeAvatar": "Kendu",
-  "featureNotAvailable": "Funtzioa ez dago erabilgarri",
-  "featureNotAvailableDescription": "Funtzio honek objektuen biltegiratzea gaituta egotea eskatzen du.",
   "uploadProfilePicture": "Igo",
   "profilePictureDescription": "Gehienez 2 MB, JPG edo PNG",
   "invalidFileType": "Fitxategi mota baliogabea",
