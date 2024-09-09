@@ -253,32 +253,62 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           await mergeGuestsIntoUser(user.id, [account.providerAccountId]);
         }
 
-        if (user) {
-          token.locale = user.locale;
-          token.timeFormat = user.timeFormat;
-          token.timeZone = user.timeZone;
-          token.weekStart = user.weekStart;
-          token.picture = user.image;
-        }
-
         if (session) {
           token.locale = session.locale;
           token.timeFormat = session.timeFormat;
           token.timeZone = session.timeZone;
           token.weekStart = session.weekStart;
-          token.picture = session.image;
         }
 
         return token;
       },
       async session({ session, token }) {
-        session.user.id = token.sub as string;
-        session.user.name = token.name;
-        session.user.timeFormat = token.timeFormat;
-        session.user.timeZone = token.timeZone;
-        session.user.locale = token.locale;
-        session.user.weekStart = token.weekStart;
-        session.user.image = token.picture;
+        if (token.sub?.startsWith("user-")) {
+          session.user.id = token.sub as string;
+          session.user.locale = token.locale;
+          session.user.timeFormat = token.timeFormat;
+          session.user.timeZone = token.timeZone;
+          session.user.locale = token.locale;
+          session.user.weekStart = token.weekStart;
+          return session;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id: token.sub as string,
+          },
+          select: {
+            id: true,
+            name: true,
+            timeFormat: true,
+            timeZone: true,
+            locale: true,
+            weekStart: true,
+            email: true,
+            image: true,
+          },
+        });
+
+        if (!user) {
+          session.user.id = token.sub as string;
+          session.user.email = token.email;
+          session.user.locale = token.locale;
+          session.user.timeFormat = token.timeFormat;
+          session.user.timeZone = token.timeZone;
+          session.user.locale = token.locale;
+          session.user.weekStart = token.weekStart;
+        } else {
+          session.user.id = user.id;
+          session.user.name = user.name;
+          session.user.email = user.email;
+          session.user.locale = user.locale;
+          session.user.timeFormat = user.timeFormat;
+          session.user.timeZone = user.timeZone;
+          session.user.locale = user.locale;
+          session.user.weekStart = user.weekStart;
+          session.user.image = user.image;
+        }
+
         return session;
       },
     },

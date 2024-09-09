@@ -29,10 +29,27 @@ function ChangeAvatarButton({
   const { t } = useTranslation();
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
-  const getAvatarUploadUrlMutation = trpc.user.getAvatarUploadUrl.useMutation();
+  const getAvatarUploadUrlMutation = trpc.user.getAvatarUploadUrl.useMutation({
+    onError: (error) => {
+      toast({
+        title: t("error", {
+          defaultValue: "Error",
+        }),
+        description: error.message,
+      });
+    },
+  });
   const updateAvatarMutation = trpc.user.updateAvatar.useMutation({
     onSuccess: (_res, input) => {
       onSuccess(input.imageKey);
+    },
+    onError: (error) => {
+      toast({
+        title: t("error", {
+          defaultValue: "Error",
+        }),
+        description: error.message,
+      });
     },
   });
 
@@ -84,7 +101,7 @@ function ChangeAvatarButton({
     try {
       // Get pre-signed URL
       const res = await getAvatarUploadUrlMutation.mutateAsync({
-        fileType,
+        fileType: fileType as "image/jpeg" | "image/png",
         fileSize: file.size,
       });
 
