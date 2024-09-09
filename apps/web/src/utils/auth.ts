@@ -291,6 +291,8 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
 
         if (user) {
           session.user.id = user.id;
+          session.user.name = user.name;
+          session.user.email = user.email;
           session.user.image = user.image;
         } else {
           session.user.id = token.sub || `user-${randomid()}`;
@@ -298,12 +300,9 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
 
         const source = user ?? token;
 
-        session.user.name = source.name;
-        session.user.email = source.email;
         session.user.locale = source.locale;
         session.user.timeFormat = source.timeFormat;
         session.user.timeZone = source.timeZone;
-        session.user.locale = source.locale;
         session.user.weekStart = source.weekStart;
 
         return session;
