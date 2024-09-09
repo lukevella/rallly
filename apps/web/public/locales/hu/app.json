@@ -275,8 +275,6 @@
   "noKeepCurrentTimezone": "Nem, tartsd meg a jelenlegi időzónát",
   "annualBenefit": "{count} hónapig ingyenes",
   "removeAvatar": "Törlés",
-  "featureNotAvailable": "Funkció nem elérhető",
-  "featureNotAvailableDescription": "Ehhez a funkcióhoz engedélyezned kell az objektum tárolást.",
   "uploadProfilePicture": "Feltöltés",
   "profilePictureDescription": "Max. 2 MB, JPG vagy PNG",
   "invalidFileType": "Érvénytelen fájltípus",
