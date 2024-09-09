@@ -45,5 +45,6 @@
   "register_subject": "Bitte bestätige Deine E-Mail-Adresse",
   "common_viewOn": "Auf {{domain}} ansehen",
   "newComment_preview": "Gehe zu deiner Umfrage, um zu sehen, was sie gesagt haben.",
-  "newComment_heading": "Neuer Kommentar"
+  "newComment_heading": "Neuer Kommentar",
+  "newPoll_preview": "Teilen Sie den Einladungslink, um mit dem Sammeln von Antworten zu beginnen."
 }
