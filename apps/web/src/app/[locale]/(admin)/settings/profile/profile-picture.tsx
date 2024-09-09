@@ -4,22 +4,19 @@ import * as Sentry from "@sentry/nextjs";
 import React, { useState } from "react";
 import { z } from "zod";
 
-import {
-  getPresignedUrl,
-  removeAvatar,
-  updateAvatar,
-} from "@/app/[locale]/(admin)/settings/profile/actions";
 import { useTranslation } from "@/app/i18n/client";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { useAvatarsEnabled } from "@/features/avatars";
 import { usePostHog } from "@/utils/posthog";
+import { trpc } from "@/utils/trpc/client";
 
 const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 
 function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
-  const { user } = useUser();
+  const getPresignedUrl = trpc.user.getAvatarUploadUrl.useMutation();
+  const updateAvatar = trpc.user.updateAvatar.useMutation();
   const { t } = useTranslation();
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
@@ -73,8 +70,7 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
     setIsUploading(true);
     try {
       // Get pre-signed URL
-      const res = await getPresignedUrl({
-        userId: user.id,
+      const res = await getPresignedUrl.mutateAsync({
         fileType,
         fileSize: file.size,
       });
@@ -90,9 +86,8 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
         },
       });
 
-      await updateAvatar({
-        userId: user.id,
-        image: fields.key,
+      await updateAvatar.mutateAsync({
+        imageKey: fields.key,
       });
 
       onSuccess();
@@ -134,8 +129,8 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
 }
 
 function RemoveAvatarButton({ onSuccess }: { onSuccess?: () => void }) {
-  const { user } = useUser();
   const [isLoading, setLoading] = React.useState(false);
+  const removeAvatar = trpc.user.removeAvatar.useMutation();
   return (
     <Button
       loading={isLoading}
@@ -143,7 +138,7 @@ function RemoveAvatarButton({ onSuccess }: { onSuccess?: () => void }) {
       onClick={async () => {
         setLoading(true);
         try {
-          await removeAvatar({ userId: user.id });
+          await removeAvatar.mutateAsync();
           onSuccess?.();
         } finally {
           setLoading(false);
