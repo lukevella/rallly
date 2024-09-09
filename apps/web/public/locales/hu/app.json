@@ -280,5 +280,6 @@
   "invalidFileType": "Érvénytelen fájltípus",
   "invalidFileTypeDescription": "Kérjük, tölts fel egy JPG vagy PNG fájlt.",
   "fileTooLarge": "A fájl túl nagy",
-  "fileTooLargeDescription": "Kérjük, tölts fel egy 2MB-nál kisebb fájlt."
+  "fileTooLargeDescription": "Kérjük, tölts fel egy 2MB-nál kisebb fájlt.",
+  "errorUploadPicture": "Sikertelen feltöltés"
 }
