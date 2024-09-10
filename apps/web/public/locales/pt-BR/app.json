@@ -273,5 +273,14 @@
   "timeZoneChangeDetectorMessage": "Seu fuso horário mudou para <b>{currentTimeZone}</b>. Você deseja atualizar suas preferências?",
   "yesUpdateTimezone": "Sim, atualize meu fuso horário",
   "noKeepCurrentTimezone": "Não, mantenha o fuso horário atual",
-  "annualBenefit": "{count} meses grátis"
+  "annualBenefit": "{count} meses grátis",
+  "removeAvatar": "Remover",
+  "uploadProfilePicture": "Enviar",
+  "profilePictureDescription": "Até 2MB, JPG ou PNG",
+  "invalidFileType": "Tipo de arquivo inválido",
+  "invalidFileTypeDescription": "Por favor, envie um arquivo JPG ou PNG.",
+  "fileTooLarge": "Arquivo muito grande",
+  "fileTooLargeDescription": "Por favor, envie um arquivo menor que 2MB.",
+  "errorUploadPicture": "Falha no envio",
+  "errorUploadPictureDescription": "Houve um problema ao enviar sua foto. Por favor, tente novamente mais tarde."
 }
