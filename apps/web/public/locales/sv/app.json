@@ -278,5 +278,7 @@
   "profilePictureDescription": "Upp till 2 MB, JPG eller PNG",
   "invalidFileType": "Ogiltig filtyp",
   "invalidFileTypeDescription": "Ladda upp en JPG- eller PNG-fil.",
-  "fileTooLargeDescription": "Ladda upp en fil som är mindre än 2 MB."
+  "fileTooLargeDescription": "Ladda upp en fil som är mindre än 2 MB.",
+  "errorUploadPicture": "Det gick inte att ladda upp",
+  "errorUploadPictureDescription": "Det uppstod ett problem med att ladda upp din bild. Försök igen senare."
 }
