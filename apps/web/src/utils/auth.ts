@@ -289,25 +289,21 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           },
         });
 
-        if (!user) {
-          session.user.id = token.sub as string;
-          session.user.email = token.email;
-          session.user.locale = token.locale;
-          session.user.timeFormat = token.timeFormat;
-          session.user.timeZone = token.timeZone;
-          session.user.locale = token.locale;
-          session.user.weekStart = token.weekStart;
-        } else {
+        if (user) {
           session.user.id = user.id;
           session.user.name = user.name;
           session.user.email = user.email;
-          session.user.locale = user.locale;
-          session.user.timeFormat = user.timeFormat;
-          session.user.timeZone = user.timeZone;
-          session.user.locale = user.locale;
-          session.user.weekStart = user.weekStart;
           session.user.image = user.image;
+        } else {
+          session.user.id = token.sub || `user-${randomid()}`;
         }
+
+        const source = user ?? token;
+
+        session.user.locale = source.locale;
+        session.user.timeFormat = source.timeFormat;
+        session.user.timeZone = source.timeZone;
+        session.user.weekStart = source.weekStart;
 
         return session;
       },
