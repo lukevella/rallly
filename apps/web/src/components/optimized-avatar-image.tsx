@@ -25,7 +25,7 @@ export function OptimizedAvatarImage({
           <AvatarImage src={src} alt={name} />
         ) : isAvatarsEnabled ? (
           <Image
-            src={`https://d39ixtfgglw55o.cloudfront.net/${src}`}
+            src={`/api/storage/${src}`}
             width={128}
             height={128}
             alt={name}
