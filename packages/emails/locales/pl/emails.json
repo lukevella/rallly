@@ -45,5 +45,6 @@
   "register_subject": "Proszę zweryfikować swój adres e-mail",
   "common_viewOn": "Zobacz na {{domain}}",
   "newComment_preview": "Przejdź do swojej ankiety, aby zobaczyć, co powiedzieli.",
-  "newComment_heading": "Nowy komentarz"
+  "newComment_heading": "Nowy komentarz",
+  "newPoll_preview": "Udostępnij swój link uczestnika, aby rozpocząć zbieranie odpowiedzi."
 }
