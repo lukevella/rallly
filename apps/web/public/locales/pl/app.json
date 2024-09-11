@@ -273,5 +273,14 @@
   "timeZoneChangeDetectorMessage": "Twoja strefa czasowa została zmieniona na <b>{currentTimeZone}</b>. Czy chcesz zaktualizować swoje preferencje?",
   "yesUpdateTimezone": "Tak, zaktualizuj moją strefę czasową",
   "noKeepCurrentTimezone": "Nie, zachowaj bieżącą strefę czasową",
-  "annualBenefit": "{count} miesiące gratis"
+  "annualBenefit": "{count} miesiące gratis",
+  "removeAvatar": "Usuń",
+  "uploadProfilePicture": "Prześlij",
+  "profilePictureDescription": "Do 2 MB, JPG lub PNG",
+  "invalidFileType": "Nieprawidłowy typ pliku",
+  "invalidFileTypeDescription": "Należy przesłać plik JPG lub PNG.",
+  "fileTooLarge": "Plik jest zbyt duży",
+  "fileTooLargeDescription": "Należy przesłać plik mniejszy niż 2 MB.",
+  "errorUploadPicture": "Przesyłanie nie powiodło się",
+  "errorUploadPictureDescription": "Wystąpił problem podczas przesyłania zdjęcia. Spróbuj ponownie później."
 }
