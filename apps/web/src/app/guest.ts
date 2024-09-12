@@ -42,7 +42,15 @@ export async function resetUser(res: NextResponse) {
   await setCookie(res, jwt);
 }
 
-export async function initGuest(req: NextRequest, res: NextResponse) {
+export async function initGuest(
+  req: NextRequest,
+  res: NextResponse,
+  {
+    locale,
+  }: {
+    locale: string;
+  },
+) {
   const { name } = getCookieSettings();
 
   if (req.cookies.has(name)) {
@@ -53,6 +61,7 @@ export async function initGuest(req: NextRequest, res: NextResponse) {
   const jwt: JWT = {
     sub: `user-${randomid()}`,
     email: null,
+    locale,
   };
 
   await setCookie(res, jwt);
