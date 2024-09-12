@@ -9,7 +9,6 @@ import { z } from "zod";
 
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
 import { usePreferences } from "@/contexts/preferences";
 
 const formSchema = z.object({
@@ -20,7 +19,6 @@ type FormData = z.infer<typeof formSchema>;
 
 export const LanguagePreference = () => {
   const { i18n } = useTranslation();
-  const { user } = useUser();
   const router = useRouter();
   const form = useForm<FormData>({
     defaultValues: {
@@ -33,9 +31,7 @@ export const LanguagePreference = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          if (!user.isGuest) {
-            await updatePreferences({ locale: data.language });
-          }
+          await updatePreferences({ locale: data.language });
           router.refresh();
         })}
       >
