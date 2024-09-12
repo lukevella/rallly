@@ -23,23 +23,25 @@ export const middleware = withAuth(
     }
 
     // Check if locale is specified in cookie
-    const preferredLocale = req.nextauth.token?.locale;
-    if (preferredLocale && supportedLocales.includes(preferredLocale)) {
-      newUrl.pathname = `/${preferredLocale}${newUrl.pathname}`;
+    let locale = req.nextauth.token?.locale;
+    if (locale && supportedLocales.includes(locale)) {
+      newUrl.pathname = `/${locale}${newUrl.pathname}`;
     } else {
       // Check if locale is specified in header
       const acceptLanguageHeader = headers.get("accept-language");
       const localeFromHeader = acceptLanguageHeader
         ? languageParser.pick(supportedLocales, acceptLanguageHeader)
         : null;
-      const locale = localeFromHeader ?? "en";
+      locale = localeFromHeader ?? "en";
 
       newUrl.pathname = `/${locale}${newUrl.pathname}`;
     }
 
     const res = NextResponse.rewrite(newUrl);
 
-    await initGuest(req, res);
+    await initGuest(req, res, {
+      locale,
+    });
 
     return res;
   },
