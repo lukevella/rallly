@@ -273,5 +273,14 @@
   "timeZoneChangeDetectorMessage": "Din tidszone er ændret til <b>{currentTimeZone}</b>. Vil du opdatere dine indstillinger?",
   "yesUpdateTimezone": "Ja, opdater min tidszone",
   "noKeepCurrentTimezone": "Nej, behold den aktuelle tidszone",
-  "annualBenefit": "{count} måneder gratis"
+  "annualBenefit": "{count} måneder gratis",
+  "removeAvatar": "Fjern",
+  "uploadProfilePicture": "Upload",
+  "profilePictureDescription": "Op til 2 MB, JPG eller PNG",
+  "invalidFileType": "Ugyldig filtype",
+  "invalidFileTypeDescription": "Upload venligst en JPG- eller PNG-fil.",
+  "fileTooLarge": "Filen er for stor",
+  "fileTooLargeDescription": "Upload venligst en fil mindre end 2 MB.",
+  "errorUploadPicture": "Fejl ved overførsel",
+  "errorUploadPictureDescription": "Der opstod et problem med at uploade dit billede. Prøv venligst igen senere."
 }

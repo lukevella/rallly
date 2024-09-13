@@ -45,5 +45,6 @@
   "register_subject": "Por favor, verifique seu e-mail",
   "common_viewOn": "Ver em {{domain}}",
   "newComment_preview": "Vá para a sua enquete para ver o que eles disseram.",
-  "newComment_heading": "Novo Comentário"
+  "newComment_heading": "Novo Comentário",
+  "newPoll_preview": "Compartilhe seu link de participante para começar a coletar respostas."
 }

@@ -45,5 +45,6 @@
   "register_subject": "Du skal bekræfte din e-mail adresse",
   "common_viewOn": "Vis på {{domain}}",
   "newComment_preview": "Gå til din afstemning, for at se hvad de sagde.",
-  "newComment_heading": "Ny kommentar"
+  "newComment_heading": "Ny kommentar",
+  "newPoll_preview": "Del dit deltagerlink, for at begynde at indsamle svar."
 }
