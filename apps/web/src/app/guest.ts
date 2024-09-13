@@ -1,8 +1,12 @@
+import languages from "@rallly/languages";
+import languageParser from "accept-language-parser";
 import { NextRequest, NextResponse } from "next/server";
 import { encode, JWT } from "next-auth/jwt";
 
 import { absoluteUrl } from "@/utils/absolute-url";
 import { randomid } from "@/utils/nanoid";
+
+const supportedLocales = Object.keys(languages);
 
 function getCookieSettings() {
   const secure = absoluteUrl().startsWith("https://");
@@ -12,6 +16,16 @@ function getCookieSettings() {
     secure,
     name,
   };
+}
+
+export async function getLocaleFromHeader(req: NextRequest) {
+  // Check if locale is specified in header
+  const headers = req.headers;
+  const acceptLanguageHeader = headers.get("accept-language");
+  const localeFromHeader = acceptLanguageHeader
+    ? languageParser.pick(supportedLocales, acceptLanguageHeader)
+    : null;
+  return localeFromHeader ?? "en";
 }
 
 async function setCookie(res: NextResponse, jwt: JWT) {
@@ -32,31 +46,28 @@ async function setCookie(res: NextResponse, jwt: JWT) {
   });
 }
 
-export async function resetUser(res: NextResponse) {
+export async function resetUser(req: NextRequest, res: NextResponse) {
   // resets to a new guest user
+  const locale = await getLocaleFromHeader(req);
+
   const jwt: JWT = {
     sub: `user-${randomid()}`,
     email: null,
+    locale,
   };
 
   await setCookie(res, jwt);
 }
 
-export async function initGuest(
-  req: NextRequest,
-  res: NextResponse,
-  {
-    locale,
-  }: {
-    locale: string;
-  },
-) {
+export async function initGuest(req: NextRequest, res: NextResponse) {
   const { name } = getCookieSettings();
 
   if (req.cookies.has(name)) {
     // already has a session token
     return;
   }
+
+  const locale = await getLocaleFromHeader(req);
 
   const jwt: JWT = {
     sub: `user-${randomid()}`,

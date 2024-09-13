@@ -1,6 +1,5 @@
 "use client";
 import { Button, ButtonProps } from "@rallly/ui/button";
-import { signOut } from "next-auth/react";
 
 import { usePostHog } from "@/utils/posthog";
 
@@ -15,12 +14,10 @@ export function LogoutButton({
       {...rest}
       onClick={async (e) => {
         onClick?.(e);
+        await fetch("/api/logout", { method: "POST" });
         posthog?.capture("logout");
         posthog?.reset();
-        signOut({
-          redirect: true,
-          callbackUrl: "/login",
-        });
+        window.location.href = "/login";
       }}
     >
       {children}
