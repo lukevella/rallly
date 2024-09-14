@@ -39,6 +39,11 @@ const dayjsLocales: Record<
     timeFormat: "hours12",
     import: () => import("dayjs/locale/en"),
   },
+  "en-GB": {
+    weekStart: 1,
+    timeFormat: "hours24",
+    import: () => import("dayjs/locale/en-gb"),
+  },
   es: {
     weekStart: 1,
     timeFormat: "hours24",
