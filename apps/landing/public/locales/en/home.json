@@ -36,5 +36,9 @@
   "new": "New",
   "metaTitle": "Rallly: Group Scheduling Tool",
   "metaDescription": "Rallly is the fastest and easiest scheduling and collaboration tool. Create a meeting poll in seconds, no login required.",
-  "selfHostingBlog": "Rallly 3.0 Self-Hosting"
+  "selfHostingBlog": "Rallly 3.0 Self-Hosting",
+  "when2meetAlternativeMetaTitle": "Best When2Meet Alternative: Rallly",
+  "when2meetAlternativeMetaDescription": "Find a better way to schedule meetings with Rallly, the top free alternative to When2Meet. Easy to use and free.",
+  "when2meetAlternative": "Still using When2Meet?",
+  "when2meetAlternativeDescription": "Create professional, ad-free meetings polls for free with Rallly."
 }
