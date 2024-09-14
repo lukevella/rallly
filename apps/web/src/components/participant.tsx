@@ -1,22 +1,19 @@
 import { cn } from "@rallly/ui";
-import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
+import { Avatar, AvatarFallback, getColor } from "@rallly/ui/avatar";
 import React from "react";
 
 export function Participant({ children }: { children: React.ReactNode }) {
   return <div className="flex min-w-0 items-center gap-x-2">{children}</div>;
 }
 
-export const ParticipantAvatar = ({
-  src,
-  name,
-}: {
-  src?: string;
-  name: string;
-}) => {
+export const ParticipantAvatar = ({ name }: { name: string }) => {
+  const color = getColor(name);
+
   return (
-    <Avatar>
-      <AvatarImage src={src} alt={name} />
-      <AvatarFallback>{name[0]}</AvatarFallback>
+    <Avatar size={20}>
+      <AvatarFallback className="text-xs" color={color}>
+        {name[0]}
+      </AvatarFallback>
     </Avatar>
   );
 };

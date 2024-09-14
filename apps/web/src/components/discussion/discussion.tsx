@@ -28,8 +28,11 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Participant, ParticipantName } from "@/components/participant";
+import {
+  Participant,
+  ParticipantAvatar,
+  ParticipantName,
+} from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
@@ -211,10 +214,7 @@ function DiscussionInner() {
                   <div data-testid="comment">
                     <div className="mb-1 flex items-center space-x-2">
                       <Participant>
-                        <OptimizedAvatarImage
-                          name={comment.authorName}
-                          size={20}
-                        />
+                        <ParticipantAvatar name={comment.authorName} />
                         <ParticipantName>{comment.authorName}</ParticipantName>
                         {session.ownsObject(comment) ? (
                           <Badge>

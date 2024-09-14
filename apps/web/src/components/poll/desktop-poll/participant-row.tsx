@@ -6,8 +6,11 @@ import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
 
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Participant, ParticipantName } from "@/components/participant";
+import {
+  Participant,
+  ParticipantAvatar,
+  ParticipantName,
+} from "@/components/participant";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
@@ -51,7 +54,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       >
         <div className="flex max-w-full items-center justify-between gap-x-4">
           <Participant>
-            <OptimizedAvatarImage name={name} size={20} />
+            <ParticipantAvatar name={name} />
             <ParticipantName>{name}</ParticipantName>
             {isYou ? (
               <Badge>
