@@ -187,6 +187,17 @@ const Footer: React.FunctionComponent = () => {
             <li>
               <Link
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                href="/when2meet-alternative"
+              >
+                <Trans
+                  i18nKey="when2MeetAlternative"
+                  defaults="When2Meet Alternative"
+                />
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/free-scheduling-poll"
               >
                 <Trans
