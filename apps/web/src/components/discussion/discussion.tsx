@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
+import { Input } from "@rallly/ui/input";
 import { Textarea } from "@rallly/ui/textarea";
 import dayjs from "dayjs";
 import {
@@ -27,6 +28,11 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import {
+  Participant,
+  ParticipantAvatar,
+  ParticipantName,
+} from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
@@ -36,9 +42,7 @@ import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
 import { requiredString } from "../../utils/form-validation";
-import NameInput from "../name-input";
 import TruncatedLinkify from "../poll/truncated-linkify";
-import UserAvatar from "../poll/user-avatar";
 import { useUser } from "../user-provider";
 
 interface CommentForm {
@@ -119,7 +123,13 @@ function NewCommentForm({
           control={control}
           rules={{ validate: requiredString }}
           render={({ field }) => (
-            <NameInput error={!!formState.errors.authorName} {...field} />
+            <Input
+              placeholder={t("yourName")}
+              className="lg:w-48"
+              data-1p-ignore="true"
+              error={!!formState.errors.authorName}
+              {...field}
+            />
           )}
         />
       </div>
@@ -203,11 +213,15 @@ function DiscussionInner() {
                 <div className="" key={comment.id}>
                   <div data-testid="comment">
                     <div className="mb-1 flex items-center space-x-2">
-                      <UserAvatar
-                        name={comment.authorName}
-                        showName={true}
-                        isYou={session.ownsObject(comment)}
-                      />
+                      <Participant>
+                        <ParticipantAvatar name={comment.authorName} />
+                        <ParticipantName>{comment.authorName}</ParticipantName>
+                        {session.ownsObject(comment) ? (
+                          <Badge>
+                            <Trans i18nKey="you" />
+                          </Badge>
+                        ) : null}
+                      </Participant>
                       <div className="flex items-center gap-2 text-sm ">
                         <div className="text-gray-500">
                           {dayjs(comment.createdAt).fromNow()}

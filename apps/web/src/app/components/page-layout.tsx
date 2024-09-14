@@ -50,7 +50,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("mb-4 md:mt-2", className)}>{children}</div>;
+  return <div className={cn("mb-6", className)}>{children}</div>;
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {

@@ -12,11 +12,12 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller } from "react-hook-form";
 
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { Participant, ParticipantName } from "@/components/participant";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { Trans } from "@/components/trans";
 
 import { usePoll } from "../../poll-context";
-import UserAvatar, { YouAvatar } from "../user-avatar";
 import { toggleVote, VoteSelector } from "../vote-selector";
 
 export interface ParticipantRowFormProps {
@@ -30,7 +31,6 @@ export interface ParticipantRowFormProps {
 const ParticipantRowForm = ({
   name,
   isNew,
-  isYou,
   className,
 }: ParticipantRowFormProps) => {
   const { t } = useTranslation();
@@ -50,6 +50,8 @@ const ParticipantRowForm = ({
     };
   }, [form]);
 
+  const participantName = name ?? t("you");
+
   return (
     <tr className={cn("group", className)}>
       <td
@@ -57,11 +59,10 @@ const ParticipantRowForm = ({
         className="sticky left-0 z-10 h-12 bg-white px-4"
       >
         <div className="flex items-center justify-between gap-x-2.5">
-          {name ? (
-            <UserAvatar name={name ?? t("you")} isYou={isYou} showName={true} />
-          ) : (
-            <YouAvatar />
-          )}
+          <Participant>
+            <OptimizedAvatarImage name={participantName} size={20} />
+            <ParticipantName>{participantName}</ParticipantName>
+          </Participant>
           {!isNew ? (
             <div className="flex items-center gap-1">
               <Tooltip>

@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@rallly/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import Image from "next/image";
 import React from "react";
@@ -36,7 +37,16 @@ export function OptimizedAvatarImage({
           />
         ) : null
       ) : null}
-      {!src || !isLoaded ? <AvatarFallback>{name[0]}</AvatarFallback> : null}
+      {!src || !isLoaded ? (
+        <AvatarFallback
+          className={cn({
+            "text-xs": size <= 24,
+            "text-lg": size >= 48,
+          })}
+        >
+          {name[0]}
+        </AvatarFallback>
+      ) : null}
     </Avatar>
   );
 }

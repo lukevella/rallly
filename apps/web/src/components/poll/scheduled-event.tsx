@@ -1,5 +1,7 @@
 "use client";
 
+import { CalendarIcon } from "lucide-react";
+
 import { AddToCalendarButton } from "@/components/add-to-calendar-button";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { useVisibleParticipants } from "@/components/participants-provider";
@@ -11,7 +13,9 @@ import { useDayjs } from "@/utils/dayjs";
 function FinalDate({ start }: { start: Date }) {
   const poll = usePoll();
   const { adjustTimeZone } = useDayjs();
-  return <span>{adjustTimeZone(start, !poll.timeZone).format("LL")}</span>;
+  return (
+    <span>{adjustTimeZone(start, !poll.timeZone).format("dddd, LL")}</span>
+  );
 }
 
 function DateIcon({ start }: { start: Date }) {
@@ -20,7 +24,7 @@ function DateIcon({ start }: { start: Date }) {
   const d = adjustTimeZone(start, !poll.timeZone);
   return (
     <time
-      className="inline-flex size-12 flex-col rounded-lg border border-green-600/10 bg-green-600/5 text-center text-green-800/75"
+      className="inline-flex size-12 flex-col rounded-lg border text-center"
       dateTime={d.toISOString()}
     >
       <div className="border-b border-green-600/10 p-px text-xs">
@@ -74,9 +78,10 @@ export function ScheduledEvent() {
 
   return (
     <>
-      <div className="rounded-lg border border-green-400/20 bg-gradient-to-r from-green-200/15 to-green-200/5 p-0.5 shadow-sm">
-        <div className="flex items-center gap-x-2 rounded-md border-b bg-green-500/10 p-3">
-          <h2 className="text-sm font-medium text-green-800">
+      <div className="rounded-lg border bg-white p-0.5 shadow-sm">
+        <div className="flex h-9 items-center gap-x-2 rounded-md bg-gray-100 px-2">
+          <CalendarIcon className="size-4" />
+          <h2 className="text-sm font-medium">
             <Trans i18nKey="schedulateDate" defaults="Scheduled Date" />
           </h2>
         </div>
@@ -85,7 +90,7 @@ export function ScheduledEvent() {
             <div>
               <DateIcon start={event.start} />
             </div>
-            <div className="items-center gap-x-4 text-green-800">
+            <div className="items-center gap-x-4">
               <div className="space-y-1">
                 <div className="text-sm font-medium">
                   <FinalDate start={event.start} />

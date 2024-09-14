@@ -1,10 +1,11 @@
 "use client";
 import { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
+import { Badge } from "@rallly/ui/badge";
+import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { RadioCards, RadioCardsItem } from "@rallly/ui/radio-pills";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import dayjs from "dayjs";
 import { CalendarPlusIcon, CheckIcon, LinkIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -132,31 +133,33 @@ function CopyLinkButton({ pollId }: { pollId: string }) {
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
-  if (didCopy) {
-    return (
-      <div className="inline-flex items-center gap-x-1.5 text-sm font-medium text-green-600">
-        <CheckIcon className="size-4" />
-        <Trans i18nKey="copied" />
-      </div>
-    );
-  }
-
   return (
-    <button
+    <Button
       type="button"
-      onClick={() => {
+      disabled={didCopy}
+      onClick={(e) => {
+        e.stopPropagation();
         copy(`${window.location.origin}/invite/${pollId}`);
         setDidCopy(true);
         setTimeout(() => {
           setDidCopy(false);
         }, 1000);
       }}
-      className="text-foreground inline-flex items-center gap-x-1.5 text-sm hover:underline"
+      className="relative z-20 w-full"
     >
-      <LinkIcon className="size-4" />
+      {didCopy ? (
+        <>
+          <CheckIcon className="size-4" />
 
-      <Trans i18nKey="copyLink" defaults="Copy Link" />
-    </button>
+          <Trans i18nKey="copied" defaults="Copied" />
+        </>
+      ) : (
+        <>
+          <LinkIcon className="size-4" />
+          <Trans i18nKey="copyLink" defaults="Copy Link" />
+        </>
+      )}
+    </Button>
   );
 }
 
@@ -208,38 +211,36 @@ function PollsListView({
   }
 
   return (
-    <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
       {table.getRowModel().rows.map((row) => (
         <div
-          className={cn("overflow-hidden rounded-lg border bg-white p-1")}
+          className={cn(
+            "group relative space-y-4 overflow-hidden rounded-lg border bg-white p-4 focus-within:bg-gray-50",
+          )}
           key={row.id}
         >
-          <div className="relative space-y-4 p-3 focus-within:bg-gray-100">
-            <div className="flex items-start justify-between">
-              <GroupPollIcon size="sm" />
-              <PollStatusBadge status={row.original.status} />
-            </div>
-            <div className="space-y-2">
-              <h2 className="truncate text-base font-medium">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <GroupPollIcon size="xs" />
+              <h2 className="truncate text-base font-medium group-hover:underline">
                 <Link
                   href={`/poll/${row.original.id}`}
                   className="absolute inset-0 z-10"
                 />
                 {row.original.title}
               </h2>
-              <ParticipantCount count={row.original.participants.length} />
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge size="lg">
+                <PollStatusBadge status={row.original.status} />
+              </Badge>
+              <Badge size="lg">
+                <ParticipantCount count={row.original.participants.length} />
+              </Badge>
             </div>
           </div>
-          <div className="flex items-end justify-between p-3">
+          <div className="flex items-end justify-between">
             <CopyLinkButton pollId={row.original.id} />
-            <p className="text-muted-foreground whitespace-nowrap text-sm">
-              <Trans
-                i18nKey="createdTime"
-                values={{
-                  relativeTime: dayjs(row.original.createdAt).fromNow(),
-                }}
-              />
-            </p>
           </div>
         </div>
       ))}

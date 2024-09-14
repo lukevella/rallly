@@ -304,7 +304,13 @@ const DesktopPoll: React.FunctionComponent = () => {
                             return (
                               <ParticipantRow
                                 key={i}
-                                participant={participant}
+                                participant={{
+                                  id: participant.id,
+                                  name: participant.name,
+                                  userId: participant.userId ?? undefined,
+                                  email: participant.email ?? undefined,
+                                  votes: participant.votes,
+                                }}
                                 editMode={
                                   votingForm.watch("mode") === "edit" &&
                                   votingForm.watch("participantId") ===
