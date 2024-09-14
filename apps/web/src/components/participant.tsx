@@ -6,11 +6,17 @@ export function Participant({ children }: { children: React.ReactNode }) {
   return <div className="flex min-w-0 items-center gap-x-2">{children}</div>;
 }
 
-export const ParticipantAvatar = ({ name }: { name: string }) => {
+export const ParticipantAvatar = ({
+  size = 20,
+  name,
+}: {
+  size?: number;
+  name: string;
+}) => {
   const color = getColor(name);
 
   return (
-    <Avatar size={20}>
+    <Avatar size={size}>
       <AvatarFallback className="text-xs" color={color}>
         {name[0]}
       </AvatarFallback>

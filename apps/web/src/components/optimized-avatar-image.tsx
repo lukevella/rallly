@@ -40,7 +40,7 @@ export function OptimizedAvatarImage({
       {!src || !isLoaded ? (
         <AvatarFallback
           className={cn({
-            "text-xs": size <= 20,
+            "text-xs": size <= 24,
             "text-lg": size >= 48,
           })}
         >
