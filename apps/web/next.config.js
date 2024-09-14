@@ -16,17 +16,6 @@ require("dotenv").config({
 const nextConfig = {
   output:
     process.env.NEXT_PUBLIC_SELF_HOSTED === "true" ? "standalone" : undefined,
-  images: {
-    remotePatterns: [
-      {
-        hostname: "app.rallly.co",
-        pathname: "/api/storage/**",
-      },
-      {
-        hostname: "d39ixtfgglw55o.cloudfront.net",
-      },
-    ],
-  },
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/database",
