@@ -1,7 +1,6 @@
 import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { ParticipantAvatar } from "@/components/participant";
 
 interface ParticipantAvatarBarProps {
