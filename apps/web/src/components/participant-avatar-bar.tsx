@@ -2,6 +2,7 @@ import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { ParticipantAvatar } from "@/components/participant";
 
 interface ParticipantAvatarBarProps {
   participants: { name: string }[];
@@ -15,12 +16,12 @@ export const ParticipantAvatarBar = ({
   const visibleCount = participants.length > max ? max - 1 : max;
   const hiddenCount = participants.length - visibleCount;
   return (
-    <ul className="flex items-center -space-x-1 rounded-full border p-0.5">
+    <ul className="flex items-center -space-x-1">
       {participants.slice(0, visibleCount).map((participant, index) => (
         <Tooltip key={index}>
           <TooltipTrigger asChild>
             <li className="z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
-              <OptimizedAvatarImage size={20} name={participant.name} />
+              <ParticipantAvatar name={participant.name} />
             </li>
           </TooltipTrigger>
           <TooltipContent>{participant.name}</TooltipContent>
@@ -33,7 +34,7 @@ export const ParticipantAvatarBar = ({
               <span
                 className={cn(
                   "select-none",
-                  "rounded-full bg-gray-200 px-1.5 text-xs font-semibold",
+                  "rounded-full bg-gray-100 px-1.5 text-xs font-semibold",
                   "inline-flex h-5 items-center justify-center",
                 )}
               >
