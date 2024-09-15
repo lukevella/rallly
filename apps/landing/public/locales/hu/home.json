@@ -36,5 +36,9 @@
   "new": "Új",
   "metaTitle": "Rallly - Ütemezz csoportos találkozókat",
   "metaDescription": "Hozz létre szavazásokat és szavazz, hogy megtaláld a legjobb napot vagy időt. Egy ingyenes Doodle alternatíva.",
-  "selfHostingBlog": "Rallly 3.0 Saját szolgáltatásként"
+  "selfHostingBlog": "Rallly 3.0 Saját szolgáltatásként",
+  "when2meetAlternativeMetaTitle": "Legjobb When2Meet alternatíva: Rallly",
+  "when2meetAlternativeMetaDescription": "Találj jobb módot a találkozók időpontjainak megszervezésére a Rallly segítségével, a When2Meet legjobb ingyenes alternatívájával. Könnyen használható és ingyenes.",
+  "when2meetAlternative": "Még mindig When2Meet-et használsz?",
+  "when2meetAlternativeDescription": "Hozz létre profi, hirdetésmentes találkozó szavazásokat ingyen a Rallly segítségével."
 }
