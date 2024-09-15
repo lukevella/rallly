@@ -273,5 +273,14 @@
   "timeZoneChangeDetectorMessage": "Votre fuseau horaire a été modifié en <b>{currentTimeZone}</b>. Souhaitez-vous mettre à jour vos préférences ?",
   "yesUpdateTimezone": "Oui, mettez à jour mon fuseau horaire",
   "noKeepCurrentTimezone": "Non, conserver le fuseau horaire actuel",
-  "annualBenefit": "{count} mois gratuits"
+  "annualBenefit": "{count} mois gratuits",
+  "removeAvatar": "Supprimer",
+  "uploadProfilePicture": "Ajouter",
+  "profilePictureDescription": "Jusqu'à 2 Mo, JPG ou PNG",
+  "invalidFileType": "Type de fichier invalide",
+  "invalidFileTypeDescription": "Veuillez télécharger un fichier JPG ou PNG.",
+  "fileTooLarge": "Fichier trop volumineux",
+  "fileTooLargeDescription": "Veuillez télécharger un fichier de moins de 2 Mo.",
+  "errorUploadPicture": "Échec de l'envoi",
+  "errorUploadPictureDescription": "Un problème est survenu lors du chargement de votre image. Veuillez réessayer plus tard."
 }
