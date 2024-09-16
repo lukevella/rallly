@@ -26,7 +26,16 @@ ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 
 RUN SKIP_ENV_VALIDATION=1 yarn build
 
-FROM node:20 AS runner
+FROM node:20-slim AS runner
+
+# prisma requirements
+# (see https://www.prisma.io/docs/orm/reference/system-requirements)
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    openssl \
+    zlib1g \
+    libgcc-s1 \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
