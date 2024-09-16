@@ -18,7 +18,7 @@ export const ParticipantAvatar = ({
   return (
     <Avatar size={size}>
       <AvatarFallback className="text-xs" color={color}>
-        {name[0]}
+        {name[0]?.toUpperCase()}
       </AvatarFallback>
     </Avatar>
   );
