@@ -37,11 +37,9 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const colorPairs = [
   { bg: "#E6F4FF", text: "#0065BD" }, // Light blue
-  { bg: "#FFF0E6", text: "#BD4200" }, // Light orange
-  { bg: "#E6FFE6", text: "#00BD1F" }, // Light green
+  { bg: "#DCFCE7", text: "#16A34A" }, // Light green
   { bg: "#FFE6F4", text: "#BD007A" }, // Light pink
   { bg: "#F4E6FF", text: "#6200BD" }, // Light purple
-  { bg: "#E6FFFF", text: "#00A3A3" }, // Light cyan
   { bg: "#FFE6E6", text: "#BD0000" }, // Light red
   { bg: "#FFE6FF", text: "#A300A3" }, // Bright pink
   { bg: "#F0E6FF", text: "#5700BD" }, // Lavender
