@@ -15,6 +15,7 @@ import { Controller } from "react-hook-form";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { useVotingForm } from "@/components/poll/voting-form";
+import { YouAvatar } from "@/components/poll/you-avatar";
 import { Trans } from "@/components/trans";
 
 import { usePoll } from "../../poll-context";
@@ -63,9 +64,7 @@ const ParticipantRowForm = ({
             {name ? (
               <OptimizedAvatarImage name={participantName} size={20} />
             ) : (
-              <div className="inline-flex size-5 items-center justify-center rounded-full bg-gray-100 text-xs font-medium">
-                {t("you")[0]}
-              </div>
+              <YouAvatar />
             )}
             <ParticipantName>{participantName}</ParticipantName>
           </Participant>
