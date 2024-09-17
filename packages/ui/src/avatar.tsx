@@ -37,7 +37,7 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const colorPairs = [
   { bg: "#E6F4FF", text: "#0065BD" }, // Light blue
-  { bg: "#DCFCE7", text: "#16A34A" }, // Light green
+  { bg: "#DCFCE7", text: "#15803D" }, // Light green
   { bg: "#FFE6F4", text: "#BD007A" }, // Light pink
   { bg: "#F4E6FF", text: "#6200BD" }, // Light purple
   { bg: "#FFE6E6", text: "#BD0000" }, // Light red
