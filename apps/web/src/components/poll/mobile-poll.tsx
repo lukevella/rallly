@@ -20,6 +20,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
+import { YouAvatar } from "@/components/poll/you-avatar";
 import { useOptions, usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
@@ -121,7 +122,7 @@ const MobilePoll: React.FunctionComponent = () => {
           ) : (
             <div className="flex grow items-center px-1">
               <Participant>
-                <OptimizedAvatarImage name={t("you")} size={20} />
+                <YouAvatar />
                 <ParticipantName>{t("you")}</ParticipantName>
               </Participant>
             </div>

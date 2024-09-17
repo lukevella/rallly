@@ -2,23 +2,8 @@
 
 import * as React from "react";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@rallly/ui";
-
-export const avatarColors = [
-  "indigo",
-  "green",
-  "blue",
-  "purple",
-  "emerald",
-  "violet",
-  "sky",
-  "cyan",
-  "pink",
-] as const;
-
-export type AvatarColor = (typeof avatarColors)[number];
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
@@ -50,47 +35,54 @@ const AvatarImage = React.forwardRef<
 ));
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
-const avatarFallbackVariants = cva(
-  "flex h-full w-full items-center justify-center rounded-full font-medium",
-  {
-    variants: {
-      color: {
-        indigo: "bg-indigo-50 text-indigo-600",
-        green: "bg-green-50 text-green-600",
-        blue: "bg-blue-50 text-blue-600",
-        purple: "bg-purple-50 text-purple-600",
-        emerald: "bg-emerald-50 text-emerald-600",
-        violet: "bg-violet-50 text-violet-600",
-        sky: "bg-sky-50 text-sky-600",
-        cyan: "bg-cyan-50 text-cyan-600",
-        pink: "bg-pink-50 text-pink-600",
-      },
-    },
-    defaultVariants: {
-      color: "indigo",
-    },
-  },
-);
+const colorPairs = [
+  { bg: "#E6F4FF", text: "#0065BD" }, // Light blue
+  { bg: "#DCFCE7", text: "#15803D" }, // Light green
+  { bg: "#FFE6F4", text: "#BD007A" }, // Light pink
+  { bg: "#F4E6FF", text: "#6200BD" }, // Light purple
+  { bg: "#FFE6E6", text: "#BD0000" }, // Light red
+  { bg: "#FFE6FF", text: "#A300A3" }, // Bright pink
+  { bg: "#F0E6FF", text: "#5700BD" }, // Lavender
+  { bg: "#FFE6F9", text: "#BD0066" }, // Rose
+  { bg: "#E6E6FF", text: "#0000BD" }, // Periwinkle
+  { bg: "#FFE6EC", text: "#BD001F" }, // Salmon pink
+  { bg: "#EBE6FF", text: "#4800BD" }, // Light indigo
+];
 
-export function getColor(seed: string): AvatarColor {
+export function getColor(seed?: string): {
+  bgColor: string;
+  textColor: string;
+} {
+  if (!seed) {
+    return { bgColor: "#E6F4FF", textColor: "#0065BD" };
+  }
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = seed.charCodeAt(i) + ((hash << 5) - hash);
   }
-  return avatarColors[Math.abs(hash) % avatarColors.length];
+  const colorPair = colorPairs[Math.abs(hash) % colorPairs.length];
+  return { bgColor: colorPair.bg, textColor: colorPair.text };
 }
 
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> &
-    VariantProps<typeof avatarFallbackVariants>
->(({ className, color, ...props }, ref) => (
-  <AvatarPrimitive.Fallback
-    ref={ref}
-    className={cn(avatarFallbackVariants({ color }), className)}
-    {...props}
-  />
-));
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
+    seed: string;
+  }
+>(({ className, seed, ...props }, ref) => {
+  const { bgColor, textColor } = getColor(seed);
+  return (
+    <AvatarPrimitive.Fallback
+      ref={ref}
+      className={cn(
+        "flex h-full w-full items-center justify-center rounded-full font-medium",
+        className,
+      )}
+      style={{ backgroundColor: bgColor, color: textColor }}
+      {...props}
+    />
+  );
+});
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 export { Avatar, AvatarImage, AvatarFallback };
