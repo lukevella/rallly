@@ -60,7 +60,13 @@ const ParticipantRowForm = ({
       >
         <div className="flex items-center justify-between gap-x-2.5">
           <Participant>
-            <OptimizedAvatarImage name={participantName} size={20} />
+            {name ? (
+              <OptimizedAvatarImage name={participantName} size={20} />
+            ) : (
+              <div className="inline-flex size-5 items-center justify-center rounded-full bg-gray-100 text-xs font-medium">
+                {t("you")[0]}
+              </div>
+            )}
             <ParticipantName>{participantName}</ParticipantName>
           </Participant>
           {!isNew ? (
