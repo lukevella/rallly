@@ -49,13 +49,10 @@ const colorPairs = [
   { bg: "#EBE6FF", text: "#4800BD" }, // Light indigo
 ];
 
-export function getColor(seed?: string): {
+export function getColor(seed: string): {
   bgColor: string;
   textColor: string;
 } {
-  if (!seed) {
-    return { bgColor: "#E6F4FF", textColor: "#0065BD" };
-  }
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = seed.charCodeAt(i) + ((hash << 5) - hash);
