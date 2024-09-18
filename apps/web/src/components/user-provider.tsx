@@ -2,7 +2,6 @@
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { z } from "zod";
 
 import { useTranslation } from "@/app/i18n/client";
 import { Spinner } from "@/components/spinner";
@@ -13,20 +12,21 @@ import { trpc } from "@/utils/trpc/client";
 
 import { useRequiredContext } from "./use-required-context";
 
-const userSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string().email().nullable(),
-  isGuest: z.boolean(),
-  tier: z.enum(["guest", "hobby", "pro"]),
-  timeZone: z.string().nullish(),
-  timeFormat: z.enum(["hours12", "hours24"]).nullish(),
-  weekStart: z.number().min(0).max(6).nullish(),
-  image: z.string().nullish(),
-});
+type UserData = {
+  id: string;
+  name: string;
+  email?: string | null;
+  isGuest: boolean;
+  tier: "guest" | "hobby" | "pro";
+  timeZone?: string | null;
+  timeFormat?: "hours12" | "hours24" | null;
+  weekStart?: number | null;
+  image?: string | null;
+  locale?: string | null;
+};
 
 export const UserContext = React.createContext<{
-  user: z.infer<typeof userSchema>;
+  user: UserData;
   refresh: (data?: Record<string, unknown>) => Promise<Session | null>;
   ownsObject: (obj: { userId?: string | null }) => boolean;
 } | null>(null);
@@ -58,7 +58,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const user = session.data?.user;
   const subscription = useSubscription();
   const updatePreferences = trpc.user.updatePreferences.useMutation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   if (!user) {
     return (
@@ -82,6 +82,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           tier,
           timeZone: user.timeZone ?? null,
           image: user.image ?? null,
+          locale: user.locale ?? i18n.language,
         },
         refresh: session.update,
         ownsObject: ({ userId }) => {
