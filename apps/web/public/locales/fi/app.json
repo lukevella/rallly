@@ -273,5 +273,16 @@
   "invalidFileType": "Tiedostomuoto ei kelpaa",
   "invalidFileTypeDescription": "Lataa JPG- tai PNG-tiedosto.",
   "fileTooLarge": "Tiedosto on liian suuri",
-  "fileTooLargeDescription": "Lataa tiedosto, joka on korkeintaan 2 Mt."
+  "fileTooLargeDescription": "Lataa tiedosto, joka on korkeintaan 2 Mt.",
+  "errorUploadPicture": "Lataaminen epäonnistui",
+  "errorUploadPictureDescription": "Kuvaa ladattaessa tapahtui virhe. Yritä myöhemmin uudelleen.",
+  "featureNameFinalize": "Sulje kysely",
+  "featureNameDuplicate": "Monista kysely",
+  "featureNameAdvancedSettings": "Edistyneet asetukset",
+  "featureNameExtendedPollLifetime": "Pidempi aika kyselyille",
+  "12months": "12 kuukautta",
+  "savePercentage": "Säästä {percentage} %",
+  "1month": "1 kuukausi",
+  "subscribe": "Tilaa",
+  "cancelAnytime": "Peruuta milloin tahansa <a>laskutussivulta</a>."
 }
