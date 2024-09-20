@@ -27,8 +27,8 @@ import Link from "next/link";
 import * as React from "react";
 
 import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
-import { PayWallDialogContent } from "@/app/[locale]/poll/[urlId]/pay-wall-dialog-content";
 import { trpc } from "@/app/providers";
+import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
@@ -274,7 +274,7 @@ const ManagePoll: React.FunctionComponent<{
         {...duplicateDialog.dialogProps}
       />
       <FinalizePollDialog {...finalizeDialog.dialogProps} />
-      <PayWallDialogContent {...paywallDialog.dialogProps} />
+      <PayWallDialog {...paywallDialog.dialogProps} />
     </>
   );
 };
