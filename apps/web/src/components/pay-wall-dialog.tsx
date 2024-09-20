@@ -1,11 +1,18 @@
+"use client";
+
 import { pricingData } from "@rallly/billing/pricing";
 import { Badge } from "@rallly/ui/badge";
-import { Dialog, DialogContent, DialogProps } from "@rallly/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogProps,
+  useDialog,
+} from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { m } from "framer-motion";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import React from "react";
 
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
@@ -22,11 +29,13 @@ const monthlyPriceAnnualRate = (pricingData.yearly.amount / 100 / 12).toFixed(
   2,
 );
 
-export function PayWallDialogContent(props: DialogProps) {
-  const [period, setPeriod] = useState("yearly");
+export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
+  const dialog = useDialog();
+  const [period, setPeriod] = React.useState("yearly");
 
   return (
-    <Dialog {...props}>
+    <Dialog {...dialog.dialogProps} {...forwardedProps}>
+      {children}
       <DialogContent className="w-[600px] p-4">
         <div className="space-y-6">
           <header className="pt-4">
