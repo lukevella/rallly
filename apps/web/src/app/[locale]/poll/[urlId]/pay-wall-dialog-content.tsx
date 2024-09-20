@@ -132,7 +132,7 @@ export function PayWallDialogContent(props: DialogProps) {
           </section>
           <footer className="space-y-4">
             <div className="grid gap-2">
-              <UpgradeButton annual={period === "yearly"}>
+              <UpgradeButton large annual={period === "yearly"}>
                 <Trans i18nKey="subscribe" defaults="Subscribe" />
               </UpgradeButton>
             </div>
