@@ -24,6 +24,7 @@ export const UpgradeButton = ({
         value={window.location.pathname}
       />
       <Button
+        size="lg"
         className="w-full"
         type="submit"
         variant="primary"
