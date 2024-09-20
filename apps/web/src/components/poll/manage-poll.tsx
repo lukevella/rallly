@@ -34,6 +34,7 @@ import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
+import { usePostHog } from "@/utils/posthog";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
@@ -148,6 +149,7 @@ const ManagePoll: React.FunctionComponent<{
   const finalizeDialog = useDialog();
   const paywallDialog = useDialog();
   const plan = usePlan();
+  const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
 
   return (
@@ -206,6 +208,10 @@ const ManagePoll: React.FunctionComponent<{
                   onClick={() => {
                     if (plan === "free") {
                       paywallDialog.trigger();
+                      posthog?.capture("trigger paywall", {
+                        poll_id: poll.id,
+                        action: "finalize",
+                      });
                     } else {
                       finalizeDialog.trigger();
                     }
@@ -231,6 +237,10 @@ const ManagePoll: React.FunctionComponent<{
             onClick={() => {
               if (plan === "free") {
                 paywallDialog.trigger();
+                posthog?.capture("trigger paywall", {
+                  poll_id: poll.id,
+                  action: "duplicate",
+                });
               } else {
                 duplicateDialog.trigger();
               }
