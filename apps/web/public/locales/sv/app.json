@@ -275,5 +275,10 @@
   "fileTooLarge": "För stor fil",
   "fileTooLargeDescription": "Ladda upp en fil som är mindre än 2 MB.",
   "errorUploadPicture": "Det gick inte att ladda upp",
-  "errorUploadPictureDescription": "Det uppstod ett problem med att ladda upp din bild. Försök igen senare."
+  "errorUploadPictureDescription": "Det uppstod ett problem med att ladda upp din bild. Försök igen senare.",
+  "featureNameAdvancedSettings": "Avancerade inställningar",
+  "12months": "12 månader",
+  "savePercentage": "Spara {percentage}%",
+  "1month": "1 månad",
+  "subscribe": "Prenumerera"
 }
