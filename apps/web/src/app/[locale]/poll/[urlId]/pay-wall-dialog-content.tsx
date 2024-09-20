@@ -1,33 +1,38 @@
+import { pricingData } from "@rallly/billing/pricing";
 import { Badge } from "@rallly/ui/badge";
-import { Button } from "@rallly/ui/button";
-import { DialogClose, DialogContent } from "@rallly/ui/dialog";
+import { Dialog, DialogContent, DialogProps } from "@rallly/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { m } from "framer-motion";
-import {
-  CalendarCheck2Icon,
-  ClockIcon,
-  CopyIcon,
-  Settings2Icon,
-} from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 import { Trans } from "@/components/trans";
-import { usePlan } from "@/contexts/plan";
+import { UpgradeButton } from "@/components/upgrade-button";
 
-export function PayWallDialogContent({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
-  const plan = usePlan();
+const annualSavingsPercentage = (
+  ((pricingData.monthly.amount * 12 - pricingData.yearly.amount) /
+    (pricingData.monthly.amount * 12)) *
+  100
+).toFixed(0);
 
-  if (plan === "free") {
-    return (
+const yearlyPrice = (pricingData.yearly.amount / 100).toFixed(2);
+const monthlyPrice = (pricingData.monthly.amount / 100).toFixed(2);
+const monthlyPriceAnnualRate = (pricingData.yearly.amount / 100 / 12).toFixed(
+  2,
+);
+
+export function PayWallDialogContent(props: DialogProps) {
+  const [period, setPeriod] = useState("yearly");
+
+  return (
+    <Dialog {...props}>
       <DialogContent className="w-[600px] p-4">
-        <article>
-          <header className="p-4">
+        <div className="space-y-6">
+          <header className="pt-4">
             <m.div
               transition={{
-                delay: 0.5,
+                delay: 0.2,
                 duration: 0.4,
                 type: "spring",
                 bounce: 0.5,
@@ -41,111 +46,108 @@ export function PayWallDialogContent({
                 <Trans i18nKey="planPro" />
               </Badge>
             </m.div>
-            <h1 className="mb-1 mt-2 text-center text-xl font-bold">
+            <h1 className="mb-2 mt-4 text-center text-xl font-bold">
               <Trans defaults="Upgrade to Pro" i18nKey="upgradePromptTitle" />
             </h1>
-            <p className="text-muted-foreground text-center text-sm leading-relaxed">
+            <p className="text-muted-foreground mb-4 text-center text-sm leading-relaxed">
               <Trans
                 i18nKey="upgradeOverlaySubtitle3"
                 defaults="Unlock these feature by upgrading to a Pro plan."
               />
             </p>
-          </header>
-          <section className="rounded-lg border bg-gray-50">
-            <ul className="divide-y text-left">
-              <li className="flex items-start gap-x-4 p-4">
-                <div>
-                  <div className="inline-flex rounded-lg bg-indigo-100 p-2">
-                    <CalendarCheck2Icon className="size-4 text-indigo-600" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="mb-1 text-sm font-semibold">
-                    <Trans defaults="Finalize" i18nKey="finalize" />
-                  </h3>
-                  <p className="text-muted-foreground text-pretty text-sm leading-relaxed">
-                    <Trans
-                      i18nKey="finalizeFeatureDescription"
-                      defaults="Select a final date for your event and notify participants."
-                    />
-                  </p>
-                </div>
+            <ul className="grid grid-cols-2 justify-center gap-2 text-center text-sm font-medium">
+              <li>
+                <CheckIcon className="mr-2 inline-block size-4 text-green-600" />
+                <Trans i18nKey="featureNameFinalize" defaults="Finalize Poll" />
               </li>
-              <li className="flex items-start gap-x-4 p-4">
-                <div className="inline-flex rounded-lg bg-violet-100 p-2">
-                  <CopyIcon className="size-4 text-violet-600" />
-                </div>
-                <div>
-                  <h3 className="mb-1 text-sm font-semibold">
-                    <Trans defaults="Duplicate" i18nKey="duplicateTitle" />
-                  </h3>
-                  <p className="text-muted-foreground leading-rel text-pretty text-sm">
-                    <Trans
-                      i18nKey="duplicateFeatureDescription"
-                      defaults="Reuse dates and settings of a poll to create a new one."
-                    />
-                  </p>
-                </div>
+              <li>
+                <CheckIcon className="mr-2 inline-block size-4 text-green-600" />
+                <Trans
+                  i18nKey="featureNameDuplicate"
+                  defaults="Duplicate Poll"
+                />
               </li>
-              <li className="flex items-start gap-x-4 p-4">
-                <div>
-                  <div className="inline-flex rounded-lg bg-purple-100 p-2">
-                    <Settings2Icon className="size-4 text-purple-600" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="mb-1 text-sm font-semibold">
-                    <Trans
-                      defaults="Advanced Settings"
-                      i18nKey="advancedSettingsTitle"
-                    />
-                  </h3>
-                  <p className="text-muted-foreground leading-rel text-pretty text-sm">
-                    <Trans
-                      i18nKey="advancedSettingsDescription"
-                      defaults="Hide participants, hide scores, require participant email address."
-                    />
-                  </p>
-                </div>
+              <li>
+                <CheckIcon className="mr-2 inline-block size-4 text-green-600" />
+                <Trans
+                  i18nKey="featureNameAdvancedSettings"
+                  defaults="Advanced Settings"
+                />
               </li>
-              <li className="flex items-start gap-x-4 p-4">
-                <div>
-                  <div className="inline-flex rounded-lg bg-pink-100 p-2">
-                    <ClockIcon className="size-4 text-pink-600" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="mb-1 text-sm font-semibold">
-                    <Trans
-                      defaults="Keep Polls Indefinitely"
-                      i18nKey="keepPollsIndefinitely"
-                    />
-                  </h3>
-                  <p className="text-muted-foreground leading-rel text-pretty text-sm">
-                    <Trans
-                      i18nKey="keepPollsIndefinitelyDescription"
-                      defaults="Inactive polls will not be auto-deleted."
-                    />
-                  </p>
-                </div>
+              <li>
+                <CheckIcon className="mr-2 inline-block size-4 text-green-600" />
+                <Trans
+                  i18nKey="featureNameExtendedPollLifetime"
+                  defaults="Extended Poll Lifetime"
+                />
               </li>
             </ul>
+          </header>
+          <section>
+            <RadioGroup value={period} onValueChange={setPeriod}>
+              <li className="focus-within:ring-primary relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:ring-2">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-4">
+                    <RadioGroupItem id="yearly" value="yearly" />
+                    <label className="text-base font-semibold" htmlFor="yearly">
+                      <span role="presentation" className="absolute inset-0" />
+                      <Trans defaults="12 months" i18nKey="12months" />
+                    </label>
+                    <Badge variant="green">
+                      <Trans
+                        defaults="Save {percentage}%"
+                        i18nKey="savePercentage"
+                        values={{ percentage: annualSavingsPercentage }}
+                      />
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground flex items-baseline gap-1.5 pl-8 text-sm">
+                    <span>${yearlyPrice}</span>
+                    <span className="line-through opacity-50">
+                      ${((pricingData.monthly.amount * 12) / 100).toFixed(2)}
+                    </span>
+                  </p>
+                </div>
+                <p className="flex items-baseline gap-1">
+                  <span className="text-xl font-semibold">
+                    ${monthlyPriceAnnualRate}
+                  </span>
+                  <span className="text-muted-foreground text-sm">/ mo</span>
+                </p>
+              </li>
+              <li className="focus-within:ring-primary relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:ring-2">
+                <div className="flex items-center gap-4">
+                  <RadioGroupItem id="monthly" value="monthly" />
+                  <label className="text-base font-semibold" htmlFor="monthly">
+                    <span role="presentation" className="absolute inset-0" />
+                    <Trans defaults="1 month" i18nKey="1month" />
+                  </label>
+                </div>
+                <p className="flex items-baseline gap-1">
+                  <span className="text-xl font-semibold">${monthlyPrice}</span>
+                  <span className="text-muted-foreground text-sm">/ mo</span>
+                </p>
+              </li>
+            </RadioGroup>
           </section>
-          <footer className="mt-4 grid gap-2.5">
-            <Button variant="primary" asChild>
-              <Link href="/settings/billing">
-                <Trans i18nKey="upgrade" defaults="Upgrade" />
-              </Link>
-            </Button>
-            <DialogClose asChild>
-              <Button variant="ghost">
-                <Trans i18nKey="notToday" defaults="Not Today" />
-              </Button>
-            </DialogClose>
+          <footer className="space-y-4">
+            <div className="grid gap-2">
+              <UpgradeButton large annual={period === "yearly"}>
+                <Trans i18nKey="subscribe" defaults="Subscribe" />
+              </UpgradeButton>
+            </div>
+            <p className="text-muted-foreground text-center text-sm">
+              <Trans
+                i18nKey="cancelAnytime"
+                defaults="Cancel anytime from your <a>billing page</a>."
+                components={{
+                  a: <Link className="text-link" href="/settings/billing" />,
+                }}
+              />
+            </p>
           </footer>
-        </article>
+        </div>
       </DialogContent>
-    );
-  }
-  return <>{children}</>;
+    </Dialog>
+  );
 }

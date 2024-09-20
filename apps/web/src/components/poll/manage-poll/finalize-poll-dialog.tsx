@@ -24,7 +24,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { PayWallDialogContent } from "@/app/[locale]/poll/[urlId]/pay-wall-dialog-content";
 import { trpc } from "@/app/providers";
 import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
@@ -206,61 +205,6 @@ export const FinalizePollForm = ({
             );
           }}
         />
-        {/* <FormField
-          control={form.control}
-          name="notify"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="notify" className="mb-4">
-                <Trans i18nKey="notify" defaults="Send a calendar invite to" />
-              </FormLabel>
-              <FormControl>
-                <RadioGroup onValueChange={field.onChange} value={field.value}>
-                  <Label className="flex items-center gap-4 font-normal">
-                    <RadioGroupItem value="all" />
-                    <Trans
-                      i18nKey="notifyAllParticipants"
-                      defaults="Everyone"
-                    />
-                  </Label>
-                  <Label className="flex items-center gap-4 font-normal">
-                    <RadioGroupItem value="attendees" />
-                    <Trans
-                      i18nKey="notifyAvailableParticipants"
-                      defaults="Attendees"
-                    />
-                  </Label>
-                  <Label className="flex items-center gap-4 font-normal">
-                    <RadioGroupItem value="none" />
-                    <Trans i18nKey="notifyNo" defaults="None" />
-                  </Label>
-                </RadioGroup>
-              </FormControl>
-              <FormDescription>
-                <Trans
-                  i18nKey="notifyDescription"
-                  defaults="Choose which participants should receive a calendar invite"
-                />
-              </FormDescription>
-              {participantsWithoutEmails.length ? (
-                <Alert>
-                  <AlertCircleIcon className="size-4" />
-                  <AlertDescription>
-                    <Trans
-                      i18nKey="missingEmailsAlert"
-                      defaults="The following participants have not provided an email address."
-                    />
-                  </AlertDescription>
-                  <AlertDescription>
-                    {participantsWithoutEmails.map((participant) => (
-                      <div key={participant.id}>{participant.name}</div>
-                    ))}
-                  </AlertDescription>
-                </Alert>
-              ) : null}
-            </FormItem>
-          )}
-        /> */}
       </form>
     </Form>
   );
@@ -276,47 +220,45 @@ export function FinalizePollDialog(props: DialogProps) {
   });
   return (
     <Dialog {...props}>
-      <PayWallDialogContent>
-        <DialogContent size="2xl">
-          <DialogHeader>
-            <DialogTitle>
-              <Trans i18nKey="finalize" />
-            </DialogTitle>
-            <DialogDescription>
-              <Trans
-                i18nKey="finalizeDescription"
-                defaults="Select a final date for your event."
-              />
-            </DialogDescription>
-          </DialogHeader>
-          <FinalizePollForm
-            name="finalize-form"
-            onSubmit={(data) => {
-              scheduleEvent.mutate({
-                pollId: poll.id,
-                optionId: data.selectedOptionId,
-                notify: data.notify,
-              });
-              props.onOpenChange?.(false);
-            }}
-          />
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button>
-                <Trans i18nKey="cancel" />
-              </Button>
-            </DialogClose>
-            <Button
-              loading={scheduleEvent.isLoading}
-              type="submit"
-              form="finalize-form"
-              variant="primary"
-            >
-              <Trans i18nKey="finalize" />
+      <DialogContent size="2xl">
+        <DialogHeader>
+          <DialogTitle>
+            <Trans i18nKey="finalize" />
+          </DialogTitle>
+          <DialogDescription>
+            <Trans
+              i18nKey="finalizeDescription"
+              defaults="Select a final date for your event."
+            />
+          </DialogDescription>
+        </DialogHeader>
+        <FinalizePollForm
+          name="finalize-form"
+          onSubmit={(data) => {
+            scheduleEvent.mutate({
+              pollId: poll.id,
+              optionId: data.selectedOptionId,
+              notify: data.notify,
+            });
+            props.onOpenChange?.(false);
+          }}
+        />
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button>
+              <Trans i18nKey="cancel" />
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </PayWallDialogContent>
+          </DialogClose>
+          <Button
+            loading={scheduleEvent.isLoading}
+            type="submit"
+            form="finalize-form"
+            variant="primary"
+          >
+            <Trans i18nKey="finalize" />
+          </Button>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

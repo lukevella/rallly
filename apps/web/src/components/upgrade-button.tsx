@@ -8,7 +8,8 @@ import { usePostHog } from "@/utils/posthog";
 export const UpgradeButton = ({
   children,
   annual,
-}: React.PropsWithChildren<{ annual?: boolean }>) => {
+  large,
+}: React.PropsWithChildren<{ annual?: boolean; large?: boolean }>) => {
   const posthog = usePostHog();
 
   return (
@@ -24,6 +25,7 @@ export const UpgradeButton = ({
         value={window.location.pathname}
       />
       <Button
+        size={large ? "lg" : "default"}
         className="w-full"
         type="submit"
         variant="primary"
