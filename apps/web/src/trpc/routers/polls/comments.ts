@@ -5,11 +5,12 @@ import { absoluteUrl } from "@/utils/absolute-url";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
-import { publicProcedure, router } from "../../trpc";
+import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
 import { DisableNotificationsPayload } from "../../types";
 
 export const comments = router({
   list: publicProcedure
+    .use(rateLimitMiddleware)
     .input(
       z.object({
         pollId: z.string(),
