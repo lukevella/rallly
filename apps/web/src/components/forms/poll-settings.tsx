@@ -105,7 +105,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                   </SettingContent>
                   <Switch
                     id={field.name}
-                    checked={field.value}
+                    checked={!!field.value}
                     onCheckedChange={(checked) => {
                       field.onChange(checked);
                     }}
@@ -128,7 +128,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                     </SettingTitle>
                   </SettingContent>
                   <Switch
-                    checked={field.value}
+                    checked={!!field.value}
                     onCheckedChange={(checked) => {
                       if (isFree) {
                         paywallDialog.trigger();
@@ -159,7 +159,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                     </SettingTitle>
                   </SettingContent>
                   <Switch
-                    checked={field.value}
+                    checked={!!field.value}
                     onCheckedChange={(checked) => {
                       if (isFree) {
                         paywallDialog.trigger();
@@ -191,7 +191,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                   </SettingContent>
                   <Switch
                     id={field.name}
-                    checked={field.value}
+                    checked={!!field.value}
                     onCheckedChange={(checked) => {
                       if (isFree) {
                         paywallDialog.trigger();
