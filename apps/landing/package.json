@@ -33,7 +33,8 @@
     "react-i18next": "^12.1.4",
     "react-use": "^17.4.0",
     "remark": "^14.0.3",
-    "remark-html": "^15.0.2"
+    "remark-html": "^15.0.2",
+    "accept-language-parser": "^1.5.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.4",
