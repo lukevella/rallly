@@ -1,5 +1,5 @@
 import { cn } from "@rallly/ui";
-import { m } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   CalendarCheck2Icon,
   LanguagesIcon,
@@ -21,7 +21,7 @@ const Item = ({
   delay?: number;
 }>) => {
   return (
-    <m.div
+    <motion.div
       transition={{
         delay,
         type: "spring",
@@ -40,7 +40,7 @@ const Item = ({
         </span>
         <div className="text-sm font-semibold">{children}</div>
       </div>
-    </m.div>
+    </motion.div>
   );
 };
 

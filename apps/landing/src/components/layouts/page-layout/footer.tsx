@@ -16,22 +16,25 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Trans } from "@/components/trans";
 
 export const LanguageSelect = () => {
   const router = useRouter();
-
+  const pathname = usePathname();
+  const { i18n } = useTranslation();
   return (
     <Select
-      value={router.locale}
+      value={i18n.language}
       onValueChange={(newLocale) => {
-        router.replace(router.asPath, undefined, {
-          locale: newLocale,
-          scroll: false,
-        });
+        if (pathname) {
+          router.replace(`/${newLocale}${pathname}`, {
+            scroll: false,
+          });
+        }
       }}
     >
       <SelectTrigger asChild>

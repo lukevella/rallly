@@ -1,153 +1,151 @@
-import { m } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, QuoteIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { NextSeo } from "next-seo";
 import React from "react";
 
-import Bonus from "@/components/home/bonus";
 import { Trans } from "@/components/trans";
 
-// const UsedBy = () => {
-//   return (
-//     <div>
-//       <h2 className="mx-auto mb-8 max-w-2xl text-center leading-relaxed">
-//         Used by employees of some of the world's most influential companies and
-//         organizations
-//       </h2>
-//       <div className="flex flex-wrap justify-center gap-8">
-//         <div className="relative h-12 w-24 grayscale hover:grayscale-0">
-//           <Image
-//             src="/icrc-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="ICRC"
-//           />
-//         </div>
-//         <div className="relative h-12 w-24 grayscale hover:grayscale-0">
-//           <Image
-//             src="/harvard-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="Hardvard University"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/nhs-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="NHS"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/bcg-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="Boston Consulting Group"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/deloitte-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="Deloitte"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/ieee-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="IEEE"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/nasa-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="NASA"
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+export const UsedBy = () => {
+  return (
+    <div>
+      <h2 className="mx-auto mb-8 max-w-2xl text-center leading-relaxed">
+        Trusted by some of the world's most influential companies and
+        organizations
+      </h2>
+      <div className="flex flex-wrap justify-center gap-8">
+        <div className="relative h-12 w-24 grayscale hover:grayscale-0">
+          <Image
+            src="/static/images/icrc-logo.svg"
+            fill
+            style={{ objectFit: "contain" }}
+            alt="ICRC"
+          />
+        </div>
+        <div className="relative h-12 w-24 grayscale hover:grayscale-0">
+          <Image
+            src="/harvard-logo.svg"
+            fill
+            style={{ objectFit: "contain" }}
+            alt="Hardvard University"
+          />
+        </div>
+        <div className="relative h-10 w-20 grayscale hover:grayscale-0">
+          <Image
+            src="/nhs-logo.svg"
+            fill
+            style={{ objectFit: "contain" }}
+            alt="NHS"
+          />
+        </div>
+        <div className="relative h-10 w-20 grayscale hover:grayscale-0">
+          <Image
+            src="/bcg-logo.svg"
+            fill
+            style={{ objectFit: "contain" }}
+            alt="Boston Consulting Group"
+          />
+        </div>
+        <div className="relative h-10 w-20 grayscale hover:grayscale-0">
+          <Image
+            src="/deloitte-logo.svg"
+            fill
+            style={{ objectFit: "contain" }}
+            alt="Deloitte"
+          />
+        </div>
+        <div className="relative h-10 w-20 grayscale hover:grayscale-0">
+          <Image
+            src="/ieee-logo.svg"
+            fill
+            style={{ objectFit: "contain" }}
+            alt="IEEE"
+          />
+        </div>
+        <div className="relative h-10 w-20 grayscale hover:grayscale-0">
+          <Image
+            src="/nasa-logo.svg"
+            fill
+            style={{ objectFit: "contain" }}
+            alt="NASA"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
-// const Testimonials = () => {
-//   return (
-//     <div>
-//       <h2 className="mb-12 text-center">Testimonials</h2>
-//       <div className="">
-//         {/* <Testimonial author="Dan">
-//           {`Rallly is the only service that meets all my needs and is 100%
-//         free. It's incredibly easy to use, no sign-in even required. And I
-//         trust rallly.co because the entire project is open source.`}
-//         </Testimonial>
-//         <Testimonial author="Robert">
-//           I was looking for something simple and clean (without tons of ads)
-//           that would be easy for me to administer and easy for others to use.
-//           This fit the bill perfectly.
-//         </Testimonial>
-//         <Testimonial author="Adrià">
-//           Awesome Doodle alternative. I love its open-source nature, and how
-//           easy it is to use thanks to its modern and clean UI.
-//         </Testimonial> */}
-//       </div>
-//       {/* <div className="mt-8 text-center">
-//         <Button className="rounded-full px-6" asChild>
-//           <Link
-//             target="_blank"
-//             href="https://www.trustpilot.com/evaluate/rallly.co"
-//           >
-//             <span>Share your experience</span>
-//             <ArrowRight className="size-4" />
-//           </Link>
-//         </Button>
-//       </div> */}
-//     </div>
-//   );
-// };
+export const Testimonials = () => {
+  return (
+    <div>
+      <h2 className="mb-12 text-center">Testimonials</h2>
+      <div className="">
+        {/* <Testimonial author="Dan">
+          {`Rallly is the only service that meets all my needs and is 100%
+        free. It's incredibly easy to use, no sign-in even required. And I
+        trust rallly.co because the entire project is open source.`}
+        </Testimonial>
+        <Testimonial author="Robert">
+          I was looking for something simple and clean (without tons of ads)
+          that would be easy for me to administer and easy for others to use.
+          This fit the bill perfectly.
+        </Testimonial>
+        <Testimonial author="Adrià">
+          Awesome Doodle alternative. I love its open-source nature, and how
+          easy it is to use thanks to its modern and clean UI.
+        </Testimonial> */}
+      </div>
+      {/* <div className="mt-8 text-center">
+        <Button className="rounded-full px-6" asChild>
+          <Link
+            target="_blank"
+            href="https://www.trustpilot.com/evaluate/rallly.co"
+          >
+            <span>Share your experience</span>
+            <ArrowRight className="size-4" />
+          </Link>
+        </Button>
+      </div> */}
+    </div>
+  );
+};
 
-// const Testimonial = ({
-//   author,
-//   children,
-//   logo,
-// }: React.PropsWithChildren<{ author: string; logo?: string }>) => {
-//   return (
-//     <div className="relative flex flex-col space-y-4 rounded-md bg-gray-50 px-4 py-3 shadow-sm">
-//       <QuoteIcon className="size-4 text-gray-400" />
-//       <div className="flex justify-between">
-//         <div className="flex flex-col gap-2">
-//           <div className="font-semibold">{author}</div>
-//           <Image
-//             src="/static/images/stars-5.svg"
-//             width={100}
-//             height={30}
-//             alt="5 stars"
-//           />
-//         </div>
-//         {logo ? (
-//           <div className="relative size-16">
-//             <Image src={logo} fill alt="logo" />
-//           </div>
-//         ) : null}
-//       </div>
-//       <p className="grow text-sm leading-relaxed">{children}</p>
-//       <div className="relative h-8 w-24">
-//         <Image
-//           src="/trustpilot-logo.svg"
-//           fill
-//           alt="TrustPilot"
-//           style={{ objectPosition: "left", objectFit: "contain" }}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
+export const Testimonial = ({
+  author,
+  children,
+  logo,
+}: React.PropsWithChildren<{ author: string; logo?: string }>) => {
+  return (
+    <div className="relative flex flex-col space-y-4 rounded-md bg-gray-50 px-4 py-3 shadow-sm">
+      <QuoteIcon className="size-4 text-gray-400" />
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
+          <div className="font-semibold">{author}</div>
+          <Image
+            src="/static/images/stars-5.svg"
+            width={100}
+            height={30}
+            alt="5 stars"
+          />
+        </div>
+        {logo ? (
+          <div className="relative size-16">
+            <Image src={logo} fill alt="logo" />
+          </div>
+        ) : null}
+      </div>
+      <p className="grow text-sm leading-relaxed">{children}</p>
+      <div className="relative h-8 w-24">
+        <Image
+          src="/trustpilot-logo.svg"
+          fill
+          alt="TrustPilot"
+          style={{ objectPosition: "left", objectFit: "contain" }}
+        />
+      </div>
+    </div>
+  );
+};
 
 const Mention = ({
   logo,
@@ -158,7 +156,7 @@ const Mention = ({
   delay?: number;
 }>) => {
   return (
-    <m.div
+    <motion.div
       transition={{
         delay,
         type: "spring",
@@ -171,11 +169,11 @@ const Mention = ({
     >
       <div className="flex items-start justify-between">{logo}</div>
       <p className="grow text-center text-base">{children}</p>
-    </m.div>
+    </motion.div>
   );
 };
 
-const MentionedBy = () => {
+export const MentionedBy = () => {
   return (
     <div>
       <div className="grid gap-8 md:grid-cols-4">
@@ -256,9 +254,9 @@ const MentionedBy = () => {
   );
 };
 
-const BigTestimonial = () => {
+export const BigTestimonial = () => {
   return (
-    <m.div
+    <motion.div
       transition={{
         duration: 1,
         type: "spring",
@@ -311,7 +309,7 @@ const BigTestimonial = () => {
           </div>
         </div>
       </div>
-    </m.div>
+    </motion.div>
   );
 };
 
@@ -319,13 +317,5 @@ export const Marketing = ({
   children,
   ...props
 }: React.PropsWithChildren<{ title: string; description: string }>) => {
-  return (
-    <div className="space-y-12 sm:space-y-24">
-      <NextSeo {...props} />
-      {children}
-      <Bonus />
-      <BigTestimonial />
-      <MentionedBy />
-    </div>
-  );
+  return <div className="space-y-12 sm:space-y-24">{children}</div>;
 };

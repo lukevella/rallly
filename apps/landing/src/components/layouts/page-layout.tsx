@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@rallly/ui";
 import {
   DropdownMenu,
@@ -9,7 +11,7 @@ import {
 import { ChevronRightIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import { Trans } from "next-i18next";
 import * as React from "react";
 
@@ -25,8 +27,8 @@ const NavLink = ({
   className,
   ...props
 }: React.ComponentProps<typeof Link>) => {
-  const router = useRouter();
-  const isActive = router.pathname === props.href;
+  const pathname = usePathname();
+  const isActive = pathname === props.href;
   return (
     <Link
       className={cn(
@@ -60,7 +62,9 @@ const Menu: React.FunctionComponent<{ className: string }> = ({
   );
 };
 
-const PageLayout: React.FunctionComponent<PageLayoutProps> = ({ children }) => {
+export const PageLayout: React.FunctionComponent<PageLayoutProps> = ({
+  children,
+}) => {
   return (
     <div className="isolate flex min-h-[100vh] flex-col overflow-x-hidden bg-gray-100">
       <svg

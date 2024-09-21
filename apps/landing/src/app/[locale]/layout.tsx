@@ -6,6 +6,9 @@ import { Viewport } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
 
+import PageLayout from "@/components/layouts/page-layout";
+import { I18nProvider } from "@/i18n/client";
+
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -31,7 +34,11 @@ export default function Root({
 }) {
   return (
     <html lang={locale} className={inter.className}>
-      <body>{children}</body>
+      <body>
+        <I18nProvider>
+          <PageLayout>{children}</PageLayout>
+        </I18nProvider>
+      </body>
     </html>
   );
 }
