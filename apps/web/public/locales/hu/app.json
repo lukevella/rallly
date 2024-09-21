@@ -275,5 +275,14 @@
   "fileTooLarge": "A fájl túl nagy",
   "fileTooLargeDescription": "Kérjük, tölts fel egy 2MB-nál kisebb fájlt.",
   "errorUploadPicture": "Sikertelen feltöltés",
-  "errorUploadPictureDescription": "Hiba történt a kép feltöltésekor. Kérjük, próbáld újra később."
+  "errorUploadPictureDescription": "Hiba történt a kép feltöltésekor. Kérjük, próbáld újra később.",
+  "featureNameFinalize": "Szavazás véglegesítése",
+  "featureNameDuplicate": "Szavazás duplikálása",
+  "featureNameAdvancedSettings": "Speciális beállítások",
+  "featureNameExtendedPollLifetime": "Meghosszabbított szavazási idő",
+  "12months": "12 hónap",
+  "savePercentage": "Spórolj {percentage}-ot%",
+  "1month": "1 hónap",
+  "subscribe": "Feliratkozás",
+  "cancelAnytime": "Bármikor lemondhatod a <a>számlázás oldalon</a>."
 }
