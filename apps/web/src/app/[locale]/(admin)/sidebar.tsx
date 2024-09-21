@@ -26,6 +26,7 @@ import { Trans } from "@/components/trans";
 import { IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
 import { IconComponent } from "@/types";
+import { usePostHog } from "@/utils/posthog";
 
 function NavItem({
   href,
@@ -60,6 +61,7 @@ function NavItem({
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useUser();
+  const posthog = usePostHog();
   return (
     <nav className="flex flex-1 flex-col ">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -105,7 +107,12 @@ export function Sidebar() {
             <IfFreeUser>
               <li>
                 <PayWallDialog>
-                  <DialogTrigger asChild>
+                  <DialogTrigger
+                    onClick={() =>
+                      posthog?.capture("trigger paywall", { from: "sidebar" })
+                    }
+                    asChild
+                  >
                     <button className="mb-4 flex w-full flex-col rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200">
                       <span className="mb-2 flex items-center gap-x-2">
                         <SparklesIcon className="size-5 text-gray-400" />

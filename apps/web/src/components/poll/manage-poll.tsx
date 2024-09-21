@@ -210,6 +210,7 @@ const ManagePoll: React.FunctionComponent<{
                       paywallDialog.trigger();
                       posthog?.capture("trigger paywall", {
                         poll_id: poll.id,
+                        from: "manage-poll",
                         action: "finalize",
                       });
                     } else {
@@ -240,6 +241,7 @@ const ManagePoll: React.FunctionComponent<{
                 posthog?.capture("trigger paywall", {
                   poll_id: poll.id,
                   action: "duplicate",
+                  from: "manage-poll",
                 });
               } else {
                 duplicateDialog.trigger();
