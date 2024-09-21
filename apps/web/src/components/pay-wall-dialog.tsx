@@ -150,7 +150,13 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                 i18nKey="cancelAnytime"
                 defaults="Cancel anytime from your <a>billing page</a>."
                 components={{
-                  a: <Link className="text-link" href="/settings/billing" />,
+                  a: (
+                    <Link
+                      onClick={() => dialog.dismiss()}
+                      className="text-link"
+                      href="/settings/billing"
+                    />
+                  ),
                 }}
               />
             </p>
