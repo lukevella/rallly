@@ -36,9 +36,9 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
   return (
     <Dialog {...dialog.dialogProps} {...forwardedProps}>
       {children}
-      <DialogContent className="w-[600px] p-4">
+      <DialogContent className="w-[600px] p-4 sm:p-6">
         <div className="space-y-6">
-          <header className="pt-4">
+          <header>
             <m.div
               transition={{
                 delay: 0.2,
