@@ -218,9 +218,9 @@ export const Footer: React.FunctionComponent = () => {
             <li>
               <Link
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
-                href="/find-a-time"
+                href="/meeting-poll"
               >
-                <Trans i18nKey="findATime" defaults="Find a Time" />
+                <Trans i18nKey="meetingPoll" defaults="Meeting Poll" />
               </Link>
             </li>
             <li>
