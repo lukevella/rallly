@@ -1,5 +1,4 @@
 "use client";
-import { handwritten } from "@rallly/fonts/handwritten";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
@@ -11,6 +10,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { Trans } from "@/components/trans";
+import { handwritten } from "@/fonts/handwritten";
 import { linkToApp } from "@/lib/linkToApp";
 
 const Screenshot = () => {
