@@ -103,7 +103,7 @@ export const MarketingHero = ({
             </span>
           </Link>
         </div>
-        <h1 className="mb-2 mt-6 text-pretty text-2xl font-bold tracking-tight sm:mb-4 sm:text-4xl">
+        <h1 className="mb-2 mt-6 text-pretty text-2xl font-bold tracking-tight sm:mb-4 sm:text-5xl">
           {preventWidows(title)}
         </h1>
         <h2 className="mx-auto max-w-3xl text-pretty text-lg text-gray-500 sm:text-xl sm:leading-relaxed">
