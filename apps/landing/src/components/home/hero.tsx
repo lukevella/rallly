@@ -84,7 +84,7 @@ export const MarketingHero = ({
 }) => {
   return (
     <article className="max-w-full space-y-12 text-center">
-      <header className="p-6">
+      <header className="sm:p-6">
         <div>
           <Link
             locale="en"
@@ -103,13 +103,13 @@ export const MarketingHero = ({
             </span>
           </Link>
         </div>
-        <h1 className="mb-4 mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="mt-6 text-pretty text-2xl font-bold tracking-tight sm:mb-2 sm:text-4xl">
           {preventWidows(title)}
         </h1>
-        <p className="mx-auto max-w-3xl text-lg text-gray-500 sm:text-xl sm:leading-relaxed">
+        <h2 className="mx-auto max-w-3xl text-pretty text-lg text-gray-500 sm:text-xl sm:leading-relaxed">
           {preventWidows(description)}
-        </p>
-        <div className="mt-6 flex flex-col items-center justify-center gap-4">
+        </h2>
+        <div className="mt-8 flex flex-col items-center justify-center gap-4">
           <Button
             size="lg"
             className="group rounded-full hover:shadow-md active:shadow-sm"
@@ -123,8 +123,10 @@ export const MarketingHero = ({
           </Button>
           <p
             className={cn(
-              "whitespace-nowrap text-center text-gray-500",
+              "whitespace-nowrap text-center text-sm text-gray-600",
               handwritten.className,
+              "decoration underline decoration-gray-300 decoration-2 underline-offset-8",
+              "skew-x-[-10deg]",
             )}
           >
             <Trans
