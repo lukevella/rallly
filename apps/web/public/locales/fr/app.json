@@ -275,5 +275,14 @@
   "fileTooLarge": "Fichier trop volumineux",
   "fileTooLargeDescription": "Veuillez télécharger un fichier de moins de 2 Mo.",
   "errorUploadPicture": "Échec de l'envoi",
-  "errorUploadPictureDescription": "Un problème est survenu lors du chargement de votre image. Veuillez réessayer plus tard."
+  "errorUploadPictureDescription": "Un problème est survenu lors du chargement de votre image. Veuillez réessayer plus tard.",
+  "featureNameFinalize": "Finaliser le sondage",
+  "featureNameDuplicate": "Dupliquer le sondage",
+  "featureNameAdvancedSettings": "Paramètres avancés",
+  "featureNameExtendedPollLifetime": "Durée de vie des sondages prolongée",
+  "12months": "12 mois",
+  "savePercentage": "Économisez {percentage}%",
+  "1month": "1 mois",
+  "subscribe": "S'abonner",
+  "cancelAnytime": "Annulez à tout moment depuis votre <a>page de facturation</a>."
 }
