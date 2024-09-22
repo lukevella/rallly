@@ -1,5 +1,10 @@
+"use client";
+
 import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import Link from "next/link";
+
+dayjs.extend(localizedFormat);
 
 type Props = {
   title: string;
@@ -9,7 +14,7 @@ type Props = {
   slug: string;
 };
 
-const PostPreview = ({ title, date, excerpt, slug }: Props) => {
+export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:gap-8">
       <div>
@@ -33,5 +38,3 @@ const PostPreview = ({ title, date, excerpt, slug }: Props) => {
     </div>
   );
 };
-
-export default PostPreview;
