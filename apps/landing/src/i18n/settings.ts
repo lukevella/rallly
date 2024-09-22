@@ -3,7 +3,7 @@ import { InitOptions } from "i18next";
 
 export const fallbackLng = "en";
 export const languages = Object.keys(allLanguages);
-export const defaultNS = "app";
+export const defaultNS = "common";
 
 export function getOptions(
   lng = fallbackLng,

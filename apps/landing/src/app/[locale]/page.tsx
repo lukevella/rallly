@@ -1,41 +1,41 @@
-"use client";
-
-import { useTranslation } from "react-i18next";
-
 import Bonus from "@/components/home/bonus";
 import { MarketingHero } from "@/components/home/hero";
-import {
-  BigTestimonial,
-  Marketing,
-  MentionedBy,
-  UsedBy,
-} from "@/components/marketing";
-import { Trans } from "@/components/trans";
+import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
+import { getTranslation } from "@/i18n/server";
 
-const Page = () => {
-  const { t } = useTranslation(["home"]);
+export default async function Page({ params }: { params: { locale: string } }) {
+  const { t } = await getTranslation(params.locale, ["common", "home"]);
   return (
-    <Marketing
-      title={t("home:metaTitle", {
-        defaultValue: "Rallly - Schedule Group Meetings",
-      })}
-      description={t("home:metaDescription", {
-        defaultValue:
-          "Create polls and vote to find the best day or time. A free alternative to Doodle.",
-      })}
-    >
+    <Marketing>
       <MarketingHero
-        title={t("home:headline")}
+        title={t("home:headline", {
+          defaultValue: "Ditch the back-and-forth emails",
+        })}
         description={t("home:subheading", {
           defaultValue: "Streamline your scheduling process and save time",
         })}
-        callToAction={<Trans i18nKey="getStarted" defaults="Get started" />}
+        callToAction={t("getStarted")}
       />
       <Bonus />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>
   );
-};
+}
 
-export default Page;
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { t } = await getTranslation(params.locale, "home");
+  return {
+    title: t("home:metaTitle", {
+      defaultValue: "Rallly: Group Scheduling Tool",
+    }),
+    description: t("home:metaDescription", {
+      defaultValue:
+        "Create polls and vote to find the best day or time. A free alternative to Doodle.",
+    }),
+  };
+}

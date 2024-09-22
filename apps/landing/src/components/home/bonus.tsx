@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@rallly/ui";
 import { motion } from "framer-motion";
 import {

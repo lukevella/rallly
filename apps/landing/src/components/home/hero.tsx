@@ -1,3 +1,4 @@
+"use client";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { preventWidows } from "@rallly/utils";
