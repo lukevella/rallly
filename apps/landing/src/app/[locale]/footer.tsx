@@ -73,6 +73,7 @@ export const Footer: React.FunctionComponent = () => {
           <div className="my-8 text-sm text-gray-500">
             <p className="mb-4 leading-relaxed">
               <Trans
+                ns="common"
                 i18nKey="footerSponsor"
                 components={{
                   a: (
@@ -86,6 +87,7 @@ export const Footer: React.FunctionComponent = () => {
             </p>
             <div>
               <Trans
+                ns="common"
                 i18nKey="footerCredit"
                 components={{
                   a: (
@@ -131,7 +133,7 @@ export const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:w-1/6">
           <div className="mb-8 font-medium">
-            <Trans i18nKey="links" defaults="Links" />
+            <Trans ns="common" i18nKey="links" defaults="Links" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -148,7 +150,11 @@ export const Footer: React.FunctionComponent = () => {
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
               >
-                <Trans i18nKey="discussions" defaults="Discussions" />
+                <Trans
+                  ns="common"
+                  i18nKey="discussions"
+                  defaults="Discussions"
+                />
               </Link>
             </li>
             <li>
@@ -156,7 +162,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="https://rallly.co/blog"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
-                <Trans i18nKey="blog" defaults="Blog" />
+                <Trans ns="common" i18nKey="blog" defaults="Blog" />
               </Link>
             </li>
             <li>
@@ -164,7 +170,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="https://support.rallly.co"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
-                <Trans i18nKey="support" defaults="Support" />
+                <Trans ns="common" i18nKey="support" defaults="Support" />
               </Link>
             </li>
             <li>
@@ -172,7 +178,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="https://rallly.openstatus.dev"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
-                <Trans i18nKey="status" defaults="Status" />
+                <Trans ns="common" i18nKey="status" defaults="Status" />
               </Link>
             </li>
           </ul>
@@ -188,6 +194,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/best-doodle-alternative"
               >
                 <Trans
+                  ns="common"
                   i18nKey="bestDoodleAlternative"
                   defaults="Best Doodle Alternative"
                 />
@@ -199,6 +206,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/when2meet-alternative"
               >
                 <Trans
+                  ns="common"
                   i18nKey="when2MeetAlternative"
                   defaults="When2Meet Alternative"
                 />
@@ -210,6 +218,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/free-scheduling-poll"
               >
                 <Trans
+                  ns="common"
                   i18nKey="freeSchedulingPoll"
                   defaults="Free Scheduling Poll"
                 />
@@ -220,7 +229,11 @@ export const Footer: React.FunctionComponent = () => {
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/meeting-poll"
               >
-                <Trans i18nKey="meetingPoll" defaults="Meeting Poll" />
+                <Trans
+                  ns="common"
+                  i18nKey="meetingPoll"
+                  defaults="Meeting Poll"
+                />
               </Link>
             </li>
             <li>
@@ -229,6 +242,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/availability-poll"
               >
                 <Trans
+                  ns="common"
                   i18nKey="availabilityPoll"
                   defaults="Availability Poll"
                 />
@@ -238,7 +252,7 @@ export const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:w-2/6">
           <div className="mb-8 font-medium">
-            <Trans i18nKey="language" defaults="Language" />
+            <Trans ns="common" i18nKey="language" defaults="Language" />
           </div>
           <div className="mb-4">
             <LanguageSelect />
@@ -248,7 +262,7 @@ export const Footer: React.FunctionComponent = () => {
             className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
           >
             <LanguagesIcon className="mr-2 size-5" />
-            <Trans i18nKey="volunteerTranslator" /> &rarr;
+            <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;
           </Link>
         </div>
       </div>
@@ -259,7 +273,7 @@ export const Footer: React.FunctionComponent = () => {
               href="/privacy-policy"
               className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
             >
-              <Trans i18nKey="privacyPolicy" />
+              <Trans ns="common" i18nKey="privacyPolicy" />
             </Link>
           </li>
           <li>
@@ -267,7 +281,7 @@ export const Footer: React.FunctionComponent = () => {
               href="/cookie-policy"
               className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
             >
-              <Trans i18nKey="cookiePolicy" />
+              <Trans ns="common" i18nKey="cookiePolicy" />
             </Link>
           </li>
           <li>
@@ -275,13 +289,13 @@ export const Footer: React.FunctionComponent = () => {
               href="/terms-of-use"
               className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
             >
-              <Trans i18nKey="termsOfUse" />
+              <Trans ns="common" i18nKey="termsOfUse" />
             </Link>
           </li>
         </ul>
         <div className="grid gap-2.5">
           <div className="text-sm tracking-tight sm:text-right">
-            <Trans i18nKey="poweredBy" defaults="Powered by" />
+            <Trans ns="common" i18nKey="poweredBy" defaults="Powered by" />
           </div>
           <div className="flex flex-wrap items-center gap-x-8 gap-y-2 md:justify-end">
             <div>

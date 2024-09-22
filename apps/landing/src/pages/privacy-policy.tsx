@@ -1,11 +1,10 @@
 import { NextSeo } from "next-seo";
 
-import PageLayout from "@/components/layouts/page-layout";
 import { getStaticTranslations } from "@/utils/page-translations";
 
 const PrivacyPolicy = () => {
   return (
-    <PageLayout>
+    <>
       <NextSeo title="Privacy Policy" />
       <div className="prose mx-auto my-16 max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Privacy Policy</h1>
@@ -125,7 +124,7 @@ const PrivacyPolicy = () => {
           <a href="mailto:support@rallly.co">support@rallly.co</a>.
         </p>
       </div>
-    </PageLayout>
+    </>
   );
 };
 

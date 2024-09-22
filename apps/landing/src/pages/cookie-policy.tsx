@@ -1,12 +1,11 @@
 import { GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 
-import PageLayout from "@/components/layouts/page-layout";
 import { getStaticTranslations } from "@/utils/page-translations";
 
 const PrivacyPolicy = () => {
   return (
-    <PageLayout>
+    <>
       <NextSeo title="Cookie Policy" />
       <div className="prose mx-auto my-16 max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Cookie Policy</h1>
@@ -46,7 +45,7 @@ const PrivacyPolicy = () => {
           website.
         </p>
       </div>
-    </PageLayout>
+    </>
   );
 };
 

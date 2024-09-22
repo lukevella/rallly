@@ -24,10 +24,6 @@
   "createAPoll": "Create a Meeting Poll",
   "doodleAlternativeMetaTitle": "Best Free Doodle Alternative | Rallly",
   "doodleAlternativeMetaDescription": "Looking for a Doodle alternative? Try Rallly! It's free, easy to use, and doesn't require an account.",
-  "findATimeMetaTitle": "Find a Time to Meet | Rallly",
-  "findATimeMetaDescription": "Create a meeting poll in seconds, no login required.",
-  "findATimeTitle": "Find a Time to Meet",
-  "findATimeDescription": "Create a meeting poll and let your participants vote on the best time to meet.",
   "createASchedulingPoll": "Create a Scheduling Poll",
   "freeSchedulingPollMetaTitle": "Free Scheduling Poll | Rallly",
   "freeSchedulingPollMetaDescription": "Create a free scheduling poll in seconds. Ideal for organizing meetings, events, conferences, sports teams and more.",
@@ -40,5 +36,9 @@
   "when2meetAlternativeMetaTitle": "Best When2Meet Alternative: Rallly",
   "when2meetAlternativeMetaDescription": "Find a better way to schedule meetings with Rallly, the top free alternative to When2Meet. Easy to use and free.",
   "when2meetAlternative": "Still using When2Meet?",
-  "when2meetAlternativeDescription": "Create professional, ad-free meetings polls for free with Rallly."
+  "when2meetAlternativeDescription": "Create professional, ad-free meetings polls for free with Rallly.",
+  "meetingPoll": "Create professional meetings polls with Rallly",
+  "meetingPollDescription": "Meeting polls are a great way to get people's availability. Rallly lets you create beautiful meeting polls with ease.",
+  "meetingPollMetaTitle": "Meeting Poll",
+  "meetingPollMetaDescription": "Easily schedule meetings with our poll feature, ensuring everyone's availability."
 }
