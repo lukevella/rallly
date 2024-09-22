@@ -45,5 +45,6 @@
   "register_subject": "Veuillez vérifier votre adresse e-mail",
   "common_viewOn": "Voir sur {{domain}}",
   "newComment_preview": "Allez à votre sondage pour voir ce qu'ils ont dit.",
-  "newComment_heading": "Nouveau commentaire"
+  "newComment_heading": "Nouveau commentaire",
+  "newPoll_preview": "Partagez votre lien de participant pour commencer à collecter des réponses."
 }
