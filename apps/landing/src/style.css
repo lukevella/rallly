@@ -7,7 +7,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground overflow-y-auto bg-gray-100 font-sans;
+    @apply text-foreground h-full overflow-y-auto bg-gray-100 font-sans;
   }
   html {
     @apply h-full font-sans text-base;

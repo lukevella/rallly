@@ -46,7 +46,7 @@ export default async function Root({
     <html lang={locale} className={sans.className}>
       <body>
         <I18nProvider>
-          <div className="mx-auto w-full max-w-7xl space-y-12 p-4 sm:p-8">
+          <div className="mx-auto flex min-h-full w-full max-w-7xl flex-col space-y-12 p-4 sm:p-8">
             <header className="flex w-full items-center">
               <div className="flex grow items-center gap-x-12">
                 <Link className="inline-block rounded" href="/">
@@ -144,7 +144,7 @@ export default async function Root({
                 </div>
               </div>
             </header>
-            <section>{children}</section>
+            <section className="grow">{children}</section>
             <hr className="border-transparent" />
             <footer>
               <Footer />
