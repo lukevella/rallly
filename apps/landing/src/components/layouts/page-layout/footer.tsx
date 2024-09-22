@@ -1,5 +1,5 @@
 import { DiscordIcon } from "@rallly/icons";
-import languages from "@rallly/languages";
+import languages, { supportedLngs } from "@rallly/languages";
 import { Button } from "@rallly/ui/button";
 import {
   Select,
@@ -24,17 +24,21 @@ import { Trans } from "@/components/trans";
 
 export const LanguageSelect = () => {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const { i18n } = useTranslation();
   return (
     <Select
       value={i18n.language}
       onValueChange={(newLocale) => {
-        if (pathname) {
-          router.replace(`/${newLocale}${pathname}`, {
-            scroll: false,
-          });
-        }
+        const isLocalizedPath = supportedLngs.some((lng) =>
+          pathname?.startsWith(`/${lng}`),
+        );
+
+        const newPath = isLocalizedPath
+          ? pathname.replace(`/${i18n.language}`, "")
+          : pathname;
+
+        router.replace(`/${newLocale}${newPath}`);
       }}
     >
       <SelectTrigger asChild>
