@@ -13,7 +13,7 @@ const FAQ = async ({ locale }: { locale: string }) => {
   const { t } = await getTranslation(locale, ["pricing"]);
   return (
     <section>
-      <h2>
+      <h2 className="text-2xl font-bold">
         <Trans
           t={t}
           ns="pricing"
@@ -21,7 +21,7 @@ const FAQ = async ({ locale }: { locale: string }) => {
           defaults="Frequently Asked Questions"
         />
       </h2>
-      <h3 className="mb-4 mt-6">
+      <h3 className="mb-2 mt-6 text-lg font-bold">
         <Trans
           t={t}
           ns="pricing"
@@ -37,7 +37,7 @@ const FAQ = async ({ locale }: { locale: string }) => {
           defaults="Yes, most of Rallly's features are free and many users will never need to pay for anything. However, there are some features that are only available to paying customers. These features are designed to help you get the most out of Rallly."
         />
       </p>
-      <h3 className="mb-4 mt-6">
+      <h3 className="mb-2 mt-6 text-lg font-bold">
         <Trans
           t={t}
           ns="pricing"
@@ -53,7 +53,7 @@ const FAQ = async ({ locale }: { locale: string }) => {
           defaults="Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases."
         />
       </p>
-      <h3 className="mb-4 mt-6">
+      <h3 className="mb-2 mt-6 text-lg font-bold">
         <Trans
           t={t}
           ns="pricing"
@@ -69,7 +69,7 @@ const FAQ = async ({ locale }: { locale: string }) => {
           defaults="Polls become inactive when all date options are in the past AND the poll has not been accessed for over 30 days. Inactive polls are automatically deleted if you do not have a paid subscription."
         />
       </p>
-      <h3 className="mb-4 mt-6">
+      <h3 className="mb-2 mt-6 text-lg font-bold">
         <Trans
           t={t}
           ns="pricing"
@@ -95,7 +95,7 @@ const FAQ = async ({ locale }: { locale: string }) => {
         />
       </p>
 
-      <h3 className="mb-4 mt-6">
+      <h3 className="mb-2 mt-6 text-lg font-bold">
         <Trans
           t={t}
           ns="pricing"
@@ -182,7 +182,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
             <TrendingUpIcon className="text-indigo mr-2 mt-0.5 size-6 shrink-0" />
           </div>
           <div className="mb-1 flex items-center gap-x-2">
-            <h3 className="text-sm">
+            <h3 className="text-sm font-bold">
               <Trans
                 t={t}
                 ns="pricing"
@@ -201,10 +201,8 @@ export default async function Page({ params }: { params: { locale: string } }) {
           </p>
         </div>
       </section>
-      <hr />
-      <section>
-        <FAQ locale={params.locale} />
-      </section>
+      <hr className="border-transparent" />
+      <FAQ locale={params.locale} />
     </article>
   );
 }

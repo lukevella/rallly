@@ -85,14 +85,14 @@ export const MarketingHero = ({
   return (
     <article className="max-w-full space-y-12 text-center">
       <header className="p-6">
-        <div className="">
+        <div>
           <Link
             locale="en"
             href="/blog/rallly-3-0-self-hosting"
             className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
           >
             <Badge variant="green">
-              <Trans i18nKey="home:new" defaults="New" />
+              <Trans ns="home" i18nKey="new" defaults="New" />
             </Badge>
             <span className="flex items-center gap-x-1">
               <Trans
@@ -128,7 +128,8 @@ export const MarketingHero = ({
             )}
           >
             <Trans
-              i18nKey="home:hint"
+              ns="home"
+              i18nKey="hint"
               defaults="It's free! No login required."
             />
           </p>
