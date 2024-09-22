@@ -3,16 +3,11 @@ import "../../style.css";
 
 import languages from "@rallly/languages";
 import { Viewport } from "next";
-import { Inter } from "next/font/google";
 import React from "react";
 
 import PageLayout from "@/components/layouts/page-layout";
+import { sans } from "@/fonts/sans";
 import { I18nProvider } from "@/i18n/client";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export async function generateStaticParams() {
   return Object.keys(languages).map((locale) => ({ locale }));
@@ -33,7 +28,7 @@ export default function Root({
   params: { locale: string };
 }) {
   return (
-    <html lang={locale} className={inter.className}>
+    <html lang={locale} className={sans.className}>
       <body>
         <I18nProvider>
           <PageLayout>{children}</PageLayout>

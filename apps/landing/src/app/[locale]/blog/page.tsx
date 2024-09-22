@@ -17,10 +17,17 @@ export default async function Page({ params }: { params: URLParams }) {
     "excerpt",
   ]);
   return (
-    <section>
-      <h1 className="mb-16 text-4xl font-bold tracking-tight">
-        <Trans t={t} ns="blog" i18nKey="recentPosts" defaults="Recent Posts" />
-      </h1>
+    <section className="space-y-12">
+      <header className="p-6">
+        <h1 className="text-4xl font-bold tracking-tight">
+          <Trans
+            t={t}
+            ns="blog"
+            i18nKey="recentPosts"
+            defaults="Recent Posts"
+          />
+        </h1>
+      </header>
       <div className="mb-16 grid grid-cols-1 gap-8">
         {allPosts.map((post) => (
           <PostPreview

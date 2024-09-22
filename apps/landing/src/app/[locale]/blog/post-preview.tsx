@@ -16,7 +16,7 @@ type Props = {
 
 export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:gap-8">
+    <article className="flex flex-col gap-2 sm:flex-row sm:gap-8">
       <div>
         <div className="text-muted-foreground w-48 pt-1 sm:text-right">
           <time dateTime={date}>{dayjs(date).format("LL")}</time>
@@ -35,6 +35,6 @@ export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
         </h3>
         <p className="mb-4 text-lg leading-relaxed text-gray-600">{excerpt}</p>
       </div>
-    </div>
+    </article>
   );
 };

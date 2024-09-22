@@ -25,15 +25,11 @@ The update includes some sweet animations that are not only delightful but also 
 to the right path.
 The name field and save button were often missed so the animations should help draw attention to them.
 
-<p style="text-align:center">![Device data](/static/images/animations.gif)</p>
+![Device data](/static/images/animations.gif)
 
 ## Increased touch area
 
-<div className="text-center">
-  <div className="inline-block">
-    ![Device data](/static/images/touchable-area.png)
-  </div>
-</div>
+![Device data](/static/images/touchable-area.png)
 
 Previously, you would need to touch the tiny checkbox on the right to toggle a vote. Quite annoying if
 you're on a tiny screen. Well that's not the case anymore. The entire row is now touchable so you don't

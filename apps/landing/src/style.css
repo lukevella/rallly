@@ -7,10 +7,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground overflow-y-auto bg-gray-200/50;
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
+    @apply text-foreground overflow-y-auto bg-gray-100 font-sans;
   }
   html {
     @apply h-full font-sans text-base;
@@ -46,6 +43,63 @@
 }
 
 @layer components {
+  .blog-content {
+    h2,
+    h3,
+    h4 {
+      @apply mb-4 mt-12;
+    }
+    h2 {
+      @apply text-2xl font-bold;
+    }
+    h3 {
+      @apply text-xl font-semibold;
+    }
+    h4 {
+      @apply text-lg font-semibold;
+    }
+    p {
+      @apply mb-6 leading-relaxed;
+    }
+    p:has(> img) {
+      @apply flex items-center justify-center overflow-hidden rounded-xl border bg-gray-50  p-2;
+    }
+    img {
+      @apply mx-auto rounded-lg border;
+    }
+    ul,
+    ol {
+      @apply mb-6 ml-6;
+    }
+    ul {
+      @apply list-disc;
+    }
+    ol {
+      @apply list-decimal;
+    }
+    li {
+      @apply mb-2;
+    }
+    hr {
+      @apply my-12;
+    }
+    a {
+      @apply text-primary-600 hover:underline;
+    }
+    blockquote {
+      @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-700;
+    }
+    pre {
+      @apply my-6 overflow-x-auto rounded-lg bg-gray-100 p-4;
+    }
+    code {
+      @apply rounded bg-gray-100 px-1 py-0.5 text-sm;
+    }
+    .cursive-heading {
+      @apply font-cursive mb-6 text-3xl;
+    }
+  }
+
   .text-link {
     @apply text-primary-600 hover:text-primary-600 focus-visible:ring-primary-600 rounded-md font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }
@@ -149,5 +203,20 @@
   .bg-pattern {
     background-color: #f9fafb;
     background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f3f4f6' fill-opacity='0.75' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .font-cursive {
+    font-family: var(--font-dancing-script);
+  }
+  .font-handwritten {
+    font-family: var(--font-caveat);
+  }
+}
+
+@layer base {
+  .cursive {
+    font-family: var(--font-dancing-script);
+  }
+  .handwritten {
+    font-family: var(--font-caveat);
   }
 }

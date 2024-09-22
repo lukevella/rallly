@@ -1,4 +1,6 @@
 "use client";
+import { handwritten } from "@rallly/fonts/handwritten";
+import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { preventWidows } from "@rallly/utils";
@@ -81,50 +83,60 @@ export const MarketingHero = ({
   callToAction: React.ReactNode;
 }) => {
   return (
-    <div className="mt-8 max-w-full text-center sm:mt-16">
-      <div className="mb-8">
-        <Link
-          locale="en"
-          href="/blog/rallly-3-0-self-hosting"
-          className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
-        >
-          <Badge variant="green">
-            <Trans i18nKey="home:new" defaults="New" />
-          </Badge>
-          <span className="flex items-center gap-x-1">
-            <Trans
-              i18nKey="home:selfHostingBlog"
-              defaults="Rallly 3.0 Self-Hosting"
-            />
-            <ChevronRightIcon className="-mr-1 size-4" aria-hidden="true" />
-          </span>
-        </Link>
-      </div>
-      <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
-        {preventWidows(title)}
-      </h1>
-      <p className="mx-auto max-w-3xl text-lg text-gray-500 sm:text-xl sm:leading-relaxed">
-        {preventWidows(description)}
-      </p>
-      <div className="my-8 flex flex-col items-center justify-center gap-4">
-        <Button
-          size="lg"
-          className="group rounded-full hover:shadow-md active:shadow-sm"
-          variant="primary"
-          asChild
-        >
-          <Link href={linkToApp("/new")}>
-            {callToAction}
-            <ChevronRightIcon className="-ml-1 size-5 transition-transform group-active:translate-x-1" />
+    <article className="max-w-full space-y-12 text-center">
+      <header className="p-6">
+        <div className="">
+          <Link
+            locale="en"
+            href="/blog/rallly-3-0-self-hosting"
+            className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
+          >
+            <Badge variant="green">
+              <Trans i18nKey="home:new" defaults="New" />
+            </Badge>
+            <span className="flex items-center gap-x-1">
+              <Trans
+                i18nKey="home:selfHostingBlog"
+                defaults="Rallly 3.0 Self-Hosting"
+              />
+              <ChevronRightIcon className="-mr-1 size-4" aria-hidden="true" />
+            </span>
           </Link>
-        </Button>
-        <div className="whitespace-nowrap text-center text-sm font-medium text-gray-500">
-          <Trans i18nKey="home:hint" defaults="It's free! No login required." />
         </div>
-      </div>
-      <div className="mt-16">
+        <h1 className="mb-4 mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
+          {preventWidows(title)}
+        </h1>
+        <p className="mx-auto max-w-3xl text-lg text-gray-500 sm:text-xl sm:leading-relaxed">
+          {preventWidows(description)}
+        </p>
+        <div className="mt-6 flex flex-col items-center justify-center gap-4">
+          <Button
+            size="lg"
+            className="group rounded-full hover:shadow-md active:shadow-sm"
+            variant="primary"
+            asChild
+          >
+            <Link href={linkToApp("/new")}>
+              {callToAction}
+              <ChevronRightIcon className="-ml-1 size-5 transition-transform group-active:translate-x-1" />
+            </Link>
+          </Button>
+          <p
+            className={cn(
+              "whitespace-nowrap text-center text-gray-500",
+              handwritten.className,
+            )}
+          >
+            <Trans
+              i18nKey="home:hint"
+              defaults="It's free! No login required."
+            />
+          </p>
+        </div>
+      </header>
+      <section>
         <Screenshot />
-      </div>
-    </div>
+      </section>
+    </article>
   );
 };

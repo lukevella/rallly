@@ -17,7 +17,12 @@ function createAppUrl(subpath) {
 const nextConfig = {
   productionBrowserSourceMaps: true,
   output: "standalone",
-  transpilePackages: ["@rallly/icons", "@rallly/ui", "@rallly/tailwind-config"],
+  transpilePackages: [
+    "@rallly/icons",
+    "@rallly/ui",
+    "@rallly/tailwind-config",
+    "next-mdx-remote",
+  ],
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
