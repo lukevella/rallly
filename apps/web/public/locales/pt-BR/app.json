@@ -275,5 +275,14 @@
   "fileTooLarge": "Arquivo muito grande",
   "fileTooLargeDescription": "Por favor, envie um arquivo menor que 2MB.",
   "errorUploadPicture": "Falha no envio",
-  "errorUploadPictureDescription": "Houve um problema ao enviar sua foto. Por favor, tente novamente mais tarde."
+  "errorUploadPictureDescription": "Houve um problema ao enviar sua foto. Por favor, tente novamente mais tarde.",
+  "featureNameFinalize": "Finalizar enquete",
+  "featureNameDuplicate": "Duplicar enquete",
+  "featureNameAdvancedSettings": "Configurações Avançadas",
+  "featureNameExtendedPollLifetime": "Duração da Enquete Estendida",
+  "12months": "12 meses",
+  "savePercentage": "Economize {percentage}%",
+  "1month": "1 mês",
+  "subscribe": "Assine",
+  "cancelAnytime": "Cancele a qualquer momento na <a>página de cobrança</a>."
 }
