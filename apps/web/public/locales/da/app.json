@@ -275,5 +275,14 @@
   "fileTooLarge": "Filen er for stor",
   "fileTooLargeDescription": "Upload venligst en fil mindre end 2 MB.",
   "errorUploadPicture": "Fejl ved overførsel",
-  "errorUploadPictureDescription": "Der opstod et problem med at uploade dit billede. Prøv venligst igen senere."
+  "errorUploadPictureDescription": "Der opstod et problem med at uploade dit billede. Prøv venligst igen senere.",
+  "featureNameFinalize": "Afslut afstemning",
+  "featureNameDuplicate": "Kopier afstemning",
+  "featureNameAdvancedSettings": "Avancerede indstillinger",
+  "featureNameExtendedPollLifetime": "Udvidet afstemningstid",
+  "12months": "12 måneder",
+  "savePercentage": "Spar {percentage}%",
+  "1month": "1 måned",
+  "subscribe": "Abonner",
+  "cancelAnytime": "Annuller når som helst fra din <a>faktureringsside</a>."
 }
