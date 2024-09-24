@@ -275,5 +275,14 @@
   "fileTooLarge": "Bestand te groot",
   "fileTooLargeDescription": "Upload een bestand kleiner dan 2MB.",
   "errorUploadPicture": "Uploaden is mislukt",
-  "errorUploadPictureDescription": "Er is een probleem opgetreden bij het uploaden van je afbeelding. Probeer het later opnieuw."
+  "errorUploadPictureDescription": "Er is een probleem opgetreden bij het uploaden van je afbeelding. Probeer het later opnieuw.",
+  "featureNameFinalize": "Poll afronden",
+  "featureNameDuplicate": "Poll kopiëren",
+  "featureNameAdvancedSettings": "Geavanceerde instellingen",
+  "featureNameExtendedPollLifetime": "Verlengde levensduur polls",
+  "12months": "12 maanden",
+  "savePercentage": "Bespaar {percentage}%",
+  "1month": "1 maand",
+  "subscribe": "Aanmelden",
+  "cancelAnytime": "Je kunt op ieder moment annuleren via de <a>factureringspagina</a>."
 }
