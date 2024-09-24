@@ -266,5 +266,11 @@
   "timeZoneChangeDetectorMessage": "Ihre Zeitzone wurde auf <b>{currentTimeZone}</b> geändert. Möchten Sie Ihre Einstellungen aktualisieren?",
   "yesUpdateTimezone": "Ja, aktualisiere meine Zeitzone",
   "noKeepCurrentTimezone": "Nein, behalte die aktuelle Zeitzone",
-  "annualBenefit": "{count} Monate kostenlos"
+  "annualBenefit": "{count} Monate kostenlos",
+  "removeAvatar": "Entfernen",
+  "uploadProfilePicture": "Hochladen",
+  "fileTooLarge": "Datei zu groß",
+  "featureNameAdvancedSettings": "Erweiterte Einstellungen",
+  "12months": "12 Monate",
+  "1month": "1 Monat"
 }
