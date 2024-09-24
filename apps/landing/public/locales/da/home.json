@@ -36,5 +36,9 @@
   "new": "Ny",
   "metaTitle": "Rallly - Planlæg gruppemøder",
   "metaDescription": "Opret afstemninger og stemme for at finde den bedste dag eller tid. Et gratis alternativ til Doodle.",
-  "selfHostingBlog": "Rallly 3.0 selv-hosting"
+  "selfHostingBlog": "Rallly 3.0 selv-hosting",
+  "when2meetAlternativeMetaTitle": "Bedste When2Meet alternativ: Rallly",
+  "when2meetAlternativeMetaDescription": "Find en bedre måde at planlægge møder med Rallly, det bedste gratis alternativ til When2Meet. Let at bruge og gratis.",
+  "when2meetAlternative": "Bruger du stadig When2Meet?",
+  "when2meetAlternativeDescription": "Opret professionelle, annoncefri mødeafstemninger gratis med Rallly."
 }
