@@ -270,8 +270,19 @@
   "removeAvatar": "Entfernen",
   "uploadProfilePicture": "Hochladen",
   "profilePictureDescription": "Bis zu 2 MB, JPG oder PNG",
+  "invalidFileType": "Ungültiger Dateityp",
+  "invalidFileTypeDescription": "Bitte laden Sie eine JPG oder PNG Datei hoch.",
   "fileTooLarge": "Datei zu groß",
+  "fileTooLargeDescription": "Bitte laden Sie eine Datei kleiner als 2 MB hoch.",
+  "errorUploadPicture": "Hochladen fehlgeschlagen",
+  "errorUploadPictureDescription": "Beim Hochladen deines Bildes ist ein Fehler aufgetreten. Bitte versuche es später erneut.",
+  "featureNameFinalize": "Umfrage abschließen",
+  "featureNameDuplicate": "Umfrage kopieren",
   "featureNameAdvancedSettings": "Erweiterte Einstellungen",
+  "featureNameExtendedPollLifetime": "Verlängerte Umfragedauer",
   "12months": "12 Monate",
-  "1month": "1 Monat"
+  "savePercentage": "Spare {percentage}%",
+  "1month": "1 Monat",
+  "subscribe": "Abonnieren",
+  "cancelAnytime": "Kündige jederzeit auf deiner <a>Abrechnungsseite</a>."
 }
