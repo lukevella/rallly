@@ -224,7 +224,7 @@
   "accountNotLinkedDescription": "Ein Benutzer mit dieser E-Mail existiert bereits. Bitte melde dich mit der ursprünglichen Methode an.",
   "or": "Oder",
   "autoTimeZone": "Automatische Zeitzonen-Konvertierung",
-  "autoTimeZoneHelp": "Aktivieren Sie diese Einstellung, um die Terminzeiten automatisch an die lokale Zeitzone jedes Teilnehmers anzupassen.",
+  "autoTimeZoneHelp": "Aktiviere diese Einstellung, um die Terminzeiten automatisch an die lokale Zeitzone jedes Teilnehmers anzupassen.",
   "commentsDisabled": "Kommentare wurden deaktiviert",
   "allParticipants": "Alle Teilnehmer",
   "noParticipantsDescription": "Klicke auf <b>Teilen</b>, um Teilnehmer einzuladen",
