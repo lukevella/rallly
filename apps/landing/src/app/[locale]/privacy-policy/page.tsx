@@ -1,11 +1,6 @@
-import { NextSeo } from "next-seo";
-
-import { getStaticTranslations } from "@/utils/page-translations";
-
-const PrivacyPolicy = () => {
+export default function PrivacyPolicy() {
   return (
     <>
-      <NextSeo title="Privacy Policy" />
       <div className="prose mx-auto my-16 max-w-3xl rounded-lg bg-white p-8 shadow-md">
         <h1>Privacy Policy</h1>
         <p>Last updated: 1 August 2023</p>
@@ -126,8 +121,11 @@ const PrivacyPolicy = () => {
       </div>
     </>
   );
-};
+}
 
-export default PrivacyPolicy;
-
-export const getStaticProps = getStaticTranslations();
+export function generateMetadata() {
+  return {
+    title: "Privacy Policy",
+    description: "This is the privacy policy for our website.",
+  };
+}
