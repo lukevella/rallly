@@ -174,12 +174,12 @@ export default async function Page({ params }: { params: { locale: string } }) {
         <PriceTables />
       </section>
       <section>
-        <div className="rounded-md border bg-gradient-to-b from-cyan-50 to-cyan-50/60 px-5 py-4 text-cyan-800">
-          <div className="mb-2">
-            <TrendingUpIcon className="text-indigo mr-2 mt-0.5 size-6 shrink-0" />
+        <div className="flex flex-col gap-4 rounded-md border border-cyan-800/10 bg-gradient-to-b from-cyan-50 to-cyan-50/60 p-4 text-cyan-800 shadow-sm sm:flex-row sm:gap-6 sm:p-5">
+          <div>
+            <TrendingUpIcon className="size-6" />
           </div>
-          <div className="mb-1 flex items-center gap-x-2">
-            <h3 className="text-sm font-bold">
+          <div>
+            <h3 className="mb-2 text-sm font-bold">
               <Trans
                 t={t}
                 ns="pricing"
@@ -187,15 +187,15 @@ export default async function Page({ params }: { params: { locale: string } }) {
                 defaults="Upgrade now, save later"
               />
             </h3>
+            <p className="text-sm">
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="earlyAdopterDescription"
+                defaults="As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases."
+              />
+            </p>
           </div>
-          <p className="text-sm">
-            <Trans
-              t={t}
-              ns="pricing"
-              i18nKey="earlyAdopterDescription"
-              defaults="As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases."
-            />
-          </p>
         </div>
       </section>
       <hr className="border-transparent" />
