@@ -6,6 +6,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getTranslation } from "@/i18n/server";
 import { linkToApp } from "@/lib/linkToApp";
+import { absoluteUrl } from "@/utils/absolute-url";
 
 import { PriceTables } from "./pricing-table";
 
@@ -137,11 +138,7 @@ export const UpgradeButton = async ({
         name="period"
         value={annual ? "yearly" : "monthly"}
       />
-      <input
-        type="hidden"
-        name="return_path"
-        value={window.location.pathname}
-      />
+      <input type="hidden" name="return_path" value={absoluteUrl()} />
       <Button className="w-full" type="submit" variant="primary">
         {children || (
           <Trans t={t} ns="pricing" i18nKey="upgrade" defaults="Upgrade" />
