@@ -144,7 +144,7 @@ export default async function Root({
                 </div>
               </div>
             </header>
-            <section className="grow">{children}</section>
+            <section className="relative grow">{children}</section>
             <hr className="border-transparent" />
             <footer>
               <Footer />

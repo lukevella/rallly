@@ -19,7 +19,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex h-96 w-full items-center justify-center">
+    <div className="inset-0 flex h-96 h-full w-full items-center justify-center lg:absolute">
       <div className="space-y-8">
         <div className="space-y-4 text-center">
           {icon}
