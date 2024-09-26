@@ -1,76 +1,70 @@
-"use client";
-import { cn } from "@rallly/ui";
-import { motion } from "framer-motion";
+import { prisma } from "@rallly/database";
+import { TFunction } from "i18next";
 import {
   CalendarCheck2Icon,
   LanguagesIcon,
   Users2Icon,
   ZapIcon,
 } from "lucide-react";
+import { Trans } from "react-i18next/TransWithoutContext";
 
-import { Trans } from "@/components/trans";
-import { IconComponent } from "@/types";
+import { BonusItem } from "@/components/home/bonus-item";
 
-const Item = ({
-  icon: Icon,
-  className,
-  children,
-  delay = 0,
-}: React.PropsWithChildren<{
-  icon: IconComponent;
-  className?: string;
-  delay?: number;
-}>) => {
-  return (
-    <motion.div
-      transition={{
-        delay,
-        type: "spring",
-        bounce: 0.3,
-      }}
-      initial={{ opacity: 0, y: -20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: "all" }}
-      className="flex justify-center"
-    >
-      <div className="flex items-center justify-center gap-x-2.5 rounded-full border bg-gray-50 p-1 pr-6 shadow-sm">
-        <span
-          className={cn("bg-primary rounded-full p-2 text-gray-50", className)}
-        >
-          <Icon className="size-4" />
-        </span>
-        <div className="text-sm font-semibold">{children}</div>
-      </div>
-    </motion.div>
-  );
-};
-
-const Bonus: React.FunctionComponent = () => {
+export async function Bonus({ t }: { t: TFunction }) {
+  const userCount = await prisma.user.count();
   return (
     <div className="mx-auto flex flex-wrap justify-center  gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
-      <Item className="bg-indigo-600" icon={Users2Icon}>
+      <BonusItem
+        className="bg-indigo-600"
+        icon={<Users2Icon className="size-4" />}
+      >
         <Trans
-          i18nKey="home:statsUsersRegistered"
-          defaults="45k+ registered users"
+          t={t}
+          i18nKey="statsUsersRegistered"
+          ns="home"
+          defaults="{count, number, ::compact-short} registered users"
+          values={{ count: userCount }}
         />
-      </Item>
-      <Item delay={0.25} className="bg-pink-600" icon={CalendarCheck2Icon}>
+      </BonusItem>
+      <BonusItem
+        delay={0.25}
+        className="bg-pink-600"
+        icon={<CalendarCheck2Icon className="size-4" />}
+      >
         <Trans
-          i18nKey="home:statsPollsCreated"
-          defaults="100k+ polls created"
+          t={t}
+          ns="home"
+          i18nKey="statsPollsCreated"
+          values={{ count: 200 * 1000 }}
+          defaults="{count, number, ::compact-short}+ polls created"
         />
-      </Item>
-      <Item delay={0.5} className="bg-gray-800" icon={LanguagesIcon}>
+      </BonusItem>
+      <BonusItem
+        delay={0.5}
+        className="bg-gray-800"
+        icon={<LanguagesIcon className="size-4" />}
+      >
         <Trans
-          i18nKey="home:statsLanguagesSupported"
+          t={t}
+          ns="home"
+          i18nKey="statsLanguagesSupported"
           defaults="10+ languages supported"
         />
-      </Item>
-      <Item delay={0.75} className="bg-amber-500" icon={ZapIcon}>
-        <Trans i18nKey="home:noLoginRequired" defaults="No login required" />
-      </Item>
+      </BonusItem>
+      <BonusItem
+        delay={0.75}
+        className="bg-teal-500"
+        icon={<ZapIcon className="size-4" />}
+      >
+        <Trans
+          t={t}
+          ns="home"
+          i18nKey="noLoginRequired"
+          defaults="No login required"
+        />
+      </BonusItem>
     </div>
   );
-};
+}
 
 export default Bonus;

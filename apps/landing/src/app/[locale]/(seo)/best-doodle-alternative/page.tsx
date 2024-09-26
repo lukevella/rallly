@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
         })}
         callToAction={<Trans t={t} ns="home" i18nKey="createAPoll" />}
       />
-      <Bonus />
+      <Bonus t={t} />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>
