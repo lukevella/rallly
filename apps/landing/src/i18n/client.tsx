@@ -2,7 +2,6 @@
 import i18next, { Namespace } from "i18next";
 import ICU from "i18next-icu";
 import resourcesToBackend from "i18next-resources-to-backend";
-import { useParams } from "next/navigation";
 import React from "react";
 import {
   I18nextProvider,
@@ -32,10 +31,13 @@ export function useTranslation(ns?: Namespace) {
   return useTranslationOrg(ns);
 }
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const params = useParams<{ locale: string }>();
-  const locale = params?.locale ?? defaultNS;
-
+export function I18nProvider({
+  locale,
+  children,
+}: {
+  locale: string;
+  children: React.ReactNode;
+}) {
   const res = useAsync(async () => {
     return await initTranslations(locale);
   });

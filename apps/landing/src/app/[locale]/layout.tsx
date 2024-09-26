@@ -45,7 +45,7 @@ export default async function Root({
   return (
     <html lang={locale} className={sans.className}>
       <body>
-        <I18nProvider>
+        <I18nProvider locale={locale}>
           <div className="mx-auto flex min-h-full w-full max-w-7xl flex-col space-y-12 p-4 sm:p-8">
             <header className="flex w-full items-center">
               <div className="flex grow items-center gap-x-12">
