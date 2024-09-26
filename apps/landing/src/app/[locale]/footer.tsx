@@ -37,7 +37,7 @@ const LanguageSelect = () => {
         );
 
         const newPath = isLocalizedPath
-          ? pathname.replace(`/${i18n.language}`, "")
+          ? pathname.replace(new RegExp(`^/${i18n.language}`), "")
           : pathname;
 
         router.replace(`/${newLocale}${newPath}`);
