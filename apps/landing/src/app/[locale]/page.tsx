@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
         })}
         callToAction={t("getStarted")}
       />
-      <Bonus />
+      <Bonus t={t} />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>

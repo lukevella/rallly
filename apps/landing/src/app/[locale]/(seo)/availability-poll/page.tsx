@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
           />
         }
       />
-      <Bonus />
+      <Bonus t={t} />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>
