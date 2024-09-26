@@ -35,7 +35,7 @@ export async function Bonus({ t }: { t: TFunction }) {
           t={t}
           ns="home"
           i18nKey="statsPollsCreated"
-          values={{ count: 200 * 1000 }}
+          values={{ count: 300 * 1000 }}
           defaults="{count, number, ::compact-short}+ polls created"
         />
       </BonusItem>

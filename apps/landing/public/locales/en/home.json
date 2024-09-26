@@ -10,7 +10,7 @@
   "ericQuote": "“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”",
   "viaTrustpilot": "via Trustpilot",
   "ericJobTitle": "Executive Assistant at MIT",
-  "statsUsersRegistered": "{count, number, ::compact-short} registered users",
+  "statsUsersRegistered": "{count, number, ::compact-short}+ registered users",
   "statsPollsCreated": "{count, number, ::compact-short}+ polls created",
   "statsLanguagesSupported": "10+ languages supported",
   "hint": "It's free! No login required.",
