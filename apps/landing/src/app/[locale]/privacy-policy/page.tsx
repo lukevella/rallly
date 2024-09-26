@@ -125,7 +125,7 @@ export default function PrivacyPolicy() {
 
 export function generateMetadata() {
   return {
-    title: "Privacy Policy",
-    description: "This is the privacy policy for our website.",
+    title: "Rallly: Privacy Policy",
+    description: "The privacy policy for Rallly.",
   };
 }

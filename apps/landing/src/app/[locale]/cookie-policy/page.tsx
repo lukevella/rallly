@@ -45,7 +45,7 @@ export default function CookiePolicy() {
 
 export function generateMetadata() {
   return {
-    title: "Cookie Policy",
-    description: "This is the cookie policy for our website.",
+    title: "Rallly: Cookie Policy",
+    description: "The cookie policy for Rallly.",
   };
 }
