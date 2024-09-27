@@ -10,6 +10,8 @@
   "ericQuote": "\"Ha emailekben menedzseled az időpontjaidat, erősen ajánlom, hogy tégy egy próbát és engedd, hogy a Rallly leegyszerűsítse a szervezési feladataid jobban rendszerezett és kevésbé stresszes napokat eredményezve.\"",
   "viaTrustpilot": "Trustpilot által",
   "ericJobTitle": "Ügyvezető Asszisztens az MIT-nál",
+  "statsUsersRegistered": "{count, number, ::compact-short}+ regisztrált felhasználó",
+  "statsPollsCreated": "{count, number, ::compact-short}+ szavazás létrehozva",
   "statsLanguagesSupported": "Több mint 10 támogatott nyelv",
   "hint": "Ingyenes! Nem igényel regisztrációt.",
   "doodleAlternative": "A legjobb ingyenes Doodle alternatíva",
@@ -34,5 +36,9 @@
   "when2meetAlternativeMetaTitle": "Legjobb When2Meet alternatíva: Rallly",
   "when2meetAlternativeMetaDescription": "Találj jobb módot a találkozók időpontjainak megszervezésére a Rallly segítségével, a When2Meet legjobb ingyenes alternatívájával. Könnyen használható és ingyenes.",
   "when2meetAlternative": "Még mindig When2Meet-et használsz?",
-  "when2meetAlternativeDescription": "Hozz létre profi, hirdetésmentes találkozó szavazásokat ingyen a Rallly segítségével."
+  "when2meetAlternativeDescription": "Hozz létre profi, hirdetésmentes találkozó szavazásokat ingyen a Rallly segítségével.",
+  "meetingPoll": "Hozz létre profi találkozó szavazásokat a Rallly segítségével",
+  "meetingPollDescription": "Találkozó szavazás egy szuper módja az emberek elérhetőségének áttekintésére. Rallly segítségével könnyedén hozhatsz létre csodálatos szavazások.",
+  "meetingPollMetaTitle": "Találkozó szavazás",
+  "meetingPollMetaDescription": "Ütemezz könnyedén találkozókat a szavazás funkcióval, biztosítva, hogy mindenki ráérjen."
 }
