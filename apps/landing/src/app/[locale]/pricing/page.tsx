@@ -1,17 +1,14 @@
-import { Button } from "@rallly/ui/button";
+import { TFunction } from "i18next";
 import { TrendingUpIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getTranslation } from "@/i18n/server";
 import { linkToApp } from "@/lib/linkToApp";
-import { absoluteUrl } from "@/utils/absolute-url";
 
 import { PriceTables } from "./pricing-table";
 
-const FAQ = async ({ locale }: { locale: string }) => {
-  const { t } = await getTranslation(locale, ["pricing"]);
+const FAQ = async ({ t }: { t: TFunction }) => {
   return (
     <section>
       <h2 className="text-2xl font-bold">
@@ -125,29 +122,6 @@ const FAQ = async ({ locale }: { locale: string }) => {
   );
 };
 
-export const UpgradeButton = async ({
-  locale,
-  children,
-  annual,
-}: React.PropsWithChildren<{ annual?: boolean; locale: string }>) => {
-  const { t } = await getTranslation(locale, ["common", "pricing"]);
-  return (
-    <form method="POST" action={linkToApp("/api/stripe/checkout")}>
-      <input
-        type="hidden"
-        name="period"
-        value={annual ? "yearly" : "monthly"}
-      />
-      <input type="hidden" name="return_path" value={absoluteUrl()} />
-      <Button className="w-full" type="submit" variant="primary">
-        {children || (
-          <Trans t={t} ns="pricing" i18nKey="upgrade" defaults="Upgrade" />
-        )}
-      </Button>
-    </form>
-  );
-};
-
 export default async function Page({ params }: { params: { locale: string } }) {
   const { t } = await getTranslation(params.locale, ["common", "pricing"]);
   return (
@@ -199,7 +173,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
         </div>
       </section>
       <hr className="border-transparent" />
-      <FAQ locale={params.locale} />
+      <FAQ t={t} />
     </article>
   );
 }
