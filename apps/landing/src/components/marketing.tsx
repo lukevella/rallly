@@ -1,24 +1,23 @@
-import { m } from "framer-motion";
+"use client";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { NextSeo } from "next-seo";
 import React from "react";
 
-import Bonus from "@/components/home/bonus";
 import { Trans } from "@/components/trans";
 
-// const UsedBy = () => {
+// export const UsedBy = () => {
 //   return (
 //     <div>
 //       <h2 className="mx-auto mb-8 max-w-2xl text-center leading-relaxed">
-//         Used by employees of some of the world's most influential companies and
+//         Trusted by some of the world's most influential companies and
 //         organizations
 //       </h2>
 //       <div className="flex flex-wrap justify-center gap-8">
 //         <div className="relative h-12 w-24 grayscale hover:grayscale-0">
 //           <Image
-//             src="/icrc-logo.svg"
+//             src="/static/images/icrc-logo.svg"
 //             fill
 //             style={{ objectFit: "contain" }}
 //             alt="ICRC"
@@ -77,7 +76,7 @@ import { Trans } from "@/components/trans";
 //   );
 // };
 
-// const Testimonials = () => {
+// export const Testimonials = () => {
 //   return (
 //     <div>
 //       <h2 className="mb-12 text-center">Testimonials</h2>
@@ -112,7 +111,7 @@ import { Trans } from "@/components/trans";
 //   );
 // };
 
-// const Testimonial = ({
+// export const Testimonial = ({
 //   author,
 //   children,
 //   logo,
@@ -158,7 +157,7 @@ const Mention = ({
   delay?: number;
 }>) => {
   return (
-    <m.div
+    <motion.div
       transition={{
         delay,
         type: "spring",
@@ -171,11 +170,11 @@ const Mention = ({
     >
       <div className="flex items-start justify-between">{logo}</div>
       <p className="grow text-center text-base">{children}</p>
-    </m.div>
+    </motion.div>
   );
 };
 
-const MentionedBy = () => {
+export const MentionedBy = () => {
   return (
     <div>
       <div className="grid gap-8 md:grid-cols-4">
@@ -256,9 +255,9 @@ const MentionedBy = () => {
   );
 };
 
-const BigTestimonial = () => {
+export const BigTestimonial = () => {
   return (
-    <m.div
+    <motion.div
       transition={{
         duration: 1,
         type: "spring",
@@ -311,21 +310,10 @@ const BigTestimonial = () => {
           </div>
         </div>
       </div>
-    </m.div>
+    </motion.div>
   );
 };
 
-export const Marketing = ({
-  children,
-  ...props
-}: React.PropsWithChildren<{ title: string; description: string }>) => {
-  return (
-    <div className="space-y-12 sm:space-y-24">
-      <NextSeo {...props} />
-      {children}
-      <Bonus />
-      <BigTestimonial />
-      <MentionedBy />
-    </div>
-  );
+export const Marketing = ({ children }: React.PropsWithChildren) => {
+  return <div className="space-y-12 sm:space-y-24">{children}</div>;
 };
