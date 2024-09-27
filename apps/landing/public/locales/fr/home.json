@@ -10,6 +10,8 @@
   "ericQuote": "« Si votre travail de planification se fait via emails, fe vous encourage vivement à essayer Rallly \n et laisser le logiciel simplifier ce travail pour une journée de travail plus organisée et moins stressante.»",
   "viaTrustpilot": "via Trustpilot",
   "ericJobTitle": "Assistant exécutif au MIT",
+  "statsUsersRegistered": "{count, number, ::compact-short}+ utilisateurs enregistrés",
+  "statsPollsCreated": "{count, number, ::compact-short}+ sondages créés",
   "statsLanguagesSupported": "Plus de 10 langues supportées",
   "hint": "C'est gratuit ! Aucune connexion requise.",
   "doodleAlternative": "La meilleure alternative gratuite à Doodle",
@@ -34,5 +36,9 @@
   "when2meetAlternativeMetaTitle": "Meilleure Alternative à When2Meet : Rallly",
   "when2meetAlternativeMetaDescription": "Trouvez une meilleure façon de planifier des réunions avec Rallly, la meilleure alternative gratuite à When2Meet. Facile à utiliser et gratuit.",
   "when2meetAlternative": "Vous utilisez toujours When2Meet ?",
-  "when2meetAlternativeDescription": "Créez des sondages de réunions professionnels et sans publicité gratuitement avec Rallly."
+  "when2meetAlternativeDescription": "Créez des sondages de réunions professionnels et sans publicité gratuitement avec Rallly.",
+  "meetingPoll": "Créez des sondages professionnels avec Rallly",
+  "meetingPollDescription": "Les sondages de réunion sont un excellent moyen d'obtenir les disponibilités. Rallly vous permet de créer de beaux sondages de réunion en toute simplicité.",
+  "meetingPollMetaTitle": "Sondage de Réunion",
+  "meetingPollMetaDescription": "Planifiez facilement des réunions avec notre fonction de sondage, assurant ainsi la disponibilité de chacun."
 }
