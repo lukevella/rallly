@@ -28,5 +28,7 @@
   "whenPollInactive": "Milloin kyselystä tulee toimeton?",
   "whenPollInactiveAnswer": "Kyselystä tulee toimeton, kun kaikki päivämäärävaihtoehdot ovat menneisyydessä eikä kyselyä ole käytetty yli 30 päivään. Toimettomat kyselyt poistetaan automaattisesti, jos sinulla ei ole maksullista tilausta.",
   "yearlyBillingDescription": "vuodessa",
-  "annualBenefit": "{count} kuukautta ilmaiseksi"
+  "annualBenefit": "{count} kuukautta ilmaiseksi",
+  "pricingTitle": "Aloita ilmaiseksi",
+  "pricingSubtitle": "Vaihda maksulliseen sopimukseen saadaksesi lisäominaisuuksia käyttöösi"
 }
