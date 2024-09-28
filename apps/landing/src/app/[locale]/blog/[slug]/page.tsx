@@ -57,6 +57,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
   );
 }
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const posts = getAllPosts(["slug"]);
   return posts.map((post) => ({
