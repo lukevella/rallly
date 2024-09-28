@@ -195,6 +195,14 @@ export const useDayjs = () => {
   return useRequiredContext(DayjsContext);
 };
 
+export const useLocalizeTime = () => {
+  const { timeZone } = useDayjs();
+  return React.useCallback(
+    (date: Date) => dayjs(date).tz(timeZone),
+    [timeZone],
+  );
+};
+
 export const DayjsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
   config?: {

@@ -7,7 +7,6 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
@@ -18,14 +17,9 @@ export default async function Page({ params }: { params: Params }) {
     <div>
       <PageContainer>
         <PageHeader>
-          <div className="flex items-center gap-x-3">
-            <PageIcon>
-              <HomeIcon />
-            </PageIcon>
-            <PageTitle>
-              <Trans t={t} i18nKey="home" defaults="Home" />
-            </PageTitle>
-          </div>
+          <PageTitle>
+            <Trans t={t} i18nKey="home" defaults="Home" />
+          </PageTitle>
         </PageHeader>
         <PageContent>
           <Dashboard />

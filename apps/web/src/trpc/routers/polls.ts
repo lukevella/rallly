@@ -60,43 +60,10 @@ export const polls = router({
       {} as Record<PollStatus, number>,
     );
   }),
-  list: possiblyPublicProcedure
-    .input(
-      z.object({
-        status: z.enum(["all", "live", "paused", "finalized"]),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      return await prisma.poll.findMany({
-        where: {
-          userId: ctx.user.id,
-          status: input.status === "all" ? undefined : input.status,
-        },
-        orderBy: [
-          {
-            createdAt: "desc",
-          },
-          {
-            title: "asc",
-          },
-        ],
-        select: {
-          id: true,
-          title: true,
-          location: true,
-          timeZone: true,
-          createdAt: true,
-          status: true,
-          userId: true,
-          participants: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      });
-    }),
+
+  /**
+   * @deprecated
+   */
   infiniteList: possiblyPublicProcedure
     .input(
       z.object({
@@ -146,6 +113,74 @@ export const polls = router({
       }
       return {
         polls,
+        nextCursor,
+      };
+    }),
+
+  list: possiblyPublicProcedure
+    .input(
+      z.object({
+        status: z.enum(["all", "live", "paused", "finalized"]),
+        cursor: z.string().optional(),
+        limit: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit, status } = input;
+      const polls = await prisma.poll.findMany({
+        where: {
+          userId: ctx.user.id,
+          status: status === "all" ? undefined : status,
+        },
+        orderBy: [
+          {
+            createdAt: "desc",
+          },
+          {
+            title: "asc",
+          },
+        ],
+        cursor: cursor ? { id: cursor } : undefined,
+        take: limit + 1,
+        select: {
+          id: true,
+          title: true,
+          location: true,
+          timeZone: true,
+          createdAt: true,
+          status: true,
+          userId: true,
+          options: {
+            select: {
+              startTime: true,
+              duration: true,
+            },
+          },
+          participants: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (polls.length > input.limit) {
+        const nextItem = polls.pop();
+        nextCursor = nextItem!.id;
+      }
+      return {
+        polls: polls.map((poll) => ({
+          ...poll,
+          participantCount: poll.participants.length,
+          dateRange: {
+            start: poll.options[0].startTime,
+            end: dayjs(poll.options[poll.options.length - 1].startTime)
+              .add(poll.options[poll.options.length - 1].duration, "minute")
+              .toDate(),
+          },
+        })),
         nextCursor,
       };
     }),

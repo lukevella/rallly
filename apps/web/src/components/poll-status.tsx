@@ -15,7 +15,7 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 text-sm font-medium text-pink-600",
+            "inline-flex items-center gap-x-1.5 text-sm",
             className,
           )}
         >
@@ -27,11 +27,11 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 rounded-full text-sm font-medium text-gray-500",
+            "inline-flex items-center gap-x-1.5 rounded-full text-sm text-gray-500",
             className,
           )}
         >
-          <span className="size-1.5 rounded-full bg-gray-600" />
+          <span className="size-1.5 rounded-full bg-gray-500" />
 
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
         </span>
@@ -40,7 +40,7 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 rounded-full text-sm font-medium text-green-600",
+            "inline-flex items-center gap-x-1.5 rounded-full text-sm",
             className,
           )}
         >

@@ -13,9 +13,9 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
-import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
+import { GroupPollIcon } from "@/components/group-poll-icon";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
@@ -49,7 +49,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
   return (
-    <div className="bg-gray-100">
+    <div>
       <div className="sticky top-0 z-30 flex flex-col justify-between gap-x-4 gap-y-2.5 border-b bg-gray-100 p-3 sm:flex-row lg:items-center lg:px-5">
         <div className="flex min-w-0 items-center gap-x-2.5">
           {pathname === pollLink ? (

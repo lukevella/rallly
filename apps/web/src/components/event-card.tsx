@@ -37,7 +37,7 @@ export function EventCard() {
   const { t } = useTranslation();
   return (
     <>
-      <Card className="bg-gray-50">
+      <Card>
         <RandomGradientBar seed={poll.id} />
         <CardContent className="space-y-4 sm:space-y-6">
           <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">

@@ -1,75 +1,64 @@
 "use client";
+
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
-import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
-import {
-  AppCard,
-  AppCardContent,
-  AppCardDescription,
-  AppCardFooter,
-  AppCardIcon,
-  AppCardName,
-  GroupPollIcon,
-} from "@/app/[locale]/(admin)/app-card";
+import { GroupPollCard } from "@/components/group-poll-card";
+import { Subheading } from "@/components/heading";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/utils/trpc/client";
 
 export default function Dashboard() {
-  const { data } = trpc.dashboard.info.useQuery();
+  return (
+    <div className="space-y-6">
+      <div>
+        <Button asChild>
+          <Link href="/new">Create a Poll</Link>
+        </Button>
+      </div>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Subheading>
+            <Trans i18nKey="pending" defaults="Pending" />
+          </Subheading>
+          <Button asChild>
+            <Link href="/polls">
+              <Trans i18nKey="viewAll" defaults="View All" />
+            </Link>
+          </Button>
+        </div>
+        <PendingPolls />
+      </div>
+    </div>
+  );
+}
+
+function PendingPolls() {
+  const { data } = trpc.dashboard.getPending.useQuery(undefined, {
+    suspense: true,
+  });
 
   if (!data) {
     return <Spinner />;
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid md:flex">
-        <AppCard className="basis-96">
-          <AppCardIcon>
-            <GroupPollIcon size="lg" />
-          </AppCardIcon>
-          <AppCardContent>
-            <div>
-              <AppCardName>
-                <Trans i18nKey="groupPoll" defaults="Group Poll" />
-              </AppCardName>
-              <AppCardDescription>
-                <Trans
-                  i18nKey="groupPollDescription"
-                  defaults="Share your availability with a group of people and find the best time to meet."
-                />
-              </AppCardDescription>
-            </div>
-          </AppCardContent>
-          <AppCardFooter className="flex items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-1 text-sm">
-              <Link
-                className="text-primary font-medium hover:underline"
-                href="/polls?status=live"
-              >
-                <Trans
-                  i18nKey="activePollCount"
-                  defaults="{{activePollCount}} Live"
-                  values={{
-                    activePollCount: data.activePollCount,
-                  }}
-                />
-              </Link>
-            </div>
-            <Button asChild>
-              <Link href="/new">
-                <Icon>
-                  <PlusIcon />
-                </Icon>
-                <Trans i18nKey="create" defaults="Create" />
-              </Link>
-            </Button>
-          </AppCardFooter>
-        </AppCard>
-      </div>
+    <div className="grid gap-2 md:grid-cols-3">
+      {data.map((poll) => {
+        return (
+          <GroupPollCard
+            key={poll.id}
+            pollId={poll.id}
+            title={poll.title}
+            status={poll.status}
+            inviteLink={poll.inviteLink}
+            responseCount={poll.responseCount}
+            dateStart={poll.range.start}
+            dateEnd={poll.range.end}
+          />
+        );
+      })}
     </div>
   );
 }

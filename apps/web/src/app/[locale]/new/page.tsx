@@ -1,10 +1,10 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import { BackButton } from "@/app/[locale]/(admin)/menu/menu-button";
 import { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 import { CreatePoll } from "@/components/create-poll";
+import { GroupPollIcon } from "@/components/group-poll-icon";
 import { UserDropdown } from "@/components/user-dropdown";
 
 export default async function Page({ params }: { params: Params }) {

@@ -92,16 +92,6 @@ export function Sidebar() {
             </li>
           </ul>
         </li>
-        <li className="-mx-2 space-y-1">
-          <Button variant="primary" className="w-full rounded-full" asChild>
-            <Link href="/new">
-              <Icon>
-                <PlusIcon />
-              </Icon>
-              <Trans i18nKey="create" defaults="create" />
-            </Link>
-          </Button>
-        </li>
         <li className="mt-auto">
           <ul role="list" className="-mx-2 space-y-1">
             <IfFreeUser>

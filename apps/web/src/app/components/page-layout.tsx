@@ -2,11 +2,13 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@rallly/ui";
 
+import { Heading } from "@/components/heading";
+
 export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn(className)}>{children}</div>;
+  return <div className={cn("space-y-6", className)}>{children}</div>;
 }
 
 export function PageIcon({
@@ -30,16 +32,7 @@ export function PageTitle({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <h1
-      className={cn(
-        "inline-flex items-center truncate text-xl font-bold tracking-tight text-gray-700",
-        className,
-      )}
-    >
-      {children}
-    </h1>
-  );
+  return <Heading className={className}>{children}</Heading>;
 }
 
 export function PageHeader({
@@ -50,7 +43,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("mb-6", className)}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {

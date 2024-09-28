@@ -1,10 +1,15 @@
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import { PlusIcon, SearchIcon } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
 import { ProBadge } from "@/app/[locale]/(admin)/pro-badge";
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
 import { LogoLink } from "@/app/components/logo-link";
+import { UserDropdown } from "@/components/user-dropdown";
 
 export default async function Layout({
   children,
@@ -12,10 +17,10 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen flex-col pb-16 md:pb-0">
+    <div className="flex h-screen flex-col bg-gray-50 pb-16 md:pb-0">
       <div
         className={cn(
-          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-4 overflow-y-auto p-6 py-5 md:flex",
+          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-6 overflow-y-auto p-6 lg:flex",
         )}
       >
         <div className="flex w-full items-center justify-between gap-4">
@@ -24,16 +29,33 @@ export default async function Layout({
         </div>
         <Sidebar />
       </div>
-      <div
-        className={cn(
-          "flex flex-1 flex-col pb-2 lg:min-w-0 lg:pl-72 lg:pr-2 lg:pt-2",
-        )}
-      >
-        <div className="grow p-6 lg:rounded-lg lg:bg-white lg:p-10 lg:shadow-sm lg:ring-1 lg:ring-gray-950/5 dark:lg:bg-gray-900 dark:lg:ring-white/10">
+      <div className={cn("pb-16 lg:min-w-0 lg:pb-0 lg:pl-72")}>
+        <div className="mx-auto max-w-7xl p-6">
+          <div className="mb-6 flex justify-between gap-2">
+            <div>
+              <Button>
+                <Icon>
+                  <SearchIcon />
+                </Icon>
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" asChild>
+                <Link href="/new">
+                  <Icon>
+                    <PlusIcon />
+                  </Icon>
+                  Create
+                </Link>
+              </Button>
+              <UserDropdown />
+            </div>
+          </div>
           {children}
         </div>
       </div>
-      <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md md:hidden">
+      <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md lg:hidden">
         <MobileNavigation />
       </div>
     </div>

@@ -3,11 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply text-foreground h-full overflow-y-auto bg-gray-100 font-sans;
+    @apply text-foreground h-full overflow-y-auto bg-gray-50 font-sans;
   }
   html {
     @apply h-full font-sans text-base;
