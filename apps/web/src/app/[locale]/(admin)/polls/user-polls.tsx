@@ -1,7 +1,6 @@
 "use client";
 import { PollStatus } from "@rallly/database";
 import { RadioCards, RadioCardsItem } from "@rallly/ui/radio-pills";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { CalendarPlusIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { z } from "zod";
@@ -29,6 +28,7 @@ function FilteredPolls({ status }: { status: PollStatus }) {
       limit: 30,
     },
     {
+      suspense: true,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       keepPreviousData: true,
     },
@@ -59,7 +59,7 @@ function FilteredPolls({ status }: { status: PollStatus }) {
       <ol className="space-y-4">
         {data.pages.map((page, i) => (
           <li key={i}>
-            <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-3">
               {page.polls.map((poll) => (
                 <GroupPollCard
                   key={poll.id}
@@ -93,7 +93,9 @@ function PollStatusMenu({
   onStatusChange?: (status: PollStatus) => void;
 }) {
   const { data: countByStatus, isFetching } =
-    trpc.polls.getCountByStatus.useQuery();
+    trpc.polls.getCountByStatus.useQuery(undefined, {
+      suspense: true,
+    });
 
   if (!countByStatus) {
     return null;

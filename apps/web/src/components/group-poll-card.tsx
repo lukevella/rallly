@@ -2,16 +2,17 @@
 
 import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
-import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Icon } from "@rallly/ui/icon";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   BarChart2Icon,
   CalendarIcon,
+  CheckIcon,
   Link2Icon,
   User2Icon,
 } from "lucide-react";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import { useCopyToClipboard } from "react-use";
 
 import {
@@ -25,6 +26,45 @@ import { PollStatusLabel } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
 import { useLocalizeTime } from "@/utils/dayjs";
 import { getRange } from "@/utils/get-range";
+
+function CopyLinkButton({ link, ...forwardProps }: { link: string }) {
+  const [, copy] = useCopyToClipboard();
+  const [isCopied, setIsCopied] = React.useState(false);
+
+  return (
+    <Tooltip open={isCopied ? true : undefined}>
+      <TooltipTrigger asChild>
+        <Button
+          {...forwardProps}
+          variant="ghost"
+          onClick={() => {
+            copy(link);
+            React.startTransition(() => {
+              setIsCopied(true);
+            });
+            setTimeout(() => {
+              setIsCopied(false);
+            }, 2000);
+          }}
+        >
+          <Icon>
+            <Link2Icon />
+          </Icon>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        {isCopied ? (
+          <p>
+            <CheckIcon className="mr-2 inline-block size-4 text-green-500" />
+            <Trans i18nKey="copied" defaults="Copied" />
+          </p>
+        ) : (
+          <Trans i18nKey="copyLink" defaults="Copy link" />
+        )}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 export function GroupPollCard({
   status,
@@ -45,10 +85,6 @@ export function GroupPollCard({
 }) {
   const localizeTime = useLocalizeTime();
 
-  const { t } = useTranslation("app");
-  const [, copy] = useCopyToClipboard();
-  const { toast } = useToast();
-
   return (
     <GridCard key={pollId}>
       <GridCardHeader>
@@ -56,7 +92,10 @@ export function GroupPollCard({
           <GroupPollIcon size="xs" />
         </div>
         <h3 className="truncate font-medium">
-          <Link className="focus:underline" href={`/poll/${pollId}`}>
+          <Link
+            className="hover:underline focus:text-gray-900"
+            href={`/poll/${pollId}`}
+          >
             {title}
           </Link>
         </h3>
@@ -82,29 +121,23 @@ export function GroupPollCard({
         </Pill>
       </PillList>
       <GridCardFooter>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            copy(inviteLink);
-            toast({
-              title: t("copiedToClipboard", {
-                ns: "app",
-                defaultValue: "Copied to clipboard",
-              }),
-            });
-          }}
-        >
-          <Icon>
-            <Link2Icon />
-          </Icon>
-        </Button>
-        <Button variant="ghost" asChild>
-          <Link href={`/poll/${pollId}`}>
-            <Icon>
-              <BarChart2Icon />
-            </Icon>
-          </Link>
-        </Button>
+        <div className="flex justify-end gap-1">
+          <CopyLinkButton link={inviteLink} />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" asChild>
+                <Link href={`/poll/${pollId}`}>
+                  <Icon>
+                    <BarChart2Icon />
+                  </Icon>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <Trans i18nKey="viewResults" defaults="View results" />
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </GridCardFooter>
     </GridCard>
   );

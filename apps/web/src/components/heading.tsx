@@ -9,7 +9,7 @@ export function Heading({
   return (
     <h1
       className={cn(
-        "text-xl font-semibold text-gray-900",
+        "text-2xl font-semibold text-gray-900",
         heading.className,
         className,
       )}
@@ -24,6 +24,8 @@ export function Subheading({
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <h2 className={cn("text-base font-semibold", className)}>{children}</h2>
+    <h2 className={cn("text-lg font-semibold text-gray-900", className)}>
+      {children}
+    </h2>
   );
 }

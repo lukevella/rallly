@@ -278,7 +278,8 @@
   "1month": "1 month",
   "subscribe": "Subscribe",
   "cancelAnytime": "Cancel anytime from your <a>billing page</a>.",
-  "copiedToClipboard": "Copied to clipboard",
   "viewAll": "View All",
-  "pending": "Pending"
+  "pending": "Pending",
+  "copyLink": "Copy link",
+  "viewResults": "View results"
 }
