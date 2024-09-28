@@ -38,6 +38,8 @@ You can expect to see more features being added soon such as:
 
 I've also published a post outlining [the future of Rallly](/blog/the-future-of-rallly) which involves adding more solutions on top of the much loved polling feature. With your help we can turn this vision into a reality.
 
+---
+
 Thank you for your support and if you'd like to be notified when Rallly Pro is available you can subscribe below.
 
 Happy scheduling :)

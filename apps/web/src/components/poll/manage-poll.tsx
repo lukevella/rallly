@@ -28,10 +28,13 @@ import * as React from "react";
 
 import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
 import { trpc } from "@/app/providers";
+import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
+import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
+import { usePostHog } from "@/utils/posthog";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
@@ -144,6 +147,9 @@ const ManagePoll: React.FunctionComponent<{
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
   const finalizeDialog = useDialog();
+  const paywallDialog = useDialog();
+  const plan = usePlan();
+  const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
 
   return (
@@ -161,37 +167,6 @@ const ManagePoll: React.FunctionComponent<{
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <>
-            {poll.status === "finalized" ? (
-              <DropdownMenuItem
-                onClick={() => {
-                  reopen.mutate({ pollId: poll.id });
-                }}
-              >
-                <Icon>
-                  <RotateCcwIcon />
-                </Icon>
-                <Trans i18nKey="reopenPoll" defaults="Reopen" />
-              </DropdownMenuItem>
-            ) : (
-              <>
-                <DropdownMenuItem
-                  disabled={!!poll.event}
-                  onClick={() => {
-                    finalizeDialog.trigger();
-                  }}
-                >
-                  <Icon>
-                    <CalendarCheck2Icon />
-                  </Icon>
-                  <Trans i18nKey="finishPoll" defaults="Finalize" />
-                  <ProFeatureBadge />
-                </DropdownMenuItem>
-                <PauseResumeToggle />
-              </>
-            )}
-          </>
-          <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href={`/poll/${poll.id}/edit-details`}>
               <DropdownMenuItemIconLabel icon={PencilIcon}>
@@ -214,6 +189,45 @@ const ManagePoll: React.FunctionComponent<{
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <>
+            {poll.status === "finalized" ? (
+              <DropdownMenuItem
+                onClick={() => {
+                  reopen.mutate({ pollId: poll.id });
+                }}
+              >
+                <Icon>
+                  <RotateCcwIcon />
+                </Icon>
+                <Trans i18nKey="reopenPoll" defaults="Reopen" />
+              </DropdownMenuItem>
+            ) : (
+              <>
+                <DropdownMenuItem
+                  disabled={!!poll.event}
+                  onClick={() => {
+                    if (plan === "free") {
+                      paywallDialog.trigger();
+                      posthog?.capture("trigger paywall", {
+                        poll_id: poll.id,
+                        from: "manage-poll",
+                        action: "finalize",
+                      });
+                    } else {
+                      finalizeDialog.trigger();
+                    }
+                  }}
+                >
+                  <Icon>
+                    <CalendarCheck2Icon />
+                  </Icon>
+                  <Trans i18nKey="finishPoll" defaults="Finalize" />
+                  <ProFeatureBadge />
+                </DropdownMenuItem>
+                <PauseResumeToggle />
+              </>
+            )}
+          </>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DropdownMenuItemIconLabel icon={DownloadIcon}>
@@ -222,7 +236,16 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              duplicateDialog.trigger();
+              if (plan === "free") {
+                paywallDialog.trigger();
+                posthog?.capture("trigger paywall", {
+                  poll_id: poll.id,
+                  action: "duplicate",
+                  from: "manage-poll",
+                });
+              } else {
+                duplicateDialog.trigger();
+              }
             }}
           >
             <DropdownMenuItemIconLabel icon={CopyIcon}>
@@ -253,6 +276,7 @@ const ManagePoll: React.FunctionComponent<{
         {...duplicateDialog.dialogProps}
       />
       <FinalizePollDialog {...finalizeDialog.dialogProps} />
+      <PayWallDialog {...paywallDialog.dialogProps} />
     </>
   );
 };

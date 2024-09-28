@@ -2,6 +2,7 @@
 
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { DialogTrigger } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import {
   ArrowUpRightIcon,
@@ -19,11 +20,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
+import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
 import { IconComponent } from "@/types";
+import { usePostHog } from "@/utils/posthog";
 
 function NavItem({
   href,
@@ -58,6 +61,7 @@ function NavItem({
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useUser();
+  const posthog = usePostHog();
   return (
     <nav className="flex flex-1 flex-col ">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -102,24 +106,30 @@ export function Sidebar() {
           <ul role="list" className="-mx-2 space-y-1">
             <IfFreeUser>
               <li>
-                <Link
-                  href="/settings/billing"
-                  className="mb-4 grid rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200"
-                >
-                  <span className="mb-2 flex items-center gap-x-2">
-                    <SparklesIcon className="size-5 text-gray-400" />
-                    <span className="text-sm font-bold">
-                      <Trans i18nKey="upgrade" />
-                    </span>
-                    <ProBadge />
-                  </span>
-                  <span className="text-sm leading-relaxed text-gray-500">
-                    <Trans
-                      i18nKey="unlockFeatures"
-                      defaults="Unlock all Pro features."
-                    />
-                  </span>
-                </Link>
+                <PayWallDialog>
+                  <DialogTrigger
+                    onClick={() =>
+                      posthog?.capture("trigger paywall", { from: "sidebar" })
+                    }
+                    asChild
+                  >
+                    <button className="mb-4 flex w-full flex-col rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200">
+                      <span className="mb-2 flex items-center gap-x-2">
+                        <SparklesIcon className="size-5 text-gray-400" />
+                        <span className="text-sm font-bold">
+                          <Trans i18nKey="upgrade" />
+                        </span>
+                        <ProBadge />
+                      </span>
+                      <span className="text-sm leading-relaxed text-gray-500">
+                        <Trans
+                          i18nKey="unlockFeatures"
+                          defaults="Unlock all Pro features."
+                        />
+                      </span>
+                    </button>
+                  </DialogTrigger>
+                </PayWallDialog>
               </li>
             </IfFreeUser>
             <IfGuest>

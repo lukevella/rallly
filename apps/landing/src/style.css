@@ -7,10 +7,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground overflow-y-auto bg-gray-200/50;
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
+    @apply text-foreground h-full overflow-y-auto bg-gray-100 font-sans;
   }
   html {
     @apply h-full font-sans text-base;
@@ -46,6 +43,60 @@
 }
 
 @layer components {
+  .blog-content {
+    h2,
+    h3,
+    h4 {
+      @apply mb-4 mt-12;
+    }
+    h2 {
+      @apply text-2xl font-bold;
+    }
+    h3 {
+      @apply text-xl font-semibold;
+    }
+    h4 {
+      @apply text-lg font-semibold;
+    }
+    p {
+      @apply mb-6 leading-relaxed;
+    }
+    p:has(> img) {
+      @apply flex items-center justify-center overflow-hidden rounded-xl border bg-gray-50  p-2;
+    }
+    img {
+      @apply mx-auto rounded-lg border;
+    }
+    ul,
+    ol {
+      @apply mb-6 ml-6;
+    }
+    ul {
+      @apply list-disc;
+    }
+    ol {
+      @apply list-decimal;
+    }
+    li {
+      @apply mb-2;
+    }
+    hr {
+      @apply my-12;
+    }
+    a {
+      @apply text-primary-600 hover:underline;
+    }
+    blockquote {
+      @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-700;
+    }
+    pre {
+      @apply my-6 overflow-x-auto rounded-lg bg-gray-100 p-4;
+    }
+    code {
+      @apply rounded bg-gray-100 px-1 py-0.5 text-sm;
+    }
+  }
+
   .text-link {
     @apply text-primary-600 hover:text-primary-600 focus-visible:ring-primary-600 rounded-md font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }

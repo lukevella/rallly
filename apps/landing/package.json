@@ -13,14 +13,14 @@
     "prettier": "prettier --write ./src"
   },
   "dependencies": {
+    "@rallly/billing": "*",
     "@rallly/icons": "*",
     "@rallly/languages": "*",
     "@rallly/tailwind-config": "*",
     "@rallly/ui": "*",
-    "@rallly/billing": "*",
     "@svgr/webpack": "^6.5.1",
     "@vercel/analytics": "^0.1.8",
-    "class-variance-authority": "^0.7.0",
+    "accept-language-parser": "^1.5.0",
     "dayjs": "^1.11.7",
     "gray-matter": "^4.0.3",
     "i18next": "^22.4.9",
@@ -29,15 +29,15 @@
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
     "next-i18next": "^13.0.3",
+    "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
     "react-i18next": "^12.1.4",
-    "react-use": "^17.4.0",
-    "remark": "^14.0.3",
-    "remark-html": "^15.0.2"
+    "react-use": "^17.4.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.4",
     "@rallly/tsconfig": "*",
+    "@rallly/eslint-config": "*",
     "@types/color-hash": "^1.0.2",
     "@types/lodash": "^4.14.178",
     "cross-env": "^7.0.3",

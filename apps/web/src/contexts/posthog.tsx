@@ -5,7 +5,6 @@ import { PostHogProvider as Provider, usePostHog } from "posthog-js/react";
 import React from "react";
 import { useMount } from "react-use";
 
-import { useTranslation } from "@/app/i18n/client";
 import { useUser } from "@/components/user-provider";
 import { env } from "@/env";
 
@@ -49,7 +48,6 @@ function usePostHogPageView() {
 
 export function PostHogProvider(props: PostHogProviderProps) {
   const { user } = useUser();
-  const { i18n } = useTranslation();
 
   usePostHogPageView();
 
@@ -60,10 +58,8 @@ export function PostHogProvider(props: PostHogProviderProps) {
         name: user.name,
         tier: user.tier,
         timeZone: user.timeZone,
-        locale: i18n.language,
+        locale: user.locale,
       });
-    } else {
-      posthog.alias(user.id);
     }
   });
 

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, VoteType } from "@prisma/client";
 import dayjs from "dayjs";
 
 const prisma = new PrismaClient();
@@ -7,12 +7,28 @@ const prisma = new PrismaClient();
 const randInt = (max = 1, floor = 0) => {
   return Math.round(Math.random() * max) + floor;
 };
+
+function generateTitle() {
+  const titleTemplates = [
+    () => `${faker.company.catchPhrase()} Meeting`,
+    () => `${faker.commerce.department()} Team Sync`,
+    () => `Q${faker.datatype.number({ min: 1, max: 4 })} Planning`,
+    () => `${faker.name.jobArea()} Workshop`,
+    () => `Project ${faker.word.adjective()} Update`,
+    () => `${faker.company.bsBuzz()} Strategy Session`,
+    () => faker.company.catchPhrase(),
+    () => `${faker.name.jobType()} Interview`,
+    () => `${faker.commerce.productAdjective()} Product Review`,
+    () => `Team ${faker.word.verb()} Day`,
+  ];
+
+  return faker.helpers.arrayElement(titleTemplates)();
+}
+
 async function createPollForUser(userId: string) {
-  // create some polls with no duration (all day) and some with a random duration.
   const duration = 60 * randInt(8);
   let cursor = dayjs().add(randInt(30), "day").second(0).minute(0);
-
-  const numberOfOptions = randInt(30, 2);
+  const numberOfOptions = randInt(5, 2); // Reduced for realism
 
   const poll = await prisma.poll.create({
     include: {
@@ -21,8 +37,8 @@ async function createPollForUser(userId: string) {
     },
     data: {
       id: faker.random.alpha(10),
-      title: `${faker.animal.cat()} Meetup ${faker.date.month()}`,
-      description: faker.lorem.paragraph(),
+      title: generateTitle(),
+      description: generateDescription(),
       location: faker.address.streetAddress(),
       deadline: faker.date.future(),
       user: {
@@ -30,15 +46,12 @@ async function createPollForUser(userId: string) {
           id: userId,
         },
       },
+      status: faker.helpers.arrayElement(["live", "paused", "finalized"]),
       timeZone: duration !== 0 ? "Europe/London" : undefined,
       options: {
         create: Array.from({ length: numberOfOptions }).map(() => {
           const startTime = cursor.toDate();
-          if (duration !== 0) {
-            cursor = cursor.add(randInt(72, 1), "hour");
-          } else {
-            cursor = cursor.add(randInt(7, 1), "day");
-          }
+          cursor = cursor.add(randInt(72, 1), "hour");
           return {
             startTime,
             duration,
@@ -58,52 +71,50 @@ async function createPollForUser(userId: string) {
     },
   });
 
+  // Generate vote data for all participants and options
+  const voteData = poll.participants.flatMap((participant) =>
+    poll.options.map((option) => ({
+      id: faker.random.alpha(10),
+      optionId: option.id,
+      participantId: participant.id,
+      pollId: poll.id,
+      type: faker.helpers.arrayElement(["yes", "no", "ifNeedBe"]) as VoteType,
+    })),
+  );
+
+  // Create all votes in a single query
+  await prisma.vote.createMany({
+    data: voteData,
+  });
+
   return poll;
 }
 
-async function createPollsForUser(userId: string) {
-  // Create some polls
-  const polls = await Promise.all(
-    Array.from({ length: 100 }).map(() => createPollForUser(userId)),
-  );
+// Function to generate realistic descriptions
+function generateDescription() {
+  const descriptions = [
+    "Discuss the quarterly results and strategize for the upcoming quarter. Please come prepared with your reports.",
+    "Team meeting to align on project goals and timelines. Bring your ideas and feedback.",
+    "An informal catch-up to discuss ongoing projects and any roadblocks. Open to all team members.",
+    "Monthly review of our marketing strategies and performance metrics. Let's brainstorm new ideas.",
+    "A brief meeting to go over the new software updates and how they will impact our workflow.",
+    "Discussion on the upcoming product launch and marketing strategies. Your input is valuable!",
+    "Weekly sync to check in on project progress and address any concerns. Please be on time.",
+    "A brainstorming session for the new campaign. All creative minds are welcome!",
+    "Review of the last sprint and planning for the next one. Let's ensure we're on track.",
+    "An open forum for team members to share updates and challenges. Everyone is encouraged to speak up.",
+  ];
 
-  // Create some votes
-  for (const poll of polls) {
-    for (const participant of poll.participants) {
-      await prisma.vote.createMany({
-        data: poll.options.map((option) => {
-          const randomNumber = randInt(100);
-          const vote =
-            randomNumber > 95 ? "ifNeedBe" : randomNumber > 50 ? "yes" : "no";
-          return {
-            participantId: participant.id,
-            pollId: poll.id,
-            optionId: option.id,
-            type: vote,
-          };
-        }),
-      });
-    }
-  }
-
-  for (const poll of polls) {
-    const commentCount = randInt(3);
-    if (commentCount) {
-      await prisma.comment.createMany({
-        data: Array.from({ length: commentCount }).map(() => ({
-          pollId: poll.id,
-          authorName: faker.name.fullName(),
-          content: faker.lorem.sentence(),
-        })),
-      });
-    }
-  }
+  // Randomly select a description
+  return faker.helpers.arrayElement(descriptions);
 }
 
 async function main() {
   // Create some users
+  // Create some users and polls
   const freeUser = await prisma.user.create({
     data: {
+      id: "free-user",
       name: "Dev User",
       email: "dev@rallly.co",
       timeZone: "America/New_York",
@@ -112,6 +123,7 @@ async function main() {
 
   const proUser = await prisma.user.create({
     data: {
+      id: "pro-user",
       name: "Pro User",
       email: "dev+pro@rallly.co",
       customerId: "cus_123",
@@ -148,10 +160,13 @@ async function main() {
 
   await Promise.all(
     [freeUser, proUser, proUserLegacy].map(async (user) => {
-      await createPollsForUser(user.id);
+      Array.from({ length: 20 }).forEach(async () => {
+        await createPollForUser(user.id);
+      });
       console.info(`✓ Added ${user.email}`);
     }),
   );
+  console.info(`✓ Added polls for ${freeUser.email}`);
 }
 
 main()

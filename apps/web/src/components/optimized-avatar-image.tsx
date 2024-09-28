@@ -39,6 +39,7 @@ export function OptimizedAvatarImage({
       ) : null}
       {!src || !isLoaded ? (
         <AvatarFallback
+          seed={name}
           className={cn({
             "text-xs": size <= 24,
             "text-lg": size >= 48,

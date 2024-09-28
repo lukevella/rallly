@@ -1,5 +1,5 @@
 import { cn } from "@rallly/ui";
-import { Avatar, AvatarFallback, getColor } from "@rallly/ui/avatar";
+import { Avatar, AvatarFallback } from "@rallly/ui/avatar";
 import React from "react";
 
 export function Participant({ children }: { children: React.ReactNode }) {
@@ -13,11 +13,9 @@ export const ParticipantAvatar = ({
   size?: number;
   name: string;
 }) => {
-  const color = getColor(name);
-
   return (
     <Avatar size={size}>
-      <AvatarFallback className="text-xs" color={color}>
+      <AvatarFallback className="text-xs" seed={name}>
         {name[0]?.toUpperCase()}
       </AvatarFallback>
     </Avatar>
