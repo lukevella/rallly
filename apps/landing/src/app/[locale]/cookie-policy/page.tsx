@@ -1,7 +1,7 @@
 export default function CookiePolicy() {
   return (
     <>
-      <div className="prose mx-auto my-16 max-w-3xl rounded-lg bg-white p-8 shadow-md">
+      <div className="prose mx-auto max-w-3xl">
         <h1>Cookie Policy</h1>
         <p>Last updated: 19 April 2023</p>
         <p>

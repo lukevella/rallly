@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: URLParams }) {
   ]);
   return (
     <section className="space-y-12">
-      <header className="p-6">
+      <header className="sm:p-6">
         <h1 className="text-4xl font-bold tracking-tight">
           <Trans
             t={t}

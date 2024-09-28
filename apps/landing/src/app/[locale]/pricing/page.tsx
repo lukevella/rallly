@@ -126,8 +126,8 @@ export default async function Page({ params }: { params: { locale: string } }) {
   const { t } = await getTranslation(params.locale, ["common", "pricing"]);
   return (
     <article className="mx-auto max-w-3xl space-y-6">
-      <header className="space-y-2 p-6 text-center ">
-        <h1 className="text-4xl font-bold tracking-tight">
+      <header className="space-y-2 sm:p-6 sm:text-center ">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">
           <Trans
             t={t}
             ns="pricing"
