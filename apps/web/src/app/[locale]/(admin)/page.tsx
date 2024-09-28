@@ -7,6 +7,7 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
@@ -17,6 +18,9 @@ export default async function Page({ params }: { params: Params }) {
     <div>
       <PageContainer>
         <PageHeader>
+          <PageIcon>
+            <HomeIcon />
+          </PageIcon>
           <PageTitle>
             <Trans t={t} i18nKey="home" defaults="Home" />
           </PageTitle>
@@ -27,17 +31,4 @@ export default async function Page({ params }: { params: Params }) {
       </PageContainer>
     </div>
   );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
-  return {
-    title: t("home", {
-      defaultValue: "Home",
-    }),
-  };
 }

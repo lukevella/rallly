@@ -68,8 +68,8 @@ function FilteredPolls({ status }: { status: PollStatus }) {
                   status={poll.status}
                   inviteLink={`${window.location.origin}/invite/${poll.id}`}
                   responseCount={poll.participants.length}
-                  dateStart={poll.createdAt}
-                  dateEnd={poll.createdAt}
+                  dateStart={poll.dateRange.start}
+                  dateEnd={poll.dateRange.end}
                 />
               ))}
             </div>

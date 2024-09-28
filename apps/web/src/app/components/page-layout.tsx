@@ -19,7 +19,7 @@ export function PageIcon({
   className?: string;
 }) {
   return (
-    <div className={cn("hidden", className)}>
+    <div className={cn("hidden rounded-md border bg-gray-50 p-2", className)}>
       <Slot className="size-4">{children}</Slot>
     </div>
   );
@@ -43,7 +43,9 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn(className)}>{children}</div>;
+  return (
+    <div className={cn("flex items-center gap-x-4", className)}>{children}</div>
+  );
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {

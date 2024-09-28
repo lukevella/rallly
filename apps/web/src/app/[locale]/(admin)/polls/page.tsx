@@ -21,16 +21,14 @@ export default async function Page({
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-center gap-x-3">
-          <PageIcon>
-            <BarChart2Icon />
-          </PageIcon>
-          <PageTitle>
-            {t("polls", {
-              defaultValue: "Polls",
-            })}
-          </PageTitle>
-        </div>
+        <PageIcon>
+          <BarChart2Icon />
+        </PageIcon>
+        <PageTitle>
+          {t("polls", {
+            defaultValue: "Polls",
+          })}
+        </PageTitle>
       </PageHeader>
       <PageContent>
         <UserPolls />

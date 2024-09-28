@@ -1,9 +1,12 @@
+import { CalendarIcon } from "lucide-react";
+
 import { UserScheduledEvents } from "@/app/[locale]/(admin)/events/user-scheduled-events";
 import { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/app/i18n";
@@ -13,13 +16,14 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-center gap-x-3">
-          <PageTitle>
-            {t("events", {
-              defaultValue: "Events",
-            })}
-          </PageTitle>
-        </div>
+        <PageIcon>
+          <CalendarIcon />
+        </PageIcon>
+        <PageTitle>
+          {t("events", {
+            defaultValue: "Events",
+          })}
+        </PageTitle>
       </PageHeader>
       <PageContent>
         <UserScheduledEvents />

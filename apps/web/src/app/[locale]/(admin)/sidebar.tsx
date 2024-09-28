@@ -64,9 +64,9 @@ export function Sidebar() {
   const posthog = usePostHog();
   return (
     <nav className="flex flex-1 flex-col ">
-      <ul role="list" className="flex flex-1 flex-col gap-y-7">
+      <ul role="list" className="flex flex-1 flex-col gap-y-8">
         <li>
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul role="list" className="-mx-2 space-y-2">
             <li>
               <NavItem current={pathname === "/"} href="/" icon={HomeIcon}>
                 <Trans i18nKey="home" defaults="Home" />
