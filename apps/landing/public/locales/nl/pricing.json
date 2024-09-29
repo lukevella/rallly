@@ -28,5 +28,7 @@
   "whenPollInactive": "Wanneer krijgt een poll de status \"inactief\"?",
   "whenPollInactiveAnswer": "Polls worden inactief wanneer alle datumopties in het verleden liggen en de poll gedurende meer dan 30 dagen niet is benaderd. Zonder een betaald abonnement worden inactieve polls automatisch verwijderd.",
   "yearlyBillingDescription": "per jaar",
-  "annualBenefit": "{count} maanden gratis"
+  "annualBenefit": "{count} maanden gratis",
+  "pricingTitle": "Gratis aan de slag",
+  "pricingSubtitle": "Upgrade naar een betaald abonnement om toegang te krijgen tot premium functies"
 }
