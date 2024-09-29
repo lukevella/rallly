@@ -270,9 +270,9 @@ const DesktopPoll: React.FunctionComponent = () => {
               <TableControls />
             </CardHeader>
             {poll.options[0]?.duration !== 0 && poll.timeZone ? (
-              <CardHeader>
+              <div className="border-b bg-gray-50 px-4 py-3">
                 <TimesShownIn />
-              </CardHeader>
+              </div>
             ) : null}
             {participants.length > 0 || mode !== "view" ? (
               <div className="relative flex min-h-0 flex-col">
