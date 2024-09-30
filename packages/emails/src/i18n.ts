@@ -1,3 +1,4 @@
+import type { InitOptions } from "i18next";
 import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
@@ -13,12 +14,15 @@ i18nInstance
     ),
   );
 
-const i18nDefaultConfig = {
+const i18nDefaultConfig: InitOptions = {
   lng: "en",
   fallbackLng: "en",
   ns: ["emails"],
   fallbackNS: "emails",
   defaultNS: "emails",
+  interpolation: {
+    escapeValue: false,
+  },
 } as const;
 
 export type I18nInstance = typeof i18nInstance;
