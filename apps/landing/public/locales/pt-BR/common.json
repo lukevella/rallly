@@ -19,10 +19,11 @@
   "pricing": "Preços",
   "bestDoodleAlternative": "Melhor alternativa ao Doodle",
   "freeSchedulingPoll": "Agendamento de Enquete Gratuito",
-  "findATime": "Encontre um Horário",
   "getStarted": "Comece agora",
   "availabilityPoll": "Enquete de Disponibilidade",
   "solutions": "Soluções",
   "howItWorks": "Como Funciona",
-  "status": "Status"
+  "status": "Status",
+  "when2MeetAlternative": "When2Meet Alternativo",
+  "meetingPoll": "Enquete de reunião"
 }

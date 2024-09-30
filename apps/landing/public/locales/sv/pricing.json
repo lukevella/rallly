@@ -1,5 +1,4 @@
 {
-  "pricing": "Priser",
   "pricingDescription": "Kom igång gratis. Ingen inloggning krävs.",
   "freeForever": "gratis för alltid",
   "planPro": "Pro",
@@ -29,5 +28,7 @@
   "whenPollInactive": "När blir en omröstning inaktiv?",
   "whenPollInactiveAnswer": "Omröstningar blir inaktiva när alla datumalternativ ligger i det förflutna OCH omröstningen inte har öppnats på över 30 dagar. Inaktiva omröstningar raderas automatiskt om du inte har en betalprenumeration.",
   "yearlyBillingDescription": "per år",
-  "annualBenefit": "{count} månader gratis"
+  "annualBenefit": "{count} månader gratis",
+  "pricingTitle": "Kom igång kostnadsfritt",
+  "pricingSubtitle": "Uppgradera till en betald plan för att få tillgång till premiumfunktioner"
 }
