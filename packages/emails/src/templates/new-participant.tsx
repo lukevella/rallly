@@ -69,6 +69,9 @@ NewParticipantEmail.getSubject = (
     name: props.participantName,
     title: props.title,
     ns: "emails",
+    interpolation: {
+      escapeValue: false,
+    },
   });
 };
 
