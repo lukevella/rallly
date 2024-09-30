@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Analytics } from "@vercel/analytics/react";
 import { ChevronRightIcon, MenuIcon } from "lucide-react";
 import { Viewport } from "next";
 import Image from "next/image";
@@ -151,6 +152,7 @@ export default async function Root({
             </footer>
           </div>
         </I18nProvider>
+        <Analytics />
       </body>
     </html>
   );
