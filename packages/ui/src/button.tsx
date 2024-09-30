@@ -8,26 +8,25 @@ import { cn } from "./lib/utils";
 const buttonVariants = cva(
   cn(
     "inline-flex border transition-colors font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
-    "focus-visible:ring-offset-input-background",
-    "focus:shadow-none",
+    "focus-visible:shadow-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-400",
   ),
   {
     variants: {
       variant: {
         primary:
-          "border-primary-700 bg-primary disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm focus:bg-primary-500",
+          "bg-primary disabled:bg-gray-400  disabled:border-transparent text-primary-foreground hover:bg-primary-700 active:bg-primary-800 shadow-sm",
         destructive:
-          "bg-destructive shadow-sm text-destructive-foreground focus-visible:ring-offset-1 active:bg-destructive border-destructive hover:bg-destructive/90",
+          "bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
         default:
-          "ring-1 ring-inset ring-white/25 data-[state=open]:bg-gray-100 focus:border-gray-300 focus:bg-gray-200 hover:bg-gray-100 bg-gray-50",
+          "data-[state=open]:bg-gray-100 hover:bg-gray-100 active:bg-gray-200 bg-gray-50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "border-transparent bg-transparent text-gray-800 hover:bg-gray-100 focus:bg-gray-200",
+          "border-transparent bg-transparent bg-gray-50 text-gray-800 hover:bg-gray-100 active:bg-gray-200",
         link: "underline-offset-4 border-transparent hover:underline text-primary",
       },
       size: {
-        default: "h-9 px-2.5 pr-3 gap-x-2 text-sm rounded-md",
+        default: "h-8 px-2 gap-x-1.5 text-sm rounded-md",
         sm: "h-7 text-sm px-1.5 gap-x-1.5 rounded-md",
         lg: "h-11 text-base gap-x-3 px-4 rounded-md",
       },

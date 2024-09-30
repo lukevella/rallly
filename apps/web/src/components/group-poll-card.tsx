@@ -23,6 +23,7 @@ import {
 import { GroupPollIcon } from "@/components/group-poll-icon";
 import { Pill, PillList } from "@/components/pill";
 import { PollStatusLabel } from "@/components/poll-status";
+import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Trans } from "@/components/trans";
 import { useLocalizeTime } from "@/utils/dayjs";
 import { getRange } from "@/utils/get-range";
@@ -74,6 +75,7 @@ export function GroupPollCard({
   responseCount,
   dateStart,
   dateEnd,
+  timeZone,
 }: {
   pollId: string;
   title: string;
@@ -82,20 +84,18 @@ export function GroupPollCard({
   dateStart: Date;
   dateEnd: Date;
   status: PollStatus;
+  timeZone?: string;
 }) {
   const localizeTime = useLocalizeTime();
 
   return (
     <GridCard key={pollId}>
-      <GridCardHeader>
+      <GridCardHeader className="flex items-center gap-2">
         <div>
           <GroupPollIcon size="xs" />
         </div>
         <h3 className="truncate font-medium">
-          <Link
-            className="hover:underline focus:text-gray-900"
-            href={`/poll/${pollId}`}
-          >
+          <Link className="hover:underline" href={`/poll/${pollId}`}>
             {title}
           </Link>
         </h3>
@@ -109,8 +109,8 @@ export function GroupPollCard({
             <CalendarIcon />
           </Icon>
           {getRange(
-            localizeTime(dateStart).toDate(),
-            localizeTime(dateEnd).toDate(),
+            localizeTime(dateStart, !timeZone).toDate(),
+            localizeTime(dateEnd, !timeZone).toDate(),
           )}
         </Pill>
         <Pill>

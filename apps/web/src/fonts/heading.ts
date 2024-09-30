@@ -1,6 +1,6 @@
-import { Archivo } from "next/font/google";
+import { Inter_Tight } from "next/font/google";
 
-export const heading = Archivo({
+export const heading = Inter_Tight({
   subsets: ["latin"],
   display: "swap",
 });

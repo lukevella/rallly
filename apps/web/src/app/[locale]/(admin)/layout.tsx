@@ -17,10 +17,10 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen flex-col bg-gray-50 pb-16 md:pb-0">
+    <div className="flex h-screen flex-col pb-16 md:pb-0">
       <div
         className={cn(
-          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-6 overflow-y-auto p-6 lg:flex",
+          "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-10 overflow-y-auto p-6 lg:flex",
         )}
       >
         <div className="flex w-full items-center justify-between gap-4">
@@ -40,8 +40,8 @@ export default async function Layout({
               </Button>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" asChild>
+            <div className="flex items-center gap-4">
+              <Button variant="primary" asChild>
                 <Link href="/new">
                   <Icon>
                     <PlusIcon />

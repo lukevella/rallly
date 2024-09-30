@@ -198,7 +198,8 @@ export const useDayjs = () => {
 export const useLocalizeTime = () => {
   const { timeZone } = useDayjs();
   return React.useCallback(
-    (date: Date) => dayjs(date).tz(timeZone),
+    (date: Date, keepLocalTime = false) =>
+      keepLocalTime ? dayjs(date).utc() : dayjs(date).tz(timeZone),
     [timeZone],
   );
 };

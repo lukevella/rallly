@@ -29,6 +29,7 @@ export const dashboard = router({
         title: true,
         createdAt: true,
         status: true,
+        timeZone: true,
         options: {
           select: {
             startTime: true,
@@ -58,7 +59,48 @@ export const dashboard = router({
         status: poll.status,
         responseCount: poll._count.participants,
         inviteLink: shortUrl(`/invite/${poll.id}`),
+        timeZone: poll.timeZone,
       };
     });
+  }),
+  getUpcoming: possiblyPublicProcedure.query(async ({ ctx }) => {
+    const events = await prisma.event.findMany({
+      select: {
+        id: true,
+        title: true,
+        start: true,
+        duration: true,
+        poll: {
+          select: {
+            timeZone: true,
+            location: true,
+            participants: {
+              include: {
+                _count: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        userId: ctx.user.id,
+        start: { gte: new Date() },
+      },
+      orderBy: [
+        {
+          start: "desc",
+        },
+        {
+          title: "asc",
+        },
+      ],
+      take: 3,
+    });
+
+    return events.map(({ poll, ...event }) => ({
+      ...event,
+      timeZone: poll?.timeZone || null,
+      location: poll?.location || null,
+    }));
   }),
 });

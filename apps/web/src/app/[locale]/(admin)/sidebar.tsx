@@ -12,7 +12,6 @@ import {
   HomeIcon,
   LifeBuoyIcon,
   LogInIcon,
-  PlusIcon,
   Settings2Icon,
   SparklesIcon,
 } from "lucide-react";
