@@ -19,6 +19,11 @@
     @apply h-full;
   }
 
+  button,
+  a {
+    @apply focus-visible:ring-primary-400 focus-visible:shadow-none focus-visible:ring-2 focus-visible:ring-offset-1;
+  }
+
   label {
     @apply block text-sm;
   }

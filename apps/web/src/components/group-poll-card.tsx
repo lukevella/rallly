@@ -2,28 +2,32 @@
 
 import { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   BarChart2Icon,
-  CalendarIcon,
+  CalendarSearchIcon,
   CheckIcon,
   Link2Icon,
+  MoreHorizontalIcon,
+  PauseIcon,
+  TrashIcon,
   User2Icon,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import {
-  GridCard,
-  GridCardFooter,
-  GridCardHeader,
-} from "@/components/grid-card";
+import { GridCard, GridCardHeader } from "@/components/grid-card";
 import { GroupPollIcon } from "@/components/group-poll-icon";
 import { Pill, PillList } from "@/components/pill";
-import { PollStatusLabel } from "@/components/poll-status";
-import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Trans } from "@/components/trans";
 import { useLocalizeTime } from "@/utils/dayjs";
 import { getRange } from "@/utils/get-range";
@@ -36,8 +40,8 @@ function CopyLinkButton({ link, ...forwardProps }: { link: string }) {
     <Tooltip open={isCopied ? true : undefined}>
       <TooltipTrigger asChild>
         <Button
+          size="sm"
           {...forwardProps}
-          variant="ghost"
           onClick={() => {
             copy(link);
             React.startTransition(() => {
@@ -90,42 +94,22 @@ export function GroupPollCard({
 
   return (
     <GridCard key={pollId}>
-      <GridCardHeader className="flex items-center gap-2">
-        <div>
-          <GroupPollIcon size="xs" />
+      <GridCardHeader className="flex justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <div>
+            <GroupPollIcon size="xs" />
+          </div>
+          <h3 className="font-medium">
+            <Link className="truncate hover:underline" href={`/poll/${pollId}`}>
+              {title}
+            </Link>
+          </h3>
         </div>
-        <h3 className="truncate font-medium">
-          <Link className="hover:underline" href={`/poll/${pollId}`}>
-            {title}
-          </Link>
-        </h3>
-      </GridCardHeader>
-      <PillList>
-        <Pill>
-          <PollStatusLabel status={status} />
-        </Pill>
-        <Pill>
-          <Icon>
-            <CalendarIcon />
-          </Icon>
-          {getRange(
-            localizeTime(dateStart, !timeZone).toDate(),
-            localizeTime(dateEnd, !timeZone).toDate(),
-          )}
-        </Pill>
-        <Pill>
-          <Icon>
-            <User2Icon />
-          </Icon>
-          <Trans defaults="{count, number}" values={{ count: responseCount }} />
-        </Pill>
-      </PillList>
-      <GridCardFooter>
-        <div className="flex justify-end gap-1">
+        <div className="flex items-center gap-2">
           <CopyLinkButton link={inviteLink} />
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" asChild>
+              <Button size="sm" asChild>
                 <Link href={`/poll/${pollId}`}>
                   <Icon>
                     <BarChart2Icon />
@@ -137,8 +121,53 @@ export function GroupPollCard({
               <Trans i18nKey="viewResults" defaults="View results" />
             </TooltipContent>
           </Tooltip>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm">
+                <Icon>
+                  <MoreHorizontalIcon />
+                </Icon>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>
+                <Icon>
+                  <PauseIcon />
+                </Icon>
+                <Trans i18nKey="pause" defaults="Pause" />
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Icon>
+                  <TrashIcon />
+                </Icon>
+                <Trans i18nKey="deleteMenuItem" defaults="Delete…" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </GridCardFooter>
+      </GridCardHeader>
+      <PillList>
+        <Pill>
+          <Icon>
+            <CalendarSearchIcon />
+          </Icon>
+          {getRange(
+            localizeTime(dateStart, !timeZone).toDate(),
+            localizeTime(dateEnd, !timeZone).toDate(),
+          )}
+        </Pill>
+        <Pill>
+          <Icon>
+            <User2Icon />
+          </Icon>
+          <Trans
+            i18nKey="participantCount"
+            defaults="{count, plural, one {# participant} other {# participants}}"
+            values={{ count: responseCount }}
+          />
+        </Pill>
+      </PillList>
     </GridCard>
   );
 }

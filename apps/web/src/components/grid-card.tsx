@@ -1,7 +1,10 @@
 import { cn } from "@rallly/ui";
 
-export function GridCardFooter({ children }: React.PropsWithChildren) {
-  return <div className="relative z-10 mt-6">{children}</div>;
+export function GridCardFooter({
+  children,
+  className,
+}: React.PropsWithChildren<{ className?: string }>) {
+  return <div className={cn("relative z-10 mt-4", className)}>{children}</div>;
 }
 
 export function GridCardHeader({
@@ -13,7 +16,7 @@ export function GridCardHeader({
 
 export const GridCard = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="relative rounded-lg border bg-white p-4 shadow-sm">
+    <div className="relative rounded-lg border bg-white p-3 shadow-sm">
       {children}
     </div>
   );

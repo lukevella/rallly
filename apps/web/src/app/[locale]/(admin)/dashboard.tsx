@@ -19,17 +19,12 @@ const SectionHeading = ({ children }: React.PropsWithChildren) => {
 export default function Dashboard() {
   return (
     <div className="space-y-6">
-      <div>
-        <Button asChild>
-          <Link href="/new">Create a Poll</Link>
-        </Button>
-      </div>
       <div className="space-y-4">
         <SectionHeading>
           <Subheading>
             <Trans i18nKey="pending" defaults="Pending" />
           </Subheading>
-          <Button asChild>
+          <Button variant="ghost" asChild>
             <Link href="/polls">
               <Trans i18nKey="viewAll" defaults="View All" />
             </Link>
@@ -42,7 +37,7 @@ export default function Dashboard() {
           <Subheading>
             <Trans i18nKey="upcoming" defaults="Upcoming" />
           </Subheading>
-          <Button asChild>
+          <Button variant="ghost" asChild>
             <Link href="/events">
               <Trans i18nKey="viewAll" defaults="View All" />
             </Link>
@@ -64,7 +59,7 @@ function PendingPolls() {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2">
       {data.map((poll) => {
         return (
           <GroupPollCard
@@ -96,7 +91,12 @@ function UpcomingEvents() {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2">
+      {data.length === 0 ? (
+        <div className="text-muted-foreground">
+          <Trans i18nKey="noUpcomingEvents" defaults="No upcoming events" />
+        </div>
+      ) : null}
       {data.map((event) => {
         return (
           <GridCard key={event.id}>
