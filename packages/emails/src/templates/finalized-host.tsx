@@ -39,7 +39,6 @@ const FinalizeHostEmail = ({
         ns: "emails",
         defaultValue:
           "Final date booked! We've notified participants and sent them calendar invites.",
-        title,
       })}
     >
       <Heading>
