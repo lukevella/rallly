@@ -10,6 +10,8 @@
   "ericQuote": "“Hvis din planlægning drukner i e-mails, opfordrer jeg dig på det kraftigste til at prøve at lade Rallly forenkle din planlægningsopgaver.”",
   "viaTrustpilot": "via Trustpilot",
   "ericJobTitle": "Administrerende assistent ved MIT",
+  "statsUsersRegistered": "{count, number, ::compact-short}+ registrerede brugere",
+  "statsPollsCreated": "{count, number, ::compact-short}+ oprettede afstemninger",
   "statsLanguagesSupported": "Over 10 sprog understøttet",
   "hint": "Det er gratis! Intet login kræves.",
   "doodleAlternative": "Det bedste gratis alternativ til Doodle",
@@ -34,5 +36,9 @@
   "when2meetAlternativeMetaTitle": "Bedste When2Meet alternativ: Rallly",
   "when2meetAlternativeMetaDescription": "Find en bedre måde at planlægge møder med Rallly, det bedste gratis alternativ til When2Meet. Let at bruge og gratis.",
   "when2meetAlternative": "Bruger du stadig When2Meet?",
-  "when2meetAlternativeDescription": "Opret professionelle, annoncefri mødeafstemninger gratis med Rallly."
+  "when2meetAlternativeDescription": "Opret professionelle, annoncefri mødeafstemninger gratis med Rallly.",
+  "meetingPoll": "Opret professionelle mødeafstemninger med Rallly",
+  "meetingPollDescription": "Mødeafstemninger er en fantastisk måde at undersøge folks tilgængelighed. Rallly lader dig oprette flotte mødeafstemninger med lethed.",
+  "meetingPollMetaTitle": "Mødeafstemning",
+  "meetingPollMetaDescription": "Planlæg nemt møder med vores meningsmåling, hvilket sikrer alles tilgængelighed."
 }
