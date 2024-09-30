@@ -39,6 +39,7 @@ const FinalizeHostEmail = ({
         ns: "emails",
         defaultValue:
           "Final date booked! We've notified participants and sent them calendar invites.",
+        title,
       })}
     >
       <Heading>
@@ -54,7 +55,6 @@ const FinalizeHostEmail = ({
           i18nKey="finalizeHost_content"
           ns="emails"
           values={{ title }}
-          shouldUnescape={true}
           components={{
             b: <strong />,
           }}
@@ -126,9 +126,6 @@ FinalizeHostEmail.getSubject = (
     defaultValue: "Date booked for {{title}}",
     title: props.title,
     ns: "emails",
-    interpolation: {
-      escapeValue: false,
-    },
   });
 };
 
