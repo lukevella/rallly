@@ -53,6 +53,7 @@ const FinalizeParticipantEmail = ({
           ns="emails"
           defaults="<b>{{hostName}}</b> has booked <b>{{title}}</b> for the following date:"
           values={{ hostName, title }}
+          shouldUnescape={true}
           components={{
             b: <strong />,
           }}
@@ -117,6 +118,9 @@ FinalizeParticipantEmail.getSubject = (
     defaultValue: "Date booked for {{title}}",
     title: props.title,
     ns: "emails",
+    interpolation: {
+      escapeValue: false,
+    },
   });
 };
 

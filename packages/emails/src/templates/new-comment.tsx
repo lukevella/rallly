@@ -42,6 +42,7 @@ const NewCommentEmail = ({
           ns="emails"
           i18nKey="newComment_content"
           defaults="<b>{{authorName}}</b> has commented on <b>{{title}}</b>."
+          shouldUnescape={true}
           components={{
             b: <strong />,
           }}
@@ -64,6 +65,9 @@ NewCommentEmail.getSubject = (
     defaultValue: "{{authorName}} has commented on {{title}}",
     authorName: props.authorName,
     title: props.title,
+    interpolation: {
+      escapeValue: false,
+    },
   });
 };
 
