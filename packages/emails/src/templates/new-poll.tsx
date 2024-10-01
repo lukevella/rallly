@@ -46,7 +46,6 @@ export const NewPollEmail = ({
           i18nKey="newPoll_content"
           ns="emails"
           values={{ title }}
-          shouldUnescape={true}
           components={{
             b: <strong />,
           }}
@@ -72,9 +71,6 @@ NewPollEmail.getSubject = (props: NewPollEmailProps, ctx: EmailContext) => {
   return ctx.t("newPoll_subject", {
     defaultValue: "Let's find a date for {{title}}!",
     title: props.title,
-    interpolation: {
-      escapeValue: false,
-    },
     ns: "emails",
   });
 };
