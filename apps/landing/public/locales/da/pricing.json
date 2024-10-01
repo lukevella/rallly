@@ -28,5 +28,7 @@
   "whenPollInactive": "Hvornår bliver en afstemning inaktiv?",
   "whenPollInactiveAnswer": "Afstemninger bliver inaktive, når alle dato-muligheder er i fortiden, OG meningsmålingen ikke er blevet tilgået i over 30 dage. Inaktive afstemninger slettes automatisk, hvis du ikke har et betalt abonnement.",
   "yearlyBillingDescription": "pr. år",
-  "annualBenefit": "{count} måneder gratis"
+  "annualBenefit": "{count} måneder gratis",
+  "pricingTitle": "Kom i gang gratis",
+  "pricingSubtitle": "Opgrader til et abonnement for at få adgang til premium-funktioner"
 }
