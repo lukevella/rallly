@@ -38,7 +38,7 @@ function CopyLinkButton({ link, ...forwardProps }: { link: string }) {
 
   return (
     <Tooltip open={isCopied ? true : undefined}>
-      <TooltipTrigger asChild>
+      <TooltipTrigger onMouseLeave={() => setIsCopied(false)} asChild>
         <Button
           size="sm"
           {...forwardProps}
@@ -94,8 +94,8 @@ export function GroupPollCard({
 
   return (
     <GridCard key={pollId}>
-      <GridCardHeader className="flex justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-2">
+      <GridCardHeader className="flex flex-col justify-between gap-4 sm:flex-row">
+        <div className="flex items-center gap-2">
           <div>
             <GroupPollIcon size="xs" />
           </div>
