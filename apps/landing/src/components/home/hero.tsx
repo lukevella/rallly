@@ -2,7 +2,6 @@
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { preventWidows } from "@rallly/utils";
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
@@ -104,10 +103,10 @@ export const MarketingHero = ({
           </Link>
         </div>
         <h1 className="mb-2 mt-6 text-pretty text-2xl font-bold tracking-tight sm:mb-4 sm:text-5xl">
-          {preventWidows(title)}
+          {title}
         </h1>
         <h2 className="mx-auto max-w-3xl text-pretty text-lg text-gray-500 sm:text-xl sm:leading-relaxed">
-          {preventWidows(description)}
+          {description}
         </h2>
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
           <Button
