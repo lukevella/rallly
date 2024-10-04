@@ -1,10 +1,10 @@
 export function PillList({ children }: React.PropsWithChildren) {
-  return <ul className="flex gap-2">{children}</ul>;
+  return <ul className="flex flex-col gap-2">{children}</ul>;
 }
 
 export function Pill({ children }: React.PropsWithChildren) {
   return (
-    <span className="text-muted-foreground inline-flex items-center gap-2 rounded-md border bg-gray-50 p-1 text-sm">
+    <span className="inline-flex items-center gap-2 rounded-md text-sm">
       {children}
     </span>
   );

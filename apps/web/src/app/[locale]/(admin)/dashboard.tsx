@@ -1,9 +1,18 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { CalendarIcon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import {
+  BarChart2Icon,
+  BookIcon,
+  CalendarIcon,
+  PlusIcon,
+  TableIcon,
+  UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 
+import { CreateButton } from "@/app/[locale]/(admin)/create-button";
 import { GridCard, GridCardHeader } from "@/components/grid-card";
 import { GroupPollCard } from "@/components/group-poll-card";
 import { Subheading } from "@/components/heading";
@@ -19,6 +28,37 @@ const SectionHeading = ({ children }: React.PropsWithChildren) => {
 export default function Dashboard() {
   return (
     <div className="space-y-6">
+      <div className="space-y-4">
+        <Subheading>
+          <Trans i18nKey="create" defaults="Create" />
+        </Subheading>
+        <div className="scrollbar-none -mx-6 flex gap-2 overflow-x-auto whitespace-nowrap px-6">
+          <CreateButton
+            variant="purple"
+            href="/new"
+            icon={<BarChart2Icon className="size-5" />}
+            label={<Trans i18nKey="groupPoll" defaults="Group Poll" />}
+          />
+          <CreateButton
+            variant="violet"
+            href="/new"
+            icon={<UserIcon className="size-5" />}
+            label={<Trans i18nKey="oneOnOne" defaults="One-on-One" />}
+          />
+          <CreateButton
+            variant="indigo"
+            href="/new"
+            icon={<BookIcon className="size-5" />}
+            label={<Trans i18nKey="bookingPage" defaults="Booking Page" />}
+          />
+          <CreateButton
+            variant="pink"
+            href="/new"
+            icon={<TableIcon className="size-5" />}
+            label={<Trans i18nKey="signUpSheet" defaults="Sign Up Sheet" />}
+          />
+        </div>
+      </div>
       <div className="space-y-4">
         <SectionHeading>
           <Subheading>
@@ -54,12 +94,8 @@ function PendingPolls() {
     suspense: true,
   });
 
-  if (!data) {
-    return <Spinner />;
-  }
-
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-2 md:grid-cols-3">
       {data.map((poll) => {
         return (
           <GroupPollCard
@@ -90,20 +126,23 @@ function UpcomingEvents() {
     return <Spinner />;
   }
 
+  if (data.length === 0) {
+    return (
+      <div className="text-muted-foreground">
+        <Trans i18nKey="noUpcomingEvents" defaults="No upcoming events" />
+      </div>
+    );
+  }
+
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      {data.length === 0 ? (
-        <div className="text-muted-foreground">
-          <Trans i18nKey="noUpcomingEvents" defaults="No upcoming events" />
-        </div>
-      ) : null}
+    <div className="grid gap-4 md:grid-cols-3">
       {data.map((event) => {
         return (
           <GridCard key={event.id}>
             <GridCardHeader className="flex gap-2">
               <div>
                 <div className="bg-primary-600 text-primary-100 inline-flex items-center justify-center rounded-md p-1.5">
-                  <CalendarIcon className="size-4" />
+                  <CalendarIcon className="size-5" />
                 </div>
               </div>
               <div className="min-w-0">

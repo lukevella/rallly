@@ -46,8 +46,8 @@ function NavItem({
       target={target}
       className={cn(
         current
-          ? "text-foreground bg-gray-200"
-          : "text-muted-foreground border-transparent hover:bg-gray-200 focus:bg-gray-300",
+          ? "text-foreground bg-gray-100"
+          : "text-muted-foreground hover:text-foreground border-transparent hover:bg-gray-100 focus:bg-gray-200",
         "group flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
@@ -102,15 +102,15 @@ export function Sidebar() {
                     }
                     asChild
                   >
-                    <button className="mb-4 flex w-full flex-col rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200">
+                    <button className="bg-primary-50 text-primary hover:bg-primary-100 focus:bg-primary-200 mb-4 flex w-full flex-col rounded-lg px-4 py-3">
                       <span className="mb-2 flex items-center gap-x-2">
-                        <SparklesIcon className="size-5 text-gray-400" />
+                        <SparklesIcon className="size-5 opacity-50" />
                         <span className="text-sm font-bold">
                           <Trans i18nKey="upgrade" />
                         </span>
                         <ProBadge />
                       </span>
-                      <span className="text-sm leading-relaxed text-gray-500">
+                      <span className="text-sm leading-relaxed opacity-75">
                         <Trans
                           i18nKey="unlockFeatures"
                           defaults="Unlock all Pro features."

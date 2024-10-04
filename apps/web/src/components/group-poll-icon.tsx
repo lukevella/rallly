@@ -11,7 +11,7 @@ export function GroupPollIcon({
       role="img"
       aria-label="Group Poll Icon"
       className={cn(
-        "inline-flex items-center justify-center bg-gradient-to-br from-purple-500 to-violet-500 text-purple-100",
+        "inline-flex items-center justify-center bg-purple-600 text-purple-50",
         {
           "size-6 rounded": size === "xs",
           "size-8 rounded-md": size === "sm",

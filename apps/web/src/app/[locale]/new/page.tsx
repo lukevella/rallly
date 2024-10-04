@@ -11,7 +11,7 @@ export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   return (
     <div>
-      <div className="sticky top-0 z-20 flex items-center justify-between border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3">
+      <div className="sticky top-0 z-20 flex items-center justify-between p-3 backdrop-blur-md sm:grid-cols-3">
         <div className="flex items-center justify-center gap-x-4">
           <BackButton />
           <GroupPollIcon size="xs" />

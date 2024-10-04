@@ -42,7 +42,7 @@ export const dashboard = router({
           },
         },
       },
-      take: 4,
+      take: 3,
     });
 
     return polls.map((poll) => {

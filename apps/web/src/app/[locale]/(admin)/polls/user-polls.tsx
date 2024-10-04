@@ -59,7 +59,7 @@ function FilteredPolls({ status }: { status: PollStatus }) {
       <ol className="space-y-4">
         {data.pages.map((page, i) => (
           <li key={i}>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-2 sm:gap-4 md:grid-cols-3">
               {page.polls.map((poll) => (
                 <GroupPollCard
                   key={poll.id}
@@ -141,7 +141,7 @@ export function UserPolls() {
   const parsedPollStatus = pollStatusSchema.parse(pollStatus);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PollStatusMenu
         status={parsedPollStatus}
         onStatusChange={setPollStatus}

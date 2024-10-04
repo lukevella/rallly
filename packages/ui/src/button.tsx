@@ -7,15 +7,15 @@ import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex border transition-colors font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
+    "inline-flex border active:shadow-none hover:shadow-sm transition-colors font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
   ),
   {
     variants: {
       variant: {
         primary:
-          "bg-primary disabled:bg-gray-400  disabled:border-transparent text-primary-foreground hover:bg-primary-700 active:bg-primary-800 shadow-sm",
+          "bg-primary disabled:bg-gray-400 disabled:border-transparent text-primary-foreground hover:bg-primary-700 active:bg-primary-800",
         destructive:
-          "bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
         default:
           "data-[state=open]:bg-gray-100 hover:bg-gray-100 active:bg-gray-200 bg-white",
         secondary:
@@ -27,7 +27,7 @@ const buttonVariants = cva(
       size: {
         default: "h-8 px-2 gap-x-1.5 text-sm rounded-md",
         sm: "h-7 text-sm px-1.5 gap-x-1.5 rounded-md",
-        lg: "h-11 text-base gap-x-3 px-4 rounded-md",
+        lg: "h-11 text-base gap-x-3 px-4 rounded-xl",
       },
     },
     defaultVariants: {

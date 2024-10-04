@@ -43,9 +43,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return (
-    <div className={cn("flex items-center gap-x-4", className)}>{children}</div>
-  );
+  return <div className={cn(className)}>{children}</div>;
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {

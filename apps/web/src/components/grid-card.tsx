@@ -16,7 +16,7 @@ export function GridCardHeader({
 
 export const GridCard = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="relative rounded-lg border bg-white p-3 shadow-sm">
+    <div className="relative flex h-48 flex-col rounded-lg bg-gray-100 p-4">
       {children}
     </div>
   );

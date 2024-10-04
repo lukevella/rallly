@@ -30,15 +30,18 @@ export default async function Layout({
         <Sidebar />
       </div>
       <div className={cn("pb-16 lg:min-w-0 lg:pb-0 lg:pl-72")}>
-        <div className="mx-auto max-w-7xl p-6 xl:pr-12">
+        <div className="mx-auto max-w-7xl p-3 sm:p-6 xl:pr-12">
           <div className="mb-6 flex justify-end gap-2">
             <div className="flex items-center gap-4">
-              <Button variant="primary" asChild>
+              <Button
+                className="hidden sm:inline-flex"
+                variant="primary"
+                asChild
+              >
                 <Link href="/new">
                   <Icon>
                     <PlusIcon />
                   </Icon>
-                  Create
                 </Link>
               </Button>
               <UserDropdown />

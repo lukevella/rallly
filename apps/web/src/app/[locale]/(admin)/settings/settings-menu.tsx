@@ -1,6 +1,5 @@
 "use client";
 
-import { Icon } from "@rallly/ui/icon";
 import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { Trans } from "react-i18next";
 
@@ -11,22 +10,16 @@ export function SettingsMenu() {
   return (
     <TabMenu>
       <TabMenuItem href="/settings/profile">
-        <Icon>
-          <UserIcon />
-        </Icon>
+        <UserIcon className="size-4" />
         <Trans i18nKey="profile" />
       </TabMenuItem>
       <TabMenuItem href="/settings/preferences">
-        <Icon>
-          <Settings2Icon />
-        </Icon>
+        <Settings2Icon className="size-4" />
         <Trans i18nKey="preferences" />
       </TabMenuItem>
       <IfCloudHosted>
         <TabMenuItem href="/settings/billing">
-          <Icon>
-            <CreditCardIcon />
-          </Icon>
+          <CreditCardIcon className="size-4" />
           <Trans i18nKey="billing" />
         </TabMenuItem>
       </IfCloudHosted>
