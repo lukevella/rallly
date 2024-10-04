@@ -2,15 +2,13 @@ import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
+import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
 
-import {
-  Participant,
-  ParticipantAvatar,
-  ParticipantName,
-} from "@/components/participant";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { ParticipantName } from "@/components/participant";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
@@ -53,16 +51,18 @@ export const ParticipantRowView: React.FunctionComponent<{
         className="sticky left-0 z-10 h-12 bg-white px-4"
       >
         <div className="flex max-w-full items-center justify-between gap-x-4">
-          <Participant>
-            <ParticipantAvatar name={name} />
-            <ParticipantName>{name}</ParticipantName>
-            {isYou ? (
-              <Badge>
-                <Trans i18nKey="you" />
-              </Badge>
-            ) : null}
-          </Participant>
-          {action}
+          <div>
+            <Flex gap="sm">
+              <OptimizedAvatarImage size="xs" name={name} />
+              <ParticipantName>{name}</ParticipantName>
+              {isYou ? (
+                <Badge>
+                  <Trans i18nKey="you" />
+                </Badge>
+              ) : null}
+            </Flex>
+          </div>
+          <div>{action}</div>
         </div>
       </td>
       {votes.map((vote, i) => {

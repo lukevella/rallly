@@ -34,6 +34,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";
 import { z } from "zod";
 
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useDeleteParticipantMutation } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
 import { useFormValidation } from "@/utils/form-validation";
@@ -75,13 +76,18 @@ export const ParticipantDropdown = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent align={align}>
           <DropdownMenuLabel>
-            <div className="grid gap-0.5">
-              <div>{participant.name}</div>
-              {participant.email ? (
-                <div className="text-muted-foreground text-xs font-normal">
-                  {participant.email}
-                </div>
-              ) : null}
+            <div className="flex items-center gap-x-2">
+              <div>
+                <OptimizedAvatarImage name={participant.name} size="md" />
+              </div>
+              <div className="grid gap-0.5">
+                <div>{participant.name}</div>
+                {participant.email ? (
+                  <div className="text-muted-foreground text-xs font-normal">
+                    {participant.email}
+                  </div>
+                ) : null}
+              </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

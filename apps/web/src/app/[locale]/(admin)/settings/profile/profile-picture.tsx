@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { z } from "zod";
 
 import { useTranslation } from "@/app/i18n/client";
-import { CurrentUserAvatar } from "@/components/current-user-avatar";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { useAvatarsEnabled } from "@/features/avatars";
@@ -189,9 +189,14 @@ function Upload() {
 }
 
 export function ProfilePicture() {
+  const { user } = useUser();
   return (
     <div className="flex items-center gap-x-4">
-      <CurrentUserAvatar size={56} />
+      <OptimizedAvatarImage
+        src={user.image ?? undefined}
+        name={user.name}
+        size="lg"
+      />
       <Upload />
     </div>
   );

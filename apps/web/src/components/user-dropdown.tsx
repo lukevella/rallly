@@ -26,8 +26,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { LoginLink } from "@/components/login-link";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
@@ -57,7 +57,11 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         className={cn("group min-w-0", className)}
       >
         <Button variant="ghost">
-          <CurrentUserAvatar size={24} />
+          <OptimizedAvatarImage
+            src={user.image ?? undefined}
+            name={user.name}
+            size="sm"
+          />
           <span className="truncate">{user.name}</span>
           <Icon>
             <ChevronDownIcon />

@@ -19,7 +19,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { CurrentUserAvatar } from "@/components/current-user-avatar";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
@@ -171,7 +171,11 @@ export function Sidebar() {
               >
                 <Link href="/settings/profile">
                   <div>
-                    <CurrentUserAvatar size={40} />
+                    <OptimizedAvatarImage
+                      src={user.image ?? undefined}
+                      name={user.name}
+                      size="md"
+                    />
                   </div>
                   <span className="ml-1 grid grow">
                     <span className="font-semibold">{user.name}</span>

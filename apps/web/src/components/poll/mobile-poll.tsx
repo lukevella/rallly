@@ -1,6 +1,7 @@
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@rallly/ui/card";
+import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
 import {
   Select,
@@ -101,20 +102,15 @@ const MobilePoll: React.FunctionComponent = () => {
                 </SelectItem>
                 {visibleParticipants.map((participant) => (
                   <SelectItem key={participant.id} value={participant.id}>
-                    <div className="flex items-center gap-x-2.5">
-                      <Participant>
-                        <OptimizedAvatarImage
-                          name={participant.name}
-                          size={20}
-                        />
-                        <ParticipantName>{participant.name}</ParticipantName>
-                        {session.ownsObject(participant) && (
-                          <Badge>
-                            <Trans i18nKey="you" />
-                          </Badge>
-                        )}
-                      </Participant>
-                    </div>
+                    <Flex gap="sm">
+                      <OptimizedAvatarImage name={participant.name} size="xs" />
+                      <ParticipantName>{participant.name}</ParticipantName>
+                      {session.ownsObject(participant) && (
+                        <Badge>
+                          <Trans i18nKey="you" />
+                        </Badge>
+                      )}
+                    </Flex>
                   </SelectItem>
                 ))}
               </SelectContent>
