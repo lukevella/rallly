@@ -4,8 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import Image from "next/image";
 import React from "react";
 
-import { useAvatarsEnabled } from "@/features/avatars";
-
 const sizeToWidth = {
   xs: 20,
   sm: 24,
@@ -24,7 +22,6 @@ export function OptimizedAvatarImage({
   name: string;
   className?: string;
 }) {
-  const isAvatarsEnabled = useAvatarsEnabled();
   const [isLoaded, setLoaded] = React.useState(false);
   return (
     <Avatar
@@ -34,7 +31,7 @@ export function OptimizedAvatarImage({
       {src ? (
         src.startsWith("https") ? (
           <AvatarImage src={src} alt={name} />
-        ) : isAvatarsEnabled ? (
+        ) : (
           <Image
             src={`/api/storage/${src}`}
             width={128}
@@ -45,7 +42,7 @@ export function OptimizedAvatarImage({
               setLoaded(true);
             }}
           />
-        ) : null
+        )
       ) : null}
       {!src || !isLoaded ? (
         <AvatarFallback
