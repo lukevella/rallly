@@ -6,13 +6,19 @@ import React from "react";
 
 import { useAvatarsEnabled } from "@/features/avatars";
 
+const sizeToWidth = {
+  sm: 24,
+  md: 36,
+  lg: 48,
+};
+
 export function OptimizedAvatarImage({
   size,
   className,
   src,
   name,
 }: {
-  size: number;
+  size: "sm" | "md" | "lg";
   src?: string;
   name: string;
   className?: string;
@@ -20,7 +26,10 @@ export function OptimizedAvatarImage({
   const isAvatarsEnabled = useAvatarsEnabled();
   const [isLoaded, setLoaded] = React.useState(false);
   return (
-    <Avatar className={className} style={{ width: size, height: size }}>
+    <Avatar
+      className={className}
+      style={{ width: sizeToWidth[size], height: sizeToWidth[size] }}
+    >
       {src ? (
         src.startsWith("https") ? (
           <AvatarImage src={src} alt={name} />
@@ -41,8 +50,9 @@ export function OptimizedAvatarImage({
         <AvatarFallback
           seed={name}
           className={cn({
-            "text-xs": size <= 24,
-            "text-lg": size >= 48,
+            "text-xs": size === "sm",
+            "text-sm": size === "md",
+            "text-lg": size === "lg",
           })}
         >
           {name[0]?.toUpperCase()}

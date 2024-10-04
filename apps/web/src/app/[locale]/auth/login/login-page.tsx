@@ -57,7 +57,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
             <OptimizedAvatarImage
               src={data?.image ?? undefined}
               name={data?.name ?? ""}
-              size={56}
+              size="lg"
             />
             <div className="text-center">
               <div className="mb-1 h-6 font-medium">
