@@ -9,6 +9,7 @@ const sizeToWidth = {
   sm: 24,
   md: 36,
   lg: 48,
+  xl: 56,
 };
 
 export function OptimizedAvatarImage({
@@ -17,7 +18,7 @@ export function OptimizedAvatarImage({
   src,
   name,
 }: {
-  size: "xs" | "sm" | "md" | "lg";
+  size: "xs" | "sm" | "md" | "lg" | "xl";
   src?: string;
   name: string;
   className?: string;
@@ -52,6 +53,7 @@ export function OptimizedAvatarImage({
             "text-sm": size === "sm",
             "text-md": size === "md",
             "text-lg": size === "lg",
+            "text-xl": size === "xl",
           })}
         >
           {name[0]?.toUpperCase()}
