@@ -1,8 +1,3 @@
-const sharedConfig = require("@rallly/tailwind-config/tailwind.config");
+const sharedConfig = require("@rallly/tailwind-config");
 
-module.exports = {
-  ...sharedConfig,
-  theme: {
-    ...sharedConfig.theme,
-  },
-};
+module.exports = sharedConfig;
