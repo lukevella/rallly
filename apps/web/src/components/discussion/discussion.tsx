@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Flex } from "@rallly/ui/flex";
 import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
@@ -29,11 +30,8 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import {
-  Participant,
-  ParticipantAvatar,
-  ParticipantName,
-} from "@/components/participant";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { ParticipantName } from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
@@ -220,15 +218,18 @@ function DiscussionInner() {
                 <div className="" key={comment.id}>
                   <div data-testid="comment">
                     <div className="mb-1 flex items-center space-x-2">
-                      <Participant>
-                        <ParticipantAvatar name={comment.authorName} />
+                      <Flex gap="sm">
+                        <OptimizedAvatarImage
+                          name={comment.authorName}
+                          size="xs"
+                        />
                         <ParticipantName>{comment.authorName}</ParticipantName>
                         {session.ownsObject(comment) ? (
                           <Badge>
                             <Trans i18nKey="you" />
                           </Badge>
                         ) : null}
-                      </Participant>
+                      </Flex>
                       <div className="flex items-center gap-2 text-sm ">
                         <div className="text-gray-500">
                           {dayjs(comment.createdAt).fromNow()}
@@ -257,7 +258,7 @@ function DiscussionInner() {
                         )}
                       </div>
                     </div>
-                    <div className="ml-0.5 w-fit whitespace-pre-wrap pl-7 text-sm leading-relaxed">
+                    <div className="w-fit whitespace-pre-wrap pl-7 text-sm leading-relaxed">
                       <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                     </div>
                   </div>

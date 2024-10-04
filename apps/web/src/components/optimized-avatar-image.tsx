@@ -7,6 +7,7 @@ import React from "react";
 import { useAvatarsEnabled } from "@/features/avatars";
 
 const sizeToWidth = {
+  xs: 20,
   sm: 24,
   md: 36,
   lg: 48,
@@ -18,7 +19,7 @@ export function OptimizedAvatarImage({
   src,
   name,
 }: {
-  size: "sm" | "md" | "lg";
+  size: "xs" | "sm" | "md" | "lg";
   src?: string;
   name: string;
   className?: string;
@@ -49,9 +50,10 @@ export function OptimizedAvatarImage({
       {!src || !isLoaded ? (
         <AvatarFallback
           seed={name}
-          className={cn({
-            "text-xs": size === "sm",
-            "text-sm": size === "md",
+          className={cn("shrink-0", {
+            "text-xs": size === "xs",
+            "text-sm": size === "sm",
+            "text-md": size === "md",
             "text-lg": size === "lg",
           })}
         >

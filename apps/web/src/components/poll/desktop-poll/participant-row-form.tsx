@@ -62,7 +62,7 @@ const ParticipantRowForm = ({
         <div className="flex items-center justify-between gap-x-2.5">
           <Participant>
             {name ? (
-              <OptimizedAvatarImage name={participantName} size={20} />
+              <OptimizedAvatarImage name={participantName} size="xs" />
             ) : (
               <YouAvatar />
             )}
