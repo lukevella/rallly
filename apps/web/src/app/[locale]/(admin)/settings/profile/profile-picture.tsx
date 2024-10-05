@@ -8,7 +8,6 @@ import { useTranslation } from "@/app/i18n/client";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { useAvatarsEnabled } from "@/features/avatars";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -152,13 +151,8 @@ function RemoveAvatarButton({ onSuccess }: { onSuccess?: () => void }) {
 
 function Upload() {
   const { user, refresh } = useUser();
-  const isAvatarsEnabled = useAvatarsEnabled();
 
   const posthog = usePostHog();
-
-  if (!isAvatarsEnabled) {
-    return null;
-  }
 
   return (
     <div className="flex flex-col gap-y-2">
