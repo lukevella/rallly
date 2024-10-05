@@ -6,6 +6,7 @@ import {
   BarChart2Icon,
   BookIcon,
   CalendarIcon,
+  CalendarPlusIcon,
   PlusIcon,
   TableIcon,
   UserIcon,
@@ -13,6 +14,12 @@ import {
 import Link from "next/link";
 
 import { CreateButton } from "@/app/[locale]/(admin)/create-button";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/app/components/empty-state";
 import { GridCard, GridCardHeader } from "@/components/grid-card";
 import { GroupPollCard } from "@/components/group-poll-card";
 import { Subheading } from "@/components/heading";
@@ -94,6 +101,32 @@ function PendingPolls() {
     suspense: true,
   });
 
+  if (!data) {
+    return <Spinner />;
+  }
+
+  if (data.length === 0) {
+    return (
+      <EmptyState className="h-96 rounded-lg">
+        <EmptyStateIcon>
+          <CalendarPlusIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans
+            i18nKey="pendingPollsEmptyStateTitle"
+            defaults="No Pending Polls"
+          />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="pendingPollsEmptyStateDescription"
+            defaults="When you create polls, they will appear here."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
+
   return (
     <div className="grid gap-2 md:grid-cols-3">
       {data.map((poll) => {
@@ -128,9 +161,23 @@ function UpcomingEvents() {
 
   if (data.length === 0) {
     return (
-      <div className="text-muted-foreground">
-        <Trans i18nKey="noUpcomingEvents" defaults="No upcoming events" />
-      </div>
+      <EmptyState className="h-96 rounded-lg">
+        <EmptyStateIcon>
+          <CalendarPlusIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans
+            i18nKey="upcomingEventsEmptyStateTitle"
+            defaults="No Upcoming Events"
+          />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="upcomingEventsEmptyStateDescription"
+            defaults="When you schedule events, they will appear here."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
     );
   }
 
