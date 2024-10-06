@@ -2,7 +2,6 @@
   "name": "@rallly/tsconfig",
   "version": "0.0.0",
   "private": true,
-  "extends": "./base.json",
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.2",
     "@tsconfig/next": "^2.0.1"
