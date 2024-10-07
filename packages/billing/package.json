@@ -12,9 +12,9 @@
     "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts"
   },
   "dependencies": {
-    "@rallly/ui": "*",
-    "stripe": "^13.2.0",
     "@radix-ui/react-radio-group": "^1.2.0",
-    "next": "*"
+    "@rallly/ui": "*",
+    "next": "*",
+    "stripe": "^13.2.0"
   }
 }

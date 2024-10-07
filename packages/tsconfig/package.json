@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@tsconfig/strictest": "^2.0.2",
-    "@tsconfig/next": "^2.0.1"
+    "@tsconfig/next": "^2.0.1",
+    "@tsconfig/strictest": "^2.0.2"
   }
 }

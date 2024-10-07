@@ -5,8 +5,8 @@
   "main": "tailwind.config.js",
   "types": "tailwind.config.d.ts",
   "devDependencies": {
-    "autoprefixer": "^10.4.13",
     "@tailwindcss/typography": "^0.5.13",
+    "autoprefixer": "^10.4.13",
     "tailwind-scrollbar": "^3.0.4",
     "tailwindcss-animate": "^1.0.5"
   }

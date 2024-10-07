@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.4",
-    "@rallly/tsconfig": "*",
     "@rallly/eslint-config": "*",
+    "@rallly/tsconfig": "*",
     "@types/color-hash": "^1.0.2",
     "@types/lodash": "^4.14.178",
     "cross-env": "^7.0.3",
