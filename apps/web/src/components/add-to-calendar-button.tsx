@@ -119,13 +119,11 @@ export function AddToCalendarButton({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            const res = ics(calendarEvent);
+            const data = ics(calendarEvent);
 
             // download the file
-            const blob = new Blob([res], { type: "text/calendar" });
-            const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.setAttribute("href", url);
+            link.setAttribute("href", data);
             link.setAttribute(
               "download",
               `${title.toLocaleLowerCase().replace(/\s/g, "-")}.ics`,
