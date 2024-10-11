@@ -10,6 +10,8 @@
   "ericQuote": "“Hvis planleggingsarbeidet ditt foregår via e-post, oppfordrer jeg deg sterkt til å forsøke å la Rallly forenkle planleggingsoppgavene dine for en mer organisert og mindre stressfylt arbeidsdag.”",
   "viaTrustpilot": "via Trustpilot",
   "ericJobTitle": "Utøvende assistent ved MIT",
+  "statsUsersRegistered": "{count, number, ::compact-short}+ registrerte brukere",
+  "statsPollsCreated": "{count, number, ::compact-short}+ avstemninger opprettet",
   "statsLanguagesSupported": "Over 10 støttede språk",
   "hint": "Det er gratis! Innlogging kreves ikke.",
   "doodleAlternative": "Det beste gratis Doodle-alternativet",
@@ -30,5 +32,8 @@
   "new": "Nytt",
   "metaTitle": "Rallly - Planlegg gruppemøter",
   "metaDescription": "Opprett avstemninger og stem for å finne den beste dagen eller tidspunktet. Et gratis Doodle-alternativ.",
-  "selfHostingBlog": "Rallly 3.0 på egen infrastruktur"
+  "selfHostingBlog": "Rallly 3.0 på egen infrastruktur",
+  "when2meetAlternativeMetaTitle": "Det beste alternativet til When2Meet: Rallly",
+  "when2meetAlternativeMetaDescription": "Finn en bedre måte å planlegge møter på med Rallly, det beste gratisalternativet til When2Meet. Lettvint å bruke og gratis.",
+  "when2meetAlternative": "Bruker du fremdeles When2Meet?"
 }
