@@ -5,8 +5,8 @@ on:
       - "v*"
 
 jobs:
-  publish:
-    name: Build and publish Docker image
+  publish-amd64:
+    name: Build and publish AMD64 Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -19,9 +19,9 @@ jobs:
           images: |
             ${{ secrets.DOCKER_NAMESPACE }}/rallly
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}}-amd64
+            type=semver,pattern={{major}}.{{minor}}-amd64
+            type=semver,pattern={{major}}-amd64
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -29,7 +29,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and publish image
+      - name: Build and publish AMD64 image
         uses: docker/build-push-action@v5
         with:
           file: ./apps/web/Dockerfile
@@ -40,3 +40,71 @@ jobs:
           build-args: |
             APP_VERSION=${{ github.ref_name }}
             SELF_HOSTED=true
+
+  publish-arm64:
+    name: Build and publish ARM64 Docker image
+    runs-on: buildjet-4vcpu-ubuntu-2204-arm
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly
+          tags: |
+            type=semver,pattern={{version}}-arm64
+            type=semver,pattern={{major}}.{{minor}}-arm64
+            type=semver,pattern={{major}}-arm64
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and publish ARM64 image
+        uses: docker/build-push-action@v5
+        with:
+          file: ./apps/web/Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            APP_VERSION=${{ github.ref_name }}
+            SELF_HOSTED=true
+
+  create-manifest:
+    name: Create and Push Multi-Arch Manifest
+    needs: [publish-amd64, publish-arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Create and push manifest
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          MAJOR=${VERSION%%.*}
+          MINOR=${VERSION%.*}
+
+          docker manifest create ${{ secrets.DOCKER_NAMESPACE }}/rallly:${VERSION} \
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:${VERSION}-amd64 \
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:${VERSION}-arm64
+          docker manifest push ${{ secrets.DOCKER_NAMESPACE }}/rallly:${VERSION}
+
+          docker manifest create ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR}.${MINOR} \
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR}.${MINOR}-amd64 \
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR}.${MINOR}-arm64
+          docker manifest push ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR}.${MINOR}
+
+          docker manifest create ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR} \
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR}-amd64 \
+            ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR}-arm64
+          docker manifest push ${{ secrets.DOCKER_NAMESPACE }}/rallly:${MAJOR}
