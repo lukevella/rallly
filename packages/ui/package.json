@@ -32,7 +32,9 @@
     "@rallly/tailwind-config": "workspace:*",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
+    "react-hook-form": "^7.42.1",
     "cmdk": "^0.2.1",
+    "lucide-react": "^0.452.0",
     "tailwind-merge": "^1.12.0"
   },
   "devDependencies": {
