@@ -16,7 +16,7 @@ import { Adapter, AdapterAccount } from "next-auth/adapters";
 export function CustomPrismaAdapter(client: ExtendedPrismaClient): Adapter {
   return {
     ...PrismaAdapter(client as PrismaClient),
-    linkAccount: (data) => {
+    linkAccount: (data: AdapterAccount) => {
       return client.account.create({
         data: {
           userId: data.userId,

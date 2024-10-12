@@ -6,7 +6,7 @@ import { FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
@@ -59,7 +59,7 @@ const VoteSummary = ({
 
   return (
     <div
-      className={clsx("flex flex-wrap gap-1.5 rounded border p-1.5", className)}
+      className={cn("flex flex-wrap gap-1.5 rounded border p-1.5", className)}
     >
       {voteTypes.map((voteType) => {
         const votes = voteByType[voteType];

@@ -27,15 +27,17 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.4",
     "@radix-ui/react-tooltip": "^1.0.6",
-    "@rallly/icons": "*",
-    "@rallly/languages": "*",
-    "@rallly/tailwind-config": "*",
+    "@rallly/icons": "workspace:*",
+    "@rallly/languages": "workspace:*",
+    "@rallly/tailwind-config": "workspace:*",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
+    "react-hook-form": "^7.42.1",
     "cmdk": "^0.2.1",
+    "lucide-react": "^0.452.0",
     "tailwind-merge": "^1.12.0"
   },
   "devDependencies": {
-    "@rallly/tsconfig": "*"
+    "@rallly/tsconfig": "workspace:*"
   }
 }

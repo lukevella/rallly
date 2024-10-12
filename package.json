@@ -1,7 +1,7 @@
 {
   "name": "rallly",
   "private": true,
-  "version": "3.11.1",
+  "version": "3.10.0",
   "scripts": {
     "dev": "turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
@@ -10,8 +10,8 @@
     "build": "dotenv -c -- turbo run build --filter=@rallly/web",
     "build:test": "turbo build:test",
     "docs:dev": "turbo dev --filter=@rallly/docs...",
-    "db:deploy": "prisma migrate deploy",
-    "db:generate": "prisma generate",
+    "db:deploy": "prisma migrate deploy --schema=./packages/database/prisma/schema.prisma",
+    "db:generate": "prisma generate --schema=./packages/database/prisma/schema.prisma",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "docker:up": "docker compose -f docker-compose.dev.yml up -d && wait-on --timeout 60000 tcp:localhost:5450",
@@ -27,18 +27,15 @@
   "prisma": {
     "seed": "yarn workspace @rallly/database db:seed"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "dependencies": {
-    "@prisma/client": "^5.17.0",
+    "@prisma/client": "^5.20.0",
     "@sentry/nextjs": "^8.32.0",
     "framer-motion": "^10.16.4",
     "next": "^14.2.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2",
+    "prisma": "^5.20.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -50,10 +47,11 @@
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.4",
     "turbo": "^2.1.1",
+    "wait-on": "^6.0.1",
     "vitest": "^2.1.1"
   },
   "engines": {
     "node": "20.x"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "pnpm@9.12.1"
 }
