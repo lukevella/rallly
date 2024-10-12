@@ -8,7 +8,7 @@ inputs:
   cache:
     description: "Package manager for caching"
     required: false
-    default: "yarn"
+    default: "pnpm"
 runs:
   using: "composite"
   steps:
@@ -17,3 +17,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: ${{ inputs.cache }}
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
