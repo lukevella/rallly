@@ -17,7 +17,7 @@ export const ParticipantAvatarBar = ({
   return (
     <ul className="flex items-center -space-x-1">
       {participants.slice(0, visibleCount).map((participant, index) => (
-        <Tooltip key={index}>
+        <Tooltip key={`${participant.name}-${index}`}>
           <TooltipTrigger asChild>
             <li className="z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
               <OptimizedAvatarImage name={participant.name} size="xs" />
@@ -45,7 +45,9 @@ export const ParticipantAvatarBar = ({
                 {participants
                   .slice(visibleCount, 10)
                   .map((participant, index) => (
-                    <li key={index}>{participant.name}</li>
+                    <li key={`${participant.name}-${index}`}>
+                      {participant.name}
+                    </li>
                   ))}
               </ul>
             </TooltipContent>

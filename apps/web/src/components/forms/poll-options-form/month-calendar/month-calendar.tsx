@@ -34,8 +34,7 @@ import {
 } from "../../../../utils/date-time-utils";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
-import type { DateTimeOption } from "..";
-import type { DateTimePickerProps } from "../types";
+import type { DateTimeOption, DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
 import TimePicker from "./time-picker";
 
@@ -127,7 +126,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               {datepicker.days.map((day, i) => {
                 return (
                   <div
-                    key={i}
+                    key={day.date.toISOString()}
                     className={cn("h-11", {
                       "border-r": (i + 1) % 7 !== 0,
                       "border-b": i < datepicker.days.length - 7,
@@ -411,22 +410,21 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                     },
                                   );
                                   const newOptions: DateTimeOption[] = [];
-                                  Object.keys(optionsByDay).forEach(
-                                    (dateString) => {
-                                      times.forEach((time) => {
-                                        const start =
-                                          dateString + time.startTime;
-                                        newOptions.push({
-                                          type: "timeSlot",
-                                          start: start,
-                                          duration,
-                                          end: dayjs(start)
-                                            .add(duration, "minutes")
-                                            .format("YYYY-MM-DDTHH:mm"),
-                                        });
+                                  for (const dateString of Object.keys(
+                                    optionsByDay,
+                                  )) {
+                                    for (const time of times) {
+                                      const start = dateString + time.startTime;
+                                      newOptions.push({
+                                        type: "timeSlot",
+                                        start: start,
+                                        duration,
+                                        end: dayjs(start)
+                                          .add(duration, "minutes")
+                                          .format("YYYY-MM-DDTHH:mm"),
                                       });
-                                    },
-                                  );
+                                    }
+                                  }
                                   onChange(newOptions);
                                 }}
                               >
@@ -462,10 +460,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             <div className="flex flex-wrap gap-3 p-3 sm:gap-4 sm:p-4">
               {datepicker.selection
                 .sort((a, b) => a.getTime() - b.getTime())
-                .map((selectedDate, i) => {
+                .map((selectedDate) => {
                   return (
                     <DateCard
-                      key={i}
+                      key={selectedDate.toISOString()}
                       {...getDateProps(selectedDate)}
                       // annotation={
                       //   <CompactButton
