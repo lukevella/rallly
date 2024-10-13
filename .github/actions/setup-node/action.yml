@@ -18,6 +18,6 @@ runs:
         node-version: ${{ inputs.node-version }}
         cache: ${{ inputs.cache }}
     - name: Install pnpm
-      uses: pnpm/action-setup@v2
+      uses: pnpm/action-setup@v4
       with:
         version: 8
