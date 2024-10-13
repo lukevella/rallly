@@ -8,7 +8,7 @@ import { useState } from "react";
 
 import { I18nProvider } from "@/app/i18n/client";
 import { UserProvider } from "@/components/user-provider";
-import { AppRouter } from "@/trpc/routers";
+import type { AppRouter } from "@/trpc/routers";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpcConfig } from "@/utils/trpc/config";
 

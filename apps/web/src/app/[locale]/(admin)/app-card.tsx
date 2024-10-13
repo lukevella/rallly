@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import { BarChart2Icon } from "lucide-react";
-import React from "react";
+import type React from "react";
 
 export function AppCard({
   children,

@@ -1,4 +1,4 @@
-import { PollStatus } from "@rallly/database";
+import type { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
 
 import { Trans } from "@/components/trans";

@@ -3,8 +3,8 @@
 import * as React from "react";
 
 import { cn } from "./lib/utils";
-import { VariantProps, cva } from "class-variance-authority";
-import { Icon, IconProps } from "./icon";
+import { type VariantProps, cva } from "class-variance-authority";
+import { Icon, type IconProps } from "./icon";
 
 const inputVariants = cva(
   cn(

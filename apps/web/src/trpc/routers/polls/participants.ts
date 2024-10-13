@@ -6,7 +6,7 @@ import { absoluteUrl } from "@/utils/absolute-url";
 import { createToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
-import { DisableNotificationsPayload } from "../../types";
+import type { DisableNotificationsPayload } from "../../types";
 
 export const participants = router({
   list: publicProcedure

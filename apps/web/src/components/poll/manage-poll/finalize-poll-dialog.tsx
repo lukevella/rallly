@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogProps,
+  type DialogProps,
   DialogTitle,
 } from "@rallly/ui/dialog";
 import {

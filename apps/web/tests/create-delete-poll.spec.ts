@@ -1,5 +1,5 @@
-import { expect, Page, test } from "@playwright/test";
-import smtpTester, { MailServer } from "smtp-tester";
+import { expect, type Page, test } from "@playwright/test";
+import smtpTester, { type MailServer } from "smtp-tester";
 import { NewPollPage } from "tests/new-poll-page";
 
 test.describe.serial(() => {

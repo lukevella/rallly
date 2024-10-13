@@ -9,7 +9,7 @@ import {
 } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/navigation";
-import React from "react";
+import type React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useUnmount } from "react-use";
@@ -21,7 +21,7 @@ import { setCookie } from "@/utils/cookies";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
-import { NewEventData, PollDetailsForm, PollOptionsForm } from "./forms";
+import { type NewEventData, PollDetailsForm, PollOptionsForm } from "./forms";
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {

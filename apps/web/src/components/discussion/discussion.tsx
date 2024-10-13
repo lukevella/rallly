@@ -65,9 +65,8 @@ function NewCommentForm({
     if (user.isGuest) {
       const participant = participants.find((p) => p.userId === user.id);
       return participant?.name ?? "";
-    } else {
-      return user.name;
     }
+    return user.name;
   }, [user, participants]);
 
   const pollId = poll.id;
@@ -237,7 +236,10 @@ function DiscussionInner() {
                         {canDelete && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild={true}>
-                              <button className="hover:text-foreground text-gray-500">
+                              <button
+                                type="button"
+                                className="hover:text-foreground text-gray-500"
+                              >
                                 <MoreHorizontalIcon className="size-4" />
                               </button>
                             </DropdownMenuTrigger>
@@ -281,6 +283,7 @@ function DiscussionInner() {
             />
           ) : (
             <button
+              type="button"
               className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-2 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
               onClick={() => setIsWriting(true)}
             >

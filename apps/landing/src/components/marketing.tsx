@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import type React from "react";
 
 import { Trans } from "@/components/trans";
 

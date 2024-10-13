@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient, VoteType } from "@prisma/client";
+import { PrismaClient, type VoteType } from "@prisma/client";
 import dayjs from "dayjs";
 
 const prisma = new PrismaClient();

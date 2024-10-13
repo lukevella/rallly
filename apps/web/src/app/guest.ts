@@ -1,7 +1,7 @@
 import languages from "@rallly/languages";
 import languageParser from "accept-language-parser";
-import { NextRequest, NextResponse } from "next/server";
-import { encode, JWT } from "next-auth/jwt";
+import type { NextRequest, NextResponse } from "next/server";
+import { encode, type JWT } from "next-auth/jwt";
 
 import { absoluteUrl } from "@/utils/absolute-url";
 import { randomid } from "@/utils/nanoid";

@@ -30,7 +30,7 @@ import { Input } from "@rallly/ui/input";
 import { PencilIcon, TagIcon, TrashIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { useMount } from "react-use";
 import { z } from "zod";
 

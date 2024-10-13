@@ -1,7 +1,7 @@
 import { Button } from "@rallly/ui/button";
 import { Input } from "@rallly/ui/input";
 import { Trans, useTranslation } from "next-i18next";
-import React from "react";
+import type React from "react";
 import { useForm } from "react-hook-form";
 
 import { requiredString } from "../../utils/form-validation";

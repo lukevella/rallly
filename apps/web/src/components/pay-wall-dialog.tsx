@@ -5,7 +5,7 @@ import { Badge } from "@rallly/ui/badge";
 import {
   Dialog,
   DialogContent,
-  DialogProps,
+  type DialogProps,
   useDialog,
 } from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";

@@ -1,10 +1,10 @@
-import { Participant, VoteType } from "@rallly/database";
+import type { Participant, VoteType } from "@rallly/database";
 import * as React from "react";
 
 import { useVisibility } from "@/components/visibility";
 import { usePermissions } from "@/contexts/permissions";
 import { trpc } from "@/utils/trpc/client";
-import { Vote } from "@/utils/trpc/types";
+import type { Vote } from "@/utils/trpc/types";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -27,7 +27,7 @@ export const ParticipantsProvider: React.FunctionComponent<{
     },
     {
       staleTime: 1000 * 10,
-      cacheTime: Infinity,
+      cacheTime: Number.POSITIVE_INFINITY,
     },
   );
 

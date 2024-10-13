@@ -16,11 +16,11 @@ import { Trans } from "@/components/trans";
 import { useSubscription } from "@/contexts/plan";
 import { trpc } from "@/utils/trpc/client";
 
-import { BillingPlans, PricingData } from "./billing-plans";
+import { BillingPlans, type PricingData } from "./billing-plans";
 
 declare global {
   interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     Paddle: any;
   }
 }

@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { TimeFormat } from "@rallly/database";
 import { extend } from "lodash";
-import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
-import { DefaultJWT, JWT } from "next-auth/jwt";
+import NextAuth, { type DefaultSession, type DefaultUser } from "next-auth";
+import { type DefaultJWT, JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   /**

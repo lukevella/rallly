@@ -47,6 +47,7 @@ const CookieConsentPopover = () => {
                   Privacy Policy
                 </Link>
                 <button
+                  type="button"
                   onClick={() => {
                     Cookies.set("rallly_cookie_consent", "1", { expires: 365 });
                     setVisible(false);

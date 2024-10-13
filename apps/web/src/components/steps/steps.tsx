@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import { useTranslation } from "next-i18next";
-import React from "react";
+import type React from "react";
 
 export interface StepsProps {
   current: number;

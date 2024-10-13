@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 import {
   PollSettingsForm,
-  PollSettingsFormData,
+  type PollSettingsFormData,
 } from "@/components/forms/poll-settings";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";

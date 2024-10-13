@@ -3,7 +3,7 @@ import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import * as Sentry from "@sentry/nextjs";
 import { buffer } from "micro";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 import { posthog, posthogApiHandler } from "@/app/posthog";

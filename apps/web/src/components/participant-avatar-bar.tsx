@@ -10,7 +10,7 @@ interface ParticipantAvatarBarProps {
 
 export const ParticipantAvatarBar = ({
   participants,
-  max = Infinity,
+  max = Number.POSITIVE_INFINITY,
 }: ParticipantAvatarBarProps) => {
   const visibleCount = participants.length > max ? max - 1 : max;
   const hiddenCount = participants.length - visibleCount;

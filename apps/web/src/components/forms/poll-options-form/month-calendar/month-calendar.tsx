@@ -23,7 +23,7 @@ import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
-import { NewEventData } from "@/components/forms";
+import type { NewEventData } from "@/components/forms";
 import { Trans } from "@/components/trans";
 
 import {
@@ -34,8 +34,8 @@ import {
 } from "../../../../utils/date-time-utils";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
-import { DateTimeOption } from "..";
-import { DateTimePickerProps } from "../types";
+import type { DateTimeOption } from "..";
+import type { DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
 import TimePicker from "./time-picker";
 

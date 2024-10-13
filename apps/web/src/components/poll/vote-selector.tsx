@@ -1,4 +1,4 @@
-import { VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import * as React from "react";
 

@@ -1,8 +1,8 @@
 import { cn } from "@rallly/ui";
 import { groupBy } from "lodash";
-import * as React from "react";
+import type * as React from "react";
 
-import { ParsedDateTimeOpton } from "@/utils/date-time-utils";
+import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
 
 import PollOptions from "./poll-options";
 

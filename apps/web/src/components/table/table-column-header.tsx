@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
-import { Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table";
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
 interface DataTableColumnHeaderProps<TData, TValue>

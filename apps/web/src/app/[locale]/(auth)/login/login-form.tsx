@@ -31,8 +31,8 @@ export function LoginForm() {
   });
 
   const { data: providers } = useQuery(["providers"], getProviders, {
-    cacheTime: Infinity,
-    staleTime: Infinity,
+    cacheTime: Number.POSITIVE_INFINITY,
+    staleTime: Number.POSITIVE_INFINITY,
   });
 
   const session = useSession();
@@ -223,8 +223,8 @@ export function LoginForm() {
               </span>
             </div>
             <div className="grid gap-2.5">
-              {alternativeLoginMethods.map((method, i) => (
-                <Button size="lg" key={i} onClick={method.login}>
+              {alternativeLoginMethods.map((method) => (
+                <Button size="lg" key={method.name} onClick={method.login}>
                   {method.icon}
                   {method.name}
                 </Button>

@@ -11,7 +11,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Analytics } from "@vercel/analytics/react";
 import { ChevronRightIcon, MenuIcon } from "lucide-react";
-import { Viewport } from "next";
+import type { Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";

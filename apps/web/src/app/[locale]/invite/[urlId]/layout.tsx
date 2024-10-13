@@ -1,6 +1,6 @@
 "use client";
 import { notFound, useParams, useSearchParams } from "next/navigation";
-import React from "react";
+import type React from "react";
 
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { VisibilityProvider } from "@/components/visibility";

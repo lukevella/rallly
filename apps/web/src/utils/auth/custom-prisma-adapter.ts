@@ -10,8 +10,8 @@
  * See: https://github.com/lukevella/rallly/issues/949
  */
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { ExtendedPrismaClient, PrismaClient } from "@rallly/database";
-import { Adapter, AdapterAccount } from "next-auth/adapters";
+import type { ExtendedPrismaClient, PrismaClient } from "@rallly/database";
+import type { Adapter, AdapterAccount } from "next-auth/adapters";
 
 export function CustomPrismaAdapter(client: ExtendedPrismaClient): Adapter {
   return {

@@ -1,6 +1,6 @@
-import { expect, Page, test } from "@playwright/test";
-import smtpTester, { MailServer } from "smtp-tester";
-import { EditOptionsPage } from "tests/edit-options-page";
+import { expect, type Page, test } from "@playwright/test";
+import smtpTester, { type MailServer } from "smtp-tester";
+import type { EditOptionsPage } from "tests/edit-options-page";
 import { NewPollPage } from "tests/new-poll-page";
 
 test.describe("edit options", () => {

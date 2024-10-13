@@ -25,7 +25,7 @@ import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
-import { IconComponent } from "@/types";
+import type { IconComponent } from "@/types";
 import { usePostHog } from "@/utils/posthog";
 
 function NavItem({
@@ -64,9 +64,9 @@ export function Sidebar() {
   const posthog = usePostHog();
   return (
     <nav className="flex flex-1 flex-col ">
-      <ul role="list" className="flex flex-1 flex-col gap-y-7">
+      <ul className="flex flex-1 flex-col gap-y-7">
         <li>
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul className="-mx-2 space-y-1">
             <li>
               <NavItem current={pathname === "/"} href="/" icon={HomeIcon}>
                 <Trans i18nKey="home" defaults="Home" />
@@ -103,7 +103,7 @@ export function Sidebar() {
           </Button>
         </li>
         <li className="mt-auto">
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul className="-mx-2 space-y-1">
             <IfFreeUser>
               <li>
                 <PayWallDialog>
@@ -113,7 +113,10 @@ export function Sidebar() {
                     }
                     asChild
                   >
-                    <button className="mb-4 flex w-full flex-col rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200">
+                    <button
+                      type="button"
+                      className="mb-4 flex w-full flex-col rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200"
+                    >
                       <span className="mb-2 flex items-center gap-x-2">
                         <SparklesIcon className="size-5 text-gray-400" />
                         <span className="text-sm font-bold">
@@ -162,7 +165,7 @@ export function Sidebar() {
             </li>
           </ul>
           <hr className="my-2" />
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul className="-mx-2 space-y-1">
             <li>
               <Button
                 asChild

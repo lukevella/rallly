@@ -1,7 +1,7 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import NotificationEmail, {
-  NotificationBaseProps,
+  type NotificationBaseProps,
 } from "../components/notification-email";
 import { Heading, Text } from "../components/styled-components";
 import type { EmailContext } from "../types";

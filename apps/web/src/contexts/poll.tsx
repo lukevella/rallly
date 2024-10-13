@@ -11,7 +11,7 @@ export const usePoll = () => {
   const pollQuery = trpc.polls.get.useQuery(
     { urlId },
     {
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     },
   );
 

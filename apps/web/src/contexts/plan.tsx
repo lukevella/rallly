@@ -1,6 +1,6 @@
 "use client";
 import { Badge } from "@rallly/ui/badge";
-import React from "react";
+import type React from "react";
 
 import { Trans } from "@/components/trans";
 import { isSelfHosted } from "@/utils/constants";

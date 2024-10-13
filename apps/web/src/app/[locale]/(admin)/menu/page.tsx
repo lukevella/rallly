@@ -1,7 +1,7 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
-import { Params } from "@/app/[locale]/types";
+import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,

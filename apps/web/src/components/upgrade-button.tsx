@@ -1,7 +1,7 @@
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans } from "next-i18next";
-import React from "react";
+import type React from "react";
 
 import { usePostHog } from "@/utils/posthog";
 

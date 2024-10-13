@@ -1,6 +1,6 @@
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 import { absoluteUrl } from "@/utils/absolute-url";

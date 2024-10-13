@@ -1,5 +1,5 @@
 "use client";
-import { PollStatus } from "@rallly/database";
+import type { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
@@ -50,8 +50,8 @@ function FilteredPolls({ status }: { status: PollStatus }) {
   return (
     <div className="space-y-6">
       <ol className="space-y-4">
-        {data.pages.map((page, i) => (
-          <li key={i}>
+        {data.pages.map((page) => (
+          <li key={page.nextCursor}>
             <PollsListView data={page.polls} />
           </li>
         ))}
@@ -102,7 +102,7 @@ function useQueryParam(name: string) {
   const searchParams = useSearchParams();
   return [
     searchParams?.get(name),
-    function (value: string) {
+    (value: string) => {
       const newParams = new URLSearchParams(searchParams?.toString());
       newParams.set(name, value);
       window.history.replaceState(null, "", `?${newParams.toString()}`);

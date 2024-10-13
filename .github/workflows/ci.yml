@@ -24,15 +24,18 @@ jobs:
         run: pnpm type-check
 
   linting:
-    name: Linting
+    name: Linting and Formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/pnpm-install
 
-      - name: Check linting rules
-        run: pnpm lint
+      - name: Install Biome
+        run: pnpm add -D @biomejs/biome
+
+      - name: Check linting and formatting
+        run: pnpm ci
 
   unit-tests:
     name: Unit tests

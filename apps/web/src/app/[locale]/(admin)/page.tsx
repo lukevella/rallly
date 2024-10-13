@@ -2,7 +2,7 @@ import { HomeIcon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import Dashboard from "@/app/[locale]/(admin)/dashboard";
-import { Params } from "@/app/[locale]/types";
+import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,

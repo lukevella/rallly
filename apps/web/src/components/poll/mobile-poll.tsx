@@ -13,7 +13,7 @@ import {
 import { AnimatePresence, m } from "framer-motion";
 import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
-import * as React from "react";
+import type * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";

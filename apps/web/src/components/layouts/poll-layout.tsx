@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React from "react";
+import type React from "react";
 
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import Loader from "@/app/[locale]/poll/[urlId]/skeleton";

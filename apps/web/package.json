@@ -8,7 +8,6 @@
     "build:test": "NODE_ENV=test next build",
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
-    "lint": "eslint .",
     "type-check": "tsc --pretty --noEmit",
     "i18n:scan": "i18next-scanner --config i18next-scanner.config.js",
     "prettier": "prettier --write ./src",
@@ -88,7 +87,6 @@
   "devDependencies": {
     "@next/env": "^14.2.15",
     "@playwright/test": "^1.39.0",
-    "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/accept-language-parser": "^1.5.3",
     "@types/color-hash": "^1.0.2",

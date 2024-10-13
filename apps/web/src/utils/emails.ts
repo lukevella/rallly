@@ -1,4 +1,4 @@
-import { EmailClient, SupportedEmailProviders } from "@rallly/emails";
+import { EmailClient, type SupportedEmailProviders } from "@rallly/emails";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";

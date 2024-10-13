@@ -1,9 +1,9 @@
 "use client";
-import i18next, { Namespace } from "i18next";
+import i18next, { type Namespace } from "i18next";
 import ICU from "i18next-icu";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { useParams } from "next/navigation";
-import React from "react";
+import type React from "react";
 import {
   I18nextProvider,
   initReactI18next,

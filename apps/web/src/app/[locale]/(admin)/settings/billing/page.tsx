@@ -2,7 +2,7 @@ import { pricingData } from "@rallly/billing/pricing";
 import { notFound } from "next/navigation";
 
 import { BillingPage } from "@/app/[locale]/(admin)/settings/billing/billing-page";
-import { Params } from "@/app/[locale]/types";
+import type { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 import { env } from "@/env";
 

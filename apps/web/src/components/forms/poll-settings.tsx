@@ -10,7 +10,7 @@ import { useDialog } from "@rallly/ui/dialog";
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
 import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
-import React from "react";
+import type React from "react";
 import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";
 

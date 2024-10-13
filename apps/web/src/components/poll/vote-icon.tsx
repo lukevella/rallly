@@ -1,7 +1,7 @@
-import { VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
 import { IfNeedBeIcon, NoIcon, PendingIcon, YesIcon } from "@rallly/icons";
 import { cn } from "@rallly/ui";
-import * as React from "react";
+import type * as React from "react";
 
 const VoteIcon: React.FunctionComponent<{
   type?: VoteType;

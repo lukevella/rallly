@@ -19,7 +19,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import * as React from "react";
+import type * as React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Trans } from "@/components/trans";
@@ -302,7 +302,7 @@ export const Footer: React.FunctionComponent = () => {
               <a
                 target="_blank"
                 href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
-                className="inline-block text-white"
+                className="inline-block text-white" rel="noreferrer"
               >
                 <Image
                   src="/static/images/partners/vercel-logotype-dark.svg"
@@ -316,7 +316,7 @@ export const Footer: React.FunctionComponent = () => {
               <a
                 target="_blank"
                 className="inline-block"
-                href="/partners/digitalocean"
+                href="/partners/digitalocean" rel="noreferrer"
               >
                 <Image
                   src="/static/images/partners/digitalocean-logo.svg"
@@ -330,7 +330,7 @@ export const Footer: React.FunctionComponent = () => {
               <a
                 target="_blank"
                 className="inline-block"
-                href="https://sentry.io"
+                href="https://sentry.io" rel="noreferrer"
               >
                 <Image
                   src="/static/images/partners/sentry.svg"

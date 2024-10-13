@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@rallly/ui/button";
+import { Button, type ButtonProps } from "@rallly/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import * as React from "react";
+import type * as React from "react";
 
 export interface ModalProps {
   title?: React.ReactNode;

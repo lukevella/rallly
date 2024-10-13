@@ -1,4 +1,4 @@
-import { PollStatus, prisma } from "@rallly/database";
+import { type PollStatus, prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import * as ics from "ics";

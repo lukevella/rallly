@@ -18,7 +18,10 @@
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "test:integration": "turbo test:integration",
     "test:unit": "turbo test:unit",
-    "lint": "turbo lint",
+    "lint": "biome lint .",
+    "format": "biome format . --write",
+    "check": "biome check .",
+    "ci": "biome ci .",
     "i18n:scan": "turbo i18n:scan",
     "type-check": "turbo type-check",
     "prettier": "prettier --write .",
@@ -39,6 +42,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.3",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "dotenv-cli": "^7.1.0",

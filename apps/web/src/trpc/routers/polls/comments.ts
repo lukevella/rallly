@@ -6,7 +6,7 @@ import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
-import { DisableNotificationsPayload } from "../../types";
+import type { DisableNotificationsPayload } from "../../types";
 
 export const comments = router({
   list: publicProcedure

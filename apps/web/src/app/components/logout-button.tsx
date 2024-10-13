@@ -1,5 +1,5 @@
 "use client";
-import { Button, ButtonProps } from "@rallly/ui/button";
+import { Button, type ButtonProps } from "@rallly/ui/button";
 
 import { usePostHog } from "@/utils/posthog";
 

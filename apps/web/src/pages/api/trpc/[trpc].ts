@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
 import { posthogApiHandler } from "@/app/posthog";
-import { AppRouter, appRouter } from "@/trpc/routers";
+import { type AppRouter, appRouter } from "@/trpc/routers";
 import { getServerSession } from "@/utils/auth";
 import { getEmailClient } from "@/utils/emails";
 import { composeApiHandlers } from "@/utils/next";

@@ -1,4 +1,4 @@
-import { TimeFormat } from "@rallly/database";
+import type { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import duration from "dayjs/plugin/duration";

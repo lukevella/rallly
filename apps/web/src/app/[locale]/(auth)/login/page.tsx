@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { LoginForm } from "@/app/[locale]/(auth)/login/login-form";
-import { Params } from "@/app/[locale]/types";
+import type { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/app/i18n";
 import { AuthCard } from "@/components/auth/auth-layout";
 

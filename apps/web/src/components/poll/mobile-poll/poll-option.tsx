@@ -1,5 +1,5 @@
 "use client";
-import { Participant, VoteType } from "@rallly/database";
+import type { Participant, VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";

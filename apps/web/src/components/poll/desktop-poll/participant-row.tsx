@@ -5,7 +5,7 @@ import { Button } from "@rallly/ui/button";
 import { Flex } from "@rallly/ui/flex";
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { ParticipantName } from "@/components/participant";
@@ -14,7 +14,7 @@ import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePermissions } from "@/contexts/permissions";
-import { Vote } from "@/utils/trpc/types";
+import type { Vote } from "@/utils/trpc/types";
 
 import VoteIcon from "../vote-icon";
 import ParticipantRowForm from "./participant-row-form";

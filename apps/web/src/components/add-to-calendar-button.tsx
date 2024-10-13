@@ -10,7 +10,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import {
-  CalendarEvent,
+  type CalendarEvent,
   google,
   ics,
   office365,

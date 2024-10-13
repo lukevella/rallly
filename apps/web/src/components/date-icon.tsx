@@ -1,5 +1,5 @@
 import { cn } from "@rallly/ui";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 
 export const DateIconInner = (props: {
   dow?: React.ReactNode;

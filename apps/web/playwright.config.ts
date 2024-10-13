@@ -1,5 +1,5 @@
 import { loadEnvConfig } from "@next/env";
-import { devices, PlaywrightTestConfig } from "@playwright/test";
+import { devices, type PlaywrightTestConfig } from "@playwright/test";
 
 const ci = process.env.CI === "true";
 

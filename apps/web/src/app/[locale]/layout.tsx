@@ -3,9 +3,9 @@ import "../../style.css";
 
 import languages from "@rallly/languages";
 import { Toaster } from "@rallly/ui/toaster";
-import { Viewport } from "next";
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
-import React from "react";
+import type React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { Providers } from "@/app/providers";

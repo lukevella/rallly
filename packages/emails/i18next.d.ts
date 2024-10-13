@@ -1,6 +1,6 @@
 import "i18next";
 
-import emails from "./locales/en/emails.json";
+import type emails from "./locales/en/emails.json";
 
 interface I18nNamespaces {
   emails: typeof emails;

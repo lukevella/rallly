@@ -1,5 +1,5 @@
 import { cn } from "@rallly/ui";
-import React from "react";
+import type React from "react";
 
 import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
 import { ProBadge } from "@/app/[locale]/(admin)/pro-badge";

@@ -4,7 +4,7 @@ import { Button } from "@rallly/ui/button";
 import { FileSearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
-import * as React from "react";
+import type * as React from "react";
 
 export interface ComponentProps {
   icon?: React.ReactNode;

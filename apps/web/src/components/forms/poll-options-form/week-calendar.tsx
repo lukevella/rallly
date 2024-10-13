@@ -3,14 +3,14 @@ import "./rbc-overrides.css";
 
 import dayjs from "dayjs";
 import { XIcon } from "lucide-react";
-import React from "react";
-import { Calendar, CalendarProps } from "react-big-calendar";
+import type React from "react";
+import { Calendar, type CalendarProps } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
-import { DateTimeOption, DateTimePickerProps } from "./types";
+import type { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTz } from "./utils";
 
 const localizer = dayjsLocalizer(dayjs);
@@ -47,12 +47,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         events={options.map((option) => {
           if (option.type === "date") {
             return { start: new Date(option.date) };
-          } else {
-            return {
-              start: new Date(option.start),
-              end: new Date(option.end),
-            };
           }
+          return {
+            start: new Date(option.start),
+            end: new Date(option.end),
+          };
         })}
         culture="default"
         onNavigate={onNavigate}
@@ -122,7 +121,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             );
           },
           week: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             header: function Header({ date }: any) {
               return (
                 <span className="w-full rounded-md text-center text-sm tracking-tight">

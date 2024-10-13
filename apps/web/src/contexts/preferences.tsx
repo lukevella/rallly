@@ -1,4 +1,4 @@
-import { TimeFormat } from "@rallly/database";
+import type { TimeFormat } from "@rallly/database";
 import React from "react";
 import { useSetState } from "react-use";
 

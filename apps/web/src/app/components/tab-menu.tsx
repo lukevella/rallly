@@ -2,7 +2,7 @@
 import { cn } from "@rallly/ui";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import type React from "react";
 
 export function TabMenuItem({
   href,

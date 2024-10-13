@@ -1,4 +1,4 @@
-import { Participant, VoteType } from "@rallly/database";
+import type { Participant, VoteType } from "@rallly/database";
 import dayjs from "dayjs";
 import { keyBy } from "lodash";
 import { TrashIcon } from "lucide-react";
@@ -6,12 +6,12 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 
 import {
+  type ParsedDateOption,
+  type ParsedTimeSlotOption,
   getDuration,
-  ParsedDateOption,
-  ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";
 import { useDayjs } from "@/utils/dayjs";
-import { GetPollApiResponse, Vote } from "@/utils/trpc/types";
+import type { GetPollApiResponse, Vote } from "@/utils/trpc/types";
 
 import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
@@ -59,9 +59,9 @@ export const PollContextProvider: React.FunctionComponent<{
     (optionId: string) => {
       return (participants ?? []).reduce(
         (acc, curr) => {
-          curr.votes.forEach((vote) => {
+          for (const vote of curr.votes) {
             if (vote.optionId !== optionId) {
-              return;
+              continue;
             }
             if (vote.type === "yes") {
               acc.yes += 1;
@@ -72,7 +72,7 @@ export const PollContextProvider: React.FunctionComponent<{
             } else {
               acc.skip += 1;
             }
-          });
+          }
           return acc;
         },
         { yes: 0, ifNeedBe: 0, no: 0, skip: 0 },
@@ -103,14 +103,14 @@ export const PollContextProvider: React.FunctionComponent<{
     );
 
     const participantsByOptionId: Record<string, Participant[]> = {};
-    poll.options.forEach((option) => {
+    for (const option of poll.options) {
       participantsByOptionId[option.id] = (participants ?? []).filter(
         (participant) =>
           participant.votes.some(
             ({ type, optionId }) => optionId === option.id && type === "yes",
           ),
       );
-    });
+    }
 
     return {
       optionIds,
@@ -208,38 +208,37 @@ function createOptionsContextValue(
         } satisfies ParsedTimeSlotOption;
       }),
     };
-  } else {
-    return {
-      pollType: "date",
-      options: pollOptions.map((option) => {
-        const localTime = sourceTimeZone
-          ? dayjs(option.startTime).tz(targetTimeZone)
-          : dayjs(option.startTime).utc();
-
-        return {
-          optionId: option.id,
-          type: "date",
-          month: localTime.format("MMM"),
-          day: localTime.format("D"),
-          dow: localTime.format("ddd"),
-          year: localTime.format("YYYY"),
-        } satisfies ParsedDateOption;
-      }),
-    };
   }
+  return {
+    pollType: "date",
+    options: pollOptions.map((option) => {
+      const localTime = sourceTimeZone
+        ? dayjs(option.startTime).tz(targetTimeZone)
+        : dayjs(option.startTime).utc();
+
+      return {
+        optionId: option.id,
+        type: "date",
+        month: localTime.format("MMM"),
+        day: localTime.format("D"),
+        dow: localTime.format("ddd"),
+        year: localTime.format("YYYY"),
+      } satisfies ParsedDateOption;
+    }),
+  };
 }
 
 export const OptionsProvider = (props: React.PropsWithChildren) => {
   const { poll } = usePoll();
   const { timeZone: targetTimeZone, timeFormat } = useDayjs();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const options = React.useMemo(() => {
     return createOptionsContextValue(
       poll.options,
       targetTimeZone,
       poll.timeZone,
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poll.options, poll.timeZone, targetTimeZone, timeFormat]);
 
   return (

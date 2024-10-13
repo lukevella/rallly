@@ -1,5 +1,5 @@
 import { prisma } from "@rallly/database";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
 import { getTranslation } from "@/app/i18n";

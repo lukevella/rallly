@@ -1,5 +1,5 @@
 import { prisma } from "@rallly/database";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 
 import type { DisableNotificationsPayload } from "@/trpc/types";
 import { getServerSession } from "@/utils/auth";

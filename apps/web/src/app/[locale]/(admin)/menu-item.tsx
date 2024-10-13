@@ -4,7 +4,7 @@ import { cn } from "@rallly/ui";
 import { Link } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-import { IconComponent } from "@/types";
+import type { IconComponent } from "@/types";
 
 export function MenuItem({
   href,

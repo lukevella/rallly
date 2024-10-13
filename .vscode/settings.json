@@ -1,7 +1,10 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.fixAll.eslint": "never",
+    "source.organizeImports.biome": "explicit",
+    "quickfix.biome": "explicit"
   },
+  "editor.defaultFormatter": "biomejs.biome",
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "cSpell.words": ["Rallly", "Vella"]
