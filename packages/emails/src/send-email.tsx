@@ -4,7 +4,6 @@ import { renderAsync } from "@react-email/render";
 import { waitUntil } from "@vercel/functions";
 import { type Transporter, createTransport } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
-import previewEmail from "preview-email";
 import type React from "react";
 
 import { i18nDefaultConfig, i18nInstance } from "./i18n";
@@ -150,7 +149,8 @@ export class EmailClient {
   }
 
   async sendEmail(options: Mail.Options) {
-    if (this.config.openPreviews) {
+    if (process.env.NODE_ENV === "development" && this.config.openPreviews) {
+      const previewEmail = (await import("preview-email")).default;
       previewEmail(options, {
         openSimulator: false,
       });

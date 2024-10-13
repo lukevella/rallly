@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
-    "@sentry/nextjs": "^8.32.0",
     "framer-motion": "^10.16.4",
     "next": "^14.2.13",
     "react": "^18.2.0",
