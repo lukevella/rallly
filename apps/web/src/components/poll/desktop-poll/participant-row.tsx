@@ -68,7 +68,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       {votes.map((vote, i) => {
         return (
           <td
-            key={i}
+            key={`vote-${i}-${vote}`}
             className={cn(
               "h-12 border-l border-t",
               !vote || vote === "no" ? "bg-gray-100" : "bg-white",
@@ -109,7 +109,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { user, ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
 
-  const isYou = !!(user && ownsObject(participant) );
+  const isYou = !!(user && ownsObject(participant));
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);

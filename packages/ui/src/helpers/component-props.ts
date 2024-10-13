@@ -1,6 +1,7 @@
 import type React from "react";
 
 type ComponentPropsAs<
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   C extends React.ElementType<any>,
   T extends React.ComponentPropsWithoutRef<C>["as"],
 > = Omit<

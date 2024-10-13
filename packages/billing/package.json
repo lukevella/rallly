@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@rallly/ui": "workspace:*",
+    "@rallly/database": "workspace:*",
     "stripe": "^13.2.0",
     "@radix-ui/react-radio-group": "^1.2.0",
     "next": "*"

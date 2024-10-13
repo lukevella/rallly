@@ -303,7 +303,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                         ? visibleParticipants.map((participant, i) => {
                             return (
                               <ParticipantRow
-                                key={i}
+                                key={participant.id}
                                 participant={{
                                   id: participant.id,
                                   name: participant.name,

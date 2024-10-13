@@ -1,6 +1,6 @@
+import crypto from "node:crypto";
 // Original source: https://gist.github.com/dsumer/3594cda57e84a93a9019cddc71831882
 import { prisma } from "@rallly/database";
-import crypto from "node:crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Serialize from "php-serialize";
 
@@ -55,7 +55,7 @@ export function validateWebhook(req: NextApiRequest) {
   jsonObj = ksort(jsonObj);
   for (const property in jsonObj) {
     if (
-      jsonObj.hasOwnProperty(property) &&
+      Object.hasOwn(jsonObj, property) &&
       typeof jsonObj[property] !== "string"
     ) {
       if (Array.isArray(jsonObj[property])) {

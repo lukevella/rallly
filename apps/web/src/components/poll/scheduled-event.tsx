@@ -72,6 +72,14 @@ export function ScheduledEvent() {
 
   const attendees = useAttendees();
 
+  const guestEmails: string[] = [];
+
+  for (const attendee of attendees) {
+    if (attendee.email) {
+      guestEmails.push(attendee.email);
+    }
+  }
+
   if (!event) {
     return null;
   }
@@ -116,9 +124,7 @@ export function ScheduledEvent() {
                   ? { name: poll.user.name, email: poll.user.email }
                   : undefined
               }
-              guests={attendees
-                .filter((participant) => !!participant.email)
-                .map((participant) => participant.email!)}
+              guests={guestEmails}
             />
           </div>
         </div>

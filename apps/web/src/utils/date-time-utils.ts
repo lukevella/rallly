@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
-
 import { supportedTimeZones } from "@/utils/supported-time-zones";
+import * as Sentry from "@sentry/nextjs";
+import dayjs from "dayjs";
 
 import type {
   DateTimeOption,
@@ -67,11 +67,20 @@ export function normalizeTimeZone(timeZone: string) {
       return dayjs().tz(tz, true).utcOffset() === timeZoneOffset;
     });
   }
-
   if (!tz) {
     tz = supportedTimeZones.find((tz) => {
       return getTimeZoneOffset(tz) === timeZoneOffset;
-    })!; // We assume there has to be a timezone with the same offset
+    });
+
+    if (!tz) {
+      Sentry.captureException(
+        new Error(`Failed to resolve timezone ${timeZone}`),
+      );
+      // TODO: This shouldn't happen since there is at least one timezone with the same offset
+      // that is supported by the application, but at least we have a fallback.
+      // We should prompt the user for their timezone if we can't resolve it automatically.
+      tz = "Europe/London";
+    }
   }
 
   return tz;

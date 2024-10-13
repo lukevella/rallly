@@ -27,7 +27,7 @@ const Steps: React.FunctionComponent<StepsProps> = ({
         {[...Array(total)].map((_, i) => {
           return (
             <span
-              key={i}
+              key={i.toString()}
               className={cn("h-2  w-2 rounded-full transition-all", {
                 "bg-primary-400": i <= current,
                 "bg-gray-300": i > current,

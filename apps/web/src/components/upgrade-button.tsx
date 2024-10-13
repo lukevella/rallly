@@ -1,6 +1,6 @@
 import { Button } from "@rallly/ui/button";
-import Link from "next/link";
 import { Trans } from "next-i18next";
+import Link from "next/link";
 import type React from "react";
 
 import { usePostHog } from "@/utils/posthog";
@@ -39,7 +39,7 @@ export const UpgradeButton = ({
   );
 };
 
-export const UpgradeLink = ({}) => {
+export const UpgradeLink = () => {
   return (
     <Button variant="primary" asChild>
       <Link href="/settings/billing">

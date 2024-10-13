@@ -1,8 +1,8 @@
+import { prisma } from "@rallly/database";
 /**
  * This script will go through all subscriptions and add the userId to the metadata.
  */
 import { stripe } from "../lib/stripe";
-import { prisma } from "@rallly/database";
 
 async function getSubscriptionsWithMissingMetadata(
   starting_after?: string,
@@ -13,11 +13,11 @@ async function getSubscriptionsWithMissingMetadata(
     limit: 100,
     starting_after,
   });
-  subscriptions.data.forEach((subscription) => {
+  for (const subscription of subscriptions.data) {
     if (!subscription.metadata.userId) {
       res.push(subscription.id);
     }
-  });
+  }
   if (subscriptions.has_more) {
     return [
       ...res,
@@ -26,7 +26,7 @@ async function getSubscriptionsWithMissingMetadata(
       )),
     ];
   }
-    return res;
+  return res;
 }
 
 async function normalizeSubscriptionMetadata() {

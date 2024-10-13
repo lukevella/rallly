@@ -48,8 +48,8 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
       ) : (
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedYes.map(({ name }, i) => (
-              <div key={i} className="flex">
+            {participantsWhoVotedYes.map(({ id, name }) => (
+              <div key={id} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
                   <OptimizedAvatarImage size="xs" name={name} />
                   <VoteIcon
@@ -61,8 +61,8 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                 <div className="truncate text-sm">{name}</div>
               </div>
             ))}
-            {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
-              <div key={i} className="flex">
+            {participantsWhoVotedIfNeedBe.map(({ id, name }) => (
+              <div key={id} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
                   <OptimizedAvatarImage size="xs" name={name} />
                   <VoteIcon
@@ -76,8 +76,8 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             ))}
           </div>
           <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedNo.map(({ name }, i) => (
-              <div key={i} className="flex">
+            {participantsWhoVotedNo.map(({ id, name }) => (
+              <div key={id} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
                   <OptimizedAvatarImage size="xs" name={name} />
                   <VoteIcon
@@ -121,6 +121,17 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       data-testid="poll-option"
       onClick={() => {
         selectorRef.current?.click();
+      }}
+      onKeyUp={(e) => {
+        if (e.key === "Enter") {
+          selectorRef.current?.click();
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === " ") {
+          e.preventDefault();
+          selectorRef.current?.click();
+        }
       }}
     >
       <div className="flex h-7 items-center justify-between gap-x-4">

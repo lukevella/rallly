@@ -161,7 +161,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         ) : null}
       </fieldset>
       <fieldset>
-        <label className="mb-1 text-gray-500">{t("response")}</label>
+        <div className="mb-1 text-sm text-gray-500">{t("response")}</div>
         <VoteSummary votes={props.votes} />
       </fieldset>
       {formState.errors.root?.message ? (

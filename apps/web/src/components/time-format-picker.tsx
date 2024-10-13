@@ -17,18 +17,18 @@ const TimeFormatPicker = ({
   return (
     <RadioGroup value={value} onValueChange={onChange} disabled={disabled}>
       <div className="grid gap-y-1">
-        <label className="flex items-center gap-x-2">
-          <RadioGroupItem value="hours12" />
-          <span>
+        <div className="flex items-center gap-x-2">
+          <RadioGroupItem id="hours12" value="hours12" />
+          <label htmlFor="hours12">
             <Trans i18nKey="12h" />
-          </span>
-        </label>
-        <label className="flex items-center gap-x-2">
-          <RadioGroupItem value="hours24" />
-          <span>
+          </label>
+        </div>
+        <div className="flex items-center gap-x-2">
+          <RadioGroupItem id="hours24" value="hours24" />
+          <label htmlFor="hours24">
             <Trans i18nKey="24h" />
-          </span>
-        </label>
+          </label>
+        </div>
       </div>
     </RadioGroup>
   );

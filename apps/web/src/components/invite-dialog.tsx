@@ -80,9 +80,9 @@ export const InviteDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <div className="min-w-0">
-          <label className="mb-2">
+          <div className="mb-2">
             <Trans i18nKey="inviteLink" defaults="Invite Link" />
-          </label>
+          </div>
           <div className="flex gap-2">
             <CopyInviteLinkButton />
             <div className="shrink-0">

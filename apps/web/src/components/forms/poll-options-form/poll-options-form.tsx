@@ -70,7 +70,7 @@ const PollOptionsForm = ({
     [views, watchView],
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // biome-ignore lint/style/noNonNullAssertion: <explanation>
   const watchOptions = watch("options", [])!;
   const watchDuration = watch("duration");
   const watchTimeZone = watch("timeZone");

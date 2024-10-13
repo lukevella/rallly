@@ -18,7 +18,7 @@ function joinPath(baseUrl: string, subpath = "") {
 export function objectToQueryString(obj: Record<string, string>) {
   const parts = [];
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.hasOwn(obj, key)) {
       const value = obj[key];
       if (value !== undefined) {
         parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);

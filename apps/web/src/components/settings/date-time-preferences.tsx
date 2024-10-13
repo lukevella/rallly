@@ -106,7 +106,10 @@ const DateTimePreferencesForm = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {dayjs.weekdays().map((day, index) => (
-                        <SelectItem key={index} value={index.toString()}>
+                        <SelectItem
+                          key={index.toString()}
+                          value={index.toString()}
+                        >
                           {day}
                         </SelectItem>
                       ))}

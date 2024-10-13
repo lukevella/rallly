@@ -51,19 +51,19 @@ const useScoreByOptionId = () => {
 
   return React.useMemo(() => {
     const scoreByOptionId: Record<string, OptionScore> = {};
-    options.forEach((option) => {
+    for (const option of options) {
       scoreByOptionId[option.id] = {
         yes: [],
         ifNeedBe: [],
         no: [],
       };
-    });
+    }
 
-    responses?.forEach((response) => {
-      response.votes.forEach((vote) => {
+    for (const response of responses) {
+      for (const vote of response.votes) {
         scoreByOptionId[vote.optionId]?.[vote.type].push(response.id);
-      });
-    });
+      }
+    }
 
     return scoreByOptionId;
   }, [responses, options]);

@@ -78,7 +78,10 @@ export const TimesShownIn = () => {
 
   return (
     <ClockPreferences>
-      <button className="inline-flex items-center gap-x-2.5 text-sm hover:underline">
+      <button
+        type="button"
+        className="inline-flex items-center gap-x-2.5 text-sm hover:underline"
+      >
         <GlobeIcon className="size-4" />
         <Trans
           i18nKey="timeShownIn"

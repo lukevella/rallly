@@ -77,7 +77,7 @@ const ModalProvider: React.FunctionComponent<ModalProviderProps> = ({
       ))}
       {modals.map((props, i) => (
         <Modal
-          key={i}
+          key={`modal-${i}-${props.title}`}
           visible={true}
           {...props}
           content={

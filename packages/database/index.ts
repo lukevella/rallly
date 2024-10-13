@@ -20,6 +20,7 @@ const prismaClientSingleton = () => {
 
 export type ExtendedPrismaClient = ReturnType<typeof prismaClientSingleton>;
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-dev-practices
 declare const globalThis: {
   prismaGlobal: ExtendedPrismaClient;
 } & typeof global;

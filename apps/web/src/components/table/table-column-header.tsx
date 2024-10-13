@@ -20,6 +20,7 @@ export function DataTableColumnHeader<TData, TValue>({
 
   return (
     <button
+      type="button"
       className="flex w-full items-center gap-x-2.5"
       onClick={() => {
         column.toggleSorting();

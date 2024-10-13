@@ -9,7 +9,7 @@
     "useIgnoreFile": false
   },
   "linter": {
-    "ignore": ["node_modules", ".next", "dist"],
+    "ignore": ["node_modules", ".next", "dist", "public/static/scripts"],
     "enabled": true,
     "rules": {
       "recommended": true

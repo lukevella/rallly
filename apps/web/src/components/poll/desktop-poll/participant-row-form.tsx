@@ -19,7 +19,7 @@ import { YouAvatar } from "@/components/poll/you-avatar";
 import { Trans } from "@/components/trans";
 
 import { usePoll } from "../../poll-context";
-import { toggleVote, VoteSelector } from "../vote-selector";
+import { VoteSelector, toggleVote } from "../vote-selector";
 
 export interface ParticipantRowFormProps {
   name?: string;
@@ -112,24 +112,32 @@ const ParticipantRowForm = ({
             <Controller
               control={form.control}
               name={`votes.${i}`}
-              render={({ field }) => (
-                <div
-                  onClick={() => {
-                    field.onChange({
-                      optionId,
-                      type: toggleVote(field.value?.type),
-                    });
-                  }}
-                  className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-inset active:ring-gray-200"
-                >
-                  <VoteSelector
-                    value={field.value?.type}
-                    onChange={(vote) => {
-                      field.onChange({ optionId, type: vote });
+              render={({ field }) => {
+                const handleChange = () => {
+                  field.onChange({
+                    optionId,
+                    type: toggleVote(field.value?.type),
+                  });
+                };
+                return (
+                  <div
+                    onClick={handleChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleChange();
+                      }
                     }}
-                  />
-                </div>
-              )}
+                    className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-inset active:ring-gray-200"
+                  >
+                    <VoteSelector
+                      value={field.value?.type}
+                      onChange={(vote) => {
+                        field.onChange({ optionId, type: vote });
+                      }}
+                    />
+                  </div>
+                );
+              }}
             />
           </td>
         );

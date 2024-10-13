@@ -160,9 +160,9 @@ async function main() {
 
   await Promise.all(
     [freeUser, proUser, proUserLegacy].map(async (user) => {
-      Array.from({ length: 20 }).forEach(async () => {
+      for (let i = 0; i < 20; i++) {
         await createPollForUser(user.id);
-      });
+      }
       console.info(`✓ Added ${user.email}`);
     }),
   );
