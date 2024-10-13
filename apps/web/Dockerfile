@@ -8,6 +8,7 @@ RUN turbo prune --scope=@rallly/web --docker
 FROM node:20 AS installer
 
 WORKDIR /app
+RUN npm install -g pnpm
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
@@ -39,7 +40,7 @@ RUN apt-get update \
 
 WORKDIR /app
 
-RUN npm install -g prisma
+RUN npm install -g pnpm prisma
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
