@@ -142,7 +142,7 @@ export const polls = router({
       let nextCursor: typeof cursor | undefined = undefined;
       if (polls.length > input.limit) {
         const nextItem = polls.pop();
-        nextCursor = nextItem!.id;
+        nextCursor = nextItem?.id;
       }
       return {
         polls,
@@ -304,12 +304,11 @@ export const polls = router({
                 duration: dayjs(end).diff(dayjs(start), "minute"),
                 pollId,
               };
-            } else {
-              return {
-                startTime: dayjs(start).utc(true).toDate(),
-                pollId,
-              };
             }
+            return {
+              startTime: dayjs(start).utc(true).toDate(),
+              pollId,
+            };
           }),
         });
       }
@@ -513,9 +512,8 @@ export const polls = router({
 
       if (ctx.user.id === res.userId || res.adminUrlId === input.adminToken) {
         return { ...res, inviteLink };
-      } else {
-        return { ...res, adminUrlId: "", inviteLink };
       }
+      return { ...res, adminUrlId: "", inviteLink };
     }),
   transfer: possiblyPublicProcedure
     .input(
@@ -876,104 +874,104 @@ export const polls = router({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to generate ics",
         });
-      } else {
-        const timeZoneAbbrev = poll.timeZone
-          ? getTimeZoneAbbreviation(eventStart.toDate(), poll.timeZone)
-          : "";
-        const date = eventStart.format("dddd, MMMM D, YYYY");
-        const day = eventStart.format("D");
-        const dow = eventStart.format("ddd");
-        const startTime = eventStart.format("hh:mm A");
-        const endTime = eventEnd.format("hh:mm A");
-
-        const time =
-          option.duration > 0
-            ? `${startTime} - ${endTime} ${timeZoneAbbrev}`
-            : "All-day";
-
-        const participantsToEmail: Array<{
-          name: string;
-          email: string;
-          locale: string | undefined;
-        }> = [];
-
-        if (input.notify === "all") {
-          poll.participants.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-              });
-            }
-          });
-        }
-
-        if (input.notify === "attendees") {
-          attendees.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-              });
-            }
-          });
-        }
-
-        ctx.user.getEmailClient().queueTemplate("FinalizeHostEmail", {
-          to: poll.user.email,
-          props: {
-            name: poll.user.name,
-            pollUrl: absoluteUrl(`/poll/${poll.id}`),
-            location: poll.location,
-            title: poll.title,
-            attendees: poll.participants
-              .filter((p) =>
-                p.votes.some(
-                  (v) => v.optionId === input.optionId && v.type !== "no",
-                ),
-              )
-              .map((p) => p.name),
-            date,
-            day,
-            dow,
-            time,
-          },
-          attachments: [{ filename: "event.ics", content: event.value }],
-        });
-
-        for (const p of participantsToEmail) {
-          getEmailClient(p.locale ?? undefined).queueTemplate(
-            "FinalizeParticipantEmail",
-            {
-              to: p.email,
-              props: {
-                pollUrl: absoluteUrl(`/invite/${poll.id}`),
-                title: poll.title,
-                hostName: poll.user?.name ?? "",
-                date,
-                day,
-                dow,
-                time,
-              },
-              attachments: [{ filename: "event.ics", content: event.value }],
-            },
-          );
-        }
-
-        posthog?.capture({
-          distinctId: ctx.user.id,
-          event: "finalize poll",
-          properties: {
-            poll_id: poll.id,
-            poll_time_zone: poll.timeZone,
-            number_of_participants: poll.participants.length,
-            number_of_attendees: attendees.length,
-            days_since_created: dayjs().diff(poll.createdAt, "day"),
-          },
-        });
       }
+
+      const timeZoneAbbrev = poll.timeZone
+        ? getTimeZoneAbbreviation(eventStart.toDate(), poll.timeZone)
+        : "";
+      const date = eventStart.format("dddd, MMMM D, YYYY");
+      const day = eventStart.format("D");
+      const dow = eventStart.format("ddd");
+      const startTime = eventStart.format("hh:mm A");
+      const endTime = eventEnd.format("hh:mm A");
+
+      const time =
+        option.duration > 0
+          ? `${startTime} - ${endTime} ${timeZoneAbbrev}`
+          : "All-day";
+
+      const participantsToEmail: Array<{
+        name: string;
+        email: string;
+        locale: string | undefined;
+      }> = [];
+
+      // if (input.notify === "all") {
+      //   poll.participants.forEach((p) => {
+      //     if (p.email) {
+      //       participantsToEmail.push({
+      //         name: p.name,
+      //         email: p.email,
+      //         locale: p.locale ?? undefined,
+      //       });
+      //     }
+      //   });
+      // }
+
+      // if (input.notify === "attendees") {
+      //   attendees.forEach((p) => {
+      //     if (p.email) {
+      //       participantsToEmail.push({
+      //         name: p.name,
+      //         email: p.email,
+      //         locale: p.locale ?? undefined,
+      //       });
+      //     }
+      //   });
+      // }
+
+      ctx.user.getEmailClient().queueTemplate("FinalizeHostEmail", {
+        to: poll.user.email,
+        props: {
+          name: poll.user.name,
+          pollUrl: absoluteUrl(`/poll/${poll.id}`),
+          location: poll.location,
+          title: poll.title,
+          attendees: poll.participants
+            .filter((p) =>
+              p.votes.some(
+                (v) => v.optionId === input.optionId && v.type !== "no",
+              ),
+            )
+            .map((p) => p.name),
+          date,
+          day,
+          dow,
+          time,
+        },
+        attachments: [{ filename: "event.ics", content: event.value }],
+      });
+
+      for (const p of participantsToEmail) {
+        getEmailClient(p.locale ?? undefined).queueTemplate(
+          "FinalizeParticipantEmail",
+          {
+            to: p.email,
+            props: {
+              pollUrl: absoluteUrl(`/invite/${poll.id}`),
+              title: poll.title,
+              hostName: poll.user?.name ?? "",
+              date,
+              day,
+              dow,
+              time,
+            },
+            attachments: [{ filename: "event.ics", content: event.value }],
+          },
+        );
+      }
+
+      posthog?.capture({
+        distinctId: ctx.user.id,
+        event: "finalize poll",
+        properties: {
+          poll_id: poll.id,
+          poll_time_zone: poll.timeZone,
+          number_of_participants: poll.participants.length,
+          number_of_attendees: attendees.length,
+          days_since_created: dayjs().diff(poll.createdAt, "day"),
+        },
+      });
     }),
   reopen: possiblyPublicProcedure
     .input(

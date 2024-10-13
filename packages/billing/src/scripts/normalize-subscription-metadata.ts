@@ -25,9 +25,8 @@ async function getSubscriptionsWithMissingMetadata(
         subscriptions.data[subscriptions.data.length - 1].id,
       )),
     ];
-  } else {
-    return res;
   }
+    return res;
 }
 
 async function normalizeSubscriptionMetadata() {

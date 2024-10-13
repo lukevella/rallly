@@ -95,7 +95,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           </td>
         );
       })}
-      <td className="bg-diagonal-lines border-l"></td>
+      <td className="bg-diagonal-lines border-l" />
     </tr>
   );
 };
@@ -109,7 +109,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { user, ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
 
-  const isYou = user && ownsObject(participant) ? true : false;
+  const isYou = !!(user && ownsObject(participant) );
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);

@@ -81,7 +81,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   const datepickerSelection = React.useMemo(() => {
     return Object.keys(optionsByDay).map(
-      (dateString) => new Date(dateString + "T12:00:00"),
+      (dateString) => new Date(`${dateString}T12:00:00`),
     );
   }, [optionsByDay]);
 
@@ -192,7 +192,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             ? "border-primary-300 group-hover:border-primary-400 border-dashed shadow-sm"
                             : "border-dashed border-transparent group-hover:border-gray-400 group-active:bg-gray-200",
                         )}
-                      ></span>
+                      />
                       <span className="z-10">{day.day}</span>
                     </button>
                   </div>
@@ -272,7 +272,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       className="space-y-3 p-3 sm:flex sm:items-start sm:space-x-4 sm:space-y-0 sm:p-4"
                     >
                       <DateCard
-                        {...getDateProps(new Date(dateString + "T12:00:00"))}
+                        {...getDateProps(new Date(`${dateString}T12:00:00`))}
                       />
                       <div className="grow space-y-3">
                         {optionsForDay.map(({ option, index }) => {

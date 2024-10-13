@@ -23,7 +23,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
         {finalText}
       </Link>
     );
-  } else {
+  }
     finalText += "…";
     return (
       <Tooltip>
@@ -42,7 +42,6 @@ export const truncateLink = (href: string, text: string, key: number) => {
         </TooltipContent>
       </Tooltip>
     );
-  }
 };
 
 const TruncatedLinkify = ({ children }: { children: React.ReactNode }) => {

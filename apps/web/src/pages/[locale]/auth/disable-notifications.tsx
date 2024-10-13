@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: {},
       redirect: {
         destination:
-          "/login?callbackUrl=" + encodeURIComponent(ctx.req.url ?? "/"),
+          `/login?callbackUrl=${encodeURIComponent(ctx.req.url ?? "/")}`,
       },
     };
   }

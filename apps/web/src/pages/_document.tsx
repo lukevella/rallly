@@ -103,7 +103,7 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <div id="portal"></div>
+        <div id="portal" />
       </body>
     </Html>
   );

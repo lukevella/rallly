@@ -224,9 +224,8 @@ export const DayjsProvider: React.FunctionComponent<{
     (date: dayjs.ConfigType, localTime = false) => {
       if (!localTime) {
         return dayjs(date).tz(preferredTimeZone);
-      } else {
-        return dayjs(date).utc();
       }
+        return dayjs(date).utc();
     },
     [preferredTimeZone],
   );

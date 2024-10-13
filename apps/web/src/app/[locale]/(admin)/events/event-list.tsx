@@ -55,7 +55,7 @@ export function EventList({ data }: { data: ScheduledEvent[] }) {
                         style={{
                           background: generateGradient(row.original.id),
                         }}
-                      ></span>
+                      />
                       <h2 className="truncate text-base font-semibold">
                         {row.original.title}
                       </h2>

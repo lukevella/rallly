@@ -1,6 +1,6 @@
 // Original source: https://gist.github.com/dsumer/3594cda57e84a93a9019cddc71831882
 import { prisma } from "@rallly/database";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Serialize from "php-serialize";
 
@@ -50,7 +50,7 @@ export function validateWebhook(req: NextApiRequest) {
   // Grab p_signature
   const mySig = Buffer.from(jsonObj.p_signature, "base64");
   // Remove p_signature from object - not included in array of fields used in verification.
-  delete jsonObj.p_signature;
+  jsonObj.p_signature = undefined;
   // Need to sort array by key in ascending order
   jsonObj = ksort(jsonObj);
   for (const property in jsonObj) {
@@ -113,7 +113,7 @@ export default async function handler(
       passthrough = JSON.parse(payload.passthrough) as PaddlePassthrough;
     } catch {}
     if (!passthrough) {
-      res.status(400).send("Invalid passthrough: " + payload.passthrough);
+      res.status(400).send(`Invalid passthrough: ${payload.passthrough}`);
       return;
     }
 
@@ -204,6 +204,5 @@ export default async function handler(
 
     // If everything went well, send a 200 OK
     return res.status(200).json({ success: true });
-  } else {
   }
 }

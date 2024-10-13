@@ -21,7 +21,7 @@ export function objectToQueryString(obj: Record<string, string>) {
     if (obj.hasOwnProperty(key)) {
       const value = obj[key];
       if (value !== undefined) {
-        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+        parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
       }
     }
   }

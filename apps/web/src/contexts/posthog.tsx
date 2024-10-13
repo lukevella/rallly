@@ -34,7 +34,7 @@ function usePostHogPageView() {
     if (pathname && posthog) {
       let url = window.origin + pathname;
       if (searchParams?.toString()) {
-        url = url + `?${searchParams.toString()}`;
+        url = `${url}?${searchParams.toString()}`;
       }
       if (previousUrl.current !== url) {
         posthog.capture("$pageview", {

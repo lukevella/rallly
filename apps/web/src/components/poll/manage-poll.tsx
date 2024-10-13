@@ -93,7 +93,7 @@ function PauseResumeToggle() {
         <Trans i18nKey="resumePoll" />
       </DropdownMenuItem>
     );
-  } else {
+  }
     return (
       <DropdownMenuItem
         onClick={() => {
@@ -119,7 +119,6 @@ function PauseResumeToggle() {
         <Trans i18nKey="pausePoll" />
       </DropdownMenuItem>
     );
-  }
 }
 
 const ManagePoll: React.FunctionComponent<{
@@ -189,8 +188,7 @@ const ManagePoll: React.FunctionComponent<{
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <>
-            {poll.status === "finalized" ? (
+          {poll.status === "finalized" ? (
               <DropdownMenuItem
                 onClick={() => {
                   reopen.mutate({ pollId: poll.id });
@@ -227,7 +225,6 @@ const ManagePoll: React.FunctionComponent<{
                 <PauseResumeToggle />
               </>
             )}
-          </>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DropdownMenuItemIconLabel icon={DownloadIcon}>
