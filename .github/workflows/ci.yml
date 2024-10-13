@@ -65,7 +65,7 @@ jobs:
           sudo apt-get update
 
       - name: Install playwright dependencies
-        run: pnpm playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Create production build
         run: pnpm turbo build:test --filter=@rallly/web
