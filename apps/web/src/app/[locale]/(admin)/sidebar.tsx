@@ -25,19 +25,16 @@ import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
-import type { IconComponent } from "@/types";
 import { usePostHog } from "@/utils/posthog";
 
 function NavItem({
   href,
   children,
   target,
-  icon: Icon,
   current,
 }: {
   href: string;
   target?: string;
-  icon: IconComponent;
   children: React.ReactNode;
   current?: boolean;
 }) {
@@ -52,7 +49,6 @@ function NavItem({
         "group flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-semibold leading-6",
       )}
     >
-      <Icon className={cn("size-5 shrink-0")} aria-hidden="true" />
       {children}
     </Link>
   );
@@ -68,25 +64,20 @@ export function Sidebar() {
         <li>
           <ul className="-mx-2 space-y-1">
             <li>
-              <NavItem current={pathname === "/"} href="/" icon={HomeIcon}>
+              <NavItem current={pathname === "/"} href="/">
+                <HomeIcon className="size-5 shrink-0" aria-hidden="true" />
                 <Trans i18nKey="home" defaults="Home" />
               </NavItem>
             </li>
             <li>
-              <NavItem
-                current={pathname?.startsWith("/polls")}
-                href="/polls"
-                icon={BarChart2Icon}
-              >
+              <NavItem current={pathname?.startsWith("/polls")} href="/polls">
+                <BarChart2Icon className="size-5 shrink-0" aria-hidden="true" />
                 <Trans i18nKey="polls" defaults="Polls" />
               </NavItem>
             </li>
             <li>
-              <NavItem
-                current={pathname?.startsWith("/events")}
-                href="/events"
-                icon={CalendarIcon}
-              >
+              <NavItem current={pathname?.startsWith("/events")} href="/events">
+                <CalendarIcon className="size-5 shrink-0" aria-hidden="true" />
                 <Trans i18nKey="events" defaults="Events" />
               </NavItem>
             </li>
@@ -137,17 +128,15 @@ export function Sidebar() {
             </IfFreeUser>
             <IfGuest>
               <li>
-                <NavItem href="/login" icon={LogInIcon}>
+                <NavItem href="/login">
+                  <LogInIcon className="size-5 shrink-0" aria-hidden="true" />
                   <Trans i18nKey="login" />
                 </NavItem>
               </li>
             </IfGuest>
             <li>
-              <NavItem
-                target="_blank"
-                href="https://support.rallly.co"
-                icon={LifeBuoyIcon}
-              >
+              <NavItem target="_blank" href="https://support.rallly.co">
+                <LifeBuoyIcon className="size-5 shrink-0" aria-hidden="true" />
                 <Trans i18nKey="support" />
                 <Icon>
                   <ArrowUpRightIcon />
@@ -158,8 +147,8 @@ export function Sidebar() {
               <NavItem
                 href="/settings/preferences"
                 current={pathname === "/settings/preferences"}
-                icon={Settings2Icon}
               >
+                <Settings2Icon className="size-5 shrink-0" aria-hidden="true" />
                 <Trans i18nKey="preferences" />
               </NavItem>
             </li>

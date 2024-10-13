@@ -3,12 +3,12 @@ import "tailwindcss/tailwind.css";
 import "../style.css";
 
 import { TooltipProvider } from "@rallly/ui/tooltip";
-import { domMax, LazyMotion } from "framer-motion";
+import { LazyMotion, domMax } from "framer-motion";
 import type { NextPage } from "next";
+import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
-import { SessionProvider, signIn, useSession } from "next-auth/react";
 import React from "react";
 
 import { I18nProvider } from "@/app/i18n/client";
@@ -17,40 +17,16 @@ import { UserProvider } from "@/components/user-provider";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 
-import type { NextPageWithLayout } from "../types";
-
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
 
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
-};
-
-const Auth = ({ children }: { children: React.ReactNode }) => {
-  const session = useSession();
-  const isAuthenticated = !!session.data?.user.email;
-
-  React.useEffect(() => {
-    if (!isAuthenticated) {
-      signIn();
-    }
-  }, [isAuthenticated]);
-
-  if (isAuthenticated) {
-    return <>{children}</>;
-  }
-
-  return null;
-};
-
-const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
+const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1") {
     return <Maintenance />;
   }
 
-  const getLayout = Component.getLayout ?? ((page) => page);
   const children = <Component {...pageProps} />;
 
   return (
@@ -70,13 +46,7 @@ const MyApp: NextPage<AppPropsWithLayout> = ({ Component, pageProps }) => {
         <I18nProvider>
           <TooltipProvider delayDuration={200}>
             <UserProvider>
-              <ConnectedDayjsProvider>
-                {Component.isAuthRequired ? (
-                  <Auth>{getLayout(children)}</Auth>
-                ) : (
-                  getLayout(children)
-                )}
-              </ConnectedDayjsProvider>
+              <ConnectedDayjsProvider>{children}</ConnectedDayjsProvider>
             </UserProvider>
           </TooltipProvider>
         </I18nProvider>
