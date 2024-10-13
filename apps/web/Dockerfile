@@ -1,7 +1,7 @@
 FROM node:20 AS builder
 
 WORKDIR /app
-RUN yarn global add turbo
+RUN npm install -g pnpm turbo
 COPY . .
 RUN turbo prune --scope=@rallly/web --docker
 
@@ -10,13 +10,13 @@ FROM node:20 AS installer
 WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/yarn.lock ./yarn.lock
-RUN yarn --network-timeout 1000000
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm install --frozen-lockfile
 
 # Build the project
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
-RUN yarn db:generate
+RUN pnpm db:generate
 
 ARG APP_VERSION
 ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
@@ -24,7 +24,7 @@ ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 
-RUN SKIP_ENV_VALIDATION=1 yarn build
+RUN SKIP_ENV_VALIDATION=1 pnpm build
 
 FROM node:20-slim AS runner
 
@@ -39,7 +39,7 @@ RUN apt-get update \
 
 WORKDIR /app
 
-RUN yarn global add prisma
+RUN npm install -g prisma
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

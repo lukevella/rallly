@@ -28,7 +28,7 @@
     "release": "./scripts/create-release.sh"
   },
   "prisma": {
-    "seed": "yarn workspace @rallly/database db:seed"
+    "seed": "pnpm workspace @rallly/database db:seed"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",

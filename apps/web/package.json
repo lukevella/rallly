@@ -13,7 +13,6 @@
     "prettier": "prettier --write ./src",
     "test:integration": "NODE_ENV=test playwright test",
     "test:unit": "vitest run",
-    "test": "yarn test:unit && yarn test:e2e",
     "test:codegen": "playwright codegen http://localhost:3000",
     "docker:start": "./scripts/docker-start.sh"
   },
