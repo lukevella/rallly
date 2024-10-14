@@ -68,7 +68,7 @@ jobs:
         run: pnpm turbo build:test --filter=@rallly/web
 
       - name: Start services
-        run: pnpm docker:up
+        run: docker compose -f docker-compose.dev.yml up -d rallly_db
 
       - name: Setup database
         run: pnpm db:deploy
