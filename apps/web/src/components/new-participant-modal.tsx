@@ -19,13 +19,13 @@ import VoteIcon from "./poll/vote-icon";
 
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
-  name: z.string().nonempty().max(100),
+  name: z.string().min(1).max(100),
   email: z.string().email(),
 });
 
 const optionalEmailSchema = z.object({
   requireEmail: z.literal(false),
-  name: z.string().nonempty().max(100),
+  name: z.string().min(1).max(100),
   email: z.string().email().or(z.literal("")),
 });
 
