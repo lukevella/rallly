@@ -174,7 +174,7 @@ importers:
     dependencies:
       '@auth/prisma-adapter':
         specifier: ^2.7.0
-        version: 2.7.0(@prisma/client@5.20.0(prisma@5.20.0))(nodemailer@6.9.15)
+        version: 2.7.0(@prisma/client@5.17.0(prisma@5.20.0))(nodemailer@6.9.15)
       '@aws-sdk/client-s3':
         specifier: ^3.645.0
         version: 3.670.0
@@ -317,7 +317,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.2
       next-auth:
-        specifier: ^4.24.5
+        specifier: 4.24.8
         version: 4.24.8(next@14.2.13(@opentelemetry/api@1.9.0)(@playwright/test@1.48.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.15)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-i18next:
         specifier: ^13.0.3
@@ -2440,15 +2440,6 @@ packages:
 
   '@prisma/client@5.17.0':
     resolution: {integrity: sha512-N2tnyKayT0Zf7mHjwEyE8iG7FwTmXDHFZ1GnNhQp0pJUObsuel4ZZ1XwfuAYkq5mRIiC/Kot0kt0tGCfLJ70Jw==}
-    engines: {node: '>=16.13'}
-    peerDependencies:
-      prisma: '*'
-    peerDependenciesMeta:
-      prisma:
-        optional: true
-
-  '@prisma/client@5.20.0':
-    resolution: {integrity: sha512-CLv55ZuMuUawMsxoqxGtLT3bEZoa2W8L3Qnp6rDIFWy+ZBrUcOFKdoeGPSnbBqxc3SkdxJrF+D1veN/WNynZYA==}
     engines: {node: '>=16.13'}
     peerDependencies:
       prisma: '*'
@@ -9038,10 +9029,10 @@ snapshots:
     optionalDependencies:
       nodemailer: 6.9.15
 
-  '@auth/prisma-adapter@2.7.0(@prisma/client@5.20.0(prisma@5.20.0))(nodemailer@6.9.15)':
+  '@auth/prisma-adapter@2.7.0(@prisma/client@5.17.0(prisma@5.20.0))(nodemailer@6.9.15)':
     dependencies:
       '@auth/core': 0.37.0(nodemailer@6.9.15)
-      '@prisma/client': 5.20.0(prisma@5.20.0)
+      '@prisma/client': 5.17.0(prisma@5.20.0)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
@@ -11274,7 +11265,7 @@ snapshots:
     optionalDependencies:
       prisma: 5.17.0
 
-  '@prisma/client@5.20.0(prisma@5.20.0)':
+  '@prisma/client@5.17.0(prisma@5.20.0)':
     optionalDependencies:
       prisma: 5.20.0
 
