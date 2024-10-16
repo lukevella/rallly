@@ -82,7 +82,7 @@ export function validateWebhook(req: NextApiRequest) {
     `-----BEGIN PUBLIC KEY-----\n${process.env.PADDLE_PUBLIC_KEY}\n-----END PUBLIC KEY-----`,
   );
 
-  const isValid = verifier.verify(publicKey, mySig);
+  const isValid = verifier.verify(publicKey, mySig.toString("base64"));
 
   if (!isValid) {
     console.error("Invalid paddle signature");
