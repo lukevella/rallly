@@ -17,15 +17,19 @@
     "@aws-sdk/credential-provider-node": "^3.501.0",
     "@react-email/components": "^0.0.14",
     "@react-email/render": "^0.0.12",
+    "@react-email/section": "0.0.14",
+    "@vercel/functions": "^1.0.2",
+    "i18next": "^22.4.9",
+    "i18next-resources-to-backend": "^1.1.4",
     "nodemailer": "^6.9.9",
     "preview-email": "^3.0.19",
     "react-email": "^2.0.0",
-    "@vercel/functions": "*"
+    "react-i18next": "^12.1.4"
   },
   "devDependencies": {
-    "@rallly/tailwind-config": "*",
-    "@rallly/tsconfig": "*",
-    "@rallly/utils": "*",
+    "@rallly/tailwind-config": "workspace:*",
+    "@rallly/tsconfig": "workspace:*",
+    "@rallly/utils": "workspace:*",
     "@types/nodemailer": "^6.4.14",
     "@types/preview-email": "^3.0.4"
   }

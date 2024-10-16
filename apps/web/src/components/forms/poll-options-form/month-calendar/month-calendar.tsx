@@ -8,7 +8,6 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { Switch } from "@rallly/ui/switch";
-import clsx from "clsx";
 import dayjs from "dayjs";
 import {
   CalendarIcon,
@@ -129,7 +128,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 return (
                   <div
                     key={i}
-                    className={clsx("h-11", {
+                    className={cn("h-11", {
                       "border-r": (i + 1) % 7 !== 0,
                       "border-b": i < datepicker.days.length - 7,
                     })}
@@ -174,7 +173,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           }
                         }
                       }}
-                      className={clsx(
+                      className={cn(
                         "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 text-sm font-medium tracking-tight focus:z-10 focus:rounded",
                         {
                           "bg-gray-100 text-gray-400": day.isPast,
@@ -208,7 +207,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
       </div>
       <div className="flex grow flex-col">
         <div
-          className={clsx("border-b", {
+          className={cn("border-b", {
             hidden: datepicker.selection.length === 0,
           })}
         >

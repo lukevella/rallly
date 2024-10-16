@@ -1,0 +1,11 @@
+name: "pnpm Install"
+description: "Runs pnpm install with --frozen-lockfile"
+runs:
+  using: "composite"
+  steps:
+    - name: Run pnpm install
+      run: pnpm install --frozen-lockfile
+      shell: bash
+    - name: Generate Prisma client
+      run: pnpm db:generate
+      shell: bash

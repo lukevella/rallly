@@ -18,10 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/yarn-install
+      - uses: ./.github/actions/pnpm-install
 
       - name: Check types
-        run: yarn type-check
+        run: pnpm type-check
 
   linting:
     name: Linting
@@ -29,10 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/yarn-install
+      - uses: ./.github/actions/pnpm-install
 
       - name: Check linting rules
-        run: yarn lint
+        run: pnpm lint
 
   unit-tests:
     name: Unit tests
@@ -40,10 +40,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/yarn-install
+      - uses: ./.github/actions/pnpm-install
 
       - name: Run tests
-        run: yarn test:unit
+        run: pnpm test:unit
 
   # Label of the container job
   integration-tests:
@@ -55,26 +55,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/yarn-install
+      - uses: ./.github/actions/pnpm-install
 
       - name: Install system dependencies
         run: |
           sudo apt-get update
 
       - name: Install playwright dependencies
-        run: yarn playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Create production build
-        run: yarn turbo build:test --filter=@rallly/web
+        run: pnpm turbo build:test --filter=@rallly/web
 
       - name: Start services
-        run: yarn docker:up
+        run: docker compose -f docker-compose.dev.yml up -d rallly_db
 
       - name: Setup database
-        run: yarn db:deploy
+        run: pnpm db:deploy
 
       - name: Run tests
-        run: yarn turbo test:integration
+        run: pnpm turbo test:integration
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}
