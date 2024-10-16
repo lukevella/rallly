@@ -1,1 +1,27 @@
-{}
+{
+  "pricingDescription": "無料で始めましょう。ログインは必要ありません。",
+  "freeForever": "永久に無料",
+  "planPro": "Pro",
+  "monthlyBillingDescription": "/月",
+  "upgrade": "アップグレード",
+  "faq": "よくある質問",
+  "canUseFree": "Ralllyは無料で利用できますか？",
+  "whyUpgrade": "アップグレードする理由は？",
+  "howToUpgrade": "有料プランにアップグレードするには?",
+  "cancelSubscription": "サブスクリプションを解約するにはどうすればいいですか？",
+  "billingPeriodMonthly": "月払い",
+  "billingPeriodYearly": "年払い",
+  "planFreeDescription": "カジュアルユーザー向け",
+  "limitedAccess": "コアな機能へのアクセス",
+  "pollsDeleted": "アンケートは非アクティブになると自動的に削除されます",
+  "planProDescription": "パワーユーザーとプロフェッショナル向け",
+  "accessAllFeatures": "すべての機能にアクセス",
+  "getEarlyAccess": "新機能への早期アクセス",
+  "planFree": "無料",
+  "keepPollsIndefinitely": "無期限にアンケートを保持",
+  "whenPollInactive": "アンケートはいつ非アクティブになりますか？",
+  "yearlyBillingDescription": "/年",
+  "annualBenefit": "{count} ヶ月無料",
+  "pricingTitle": "無料で始める",
+  "pricingSubtitle": "プレミアム機能を利用するには有料プランにアップグレードしてください"
+}
