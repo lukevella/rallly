@@ -69,6 +69,7 @@
     "next-auth": "^4.24.5",
     "next-i18next": "^13.0.3",
     "php-serialize": "^4.1.1",
+    "preview-email": "^3.1.0",
     "postcss": "^8.4.31",
     "posthog-js": "^1.154.0",
     "posthog-node": "^4.0.1",

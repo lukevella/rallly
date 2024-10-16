@@ -22,6 +22,7 @@ const nextConfig = {
     "@rallly/icons",
     "@rallly/ui",
     "@rallly/tailwind-config",
+    "@rallly/emails",
   ],
   webpack(config) {
     config.module.rules.push({

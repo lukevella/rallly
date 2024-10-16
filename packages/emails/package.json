@@ -22,7 +22,7 @@
     "i18next": "^22.4.9",
     "i18next-resources-to-backend": "^1.1.4",
     "nodemailer": "^6.9.9",
-    "preview-email": "^3.0.19",
+    "preview-email": "^3.1.0",
     "react-email": "^2.0.0",
     "react-i18next": "^12.1.4"
   },
