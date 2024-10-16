@@ -1,1 +1,19 @@
-{}
+{
+  "createPageLikeThis": "こんなページが数秒で作れます！",
+  "noLoginRequired": "ログイン不要",
+  "subheading": "効率的な日程調整で時間を節約",
+  "pcmagQuote": "「わずかな時間で日程調整を設定できる」",
+  "hubspotQuote": "「もっともシンプルな大規模グループ向けの日程調整方法」",
+  "goodfirmsQuote": "「シンプルで、連絡にかかる時間を最小限にできる」",
+  "popsciQuote": "「\"お返事ください\"の手間を省きたいなら完璧な選択だ」",
+  "statsLanguagesSupported": "10以上の言語に対応",
+  "hint": "無料です！ログインは必要ありません。",
+  "doodleAlternative": "最高の無料Doodle代替",
+  "new": "New",
+  "metaTitle": "Rallly: グループスケジューリングツール",
+  "selfHostingBlog": "Rallly 3.0 Self-Hosting",
+  "when2meetAlternativeMetaTitle": "ベストなWhen2Meetの代替: Rallly",
+  "when2meetAlternative": "まだWhen2Meetを使っていますか？",
+  "meetingPollMetaTitle": "日程調整",
+  "meetingPollMetaDescription": "アンケート機能を使って簡単にミーティングを計画し、誰でも利用できるようにします。"
+}
