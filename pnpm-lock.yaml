@@ -147,9 +147,6 @@ importers:
       '@next/bundle-analyzer':
         specifier: ^12.3.4
         version: 12.3.4
-      '@prisma/nextjs-monorepo-workaround-plugin':
-        specifier: ^5.21.1
-        version: 5.21.1
       '@rallly/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config

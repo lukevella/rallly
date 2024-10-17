@@ -7,8 +7,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-const { PrismaPlugin } = require("@prisma/nextjs-monorepo-workaround-plugin");
-
 const appBaseUrl = process.env.NEXT_PUBLIC_APP_BASE_URL;
 
 function createAppUrl(subpath) {
@@ -25,11 +23,7 @@ const nextConfig = {
     "@rallly/tailwind-config",
     "next-mdx-remote",
   ],
-  webpack(config, { isServer }) {
-    if (isServer) {
-      config.plugins.push(new PrismaPlugin());
-    }
-
+  webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
       issuer: /\.[jt]sx?$/,
