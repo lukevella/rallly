@@ -34,6 +34,9 @@ jobs:
       - name: Check linting rules
         run: pnpm lint
 
+      - name: Check sherif rules
+        run: pnpm sherif
+
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest

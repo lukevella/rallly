@@ -23,7 +23,9 @@
     "i18n:scan": "turbo i18n:scan",
     "type-check": "turbo type-check",
     "prettier": "prettier --write .",
-    "release": "./scripts/create-release.sh"
+    "release": "./scripts/create-release.sh",
+    "sherif": "pnpm dlx sherif@latest",
+    "sherif:fix": "pnpm dlx sherif@latest --fix"
   },
   "prisma": {
     "seed": "pnpm --filter @rallly/database db:seed",
