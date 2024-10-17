@@ -38,7 +38,7 @@ The following instructions are for running the project locally for development.
 2. Install dependencies
 
    ```bash
-   yarn
+   pnpm i
    ```
 
 3. Setup environment variables
@@ -54,7 +54,7 @@ The following instructions are for running the project locally for development.
 4. Generate Prisma client
 
    ```bash
-   yarn db:generate
+   pnpm db:generate
    ```
 
 5. Setup database
@@ -64,13 +64,13 @@ The following instructions are for running the project locally for development.
    To start the database, run:
 
    ```bash
-   yarn docker:up
+   pnpm docker:up
    ```
 
    Next run the following command to setup the database:
 
    ```bash
-   yarn db:reset
+   pnpm db:reset
    ```
 
    This will:
@@ -82,7 +82,7 @@ The following instructions are for running the project locally for development.
 6. Start the Next.js server
 
    ```bash
-   yarn dev
+   pnpm dev
    ```
 
 ## Contributors

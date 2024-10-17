@@ -10,14 +10,6 @@
       "inputs": ["src/**/*", "!tests/**/*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
-    "@rallly/web#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**"]
-    },
-    "@rallly/landing#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**"]
-    },
     "test": {
       "inputs": ["src/**/*", "tests/**/*"],
       "env": ["CI"],

@@ -1,7 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/nextjs";
 import { buffer } from "micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";

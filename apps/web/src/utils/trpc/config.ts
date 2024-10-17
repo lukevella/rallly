@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/browser";
+import * as Sentry from "@sentry/nextjs";
 import { MutationCache } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import superjson from "superjson";

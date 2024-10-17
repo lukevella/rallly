@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import * as React from "react";
 
 export interface DateCardProps {
@@ -15,7 +15,7 @@ const DateCard: React.FunctionComponent<DateCardProps> = ({
 }) => {
   return (
     <div
-      className={clsx(
+      className={cn(
         "relative inline-flex size-12 flex-col rounded-md border bg-gray-50 text-center text-slate-800",
         className,
       )}

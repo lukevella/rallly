@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import { groupBy } from "lodash";
 import * as React from "react";
 
@@ -28,7 +28,7 @@ const GroupedOptions: React.FunctionComponent<GroupedOptionsProps> = ({
         return (
           <div key={day}>
             <div
-              className={clsx(
+              className={cn(
                 "flex border-b bg-gray-50 px-4 py-2 text-xs font-medium uppercase",
                 groupClassName,
               )}

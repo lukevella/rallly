@@ -9,14 +9,14 @@
  *
  * See: https://github.com/lukevella/rallly/issues/949
  */
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { ExtendedPrismaClient, PrismaClient } from "@rallly/database";
 import { Adapter, AdapterAccount } from "next-auth/adapters";
 
 export function CustomPrismaAdapter(client: ExtendedPrismaClient): Adapter {
   return {
     ...PrismaAdapter(client as PrismaClient),
-    linkAccount: (data) => {
+    linkAccount: (data: AdapterAccount) => {
       return client.account.create({
         data: {
           userId: data.userId,

@@ -10,22 +10,10 @@ This site is kindly built with and hosted by [Mintlify](https://mintlify.com).
 
 To preview your changes locally, you can use the [mintlify cli](https://mintlify.com/docs/development) to run a development server.
 
-Install the cli globally:
-
-```bash
-yarn global add mintlify
-```
-
-Navigate to this directory (where you can find `mint.json`):
-
-```bash
-cd apps/docs
-```
-
 Start the development server:
 
 ```bash
-mintlify dev
+npx mintlify dev
 ```
 
 ## Components
