@@ -147,6 +147,9 @@ importers:
       '@next/bundle-analyzer':
         specifier: ^12.3.4
         version: 12.3.4
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^5.21.1
+        version: 5.21.1
       '@rallly/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -394,6 +397,9 @@ importers:
       '@playwright/test':
         specifier: ^1.39.0
         version: 1.48.0
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^5.21.1
+        version: 5.21.1
       '@rallly/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -2467,6 +2473,9 @@ packages:
 
   '@prisma/instrumentation@5.19.1':
     resolution: {integrity: sha512-VLnzMQq7CWroL5AeaW0Py2huiNKeoMfCH3SUxstdzPrlWQi6UQ9UrfcbUkNHlVFqOMacqy8X/8YtE0kuKDpD9w==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@5.21.1':
+    resolution: {integrity: sha512-nbrAetFfGXw3Czg9+u/Hs4a5uLnT8MNsVRK7mSzl+Y2zi5badgpN8hmlhv2WEX1+GSDKMxJ8rAKpTwiIqH7fdQ==}
 
   '@radix-ui/colors@1.0.1':
     resolution: {integrity: sha512-xySw8f0ZVsAEP+e7iLl3EvcBXX7gsIlC1Zso/sPBW9gIWerBTgz6axrjU+MZ39wD+WFi5h5zdWpsg3+hwt2Qsg==}
@@ -11068,6 +11077,8 @@ snapshots:
       '@opentelemetry/sdk-trace-base': 1.26.0(@opentelemetry/api@1.9.0)
     transitivePeerDependencies:
       - supports-color
+
+  '@prisma/nextjs-monorepo-workaround-plugin@5.21.1': {}
 
   '@radix-ui/colors@1.0.1': {}
 

@@ -4,6 +4,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require("@sentry/nextjs");
+const { PrismaPlugin } = require("@prisma/nextjs-monorepo-workaround-plugin");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
@@ -24,7 +25,11 @@ const nextConfig = {
     "@rallly/tailwind-config",
     "@rallly/emails",
   ],
-  webpack(config) {
+  webpack(config, { isServer }) {
+    if (isServer) {
+      config.plugins.push(new PrismaPlugin());
+    }
+
     config.module.rules.push({
       test: /\.svg$/,
       use: ["@svgr/webpack"],

@@ -93,6 +93,7 @@
   "devDependencies": {
     "@next/env": "^14.2.15",
     "@playwright/test": "^1.39.0",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^5.21.1",
     "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/accept-language-parser": "^1.5.3",

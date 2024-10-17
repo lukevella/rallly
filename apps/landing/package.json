@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.4",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^5.21.1",
     "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/accept-language-parser": "^1.5.3",
