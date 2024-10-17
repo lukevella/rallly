@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
-    "dayjs": "^1.11.10",
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^18.15.10",
+    "dayjs": "^1.11.10",
     "prisma": "5.20.0",
     "tsx": "^4.6.2"
   }

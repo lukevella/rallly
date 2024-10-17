@@ -29,15 +29,6 @@
     "seed": "pnpm --filter @rallly/database db:seed",
     "schema": "./packages/database/prisma/schema.prisma"
   },
-  "dependencies": {
-    "@sentry/nextjs": "^8.32.0",
-    "framer-motion": "^10.16.4",
-    "next": "^14.2.13",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.2.2",
-    "zod": "^3.23.8"
-  },
   "devDependencies": {
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
@@ -48,6 +39,7 @@
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.4",
     "turbo": "^2.1.1",
+    "typescript": "^5.2.2",
     "vitest": "^2.1.1",
     "wait-on": "^6.0.1"
   },
