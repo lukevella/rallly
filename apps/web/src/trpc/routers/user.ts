@@ -56,7 +56,9 @@ export const user = router({
     await prisma.$transaction(async (tx) => {
       const polls = await tx.poll.findMany({
         select: { id: true },
-        where: { userId: ctx.user.id },
+        where: {
+          userId: ctx.user.id,
+        },
       });
       const pollIds = polls.map((poll) => poll.id);
 

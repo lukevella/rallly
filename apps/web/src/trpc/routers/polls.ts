@@ -70,6 +70,7 @@ export const polls = router({
       return await prisma.poll.findMany({
         where: {
           userId: ctx.user.id,
+          deleted: false,
           status: input.status === "all" ? undefined : input.status,
         },
         orderBy: [
@@ -110,6 +111,7 @@ export const polls = router({
       const polls = await prisma.poll.findMany({
         where: {
           userId: ctx.user.id,
+          deleted: false,
           status: status === "all" ? undefined : status,
         },
         orderBy: [
