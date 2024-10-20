@@ -15,27 +15,21 @@ function joinPath(baseUrl: string, subpath = "") {
   return baseUrl;
 }
 
-export function objectToQueryString(obj: Record<string, string>) {
-  const parts = [];
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      const value = obj[key];
-      if (value !== undefined) {
-        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
-      }
-    }
-  }
-  return parts.join("&");
-}
-export function absoluteUrl(subpath = "", query?: Record<string, string>) {
-  const queryString = query ? `?${objectToQueryString(query)}` : "";
-
+export function absoluteUrl(subpath = "", query: Record<string, string> = {}) {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ??
     getVercelUrl() ??
     `http://localhost:${port}`;
 
-  return joinPath(baseUrl, subpath) + queryString;
+  const url = new URL(subpath, baseUrl);
+
+  Object.entries(query).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+
+  const urlString = url.href;
+
+  return urlString.endsWith("/") ? urlString.slice(0, -1) : urlString;
 }
 
 export function shortUrl(subpath = "") {
