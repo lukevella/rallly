@@ -1,5 +1,6 @@
 import { prisma } from "@rallly/database";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
 import { getTranslation } from "@/app/i18n";
@@ -35,12 +36,22 @@ export async function generateMetadata({
   const { t } = await getTranslation(locale);
 
   if (!poll) {
-    return null;
+    notFound();
   }
 
   const { title, id, user } = poll;
 
-  const author = user?.name || t("guest");
+  const author =
+    user?.name ||
+    t("guest", {
+      ns: "app",
+      defaultValue: "Guest",
+    });
+
+  const ogImageUrl = absoluteUrl("/api/og-image-poll", {
+    title,
+    author,
+  });
 
   return {
     title,
@@ -51,10 +62,7 @@ export async function generateMetadata({
       url: `/invite/${id}`,
       images: [
         {
-          url: `${absoluteUrl("/api/og-image-poll", {
-            title,
-            author,
-          })}`,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: title,
