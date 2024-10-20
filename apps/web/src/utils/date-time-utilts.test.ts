@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { describe, expect, it } from "vitest";
 
 import { supportedTimeZones } from "@/utils/supported-time-zones";
 

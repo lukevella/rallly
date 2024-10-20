@@ -1,5 +1,3 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
-
 import { absoluteUrl } from "./absolute-url";
 
 describe("absoluteUrl", () => {
