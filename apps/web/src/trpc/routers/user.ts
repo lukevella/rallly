@@ -59,8 +59,12 @@ export const user = router({
         where: { userId: ctx.user.id },
       });
       const pollIds = polls.map((poll) => poll.id);
-      await tx.comment.deleteMany({
+
+      await tx.vote.deleteMany({
         where: { pollId: { in: pollIds } },
+      });
+      await tx.comment.deleteMany({
+        where: { OR: [{ pollId: { in: pollIds } }, { userId: ctx.user.id }] },
       });
       await tx.option.deleteMany({
         where: { pollId: { in: pollIds } },
@@ -71,14 +75,8 @@ export const user = router({
       await tx.watcher.deleteMany({
         where: { OR: [{ pollId: { in: pollIds } }, { userId: ctx.user.id }] },
       });
-      await tx.vote.deleteMany({
-        where: { pollId: { in: pollIds } },
-      });
       await tx.event.deleteMany({
         where: { userId: ctx.user.id },
-      });
-      await tx.comment.deleteMany({
-        where: { OR: [{ pollId: { in: pollIds } }, { userId: ctx.user.id }] },
       });
       await tx.poll.deleteMany({
         where: { userId: ctx.user.id },
