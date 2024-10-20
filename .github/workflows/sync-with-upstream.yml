@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   schedule:
       - cron:  '0 2 * * SUN'
+
 jobs:
   merge:
     runs-on: ubuntu-latest
