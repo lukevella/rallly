@@ -6,6 +6,7 @@
       "@/*": ["src/*"],
     },
     "strictNullChecks": true,
+    "types": ["vitest/globals"],
   },
   "include": [
     "**/*.ts",
