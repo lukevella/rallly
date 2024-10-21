@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { redirect, RedirectType } from "next/navigation";
 
 import { Params } from "@/app/[locale]/types";
+import { getTranslation } from "@/app/i18n";
 import { getServerSession } from "@/utils/auth";
 
 export default async function Layout({
@@ -17,56 +17,29 @@ export default async function Layout({
   }
 
   return (
-    <div className="relative h-screen">
-      <div className="absolute inset-0 hidden sm:block">
-        <GridPattern />
+    <div className="relative flex h-screen flex-col items-center gap-4 p-4">
+      <div className="flex w-full flex-1 flex-col items-center justify-center">
+        {children}
       </div>
-
-      <div className="relative z-20 flex flex-col sm:h-full">
-        <div className="sm:pt-29 grow sm:pt-20">
-          <div className="m-6 flex justify-center">
-            <div className="inline-flex size-12 items-center justify-center rounded-lg border border-white bg-gradient-to-b from-white to-gray-50 shadow">
-              <Image
-                src="/images/logo-mark.svg"
-                alt="Rallly"
-                width={32}
-                height={32}
-                priority={true}
-                className="shrink-0"
-              />
-            </div>
-          </div>
-          {children}
+      <div className="text-muted-foreground flex w-full justify-between px-4 text-sm">
+        <div>© 2024 Rallly</div>
+        <div>
+          <a href="https://support.rallly.co">Support</a>
         </div>
       </div>
     </div>
   );
 }
 
-function GridPattern() {
-  return (
-    <svg
-      className="absolute inset-0 z-10 h-screen w-full stroke-gray-200 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)]"
-      aria-hidden="true"
-    >
-      <defs>
-        <pattern
-          id="1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84"
-          width={220}
-          height={220}
-          x="50%"
-          y={-1}
-          patternUnits="userSpaceOnUse"
-        >
-          <path d="M.5 220V.5H220" fill="none" />
-        </pattern>
-      </defs>
-      <rect
-        width="100%"
-        height="100%"
-        strokeWidth={0}
-        fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
-      />
-    </svg>
-  );
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { t } = await getTranslation(params.locale);
+  return {
+    title: t("login", {
+      ns: "app",
+    }),
+  };
 }

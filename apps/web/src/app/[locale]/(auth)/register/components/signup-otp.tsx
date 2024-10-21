@@ -14,11 +14,13 @@ import { ChevronLeftIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { InputOTP } from "@/app/[locale]/(auth)/login/components/input-otp";
+import { InputOTP } from "@/app/[locale]/(auth)/login/verify/components/input-otp";
+import { LoginWizardError } from "@/app/[locale]/(auth)/login/login-wizard/errors";
 import {
   useLoginWizard,
   useLoginWizardProps,
 } from "@/app/[locale]/(auth)/login/login-wizard/login-wizard";
+import { SSOMenu } from "@/app/[locale]/(auth)/login/components/sso-provider";
 import { useTranslation } from "@/app/i18n/client";
 import { Trans } from "@/components/trans";
 
@@ -28,10 +30,9 @@ const loginOtpFormSchema = z.object({
 
 type LoginOtpFormValues = z.infer<typeof loginOtpFormSchema>;
 
-export function LoginOtp() {
-  const { state, dispatch } = useLoginWizard();
-  const { onLogin } = useLoginWizardProps();
-
+export function SignUpOtp() {
+  const { dispatch } = useLoginWizard();
+  const { finishSignUp } = useLoginWizardProps();
   const { t } = useTranslation();
   const form = useForm<LoginOtpFormValues>({
     defaultValues: {
@@ -41,15 +42,22 @@ export function LoginOtp() {
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    const res = await onLogin(state.email, data.otp);
-
-    if (res?.error) {
-      form.setError("otp", {
-        message: t("wrongVerificationCode"),
-      });
+    try {
+      await finishSignUp(data);
+    } catch (error) {
+      if (error instanceof LoginWizardError) {
+        switch (error.code) {
+          case "invalidOTP": {
+            form.setError("otp", {
+              type: "manual",
+              message: t("wrongVerificationCode"),
+            });
+            break;
+          }
+        }
+      }
     }
   });
-
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -58,7 +66,7 @@ export function LoginOtp() {
             type="button"
             className="inline-block h-7"
             onClick={() => {
-              dispatch({ type: "setStep", step: "menu" });
+              dispatch({ type: "setStep", step: "signup-name" });
             }}
           >
             <Icon>
@@ -66,20 +74,19 @@ export function LoginOtp() {
             </Icon>
           </button>
           <h1 className="text-lg font-bold tracking-tight">
-            <Trans i18nKey="finishLoggingIn" defaults="Finish logging in" />
+            <Trans i18nKey="finishSigningUp" defaults="Finish Signing Up" />
           </h1>
         </div>
 
         <p className="text-muted-foreground text-sm">
           <Trans
-            i18nKey="enterCode"
-            values={{ email: state.email }}
-            defaults="Enter the code we sent to {email}"
+            i18nKey="enterCodeInstruction"
+            defaults="Check and enter the code we sent you."
           />
         </p>
       </div>
       <Form {...form}>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <FormField
             control={form.control}
             name="otp"
@@ -91,14 +98,8 @@ export function LoginOtp() {
                   </FormLabel>
                   <FormControl>
                     <InputOTP
-                      disabled={
-                        form.formState.isSubmitting ||
-                        form.formState.isSubmitSuccessful
-                      }
                       autoFocus={true}
-                      onValidCode={() => {
-                        handleSubmit();
-                      }}
+                      onValidCode={() => handleSubmit()}
                       {...field}
                     />
                   </FormControl>
@@ -125,6 +126,7 @@ export function LoginOtp() {
           </div>
         </form>
       </Form>
+      <SSOMenu />
     </div>
   );
 }
