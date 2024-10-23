@@ -22,9 +22,7 @@ const TimeSlotOption: React.FunctionComponent<TimeSlotOptionProps> = ({
 }) => {
   const breakpoint = useBreakpoint();
   const showVotes = !!(rest.selectedParticipantId || rest.editable);
-  const showDuration =
-    breakpoint === "showDuration" ||
-    (breakpoint !== "showDuration" && !showVotes);
+  const showDuration = breakpoint === "showDuration" || !showVotes;
 
   return (
     <PollOption {...rest}>
