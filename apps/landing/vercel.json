@@ -1,5 +1,5 @@
 {
   "installCommand": "yarn install",
-  "buildCommand": "cd ../.. && yarn prisma generate && yarn turbo build --filter=@rallly/landing...",
+  "buildCommand": "cd ../.. && yarn db:generate && yarn build:web && yarn db:deploy",
   "outputDirectory": ".next"
 }
