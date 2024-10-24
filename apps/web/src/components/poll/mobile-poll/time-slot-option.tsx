@@ -11,14 +11,13 @@ export interface TimeSlotOptionProps extends PollOptionProps {
 
 const TimeSlotOption: React.FunctionComponent<TimeSlotOptionProps> = ({
   startTime,
-  endTime,
   duration,
   ...rest
 }) => {
   return (
     <PollOption {...rest}>
       <div className="flex items-center gap-x-4 text-sm">
-        <div>{`${startTime} - ${endTime}`}</div>
+        <div>{startTime}</div>
         <div className="flex items-center gap-x-1.5 opacity-50">
           <ClockIcon className="size-4" />
           {duration}
