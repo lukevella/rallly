@@ -15,7 +15,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Flex } from "@rallly/ui/flex";
 import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
@@ -31,7 +30,7 @@ import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { ParticipantName } from "@/components/participant";
+import { Participant, ParticipantName } from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
@@ -218,7 +217,7 @@ function DiscussionInner() {
                 <div className="" key={comment.id}>
                   <div data-testid="comment">
                     <div className="mb-1 flex items-center space-x-2">
-                      <Flex gap="sm">
+                      <Participant>
                         <OptimizedAvatarImage
                           name={comment.authorName}
                           size="xs"
@@ -229,7 +228,7 @@ function DiscussionInner() {
                             <Trans i18nKey="you" />
                           </Badge>
                         ) : null}
-                      </Flex>
+                      </Participant>
                       <div className="flex items-center gap-2 text-sm ">
                         <div className="text-gray-500">
                           {dayjs(comment.createdAt).fromNow()}
