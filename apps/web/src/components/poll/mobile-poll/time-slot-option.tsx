@@ -1,5 +1,3 @@
-import { cn } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 import { ClockIcon } from "lucide-react";
 import * as React from "react";
 
@@ -20,15 +18,8 @@ const TimeSlotOption: React.FunctionComponent<TimeSlotOptionProps> = ({
     <PollOption {...rest}>
       <div className="flex items-center gap-x-4 text-sm">
         <div>{startTime}</div>
-        <div
-          className={cn(
-            "flex items-center gap-x-1.5 whitespace-nowrap opacity-50",
-            "xs:flex",
-          )}
-        >
-          <Icon>
-            <ClockIcon />
-          </Icon>
+        <div className="flex items-center gap-x-1.5 opacity-50">
+          <ClockIcon className="size-4" />
           {duration}
         </div>
       </div>
