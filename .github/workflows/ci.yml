@@ -61,6 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
+      DIRECT_DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
       CI: true
     steps:
       - uses: actions/checkout@v4
