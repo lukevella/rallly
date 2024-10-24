@@ -1,0 +1,5 @@
+{
+  "installCommand": "yarn install",
+  "buildCommand": "cd ../.. && yarn db:generate && yarn build:web && yarn db:deploy",
+  "outputDirectory": ".next"
+}
