@@ -49,11 +49,6 @@ const nextConfig = {
         destination: "/settings/profile",
         permanent: true,
       },
-      {
-        source: "/register",
-        destination: "/login?from=register",
-        permanent: true,
-      },
     ];
   },
   experimental: {

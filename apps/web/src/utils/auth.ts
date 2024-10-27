@@ -178,6 +178,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     providers: providers,
     pages: {
       signIn: "/login",
+      verifyRequest: "/login/verify",
       error: "/auth/error",
     },
     events: {

@@ -1,72 +1,79 @@
-import Image from "next/image";
+import { Metadata } from "next";
 import { redirect, RedirectType } from "next/navigation";
+import { Trans } from "react-i18next/TransWithoutContext";
 
 import { Params } from "@/app/[locale]/types";
+import { UserLanguageSwitcher } from "@/app/components/user-language-switcher";
+import { getTranslation } from "@/app/i18n";
+import { IfCloudHosted } from "@/contexts/environment";
 import { getServerSession } from "@/utils/auth";
+import Image from "next/image";
+import Link from "next/link";
 
 export default async function Layout({
   children,
+  params,
 }: {
   children: React.ReactNode;
   params: Params;
 }) {
   const session = await getServerSession();
-
+  const { t } = await getTranslation(params.locale);
   if (session?.user.email) {
     return redirect("/", RedirectType.replace);
   }
 
   return (
-    <div className="relative h-screen">
-      <div className="absolute inset-0 hidden sm:block">
-        <GridPattern />
+    <div className="relative flex h-screen flex-col gap-8 p-4 sm:p-6">
+      <div className="flex justify-between">
+        <span className="flex basis-1/3 items-center">
+          <Link href="/">
+            <Image
+              src="/images/logo-mark.svg"
+              alt="Rallly"
+              width={32}
+              height={32}
+            />
+          </Link>
+        </span>
+        <span className="flex basis-1/3 items-center justify-center"></span>
+        <span className="flex basis-1/3 items-center justify-end">
+          <UserLanguageSwitcher />
+        </span>
       </div>
-
-      <div className="relative z-20 flex flex-col sm:h-full">
-        <div className="sm:pt-29 grow sm:pt-20">
-          <div className="m-6 flex justify-center">
-            <div className="inline-flex size-12 items-center justify-center rounded-lg border border-white bg-gradient-to-b from-white to-gray-50 shadow">
-              <Image
-                src="/images/logo-mark.svg"
-                alt="Rallly"
-                width={32}
-                height={32}
-                priority={true}
-                className="shrink-0"
-              />
-            </div>
-          </div>
-          {children}
+      <div className="grow">
+        <div className="flex h-full w-full justify-center sm:items-center">
+          <div className="w-full space-y-8 sm:max-w-sm">{children}</div>
         </div>
+      </div>
+      <div className="text-muted-foreground flex items-center justify-between justify-between gap-6 text-sm">
+        <div className="flex items-center gap-6">
+          <IfCloudHosted>
+            <a className="hover:underline" href="https://rallly.co/terms">
+              <Trans t={t} ns="app" i18nKey="terms" defaults="Terms" />
+            </a>
+            <a className="hover:underline" href="https://rallly.co/privacy">
+              <Trans
+                t={t}
+                ns="app"
+                i18nKey="privacyPolicy"
+                defaults="Privacy Policy"
+              />
+            </a>
+          </IfCloudHosted>
+          <a className="hover:underline" href="https://support.rallly.co">
+            <Trans t={t} ns="app" i18nKey="support" defaults="Support" />
+          </a>
+        </div>
+        <div>v{process.env.NEXT_PUBLIC_APP_VERSION}</div>
       </div>
     </div>
   );
 }
 
-function GridPattern() {
-  return (
-    <svg
-      className="absolute inset-0 z-10 h-screen w-full stroke-gray-200 [mask-image:radial-gradient(800px_800px_at_center,white,transparent)]"
-      aria-hidden="true"
-    >
-      <defs>
-        <pattern
-          id="1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84"
-          width={220}
-          height={220}
-          x="50%"
-          y={-1}
-          patternUnits="userSpaceOnUse"
-        >
-          <path d="M.5 220V.5H220" fill="none" />
-        </pattern>
-      </defs>
-      <rect
-        width="100%"
-        height="100%"
-        strokeWidth={0}
-        fill="url(#1f932ae7-37de-4c0a-a8b0-a6e3b4d44b84)"
-      />
-    </svg>
-  );
-}
+export const metadata: Metadata = {
+  title: {
+    template: "%s - Rallly",
+    default: "Rallly",
+  },
+};

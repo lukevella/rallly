@@ -42,12 +42,6 @@ test.describe.serial(() => {
     mailServer.stop(() => {});
   });
 
-  test("register should redirect to login page", async ({ page }) => {
-    await page.goto("/register");
-    await page.waitForURL("/login?from=register");
-    expect(await page.title()).toBe("Login");
-  });
-
   test.describe("new user", () => {
     test("user registration", async ({ page }) => {
       await page.goto("/login");
