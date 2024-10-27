@@ -8,22 +8,20 @@ import { cn } from "./lib/utils";
 const buttonVariants = cva(
   cn(
     "inline-flex border font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
-    "focus-visible:ring-offset-input-background",
-    "focus:shadow-none",
+    "focus:shadow-none focus-visible:ring-2 focus-visible:ring-ring",
   ),
   {
     variants: {
       variant: {
         primary:
-          "border-primary-700 bg-primary disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm focus:bg-primary-500",
+          "focus:ring-offset-1 border-primary-700 bg-primary disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm",
         destructive:
-          "bg-destructive shadow-sm text-destructive-foreground focus-visible:ring-offset-1 active:bg-destructive border-destructive hover:bg-destructive/90",
-        default:
-          "ring-1 ring-inset ring-white/25 data-[state=open]:bg-gray-100 focus:border-gray-300 focus:bg-gray-200 hover:bg-gray-100 bg-gray-50",
+          "focus:ring-offset-1 bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
+        default: "focus:ring-offset-1 hover:bg-gray-100 bg-gray-50",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "focus:ring-offset-1 bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "border-transparent bg-transparent text-gray-800 hover:bg-gray-100 focus:bg-gray-200",
+          "border-transparent bg-transparent data-[state=open]:bg-gray-500/20 text-gray-800 hover:bg-gray-500/10 active:bg-gray-500/20",
         link: "underline-offset-4 border-transparent hover:underline text-primary",
       },
       size: {
