@@ -91,7 +91,7 @@ export function OTPForm({ email }: { email: string }) {
           className="w-full"
           variant="primary"
           type="submit"
-          disabled={form.formState.isSubmitting}
+          loading={form.formState.isSubmitting}
         >
           <Trans i18nKey="continue" defaults="Continue" />
         </Button>
