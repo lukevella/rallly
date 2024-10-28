@@ -108,26 +108,24 @@ export function Sidebar() {
               <li>
                 <PayWallDialog>
                   <DialogTrigger
+                    className="mb-4 flex w-full flex-col rounded-md border bg-gray-50 px-4 py-3 text-left focus:border-gray-300 focus:bg-gray-200"
                     onClick={() =>
                       posthog?.capture("trigger paywall", { from: "sidebar" })
                     }
-                    asChild
                   >
-                    <button className="mb-4 flex w-full flex-col rounded-md border bg-gray-50 px-4 py-3 focus:border-gray-300 focus:bg-gray-200">
-                      <span className="mb-2 flex items-center gap-x-2">
-                        <SparklesIcon className="size-5 text-gray-400" />
-                        <span className="text-sm font-bold">
-                          <Trans i18nKey="upgrade" />
-                        </span>
-                        <ProBadge />
+                    <span className="mb-2 flex items-center gap-x-2">
+                      <SparklesIcon className="size-5 text-gray-400" />
+                      <span className="text-sm font-bold">
+                        <Trans i18nKey="upgrade" />
                       </span>
-                      <span className="text-sm leading-relaxed text-gray-500">
-                        <Trans
-                          i18nKey="unlockFeatures"
-                          defaults="Unlock all Pro features."
-                        />
-                      </span>
-                    </button>
+                      <ProBadge />
+                    </span>
+                    <span className="text-sm leading-relaxed text-gray-500">
+                      <Trans
+                        i18nKey="unlockFeatures"
+                        defaults="Unlock all Pro features."
+                      />
+                    </span>
                   </DialogTrigger>
                 </PayWallDialog>
               </li>
