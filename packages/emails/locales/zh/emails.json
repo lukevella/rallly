@@ -45,5 +45,6 @@
   "register_subject": "请验证您的电子邮件地址",
   "common_viewOn": "在 {{domain}} 上查看",
   "newComment_preview": "前往您的投票查看他们的回复。",
-  "newComment_heading": "新评论"
+  "newComment_heading": "新评论",
+  "newPoll_preview": "分享您的参与者链接以开始收集回复。"
 }
