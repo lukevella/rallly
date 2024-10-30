@@ -263,5 +263,15 @@
   "timeZoneChangeDetectorMessage": "您的时区已更改为 <b>{currentTimeZone}</b>。您想要更新您的偏好设置吗？",
   "yesUpdateTimezone": "是的，更新我的时区",
   "noKeepCurrentTimezone": "否，保留当前时区",
-  "annualBenefit": "{count} 个月免费"
+  "annualBenefit": "{count} 个月免费",
+  "removeAvatar": "移除",
+  "uploadProfilePicture": "上传",
+  "profilePictureDescription": "最多2MB, JPG 或 PNG",
+  "invalidFileType": "无效的文件类型",
+  "invalidFileTypeDescription": "请上传一个 JPG 或 PNG 文件。",
+  "fileTooLarge": "文件过大",
+  "fileTooLargeDescription": "请上传小于50MB的文件",
+  "errorUploadPicture": "上传失败",
+  "errorUploadPictureDescription": "上传您的图片时出现问题。请稍后再试。",
+  "featureNameFinalize": "完成投票"
 }
