@@ -1,7 +1,6 @@
 import "tailwindcss/tailwind.css";
 import "../../style.css";
 
-import languages from "@rallly/languages";
 import { Toaster } from "@rallly/ui/toaster";
 import { Viewport } from "next";
 import { Inter } from "next/font/google";
@@ -14,10 +13,6 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
-
-export async function generateStaticParams() {
-  return Object.keys(languages).map((locale) => ({ locale }));
-}
 
 export const viewport: Viewport = {
   width: "device-width",
