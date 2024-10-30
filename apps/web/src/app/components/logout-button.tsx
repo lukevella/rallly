@@ -1,8 +1,7 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import type { ButtonProps } from "@rallly/ui/button";
 import { Button } from "@rallly/ui/button";
-
-import { usePostHog } from "@/utils/posthog";
 
 export function LogoutButton({
   children,

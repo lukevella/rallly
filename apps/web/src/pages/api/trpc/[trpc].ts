@@ -1,10 +1,10 @@
+import { posthogApiHandler } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-import { posthogApiHandler } from "@/app/posthog";
 import { getServerSession } from "@/auth";
-import type { AppRouter} from "@/trpc/routers";
+import type { AppRouter } from "@/trpc/routers";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
 import { composeApiHandlers } from "@/utils/next";

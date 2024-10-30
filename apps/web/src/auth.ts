@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type {
   GetServerSidePropsContext,
@@ -15,15 +16,15 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers/index";
 
-import { posthog } from "@/app/posthog";
-import { CustomPrismaAdapter } from "@/auth/custom-prisma-adapter";
-import { mergeGuestsIntoUser } from "@/auth/merge-user";
 import { env } from "@/env";
 import type { RegistrationTokenPayload } from "@/trpc/types";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 import { generateOtp, randomid } from "@/utils/nanoid";
 import { decryptToken } from "@/utils/session";
+
+import { CustomPrismaAdapter } from "./auth/custom-prisma-adapter";
+import { mergeGuestsIntoUser } from "./auth/merge-user";
 
 const providers: Provider[] = [
   // When a user registers, we don't want to go through the email verification process

@@ -1,0 +1,16 @@
+{
+  "name": "@rallly/posthog",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./server": "./src/server/index.ts",
+    "./client": "./src/client/index.ts"
+  },
+  "dependencies": {
+    "posthog-js": "^1.178.0",
+    "posthog-node": "^4.2.1"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  }
+}

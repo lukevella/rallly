@@ -1,3 +1,4 @@
+import { usePostHog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import {
   Card,
@@ -17,7 +18,6 @@ import { Trans } from "react-i18next";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { usePlan } from "@/contexts/plan";
-import { usePostHog } from "@/utils/posthog";
 
 export type PollSettingsFormData = {
   requireParticipantEmail: boolean;

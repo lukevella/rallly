@@ -1,3 +1,4 @@
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
@@ -10,7 +11,6 @@ import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
-import { usePostHog } from "@/utils/posthog";
 
 import { usePoll } from "../poll-context";
 

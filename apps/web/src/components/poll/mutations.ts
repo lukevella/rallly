@@ -1,6 +1,7 @@
+import { usePostHog } from "@rallly/posthog/client";
+
 import { usePoll } from "@/components/poll-context";
 import { trpc } from "@/trpc/client";
-import { usePostHog } from "@/utils/posthog";
 
 import type { ParticipantForm } from "./types";
 

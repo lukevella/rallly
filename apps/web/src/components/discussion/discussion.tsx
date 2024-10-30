@@ -1,4 +1,5 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
@@ -37,7 +38,6 @@ import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { trpc } from "@/trpc/client";
-import { usePostHog } from "@/utils/posthog";
 
 import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";
