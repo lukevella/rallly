@@ -7,7 +7,6 @@ import { isSelfHosted } from "@/utils/constants";
 
 export const getEmailClient = (locale?: string) => {
   return new EmailClient({
-    openPreviews: env.NODE_ENV === "development",
     provider: {
       name: (process.env.EMAIL_PROVIDER as SupportedEmailProviders) ?? "smtp",
     },
