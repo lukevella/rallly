@@ -19,14 +19,12 @@
     "@react-email/render": "^0.0.12",
     "@vercel/functions": "*",
     "nodemailer": "^6.9.9",
-    "preview-email": "^3.0.19",
     "react-email": "^2.0.0"
   },
   "devDependencies": {
     "@rallly/tailwind-config": "*",
     "@rallly/tsconfig": "*",
     "@rallly/utils": "*",
-    "@types/nodemailer": "^6.4.14",
-    "@types/preview-email": "^3.0.4"
+    "@types/nodemailer": "^6.4.14"
   }
 }

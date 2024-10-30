@@ -4,7 +4,6 @@ import { renderAsync } from "@react-email/render";
 import { waitUntil } from "@vercel/functions";
 import { createTransport, Transporter } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
-import previewEmail from "preview-email";
 import React from "react";
 
 import { i18nDefaultConfig, i18nInstance } from "./i18n";
@@ -42,10 +41,6 @@ type EmailProviderConfig =
 export type SupportedEmailProviders = EmailProviderConfig["name"];
 
 type EmailClientConfig = {
-  /**
-   * Whether to open previews of each email in the browser
-   */
-  openPreviews?: boolean;
   /**
    * Email provider config
    */
@@ -150,12 +145,6 @@ export class EmailClient {
   }
 
   async sendEmail(options: Mail.Options) {
-    if (this.config.openPreviews) {
-      previewEmail(options, {
-        openSimulator: false,
-      });
-    }
-
     if (!process.env["SUPPORT_EMAIL"]) {
       console.info("ℹ SUPPORT_EMAIL not configured - skipping email send");
       return;
