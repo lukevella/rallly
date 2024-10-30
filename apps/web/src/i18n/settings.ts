@@ -10,7 +10,6 @@ export function getOptions(
   ns: string | string[] = defaultNS,
 ): InitOptions {
   return {
-    // debug: true,
     supportedLngs: languages,
     fallbackLng,
     lng,

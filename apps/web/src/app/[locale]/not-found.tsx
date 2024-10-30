@@ -2,7 +2,7 @@ import { Button } from "@rallly/ui/button";
 import { FileSearchIcon } from "lucide-react";
 import Link from "next/link";
 
-import { getTranslation } from "@/app/i18n";
+import { getTranslation } from "@/i18n/server";
 
 export default async function Page() {
   // TODO (Luke Vella) [2023-11-03]: not-found doesn't have access to params right now

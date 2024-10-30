@@ -1,6 +1,6 @@
 import { RegisterForm } from "@/app/[locale]/(auth)/register/register-page";
 import { Params } from "@/app/[locale]/types";
-import { getTranslation } from "@/app/i18n";
+import { getTranslation } from "@/i18n/server";
 
 export default async function Page() {
   return <RegisterForm />;

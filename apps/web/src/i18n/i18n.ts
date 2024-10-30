@@ -1,13 +1,15 @@
 import { createInstance, Namespace } from "i18next";
+import ICU from "i18next-icu";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
 
-import { defaultNS, getOptions } from "./i18n/settings";
+import { getOptions } from "./settings";
 
-const initI18next = async (lng: string, ns: Namespace) => {
+export const initI18next = async (lng: string, ns: Namespace) => {
   const i18nInstance = createInstance();
   await i18nInstance
     .use(initReactI18next)
+    .use(ICU)
     .use(
       resourcesToBackend(
         (language: string, namespace: string) =>
@@ -17,14 +19,3 @@ const initI18next = async (lng: string, ns: Namespace) => {
     .init(getOptions(lng, ns));
   return i18nInstance;
 };
-
-export async function getTranslation(
-  locale: string,
-  ns: Namespace = defaultNS,
-) {
-  const i18nextInstance = await initI18next(locale, ns);
-  return {
-    t: i18nextInstance.getFixedT(locale, Array.isArray(ns) ? ns[0] : ns),
-    i18n: i18nextInstance,
-  };
-}

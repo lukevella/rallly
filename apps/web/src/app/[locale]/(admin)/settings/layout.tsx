@@ -6,7 +6,7 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { getTranslation } from "@/app/i18n";
+import { getTranslation } from "@/i18n/server";
 
 import { SettingsMenu } from "./settings-menu";
 

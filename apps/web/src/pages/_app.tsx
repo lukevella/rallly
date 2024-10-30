@@ -11,9 +11,9 @@ import Head from "next/head";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import React from "react";
 
-import { I18nProvider } from "@/app/i18n/client";
 import Maintenance from "@/components/maintenance";
 import { UserProvider } from "@/components/user-provider";
+import { I18nProvider } from "@/i18n/client";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { trpc } from "@/utils/trpc/client";
 

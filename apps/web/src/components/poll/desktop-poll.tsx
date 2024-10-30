@@ -23,11 +23,11 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/app/components/empty-state";
-import { useTranslation } from "@/app/i18n/client";
 import { TimesShownIn } from "@/components/clock";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
+import { useTranslation } from "@/i18n/client";
 
 import {
   useParticipants,

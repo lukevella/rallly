@@ -3,11 +3,11 @@ import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import React from "react";
 
-import { useTranslation } from "@/app/i18n/client";
 import { Spinner } from "@/components/spinner";
 import { useSubscription } from "@/contexts/plan";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/utils/trpc/client";
 
 import { useRequiredContext } from "./use-required-context";
