@@ -1,7 +1,7 @@
 import { useParams } from "next/navigation";
 import React from "react";
 
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export const usePoll = () => {
   const params = useParams<{ urlId: string }>();

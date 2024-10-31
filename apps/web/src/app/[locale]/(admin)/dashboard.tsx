@@ -15,7 +15,7 @@ import {
 } from "@/app/[locale]/(admin)/app-card";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function Dashboard() {
   const { data } = trpc.dashboard.info.useQuery();

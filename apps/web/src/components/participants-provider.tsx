@@ -3,8 +3,8 @@ import * as React from "react";
 
 import { useVisibility } from "@/components/visibility";
 import { usePermissions } from "@/contexts/permissions";
-import { trpc } from "@/utils/trpc/client";
-import { Vote } from "@/utils/trpc/types";
+import { trpc } from "@/trpc/client";
+import { Vote } from "@/trpc/client/types";
 
 import { useRequiredContext } from "./use-required-context";
 

@@ -8,7 +8,7 @@ import { useSubscription } from "@/contexts/plan";
 import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 import { useRequiredContext } from "./use-required-context";
 

@@ -14,8 +14,8 @@ import React from "react";
 import Maintenance from "@/components/maintenance";
 import { UserProvider } from "@/components/user-provider";
 import { I18nProvider } from "@/i18n/client";
+import { trpc } from "@/trpc/client";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
-import { trpc } from "@/utils/trpc/client";
 
 import { NextPageWithLayout } from "../types";
 

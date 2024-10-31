@@ -10,7 +10,7 @@ import {
 } from "@/app/components/empty-state";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export function PastEvents() {
   const { data } = trpc.scheduledEvents.list.useQuery({

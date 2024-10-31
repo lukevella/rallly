@@ -1,7 +1,7 @@
 import { createTRPCNext } from "@trpc/next";
 
+import { trpcConfig } from "@/trpc/client/config";
 import type { AppRouter } from "@/trpc/routers";
-import { trpcConfig } from "@/utils/trpc/config";
 
 export const trpc = createTRPCNext<AppRouter>({
   config() {

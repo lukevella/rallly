@@ -9,8 +9,8 @@ import * as React from "react";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { trpc } from "@/trpc/client";
 import { usePostHog } from "@/utils/posthog";
-import { trpc } from "@/utils/trpc/client";
 
 import { usePoll } from "../poll-context";
 

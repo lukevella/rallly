@@ -3,8 +3,8 @@ import { Badge } from "@rallly/ui/badge";
 import React from "react";
 
 import { Trans } from "@/components/trans";
+import { trpc } from "@/trpc/client";
 import { isSelfHosted } from "@/utils/constants";
-import { trpc } from "@/utils/trpc/client";
 
 export const useSubscription = () => {
   const { data } = trpc.user.subscription.useQuery(undefined, {

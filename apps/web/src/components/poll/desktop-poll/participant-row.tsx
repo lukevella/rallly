@@ -13,7 +13,7 @@ import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePermissions } from "@/contexts/permissions";
-import { Vote } from "@/utils/trpc/types";
+import { Vote } from "@/trpc/client/types";
 
 import VoteIcon from "../vote-icon";
 import ParticipantRowForm from "./participant-row-form";
