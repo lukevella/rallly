@@ -17,8 +17,8 @@ import { useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
+import { trpc } from "@/trpc/client";
 import { usePostHog } from "@/utils/posthog";
-import { trpc } from "@/utils/trpc/client";
 
 export function DeleteAccountDialog({
   email,

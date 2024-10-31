@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { ProfilePicture } from "@/app/[locale]/(admin)/settings/profile/profile-picture";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export const ProfileSettings = () => {
   const { user, refresh } = useUser();

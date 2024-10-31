@@ -5,7 +5,7 @@ import React from "react";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { VisibilityProvider } from "@/components/visibility";
 import { PermissionsContext } from "@/contexts/permissions";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 import Loader from "./loading";
 

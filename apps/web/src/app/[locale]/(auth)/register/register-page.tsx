@@ -23,8 +23,8 @@ import { z } from "zod";
 import { VerifyCode } from "@/components/auth/auth-forms";
 import { AuthCard } from "@/components/auth/auth-layout";
 import { Trans } from "@/components/trans";
+import { trpc } from "@/trpc/client";
 import { useDayjs } from "@/utils/dayjs";
-import { trpc } from "@/utils/trpc/client";
 
 const registerFormSchema = z.object({
   name: z.string().nonempty().max(100),

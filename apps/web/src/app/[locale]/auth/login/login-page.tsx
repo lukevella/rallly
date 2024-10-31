@@ -8,8 +8,8 @@ import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
+import { trpc } from "@/trpc/client";
 import { usePostHog } from "@/utils/posthog";
-import { trpc } from "@/utils/trpc/client";
 
 type PageProps = { magicLink: string; email: string };
 

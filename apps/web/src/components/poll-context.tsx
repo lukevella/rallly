@@ -5,13 +5,13 @@ import { TrashIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
+import { GetPollApiResponse, Vote } from "@/trpc/client/types";
 import {
   getDuration,
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";
 import { useDayjs } from "@/utils/dayjs";
-import { GetPollApiResponse, Vote } from "@/utils/trpc/types";
 
 import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";

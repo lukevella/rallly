@@ -32,7 +32,7 @@ import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 const AdminControls = () => {
   return (

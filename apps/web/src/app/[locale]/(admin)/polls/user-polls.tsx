@@ -24,7 +24,7 @@ import { PollStatusBadge } from "@/components/poll-status";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { VisibilityTrigger } from "@/components/visibility-trigger";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/trpc/client";
 
 function PollCount({ count }: { count?: number }) {
   return <span className="font-semibold">{count || 0}</span>;
