@@ -3,8 +3,8 @@ import { prisma } from "@rallly/database";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
-import { absoluteUrl } from "@/utils/absolute-url";
 import { getServerSession } from "@/auth";
+import { absoluteUrl } from "@/utils/absolute-url";
 
 const inputSchema = z.object({
   session_id: z.string().optional(),
