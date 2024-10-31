@@ -3,9 +3,9 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import { BackButton } from "@/app/[locale]/(admin)/menu/menu-button";
 import { Params } from "@/app/[locale]/types";
-import { getTranslation } from "@/app/i18n";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
+import { getTranslation } from "@/i18n/server";
 
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);

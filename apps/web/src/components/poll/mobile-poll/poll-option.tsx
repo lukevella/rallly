@@ -7,11 +7,11 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 import { useToggle } from "react-use";
 
-import { useTranslation } from "@/app/i18n/client";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useParticipants } from "@/components/participants-provider";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
+import { useTranslation } from "@/i18n/client";
 
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";

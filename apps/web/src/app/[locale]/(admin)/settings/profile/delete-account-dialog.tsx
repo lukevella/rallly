@@ -15,8 +15,8 @@ import { Input } from "@rallly/ui/input";
 import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
-import { useTranslation } from "@/app/i18n/client";
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 import { usePostHog } from "@/utils/posthog";
 import { trpc } from "@/utils/trpc/client";
 
@@ -32,7 +32,7 @@ export function DeleteAccountDialog({
       email: "",
     },
   });
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   const trpcUtils = trpc.useUtils();
   const posthog = usePostHog();
   const deleteAccount = trpc.user.delete.useMutation({

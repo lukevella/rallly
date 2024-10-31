@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
-import { getTranslation } from "@/app/i18n";
+import { getTranslation } from "@/i18n/server";
 import { absoluteUrl } from "@/utils/absolute-url";
 
 export default async function Page() {

@@ -1,7 +1,6 @@
 "use client";
 import Head from "next/head";
 
-import { useTranslation } from "@/app/i18n/client";
 import { DateTimePreferences } from "@/components/settings/date-time-preferences";
 import { LanguagePreference } from "@/components/settings/language-preference";
 import {
@@ -10,6 +9,7 @@ import {
   SettingsSection,
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 
 export function PreferencesPage() {
   const { t } = useTranslation();

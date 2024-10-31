@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { z } from "zod";
 
-import { getTranslation } from "@/app/i18n";
+import { getTranslation } from "@/i18n/server";
 
 import { LoginPage } from "./login-page";
 

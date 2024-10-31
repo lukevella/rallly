@@ -1,6 +1,6 @@
 import { Trans as BaseTrans } from "react-i18next";
 
-import { useTranslation } from "@/app/i18n/client";
+import { useTranslation } from "@/i18n/client";
 
 import { I18nNamespaces } from "../../declarations/i18next";
 
@@ -11,6 +11,6 @@ export const Trans = (props: {
   children?: React.ReactNode;
   components?: Record<string, React.ReactElement> | React.ReactElement[];
 }) => {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
   return <BaseTrans ns="app" t={t} {...props} />;
 };

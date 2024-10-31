@@ -5,13 +5,13 @@ import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { DotIcon, MapPinIcon, PauseIcon } from "lucide-react";
 
-import { useTranslation } from "@/app/i18n/client";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import VoteIcon from "@/components/poll/vote-icon";
 import { PollStatusBadge } from "@/components/poll-status";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { useTranslation } from "@/i18n/client";
 
 function IconGuide() {
   return (
