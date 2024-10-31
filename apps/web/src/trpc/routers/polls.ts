@@ -45,7 +45,7 @@ export const polls = router({
       by: ["status"],
       where: {
         userId: ctx.user.id,
-        deleted: false,
+        deletedAt: null,
       },
       _count: {
         status: true,
@@ -60,44 +60,6 @@ export const polls = router({
       {} as Record<PollStatus, number>,
     );
   }),
-  list: possiblyPublicProcedure
-    .input(
-      z.object({
-        status: z.enum(["all", "live", "paused", "finalized"]),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      return await prisma.poll.findMany({
-        where: {
-          userId: ctx.user.id,
-          deleted: false,
-          status: input.status === "all" ? undefined : input.status,
-        },
-        orderBy: [
-          {
-            createdAt: "desc",
-          },
-          {
-            title: "asc",
-          },
-        ],
-        select: {
-          id: true,
-          title: true,
-          location: true,
-          timeZone: true,
-          createdAt: true,
-          status: true,
-          userId: true,
-          participants: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      });
-    }),
   infiniteList: possiblyPublicProcedure
     .input(
       z.object({
@@ -111,7 +73,7 @@ export const polls = router({
       const polls = await prisma.poll.findMany({
         where: {
           userId: ctx.user.id,
-          deleted: false,
+          deletedAt: null,
           status: status === "all" ? undefined : status,
         },
         orderBy: [
@@ -133,6 +95,9 @@ export const polls = router({
           status: true,
           userId: true,
           participants: {
+            where: {
+              deletedAt: null,
+            },
             select: {
               id: true,
               name: true,
@@ -535,118 +500,6 @@ export const polls = router({
         },
       });
     }),
-  paginatedList: possiblyPublicProcedure
-    .input(
-      z.object({
-        list: z.string().optional(),
-        pagination: z.object({
-          pageIndex: z.number(),
-          pageSize: z.number(),
-        }),
-        sorting: z
-          .array(
-            z.object({
-              id: z.string(),
-              desc: z.boolean(),
-            }),
-          )
-          .optional(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const whereParticipated = {
-        userId: {
-          not: ctx.user.id,
-        },
-        participants: {
-          some: {
-            userId: ctx.user.id,
-          },
-        },
-      };
-
-      const whereCreated = {
-        userId: ctx.user.id,
-      };
-
-      const where =
-        input.list === "all"
-          ? {
-              OR: [whereCreated, whereParticipated],
-            }
-          : input.list === "other"
-            ? whereParticipated
-            : input.list === "mine"
-              ? whereCreated
-              : null;
-
-      if (!where) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid list",
-        });
-      }
-
-      const [total, rows] = await prisma.$transaction([
-        prisma.poll.count({
-          where: { deleted: false, ...where },
-        }),
-        prisma.poll.findMany({
-          where: { deleted: false, ...where },
-          select: {
-            id: true,
-            title: true,
-            location: true,
-            userId: true,
-            user: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            createdAt: true,
-            timeZone: true,
-            adminUrlId: true,
-            participantUrlId: true,
-            status: true,
-            event: {
-              select: {
-                start: true,
-                duration: true,
-              },
-            },
-            closed: true,
-            participants: {
-              select: {
-                id: true,
-                name: true,
-              },
-              orderBy: [
-                {
-                  createdAt: "desc",
-                },
-                { name: "desc" },
-              ],
-            },
-          },
-          orderBy:
-            input.sorting && input
-              ? input.sorting?.map((s) => ({
-                  [s.id]: s.desc ? "desc" : "asc",
-                }))
-              : [
-                  {
-                    createdAt: "desc",
-                  },
-                  { title: "asc" },
-                ],
-          skip: input.pagination.pageIndex * input.pagination.pageSize,
-          take: input.pagination.pageSize,
-        }),
-      ]);
-
-      return { total, rows };
-    }),
   getParticipating: possiblyPublicProcedure
     .input(
       z.object({
@@ -669,7 +522,7 @@ export const polls = router({
         }),
         prisma.poll.findMany({
           where: {
-            deleted: false,
+            deletedAt: null,
             participants: {
               some: {
                 userId: ctx.user.id,
