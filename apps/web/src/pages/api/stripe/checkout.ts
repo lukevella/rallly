@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 import { absoluteUrl } from "@/utils/absolute-url";
-import { getServerSession } from "@/utils/auth";
+import { getServerSession } from "@/auth";
 
 export const config = {
   edge: true,
