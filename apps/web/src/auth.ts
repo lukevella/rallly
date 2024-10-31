@@ -15,11 +15,11 @@ import GoogleProvider from "next-auth/providers/google";
 import { Provider } from "next-auth/providers/index";
 
 import { posthog } from "@/app/posthog";
+import { CustomPrismaAdapter } from "@/auth/custom-prisma-adapter";
+import { mergeGuestsIntoUser } from "@/auth/merge-user";
 import { env } from "@/env";
 import type { RegistrationTokenPayload } from "@/trpc/types";
 import { absoluteUrl } from "@/utils/absolute-url";
-import { CustomPrismaAdapter } from "@/utils/auth/custom-prisma-adapter";
-import { mergeGuestsIntoUser } from "@/utils/auth/merge-user";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 import { generateOtp, randomid } from "@/utils/nanoid";

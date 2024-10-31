@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
 import { GetServerSideProps } from "next";
 
+import { getServerSession } from "@/auth";
 import type { DisableNotificationsPayload } from "@/trpc/types";
-import { getServerSession } from "@/utils/auth";
 import { decryptToken } from "@/utils/session";
 
 const Page = () => {

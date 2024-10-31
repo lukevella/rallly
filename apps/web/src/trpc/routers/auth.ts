@@ -2,7 +2,7 @@ import { prisma } from "@rallly/database";
 import { z } from "zod";
 
 import { posthog } from "@/app/posthog";
-import { isEmailBlocked } from "@/utils/auth";
+import { isEmailBlocked } from "@/auth";
 import { generateOtp } from "@/utils/nanoid";
 import { createToken, decryptToken } from "@/utils/session";
 
