@@ -1,8 +1,8 @@
 import { supportedLngs } from "@rallly/languages";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { MetadataRoute } from "next";
 
 import { getAllPosts } from "@/lib/api";
-import { absoluteUrl } from "@/utils/absolute-url";
 
 const alternateLanguages = supportedLngs.filter((lng) => lng !== "en");
 

@@ -1,5 +1,5 @@
 import allLanguages from "@rallly/languages";
-import { InitOptions } from "i18next";
+import type { InitOptions } from "i18next";
 
 export const fallbackLng = "en";
 export const languages = Object.keys(allLanguages);

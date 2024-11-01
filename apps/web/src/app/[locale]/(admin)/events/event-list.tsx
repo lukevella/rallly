@@ -4,7 +4,7 @@ import { Card, CardContent } from "@rallly/ui/card";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import dayjs from "dayjs";
 
-import { ScheduledEvent } from "@/app/[locale]/(admin)/events/types";
+import type { ScheduledEvent } from "@/app/[locale]/(admin)/events/types";
 import { Trans } from "@/components/trans";
 import { generateGradient } from "@/utils/color-hash";
 import { useDayjs } from "@/utils/dayjs";

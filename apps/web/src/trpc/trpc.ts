@@ -7,7 +7,7 @@ import superjson from "superjson";
 import { isSelfHosted } from "@/utils/constants";
 import { getSubscriptionStatus } from "@/utils/subscription";
 
-import { TRPCContext } from "./context";
+import type { TRPCContext } from "./context";
 
 const t = initTRPC.context<TRPCContext>().create({
   transformer: superjson,

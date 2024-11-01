@@ -1,7 +1,9 @@
 {
   "name": "@rallly/eslint-config",
   "version": "0.0.0",
-  "main": "preset.js",
+  "exports": {
+    "./*": "./*.js"
+  },
   "private": true,
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.6.0",

@@ -4,8 +4,8 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "./lib/utils";
 import { Icon } from "./icon";
+import { cn } from "./lib/utils";
 
 const Select = SelectPrimitive.Root;
 
@@ -24,6 +24,7 @@ const SelectValue = React.forwardRef<
     </div>
   );
 });
+SelectValue.displayName = SelectPrimitive.Value.displayName;
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,

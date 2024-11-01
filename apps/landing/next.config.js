@@ -21,6 +21,7 @@ const nextConfig = {
     "@rallly/icons",
     "@rallly/ui",
     "@rallly/tailwind-config",
+    "@rallly/utils",
     "next-mdx-remote",
   ],
   webpack(config) {

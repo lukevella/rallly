@@ -2,7 +2,7 @@ import { Trans as BaseTrans } from "react-i18next";
 
 import { useTranslation } from "@/i18n/client";
 
-import { I18nNamespaces } from "../../declarations/i18next";
+import type { I18nNamespaces } from "../../declarations/i18next";
 
 export const Trans = (props: {
   i18nKey: keyof I18nNamespaces["app"];

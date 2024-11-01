@@ -1,5 +1,5 @@
-import { NextPage } from "next";
-import React from "react";
+import type { NextPage } from "next";
+import type React from "react";
 
 export type ReactTag = keyof JSX.IntrinsicElements;
 

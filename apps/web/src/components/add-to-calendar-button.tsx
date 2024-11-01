@@ -9,8 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
+import type {
+  CalendarEvent} from "calendar-link";
 import {
-  CalendarEvent,
   google,
   ics,
   office365,

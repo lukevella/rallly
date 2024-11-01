@@ -2,7 +2,7 @@ import "tailwindcss/tailwind.css";
 import "../../style.css";
 
 import { Toaster } from "@rallly/ui/toaster";
-import { Viewport } from "next";
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
 

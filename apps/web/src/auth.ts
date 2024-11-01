@@ -1,10 +1,10 @@
 import { prisma } from "@rallly/database";
-import {
+import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import { NextAuthOptions, User } from "next-auth";
+import type { NextAuthOptions, User } from "next-auth";
 import NextAuth, {
   getServerSession as getServerSessionWithOptions,
 } from "next-auth/next";
@@ -12,7 +12,7 @@ import AzureADProvider from "next-auth/providers/azure-ad";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
-import { Provider } from "next-auth/providers/index";
+import type { Provider } from "next-auth/providers/index";
 
 import { posthog } from "@/app/posthog";
 import { CustomPrismaAdapter } from "@/auth/custom-prisma-adapter";

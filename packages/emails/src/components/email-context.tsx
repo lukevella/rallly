@@ -1,5 +1,5 @@
 import { i18nDefaultConfig, i18nInstance } from "../i18n";
-import { EmailContext } from "../types";
+import type { EmailContext } from "../types";
 
 i18nInstance.init({
   ...i18nDefaultConfig,

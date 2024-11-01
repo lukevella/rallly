@@ -1,4 +1,4 @@
-import { Params } from "@/app/[locale]/types";
+import type { Params } from "@/app/[locale]/types";
 
 export interface PParams extends Params {
   adminUrlId: string;

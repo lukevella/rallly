@@ -1,15 +1,16 @@
-import { Participant, VoteType } from "@rallly/database";
+import type { Participant, VoteType } from "@rallly/database";
 import dayjs from "dayjs";
 import { keyBy } from "lodash";
 import { TrashIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
-import { GetPollApiResponse, Vote } from "@/trpc/client/types";
-import {
-  getDuration,
+import type { GetPollApiResponse, Vote } from "@/trpc/client/types";
+import type {
   ParsedDateOption,
-  ParsedTimeSlotOption,
+  ParsedTimeSlotOption} from "@/utils/date-time-utils";
+import {
+  getDuration
 } from "@/utils/date-time-utils";
 import { useDayjs } from "@/utils/dayjs";
 

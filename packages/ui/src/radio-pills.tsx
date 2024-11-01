@@ -15,6 +15,7 @@ const RadioPills = React.forwardRef<
     {...props}
   />
 ));
+RadioPills.displayName = Primitive.Root.displayName;
 
 const RadioPillsItem = React.forwardRef<
   React.ElementRef<typeof Primitive.Item>,

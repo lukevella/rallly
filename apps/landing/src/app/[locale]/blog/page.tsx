@@ -1,3 +1,5 @@
+import { absoluteUrl } from "@rallly/utils/absolute-url";
+import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { URLParams } from "@/app/[locale]/types";
@@ -59,5 +61,8 @@ export async function generateMetadata({
       ns: "blog",
       defaultValue: "News, updates and announcement about Rallly.",
     }),
-  };
+    alternates: {
+      canonical: absoluteUrl("/blog"),
+    },
+  } satisfies Metadata;
 }

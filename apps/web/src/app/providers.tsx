@@ -9,7 +9,7 @@ import { useState } from "react";
 import { UserProvider } from "@/components/user-provider";
 import { I18nProvider } from "@/i18n/client";
 import { trpcConfig } from "@/trpc/client/config";
-import { AppRouter } from "@/trpc/routers";
+import type { AppRouter } from "@/trpc/routers";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
 export const trpc = createTRPCReact<AppRouter>({

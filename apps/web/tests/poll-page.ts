@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { EditOptionsPage } from "tests/edit-options-page";
 import { InvitePage } from "tests/invite-page";
 

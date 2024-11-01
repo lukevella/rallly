@@ -1,12 +1,13 @@
+import type {
+  LinkProps,
+  SectionProps,
+  TextProps} from "@react-email/components";
 import {
   Button as UnstyledButton,
   Heading as UnstyledHeading,
   Link as UnstyledLink,
-  LinkProps,
   Section as UnstyledSection,
-  SectionProps,
-  Text as UnstyledText,
-  TextProps,
+  Text as UnstyledText
 } from "@react-email/components";
 
 import type { EmailContext } from "../types";
