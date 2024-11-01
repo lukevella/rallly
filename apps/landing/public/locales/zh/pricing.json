@@ -28,5 +28,7 @@
   "whenPollInactive": "投票何时不活跃？",
   "whenPollInactiveAnswer": "当所有日期选项过去并且投票未访问超过30天时，投票变为不活动状态。如果您没有付费订阅，不活动的投票将被自动删除。",
   "yearlyBillingDescription": "每年",
-  "annualBenefit": "{count} 个月免费"
+  "annualBenefit": "{count} 个月免费",
+  "pricingTitle": "开始免费使用",
+  "pricingSubtitle": "升级到付费计划以获得高级功能"
 }
