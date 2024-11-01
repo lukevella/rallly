@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { absoluteUrl } from "@/utils/absolute-url";
 import { createToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";

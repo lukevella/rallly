@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { notFound } from "next/navigation";
 
 import { Redirect } from "@/app/components/redirect";
-import { absoluteUrl } from "@/utils/absolute-url";
 
 import type { PParams } from "./types";
 

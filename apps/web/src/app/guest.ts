@@ -1,10 +1,10 @@
 import languages from "@rallly/languages";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import languageParser from "accept-language-parser";
 import type { NextRequest, NextResponse } from "next/server";
 import type { JWT } from "next-auth/jwt";
 import { encode } from "next-auth/jwt";
 
-import { absoluteUrl } from "@/utils/absolute-url";
 import { randomid } from "@/utils/nanoid";
 
 const supportedLocales = Object.keys(languages);

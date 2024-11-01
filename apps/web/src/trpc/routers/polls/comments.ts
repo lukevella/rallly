@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { z } from "zod";
 
-import { absoluteUrl } from "@/utils/absolute-url";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
