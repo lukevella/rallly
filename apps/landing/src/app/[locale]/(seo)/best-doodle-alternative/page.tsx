@@ -1,5 +1,3 @@
-import { absoluteUrl } from "@rallly/utils/absolute-url";
-import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import Bonus from "@/components/home/bonus";
@@ -40,8 +38,5 @@ export async function generateMetadata({
     description: t("doodleAlternativeMetaDescription", {
       ns: "home",
     }),
-    alternates: {
-      canonical: absoluteUrl("/best-doodle-alternative"),
-    },
-  } satisfies Metadata;
+  };
 }

@@ -1,5 +1,3 @@
-import { absoluteUrl } from "@rallly/utils/absolute-url";
-
 import Bonus from "@/components/home/bonus";
 import { MarketingHero } from "@/components/home/hero";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
@@ -39,8 +37,5 @@ export async function generateMetadata({
       defaultValue:
         "Create polls and vote to find the best day or time. A free alternative to Doodle.",
     }),
-    alternates: {
-      canonical: absoluteUrl(),
-    },
   };
 }
