@@ -6,6 +6,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": false,
-    "noImplicitReturns": false
+    "noImplicitReturns": false,
+    "verbatimModuleSyntax": true
   }
 }

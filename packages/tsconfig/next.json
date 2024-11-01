@@ -1,8 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Next.js",
-  "extends": ["./base.json", "@tsconfig/next/tsconfig.json"],
-  "compilerOptions": {
-    "verbatimModuleSyntax": true
-  }
+  "extends": ["./base.json", "@tsconfig/next/tsconfig.json"]
 }
