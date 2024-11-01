@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
 /**
  * This script will go through all subscriptions and add the userId to the metadata.
  */
-import { stripe } from "../lib/stripe";
 import { prisma } from "@rallly/database";
+
+import { stripe } from "../lib/stripe";
 
 async function getSubscriptionsWithMissingMetadata(
   starting_after?: string,
