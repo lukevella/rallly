@@ -1,15 +1,15 @@
 import "react-i18next";
 
-import type blog from "../public/locales/en/blog.json";
-import type common from "../public/locales/en/common.json";
-import type home from "../public/locales/en/home.json";
-import type pricing from "../public/locales/en/pricing.json";
+import type Blog from "../public/locales/en/blog.json";
+import type Common from "../public/locales/en/common.json";
+import type Home from "../public/locales/en/home.json";
+import type Pricing from "../public/locales/en/pricing.json";
 
 interface I18nNamespaces {
-  common: typeof common;
-  home: typeof home;
-  pricing: typeof pricing;
-  blog: typeof blog;
+  common: Common;
+  home: Home;
+  pricing: Pricing;
+  blog: Blog;
 }
 
 declare module "i18next" {
