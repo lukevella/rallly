@@ -2,6 +2,10 @@
   "name": "@rallly/posthog",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "type-check": "tsc --pretty --noEmit",
+    "lint": "eslint ."
+  },
   "exports": {
     "./server": "./src/server/index.ts",
     "./client": "./src/client/index.ts"

@@ -1,6 +1,7 @@
 import "tailwindcss/tailwind.css";
 import "../../style.css";
 
+import { PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/toaster";
 import type { Viewport } from "next";
 import { Inter } from "next/font/google";
@@ -36,10 +37,12 @@ export default async function Root({
       <body>
         <Toaster />
         <SessionProvider session={session}>
-          <Providers>
-            {children}
-            <TimeZoneChangeDetector />
-          </Providers>
+          <PostHogProvider distinctId={session?.user?.id}>
+            <Providers>
+              {children}
+              <TimeZoneChangeDetector />
+            </Providers>
+          </PostHogProvider>
         </SessionProvider>
       </body>
     </html>

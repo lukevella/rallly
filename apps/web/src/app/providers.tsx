@@ -1,5 +1,4 @@
 "use client";
-import { PostHogProvider } from "@rallly/posthog/client";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
@@ -32,13 +31,11 @@ export function Providers(props: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <I18nProvider>
             <TooltipProvider>
-              <PostHogProvider>
-                <UserProvider>
-                  <ConnectedDayjsProvider>
-                    {props.children}
-                  </ConnectedDayjsProvider>
-                </UserProvider>
-              </PostHogProvider>
+              <UserProvider>
+                <ConnectedDayjsProvider>
+                  {props.children}
+                </ConnectedDayjsProvider>
+              </UserProvider>
             </TooltipProvider>
           </I18nProvider>
         </QueryClientProvider>

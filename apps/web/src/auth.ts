@@ -264,6 +264,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         return token;
       },
       async session({ session, token }) {
+        // If the user is a guest, we don't need to fetch them from the database
         if (token.sub?.startsWith("user-")) {
           session.user.id = token.sub as string;
           session.user.locale = token.locale;
