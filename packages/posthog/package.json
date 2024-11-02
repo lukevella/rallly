@@ -16,7 +16,7 @@
     "posthog-node": "^4.2.1"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "next": "^14.2.13"
+    "next": "^14.2.13",
+    "react": "^18.2.0"
   }
 }
