@@ -1,12 +1,12 @@
 import "i18next";
 
-import type Emails from "@rallly/emails/locales/emails.json";
+import type emails from "@rallly/emails/locales/emails.json";
 
-import type App from "../public/locales/en/app.json";
+import type app from "../public/locales/en/app.json";
 
 interface I18nNamespaces {
-  app: App;
-  emails: Emails;
+  app: typeof app;
+  emails: typeof emails;
 }
 
 declare module "i18next" {
