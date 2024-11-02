@@ -1,10 +1,10 @@
-import { VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
 import * as React from "react";
 import { Controller } from "react-hook-form";
 
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/components/poll-context";
-import { ParsedDateTimeOpton } from "@/utils/date-time-utils";
+import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
 
 import DateOption from "./date-option";
 import TimeSlotOption from "./time-slot-option";

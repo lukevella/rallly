@@ -1,10 +1,12 @@
 "use client";
 
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import * as React from "react";
 
+import type { IconProps } from "./icon";
+import { Icon } from "./icon";
 import { cn } from "./lib/utils";
-import { VariantProps, cva } from "class-variance-authority";
-import { Icon, IconProps } from "./icon";
 
 const inputVariants = cva(
   cn(
@@ -47,13 +49,14 @@ const TextFieldInput = React.forwardRef<HTMLInputElement, InputProps>(
     );
   },
 );
+TextFieldInput.displayName = "TextFieldInput";
 
 interface TextFieldProps extends InputProps {
   children?: React.ReactNode;
 }
 
 const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
-  ({ className, size, type, children, ...props }, ref) => {
+  ({ className, size, children, ...props }, ref) => {
     return (
       <div
         ref={ref}

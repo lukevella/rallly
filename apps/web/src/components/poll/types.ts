@@ -1,4 +1,4 @@
-import { VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
 
 export interface ParticipantForm {
   votes: Array<

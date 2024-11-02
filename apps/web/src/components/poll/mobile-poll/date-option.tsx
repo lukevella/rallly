@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import PollOption, { PollOptionProps } from "./poll-option";
+import type { PollOptionProps } from "./poll-option";
+import PollOption from "./poll-option";
 
 export interface DateOptionProps extends PollOptionProps {
   dow: string;

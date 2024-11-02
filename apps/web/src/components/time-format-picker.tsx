@@ -1,4 +1,4 @@
-import { TimeFormat } from "@rallly/database";
+import type { TimeFormat } from "@rallly/database";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 
 import { Trans } from "@/components/trans";

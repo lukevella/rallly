@@ -1,5 +1,5 @@
 import { Container } from "@/components/container";
-import { IconComponent } from "@/types";
+import type { IconComponent } from "@/types";
 
 export const PageDialog = (
   props: React.PropsWithChildren<{ icon?: IconComponent }>,

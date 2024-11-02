@@ -1,4 +1,4 @@
-import { VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
 import { IfNeedBeIcon, NoIcon, PendingIcon, YesIcon } from "@rallly/icons";
 import clsx from "clsx";
 import * as React from "react";

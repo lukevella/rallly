@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { FormMessage } from "@rallly/ui/form";

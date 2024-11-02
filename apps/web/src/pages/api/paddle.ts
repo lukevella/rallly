@@ -4,7 +4,7 @@ import crypto from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Serialize from "php-serialize";
 
-import { PaddlePassthrough, PaddleRequest } from "@/paddle.interface";
+import type { PaddlePassthrough, PaddleRequest } from "@/paddle.interface";
 
 const allowedIpAdresses = [
   // Sandbox

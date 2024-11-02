@@ -23,9 +23,9 @@ import { useFormContext } from "react-hook-form";
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
-import { NewEventData } from "../types";
+import type { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar";
-import { DateTimeOption } from "./types";
+import type { DateTimeOption } from "./types";
 import WeekCalendar from "./week-calendar";
 
 export type PollOptionsData = {

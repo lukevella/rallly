@@ -1,7 +1,9 @@
-import { expect, Page, Request, test } from "@playwright/test";
+import type { Page, Request } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { load } from "cheerio";
-import smtpTester, { MailServer } from "smtp-tester";
-import { PollPage } from "tests/poll-page";
+import type { MailServer } from "smtp-tester";
+import smtpTester from "smtp-tester";
+import type { PollPage } from "tests/poll-page";
 
 import { NewPollPage } from "./new-poll-page";
 

@@ -1,5 +1,5 @@
 import { UserScheduledEvents } from "@/app/[locale]/(admin)/events/user-scheduled-events";
-import { Params } from "@/app/[locale]/types";
+import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,

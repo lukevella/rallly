@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import dayjs, { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 export const DateIconInner = (props: {
   dow?: React.ReactNode;

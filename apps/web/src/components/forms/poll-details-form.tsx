@@ -7,7 +7,7 @@ import { useFormContext } from "react-hook-form";
 import { Trans } from "@/components/trans";
 import { useFormValidation } from "@/utils/form-validation";
 
-import { NewEventData } from "./types";
+import type { NewEventData } from "./types";
 
 export interface PollDetailsData {
   title: string;

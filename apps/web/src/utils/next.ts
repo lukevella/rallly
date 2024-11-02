@@ -1,4 +1,4 @@
-import { NextApiHandler } from "next";
+import type { NextApiHandler } from "next";
 
 export function composeApiHandlers(...fns: NextApiHandler[]): NextApiHandler {
   return async (req, res) => {

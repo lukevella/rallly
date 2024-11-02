@@ -1,12 +1,12 @@
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { z } from "zod";
 
-import { absoluteUrl } from "@/utils/absolute-url";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
-import { DisableNotificationsPayload } from "../../types";
+import type { DisableNotificationsPayload } from "../../types";
 
 export const comments = router({
   list: publicProcedure

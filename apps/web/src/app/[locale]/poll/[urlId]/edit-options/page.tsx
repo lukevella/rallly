@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
-import { PollOptionsData } from "@/components/forms";
+import type { PollOptionsData } from "@/components/forms";
 import PollOptionsForm from "@/components/forms/poll-options-form";
 import { useModalContext } from "@/components/modal/modal-provider";
 import { useUpdatePollMutation } from "@/components/poll/mutations";

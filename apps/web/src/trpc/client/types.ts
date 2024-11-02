@@ -1,4 +1,4 @@
-import { PollStatus, User, VoteType } from "@rallly/database";
+import type { PollStatus, User, VoteType } from "@rallly/database";
 
 export type GetPollApiResponse = {
   id: string;

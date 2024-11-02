@@ -13,14 +13,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
+import type {
+  PollDetailsData} from "@/components/forms/poll-details-form";
 import {
-  PollDetailsData,
   PollDetailsForm,
 } from "@/components/forms/poll-details-form";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
-import { NextPageWithLayout } from "@/types";
+import type { NextPageWithLayout } from "@/types";
 
 const Page: NextPageWithLayout = () => {
   const { poll } = usePoll();

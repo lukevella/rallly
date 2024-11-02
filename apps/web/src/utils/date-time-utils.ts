@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 import { supportedTimeZones } from "@/utils/supported-time-zones";
 
-import {
+import type {
   DateTimeOption,
   TimeOption,
 } from "../components/forms/poll-options-form";

@@ -1,9 +1,10 @@
+import { Slot } from "@radix-ui/react-slot";
+import type {VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import * as React from "react";
 
-import { Slot } from "@radix-ui/react-slot";
+import type { ComponentPropsWithout, RemovedProps } from "./helpers/component-props";
 import { cn } from "./lib/utils";
-import { VariantProps, cva } from "class-variance-authority";
-import { ComponentPropsWithout, RemovedProps } from "./helpers/component-props";
 
 type FlexElement = React.ElementRef<"div">;
 type FlexDivProps = { as?: "div" } & ComponentPropsWithout<"div", RemovedProps>;

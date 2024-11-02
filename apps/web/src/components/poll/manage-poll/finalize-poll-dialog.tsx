@@ -1,5 +1,7 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import type {
+  DialogProps} from "@rallly/ui/dialog";
 import {
   Dialog,
   DialogClose,
@@ -7,7 +9,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogProps,
   DialogTitle,
 } from "@rallly/ui/dialog";
 import {

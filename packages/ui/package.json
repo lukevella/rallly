@@ -5,7 +5,9 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "ui:add": "npx shadcn-ui@latest add"
+    "ui:add": "npx shadcn-ui@latest add",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
   },
   "exports": {
     ".": "./src/lib/utils.ts",
@@ -36,6 +38,7 @@
     "tailwind-merge": "^1.12.0"
   },
   "devDependencies": {
+    "@rallly/eslint-config": "*",
     "@rallly/tsconfig": "*"
   }
 }

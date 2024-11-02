@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { PollPage } from "tests/poll-page";
 
 export class NewPollPage {

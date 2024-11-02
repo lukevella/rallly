@@ -9,7 +9,8 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts"
+    "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts",
+    "type-check": "tsc --pretty --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-radio-group": "^1.2.0",

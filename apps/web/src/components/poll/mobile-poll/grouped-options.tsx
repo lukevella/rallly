@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { groupBy } from "lodash";
 import * as React from "react";
 
-import { ParsedDateTimeOpton } from "@/utils/date-time-utils";
+import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
 
 import PollOptions from "./poll-options";
 

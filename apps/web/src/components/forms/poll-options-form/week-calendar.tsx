@@ -4,13 +4,14 @@ import "./rbc-overrides.css";
 import dayjs from "dayjs";
 import { XIcon } from "lucide-react";
 import React from "react";
-import { Calendar, CalendarProps } from "react-big-calendar";
+import type { CalendarProps } from "react-big-calendar";
+import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
 
 import { getDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
-import { DateTimeOption, DateTimePickerProps } from "./types";
+import type { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTz } from "./utils";
 
 const localizer = dayjsLocalizer(dayjs);

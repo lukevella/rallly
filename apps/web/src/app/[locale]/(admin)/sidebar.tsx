@@ -25,7 +25,7 @@ import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { IfGuest, useUser } from "@/components/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
-import { IconComponent } from "@/types";
+import type { IconComponent } from "@/types";
 import { usePostHog } from "@/utils/posthog";
 
 function NavItem({

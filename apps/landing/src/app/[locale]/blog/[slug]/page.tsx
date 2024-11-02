@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { ArrowLeftIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,7 +6,6 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 
 import PostHeader from "@/components/blog/post-header";
 import { getAllPosts, getPostBySlug } from "@/lib/api";
-import { absoluteUrl } from "@/utils/absolute-url";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug, [

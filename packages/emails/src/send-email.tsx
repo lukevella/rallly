@@ -2,7 +2,8 @@ import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { renderAsync } from "@react-email/render";
 import { waitUntil } from "@vercel/functions";
-import { createTransport, Transporter } from "nodemailer";
+import type { Transporter } from "nodemailer";
+import { createTransport } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 import React from "react";
 

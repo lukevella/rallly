@@ -1,6 +1,7 @@
 import React from "react";
 
-import Modal, { ModalProps } from "./modal";
+import type { ModalProps } from "./modal";
+import Modal from "./modal";
 
 type OpenModalFn = () => void;
 type CloseModalFn = () => void;

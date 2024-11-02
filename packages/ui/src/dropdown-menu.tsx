@@ -4,8 +4,8 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { CheckIcon, ChevronRightIcon, PlusCircleIcon } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "./lib/utils";
 import { Icon } from "./icon";
+import { cn } from "./lib/utils";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -21,7 +21,7 @@ const DropdownMenuTrigger = React.forwardRef<
     }}
   />
 ));
-
+DropdownMenuTrigger.displayName = DropdownMenuPrimitive.Trigger.displayName;
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;

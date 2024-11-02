@@ -1,8 +1,9 @@
-import { EmailClient, SupportedEmailProviders } from "@rallly/emails";
+import type { SupportedEmailProviders } from "@rallly/emails";
+import { EmailClient } from "@rallly/emails";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
-import { absoluteUrl } from "@/utils/absolute-url";
 import { isSelfHosted } from "@/utils/constants";
 
 export const getEmailClient = (locale?: string) => {

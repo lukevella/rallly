@@ -16,7 +16,8 @@ import { Trans } from "@/components/trans";
 import { useSubscription } from "@/contexts/plan";
 import { trpc } from "@/trpc/client";
 
-import { BillingPlans, PricingData } from "./billing-plans";
+import type { PricingData } from "./billing-plans";
+import { BillingPlans } from "./billing-plans";
 
 declare global {
   interface Window {
