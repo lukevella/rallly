@@ -3,7 +3,7 @@
 import { Badge } from "@rallly/ui/badge";
 
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useUser } from "@/auth/client/user-provider";
 
 export function ProBadge() {
   const { user } = useUser();

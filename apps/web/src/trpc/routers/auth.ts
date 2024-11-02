@@ -3,7 +3,7 @@ import { posthog } from "@rallly/posthog/server";
 import { z } from "zod";
 
 import { isEmailBlocked } from "@/auth";
-import { generateOtp } from "@/utils/nanoid";
+import { generateOtp } from "@rallly/utils/nanoid";
 import { createToken, decryptToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../trpc";

@@ -5,12 +5,13 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Spinner } from "@/components/spinner";
+import { useRequiredContext } from "@/components/use-required-context";
 import { useSubscription } from "@/contexts/plan";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
-import { useRequiredContext } from "./use-required-context";
+import { useGuestUser } from "./use-guest-user";
 
 type UserData = {
   id: string;
@@ -55,15 +56,27 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 
 export const UserProvider = (props: { children?: React.ReactNode }) => {
   const session = useSession();
-  const user = session.data?.user;
+  const guestUser = useGuestUser();
+  const authenticatedUser = session.data?.user;
   const subscription = useSubscription();
   const updatePreferences = trpc.user.updatePreferences.useMutation();
   const { t, i18n } = useTranslation();
 
   const posthog = usePostHog();
 
-  const isGuest = !user?.email;
+  const isGuest = !authenticatedUser?.email;
   const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
+
+  const user = {
+    id: authenticatedUser?.id ?? guestUser?.id,
+    name: authenticatedUser?.name,
+    email: authenticatedUser?.email,
+    timeZone: authenticatedUser?.timeZone ?? guestUser?.timeZone,
+    timeFormat: authenticatedUser?.timeFormat ?? guestUser?.timeFormat,
+    weekStart: authenticatedUser?.weekStart ?? guestUser?.weekStart,
+    image: authenticatedUser?.image,
+    locale: authenticatedUser?.locale ?? guestUser?.locale,
+  };
 
   React.useEffect(() => {
     if (user) {

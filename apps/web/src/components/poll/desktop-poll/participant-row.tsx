@@ -11,7 +11,7 @@ import { Participant, ParticipantName } from "@/components/participant";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useUser } from "@/auth/client/user-provider";
 import { usePermissions } from "@/contexts/permissions";
 import type { Vote } from "@/trpc/client/types";
 

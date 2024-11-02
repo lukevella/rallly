@@ -12,13 +12,13 @@ import { useTranslation } from "next-i18next";
 import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
 import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
 import { LogoutButton } from "@/app/components/logout-button";
+import { useUser } from "@/auth/client/user-provider";
 import {
   Settings,
   SettingsContent,
   SettingsSection,
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
 
 export const ProfilePage = () => {
   const { t } = useTranslation();

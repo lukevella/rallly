@@ -17,11 +17,11 @@ import { useUnmount } from "react-use";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useUser } from "@/auth/client/user-provider";
 import { trpc } from "@/trpc/client";
 import { setCookie } from "@/utils/cookies";
 
-import type { NewEventData} from "./forms";
+import type { NewEventData } from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";
 
 const required = <T,>(v: T | undefined): T => {

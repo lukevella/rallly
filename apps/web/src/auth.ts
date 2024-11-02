@@ -1,6 +1,7 @@
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { generateOtp, randomid } from "@rallly/utils/nanoid";
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -20,7 +21,6 @@ import { env } from "@/env";
 import type { RegistrationTokenPayload } from "@/trpc/types";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
-import { generateOtp, randomid } from "@/utils/nanoid";
 import { decryptToken } from "@/utils/session";
 
 import { CustomPrismaAdapter } from "./auth/custom-prisma-adapter";
@@ -239,7 +239,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
             return false;
           }
         } else {
-          // merge guest user into newly logged in user
+          // merge guest user into newly logged in user`
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
@@ -264,6 +264,9 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         return token;
       },
       async session({ session, token }) {
+        if (!session.user) {
+          return session;
+        }
         // If the user is a guest, we don't need to fetch them from the database
         if (token.sub?.startsWith("user-")) {
           session.user.id = token.sub as string;

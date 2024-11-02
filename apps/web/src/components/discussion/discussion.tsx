@@ -41,7 +41,7 @@ import { trpc } from "@/trpc/client";
 
 import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";
-import { useUser } from "../user-provider";
+import { useUser } from "../../auth/client/user-provider";
 
 interface CommentForm {
   authorName: string;

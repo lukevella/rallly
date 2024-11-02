@@ -11,7 +11,7 @@ import { ScheduledEvent } from "@/components/poll/scheduled-event";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useUser } from "@/auth/client/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 const GoToApp = () => {

@@ -2,7 +2,8 @@ import languages from "@rallly/languages";
 import { NextResponse } from "next/server";
 import withAuth from "next-auth/middleware";
 
-import { getLocaleFromHeader, initGuest } from "@/app/guest";
+import { getLocaleFromHeader } from "@/app/guest";
+import { initGuestUser } from "@/auth/edge";
 import { isSelfHosted } from "@/utils/constants";
 
 const supportedLocales = Object.keys(languages);
@@ -34,7 +35,7 @@ export const middleware = withAuth(
 
     const res = NextResponse.rewrite(newUrl);
 
-    await initGuest(req, res);
+    await initGuestUser(req, res);
 
     return res;
   },

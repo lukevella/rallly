@@ -9,7 +9,8 @@
   "exports": {
     "./server": "./src/server/index.ts",
     "./client": "./src/client/index.ts",
-    "./next": "./src/next.ts"
+    "./next": "./src/next.ts",
+    "./edge": "./src/edge.ts"
   },
   "dependencies": {
     "posthog-js": "^1.180.1",

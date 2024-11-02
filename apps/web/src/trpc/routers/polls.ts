@@ -2,6 +2,7 @@ import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
+import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import * as ics from "ics";
@@ -10,7 +11,6 @@ import { z } from "zod";
 import { getEmailClient } from "@/utils/emails";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
-import { nanoid } from "../../utils/nanoid";
 import {
   possiblyPublicProcedure,
   proProcedure,

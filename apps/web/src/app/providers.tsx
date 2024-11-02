@@ -5,7 +5,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import { domMax, LazyMotion } from "framer-motion";
 import { useState } from "react";
 
-import { UserProvider } from "@/components/user-provider";
+import { UserProvider } from "@/auth/client/user-provider";
 import { I18nProvider } from "@/i18n/client";
 import { trpcConfig } from "@/trpc/client/config";
 import type { AppRouter } from "@/trpc/routers";

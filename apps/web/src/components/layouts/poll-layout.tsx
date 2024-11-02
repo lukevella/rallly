@@ -29,7 +29,7 @@ import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useUser } from "@/auth/client/user-provider";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/trpc/client";

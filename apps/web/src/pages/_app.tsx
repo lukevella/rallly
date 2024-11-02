@@ -12,7 +12,7 @@ import { SessionProvider, signIn, useSession } from "next-auth/react";
 import React from "react";
 
 import Maintenance from "@/components/maintenance";
-import { UserProvider } from "@/components/user-provider";
+import { UserProvider } from "@/auth/client/user-provider";
 import { I18nProvider } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";

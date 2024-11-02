@@ -12,6 +12,8 @@ import React from "react";
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { Providers } from "@/app/providers";
 import { getServerSession } from "@/auth";
+import { getGuestUser } from "@/auth/next";
+import type { User } from "@/auth/schema";
 import { SessionProvider } from "@/auth/session-provider";
 
 const PostHogPageView = dynamic(() => import("@rallly/posthog/next"), {
@@ -38,8 +40,11 @@ export default async function Root({
   params: { locale: string };
 }) {
   let session: Session | null = null;
+  let guestUser: User | null = null;
+
   try {
     session = await getServerSession();
+    guestUser = await getGuestUser();
   } catch (error) {
     console.error(error);
   }
@@ -49,7 +54,7 @@ export default async function Root({
       <body>
         <Toaster />
         <SessionProvider session={session}>
-          <PostHogProvider distinctId={session?.user?.id}>
+          <PostHogProvider distinctId={session?.user?.id ?? guestUser?.id}>
             <PostHogPageView />
             <Providers>
               {children}

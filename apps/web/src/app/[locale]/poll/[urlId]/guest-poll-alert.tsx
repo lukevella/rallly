@@ -5,7 +5,7 @@ import { Trans } from "next-i18next";
 
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
-import { useUser } from "@/components/user-provider";
+import { useUser } from "@/auth/client/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 export const GuestPollAlert = () => {

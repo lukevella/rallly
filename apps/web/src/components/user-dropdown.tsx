@@ -34,7 +34,11 @@ import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { Plan, usePlan } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 
-import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
+import {
+  IfAuthenticated,
+  IfGuest,
+  useUser,
+} from "../auth/client/user-provider";
 
 function logout() {
   // programmtically submit form with name="logout"

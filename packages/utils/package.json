@@ -1,5 +1,6 @@
 {
   "name": "@rallly/utils",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,6 +8,9 @@
   },
   "exports": {
     "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "nanoid": "^4.0.0"
   },
   "devDependencies": {
     "vitest": "^2.1.1"

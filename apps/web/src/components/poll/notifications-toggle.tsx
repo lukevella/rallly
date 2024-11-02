@@ -9,7 +9,7 @@ import * as React from "react";
 
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useUser } from "@/auth/client/user-provider";
 import { trpc } from "@/trpc/client";
 
 import { usePoll } from "../poll-context";
