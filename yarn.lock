@@ -12817,10 +12817,10 @@ postgres-range@^1.1.1:
   resolved "https://registry.yarnpkg.com/postgres-range/-/postgres-range-1.1.4.tgz#a59c5f9520909bcec5e63e8cf913a92e4c952863"
   integrity sha512-i/hbxIE9803Alj/6ytL7UHQxRvZkI9O4Sy+J3HGc4F4oo/2eQAjTSNJ0bfxyse3bH0nuVesCk+3IRLaMtG3H6w==
 
-posthog-js@^1.178.0:
-  version "1.178.0"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.178.0.tgz#80005798e6c67d4d6565a5648939a0f017b0879b"
-  integrity sha512-ILD4flNh72d5dycc4ZouKORlaVr+pDzl5TlZr1JgP0NBAoduHjhE7XZYwk7zdYkry7u0qAIpfv2306zJCW2vGg==
+posthog-js@^1.180.1:
+  version "1.180.1"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.180.1.tgz#e4b1bb2917b306f40c6063102a1508539f44ba2a"
+  integrity sha512-LV65maVrpqkAh0wu32YvU7FpCSEjg6o+sZFYCs1+6tnEa9VvXuz8J6ReLiyRpJABI4j1qX/PB2jaVY5tDbLalQ==
   dependencies:
     core-js "^3.38.1"
     fflate "^0.4.8"

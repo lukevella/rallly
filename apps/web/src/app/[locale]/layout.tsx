@@ -4,6 +4,7 @@ import "../../style.css";
 import { PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/toaster";
 import type { Viewport } from "next";
+import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import React from "react";
 
@@ -11,6 +12,10 @@ import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector"
 import { Providers } from "@/app/providers";
 import { getServerSession } from "@/auth";
 import { SessionProvider } from "@/auth/session-provider";
+
+const PostHogPageView = dynamic(() => import("@rallly/posthog/next"), {
+  ssr: false,
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,6 +43,7 @@ export default async function Root({
         <Toaster />
         <SessionProvider session={session}>
           <PostHogProvider distinctId={session?.user?.id}>
+            <PostHogPageView />
             <Providers>
               {children}
               <TimeZoneChangeDetector />
