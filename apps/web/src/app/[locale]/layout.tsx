@@ -6,6 +6,7 @@ import { Toaster } from "@rallly/ui/toaster";
 import type { Viewport } from "next";
 import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
+import type { Session } from "next-auth";
 import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
@@ -36,7 +37,13 @@ export default async function Root({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const session = await getServerSession();
+  let session: Session | null = null;
+  try {
+    session = await getServerSession();
+  } catch (error) {
+    console.error(error);
+  }
+
   return (
     <html lang={locale} className={inter.className}>
       <body>
