@@ -8,6 +8,9 @@ module.exports = function (workspaceDirPath) {
       "simple-import-sort",
       "@typescript-eslint",
     ],
+    env: {
+      es6: true,
+    },
     ignorePatterns: ["dist/", "playwright-report/"],
     globals: {
       React: true,
