@@ -5,13 +5,13 @@ import { DialogTrigger } from "@rallly/ui/dialog";
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { InfoIcon, LogOutIcon, TrashIcon, UserXIcon } from "lucide-react";
-import Head from "next/head";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
+import { useRouter } from "next/navigation";
 
 import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
 import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
 import { LogoutButton } from "@/app/components/logout-button";
+import { deleteGuestUser } from "@/auth/client/delete-guest-user";
 import { useUser } from "@/auth/client/user-provider";
 import {
   Settings,
@@ -21,14 +21,11 @@ import {
 import { Trans } from "@/components/trans";
 
 export const ProfilePage = () => {
-  const { t } = useTranslation();
   const { user } = useUser();
 
+  const router = useRouter();
   return (
     <Settings>
-      <Head>
-        <title>{t("profile")}</title>
-      </Head>
       {user.isGuest ? (
         <SettingsContent>
           <SettingsSection
@@ -59,10 +56,17 @@ export const ProfilePage = () => {
                 />
               </AlertDescription>
             </Alert>
-            <LogoutButton className="mt-6" variant="destructive">
+            <Button
+              onClick={() => {
+                deleteGuestUser();
+                router.refresh();
+              }}
+              className="mt-6"
+              variant="destructive"
+            >
               <UserXIcon className="size-4" />
               <Trans i18nKey="forgetMe" />
-            </LogoutButton>
+            </Button>
           </SettingsSection>
         </SettingsContent>
       ) : (
