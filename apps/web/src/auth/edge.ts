@@ -25,7 +25,7 @@ export async function initGuestUser(
   });
 
   res.cookies.set(GUEST_USER_COOKIE, JSON.stringify(user), {
-    httpOnly: false,
+    httpOnly: true,
   });
 
   return user;

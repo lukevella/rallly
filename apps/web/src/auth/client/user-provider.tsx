@@ -11,7 +11,7 @@ import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
-import { useGuestUser } from "./use-guest-user";
+import { useGuestUser } from "./guest-provider";
 
 type UserData = {
   id: string;

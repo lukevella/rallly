@@ -4,14 +4,12 @@ import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
-import { InfoIcon, LogOutIcon, TrashIcon, UserXIcon } from "lucide-react";
+import { InfoIcon, LogOutIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
 import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
 import { LogoutButton } from "@/app/components/logout-button";
-import { deleteGuestUser } from "@/auth/client/delete-guest-user";
 import { useUser } from "@/auth/client/user-provider";
 import {
   Settings,
@@ -23,7 +21,6 @@ import { Trans } from "@/components/trans";
 export const ProfilePage = () => {
   const { user } = useUser();
 
-  const router = useRouter();
   return (
     <Settings>
       {user.isGuest ? (
@@ -56,17 +53,6 @@ export const ProfilePage = () => {
                 />
               </AlertDescription>
             </Alert>
-            <Button
-              onClick={() => {
-                deleteGuestUser();
-                router.refresh();
-              }}
-              className="mt-6"
-              variant="destructive"
-            >
-              <UserXIcon className="size-4" />
-              <Trans i18nKey="forgetMe" />
-            </Button>
           </SettingsSection>
         </SettingsContent>
       ) : (
