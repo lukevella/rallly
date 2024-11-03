@@ -270,5 +270,10 @@
   "invalidFileType": "Fitxategi mota baliogabea",
   "invalidFileTypeDescription": "Igo JPG edo PNG fitxategi bat.",
   "fileTooLarge": "Fitxategi handiegia",
-  "fileTooLargeDescription": "Igo 2 MB baino txikiagoa den fitxategi bat."
+  "fileTooLargeDescription": "Igo 2 MB baino txikiagoa den fitxategi bat.",
+  "errorUploadPicture": "Ezin izan da igo",
+  "errorUploadPictureDescription": "Arazo bat izan da zure argazkia igotzen. Saiatu berriro geroago.",
+  "featureNameFinalize": "Amaitu galdetegia",
+  "featureNameDuplicate": "Bikoiztu galdetegia",
+  "featureNameExtendedPollLifetime": "Galdetegiaren bizitza luzatua"
 }
