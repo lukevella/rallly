@@ -25,6 +25,7 @@ import { decryptToken } from "@/utils/session";
 
 import { CustomPrismaAdapter } from "./auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "./auth/merge-user";
+import { getGuestUserFromApiRequest } from "./auth/next";
 
 const providers: Provider[] = [
   // When a user registers, we don't want to go through the email verification process
@@ -240,9 +241,11 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           }
         } else {
           // merge guest user into newly logged in user`
-          const session = await getServerSession(...args);
-          if (session && session.user?.email === null) {
-            await mergeGuestsIntoUser(user.id, [session.user.id]);
+          const guestUser = await getGuestUserFromApiRequest(
+            args[0] as NextApiRequest,
+          );
+          if (guestUser) {
+            await mergeGuestsIntoUser(user.id, [guestUser.id]);
           }
         }
 
