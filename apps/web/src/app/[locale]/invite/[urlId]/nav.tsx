@@ -4,9 +4,9 @@ import { ArrowUpLeftIcon } from "lucide-react";
 import Link from "next/link";
 
 import { PageHeader } from "@/app/components/page-layout";
+import { useUser } from "@/auth/client/user-provider";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
-import { useUser } from "@/auth/client/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 export const Nav = () => {

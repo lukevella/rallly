@@ -7,9 +7,9 @@ import { signIn } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 
+import { useUser } from "@/auth/client/user-provider";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/auth/client/user-provider";
 import { trpc } from "@/trpc/client";
 
 import { usePoll } from "../poll-context";

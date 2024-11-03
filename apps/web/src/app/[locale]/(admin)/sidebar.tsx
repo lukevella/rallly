@@ -20,11 +20,11 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { IfGuest, useUser } from "@/auth/client/user-provider";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
-import { IfGuest, useUser } from "@/auth/client/user-provider";
 import { IfFreeUser } from "@/contexts/plan";
 import type { IconComponent } from "@/types";
 

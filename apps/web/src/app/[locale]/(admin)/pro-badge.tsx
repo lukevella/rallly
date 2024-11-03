@@ -2,8 +2,8 @@
 
 import { Badge } from "@rallly/ui/badge";
 
-import { Trans } from "@/components/trans";
 import { useUser } from "@/auth/client/user-provider";
+import { Trans } from "@/components/trans";
 
 export function ProBadge() {
   const { user } = useUser();

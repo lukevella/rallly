@@ -8,10 +8,9 @@ import React from "react";
 import type { GetPollApiResponse, Vote } from "@/trpc/client/types";
 import type {
   ParsedDateOption,
-  ParsedTimeSlotOption} from "@/utils/date-time-utils";
-import {
-  getDuration
+  ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";
+import { getDuration } from "@/utils/date-time-utils";
 import { useDayjs } from "@/utils/dayjs";
 
 import ErrorPage from "./error-page";

@@ -25,8 +25,8 @@ import { useOptions, usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 
-import { useVisibleParticipants } from "../participants-provider";
 import { useUser } from "../../auth/client/user-provider";
+import { useVisibleParticipants } from "../participants-provider";
 import GroupedOptions from "./mobile-poll/grouped-options";
 
 if (typeof window !== "undefined") {

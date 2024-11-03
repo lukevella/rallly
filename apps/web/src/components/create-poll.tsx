@@ -15,9 +15,9 @@ import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useUnmount } from "react-use";
 
+import { useUser } from "@/auth/client/user-provider";
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/auth/client/user-provider";
 import { trpc } from "@/trpc/client";
 import { setCookie } from "@/utils/cookies";
 

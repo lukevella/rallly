@@ -3,9 +3,9 @@ import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { InfoIcon } from "lucide-react";
 import { Trans } from "next-i18next";
 
+import { useUser } from "@/auth/client/user-provider";
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
-import { useUser } from "@/auth/client/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 export const GuestPollAlert = () => {

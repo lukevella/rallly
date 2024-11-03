@@ -39,9 +39,9 @@ import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { trpc } from "@/trpc/client";
 
+import { useUser } from "../../auth/client/user-provider";
 import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";
-import { useUser } from "../../auth/client/user-provider";
 
 interface CommentForm {
   authorName: string;

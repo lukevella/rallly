@@ -16,6 +16,7 @@ import React from "react";
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
+import { useUser } from "@/auth/client/user-provider";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
@@ -29,7 +30,6 @@ import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/auth/client/user-provider";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/trpc/client";

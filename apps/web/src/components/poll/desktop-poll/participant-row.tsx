@@ -6,12 +6,12 @@ import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
 
+import { useUser } from "@/auth/client/user-provider";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/auth/client/user-provider";
 import { usePermissions } from "@/contexts/permissions";
 import type { Vote } from "@/trpc/client/types";
 

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { useParticipants } from "@/components/participants-provider";
 import { useUser } from "@/auth/client/user-provider";
+import { useParticipants } from "@/components/participants-provider";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 

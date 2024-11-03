@@ -10,8 +10,8 @@ import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 
 import { ProfilePicture } from "@/app/[locale]/(admin)/settings/profile/profile-picture";
-import { Trans } from "@/components/trans";
 import { useUser } from "@/auth/client/user-provider";
+import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
 
 export const ProfileSettings = () => {

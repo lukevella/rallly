@@ -2,6 +2,7 @@
 import { ArrowUpRightIcon, UserCircle2Icon } from "lucide-react";
 import Link from "next/link";
 
+import { useUser } from "@/auth/client/user-provider";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { PollFooter } from "@/components/poll/poll-footer";
@@ -11,7 +12,6 @@ import { ScheduledEvent } from "@/components/poll/scheduled-event";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/auth/client/user-provider";
 import { usePoll } from "@/contexts/poll";
 
 const GoToApp = () => {
