@@ -1,9 +1,6 @@
 import type { NextRequest, NextResponse } from "next/server";
 
-import {
-  getLocaleFromHeader,
-  migrateGuestFromNextAuthCookie,
-} from "@/app/guest";
+import { getLocaleFromHeader } from "@/app/guest";
 
 import { GUEST_USER_COOKIE } from "./constants";
 import { createGuestUser } from "./lib/create-guest-user";
@@ -14,7 +11,6 @@ export async function initGuestUser(
   req: NextRequest,
   res: NextResponse,
 ): Promise<User> {
-  await migrateGuestFromNextAuthCookie(req, res);
   const cookie = req.cookies.get(GUEST_USER_COOKIE);
 
   if (cookie) {

@@ -2,7 +2,10 @@ import languages from "@rallly/languages";
 import { NextResponse } from "next/server";
 import withAuth from "next-auth/middleware";
 
-import { getLocaleFromHeader } from "@/app/guest";
+import {
+  getLocaleFromHeader,
+  migrateGuestFromNextAuthCookie,
+} from "@/app/guest";
 import { initGuestUser } from "@/auth/edge";
 import { isSelfHosted } from "@/utils/constants";
 
@@ -34,7 +37,9 @@ export const middleware = withAuth(
     }
 
     const res = NextResponse.rewrite(newUrl);
-
+    // migrate guest user from next auth cookie to edge cookie
+    await migrateGuestFromNextAuthCookie(req, res);
+    // create guest user if not exists
     await initGuestUser(req, res);
 
     return res;
