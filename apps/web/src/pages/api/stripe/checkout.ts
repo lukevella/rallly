@@ -22,8 +22,8 @@ export default async function handler(
 ) {
   const userSession = await getServerSession(req, res);
   const { period = "monthly", return_path } = inputSchema.parse(req.body);
-
-  if (!userSession || userSession.user.email === null) {
+  const userId = userSession?.user?.id;
+  if (!userId || userSession.user?.email === null) {
     // You need to be logged in to subscribe
     res.redirect(
       303,
@@ -37,7 +37,7 @@ export default async function handler(
 
   const user = await prisma.user.findUnique({
     where: {
-      id: userSession.user.id,
+      id: userId,
     },
     select: {
       email: true,
@@ -88,11 +88,11 @@ export default async function handler(
       enabled: true,
     },
     metadata: {
-      userId: userSession.user.id,
+      userId,
     },
     subscription_data: {
       metadata: {
-        userId: userSession.user.id,
+        userId,
       },
     },
     line_items: [

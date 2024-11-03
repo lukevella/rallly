@@ -28,9 +28,9 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
         const updatedSession = await session.update();
         if (updatedSession) {
           // identify the user in posthog
-          posthog?.identify(updatedSession.user.id, {
-            email: updatedSession.user.email,
-            name: updatedSession.user.name,
+          posthog?.identify(updatedSession.user?.id, {
+            email: updatedSession.user?.email,
+            name: updatedSession.user?.name,
           });
 
           await trpcUtils.invalidate();

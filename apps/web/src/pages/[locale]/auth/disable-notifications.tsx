@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const token = ctx.query.token as string;
   const session = await getServerSession(ctx.req, ctx.res);
 
-  if (!session || session.user.email === null) {
+  if (!session || session.user?.email === null) {
     return {
       props: {},
       redirect: {
@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (payload) {
       const watcher = await prisma.watcher.findFirst({
         where: {
-          userId: session.user.id,
+          userId: session.user?.id,
           pollId: payload.pollId,
         },
       });

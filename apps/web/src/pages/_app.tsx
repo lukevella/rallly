@@ -30,7 +30,7 @@ type AppPropsWithLayout = AppProps & {
 
 const Auth = ({ children }: { children: React.ReactNode }) => {
   const session = useSession();
-  const isAuthenticated = !!session.data?.user.email;
+  const isAuthenticated = !!session.data?.user?.email;
 
   React.useEffect(() => {
     if (!isAuthenticated) {

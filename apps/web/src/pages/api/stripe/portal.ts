@@ -17,7 +17,7 @@ export default async function handler(
 ) {
   const userSession = await getServerSession(req, res);
 
-  if (!userSession?.user.email) {
+  if (!userSession?.user?.email) {
     // You need to be logged in to subscribe
     res
       .status(403)

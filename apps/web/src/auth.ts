@@ -241,7 +241,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         } else {
           // merge guest user into newly logged in user`
           const session = await getServerSession(...args);
-          if (session && session.user.email === null) {
+          if (session && session.user?.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
         }
