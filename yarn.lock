@@ -12464,6 +12464,11 @@ nanoid@^4.0.2:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-4.0.2.tgz#140b3c5003959adbebf521c170f282c5e7f9fb9e"
   integrity sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==
 
+nanoid@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-5.0.8.tgz#7610003f6b3b761b5c244bb342c112c5312512bf"
+  integrity sha512-TcJPw+9RV9dibz1hHUzlLVy8N4X9TnwirAjrU08Juo6BNKggzVfP2ZJ/3ZUSq15Xl5i85i+Z89XBO90pB2PghQ==
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
@@ -14462,10 +14467,10 @@ space-separated-tokens@^2.0.0:
   resolved "https://registry.npmjs.org/space-separated-tokens/-/space-separated-tokens-2.0.2.tgz"
   integrity sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==
 
-spacetime@^7.4.7:
-  version "7.4.7"
-  resolved "https://registry.npmjs.org/spacetime/-/spacetime-7.4.7.tgz"
-  integrity sha512-5qVgPHUQj9TD4g1Xl68tXXwEi/27Xatvroyj8VU8/E7RgaqLJNaTte5tu3GRowuMqHcNMxs7UfzKeqAlLCo3tQ==
+spacetime@^7.6.2:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/spacetime/-/spacetime-7.6.2.tgz#bbdf7bad240d61a537e1482f0e0315f5282e61f5"
+  integrity sha512-x5Qr2yiG5wy/0IBeaNeYG9OLigePKTj1/liF9j5xWNbb1psi5Q2AuZTh9SpIT+QZqpKCWX0OCdvwJIm9FlJouA==
 
 spdx-correct@^3.0.0:
   version "3.1.1"
