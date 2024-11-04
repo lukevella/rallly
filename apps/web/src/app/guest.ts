@@ -54,25 +54,32 @@ export async function migrateGuestFromNextAuthCookie(
   res: NextResponse,
 ) {
   const { name } = getNextAuthCookieSettings();
-  if (req.cookies.has(name)) {
-    // get user session token
-    const token = req.cookies.get(name)?.value;
-    if (token) {
-      const jwt = await decode({
-        token,
-        secret: process.env.SECRET_PASSWORD,
+
+  const token = req.cookies.get(name)?.value;
+
+  if (!token) {
+    return;
+  }
+
+  try {
+    const jwt = await decode({
+      token,
+      secret: process.env.SECRET_PASSWORD,
+    });
+
+    if (jwt?.sub && jwt?.locale) {
+      const user = await createGuestUser({
+        id: jwt.sub,
+        locale: jwt.locale,
+        timeZone: jwt.timeZone ?? undefined,
+        weekStart: jwt.weekStart ?? undefined,
+        timeFormat: jwt.timeFormat ?? undefined,
       });
-      if (jwt?.sub && jwt?.locale) {
-        const user = await createGuestUser({
-          id: jwt.sub,
-          locale: jwt.locale,
-          timeZone: jwt.timeZone ?? undefined,
-          weekStart: jwt.weekStart ?? undefined,
-          timeFormat: jwt.timeFormat ?? undefined,
-        });
-        res.cookies.set(GUEST_USER_COOKIE, JSON.stringify(user));
-      }
+      res.cookies.set(GUEST_USER_COOKIE, JSON.stringify(user));
     }
+  } catch (error) {
+    console.error("Failed to decode JWT:", error);
+    res.cookies.delete(name);
   }
 }
 
