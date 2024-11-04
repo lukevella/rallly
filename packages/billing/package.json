@@ -16,6 +16,6 @@
     "@radix-ui/react-radio-group": "^1.2.0",
     "@rallly/ui": "*",
     "next": "*",
-    "stripe": "^13.2.0"
+    "stripe": "^13.11.0"
   }
 }
