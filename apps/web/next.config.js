@@ -23,7 +23,6 @@ const nextConfig = {
     "@rallly/ui",
     "@rallly/tailwind-config",
     "@rallly/posthog",
-    "@rallly/guest-user",
     "@rallly/emails",
   ],
   webpack(config) {
