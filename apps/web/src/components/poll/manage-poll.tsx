@@ -1,3 +1,4 @@
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import {
@@ -34,7 +35,6 @@ import { ProFeatureBadge } from "@/components/pro-feature-badge";
 import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
-import { usePostHog } from "@/utils/posthog";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";

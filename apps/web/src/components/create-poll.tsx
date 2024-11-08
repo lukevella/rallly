@@ -1,4 +1,5 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -19,7 +20,6 @@ import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 import { setCookie } from "@/utils/cookies";
-import { usePostHog } from "@/utils/posthog";
 
 import type { NewEventData} from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";

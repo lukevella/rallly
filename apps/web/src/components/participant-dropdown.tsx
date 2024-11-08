@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -40,7 +41,6 @@ import { useDeleteParticipantMutation } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
 import { useFormValidation } from "@/utils/form-validation";
-import { usePostHog } from "@/utils/posthog";
 
 export const ParticipantDropdown = ({
   participant,
