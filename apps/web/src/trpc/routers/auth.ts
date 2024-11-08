@@ -1,9 +1,9 @@
 import { prisma } from "@rallly/database";
+import { generateOtp } from "@rallly/utils/nanoid";
 import { z } from "zod";
 
 import { posthog } from "@/app/posthog";
 import { isEmailBlocked } from "@/auth";
-import { generateOtp } from "@rallly/utils/nanoid";
 import { createToken, decryptToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
