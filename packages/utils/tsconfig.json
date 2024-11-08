@@ -2,6 +2,6 @@
   "compilerOptions": {
     "types": ["vitest/globals"],
   },
-  "extends": "@rallly/tsconfig/react.json",
+  "extends": "@rallly/tsconfig/base.json",
   "include": ["**/*.ts", "**/*.tsx"],
 }
