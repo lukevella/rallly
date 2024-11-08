@@ -1,4 +1,5 @@
 import languages from "@rallly/languages";
+import { withPostHog } from "@rallly/posthog/next/middleware";
 import { NextResponse } from "next/server";
 import withAuth from "next-auth/middleware";
 
@@ -34,7 +35,11 @@ export const middleware = withAuth(
 
     const res = NextResponse.rewrite(newUrl);
 
-    await initGuest(req, res);
+    const jwt = await initGuest(req, res);
+
+    if (jwt?.sub) {
+      await withPostHog(res, { distinctID: jwt.sub });
+    }
 
     return res;
   },
