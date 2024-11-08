@@ -1,9 +1,9 @@
 "use client";
+import { PostHogProvider } from "@rallly/posthog/client";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 import { domMax, LazyMotion } from "framer-motion";
-import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 
 import { UserProvider } from "@/components/user-provider";
@@ -32,13 +32,13 @@ export function Providers(props: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <I18nProvider>
             <TooltipProvider>
-              <SessionProvider>
+              <PostHogProvider>
                 <UserProvider>
                   <ConnectedDayjsProvider>
                     {props.children}
                   </ConnectedDayjsProvider>
                 </UserProvider>
-              </SessionProvider>
+              </PostHogProvider>
             </TooltipProvider>
           </I18nProvider>
         </QueryClientProvider>
