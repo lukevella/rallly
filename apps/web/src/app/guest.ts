@@ -5,7 +5,7 @@ import type { NextRequest, NextResponse } from "next/server";
 import type { JWT } from "next-auth/jwt";
 import { encode } from "next-auth/jwt";
 
-import { randomid } from "@/utils/nanoid";
+import { randomid } from "@rallly/utils/nanoid";
 
 const supportedLocales = Object.keys(languages);
 
