@@ -18,7 +18,7 @@ module.exports = function (workspaceDirPath) {
     },
     parserOptions: {
       tsconfigRootDir: workspaceDirPath,
-      project: `${workspaceDirPath}/tsconfig.json`,
+      project: workspaceDirPath + "/tsconfig.json",
     },
     overrides: [
       {
@@ -28,6 +28,14 @@ module.exports = function (workspaceDirPath) {
         extends: ["plugin:@typescript-eslint/recommended"],
         rules: {
           "@typescript-eslint/no-unused-vars": "error",
+          "@typescript-eslint/consistent-type-imports": [
+            "error",
+            {
+              prefer: "type-imports",
+              fixStyle: "separate-type-imports",
+              disallowTypeAnnotations: true,
+            },
+          ],
         },
       },
     ],
@@ -39,7 +47,6 @@ module.exports = function (workspaceDirPath) {
       "import/no-duplicates": "error",
       "no-console": ["error", { allow: ["warn", "error", "info"] }],
       "no-unused-vars": "error",
-      "@typescript-eslint/consistent-type-imports": "error",
     },
   };
 };
