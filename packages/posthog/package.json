@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint ./src",
     "type-check": "tsc --noEmit",
-    "prettier": "prettier --write ."
+    "format": "prettier --write ."
   },
   "dependencies": {
     "posthog-js": "^1.178.0",

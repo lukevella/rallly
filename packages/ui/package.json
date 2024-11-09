@@ -8,7 +8,7 @@
     "ui:add": "npx shadcn-ui@latest add",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "prettier": "prettier --write ."
+    "format": "prettier --write ."
   },
   "exports": {
     ".": "./src/lib/utils.ts",

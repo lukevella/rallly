@@ -23,7 +23,7 @@
     "lint": "turbo lint",
     "i18n:scan": "turbo i18n:scan",
     "type-check": "turbo type-check",
-    "prettier": "prettier --write .",
+    "format": "turbo format",
     "release": "./scripts/create-release.sh",
     "sherif": "npx sherif@latest",
     "sherif:fix": "npx sherif@latest --fix"

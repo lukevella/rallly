@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "type-check": "tsc --pretty --noEmit",
     "i18n:scan": "i18next-scanner --config i18next-scanner.config.js",
-    "prettier": "prettier --write ./src"
+    "format": "prettier --write ./src"
   },
   "dependencies": {
     "@rallly/billing": "*",

@@ -9,7 +9,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "type-check": "tsc --pretty --noEmit",
-    "prettier": "prettier --write ."
+    "format": "prettier --write ."
   },
   "exports": "./index.ts",
   "devDependencies": {

@@ -11,7 +11,7 @@
   "scripts": {
     "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts",
     "type-check": "tsc --pretty --noEmit",
-    "prettier": "prettier --write .",
+    "format": "prettier --write .",
     "lint": "eslint ./src"
   },
   "dependencies": {
