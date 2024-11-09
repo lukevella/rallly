@@ -10,6 +10,8 @@
   "ericQuote": "“Programazioko zure lan-fluxua mezu elektronikoetan bizi bada, Ralllyk zure programazio-lanak sinplifikatzera animatzen zaitut, lan-egun antolatuago eta estresagarriago baterako”",
   "viaTrustpilot": "trustpiloten bitartez",
   "ericJobTitle": "MIT, laguntzaile exekutiboa",
+  "statsUsersRegistered": "{count, number, ::compact-short}+ erregistratutako erabiltzaileak",
+  "statsPollsCreated": "{count, number, ::compact-short}+ inkestak sortu dira",
   "statsLanguagesSupported": "10 hizkuntza baino gehiago",
   "hint": "Dohakoa da! Ez da erregistratu behar.",
   "doodleAlternative": "Doodleen alternatiba onena",
@@ -30,5 +32,13 @@
   "new": "Berria",
   "metaTitle": "Rallly - Programatu taldeko bilerak",
   "metaDescription": "Sortu galdetegiak eta aukeratu egun eta ordu egokiena. Doodlen dohako alternatiba.",
-  "selfHostingBlog": "Rallly 3.0 Auto-Hostinga"
+  "selfHostingBlog": "Rallly 3.0 Auto-Hostinga",
+  "when2meetAlternativeMetaTitle": "When2Meet-en alternatibarik onena: Rallly",
+  "when2meetAlternativeMetaDescription": "Bilatu bilerak antolatzeko modu hobe bat Rallly-rekin, When2Meet-en doako alternatiba nagusia. Erabiltzeko erraza eta doakoa.",
+  "when2meetAlternative": "Oraindik erabiltzen duzu When2Meet?",
+  "when2meetAlternativeDescription": "Sortu iragarkirik gabeko bilera-galdetegiak dohainik Rallly-rekin.",
+  "meetingPoll": "Sortu bilera profesionalen galdetegiak Rallly-rekin",
+  "meetingPollDescription": "Bilera-galdetegiak jendearen prestutasuna lortzeko modu bikaina dira. Rallly-k bilera-galdetegi ederrak erraz sortzeko aukera ematen dizu.",
+  "meetingPollMetaTitle": "Bilera-galdetegia",
+  "meetingPollMetaDescription": "Antolatu bilerak erraz gure galdetegia funtzioarekin, guztion prestutasuna ziurtatuz."
 }

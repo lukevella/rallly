@@ -97,7 +97,7 @@
   "polls": "Abstimmungen",
   "timeZoneSelect__noOption": "Keine Option gefunden",
   "timeZoneSelect__inputPlaceholder": "Suchen…",
-  "poweredByRallly": "Betrieben von <a>{name}</a>",
+  "poweredByRallly": "Powered by <a>{name}</a>",
   "participants": "Teilnehmer",
   "language": "Sprache",
   "languageDescription": "Ändere deine bevorzugte Sprache",
