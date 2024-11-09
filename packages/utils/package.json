@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "test:unit": "vitest run",
-    "format": "prettier --write .",
     "lint": "eslint ./src",
     "type-check": "tsc --noEmit"
   },

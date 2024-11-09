@@ -9,8 +9,7 @@
   },
   "scripts": {
     "lint": "eslint ./src",
-    "type-check": "tsc --noEmit",
-    "format": "prettier --write ."
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "posthog-js": "^1.178.0",

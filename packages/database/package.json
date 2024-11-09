@@ -8,8 +8,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
-    "type-check": "tsc --pretty --noEmit",
-    "format": "prettier --write ."
+    "type-check": "tsc --pretty --noEmit"
   },
   "exports": "./index.ts",
   "devDependencies": {
