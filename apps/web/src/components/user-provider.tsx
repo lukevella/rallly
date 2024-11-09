@@ -1,11 +1,11 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Spinner } from "@/components/spinner";
 import { useSubscription } from "@/contexts/plan";
-import { PostHogProvider } from "@/contexts/posthog";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
@@ -60,6 +60,25 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const updatePreferences = trpc.user.updatePreferences.useMutation();
   const { t, i18n } = useTranslation();
 
+  const posthog = usePostHog();
+
+  const isGuest = !user?.email;
+  const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
+
+  React.useEffect(() => {
+    if (user) {
+      posthog?.identify(user.id, {
+        email: user.email,
+        name: user.name,
+        tier,
+        timeZone: user.timeZone ?? null,
+        image: user.image ?? null,
+        locale: user.locale ?? i18n.language,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
   if (!user) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -67,9 +86,6 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
       </div>
     );
   }
-
-  const isGuest = !user.email;
-  const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
 
   return (
     <UserContext.Provider
@@ -109,7 +125,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           await session.update(newPreferences);
         }}
       >
-        <PostHogProvider>{props.children}</PostHogProvider>
+        {props.children}
       </PreferencesProvider>
     </UserContext.Provider>
   );

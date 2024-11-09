@@ -4,7 +4,7 @@ import { randomid } from "@rallly/utils/nanoid";
 import languageParser from "accept-language-parser";
 import type { NextRequest, NextResponse } from "next/server";
 import type { JWT } from "next-auth/jwt";
-import { encode } from "next-auth/jwt";
+import { decode, encode } from "next-auth/jwt";
 
 const supportedLocales = Object.keys(languages);
 
@@ -61,10 +61,20 @@ export async function resetUser(req: NextRequest, res: NextResponse) {
 
 export async function initGuest(req: NextRequest, res: NextResponse) {
   const { name } = getCookieSettings();
-
-  if (req.cookies.has(name)) {
-    // already has a session token
-    return;
+  const token = req.cookies.get(name)?.value;
+  if (token) {
+    try {
+      const jwt = await decode({
+        token,
+        secret: process.env.SECRET_PASSWORD,
+      });
+      if (jwt) {
+        return jwt;
+      }
+    } catch (error) {
+      // invalid token
+      console.error(error);
+    }
   }
 
   const locale = await getLocaleFromHeader(req);

@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 import { generateOtp } from "@rallly/utils/nanoid";
 import { z } from "zod";
 
-import { posthog } from "@/app/posthog";
 import { isEmailBlocked } from "@/auth";
 import { createToken, decryptToken } from "@/utils/session";
 

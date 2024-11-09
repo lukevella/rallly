@@ -8,6 +8,8 @@ import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { Providers } from "@/app/providers";
+import { getServerSession } from "@/auth";
+import { SessionProvider } from "@/auth/session-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,21 +23,24 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function Root({
+export default async function Root({
   children,
   params: { locale },
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
+  const session = await getServerSession();
   return (
     <html lang={locale} className={inter.className}>
       <body>
         <Toaster />
-        <Providers>
-          {children}
-          <TimeZoneChangeDetector />
-        </Providers>
+        <SessionProvider session={session}>
+          <Providers>
+            {children}
+            <TimeZoneChangeDetector />
+          </Providers>
+        </SessionProvider>
       </body>
     </html>
   );

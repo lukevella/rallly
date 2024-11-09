@@ -1,3 +1,4 @@
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useToast } from "@rallly/ui/hooks/use-toast";
 import * as Sentry from "@sentry/nextjs";
@@ -10,7 +11,6 @@ import { useUser } from "@/components/user-provider";
 import { IfCloudHosted } from "@/contexts/environment";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { usePostHog } from "@/utils/posthog";
 
 const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 

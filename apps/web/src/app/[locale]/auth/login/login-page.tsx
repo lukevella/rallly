@@ -1,4 +1,5 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -9,7 +10,6 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
-import { usePostHog } from "@/utils/posthog";
 
 type PageProps = { magicLink: string; email: string };
 

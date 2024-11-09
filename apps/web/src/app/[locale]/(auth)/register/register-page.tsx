@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -15,7 +16,6 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useTranslation } from "next-i18next";
-import { usePostHog } from "posthog-js/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
