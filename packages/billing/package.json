@@ -10,7 +10,9 @@
   },
   "scripts": {
     "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts",
-    "type-check": "tsc --pretty --noEmit"
+    "type-check": "tsc --pretty --noEmit",
+    "prettier": "prettier --write .",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "@radix-ui/react-radio-group": "^1.2.0",

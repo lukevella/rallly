@@ -3,7 +3,7 @@ import type { TimeFormat } from "@rallly/database";
 import { extend } from "lodash";
 import type { DefaultSession, DefaultUser } from "next-auth";
 import NextAuth from "next-auth";
-import type { DefaultJWT} from "next-auth/jwt";
+import type { DefaultJWT } from "next-auth/jwt";
 import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
