@@ -42,7 +42,7 @@
   .input {
     @apply appearance-none border px-2 text-gray-800 placeholder:text-gray-500;
     @apply focus-visible:ring-offset-input-background focus-visible:ring-1 focus-visible:ring-offset-1;
-    @apply focus-visible:border-primary-400  focus-visible:ring-primary-100;
+    @apply focus-visible:border-primary-400 focus-visible:ring-primary-100;
   }
   input.input {
     @apply h-9;
@@ -64,7 +64,7 @@
   }
 
   .btn-default {
-    @apply btn bg-white/50 text-gray-700 hover:bg-gray-50 hover:shadow-sm active:bg-gray-200  active:shadow-none;
+    @apply btn bg-white/50 text-gray-700 hover:bg-gray-50 hover:shadow-sm active:bg-gray-200 active:shadow-none;
   }
   .btn-danger {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;

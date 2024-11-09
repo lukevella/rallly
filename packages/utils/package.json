@@ -1,10 +1,11 @@
 {
   "name": "@rallly/utils",
-  "type": "module",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "lint": "eslint ./src",
+    "type-check": "tsc --noEmit"
   },
   "exports": {
     "./*": "./src/*.ts"

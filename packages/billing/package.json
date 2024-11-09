@@ -10,12 +10,16 @@
   },
   "scripts": {
     "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts",
-    "type-check": "tsc --pretty --noEmit"
+    "type-check": "tsc --pretty --noEmit",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "@radix-ui/react-radio-group": "^1.2.0",
     "@rallly/ui": "*",
     "next": "*",
     "stripe": "^13.2.0"
+  },
+  "devDependencies": {
+    "@rallly/eslint-config": "*"
   }
 }

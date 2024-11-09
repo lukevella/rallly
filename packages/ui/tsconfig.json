@@ -5,9 +5,9 @@
     "paths": {
       "@/utils": ["src/lib/utils.ts"],
       "@/components/*": ["src/*"],
-      "@/ui/*": ["src/*"],
-    },
+      "@/ui/*": ["src/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

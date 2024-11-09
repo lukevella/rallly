@@ -57,6 +57,9 @@
     "i18n:scan": {
       "inputs": ["src/**", "i18next-scanner.config.js"],
       "outputs": ["public/locales/**"]
+    },
+    "format": {
+      "cache": false
     }
   },
   "globalEnv": [

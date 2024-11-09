@@ -7,6 +7,10 @@
     "./client": "./src/client/index.ts",
     "./next/middleware": "./src/next/middleware.ts"
   },
+  "scripts": {
+    "lint": "eslint ./src",
+    "type-check": "tsc --noEmit"
+  },
   "dependencies": {
     "posthog-js": "^1.178.0",
     "posthog-node": "^4.2.1"

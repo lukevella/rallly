@@ -266,7 +266,7 @@ export const BigTestimonial = () => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: "all" }}
-      className="flex flex-col items-center gap-y-8 "
+      className="flex flex-col items-center gap-y-8"
     >
       <Image
         src="/static/images/stars-5.svg"

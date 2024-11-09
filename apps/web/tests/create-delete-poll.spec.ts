@@ -1,4 +1,4 @@
-import type { Page} from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import type { MailServer } from "smtp-tester";
 import smtpTester from "smtp-tester";

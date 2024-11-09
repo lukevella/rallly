@@ -63,7 +63,7 @@ export const Footer: React.FunctionComponent = () => {
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-16 lg:flex lg:space-x-8 lg:space-y-0">
-        <div className=" lg:w-2/6">
+        <div className="lg:w-2/6">
           <Image
             src="/logo-grayscale.svg"
             width={140}

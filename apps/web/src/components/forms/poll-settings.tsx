@@ -54,7 +54,7 @@ const Setting = ({ children }: React.PropsWithChildren) => {
     <label
       className={cn(
         "cursor-pointer bg-white hover:bg-gray-50 active:bg-gray-100",
-        "flex select-none justify-between gap-x-4 gap-y-2.5 rounded-md border p-3 sm:flex-row ",
+        "flex select-none justify-between gap-x-4 gap-y-2.5 rounded-md border p-3 sm:flex-row",
       )}
     >
       {children}

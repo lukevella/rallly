@@ -62,7 +62,7 @@
       @apply mb-6 leading-relaxed;
     }
     p:has(> img) {
-      @apply flex items-center justify-center overflow-hidden rounded-xl border bg-gray-50  p-2;
+      @apply flex items-center justify-center overflow-hidden rounded-xl border bg-gray-50 p-2;
     }
     img {
       @apply mx-auto rounded-lg border;
@@ -126,7 +126,7 @@
   }
 
   .btn-default {
-    @apply btn bg-white/50 text-gray-700 hover:bg-gray-50 hover:shadow-sm active:bg-gray-200  active:shadow-none;
+    @apply btn bg-white/50 text-gray-700 hover:bg-gray-50 hover:shadow-sm active:bg-gray-200 active:shadow-none;
   }
   .btn-danger {
     text-shadow: rgb(0 0 0 / 20%) 0px 1px 1px;

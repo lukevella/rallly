@@ -2,13 +2,8 @@
 
 import { pricingData } from "@rallly/billing/pricing";
 import { Badge } from "@rallly/ui/badge";
-import type {
-  DialogProps} from "@rallly/ui/dialog";
-import {
-  Dialog,
-  DialogContent,
-  useDialog,
-} from "@rallly/ui/dialog";
+import type { DialogProps } from "@rallly/ui/dialog";
+import { Dialog, DialogContent, useDialog } from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { m } from "framer-motion";
 import { CheckIcon } from "lucide-react";
