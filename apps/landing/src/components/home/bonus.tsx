@@ -13,7 +13,7 @@ import { BonusItem } from "@/components/home/bonus-item";
 export async function Bonus({ t }: { t: TFunction }) {
   const userCount = await prisma.user.count();
   return (
-    <div className="mx-auto flex flex-wrap justify-center  gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
+    <div className="mx-auto flex flex-wrap justify-center gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
       <BonusItem
         className="bg-indigo-600"
         icon={<Users2Icon className="size-4" />}

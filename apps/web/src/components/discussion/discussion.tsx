@@ -229,7 +229,7 @@ function DiscussionInner() {
                           </Badge>
                         ) : null}
                       </Participant>
-                      <div className="flex items-center gap-2 text-sm ">
+                      <div className="flex items-center gap-2 text-sm">
                         <div className="text-gray-500">
                           {dayjs(comment.createdAt).fromNow()}
                         </div>

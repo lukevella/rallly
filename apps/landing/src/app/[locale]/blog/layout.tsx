@@ -12,7 +12,7 @@ export default function BlogLayout({
         <div className="mx-auto max-w-2xl space-y-12">
           {children}
           <div className="overflow-hidden rounded-md border bg-gray-200/50 backdrop-blur-sm">
-            <div className="flex flex-col gap-x-4 gap-y-2 p-6  pb-0 sm:flex-row">
+            <div className="flex flex-col gap-x-4 gap-y-2 p-6 pb-0 sm:flex-row">
               <div>
                 <NewspaperIcon className="size-6" />
               </div>

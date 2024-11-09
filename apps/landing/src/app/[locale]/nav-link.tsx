@@ -14,7 +14,7 @@ export const NavLink = ({
     <Link
       className={cn(
         "inline-flex items-center gap-x-2.5 rounded text-sm font-medium",
-        isActive ? "" : "hover:text-primary text-muted-foreground ",
+        isActive ? "" : "hover:text-primary text-muted-foreground",
         className,
       )}
       {...props}

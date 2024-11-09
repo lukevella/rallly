@@ -19,5 +19,8 @@
     "@rallly/ui": "*",
     "next": "*",
     "stripe": "^13.2.0"
+  },
+  "devDependencies": {
+    "@rallly/eslint-config": "*"
   }
 }
