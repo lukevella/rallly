@@ -10,6 +10,7 @@
     "noUncheckedIndexedAccess": false,
     "noImplicitReturns": false,
     "verbatimModuleSyntax": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictNullChecks": true
   }
 }

@@ -12,6 +12,8 @@ import { trpcConfig } from "@/trpc/client/config";
 import type { AppRouter } from "@/trpc/routers";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
+import { PostHogPageView } from "./posthog-page-view";
+
 export const trpc = createTRPCReact<AppRouter>({
   unstable_overrides: {
     useMutation: {
@@ -33,6 +35,7 @@ export function Providers(props: { children: React.ReactNode }) {
           <I18nProvider>
             <TooltipProvider>
               <PostHogProvider>
+                <PostHogPageView />
                 <UserProvider>
                   <ConnectedDayjsProvider>
                     {props.children}
