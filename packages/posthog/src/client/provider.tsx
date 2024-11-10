@@ -5,6 +5,7 @@ import { PostHogProvider as Provider } from "posthog-js/react";
 import React from "react";
 
 import { POSTHOG_BOOTSTAP_DATA_COOKIE_NAME } from "../constants";
+import { PostHogPageView } from "./posthog-page-view";
 
 if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
   let bootstrapData = {};
@@ -32,5 +33,10 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
 }
 
 export function PostHogProvider(props: { children?: React.ReactNode }) {
-  return <Provider client={posthog}>{props.children}</Provider>;
+  return (
+    <Provider client={posthog}>
+      <PostHogPageView />
+      {props.children}
+    </Provider>
+  );
 }
