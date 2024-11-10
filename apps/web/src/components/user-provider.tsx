@@ -66,7 +66,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
 
   React.useEffect(() => {
-    if (user) {
+    if (user?.email) {
       posthog?.identify(user.id, {
         email: user.email,
         name: user.name,
