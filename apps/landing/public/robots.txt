@@ -2,3 +2,4 @@ User-agent: *
 Disallow: /api
 Disallow: /locales
 Allow: /api/og-image
+Sitemap: https://rallly.co/sitemap.xml
