@@ -27,8 +27,8 @@ import { trpc } from "@/trpc/client";
 import { useDayjs } from "@/utils/dayjs";
 
 const registerFormSchema = z.object({
-  name: z.string().nonempty().max(100),
-  email: z.string().email(),
+  name: z.string().min(1).max(100),
+  email: z.string().email().max(255),
 });
 
 type RegisterFormData = z.infer<typeof registerFormSchema>;
