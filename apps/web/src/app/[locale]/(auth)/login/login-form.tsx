@@ -1,4 +1,5 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { usePostHog } from "@rallly/posthog/client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
@@ -11,23 +12,28 @@ import { getProviders, signIn, useSession } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { z } from "zod";
 
 import { trpc } from "@/app/providers";
 import { VerifyCode, verifyCode } from "@/components/auth/auth-forms";
 import { Spinner } from "@/components/spinner";
 import { isSelfHosted } from "@/utils/constants";
-import { validEmail } from "@/utils/form-validation";
 
 const allowGuestAccess = !isSelfHosted;
+
+const loginFormSchema = z.object({
+  email: z.string().email().max(255),
+});
+
+type LoginFormData = z.infer<typeof loginFormSchema>;
 
 export function LoginForm() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
 
-  const { register, handleSubmit, getValues, formState, setError } = useForm<{
-    email: string;
-  }>({
+  const { register, handleSubmit, getValues, formState, setError } = useForm<LoginFormData>({
     defaultValues: { email: "" },
+    resolver: zodResolver(loginFormSchema),
   });
 
   const { data: providers } = useQuery(["providers"], getProviders, {
@@ -178,7 +184,7 @@ export function LoginForm() {
           autoFocus={true}
           disabled={formState.isSubmitting}
           placeholder={t("emailPlaceholder")}
-          {...register("email", { validate: validEmail })}
+          {...register("email")}
         />
         {formState.errors.email?.message ? (
           <div className="mt-2 text-sm text-rose-500">
