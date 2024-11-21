@@ -18,7 +18,6 @@ import { trpc } from "@/app/providers";
 import { VerifyCode, verifyCode } from "@/components/auth/auth-forms";
 import { Spinner } from "@/components/spinner";
 import { isSelfHosted } from "@/utils/constants";
-import { validEmail } from "@/utils/form-validation";
 
 const allowGuestAccess = !isSelfHosted;
 
@@ -185,7 +184,7 @@ export function LoginForm() {
           autoFocus={true}
           disabled={formState.isSubmitting}
           placeholder={t("emailPlaceholder")}
-          {...register("email", { validate: validEmail })}
+          {...register("email")}
         />
         {formState.errors.email?.message ? (
           <div className="mt-2 text-sm text-rose-500">
