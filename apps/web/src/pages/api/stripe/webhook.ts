@@ -110,7 +110,7 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
 
       // check if the subscription is active
       const isActive =
-        subscription.status === "active" || subscription.status === "past_due";
+        subscription.status === "active" || subscription.status === "trialing";
 
       // get the subscription price details
       const lineItem = subscription.items.data[0];
