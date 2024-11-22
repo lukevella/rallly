@@ -1,22 +1,23 @@
 import { stripe } from "@rallly/billing/lib/stripe";
 import { createPortalSession } from "@rallly/billing/portal";
 import { prisma } from "@rallly/database";
+import * as Sentry from "@sentry/nextjs";
 import { redirect } from "next/navigation";
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { getServerSession } from "@/auth";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const returnPath = formData.get("return_path") as string | null;
   const userSession = await getServerSession();
 
   if (!userSession?.user.email) {
     // You need to be logged in to subscribe
-    const url = new URL(request.url);
-    redirect(
-      `/login${url ? `?redirect=${encodeURIComponent(url.pathname)}` : ""}`,
-    );
+    const redirectUrl = new URL("/login", request.nextUrl.origin);
+    redirectUrl.searchParams.set("redirect", returnPath ?? "/");
+    return NextResponse.redirect(redirectUrl);
   }
 
   const user = await prisma.user.findUnique({
@@ -60,4 +61,27 @@ export async function POST(request: Request) {
   });
 
   redirect(portalSession.url);
+}
+
+export async function GET(request: NextRequest) {
+  const sessionId = request.nextUrl.searchParams.get("session_id");
+
+  if (!sessionId) {
+    Sentry.captureException(new Error("session_id is required"));
+    return NextResponse.redirect("/login");
+  }
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+  const customerId = session.customer as string;
+
+  if (!customerId) {
+    Sentry.captureException(new Error("customer_id is required"));
+    return NextResponse.redirect("/login");
+  }
+
+  const portalSession = await createPortalSession({
+    customerId,
+  });
+
+  return NextResponse.redirect(portalSession.url);
 }
