@@ -43,6 +43,9 @@ export async function POST(request: NextRequest) {
     const customer = await stripe.customers.create({
       name: user.name,
       email: user.email,
+      metadata: {
+        userId: userSession.user.id,
+      },
     });
     customerId = customer.id;
     await prisma.user.update({
