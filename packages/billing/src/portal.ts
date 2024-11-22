@@ -21,9 +21,7 @@ export async function createPortalSession({
   } else if (customerId) {
     stripeCustomerId = customerId;
   } else {
-    // create customer
-    const customer = await stripe.customers.create({});
-    stripeCustomerId = customer.id;
+    throw new Error("Either sessionId or customerId must be provided");
   }
 
   const portalSession = await stripe.billingPortal.sessions.create({
