@@ -36,18 +36,19 @@ const BillingPortal = () => {
         />
       </p>
       <div className="mt-6">
-        <form
-          action="/api/stripe/portal"
-        >
-          <input type="hidden" name="return_path" value={window.location.pathname} />
-          <Button type="submit">
+        <Button asChild>
+          <Link
+            href={`/api/stripe/portal?return_path=${encodeURIComponent(
+              window.location.pathname,
+            )}`}
+          >
             <CreditCardIcon className="size-4" />
             <span>
               <Trans i18nKey="billingPortal" defaults="Billing Portal" />
             </span>
             <ArrowUpRight className="size-4" />
-          </Button>
-        </form>
+          </Link>
+        </Button>
       </div>
     </div>
   );
