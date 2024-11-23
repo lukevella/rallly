@@ -7,11 +7,9 @@ import { useForm } from "react-hook-form";
 import { requiredString } from "../../utils/form-validation";
 
 export const verifyCode = async (options: { email: string; token: string }) => {
-  const url = `${
-    window.location.origin
-  }/api/auth/callback/email?email=${encodeURIComponent(options.email)}&token=${
-    options.token
-  }`;
+  const url = `${window.location.origin
+    }/api/auth/callback/email?email=${encodeURIComponent(options.email)}&token=${options.token
+    }`;
 
   const res = await fetch(url);
 

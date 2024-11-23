@@ -33,12 +33,10 @@ export function DeleteAccountDialog({
     },
   });
   const { t } = useTranslation();
-  const trpcUtils = trpc.useUtils();
   const posthog = usePostHog();
   const deleteAccount = trpc.user.delete.useMutation({
     onSuccess() {
       posthog?.capture("delete account");
-      trpcUtils.invalidate();
       signOut({
         callbackUrl: "/login",
       });

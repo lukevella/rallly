@@ -195,10 +195,8 @@ const ChangeNameModal = (props: {
   onOpenChange: (open: boolean) => void;
 }) => {
   const posthog = usePostHog();
-  const queryClient = trpc.useUtils();
   const changeName = trpc.polls.participants.rename.useMutation({
     onSuccess: (_, { participantId, newName }) => {
-      queryClient.polls.participants.invalidate();
       posthog?.capture("changed name", {
         participantId,
         oldName: props.oldName,

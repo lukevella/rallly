@@ -16,7 +16,6 @@ type PageProps = { magicLink: string; email: string };
 export const LoginPage = ({ magicLink, email }: PageProps) => {
   const session = useSession();
   const posthog = usePostHog();
-  const trpcUtils = trpc.useUtils();
   const magicLinkFetch = useMutation({
     mutationFn: async () => {
       const res = await fetch(magicLink);
@@ -32,8 +31,6 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
             email: updatedSession.user.email,
             name: updatedSession.user.name,
           });
-
-          await trpcUtils.invalidate();
         }
       }
 

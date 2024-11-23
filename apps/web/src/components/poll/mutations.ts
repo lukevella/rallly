@@ -31,7 +31,6 @@ export const useAddParticipantMutation = () => {
           ];
         },
       );
-      queryClient.polls.participants.list.invalidate({ pollId });
       posthog?.capture("add participant", {
         pollId,
         name,
@@ -83,7 +82,6 @@ export const useDeleteParticipantMutation = () => {
       );
     },
     onSuccess: (_, { participantId }) => {
-      queryClient.polls.participants.list.invalidate({ pollId: poll.id });
       posthog?.capture("remove participant", {
         pollId: poll.id,
         participantId,
@@ -93,11 +91,9 @@ export const useDeleteParticipantMutation = () => {
 };
 
 export const useUpdatePollMutation = () => {
-  const queryClient = trpc.useUtils();
   const posthog = usePostHog();
   return trpc.polls.update.useMutation({
     onSuccess: (_data, { urlId }) => {
-      queryClient.polls.invalidate();
       posthog?.capture("updated poll", {
         id: urlId,
       });

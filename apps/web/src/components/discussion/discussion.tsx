@@ -73,7 +73,6 @@ function NewCommentForm({
 
   const posthog = usePostHog();
 
-  const queryClient = trpc.useUtils();
 
   const session = useUser();
 
@@ -88,7 +87,6 @@ function NewCommentForm({
 
   const addComment = trpc.polls.comments.add.useMutation({
     onSuccess: () => {
-      queryClient.polls.comments.invalidate();
       posthog?.capture("created comment");
     },
     onError: (error) => {

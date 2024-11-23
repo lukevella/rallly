@@ -50,7 +50,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
           return [...oldWatchers, { userId: user.id }];
         },
       );
-      queryClient.polls.invalidate();
     },
   });
 
@@ -69,7 +68,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
           return oldWatchers.filter(({ userId }) => userId !== user.id);
         },
       );
-      queryClient.polls.invalidate();
     },
   });
 
@@ -126,11 +124,11 @@ const NotificationsToggle: React.FunctionComponent = () => {
             values={{
               value: isWatching
                 ? t("notificationsOn", {
-                    defaultValue: "On",
-                  })
+                  defaultValue: "On",
+                })
                 : t("notificationsOff", {
-                    defaultValue: "Off",
-                  }),
+                  defaultValue: "Off",
+                }),
             }}
           />
         )}
