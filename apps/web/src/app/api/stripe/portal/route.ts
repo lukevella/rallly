@@ -17,14 +17,20 @@ export async function GET(request: NextRequest) {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     if (typeof session.customer !== "string") {
       Sentry.captureException(new Error("Invalid customer ID in session"));
-      return NextResponse.redirect("/login");
+      return NextResponse.json(
+        { error: "Invalid customer ID in session" },
+        { status: 400 },
+      );
     }
     customerId = session.customer;
   } else {
     const userSession = await getServerSession();
     if (!userSession || userSession.user.email === null) {
       Sentry.captureException(new Error("User not logged in"));
-      return NextResponse.redirect("/login");
+      return NextResponse.json(
+        { error: "User not logged in" },
+        { status: 400 },
+      );
     }
     const user = await prisma.user.findUnique({
       where: {
@@ -39,7 +45,10 @@ export async function GET(request: NextRequest) {
 
   if (!customerId) {
     Sentry.captureException(new Error("Session has no customer ID"));
-    return NextResponse.redirect("/login");
+    return NextResponse.json(
+      { error: "Session has no customer ID" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -50,6 +59,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(portalSession.url);
   } catch (error) {
     Sentry.captureException(error);
-    return NextResponse.redirect("/login");
+    return NextResponse.json(
+      { error: "Failed to create portal session" },
+      { status: 500 },
+    );
   }
 }
