@@ -1,34 +1,12 @@
 import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { posthog, posthogApiHandler } from "@rallly/posthog/server";
-import * as Sentry from "@sentry/node";
-import { buffer } from "micro";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { posthog } from "@rallly/posthog/server";
+import * as Sentry from "@sentry/nextjs";
+import { waitUntil } from "@vercel/functions";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
-
-import { composeApiHandlers } from "@/utils/next";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-const toDate = (date: number) => new Date(date * 1000);
-
-const endpointSecret = process.env.STRIPE_SIGNING_SECRET as string;
-
-const validatedWebhook = async (req: NextApiRequest) => {
-  const signature = req.headers["stripe-signature"] as string;
-  const buf = await buffer(req);
-
-  try {
-    return stripe.webhooks.constructEvent(buf, signature, endpointSecret);
-  } catch (err) {
-    return null;
-  }
-};
 
 const checkoutMetadataSchema = z.object({
   userId: z.string(),
@@ -38,20 +16,34 @@ const subscriptionMetadataSchema = z.object({
   userId: z.string(),
 });
 
-async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    res.status(405).end();
-    return;
-  }
-  if (!endpointSecret) {
-    res.status(400).send("No endpoint secret");
-    return;
-  }
-  const event = await validatedWebhook(req);
+function toDate(date: number) {
+  return new Date(date * 1000);
+}
 
-  if (!event) {
-    res.status(400).send("Invalid signature");
-    return;
+export async function POST(request: NextRequest) {
+  const body = await request.text();
+  const sig = request.headers.get("stripe-signature")!;
+  const stripeSigningSecret = process.env.STRIPE_SIGNING_SECRET;
+
+  if (!stripeSigningSecret) {
+    Sentry.captureException(new Error("STRIPE_SIGNING_SECRET is not set"));
+
+    return NextResponse.json(
+      { error: "STRIPE_SIGNING_SECRET is not set" },
+      { status: 500 },
+    );
+  }
+
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(body, sig, stripeSigningSecret);
+  } catch (err) {
+    Sentry.captureException(err);
+    return NextResponse.json(
+      { error: `Webhook Error: Failed to construct event` },
+      { status: 400 },
+    );
   }
 
   switch (event.type) {
@@ -66,8 +58,10 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
       const { userId } = checkoutMetadataSchema.parse(checkoutSession.metadata);
 
       if (!userId) {
-        res.status(400).send("Missing client reference ID");
-        return;
+        return NextResponse.json(
+          { error: "Missing client reference ID" },
+          { status: 400 },
+        );
       }
 
       await prisma.user.update({
@@ -84,20 +78,16 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
         checkoutSession.subscription as string,
       );
 
-      try {
-        posthog?.capture({
-          distinctId: userId,
-          event: "upgrade",
-          properties: {
-            interval: subscription.items.data[0].plan.interval,
-            $set: {
-              tier: "pro",
-            },
+      posthog?.capture({
+        distinctId: userId,
+        event: "upgrade",
+        properties: {
+          interval: subscription.items.data[0].plan.interval,
+          $set: {
+            tier: "pro",
           },
-        });
-      } catch (e) {
-        Sentry.captureException(e);
-      }
+        },
+      });
 
       break;
     }
@@ -110,13 +100,16 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
 
       // check if the subscription is active
       const isActive =
-        subscription.status === "active" || subscription.status === "trialing";
+        subscription.status === "active" ||
+        subscription.status === "trialing" ||
+        subscription.status === "past_due";
 
       // get the subscription price details
       const lineItem = subscription.items.data[0];
 
       // update/create the subscription in the database
       const { price } = lineItem;
+
       await prisma.subscription.upsert({
         where: {
           id: subscription.id,
@@ -141,10 +134,18 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
       });
 
       try {
-        const data = subscriptionMetadataSchema.parse(subscription.metadata);
+        const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
+
+        if (!res.success) {
+          return NextResponse.json(
+            { error: "Missing user ID" },
+            { status: 400 },
+          );
+        }
+
         posthog?.capture({
           event: "subscription change",
-          distinctId: data.userId,
+          distinctId: res.data.userId,
           properties: {
             type: event.type,
             $set: {
@@ -159,13 +160,15 @@ async function stripeApiHandler(req: NextApiRequest, res: NextApiResponse) {
       break;
     }
     default:
+      Sentry.captureException(new Error(`Unhandled event type: ${event.type}`));
       // Unexpected event type
-      res.status(400).json({
-        error: "Unhandled event type",
-      });
+      return NextResponse.json(
+        { error: "Unhandled event type" },
+        { status: 400 },
+      );
   }
 
-  res.end();
-}
+  waitUntil(Promise.all([posthog?.shutdown()]));
 
-export default composeApiHandlers(stripeApiHandler, posthogApiHandler);
+  return NextResponse.json({ received: true }, { status: 200 });
+}
