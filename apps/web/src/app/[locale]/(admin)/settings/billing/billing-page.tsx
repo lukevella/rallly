@@ -37,7 +37,6 @@ const BillingPortal = () => {
       </p>
       <div className="mt-6">
         <form
-          method="POST"
           action="/api/stripe/portal"
         >
           <input type="hidden" name="return_path" value={window.location.pathname} />
