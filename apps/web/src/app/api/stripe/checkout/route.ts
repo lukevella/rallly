@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
 
   if (session.url) {
     // redirect to checkout session
-    return NextResponse.redirect(new URL(session.url), 303);
+    return NextResponse.redirect(session.url, 303);
   }
 
   return NextResponse.json(
