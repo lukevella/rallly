@@ -23,15 +23,21 @@ function toDate(date: number) {
 export async function POST(request: NextRequest) {
   const body = await request.text();
   const sig = request.headers.get("stripe-signature")!;
+  const stripeSigningSecret = process.env.STRIPE_SIGNING_SECRET;
+
+  if (!stripeSigningSecret) {
+    Sentry.captureException(new Error("STRIPE_SIGNING_SECRET is not set"));
+
+    return NextResponse.json(
+      { error: "STRIPE_SIGNING_SECRET is not set" },
+      { status: 500 },
+    );
+  }
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_SIGNING_SECRET!,
-    );
+    event = stripe.webhooks.constructEvent(body, sig, stripeSigningSecret);
   } catch (err) {
     Sentry.captureException(err);
     return NextResponse.json(
@@ -72,20 +78,16 @@ export async function POST(request: NextRequest) {
         checkoutSession.subscription as string,
       );
 
-      try {
-        posthog?.capture({
-          distinctId: userId,
-          event: "upgrade",
-          properties: {
-            interval: subscription.items.data[0].plan.interval,
-            $set: {
-              tier: "pro",
-            },
+      posthog?.capture({
+        distinctId: userId,
+        event: "upgrade",
+        properties: {
+          interval: subscription.items.data[0].plan.interval,
+          $set: {
+            tier: "pro",
           },
-        });
-      } catch (e) {
-        Sentry.captureException(e);
-      }
+        },
+      });
 
       break;
     }
@@ -105,6 +107,7 @@ export async function POST(request: NextRequest) {
 
       // update/create the subscription in the database
       const { price } = lineItem;
+
       await prisma.subscription.upsert({
         where: {
           id: subscription.id,
@@ -129,10 +132,18 @@ export async function POST(request: NextRequest) {
       });
 
       try {
-        const data = subscriptionMetadataSchema.parse(subscription.metadata);
+        const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
+
+        if (!res.success) {
+          return NextResponse.json(
+            { error: "Missing user ID" },
+            { status: 400 },
+          );
+        }
+
         posthog?.capture({
           event: "subscription change",
-          distinctId: data.userId,
+          distinctId: res.data.userId,
           properties: {
             type: event.type,
             $set: {
@@ -147,6 +158,7 @@ export async function POST(request: NextRequest) {
       break;
     }
     default:
+      Sentry.captureException(new Error(`Unhandled event type: ${event.type}`));
       // Unexpected event type
       return NextResponse.json(
         { error: "Unhandled event type" },
@@ -156,5 +168,5 @@ export async function POST(request: NextRequest) {
 
   waitUntil(Promise.all([posthog?.shutdown()]));
 
-  return NextResponse.json({ success: true }, { status: 200 });
+  return NextResponse.json({ received: true }, { status: 200 });
 }
