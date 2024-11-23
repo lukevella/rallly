@@ -100,7 +100,9 @@ export async function POST(request: NextRequest) {
 
       // check if the subscription is active
       const isActive =
-        subscription.status === "active" || subscription.status === "trialing";
+        subscription.status === "active" ||
+        subscription.status === "trialing" ||
+        subscription.status === "past_due";
 
       // get the subscription price details
       const lineItem = subscription.items.data[0];
