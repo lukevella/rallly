@@ -1,16 +1,33 @@
-import { stripe } from "@rallly/billing/lib/stripe";
-import { createPortalSession } from "@rallly/billing/portal";
+import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
-import { redirect } from "next/navigation";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { getServerSession } from "@/auth";
 
+async function getReturnPath(request: NextRequest) {
+  try {
+    const formData = await request.formData();
+    const returnPath = formData.get("return_path");
+    if (
+      typeof returnPath !== "string" ||
+      !returnPath.startsWith("/") ||
+      returnPath.includes("..")
+    ) {
+      Sentry.captureException(new Error(`Invalid return path: ${returnPath}`));
+      return;
+    }
+    return returnPath;
+  } catch (error) {
+    Sentry.captureException(error);
+  }
+}
+
 export async function POST(request: NextRequest) {
-  const formData = await request.formData();
-  const returnPath = formData.get("return_path") as string | null;
+  const returnPath = await getReturnPath(request);
+
   const userSession = await getServerSession();
 
   if (!userSession?.user.email) {
@@ -58,33 +75,47 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const portalSession = await createPortalSession({
-    returnPath: returnPath ?? undefined,
-    customerId,
-  });
-
-  redirect(portalSession.url);
+  try {
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: absoluteUrl(returnPath),
+    });
+    return NextResponse.redirect(portalSession.url);
+  } catch (error) {
+    Sentry.captureException(error);
+    return NextResponse.redirect("/login");
+  }
 }
 
 export async function GET(request: NextRequest) {
   const sessionId = request.nextUrl.searchParams.get("session_id");
 
   if (!sessionId) {
-    Sentry.captureException(new Error("session_id is required"));
+    Sentry.captureException(new Error("Session ID is required"));
     return NextResponse.redirect("/login");
   }
 
   const session = await stripe.checkout.sessions.retrieve(sessionId);
-  const customerId = session.customer as string;
 
-  if (!customerId) {
-    Sentry.captureException(new Error("customer_id is required"));
+  if (typeof session.customer !== "string") {
+    Sentry.captureException(new Error("Invalid customer ID in session"));
     return NextResponse.redirect("/login");
   }
 
-  const portalSession = await createPortalSession({
-    customerId,
-  });
+  const customerId = session.customer;
 
-  return NextResponse.redirect(portalSession.url);
+  if (!customerId) {
+    Sentry.captureException(new Error("Session has no customer ID"));
+    return NextResponse.redirect("/login");
+  }
+
+  try {
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+    });
+    return NextResponse.redirect(portalSession.url);
+  } catch (error) {
+    Sentry.captureException(error);
+    return NextResponse.redirect("/login");
+  }
 }
