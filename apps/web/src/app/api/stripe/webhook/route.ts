@@ -91,7 +91,56 @@ export async function POST(request: NextRequest) {
 
       break;
     }
-    case "customer.subscription.deleted":
+    case "customer.subscription.deleted": {
+      const { id } = event.data.object as Stripe.Subscription;
+      const subscription = await stripe.subscriptions.retrieve(id);
+
+      // void any unpaid invoices
+      const invoices = await stripe.invoices.list({
+        subscription: subscription.id,
+        status: "open",
+      });
+
+      for (const invoice of invoices.data) {
+        await stripe.invoices.voidInvoice(invoice.id);
+      }
+
+      // remove the subscription from the user
+      await prisma.user.update({
+        where: {
+          subscriptionId: subscription.id,
+        },
+        data: {
+          subscriptionId: null,
+        },
+      });
+      // delete the subscription from the database
+      await prisma.subscription.delete({
+        where: {
+          id: subscription.id,
+        },
+      });
+
+      try {
+        const { userId } = subscriptionMetadataSchema.parse(
+          subscription.metadata,
+        );
+
+        posthog?.capture({
+          distinctId: userId,
+          event: "subscription cancel",
+          properties: {
+            $set: {
+              tier: "hobby",
+            },
+          },
+        });
+      } catch (e) {
+        Sentry.captureException(e);
+      }
+
+      break;
+    }
     case "customer.subscription.updated":
     case "customer.subscription.created": {
       const { id } = event.data.object as Stripe.Subscription;
