@@ -3,8 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./server/*": "./src/server/*.tsx",
-    "./next": "./src/next/index.ts",
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },

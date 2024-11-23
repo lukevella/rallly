@@ -38,7 +38,6 @@ const BillingPortal = () => {
       <div className="mt-6">
         <Button asChild>
           <Link
-            target="_blank"
             href={`/api/stripe/portal?return_path=${encodeURIComponent(
               window.location.pathname,
             )}`}

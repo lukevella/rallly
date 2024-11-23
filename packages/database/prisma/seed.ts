@@ -126,7 +126,6 @@ async function main() {
       id: "pro-user",
       name: "Pro User",
       email: "dev+pro@rallly.co",
-      customerId: "cus_123",
       subscription: {
         create: {
           id: "sub_123",
