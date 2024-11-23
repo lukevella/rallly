@@ -14,15 +14,23 @@ export async function GET(request: NextRequest) {
   let customerId: string | undefined;
 
   if (sessionId) {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    if (typeof session.customer !== "string") {
-      Sentry.captureException(new Error("Invalid customer ID in session"));
+    try {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      if (typeof session.customer !== "string") {
+        Sentry.captureException(new Error("Invalid customer ID in session"));
+        return NextResponse.json(
+          { error: "Invalid customer ID in session" },
+          { status: 400 },
+        );
+      }
+      customerId = session.customer;
+    } catch (error) {
+      Sentry.captureException(error);
       return NextResponse.json(
-        { error: "Invalid customer ID in session" },
-        { status: 400 },
+        { error: "Failed to retrieve session" },
+        { status: 500 },
       );
     }
-    customerId = session.customer;
   } else {
     const userSession = await getServerSession();
     if (!userSession || userSession.user.email === null) {
@@ -32,15 +40,23 @@ export async function GET(request: NextRequest) {
         { status: 400 },
       );
     }
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userSession.user.id,
-      },
-      select: {
-        customerId: true,
-      },
-    });
-    customerId = user?.customerId ?? undefined;
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: userSession.user.id,
+        },
+        select: {
+          customerId: true,
+        },
+      });
+      customerId = user?.customerId ?? undefined;
+    } catch (error) {
+      Sentry.captureException(error);
+      return NextResponse.json(
+        { error: "Failed to retrieve user" },
+        { status: 500 },
+      );
+    }
   }
 
   if (!customerId) {
