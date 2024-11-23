@@ -1,14 +1,11 @@
 import { getProPricing, stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getServerSession } from "@/auth";
-
-export const config = {
-  edge: true,
-};
 
 const inputSchema = z.object({
   period: z.enum(["monthly", "yearly"]).optional(),
@@ -16,23 +13,24 @@ const inputSchema = z.object({
   return_path: z.string().optional(),
 });
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const userSession = await getServerSession(req, res);
-  const { period = "monthly", return_path } = inputSchema.parse(req.body);
+export async function POST(request: NextRequest) {
+  const userSession = await getServerSession();
+  const formData = await request.formData();
+  const { period = "monthly", return_path } = inputSchema.parse(
+    Object.fromEntries(formData.entries()),
+  );
 
   if (!userSession || userSession.user.email === null) {
     // You need to be logged in to subscribe
-    res.redirect(
+    return NextResponse.redirect(
+      new URL(
+        `/login${
+          return_path ? `?redirect=${encodeURIComponent(return_path)}` : ""
+        }`,
+        request.url,
+      ),
       303,
-      `/login${
-        return_path ? `?redirect=${encodeURIComponent(return_path)}` : ""
-      }`,
     );
-
-    return;
   }
 
   const user = await prisma.user.findUnique({
@@ -51,14 +49,15 @@ export default async function handler(
   });
 
   if (!user) {
-    res.status(404).end();
-    return;
+    return new NextResponse(null, { status: 404 });
   }
 
   if (user.subscription?.active === true) {
     // User already has an active subscription. Take them to customer portal
-    res.redirect(303, "/api/stripe/portal");
-    return;
+    return NextResponse.redirect(
+      new URL("/api/stripe/portal", request.url),
+      303,
+    );
   }
 
   const proPricingData = await getProPricing();
@@ -70,15 +69,12 @@ export default async function handler(
     cancel_url: absoluteUrl(return_path),
     ...(user.customerId
       ? {
-          // use existing customer if available to reuse payment details
           customer: user.customerId,
           customer_update: {
-            // needed for tax id collection
             name: "auto",
           },
         }
       : {
-          // supply email if user is not a customer yet
           customer_email: user.email,
         }),
     mode: "subscription",
@@ -111,11 +107,11 @@ export default async function handler(
 
   if (session.url) {
     // redirect to checkout session
-    res.redirect(303, session.url);
-    return;
+    return NextResponse.redirect(new URL(session.url), 303);
   }
 
-  res
-    .status(500)
-    .json({ error: "Something went wrong while creating a checkout session" });
+  return NextResponse.json(
+    { error: "Something went wrong while creating a checkout session" },
+    { status: 500 },
+  );
 }
