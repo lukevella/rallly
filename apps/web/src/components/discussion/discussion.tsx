@@ -164,9 +164,6 @@ function DiscussionInner() {
 
   const { data: comments } = trpc.polls.comments.list.useQuery(
     { pollId },
-    {
-      staleTime: 1000 * 5,
-    },
   );
   const posthog = usePostHog();
 
