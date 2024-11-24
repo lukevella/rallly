@@ -64,7 +64,6 @@ export const CreatePoll: React.FunctionComponent = () => {
   useUnmount(clear);
 
   const posthog = usePostHog();
-  const queryClient = trpc.useUtils();
   const createPoll = trpc.polls.create.useMutation({
     networkMode: "always",
     onSuccess: () => {
@@ -104,7 +103,6 @@ export const CreatePoll: React.FunctionComponent = () => {
                     last_poll_created_at: new Date().toISOString(),
                   },
                 });
-                queryClient.invalidate();
                 router.push(`/poll/${res.id}`);
               },
             },

@@ -51,7 +51,6 @@ function PauseResumeToggle() {
           status: "live",
         };
       });
-      queryClient.polls.invalidate();
     },
   });
   const pause = trpc.polls.pause.useMutation({
@@ -63,7 +62,6 @@ function PauseResumeToggle() {
           status: "paused",
         };
       });
-      queryClient.polls.invalidate();
     },
   });
 
@@ -138,9 +136,6 @@ const ManagePoll: React.FunctionComponent<{
           event: null,
         };
       });
-    },
-    onSuccess: () => {
-      queryClient.polls.invalidate();
     },
   });
 

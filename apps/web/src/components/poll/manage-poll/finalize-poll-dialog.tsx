@@ -212,12 +212,7 @@ export const FinalizePollForm = ({
 
 export function FinalizePollDialog(props: DialogProps) {
   const poll = usePoll();
-  const queryClient = trpc.useUtils();
-  const scheduleEvent = trpc.polls.book.useMutation({
-    onSuccess: () => {
-      queryClient.invalidate();
-    },
-  });
+  const scheduleEvent = trpc.polls.book.useMutation();
   return (
     <Dialog {...props}>
       <DialogContent size="2xl">

@@ -44,7 +44,6 @@ export const RegisterForm = () => {
   });
 
   const { handleSubmit, control, getValues, setError, formState } = form;
-  const queryClient = trpc.useUtils();
   const requestRegistration = trpc.auth.requestRegistration.useMutation();
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();
@@ -68,7 +67,6 @@ export const RegisterForm = () => {
               throw new Error("Failed to authenticate user");
             }
 
-            queryClient.invalidate();
 
             posthog?.identify(res.user.id, {
               email: res.user.email,

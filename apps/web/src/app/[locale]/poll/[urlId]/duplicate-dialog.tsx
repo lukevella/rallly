@@ -23,7 +23,6 @@ export function DuplicateDialog({
   pollTitle,
   ...props
 }: DialogProps & { pollId: string; pollTitle: string }) {
-  const queryClient = trpc.useUtils();
   const duplicate = trpc.polls.duplicate.useMutation();
   const posthog = usePostHog();
   const router = useRouter();
@@ -52,7 +51,6 @@ export function DuplicateDialog({
                     pollId,
                     newPollId: res.id,
                   });
-                  queryClient.invalidate();
                   router.push(`/poll/${res.id}`);
                 },
               },
