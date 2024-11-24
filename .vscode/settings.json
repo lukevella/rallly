@@ -6,6 +6,5 @@
   "typescript.preferences.importModuleSpecifier": "shortest",
   "cSpell.words": ["Rallly", "Vella"],
   "jestrunner.codeLensSelector": "",
-  "vitest.filesWatcherInclude": "**/*.test.ts",
-  "biome.enabled": false
+  "vitest.filesWatcherInclude": "**/*.test.ts"
 }
