@@ -84,6 +84,7 @@ export class EmailClient {
           .enqueueJSON({
             url: absoluteUrl("/api/send-email"),
             body: { locale: this.config.locale, templateName, options },
+            retries: 2,
           })
           .catch(() => {
             Sentry.captureException(new Error("Failed to queue email"));
