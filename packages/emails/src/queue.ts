@@ -5,5 +5,7 @@ export function createQstashClient() {
     return null;
   }
 
-  return new Client({ token: process.env.QSTASH_TOKEN });
+  return new Client({
+    token: process.env.QSTASH_TOKEN,
+  });
 }
