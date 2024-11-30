@@ -15,7 +15,7 @@ export type EmailContext = {
 export type TemplateName = keyof EmailTemplates;
 
 export type TemplateProps<T extends TemplateName> = Omit<
-  React.ComponentProps<TemplateComponent<T>>,
+  React.ComponentProps<EmailTemplates[T]>,
   "ctx"
 >;
 

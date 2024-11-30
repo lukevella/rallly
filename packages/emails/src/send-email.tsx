@@ -2,6 +2,7 @@ import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { renderAsync } from "@react-email/render";
+import * as Sentry from "@sentry/nextjs";
 import { waitUntil } from "@vercel/functions";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
@@ -71,23 +72,30 @@ export class EmailClient {
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
-    const client = createQstashClient();
+    const createEmailJob = async () => {
+      const client = createQstashClient();
 
-    if (!client) {
-      // If Qstash is not configured, send the email immediately
-      return waitUntil(this.sendTemplate(templateName, options));
-    }
+      if (client) {
+        const queue = client.queue({
+          queueName: "emails",
+        });
 
-    const queue = client.queue({
-      queueName: "emails",
-    });
+        queue
+          .enqueueJSON({
+            url: absoluteUrl("/api/send-email"),
+            body: { templateName, options },
+          })
+          .catch(() => {
+            Sentry.captureException(new Error("Failed to queue email"));
+            // If there's an error queuing the email, send it immediately
+            this.sendTemplate(templateName, options);
+          });
+      } else {
+        this.sendTemplate(templateName, options);
+      }
+    };
 
-    return waitUntil(
-      queue.enqueueJSON({
-        url: absoluteUrl("/api/send-email"),
-        body: { templateName, options },
-      }),
-    );
+    waitUntil(createEmailJob());
   }
 
   async sendTemplate<T extends TemplateName>(
