@@ -72,12 +72,13 @@ export class EmailClient {
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
+    const isQueueEnabled = false; // TODO: Enable this
     const createEmailJob = async () => {
       const client = createQstashClient();
 
-      if (client) {
+      if (client && isQueueEnabled) {
         const queue = client.queue({
-          queueName: "emails",
+          queueName: "emails-mq",
         });
 
         queue
