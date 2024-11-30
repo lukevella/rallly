@@ -1,12 +1,16 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { renderAsync } from "@react-email/render";
+import * as Sentry from "@sentry/nextjs";
 import { waitUntil } from "@vercel/functions";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
+import React from "react";
 
 import { i18nDefaultConfig, i18nInstance } from "./i18n";
+import { createQstashClient } from "./queue";
 import { templates } from "./templates";
 import type { TemplateComponent, TemplateName, TemplateProps } from "./types";
 
@@ -68,31 +72,32 @@ export class EmailClient {
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
-    // const createEmailJob = async () => {
-    //   const client = createQstashClient();
+    const isQueueEnabled = false; // TODO: Enable this
+    const createEmailJob = async () => {
+      const client = createQstashClient();
 
-    //   if (client) {
-    //     const queue = client.queue({
-    //       queueName: "emails-mq",
-    //     });
+      if (client && isQueueEnabled) {
+        const queue = client.queue({
+          queueName: "emails-mq",
+        });
 
-    //     queue
-    //       .enqueueJSON({
-    //         url: absoluteUrl("/api/send-email"),
-    //         body: { locale: this.config.locale, templateName, options },
-    //         retries: 2,
-    //       })
-    //       .catch(() => {
-    //         Sentry.captureException(new Error("Failed to queue email"));
-    //         // If there's an error queuing the email, send it immediately
-    //         this.sendTemplate(templateName, options);
-    //       });
-    //   } else {
-    //     this.sendTemplate(templateName, options);
-    //   }
-    // };
+        queue
+          .enqueueJSON({
+            url: absoluteUrl("/api/send-email"),
+            body: { locale: this.config.locale, templateName, options },
+            retries: 2,
+          })
+          .catch(() => {
+            Sentry.captureException(new Error("Failed to queue email"));
+            // If there's an error queuing the email, send it immediately
+            this.sendTemplate(templateName, options);
+          });
+      } else {
+        this.sendTemplate(templateName, options);
+      }
+    };
 
-    waitUntil(this.sendTemplate(templateName, options));
+    waitUntil(createEmailJob());
   }
 
   async sendTemplate<T extends TemplateName>(
