@@ -1,5 +1,6 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { renderAsync } from "@react-email/render";
 import { waitUntil } from "@vercel/functions";
 import type { Transporter } from "nodemailer";
@@ -8,20 +9,9 @@ import type Mail from "nodemailer/lib/mailer";
 import React from "react";
 
 import { i18nDefaultConfig, i18nInstance } from "./i18n";
-import * as templates from "./templates";
-import type { EmailContext } from "./types";
-
-type Templates = typeof templates;
-
-type TemplateName = keyof typeof templates;
-
-type TemplateProps<T extends TemplateName> = Omit<
-  React.ComponentProps<TemplateComponent<T>>,
-  "ctx"
->;
-type TemplateComponent<T extends TemplateName> = Templates[T] & {
-  getSubject?: (props: TemplateProps<T>, ctx: EmailContext) => string;
-};
+import { createQstashClient } from "./queue";
+import { templates } from "./templates";
+import type { TemplateComponent, TemplateName, TemplateProps } from "./types";
 
 type SendEmailOptions<T extends TemplateName> = {
   to: string;
@@ -81,10 +71,22 @@ export class EmailClient {
     templateName: T,
     options: SendEmailOptions<T>,
   ) {
+    const client = createQstashClient();
+
+    if (!client) {
+      // If Qstash is not configured, send the email immediately
+      return waitUntil(this.sendTemplate(templateName, options));
+    }
+
+    const queue = client.queue({
+      queueName: "emails",
+    });
+
     return waitUntil(
-      (async () => {
-        this.sendTemplate(templateName, options);
-      })(),
+      queue.enqueueJSON({
+        url: absoluteUrl("/api/send-email"),
+        body: { templateName, options },
+      }),
     );
   }
 

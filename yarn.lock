@@ -7071,6 +7071,15 @@
   dependencies:
     "@upstash/redis" "^1.28.3"
 
+"@upstash/qstash@^2.7.17":
+  version "2.7.17"
+  resolved "https://registry.yarnpkg.com/@upstash/qstash/-/qstash-2.7.17.tgz#df0561371787c62bdb8267766883f9375402ded4"
+  integrity sha512-EJW4BwK7KfIpqBHp2rTohwtY+lvP8TtFC+G/nMFLmSiClpD2DzcPDZ0SxXO6QEOZWtfqQTXVCSYppQZgRxH/tQ==
+  dependencies:
+    crypto-js ">=4.2.0"
+    jose "^5.2.3"
+    neverthrow "^7.0.1"
+
 "@upstash/ratelimit@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@upstash/ratelimit/-/ratelimit-1.2.1.tgz#835a33ce715e999d646431f70a71a69de7d439ee"

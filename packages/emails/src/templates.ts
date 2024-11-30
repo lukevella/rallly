@@ -1,8 +1,26 @@
-export * from "./templates/finalized-host";
-export * from "./templates/finalized-participant";
-export * from "./templates/login";
-export * from "./templates/new-comment";
-export * from "./templates/new-participant";
-export * from "./templates/new-participant-confirmation";
-export * from "./templates/new-poll";
-export * from "./templates/register";
+import { FinalizeHostEmail } from "./templates/finalized-host";
+import { FinalizeParticipantEmail } from "./templates/finalized-participant";
+import { LoginEmail } from "./templates/login";
+import { NewCommentEmail } from "./templates/new-comment";
+import { NewParticipantEmail } from "./templates/new-participant";
+import { NewParticipantConfirmationEmail } from "./templates/new-participant-confirmation";
+import { NewPollEmail } from "./templates/new-poll";
+import { RegisterEmail } from "./templates/register";
+import type { TemplateName } from "./types";
+
+const templates = {
+  FinalizeHostEmail,
+  FinalizeParticipantEmail,
+  LoginEmail,
+  NewCommentEmail,
+  NewParticipantEmail,
+  NewParticipantConfirmationEmail,
+  NewPollEmail,
+  RegisterEmail,
+};
+
+export const emailTemplates = Object.keys(templates) as TemplateName[];
+
+export type EmailTemplates = typeof templates;
+
+export { templates };
