@@ -1,5 +1,5 @@
 import { previewEmailContext } from "../components/email-context";
-import NewParticipantConfirmationEmail from "../templates/new-participant-confirmation";
+import { NewParticipantConfirmationEmail } from "../templates/new-participant-confirmation";
 
 export default function NewParticipantConfirmationPreview() {
   return (

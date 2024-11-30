@@ -2,7 +2,6 @@ import { Client } from "@upstash/qstash";
 
 export function createQstashClient() {
   if (!process.env.QSTASH_TOKEN) {
-    console.log("QSTASH_TOKEN is not set");
     return null;
   }
 
