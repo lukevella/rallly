@@ -15,7 +15,8 @@ interface NewParticipantConfirmationEmailProps {
   editSubmissionUrl: string;
   ctx: EmailContext;
 }
-export const NewParticipantConfirmationEmail = ({
+
+const NewParticipantConfirmationEmail = ({
   title,
   editSubmissionUrl,
   ctx,
@@ -96,4 +97,4 @@ NewParticipantConfirmationEmail.getSubject = (
   });
 };
 
-export default NewParticipantConfirmationEmail;
+export { NewParticipantConfirmationEmail };

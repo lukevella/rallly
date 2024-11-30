@@ -42,6 +42,7 @@
     "@trpc/next": "^10.13.0",
     "@trpc/react-query": "^10.13.0",
     "@trpc/server": "^10.13.0",
+    "@upstash/qstash": "^2.7.17",
     "@upstash/ratelimit": "^1.2.1",
     "@vercel/functions": "^1.0.2",
     "@vercel/kv": "^2.0.0",
