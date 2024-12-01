@@ -9,7 +9,7 @@ export type EmailContext = {
   domain: string;
   supportEmail: string;
   i18n: I18nInstance;
-  t: TFunction;
+  t: TFunction<"emails", undefined, "emails">;
 };
 
 export type TemplateName = keyof EmailTemplates;

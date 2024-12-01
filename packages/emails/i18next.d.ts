@@ -2,14 +2,12 @@ import "i18next";
 
 import type emails from "./locales/en/emails.json";
 
-interface I18nNamespaces {
-  emails: typeof emails;
-}
-
 declare module "i18next" {
   interface CustomTypeOptions {
     defaultNS: "emails";
-    resources: I18nNamespaces;
+    resources: {
+      emails: typeof emails;
+    };
     returnNull: false;
   }
 }
