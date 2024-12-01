@@ -8,6 +8,8 @@ import { createToken } from "@/utils/session";
 import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
 
+const MAX_PARTICIPANTS = 1000;
+
 export const participants = router({
   list: publicProcedure
     .input(
@@ -73,19 +75,21 @@ export const participants = router({
     .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
       const { user } = ctx;
 
-      const poll = await prisma.poll.findUnique({
-        where: { id: pollId },
-        select: {
-          id: true,
-          title: true,
-        },
-      });
-
-      if (!poll) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Poll not found" });
-      }
-
       const participant = await prisma.$transaction(async (prisma) => {
+        const participantCount = await prisma.participant.count({
+          where: {
+            pollId,
+            deleted: false,
+          },
+        });
+
+        if (participantCount >= MAX_PARTICIPANTS) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
+          });
+        }
+
         const participant = await prisma.participant.create({
           data: {
             pollId: pollId,
@@ -93,6 +97,14 @@ export const participants = router({
             email,
             userId: user.id,
             locale: user.locale ?? undefined,
+          },
+          include: {
+            poll: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
           },
         });
 
@@ -121,9 +133,9 @@ export const participants = router({
           .queueTemplate("NewParticipantConfirmationEmail", {
             to: email,
             props: {
-              title: poll.title,
+              title: participant.poll.title,
               editSubmissionUrl: absoluteUrl(
-                `/invite/${poll.id}?token=${token}`,
+                `/invite/${participant.poll.id}?token=${token}`,
               ),
             },
           });
@@ -155,11 +167,11 @@ export const participants = router({
           to: email,
           props: {
             participantName: participant.name,
-            pollUrl: absoluteUrl(`/poll/${poll.id}`),
+            pollUrl: absoluteUrl(`/poll/${participant.poll.id}`),
             disableNotificationsUrl: absoluteUrl(
               `/auth/disable-notifications?token=${token}`,
             ),
-            title: poll.title,
+            title: participant.poll.title,
           },
         });
       }
