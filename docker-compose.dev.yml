@@ -45,6 +45,12 @@ services:
       MINIO_ROOT_PASSWORD: minio123
     volumes:
       - s3-data:/data
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
   # This service just make sure a bucket with the right policies is created
   createbuckets:
     image: minio/mc
