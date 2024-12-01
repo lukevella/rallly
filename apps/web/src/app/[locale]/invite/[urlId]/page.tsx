@@ -4,8 +4,17 @@ import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
 import { getTranslation } from "@/i18n/server";
+import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
-export default async function Page() {
+export default async function Page({ params }: { params: { urlId: string } }) {
+  const trpc = await createSSRHelper();
+
+  // Prefetch all queries used in PollLayout
+  await Promise.all([
+    trpc.polls.get.prefetch({ urlId: params.urlId }),
+    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
+    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
+  ]);
   return <InvitePage />;
 }
 

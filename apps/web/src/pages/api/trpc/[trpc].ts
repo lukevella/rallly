@@ -2,8 +2,10 @@ import { posthogApiHandler } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
+import requestIp from "request-ip";
 
 import { getServerSession } from "@/auth";
+import type { TRPCContext } from "@/trpc/context";
 import type { AppRouter } from "@/trpc/routers";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
@@ -27,7 +29,7 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
       });
     }
 
-    const res = {
+    return {
       user: {
         id: session.user.id,
         isGuest: session.user.email === null,
@@ -35,11 +37,8 @@ const trpcApiHandler = createNextApiHandler<AppRouter>({
         image: session.user.image ?? undefined,
         getEmailClient: () => getEmailClient(session.user.locale ?? undefined),
       },
-      req: opts.req,
-      res: opts.res,
-    };
-
-    return res;
+      ip: requestIp.getClientIp(opts.req) ?? undefined,
+    } satisfies TRPCContext;
   },
   onError({ error }) {
     if (error.code === "INTERNAL_SERVER_ERROR") {
