@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 import { useParticipants } from "@/components/participants-provider";
@@ -5,11 +6,22 @@ import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 
-export const PermissionsContext = React.createContext<{
+const PermissionsContext = React.createContext<{
   userId: string | null;
 }>({
   userId: null,
 });
+
+export const PermissionProvider = ({
+  children,
+  userId,
+}: React.PropsWithChildren<{ userId: string | null }>) => {
+  return (
+    <PermissionsContext.Provider value={{ userId }}>
+      {children}
+    </PermissionsContext.Provider>
+  );
+};
 
 export const usePermissions = () => {
   const poll = usePoll();

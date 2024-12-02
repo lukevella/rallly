@@ -1,7 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
-import requestIp from "request-ip";
 import superjson from "superjson";
 
 import { isSelfHosted } from "@/utils/constants";
@@ -85,16 +84,14 @@ export const rateLimitMiddleware = middleware(async ({ ctx, next }) => {
     limiter: Ratelimit.slidingWindow(5, "1 m"),
   });
 
-  const clientIp = requestIp.getClientIp(ctx.req);
-
-  if (!clientIp) {
+  if (!ctx.ip) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get client IP",
     });
   }
 
-  const res = await ratelimit.limit(clientIp);
+  const res = await ratelimit.limit(ctx.ip);
 
   if (!res.success) {
     throw new TRPCError({

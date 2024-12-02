@@ -21,15 +21,9 @@ export const ParticipantsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
   pollId: string;
 }> = ({ children, pollId }) => {
-  const { data: participants } = trpc.polls.participants.list.useQuery(
-    {
-      pollId,
-    },
-    {
-      staleTime: 1000 * 10,
-      cacheTime: Infinity,
-    },
-  );
+  const { data: participants } = trpc.polls.participants.list.useQuery({
+    pollId,
+  });
 
   const getParticipants = (
     optionId: string,

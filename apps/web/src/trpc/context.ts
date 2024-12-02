@@ -1,5 +1,4 @@
 import type { EmailClient } from "@rallly/emails";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 export type TRPCContext = {
   user: {
@@ -9,6 +8,5 @@ export type TRPCContext = {
     getEmailClient: (locale?: string) => EmailClient;
     image?: string;
   };
-  req: NextApiRequest;
-  res: NextApiResponse;
+  ip?: string;
 };
