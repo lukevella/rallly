@@ -3,19 +3,38 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
+import { PermissionProvider } from "@/contexts/permissions";
 import { getTranslation } from "@/i18n/server";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
-export default async function Page({ params }: { params: { urlId: string } }) {
-  const trpc = await createSSRHelper();
+const PermissionContext = async ({
+  children,
+  token,
+}: React.PropsWithChildren<{ token?: string }>) => {
+  const helpers = await createSSRHelper();
+  let impersonatedUserId: string | null = null;
+  if (token) {
+    const res = await helpers.auth.getUserPermission.fetch({ token });
+    impersonatedUserId = res?.userId ?? null;
+  }
+  return (
+    <PermissionProvider userId={impersonatedUserId}>
+      {children}
+    </PermissionProvider>
+  );
+};
 
-  // Prefetch all queries used in PollLayout
-  await Promise.all([
-    trpc.polls.get.prefetch({ urlId: params.urlId }),
-    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
-    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
-  ]);
-  return <InvitePage />;
+export default async function Page({
+  searchParams,
+}: {
+  params: { urlId: string };
+  searchParams: { token: string };
+}) {
+  return (
+    <PermissionContext token={searchParams.token}>
+      <InvitePage />
+    </PermissionContext>
+  );
 }
 
 export async function generateMetadata({

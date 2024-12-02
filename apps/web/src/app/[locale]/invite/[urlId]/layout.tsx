@@ -1,59 +1,26 @@
-"use client";
-import { notFound, useParams, useSearchParams } from "next/navigation";
-import React from "react";
+import { dehydrate, Hydrate } from "@tanstack/react-query";
 
-import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
-import { VisibilityProvider } from "@/components/visibility";
-import { PermissionsContext } from "@/contexts/permissions";
-import { trpc } from "@/trpc/client";
+import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
-import Loader from "./loading";
+import Providers from "./providers";
 
-const Prefetch = ({ children }: React.PropsWithChildren) => {
-  const searchParams = useSearchParams();
-  const token = searchParams?.get("token") as string;
-  const params = useParams<{ urlId: string }>();
-  const urlId = params?.urlId as string;
-  const { data: permission } = trpc.auth.getUserPermission.useQuery(
-    { token },
-    {
-      enabled: !!token,
-    },
-  );
+export default async function Layout({
+  children,
+  params,
+}: {
+  params: { urlId: string };
+  children: React.ReactNode;
+}) {
+  const trpc = await createSSRHelper();
 
-  const { data: poll, error } = trpc.polls.get.useQuery(
-    { urlId },
-    {
-      retry: false,
-    },
-  );
-
-  const { data: participants } = trpc.polls.participants.list.useQuery({
-    pollId: urlId,
-  });
-
-  const comments = trpc.polls.comments.list.useQuery({ pollId: urlId });
-
-  if (error?.data?.code === "NOT_FOUND") {
-    notFound();
-  }
-  if (!poll || !participants || !comments.isFetched) {
-    return <Loader />;
-  }
-
+  await Promise.all([
+    trpc.polls.get.prefetch({ urlId: params.urlId }),
+    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
+    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
+  ]);
   return (
-    <PermissionsContext.Provider value={{ userId: permission?.userId ?? null }}>
-      {children}
-    </PermissionsContext.Provider>
-  );
-};
-
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <Prefetch>
-      <LegacyPollContextProvider>
-        <VisibilityProvider>{children}</VisibilityProvider>
-      </LegacyPollContextProvider>
-    </Prefetch>
+    <Hydrate state={dehydrate(trpc.queryClient)}>
+      <Providers>{children}</Providers>
+    </Hydrate>
   );
 }
