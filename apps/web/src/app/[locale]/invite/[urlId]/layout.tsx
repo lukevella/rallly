@@ -1,4 +1,5 @@
 import { dehydrate, Hydrate } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
 
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
@@ -13,11 +14,16 @@ export default async function Layout({
 }) {
   const trpc = await createSSRHelper();
 
-  await Promise.all([
-    trpc.polls.get.prefetch({ urlId: params.urlId }),
+  const [poll] = await Promise.all([
+    trpc.polls.get.fetch({ urlId: params.urlId }),
     trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
+
+  if (!poll) {
+    notFound();
+  }
+
   return (
     <Hydrate state={dehydrate(trpc.queryClient)}>
       <Providers>{children}</Providers>

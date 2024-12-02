@@ -12,14 +12,13 @@ export default async function Layout({
   const trpc = await createSSRHelper();
 
   // Prefetch all queries used in PollLayout
-  await Promise.all([
-    trpc.polls.get.prefetch({ urlId: params.urlId }),
+  const [poll] = await Promise.all([
+    trpc.polls.get.fetch({ urlId: params.urlId }),
     trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
     trpc.polls.getWatchers.prefetch({ pollId: params.urlId }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
 
-  const poll = await prisma.poll.findUnique({ where: { id: params.urlId } });
   if (!poll) {
     notFound();
   }
@@ -36,7 +35,10 @@ export async function generateMetadata({
 }: {
   params: { locale: string; urlId: string };
 }) {
-  const poll = await prisma.poll.findUnique({ where: { id: params.urlId } });
+  const poll = await prisma.poll.findUnique({
+    where: { id: params.urlId },
+    select: { title: true },
+  });
 
   if (!poll) {
     return notFound();

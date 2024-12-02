@@ -472,10 +472,7 @@ export const polls = router({
       });
 
       if (!res) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Poll not found",
-        });
+        return null;
       }
       const inviteLink = shortUrl(`/invite/${res.id}`);
 
