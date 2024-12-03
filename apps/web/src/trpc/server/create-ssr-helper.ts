@@ -1,5 +1,6 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { TRPCError } from "@trpc/server";
+import { redirect } from "next/navigation";
 import superjson from "superjson";
 
 import { getServerSession } from "@/auth";
@@ -18,7 +19,7 @@ async function createContext(): Promise<TRPCContext> {
     });
   }
 
-  const res = {
+  return {
     user: {
       id: session.user.id,
       isGuest: session.user.email === null,
@@ -27,8 +28,6 @@ async function createContext(): Promise<TRPCContext> {
       getEmailClient: () => getEmailClient(session.user.locale ?? undefined),
     },
   };
-
-  return res;
 }
 
 /**
@@ -36,9 +35,14 @@ async function createContext(): Promise<TRPCContext> {
  * @description use this function to call tRPC procedures server-side and hydrate `react-query`'s cache
  * @see https://trpc.io/docs/client/nextjs/server-side-helpers#1-internal-router
  */
-export const createSSRHelper = async () =>
-  createServerSideHelpers({
-    router: appRouter,
-    ctx: await createContext(),
-    transformer: superjson,
-  });
+export const createSSRHelper = async () => {
+  try {
+    return createServerSideHelpers({
+      router: appRouter,
+      ctx: await createContext(),
+      transformer: superjson,
+    });
+  } catch (error) {
+    return redirect("/login");
+  }
+};

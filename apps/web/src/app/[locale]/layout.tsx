@@ -4,7 +4,6 @@ import "../../style.css";
 import { Toaster } from "@rallly/ui/toaster";
 import type { Viewport } from "next";
 import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
 import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
@@ -32,10 +31,6 @@ export default async function Root({
   params: { locale: string };
 }) {
   const session = await getServerSession();
-
-  if (!session) {
-    redirect("/login");
-  }
 
   return (
     <html lang={locale} className={inter.className}>
