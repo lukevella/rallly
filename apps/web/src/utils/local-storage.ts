@@ -7,8 +7,21 @@ class LocalStorage {
   private isLocalStorageAvailable: boolean;
 
   constructor() {
-    this.isLocalStorageAvailable =
-      typeof window !== "undefined" && !!window.localStorage;
+    this.isLocalStorageAvailable = this.checkLocalStorageAvailability();
+  }
+
+  private checkLocalStorageAvailability(): boolean {
+    try {
+      if (typeof window === "undefined") return false;
+
+      // Test localStorage by actually trying to use it
+      const testKey = "__storage_test__";
+      localStorage.setItem(testKey, testKey);
+      localStorage.removeItem(testKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   getItem(key: string): string | null {
