@@ -10,7 +10,7 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 Sentry.init({
   dsn: SENTRY_DSN,
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
+  tracesSampleRate: 0.2,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
