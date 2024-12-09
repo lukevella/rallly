@@ -11,7 +11,7 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "nanoid": "^5.0.8"
+    "nanoid": "^5.0.9"
   },
   "devDependencies": {
     "vitest": "^2.1.1"
