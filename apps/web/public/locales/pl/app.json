@@ -272,5 +272,14 @@
   "fileTooLarge": "Plik jest zbyt duży",
   "fileTooLargeDescription": "Należy przesłać plik mniejszy niż 2 MB.",
   "errorUploadPicture": "Przesyłanie nie powiodło się",
-  "errorUploadPictureDescription": "Wystąpił problem podczas przesyłania zdjęcia. Spróbuj ponownie później."
+  "errorUploadPictureDescription": "Wystąpił problem podczas przesyłania zdjęcia. Spróbuj ponownie później.",
+  "featureNameFinalize": "Zakończ ankietę",
+  "featureNameDuplicate": "Sklonuj ankietę",
+  "featureNameAdvancedSettings": "Ustawienia zaawansowane",
+  "featureNameExtendedPollLifetime": "Wydłużony czas trwania ankiety",
+  "12months": "12 miesięcy",
+  "savePercentage": "Zapisz {percentage}%",
+  "1month": "1 miesiąc",
+  "subscribe": "Subskrybuj",
+  "cancelAnytime": "Możesz anulować w dowolnym momencie na <a>stronie rozliczeniowej</a>."
 }
