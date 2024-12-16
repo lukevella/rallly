@@ -29,14 +29,15 @@
     "sherif:fix": "npx sherif@latest --fix"
   },
   "prisma": {
-    "seed": "yarn workspace @rallly/database db:seed"
+    "seed": "yarn workspace @rallly/database db:seed",
+    "schema": "./packages/database/prisma/schema.prisma"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "devDependencies": {
-    "@prisma/client": "^5.17.0",
+    "@prisma/client": "^6.0.1",
     "@sentry/nextjs": "^8.32.0",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
