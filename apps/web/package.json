@@ -84,7 +84,7 @@
     "timezone-soft": "^1.5.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.39.0",
+    "@playwright/test": "^1.49.1",
     "@rallly/eslint-config": "*",
     "@rallly/tsconfig": "*",
     "@types/accept-language-parser": "^1.5.3",
