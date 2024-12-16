@@ -24,7 +24,7 @@ jobs:
         run: yarn type-check
 
   sherif:
-    name: sherif
+    name: Sherif
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
