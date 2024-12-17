@@ -138,12 +138,13 @@ model Poll {
   disableComments         Boolean    @default(false) @map("disable_comments")
   requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
 
-  user         User?         @relation(fields: [userId], references: [id])
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   event        Event?        @relation(fields: [eventId], references: [id])
-  options      Option[]
-  participants Participant[]
-  watchers     Watcher[]
-  comments     Comment[]
+  options      Option[]      @relation("PollToOptions")
+  participants Participant[]   @relation("PollToParticipants")
+  watchers     Watcher[]     @relation("PollToWatchers")
+  comments     Comment[]     @relation("PollToComments")
+  votes        Vote[]        @relation("PollToVotes")
 
   @@map("polls")
 }
@@ -169,7 +170,8 @@ model Watcher {
   user      User     @relation(fields: [userId], references: [id])
   pollId    String   @map("poll_id")
   createdAt DateTime @default(now()) @map("created_at")
-  poll      Poll     @relation(fields: [pollId], references: [id])
+
+  poll      Poll     @relation("PollToWatchers", fields: [pollId], references: [id], onDelete: Cascade)
 
   @@map("watchers")
 }
@@ -179,14 +181,15 @@ model Participant {
   name      String
   email     String?
   userId    String?   @map("user_id")
-  poll      Poll      @relation(fields: [pollId], references: [id])
+  poll      Poll      @relation("PollToParticipants", fields: [pollId], references: [id], onDelete: Cascade)
   pollId    String    @map("poll_id")
-  votes     Vote[]
   locale    String?
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deleted   Boolean   @default(false)
   deletedAt DateTime? @map("deleted_at")
+
+  votes     Vote[]    @relation("ParticipantToVotes")
 
   @@map("participants")
 }
@@ -196,7 +199,7 @@ model Option {
   startTime DateTime @map("start_time") @db.Timestamp(0)
   duration  Int      @default(0) @map("duration_minutes")
   pollId    String   @map("poll_id")
-  poll      Poll     @relation(fields: [pollId], references: [id])
+  poll      Poll     @relation("PollToOptions", fields: [pollId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("options")
@@ -212,7 +215,6 @@ enum VoteType {
 
 model Vote {
   id            String      @id @default(cuid())
-  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
   participantId String      @map("participant_id")
   optionId      String      @map("option_id")
   pollId        String      @map("poll_id")
@@ -220,19 +222,24 @@ model Vote {
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime?   @updatedAt @map("updated_at")
 
+
+  participant   Participant @relation("ParticipantToVotes", fields: [participantId], references: [id], onDelete: Cascade)
+  poll          Poll        @relation("PollToVotes", fields: [pollId], references: [id], onDelete: Cascade)
   @@map("votes")
 }
 
 model Comment {
   id         String    @id @default(cuid())
   content    String
-  poll       Poll      @relation(fields: [pollId], references: [id])
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
   user       User?     @relation(fields: [userId], references: [id])
   userId     String?   @map("user_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
+
+
+  poll       Poll      @relation("PollToComments", fields: [pollId], references: [id], onDelete: Cascade)
 
   @@map("comments")
 }
