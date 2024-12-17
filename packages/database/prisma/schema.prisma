@@ -146,6 +146,8 @@ model Poll {
   comments     Comment[]     @relation("PollToComments")
   votes        Vote[]        @relation("PollToVotes")
 
+  @@index([deleted, touchedAt])
+  @@index([deleted, deletedAt])
   @@map("polls")
 }
 
@@ -173,6 +175,7 @@ model Watcher {
 
   poll Poll @relation("PollToWatchers", fields: [pollId], references: [id], onDelete: Cascade)
 
+  @@index([pollId], type: Hash)
   @@map("watchers")
 }
 
@@ -181,7 +184,6 @@ model Participant {
   name      String
   email     String?
   userId    String?   @map("user_id")
-  poll      Poll      @relation("PollToParticipants", fields: [pollId], references: [id], onDelete: Cascade)
   pollId    String    @map("poll_id")
   locale    String?
   createdAt DateTime  @default(now()) @map("created_at")
@@ -190,7 +192,9 @@ model Participant {
   deletedAt DateTime? @map("deleted_at")
 
   votes Vote[] @relation("ParticipantToVotes")
+  poll      Poll      @relation("PollToParticipants", fields: [pollId], references: [id], onDelete: Cascade)
 
+  @@index([pollId], type: Hash)
   @@map("participants")
 }
 
@@ -202,6 +206,7 @@ model Option {
   poll      Poll     @relation("PollToOptions", fields: [pollId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
 
+  @@index([pollId], type: Hash)
   @@map("options")
 }
 
@@ -225,6 +230,9 @@ model Vote {
   participant Participant @relation("ParticipantToVotes", fields: [participantId], references: [id], onDelete: Cascade)
   poll        Poll        @relation("PollToVotes", fields: [pollId], references: [id], onDelete: Cascade)
 
+  @@index([pollId], type: Hash)
+  @@index([participantId], type: Hash)
+  @@index([optionId], type: Hash)
   @@map("votes")
 }
 
@@ -240,6 +248,7 @@ model Comment {
 
   poll Poll @relation("PollToComments", fields: [pollId], references: [id], onDelete: Cascade)
 
+  @@index([pollId], type: Hash)
   @@map("comments")
 }
 
