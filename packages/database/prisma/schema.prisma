@@ -2,7 +2,6 @@ datasource db {
   provider     = "postgresql"
   url          = env("DATABASE_URL")
   directUrl    = env("DIRECT_DATABASE_URL")
-  relationMode = "prisma"
 }
 
 generator client {
@@ -34,15 +33,15 @@ model Account {
   user User @relation(fields: [userId], references: [id])
 
   @@unique([provider, providerAccountId])
-  @@index([userId], type: Hash)
   @@map("accounts")
 }
 
 model User {
   id             String      @id @default(cuid())
-  name           String
-  email          String      @unique() @db.Citext
-  emailVerified  DateTime?   @map("email_verified")
+  name           String?
+  email          String?     @unique() @db.Citext
+  emailVerified  DateTime?    @map("email_verified")
+  isGuest        Boolean     @default(false) @map("is_guest")
   image          String?
   timeZone       String?     @map("time_zone")
   weekStart      Int?        @map("week_start")
@@ -146,7 +145,6 @@ model Poll {
   watchers     Watcher[]
   comments     Comment[]
 
-  @@index([userId], type: Hash)
   @@map("polls")
 }
 
@@ -162,7 +160,6 @@ model Event {
 
   poll Poll?
 
-  @@index([userId], type: Hash)
   @@map("events")
 }
 
@@ -174,8 +171,6 @@ model Watcher {
   createdAt DateTime @default(now()) @map("created_at")
   poll      Poll     @relation(fields: [pollId], references: [id])
 
-  @@index([userId], type: Hash)
-  @@index([pollId], type: Hash)
   @@map("watchers")
 }
 
@@ -193,7 +188,6 @@ model Participant {
   deleted   Boolean   @default(false)
   deletedAt DateTime? @map("deleted_at")
 
-  @@index([pollId], type: Hash)
   @@map("participants")
 }
 
@@ -205,7 +199,6 @@ model Option {
   poll      Poll     @relation(fields: [pollId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
 
-  @@index([pollId], type: Hash)
   @@map("options")
 }
 
@@ -227,9 +220,6 @@ model Vote {
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime?   @updatedAt @map("updated_at")
 
-  @@index([participantId], type: Hash)
-  @@index([optionId], type: Hash)
-  @@index([pollId], type: Hash)
   @@map("votes")
 }
 
@@ -244,8 +234,6 @@ model Comment {
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
-  @@index([userId], type: Hash)
-  @@index([pollId], type: Hash)
   @@map("comments")
 }
 
