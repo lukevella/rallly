@@ -62,6 +62,10 @@ export async function POST(request: NextRequest) {
 
   const proPricingData = await getProPricing();
 
+  if (!user.email) {
+    return NextResponse.redirect(new URL("/login", request.url), 401);
+  }
+
   const session = await stripe.checkout.sessions.create({
     success_url: absoluteUrl(
       return_path ?? "/api/stripe/portal?session_id={CHECKOUT_SESSION_ID}",

@@ -1,3 +1,4 @@
+import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
@@ -43,6 +44,18 @@ export const proProcedure = t.procedure.use(
       });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: ctx.user.id },
+      select: { email: true, name: true },
+    });
+
+    if (!user?.email || !user?.name) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User is not fully onboarded and cannot perform this action",
+      });
+    }
+
     if (isSelfHosted) {
       // Self-hosted instances don't have paid subscriptions
       return next();
@@ -58,7 +71,14 @@ export const proProcedure = t.procedure.use(
       });
     }
 
-    return next();
+    return next({
+      ctx: {
+        user: {
+          ...ctx.user,
+          isGuest: false,
+        },
+      },
+    });
   }),
 );
 

@@ -83,6 +83,10 @@ export const comments = router({
           { ttl: 0 },
         );
 
+        if (!email) {
+          continue;
+        }
+
         getEmailClient(watcher.user.locale ?? undefined).queueTemplate(
           "NewCommentEmail",
           {

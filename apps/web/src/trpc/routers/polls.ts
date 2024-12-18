@@ -204,7 +204,7 @@ export const polls = router({
           where: { id: ctx.user.id },
         });
 
-        if (user) {
+        if (user && user.email && user.name) {
           ctx.user.getEmailClient().queueTemplate("NewPollEmail", {
             to: user.email,
             props: {
@@ -691,8 +691,8 @@ export const polls = router({
         location: poll.location ?? undefined,
         description: poll.description ?? undefined,
         organizer: {
-          name: poll.user.name,
-          email: poll.user.email,
+          name: poll.user.name ?? undefined,
+          email: poll.user.email ?? undefined,
         },
         attendees: icsAttendees,
         ...(option.duration > 0
@@ -774,27 +774,29 @@ export const polls = router({
           });
         }
 
-        ctx.user.getEmailClient().queueTemplate("FinalizeHostEmail", {
-          to: poll.user.email,
-          props: {
-            name: poll.user.name,
-            pollUrl: absoluteUrl(`/poll/${poll.id}`),
-            location: poll.location,
-            title: poll.title,
-            attendees: poll.participants
-              .filter((p) =>
-                p.votes.some(
-                  (v) => v.optionId === input.optionId && v.type !== "no",
-                ),
-              )
-              .map((p) => p.name),
-            date,
-            day,
-            dow,
-            time,
-          },
-          attachments: [{ filename: "event.ics", content: event.value }],
-        });
+        if (poll.user.email && poll.user.name) {
+          ctx.user.getEmailClient().queueTemplate("FinalizeHostEmail", {
+            to: poll.user.email,
+            props: {
+              name: poll.user.name,
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
+              location: poll.location,
+              title: poll.title,
+              attendees: poll.participants
+                .filter((p) =>
+                  p.votes.some(
+                    (v) => v.optionId === input.optionId && v.type !== "no",
+                  ),
+                )
+                .map((p) => p.name),
+              date,
+              day,
+              dow,
+              time,
+            },
+            attachments: [{ filename: "event.ics", content: event.value }],
+          });
+        }
 
         for (const p of participantsToEmail) {
           getEmailClient(p.locale ?? undefined).queueTemplate(

@@ -159,6 +159,11 @@ export const participants = router({
 
       for (const watcher of watchers) {
         const email = watcher.user.email;
+
+        if (!email) {
+          continue;
+        }
+
         const token = await createToken<DisableNotificationsPayload>(
           { watcherId: watcher.id, pollId },
           { ttl: 0 },
