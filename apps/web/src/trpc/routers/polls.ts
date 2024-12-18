@@ -164,7 +164,16 @@ export const polls = router({
           description: input.description,
           adminUrlId: adminToken,
           participantUrlId,
-          userId: ctx.user.id,
+          user: {
+            connectOrCreate: {
+              where: {
+                id: ctx.user.id,
+              },
+              create: {
+                id: ctx.user.id,
+              },
+            },
+          },
           watchers: !ctx.user.isGuest
             ? {
                 create: {
