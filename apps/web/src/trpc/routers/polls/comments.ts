@@ -39,9 +39,23 @@ export const comments = router({
       const newComment = await prisma.comment.create({
         data: {
           content,
-          pollId,
           authorName,
-          userId: ctx.user.id,
+          poll: {
+            connect: {
+              id: pollId,
+            },
+          },
+          user: {
+            connectOrCreate: {
+              where: {
+                id: ctx.user.id,
+              },
+              create: {
+                id: ctx.user.id,
+                isGuest: true,
+              },
+            },
+          },
         },
         select: {
           id: true,

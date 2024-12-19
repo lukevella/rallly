@@ -171,6 +171,7 @@ export const polls = router({
               },
               create: {
                 id: ctx.user.id,
+                isGuest: true,
               },
             },
           },
