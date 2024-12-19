@@ -243,12 +243,12 @@ model Comment {
   content    String
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
-  user       User?     @relation(fields: [userId], references: [id])
-  userId     String?   @map("user_id")
+  userId     String    @map("user_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
   poll Poll @relation("PollToComments", fields: [pollId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
 
   @@index([pollId], type: Hash)
   @@map("comments")
