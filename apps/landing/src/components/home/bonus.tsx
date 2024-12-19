@@ -11,7 +11,11 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { BonusItem } from "@/components/home/bonus-item";
 
 export async function Bonus({ t }: { t: TFunction }) {
-  const userCount = await prisma.user.count();
+  const userCount = await prisma.user.count({
+    where: {
+      isGuest: false,
+    },
+  });
   return (
     <div className="mx-auto flex flex-wrap justify-center gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
       <BonusItem
