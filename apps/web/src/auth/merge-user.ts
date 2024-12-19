@@ -4,36 +4,60 @@ export const mergeGuestsIntoUser = async (
   userId: string,
   guestIds: string[],
 ) => {
-  await prisma.poll.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
+  await prisma.$transaction(async (tx) => {
+    const updatePolls = tx.poll.updateMany({
+      where: {
+        userId: {
+          in: guestIds,
+        },
       },
-    },
-    data: {
-      userId: userId,
-    },
-  });
+      data: {
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
 
-  await prisma.participant.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
+    const updateParticipants = tx.participant.updateMany({
+      where: {
+        userId: {
+          in: guestIds,
+        },
       },
-    },
-    data: {
-      userId: userId,
-    },
-  });
+      data: {
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
 
-  await prisma.comment.updateMany({
-    where: {
-      userId: {
-        in: guestIds,
+    const updateComments = tx.comment.updateMany({
+      where: {
+        userId: {
+          in: guestIds,
+        },
       },
-    },
-    data: {
-      userId: userId,
-    },
+      data: {
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    await Promise.all([updatePolls, updateParticipants, updateComments]);
+
+    await tx.user.deleteMany({
+      where: {
+        id: {
+          in: guestIds,
+        },
+      },
+    });
   });
 };
