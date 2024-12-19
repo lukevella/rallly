@@ -6,15 +6,9 @@ import { Trans } from "next-i18next";
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
 import { useUser } from "@/components/user-provider";
-import { usePoll } from "@/contexts/poll";
 
 export const GuestPollAlert = () => {
-  const poll = usePoll();
   const { user } = useUser();
-
-  if (poll.user) {
-    return null;
-  }
 
   if (!user.isGuest) {
     return null;
