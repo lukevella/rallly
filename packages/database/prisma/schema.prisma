@@ -40,7 +40,7 @@ model User {
   id             String      @id @default(cuid())
   name           String?
   email          String?     @unique() @db.Citext
-  emailVerified  DateTime?   @map("email_verified")
+  emailVerified   DateTime?    @map("email_verified")
   isGuest        Boolean     @default(false) @map("is_guest")
   image          String?
   timeZone       String?     @map("time_zone")
@@ -52,11 +52,12 @@ model User {
   customerId     String?     @map("customer_id")
   subscriptionId String?     @unique @map("subscription_id")
 
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
   comments     Comment[]
   polls        Poll[]
   watcher      Watcher[]
   events       Event[]
-  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
   accounts     Account[]
   participants Participant[]
 
@@ -155,13 +156,13 @@ model Poll {
 model Event {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
   optionId  String   @map("option_id")
   title     String
   start     DateTime @db.Timestamp(0)
   duration  Int      @default(0) @map("duration_minutes")
   createdAt DateTime @default(now()) @map("created_at")
 
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   poll Poll?
 
   @@map("events")
@@ -170,11 +171,11 @@ model Event {
 model Watcher {
   id        Int      @id @default(autoincrement())
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
   pollId    String   @map("poll_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  poll Poll @relation("PollToWatchers", fields: [pollId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  poll      Poll     @relation("PollToWatchers", fields: [pollId], references: [id], onDelete: Cascade)
 
   @@index([pollId], type: Hash)
   @@map("watchers")
@@ -205,8 +206,9 @@ model Option {
   startTime DateTime @map("start_time") @db.Timestamp(0)
   duration  Int      @default(0) @map("duration_minutes")
   pollId    String   @map("poll_id")
-  poll      Poll     @relation("PollToOptions", fields: [pollId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
+
+  poll Poll @relation("PollToOptions", fields: [pollId], references: [id], onDelete: Cascade)
 
   @@index([pollId], type: Hash)
   @@map("options")
@@ -248,7 +250,7 @@ model Comment {
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
   poll Poll @relation("PollToComments", fields: [pollId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([pollId], type: Hash)
   @@map("comments")
