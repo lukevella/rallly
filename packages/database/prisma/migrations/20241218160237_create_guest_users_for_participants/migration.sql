@@ -9,8 +9,9 @@ BEGIN
         WHERE user_id IS NULL
     LOOP
         WITH new_user AS (
-            INSERT INTO users (is_guest, created_at)
+            INSERT INTO users (id, is_guest, created_at)
             VALUES (
+                gen_random_uuid()::text,
                 TRUE,
                 NOW()
             )

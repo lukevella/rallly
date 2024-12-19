@@ -184,7 +184,7 @@ model Participant {
   id        String    @id @default(cuid())
   name      String
   email     String?
-  userId    String   @map("user_id")
+  userId    String    @map("user_id")
   pollId    String    @map("poll_id")
   locale    String?
   createdAt DateTime  @default(now()) @map("created_at")
@@ -194,7 +194,7 @@ model Participant {
 
   votes Vote[] @relation("ParticipantToVotes")
   poll  Poll   @relation("PollToParticipants", fields: [pollId], references: [id], onDelete: Cascade)
-  user  User   @relation(fields: [userId], references: [id])
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([pollId], type: Hash)
   @@map("participants")

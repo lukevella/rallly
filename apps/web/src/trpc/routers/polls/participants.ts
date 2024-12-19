@@ -92,9 +92,14 @@ export const participants = router({
 
         const participant = await prisma.participant.create({
           data: {
-            pollId: pollId,
             name: name,
             email,
+            locale: user.locale ?? undefined,
+            poll: {
+              connect: {
+                id: pollId,
+              },
+            },
             user: {
               connectOrCreate: {
                 where: {
@@ -102,12 +107,15 @@ export const participants = router({
                 },
                 create: {
                   id: user.id,
+                  isGuest: true,
                 },
               },
             },
-            locale: user.locale ?? undefined,
           },
-          include: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
             poll: {
               select: {
                 id: true,
