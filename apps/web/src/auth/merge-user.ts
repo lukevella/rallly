@@ -12,11 +12,7 @@ export const mergeGuestsIntoUser = async (
         },
       },
       data: {
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
+        userId,
       },
     });
 
@@ -27,11 +23,7 @@ export const mergeGuestsIntoUser = async (
         },
       },
       data: {
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
+        userId,
       },
     });
 
@@ -42,11 +34,7 @@ export const mergeGuestsIntoUser = async (
         },
       },
       data: {
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
+        userId,
       },
     });
 
