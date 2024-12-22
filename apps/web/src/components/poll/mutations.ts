@@ -20,13 +20,15 @@ export const useAddParticipantMutation = () => {
   const queryClient = trpc.useUtils();
 
   return trpc.polls.participants.add.useMutation({
-    onSuccess: (newParticipant, input) => {
-      const { pollId, name, email } = newParticipant;
+    onSuccess: (res, input) => {
+      const { poll, ...newParticipant } = res;
+      const { name, email } = newParticipant;
+      const pollId = poll.id;
       queryClient.polls.participants.list.setData(
         { pollId },
         (existingParticipants = []) => {
           return [
-            { ...newParticipant, votes: input.votes },
+            { ...newParticipant, votes: input.votes, pollId },
             ...existingParticipants,
           ];
         },

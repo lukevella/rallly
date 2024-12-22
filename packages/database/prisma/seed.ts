@@ -63,6 +63,12 @@ async function createPollForUser(userId: string) {
           () => ({
             name: faker.name.fullName(),
             email: faker.internet.email(),
+            user: {
+              create: {
+                id: faker.random.alpha(10),
+                isGuest: true,
+              },
+            },
           }),
         ),
       },

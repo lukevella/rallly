@@ -112,10 +112,7 @@ export const participants = router({
               },
             },
           },
-          select: {
-            id: true,
-            name: true,
-            email: true,
+          include: {
             poll: {
               select: {
                 id: true,
