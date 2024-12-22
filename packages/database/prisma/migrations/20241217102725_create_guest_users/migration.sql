@@ -39,7 +39,6 @@ BEGIN
             RAISE NOTICE 'Processed up to row %', offset_count;
         END IF;
         
-        COMMIT;
     END LOOP;
 
     -- Clean up
