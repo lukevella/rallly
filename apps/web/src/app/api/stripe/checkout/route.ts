@@ -63,7 +63,10 @@ export async function POST(request: NextRequest) {
   const proPricingData = await getProPricing();
 
   if (!user.email) {
-    return NextResponse.redirect(new URL("/login", request.url), 401);
+    return NextResponse.redirect(
+      new URL("/login?reason=missing_email", request.url),
+      303,
+    );
   }
 
   const session = await stripe.checkout.sessions.create({
