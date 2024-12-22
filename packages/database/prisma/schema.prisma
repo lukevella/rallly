@@ -52,7 +52,7 @@ model User {
   customerId     String?     @map("customer_id")
   subscriptionId String?     @unique @map("subscription_id")
 
-  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
 
   comments     Comment[]
   polls        Poll[]

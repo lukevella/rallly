@@ -105,15 +105,6 @@ export async function POST(request: NextRequest) {
         await stripe.invoices.voidInvoice(invoice.id);
       }
 
-      // remove the subscription from the user
-      await prisma.user.update({
-        where: {
-          subscriptionId: subscription.id,
-        },
-        data: {
-          subscriptionId: null,
-        },
-      });
       // delete the subscription from the database
       await prisma.subscription.delete({
         where: {
