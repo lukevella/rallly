@@ -462,6 +462,7 @@ export const polls = router({
           },
           user: true,
           userId: true,
+          guestId: true,
           deleted: true,
           event: {
             select: {
@@ -486,7 +487,11 @@ export const polls = router({
       }
       const inviteLink = shortUrl(`/invite/${res.id}`);
 
-      if (ctx.user.id === res.userId || res.adminUrlId === input.adminToken) {
+      const isOwner = ctx.user.isGuest
+        ? ctx.user.id === res.guestId
+        : ctx.user.id === res.userId;
+
+      if (isOwner || res.adminUrlId === input.adminToken) {
         return { ...res, inviteLink };
       } else {
         return { ...res, adminUrlId: "", inviteLink };
