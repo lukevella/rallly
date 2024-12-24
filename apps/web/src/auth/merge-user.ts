@@ -6,33 +6,36 @@ export const mergeGuestsIntoUser = async (
 ) => {
   await prisma.poll.updateMany({
     where: {
-      userId: {
+      guestId: {
         in: guestIds,
       },
     },
     data: {
+      guestId: null,
       userId: userId,
     },
   });
 
   await prisma.participant.updateMany({
     where: {
-      userId: {
+      guestId: {
         in: guestIds,
       },
     },
     data: {
+      guestId: null,
       userId: userId,
     },
   });
 
   await prisma.comment.updateMany({
     where: {
-      userId: {
+      guestId: {
         in: guestIds,
       },
     },
     data: {
+      guestId: null,
       userId: userId,
     },
   });
