@@ -95,7 +95,7 @@ export const participants = router({
             pollId: pollId,
             name: name,
             email,
-            userId: user.id,
+            ...(user.isGuest ? { guestId: user.id } : { userId: user.id }),
             locale: user.locale ?? undefined,
           },
           include: {

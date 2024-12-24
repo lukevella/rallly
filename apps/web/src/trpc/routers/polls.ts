@@ -73,7 +73,9 @@ export const polls = router({
       const { cursor, limit, status } = input;
       const polls = await prisma.poll.findMany({
         where: {
-          userId: ctx.user.id,
+          ...(ctx.user.isGuest
+            ? { guestId: ctx.user.id }
+            : { userId: ctx.user.id }),
           deletedAt: null,
           status: status === "all" ? undefined : status,
         },
@@ -94,7 +96,13 @@ export const polls = router({
           timeZone: true,
           createdAt: true,
           status: true,
-          userId: true,
+          guestId: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           participants: {
             where: {
               deletedAt: null,
@@ -164,7 +172,9 @@ export const polls = router({
           description: input.description,
           adminUrlId: adminToken,
           participantUrlId,
-          userId: ctx.user.id,
+          ...(ctx.user.isGuest
+            ? { guestId: ctx.user.id }
+            : { userId: ctx.user.id }),
           watchers: !ctx.user.isGuest
             ? {
                 create: {

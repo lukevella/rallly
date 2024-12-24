@@ -9,6 +9,7 @@ import { useSubscription } from "@/contexts/plan";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { isOwner } from "@/utils/permissions";
 
 import { useRequiredContext } from "./use-required-context";
 
@@ -28,7 +29,10 @@ type UserData = {
 export const UserContext = React.createContext<{
   user: UserData;
   refresh: (data?: Record<string, unknown>) => Promise<Session | null>;
-  ownsObject: (obj: { userId?: string | null }) => boolean;
+  ownsObject: (obj: {
+    userId?: string | null;
+    guestId?: string | null;
+  }) => boolean;
 } | null>(null);
 
 export const useUser = () => {
@@ -101,8 +105,8 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           locale: user.locale ?? i18n.language,
         },
         refresh: session.update,
-        ownsObject: ({ userId }) => {
-          return userId ? [user.id].includes(userId) : false;
+        ownsObject: (resource) => {
+          return isOwner(resource, { id: user.id, isGuest });
         },
       }}
     >
