@@ -23,5 +23,7 @@
   "availabilityPoll": "Опрос доступности",
   "solutions": "Решения",
   "howItWorks": "Как это работает",
-  "status": "Статус"
+  "status": "Статус",
+  "when2MeetAlternative": "Альтернатива When2Meet",
+  "meetingPoll": "Опрос для планирования встреч"
 }
