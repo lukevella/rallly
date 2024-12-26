@@ -28,5 +28,7 @@
   "whenPollInactive": "설문조사가 언제 비활성 상태가 되나요?",
   "whenPollInactiveAnswer": "모든 날짜 옵션이 과거에 있으며 설문조사가 30일 이상 액세스되지 않으면 설문조사는 비활성 상태가 됩니다. 유료 구독이 없는 경우 비활성 설문조사는 자동으로 삭제됩니다.",
   "yearlyBillingDescription": "연간",
-  "annualBenefit": "{count}개월 무료"
+  "annualBenefit": "{count}개월 무료",
+  "pricingTitle": "무료로 시작하세요",
+  "pricingSubtitle": "프리미엄 기능에 액세스하려면 유료 요금제로 업그레이드하세요"
 }
