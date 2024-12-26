@@ -45,5 +45,6 @@
   "register_subject": "Please verify your email address",
   "common_viewOn": "View on {{domain}}",
   "newComment_preview": "Go to your poll to see what they said.",
-  "newComment_heading": "New Comment"
+  "newComment_heading": "New Comment",
+  "newPoll_preview": "참여 링크를 공유하여 응답 수집을 시작하세요."
 }
