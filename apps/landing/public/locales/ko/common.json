@@ -23,5 +23,7 @@
   "availabilityPoll": "가능한 시간 투표",
   "solutions": "해결책",
   "howItWorks": "이용 방법",
-  "status": "상태"
+  "status": "상태",
+  "when2MeetAlternative": "When2Meet 대안",
+  "meetingPoll": "미팅 투표"
 }
