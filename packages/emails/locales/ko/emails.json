@@ -1,3 +1,5 @@
 {
+  "common_poweredBy": "Powered by <a>{{domain}}</a>",
+  "common_disableNotifications": "업데이트 수신을 중단하고 싶으시면  <a>알림을 끄셔도 됩니다.</a>.",
   "newPoll_preview": "참여 링크를 공유하여 응답 수집을 시작하세요."
 }
