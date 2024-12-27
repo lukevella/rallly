@@ -124,7 +124,8 @@ model Poll {
   title                   String
   description             String?
   location                String?
-  userId                  String        @map("user_id")
+  userId                  String?       @map("user_id")
+  guestId                 String?       @map("guest_id")
   timeZone                String?       @map("time_zone")
   closed                  Boolean       @default(false) // @deprecated
   status                  PollStatus    @default(live)
@@ -147,6 +148,7 @@ model Poll {
   comments                Comment[]
 
   @@index([userId], type: Hash)
+  @@index([guestId], type: Hash)
   @@map("polls")
 }
 
@@ -184,6 +186,7 @@ model Participant {
   name      String
   email     String?
   userId    String?   @map("user_id")
+  guestId   String?   @map("guest_id")
   poll      Poll      @relation(fields: [pollId], references: [id])
   pollId    String    @map("poll_id")
   votes     Vote[]
@@ -194,6 +197,7 @@ model Participant {
   deletedAt DateTime? @map("deleted_at")
 
   @@index([pollId], type: Hash)
+  @@index([guestId], type: Hash)
   @@map("participants")
 }
 
@@ -241,10 +245,12 @@ model Comment {
   authorName String    @map("author_name")
   user       User?     @relation(fields: [userId], references: [id])
   userId     String?   @map("user_id")
+  guestId    String?   @map("guest_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
   @@index([userId], type: Hash)
+  @@index([guestId], type: Hash)
   @@index([pollId], type: Hash)
   @@map("comments")
 }

@@ -26,7 +26,7 @@ export const PermissionProvider = ({
 export const usePermissions = () => {
   const poll = usePoll();
   const context = React.useContext(PermissionsContext);
-  const { user } = useUser();
+  const { user, ownsObject } = useUser();
   const role = useRole();
   const { participants } = useParticipants();
   const isClosed = poll.closed === true || poll.event !== null;
@@ -37,7 +37,8 @@ export const usePermissions = () => {
       if (isClosed) {
         return false;
       }
-      if (role === "admin" && user.id === poll.userId) {
+
+      if (role === "admin" && ownsObject(poll)) {
         return true;
       }
 
@@ -45,10 +46,15 @@ export const usePermissions = () => {
         (participant) => participant.id === participantId,
       );
 
+      if (!participant) {
+        return false;
+      }
+
       if (
-        participant &&
-        (participant.userId === user.id ||
-          (context.userId && participant.userId === context.userId))
+        ownsObject(participant) ||
+        (context.userId &&
+          (participant.userId === context.userId ||
+            participant.guestId === context.userId))
       ) {
         return true;
       }

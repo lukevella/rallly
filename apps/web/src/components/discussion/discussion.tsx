@@ -34,7 +34,6 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
-import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { trpc } from "@/trpc/client";
@@ -72,7 +71,6 @@ function NewCommentForm({
   const pollId = poll.id;
 
   const posthog = usePostHog();
-
 
   const session = useUser();
 
@@ -162,9 +160,7 @@ function DiscussionInner() {
 
   const pollId = poll.id;
 
-  const { data: comments } = trpc.polls.comments.list.useQuery(
-    { pollId },
-  );
+  const { data: comments } = trpc.polls.comments.list.useQuery({ pollId });
   const posthog = usePostHog();
 
   const queryClient = trpc.useUtils();
@@ -187,7 +183,6 @@ function DiscussionInner() {
 
   const [isWriting, setIsWriting] = React.useState(false);
   const role = useRole();
-  const { isUser } = usePermissions();
 
   if (!comments) {
     return null;
@@ -205,8 +200,7 @@ function DiscussionInner() {
         <CardContent className="border-b">
           <div className="space-y-4">
             {comments.map((comment) => {
-              const canDelete =
-                role === "admin" || (comment.userId && isUser(comment.userId));
+              const canDelete = role === "admin" || session.ownsObject(comment);
 
               return (
                 <div className="" key={comment.id}>

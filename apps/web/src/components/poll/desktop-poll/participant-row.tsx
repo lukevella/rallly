@@ -23,6 +23,7 @@ export interface ParticipantRowProps {
     id: string;
     name: string;
     userId?: string;
+    guestId?: string;
     email?: string;
     votes: Vote[];
   };
@@ -105,10 +106,10 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   className,
   onChangeEditMode,
 }) => {
-  const { user, ownsObject } = useUser();
+  const { ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
 
-  const isYou = user && ownsObject(participant) ? true : false;
+  const isYou = ownsObject(participant) ? true : false;
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);

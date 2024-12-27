@@ -182,7 +182,11 @@ function PollsListView({
     status: PollStatus;
     title: string;
     createdAt: Date;
-    userId: string;
+    user: {
+      id: string;
+      name: string;
+    } | null;
+    guestId?: string | null;
     participants: {
       id: string;
       name: string;

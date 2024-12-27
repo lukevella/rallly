@@ -16,8 +16,8 @@ import { usePoll } from "@/contexts/poll";
 
 const GoToApp = () => {
   const poll = usePoll();
-  const { user } = useUser();
-  if (poll.userId !== user.id) {
+  const { ownsObject } = useUser();
+  if (!ownsObject(poll)) {
     return null;
   }
 
