@@ -2,7 +2,6 @@ datasource db {
   provider     = "postgresql"
   url          = env("DATABASE_URL")
   directUrl    = env("DIRECT_DATABASE_URL")
-  relationMode = "prisma"
 }
 
 generator client {
@@ -31,10 +30,9 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@index([userId], type: Hash)
   @@map("accounts")
 }
 
@@ -57,8 +55,10 @@ model User {
   polls        Poll[]
   watcher      Watcher[]
   events       Event[]
-  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
   accounts     Account[]
+  participants Participant[]
+
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
 
   @@map("users")
 }
@@ -140,22 +140,21 @@ model Poll {
   disableComments         Boolean       @default(false) @map("disable_comments")
   requireParticipantEmail Boolean       @default(false) @map("require_participant_email")
 
-  user                    User?         @relation(fields: [userId], references: [id])
-  event                   Event?        @relation(fields: [eventId], references: [id])
+  user                    User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  event                   Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
   options                 Option[]
   participants            Participant[]
   watchers                Watcher[]
   comments                Comment[]
-
-  @@index([userId], type: Hash)
-  @@index([guestId], type: Hash)
+  votes                   Vote[]
+  @@index([guestId])
   @@map("polls")
 }
 
 model Event {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   optionId  String   @map("option_id")
   title     String
   start     DateTime @db.Timestamp(0)
@@ -171,12 +170,12 @@ model Event {
 model Watcher {
   id        Int      @id @default(autoincrement())
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
   pollId    String   @map("poll_id")
   createdAt DateTime @default(now()) @map("created_at")
-  poll      Poll     @relation(fields: [pollId], references: [id])
+  
+  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId], type: Hash)
   @@index([pollId], type: Hash)
   @@map("watchers")
 }
@@ -187,17 +186,20 @@ model Participant {
   email     String?
   userId    String?   @map("user_id")
   guestId   String?   @map("guest_id")
-  poll      Poll      @relation(fields: [pollId], references: [id])
   pollId    String    @map("poll_id")
-  votes     Vote[]
   locale    String?
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deleted   Boolean   @default(false)
   deletedAt DateTime? @map("deleted_at")
 
-  @@index([pollId], type: Hash)
+  votes     Vote[]
+
+  poll      Poll      @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
   @@index([guestId], type: Hash)
+  @@index([pollId], type: Hash)
   @@map("participants")
 }
 
@@ -206,8 +208,11 @@ model Option {
   startTime DateTime @db.Timestamp(0) @map("start_time")
   duration  Int      @default(0) @map("duration_minutes")
   pollId    String   @map("poll_id")
-  poll      Poll     @relation(fields: [pollId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
+
+  votes     Vote[]
+
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
 
   @@index([pollId], type: Hash)
   @@map("options")
@@ -223,7 +228,6 @@ enum VoteType {
 
 model Vote {
   id            String      @id @default(cuid())
-  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
   participantId String      @map("participant_id")
   optionId      String      @map("option_id")
   pollId        String      @map("poll_id")
@@ -231,25 +235,29 @@ model Vote {
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime?   @updatedAt @map("updated_at")
 
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  option        Option      @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  poll          Poll        @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  @@index([pollId], type: Hash)
   @@index([participantId], type: Hash)
   @@index([optionId], type: Hash)
-  @@index([pollId], type: Hash)
   @@map("votes")
 }
 
 model Comment {
   id         String    @id @default(cuid())
   content    String
-  poll       Poll      @relation(fields: [pollId], references: [id])
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
-  user       User?     @relation(fields: [userId], references: [id])
   userId     String?   @map("user_id")
   guestId    String?   @map("guest_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
-  @@index([userId], type: Hash)
+  poll       Poll      @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([guestId], type: Hash)
   @@index([pollId], type: Hash)
   @@map("comments")

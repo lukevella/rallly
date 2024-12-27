@@ -250,23 +250,14 @@ export const polls = router({
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
-        await prisma.$transaction([
-          prisma.option.deleteMany({
-            where: {
-              pollId,
-              id: {
-                in: input.optionsToDelete,
-              },
+        await prisma.option.deleteMany({
+          where: {
+            pollId,
+            id: {
+              in: input.optionsToDelete,
             },
-          }),
-          prisma.vote.deleteMany({
-            where: {
-              optionId: {
-                in: input.optionsToDelete,
-              },
-            },
-          }),
-        ]);
+          },
+        });
       }
 
       if (input.optionsToAdd && input.optionsToAdd.length > 0) {
