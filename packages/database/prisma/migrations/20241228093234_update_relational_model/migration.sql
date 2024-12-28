@@ -75,6 +75,7 @@ UPDATE users
 SET subscription_id = NULL 
 WHERE subscription_id IS NOT NULL 
 AND NOT EXISTS (SELECT 1 FROM subscriptions s WHERE s.id = users.subscription_id);
+
 -- DropIndex
 DROP INDEX "accounts_user_id_idx";
 
