@@ -1,10 +1,9 @@
--- 1. First clean up polls (they reference users)
--- This needs to happen first to avoid orphaned child records
+-- Clean up polls
 DELETE FROM polls 
 WHERE user_id IS NOT NULL 
 AND NOT EXISTS (SELECT 1 FROM users u WHERE u.id = polls.user_id);
 
--- 2. Clean up participants (they reference polls and users)
+-- Clean up participants
 DELETE FROM participants pa
 WHERE NOT EXISTS (
   SELECT 1 FROM polls p 
@@ -15,14 +14,14 @@ DELETE FROM participants
 WHERE user_id IS NOT NULL 
 AND NOT EXISTS (SELECT 1 FROM users u WHERE u.id = participants.user_id);
 
--- 3. Clean up options (they reference polls)
+-- Clean up options
 DELETE FROM options o
 WHERE NOT EXISTS (
   SELECT 1 FROM polls p 
   WHERE p.id = o.poll_id
 );
 
--- 4. Clean up votes (they reference participants, options, and polls)
+-- Clean up votes
 DELETE FROM votes v
 WHERE NOT EXISTS (
   SELECT 1 FROM polls p 
@@ -43,7 +42,7 @@ WHERE NOT EXISTS (
   AND o.id = v.option_id
 );
 
--- 5. Clean up comments (they reference polls and users)
+-- Clean up comments
 DELETE FROM comments c
 WHERE NOT EXISTS (
   SELECT 1 FROM polls p 
@@ -54,7 +53,7 @@ DELETE FROM comments
 WHERE user_id IS NOT NULL 
 AND NOT EXISTS (SELECT 1 FROM users u WHERE u.id = comments.user_id);
 
--- 6. Clean up watchers (they reference polls and users)
+-- Clean up watchers
 DELETE FROM watchers w
 WHERE NOT EXISTS (
   SELECT 1 FROM polls p 
@@ -65,12 +64,12 @@ DELETE FROM watchers
 WHERE user_id IS NOT NULL 
 AND NOT EXISTS (SELECT 1 FROM users u WHERE u.id = watchers.user_id);
 
--- 7. Clean up events (they reference users)
+-- Clean up events
 DELETE FROM events 
 WHERE user_id IS NOT NULL 
 AND NOT EXISTS (SELECT 1 FROM users u WHERE u.id = events.user_id);
 
--- 8. Finally, handle subscription updates
+-- Handle subscription updates
 UPDATE users 
 SET subscription_id = NULL 
 WHERE subscription_id IS NOT NULL 
