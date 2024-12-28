@@ -1,7 +1,7 @@
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
-  directUrl    = env("DIRECT_DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 generator client {
@@ -117,36 +117,37 @@ enum PollStatus {
 }
 
 model Poll {
-  id                      String        @id @unique @map("id")
-  createdAt               DateTime      @default(now()) @map("created_at")
-  updatedAt               DateTime      @updatedAt @map("updated_at")
+  id                      String     @id @unique @map("id")
+  createdAt               DateTime   @default(now()) @map("created_at")
+  updatedAt               DateTime   @updatedAt @map("updated_at")
   deadline                DateTime?
   title                   String
   description             String?
   location                String?
-  userId                  String?       @map("user_id")
-  guestId                 String?       @map("guest_id")
-  timeZone                String?       @map("time_zone")
-  closed                  Boolean       @default(false) // @deprecated
-  status                  PollStatus    @default(live)
-  deleted                 Boolean       @default(false)
-  deletedAt               DateTime?     @map("deleted_at")
-  touchedAt               DateTime      @default(now()) @map("touched_at")
-  participantUrlId        String        @unique @map("participant_url_id")
-  adminUrlId              String        @unique @map("admin_url_id")
-  eventId                 String?       @unique @map("event_id")
-  hideParticipants        Boolean       @default(false) @map("hide_participants")
-  hideScores              Boolean       @default(false) @map("hide_scores")
-  disableComments         Boolean       @default(false) @map("disable_comments")
-  requireParticipantEmail Boolean       @default(false) @map("require_participant_email")
+  userId                  String?    @map("user_id")
+  guestId                 String?    @map("guest_id")
+  timeZone                String?    @map("time_zone")
+  closed                  Boolean    @default(false) // @deprecated
+  status                  PollStatus @default(live)
+  deleted                 Boolean    @default(false)
+  deletedAt               DateTime?  @map("deleted_at")
+  touchedAt               DateTime   @default(now()) @map("touched_at")
+  participantUrlId        String     @unique @map("participant_url_id")
+  adminUrlId              String     @unique @map("admin_url_id")
+  eventId                 String?    @unique @map("event_id")
+  hideParticipants        Boolean    @default(false) @map("hide_participants")
+  hideScores              Boolean    @default(false) @map("hide_scores")
+  disableComments         Boolean    @default(false) @map("disable_comments")
+  requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
 
-  user                    User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
-  event                   Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
-  options                 Option[]
-  participants            Participant[]
-  watchers                Watcher[]
-  comments                Comment[]
-  votes                   Vote[]
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event        Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  options      Option[]
+  participants Participant[]
+  watchers     Watcher[]
+  comments     Comment[]
+  votes        Vote[]
+
   @@index([guestId])
   @@map("polls")
 }
@@ -161,7 +162,7 @@ model Event {
   duration  Int      @default(0) @map("duration_minutes")
   createdAt DateTime @default(now()) @map("created_at")
 
-  poll      Poll?
+  poll Poll?
 
   @@index([userId], type: Hash)
   @@map("events")
@@ -172,9 +173,9 @@ model Watcher {
   userId    String   @map("user_id")
   pollId    String   @map("poll_id")
   createdAt DateTime @default(now()) @map("created_at")
-  
-  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([pollId], type: Hash)
   @@map("watchers")
@@ -193,10 +194,10 @@ model Participant {
   deleted   Boolean   @default(false)
   deletedAt DateTime? @map("deleted_at")
 
-  votes     Vote[]
+  votes Vote[]
 
-  poll      Poll      @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([guestId], type: Hash)
   @@index([pollId], type: Hash)
@@ -205,12 +206,12 @@ model Participant {
 
 model Option {
   id        String   @id @default(cuid())
-  startTime DateTime @db.Timestamp(0) @map("start_time")
+  startTime DateTime @map("start_time") @db.Timestamp(0)
   duration  Int      @default(0) @map("duration_minutes")
   pollId    String   @map("poll_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  votes     Vote[]
+  votes Vote[]
 
   poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
 
@@ -227,17 +228,17 @@ enum VoteType {
 }
 
 model Vote {
-  id            String      @id @default(cuid())
-  participantId String      @map("participant_id")
-  optionId      String      @map("option_id")
-  pollId        String      @map("poll_id")
-  type          VoteType    @default(yes)
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime?   @updatedAt @map("updated_at")
+  id            String    @id @default(cuid())
+  participantId String    @map("participant_id")
+  optionId      String    @map("option_id")
+  pollId        String    @map("poll_id")
+  type          VoteType  @default(yes)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
-  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  option        Option      @relation(fields: [optionId], references: [id], onDelete: Cascade)
-  poll          Poll        @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  option      Option      @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  poll        Poll        @relation(fields: [pollId], references: [id], onDelete: Cascade)
 
   @@index([pollId], type: Hash)
   @@index([participantId], type: Hash)
@@ -255,8 +256,8 @@ model Comment {
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
-  poll       Poll      @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([guestId], type: Hash)
   @@index([pollId], type: Hash)
