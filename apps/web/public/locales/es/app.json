@@ -263,5 +263,20 @@
   "timeZoneChangeDetectorMessage": "Tu zona horaria ha cambiado a <b>{currentTimeZone}</b>. ¿Quieres actualizar tus preferencias?",
   "yesUpdateTimezone": "Sí, actualizar mi zona horaria",
   "noKeepCurrentTimezone": "No, mantener la zona horaria actual",
-  "annualBenefit": "{count} meses gratis"
+  "annualBenefit": "{count} meses gratis",
+  "removeAvatar": "Remover",
+  "uploadProfilePicture": "Cargar",
+  "profilePictureDescription": "Hasta 2 MB, JPG o PNG",
+  "invalidFileType": "Tipo de archivo inválido",
+  "invalidFileTypeDescription": "Por favor, sube un archivo JPG o PNG.",
+  "fileTooLarge": "Archivo demasiado grande",
+  "fileTooLargeDescription": "Por favor, sube un archivo menor de 2 MB.",
+  "errorUploadPicture": "No se pudo subir",
+  "errorUploadPictureDescription": "Hubo un problema al subir la imagen. Por favor, inténtalo de nuevo más tarde.",
+  "featureNameFinalize": "Finalizar encuesta",
+  "featureNameDuplicate": "Duplicar encuesta",
+  "featureNameAdvancedSettings": "Configuración avanzada",
+  "featureNameExtendedPollLifetime": "Duración de encuesta extendida",
+  "12months": "12 meses",
+  "savePercentage": "Guardar {percentage}%"
 }
