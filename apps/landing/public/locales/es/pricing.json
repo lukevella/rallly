@@ -1,14 +1,14 @@
 {
-  "pricingDescription": "Comience a utilizarlo gratis. No se necesita tarjeta de crédito.",
+  "pricingDescription": "Comienza a utilizarlo gratis. No se necesita iniciar sesión.",
   "freeForever": "gratis para siempre",
   "planPro": "Pro",
   "monthlyBillingDescription": "por mes",
   "upgrade": "Mejorar",
   "faq": "Preguntas frecuentes",
   "canUseFree": "¿Puedo usar Rallly de forma gratuita?",
-  "whyUpgrade": "¿Por qué debo mejorar?",
+  "whyUpgrade": "¿Por qué debería mejorar a un plan de pago?",
   "howToUpgrade": "¿Cómo puedo cambiar a un plan de pago?",
-  "howToUpgradeAnswer": "Para mejorar, puedes ir a tu <a>configuración de facturación</a> y hacer clic en <b>Actualizar</b>.",
+  "howToUpgradeAnswer": "Para mejorar, puedes ir a tu <a>configuración de facturación</a> y hacer clic en <b>Mejorar</b>.",
   "cancelSubscription": "¿Cómo puedo cancelar mi suscripción?",
   "cancelSubscriptionAnswer": "Puedes cancelar tu suscripción en cualquier momento dirigiéndote a tu <a>configuración de facturación</a>. Una vez que cancele su suscripción, tendrá acceso a su plan de pago hasta el final de su período de facturación. Después, usted será degradado a un plan gratuito.",
   "billingPeriodMonthly": "Mensual",
@@ -23,10 +23,12 @@
   "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso temprano a nuevas herramientas de programación de alta calidad a medida que se liberan y se bloquean en su tarifa de suscripción para que no se vea afectado por aumentos de precios futuros.",
   "upgradeNowSaveLater": "Actualizar ahora, guardar más tarde",
   "earlyAdopterDescription": "Como usuario pionero, fijará su tarifa de suscripción y no se verá afectado por futuras subidas de precios.",
-  "planFree": "Gratis",
+  "planFree": "Gratuito",
   "keepPollsIndefinitely": "Mantener encuestas indefinidamente",
   "whenPollInactive": "¿Cuándo una encuesta se vuelve inactiva?",
   "whenPollInactiveAnswer": "Las encuestas se vuelven inactivas cuando todas las opciones de fecha están en el pasado Y la encuesta no ha sido accedida durante más de 30 días. Las encuestas inactivas se eliminan automáticamente si no tienes una suscripción de pago.",
   "yearlyBillingDescription": "por año",
-  "annualBenefit": "{count} meses gratis"
+  "annualBenefit": "{count} meses gratis",
+  "pricingTitle": "Empieza de manera gratuita",
+  "pricingSubtitle": "Cambia a un plan de pago para acceder a funciones premium"
 }
