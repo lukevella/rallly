@@ -17,11 +17,13 @@
   "goToHome": "Ir al inicio",
   "goToApp": "Ir a app",
   "pricing": "Precios",
-  "bestDoodleAlternative": "Mejor alternativa de Doodle",
-  "freeSchedulingPoll": "Encuesta gratuita de programación",
+  "bestDoodleAlternative": "Mejor alternativa a Doodle",
+  "freeSchedulingPoll": "Encuesta de programación gratuita",
   "getStarted": "Empezar",
   "availabilityPoll": "Encuesta de disponibilidad",
   "solutions": "Soluciones",
   "howItWorks": "Cómo funciona",
-  "status": "Estado"
+  "status": "Estado",
+  "when2MeetAlternative": "Alternativa a When2Meet",
+  "meetingPoll": "Encuesta de reunión"
 }
