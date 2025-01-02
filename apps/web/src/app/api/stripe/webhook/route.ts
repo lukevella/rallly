@@ -70,7 +70,6 @@ export async function POST(request: NextRequest) {
         },
         data: {
           customerId: checkoutSession.customer as string,
-          subscriptionId: checkoutSession.subscription as string,
         },
       });
 
@@ -150,6 +149,13 @@ export async function POST(request: NextRequest) {
       // update/create the subscription in the database
       const { price } = lineItem;
 
+      const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
+
+      if (!res.success) {
+        return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
+      }
+
+      // create or update the subscription in the database
       await prisma.subscription.upsert({
         where: {
           id: subscription.id,
@@ -173,19 +179,20 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // update the user with the subscription id
+      await prisma.user.update({
+        where: {
+          id: res.data.userId,
+        },
+        data: {
+          subscriptionId: subscription.id,
+        },
+      });
+
       try {
-        const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
-
-        if (!res.success) {
-          return NextResponse.json(
-            { error: "Missing user ID" },
-            { status: 400 },
-          );
-        }
-
         posthog?.capture({
-          event: "subscription change",
           distinctId: res.data.userId,
+          event: "subscription change",
           properties: {
             type: event.type,
             $set: {
