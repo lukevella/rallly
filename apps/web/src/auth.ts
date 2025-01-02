@@ -243,12 +243,13 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
             // check if user exists
-            const userExists = await prisma.user.count({
+            const count = await prisma.user.count({
               where: {
                 email: user.email as string,
               },
             });
-            if (userExists !== 0) {
+
+            if (count !== 0) {
               await mergeGuestsIntoUser(user.id, [session.user.id]);
             } else {
               // when logging in with a social account, the user doesn't exist yet
