@@ -24,7 +24,7 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 import { decryptToken } from "@/utils/session";
 
 import { CustomPrismaAdapter } from "./auth/custom-prisma-adapter";
-import { mergeGuestsIntoUser } from "./auth/merge-user";
+import { mergeGuestsIntoUser, temporarilyMigrateData } from "./auth/merge-user";
 
 const providers: Provider[] = [
   // When a user registers, we don't want to go through the email verification process
@@ -242,7 +242,19 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           // merge guest user into newly logged in user
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
-            await mergeGuestsIntoUser(user.id, [session.user.id]);
+            // check if user exists
+            const userExists = await prisma.user.count({
+              where: {
+                email: user.email as string,
+              },
+            });
+            if (userExists !== 0) {
+              await mergeGuestsIntoUser(user.id, [session.user.id]);
+            } else {
+              // when logging in with a social account, the user doesn't exist yet
+              // so we temporarily migrate the data to a different guest user.
+              await temporarilyMigrateData(user.id, [session.user.id]);
+            }
           }
         }
 
