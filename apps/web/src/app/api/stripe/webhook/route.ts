@@ -70,7 +70,6 @@ export async function POST(request: NextRequest) {
         },
         data: {
           customerId: checkoutSession.customer as string,
-          subscriptionId: checkoutSession.subscription as string,
         },
       });
 
@@ -150,6 +149,7 @@ export async function POST(request: NextRequest) {
       // update/create the subscription in the database
       const { price } = lineItem;
 
+      // create or update the subscription in the database
       await prisma.subscription.upsert({
         where: {
           id: subscription.id,
@@ -170,6 +170,16 @@ export async function POST(request: NextRequest) {
           createdAt: toDate(subscription.created),
           periodStart: toDate(subscription.current_period_start),
           periodEnd: toDate(subscription.current_period_end),
+        },
+      });
+
+      // update the user with the subscription id
+      await prisma.user.update({
+        where: {
+          id: subscription.metadata.userId as string,
+        },
+        data: {
+          subscriptionId: subscription.id,
         },
       });
 
