@@ -4,51 +4,14 @@ export const mergeGuestsIntoUser = async (
   userId: string,
   guestIds: string[],
 ) => {
-  return await prisma.$transaction(async (tx) => {
-    await Promise.all([
-      tx.poll.updateMany({
-        where: {
-          guestId: {
-            in: guestIds,
-          },
-        },
-        data: {
-          guestId: null,
-          userId: userId,
-        },
-      }),
-
-      tx.participant.updateMany({
-        where: {
-          guestId: {
-            in: guestIds,
-          },
-        },
-        data: {
-          guestId: null,
-          userId: userId,
-        },
-      }),
-
-      tx.comment.updateMany({
-        where: {
-          guestId: {
-            in: guestIds,
-          },
-        },
-        data: {
-          guestId: null,
-          userId: userId,
-        },
-      }),
-    ]);
+  const userCount = await prisma.user.count({
+    where: {
+      id: userId,
+    },
   });
-};
 
-export const temporarilyMigrateData = async (
-  providerId: string,
-  guestIds: string[],
-) => {
+  const doesUserExist = userCount > 0;
+
   return await prisma.$transaction(async (tx) => {
     await Promise.all([
       tx.poll.updateMany({
@@ -58,7 +21,8 @@ export const temporarilyMigrateData = async (
           },
         },
         data: {
-          guestId: providerId,
+          guestId: doesUserExist ? null : userId,
+          userId: doesUserExist ? userId : null,
         },
       }),
 
@@ -69,7 +33,8 @@ export const temporarilyMigrateData = async (
           },
         },
         data: {
-          guestId: providerId,
+          guestId: doesUserExist ? null : userId,
+          userId: doesUserExist ? userId : null,
         },
       }),
 
@@ -80,7 +45,8 @@ export const temporarilyMigrateData = async (
           },
         },
         data: {
-          guestId: providerId,
+          guestId: doesUserExist ? null : userId,
+          userId: doesUserExist ? userId : null,
         },
       }),
     ]);
