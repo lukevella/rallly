@@ -247,7 +247,13 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           }
         }
 
-        if (user.id !== profile?.sub) {
+        // when we login with a social account for the first time, the user is not created yet
+        // and the user id will be the same as the provider account id
+        // we handle this case the the prisma adapter when we link accounts
+        const isInitialSocialLogin = user.id === profile?.sub;
+
+        if (!isInitialSocialLogin) {
+          // merge guest user into newly logged in user
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
