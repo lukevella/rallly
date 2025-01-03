@@ -24,7 +24,7 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 import { decryptToken } from "@/utils/session";
 
 import { CustomPrismaAdapter } from "./auth/custom-prisma-adapter";
-import { mergeGuestsIntoUser, temporarilyMigrateData } from "./auth/merge-user";
+import { mergeGuestsIntoUser } from "./auth/merge-user";
 
 const providers: Provider[] = [
   // When a user registers, we don't want to go through the email verification process
@@ -170,7 +170,14 @@ if (
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
-    adapter: CustomPrismaAdapter(prisma),
+    adapter: CustomPrismaAdapter(prisma, {
+      migrateData: async (userId) => {
+        const session = await getServerSession(...args);
+        if (session && session.user.email === null) {
+          await mergeGuestsIntoUser(userId, [session.user.id]);
+        }
+      },
+    }),
     secret: process.env.SECRET_PASSWORD,
     session: {
       strategy: "jwt",
@@ -238,24 +245,18 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
           if (isUnregisteredUser) {
             return false;
           }
-        } else {
+        }
+
+        // when we login with a social account for the first time, the user is not created yet
+        // and the user id will be the same as the provider account id
+        // we handle this case the the prisma adapter when we link accounts
+        const isInitialSocialLogin = user.id === profile?.sub;
+
+        if (!isInitialSocialLogin) {
           // merge guest user into newly logged in user
           const session = await getServerSession(...args);
           if (session && session.user.email === null) {
-            // check if user exists
-            const count = await prisma.user.count({
-              where: {
-                email: user.email as string,
-              },
-            });
-
-            if (count !== 0) {
-              await mergeGuestsIntoUser(user.id, [session.user.id]);
-            } else {
-              // when logging in with a social account, the user doesn't exist yet
-              // so we temporarily migrate the data to a different guest user.
-              await temporarilyMigrateData(user.id, [session.user.id]);
-            }
+            await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
         }
 

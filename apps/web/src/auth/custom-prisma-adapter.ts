@@ -13,10 +13,14 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { ExtendedPrismaClient, PrismaClient } from "@rallly/database";
 import type { Adapter, AdapterAccount } from "next-auth/adapters";
 
-export function CustomPrismaAdapter(client: ExtendedPrismaClient): Adapter {
+export function CustomPrismaAdapter(
+  client: ExtendedPrismaClient,
+  options: { migrateData: (userId: string) => Promise<void> },
+): Adapter {
   return {
     ...PrismaAdapter(client as PrismaClient),
-    linkAccount: (data) => {
+    linkAccount: async (data) => {
+      await options.migrateData(data.userId);
       return client.account.create({
         data: {
           userId: data.userId,
