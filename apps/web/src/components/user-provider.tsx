@@ -33,6 +33,7 @@ export const UserContext = React.createContext<{
     userId?: string | null;
     guestId?: string | null;
   }) => boolean;
+  logout: () => Promise<void>;
 } | null>(null);
 
 export const useUser = () => {
@@ -105,6 +106,12 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           locale: user.locale ?? i18n.language,
         },
         refresh: session.update,
+        logout: async () => {
+          await fetch("/api/logout", { method: "POST" });
+          posthog?.capture("logout");
+          posthog?.reset();
+          window.location.href = "/login";
+        },
         ownsObject: (resource) => {
           return isOwner(resource, { id: user.id, isGuest });
         },
