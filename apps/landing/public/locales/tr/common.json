@@ -6,12 +6,12 @@
   "footerCredit": "Oluşturan: <a>@imlukevella</a>",
   "footerSponsor": "Bu proje kullanıcılar tarafından finanse edilmektedir. Lütfen <a>bağış yaparak</a> desteklemeyi düşünün.",
   "language": "Dil",
-  "poweredBy": "Destekliyenler",
+  "poweredBy": "Destekleyenler",
   "privacyPolicy": "Gizlilik Politikası",
   "support": "Yardım",
   "cookiePolicy": "Çerez Politikası",
   "termsOfUse": "Kullanım Koşulları",
-  "volunteerTranslator": "Bu sitenin çevirilmesine yardım edin",
+  "volunteerTranslator": "Bu sitenin çevrilmesine yardım edin",
   "notFoundTitle": "404 Sayfa bulunamadı",
   "notFoundDescription": "Aradığınız sayfayı bulamadık.",
   "goToHome": "Ana sayfaya git",
@@ -23,5 +23,7 @@
   "availabilityPoll": "Uygunluk Anketi",
   "solutions": "Çözümler",
   "howItWorks": "Nasıl Çalışır",
-  "status": "Durum"
+  "status": "Durum",
+  "when2MeetAlternative": "When2Meet Alternatifi",
+  "meetingPoll": "Toplantı Anketi"
 }
