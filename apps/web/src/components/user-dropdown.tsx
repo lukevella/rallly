@@ -36,18 +36,8 @@ import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
-function logout() {
-  // programmtically submit form with name="logout"
-  const form = document.forms.namedItem("logout");
-  if (form && typeof form.submit === "function") {
-    form.submit();
-  } else {
-    console.error("Logout form or submit method not found");
-  }
-}
-
 export const UserDropdown = ({ className }: { className?: string }) => {
-  const { user } = useUser();
+  const { user, logout } = useUser();
   usePlan(); // prefetch plan data
   return (
     <DropdownMenu modal={false}>
@@ -177,13 +167,6 @@ export const UserDropdown = ({ className }: { className?: string }) => {
             }}
             className="flex items-center gap-x-2"
           >
-            <form
-              className="hidden"
-              action="/auth/logout"
-              name="logout"
-              method="POST"
-            />
-            {/* Don't use signOut() from next-auth. It doesn't work in vercel-production env. I don't know why. */}
             <LogOutIcon className="text-muted-foreground size-4" />
             <Trans i18nKey="logout" />
           </DropdownMenuItem>
