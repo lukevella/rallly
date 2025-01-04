@@ -205,27 +205,34 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { pollId, participantId, votes } }) => {
-      const participant = await prisma.participant.update({
-        where: {
-          id: participantId,
-        },
-        data: {
-          votes: {
-            deleteMany: {
-              pollId: pollId,
-            },
-            createMany: {
-              data: votes.map(({ optionId, type }) => ({
-                optionId,
-                type,
-                pollId,
-              })),
-            },
+      const participant = await prisma.$transaction(async (tx) => {
+        // Delete existing votes
+        await tx.vote.deleteMany({
+          where: {
+            participantId,
+            pollId,
           },
-        },
-        include: {
-          votes: true,
-        },
+        });
+
+        // Create new votes
+        await tx.vote.createMany({
+          data: votes.map(({ optionId, type }) => ({
+            optionId,
+            type,
+            pollId,
+            participantId,
+          })),
+        });
+
+        // Return updated participant with votes
+        return tx.participant.findUniqueOrThrow({
+          where: {
+            id: participantId,
+          },
+          include: {
+            votes: true,
+          },
+        });
       });
 
       return participant;
