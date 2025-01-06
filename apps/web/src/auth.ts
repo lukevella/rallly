@@ -262,12 +262,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
 
         return true;
       },
-      async jwt({ token, user, trigger, account, session }) {
-        if (trigger === "signUp" && account?.providerAccountId) {
-          // merge accounts assigned to provider account id to the current user id
-          await mergeGuestsIntoUser(user.id, [account.providerAccountId]);
-        }
-
+      async jwt({ token, session }) {
         if (session) {
           token.locale = session.locale;
           token.timeFormat = session.timeFormat;
