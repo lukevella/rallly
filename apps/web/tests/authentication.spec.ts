@@ -1,33 +1,30 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { load } from "cheerio";
-import smtpTester from "smtp-tester";
+
+import { captureOne } from "./mailpit/mailpit";
 
 const testUserEmail = "test@example.com";
-let mailServer: smtpTester.MailServer;
+
 /**
  * Get the 6-digit code from the email
  * @returns 6-digit code
  */
 const getCode = async () => {
-  const { email } = await mailServer.captureOne(testUserEmail, {
+  const { email } = await captureOne(testUserEmail, {
     wait: 5000,
   });
 
-  if (!email.html) {
+  if (!email.HTML) {
     throw new Error("Email doesn't contain HTML");
   }
 
-  const $ = load(email.html);
+  const $ = load(email.HTML);
 
   return $("#code").text().trim();
 };
 
 test.describe.serial(() => {
-  test.beforeAll(() => {
-    mailServer = smtpTester.init(4025);
-  });
-
   test.afterAll(async () => {
     try {
       await prisma.user.deleteMany({
@@ -38,8 +35,6 @@ test.describe.serial(() => {
     } catch {
       // User doesn't exist
     }
-
-    mailServer.stop(() => {});
   });
 
   test.describe("new user", () => {
@@ -110,15 +105,15 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Login with Email" }).click();
 
-      const { email } = await mailServer.captureOne(testUserEmail, {
+      const { email } = await captureOne(testUserEmail, {
         wait: 5000,
       });
 
-      if (!email.html) {
+      if (!email.HTML) {
         throw new Error("Email doesn't contain HTML");
       }
 
-      const $ = load(email.html);
+      const $ = load(email.HTML);
 
       const magicLink = $("#magicLink").attr("href");
 

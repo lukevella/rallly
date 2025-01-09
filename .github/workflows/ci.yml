@@ -69,8 +69,7 @@ jobs:
       - uses: ./.github/actions/yarn-install
 
       - name: Install system dependencies
-        run: |
-          sudo apt-get update
+        run: sudo apt-get update
 
       - name: Install playwright dependencies
         run: yarn playwright install --with-deps chromium
