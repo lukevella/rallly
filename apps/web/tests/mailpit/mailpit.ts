@@ -46,3 +46,11 @@ export async function captureOne(
 
   throw new Error(`No email received for ${to} within ${timeout}ms`);
 }
+
+export async function captureEmailHTML(to: string): Promise<string> {
+  const { email } = await captureOne(to);
+  if (!email.HTML) {
+    throw new Error("Email doesn't contain HTML");
+  }
+  return email.HTML;
+}

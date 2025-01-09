@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { load } from "cheerio";
 
-import { captureOne } from "./mailpit/mailpit";
+import { captureEmailHTML } from "./mailpit/mailpit";
 
 const testUserEmail = "test@example.com";
 
@@ -11,15 +11,9 @@ const testUserEmail = "test@example.com";
  * @returns 6-digit code
  */
 const getCode = async () => {
-  const { email } = await captureOne(testUserEmail, {
-    wait: 5000,
-  });
+  const html = await captureEmailHTML(testUserEmail);
 
-  if (!email.HTML) {
-    throw new Error("Email doesn't contain HTML");
-  }
-
-  const $ = load(email.HTML);
+  const $ = load(html);
 
   return $("#code").text().trim();
 };
@@ -105,15 +99,9 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Login with Email" }).click();
 
-      const { email } = await captureOne(testUserEmail, {
-        wait: 5000,
-      });
+      const html = await captureEmailHTML(testUserEmail);
 
-      if (!email.HTML) {
-        throw new Error("Email doesn't contain HTML");
-      }
-
-      const $ = load(email.HTML);
+      const $ = load(html);
 
       const magicLink = $("#magicLink").attr("href");
 
