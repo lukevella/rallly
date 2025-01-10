@@ -1,27 +1,19 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import type { MailServer } from "smtp-tester";
-import smtpTester from "smtp-tester";
 import type { EditOptionsPage } from "tests/edit-options-page";
 import { NewPollPage } from "tests/new-poll-page";
 
 test.describe("edit options", () => {
   let page: Page;
   let editOptionsPage: EditOptionsPage;
-  let mailServer: MailServer;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
-    mailServer = smtpTester.init(4025);
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
     const pollPage = await newPollPage.createPollAndCloseDialog();
     await pollPage.addParticipant("Mark");
     editOptionsPage = await pollPage.editOptions();
-  });
-
-  test.afterAll(async () => {
-    mailServer.stop(() => {});
   });
 
   test("should show warning when deleting options with votes in them", async () => {

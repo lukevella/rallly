@@ -1,20 +1,15 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import type { MailServer } from "smtp-tester";
-import smtpTester from "smtp-tester";
 import { NewPollPage } from "tests/new-poll-page";
+
+import { deleteAllMessages } from "./mailpit/mailpit";
 
 test.describe.serial(() => {
   let page: Page;
 
-  let mailServer: MailServer;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
-    mailServer = smtpTester.init(4025);
-  });
-
-  test.afterAll(async () => {
-    mailServer.stop(() => {});
+    await deleteAllMessages(); // Clean the mailbox before tests
   });
 
   test("create a new poll", async () => {

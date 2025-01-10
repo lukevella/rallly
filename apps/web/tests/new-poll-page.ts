@@ -16,7 +16,7 @@ export class NewPollPage {
   async createPoll() {
     const page = this.page;
 
-    await page.type('[placeholder="Monthly Meetup"]', "Monthly Meetup");
+    await page.fill('[placeholder="Monthly Meetup"]', "Monthly Meetup");
     // click on label to focus on input
     await page.click('text="Location"');
     await page.keyboard.type("Joe's Coffee Shop");

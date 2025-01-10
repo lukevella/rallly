@@ -45,8 +45,8 @@ services:
       MINIO_ROOT_PASSWORD: minio123
     volumes:
       - s3-data:/data
-  mailhog:
-    image: mailhog/mailhog
+  mailpit:
+    image: axllent/mailpit
     ports:
       - "8025:8025"
       - "1025:1025"
