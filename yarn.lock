@@ -6784,13 +6784,6 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/request-ip@^0.0.41":
-  version "0.0.41"
-  resolved "https://registry.yarnpkg.com/@types/request-ip/-/request-ip-0.0.41.tgz#c22a3244df2573402989346062851b06b7a5ac4e"
-  integrity sha512-Qzz0PM2nSZej4lsLzzNfADIORZhhxO7PED0fXpg4FjXiHuJ/lMyUg+YFF5q8x9HPZH3Gl6N+NOM8QZjItNgGKg==
-  dependencies:
-    "@types/node" "*"
-
 "@types/scheduler@*":
   version "0.16.2"
   resolved "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.2.tgz"
@@ -7023,10 +7016,10 @@
   resolved "https://registry.yarnpkg.com/@vercel/functions/-/functions-1.4.1.tgz#d1a81c27f7eb5b5b2ca412a8a4e682e4cfbea32d"
   integrity sha512-987mKpoDCI18x2rDjrDbiuGOtxDMK/UhfhDZoN3A2SAt40BMaj8HEKwVqL6fOian5j/3RZcOuJnMOpatQGgpjw==
 
-"@vercel/functions@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@vercel/functions/-/functions-1.0.2.tgz#c26ed4e3b0ed701e28c4ebd71c76b1bfe14db02a"
-  integrity sha512-j3udyHOv/05Y8o3WQ/ANMWa1aYagsY5B3ouImiwgYsz5z4CBUHTY5dk74oQAXYr+bgoVDpdDlmxkpnxGzKEdLQ==
+"@vercel/functions@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@vercel/functions/-/functions-1.5.2.tgz#9adf248fc76e082055e70543791842a1e460eb40"
+  integrity sha512-9XuynFoM/J1X+LSahgjhuAZCbZ96vm9mpXapCkSS1MX890U7zLh7n2RW/2KLNuxsXt8u8h2dOCw+Njtg+7pXgQ==
 
 "@vercel/kv@^2.0.0":
   version "2.0.0"
@@ -13130,11 +13123,6 @@ replace-ext@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/replace-ext/-/replace-ext-1.0.1.tgz"
   integrity sha512-yD5BHCe7quCgBph4rMQ+0KkIRKwWCrHDOX1p1Gp6HwjPM5kVoCdKGNhN7ydqqsX6lJEnQDKZ/tFMiEdQ1dvPEw==
-
-request-ip@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/request-ip/-/request-ip-3.3.0.tgz#863451e8fec03847d44f223e30a5d63e369fa611"
-  integrity sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==
 
 require-in-the-middle@^7.1.1:
   version "7.3.0"
