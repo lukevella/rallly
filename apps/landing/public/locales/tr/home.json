@@ -1,7 +1,7 @@
 {
-  "createPageLikeThis": "Bunun gibi bir sayfayı saniyeler içinde yapın!",
+  "createPageLikeThis": "Bunun gibi bir sayfayı saniyeler içinde oluşturun!",
   "noLoginRequired": "Giriş gerekmez",
-  "headline": "Karşılıklı email kullanmaktan kurtulun",
+  "headline": "Gidip-gelen e-postalardan kurtulun",
   "subheading": "Planlama sürecinizi kolaylaştırın ve zamandan tasarruf edin",
   "pcmagQuote": "\"Mümkün olan en kısa sürede bir planlama anketi oluşturun.\"",
   "hubspotQuote": "\"Büyük gruplar için müsaitlik yoklaması için en basit seçim.\"",
@@ -10,6 +10,8 @@
   "ericQuote": "\"Programlama iş akışınız e-postalarda yaşıyorsa, daha organize ve daha az stresli bir iş günü için Rallly'nin planlama görevlerinizi basitleştirmesine izin vermenizi tavsiye ederim.\"",
   "viaTrustpilot": "Trustpilot aracılığıyla",
   "ericJobTitle": "MIT'te Yönetici Asistanı",
+  "statsUsersRegistered": "{count, number, ::compact-short} kayıtlı kullanıcı",
+  "statsPollsCreated": "{count, number, ::compact-short} anket oluşturuldu",
   "statsLanguagesSupported": "10+ dil desteği",
   "hint": "Ücretsizdir! Oturum açmaya gerek yok.",
   "doodleAlternative": "En iyi Doodle Alternatifi",
@@ -24,9 +26,12 @@
   "doodleAlternativeMetaDescription": "Doodle alternatifi mi arıyorsun? Rallly i dene! Ücretsiz, kullanımı kolay ve hesap gerektirmiyor.",
   "createASchedulingPoll": "Zamanlama Anketi oluştur",
   "freeSchedulingPollMetaDescription": "Saniyeler içinde ücretsiz bir zamanlama anketi oluşturun. Toplantılar, etkinlikler, konferanslar, spor takımları ve daha fazlasını planlamak için ideal.",
+  "freeSchedulingPollTitle": "Bir sonraki etkinliğiniz için tarihi bulun",
   "freeSchedulingPollDescription": "Rallly size güzel ve kullanımı kolay zamanlama anketleri oluşturmanıza olanak tanır, böylece bir sonraki etkinliğiniz için en uygun zamanı bulabilirsiniz.",
   "new": "Yeni",
   "metaTitle": "Rallly - Grup Toplantıları Planlayın",
   "metaDescription": "Anketler oluşturun ve en iyi günü veya saati bulmak için oy verin. Doodle'a ücretsiz bir alternatif.",
-  "selfHostingBlog": "Rallly 3.0 Kendi Sunucunuzda Barındırma"
+  "selfHostingBlog": "Rallly 3.0 Kendi Sunucunuzda Barındırma",
+  "when2meetAlternativeMetaTitle": "En iyi When2Meet Alternatifi: Rallly",
+  "when2meetAlternative": "Hâlâ When2Meet mi kullanıyorsunuz?"
 }
