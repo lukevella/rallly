@@ -100,6 +100,18 @@ export const user = router({
     .use(rateLimitMiddleware)
     .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input, ctx }) => {
+      // check if the email is already in use
+      const existingUser = await prisma.user.count({
+        where: { email: input.email },
+      });
+
+      if (existingUser) {
+        return {
+          success: false as const,
+          reason: "emailAlreadyInUse" as const,
+        };
+      }
+
       // create a verification token
       const token = await createToken({
         fromEmail: ctx.user.email,
@@ -124,6 +136,8 @@ export const user = router({
           toEmail: input.email,
         },
       });
+
+      return { success: true as const };
     }),
   getAvatarUploadUrl: privateProcedure
     .use(rateLimitMiddleware)

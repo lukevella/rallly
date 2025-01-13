@@ -286,5 +286,8 @@
   "emailChangeInvalidToken": "The verification link is invalid or has expired. Please try again.",
   "emailChangeError": "An error occurred while changing your email",
   "emailChangeRequestSent": "Verify your new email address",
-  "emailChangeRequestSentDescription": "To complete the change, please check your email for a verification link."
+  "emailChangeRequestSentDescription": "To complete the change, please check your email for a verification link.",
+  "profileEmailAddress": "Email Address",
+  "profileEmailAddressDescription": "Your email address is used to log in to your account",
+  "emailAlreadyInUse": "Email already in use. Please try a different one or delete the existing account."
 }

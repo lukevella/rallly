@@ -20,6 +20,8 @@ import {
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
+import { ProfileEmailAddress } from "./profile-email-address";
+
 export const ProfilePage = () => {
   const { t } = useTranslation();
   const { user } = useUser();
@@ -77,6 +79,19 @@ export const ProfilePage = () => {
             }
           >
             <ProfileSettings />
+          </SettingsSection>
+          <SettingsSection
+            title={
+              <Trans i18nKey="profileEmailAddress" defaults="Email Address" />
+            }
+            description={
+              <Trans
+                i18nKey="profileEmailAddressDescription"
+                defaults="Your email address is used to log in to your account"
+              />
+            }
+          >
+            <ProfileEmailAddress />
           </SettingsSection>
           <hr />
 
