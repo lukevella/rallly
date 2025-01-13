@@ -26,15 +26,6 @@ const setEmailChangeCookie = (
 };
 
 const handleEmailChange = async (token: string) => {
-  const verificationToken = await prisma.verificationToken.findUnique({
-    where: { token },
-  });
-
-  if (!verificationToken) {
-    setEmailChangeCookie("error", "invalidToken");
-    return false;
-  }
-
   const payload = await decryptToken<EmailChangePayload>(token);
 
   if (!payload) {
@@ -42,19 +33,13 @@ const handleEmailChange = async (token: string) => {
     return false;
   }
 
-  await prisma.$transaction(async (tx) => {
-    await Promise.all([
-      tx.user.update({
-        where: { email: payload.fromEmail },
-        data: { email: payload.toEmail },
-      }),
-      tx.verificationToken.delete({
-        where: { token },
-      }),
-    ]);
+  await prisma.user.update({
+    where: { email: payload.fromEmail },
+    data: { email: payload.toEmail },
   });
 
   setEmailChangeCookie("success");
+
   return true;
 };
 

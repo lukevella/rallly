@@ -139,24 +139,21 @@ export const user = router({
       }
 
       // create a verification token
-      const token = await createToken({
-        fromEmail: ctx.user.email,
-        toEmail: input.email,
-      });
-
-      const verificationToken = await prisma.verificationToken.create({
-        data: {
-          identifier: input.email,
-          token,
-          expires: new Date(Date.now() + 1000 * 60 * 10),
+      const token = await createToken(
+        {
+          fromEmail: ctx.user.email,
+          toEmail: input.email,
         },
-      });
+        {
+          ttl: 60 * 10,
+        },
+      );
 
       ctx.user.getEmailClient().sendTemplate("ChangeEmailRequest", {
         to: input.email,
         props: {
           verificationUrl: absoluteUrl(
-            `/api/user/verify-email-change?token=${verificationToken.token}`,
+            `/api/user/verify-email-change?token=${token}`,
           ),
           fromEmail: ctx.user.email,
           toEmail: input.email,
