@@ -38,18 +38,22 @@ export const GET = async (req: NextRequest) => {
       where: {
         id: watcher.id,
       },
+      select: {
+        pollId: true,
+      },
     });
 
     // Set a session cookie to indicate that the user has unsubscribed
-    cookies().set("notifications-unsubscribed", "1", {
+    cookies().set(`notifications-unsubscribed-${watcher.pollId}`, "1", {
       path: "/",
       httpOnly: false,
       secure: false,
       sameSite: "lax",
+      maxAge: 5,
     });
 
     // redirect to poll
-    return NextResponse.redirect(new URL(`/poll/${payload.pollId}`, req.url));
+    return NextResponse.redirect(new URL(`/poll/${watcher.pollId}`, req.url));
   }
 
   return NextResponse.redirect(new URL(`/poll/${payload.pollId}`, req.url));
