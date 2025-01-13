@@ -277,5 +277,7 @@
   "savePercentage": "Spórolj {percentage}%-ot",
   "1month": "1 hónap",
   "subscribe": "Feliratkozás",
-  "cancelAnytime": "Bármikor lemondhatod a <a>számlázás oldalon</a>."
+  "cancelAnytime": "Bármikor lemondhatod a <a>számlázás oldalon</a>.",
+  "unsubscribeToastTitle": "Kikapcsoltad az értesítéseket",
+  "unsubscribeToastDescription": "Mostantól nem kapsz több értesítést erről a szavazásról"
 }
