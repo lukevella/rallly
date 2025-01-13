@@ -41,9 +41,16 @@ const handleEmailChange = async (token: string) => {
     return false;
   }
 
-  await prisma.user.update({
-    where: { email: payload.fromEmail },
-    data: { email: payload.toEmail },
+  await prisma.$transaction(async (tx) => {
+    await Promise.all([
+      tx.user.update({
+        where: { email: payload.fromEmail },
+        data: { email: payload.toEmail },
+      }),
+      tx.verificationToken.delete({
+        where: { token },
+      }),
+    ]);
   });
 
   setEmailChangeCookie("success");
