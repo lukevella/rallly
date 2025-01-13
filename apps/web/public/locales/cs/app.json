@@ -259,5 +259,7 @@
   "timeZoneChangeDetectorMessage": "Vaše časové pásmo se změnilo na <b>{currentTimeZone}</b>. Chcete aktualizovat svá nastavení?",
   "yesUpdateTimezone": "Ano, aktualizovat mé časové pásmo",
   "noKeepCurrentTimezone": "Ne, zachovat aktuální časové pásmo",
-  "annualBenefit": "{count} měsíců zdarma"
+  "annualBenefit": "{count} měsíců zdarma",
+  "unsubscribeToastTitle": "Notifikace jsou vypnuté",
+  "unsubscribeToastDescription": "Upozornění na toto hlasován již nebudete dostávat"
 }
