@@ -13,7 +13,7 @@ type EmailChangePayload = {
 const COOKIE_CONFIG = {
   path: "/",
   httpOnly: false,
-  secure: process.env.NODE_ENV === "production",
+  secure: false,
   expires: new Date(Date.now() + 5 * 1000), // 5 seconds
 } as const;
 

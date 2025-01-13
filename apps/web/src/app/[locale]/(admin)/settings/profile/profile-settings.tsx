@@ -55,7 +55,6 @@ export const ProfileSettings = () => {
           defaultValue: "Your email has been updated",
         }),
       });
-      Cookies.remove("email-change-success");
     }
 
     if (error) {
@@ -75,7 +74,6 @@ export const ProfileSettings = () => {
                 defaultValue: "An error occurred while changing your email",
               }),
       });
-      Cookies.remove("email-change-error");
     }
   }, [posthog, refresh, t, toast]);
 
@@ -90,7 +88,9 @@ export const ProfileSettings = () => {
               await requestEmailChange.mutateAsync({ email: data.email });
               setDidRequestEmailChange(true);
             }
-            await changeName.mutateAsync({ name: data.name });
+            if (data.name !== user.name) {
+              await changeName.mutateAsync({ name: data.name });
+            }
             await refresh();
             reset(data);
           })}
