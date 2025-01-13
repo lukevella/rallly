@@ -279,5 +279,15 @@
   "subscribe": "Aanmelden",
   "cancelAnytime": "Je kunt op ieder moment annuleren via de <a>factureringspagina</a>.",
   "unsubscribeToastTitle": "Je ontvangt geen meldingen",
-  "unsubscribeToastDescription": "Je zult niet langer meldingen ontvangen voor deze poll"
+  "unsubscribeToastDescription": "Je zult niet langer meldingen ontvangen voor deze poll",
+  "emailChangeSuccess": "Je e-mailadres is gewijzigd",
+  "emailChangeSuccessDescription": "Je e-mailadres is bijgewerkt",
+  "emailChangeFailed": "E-mailadres wijzigen mislukt",
+  "emailChangeInvalidToken": "De verificatielink is ongeldig of is verlopen. Probeer het opnieuw.",
+  "emailChangeError": "Er is een fout opgetreden bij het wijzigen van je e-mailadres",
+  "emailChangeRequestSent": "Bevestig je nieuwe e-mailadres",
+  "emailChangeRequestSentDescription": "Controleer je e-mail en gebruik de bevestigingslink om de wijziging te voltooien.",
+  "profileEmailAddress": "E-mailadres",
+  "profileEmailAddressDescription": "Je e-mailadres wordt gebruikt om in te loggen op je account",
+  "emailAlreadyInUse": "Dit e-mailadres is al in gebruik. Probeer een andere of verwijder het bestaande account."
 }
