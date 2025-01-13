@@ -96,6 +96,32 @@ export const user = router({
         },
       });
     }),
+  updatePreferences: privateProcedure
+    .input(
+      z.object({
+        locale: z.string().optional(),
+        timeZone: z.string().optional(),
+        weekStart: z.number().min(0).max(6).optional(),
+        timeFormat: z.enum(["hours12", "hours24"]).optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.isGuest) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Guest users cannot update preferences",
+        });
+      }
+
+      await prisma.user.update({
+        where: {
+          id: ctx.user.id,
+        },
+        data: input,
+      });
+
+      return { success: true };
+    }),
   requestEmailChange: privateProcedure
     .use(rateLimitMiddleware)
     .input(z.object({ email: z.string().email() }))
