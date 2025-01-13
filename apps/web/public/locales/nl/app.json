@@ -277,5 +277,7 @@
   "savePercentage": "Bespaar {percentage}%",
   "1month": "1 maand",
   "subscribe": "Aanmelden",
-  "cancelAnytime": "Je kunt op ieder moment annuleren via de <a>factureringspagina</a>."
+  "cancelAnytime": "Je kunt op ieder moment annuleren via de <a>factureringspagina</a>.",
+  "unsubscribeToastTitle": "Je ontvangt geen meldingen",
+  "unsubscribeToastDescription": "Je zult niet langer meldingen ontvangen voor deze poll"
 }
