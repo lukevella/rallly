@@ -198,16 +198,12 @@
   "requireParticipantEmailLabel": "E-mailadres verplichten voor de deelnemers",
   "hideParticipantsLabel": "Deelnemersgegevens verbergen voor andere deelnemers",
   "hideScoresLabel": "Scores verbergen totdat een deelnemer heeft gestemd",
-  "authErrorTitle": "Fout bij het inloggen",
-  "authErrorDescription": "Er is een fout opgetreden bij het inloggen. Probeer het opnieuw.",
-  "authErrorCta": "Ga naar de inlogpagina",
   "continueAs": "Ga verder als",
   "pageMovedDescription": "Doorverwijzen naar <a>{newUrl}</a>",
   "notRegistered": "Heb je geen account? <a>Registreer</a>",
   "unlockFeatures": "Ontgrendel alle Pro-functies.",
   "pollStatusFinalized": "Afgerond",
   "share": "Delen",
-  "pageXOfY": "Pagina {currentPage} van {pageCount}",
   "noParticipants": "Geen deelnemers",
   "userId": "User ID",
   "aboutGuest": "Gast",
@@ -281,5 +277,7 @@
   "savePercentage": "Bespaar {percentage}%",
   "1month": "1 maand",
   "subscribe": "Aanmelden",
-  "cancelAnytime": "Je kunt op ieder moment annuleren via de <a>factureringspagina</a>."
+  "cancelAnytime": "Je kunt op ieder moment annuleren via de <a>factureringspagina</a>.",
+  "unsubscribeToastTitle": "Je ontvangt geen meldingen",
+  "unsubscribeToastDescription": "Je zult niet langer meldingen ontvangen voor deze poll"
 }

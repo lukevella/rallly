@@ -198,16 +198,12 @@
   "requireParticipantEmailLabel": "Email megadása kötelező lesz a résztvevők számára",
   "hideParticipantsLabel": "Rejtsd el a résztvevők listáját a többi résztvevő elől",
   "hideScoresLabel": "Rejtsd el a szavazatszámlálót, amíg nem szavaz a résztvevő",
-  "authErrorTitle": "Bejelentkezési hiba",
-  "authErrorDescription": "Hiba történt a bejelentkezés közben. Kérjük, próbáld újra!",
-  "authErrorCta": "Irány a bejelentkezési oldalra",
   "continueAs": "Folytatás, mint",
   "pageMovedDescription": "Átirányítás ide: <a>{newUrl}</a>",
   "notRegistered": "Nincs fiókod? <a>Regisztrálj</a>",
   "unlockFeatures": "Az összes Pro funkció feloldása.",
   "pollStatusFinalized": "Véglegesített",
   "share": "Megosztás",
-  "pageXOfY": "{currentPage} / {pageCount} oldal",
   "noParticipants": "Nincsenek résztvevők",
   "userId": "Felhasználó azonosító",
   "aboutGuest": "Vendég felhasználó",
@@ -281,5 +277,7 @@
   "savePercentage": "Spórolj {percentage}%-ot",
   "1month": "1 hónap",
   "subscribe": "Feliratkozás",
-  "cancelAnytime": "Bármikor lemondhatod a <a>számlázás oldalon</a>."
+  "cancelAnytime": "Bármikor lemondhatod a <a>számlázás oldalon</a>.",
+  "unsubscribeToastTitle": "Kikapcsoltad az értesítéseket",
+  "unsubscribeToastDescription": "Mostantól nem kapsz több értesítést erről a szavazásról"
 }
