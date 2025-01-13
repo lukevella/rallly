@@ -1,9 +1,8 @@
 const typescriptTransform = require("i18next-scanner-typescript");
 
 module.exports = {
-  input: ["src/**/*.{ts,tsx}", "!src/utils/auth.ts"],
+  input: ["src/**/*.{ts,tsx}", "!src/auth.ts"],
   options: {
-    keySeparator: ".",
     nsSeparator: false,
     defaultNs: "app",
     defaultValue: "__STRING_NOT_TRANSLATED__",

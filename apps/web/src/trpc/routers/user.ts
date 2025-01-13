@@ -1,12 +1,14 @@
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
 import { env } from "@/env";
 import { getS3Client } from "@/utils/s3";
+import { createToken } from "@/utils/session";
 import { getSubscriptionStatus } from "@/utils/subscription";
 
 import {
@@ -119,6 +121,46 @@ export const user = router({
       });
 
       return { success: true };
+    }),
+  requestEmailChange: privateProcedure
+    .use(rateLimitMiddleware)
+    .input(z.object({ email: z.string().email() }))
+    .mutation(async ({ input, ctx }) => {
+      // check if the email is already in use
+      const existingUser = await prisma.user.count({
+        where: { email: input.email },
+      });
+
+      if (existingUser) {
+        return {
+          success: false as const,
+          reason: "emailAlreadyInUse" as const,
+        };
+      }
+
+      // create a verification token
+      const token = await createToken(
+        {
+          fromEmail: ctx.user.email,
+          toEmail: input.email,
+        },
+        {
+          ttl: 60 * 10,
+        },
+      );
+
+      ctx.user.getEmailClient().sendTemplate("ChangeEmailRequest", {
+        to: input.email,
+        props: {
+          verificationUrl: absoluteUrl(
+            `/api/user/verify-email-change?token=${token}`,
+          ),
+          fromEmail: ctx.user.email,
+          toEmail: input.email,
+        },
+      });
+
+      return { success: true as const };
     }),
   getAvatarUploadUrl: privateProcedure
     .use(rateLimitMiddleware)

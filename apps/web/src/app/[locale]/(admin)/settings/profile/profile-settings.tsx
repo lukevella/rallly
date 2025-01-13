@@ -17,6 +17,7 @@ import { trpc } from "@/trpc/client";
 export const ProfileSettings = () => {
   const { user, refresh } = useUser();
   const changeName = trpc.user.changeName.useMutation();
+
   const form = useForm<{
     name: string;
     email: string;
@@ -33,9 +34,11 @@ export const ProfileSettings = () => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            await changeName.mutateAsync({ name: data.name });
-            await refresh();
+            if (data.name !== user.name) {
+              await changeName.mutateAsync({ name: data.name });
+            }
             reset(data);
+            await refresh();
           })}
         >
           <div className="flex flex-col gap-y-4">
@@ -54,20 +57,7 @@ export const ProfileSettings = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    <Trans i18nKey="email" />
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={true} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+
             <div className="mt-4 flex">
               <Button
                 loading={formState.isSubmitting}
