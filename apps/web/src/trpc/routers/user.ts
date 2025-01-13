@@ -97,6 +97,7 @@ export const user = router({
       });
     }),
   requestEmailChange: privateProcedure
+    .use(rateLimitMiddleware)
     .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input, ctx }) => {
       // create a verification token
