@@ -7,6 +7,7 @@ export type TRPCContext = {
     locale?: string;
     getEmailClient: (locale?: string) => EmailClient;
     image?: string;
+    email?: string;
   };
   ip?: string;
 };

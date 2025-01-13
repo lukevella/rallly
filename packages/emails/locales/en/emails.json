@@ -46,5 +46,12 @@
   "common_viewOn": "View on {{domain}}",
   "newComment_preview": "Go to your poll to see what they said.",
   "newComment_heading": "New Comment",
-  "newPoll_preview": "Share your participant link to start collecting responses."
+  "newPoll_preview": "Share your participant link to start collecting responses.",
+  "changeEmailRequest_preview": "Please verify your email address",
+  "changeEmailRequest_heading": "Verify Your New Email Address",
+  "changeEmailRequest_text1": "We've received a request to change the email address for your account.",
+  "changeEmailRequest_text2": "To complete this change, please click the button below:",
+  "changeEmailRequest_button": "Verify Email Address",
+  "changeEmailRequest_subject": "Verify your new email address",
+  "changeEmailRequest_text3": "This link will expire in 10 minutes. If you did not request this change, please contact support."
 }

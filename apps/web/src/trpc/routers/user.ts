@@ -1,12 +1,14 @@
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
 import { env } from "@/env";
 import { getS3Client } from "@/utils/s3";
+import { createToken } from "@/utils/session";
 import { getSubscriptionStatus } from "@/utils/subscription";
 
 import {
@@ -94,31 +96,33 @@ export const user = router({
         },
       });
     }),
-  updatePreferences: privateProcedure
-    .input(
-      z.object({
-        locale: z.string().optional(),
-        timeZone: z.string().optional(),
-        weekStart: z.number().min(0).max(6).optional(),
-        timeFormat: z.enum(["hours12", "hours24"]).optional(),
-      }),
-    )
+  requestEmailChange: privateProcedure
+    .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input, ctx }) => {
-      if (ctx.user.isGuest) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Guest users cannot update preferences",
-        });
-      }
-
-      await prisma.user.update({
-        where: {
-          id: ctx.user.id,
-        },
-        data: input,
+      // create a verification token
+      const token = await createToken({
+        fromEmail: ctx.user.email,
+        toEmail: input.email,
       });
 
-      return { success: true };
+      const verificationToken = await prisma.verificationToken.create({
+        data: {
+          identifier: input.email,
+          token,
+          expires: new Date(Date.now() + 1000 * 60 * 10),
+        },
+      });
+
+      ctx.user.getEmailClient().sendTemplate("ChangeEmailRequest", {
+        to: input.email,
+        props: {
+          verificationUrl: absoluteUrl(
+            `/api/user/verify-email-change?token=${verificationToken.token}`,
+          ),
+          fromEmail: ctx.user.email,
+          toEmail: input.email,
+        },
+      });
     }),
   getAvatarUploadUrl: privateProcedure
     .use(rateLimitMiddleware)

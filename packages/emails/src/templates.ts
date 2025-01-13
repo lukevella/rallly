@@ -1,3 +1,4 @@
+import { ChangeEmailRequest } from "./templates/change-email-request";
 import { FinalizeHostEmail } from "./templates/finalized-host";
 import { FinalizeParticipantEmail } from "./templates/finalized-participant";
 import { LoginEmail } from "./templates/login";
@@ -17,6 +18,7 @@ const templates = {
   NewParticipantConfirmationEmail,
   NewPollEmail,
   RegisterEmail,
+  ChangeEmailRequest,
 };
 
 export const emailTemplates = Object.keys(templates) as TemplateName[];
