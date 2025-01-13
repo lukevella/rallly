@@ -169,7 +169,7 @@ export const participants = router({
             participantName: participant.name,
             pollUrl: absoluteUrl(`/poll/${participant.poll.id}`),
             disableNotificationsUrl: absoluteUrl(
-              `/auth/disable-notifications?token=${token}`,
+              `/api/notifications/unsubscribe?token=${token}`,
             ),
             title: participant.poll.title,
           },

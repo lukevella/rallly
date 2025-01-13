@@ -198,16 +198,12 @@
   "requireParticipantEmailLabel": "Make email address required for participants",
   "hideParticipantsLabel": "Hide participant list from other participants",
   "hideScoresLabel": "Hide scores until after a participant has voted",
-  "authErrorTitle": "Login Error",
-  "authErrorDescription": "There was an error logging you in. Please try again.",
-  "authErrorCta": "Go to login page",
   "continueAs": "Continue as",
   "pageMovedDescription": "Redirecting to <a>{newUrl}</a>",
   "notRegistered": "Don't have an account? <a>Register</a>",
   "unlockFeatures": "Unlock all Pro features.",
   "pollStatusFinalized": "Finalized",
   "share": "Share",
-  "pageXOfY": "Page {currentPage} of {pageCount}",
   "noParticipants": "No participants",
   "userId": "User ID",
   "aboutGuest": "Guest User",
@@ -281,5 +277,7 @@
   "savePercentage": "Save {percentage}%",
   "1month": "1 month",
   "subscribe": "Subscribe",
-  "cancelAnytime": "Cancel anytime from your <a>billing page</a>."
+  "cancelAnytime": "Cancel anytime from your <a>billing page</a>.",
+  "unsubscribeToastTitle": "You have disabled notifications",
+  "unsubscribeToastDescription": "You will no longer receive notifications for this poll"
 }

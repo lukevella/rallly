@@ -9,11 +9,13 @@ import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
 
 import { GuestPollAlert } from "./guest-poll-alert";
+import { UnsubscribeAlert } from "./unsubscribe-alert";
 
 export function AdminPage() {
   useTouchBeacon();
   return (
     <div className="space-y-3 lg:space-y-4">
+      <UnsubscribeAlert />
       <PollHeader />
       <GuestPollAlert />
       <EventCard />

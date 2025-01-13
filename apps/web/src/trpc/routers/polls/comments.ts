@@ -93,7 +93,7 @@ export const comments = router({
               authorName,
               pollUrl: absoluteUrl(`/poll/${poll.id}`),
               disableNotificationsUrl: absoluteUrl(
-                `/auth/disable-notifications?token=${token}`,
+                `/api/notifications/unsubscribe?token=${token}`,
               ),
               title: poll.title,
             },

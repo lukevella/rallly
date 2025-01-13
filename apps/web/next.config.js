@@ -51,6 +51,11 @@ const nextConfig = {
         destination: "/settings/profile",
         permanent: true,
       },
+      {
+        source: "/auth/disable-notifications",
+        destination: "/api/notifications/unsubscribe",
+        permanent: true,
+      },
     ];
   },
   experimental: {
