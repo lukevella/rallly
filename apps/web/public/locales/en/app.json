@@ -289,5 +289,5 @@
   "emailChangeRequestSentDescription": "To complete the change, please check your email for a verification link.",
   "profileEmailAddress": "Email Address",
   "profileEmailAddressDescription": "Your email address is used to log in to your account",
-  "emailAlreadyInUse": "Email already in use. Please try a different one or delete the existing account."
+  "emailAlreadyInUse": "This email address is already associated with another account. Please use a different email address."
 }

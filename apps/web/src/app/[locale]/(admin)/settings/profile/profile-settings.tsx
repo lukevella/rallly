@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -5,27 +6,32 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { ProfilePicture } from "@/app/[locale]/(admin)/settings/profile/profile-picture";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 
+const profileSettingsFormData = z.object({
+  name: z.string().min(1).max(100),
+});
+
+type ProfileSettingsFormData = z.infer<typeof profileSettingsFormData>;
+
 export const ProfileSettings = () => {
   const { user, refresh } = useUser();
   const changeName = trpc.user.changeName.useMutation();
 
-  const form = useForm<{
-    name: string;
-    email: string;
-  }>({
+  const form = useForm<ProfileSettingsFormData>({
     defaultValues: {
       name: user.isGuest ? "" : user.name,
-      email: user.email ?? "",
     },
+    resolver: zodResolver(profileSettingsFormData),
   });
 
   const { control, handleSubmit, formState, reset } = form;
@@ -54,6 +60,7 @@ export const ProfileSettings = () => {
                   <FormControl>
                     <Input id="name" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
