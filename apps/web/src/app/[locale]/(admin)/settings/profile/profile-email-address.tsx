@@ -20,19 +20,23 @@ import { useTranslation } from "react-i18next";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+const emailChangeFormData = z.object({
+  email: z.string().email(),
+});
+
+type EmailChangeFormData = z.infer<typeof emailChangeFormData>;
 export const ProfileEmailAddress = () => {
   const { user, refresh } = useUser();
   const requestEmailChange = trpc.user.requestEmailChange.useMutation();
   const posthog = usePostHog();
-  const form = useForm<{
-    name: string;
-    email: string;
-  }>({
+  const form = useForm<EmailChangeFormData>({
     defaultValues: {
-      name: user.isGuest ? "" : user.name,
       email: user.email ?? "",
     },
+    resolver: zodResolver(emailChangeFormData),
   });
   const { t } = useTranslation("app");
   const { toast } = useToast();
