@@ -82,7 +82,6 @@ export const ProfileEmailAddress = () => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            reset(data);
             if (data.email !== user.email) {
               posthog.capture("email change requested");
               const res = await requestEmailChange.mutateAsync({
@@ -99,9 +98,9 @@ export const ProfileEmailAddress = () => {
                 }
               } else {
                 setDidRequestEmailChange(true);
+                reset(data);
               }
             }
-            await refresh();
           })}
         >
           <div className="flex flex-col gap-y-4">

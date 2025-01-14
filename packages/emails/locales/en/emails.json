@@ -52,6 +52,6 @@
   "changeEmailRequest_text2": "To complete this change, please click the button below:",
   "changeEmailRequest_button": "Verify Email Address",
   "changeEmailRequest_subject": "Verify your new email address",
-  "changeEmailRequest_text3": "This link will expire in 10 minutes. If you did not request this change, please contact support.",
+  "changeEmailRequest_text3": "This link will expire in 10 minutes. If you did not request this change, please ignore this email.",
   "changeEmailRequest_text1": "We've received a request to change the email address for your account from <b>{{fromEmail}}</b> to <b>{{toEmail}}</b>."
 }
