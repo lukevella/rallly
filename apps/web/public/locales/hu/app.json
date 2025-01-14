@@ -288,6 +288,5 @@
   "emailChangeRequestSent": "Hitelesítsd az új email címed",
   "emailChangeRequestSentDescription": "Hogy véglegesítsd a változást, ellenőrizd az email fiókod a hitelesítő linkért.",
   "profileEmailAddress": "Email cím",
-  "profileEmailAddressDescription": "Az email címed használhatod a belépéshez",
-  "emailAlreadyInUse": "Az email cím már foglalt. Kérjük próbálj meg egy másikat vagy töröl a meglévő fiókot."
+  "profileEmailAddressDescription": "Az email címed használhatod a belépéshez"
 }
