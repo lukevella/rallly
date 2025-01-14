@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -9,13 +10,12 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { ProfilePicture } from "@/app/[locale]/(admin)/settings/profile/profile-picture";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const profileSettingsFormData = z.object({
   name: z.string().min(1).max(100),

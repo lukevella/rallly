@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { usePostHog } from "@rallly/posthog/client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
@@ -16,12 +17,11 @@ import { InfoIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { z } from "zod";
 
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const emailChangeFormData = z.object({
   email: z.string().email(),
