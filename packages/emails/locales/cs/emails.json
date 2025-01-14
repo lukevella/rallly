@@ -51,6 +51,5 @@
   "changeEmailRequest_text2": "Chcete-li dokončit tuto změnu, klikněte na tlačítko níže:",
   "changeEmailRequest_button": "Ověřit e-mailovou adresu",
   "changeEmailRequest_subject": "Ověřte svou novou e-mailovou adresu",
-  "changeEmailRequest_text3": "Tento odkaz vyprší za 10 minut. Pokud jste o tuto změnu nepožádali, kontaktujte podporu.",
   "changeEmailRequest_text1": "Obdrželi jsme žádost o změnu e-mailové adresy pro váš účet z <b>{{fromEmail}}</b> na <b>{{toEmail}}</b>."
 }
