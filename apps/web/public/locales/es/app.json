@@ -277,5 +277,17 @@
   "savePercentage": "Ahorre {percentage}%",
   "1month": "1 mes",
   "subscribe": "Suscribirse",
-  "cancelAnytime": "Cancela en cualquier momento desde tu <a>página de facturación</a>."
+  "cancelAnytime": "Cancela en cualquier momento desde tu <a>página de facturación</a>.",
+  "unsubscribeToastTitle": "Has deshabilitado las notificaciones",
+  "unsubscribeToastDescription": "Ya no recibirás notificaciones de esta encuesta",
+  "emailChangeSuccess": "Correo electrónico cambiado correctamente",
+  "emailChangeSuccessDescription": "Su correo electrónico ha sido actualizado",
+  "emailChangeFailed": "Error al cambiar el correo electrónico",
+  "emailChangeInvalidToken": "El enlace de verificación no es válido o ha vencido. Por favor inténtelo nuevamente.",
+  "emailChangeError": "Se ha producido un error al cambiar su correo electrónico",
+  "emailChangeRequestSent": "Verifica tu nueva dirección de correo electrónico",
+  "emailChangeRequestSentDescription": "Para completar el cambio, por favor revisa tu correo electrónico para ver el enlace de verificación.",
+  "profileEmailAddress": "Dirección de correo electrónico",
+  "profileEmailAddressDescription": "Tu dirección de correo electrónico se utiliza para iniciar sesión en tu cuenta",
+  "emailAlreadyInUse": "El correo electrónico ya está en uso. Por favor, inténtalo con uno diferente o elimina la cuenta existente."
 }

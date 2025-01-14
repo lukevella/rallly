@@ -46,5 +46,12 @@
   "common_viewOn": "Ver en {{domain}}",
   "newComment_preview": "Ve a tu encuesta para ver lo que dijeron.",
   "newComment_heading": "Nuevo comentario",
-  "newPoll_preview": "Comparte tu enlace de participante para empezar a recopilar respuestas."
+  "newPoll_preview": "Comparte tu enlace de participante para empezar a recopilar respuestas.",
+  "changeEmailRequest_preview": "Por favor, verifica tu dirección de correo electrónico",
+  "changeEmailRequest_heading": "Verifica tu nueva dirección de correo electrónico",
+  "changeEmailRequest_text2": "Para completar este cambio, por favor haz clic en el siguiente botón:",
+  "changeEmailRequest_button": "Verificar correo electrónico",
+  "changeEmailRequest_subject": "Verifica tu nueva dirección de correo electrónico",
+  "changeEmailRequest_text3": "Este enlace caducará en 10 minutos. Si no solicitó este cambio, póngase en contacto con el servicio de asistencia.",
+  "changeEmailRequest_text1": "Hemos recibido una solicitud para cambiar la dirección de correo electrónico de tu cuenta de <b>{{fromEmail}}</b> a <b>{{toEmail}}</b>."
 }

@@ -261,5 +261,15 @@
   "noKeepCurrentTimezone": "Ne, zachovat aktuální časové pásmo",
   "annualBenefit": "{count} měsíců zdarma",
   "unsubscribeToastTitle": "Notifikace jsou vypnuté",
-  "unsubscribeToastDescription": "Upozornění na toto hlasován již nebudete dostávat"
+  "unsubscribeToastDescription": "Upozornění na toto hlasován již nebudete dostávat",
+  "emailChangeSuccess": "E‑mail byl úspěšně změněn",
+  "emailChangeSuccessDescription": "Váš e-mail byl aktualizován",
+  "emailChangeFailed": "Změna e-mailu se nezdařila",
+  "emailChangeInvalidToken": "Ověřovací odkaz je neplatný nebo vypršel. Zkuste to prosím znovu.",
+  "emailChangeError": "Při změně e-mailu došlo k chybě",
+  "emailChangeRequestSent": "Ověřte svou novou e-mailovou adresu",
+  "emailChangeRequestSentDescription": "Chcete-li dokončit změnu, zkontrolujte prosím svůj e-mail, kam byl zaslán ověřovací odkaz.",
+  "profileEmailAddress": "E-mailová adresa",
+  "profileEmailAddressDescription": "Vaše e-mailová adresa je použita k přihlášení k vašemu účtu",
+  "emailAlreadyInUse": "E-mail je již používán. Zkuste jiný nebo odstraňte existující účet."
 }

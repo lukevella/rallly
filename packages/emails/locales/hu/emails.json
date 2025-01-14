@@ -46,5 +46,12 @@
   "common_viewOn": "Nézd meg itt: {{domain}}",
   "newComment_preview": "Irány a szavazásod, hogy lásd a hozzászólásokat.",
   "newComment_heading": "Új hozzászólás",
-  "newPoll_preview": "Oszd meg a résztvevői linked, hogy elkezdhess válaszokat gyűjteni."
+  "newPoll_preview": "Oszd meg a résztvevői linked, hogy elkezdhess válaszokat gyűjteni.",
+  "changeEmailRequest_preview": "Kérjük hitelesítsd az email címed",
+  "changeEmailRequest_heading": "Hitelesítsd az új email címed",
+  "changeEmailRequest_text2": "Hogy befejezd a váltást, kattints az alábbi gombra:",
+  "changeEmailRequest_button": "Email cím hitelesítése",
+  "changeEmailRequest_subject": "Hitelesítsd az új email címed",
+  "changeEmailRequest_text3": "A link 10 perc múlva lejár. Ha nem te kezdeményezted ezt a váltás, kérjük vedd fel a kapcsolatot az üzemeltetéssel.",
+  "changeEmailRequest_text1": "Kaptunk egy kérést, hogy a jelenlegi email címed (<b>{{fromEmail}}</b>) megváltoztassuk erre: <b>{{toEmail}}</b>."
 }

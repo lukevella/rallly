@@ -279,5 +279,15 @@
   "subscribe": "Feliratkozás",
   "cancelAnytime": "Bármikor lemondhatod a <a>számlázás oldalon</a>.",
   "unsubscribeToastTitle": "Kikapcsoltad az értesítéseket",
-  "unsubscribeToastDescription": "Mostantól nem kapsz több értesítést erről a szavazásról"
+  "unsubscribeToastDescription": "Mostantól nem kapsz több értesítést erről a szavazásról",
+  "emailChangeSuccess": "Email váltás sikeresen megtörtént",
+  "emailChangeSuccessDescription": "Email címed frissítve",
+  "emailChangeFailed": "Email váltás sikertelen",
+  "emailChangeInvalidToken": "A hitelesítő link érvénytelen vagy lejárt. Kérjük próbáld újra!",
+  "emailChangeError": "Hiba történt az email váltás közben",
+  "emailChangeRequestSent": "Hitelesítsd az új email címed",
+  "emailChangeRequestSentDescription": "Hogy véglegesítsd a változást, ellenőrizd az email fiókod a hitelesítő linkért.",
+  "profileEmailAddress": "Email cím",
+  "profileEmailAddressDescription": "Az email címed használhatod a belépéshez",
+  "emailAlreadyInUse": "Az email cím már foglalt. Kérjük próbálj meg egy másikat vagy töröl a meglévő fiókot."
 }
