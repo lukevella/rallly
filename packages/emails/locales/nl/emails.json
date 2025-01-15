@@ -52,6 +52,5 @@
   "changeEmailRequest_text2": "Klik op onderstaande knop om deze wijziging te bevestigen:",
   "changeEmailRequest_button": "E-mailadres bevestigen",
   "changeEmailRequest_subject": "Bevestig je nieuwe e-mailadres",
-  "changeEmailRequest_text3": "Deze link verloopt over 10 minuten. Als je deze wijziging niet hebt aangevraagd, neem dan contact met ons op.",
   "changeEmailRequest_text1": "We hebben een verzoek ontvangen om het e-mailadres voor je account van <b>{{fromEmail}}</b> te wijzigen naar <b>{{toEmail}}</b>."
 }

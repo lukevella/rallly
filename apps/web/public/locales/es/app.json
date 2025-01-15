@@ -288,6 +288,5 @@
   "emailChangeRequestSent": "Verifica tu nueva dirección de correo electrónico",
   "emailChangeRequestSentDescription": "Para completar el cambio, por favor revisa tu correo electrónico para ver el enlace de verificación.",
   "profileEmailAddress": "Dirección de correo electrónico",
-  "profileEmailAddressDescription": "Tu dirección de correo electrónico se utiliza para iniciar sesión en tu cuenta",
-  "emailAlreadyInUse": "El correo electrónico ya está en uso. Por favor, inténtalo con uno diferente o elimina la cuenta existente."
+  "profileEmailAddressDescription": "Tu dirección de correo electrónico se utiliza para iniciar sesión en tu cuenta"
 }

@@ -277,5 +277,17 @@
   "savePercentage": "Economize {percentage}%",
   "1month": "1 mês",
   "subscribe": "Assine",
-  "cancelAnytime": "Cancele a qualquer momento na <a>página de cobrança</a>."
+  "cancelAnytime": "Cancele a qualquer momento na <a>página de cobrança</a>.",
+  "unsubscribeToastTitle": "Você desativou as notificações",
+  "unsubscribeToastDescription": "Você não receberá mais notificações para esta enquete",
+  "emailChangeSuccess": "E-mail alterado com sucesso",
+  "emailChangeSuccessDescription": "O seu email foi atualizado",
+  "emailChangeFailed": "Falha na alteração do e-mail",
+  "emailChangeInvalidToken": "O link de verificação é inválido ou expirou. Por favor, tente novamente.",
+  "emailChangeError": "Um erro ocorreu ao alterar seu e-mail",
+  "emailChangeRequestSent": "Verifique seu novo endereço de email",
+  "emailChangeRequestSentDescription": "Para completar a alteração, verifique seu email por um link de verificação.",
+  "profileEmailAddress": "Endereço de email",
+  "profileEmailAddressDescription": "Seu endereço de email é usado para acessar sua conta",
+  "emailAlreadyInUse": "Este endereço de e-mail já está associado a outra conta. Por favor, use um endereço de e-mail diferente."
 }

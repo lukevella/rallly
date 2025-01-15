@@ -288,6 +288,5 @@
   "emailChangeRequestSent": "Bevestig je nieuwe e-mailadres",
   "emailChangeRequestSentDescription": "Controleer je e-mail en gebruik de bevestigingslink om de wijziging te voltooien.",
   "profileEmailAddress": "E-mailadres",
-  "profileEmailAddressDescription": "Je e-mailadres wordt gebruikt om in te loggen op je account",
-  "emailAlreadyInUse": "Dit e-mailadres is al in gebruik. Probeer een andere of verwijder het bestaande account."
+  "profileEmailAddressDescription": "Je e-mailadres wordt gebruikt om in te loggen op je account"
 }

@@ -270,6 +270,5 @@
   "emailChangeRequestSent": "Ověřte svou novou e-mailovou adresu",
   "emailChangeRequestSentDescription": "Chcete-li dokončit změnu, zkontrolujte prosím svůj e-mail, kam byl zaslán ověřovací odkaz.",
   "profileEmailAddress": "E-mailová adresa",
-  "profileEmailAddressDescription": "Vaše e-mailová adresa je použita k přihlášení k vašemu účtu",
-  "emailAlreadyInUse": "E-mail je již používán. Zkuste jiný nebo odstraňte existující účet."
+  "profileEmailAddressDescription": "Vaše e-mailová adresa je použita k přihlášení k vašemu účtu"
 }
