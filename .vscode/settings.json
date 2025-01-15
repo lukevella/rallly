@@ -8,5 +8,7 @@
   "jestrunner.codeLensSelector": "",
   "vitest.filesWatcherInclude": "**/*.test.ts",
   "editor.formatOnSave": true,
-  "typescript.preferences.preferTypeOnlyAutoImports": true
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.tsserver.log": "verbose",
+  "typescript.tsserver.trace": "messages"
 }
