@@ -52,5 +52,6 @@
   "changeEmailRequest_text2": "Hogy befejezd a váltást, kattints az alábbi gombra:",
   "changeEmailRequest_button": "Email cím hitelesítése",
   "changeEmailRequest_subject": "Hitelesítsd az új email címed",
+  "changeEmailRequest_text3": "A link 10 perc múlva lejár. Ha nem te kezdeményezted ezt a váltás, kérjük hagyd figyelmen kívül ezt a levelet.",
   "changeEmailRequest_text1": "Kaptunk egy kérést, hogy a jelenlegi email címed (<b>{{fromEmail}}</b>) megváltoztassuk erre: <b>{{toEmail}}</b>."
 }
