@@ -52,6 +52,6 @@
   "changeEmailRequest_text2": "Para completar este cambio, por favor haz clic en el siguiente botón:",
   "changeEmailRequest_button": "Verificar correo electrónico",
   "changeEmailRequest_subject": "Verifica tu nueva dirección de correo electrónico",
-  "changeEmailRequest_text3": "Este enlace caducará en 10 minutos. Si usted no solicitó este cambio, por favor ignore este correo electrónico.",
+  "changeEmailRequest_text3": "Este enlace caducará en 10 minutos. Si no solicitó este cambio, por favor ignore este correo electrónico.",
   "changeEmailRequest_text1": "Hemos recibido una solicitud para cambiar la dirección de correo electrónico de tu cuenta de <b>{{fromEmail}}</b> a <b>{{toEmail}}</b>."
 }
