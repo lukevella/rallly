@@ -235,16 +235,14 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         // to display on the dashboard. The flow can be modified so that
         // the name is requested after the user has logged in.
         if (email?.verificationRequest) {
-          const isUnregisteredUser =
+          const isRegisteredUser =
             (await prisma.user.count({
               where: {
                 email: user.email as string,
               },
-            })) === 0;
+            })) > 0;
 
-          if (isUnregisteredUser) {
-            return false;
-          }
+          return isRegisteredUser;
         }
 
         // when we login with a social account for the first time, the user is not created yet
