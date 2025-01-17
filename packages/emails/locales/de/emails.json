@@ -46,5 +46,12 @@
   "common_viewOn": "Auf {{domain}} ansehen",
   "newComment_preview": "Gehe zu deiner Umfrage, um zu sehen, was sie gesagt haben.",
   "newComment_heading": "Neuer Kommentar",
-  "newPoll_preview": "Teilen Sie den Einladungslink, um mit dem Sammeln von Antworten zu beginnen."
+  "newPoll_preview": "Teilen Sie den Einladungslink, um mit dem Sammeln von Antworten zu beginnen.",
+  "changeEmailRequest_preview": "Bitte bestätige deine E-Mail Adresse",
+  "changeEmailRequest_heading": "Bestätige deine neue E-Mail-Adresse",
+  "changeEmailRequest_text2": "Um diese Änderung abzuschließen, klicke bitte unten auf den Button:",
+  "changeEmailRequest_button": "E-Mail-Adresse bestätigen",
+  "changeEmailRequest_subject": "Bestätige deine neue E-Mail-Adresse",
+  "changeEmailRequest_text3": "Dieser Link läuft in 10 Minuten ab. Wenn du diese Änderung nicht angefordert hast, bitte ignoriere diese E-Mail.",
+  "changeEmailRequest_text1": "Wir haben eine Anfrage erhalten, die E-Mail-Adresse deines Accounts von <b>{{fromEmail}}</b> nach <b>{{toEmail}}</b> zu ändern."
 }
