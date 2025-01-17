@@ -9,13 +9,13 @@ import { TRPCClientError } from "@trpc/client";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
-import { useMount } from "react-use";
 import z from "zod";
 
 import { usePoll } from "@/contexts/poll";
 
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
+import { useUser } from "./user-provider";
 
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
@@ -90,17 +90,23 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const isEmailRequired = poll.requireParticipantEmail;
 
-  const { register, setError, formState, setFocus, handleSubmit } =
+  const { user } = useUser();
+  const isLoggedIn = !user.isGuest;
+
+  const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
       resolver: zodResolver(schema),
       defaultValues: {
         requireEmail: isEmailRequired,
+        ...(isLoggedIn
+          ? { name: user.name, email: user.email ?? "" }
+          : {
+              name: "",
+              email: "",
+            }),
       },
     });
   const addParticipant = useAddParticipantMutation();
-  useMount(() => {
-    setFocus("name");
-  });
 
   return (
     <form
@@ -131,6 +137,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         <Input
           className="w-full"
           data-1p-ignore="true"
+          autoFocus={true}
           error={!!formState.errors.name}
           disabled={formState.isSubmitting}
           placeholder={t("namePlaceholder")}
