@@ -10,9 +10,10 @@ export const UpgradeButton = ({
   large,
 }: React.PropsWithChildren<{ annual?: boolean; large?: boolean }>) => {
   const posthog = usePostHog();
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   return (
-    <form method="POST" action="/api/stripe/checkout">
+    <form ref={formRef} method="POST" action="/api/stripe/checkout">
       <input
         type="hidden"
         name="period"
@@ -26,9 +27,14 @@ export const UpgradeButton = ({
       <Button
         size={large ? "lg" : "default"}
         className="w-full"
-        type="submit"
         variant="primary"
-        onClick={() => {
+        onClick={(e) => {
+          // 🐛 Since we have nested forms, we need to prevent the default
+          // action of the button from being triggered so that we don't submit
+          // the parent form.
+          // TODO: Fix this by making sure we never have nested forms.
+          e.preventDefault();
+          formRef.current?.submit();
           posthog?.capture("click upgrade button");
         }}
       >
