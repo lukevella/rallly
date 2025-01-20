@@ -1,9 +1,9 @@
 import { prisma } from "@rallly/database";
 
-import { possiblyPublicProcedure, router } from "../trpc";
+import { privateProcedure, router } from "../trpc";
 
 export const dashboard = router({
-  info: possiblyPublicProcedure.query(async ({ ctx }) => {
+  info: privateProcedure.query(async ({ ctx }) => {
     const activePollCount = await prisma.poll.count({
       where: {
         ...(ctx.user.isGuest

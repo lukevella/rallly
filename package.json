@@ -8,7 +8,7 @@
     "dev:landing": "dotenv -c development turbo dev --filter=@rallly/landing",
     "start": "turbo run start --filter=@rallly/web",
     "build": "dotenv -c -- turbo run build --filter=@rallly/web",
-    "build:web": "turbo run build --filter=@rallly/web",
+    "build:web": "NEXT_PUBLIC_APP_VERSION=$(node scripts/inject-version.js) turbo run build --filter=@rallly/web",
     "build:landing": "turbo run build --filter=@rallly/landing",
     "build:test": "turbo build:test",
     "docs:dev": "turbo dev --filter=@rallly/docs...",

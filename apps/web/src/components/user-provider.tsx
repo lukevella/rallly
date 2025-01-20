@@ -1,7 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
 import type { Session } from "next-auth";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import React from "react";
 
 import { Spinner } from "@/components/spinner";
@@ -107,10 +107,9 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
         },
         refresh: session.update,
         logout: async () => {
-          await fetch("/api/logout", { method: "POST" });
+          await signOut();
           posthog?.capture("logout");
           posthog?.reset();
-          window.location.href = "/login";
         },
         ownsObject: (resource) => {
           return isOwner(resource, { id: user.id, isGuest });

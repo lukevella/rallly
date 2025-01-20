@@ -64,22 +64,14 @@ export const proProcedure = t.procedure.use(
 
 export const privateProcedure = t.procedure.use(
   middleware(async ({ ctx, next }) => {
-    const email = ctx.user.email;
-    if (!email) {
+    if (ctx.user.isGuest !== false) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Login is required",
       });
     }
 
-    return next({
-      ctx: {
-        user: {
-          ...ctx.user,
-          email,
-        },
-      },
-    });
+    return next();
   }),
 );
 

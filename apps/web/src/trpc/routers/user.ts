@@ -25,7 +25,7 @@ const mimeToExtension = {
 } as const;
 
 export const user = router({
-  getBilling: possiblyPublicProcedure.query(async ({ ctx }) => {
+  getBilling: privateProcedure.query(async ({ ctx }) => {
     return await prisma.userPaymentData.findUnique({
       select: {
         subscriptionId: true,
@@ -126,6 +126,18 @@ export const user = router({
     .use(rateLimitMiddleware)
     .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input, ctx }) => {
+      const currentUser = await prisma.user.findUnique({
+        where: { id: ctx.user.id },
+        select: { email: true },
+      });
+
+      if (!currentUser) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "User not found",
+        });
+      }
+
       // check if the email is already in use
       const existingUser = await prisma.user.count({
         where: { email: input.email },
@@ -141,7 +153,7 @@ export const user = router({
       // create a verification token
       const token = await createToken(
         {
-          fromEmail: ctx.user.email,
+          fromEmail: currentUser.email,
           toEmail: input.email,
         },
         {
@@ -155,7 +167,7 @@ export const user = router({
           verificationUrl: absoluteUrl(
             `/api/user/verify-email-change?token=${token}`,
           ),
-          fromEmail: ctx.user.email,
+          fromEmail: currentUser.email,
           toEmail: input.email,
         },
       });
