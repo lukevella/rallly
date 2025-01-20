@@ -60,9 +60,11 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      const codeInput = page.getByPlaceholder("Enter your 6-digit code");
-
       const code = await getCode();
+
+      await page.getByText("Finish Registering").waitFor();
+
+      const codeInput = page.getByPlaceholder("Enter your 6-digit code");
 
       await codeInput.fill(code);
 
