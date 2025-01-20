@@ -1,9 +1,7 @@
 import { cn } from "@rallly/ui";
 import { DotPattern } from "@rallly/ui/dot-pattern";
 import type { Metadata } from "next";
-import { redirect, RedirectType } from "next/navigation";
 
-import { getServerSession } from "@/auth";
 import { Logo } from "@/components/logo";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { QuickStartButton } from "@/features/quick-create/quick-create-button";
@@ -14,12 +12,6 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
-
-  if (session?.user.email) {
-    return redirect("/", RedirectType.replace);
-  }
-
   return (
     <div className="relative flex h-screen flex-col items-center justify-center bg-gray-100 p-2 lg:p-4">
       <div className="z-10 flex w-full max-w-7xl flex-1 rounded-xl border bg-white shadow-sm lg:max-h-[720px] lg:p-2">

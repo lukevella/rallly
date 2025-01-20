@@ -116,7 +116,7 @@ export async function QuickStartWidget() {
               t={t}
               ns="app"
               i18nKey="quickCreateGetNotifications"
-              defaults="Get email notifications notifications"
+              defaults="Get email notifications"
             />
           </li>
           <li className="flex items-center gap-2">

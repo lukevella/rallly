@@ -114,6 +114,22 @@ test.describe.serial(() => {
       await expect(page.getByText("Test User")).toBeVisible();
     });
 
+    test("shows error for invalid verification code", async ({ page }) => {
+      await page.goto("/login");
+
+      await page
+        .getByPlaceholder("jessie.smith@example.com")
+        .fill(testUserEmail);
+
+      await page.getByRole("button", { name: "Continue with Email" }).click();
+
+      await page.getByPlaceholder("Enter your 6-digit code").fill("000000");
+
+      await expect(
+        page.getByText("Your verification code is incorrect or has expired"),
+      ).toBeVisible();
+    });
+
     test("can login with verification code", async ({ page }) => {
       await page.goto("/login");
 

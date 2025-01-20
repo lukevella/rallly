@@ -10,7 +10,12 @@ export async function setVerificationEmail(email: string) {
     },
   });
 
-  cookies().set("verification-email", email);
+  cookies().set("verification-email", email, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 15 * 60,
+  });
 
   return count > 0;
 }
