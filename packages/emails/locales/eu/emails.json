@@ -46,5 +46,6 @@
   "common_viewOn": "Ikusi {{domain}}-n",
   "newComment_preview": "Zoaz zure inkestara zer esan duten ikusteko.",
   "newComment_heading": "Iruzkin berria",
-  "newPoll_preview": "Partekatu zure parte-hartzaile esteka erantzunak biltzen hasteko."
+  "newPoll_preview": "Partekatu zure parte-hartzaile esteka erantzunak biltzen hasteko.",
+  "changeEmailRequest_preview": "Egiaztatu zure posta helbidea"
 }
