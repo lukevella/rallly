@@ -270,5 +270,8 @@
   "1month": "1 kuukausi",
   "subscribe": "Tilaa",
   "cancelAnytime": "Peruuta milloin tahansa <a>laskutussivulta</a>.",
-  "userNotFound": "Tällä sähköpostiosoitteella ei ole käyttäjää"
+  "back": "Takaisin",
+  "verifyEmail": "Vahvista sähköpostiosoitteesi",
+  "userNotFound": "Tällä sähköpostiosoitteella ei ole käyttäjää",
+  "registerDescription": "Aikatauluta sujuvasti ja säästä aikaa"
 }
