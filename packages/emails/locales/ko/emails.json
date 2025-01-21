@@ -13,5 +13,6 @@
   "finalizeParticipant_content2": "이 이벤트에 대한 캘린더 초대장을 첨부해 드렸습니다.",
   "finalizeParticipant_subject": "{{title}}에 예약된 날짜",
   "login_button": "{{domain}}에 로그인합니다",
+  "login_heading": "로그인",
   "newPoll_preview": "참여 링크를 공유하여 응답 수집을 시작하세요."
 }
