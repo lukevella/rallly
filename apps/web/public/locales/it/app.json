@@ -93,6 +93,7 @@
   "polls": "Sondaggi",
   "timeZoneSelect__noOption": "Nessuna opzione trovata",
   "timeZoneSelect__inputPlaceholder": "Ricerca…",
+  "poweredByRallly": "Powered by <a>{{name}}</a>",
   "participants": "Partecipanti",
   "language": "Lingua",
   "languageDescription": "Cambia la tua lingua preferita",
@@ -251,5 +252,9 @@
   "yesUpdateTimezone": "Sì, aggiorna il mio fuso orario",
   "noKeepCurrentTimezone": "No, mantieni il fuso orario attuale",
   "annualBenefit": "{count} mesi gratis",
-  "userNotFound": "Non esiste un utente con questa email"
+  "savePercentage": "Risparmia {percentage}%",
+  "back": "Indietro",
+  "verifyEmail": "Verifica la tua email",
+  "userNotFound": "Non esiste un utente con questa email",
+  "registerDescription": "Semplifica il processo di programmazione e risparmia tempo"
 }
