@@ -270,5 +270,8 @@
   "1month": "1 mois",
   "subscribe": "S'abonner",
   "cancelAnytime": "Annulez à tout moment depuis votre <a>page de facturation</a>.",
-  "userNotFound": "Il n’y a aucun utilisateur avec cette adresse e-mail"
+  "back": "Retour",
+  "verifyEmail": "Vérifiez votre e-mail",
+  "userNotFound": "Il n’y a aucun utilisateur avec cette adresse e-mail",
+  "registerDescription": "Simplifiez votre processus de planification et gagnez du temps"
 }
