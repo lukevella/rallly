@@ -270,5 +270,8 @@
   "1month": "1 miesiąc",
   "subscribe": "Subskrybuj",
   "cancelAnytime": "Możesz anulować w dowolnym momencie na <a>stronie rozliczeniowej</a>.",
-  "userNotFound": "Użytkownik o tym adresie e-mail nie istnieje"
+  "back": "Powrót",
+  "verifyEmail": "Zweryfikuj swój e-mail",
+  "userNotFound": "Użytkownik o tym adresie e-mail nie istnieje",
+  "registerDescription": "Zoptymalizuj proces planowania i oszczędzaj czas"
 }
