@@ -28,5 +28,6 @@
   "whenPollInactive": "Kada anketa postaje neaktivna?",
   "whenPollInactiveAnswer": "Ankete postaju neaktivne kada su sve opcije datuma prošle I anketa nije pristupljena više od 30 dana. Neaktivne ankete se automatski brišu ako nemate plaćenu pretplatu.",
   "yearlyBillingDescription": "godišnje",
-  "annualBenefit": "{count} mjeseci besplatno"
+  "annualBenefit": "{count} mjeseci besplatno",
+  "pricingTitle": "Započnite besplatno"
 }
