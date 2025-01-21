@@ -266,5 +266,8 @@
   "savePercentage": "Spara {percentage}%",
   "1month": "1 månad",
   "subscribe": "Prenumerera",
-  "userNotFound": "En användare med den e-postadressen existerar inte"
+  "back": "Tillbaka",
+  "verifyEmail": "Verifiera din e-postadress",
+  "userNotFound": "En användare med den e-postadressen existerar inte",
+  "registerDescription": "Effektivisera din schemaläggning och spara tid"
 }
