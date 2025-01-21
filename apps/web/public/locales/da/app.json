@@ -270,5 +270,8 @@
   "1month": "1 måned",
   "subscribe": "Abonner",
   "cancelAnytime": "Annuller når som helst fra din <a>faktureringsside</a>.",
-  "userNotFound": "En bruger med den e-mail eksisterer ikke"
+  "back": "Tilbage",
+  "verifyEmail": "Bekræft din e-mail",
+  "userNotFound": "En bruger med den e-mail eksisterer ikke",
+  "registerDescription": "Strømlin din planlægningsproces og spar tid"
 }
