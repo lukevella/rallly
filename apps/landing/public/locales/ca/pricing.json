@@ -28,5 +28,6 @@
   "whenPollInactive": "Quan es converteix un sondeig en inactiu?",
   "whenPollInactiveAnswer": "Els sondejos esdevenen inactius quan totes les opcions de data són en el passat I el sondeig no ha estat accessible durant més de 30 dies. Els sondejos inactius s'eliminen automàticament si no teniu una subscripció de pagament.",
   "yearlyBillingDescription": "per any",
-  "annualBenefit": "{count} mesos gratuïts"
+  "annualBenefit": "{count} mesos gratuïts",
+  "pricingTitle": "Comença gratis"
 }
