@@ -252,5 +252,9 @@
   "yesUpdateTimezone": "Áno, aktualizovať moje časové pásmo",
   "noKeepCurrentTimezone": "Nie, ponechať aktuálne časové pásmo",
   "annualBenefit": "{count} mesiacov zadarmo",
-  "userNotFound": "Používateľ s týmto e-mailom neexistuje"
+  "savePercentage": "Ušetríte {percentage}%",
+  "back": "Späť",
+  "verifyEmail": "Overte svoj e-mail",
+  "userNotFound": "Používateľ s týmto e-mailom neexistuje",
+  "registerDescription": "Zefektívnite svoje plánovanie a ušetrite čas"
 }
