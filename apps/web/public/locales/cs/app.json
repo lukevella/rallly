@@ -252,6 +252,7 @@
   "yesUpdateTimezone": "Ano, aktualizovat mé časové pásmo",
   "noKeepCurrentTimezone": "Ne, zachovat aktuální časové pásmo",
   "annualBenefit": "{count} měsíců zdarma",
+  "savePercentage": "Ušetříte {percentage}%",
   "unsubscribeToastTitle": "Notifikace jsou vypnuté",
   "unsubscribeToastDescription": "Upozornění na toto hlasován již nebudete dostávat",
   "emailChangeSuccess": "E‑mail byl úspěšně změněn",
@@ -263,5 +264,8 @@
   "emailChangeRequestSentDescription": "Chcete-li dokončit změnu, zkontrolujte prosím svůj e-mail, kam byl zaslán ověřovací odkaz.",
   "profileEmailAddress": "E-mailová adresa",
   "profileEmailAddressDescription": "Vaše e-mailová adresa je použita k přihlášení k vašemu účtu",
-  "userNotFound": "Uživatel s tímto e-mailem neexistuje"
+  "back": "Zpět",
+  "verifyEmail": "Ověřte e-mailovou adresu",
+  "userNotFound": "Uživatel s tímto e-mailem neexistuje",
+  "registerDescription": "Zjednodušte proces plánování a šetřete čas"
 }
