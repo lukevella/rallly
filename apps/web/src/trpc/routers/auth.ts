@@ -10,11 +10,26 @@ import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
 
 export const auth = router({
+  getUserInfo: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const count = await prisma.user.count({
+        where: {
+          email: input.email,
+        },
+      });
+
+      return { isRegistered: count > 0 };
+    }),
   requestRegistration: publicProcedure
     .use(rateLimitMiddleware)
     .input(
       z.object({
-        name: z.string().nonempty().max(100),
+        name: z.string().min(1).max(100),
         email: z.string().email(),
       }),
     )

@@ -40,7 +40,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       // Make sure the user doesn't exist yet and that logging in is not possible
       await expect(
@@ -51,7 +51,7 @@ test.describe.serial(() => {
     test("user registration", async ({ page }) => {
       await page.goto("/register");
 
-      await page.getByText("Create an account").waitFor();
+      await page.getByText("Create Your Account").waitFor();
 
       await page.getByPlaceholder("Jessie Smith").fill("Test User");
       await page
@@ -60,15 +60,15 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      const codeInput = page.getByPlaceholder("Enter your 6-digit code");
-
       const code = await getCode();
+
+      await page.getByText("Finish Registering").waitFor();
+
+      const codeInput = page.getByPlaceholder("Enter your 6-digit code");
 
       await codeInput.fill(code);
 
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      await page.waitForURL("/");
+      await expect(page.getByText("Test User")).toBeVisible();
     });
   });
 
@@ -76,7 +76,7 @@ test.describe.serial(() => {
     test("can't register with the same email", async ({ page }) => {
       await page.goto("/register");
 
-      await page.getByText("Create an account").waitFor();
+      await page.getByText("Create Your Account").waitFor();
 
       await page.getByPlaceholder("Jessie Smith").fill("Test User");
       await page
@@ -97,7 +97,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       const html = await captureEmailHTML(testUserEmail);
 
@@ -111,11 +111,25 @@ test.describe.serial(() => {
 
       await page.goto(magicLink);
 
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      await page.waitForURL("/");
+      await page.getByRole("button", { name: "Login", exact: true }).click();
 
       await expect(page.getByText("Test User")).toBeVisible();
+    });
+
+    test("shows error for invalid verification code", async ({ page }) => {
+      await page.goto("/login");
+
+      await page
+        .getByPlaceholder("jessie.smith@example.com")
+        .fill(testUserEmail);
+
+      await page.getByRole("button", { name: "Continue with Email" }).click();
+
+      await page.getByPlaceholder("Enter your 6-digit code").fill("000000");
+
+      await expect(
+        page.getByText("Your verification code is incorrect or has expired"),
+      ).toBeVisible();
     });
 
     test("can login with verification code", async ({ page }) => {
@@ -125,15 +139,11 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       const code = await getCode();
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      await page.waitForURL("/");
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
@@ -145,15 +155,11 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill("Test@example.com");
 
-      await page.getByRole("button", { name: "Login with Email" }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       const code = await getCode();
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      await page.waitForURL("/");
 
       await expect(page.getByText("Test User")).toBeVisible();
     });

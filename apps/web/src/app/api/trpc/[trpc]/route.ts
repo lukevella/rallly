@@ -29,7 +29,6 @@ const handler = (request: Request) => {
           isGuest: session.user.email === null,
           locale: session.user.locale ?? undefined,
           image: session.user.image ?? undefined,
-          email: session.user.email ?? undefined,
           getEmailClient: () =>
             getEmailClient(session.user?.locale ?? undefined),
         },

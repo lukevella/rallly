@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { getTranslation } from "@/i18n/server";
 
-import { LoginPage } from "./login-page";
+import { LoginPage } from "./components/login-page";
 
 export const dynamic = "force-dynamic";
 
