@@ -22,7 +22,7 @@ export async function QuickStartWidget() {
             <Trans
               t={t}
               ns="app"
-              i18nKey="quickActionCreate"
+              i18nKey="quickCreate"
               defaults="Quick Create"
             />
           </h2>

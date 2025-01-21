@@ -293,7 +293,6 @@
   "loginTitle": "Welcome",
   "registerTitle": "Create Your Account",
   "registerDescription": "Streamline your scheduling process and save time",
-  "quickActionCreate": "Quick Create",
   "quickActionsDescription": "Create a group poll without signing in. Login later to link it to your account.",
   "quickCreateGroupPoll": "Create Group Poll",
   "quickCreate": "Quick Create",
