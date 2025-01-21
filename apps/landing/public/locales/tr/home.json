@@ -31,7 +31,7 @@
   "new": "Yeni",
   "metaTitle": "Rallly - Grup Toplantıları Planlayın",
   "metaDescription": "Anketler oluşturun ve en iyi günü veya saati bulmak için oy verin. Doodle'a ücretsiz bir alternatif.",
-  "selfHostingBlog": "Rallly 3.0 Kendi Sunucunuzda Barındırma",
   "when2meetAlternativeMetaTitle": "En iyi When2Meet Alternatifi: Rallly",
-  "when2meetAlternative": "Hâlâ When2Meet mi kullanıyorsunuz?"
+  "when2meetAlternative": "Hâlâ When2Meet mi kullanıyorsunuz?",
+  "meetingPollMetaTitle": "Toplantı Anketi"
 }
