@@ -270,5 +270,8 @@
   "1month": "1个月",
   "subscribe": "订阅",
   "cancelAnytime": "随时在<a>账单页</a>取消订阅",
-  "userNotFound": "使用該電子郵件地址的用戶不存在"
+  "back": "返回",
+  "verifyEmail": "驗證您的電子郵件地址",
+  "userNotFound": "使用該電子郵件地址的用戶不存在",
+  "registerDescription": "简化您日程安排的流程并节约时间"
 }
