@@ -13,6 +13,7 @@ import { getEmailClient } from "@/utils/emails";
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
   possiblyPublicProcedure,
+  privateProcedure,
   proProcedure,
   publicProcedure,
   rateLimitMiddleware,
@@ -41,7 +42,7 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
-  getCountByStatus: possiblyPublicProcedure.query(async ({ ctx }) => {
+  getCountByStatus: privateProcedure.query(async ({ ctx }) => {
     const res = await prisma.poll.groupBy({
       by: ["status"],
       where: {
@@ -61,7 +62,7 @@ export const polls = router({
       {} as Record<PollStatus, number>,
     );
   }),
-  infiniteList: possiblyPublicProcedure
+  infiniteList: privateProcedure
     .input(
       z.object({
         status: z.enum(["all", "live", "paused", "finalized"]),

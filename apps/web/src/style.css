@@ -15,12 +15,17 @@
   html {
     @apply h-full font-sans text-base text-gray-700;
   }
-  body #__next {
+  body,
+  #__next {
     @apply h-full;
   }
 
   label {
     @apply block text-sm;
+  }
+
+  p {
+    @apply leading-normal;
   }
 
   a,
@@ -34,7 +39,7 @@
 
 @layer components {
   .text-link {
-    @apply rounded-md underline outline-none hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
+    @apply text-primary rounded-md font-medium outline-none hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1;
   }
   .formField {
     @apply mb-4;

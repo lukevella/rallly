@@ -5,14 +5,14 @@ import toArray from "dayjs/plugin/toArray";
 import utc from "dayjs/plugin/utc";
 import { z } from "zod";
 
-import { possiblyPublicProcedure, router } from "../trpc";
+import { privateProcedure, router } from "../trpc";
 
 dayjs.extend(toArray);
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
 export const scheduledEvents = router({
-  list: possiblyPublicProcedure
+  list: privateProcedure
     .input(
       z.object({
         period: z.enum(["upcoming", "past"]).default("upcoming"),

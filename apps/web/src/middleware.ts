@@ -8,17 +8,37 @@ import { isSelfHosted } from "@/utils/constants";
 
 const supportedLocales = Object.keys(languages);
 
+const publicRoutes = [
+  "/login",
+  "/register",
+  "/invite/",
+  "/new",
+  "/poll/",
+  "/quick-create",
+  "/auth/login",
+];
+
 export const middleware = withAuth(
   async function middleware(req) {
     const { nextUrl } = req;
     const newUrl = nextUrl.clone();
 
+    const isLoggedIn = req.nextauth.token?.email;
+    // set x-pathname header to the pathname
+
     // if the user is already logged in, don't let them access the login page
-    if (
-      /^\/(login|register)/.test(newUrl.pathname) &&
-      req.nextauth.token?.email
-    ) {
+    if (/^\/(login)/.test(newUrl.pathname) && isLoggedIn) {
       newUrl.pathname = "/";
+      return NextResponse.redirect(newUrl);
+    }
+
+    // if the user is not logged in and the page is not public, redirect to login
+    if (
+      !isLoggedIn &&
+      !publicRoutes.some((route) => newUrl.pathname.startsWith(route))
+    ) {
+      newUrl.searchParams.set("callbackUrl", newUrl.pathname);
+      newUrl.pathname = "/login";
       return NextResponse.redirect(newUrl);
     }
 
@@ -34,7 +54,7 @@ export const middleware = withAuth(
     }
 
     const res = NextResponse.rewrite(newUrl);
-
+    res.headers.set("x-pathname", newUrl.pathname);
     const jwt = await initGuest(req, res);
 
     if (jwt?.sub) {

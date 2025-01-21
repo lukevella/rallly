@@ -13,7 +13,7 @@ export type InputProps = Omit<
 
 const inputVariants = cva(
   cn(
-    "w-full focus-visible:border-primary-400 focus-visible:ring-offset-1 focus-visible:outline-none focus-visible:ring-primary-200 focus-visible:ring-1",
+    "w-full focus-visible:border-gray-300 focus:ring-ring focus:ring-2",
     "border-input placeholder:text-muted-foreground h-9 rounded-md border bg-white file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
   ),
   {
@@ -21,7 +21,7 @@ const inputVariants = cva(
       size: {
         sm: "h-7 text-xs px-1",
         md: "h-9 text-sm px-2",
-        lg: "h-12 text-lg px-3",
+        lg: "h-12 text-base px-3",
       },
       variant: {
         default: "border-primary-400 focus-visible:border-primary-400",
