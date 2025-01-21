@@ -282,5 +282,8 @@
   "profileEmailAddress": "Dirección de correo electrónico",
   "profileEmailAddressDescription": "Tu dirección de correo electrónico se utiliza para iniciar sesión en tu cuenta",
   "emailAlreadyInUse": "Esta dirección de correo electrónico ya está asociada con otra cuenta. Por favor, utilice una dirección de correo electrónico diferente.",
-  "userNotFound": "No hay ningún usuario con esa dirección de correo"
+  "back": "Volver",
+  "verifyEmail": "Verifica tu correo",
+  "userNotFound": "No hay ningún usuario con esa dirección de correo",
+  "registerDescription": "Agiliza tu proceso de planeación y ahorra tiempo"
 }
