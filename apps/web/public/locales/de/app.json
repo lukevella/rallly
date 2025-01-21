@@ -278,5 +278,16 @@
   "1month": "1 Monat",
   "subscribe": "Abonnieren",
   "cancelAnytime": "Kündige jederzeit auf deiner <a>Abrechnungsseite</a>.",
+  "unsubscribeToastTitle": "Du hast Benachrichtigungen deaktiviert",
+  "unsubscribeToastDescription": "Du wirst für diese Umfrage keine Benachrichtigungen mehr erhalten",
+  "emailChangeSuccess": "E-Mail-Adresse erfolgreich geändert",
+  "emailChangeSuccessDescription": "Deine E-Mail-Adresse wurde aktualisiert",
+  "emailChangeFailed": "E-Mail-Adresse wurde nicht geändert",
+  "emailChangeInvalidToken": "Der Bestätigungslink ist ungültig oder abgelaufen. Bitte versuch es erneut.",
+  "emailChangeError": "Beim Ändern deiner E--Mail-Adresse ist ein Fehler aufgetreten",
+  "emailChangeRequestSent": "Bestätige deine neue E-Mail-Adresse",
+  "emailChangeRequestSentDescription": "Zum Abschließen der Änderung, prüfe bitte dein E-Mail-Postfach auf einen Bestätigungslink.",
+  "profileEmailAddress": "E-Mail-Adresse",
+  "profileEmailAddressDescription": "Deine E-Mail-Adresse wird verwendet, um dich bei deinem Konto anzumelden",
   "emailAlreadyInUse": "Diese E-Mail-Adresse ist bereits mit einem anderen Konto verknüpft. Bitte verwende eine andere E-Mail-Adresse."
 }
