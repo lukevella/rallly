@@ -282,5 +282,8 @@
   "profileEmailAddress": "Endereço de email",
   "profileEmailAddressDescription": "Seu endereço de email é usado para acessar sua conta",
   "emailAlreadyInUse": "Este endereço de e-mail já está associado a outra conta. Por favor, use um endereço de e-mail diferente.",
-  "userNotFound": "Não existe um usuário com esse e-mail"
+  "back": "Voltar",
+  "verifyEmail": "Verifique seu e-mail",
+  "userNotFound": "Não existe um usuário com esse e-mail",
+  "registerDescription": "Agilize seu processo de agendamento e poupe tempo"
 }
