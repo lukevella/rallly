@@ -270,5 +270,8 @@
   "1month": "1 ay",
   "subscribe": "Abone Ol",
   "cancelAnytime": "İstediğiniz zaman <a>faturalama sayfasından</a> iptal edin.",
-  "userNotFound": "Bu e-posta adresi ile kayıtlı bir kullanıcı yok"
+  "back": "Geri",
+  "verifyEmail": "E-postanızı doğrulayın",
+  "userNotFound": "Bu e-posta adresi ile kayıtlı bir kullanıcı yok",
+  "registerDescription": "Planlama sürecinizi kolaylaştırın ve zamandan tasarruf edin"
 }
