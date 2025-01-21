@@ -282,5 +282,10 @@
   "profileEmailAddress": "E-Mail-Adresse",
   "profileEmailAddressDescription": "Deine E-Mail-Adresse wird verwendet, um dich bei deinem Konto anzumelden",
   "emailAlreadyInUse": "Diese E-Mail-Adresse ist bereits mit einem anderen Konto verknüpft. Bitte verwende eine andere E-Mail-Adresse.",
-  "userNotFound": "Es existiert kein Benutzer mit dieser E-Mail-Adresse"
+  "back": "Zurück",
+  "verifyEmail": "Bestätige deine E-Mail-Adresse",
+  "userNotFound": "Es existiert kein Benutzer mit dieser E-Mail-Adresse",
+  "loginTitle": "Willkommen",
+  "registerDescription": "Spare Zeit mit einem reibungslosen Planungsprozess",
+  "createAccount": "Konto erstellen"
 }
