@@ -270,5 +270,8 @@
   "1month": "Hilabete 1",
   "subscribe": "Harpidetu",
   "cancelAnytime": "Utzi nahi duzunean zure <a>fakturazio orritik</a>.",
-  "userNotFound": "Posta elektroniko hori duen erabiltzailea ez da existitzen"
+  "back": "Atzera",
+  "verifyEmail": "Egiaztatu zure posta",
+  "userNotFound": "Posta elektroniko hori duen erabiltzailea ez da existitzen",
+  "registerDescription": "Arrazionalizatu zure programazio-prozesua eta aurreztu denbora"
 }
