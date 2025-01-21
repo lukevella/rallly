@@ -72,6 +72,11 @@ export function OTPForm({ token }: { token: string }) {
     });
   });
 
+  const isLoading =
+    form.formState.isSubmitting ||
+    form.formState.isSubmitSuccessful ||
+    authenticateRegistration.isLoading;
+
   return (
     <Form {...form}>
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -87,10 +92,7 @@ export function OTPForm({ token }: { token: string }) {
                     placeholder={t("verificationCodePlaceholder", {
                       ns: "app",
                     })}
-                    disabled={
-                      form.formState.isSubmitting ||
-                      form.formState.isSubmitSuccessful
-                    }
+                    disabled={isLoading}
                     autoFocus={true}
                     onValidCode={() => {
                       handleSubmit();
@@ -111,7 +113,7 @@ export function OTPForm({ token }: { token: string }) {
           variant="primary"
           type="submit"
           size="lg"
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
         >
           <Trans i18nKey="createAccount" defaults="Create Account" />
         </Button>
