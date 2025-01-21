@@ -270,5 +270,7 @@
   "1month": "1ヶ月",
   "subscribe": "サブスクライブ",
   "cancelAnytime": "<a>請求ページ</a>からいつでもキャンセルできます。",
-  "userNotFound": "そのメールアドレスのユーザーは存在しません"
+  "verifyEmail": "メールアドレスを認証する",
+  "userNotFound": "そのメールアドレスのユーザーは存在しません",
+  "registerDescription": "効率的な日程調整で時間を節約"
 }
