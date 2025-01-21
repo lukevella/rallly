@@ -46,5 +46,6 @@
   "common_viewOn": "{{domain}} で表示",
   "newComment_preview": "アンケート上で回答をご確認ください。",
   "newComment_heading": "新しいコメント",
-  "newPoll_preview": "回答を集めるために参加者にリンクを共有してください。"
+  "newPoll_preview": "回答を集めるために参加者にリンクを共有してください。",
+  "changeEmailRequest_preview": "メールアドレスを認証してください"
 }
