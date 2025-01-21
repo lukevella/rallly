@@ -252,5 +252,9 @@
   "yesUpdateTimezone": "Sí, actualitza la meva zona horària",
   "noKeepCurrentTimezone": "No, mantingues la zona horària actual",
   "annualBenefit": "{count} mesos gratuïts",
-  "userNotFound": "No existeix cap usuari amb aquest correu"
+  "savePercentage": "Estalvieu el {percentage}%",
+  "back": "Torna",
+  "verifyEmail": "Verifica el teu correu",
+  "userNotFound": "No existeix cap usuari amb aquest correu",
+  "registerDescription": "Agilitza la programació d'esdeveniments i estalvia temps"
 }
