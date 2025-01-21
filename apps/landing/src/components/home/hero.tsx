@@ -87,7 +87,7 @@ export const MarketingHero = ({
         <div>
           <Link
             locale="en"
-            href="/blog/rallly-3-0-self-hosting"
+            href="/blog/introducing-quick-create"
             className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
           >
             <Badge variant="green">
@@ -95,8 +95,8 @@ export const MarketingHero = ({
             </Badge>
             <span className="flex items-center gap-x-1">
               <Trans
-                i18nKey="home:selfHostingBlog"
-                defaults="Rallly 3.0 Self-Hosting"
+                i18nKey="home:quickCreateBlog"
+                defaults="Introducing Quick Create"
               />
               <ChevronRightIcon className="-mr-1 size-4" aria-hidden="true" />
             </span>
