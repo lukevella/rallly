@@ -252,5 +252,9 @@
   "yesUpdateTimezone": "Da, ažuriraj svoju vremensku zonu",
   "noKeepCurrentTimezone": "Ne, zadrži trenutnu vremensku zonu",
   "annualBenefit": "{count} mjeseci besplatno",
-  "userNotFound": "Ne postoji korisnik s tom adresom e-pošte"
+  "savePercentage": "Uštedite {percentage}%",
+  "back": "Natrag",
+  "verifyEmail": "Potvrdite svoju adresu e-pošte",
+  "userNotFound": "Ne postoji korisnik s tom adresom e-pošte",
+  "registerDescription": "Poboljšajte postupak zakazivanja termina i uštedite na vremenu"
 }
