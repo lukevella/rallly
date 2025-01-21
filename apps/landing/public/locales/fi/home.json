@@ -39,5 +39,6 @@
   "meetingPoll": "Luo ammattimaisia kokouskyselyitä Ralllyn avulla",
   "meetingPollDescription": "Kokouskyselyt ovat loistava tapa tiedustella muille sopivia aikoja. Rallly avulla voit luoda kauniita kokouskyselyitä helposti.",
   "meetingPollMetaTitle": "Kokouskysely",
-  "meetingPollMetaDescription": "Kyselyominaisuutemme avulla aikataulutat kokoukset helposti ja varmistat kaikille sopivan ajan."
+  "meetingPollMetaDescription": "Kyselyominaisuutemme avulla aikataulutat kokoukset helposti ja varmistat kaikille sopivan ajan.",
+  "quickCreateBlog": "Esittelyssä pikaluonti"
 }
