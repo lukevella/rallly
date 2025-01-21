@@ -277,5 +277,6 @@
   "savePercentage": "Spare {percentage}%",
   "1month": "1 Monat",
   "subscribe": "Abonnieren",
-  "cancelAnytime": "Kündige jederzeit auf deiner <a>Abrechnungsseite</a>."
+  "cancelAnytime": "Kündige jederzeit auf deiner <a>Abrechnungsseite</a>.",
+  "emailAlreadyInUse": "Diese E-Mail-Adresse ist bereits mit einem anderen Konto verknüpft. Bitte verwende eine andere E-Mail-Adresse."
 }
