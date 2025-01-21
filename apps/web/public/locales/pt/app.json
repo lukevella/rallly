@@ -252,5 +252,7 @@
   "yesUpdateTimezone": "Sim, atualizar meu fuso horário",
   "noKeepCurrentTimezone": "Não, manter o fuso horário atual",
   "annualBenefit": "{count} meses grátis",
+  "back": "Voltar",
+  "verifyEmail": "Verifique o seu e-mail",
   "userNotFound": "Não existe um utilizador com este endereço de e-mail"
 }
