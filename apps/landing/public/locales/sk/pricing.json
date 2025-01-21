@@ -28,5 +28,6 @@
   "whenPollInactive": "Kedy sa anketa stáva neaktívnou?",
   "whenPollInactiveAnswer": "Ankety sa stávajú neaktívnymi, keď sú všetky možnosti dátumu minulé A anketa nebola zobrazená viac ako 30 dní. Neaktívne ankety sú automaticky odstránené, ak nemáte platené členstvo.",
   "yearlyBillingDescription": "za rok",
-  "annualBenefit": "{count} mesiacov zadarmo"
+  "annualBenefit": "{count} mesiacov zadarmo",
+  "pricingTitle": "Začnite teraz bezplatne"
 }
