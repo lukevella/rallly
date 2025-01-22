@@ -281,7 +281,6 @@
   "emailChangeRequestSentDescription": "Hogy véglegesítsd a változást, ellenőrizd az email fiókod a hitelesítő linkért.",
   "profileEmailAddress": "Email cím",
   "profileEmailAddressDescription": "Az email címed használhatod a belépéshez",
-  "emailAlreadyInUse": "Ez az email cím már társítva van egy másik felhasználóhoz. Kérjük használj másik felhasználót.",
   "continueWith": "Folytatás {provider} fiókkal",
   "continueWithProvider": "Folytatás {{provider}} fiókkal",
   "loginFooter": "Nincs felhasználód? <a>Regisztrálj</a>",
