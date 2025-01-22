@@ -45,5 +45,13 @@
   "register_subject": "Por favor, verifique seu e-mail",
   "common_viewOn": "Ver no {{domain}}",
   "newComment_preview": "Vá para sua sondagem para ver o que eles disseram.",
-  "newComment_heading": "Novo Comentário"
+  "newComment_heading": "Novo Comentário",
+  "newPoll_preview": "Partilhe o seu link de participante para começar a recolher respostas.",
+  "changeEmailRequest_preview": "Por favor, confirme o seu endereço de e-mail",
+  "changeEmailRequest_heading": "Verifique o seu novo endereço de e-mail",
+  "changeEmailRequest_text2": "Para efetuar esta alteração, clique no botão abaixo:",
+  "changeEmailRequest_button": "Verifique endereço de e-mail",
+  "changeEmailRequest_subject": "Verifique o seu novo endereço de e-mail",
+  "changeEmailRequest_text3": "Este link expira dentro de 10 minutos. Se não solicitou esta alteração, ignore este e-mail.",
+  "changeEmailRequest_text1": "Recebemos um pedido para alterar o e-mail da sua conta de <b>{{fromEmail}}</b> para <b>{{toEmail}}</b>."
 }
