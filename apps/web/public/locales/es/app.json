@@ -284,6 +284,22 @@
   "emailAlreadyInUse": "Esta dirección de correo electrónico ya está asociada con otra cuenta. Por favor, utilice una dirección de correo electrónico diferente.",
   "back": "Volver",
   "verifyEmail": "Verifica tu correo",
+  "loginDescription": "Inicia sesión con su cuenta para continuar",
   "userNotFound": "No hay ningún usuario con esa dirección de correo",
-  "registerDescription": "Agiliza tu proceso de planeación y ahorra tiempo"
+  "loginTitle": "Bienvenido",
+  "registerTitle": "Crea tu cuenta",
+  "registerDescription": "Agiliza tu proceso de planeación y ahorra tiempo",
+  "quickActionsDescription": "Crear una encuesta grupal sin iniciar sesión. Inicie sesión más tarde para vincularla con su cuenta.",
+  "quickCreateGroupPoll": "Crear encuesta del grupo",
+  "quickCreate": "Creación rápida",
+  "quickCreateRecentlyCreated": "Añadido recientemente",
+  "quickCreateWhyCreateAnAccount": "¿Por qué crear una cuenta?",
+  "quickCreateSecurePolls": "Acceso seguro a través de su cuenta",
+  "quickCreateGetNotifications": "Obtener notificaciones vía correo electrónico",
+  "quickCreateManagePollsFromAnyDevice": "Administrar tus encuestas desde cualquier dispositivo",
+  "registerVerifyTitle": "Finalizar registro",
+  "registerVerifyDescription": "Revise su correo electrónico para obtener el código de verificación",
+  "loginVerifyTitle": "Finalizar sesión",
+  "loginVerifyDescription": "Revise su correo electrónico para obtener el código de verificación",
+  "createAccount": "Crear una cuenta"
 }
