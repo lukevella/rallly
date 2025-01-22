@@ -8,9 +8,9 @@
   "canUseFree": "Posso usar o Rallly gratuitamente?",
   "whyUpgrade": "Por que devo atualizar?",
   "howToUpgrade": "Como faço para atualizar para um plano pago?",
-  "howToUpgradeAnswer": "Para atualizar, você pode ir para suas <a>configurações de cobrança</a> e clicar em <b>Atualizar</b>.",
+  "howToUpgradeAnswer": "Para atualizar, você pode ir para as suas <a>definições de cobrança</a> e clicar em <b>Atualizar</b>.",
   "cancelSubscription": "Como faço para cancelar minha assinatura?",
-  "cancelSubscriptionAnswer": "Você pode cancelar sua assinatura a qualquer momento acessando suas <a>configurações de cobrança</a>. Uma vez que você cancele sua assinatura, ainda terá acesso ao seu plano pago até o final do seu período de cobrança. Após isso, você será rebaixado para um plano gratuito.",
+  "cancelSubscriptionAnswer": "Você pode cancelar a sua assinatura a qualquer momento acessando as suas <a>definições de cobrança</a>. Uma vez que você cancele a sua assinatura, ainda terá acesso ao seu plano pago até ao final do seu período de cobrança. Após isso, você será rebaixado para um plano gratuito.",
   "billingPeriodMonthly": "Mensal",
   "billingPeriodYearly": "Anual",
   "planFreeDescription": "Para usuários casuais",
@@ -28,5 +28,7 @@
   "whenPollInactive": "Quando uma enquete se torna inativa?",
   "whenPollInactiveAnswer": "As enquetes se tornam inativas quando todas as opções de data estão no passado E a enquete não foi acessada por mais de 30 dias. Enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga.",
   "yearlyBillingDescription": "por ano",
-  "annualBenefit": "{count} meses grátis"
+  "annualBenefit": "{count} meses grátis",
+  "pricingTitle": "Comece gratuitamente",
+  "pricingSubtitle": "Atualize para um plano pago para ter acesso a recursos premium"
 }
