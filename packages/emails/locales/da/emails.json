@@ -47,5 +47,11 @@
   "newComment_preview": "Gå til din afstemning, for at se hvad de sagde.",
   "newComment_heading": "Ny kommentar",
   "newPoll_preview": "Del dit deltagerlink, for at begynde at indsamle svar.",
-  "changeEmailRequest_preview": "Du skal bekræfte din e-mail adresse"
+  "changeEmailRequest_preview": "Du skal bekræfte din e-mail adresse",
+  "changeEmailRequest_heading": "Bekræft din nye e-mail adresse",
+  "changeEmailRequest_text2": "Klik venligst på knappen nedenfor, for at gennemføre ændringen:",
+  "changeEmailRequest_button": "Bekræft e-mail adresse",
+  "changeEmailRequest_subject": "Bekræft din nye e-mail adresse",
+  "changeEmailRequest_text3": "Dette link udløber om 10 minutter. Hvis du ikke har anmodet om denne ændring, bedes du ignorere denne e-mail.",
+  "changeEmailRequest_text1": "Vi har modtaget en anmodning om at ændre e-mail adressen for din konto fra <b>{{fromEmail}}</b> til <b>{{toEmail}}</b>."
 }
