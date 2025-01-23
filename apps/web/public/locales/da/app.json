@@ -270,8 +270,22 @@
   "1month": "1 måned",
   "subscribe": "Abonner",
   "cancelAnytime": "Annuller når som helst fra din <a>faktureringsside</a>.",
+  "continueWith": "Fortsæt med {provider}",
+  "continueWithProvider": "Fortsæt med {{provider}}",
+  "loginFooter": "Har du ikke en konto? <a>Tilmeld dig</a>",
   "back": "Tilbage",
   "verifyEmail": "Bekræft din e-mail",
+  "alreadyHaveAccount": "Har allerede en konto? <a>Log ind</a>",
+  "loginDescription": "Log ind på din konto for at fortsætte",
   "userNotFound": "En bruger med den e-mail eksisterer ikke",
-  "registerDescription": "Strømlin din planlægningsproces og spar tid"
+  "loginTitle": "Velkommen",
+  "registerTitle": "Opret din konto",
+  "registerDescription": "Strømlin din planlægningsproces og spar tid",
+  "quickCreateGroupPoll": "Opret en gruppeafstemning",
+  "quickCreateWhyCreateAnAccount": "Hvorfor oprette en konto?",
+  "quickCreateSecurePolls": "Sikker adgang via din konto",
+  "quickCreateGetNotifications": "Få e-mail notifikationer",
+  "loginVerifyTitle": "Afslut login",
+  "loginVerifyDescription": "Tjek din email for en bekræftelseskode",
+  "createAccount": "Opret konto"
 }
