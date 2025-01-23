@@ -282,10 +282,16 @@
   "profileEmailAddress": "E-Mail-Adresse",
   "profileEmailAddressDescription": "Deine E-Mail-Adresse wird verwendet, um dich bei deinem Konto anzumelden",
   "emailAlreadyInUse": "Diese E-Mail-Adresse ist bereits mit einem anderen Konto verknüpft. Bitte verwende eine andere E-Mail-Adresse.",
+  "loginFooter": "Du hast noch kein Konto? <a>Registrieren</a>",
   "back": "Zurück",
   "verifyEmail": "Bestätige deine E-Mail-Adresse",
+  "alreadyHaveAccount": "Du hast bereits ein Konto? <a>Anmelden</a>",
+  "loginDescription": "Melde dich an, um fortzufahren",
   "userNotFound": "Es existiert kein Benutzer mit dieser E-Mail-Adresse",
   "loginTitle": "Willkommen",
+  "registerTitle": "Erstelle dein Konto",
   "registerDescription": "Spare Zeit mit einem reibungslosen Planungsprozess",
+  "registerVerifyTitle": "Registrierung abschließen",
+  "loginVerifyTitle": "Anmeldung abschließen",
   "createAccount": "Konto erstellen"
 }
