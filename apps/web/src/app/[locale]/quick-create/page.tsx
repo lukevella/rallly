@@ -4,7 +4,7 @@ import { LogInIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { QuickStartWidget } from "@/features/quick-create/quick-create-widget";
+import { QuickCreateWidget } from "@/features/quick-create/quick-create-widget";
 import { isSelfHosted } from "@/utils/constants";
 
 export default async function QuickCreatePage() {
@@ -18,7 +18,7 @@ export default async function QuickCreatePage() {
         <div className="mx-auto w-full max-w-md flex-1">
           <div className="space-y-8">
             <div className="flex-1">
-              <QuickStartWidget />
+              <QuickCreateWidget />
             </div>
           </div>
         </div>

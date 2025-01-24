@@ -3,9 +3,11 @@ import { DotPattern } from "@rallly/ui/dot-pattern";
 import type { Metadata } from "next";
 
 import { Logo } from "@/components/logo";
-import { isQuickCreateEnabled } from "@/features/quick-create";
-import { QuickStartButton } from "@/features/quick-create/quick-create-button";
-import { QuickStartWidget } from "@/features/quick-create/quick-create-widget";
+import {
+  isQuickCreateEnabled,
+  QuickCreateButton,
+  QuickCreateWidget,
+} from "@/features/quick-create";
 
 export default async function Layout({
   children,
@@ -24,14 +26,14 @@ export default async function Layout({
           </div>
           {isQuickCreateEnabled ? (
             <div className="flex justify-center lg:hidden">
-              <QuickStartButton />
+              <QuickCreateButton />
             </div>
           ) : null}
         </div>
         {isQuickCreateEnabled ? (
           <div className="relative hidden flex-1 flex-col justify-center rounded-lg border border-gray-100 bg-gray-50 lg:flex lg:p-16">
             <div className="z-10 mx-auto w-full max-w-md">
-              <QuickStartWidget />
+              <QuickCreateWidget />
             </div>
             <DotPattern
               cx={10}

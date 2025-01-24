@@ -10,7 +10,7 @@ import { getTranslation } from "@/i18n/server";
 
 import { RelativeDate } from "./components/relative-date";
 
-export async function QuickStartWidget() {
+export async function QuickCreateWidget() {
   const polls = await getGuestPolls();
   const { t } = await getTranslation();
   return (

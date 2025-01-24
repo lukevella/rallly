@@ -1,2 +1,1 @@
-export const isQuickCreateEnabled =
-  process.env.NEXT_PUBLIC_SELF_HOSTED !== "true";
+export const isQuickCreateEnabled = process.env.QUICK_CREATE_ENABLED === "true";
