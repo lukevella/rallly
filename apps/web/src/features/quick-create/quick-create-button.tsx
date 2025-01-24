@@ -6,7 +6,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getTranslation } from "@/i18n/server";
 
-export async function QuickStartButton() {
+export async function QuickCreateButton() {
   const { t } = await getTranslation();
   return (
     <Button className="rounded-full" asChild>
