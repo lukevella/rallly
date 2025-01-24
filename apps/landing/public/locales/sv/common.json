@@ -23,5 +23,7 @@
   "availabilityPoll": "Tillgänglighetsundersökning",
   "solutions": "Lösningar",
   "howItWorks": "Så här fungerar det",
-  "status": "Status"
+  "status": "Status",
+  "when2MeetAlternative": "Alternativ till When2Meet",
+  "meetingPoll": "Mötesförfrågan"
 }
