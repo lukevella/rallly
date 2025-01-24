@@ -8,11 +8,14 @@ import {
   isQuickCreateEnabled,
   QuickCreateWidget,
 } from "@/features/quick-create";
+import { getTranslation } from "@/i18n/server";
 
 export default async function QuickCreatePage() {
   if (!isQuickCreateEnabled) {
     notFound();
   }
+
+  const { t } = await getTranslation();
   return (
     <div className="flex min-h-screen p-2">
       <div className="flex flex-1 flex-col gap-6 rounded-xl border bg-white p-6">
@@ -29,7 +32,7 @@ export default async function QuickCreatePage() {
               <Icon>
                 <LogInIcon />
               </Icon>
-              Login
+              {t("login")}
             </Link>
           </Button>
         </div>
