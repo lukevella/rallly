@@ -4,12 +4,13 @@ import { LogInIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { QuickCreateWidget } from "@/features/quick-create/quick-create-widget";
-import { isSelfHosted } from "@/utils/constants";
+import {
+  isQuickCreateEnabled,
+  QuickCreateWidget,
+} from "@/features/quick-create";
 
 export default async function QuickCreatePage() {
-  if (isSelfHosted) {
-    // self hosted users should not see this page
+  if (!isQuickCreateEnabled) {
     notFound();
   }
   return (
