@@ -103,9 +103,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
               isGuest: true,
               tier: "guest",
             },
-        refresh: () => {
-          return session.update();
-        },
+        refresh: session.update,
         logout: async () => {
           await signOut();
           posthog?.capture("logout");

@@ -9,7 +9,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).end();
     res.setHeader("Content-Length", "0");
   } else {
-    res.setHeader("Cache-Control", "no-store, max-age=0");
     return composeApiHandlers(AuthApiRoute, posthogApiHandler)(req, res);
   }
 }
