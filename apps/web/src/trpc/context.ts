@@ -10,6 +10,6 @@ type User = {
 
 export type TRPCContext = {
   user?: User;
-  getEmailClient?: () => Promise<EmailClient>;
+  locale?: string;
   ip?: string;
 };

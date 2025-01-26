@@ -42,8 +42,8 @@ export const possiblyPublicProcedure = t.procedure.use(
 export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
   if (!ctx.user) {
     throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get or create user",
+      code: "UNAUTHORIZED",
+      message: "This method requires a user",
     });
   }
 

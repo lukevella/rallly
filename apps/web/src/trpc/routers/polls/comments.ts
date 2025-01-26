@@ -46,7 +46,7 @@ export const comments = router({
           return [];
         } else {
           // only show comments created by the current users
-          await prisma.comment.findMany({
+          return await prisma.comment.findMany({
             where: {
               pollId,
               ...(ctx.user.isGuest

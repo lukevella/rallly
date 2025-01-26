@@ -7,6 +7,7 @@ import { getServerSession } from "@/auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
+import { getLocaleFromHeader } from "@/app/guest";
 
 const handler = (req: NextRequest) => {
   return fetchRequestHandler({
@@ -15,7 +16,7 @@ const handler = (req: NextRequest) => {
     router: appRouter,
     createContext: async () => {
       const session = await getServerSession();
-
+      const locale = await getLocaleFromHeader(req);
       const user = session?.user
         ? {
             id: session.user.id,
@@ -29,6 +30,7 @@ const handler = (req: NextRequest) => {
 
       return {
         user,
+        locale,
         ip: ipAddress(req) ?? undefined,
       } satisfies TRPCContext;
     },

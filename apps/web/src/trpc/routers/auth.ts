@@ -6,13 +6,9 @@ import { z } from "zod";
 import { isEmailBlocked } from "@/auth";
 import { createToken, decryptToken } from "@/utils/session";
 
-import {
-  requireUserMiddleware,
-  publicProcedure,
-  rateLimitMiddleware,
-  router,
-} from "../trpc";
+import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
+import { getEmailClient } from "@/utils/emails";
 
 export const auth = router({
   getUserInfo: publicProcedure
@@ -32,7 +28,6 @@ export const auth = router({
     }),
   requestRegistration: publicProcedure
     .use(rateLimitMiddleware)
-    .use(requireUserMiddleware)
     .input(
       z.object({
         name: z.string().min(1).max(100),
@@ -72,7 +67,7 @@ export const auth = router({
           code,
         });
 
-        await ctx.user.getEmailClient().sendTemplate("RegisterEmail", {
+        await getEmailClient(ctx.locale).sendTemplate("RegisterEmail", {
           to: input.email,
           props: {
             code,
