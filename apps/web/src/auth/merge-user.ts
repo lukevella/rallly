@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
 
 export const mergeGuestsIntoUser = async (
@@ -6,7 +7,7 @@ export const mergeGuestsIntoUser = async (
   guestIds: string[],
 ) => {
   try {
-    return await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       await Promise.all([
         tx.poll.updateMany({
           where: {
@@ -45,6 +46,7 @@ export const mergeGuestsIntoUser = async (
         }),
       ]);
     });
+    posthog?.alias({ distinctId: userId, alias: guestIds[0] });
   } catch (error) {
     Sentry.captureException(error);
   }
