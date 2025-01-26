@@ -69,7 +69,7 @@ export const CreatePoll: React.FunctionComponent = () => {
   const createPoll = trpc.polls.create.useMutation({
     networkMode: "always",
     onMutate: async () => {
-      if (session.status === "unauthenticated") {
+      if (session.status !== "authenticated") {
         await signIn("guest", {
           redirect: false,
         });
