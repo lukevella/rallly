@@ -299,5 +299,11 @@
   "quickCreateRecentlyCreated": "Creati di recente",
   "quickCreateWhyCreateAnAccount": "Perché creare un'utenza?",
   "quickCreateSecurePolls": "Accedi in modo sicuro con la tua utenza",
-  "quickCreateGetNotifications": "Ricevi notifiche email"
+  "quickCreateGetNotifications": "Ricevi notifiche email",
+  "quickCreateManagePollsFromAnyDevice": "Gestisci i sondaggi da qualsiasi dispositivo",
+  "registerVerifyTitle": "Termina La Registrazione",
+  "registerVerifyDescription": "Controlla la tua email per il codice verifica",
+  "loginVerifyTitle": "Termina L'Accesso",
+  "loginVerifyDescription": "Controlla la tua email per il codice verifica",
+  "createAccount": "Crea Utenza"
 }
