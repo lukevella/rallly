@@ -10,12 +10,11 @@ import { appRouter } from "../routers";
 
 async function createContext(): Promise<TRPCContext> {
   const session = await getServerSession();
-
   return {
     user: session?.user
       ? {
           id: session.user.id,
-          isGuest: session.user.email === null,
+          isGuest: !session.user.email,
           locale: session.user.locale ?? undefined,
           image: session.user.image ?? undefined,
           getEmailClient: () =>

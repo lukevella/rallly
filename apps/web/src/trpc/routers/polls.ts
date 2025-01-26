@@ -442,11 +442,11 @@ export const polls = router({
       }
       const inviteLink = shortUrl(`/invite/${res.id}`);
 
-      const isOwner =
-        ctx.user &&
-        (ctx.user.isGuest
-          ? ctx.user.id === res.guestId
-          : ctx.user.id === res.userId);
+      const userId = ctx.user?.id;
+
+      const isOwner = ctx.user?.isGuest
+        ? userId === res.guestId
+        : userId === res.userId;
 
       if (isOwner || res.adminUrlId === input.adminToken) {
         return { ...res, inviteLink };
