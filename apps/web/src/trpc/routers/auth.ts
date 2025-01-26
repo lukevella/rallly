@@ -4,11 +4,11 @@ import { generateOtp } from "@rallly/utils/nanoid";
 import { z } from "zod";
 
 import { isEmailBlocked } from "@/auth";
+import { getEmailClient } from "@/utils/emails";
 import { createToken, decryptToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
-import { getEmailClient } from "@/utils/emails";
 
 export const auth = router({
   getUserInfo: publicProcedure

@@ -1,10 +1,10 @@
 import { usePostHog } from "@rallly/posthog/client";
+import { signIn, useSession } from "next-auth/react";
 
 import { usePoll } from "@/components/poll-context";
 import { trpc } from "@/trpc/client";
 
 import type { ParticipantForm } from "./types";
-import { signIn, useSession } from "next-auth/react";
 
 export const normalizeVotes = (
   optionIds: string[],

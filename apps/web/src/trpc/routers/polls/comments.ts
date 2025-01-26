@@ -6,9 +6,9 @@ import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import {
-  requireUserMiddleware,
   publicProcedure,
   rateLimitMiddleware,
+  requireUserMiddleware,
   router,
 } from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";

@@ -10,6 +10,7 @@ import {
 } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
@@ -19,11 +20,9 @@ import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
-import { setCookie } from "@/utils/cookies";
 
 import type { NewEventData } from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";
-import { signIn, useSession } from "next-auth/react";
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {

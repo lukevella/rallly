@@ -3,11 +3,11 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
+import { getLocaleFromHeader } from "@/app/guest";
 import { getServerSession } from "@/auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
-import { getLocaleFromHeader } from "@/app/guest";
 
 const handler = (req: NextRequest) => {
   return fetchRequestHandler({

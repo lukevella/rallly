@@ -278,7 +278,6 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         }
 
         if (token.sub?.startsWith("user-")) {
-          console.log("TOKEN contains guest user");
           session.user = {
             id: token.sub as string,
             locale: token.locale,

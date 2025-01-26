@@ -12,12 +12,12 @@ import { getEmailClient } from "@/utils/emails";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
-  requireUserMiddleware,
   possiblyPublicProcedure,
   privateProcedure,
   proProcedure,
   publicProcedure,
   rateLimitMiddleware,
+  requireUserMiddleware,
   router,
 } from "../trpc";
 import { comments } from "./polls/comments";

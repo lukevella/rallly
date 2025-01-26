@@ -26,6 +26,7 @@ import {
   MoreHorizontalIcon,
   TrashIcon,
 } from "lucide-react";
+import { signIn, useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -41,7 +42,6 @@ import { trpc } from "@/trpc/client";
 import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import { useUser } from "../user-provider";
-import { signIn, useSession } from "next-auth/react";
 
 interface CommentForm {
   authorName: string;
