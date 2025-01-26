@@ -6,7 +6,7 @@ import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import {
-  guestFallbackMiddleware,
+  requireUserMiddleware,
   publicProcedure,
   rateLimitMiddleware,
   router,
@@ -73,7 +73,7 @@ export const comments = router({
     }),
   add: publicProcedure
     .use(rateLimitMiddleware)
-    .use(guestFallbackMiddleware)
+    .use(requireUserMiddleware)
     .input(
       z.object({
         pollId: z.string(),

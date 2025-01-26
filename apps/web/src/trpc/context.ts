@@ -11,6 +11,5 @@ type User = {
 export type TRPCContext = {
   user?: User;
   getEmailClient?: () => Promise<EmailClient>;
-  getOrCreateUser?: () => Promise<User>;
   ip?: string;
 };

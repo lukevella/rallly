@@ -2,9 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 
-import { getLocaleFromHeader, initGuest } from "@/app/guest";
 import { getServerSession } from "@/auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
@@ -21,7 +19,7 @@ const handler = (req: NextRequest) => {
       const user = session?.user
         ? {
             id: session.user.id,
-            isGuest: session.user.email === null,
+            isGuest: !session.user.email,
             locale: session.user.locale ?? undefined,
             image: session.user.image ?? undefined,
             getEmailClient: () =>
@@ -31,20 +29,6 @@ const handler = (req: NextRequest) => {
 
       return {
         user,
-        getOrCreateUser: async () => {
-          if (!user) {
-            const res = new NextResponse();
-            const jwt = await initGuest(req, res);
-            const locale = await getLocaleFromHeader(req);
-            return {
-              id: jwt.sub as string,
-              isGuest: true,
-              locale,
-              getEmailClient: () => getEmailClient(locale),
-            };
-          }
-          return user;
-        },
         ip: ipAddress(req) ?? undefined,
       } satisfies TRPCContext;
     },

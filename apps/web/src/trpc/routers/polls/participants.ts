@@ -6,7 +6,7 @@ import { z } from "zod";
 import { createToken } from "@/utils/session";
 
 import {
-  guestFallbackMiddleware,
+  requireUserMiddleware,
   publicProcedure,
   rateLimitMiddleware,
   router,
@@ -64,7 +64,7 @@ export const participants = router({
     }),
   add: publicProcedure
     .use(rateLimitMiddleware)
-    .use(guestFallbackMiddleware)
+    .use(requireUserMiddleware)
     .input(
       z.object({
         pollId: z.string(),

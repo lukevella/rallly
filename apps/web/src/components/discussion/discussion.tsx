@@ -41,6 +41,7 @@ import { trpc } from "@/trpc/client";
 import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import { useUser } from "../user-provider";
+import { signIn, useSession } from "next-auth/react";
 
 interface CommentForm {
   authorName: string;
@@ -57,6 +58,7 @@ function NewCommentForm({
   const { t } = useTranslation();
   const poll = usePoll();
   const { user } = useUser();
+  const session = useSession();
   const { participants } = useParticipants();
 
   const authorName = React.useMemo(() => {
@@ -72,8 +74,6 @@ function NewCommentForm({
 
   const posthog = usePostHog();
 
-  const session = useUser();
-
   const { register, reset, control, handleSubmit, formState } =
     useForm<CommentForm>({
       defaultValues: {
@@ -84,6 +84,13 @@ function NewCommentForm({
   const { toast } = useToast();
 
   const addComment = trpc.polls.comments.add.useMutation({
+    onMutate: async () => {
+      if (session.status !== "authenticated") {
+        await signIn("guest", {
+          redirect: false,
+        });
+      }
+    },
     onSuccess: () => {
       posthog?.capture("created comment");
     },
@@ -119,7 +126,7 @@ function NewCommentForm({
       >
         <Controller
           name="authorName"
-          key={session.user?.id}
+          key={user?.id}
           control={control}
           rules={{ validate: requiredString }}
           render={({ field }) => (

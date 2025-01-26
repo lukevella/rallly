@@ -23,6 +23,7 @@ import { setCookie } from "@/utils/cookies";
 
 import type { NewEventData } from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";
+import { signIn, useSession } from "next-auth/react";
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {
@@ -42,6 +43,7 @@ export interface CreatePollPageProps {
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
   const { user } = useUser();
+  const session = useSession();
   const form = useForm<NewEventData>({
     defaultValues: {
       title: "",
@@ -66,8 +68,12 @@ export const CreatePoll: React.FunctionComponent = () => {
   const posthog = usePostHog();
   const createPoll = trpc.polls.create.useMutation({
     networkMode: "always",
-    onSuccess: () => {
-      setCookie("new-poll", "1");
+    onMutate: async () => {
+      if (session.status === "unauthenticated") {
+        await signIn("guest", {
+          redirect: false,
+        });
+      }
     },
   });
 

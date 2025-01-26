@@ -4,7 +4,6 @@ import type { Session } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import React from "react";
 
-import { Spinner } from "@/components/spinner";
 import { useSubscription } from "@/contexts/plan";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
@@ -84,44 +83,45 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-  if (!user) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
-
   return (
     <UserContext.Provider
       value={{
-        user: {
-          id: user.id as string,
-          name: user.name ?? t("guest"),
-          email: user.email || null,
-          isGuest,
-          tier,
-          timeZone: user.timeZone ?? null,
-          image: user.image ?? null,
-          locale: user.locale ?? i18n.language,
+        user: user
+          ? {
+              id: user.id as string,
+              name: user.name ?? t("guest"),
+              email: user.email || null,
+              isGuest,
+              tier,
+              timeZone: user.timeZone ?? null,
+              image: user.image ?? null,
+              locale: user.locale ?? i18n.language,
+            }
+          : {
+              id: "",
+              name: t("guest"),
+              isGuest: true,
+              tier: "guest",
+            },
+        refresh: () => {
+          return session.update();
         },
-        refresh: session.update,
         logout: async () => {
           await signOut();
           posthog?.capture("logout");
           posthog?.reset();
         },
         ownsObject: (resource) => {
-          return isOwner(resource, { id: user.id, isGuest });
+          return user ? isOwner(resource, { id: user.id, isGuest }) : false;
         },
       }}
     >
       <PreferencesProvider
         initialValue={{
-          locale: user.locale ?? undefined,
-          timeZone: user.timeZone ?? undefined,
-          timeFormat: user.timeFormat ?? undefined,
-          weekStart: user.weekStart ?? undefined,
+          locale: user?.locale ?? undefined,
+          timeZone: user?.timeZone ?? undefined,
+          timeFormat: user?.timeFormat ?? undefined,
+          weekStart: user?.weekStart ?? undefined,
         }}
         onUpdate={async (newPreferences) => {
           if (!isGuest) {

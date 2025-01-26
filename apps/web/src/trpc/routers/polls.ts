@@ -12,7 +12,7 @@ import { getEmailClient } from "@/utils/emails";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
-  guestFallbackMiddleware,
+  requireUserMiddleware,
   possiblyPublicProcedure,
   privateProcedure,
   proProcedure,
@@ -131,7 +131,7 @@ export const polls = router({
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
     .use(rateLimitMiddleware)
-    .use(guestFallbackMiddleware)
+    .use(requireUserMiddleware)
     .input(
       z.object({
         title: z.string().trim().min(1),

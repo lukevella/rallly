@@ -39,10 +39,8 @@ export const possiblyPublicProcedure = t.procedure.use(
 
 // This procedure guarantees that a user will exist in the context by
 // creating a guest user if needed
-export const guestFallbackMiddleware = middleware(async ({ ctx, next }) => {
-  const user = await ctx.getOrCreateUser?.();
-
-  if (!user) {
+export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
+  if (!ctx.user) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get or create user",
@@ -51,7 +49,7 @@ export const guestFallbackMiddleware = middleware(async ({ ctx, next }) => {
 
   return next({
     ctx: {
-      user,
+      user: ctx.user,
     },
   });
 });

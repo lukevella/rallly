@@ -273,7 +273,12 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         return token;
       },
       async session({ session, token }) {
+        if (!token.sub) {
+          return session;
+        }
+
         if (token.sub?.startsWith("user-")) {
+          console.log("TOKEN contains guest user");
           session.user = {
             id: token.sub as string,
             locale: token.locale,
@@ -281,7 +286,6 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
             timeZone: token.timeZone,
             weekStart: token.weekStart,
           };
-
           return session;
         }
 

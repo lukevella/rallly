@@ -7,7 +7,7 @@ import { isEmailBlocked } from "@/auth";
 import { createToken, decryptToken } from "@/utils/session";
 
 import {
-  guestFallbackMiddleware,
+  requireUserMiddleware,
   publicProcedure,
   rateLimitMiddleware,
   router,
@@ -32,7 +32,7 @@ export const auth = router({
     }),
   requestRegistration: publicProcedure
     .use(rateLimitMiddleware)
-    .use(guestFallbackMiddleware)
+    .use(requireUserMiddleware)
     .input(
       z.object({
         name: z.string().min(1).max(100),
