@@ -1,5 +1,4 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
 import superjson from "superjson";
 
@@ -12,21 +11,17 @@ import { appRouter } from "../routers";
 async function createContext(): Promise<TRPCContext> {
   const session = await getServerSession();
 
-  if (!session) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Unauthorized",
-    });
-  }
-
   return {
-    user: {
-      id: session.user.id,
-      isGuest: session.user.email === null,
-      locale: session.user.locale ?? undefined,
-      image: session.user.image ?? undefined,
-      getEmailClient: () => getEmailClient(session.user.locale ?? undefined),
-    },
+    user: session?.user
+      ? {
+          id: session.user.id,
+          isGuest: session.user.email === null,
+          locale: session.user.locale ?? undefined,
+          image: session.user.image ?? undefined,
+          getEmailClient: () =>
+            getEmailClient(session.user?.locale ?? undefined),
+        }
+      : undefined,
   };
 }
 

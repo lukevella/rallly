@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     Object.fromEntries(formData.entries()),
   );
 
-  if (!userSession || userSession.user.email === null) {
+  if (!userSession?.user || userSession.user?.email === null) {
     // You need to be logged in to subscribe
     return NextResponse.redirect(
       new URL(

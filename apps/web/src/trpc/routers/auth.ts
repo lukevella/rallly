@@ -6,7 +6,12 @@ import { z } from "zod";
 import { isEmailBlocked } from "@/auth";
 import { createToken, decryptToken } from "@/utils/session";
 
-import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
+import {
+  guestFallbackMiddleware,
+  publicProcedure,
+  rateLimitMiddleware,
+  router,
+} from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
 
 export const auth = router({
@@ -27,6 +32,7 @@ export const auth = router({
     }),
   requestRegistration: publicProcedure
     .use(rateLimitMiddleware)
+    .use(guestFallbackMiddleware)
     .input(
       z.object({
         name: z.string().min(1).max(100),

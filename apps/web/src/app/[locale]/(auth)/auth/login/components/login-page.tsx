@@ -24,7 +24,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
       if (!data.url.includes("auth/error")) {
         // if login was successful, update the session
         const updatedSession = await session.update();
-        if (updatedSession) {
+        if (updatedSession?.user) {
           // identify the user in posthog
           posthog?.identify(updatedSession.user.id, {
             email: updatedSession.user.email,

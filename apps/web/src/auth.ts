@@ -174,7 +174,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     adapter: CustomPrismaAdapter(prisma, {
       migrateData: async (userId) => {
         const session = await getServerSession(...args);
-        if (session && session.user.email === null) {
+        if (session?.user && session.user.email === null) {
           await mergeGuestsIntoUser(userId, [session.user.id]);
         }
       },
@@ -255,7 +255,7 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         if (!isInitialSocialLogin) {
           // merge guest user into newly logged in user
           const session = await getServerSession(...args);
-          if (session && session.user.email === null) {
+          if (session?.user && session.user.email === null) {
             await mergeGuestsIntoUser(user.id, [session.user.id]);
           }
         }
@@ -274,12 +274,14 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
       },
       async session({ session, token }) {
         if (token.sub?.startsWith("user-")) {
-          session.user.id = token.sub as string;
-          session.user.locale = token.locale;
-          session.user.timeFormat = token.timeFormat;
-          session.user.timeZone = token.timeZone;
-          session.user.locale = token.locale;
-          session.user.weekStart = token.weekStart;
+          session.user = {
+            id: token.sub as string,
+            locale: token.locale,
+            timeFormat: token.timeFormat,
+            timeZone: token.timeZone,
+            weekStart: token.weekStart,
+          };
+
           return session;
         }
 
@@ -300,20 +302,17 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
         });
 
         if (user) {
-          session.user.id = user.id;
-          session.user.name = user.name;
-          session.user.email = user.email;
-          session.user.image = user.image;
-        } else {
-          session.user.id = token.sub || `user-${randomid()}`;
+          session.user = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            locale: user.locale,
+            timeFormat: user.timeFormat,
+            timeZone: user.timeZone,
+            weekStart: user.weekStart,
+          };
         }
-
-        const source = user ?? token;
-
-        session.user.locale = source.locale;
-        session.user.timeFormat = source.timeFormat;
-        session.user.timeZone = source.timeZone;
-        session.user.weekStart = source.weekStart;
 
         return session;
       },

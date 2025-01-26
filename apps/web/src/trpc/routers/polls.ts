@@ -12,6 +12,7 @@ import { getEmailClient } from "@/utils/emails";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
+  guestFallbackMiddleware,
   possiblyPublicProcedure,
   privateProcedure,
   proProcedure,
@@ -130,6 +131,7 @@ export const polls = router({
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
     .use(rateLimitMiddleware)
+    .use(guestFallbackMiddleware)
     .input(
       z.object({
         title: z.string().trim().min(1),
@@ -332,7 +334,7 @@ export const polls = router({
       });
     }),
   // END LEGACY ROUTES
-  getWatchers: possiblyPublicProcedure
+  getWatchers: publicProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -348,16 +350,9 @@ export const polls = router({
         },
       });
     }),
-  watch: possiblyPublicProcedure
+  watch: privateProcedure
     .input(z.object({ pollId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      if (ctx.user.isGuest) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Guests can't watch polls",
-        });
-      }
-
       await prisma.watcher.create({
         data: {
           pollId: input.pollId,
@@ -365,16 +360,9 @@ export const polls = router({
         },
       });
     }),
-  unwatch: possiblyPublicProcedure
+  unwatch: privateProcedure
     .input(z.object({ pollId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      if (ctx.user.isGuest) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Guests can't unwatch polls",
-        });
-      }
-
       const watcher = await prisma.watcher.findFirst({
         where: {
           pollId: input.pollId,
@@ -392,31 +380,6 @@ export const polls = router({
           },
         });
       }
-    }),
-  getByAdminUrlId: possiblyPublicProcedure
-    .input(
-      z.object({
-        urlId: z.string(),
-      }),
-    )
-    .query(async ({ input }) => {
-      const res = await prisma.poll.findUnique({
-        select: {
-          id: true,
-        },
-        where: {
-          adminUrlId: input.urlId,
-        },
-      });
-
-      if (!res) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Poll not found",
-        });
-      }
-
-      return res;
     }),
   get: publicProcedure
     .input(
@@ -479,102 +442,17 @@ export const polls = router({
       }
       const inviteLink = shortUrl(`/invite/${res.id}`);
 
-      const isOwner = ctx.user.isGuest
-        ? ctx.user.id === res.guestId
-        : ctx.user.id === res.userId;
+      const isOwner =
+        ctx.user &&
+        (ctx.user.isGuest
+          ? ctx.user.id === res.guestId
+          : ctx.user.id === res.userId);
 
       if (isOwner || res.adminUrlId === input.adminToken) {
         return { ...res, inviteLink };
       } else {
         return { ...res, adminUrlId: "", inviteLink };
       }
-    }),
-  transfer: possiblyPublicProcedure
-    .input(
-      z.object({
-        pollId: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await prisma.poll.update({
-        where: {
-          id: input.pollId,
-        },
-        data: {
-          userId: ctx.user.id,
-        },
-      });
-    }),
-  getParticipating: possiblyPublicProcedure
-    .input(
-      z.object({
-        pagination: z.object({
-          pageIndex: z.number(),
-          pageSize: z.number(),
-        }),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const [total, rows] = await Promise.all([
-        prisma.poll.count({
-          where: {
-            participants: {
-              some: {
-                userId: ctx.user.id,
-              },
-            },
-          },
-        }),
-        prisma.poll.findMany({
-          where: {
-            deletedAt: null,
-            participants: {
-              some: {
-                userId: ctx.user.id,
-              },
-            },
-          },
-          select: {
-            id: true,
-            title: true,
-            location: true,
-            createdAt: true,
-            timeZone: true,
-            adminUrlId: true,
-            participantUrlId: true,
-            status: true,
-            event: {
-              select: {
-                start: true,
-                duration: true,
-              },
-            },
-            closed: true,
-            participants: {
-              select: {
-                id: true,
-                name: true,
-              },
-              orderBy: [
-                {
-                  createdAt: "desc",
-                },
-                { name: "desc" },
-              ],
-            },
-          },
-          orderBy: [
-            {
-              createdAt: "desc",
-            },
-            { title: "asc" },
-          ],
-          skip: input.pagination.pageIndex * input.pagination.pageSize,
-          take: input.pagination.pageSize,
-        }),
-      ]);
-
-      return { total, rows };
     }),
   book: proProcedure
     .input(

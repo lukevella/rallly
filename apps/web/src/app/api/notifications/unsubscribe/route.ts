@@ -16,7 +16,7 @@ export const GET = async (req: NextRequest) => {
 
   const session = await getServerSession();
 
-  if (!session || !session.user.email) {
+  if (!session || !session.user?.email) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
