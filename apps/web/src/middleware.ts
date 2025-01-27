@@ -39,7 +39,9 @@ export const middleware = withAuth(
       !isLoggedIn &&
       !publicRoutes.some((route) => newUrl.pathname.startsWith(route))
     ) {
-      newUrl.searchParams.set("callbackUrl", newUrl.pathname);
+      if (newUrl.pathname !== "/") {
+        newUrl.searchParams.set("callbackUrl", newUrl.pathname);
+      }
       newUrl.pathname = "/login";
       return NextResponse.redirect(newUrl);
     }
