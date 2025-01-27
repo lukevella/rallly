@@ -45,5 +45,13 @@
   "register_subject": "Si prega di verificare il proprio indirizzo email",
   "common_viewOn": "Visualizza su {{domain}}",
   "newComment_preview": "Vai al tuo sondaggio per vedere cosa hanno detto.",
-  "newComment_heading": "Nuovo Commento"
+  "newComment_heading": "Nuovo Commento",
+  "newPoll_preview": "Condividi il tuo collegamento per iniziare a raccogliere le risposte.",
+  "changeEmailRequest_preview": "Verifica il tuo indirizzo email",
+  "changeEmailRequest_heading": "Verifica il tuo nuovo indirizzo email",
+  "changeEmailRequest_text2": "Per completare questa modifica, fare clic sul pulsante qui sotto:",
+  "changeEmailRequest_button": "Verifica Indirizzo Email",
+  "changeEmailRequest_subject": "Verifica il tuo nuovo indirizzo email",
+  "changeEmailRequest_text3": "Questo collegamento scadrà tra 10 minuti. Se non hai richiesto questa modifica, ignora questa email.",
+  "changeEmailRequest_text1": "Abbiamo ricevuto una richiesta di modifica dell'indirizzo email per la tua utenza da <b>{{fromEmail}}</b> a <b>{{toEmail}}</b>."
 }
