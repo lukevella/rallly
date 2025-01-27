@@ -12,11 +12,13 @@ const publicRoutes = [
   "/login",
   "/register",
   "/invite/",
-  "/new",
   "/poll/",
-  "/quick-create",
   "/auth/login",
 ];
+
+if (process.env.QUICK_CREATE_ENABLED === "true") {
+  publicRoutes.push("/quick-create", "/new");
+}
 
 export const middleware = withAuth(
   async function middleware(req) {
