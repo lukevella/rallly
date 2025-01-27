@@ -56,9 +56,7 @@ export async function QuickCreateWidget() {
                       <GroupPollIcon size="lg" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="truncate font-medium">
-                        <Link href={`/poll/${poll.id}`}>{poll.title}</Link>
-                      </div>
+                      <div className="truncate font-medium">{poll.title}</div>
                       <div className="text-muted-foreground whitespace-nowrap text-sm">
                         <RelativeDate date={poll.createdAt} />
                       </div>
