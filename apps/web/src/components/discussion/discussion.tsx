@@ -84,6 +84,13 @@ function NewCommentForm({
   const { toast } = useToast();
 
   const addComment = trpc.polls.comments.add.useMutation({
+    onMutate: async () => {
+      if (session.status !== "authenticated") {
+        await signIn("guest", {
+          redirect: false,
+        });
+      }
+    },
     onSuccess: () => {
       posthog?.capture("created comment");
     },
@@ -98,11 +105,6 @@ function NewCommentForm({
     <form
       className="w-full space-y-2.5"
       onSubmit={handleSubmit(async ({ authorName, content }) => {
-        if (session.status !== "authenticated") {
-          await signIn("guest", {
-            redirect: false,
-          });
-        }
         await addComment.mutateAsync({ authorName, content, pollId });
         reset({ authorName, content: "" });
         onSubmit?.();
