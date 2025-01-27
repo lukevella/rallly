@@ -7,6 +7,7 @@ import { Input } from "@rallly/ui/input";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
 import clsx from "clsx";
+import { signIn, useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -92,7 +93,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const { user } = useUser();
   const isLoggedIn = !user.isGuest;
-
+  const session = useSession();
   const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
       resolver: zodResolver(schema),
@@ -112,6 +113,11 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
+          if (session.status !== "authenticated") {
+            await signIn("guest", {
+              redirect: false,
+            });
+          }
           const newParticipant = await addParticipant.mutateAsync({
             name: data.name,
             votes: props.votes,
