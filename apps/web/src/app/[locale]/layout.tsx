@@ -2,7 +2,7 @@ import "tailwindcss/tailwind.css";
 import "../../style.css";
 
 import { Toaster } from "@rallly/ui/toaster";
-import type { Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
 
@@ -46,3 +46,10 @@ export default async function Root({
     </html>
   );
 }
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Rallly",
+    default: "Rallly",
+  },
+};
