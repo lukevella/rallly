@@ -40,3 +40,10 @@ export default async function QuickCreatePage() {
     </div>
   );
 }
+
+export async function generateMetadata() {
+  const { t } = await getTranslation();
+  return {
+    title: t("quickCreate"),
+  };
+}

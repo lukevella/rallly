@@ -1,6 +1,5 @@
 import { cn } from "@rallly/ui";
 import { DotPattern } from "@rallly/ui/dot-pattern";
-import type { Metadata } from "next";
 
 import { Logo } from "@/components/logo";
 import {
@@ -48,10 +47,3 @@ export default async function Layout({
     </div>
   );
 }
-
-export const metadata: Metadata = {
-  title: {
-    template: "%s - Rallly",
-    default: "Rallly",
-  },
-};
