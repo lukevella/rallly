@@ -10,6 +10,7 @@ import {
 } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
@@ -19,7 +20,6 @@ import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
-import { setCookie } from "@/utils/cookies";
 
 import type { NewEventData } from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";
@@ -42,6 +42,7 @@ export interface CreatePollPageProps {
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
   const { user } = useUser();
+  const session = useSession();
   const form = useForm<NewEventData>({
     defaultValues: {
       title: "",
@@ -66,8 +67,12 @@ export const CreatePoll: React.FunctionComponent = () => {
   const posthog = usePostHog();
   const createPoll = trpc.polls.create.useMutation({
     networkMode: "always",
-    onSuccess: () => {
-      setCookie("new-poll", "1");
+    onMutate: async () => {
+      if (session.status !== "authenticated") {
+        await signIn("guest", {
+          redirect: false,
+        });
+      }
     },
   });
 
@@ -76,7 +81,6 @@ export const CreatePoll: React.FunctionComponent = () => {
       <form
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
-
           await createPoll.mutateAsync(
             {
               title: title,

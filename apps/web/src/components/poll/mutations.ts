@@ -1,4 +1,5 @@
 import { usePostHog } from "@rallly/posthog/client";
+import { signIn, useSession } from "next-auth/react";
 
 import { usePoll } from "@/components/poll-context";
 import { trpc } from "@/trpc/client";
@@ -18,9 +19,16 @@ export const normalizeVotes = (
 export const useAddParticipantMutation = () => {
   const posthog = usePostHog();
   const queryClient = trpc.useUtils();
-
+  const session = useSession();
   return trpc.polls.participants.add.useMutation({
-    onSuccess: (newParticipant, input) => {
+    onMutate: async () => {
+      if (session.status !== "authenticated") {
+        await signIn("guest", {
+          redirect: false,
+        });
+      }
+    },
+    onSuccess: async (newParticipant, input) => {
       const { pollId, name, email } = newParticipant;
       queryClient.polls.participants.list.setData(
         { pollId },
@@ -31,6 +39,7 @@ export const useAddParticipantMutation = () => {
           ];
         },
       );
+
       posthog?.capture("add participant", {
         pollId,
         name,

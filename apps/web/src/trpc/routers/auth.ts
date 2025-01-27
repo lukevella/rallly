@@ -4,6 +4,7 @@ import { generateOtp } from "@rallly/utils/nanoid";
 import { z } from "zod";
 
 import { isEmailBlocked } from "@/auth";
+import { getEmailClient } from "@/utils/emails";
 import { createToken, decryptToken } from "@/utils/session";
 
 import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
@@ -66,7 +67,7 @@ export const auth = router({
           code,
         });
 
-        await ctx.user.getEmailClient().sendTemplate("RegisterEmail", {
+        await getEmailClient(ctx.locale).sendTemplate("RegisterEmail", {
           to: input.email,
           props: {
             code,

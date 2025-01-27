@@ -12,7 +12,6 @@ import { createToken } from "@/utils/session";
 import { getSubscriptionStatus } from "@/utils/subscription";
 
 import {
-  possiblyPublicProcedure,
   privateProcedure,
   publicProcedure,
   rateLimitMiddleware,
@@ -68,9 +67,9 @@ export const user = router({
       },
     });
   }),
-  subscription: possiblyPublicProcedure.query(
+  subscription: publicProcedure.query(
     async ({ ctx }): Promise<{ legacy?: boolean; active: boolean }> => {
-      if (ctx.user.isGuest) {
+      if (!ctx.user || ctx.user.isGuest) {
         // guest user can't have an active subscription
         return {
           active: false,

@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     }
   } else {
     const userSession = await getServerSession();
-    if (!userSession || userSession.user.email === null) {
+    if (!userSession?.user || userSession.user.email === null) {
       Sentry.captureException(new Error("User not logged in"));
       return NextResponse.json(
         { error: "User not logged in" },

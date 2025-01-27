@@ -52,7 +52,7 @@ export const GET = async (request: NextRequest) => {
 
   const session = await getServerSession();
 
-  if (!session || !session.user.email) {
+  if (!session?.user || !session.user.email) {
     return NextResponse.redirect(
       new URL(`/login?callbackUrl=${request.url}`, request.url),
     );

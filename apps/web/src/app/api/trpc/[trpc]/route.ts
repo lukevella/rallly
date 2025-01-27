@@ -1,38 +1,37 @@
 import * as Sentry from "@sentry/nextjs";
-import { TRPCError } from "@trpc/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
+import type { NextRequest } from "next/server";
 
+import { getLocaleFromHeader } from "@/app/guest";
 import { getServerSession } from "@/auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
 
-const handler = (request: Request) => {
+const handler = (req: NextRequest) => {
   return fetchRequestHandler({
     endpoint: "/api/trpc",
-    req: request,
+    req,
     router: appRouter,
     createContext: async () => {
       const session = await getServerSession();
-
-      if (!session?.user) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Unauthorized",
-        });
-      }
+      const locale = await getLocaleFromHeader(req);
+      const user = session?.user
+        ? {
+            id: session.user.id,
+            isGuest: !session.user.email,
+            locale: session.user.locale ?? undefined,
+            image: session.user.image ?? undefined,
+            getEmailClient: () =>
+              getEmailClient(session.user?.locale ?? undefined),
+          }
+        : undefined;
 
       return {
-        user: {
-          id: session.user.id,
-          isGuest: session.user.email === null,
-          locale: session.user.locale ?? undefined,
-          image: session.user.image ?? undefined,
-          getEmailClient: () =>
-            getEmailClient(session.user?.locale ?? undefined),
-        },
-        ip: ipAddress(request) ?? undefined,
+        user,
+        locale,
+        ip: ipAddress(req) ?? undefined,
       } satisfies TRPCContext;
     },
     onError({ error }) {

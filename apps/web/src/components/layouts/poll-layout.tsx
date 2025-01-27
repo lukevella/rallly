@@ -14,7 +14,6 @@ import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
-import Loader from "@/app/[locale]/poll/[urlId]/skeleton";
 import { LogoutButton } from "@/app/components/logout-button";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
@@ -30,9 +29,7 @@ import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
-import { trpc } from "@/trpc/client";
 
 const AdminControls = () => {
   return (
@@ -86,8 +83,9 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 };
 
 const PermissionGuard = ({ children }: React.PropsWithChildren) => {
-  const poll = usePoll();
   const { user } = useUser();
+
+  const poll = usePoll();
   if (!poll.adminUrlId) {
     return (
       <PageDialog icon={ShieldCloseIcon}>
@@ -139,30 +137,6 @@ const PermissionGuard = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
-const Prefetch = ({ children }: React.PropsWithChildren) => {
-  const params = useParams();
-
-  const urlId = params?.urlId as string;
-
-  const poll = trpc.polls.get.useQuery({ urlId });
-  const participants = trpc.polls.participants.list.useQuery({ pollId: urlId });
-  const watchers = trpc.polls.getWatchers.useQuery({ pollId: urlId });
-  const comments = trpc.polls.comments.list.useQuery({ pollId: urlId });
-
-  usePlan(); // prefetch plan
-
-  if (
-    !poll.isFetched ||
-    !watchers.isFetched ||
-    !participants.isFetched ||
-    !comments.isFetched
-  ) {
-    return <Loader />;
-  }
-
-  return <>{children}</>;
-};
-
 export const PollLayout = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
@@ -174,12 +148,10 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
   }
 
   return (
-    <Prefetch>
-      <LegacyPollContextProvider>
-        <PermissionGuard>
-          <Layout>{children}</Layout>
-        </PermissionGuard>
-      </LegacyPollContextProvider>
-    </Prefetch>
+    <LegacyPollContextProvider>
+      <PermissionGuard>
+        <Layout>{children}</Layout>
+      </PermissionGuard>
+    </LegacyPollContextProvider>
   );
 };

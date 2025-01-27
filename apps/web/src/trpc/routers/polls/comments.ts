@@ -5,7 +5,12 @@ import { z } from "zod";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
-import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
+import {
+  publicProcedure,
+  rateLimitMiddleware,
+  requireUserMiddleware,
+  router,
+} from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
 
 export const comments = router({
@@ -13,12 +18,52 @@ export const comments = router({
     .input(
       z.object({
         pollId: z.string(),
-        hideParticipants: z.boolean().optional(),
+        hideParticipants: z.boolean().optional(), // @deprecated
       }),
     )
-    .query(async ({ input: { pollId, hideParticipants }, ctx }) => {
+    .query(async ({ input: { pollId }, ctx }) => {
+      const poll = await prisma.poll.findUnique({
+        where: {
+          id: pollId,
+        },
+        select: {
+          userId: true,
+          guestId: true,
+          hideParticipants: true,
+        },
+      });
+
+      const isOwner = ctx.user?.isGuest
+        ? poll?.guestId === ctx.user.id
+        : poll?.userId === ctx.user?.id;
+
+      const hideParticipants = poll?.hideParticipants && !isOwner;
+
+      if (hideParticipants && !isOwner) {
+        // if hideParticipants is enabled and the user is not the owner
+        if (!ctx.user) {
+          // cannot see any comments if there is no user
+          return [];
+        } else {
+          // only show comments created by the current users
+          return await prisma.comment.findMany({
+            where: {
+              pollId,
+              ...(ctx.user.isGuest
+                ? { guestId: ctx.user.id }
+                : { userId: ctx.user.id }),
+            },
+            orderBy: [
+              {
+                createdAt: "asc",
+              },
+            ],
+          });
+        }
+      }
+      // return all comments
       return await prisma.comment.findMany({
-        where: { pollId, userId: hideParticipants ? ctx.user.id : undefined },
+        where: { pollId },
         orderBy: [
           {
             createdAt: "asc",
@@ -28,6 +73,7 @@ export const comments = router({
     }),
   add: publicProcedure
     .use(rateLimitMiddleware)
+    .use(requireUserMiddleware)
     .input(
       z.object({
         pollId: z.string(),

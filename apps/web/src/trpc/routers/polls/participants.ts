@@ -5,7 +5,12 @@ import { z } from "zod";
 
 import { createToken } from "@/utils/session";
 
-import { publicProcedure, rateLimitMiddleware, router } from "../../trpc";
+import {
+  publicProcedure,
+  rateLimitMiddleware,
+  requireUserMiddleware,
+  router,
+} from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
 
 const MAX_PARTICIPANTS = 1000;
@@ -59,6 +64,7 @@ export const participants = router({
     }),
   add: publicProcedure
     .use(rateLimitMiddleware)
+    .use(requireUserMiddleware)
     .input(
       z.object({
         pollId: z.string(),

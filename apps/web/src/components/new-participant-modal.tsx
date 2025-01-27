@@ -92,7 +92,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const { user } = useUser();
   const isLoggedIn = !user.isGuest;
-
   const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
       resolver: zodResolver(schema),

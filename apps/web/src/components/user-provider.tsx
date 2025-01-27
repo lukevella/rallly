@@ -4,7 +4,6 @@ import type { Session } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import React from "react";
 
-import { Spinner } from "@/components/spinner";
 import { useSubscription } from "@/contexts/plan";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
@@ -14,7 +13,7 @@ import { isOwner } from "@/utils/permissions";
 import { useRequiredContext } from "./use-required-context";
 
 type UserData = {
-  id: string;
+  id?: string;
   name: string;
   email?: string | null;
   isGuest: boolean;
@@ -71,7 +70,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
 
   React.useEffect(() => {
-    if (user?.email) {
+    if (user) {
       posthog?.identify(user.id, {
         email: user.email,
         name: user.name,
@@ -84,26 +83,18 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-  if (!user) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
-
   return (
     <UserContext.Provider
       value={{
         user: {
-          id: user.id as string,
-          name: user.name ?? t("guest"),
-          email: user.email || null,
+          id: user?.id,
+          name: user?.name ?? t("guest"),
+          email: user?.email || null,
           isGuest,
           tier,
-          timeZone: user.timeZone ?? null,
-          image: user.image ?? null,
-          locale: user.locale ?? i18n.language,
+          timeZone: user?.timeZone ?? null,
+          image: user?.image ?? null,
+          locale: user?.locale ?? i18n.language,
         },
         refresh: session.update,
         logout: async () => {
@@ -112,16 +103,16 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           posthog?.reset();
         },
         ownsObject: (resource) => {
-          return isOwner(resource, { id: user.id, isGuest });
+          return user ? isOwner(resource, { id: user.id, isGuest }) : false;
         },
       }}
     >
       <PreferencesProvider
         initialValue={{
-          locale: user.locale ?? undefined,
-          timeZone: user.timeZone ?? undefined,
-          timeFormat: user.timeFormat ?? undefined,
-          weekStart: user.weekStart ?? undefined,
+          locale: user?.locale ?? undefined,
+          timeZone: user?.timeZone ?? undefined,
+          timeFormat: user?.timeFormat ?? undefined,
+          weekStart: user?.weekStart ?? undefined,
         }}
         onUpdate={async (newPreferences) => {
           if (!isGuest) {

@@ -44,7 +44,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
       queryClient.polls.getWatchers.setData(
         { pollId: poll.id },
         (oldWatchers) => {
-          if (!oldWatchers) {
+          if (!oldWatchers || !user.id) {
             return;
           }
           return [...oldWatchers, { userId: user.id }];
@@ -124,11 +124,11 @@ const NotificationsToggle: React.FunctionComponent = () => {
             values={{
               value: isWatching
                 ? t("notificationsOn", {
-                  defaultValue: "On",
-                })
+                    defaultValue: "On",
+                  })
                 : t("notificationsOff", {
-                  defaultValue: "Off",
-                }),
+                    defaultValue: "Off",
+                  }),
             }}
           />
         )}
