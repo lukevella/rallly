@@ -16,26 +16,27 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters";
 export function CustomPrismaAdapter(
   client: ExtendedPrismaClient,
   options: { migrateData: (userId: string) => Promise<void> },
-): Adapter {
+) {
+  const adapter = PrismaAdapter(client as PrismaClient);
   return {
-    ...PrismaAdapter(client as PrismaClient),
-    linkAccount: async (data) => {
-      await options.migrateData(data.userId);
-      return client.account.create({
+    ...adapter,
+    linkAccount: async (account: AdapterAccount) => {
+      await options.migrateData(account.userId);
+      return (await client.account.create({
         data: {
-          userId: data.userId,
-          type: data.type,
-          provider: data.provider,
-          providerAccountId: data.providerAccountId,
-          access_token: data.access_token as string,
-          expires_at: data.expires_at as number,
-          id_token: data.id_token as string,
-          token_type: data.token_type as string,
-          refresh_token: data.refresh_token as string,
-          scope: data.scope as string,
-          session_state: data.session_state as string,
+          userId: account.userId,
+          type: account.type,
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+          access_token: account.access_token as string,
+          expires_at: account.expires_at as number,
+          id_token: account.id_token as string,
+          token_type: account.token_type as string,
+          refresh_token: account.refresh_token as string,
+          scope: account.scope as string,
+          session_state: account.session_state as string,
         },
-      }) as unknown as AdapterAccount;
+      })) as AdapterAccount;
     },
-  };
+  } satisfies Adapter;
 }

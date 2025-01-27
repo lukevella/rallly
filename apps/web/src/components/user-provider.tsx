@@ -13,7 +13,7 @@ import { isOwner } from "@/utils/permissions";
 import { useRequiredContext } from "./use-required-context";
 
 type UserData = {
-  id: string;
+  id?: string;
   name: string;
   email?: string | null;
   isGuest: boolean;
@@ -86,23 +86,16 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   return (
     <UserContext.Provider
       value={{
-        user: user
-          ? {
-              id: user.id as string,
-              name: user.name ?? t("guest"),
-              email: user.email || null,
-              isGuest,
-              tier,
-              timeZone: user.timeZone ?? null,
-              image: user.image ?? null,
-              locale: user.locale ?? i18n.language,
-            }
-          : {
-              id: "",
-              name: t("guest"),
-              isGuest: true,
-              tier: "guest",
-            },
+        user: {
+          id: user?.id,
+          name: user?.name ?? t("guest"),
+          email: user?.email || null,
+          isGuest,
+          tier,
+          timeZone: user?.timeZone ?? null,
+          image: user?.image ?? null,
+          locale: user?.locale ?? i18n.language,
+        },
         refresh: session.update,
         logout: async () => {
           await signOut();
