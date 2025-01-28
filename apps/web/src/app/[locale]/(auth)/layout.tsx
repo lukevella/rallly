@@ -14,7 +14,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex h-screen flex-col items-center justify-center bg-gray-100 p-2 lg:p-4">
+    <div className="relative flex h-dvh flex-col items-center justify-center bg-gray-100 p-2 lg:p-4">
       <div className="z-10 flex w-full max-w-7xl flex-1 rounded-xl border bg-white shadow-sm lg:max-h-[720px] lg:p-2">
         <div className="flex flex-1 flex-col gap-4 p-6 lg:p-16">
           <div className="py-8">
