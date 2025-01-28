@@ -304,5 +304,6 @@
   "registerVerifyTitle": "Registrierung abschließen",
   "registerVerifyDescription": "Der Bestätigungscode wurde dir per E-Mail gesendet",
   "loginVerifyTitle": "Anmeldung abschließen",
+  "loginVerifyDescription": "Der Bestätigungscode wurde dir per E-Mail gesendet",
   "createAccount": "Konto erstellen"
 }
