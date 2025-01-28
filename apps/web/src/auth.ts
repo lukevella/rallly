@@ -355,3 +355,17 @@ export const isEmailBlocked = (email: string) => {
   }
   return false;
 };
+
+export function getOAuthProviders(): {
+  id: string;
+  name: string;
+}[] {
+  return providers
+    .filter((provider) => provider.type === "oauth")
+    .map((provider) => {
+      return {
+        id: provider.id,
+        name: provider.options?.name || provider.name,
+      };
+    });
+}

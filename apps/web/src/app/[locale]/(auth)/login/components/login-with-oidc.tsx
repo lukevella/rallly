@@ -1,8 +1,12 @@
-"use client";
 import { Button } from "@rallly/ui/button";
 import { signIn } from "next-auth/react";
+import { Trans } from "react-i18next/TransWithoutContext";
 
-export function LoginWithOIDC({ children }: { children: React.ReactNode }) {
+import { getTranslation } from "@/i18n/server";
+
+export async function LoginWithOIDC({ name }: { name: string }) {
+  const { t } = await getTranslation();
+
   return (
     <Button
       onClick={() => {
@@ -10,7 +14,13 @@ export function LoginWithOIDC({ children }: { children: React.ReactNode }) {
       }}
       variant="link"
     >
-      {children}
+      <Trans
+        t={t}
+        i18nKey="continueWithProvider"
+        ns="app"
+        defaultValue="Login with {{provider}}"
+        values={{ provider: name }}
+      />
     </Button>
   );
 }

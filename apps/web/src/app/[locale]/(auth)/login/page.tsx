@@ -1,8 +1,7 @@
-import { unstable_cache } from "next/cache";
 import Link from "next/link";
-import { getProviders } from "next-auth/react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
+import { getOAuthProviders } from "@/auth";
 import { getTranslation } from "@/i18n/server";
 
 import {
@@ -17,43 +16,19 @@ import { AuthErrors } from "./components/auth-errors";
 import { LoginWithEmailForm } from "./components/login-email-form";
 import { LoginWithOIDC } from "./components/login-with-oidc";
 import { OrDivider } from "./components/or-divider";
-import { SSOProviders } from "./sso-providers";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-async function getOAuthProviders() {
-  const providers = await getProviders();
-  if (!providers) {
-    return [];
-  }
-
-  return Object.values(providers)
-    .filter((provider) => provider.type === "oauth")
-    .map((provider) => ({
-      id: provider.id,
-      name: provider.name,
-    }));
-}
-
-// Cache the OAuth providers to avoid re-fetching them on every page load
-const getCachedOAuthProviders = unstable_cache(
-  getOAuthProviders,
-  ["oauth-providers"],
-  {
-    revalidate: false,
-  },
-);
+import { SSOProvider } from "./components/sso-provider";
 
 export default async function LoginPage() {
   const { t } = await getTranslation();
-  const oAuthProviders = await getCachedOAuthProviders();
-  const socialProviders = oAuthProviders.filter(
-    (provider) => provider.id !== "oidc",
-  );
+  const oAuthProviders = getOAuthProviders();
+
+  const hasAlternateLoginMethods = oAuthProviders.length > 0;
 
   const oidcProvider = oAuthProviders.find(
     (provider) => provider.id === "oidc",
+  );
+  const socialProviders = oAuthProviders.filter(
+    (provider) => provider.id !== "oidc",
   );
 
   return (
@@ -73,24 +48,18 @@ export default async function LoginPage() {
       </AuthPageHeader>
       <AuthPageContent>
         <LoginWithEmailForm />
-        {oidcProvider ? (
-          <div className="text-center">
-            <LoginWithOIDC>
-              <Trans
-                t={t}
-                i18nKey="continueWithProvider"
-                ns="app"
-                defaultValue="Login with {{provider}}"
-                values={{ provider: oidcProvider.name }}
+        {hasAlternateLoginMethods ? <OrDivider /> : null}
+        {oidcProvider ? <LoginWithOIDC name={oidcProvider.name} /> : null}
+        {socialProviders ? (
+          <div className="grid gap-4">
+            {socialProviders.map((provider) => (
+              <SSOProvider
+                key={provider.id}
+                providerId={provider.id}
+                name={provider.name}
               />
-            </LoginWithOIDC>
+            ))}
           </div>
-        ) : null}
-        {socialProviders.length > 0 ? (
-          <>
-            <OrDivider text={t("or")} />
-            <SSOProviders />
-          </>
         ) : null}
       </AuthPageContent>
       <AuthErrors />
