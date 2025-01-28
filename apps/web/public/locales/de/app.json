@@ -295,11 +295,14 @@
   "registerDescription": "Spare Zeit mit einem reibungslosen Planungsprozess",
   "quickActionsDescription": "Erstelle eine Gruppenabstimmung, ohne dich anzumelden. Verknüpfe sie nach der Anmeldung mit deinem Konto.",
   "quickCreateGroupPoll": "Erstelle eine Gruppenabstimmung",
+  "quickCreate": "Schnell erstellen",
+  "quickCreateRecentlyCreated": "Zuletzt erstellt",
   "quickCreateWhyCreateAnAccount": "Wozu ein Konto erstellen?",
   "quickCreateSecurePolls": "Schütze den Zugriff mit einem Konto",
   "quickCreateGetNotifications": "Erhalte E-Mail-Benachrichtigungen",
   "quickCreateManagePollsFromAnyDevice": "Verwalte deine Umfragen von allen Geräten",
   "registerVerifyTitle": "Registrierung abschließen",
+  "registerVerifyDescription": "Der Bestätigungscode wurde dir per E-Mail gesendet",
   "loginVerifyTitle": "Anmeldung abschließen",
   "createAccount": "Konto erstellen"
 }
