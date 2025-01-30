@@ -17,7 +17,7 @@ export default async function QuickCreatePage() {
 
   const { t } = await getTranslation();
   return (
-    <div className="flex min-h-screen p-2">
+    <div className="flex h-dvh p-2">
       <div className="flex flex-1 flex-col gap-6 rounded-xl border bg-white p-6">
         <div className="mx-auto w-full max-w-md flex-1">
           <div className="space-y-8">
