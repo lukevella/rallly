@@ -4,9 +4,12 @@ on:
     tags:
       - "v*"
 
+env:
+  DOCKERHUB_REPO: ${{ secrets.DOCKER_NAMESPACE }}/rallly
+
 jobs:
-  publish:
-    name: Build and publish Docker image
+  build:
+    name: Build the Docker image
     strategy:
       fail-fast: false
       matrix:
@@ -16,12 +19,15 @@ jobs:
         include:
           - platform: linux/amd64
             os: ubuntu-latest
-            tag-prefix: -amd64
           - platform: linux/arm64
             os: ubuntu-24.04-arm
-            tag-prefix: -arm64
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
       - name: Check out repository code
         uses: actions/checkout@v4
 
@@ -30,11 +36,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_NAMESPACE }}/rallly
-          tags: |
-            type=semver,pattern={{version}}${{ matrix.tag-prefix }}
-            type=semver,pattern={{major}}.{{minor}}${{ matrix.tag-prefix }}
-            type=semver,pattern={{major}}${{ matrix.tag-prefix }}
+            ${{ env.DOCKERHUB_REPO }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -42,14 +44,77 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and publish image
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push by digest
+        id: build
         uses: docker/build-push-action@v5
         with:
           file: ./apps/web/Dockerfile
           platforms: ${{ matrix.platform }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          outputs: type=image,"name=${{ env.DOCKERHUB_REPO }}",push-by-digest=true,name-canonical=true,push=true
           build-args: |
             APP_VERSION=${{ github.ref_name }}
             SELF_HOSTED=true
+
+      - name: Export digest
+        run: |
+          mkdir -p ${{ runner.temp }}/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge-and-publish:
+    name: Merge digests and publish the Docker image
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.DOCKERHUB_REPO }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Create manifest list and push
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.DOCKERHUB_REPO }}@sha256:%s ' *)
+
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.DOCKERHUB_REPO }}:${{ steps.meta.outputs.version }}
