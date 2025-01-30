@@ -23,12 +23,8 @@ export const Logo = ({
       priority={true}
       className={className}
       src="/static/logo.svg"
-      style={{
-        width: sizes[size].width,
-        height: "auto",
-      }}
-      width={0}
-      height={0}
+      width={sizes[size].width}
+      height={sizes[size].height}
       alt="Rallly"
     />
   );
