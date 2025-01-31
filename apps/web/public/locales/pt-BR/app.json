@@ -283,7 +283,7 @@
   "profileEmailAddressDescription": "Seu endereço de email é usado para acessar sua conta",
   "emailAlreadyInUse": "Este endereço de e-mail já está associado a outra conta. Por favor, use um endereço de e-mail diferente.",
   "continueWith": "Continuar com {provider}",
-  "continueWithProvider": "Continuar com {{provider}}",
+  "continueWithProvider": "Continuar com {provider}",
   "loginFooter": "Não tem uma conta? <a>Cadastre-se</a>",
   "back": "Voltar",
   "verifyEmail": "Verifique seu e-mail",
