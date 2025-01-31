@@ -283,7 +283,7 @@
   "profileEmailAddressDescription": "Je e-mailadres wordt gebruikt om in te loggen op je account",
   "emailAlreadyInUse": "Dit e-mailadres is al gekoppeld aan een ander account. Gebruik een ander e-mailadres.",
   "continueWith": "Inloggen met {provider}",
-  "continueWithProvider": "Inloggen met {{provider}}",
+  "continueWithProvider": "Inloggen met {provider}",
   "loginFooter": "Heb je geen account? <a>Meld je aan</a>",
   "back": "Terug",
   "verifyEmail": "Verifieer je e-mailadres",
