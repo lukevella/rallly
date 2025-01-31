@@ -282,7 +282,7 @@
   "profileEmailAddress": "Email cím",
   "profileEmailAddressDescription": "Az email címed használhatod a belépéshez",
   "continueWith": "Folytatás {provider} fiókkal",
-  "continueWithProvider": "Folytatás {{provider}} fiókkal",
+  "continueWithProvider": "Folytatás {provider} fiókkal",
   "loginFooter": "Nincs felhasználód? <a>Regisztrálj</a>",
   "back": "Vissza",
   "verifyEmail": "Hitelesítsd az email címed",

@@ -18,7 +18,7 @@ export async function LoginWithOIDC({ name }: { name: string }) {
         t={t}
         i18nKey="continueWithProvider"
         ns="app"
-        defaultValue="Login with {{provider}}"
+        defaultValue="Login with {provider}"
         values={{ provider: name }}
       />
     </Button>

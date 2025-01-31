@@ -283,7 +283,7 @@
   "profileEmailAddressDescription": "Sähköpostiosoitettasi käytetään kirjautumaan sisään tilillesi",
   "emailAlreadyInUse": "Tämä sähköpostiosoite on jo liitetty toiseen tiliin. Ole hyvä ja käytä toista sähköpostiosoitetta.",
   "continueWith": "Jatka {provider}-tilillä",
-  "continueWithProvider": "Jatka {{provider}}-tilillä",
+  "continueWithProvider": "Jatka {provider}-tilillä",
   "loginFooter": "Eikö sinulla ole tiliä? <a>Rekisteröidy</a>",
   "back": "Takaisin",
   "verifyEmail": "Vahvista sähköpostiosoitteesi",

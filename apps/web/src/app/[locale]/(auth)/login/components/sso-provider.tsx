@@ -51,7 +51,7 @@ export function SSOProvider({
       aria-label={t("continueWithProvider", {
         provider: name,
         ns: "app",
-        defaultValue: "Continue with {{provider}}",
+        defaultValue: "Continue with {provider}",
       })}
       key={providerId}
       onClick={() => {
@@ -62,7 +62,7 @@ export function SSOProvider({
       <span>
         <Trans
           i18nKey="continueWithProvider"
-          defaults="Continue with {{provider}}"
+          defaults="Continue with {provider}"
           values={{ provider: name }}
         />
       </span>
