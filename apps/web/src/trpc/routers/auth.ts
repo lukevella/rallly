@@ -1,9 +1,11 @@
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import { generateOtp } from "@rallly/utils/nanoid";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 
 import { isEmailBlocked } from "@/auth";
+import { mergeGuestsIntoUser } from "@/auth/merge-user";
 import { getEmailClient } from "@/utils/emails";
 import { createToken, decryptToken } from "@/utils/session";
 
@@ -86,7 +88,7 @@ export const auth = router({
         locale: z.string().optional(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const payload = await decryptToken<RegistrationTokenPayload>(input.token);
 
       if (!payload) {
@@ -107,6 +109,14 @@ export const auth = router({
           locale: input.locale,
         },
       });
+
+      if (ctx.user && ctx.user.isGuest) {
+        try {
+          await mergeGuestsIntoUser(user.id, [ctx.user.id]);
+        } catch (err) {
+          Sentry.captureException(err);
+        }
+      }
 
       posthog?.capture({
         event: "register",
