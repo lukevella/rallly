@@ -3,6 +3,7 @@ import { prisma } from "@rallly/database";
 import { load } from "cheerio";
 
 import { captureEmailHTML } from "./mailpit/mailpit";
+import { RegisterPage } from "./register-page";
 import { getCode } from "./utils";
 
 const testUserEmail = "test@example.com";
@@ -38,24 +39,11 @@ test.describe.serial(() => {
     });
 
     test("user registration", async ({ page }) => {
-      await page.goto("/register");
-
-      await page.getByText("Create Your Account").waitFor();
-
-      await page.getByPlaceholder("Jessie Smith").fill("Test User");
-      await page
-        .getByPlaceholder("jessie.smith@example.com")
-        .fill(testUserEmail);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      const code = await getCode(testUserEmail);
-
-      await page.getByText("Finish Registering").waitFor();
-
-      const codeInput = page.getByPlaceholder("Enter your 6-digit code");
-
-      await codeInput.fill(code);
+      const registerPage = new RegisterPage(page);
+      registerPage.register({
+        name: "Test User",
+        email: testUserEmail,
+      });
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
