@@ -44,29 +44,34 @@ async function sendNewParticipantNotifcationEmail({
     },
   });
 
-  for (const watcher of watchers) {
-    try {
-      const email = watcher.user.email;
-      const watcherLocale = watcher.user.locale ?? undefined;
-      const token = await createToken<DisableNotificationsPayload>(
-        { watcherId: watcher.id, pollId },
-        { ttl: 0 },
-      );
-      getEmailClient(watcherLocale).queueTemplate("NewParticipantEmail", {
-        to: email,
-        props: {
-          participantName,
-          pollUrl: absoluteUrl(`/poll/${pollId}`),
-          disableNotificationsUrl: absoluteUrl(
-            `/api/notifications/unsubscribe?token=${token}`,
-          ),
-          title: pollTitle,
-        },
-      });
-    } catch (err) {
-      Sentry.captureException(err);
-    }
-  }
+  await Promise.all(
+    watchers.map(async (watcher) => {
+      try {
+        const email = watcher.user.email;
+        const watcherLocale = watcher.user.locale ?? undefined;
+        const token = await createToken<DisableNotificationsPayload>(
+          { watcherId: watcher.id, pollId },
+          { ttl: 0 },
+        );
+        await getEmailClient(watcherLocale).sendTemplate(
+          "NewParticipantEmail",
+          {
+            to: email,
+            props: {
+              participantName,
+              pollUrl: absoluteUrl(`/poll/${pollId}`),
+              disableNotificationsUrl: absoluteUrl(
+                `/api/notifications/unsubscribe?token=${token}`,
+              ),
+              title: pollTitle,
+            },
+          },
+        );
+      } catch (err) {
+        Sentry.captureException(err);
+      }
+    }),
+  );
 }
 
 export const participants = router({
