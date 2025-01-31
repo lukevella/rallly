@@ -3,20 +3,9 @@ import { prisma } from "@rallly/database";
 import { load } from "cheerio";
 
 import { captureEmailHTML } from "./mailpit/mailpit";
+import { getCode } from "./utils";
 
 const testUserEmail = "test@example.com";
-
-/**
- * Get the 6-digit code from the email
- * @returns 6-digit code
- */
-const getCode = async () => {
-  const html = await captureEmailHTML(testUserEmail);
-
-  const $ = load(html);
-
-  return $("#code").text().trim();
-};
 
 test.describe.serial(() => {
   test.afterAll(async () => {
@@ -60,7 +49,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      const code = await getCode();
+      const code = await getCode(testUserEmail);
 
       await page.getByText("Finish Registering").waitFor();
 
@@ -141,7 +130,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      const code = await getCode();
+      const code = await getCode(testUserEmail);
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
@@ -157,7 +146,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      const code = await getCode();
+      const code = await getCode(testUserEmail);
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
 

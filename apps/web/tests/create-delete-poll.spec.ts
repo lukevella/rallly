@@ -15,7 +15,6 @@ test.describe.serial(() => {
   test("create a new poll", async () => {
     const newPollPage = new NewPollPage(page);
 
-    await newPollPage.goto();
     await newPollPage.createPollAndCloseDialog();
 
     await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");

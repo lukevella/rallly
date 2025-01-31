@@ -9,6 +9,7 @@ export class NewPollPage {
   }
 
   async createPollAndCloseDialog() {
+    await this.goto();
     const pollPage = await this.createPoll();
     await pollPage.closeDialog();
     return pollPage;
