@@ -238,7 +238,7 @@
   "upcomingEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
   "pastEventsEmptyStateTitle": "Inga tidigare händelser",
   "pastEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
-  "activePollCount": "{{activePollCount}} Publik(a)",
+  "activePollCount": "{{activePollCount}} publik(a)",
   "createPoll": "Skapa omröstning",
   "yearlyBillingDescription": "per år",
   "addToCalendar": "Lägg till i kalender",
