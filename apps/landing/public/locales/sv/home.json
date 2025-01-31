@@ -31,5 +31,8 @@
   "new": "Ny",
   "metaTitle": "Rallly - Schemalägg gruppmöten",
   "metaDescription": "Skapa omröstningar och rösta för att hitta den bästa dagen eller tiden. Ett kostnadsfritt alternativ till Doodle.",
-  "when2meetAlternativeMetaTitle": "Bästa alternativet till When2Meet: Rallly"
+  "when2meetAlternativeMetaTitle": "Bästa alternativet till When2Meet: Rallly",
+  "when2meetAlternativeMetaDescription": "Hitta ett bättre sätt att schemalägga möten med Rallly, det bästa fria alternativet till When2Meet. Lätt att använda och gratis.",
+  "when2meetAlternative": "Använder du fortfarande When2Meet?",
+  "quickCreateBlog": "Introducerar SnabbSkapa"
 }
