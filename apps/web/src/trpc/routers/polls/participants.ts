@@ -1,5 +1,6 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
@@ -44,23 +45,27 @@ async function sendNewParticipantNotifcationEmail({
   });
 
   for (const watcher of watchers) {
-    const email = watcher.user.email;
-    const watcherLocale = watcher.user.locale ?? undefined;
-    const token = await createToken<DisableNotificationsPayload>(
-      { watcherId: watcher.id, pollId },
-      { ttl: 0 },
-    );
-    getEmailClient(watcherLocale).queueTemplate("NewParticipantEmail", {
-      to: email,
-      props: {
-        participantName,
-        pollUrl: absoluteUrl(`/poll/${pollId}`),
-        disableNotificationsUrl: absoluteUrl(
-          `/api/notifications/unsubscribe?token=${token}`,
-        ),
-        title: pollTitle,
-      },
-    });
+    try {
+      const email = watcher.user.email;
+      const watcherLocale = watcher.user.locale ?? undefined;
+      const token = await createToken<DisableNotificationsPayload>(
+        { watcherId: watcher.id, pollId },
+        { ttl: 0 },
+      );
+      getEmailClient(watcherLocale).queueTemplate("NewParticipantEmail", {
+        to: email,
+        props: {
+          participantName,
+          pollUrl: absoluteUrl(`/poll/${pollId}`),
+          disableNotificationsUrl: absoluteUrl(
+            `/api/notifications/unsubscribe?token=${token}`,
+          ),
+          title: pollTitle,
+        },
+      });
+    } catch (err) {
+      Sentry.captureException(err);
+    }
   }
 }
 
