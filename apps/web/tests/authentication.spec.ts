@@ -3,20 +3,10 @@ import { prisma } from "@rallly/database";
 import { load } from "cheerio";
 
 import { captureEmailHTML } from "./mailpit/mailpit";
+import { RegisterPage } from "./register-page";
+import { getCode } from "./utils";
 
 const testUserEmail = "test@example.com";
-
-/**
- * Get the 6-digit code from the email
- * @returns 6-digit code
- */
-const getCode = async () => {
-  const html = await captureEmailHTML(testUserEmail);
-
-  const $ = load(html);
-
-  return $("#code").text().trim();
-};
 
 test.describe.serial(() => {
   test.afterAll(async () => {
@@ -49,26 +39,11 @@ test.describe.serial(() => {
     });
 
     test("user registration", async ({ page }) => {
-      await page.goto("/register");
-
-      await page.getByText("Create Your Account").waitFor();
-
-      await page.getByPlaceholder("Jessie Smith").fill("Test User");
-      await page
-        .getByPlaceholder("jessie.smith@example.com")
-        .fill(testUserEmail);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      const code = await getCode();
-
-      await page.getByText("Finish Registering").waitFor();
-
-      const codeInput = page.getByPlaceholder("Enter your 6-digit code");
-
-      await codeInput.fill(code);
-
-      await expect(page.getByText("Test User")).toBeVisible();
+      const registerPage = new RegisterPage(page);
+      await registerPage.register({
+        name: "Test User",
+        email: testUserEmail,
+      });
     });
   });
 
@@ -141,7 +116,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      const code = await getCode();
+      const code = await getCode(testUserEmail);
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
@@ -157,7 +132,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      const code = await getCode();
+      const code = await getCode(testUserEmail);
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
