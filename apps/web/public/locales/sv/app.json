@@ -276,7 +276,7 @@
   "profileEmailAddressDescription": "Din mejladress används för att logga in på ditt konto",
   "emailAlreadyInUse": "Den här mejladressen är redan kopplad till ett annat konto. Använd en annan mejladress.",
   "continueWith": "Logga in med {provider}",
-  "continueWithProvider": "Logga in med {{provider}}",
+  "continueWithProvider": "Logga in med {provider}",
   "loginFooter": "Har du inte ett konto? <a>Skapa ett</a>",
   "back": "Tillbaka",
   "verifyEmail": "Verifiera din e-postadress",

@@ -283,7 +283,7 @@
   "profileEmailAddressDescription": "Din e-mail adresse bruges til at logge ind på din konto",
   "emailAlreadyInUse": "Denne e-mail adresse er allerede tilknyttet en anden konto. Brug venligst en anden e-mail adresse.",
   "continueWith": "Fortsæt med {provider}",
-  "continueWithProvider": "Fortsæt med {{provider}}",
+  "continueWithProvider": "Fortsæt med {provider}",
   "loginFooter": "Har du ikke en konto? <a>Tilmeld dig</a>",
   "back": "Tilbage",
   "verifyEmail": "Bekræft din e-mail",

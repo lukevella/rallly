@@ -283,7 +283,7 @@
   "profileEmailAddressDescription": "Il tuo indirizzo email viene utilizzato per accedere alla tua utenza",
   "emailAlreadyInUse": "Questo indirizzo email è già associato a un'altra utenza. Si prega di utilizzare un indirizzo email diverso.",
   "continueWith": "Continua con {provider}",
-  "continueWithProvider": "Continua con {{provider}}",
+  "continueWithProvider": "Continua con {provider}",
   "loginFooter": "Non hai un'utenza? <a>Iscriviti</a>",
   "back": "Indietro",
   "verifyEmail": "Verifica la tua email",
