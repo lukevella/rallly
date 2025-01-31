@@ -46,9 +46,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -63,7 +60,7 @@ jobs:
           build-args: |
             APP_VERSION=${{ github.ref_name }}
             SELF_HOSTED=true
-  
+
       - name: Export digest
         run: |
           mkdir -p ${{ runner.temp }}/digests
