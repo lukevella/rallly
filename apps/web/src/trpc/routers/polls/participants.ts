@@ -1,8 +1,11 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
+import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
+import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import {
@@ -14,6 +17,62 @@ import {
 import type { DisableNotificationsPayload } from "../../types";
 
 const MAX_PARTICIPANTS = 1000;
+
+async function sendNewParticipantNotifcationEmail({
+  pollId,
+  pollTitle,
+  participantName,
+}: {
+  pollId: string;
+  pollTitle: string;
+  participantName: string;
+}) {
+  const watchers = await prisma.watcher.findMany({
+    where: {
+      pollId,
+    },
+    select: {
+      id: true,
+      userId: true,
+      user: {
+        select: {
+          email: true,
+          name: true,
+          locale: true,
+        },
+      },
+    },
+  });
+
+  await Promise.all(
+    watchers.map(async (watcher) => {
+      try {
+        const email = watcher.user.email;
+        const watcherLocale = watcher.user.locale ?? undefined;
+        const token = await createToken<DisableNotificationsPayload>(
+          { watcherId: watcher.id, pollId },
+          { ttl: 0 },
+        );
+        await getEmailClient(watcherLocale).sendTemplate(
+          "NewParticipantEmail",
+          {
+            to: email,
+            props: {
+              participantName,
+              pollUrl: absoluteUrl(`/poll/${pollId}`),
+              disableNotificationsUrl: absoluteUrl(
+                `/api/notifications/unsubscribe?token=${token}`,
+              ),
+              title: pollTitle,
+            },
+          },
+        );
+      } catch (err) {
+        Sentry.captureException(err);
+      }
+    }),
+  );
+}
 
 export const participants = router({
   list: publicProcedure
@@ -147,40 +206,13 @@ export const participants = router({
           });
       }
 
-      const watchers = await prisma.watcher.findMany({
-        where: {
+      waitUntil(
+        sendNewParticipantNotifcationEmail({
           pollId,
-        },
-        select: {
-          id: true,
-          userId: true,
-          user: {
-            select: {
-              email: true,
-              name: true,
-            },
-          },
-        },
-      });
-
-      for (const watcher of watchers) {
-        const email = watcher.user.email;
-        const token = await createToken<DisableNotificationsPayload>(
-          { watcherId: watcher.id, pollId },
-          { ttl: 0 },
-        );
-        ctx.user.getEmailClient().queueTemplate("NewParticipantEmail", {
-          to: email,
-          props: {
-            participantName: participant.name,
-            pollUrl: absoluteUrl(`/poll/${participant.poll.id}`),
-            disableNotificationsUrl: absoluteUrl(
-              `/api/notifications/unsubscribe?token=${token}`,
-            ),
-            title: participant.poll.title,
-          },
-        });
-      }
+          pollTitle: participant.poll.title,
+          participantName: participant.name,
+        }),
+      );
 
       return participant;
     }),
