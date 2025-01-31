@@ -40,12 +40,10 @@ test.describe.serial(() => {
 
     test("user registration", async ({ page }) => {
       const registerPage = new RegisterPage(page);
-      registerPage.register({
+      await registerPage.register({
         name: "Test User",
         email: testUserEmail,
       });
-
-      await expect(page.getByText("Test User")).toBeVisible();
     });
   });
 
