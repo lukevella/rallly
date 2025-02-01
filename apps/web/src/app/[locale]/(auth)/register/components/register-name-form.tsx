@@ -20,6 +20,7 @@ import { trpc } from "@/trpc/client";
 
 import { setToken } from "../actions";
 import { registerNameFormSchema } from "./schema";
+import { signIn } from "next-auth/react";
 
 type RegisterNameFormValues = z.infer<typeof registerNameFormSchema>;
 
@@ -44,19 +45,16 @@ export function RegisterNameForm() {
           if (res.ok) {
             await setToken(res.token);
             router.push("/register/verify");
-          } else {
-            switch (res.reason) {
-              case "emailNotAllowed":
-                form.setError("email", {
-                  message: t("emailNotAllowed"),
-                });
-                break;
-              case "userAlreadyExists":
-                form.setError("email", {
-                  message: t("userAlreadyExists"),
-                });
-                break;
-            }
+          } else if (res.reason === "emailNotAllowed") {
+            form.setError("email", {
+              message: t("emailNotAllowed"),
+            });
+          } else if (res.reason === "userAlreadyExists") {
+            await signIn("email", {
+              email: data.email,
+              redirect: false,
+            });
+            router.push("/login/verify");
           }
         })}
       >

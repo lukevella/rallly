@@ -49,26 +49,15 @@ export function LoginWithEmailForm() {
       <form
         className="space-y-4"
         onSubmit={handleSubmit(async ({ identifier }) => {
-          const doesExist = await setVerificationEmail(identifier);
-          if (doesExist) {
-            await signIn("email", {
-              email: identifier,
-              callbackUrl: searchParams?.get("callbackUrl") ?? undefined,
-              redirect: false,
-            });
-            // redirect to verify page with callbackUrl
-            router.push(
-              `/login/verify?callbackUrl=${encodeURIComponent(
-                searchParams?.get("callbackUrl") ?? "",
-              )}`,
-            );
-          } else {
-            form.setError("identifier", {
-              message: t("userNotFound", {
-                defaultValue: "A user with that email doesn't exist",
-              }),
-            });
-          }
+          // Store the email in a cookie regardless of whether user exists
+          await setVerificationEmail(identifier);
+
+          // Always send them to verify page
+          router.push(
+            `/login/verify?callbackUrl=${encodeURIComponent(
+              searchParams?.get("callbackUrl") ?? "",
+            )}`,
+          );
         })}
       >
         <FormField

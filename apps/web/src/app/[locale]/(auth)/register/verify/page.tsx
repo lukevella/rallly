@@ -15,12 +15,8 @@ import {
 } from "../../components/auth-page";
 import { OTPForm } from "./components/otp-form";
 
-export default async function VerifyPage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(locale);
+export default async function VerifyPage() {
+  const { t } = await getTranslation();
   const token = cookies().get("registration-token")?.value;
 
   if (!token) {
@@ -34,16 +30,16 @@ export default async function VerifyPage({
           <Trans
             t={t}
             ns="app"
-            i18nKey="registerVerifyTitle"
-            defaults="Finish Registering"
+            i18nKey="verifyEmailTitle"
+            defaults="Verify Your Email"
           />
         </AuthPageTitle>
         <AuthPageDescription>
           <Trans
             t={t}
             ns="app"
-            i18nKey="registerVerifyDescription"
-            defaults="Check your email for the verification code"
+            i18nKey="verifyEmailDescription"
+            defaults="Please check your email for a verification code"
           />
         </AuthPageDescription>
       </AuthPageHeader>

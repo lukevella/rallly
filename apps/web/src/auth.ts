@@ -96,19 +96,26 @@ const providers: Provider[] = [
         },
       });
 
+      // Send appropriate email based on whether user exists
       if (user) {
-        await getEmailClient(user.locale ?? undefined).sendTemplate(
-          "LoginEmail",
-          {
-            to: email,
-            props: {
-              magicLink: absoluteUrl("/auth/login", {
-                magicLink: url,
-              }),
-              code: token,
-            },
+        // Send login email
+        await getEmailClient(user.locale ?? undefined).sendTemplate("LoginEmail", {
+          to: email,
+          props: {
+            magicLink: absoluteUrl("/auth/login", {
+              magicLink: url,
+            }),
+            code: token,
           },
-        );
+        });
+      } else {
+        // Send registration email
+        await getEmailClient().sendTemplate("RegisterEmail", {
+          to: email,
+          props: {
+            code: token,
+          },
+        });
       }
     },
   }),

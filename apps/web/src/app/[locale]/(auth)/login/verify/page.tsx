@@ -37,7 +37,7 @@ export default async function VerifyPage() {
             t={t}
             ns="app"
             i18nKey="loginVerifyDescription"
-            defaults="Check your email for the verification code"
+            defaults="If an account exists, a verification code will be sent to your email"
           />
         </AuthPageDescription>
       </AuthPageHeader>

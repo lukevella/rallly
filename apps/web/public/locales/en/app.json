@@ -58,7 +58,7 @@
   "preferences": "Preferences",
   "previousMonth": "Previous month",
   "register": "Register",
-  "requiredString": "“{name}” is required",
+  "requiredString": "{name} is required",
   "response": "Response",
   "save": "Save",
   "saveInstruction": "Select your availability and click <b>{action}</b>",
@@ -72,7 +72,6 @@
   "title": "Title",
   "titlePlaceholder": "Monthly Meetup",
   "today": "Today",
-  "userAlreadyExists": "A user with that email already exists",
   "validEmail": "Please enter a valid email",
   "verificationCodeHelp": "Didn't get the email? Check your spam/junk.",
   "verificationCodePlaceholder": "Enter your 6-digit code",
@@ -304,6 +303,8 @@
   "registerVerifyTitle": "Finish Registering",
   "registerVerifyDescription": "Check your email for the verification code",
   "loginVerifyTitle": "Finish Logging In",
-  "loginVerifyDescription": "Check your email for the verification code",
-  "createAccount": "Create Account"
+  "loginVerifyDescription": "If an account exists, a verification code will be sent to your email",
+  "createAccount": "Create Account",
+  "verifyEmailTitle": "Verify Your Email",
+  "verifyEmailDescription": "Please check your email for a verification code"
 }
