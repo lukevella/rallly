@@ -50,11 +50,26 @@ export function RegisterNameForm() {
               message: t("emailNotAllowed"),
             });
           } else if (res.reason === "userAlreadyExists") {
-            await signIn("email", {
-              email: data.email,
-              redirect: false,
-            });
-            router.push("/login/verify");
+            try {
+              // Attempt to sign in
+              const signInResult = await signIn("email", {
+                email: data.email,
+                redirect: false,
+              });
+
+              if (signInResult?.error) {
+                throw new Error(signInResult.error);
+              }
+
+              // Only redirect if sign in was successful
+              router.push("/login/verify");
+            } catch (error) {
+              form.setError("email", {
+                message: t("authError", {
+                  defaultValue: "An error occurred during authentication",
+                }),
+              });
+            }
           }
         })}
       >

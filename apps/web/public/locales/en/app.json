@@ -306,5 +306,6 @@
   "loginVerifyDescription": "If an account exists, a verification code will be sent to your email",
   "createAccount": "Create Account",
   "verifyEmailTitle": "Verify Your Email",
-  "verifyEmailDescription": "Please check your email for a verification code"
+  "verifyEmailDescription": "Please check your email for a verification code",
+  "authError": "An error occurred during authentication"
 }
