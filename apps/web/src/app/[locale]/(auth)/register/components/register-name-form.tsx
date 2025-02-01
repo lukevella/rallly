@@ -40,18 +40,18 @@ export function RegisterNameForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          const res = await registerUser.mutateAsync(data);
+          try {
+            const res = await registerUser.mutateAsync(data);
 
-          if (res.ok) {
-            await setToken(res.token);
-            router.push("/register/verify");
-          } else if (res.reason === "emailNotAllowed") {
-            form.setError("email", {
-              message: t("emailNotAllowed"),
-            });
-          } else if (res.reason === "userAlreadyExists") {
-            try {
-              // Attempt to sign in
+            if (res.ok) {
+              await setToken(res.token);
+              router.push("/register/verify");
+            } else if (res.reason === "emailNotAllowed") {
+              form.setError("email", {
+                message: t("emailNotAllowed"),
+              });
+            } else if (res.reason === "userAlreadyExists") {
+              // Attempt to sign in silently
               const signInResult = await signIn("email", {
                 email: data.email,
                 redirect: false,
@@ -63,13 +63,13 @@ export function RegisterNameForm() {
 
               // Only redirect if sign in was successful
               router.push("/login/verify");
-            } catch (error) {
-              form.setError("email", {
-                message: t("authError", {
-                  defaultValue: "An error occurred during authentication",
-                }),
-              });
             }
+          } catch (error) {
+            form.setError("email", {
+              message: t("authError", {
+                defaultValue: "An error occurred during authentication",
+              }),
+            });
           }
         })}
       >

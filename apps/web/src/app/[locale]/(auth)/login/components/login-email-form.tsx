@@ -52,7 +52,22 @@ export function LoginWithEmailForm() {
           // Store the email in a cookie regardless of whether user exists
           await setVerificationEmail(identifier);
 
-          // Always send them to verify page
+          // Attempt to sign in
+          const signInResult = await signIn("email", {
+            email: identifier,
+            redirect: false,
+          });
+
+          if (signInResult?.error) {
+            form.setError("identifier", {
+              message: t("authError", {
+                defaultValue: "An error occurred during authentication",
+              }),
+            });
+            return;
+          }
+
+          // Only redirect if sign in attempt was successful
           router.push(
             `/login/verify?callbackUrl=${encodeURIComponent(
               searchParams?.get("callbackUrl") ?? "",
