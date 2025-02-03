@@ -40,6 +40,7 @@ test.describe.serial(() => {
 
     test("user registration", async ({ page }) => {
       const registerPage = new RegisterPage(page);
+      registerPage.goto();
       await registerPage.register({
         name: "Test User",
         email: testUserEmail,
