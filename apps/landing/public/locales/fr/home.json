@@ -1,5 +1,5 @@
 {
-  "createPageLikeThis": "Créez une page comme celle-ci en quelques secondes!",
+  "createPageLikeThis": "Créez une page comme celle-ci en quelques secondes !",
   "noLoginRequired": "Pas de connexion requise",
   "headline": "Arrêtez les allers-retours d'emails",
   "subheading": "Simplifiez votre processus de planification et gagnez du temps",
@@ -39,5 +39,6 @@
   "meetingPoll": "Créez des sondages professionnels avec Rallly",
   "meetingPollDescription": "Les sondages de réunion sont un excellent moyen d'obtenir les disponibilités. Rallly vous permet de créer de beaux sondages de réunion en toute simplicité.",
   "meetingPollMetaTitle": "Sondage de Réunion",
-  "meetingPollMetaDescription": "Planifiez facilement des réunions avec notre fonction de sondage, assurant ainsi la disponibilité de chacun."
+  "meetingPollMetaDescription": "Planifiez facilement des réunions avec notre fonction de sondage, assurant ainsi la disponibilité de chacun.",
+  "quickCreateBlog": "Découvrez Création Rapide"
 }
