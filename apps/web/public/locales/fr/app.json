@@ -273,5 +273,7 @@
   "back": "Retour",
   "verifyEmail": "Vérifiez votre e-mail",
   "userNotFound": "Il n’y a aucun utilisateur avec cette adresse e-mail",
-  "registerDescription": "Simplifiez votre processus de planification et gagnez du temps"
+  "registerDescription": "Simplifiez votre processus de planification et gagnez du temps",
+  "loginVerifyDescription": "Vérifiez votre boîte mail pour obtenir le code de vérification",
+  "createAccount": "Créer un compte"
 }
