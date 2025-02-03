@@ -8,23 +8,23 @@ export class NewPollPage {
     await this.page.goto("/new");
   }
 
-  async createPollAndCloseDialog() {
+  async createPollAndCloseDialog({ name }: { name: string }) {
     await this.goto();
-    const pollPage = await this.createPoll();
+    const pollPage = await this.createPoll({ name });
     await pollPage.closeDialog();
     return pollPage;
   }
-  async createPoll() {
+  async createPoll({ name }: { name: string }) {
     const page = this.page;
 
-    await page.fill('[placeholder="Monthly Meetup"]', "Monthly Meetup");
+    await page.fill('[placeholder="Monthly Meetup"]', name);
     // click on label to focus on input
     await page.click('text="Location"');
-    await page.keyboard.type("Joe's Coffee Shop");
+    await page.keyboard.type("Online");
 
     await page.click('text="Description"');
 
-    await page.keyboard.type("This is a test description");
+    await page.keyboard.type("Hey everyone, what time can you meet?");
 
     await page.click('[title="Next month"]');
 
