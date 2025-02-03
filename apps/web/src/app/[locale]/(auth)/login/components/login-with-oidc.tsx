@@ -1,27 +1,28 @@
+"use client";
 import { Button } from "@rallly/ui/button";
-import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Trans } from "react-i18next/TransWithoutContext";
 
-import { getTranslation } from "@/i18n/server";
+import { Trans } from "@/components/trans";
 
-export async function LoginWithOIDC({ name }: { name: string }) {
-  const { t } = await getTranslation();
-  const searchParams = useSearchParams();
+export async function LoginWithOIDC({
+  name,
+  callbackUrl,
+}: {
+  name: string;
+  callbackUrl?: string;
+}) {
   return (
     <Button
       onClick={() => {
         signIn("oidc", {
-          callbackUrl: searchParams?.get("callbackUrl") ?? undefined,
+          callbackUrl,
         });
       }}
       variant="link"
     >
       <Trans
-        t={t}
         i18nKey="continueWithProvider"
-        ns="app"
-        defaultValue="Login with {provider}"
+        defaults="Continue with {provider}"
         values={{ provider: name }}
       />
     </Button>

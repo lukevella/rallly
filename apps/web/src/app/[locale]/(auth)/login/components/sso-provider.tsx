@@ -3,7 +3,6 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 import { Trans } from "@/components/trans";
@@ -41,12 +40,13 @@ function SSOImage({ provider }: { provider: string }) {
 export function SSOProvider({
   providerId,
   name,
+  callbackUrl,
 }: {
   providerId: string;
   name: string;
+  callbackUrl?: string;
 }) {
   const { t } = useTranslation();
-  const searchParams = useSearchParams();
   return (
     <Button
       size="lg"
@@ -58,7 +58,7 @@ export function SSOProvider({
       key={providerId}
       onClick={() => {
         signIn(providerId, {
-          callbackUrl: searchParams?.get("callbackUrl") ?? undefined,
+          callbackUrl,
         });
       }}
     >
