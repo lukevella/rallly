@@ -46,5 +46,12 @@
   "common_viewOn": "Voir sur {{domain}}",
   "newComment_preview": "Allez à votre sondage pour voir ce qu'ils ont dit.",
   "newComment_heading": "Nouveau commentaire",
-  "newPoll_preview": "Partagez votre lien de participant pour commencer à collecter des réponses."
+  "newPoll_preview": "Partagez votre lien de participant pour commencer à collecter des réponses.",
+  "changeEmailRequest_preview": "Veuillez vérifier votre adresse e-mail",
+  "changeEmailRequest_heading": "Vérifiez votre nouvelle adresse e-mail",
+  "changeEmailRequest_text2": "Pour effectuer cette modification, veuillez cliquer sur le bouton ci-dessous :",
+  "changeEmailRequest_button": "Vérifier l'adresse e-mail",
+  "changeEmailRequest_subject": "Vérifiez votre nouvelle adresse e-mail",
+  "changeEmailRequest_text3": "Ce lien expirera dans 10 minutes. Si vous n'avez pas demandé ce changement, veuillez ignorer cet e-mail.",
+  "changeEmailRequest_text1": "Nous avons reçu une demande pour changer l'adresse e-mail de votre compte de <b>{{fromEmail}}</b> à <b>{{toEmail}}</b>."
 }
