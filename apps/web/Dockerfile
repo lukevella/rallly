@@ -65,6 +65,6 @@ ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 ENV HOSTNAME=0.0.0.0
 
-HEALTHCHECK --interval=60s --timeout=20s curl --fail http://localhost:3000/api/auth/session || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:3000/api/auth/session || exit 1
 
 CMD ["./docker-start.sh"]
