@@ -21,7 +21,9 @@ test.describe(() => {
     );
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    pollPage = await newPollPage.createPollAndCloseDialog();
+    pollPage = await newPollPage.createPollAndCloseDialog({
+      name: "Monthly Meetup",
+    });
   });
 
   test("should call touch endpoint", async () => {

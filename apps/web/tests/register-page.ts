@@ -12,7 +12,6 @@ export class RegisterPage {
   }
 
   async register({ name, email }: { name: string; email: string }) {
-    await this.goto();
     // Fill in registration form
     await this.page.getByPlaceholder("Jessie Smith").fill(name);
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
