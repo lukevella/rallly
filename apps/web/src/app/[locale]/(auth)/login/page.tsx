@@ -18,7 +18,13 @@ import { LoginWithOIDC } from "./components/login-with-oidc";
 import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams?: {
+    callbackUrl?: string;
+  };
+}) {
   const { t } = await getTranslation();
   const oAuthProviders = getOAuthProviders();
 
@@ -49,7 +55,12 @@ export default async function LoginPage() {
       <AuthPageContent>
         <LoginWithEmailForm />
         {hasAlternateLoginMethods ? <OrDivider /> : null}
-        {oidcProvider ? <LoginWithOIDC name={oidcProvider.name} /> : null}
+        {oidcProvider ? (
+          <LoginWithOIDC
+            name={oidcProvider.name}
+            callbackUrl={searchParams?.callbackUrl}
+          />
+        ) : null}
         {socialProviders ? (
           <div className="grid gap-4">
             {socialProviders.map((provider) => (
@@ -57,6 +68,7 @@ export default async function LoginPage() {
                 key={provider.id}
                 providerId={provider.id}
                 name={provider.name}
+                callbackUrl={searchParams?.callbackUrl}
               />
             ))}
           </div>

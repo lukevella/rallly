@@ -40,9 +40,11 @@ function SSOImage({ provider }: { provider: string }) {
 export function SSOProvider({
   providerId,
   name,
+  callbackUrl,
 }: {
   providerId: string;
   name: string;
+  callbackUrl?: string;
 }) {
   const { t } = useTranslation();
   return (
@@ -55,7 +57,9 @@ export function SSOProvider({
       })}
       key={providerId}
       onClick={() => {
-        signIn(providerId);
+        signIn(providerId, {
+          callbackUrl,
+        });
       }}
     >
       <SSOImage provider={providerId} />
