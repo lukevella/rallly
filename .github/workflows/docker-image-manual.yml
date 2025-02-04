@@ -97,6 +97,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Get branch name
+        id: extractGitBranch
+        run: echo "branchName=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
