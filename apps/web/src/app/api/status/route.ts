@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 async function getDatabaseStatus() {
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    await prisma.$connect();
     return "connected";
   } catch (e) {
     return "disconnected";
