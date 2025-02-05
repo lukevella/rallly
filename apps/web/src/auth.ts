@@ -86,29 +86,30 @@ const providers: Provider[] = [
       return generateOtp();
     },
     async sendVerificationRequest({ identifier: email, token, url }) {
-      const user = await prisma.user.findUnique({
-        where: {
-          email,
-        },
-        select: {
-          name: true,
-          locale: true,
-        },
-      });
+      try {
+        const user = await prisma.user.findUnique({
+          where: { email },
+          select: { name: true, locale: true },
+        });
 
-      if (user) {
-        await getEmailClient(user.locale ?? undefined).sendTemplate(
-          "LoginEmail",
-          {
+        // Send appropriate email based on whether user exists
+        if (user) {
+          await getEmailClient(user.locale ?? undefined).sendTemplate("LoginEmail", {
             to: email,
             props: {
-              magicLink: absoluteUrl("/auth/login", {
-                magicLink: url,
-              }),
+              magicLink: absoluteUrl("/auth/login", { magicLink: url }),
               code: token,
             },
-          },
-        );
+          });
+        } else {
+          await getEmailClient().sendTemplate("RegisterEmail", {
+            to: email,
+            props: { code: token },
+          });
+        }
+      } catch (error) {
+        console.error("Failed to send verification email:", error);
+        throw new Error("Failed to send verification email");
       }
     },
   }),
