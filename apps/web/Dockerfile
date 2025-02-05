@@ -35,6 +35,7 @@ RUN apt-get update \
     openssl \
     zlib1g \
     libgcc-s1 \
+    curl \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -63,5 +64,7 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/publ
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 ENV HOSTNAME=0.0.0.0
+
+HEALTHCHECK CMD curl --fail http://localhost:${PORT}/api/status || exit 1
 
 CMD ["./docker-start.sh"]
