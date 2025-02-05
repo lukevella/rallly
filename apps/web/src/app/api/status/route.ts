@@ -16,7 +16,6 @@ export const GET = async () => {
   const environment = process.env.NODE_ENV;
   const timestamp = new Date().toISOString();
 
-  // Basic health check response
   const status = {
     status: "ok",
     timestamp,
