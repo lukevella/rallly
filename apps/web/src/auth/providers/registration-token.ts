@@ -18,7 +18,7 @@ export const RegistrationTokenProvider = CredentialsProvider({
   async authorize(credentials) {
     if (credentials?.token) {
       const payload = await decryptToken<RegistrationTokenPayload>(
-        credentials.token,
+        credentials.token as string,
       );
       if (payload) {
         const user = await prisma.user.findUnique({
