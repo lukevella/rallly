@@ -1,9 +1,11 @@
 import type { NextAuthConfig } from "next-auth";
 
+import { env } from "@/env";
+
 export const nextAuthConfig = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.SECRET_PASSWORD,
+  secret: env.SECRET_PASSWORD,
   providers: [],
 } satisfies NextAuthConfig;

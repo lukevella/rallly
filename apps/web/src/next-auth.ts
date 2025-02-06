@@ -13,7 +13,7 @@ import { GuestProvider } from "./auth/providers/guest";
 import { MicrosoftProvider } from "./auth/providers/microsoft";
 import { OIDCProvider } from "./auth/providers/oidc";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
-import { nextAuthConfig } from "./next-auth.confg";
+import { nextAuthConfig } from "./next-auth.config";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...nextAuthConfig,
