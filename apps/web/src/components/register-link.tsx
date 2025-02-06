@@ -17,7 +17,7 @@ export const RegisterLink = React.forwardRef<
       onClick={async (e) => {
         e.preventDefault();
         props.onClick?.(e);
-        router.push("/register?callbackUrl=" + encodeURIComponent(pathname));
+        router.push("/register?redirectTo=" + encodeURIComponent(pathname));
       }}
     >
       {children}

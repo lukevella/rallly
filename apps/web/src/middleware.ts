@@ -40,7 +40,7 @@ export default auth(async (req) => {
     !publicRoutes.some((route) => newUrl.pathname.startsWith(route))
   ) {
     if (newUrl.pathname !== "/") {
-      newUrl.searchParams.set("callbackUrl", newUrl.pathname);
+      newUrl.searchParams.set("redirectTo", newUrl.pathname);
     }
     newUrl.pathname = "/login";
     return NextResponse.redirect(newUrl);

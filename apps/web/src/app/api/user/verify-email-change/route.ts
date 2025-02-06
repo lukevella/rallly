@@ -54,7 +54,7 @@ export const GET = async (request: NextRequest) => {
 
   if (!session?.user || !session.user.email) {
     return NextResponse.redirect(
-      new URL(`/login?callbackUrl=${request.url}`, request.url),
+      new URL(`/login?redirectTo=${request.url}`, request.url),
     );
   }
 

@@ -24,7 +24,7 @@ export default async function LoginPage({
   searchParams,
 }: {
   searchParams?: {
-    callbackUrl?: string;
+    redirectTo?: string;
   };
 }) {
   const { t } = await getTranslation();
@@ -54,7 +54,7 @@ export default async function LoginPage({
         {oidcProvider ? (
           <LoginWithOIDC
             name={oidcProvider.name}
-            callbackUrl={searchParams?.callbackUrl}
+            redirectTo={searchParams?.redirectTo}
           />
         ) : null}
         {socialProviders ? (
@@ -65,7 +65,7 @@ export default async function LoginPage({
                   key={provider.id}
                   providerId={provider.id}
                   name={provider.options?.name || provider.name}
-                  callbackUrl={searchParams?.callbackUrl}
+                  redirectTo={searchParams?.redirectTo}
                 />
               ) : null,
             )}
