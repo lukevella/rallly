@@ -59,7 +59,7 @@ export function LoginWithEmailForm() {
             // redirect to verify page with callbackUrl
             router.push(
               `/login/verify?callbackUrl=${encodeURIComponent(
-                searchParams?.get("callbac`kUrl") ?? "",
+                searchParams?.get("callbackUrl") ?? "",
               )}`,
             );
           } else {
