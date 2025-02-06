@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { getOptionalProviders } from "@/auth/get-optional-providers";
 import { GoogleProvider } from "@/auth/providers/google";
 import { MicrosoftProvider } from "@/auth/providers/microsoft";
 import { OIDCProvider } from "@/auth/providers/oidc";
@@ -29,15 +28,10 @@ export default async function LoginPage({
   };
 }) {
   const { t } = await getTranslation();
-  const oAuthProviders = getOptionalProviders().map((provider) => ({
-    id: provider.options,
-    name: provider.name,
-  }));
-
-  const hasAlternateLoginMethods = oAuthProviders.length > 0;
 
   const oidcProvider = OIDCProvider();
   const socialProviders = [GoogleProvider(), MicrosoftProvider()];
+  const hasAlternateLoginMethods = socialProviders.length > 0 || !!oidcProvider;
 
   return (
     <AuthPageContainer>
