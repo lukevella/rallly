@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { getOAuthProviders } from "@/auth";
+import { getOptionalProviders } from "@/auth/get-optional-providers";
+import { GoogleProvider } from "@/auth/providers/google";
+import { MicrosoftProvider } from "@/auth/providers/microsoft";
+import { OIDCProvider } from "@/auth/providers/oidc";
 import { getTranslation } from "@/i18n/server";
 
 import {
@@ -26,16 +29,15 @@ export default async function LoginPage({
   };
 }) {
   const { t } = await getTranslation();
-  const oAuthProviders = getOAuthProviders();
+  const oAuthProviders = getOptionalProviders().map((provider) => ({
+    id: provider.options,
+    name: provider.name,
+  }));
 
   const hasAlternateLoginMethods = oAuthProviders.length > 0;
 
-  const oidcProvider = oAuthProviders.find(
-    (provider) => provider.id === "oidc",
-  );
-  const socialProviders = oAuthProviders.filter(
-    (provider) => provider.id !== "oidc",
-  );
+  const oidcProvider = OIDCProvider();
+  const socialProviders = [GoogleProvider(), MicrosoftProvider()];
 
   return (
     <AuthPageContainer>
@@ -63,14 +65,16 @@ export default async function LoginPage({
         ) : null}
         {socialProviders ? (
           <div className="grid gap-4">
-            {socialProviders.map((provider) => (
-              <SSOProvider
-                key={provider.id}
-                providerId={provider.id}
-                name={provider.name}
-                callbackUrl={searchParams?.callbackUrl}
-              />
-            ))}
+            {socialProviders.map((provider) =>
+              provider ? (
+                <SSOProvider
+                  key={provider.id}
+                  providerId={provider.id}
+                  name={provider.options?.name || provider.name}
+                  callbackUrl={searchParams?.callbackUrl}
+                />
+              ) : null,
+            )}
           </div>
         ) : null}
       </AuthPageContent>

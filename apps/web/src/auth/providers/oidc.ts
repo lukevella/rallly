@@ -1,5 +1,5 @@
 import type { User } from "next-auth";
-import type { Provider } from "next-auth/providers/index";
+import type { OIDCConfig } from "next-auth/providers/index";
 
 import { env } from "@/env";
 import { getValueByPath } from "@/utils/get-value-by-path";
@@ -13,7 +13,7 @@ export const OIDCProvider = () => {
     return {
       id: "oidc",
       name: process.env.OIDC_NAME ?? "OpenID Connect",
-      type: "oauth",
+      type: "oidc",
       wellKnown: process.env.OIDC_DISCOVERY_URL,
       authorization: { params: { scope: "openid email profile" } },
       clientId: process.env.OIDC_CLIENT_ID,
@@ -29,6 +29,6 @@ export const OIDCProvider = () => {
           image: getValueByPath(profile, env.OIDC_PICTURE_CLAIM_PATH),
         } as User;
       },
-    } satisfies Provider;
+    } satisfies OIDCConfig<Record<string, unknown>>;
   }
 };

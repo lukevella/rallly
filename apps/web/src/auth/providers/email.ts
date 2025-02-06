@@ -1,13 +1,14 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { generateOtp } from "@rallly/utils/nanoid";
-import BaseEmailProvider from "next-auth/providers/email";
+import NodemailerProvider from "next-auth/providers/nodemailer";
 
 import { getEmailClient } from "@/utils/emails";
 
-export const EmailProvider = BaseEmailProvider({
-  server: "",
+export const EmailProvider = NodemailerProvider({
+  server: "none", // This value is required even though we don't need it
   from: process.env.NOREPLY_EMAIL,
+  id: "email",
   generateVerificationToken() {
     return generateOtp();
   },

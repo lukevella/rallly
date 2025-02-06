@@ -20,6 +20,7 @@ declare module "next-auth" {
   }
 
   interface User extends DefaultUser {
+    id: string;
     locale?: string | null;
     timeZone?: string | null;
     timeFormat?: TimeFormat | null;

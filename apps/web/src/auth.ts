@@ -5,13 +5,9 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import type { NextAuthOptions } from "next-auth";
-import NextAuth, {
-  getServerSession as getServerSessionWithOptions,
-} from "next-auth/next";
-import type { Provider } from "next-auth/providers/index";
+import type { OAuthProviderType } from "next-auth/providers";
 
-import { CustomPrismaAdapter } from "./auth/custom-prisma-adapter";
+import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { mergeGuestsIntoUser } from "./auth/merge-user";
 import { EmailProvider } from "./auth/providers/email";
 import { GoogleProvider } from "./auth/providers/google";
@@ -23,12 +19,12 @@ import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 function getOptionalProviders() {
   return [OIDCProvider(), GoogleProvider(), MicrosoftProvider()].filter(
     Boolean,
-  ) as Provider[];
+  ) as OAuthProviderType[];
 }
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
   ({
-    adapter: CustomPrismaAdapter(prisma, {
+    adapter: CustomPrismaAdapter({
       migrateData: async (userId) => {
         const session = await getServerSession(...args);
         if (session?.user && session.user.email === null) {
@@ -191,11 +187,6 @@ type GetServerSessionParams =
 
 export async function getServerSession(...args: GetServerSessionParams) {
   return await getServerSessionWithOptions(...args, getAuthOptions(...args));
-}
-
-export async function AuthApiRoute(req: NextApiRequest, res: NextApiResponse) {
-  const authOptions = getAuthOptions(req, res);
-  return NextAuth(req, res, authOptions);
 }
 
 export const isEmailBlocked = (email: string) => {

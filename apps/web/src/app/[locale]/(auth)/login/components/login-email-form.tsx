@@ -53,13 +53,13 @@ export function LoginWithEmailForm() {
           if (doesExist) {
             await signIn("email", {
               email: identifier,
-              callbackUrl: searchParams?.get("callbackUrl") ?? undefined,
+              redirectTo: searchParams?.get("callbackUrl") ?? undefined,
               redirect: false,
             });
             // redirect to verify page with callbackUrl
             router.push(
               `/login/verify?callbackUrl=${encodeURIComponent(
-                searchParams?.get("callbackUrl") ?? "",
+                searchParams?.get("callbac`kUrl") ?? "",
               )}`,
             );
           } else {
