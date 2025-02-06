@@ -1,172 +1,29 @@
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
-import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { generateOtp, randomid } from "@rallly/utils/nanoid";
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import type { NextAuthOptions, User } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import NextAuth, {
   getServerSession as getServerSessionWithOptions,
 } from "next-auth/next";
-import AzureADProvider from "next-auth/providers/azure-ad";
-import CredentialsProvider from "next-auth/providers/credentials";
-import EmailProvider from "next-auth/providers/email";
-import GoogleProvider from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers/index";
-
-import { env } from "@/env";
-import type { RegistrationTokenPayload } from "@/trpc/types";
-import { getEmailClient } from "@/utils/emails";
-import { getValueByPath } from "@/utils/get-value-by-path";
-import { decryptToken } from "@/utils/session";
 
 import { CustomPrismaAdapter } from "./auth/custom-prisma-adapter";
 import { mergeGuestsIntoUser } from "./auth/merge-user";
+import { EmailProvider } from "./auth/providers/email";
+import { GoogleProvider } from "./auth/providers/google";
+import { GuestProvider } from "./auth/providers/guest";
+import { MicrosoftProvider } from "./auth/providers/microsoft";
+import { OIDCProvider } from "./auth/providers/oidc";
+import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 
-const providers: Provider[] = [
-  // When a user registers, we don't want to go through the email verification process
-  // so this provider allows us exchange the registration token for a session token
-  CredentialsProvider({
-    id: "registration-token",
-    name: "Registration Token",
-    credentials: {
-      token: {
-        label: "Token",
-        type: "text",
-      },
-    },
-    async authorize(credentials) {
-      if (credentials?.token) {
-        const payload = await decryptToken<RegistrationTokenPayload>(
-          credentials.token,
-        );
-        if (payload) {
-          const user = await prisma.user.findUnique({
-            where: {
-              email: payload.email,
-            },
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              locale: true,
-              timeFormat: true,
-              timeZone: true,
-              image: true,
-            },
-          });
-
-          if (user) {
-            return user;
-          }
-        }
-      }
-
-      return null;
-    },
-  }),
-  CredentialsProvider({
-    id: "guest",
-    name: "Guest",
-    credentials: {},
-    async authorize() {
-      return {
-        id: `user-${randomid()}`,
-        email: null,
-      };
-    },
-  }),
-  EmailProvider({
-    server: "",
-    from: process.env.NOREPLY_EMAIL,
-    generateVerificationToken() {
-      return generateOtp();
-    },
-    async sendVerificationRequest({ identifier: email, token, url }) {
-      const user = await prisma.user.findUnique({
-        where: {
-          email,
-        },
-        select: {
-          name: true,
-          locale: true,
-        },
-      });
-
-      if (user) {
-        await getEmailClient(user.locale ?? undefined).sendTemplate(
-          "LoginEmail",
-          {
-            to: email,
-            props: {
-              magicLink: absoluteUrl("/auth/login", {
-                magicLink: url,
-              }),
-              code: token,
-            },
-          },
-        );
-      }
-    },
-  }),
-];
-
-// If we have an OAuth provider configured, we add it to the list of providers
-if (
-  process.env.OIDC_DISCOVERY_URL &&
-  process.env.OIDC_CLIENT_ID &&
-  process.env.OIDC_CLIENT_SECRET
-) {
-  providers.push({
-    id: "oidc",
-    name: process.env.OIDC_NAME ?? "OpenID Connect",
-    type: "oauth",
-    wellKnown: process.env.OIDC_DISCOVERY_URL,
-    authorization: { params: { scope: "openid email profile" } },
-    clientId: process.env.OIDC_CLIENT_ID,
-    clientSecret: process.env.OIDC_CLIENT_SECRET,
-    idToken: true,
-    checks: ["state"],
-    allowDangerousEmailAccountLinking: true,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: getValueByPath(profile, env.OIDC_NAME_CLAIM_PATH),
-        email: getValueByPath(profile, env.OIDC_EMAIL_CLAIM_PATH),
-        image: getValueByPath(profile, env.OIDC_PICTURE_CLAIM_PATH),
-      } as User;
-    },
-  });
-}
-
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  providers.push(
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
-  );
-}
-
-if (
-  process.env.MICROSOFT_TENANT_ID &&
-  process.env.MICROSOFT_CLIENT_ID &&
-  process.env.MICROSOFT_CLIENT_SECRET
-) {
-  providers.push(
-    AzureADProvider({
-      name: "Microsoft",
-      tenantId: process.env.MICROSOFT_TENANT_ID,
-      clientId: process.env.MICROSOFT_CLIENT_ID,
-      clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
-      wellKnown:
-        "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration",
-    }),
-  );
+function getOptionalProviders() {
+  return [OIDCProvider(), GoogleProvider(), MicrosoftProvider()].filter(
+    Boolean,
+  ) as Provider[];
 }
 
 const getAuthOptions = (...args: GetServerSessionParams) =>
@@ -183,7 +40,12 @@ const getAuthOptions = (...args: GetServerSessionParams) =>
     session: {
       strategy: "jwt",
     },
-    providers: providers,
+    providers: [
+      RegistrationTokenProvider,
+      GuestProvider,
+      EmailProvider,
+      ...getOptionalProviders(),
+    ],
     pages: {
       signIn: "/login",
       verifyRequest: "/login/verify",
@@ -360,7 +222,7 @@ export function getOAuthProviders(): {
   id: string;
   name: string;
 }[] {
-  return providers
+  return getOptionalProviders()
     .filter((provider) => provider.type === "oauth")
     .map((provider) => {
       return {
