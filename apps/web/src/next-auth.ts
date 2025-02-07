@@ -2,6 +2,7 @@ import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
+import z from "zod";
 
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBlocked } from "./auth/is-email-blocked";
@@ -13,6 +14,13 @@ import { MicrosoftProvider } from "./auth/providers/microsoft";
 import { OIDCProvider } from "./auth/providers/oidc";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 import { nextAuthConfig } from "./next-auth.config";
+
+const sessionUpdateSchema = z.object({
+  locale: z.string().nullish(),
+  timeFormat: z.enum(["12h", "24h"]).nullish(),
+  timeZone: z.string().nullish(),
+  weekStart: z.number().nullish(),
+});
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...nextAuthConfig,
@@ -119,10 +127,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     async jwt({ token, session, trigger }) {
       if (trigger === "update") {
-        if (session) {
-          Object.entries(session).forEach(([key, value]) => {
+        const parsed = sessionUpdateSchema.safeParse(session);
+        if (parsed.success) {
+          Object.entries(parsed.data).forEach(([key, value]) => {
             token[key] = value;
           });
+        } else {
+          console.error(parsed.error);
         }
       } else {
         const userId = token.sub;

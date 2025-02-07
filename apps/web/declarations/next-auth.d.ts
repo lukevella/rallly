@@ -12,6 +12,7 @@ declare module "next-auth" {
   interface Session {
     user?: {
       id: string;
+      email?: string | null;
       timeZone?: string | null;
       timeFormat?: TimeFormat | null;
       locale?: string | null;
