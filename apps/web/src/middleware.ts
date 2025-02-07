@@ -10,18 +10,6 @@ const { auth } = NextAuth(nextAuthConfig);
 
 const supportedLocales = Object.keys(languages);
 
-const publicRoutes = [
-  "/login",
-  "/register",
-  "/invite/",
-  "/poll/",
-  "/auth/login",
-];
-
-if (process.env.QUICK_CREATE_ENABLED === "true") {
-  publicRoutes.push("/quick-create", "/new");
-}
-
 export default auth(async (req) => {
   const { nextUrl } = req;
   const newUrl = nextUrl.clone();
@@ -31,18 +19,6 @@ export default auth(async (req) => {
   // if the user is already logged in, don't let them access the login page
   if (/^\/(login)/.test(newUrl.pathname) && isLoggedIn) {
     newUrl.pathname = "/";
-    return NextResponse.redirect(newUrl);
-  }
-
-  // if the user is not logged in and the page is not public, redirect to login
-  if (
-    !isLoggedIn &&
-    !publicRoutes.some((route) => newUrl.pathname.startsWith(route))
-  ) {
-    if (newUrl.pathname !== "/") {
-      newUrl.searchParams.set("redirectTo", newUrl.pathname);
-    }
-    newUrl.pathname = "/login";
     return NextResponse.redirect(newUrl);
   }
 
