@@ -1,4 +1,3 @@
-import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
@@ -17,7 +16,6 @@ import { nextAuthConfig } from "./next-auth.config";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...nextAuthConfig,
-
   adapter: CustomPrismaAdapter({
     migrateData: async (userId) => {
       const session = await auth();
@@ -62,6 +60,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
   callbacks: {
+    ...nextAuthConfig.callbacks,
     async signIn({ user, email, profile }) {
       const distinctId = user.id;
       // prevent sign in if email is not verified
@@ -118,49 +117,42 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return true;
     },
-    async jwt({ token, session }) {
-      const userId = token.sub;
-      const isGuest = userId?.startsWith("guest-");
-      if (userId && !isGuest) {
-        const user = await prisma.user.findUnique({
-          where: {
-            id: userId,
-          },
-          select: {
-            email: true,
-            locale: true,
-            timeFormat: true,
-            timeZone: true,
-            weekStart: true,
-          },
-        });
+    async jwt({ token, session, trigger }) {
+      if (trigger === "update") {
+        if (session) {
+          Object.entries(session).forEach(([key, value]) => {
+            token[key] = value;
+          });
+        }
+      } else {
+        const userId = token.sub;
+        const isGuest = userId?.startsWith("guest-");
 
-        if (user) {
-          token.email = user.email;
-          token.locale = user.locale;
-          token.timeFormat = user.timeFormat;
-          token.timeZone = user.timeZone;
-          token.weekStart = user.weekStart;
+        if (userId && !isGuest) {
+          const user = await prisma.user.findUnique({
+            where: {
+              id: userId,
+            },
+            select: {
+              email: true,
+              locale: true,
+              timeFormat: true,
+              timeZone: true,
+              weekStart: true,
+            },
+          });
+
+          if (user) {
+            token.email = user.email;
+            token.locale = user.locale;
+            token.timeFormat = user.timeFormat;
+            token.timeZone = user.timeZone;
+            token.weekStart = user.weekStart;
+          }
         }
       }
 
-      if (session) {
-        token.locale = session.user.locale;
-        token.timeFormat = session.user.timeFormat;
-        token.timeZone = session.user.timeZone;
-        token.weekStart = session.user.weekStart;
-      }
-
       return token;
-    },
-    async session({ session, token }) {
-      session.user.id = token.sub as string;
-      session.user.email = token.email as string;
-      session.user.locale = token.locale as string;
-      session.user.timeFormat = token.timeFormat as TimeFormat;
-      session.user.timeZone = token.timeZone as string;
-      session.user.weekStart = token.weekStart as number;
-      return session;
     },
   },
 });
