@@ -47,7 +47,8 @@ export const nextAuthConfig = {
       }
       const redirectUrl = new URL("/login", request.url);
       if (nextUrl.pathname !== "/") {
-        redirectUrl.searchParams.set("redirectTo", nextUrl.href);
+        const redirectPath = nextUrl.pathname + nextUrl.search;
+        redirectUrl.searchParams.set("redirectTo", redirectPath);
       }
       return NextResponse.redirect(redirectUrl);
     },
