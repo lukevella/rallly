@@ -4,13 +4,7 @@ import type { NextAuthConfig } from "next-auth";
 import { env } from "@/env";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 
-const publicRoutes = [
-  "/login",
-  "/register",
-  "/invite/",
-  "/poll/",
-  "/auth/login",
-];
+const publicRoutes = ["/login", "/register", "/invite/", "/poll/", "/auth"];
 
 if (isQuickCreateEnabled) {
   publicRoutes.push("/quick-create", "/new");
