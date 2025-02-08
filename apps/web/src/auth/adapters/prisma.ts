@@ -10,19 +10,18 @@
  * See: https://github.com/lukevella/rallly/issues/949
  */
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import type { ExtendedPrismaClient, PrismaClient } from "@rallly/database";
-import type { Adapter, AdapterAccount } from "next-auth/adapters";
+import { prisma } from "@rallly/database";
+import type { Adapter } from "next-auth/adapters";
 
-export function CustomPrismaAdapter(
-  client: ExtendedPrismaClient,
-  options: { migrateData: (userId: string) => Promise<void> },
-) {
-  const adapter = PrismaAdapter(client as PrismaClient);
+export function CustomPrismaAdapter(options: {
+  migrateData: (userId: string) => Promise<void>;
+}) {
+  const adapter = PrismaAdapter(prisma);
   return {
     ...adapter,
-    linkAccount: async (account: AdapterAccount) => {
+    linkAccount: async (account) => {
       await options.migrateData(account.userId);
-      return (await client.account.create({
+      return prisma.account.create({
         data: {
           userId: account.userId,
           type: account.type,
@@ -36,7 +35,7 @@ export function CustomPrismaAdapter(
           scope: account.scope as string,
           session_state: account.session_state as string,
         },
-      })) as AdapterAccount;
+      });
     },
-  } satisfies Adapter;
+  } as Adapter;
 }

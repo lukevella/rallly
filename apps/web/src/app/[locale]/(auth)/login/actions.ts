@@ -4,18 +4,24 @@ import { prisma } from "@rallly/database";
 import { cookies } from "next/headers";
 
 export async function setVerificationEmail(email: string) {
-  const count = await prisma.user.count({
+  const user = await prisma.user.findUnique({
     where: {
       email,
     },
+    select: {
+      email: true,
+    },
   });
 
-  cookies().set("verification-email", email, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 15 * 60,
-  });
+  if (user) {
+    cookies().set("verification-email", user.email, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60,
+    });
+    return true;
+  }
 
-  return count > 0;
+  return false;
 }
