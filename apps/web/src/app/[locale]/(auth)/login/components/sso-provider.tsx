@@ -15,7 +15,7 @@ function SSOImage({ provider }: { provider: string }) {
     );
   }
 
-  if (provider === "microsoft-entra-id") {
+  if (provider === "azure-ad") {
     return (
       <Image
         src="/static/microsoft.svg"
@@ -40,11 +40,11 @@ function SSOImage({ provider }: { provider: string }) {
 export function SSOProvider({
   providerId,
   name,
-  redirectTo,
+  callbackUrl,
 }: {
   providerId: string;
   name: string;
-  redirectTo?: string;
+  callbackUrl?: string;
 }) {
   const { t } = useTranslation();
   return (
@@ -58,7 +58,7 @@ export function SSOProvider({
       key={providerId}
       onClick={() => {
         signIn(providerId, {
-          redirectTo: redirectTo,
+          callbackUrl,
         });
       }}
     >

@@ -18,7 +18,7 @@ export const LanguageSelect: React.FunctionComponent<{
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger asChild className={className}>
-        <Button>
+        <Button variant="ghost">
           <Icon>
             <GlobeIcon />
           </Icon>

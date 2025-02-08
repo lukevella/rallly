@@ -68,7 +68,7 @@ export function OTPForm({ token }: { token: string }) {
 
     signIn("registration-token", {
       token,
-      redirectTo: searchParams?.get("redirectTo") ?? "/",
+      callbackUrl: searchParams?.get("callbackUrl") ?? "/",
     });
   });
 

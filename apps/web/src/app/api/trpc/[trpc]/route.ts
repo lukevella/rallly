@@ -4,7 +4,7 @@ import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
 import { getLocaleFromHeader } from "@/app/guest";
-import { auth } from "@/next-auth";
+import { getServerSession } from "@/auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
@@ -15,7 +15,7 @@ const handler = (req: NextRequest) => {
     req,
     router: appRouter,
     createContext: async () => {
-      const session = await auth();
+      const session = await getServerSession();
       const locale = await getLocaleFromHeader(req);
       const user = session?.user
         ? {
