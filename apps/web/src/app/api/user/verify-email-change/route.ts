@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/next-auth";
+import { getServerSession } from "@/auth";
 import { decryptToken } from "@/utils/session";
 
 type EmailChangePayload = {
@@ -50,11 +50,11 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ error: "No token provided" }, { status: 400 });
   }
 
-  const session = await auth();
+  const session = await getServerSession();
 
   if (!session?.user || !session.user.email) {
     return NextResponse.redirect(
-      new URL(`/login?redirectTo=${request.url}`, request.url),
+      new URL(`/login?callbackUrl=${request.url}`, request.url),
     );
   }
 

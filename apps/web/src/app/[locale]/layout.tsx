@@ -8,8 +8,8 @@ import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { Providers } from "@/app/providers";
+import { getServerSession } from "@/auth";
 import { SessionProvider } from "@/auth/session-provider";
-import { auth } from "@/next-auth";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +30,7 @@ export default async function Root({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const session = await auth();
+  const session = await getServerSession();
 
   return (
     <html lang={locale} className={inter.className}>

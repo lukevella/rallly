@@ -31,6 +31,6 @@ test.describe.serial(() => {
 
     deletePollDialog.getByRole("button", { name: "delete" }).click();
 
-    await expect(page).toHaveURL("/login?redirectTo=%2Fpolls");
+    await expect(page).toHaveURL("/login?callbackUrl=%2Fpolls");
   });
 });

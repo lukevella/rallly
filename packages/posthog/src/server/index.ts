@@ -1,5 +1,4 @@
 import { waitUntil } from "@vercel/functions";
-import type { NextRequest } from "next/server";
 import { PostHog } from "posthog-node";
 
 function PostHogClient() {
@@ -21,11 +20,4 @@ export function posthogApiHandler() {
   } catch (error) {
     console.error("Failed to flush PostHog events:", error);
   }
-}
-export function withPosthog(handler: (req: NextRequest) => Promise<Response>) {
-  return async (req: NextRequest) => {
-    const res = await handler(req);
-    posthogApiHandler();
-    return res;
-  };
 }

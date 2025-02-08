@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/next-auth";
+import { getServerSession } from "@/auth";
 
 export async function GET(request: NextRequest) {
   const sessionId = request.nextUrl.searchParams.get("session_id");
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       );
     }
   } else {
-    const userSession = await auth();
+    const userSession = await getServerSession();
     if (!userSession?.user || userSession.user.email === null) {
       Sentry.captureException(new Error("User not logged in"));
       return NextResponse.json(

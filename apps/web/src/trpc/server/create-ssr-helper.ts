@@ -2,14 +2,14 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { redirect } from "next/navigation";
 import superjson from "superjson";
 
-import { auth } from "@/next-auth";
+import { getServerSession } from "@/auth";
 import { getEmailClient } from "@/utils/emails";
 
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
 
 async function createContext(): Promise<TRPCContext> {
-  const session = await auth();
+  const session = await getServerSession();
   return {
     user: session?.user
       ? {
