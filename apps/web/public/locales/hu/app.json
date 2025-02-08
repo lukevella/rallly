@@ -301,5 +301,6 @@
   "registerVerifyDescription": "Ellenőrizd az emailed az ellenőrző kódért",
   "loginVerifyTitle": "Bejelentkezés befejezése",
   "loginVerifyDescription": "Ellenőrizd az emailed az ellenőrző kódért",
-  "createAccount": "Felhasználó létrehozása"
+  "createAccount": "Felhasználó létrehozása",
+  "loginMagicLinkError": "A link érvénytelen vagy lejárt. Kérjük, igényelj egy újat."
 }
