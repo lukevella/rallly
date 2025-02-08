@@ -32,7 +32,6 @@
   "emailNotAllowed": "This email is not allowed.",
   "emailPlaceholder": "jessie.smith@example.com",
   "exportToCsv": "Export to CSV",
-  "forgetMe": "Forget me",
   "guest": "Guest",
   "ifNeedBe": "If need be",
   "location": "Location",
@@ -199,9 +198,6 @@
   "pollStatusFinalized": "Finalized",
   "share": "Share",
   "noParticipants": "No participants",
-  "userId": "User ID",
-  "aboutGuest": "Guest User",
-  "aboutGuestDescription": "Profile settings are not available for guest users. <0>Sign in</0> to your existing account or <1>create a new account</1> to customize your profile.",
   "logoutDescription": "Sign out of your existing session",
   "events": "Events",
   "inviteParticipantsDescription": "Copy and share the invite link to start gathering responses from your participants.",
@@ -305,5 +301,6 @@
   "registerVerifyDescription": "Check your email for the verification code",
   "loginVerifyTitle": "Finish Logging In",
   "loginVerifyDescription": "Check your email for the verification code",
-  "createAccount": "Create Account"
+  "createAccount": "Create Account",
+  "loginMagicLinkError": "This link is invalid or expired. Please request a new link."
 }
