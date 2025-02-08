@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { getOAuthProviders } from "@/auth";
+import { GoogleProvider } from "@/auth/providers/google";
+import { MicrosoftProvider } from "@/auth/providers/microsoft";
+import { OIDCProvider } from "@/auth/providers/oidc";
 import { getTranslation } from "@/i18n/server";
 
 import {
@@ -22,20 +24,14 @@ export default async function LoginPage({
   searchParams,
 }: {
   searchParams?: {
-    callbackUrl?: string;
+    redirectTo?: string;
   };
 }) {
   const { t } = await getTranslation();
-  const oAuthProviders = getOAuthProviders();
 
-  const hasAlternateLoginMethods = oAuthProviders.length > 0;
-
-  const oidcProvider = oAuthProviders.find(
-    (provider) => provider.id === "oidc",
-  );
-  const socialProviders = oAuthProviders.filter(
-    (provider) => provider.id !== "oidc",
-  );
+  const oidcProvider = OIDCProvider();
+  const socialProviders = [GoogleProvider(), MicrosoftProvider()];
+  const hasAlternateLoginMethods = socialProviders.length > 0 || !!oidcProvider;
 
   return (
     <AuthPageContainer>
@@ -58,19 +54,21 @@ export default async function LoginPage({
         {oidcProvider ? (
           <LoginWithOIDC
             name={oidcProvider.name}
-            callbackUrl={searchParams?.callbackUrl}
+            redirectTo={searchParams?.redirectTo}
           />
         ) : null}
         {socialProviders ? (
           <div className="grid gap-4">
-            {socialProviders.map((provider) => (
-              <SSOProvider
-                key={provider.id}
-                providerId={provider.id}
-                name={provider.name}
-                callbackUrl={searchParams?.callbackUrl}
-              />
-            ))}
+            {socialProviders.map((provider) =>
+              provider ? (
+                <SSOProvider
+                  key={provider.id}
+                  providerId={provider.id}
+                  name={provider.options?.name || provider.name}
+                  redirectTo={searchParams?.redirectTo}
+                />
+              ) : null,
+            )}
           </div>
         ) : null}
       </AuthPageContent>

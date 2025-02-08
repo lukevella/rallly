@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { getServerSession } from "@/auth";
+import { auth } from "@/next-auth";
 
 const inputSchema = z.object({
   period: z.enum(["monthly", "yearly"]).optional(),
@@ -14,7 +14,7 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const userSession = await getServerSession();
+  const userSession = await auth();
   const formData = await request.formData();
   const { period = "monthly", return_path } = inputSchema.parse(
     Object.fromEntries(formData.entries()),

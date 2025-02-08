@@ -50,7 +50,7 @@ export function OTPForm({ email }: { email: string }) {
         message: t("wrongVerificationCode"),
       });
     } else {
-      window.location.href = searchParams?.get("callbackUrl") ?? "/";
+      window.location.href = searchParams?.get("redirectTo") ?? "/";
     }
   });
 
