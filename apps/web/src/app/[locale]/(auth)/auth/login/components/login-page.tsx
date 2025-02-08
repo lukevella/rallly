@@ -22,7 +22,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
 
   const magicLinkFetch = useMutation({
     mutationFn: async () => {
-      const res = await fetch(magicLink + "test");
+      const res = await fetch(magicLink);
       return res;
     },
     onSuccess: async (data) => {
