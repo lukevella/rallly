@@ -14,8 +14,8 @@ import {
 import { useRouter } from "next/navigation";
 
 import { DuplicateForm } from "@/app/[locale]/poll/[urlId]/duplicate-form";
-import { trpc } from "@/app/providers";
 import { Trans } from "@/components/trans";
+import { trpc } from "@/trpc/client";
 
 const formName = "duplicate-form";
 export function DuplicateDialog({
