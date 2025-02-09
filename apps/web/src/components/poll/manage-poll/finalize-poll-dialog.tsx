@@ -24,12 +24,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { trpc } from "@/app/providers";
 import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
 import { usePoll } from "@/contexts/poll";
+import { trpc } from "@/trpc/client";
 import { useDayjs } from "@/utils/dayjs";
 
 const formSchema = z.object({

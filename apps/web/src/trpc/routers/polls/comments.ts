@@ -6,8 +6,8 @@ import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import {
+  createRateLimitMiddleware,
   publicProcedure,
-  rateLimitMiddleware,
   requireUserMiddleware,
   router,
 } from "../../trpc";
@@ -72,7 +72,7 @@ export const comments = router({
       });
     }),
   add: publicProcedure
-    .use(rateLimitMiddleware)
+    .use(createRateLimitMiddleware(5, "1 m"))
     .use(requireUserMiddleware)
     .input(
       z.object({

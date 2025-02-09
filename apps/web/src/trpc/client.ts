@@ -1,13 +1,9 @@
-import { createTRPCNext } from "@trpc/next";
+import { createTRPCReact } from "@trpc/react-query";
 
-import { trpcConfig } from "@/trpc/client/config";
 import type { AppRouter } from "@/trpc/routers";
 
-export const trpc = createTRPCNext<AppRouter>({
-  config() {
-    return trpcConfig;
-  },
-  unstable_overrides: {
+export const trpc = createTRPCReact<AppRouter>({
+  overrides: {
     useMutation: {
       async onSuccess(opts) {
         await opts.originalFn();

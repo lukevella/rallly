@@ -31,7 +31,8 @@ const handler = (req: NextRequest) => {
       return {
         user,
         locale,
-        ip: ipAddress(req) ?? undefined,
+        ip:
+          process.env.NODE_ENV === "development" ? "127.0.0.1" : ipAddress(req),
       } satisfies TRPCContext;
     },
     onError({ error }) {

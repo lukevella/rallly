@@ -89,33 +89,37 @@ export const proProcedure = privateProcedure.use(async ({ ctx, next }) => {
   return next();
 });
 
-export const rateLimitMiddleware = middleware(async ({ ctx, next }) => {
-  if (!process.env.KV_REST_API_URL) {
+export const createRateLimitMiddleware = (
+  requests: number,
+  duration: "1 m" | "1 h",
+) => {
+  return middleware(async ({ ctx, next }) => {
+    if (!process.env.KV_REST_API_URL) {
+      return next();
+    }
+
+    if (!ctx.ip) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to get client IP",
+      });
+    }
+    const ratelimit = new Ratelimit({
+      redis: kv,
+      limiter: Ratelimit.slidingWindow(requests, duration),
+    });
+
+    const res = await ratelimit.limit(ctx.ip);
+
+    if (!res.success) {
+      throw new TRPCError({
+        code: "TOO_MANY_REQUESTS",
+        message: "Too many requests",
+      });
+    }
+
     return next();
-  }
-
-  const ratelimit = new Ratelimit({
-    redis: kv,
-    limiter: Ratelimit.slidingWindow(5, "1 m"),
   });
-
-  if (!ctx.ip) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get client IP",
-    });
-  }
-
-  const res = await ratelimit.limit(ctx.ip);
-
-  if (!res.success) {
-    throw new TRPCError({
-      code: "TOO_MANY_REQUESTS",
-      message: "Too many requests",
-    });
-  }
-
-  return next();
-});
+};
 
 export const mergeRouters = t.mergeRouters;
