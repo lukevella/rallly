@@ -9,7 +9,7 @@ import { mergeGuestsIntoUser } from "@/auth/merge-user";
 import { getEmailClient } from "@/utils/emails";
 import { createToken, decryptToken } from "@/utils/session";
 
-import { publicProcedure, rateLimitMiddleware, router } from "../trpc";
+import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
 
 export const auth = router({
@@ -29,7 +29,7 @@ export const auth = router({
       return { isRegistered: count > 0 };
     }),
   requestRegistration: publicProcedure
-    .use(rateLimitMiddleware)
+    .use(createRateLimitMiddleware(5, "1 m"))
     .input(
       z.object({
         name: z.string().min(1).max(100),

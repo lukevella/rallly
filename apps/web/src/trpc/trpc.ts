@@ -122,7 +122,4 @@ export const createRateLimitMiddleware = (
   });
 };
 
-// Usage example:
-export const rateLimitMiddleware = createRateLimitMiddleware(5, "1 m");
-
 export const mergeRouters = t.mergeRouters;

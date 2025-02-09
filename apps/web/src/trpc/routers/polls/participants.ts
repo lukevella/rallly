@@ -9,8 +9,8 @@ import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
 import {
+  createRateLimitMiddleware,
   publicProcedure,
-  rateLimitMiddleware,
   requireUserMiddleware,
   router,
 } from "../../trpc";
@@ -105,6 +105,7 @@ export const participants = router({
       return participants;
     }),
   delete: publicProcedure
+    .use(createRateLimitMiddleware(20, "1 m"))
     .input(
       z.object({
         participantId: z.string(),
@@ -122,7 +123,7 @@ export const participants = router({
       });
     }),
   add: publicProcedure
-    .use(rateLimitMiddleware)
+    .use(createRateLimitMiddleware(20, "1 m"))
     .use(requireUserMiddleware)
     .input(
       z.object({
@@ -217,6 +218,7 @@ export const participants = router({
       return participant;
     }),
   rename: publicProcedure
+    .use(createRateLimitMiddleware(20, "1 m"))
     .input(z.object({ participantId: z.string(), newName: z.string() }))
     .mutation(async ({ input: { participantId, newName } }) => {
       await prisma.participant.update({
@@ -230,6 +232,7 @@ export const participants = router({
       });
     }),
   update: publicProcedure
+    .use(createRateLimitMiddleware(20, "1 m"))
     .input(
       z.object({
         pollId: z.string(),
