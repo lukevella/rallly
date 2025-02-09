@@ -103,9 +103,6 @@ export async function POST(request: NextRequest) {
     automatic_tax: {
       enabled: true,
     },
-    consent_collection: {
-      promotions: "auto",
-    },
     after_expiration: {
       recovery: {
         enabled: true,

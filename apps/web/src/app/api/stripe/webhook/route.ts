@@ -224,11 +224,10 @@ export async function POST(request: NextRequest) {
       // Track that a promotional email opportunity has been shown to this user
       const hasReceivedPromo = await kv.get(promoEmailKey);
 
-      // Check if the customer has consented to promotional emails and
-      // avoid spamming people who abandon Checkout multiple times
-      if (session.consent?.promotions === "opt_in" && !hasReceivedPromo) {
+      // Avoid spamming people who abandon Checkout multiple times
+      if (!hasReceivedPromo) {
         // Set the flag with a 30-day expiration (in seconds)
-        await kv.set(promoEmailKey, 1, { ex: 30 * 24 * 60 * 60 });
+        await kv.set(promoEmailKey, 1, { ex: 30 * 24 * 60 * 60, nx: true });
         getEmailClient().sendTemplate("AbandonedCheckoutEmail", {
           to: email,
           props: {
