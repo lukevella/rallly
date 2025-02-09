@@ -215,7 +215,7 @@ export async function POST(request: NextRequest) {
       // the webhook payload unless they give consent for promotional content
       const email = session.customer_details?.email;
       const recoveryUrl = session.after_expiration?.recovery?.url;
-
+      const userId = session.metadata?.userId;
       // Do nothing if the Checkout Session has no email or recovery URL
       if (!email || !recoveryUrl) {
         break;
@@ -224,8 +224,23 @@ export async function POST(request: NextRequest) {
       // Track that a promotional email opportunity has been shown to this user
       const hasReceivedPromo = await kv.get(promoEmailKey);
 
+      const user = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          subscription: {
+            select: {
+              active: true,
+            },
+          },
+        },
+      });
+
+      const isPro = !!user?.subscription?.active;
+
       // Avoid spamming people who abandon Checkout multiple times
-      if (!hasReceivedPromo) {
+      if (!hasReceivedPromo && !isPro) {
         // Set the flag with a 30-day expiration (in seconds)
         await kv.set(promoEmailKey, 1, { ex: 30 * 24 * 60 * 60, nx: true });
         getEmailClient().sendTemplate("AbandonedCheckoutEmail", {
