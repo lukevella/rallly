@@ -2,7 +2,7 @@ import { Section } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";
-import { Button, Card, Text } from "../components/styled-components";
+import { Button, Card, Signature, Text } from "../components/styled-components";
 import type { EmailContext } from "../types";
 
 interface AbandonedCheckoutEmailProps {
@@ -19,6 +19,7 @@ export const AbandonedCheckoutEmail = ({
   return (
     <EmailLayout
       ctx={ctx}
+      poweredBy={false}
       preview={ctx.t("abandoned_checkout_preview", {
         defaultValue: "Upgrade to Rallly Pro to get more features and support.",
         ns: "emails",
@@ -51,7 +52,7 @@ export const AbandonedCheckoutEmail = ({
           t={ctx.t}
           i18n={ctx.i18n}
           i18nKey="abandoned_checkout_content"
-          defaults="I noticed you were checking out Rallly Pro earlier. I wanted to reach out to see if you had any questions or needed help with anything."
+          defaults="I noticed you were exploring <b>Rallly Pro</b> and wanted to personally reach out. I'd love to hear what features caught your interest and answer any questions you might have."
           ns="emails"
           components={{
             b: <b />,
@@ -63,13 +64,22 @@ export const AbandonedCheckoutEmail = ({
           t={ctx.t}
           i18n={ctx.i18n}
           i18nKey="abandoned_checkout_offer"
-          defaults="To help you get started, you can get 20% off your first year. Just use the code below when you check out:"
+          defaults="To help you get started, I'd like to offer you <b>20% off your first year</b> with Rallly Pro. Simply use this exclusive code during checkout:"
           ns="emails"
+          components={{
+            b: <b />,
+          }}
         />
       </Text>
-      <Card>
-        <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-          WELCOME20
+      <Card style={{ marginTop: 32, marginBottom: 32 }}>
+        <Text
+          style={{
+            textAlign: "center",
+            fontFamily: "monospace",
+            fontWeight: "bold",
+          }}
+        >
+          GETPRO1Y20
         </Text>
       </Card>
       <Section>
@@ -89,11 +99,23 @@ export const AbandonedCheckoutEmail = ({
             i18n={ctx.i18n}
             t={ctx.t}
             i18nKey="abandoned_checkout_support"
-            defaults="If you have any questions about Rallly Pro or need help with anything at all, just reply to this email. I'm here to help!"
+            defaults="Have questions or need assistance? Just reply to this email."
             ns="emails"
           />
         </Text>
       </Section>
+      <Section>
+        <Text>
+          <Trans
+            i18n={ctx.i18n}
+            t={ctx.t}
+            i18nKey="abandoned_checkout_signoff"
+            defaults="Best regards,"
+            ns="emails"
+          />
+        </Text>
+      </Section>
+      <Signature />
     </EmailLayout>
   );
 };
