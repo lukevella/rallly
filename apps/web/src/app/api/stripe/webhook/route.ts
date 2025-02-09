@@ -216,8 +216,15 @@ export async function POST(request: NextRequest) {
       const email = session.customer_details?.email;
       const recoveryUrl = session.after_expiration?.recovery?.url;
       const userId = session.metadata?.userId;
+      if (!userId) {
+        Sentry.captureMessage("No user ID found in Checkout Session metadata");
+        break;
+      }
       // Do nothing if the Checkout Session has no email or recovery URL
       if (!email || !recoveryUrl) {
+        Sentry.captureMessage(
+          "No email or recovery URL found in Checkout Session",
+        );
         break;
       }
       const promoEmailKey = `promo_email_sent:${email}`;
