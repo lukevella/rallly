@@ -48,7 +48,7 @@ export const EmailLayout = ({
             alt="Rallly Logo"
           />
           {children}
-          <Section style={{ marginTop: 32 }}>
+          <Section>
             <Text light={true}>
               <Trans
                 i18n={ctx.i18n}

@@ -53,5 +53,13 @@
   "changeEmailRequest_button": "Verify Email Address",
   "changeEmailRequest_subject": "Verify your new email address",
   "changeEmailRequest_text3": "This link will expire in 10 minutes. If you did not request this change, please ignore this email.",
-  "changeEmailRequest_text1": "We've received a request to change the email address for your account from <b>{{fromEmail}}</b> to <b>{{toEmail}}</b>."
+  "changeEmailRequest_text1": "We've received a request to change the email address for your account from <b>{{fromEmail}}</b> to <b>{{toEmail}}</b>.",
+  "abandoned_checkout_name": "Hey {{name}},",
+  "abandoned_checkout_noname": "Hey there,",
+  "abandoned_checkout_content": "I noticed you were checking out Rallly Pro earlier. I wanted to reach out to see if you had any questions or needed help with anything.",
+  "abandoned_checkout_offer": "To help you get started, you can get 20% off your first year. Just use the code below when you check out:",
+  "abandoned_checkout_button": "Upgrade to Rallly Pro",
+  "abandoned_checkout_support": "If you have any questions about Rallly Pro or need help with anything at all, just reply to this email. I'm here to help!",
+  "abandoned_checkout_preview": "Upgrade to Rallly Pro to get more features and support.",
+  "abandoned_checkout_subject": "A special offer for Rallly Pro"
 }
