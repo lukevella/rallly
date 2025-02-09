@@ -12,6 +12,10 @@ import type { TemplateComponent, TemplateName, TemplateProps } from "./types";
 
 type SendEmailOptions<T extends TemplateName> = {
   to: string;
+  from?: {
+    name: string;
+    address: string;
+  };
   props: TemplateProps<T>;
   attachments?: Mail.Options["attachments"];
 };
@@ -106,7 +110,7 @@ export class EmailClient {
 
     try {
       await this.sendEmail({
-        from: this.config.mail.from,
+        from: options.from || this.config.mail.from,
         to: options.to,
         subject,
         html,

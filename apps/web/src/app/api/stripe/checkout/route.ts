@@ -103,6 +103,7 @@ export async function POST(request: NextRequest) {
     automatic_tax: {
       enabled: true,
     },
+    expires_at: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes
     after_expiration: {
       recovery: {
         enabled: true,

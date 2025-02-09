@@ -210,6 +210,7 @@ export async function POST(request: NextRequest) {
       break;
     }
     case "checkout.session.expired": {
+      console.info("Checkout session expired");
       const session = event.data.object as Stripe.Checkout.Session;
       // When a Checkout Session expires, the customer's email isn't returned in
       // the webhook payload unless they give consent for promotional content
@@ -217,11 +218,13 @@ export async function POST(request: NextRequest) {
       const recoveryUrl = session.after_expiration?.recovery?.url;
       const userId = session.metadata?.userId;
       if (!userId) {
+        console.info("No user ID found in Checkout Session metadata");
         Sentry.captureMessage("No user ID found in Checkout Session metadata");
         break;
       }
       // Do nothing if the Checkout Session has no email or recovery URL
       if (!email || !recoveryUrl) {
+        console.info("No email or recovery URL found in Checkout Session");
         Sentry.captureMessage(
           "No email or recovery URL found in Checkout Session",
         );
@@ -230,12 +233,14 @@ export async function POST(request: NextRequest) {
       const promoEmailKey = `promo_email_sent:${email}`;
       // Track that a promotional email opportunity has been shown to this user
       const hasReceivedPromo = await kv.get(promoEmailKey);
+      console.info("Has received promo", hasReceivedPromo);
 
       const user = await prisma.user.findUnique({
         where: {
           id: userId,
         },
         select: {
+          locale: true,
           subscription: {
             select: {
               active: true,
@@ -247,16 +252,24 @@ export async function POST(request: NextRequest) {
       const isPro = !!user?.subscription?.active;
 
       // Avoid spamming people who abandon Checkout multiple times
-      if (!hasReceivedPromo && !isPro) {
+      if (user && !hasReceivedPromo && !isPro) {
+        console.info("Sending abandoned checkout email");
         // Set the flag with a 30-day expiration (in seconds)
         await kv.set(promoEmailKey, 1, { ex: 30 * 24 * 60 * 60, nx: true });
-        getEmailClient().sendTemplate("AbandonedCheckoutEmail", {
-          to: email,
-          props: {
-            name: session.customer_details?.name ?? undefined,
-            recoveryUrl,
+        getEmailClient(user.locale ?? undefined).sendTemplate(
+          "AbandonedCheckoutEmail",
+          {
+            to: email,
+            from: {
+              name: "Luke from Rallly",
+              address: "luke@rallly.co",
+            },
+            props: {
+              name: session.customer_details?.name ?? undefined,
+              recoveryUrl,
+            },
           },
-        });
+        );
       }
 
       break;
