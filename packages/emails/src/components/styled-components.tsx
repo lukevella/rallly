@@ -16,6 +16,7 @@ import type { EmailContext } from "../types";
 export const lightTextColor = "#4B5563";
 export const darkTextColor = "#1F2937";
 export const borderColor = "#E2E8F0";
+
 export const Text = (
   props: TextProps & { light?: boolean; small?: boolean },
 ) => {
@@ -48,14 +49,15 @@ export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
       style={{
         backgroundColor: "#4F46E5",
         borderRadius: "4px",
-        padding: "12px 14px",
+        padding: "14px",
         fontFamily,
         boxSizing: "border-box",
         display: "block",
         width: "100%",
         maxWidth: "100%",
         textAlign: "center",
-        fontSize: "16px",
+        fontSize: "14px",
+        fontWeight: "bold",
         color: "white",
       }}
     />
@@ -147,6 +149,36 @@ export const Card = (props: SectionProps) => {
         border: "1px solid #E2E8F0",
       }}
     />
+  );
+};
+
+export const Signature = () => {
+  return (
+    <Section>
+      <UnstyledText
+        style={{
+          fontSize: 16,
+          margin: 0,
+          fontWeight: "bold",
+          color: darkTextColor,
+          fontFamily,
+        }}
+      >
+        Luke Vella
+      </UnstyledText>
+      <UnstyledText
+        style={{ fontSize: 16, margin: 0, color: lightTextColor, fontFamily }}
+      >
+        Founder
+      </UnstyledText>
+      <img
+        src="https://d39ixtfgglw55o.cloudfront.net/images/luke.jpg"
+        alt="Luke Vella"
+        style={{ borderRadius: "50%", marginTop: 16 }}
+        width={48}
+        height={48}
+      />
+    </Section>
   );
 };
 

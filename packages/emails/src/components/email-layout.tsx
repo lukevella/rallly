@@ -15,6 +15,7 @@ import { darkTextColor, fontFamily, Link, Text } from "./styled-components";
 export interface EmailLayoutProps {
   preview: string;
   ctx: EmailContext;
+  poweredBy?: boolean;
 }
 
 const containerStyles = {
@@ -30,6 +31,7 @@ export const EmailLayout = ({
   preview,
   children,
   ctx,
+  poweredBy = true,
 }: React.PropsWithChildren<EmailLayoutProps>) => {
   const { logoUrl } = ctx;
   return (
@@ -48,23 +50,25 @@ export const EmailLayout = ({
             alt="Rallly Logo"
           />
           {children}
-          <Section style={{ marginTop: 32 }}>
-            <Text light={true}>
-              <Trans
-                i18n={ctx.i18n}
-                t={ctx.t}
-                i18nKey="common_poweredBy"
-                ns="emails"
-                defaults="Powered by <a>{{domain}}</a>"
-                values={{ domain: "rallly.co" }}
-                components={{
-                  a: (
-                    <Link href="https://rallly.co?utm_source=email&utm_medium=transactional" />
-                  ),
-                }}
-              />
-            </Text>
-          </Section>
+          {poweredBy ? (
+            <Section>
+              <Text light={true}>
+                <Trans
+                  i18n={ctx.i18n}
+                  t={ctx.t}
+                  i18nKey="common_poweredBy"
+                  ns="emails"
+                  defaults="Powered by <a>{{domain}}</a>"
+                  values={{ domain: "rallly.co" }}
+                  components={{
+                    a: (
+                      <Link href="https://rallly.co?utm_source=email&utm_medium=transactional" />
+                    ),
+                  }}
+                />
+              </Text>
+            </Section>
+          ) : null}
         </Container>
       </Body>
     </Html>

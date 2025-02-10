@@ -1,3 +1,4 @@
+import { AbandonedCheckoutEmail } from "./templates/abandoned-checkout";
 import { ChangeEmailRequest } from "./templates/change-email-request";
 import { FinalizeHostEmail } from "./templates/finalized-host";
 import { FinalizeParticipantEmail } from "./templates/finalized-participant";
@@ -19,6 +20,7 @@ const templates = {
   NewPollEmail,
   RegisterEmail,
   ChangeEmailRequest,
+  AbandonedCheckoutEmail,
 };
 
 export const emailTemplates = Object.keys(templates) as TemplateName[];

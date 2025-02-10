@@ -7,7 +7,7 @@ i18nInstance.init({
 });
 
 export const previewEmailContext: EmailContext = {
-  logoUrl: "https://rallly-public.s3.amazonaws.com/images/rallly-logo-mark.png",
+  logoUrl: "https://d39ixtfgglw55o.cloudfront.net/images/rallly-logo-mark.png",
   baseUrl: "https://rallly.co",
   domain: "rallly.co",
   supportEmail: "support@rallly.co",
