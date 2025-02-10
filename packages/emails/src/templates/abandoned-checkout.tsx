@@ -64,25 +64,28 @@ export const AbandonedCheckoutEmail = ({
           t={ctx.t}
           i18n={ctx.i18n}
           i18nKey="abandoned_checkout_offer"
-          defaults="To help you get started, I'd like to offer you <b>20% off your first year</b> with Rallly Pro. Simply use this exclusive code during checkout:"
+          defaults="To help you get started, I'd like to offer you <b>{{discount}}% off your first year</b> with Rallly Pro. Simply use this code during checkout:"
           ns="emails"
+          values={{
+            discount: 20,
+          }}
           components={{
             b: <b />,
           }}
         />
       </Text>
-      <Card style={{ marginTop: 32, marginBottom: 32 }}>
-        <Text
-          style={{
-            textAlign: "center",
-            fontFamily: "monospace",
-            fontWeight: "bold",
-          }}
-        >
-          GETPRO1Y20
-        </Text>
-      </Card>
-      <Section>
+      <Section style={{ marginTop: 16, marginBottom: 16 }}>
+        <Card>
+          <Text
+            style={{
+              textAlign: "center",
+              fontFamily: "monospace",
+              fontWeight: "bold",
+            }}
+          >
+            GETPRO1Y20
+          </Text>
+        </Card>
         <Button href={recoveryUrl} id="recoveryUrl">
           <Trans
             i18n={ctx.i18n}

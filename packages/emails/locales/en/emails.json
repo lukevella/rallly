@@ -57,7 +57,7 @@
   "abandoned_checkout_name": "Hey {{name}},",
   "abandoned_checkout_noname": "Hey there,",
   "abandoned_checkout_content": "I noticed you were checking out <b>Rallly Pro</b> earlier. I wanted to reach out to see if you had any questions or needed help with anything.",
-  "abandoned_checkout_offer": "To help you get started, you can get <b>20% off</b> your first year. Just use the code below when you check out:",
+  "abandoned_checkout_offer": "To help you get started, you can get <b>{{discount}}% off</b> your first year. Just use the code below when you check out:",
   "abandoned_checkout_button": "Upgrade to Rallly Pro",
   "abandoned_checkout_support": "If you have any questions about Rallly Pro or need help with anything at all, just reply to this email. I'm here to help!",
   "abandoned_checkout_preview": "Upgrade to Rallly Pro to get more features and support.",

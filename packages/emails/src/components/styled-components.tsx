@@ -49,14 +49,15 @@ export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
       style={{
         backgroundColor: "#4F46E5",
         borderRadius: "4px",
-        padding: "12px 14px",
+        padding: "14px",
         fontFamily,
         boxSizing: "border-box",
         display: "block",
         width: "100%",
         maxWidth: "100%",
         textAlign: "center",
-        fontSize: "16px",
+        fontSize: "14px",
+        fontWeight: "bold",
         color: "white",
       }}
     />
