@@ -53,5 +53,14 @@
   "changeEmailRequest_button": "Email cím hitelesítése",
   "changeEmailRequest_subject": "Hitelesítsd az új email címed",
   "changeEmailRequest_text3": "A link 10 perc múlva lejár. Ha nem te kezdeményezted ezt a váltás, kérjük hagyd figyelmen kívül ezt a levelet.",
-  "changeEmailRequest_text1": "Kaptunk egy kérést, hogy a jelenlegi email címed (<b>{{fromEmail}}</b>) megváltoztassuk erre: <b>{{toEmail}}</b>."
+  "changeEmailRequest_text1": "Kaptunk egy kérést, hogy a jelenlegi email címed (<b>{{fromEmail}}</b>) megváltoztassuk erre: <b>{{toEmail}}</b>.",
+  "abandoned_checkout_name": "Kedves {{name}}!",
+  "abandoned_checkout_noname": "Szia!",
+  "abandoned_checkout_content": "Észrevettem, hogy kipróbáltad a <b>Rallly Pro</b>-t korábban. Meg akartalak keresni, hátha kérdésed van vagy szükséged van segítségre.",
+  "abandoned_checkout_offer": "Hogy segítsek a kezdésben, az első évben egy <b>{{discount}}%</b> kedvezményt kapsz. Csak használd az alábbi kódot fizetéskor:",
+  "abandoned_checkout_button": "Váltás Rallly Pro-ra",
+  "abandoned_checkout_support": "Ha van bármi kérdésed a Rallly Pro kapcsán vagy segítségre van szükséged, csak válaszolj erre a levélre. Örömmel segítek!",
+  "abandoned_checkout_preview": "Különleges ajánlat: 20% kedvezmény a Rallly Pro első évéhez!",
+  "abandoned_checkout_subject": "Szerezz 20% kedvezményt a Rallly Pro első évéhez",
+  "abandoned_checkout_signoff": "Üdvözlettel,"
 }
