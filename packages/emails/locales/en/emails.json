@@ -60,7 +60,7 @@
   "abandoned_checkout_offer": "To help you get started, you can get <b>{{discount}}% off</b> your first year. Just use the code below when you check out:",
   "abandoned_checkout_button": "Upgrade to Rallly Pro",
   "abandoned_checkout_support": "If you have any questions about Rallly Pro or need help with anything at all, just reply to this email. I'm here to help!",
-  "abandoned_checkout_preview": "Upgrade to Rallly Pro to get more features and support.",
-  "abandoned_checkout_subject": "A special offer for Rallly Pro",
+  "abandoned_checkout_preview": "Exclusive offer: Get 20% off your first year of Rallly Pro!",
+  "abandoned_checkout_subject": "Get 20% off your first year of Rallly Pro",
   "abandoned_checkout_signoff": "Best regards,"
 }
