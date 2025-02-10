@@ -47,5 +47,11 @@
   "newComment_preview": "Zoaz zure inkestara zer esan duten ikusteko.",
   "newComment_heading": "Iruzkin berria",
   "newPoll_preview": "Partekatu zure parte-hartzaile esteka erantzunak biltzen hasteko.",
-  "changeEmailRequest_preview": "Egiaztatu zure posta helbidea"
+  "changeEmailRequest_preview": "Egiaztatu zure posta helbidea",
+  "changeEmailRequest_heading": "Egiaztatu zure helbide elektronikoa",
+  "changeEmailRequest_text2": "Aldaketa hau osatzeko, egin klik beheko botoian:",
+  "changeEmailRequest_button": "Egiaztatu helbide elektronikoa",
+  "changeEmailRequest_subject": "Egiaztatu zure helbide elektroniko berria",
+  "changeEmailRequest_text3": "Esteka hau 10 minututan iraungiko da. Aldaketa hau eskatu ez baduzu, ez ikusi egin mezu honi.",
+  "changeEmailRequest_text1": "Zure kontuaren helbide elektronikoa <b>{{fromEmail}}</b>-tik <b>{{toEmail}}</b>-ra aldatzeko eskaera jaso dugu."
 }
