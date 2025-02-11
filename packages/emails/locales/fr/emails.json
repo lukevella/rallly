@@ -53,5 +53,6 @@
   "changeEmailRequest_button": "Vérifier l'adresse e-mail",
   "changeEmailRequest_subject": "Vérifiez votre nouvelle adresse e-mail",
   "changeEmailRequest_text3": "Ce lien expirera dans 10 minutes. Si vous n'avez pas demandé ce changement, veuillez ignorer cet e-mail.",
-  "changeEmailRequest_text1": "Nous avons reçu une demande pour changer l'adresse e-mail de votre compte de <b>{{fromEmail}}</b> à <b>{{toEmail}}</b>."
+  "changeEmailRequest_text1": "Nous avons reçu une demande pour changer l'adresse e-mail de votre compte de <b>{{fromEmail}}</b> à <b>{{toEmail}}</b>.",
+  "abandoned_checkout_signoff": "Cordialement,"
 }
