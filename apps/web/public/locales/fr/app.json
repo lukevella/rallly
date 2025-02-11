@@ -301,5 +301,7 @@
   "registerVerifyDescription": "Vérifiez votre boîte mail pour obtenir le code de vérification",
   "loginVerifyTitle": "Terminer la création du compte",
   "loginVerifyDescription": "Vérifiez votre boîte mail pour obtenir le code de vérification",
-  "createAccount": "Créer un compte"
+  "createAccount": "Créer un compte",
+  "tooManyRequests": "Trop de requêtes émises dans un délai donné",
+  "tooManyRequestsDescription": "Veuillez réessayer plus tard."
 }
