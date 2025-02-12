@@ -60,7 +60,5 @@
   "abandoned_checkout_offer": "Hogy segítsek a kezdésben, az első évben egy <b>{{discount}}%</b> kedvezményt kapsz. Csak használd az alábbi kódot fizetéskor:",
   "abandoned_checkout_button": "Váltás Rallly Pro-ra",
   "abandoned_checkout_support": "Ha van bármi kérdésed a Rallly Pro kapcsán vagy segítségre van szükséged, csak válaszolj erre a levélre. Örömmel segítek!",
-  "abandoned_checkout_preview": "Különleges ajánlat: 20% kedvezmény a Rallly Pro első évéhez!",
-  "abandoned_checkout_subject": "Szerezz 20% kedvezményt a Rallly Pro első évéhez",
   "abandoned_checkout_signoff": "Üdvözlettel,"
 }
