@@ -22,7 +22,8 @@ export const AbandonedCheckoutEmail = ({
       poweredBy={false}
       preview={ctx.t("abandoned_checkout_preview", {
         defaultValue:
-          "Exclusive offer: Get 20% off your first year of Rallly Pro!",
+          "Exclusive offer: Get {{discount}}% off your first year of Rallly Pro!",
+        discount: 20,
         ns: "emails",
       })}
     >
@@ -131,7 +132,8 @@ AbandonedCheckoutEmail.getSubject = (
   return (
     "🎉 " +
     ctx.t("abandoned_checkout_subject", {
-      defaultValue: "Get 20% off your first year of Rallly Pro",
+      defaultValue: "Get {{discount}}% off your first year of Rallly Pro",
+      discount: 20,
       ns: "emails",
     })
   );
