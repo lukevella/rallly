@@ -1,11 +1,10 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
+import type { NextRequest, NextResponse } from "next/server";
 import { encode } from "next-auth/jwt";
 
 import { decodeLegacyJWT } from "./helpers/jwt";
 
-const isSecureCookie =
-  process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://") ?? false;
+const isSecureCookie = absoluteUrl().startsWith("https://");
 
 const prefix = isSecureCookie ? "__Secure-" : "";
 
@@ -17,49 +16,60 @@ const newCookieName = prefix + "authjs.session-token";
  * This is needed for next-auth v5 which renamed the cookie prefix from 'next-auth' to 'authjs'
  */
 export function withAuthMigration(
-  middleware: (req: NextRequest) => void | Response | Promise<void | Response>,
+  middleware: (req: NextRequest) => Promise<NextResponse>,
 ) {
+  async function runMiddlewareAndDeleteOldCookie(req: NextRequest) {
+    const res = await middleware(req);
+    res.cookies.set(oldCookieName, "", {
+      httpOnly: true,
+      secure: isSecureCookie,
+      sameSite: "lax",
+      path: "/",
+    });
+    return res;
+  }
   return async (req: NextRequest) => {
     const oldCookie = req.cookies.get(oldCookieName);
 
-    // If the old cookie doesn't exist, return the middleware
-    if (!oldCookie) {
+    if (req.cookies.get(newCookieName) || !oldCookie || !oldCookie.value) {
+      // exit early if the new cookie exists or the old cookie doesn't exist or is invalid
       return middleware(req);
     }
 
-    const response = NextResponse.redirect(req.url);
-    response.cookies.delete(oldCookieName);
+    try {
+      const decodedCookie = await decodeLegacyJWT(oldCookie.value);
 
-    // If the new cookie exists, delete the old cookie first and rerun middleware
-    if (req.cookies.get(newCookieName)) {
-      return response;
+      // If old cookie is invalid, delete the old cookie
+      if (decodedCookie) {
+        // Set the new cookie
+        const encodedCookie = await encode({
+          token: decodedCookie,
+          secret: process.env.SECRET_PASSWORD,
+          salt: newCookieName,
+        });
+
+        // Run the middleware with the new cookie set
+        req.cookies.set({
+          name: newCookieName,
+          value: encodedCookie,
+        });
+
+        const res = await runMiddlewareAndDeleteOldCookie(req);
+
+        // Set the new cookie in the response
+        res.cookies.set(newCookieName, encodedCookie, {
+          httpOnly: true,
+          secure: isSecureCookie,
+          sameSite: "lax",
+          path: "/",
+        });
+
+        return res;
+      }
+    } catch (e) {
+      console.error(e);
     }
 
-    const decodedCookie = await decodeLegacyJWT(oldCookie.value);
-
-    // If old cookie is invalid, delete the old cookie first and rerun middleware
-    if (!decodedCookie) {
-      return response;
-    }
-
-    // Set the new cookie
-    const encodedCookie = await encode({
-      token: decodedCookie,
-      secret: process.env.SECRET_PASSWORD,
-      salt: newCookieName,
-    });
-
-    // Set the new cookie with the same value and attributes
-    response.cookies.set(newCookieName, encodedCookie, {
-      path: "/",
-      secure: isSecureCookie,
-      sameSite: "lax",
-      httpOnly: true,
-    });
-
-    // Delete the old cookie
-    response.cookies.delete(oldCookieName);
-
-    return response;
+    return runMiddlewareAndDeleteOldCookie(req);
   };
 }
