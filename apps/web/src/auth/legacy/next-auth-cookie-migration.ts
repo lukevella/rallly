@@ -16,31 +16,35 @@ const newCookieName = prefix + "authjs.session-token";
  * Migrates the next-auth cookies to the new authjs cookie names
  * This is needed for next-auth v5 which renamed the cookie prefix from 'next-auth' to 'authjs'
  */
-export async function withAuthMigration(request: NextRequest) {
-  const oldCookie = request.cookies.get(oldCookieName);
-  const newCookie = request.cookies.get(newCookieName);
+export function withAuthMigration(
+  middleware: (req: NextRequest) => void | Response | Promise<void | Response>,
+) {
+  return async (req: NextRequest) => {
+    const oldCookie = req.cookies.get(oldCookieName);
+    const newCookie = req.cookies.get(newCookieName);
 
-  if (!oldCookie || newCookie) return;
+    if (!oldCookie || newCookie) return middleware(req);
 
-  const decodedCookie = await decodeLegacyJWT(oldCookie.value);
+    const decodedCookie = await decodeLegacyJWT(oldCookie.value);
 
-  const encodedCookie = await encode({
-    token: decodedCookie,
-    secret: process.env.SECRET_PASSWORD,
-    salt: newCookieName,
-  });
+    const encodedCookie = await encode({
+      token: decodedCookie,
+      secret: process.env.SECRET_PASSWORD,
+      salt: newCookieName,
+    });
 
-  const response = NextResponse.redirect(request.url);
-  // Set the new cookie with the same value and attributes
-  response.cookies.set(newCookieName, encodedCookie, {
-    path: "/",
-    secure: isSecureCookie,
-    sameSite: "lax",
-    httpOnly: true,
-  });
+    const response = NextResponse.redirect(req.url);
+    // Set the new cookie with the same value and attributes
+    response.cookies.set(newCookieName, encodedCookie, {
+      path: "/",
+      secure: isSecureCookie,
+      sameSite: "lax",
+      httpOnly: true,
+    });
 
-  // Delete the old cookie
-  response.cookies.delete(oldCookieName);
+    // Delete the old cookie
+    response.cookies.delete(oldCookieName);
 
-  return response;
+    return response;
+  };
 }
