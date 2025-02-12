@@ -58,7 +58,7 @@ export function SSOProvider({
       key={providerId}
       onClick={() => {
         signIn(providerId, {
-          redirectTo: redirectTo,
+          redirectTo,
         });
       }}
     >

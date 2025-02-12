@@ -15,7 +15,7 @@ export async function LoginWithOIDC({
     <Button
       onClick={() => {
         signIn("oidc", {
-          redirectTo: redirectTo,
+          redirectTo,
         });
       }}
       variant="link"
