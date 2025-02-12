@@ -60,6 +60,7 @@ export function withAuthMigration(
         res.cookies.set(newCookieName, encodedCookie, {
           httpOnly: true,
           secure: isSecureCookie,
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
           sameSite: "lax",
           path: "/",
         });

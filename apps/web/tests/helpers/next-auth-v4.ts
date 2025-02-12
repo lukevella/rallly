@@ -1,5 +1,4 @@
 import hkdf from "@panva/hkdf";
-import { nanoid } from "@rallly/utils/nanoid";
 import { EncryptJWT } from "jose";
 import type { JWT } from "next-auth/jwt";
 
@@ -32,6 +31,6 @@ export async function encode(params: JWTEncodeParams) {
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
     .setExpirationTime(now() + maxAge)
-    .setJti(nanoid())
+    .setJti("some-random-id")
     .encrypt(encryptionSecret);
 }

@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-import { nanoid } from "@rallly/utils/nanoid";
 
 import { encode } from "./helpers/next-auth-v4";
 
@@ -12,8 +11,8 @@ test.describe.serial(() => {
       data: {
         id: "legacy-guest-poll",
         title: "Test Poll",
-        adminUrlId: nanoid(),
-        participantUrlId: nanoid(),
+        adminUrlId: "admin-url-id",
+        participantUrlId: "participant-url-id",
         guestId: legacyGuestId,
       },
     });
@@ -28,7 +27,7 @@ test.describe.serial(() => {
 
   test("should see poll on login page", async ({ page }) => {
     const context = page.context();
-    const token = await encode({
+    const legacyToken = await encode({
       token: {
         sub: legacyGuestId,
       },
@@ -39,15 +38,19 @@ test.describe.serial(() => {
     await context.addCookies([
       {
         name: "next-auth.session-token",
-        value: token,
+        value: legacyToken,
         httpOnly: true,
+        expires: Date.now() / 1000 + 60 * 60 * 24 * 7,
         secure: false,
         sameSite: "Lax",
-        path: "/",
         domain: "localhost",
+        path: "/",
       },
     ]);
-    await page.goto("/login");
+
+    await page.goto("/");
+
+    // Check if the poll title exists in the page content
     await expect(page.getByText("Test Poll")).toBeVisible();
   });
 });
