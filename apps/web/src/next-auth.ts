@@ -145,6 +145,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               id: userId,
             },
             select: {
+              name: true,
               email: true,
               locale: true,
               timeFormat: true,
@@ -154,6 +155,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           });
 
           if (user) {
+            token.name = user.name;
             token.email = user.email;
             token.locale = user.locale;
             token.timeFormat = user.timeFormat;
