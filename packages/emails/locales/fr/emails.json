@@ -60,7 +60,5 @@
   "abandoned_checkout_offer": "Pour vous aider à commencer, vous pouvez obtenir <b>{{discount}}% de réduction sur</b> votre première année. Il suffit d'utiliser le code ci-dessous lorsque vous effectuez votre commande:",
   "abandoned_checkout_button": "Passez à Rallly Pro",
   "abandoned_checkout_support": "Si vous avez des questions à propos de Rallly Pro ou si vous avez besoin d'aide, répondez à cet e-mail. Je suis là pour vous aider !",
-  "abandoned_checkout_preview": "Offre exclusive : Obtenez 20% de réduction sur votre première année de Rallly Pro!",
-  "abandoned_checkout_subject": "Obtenez 20 % de réduction sur votre première année de Rallly Pro",
   "abandoned_checkout_signoff": "Cordialement,"
 }
