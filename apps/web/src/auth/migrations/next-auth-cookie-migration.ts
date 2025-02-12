@@ -3,11 +3,12 @@ import { NextResponse } from "next/server";
 import { encode } from "next-auth/jwt";
 
 import { decode } from "./next-auth-v4/jwt";
+
 /**
  * Migrates the next-auth cookies to the new authjs cookie names
  * This is needed for next-auth v5 which renamed the cookie prefix from 'next-auth' to 'authjs'
  */
-async function migrateNextAuthCookie(request: NextRequest) {
+export async function withAuthMigration(request: NextRequest) {
   const isSecureCookie =
     process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://") ?? false;
 
@@ -46,14 +47,4 @@ async function migrateNextAuthCookie(request: NextRequest) {
   response.cookies.delete(oldCookieName);
 
   return response;
-}
-
-// Middleware for handling auth cookie migration
-export async function withAuthMigration(request: NextRequest) {
-  const response = await migrateNextAuthCookie(request);
-  // Only return the response if migration happened
-  if (response) {
-    return response;
-  }
-  return null;
 }
