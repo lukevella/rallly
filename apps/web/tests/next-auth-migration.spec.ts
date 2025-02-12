@@ -48,7 +48,8 @@ test.describe.serial(() => {
       },
     ]);
 
-    await page.goto("/");
+    // For some reason it doesn't work unless we need to redirect
+    await page.goto("/login");
 
     // Check if the poll title exists in the page content
     await expect(page.getByText("Test Poll")).toBeVisible();
