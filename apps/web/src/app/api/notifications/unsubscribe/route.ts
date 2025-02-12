@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { getServerSession } from "@/auth";
+import { auth } from "@/next-auth";
 import type { DisableNotificationsPayload } from "@/trpc/types";
 import { decryptToken } from "@/utils/session";
 
@@ -14,7 +14,7 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  const session = await getServerSession();
+  const session = await auth();
 
   if (!session || !session.user?.email) {
     return NextResponse.redirect(new URL("/login", req.url));
