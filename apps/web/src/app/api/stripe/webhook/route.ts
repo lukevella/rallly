@@ -266,6 +266,8 @@ export async function POST(request: NextRequest) {
             },
             props: {
               name: session.customer_details?.name ?? undefined,
+              discount: 20,
+              couponCode: "GETPRO1Y20",
               recoveryUrl,
             },
           },
