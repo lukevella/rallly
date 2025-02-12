@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import NextAuth from "next-auth";
 
 import { getLocaleFromHeader } from "@/app/guest";
-import { withAuthMigration } from "@/auth/migrations/next-auth-cookie-migration";
+import { withAuthMigration } from "@/auth/legacy/next-auth-cookie-migration";
 import { nextAuthConfig } from "@/next-auth.config";
 
 const { auth } = NextAuth(nextAuthConfig);
