@@ -301,5 +301,7 @@
   "registerVerifyDescription": "Katso vahvistuskoodi sähköpostistasi",
   "loginVerifyTitle": "Viimeistele kirjautuminen",
   "loginVerifyDescription": "Katso vahvistuskoodi sähköpostistasi",
-  "createAccount": "Luo tili"
+  "createAccount": "Luo tili",
+  "tooManyRequests": "Liian monta pyyntöä",
+  "tooManyRequestsDescription": "Yritä myöhemmin uudelleen."
 }
