@@ -4,8 +4,8 @@ import { generateOtp } from "@rallly/utils/nanoid";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 
-import { isEmailBlocked } from "@/auth/is-email-blocked";
-import { mergeGuestsIntoUser } from "@/auth/merge-user";
+import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
+import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { getEmailClient } from "@/utils/emails";
 import { createToken, decryptToken } from "@/utils/session";
 

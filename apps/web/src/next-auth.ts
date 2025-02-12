@@ -5,8 +5,8 @@ import type { Provider } from "next-auth/providers";
 import z from "zod";
 
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
-import { isEmailBlocked } from "./auth/is-email-blocked";
-import { mergeGuestsIntoUser } from "./auth/merge-user";
+import { isEmailBlocked } from "./auth/helpers/is-email-blocked";
+import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { EmailProvider } from "./auth/providers/email";
 import { GoogleProvider } from "./auth/providers/google";
 import { GuestProvider } from "./auth/providers/guest";

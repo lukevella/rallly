@@ -4,11 +4,11 @@ import "../../style.css";
 import { Toaster } from "@rallly/ui/toaster";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { Providers } from "@/app/providers";
-import { SessionProvider } from "@/auth/session-provider";
 import { auth } from "@/next-auth";
 
 const inter = Inter({
