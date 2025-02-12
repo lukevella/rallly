@@ -303,5 +303,6 @@
   "loginVerifyDescription": "Ellenőrizd az emailed az ellenőrző kódért",
   "createAccount": "Fiók létrehozása",
   "tooManyRequests": "Túl sok oldallekérés",
-  "tooManyRequestsDescription": "Kérjük próbáld újra később."
+  "tooManyRequestsDescription": "Kérjük próbáld újra később.",
+  "loginMagicLinkError": "A link érvénytelen vagy lejárt. Kérjük, igényelj egy újat."
 }
