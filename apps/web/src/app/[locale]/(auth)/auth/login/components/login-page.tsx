@@ -4,10 +4,12 @@ import { Button } from "@rallly/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 type PageProps = { magicLink: string; email: string };
@@ -15,6 +17,9 @@ type PageProps = { magicLink: string; email: string };
 export const LoginPage = ({ magicLink, email }: PageProps) => {
   const session = useSession();
   const posthog = usePostHog();
+  const { t } = useTranslation();
+  const [error, setError] = React.useState<string | null>(null);
+
   const magicLinkFetch = useMutation({
     mutationFn: async () => {
       const res = await fetch(magicLink);
@@ -31,9 +36,15 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
             name: updatedSession.user.name,
           });
         }
+        router.push(data.url);
+      } else {
+        setError(
+          t("loginMagicLinkError", {
+            defaultValue:
+              "This link is invalid or expired. Please request a new link.",
+          }),
+        );
       }
-
-      router.push(data.url);
     },
   });
   const { data } = trpc.user.getByEmail.useQuery({ email });
@@ -72,6 +83,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
             <Trans i18nKey="login" defaults="Login" />
           </Button>
         </div>
+        {error && <p className="text-destructive text-sm">{error}</p>}
       </div>
     </div>
   );

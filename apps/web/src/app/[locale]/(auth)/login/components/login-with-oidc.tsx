@@ -6,16 +6,16 @@ import { Trans } from "@/components/trans";
 
 export async function LoginWithOIDC({
   name,
-  callbackUrl,
+  redirectTo,
 }: {
   name: string;
-  callbackUrl?: string;
+  redirectTo?: string;
 }) {
   return (
     <Button
       onClick={() => {
         signIn("oidc", {
-          callbackUrl,
+          redirectTo,
         });
       }}
       variant="link"

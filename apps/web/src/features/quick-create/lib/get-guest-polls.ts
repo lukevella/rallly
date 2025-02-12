@@ -1,9 +1,9 @@
 import { prisma } from "@rallly/database";
 
-import { getServerSession } from "@/auth";
+import { auth } from "@/next-auth";
 
 export async function getGuestPolls() {
-  const session = await getServerSession();
+  const session = await auth();
   const user = session?.user;
   const guestId = !user?.email ? user?.id : null;
 

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { TimeFormat } from "@rallly/database";
+import type { NextRequest } from "next/server";
 import type { DefaultSession, DefaultUser } from "next-auth";
 import NextAuth from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
@@ -24,6 +25,10 @@ declare module "next-auth" {
     timeZone?: string | null;
     timeFormat?: TimeFormat | null;
     weekStart?: number | null;
+  }
+
+  interface NextAuthRequest extends NextRequest {
+    auth: Session | null;
   }
 }
 

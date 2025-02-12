@@ -303,5 +303,6 @@
   "loginVerifyDescription": "Check your email for the verification code",
   "createAccount": "Create Account",
   "tooManyRequests": "Too many requests",
-  "tooManyRequestsDescription": "Please try again later."
+  "tooManyRequestsDescription": "Please try again later.",
+  "loginMagicLinkError": "This link is invalid or expired. Please request a new link."
 }

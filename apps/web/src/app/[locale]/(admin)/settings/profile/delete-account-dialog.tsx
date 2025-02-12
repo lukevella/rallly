@@ -38,7 +38,7 @@ export function DeleteAccountDialog({
     onSuccess() {
       posthog?.capture("delete account");
       signOut({
-        callbackUrl: "/login",
+        redirectTo: "/login",
       });
     },
   });
