@@ -21,19 +21,34 @@ export function withAuthMigration(
 ) {
   return async (req: NextRequest) => {
     const oldCookie = req.cookies.get(oldCookieName);
-    const newCookie = req.cookies.get(newCookieName);
 
-    if (!oldCookie || newCookie) return middleware(req);
+    // If the old cookie doesn't exist, return the middleware
+    if (!oldCookie) {
+      return middleware(req);
+    }
+
+    const response = NextResponse.redirect(req.url);
+    response.cookies.delete(oldCookieName);
+
+    // If the new cookie exists, delete the old cookie first and rerun middleware
+    if (req.cookies.get(newCookieName)) {
+      return response;
+    }
 
     const decodedCookie = await decodeLegacyJWT(oldCookie.value);
 
+    // If old cookie is invalid, delete the old cookie first and rerun middleware
+    if (!decodedCookie) {
+      return response;
+    }
+
+    // Set the new cookie
     const encodedCookie = await encode({
       token: decodedCookie,
       secret: process.env.SECRET_PASSWORD,
       salt: newCookieName,
     });
 
-    const response = NextResponse.redirect(req.url);
     // Set the new cookie with the same value and attributes
     response.cookies.set(newCookieName, encodedCookie, {
       path: "/",
