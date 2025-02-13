@@ -177,12 +177,12 @@ const {
 });
 
 const auth = async () => {
-  const session = await getLegacySession();
+  const session = await originalAuth();
   if (session) {
     return session;
   }
 
-  return originalAuth();
+  return getLegacySession();
 };
 
 export { auth, handlers, signIn, signOut };
