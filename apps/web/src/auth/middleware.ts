@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
-import type { NextAuthRequest, Session } from "next-auth";
+import type { NextResponse } from "next/server";
+import type { NextAuthRequest } from "next-auth";
 import NextAuth from "next-auth";
 
 import { nextAuthConfig } from "@/next-auth.config";
@@ -8,7 +8,6 @@ import {
   getLegacySession,
   migrateLegacyJWT,
 } from "./legacy/next-auth-cookie-migration";
-import type { NextResponse } from "next/server";
 
 const { auth } = NextAuth(nextAuthConfig);
 
@@ -34,7 +33,11 @@ export const withAuth = (
     const middlewareRes = await middleware(request);
 
     if (legacySession) {
-      await migrateLegacyJWT(middlewareRes);
+      try {
+        await migrateLegacyJWT(middlewareRes);
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     return middlewareRes;

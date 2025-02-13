@@ -1,6 +1,6 @@
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { cookies } from "next/headers";
-import type { NextRequest, NextResponse } from "next/server";
+import type { NextResponse } from "next/server";
 import type { Session } from "next-auth";
 import { encode } from "next-auth/jwt";
 
