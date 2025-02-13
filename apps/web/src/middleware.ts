@@ -3,7 +3,7 @@ import { withPostHog } from "@rallly/posthog/next/middleware";
 import { NextResponse } from "next/server";
 
 import { getLocaleFromHeader } from "@/app/guest";
-import { withAuth } from "@/auth/middleware";
+import { withAuth } from "@/auth/edge";
 
 const supportedLocales = Object.keys(languages);
 
