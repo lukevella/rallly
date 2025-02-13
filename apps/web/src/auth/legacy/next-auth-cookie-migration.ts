@@ -2,6 +2,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
 import type { Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import { encode } from "next-auth/jwt";
 
 import { decodeLegacyJWT } from "./helpers/jwt";
@@ -16,7 +17,7 @@ const newCookieName = prefix + "authjs.session-token";
 export async function getLegacySession(): Promise<Session | null> {
   const cookieStore = cookies();
   const legacySessionCookie = cookieStore.get(oldCookieName);
-  if (legacySessionCookie) {
+  if (legacySessionCookie && legacySessionCookie.value) {
     const decodedCookie = await decodeLegacyJWT(legacySessionCookie.value);
 
     if (decodedCookie?.sub) {
@@ -45,6 +46,38 @@ async function getLegacyJWT() {
   return null;
 }
 
+function deleteLegacyCookie(res: NextResponse) {
+  const cookieStore = cookies();
+  const oldCookie = cookieStore.get(oldCookieName);
+  if (oldCookie) {
+    // Delete the old cookie
+    res.cookies.set(oldCookieName, oldCookie.value, {
+      httpOnly: true,
+      secure: isSecureCookie,
+      expires: new Date(0),
+      sameSite: "lax",
+      path: "/",
+    });
+  }
+}
+
+async function setNewSessionCookie(res: NextResponse, jwt: JWT) {
+  const newJWT = await encode({
+    token: jwt,
+    secret: process.env.SECRET_PASSWORD,
+    salt: newCookieName,
+  });
+
+  // Set new session cookie
+  res.cookies.set(newCookieName, newJWT, {
+    httpOnly: true,
+    secure: isSecureCookie,
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    sameSite: "lax",
+    path: "/",
+  });
+}
+
 /**
  * Replace the old legacy cookie with the new one
  */
@@ -52,19 +85,7 @@ export async function migrateLegacyJWT(res: NextResponse) {
   const legacyJWT = await getLegacyJWT();
 
   if (legacyJWT) {
-    const newJWT = await encode({
-      token: legacyJWT,
-      secret: process.env.SECRET_PASSWORD,
-      salt: newCookieName,
-    });
-
-    res.cookies.set(newCookieName, newJWT, {
-      httpOnly: true,
-      secure: isSecureCookie,
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      sameSite: "lax",
-      path: "/",
-    });
-    res.cookies.delete(oldCookieName);
+    await setNewSessionCookie(res, legacyJWT);
+    deleteLegacyCookie(res);
   }
 }

@@ -15,19 +15,22 @@ export const withAuth = (
   middleware: (request: NextAuthRequest) => Promise<NextResponse>,
 ) => {
   return async (request: NextAuthRequest) => {
-    let legacySession: Session | null = null;
+    let session: Session | null = null;
 
     try {
-      legacySession = await getLegacySession();
+      session = await auth();
     } catch (e) {
       console.error(e);
     }
 
-    let session = legacySession;
+    let isLegacySession = false;
 
     if (!session) {
       try {
-        session = await auth();
+        session = await getLegacySession();
+        if (session) {
+          isLegacySession = true;
+        }
       } catch (e) {
         console.error(e);
       }
@@ -50,7 +53,7 @@ export const withAuth = (
 
     const middlewareRes = await middleware(request);
 
-    if (legacySession) {
+    if (isLegacySession) {
       try {
         await migrateLegacyJWT(middlewareRes);
       } catch (e) {
