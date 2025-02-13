@@ -301,5 +301,8 @@
   "registerVerifyDescription": "Controleer je e-mail voor de verificatiecode",
   "loginVerifyTitle": "Inloggen voltooien",
   "loginVerifyDescription": "Controleer je e-mail voor de verificatiecode",
-  "createAccount": "Account aanmaken"
+  "createAccount": "Account aanmaken",
+  "tooManyRequests": "Te veel verzoeken",
+  "tooManyRequestsDescription": "Probeer het later nog eens.",
+  "loginMagicLinkError": "Deze link is verlopen of ongeldig. Vraag een nieuwe link aan."
 }
