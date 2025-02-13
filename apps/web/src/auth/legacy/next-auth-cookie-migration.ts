@@ -23,7 +23,9 @@ export async function getLegacySession(): Promise<Session | null> {
       const { sub: id, ...rest } = decodedCookie;
       return {
         user: { id, ...rest },
-        expires: new Date(decodedCookie.exp ?? 0).toISOString(),
+        expires: decodedCookie.exp
+          ? new Date(decodedCookie.exp * 1000).toISOString()
+          : new Date(Date.now() + 30 * 60 * 60 * 1000).toISOString(),
       };
     }
   }
