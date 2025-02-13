@@ -58,6 +58,7 @@ export async function migrateLegacyJWT(res: NextResponse) {
       salt: newCookieName,
     });
 
+    // Set new session cookie
     res.cookies.set(newCookieName, newJWT, {
       httpOnly: true,
       secure: isSecureCookie,
@@ -65,6 +66,14 @@ export async function migrateLegacyJWT(res: NextResponse) {
       sameSite: "lax",
       path: "/",
     });
-    res.cookies.delete(oldCookieName);
+
+    // Delete the old cookie
+    res.cookies.set(oldCookieName, "", {
+      httpOnly: true,
+      secure: isSecureCookie,
+      expires: new Date(0),
+      sameSite: "lax",
+      path: "/",
+    });
   }
 }
