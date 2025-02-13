@@ -53,5 +53,14 @@
   "changeEmailRequest_button": "E-mailadres bevestigen",
   "changeEmailRequest_subject": "Bevestig je nieuwe e-mailadres",
   "changeEmailRequest_text3": "Deze link verloopt over 10 minuten. Als je deze wijziging niet hebt aangevraagd, neem dan contact met ons op.",
-  "changeEmailRequest_text1": "We hebben een verzoek ontvangen om het e-mailadres voor je account van <b>{{fromEmail}}</b> te wijzigen naar <b>{{toEmail}}</b>."
+  "changeEmailRequest_text1": "We hebben een verzoek ontvangen om het e-mailadres voor je account van <b>{{fromEmail}}</b> te wijzigen naar <b>{{toEmail}}</b>.",
+  "abandoned_checkout_name": "Beste {{name}},",
+  "abandoned_checkout_noname": "Hoi,",
+  "abandoned_checkout_content": "Ik merkte dat je eerder <b>Rallly Pro</b> aan het bekijken was. Ik wilde graag naar weten of je vragen of hulp nodig hebt.",
+  "abandoned_checkout_offer": "Om je op weg te helpen, kun je <b>{{discount}}% korting</b> krijgen op je eerste jaar. Gebruik de code hieronder wanneer je betaalt:",
+  "abandoned_checkout_button": "Upgrade naar Rallly Pro",
+  "abandoned_checkout_support": "Als je vragen hebt over Rallly Pro of hulp nodig hebt, beantwoord dan deze e-mail en ik zal je helpen!",
+  "abandoned_checkout_preview": "Exclusieve aanbieding: Ontvang {{discount}}% korting op je eerste jaar van Rallly Pro!",
+  "abandoned_checkout_subject": "Krijg {{discount}}% korting op je eerste jaar van Rallly Pro",
+  "abandoned_checkout_signoff": "Met vriendelijke groet,"
 }
