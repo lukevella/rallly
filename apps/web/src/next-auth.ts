@@ -7,6 +7,7 @@ import z from "zod";
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
+import { getLegacySession } from "./auth/legacy/next-auth-cookie-migration";
 import { EmailProvider } from "./auth/providers/email";
 import { GoogleProvider } from "./auth/providers/google";
 import { GuestProvider } from "./auth/providers/guest";
@@ -22,7 +23,12 @@ const sessionUpdateSchema = z.object({
   weekStart: z.number().nullish(),
 });
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
+const {
+  auth: originalAuth,
+  handlers,
+  signIn,
+  signOut,
+} = NextAuth({
   ...nextAuthConfig,
   adapter: CustomPrismaAdapter({
     migrateData: async (userId) => {
@@ -169,3 +175,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
 });
+
+const auth = async () => {
+  const session = await getLegacySession();
+  if (session) {
+    return session;
+  }
+
+  return originalAuth();
+};
+
+export { auth, handlers, signIn, signOut };

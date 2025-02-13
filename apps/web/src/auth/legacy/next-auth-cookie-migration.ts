@@ -1,65 +1,70 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { cookies } from "next/headers";
+import type { NextResponse } from "next/server";
+import type { Session } from "next-auth";
 import { encode } from "next-auth/jwt";
 
 import { decodeLegacyJWT } from "./helpers/jwt";
 
-const isSecureCookie =
-  process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://") ?? false;
+const isSecureCookie = absoluteUrl().startsWith("https://");
 
 const prefix = isSecureCookie ? "__Secure-" : "";
 
 const oldCookieName = prefix + "next-auth.session-token";
 const newCookieName = prefix + "authjs.session-token";
 
+export async function getLegacySession(): Promise<Session | null> {
+  const cookieStore = cookies();
+  const legacySessionCookie = cookieStore.get(oldCookieName);
+  if (legacySessionCookie) {
+    const decodedCookie = await decodeLegacyJWT(legacySessionCookie.value);
+
+    if (decodedCookie?.sub) {
+      const { sub: id, ...rest } = decodedCookie;
+      return {
+        user: { id, ...rest },
+        expires: decodedCookie.exp
+          ? new Date(decodedCookie.exp * 1000).toISOString()
+          : new Date(Date.now() + 30 * 60 * 60 * 1000).toISOString(),
+      };
+    }
+  }
+
+  return null;
+}
+
+async function getLegacyJWT() {
+  const cookieStore = cookies();
+  const legacySessionCookie = cookieStore.get(oldCookieName);
+  if (legacySessionCookie) {
+    const decodedCookie = await decodeLegacyJWT(legacySessionCookie.value);
+    if (decodedCookie) {
+      return decodedCookie;
+    }
+  }
+  return null;
+}
+
 /**
- * Migrates the next-auth cookies to the new authjs cookie names
- * This is needed for next-auth v5 which renamed the cookie prefix from 'next-auth' to 'authjs'
+ * Replace the old legacy cookie with the new one
  */
-export function withAuthMigration(
-  middleware: (req: NextRequest) => void | Response | Promise<void | Response>,
-) {
-  return async (req: NextRequest) => {
-    const oldCookie = req.cookies.get(oldCookieName);
+export async function migrateLegacyJWT(res: NextResponse) {
+  const legacyJWT = await getLegacyJWT();
 
-    // If the old cookie doesn't exist, return the middleware
-    if (!oldCookie) {
-      return middleware(req);
-    }
-
-    const response = NextResponse.redirect(req.url);
-    response.cookies.delete(oldCookieName);
-
-    // If the new cookie exists, delete the old cookie first and rerun middleware
-    if (req.cookies.get(newCookieName)) {
-      return response;
-    }
-
-    const decodedCookie = await decodeLegacyJWT(oldCookie.value);
-
-    // If old cookie is invalid, delete the old cookie first and rerun middleware
-    if (!decodedCookie) {
-      return response;
-    }
-
-    // Set the new cookie
-    const encodedCookie = await encode({
-      token: decodedCookie,
+  if (legacyJWT) {
+    const newJWT = await encode({
+      token: legacyJWT,
       secret: process.env.SECRET_PASSWORD,
       salt: newCookieName,
     });
 
-    // Set the new cookie with the same value and attributes
-    response.cookies.set(newCookieName, encodedCookie, {
-      path: "/",
-      secure: isSecureCookie,
-      sameSite: "lax",
+    res.cookies.set(newCookieName, newJWT, {
       httpOnly: true,
+      secure: isSecureCookie,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      sameSite: "lax",
+      path: "/",
     });
-
-    // Delete the old cookie
-    response.cookies.delete(oldCookieName);
-
-    return response;
-  };
+    res.cookies.delete(oldCookieName);
+  }
 }
