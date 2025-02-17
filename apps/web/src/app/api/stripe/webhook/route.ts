@@ -166,12 +166,20 @@ export async function POST(request: NextRequest) {
 
         const subscriptionItem = subscription.items.data[0];
         const interval = subscriptionItem.price.recurring?.interval;
+        const amount = subscriptionItem.price.unit_amount;
 
         if (!interval) {
           throw new Error(
             `Missing interval in subscription ${subscription.id}`,
           );
         }
+
+        if (!amount) {
+          throw new Error(
+            `Missing amount in subscription ${subscription.id}`,
+          );
+        }
+
         // create or update the subscription in the database
         await prisma.subscription.upsert({
           where: {

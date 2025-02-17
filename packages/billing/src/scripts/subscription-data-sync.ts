@@ -24,10 +24,17 @@ import { stripe } from "../lib/stripe";
 
       const subscriptionItem = subscription.items.data[0];
       const interval = subscriptionItem.price.recurring?.interval;
+      const amount = subscriptionItem.price.unit_amount;
 
       if (!interval) {
         console.info(`🚨 Missing interval in subscription ${subscription.id}`);
-        +        failed++;
+        failed++;
+        continue;
+      }
+
+      if (!amount) {
+        console.info(`🚨 Missing amount in subscription ${subscription.id}`);
+        failed++;
         continue;
       }
 
@@ -36,7 +43,7 @@ import { stripe } from "../lib/stripe";
           id: subscription.id,
         },
         data: {
-          amount: subscriptionItem.price.unit_amount,
+          amount,
           currency: subscriptionItem.price.currency,
           interval: subscriptionItem.price.recurring?.interval,
           status: subscription.status,
