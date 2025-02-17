@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
         distinctId: userId,
         event: "upgrade",
         properties: {
-          interval: subscription.items.data[0].plan.interval,
+          interval: subscription.items.data[0].price.recurring?.interval,
           $set: {
             tier: "pro",
           },
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
           priceId: price.id,
           currency: subscriptionItem.price.currency,
           interval,
-          amount: subscriptionItem.plan.amount,
+          amount: subscriptionItem.price.unit_amount,
           status: subscription.status,
           createdAt: toDate(subscription.created),
           periodStart: toDate(subscription.current_period_start),
