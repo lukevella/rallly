@@ -141,7 +141,9 @@ export async function POST(request: NextRequest) {
       case "customer.subscription.created": {
         const { id } = event.data.object as Stripe.Subscription;
 
-        const subscription = await stripe.subscriptions.retrieve(id);
+        const subscription = await stripe.subscriptions.retrieve(id, {
+          expand: ["items.data.price.currency_options"],
+        });
 
         // check if the subscription is active
         const isActive =
@@ -166,12 +168,21 @@ export async function POST(request: NextRequest) {
 
         const subscriptionItem = subscription.items.data[0];
         const interval = subscriptionItem.price.recurring?.interval;
+        const currency = subscription.currency;
+        const amount =
+          subscriptionItem.price.currency_options?.[currency]?.unit_amount ??
+          subscriptionItem.price.unit_amount;
 
         if (!interval) {
           throw new Error(
             `Missing interval in subscription ${subscription.id}`,
           );
         }
+
+        if (!amount) {
+          throw new Error(`Missing amount in subscription ${subscription.id}`);
+        }
+
         // create or update the subscription in the database
         await prisma.subscription.upsert({
           where: {
@@ -181,9 +192,9 @@ export async function POST(request: NextRequest) {
             id: subscription.id,
             active: isActive,
             priceId: price.id,
-            currency: subscriptionItem.price.currency,
+            currency,
             interval,
-            amount: subscriptionItem.price.unit_amount,
+            amount,
             status: subscription.status,
             createdAt: toDate(subscription.created),
             periodStart: toDate(subscription.current_period_start),
@@ -192,9 +203,9 @@ export async function POST(request: NextRequest) {
           update: {
             active: isActive,
             priceId: price.id,
-            currency: subscriptionItem.price.currency,
+            currency,
             interval,
-            amount: subscriptionItem.price.unit_amount,
+            amount,
             status: subscription.status,
             createdAt: toDate(subscription.created),
             periodStart: toDate(subscription.current_period_start),

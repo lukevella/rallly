@@ -129,10 +129,14 @@ async function main() {
       subscription: {
         create: {
           id: "sub_123",
+          currency: "usd",
+          amount: 700,
+          interval: "month",
+          status: "active",
           active: true,
           priceId: "price_123",
           periodStart: new Date(),
-          periodEnd: dayjs().add(1, "year").toDate(),
+          periodEnd: dayjs().add(1, "month").toDate(),
         },
       },
     },
