@@ -88,12 +88,11 @@ model UserPaymentData {
 model Subscription {
   id            String   @id
   priceId       String   @map("price_id")
-  amount        Int?
-  status        String?
+  amount        Int
+  status        String
   active        Boolean
-  currency      String?
-  interval      String?
-  intervalCount Int?     @map("interval_count")
+  currency      String
+  interval      String
   createdAt     DateTime @default(now()) @map("created_at")
   periodStart   DateTime @map("period_start")
   periodEnd     DateTime @map("period_end")
