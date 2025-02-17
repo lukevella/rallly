@@ -88,6 +88,8 @@ model UserPaymentData {
 model Subscription {
   id            String   @id
   priceId       String   @map("price_id")
+  amount        Int?
+  status        String?
   active        Boolean
   currency      String?
   interval      String?

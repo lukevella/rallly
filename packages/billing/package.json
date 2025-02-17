@@ -9,6 +9,7 @@
   "scripts": {
     "normalize-subscription-metadata": "dotenv -e ../../.env -- tsx ./src/scripts/normalize-metadata.ts",
     "checkout-expiry": "dotenv -e ../../.env -- tsx ./src/scripts/checkout-expiry.ts",
+    "subscription-data-sync": "dotenv -e ../../.env -- tsx ./src/scripts/subscription-data-sync.ts",
     "type-check": "tsc --pretty --noEmit",
     "lint": "eslint ./src"
   },

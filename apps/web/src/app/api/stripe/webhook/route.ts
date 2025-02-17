@@ -158,6 +158,15 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
       }
 
+      const subscriptionItem = subscription.items.data[0];
+      const interval = subscriptionItem.price.recurring?.interval;
+
+      if (!interval) {
+        return NextResponse.json(
+          { error: "Missing interval in subscription" },
+          { status: 400 },
+        );
+      }
       // create or update the subscription in the database
       await prisma.subscription.upsert({
         where: {
@@ -167,7 +176,10 @@ export async function POST(request: NextRequest) {
           id: subscription.id,
           active: isActive,
           priceId: price.id,
-          currency: subscription.currency ?? null,
+          currency: subscriptionItem.price.currency,
+          interval,
+          amount: subscriptionItem.plan.amount,
+          status: subscription.status,
           createdAt: toDate(subscription.created),
           periodStart: toDate(subscription.current_period_start),
           periodEnd: toDate(subscription.current_period_end),
@@ -175,7 +187,10 @@ export async function POST(request: NextRequest) {
         update: {
           active: isActive,
           priceId: price.id,
-          currency: subscription.currency ?? null,
+          currency: subscriptionItem.price.currency,
+          interval,
+          amount: subscriptionItem.price.unit_amount,
+          status: subscription.status,
           createdAt: toDate(subscription.created),
           periodStart: toDate(subscription.current_period_start),
           periodEnd: toDate(subscription.current_period_end),
