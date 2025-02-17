@@ -59,7 +59,9 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        const { userId } = checkoutMetadataSchema.parse(checkoutSession.metadata);
+        const { userId } = checkoutMetadataSchema.parse(
+          checkoutSession.metadata,
+        );
 
         if (!userId) {
           return NextResponse.json(
@@ -156,14 +158,19 @@ export async function POST(request: NextRequest) {
         const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
 
         if (!res.success) {
-          return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
+          return NextResponse.json(
+            { error: "Missing user ID" },
+            { status: 400 },
+          );
         }
 
         const subscriptionItem = subscription.items.data[0];
         const interval = subscriptionItem.price.recurring?.interval;
 
         if (!interval) {
-          throw new Error(`Missing interval in subscription ${subscription.id}`)
+          throw new Error(
+            `Missing interval in subscription ${subscription.id}`,
+          );
         }
         // create or update the subscription in the database
         await prisma.subscription.upsert({
@@ -232,7 +239,9 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.userId;
         if (!userId) {
           console.info("No user ID found in Checkout Session metadata");
-          Sentry.captureMessage("No user ID found in Checkout Session metadata");
+          Sentry.captureMessage(
+            "No user ID found in Checkout Session metadata",
+          );
           break;
         }
         // Do nothing if the Checkout Session has no email or recovery URL
@@ -290,7 +299,9 @@ export async function POST(request: NextRequest) {
         break;
       }
       default:
-        Sentry.captureException(new Error(`Unhandled event type: ${event.type}`));
+        Sentry.captureException(
+          new Error(`Unhandled event type: ${event.type}`),
+        );
         // Unexpected event type
         return NextResponse.json(
           { error: "Unhandled event type" },
@@ -298,12 +309,10 @@ export async function POST(request: NextRequest) {
         );
     }
   } catch (err) {
-    const error = err instanceof Error ? err.message : "An unexpected error occurred";
+    const error =
+      err instanceof Error ? err.message : "An unexpected error occurred";
     Sentry.captureException(err);
-    return NextResponse.json(
-      { error },
-      { status: 500 },
-    );
+    return NextResponse.json({ error }, { status: 500 });
   }
 
   waitUntil(Promise.all([posthog?.shutdown()]));

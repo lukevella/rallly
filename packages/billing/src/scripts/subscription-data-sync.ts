@@ -9,7 +9,7 @@ export async function syncSubscriptionData() {
     },
   });
 
-  console.info(`🚀 Syncing ${userSubscriptions.length} subscriptions...`)
+  console.info(`🚀 Syncing ${userSubscriptions.length} subscriptions...`);
 
   for (const userSubscription of userSubscriptions) {
     const subscription = await stripe.subscriptions.retrieve(
