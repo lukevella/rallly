@@ -129,7 +129,7 @@ async function main() {
       subscription: {
         create: {
           id: "sub_123",
-          currency:"usd",
+          currency: "usd",
           amount: 700,
           interval: "month",
           status: "active",
