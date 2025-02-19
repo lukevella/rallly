@@ -49,7 +49,7 @@ export function TimeZoneChangeDetector() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>
             <Trans
