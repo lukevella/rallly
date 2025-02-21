@@ -263,5 +263,7 @@
   "back": "Zpět",
   "verifyEmail": "Ověřte e-mailovou adresu",
   "userNotFound": "Uživatel s tímto e-mailem neexistuje",
-  "registerDescription": "Zjednodušte proces plánování a šetřete čas"
+  "registerDescription": "Zjednodušte proces plánování a šetřete čas",
+  "tooManyRequests": "Příliš mnoho požadavků",
+  "tooManyRequestsDescription": "Zkuste to prosím později."
 }
