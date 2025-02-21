@@ -73,6 +73,15 @@ enum SubscriptionStatus {
   @@map("subscription_status")
 }
 
+enum SubscriptionInterval {
+  day
+  week
+  month
+  year
+
+  @@map("subscription_interval")
+}
+
 model UserPaymentData {
   userId         String             @id @map("user_id")
   subscriptionId String             @map("subscription_id")
@@ -86,18 +95,19 @@ model UserPaymentData {
 }
 
 model Subscription {
-  id                String   @id
-  priceId           String   @map("price_id")
+  id                String               @id
+  priceId           String               @map("price_id")
   amount            Int
   status            String
   active            Boolean
   currency          String
-  interval          String
-  createdAt         DateTime @default(now()) @map("created_at")
-  periodStart       DateTime @map("period_start")
-  periodEnd         DateTime @map("period_end")
-  user              User?
-  cancelAtPeriodEnd Boolean  @default(false) @map("cancel_at_period_end")
+  interval          SubscriptionInterval
+  createdAt         DateTime             @default(now()) @map("created_at")
+  periodStart       DateTime             @map("period_start")
+  periodEnd         DateTime             @map("period_end")
+  cancelAtPeriodEnd Boolean              @default(false) @map("cancel_at_period_end")
+
+  user User?
 
   @@map("subscriptions")
 }
