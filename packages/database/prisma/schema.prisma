@@ -86,17 +86,18 @@ model UserPaymentData {
 }
 
 model Subscription {
-  id            String   @id
-  priceId       String   @map("price_id")
-  amount        Int
-  status        String
-  active        Boolean
-  currency      String
-  interval      String
-  createdAt     DateTime @default(now()) @map("created_at")
-  periodStart   DateTime @map("period_start")
-  periodEnd     DateTime @map("period_end")
-  user          User?
+  id                String   @id
+  priceId           String   @map("price_id")
+  amount            Int
+  status            String
+  active            Boolean
+  currency          String
+  interval          String
+  createdAt         DateTime @default(now()) @map("created_at")
+  periodStart       DateTime @map("period_start")
+  periodEnd         DateTime @map("period_end")
+  user              User?
+  cancelAtPeriodEnd Boolean  @default(false) @map("cancel_at_period_end")
 
   @@map("subscriptions")
 }

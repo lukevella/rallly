@@ -210,6 +210,7 @@ export async function POST(request: NextRequest) {
             createdAt: toDate(subscription.created),
             periodStart: toDate(subscription.current_period_start),
             periodEnd: toDate(subscription.current_period_end),
+            cancelAtPeriodEnd: subscription.cancel_at_period_end,
           },
         });
 
