@@ -1,5 +1,5 @@
 -- Create the enum type
-CREATE TYPE subscription_interval AS ENUM ('month', 'year');
+CREATE TYPE subscription_interval AS ENUM ('day', 'week', 'month', 'year');
 
 -- Add the new column
 ALTER TABLE subscriptions ADD COLUMN interval_enum subscription_interval;
