@@ -51,12 +51,13 @@ model User {
   customerId     String?     @map("customer_id")
   subscriptionId String?     @unique @map("subscription_id")
 
-  comments     Comment[]
-  polls        Poll[]
-  watcher      Watcher[]
-  events       Event[]
-  accounts     Account[]
-  participants Participant[]
+  comments       Comment[]
+  polls          Poll[]
+  watcher        Watcher[]
+  events         Event[]
+  accounts       Account[]
+  participants   Participant[]
+  paymentMethods PaymentMethod[]
 
   subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
 
@@ -80,6 +81,19 @@ enum SubscriptionInterval {
   year
 
   @@map("subscription_interval")
+}
+
+model PaymentMethod {
+  id        String   @id
+  userId    String   @map("user_id")
+  type      String
+  data      Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payment_methods")
 }
 
 model UserPaymentData {

@@ -1,39 +1,48 @@
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 
 import { stripe } from "../lib/stripe";
 
-(async function syncCancelAtPeriodEnd() {
+(async function syncPaymentMethods() {
   let processed = 0;
   let failed = 0;
 
-  const userSubscriptions = await prisma.subscription.findMany({
+  const users = await prisma.user.findMany({
     select: {
       id: true,
+      customerId: true,
+      email: true,
+    },
+    where: {
+      customerId: {
+        not: null,
+      },
     },
   });
 
-  console.info(`🚀 Syncing ${userSubscriptions.length} subscriptions...`);
+  console.info(`🚀 Syncing ${users.length} users...`);
 
-  for (const userSubscription of userSubscriptions) {
+  for (const user of users) {
+    if (!user.customerId) continue;
     try {
-      const subscription = await stripe.subscriptions.retrieve(
-        userSubscription.id,
+      const paymentMethods = await stripe.customers.listPaymentMethods(
+        user.customerId,
       );
 
-      await prisma.subscription.update({
-        where: {
-          id: subscription.id,
-        },
-        data: {
-          cancelAtPeriodEnd: subscription.cancel_at_period_end,
-        },
+      await prisma.paymentMethod.createMany({
+        data: paymentMethods.data.map((paymentMethod) => ({
+          id: paymentMethod.id,
+          userId: user.id,
+          type: paymentMethod.type,
+          data: paymentMethod[paymentMethod.type] as Prisma.JsonObject,
+        })),
       });
 
-      console.info(`✅ Subscription ${subscription.id} synced`);
+      console.info(`✅ Payment methods synced for user ${user.email}`);
       processed++;
     } catch (error) {
       console.error(
-        `❌ Failed to sync subscription ${userSubscription.id}:`,
+        `❌ Failed to sync payment methods for user ${user.email}:`,
         error,
       );
       failed++;
