@@ -7,7 +7,6 @@ import { onCustomerSubscriptionDeleted } from "./customer-subscription/deleted";
 import { onCustomerSubscriptionUpdated } from "./customer-subscription/updated";
 import {
   onPaymentMethodAttached,
-  onPaymentMethodAutomaticallyUpdated,
   onPaymentMethodDetached,
   onPaymentMethodUpdated,
 } from "./payment-method";
@@ -29,7 +28,6 @@ export function getEventHandler(eventType: Stripe.Event["type"]) {
     case "payment_method.detached":
       return onPaymentMethodDetached;
     case "payment_method.automatically_updated":
-      return onPaymentMethodAutomaticallyUpdated;
     case "payment_method.updated":
       return onPaymentMethodUpdated;
     default:

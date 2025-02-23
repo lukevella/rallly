@@ -1,6 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
-import { type Prisma, prisma } from "@rallly/database";
+import type { Prisma } from "@rallly/database";
+import { prisma } from "@rallly/database";
 import { z } from "zod";
 
 export const subscriptionMetadataSchema = z.object({
@@ -45,22 +46,8 @@ export function getSubscriptionDetails(subscription: Stripe.Subscription) {
     interval,
     currency,
     amount,
-    price: subscriptionItem.price,
+    priceId: subscriptionItem.price.id,
   };
-}
-
-export async function findUserByCustomerId(customerId: string) {
-  const user = await prisma.user.findFirst({
-    where: {
-      customerId,
-    },
-  });
-
-  if (!user) {
-    throw new Error(`No user found for customer ${customerId}`);
-  }
-
-  return user;
 }
 
 export async function createOrUpdatePaymentMethod(

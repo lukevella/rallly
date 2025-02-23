@@ -14,14 +14,12 @@ export async function onCheckoutSessionExpired(event: Stripe.Event) {
   const userId = session.metadata?.userId;
 
   if (!userId) {
-    console.info("No user ID found in Checkout Session metadata");
     Sentry.captureMessage("No user ID found in Checkout Session metadata");
     return;
   }
 
   // Do nothing if the Checkout Session has no email or recovery URL
   if (!email || !recoveryUrl) {
-    console.info("No email or recovery URL found in Checkout Session");
     Sentry.captureMessage("No email or recovery URL found in Checkout Session");
     return;
   }
@@ -29,7 +27,6 @@ export async function onCheckoutSessionExpired(event: Stripe.Event) {
   const promoEmailKey = `promo_email_sent:${email}`;
   // Track that a promotional email opportunity has been shown to this user
   const hasReceivedPromo = await kv.get(promoEmailKey);
-  console.info("Has received promo", hasReceivedPromo);
 
   const user = await prisma.user.findUnique({
     where: {
@@ -52,18 +49,21 @@ export async function onCheckoutSessionExpired(event: Stripe.Event) {
     console.info("Sending abandoned checkout email");
     // Set the flag with a 30-day expiration (in seconds)
     await kv.set(promoEmailKey, 1, { ex: 30 * 24 * 60 * 60, nx: true });
-    getEmailClient(user.locale ?? undefined).sendTemplate("AbandonedCheckoutEmail", {
-      to: email,
-      from: {
-        name: "Luke from Rallly",
-        address: "luke@rallly.co",
+    getEmailClient(user.locale ?? undefined).sendTemplate(
+      "AbandonedCheckoutEmail",
+      {
+        to: email,
+        from: {
+          name: "Luke from Rallly",
+          address: "luke@rallly.co",
+        },
+        props: {
+          name: session.customer_details?.name ?? undefined,
+          discount: 20,
+          couponCode: "GETPRO1Y20",
+          recoveryUrl,
+        },
       },
-      props: {
-        name: session.customer_details?.name ?? undefined,
-        discount: 20,
-        couponCode: "GETPRO1Y20",
-        recoveryUrl,
-      },
-    });
+    );
   }
 }

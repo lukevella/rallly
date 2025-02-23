@@ -20,7 +20,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   );
 
   const isActive = isSubscriptionActive(subscription);
-  const { price, currency, interval, amount } =
+  const { priceId, currency, interval, amount } =
     getSubscriptionDetails(subscription);
 
   const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
@@ -36,7 +36,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     },
     data: {
       active: isActive,
-      priceId: price.id,
+      priceId,
       currency,
       interval,
       amount,
@@ -49,7 +49,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
 
   posthog?.capture({
     distinctId: res.data.userId,
-    event: "update_subscription",
+    event: "subscription change",
     properties: {
       type: event.type,
       $set: {

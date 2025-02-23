@@ -1,6 +1,5 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 
 import {
   getExpandedSubscription,
@@ -16,7 +15,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   );
 
   const isActive = isSubscriptionActive(subscription);
-  const { price, currency, interval, amount } =
+  const { priceId, currency, interval, amount } =
     getSubscriptionDetails(subscription);
 
   const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
@@ -30,7 +29,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     data: {
       id: subscription.id,
       active: isActive,
-      priceId: price.id,
+      priceId,
       currency,
       interval,
       amount,
@@ -48,17 +47,6 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     },
     data: {
       subscriptionId: subscription.id,
-    },
-  });
-
-  posthog?.capture({
-    distinctId: res.data.userId,
-    event: "create_subscription",
-    properties: {
-      type: event.type,
-      $set: {
-        tier: isActive ? "pro" : "hobby",
-      },
     },
   });
 }

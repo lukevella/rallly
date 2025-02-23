@@ -2,7 +2,6 @@ import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
-import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 
 const subscriptionMetadataSchema = z.object({
@@ -31,19 +30,15 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     },
   });
 
-  try {
-    const { userId } = subscriptionMetadataSchema.parse(subscription.metadata);
+  const { userId } = subscriptionMetadataSchema.parse(subscription.metadata);
 
-    posthog?.capture({
-      distinctId: userId,
-      event: "cancel_subscription",
-      properties: {
-        $set: {
-          tier: "hobby",
-        },
+  posthog?.capture({
+    distinctId: userId,
+    event: "cancel_subscription",
+    properties: {
+      $set: {
+        tier: "hobby",
       },
-    });
-  } catch (e) {
-    Sentry.captureException(e);
-  }
+    },
+  });
 }
