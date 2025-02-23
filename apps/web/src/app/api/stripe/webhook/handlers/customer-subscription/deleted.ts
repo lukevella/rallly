@@ -34,7 +34,7 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
 
   posthog?.capture({
     distinctId: userId,
-    event: "cancel_subscription",
+    event: "subscription cancel",
     properties: {
       $set: {
         tier: "hobby",
