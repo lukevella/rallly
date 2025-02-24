@@ -1,8 +1,12 @@
+-- Add new enum values in a transaction
+BEGIN;
 ALTER TYPE "subscription_status" ADD VALUE 'incomplete';
 ALTER TYPE "subscription_status" ADD VALUE 'incomplete_expired';
 ALTER TYPE "subscription_status" ADD VALUE 'canceled';
 ALTER TYPE "subscription_status" ADD VALUE 'unpaid';
+COMMIT;
 
+-- Now we can safely use the new enum values
 -- AlterTable
 ALTER TABLE "subscriptions" 
 ADD COLUMN "status_enum" "subscription_status";
