@@ -65,11 +65,15 @@ model User {
 }
 
 enum SubscriptionStatus {
+  incomplete
+  incomplete_expired
   active
   paused
-  deleted
   trialing
   past_due
+  canceled
+  unpaid
+  deleted // @deprecated - Only used in UserPaymentData which is also deprecated
 
   @@map("subscription_status")
 }
@@ -112,7 +116,7 @@ model Subscription {
   id                String               @id
   priceId           String               @map("price_id")
   amount            Int
-  status            String
+  status            SubscriptionStatus
   active            Boolean
   currency          String
   interval          SubscriptionInterval
