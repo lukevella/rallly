@@ -79,11 +79,6 @@ const dayjsLocales: Record<
     timeFormat: "hours24",
     import: () => import("dayjs/locale/hr"),
   },
-  ja: {
-    weekStart: 1,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/ja"),
-  },
   it: {
     weekStart: 1,
     timeFormat: "hours24",
@@ -123,11 +118,6 @@ const dayjsLocales: Record<
     weekStart: 1,
     timeFormat: "hours24",
     import: () => import("dayjs/locale/ru"),
-  },
-  ko: {
-    weekStart: 0,
-    timeFormat: "hours12",
-    import: () => import("dayjs/locale/ko"),
   },
   nl: {
     weekStart: 1,
