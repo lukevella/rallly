@@ -17,13 +17,13 @@ import * as React from "react";
 import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
 
+import { TimesShownIn } from "@/components/clock";
 import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { TimesShownIn } from "@/components/clock";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
