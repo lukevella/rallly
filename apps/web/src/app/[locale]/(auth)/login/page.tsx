@@ -20,13 +20,9 @@ import { LoginWithOIDC } from "./components/login-with-oidc";
 import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams?: {
-    redirectTo?: string;
-  };
-}) {
+export const dynamic = "force-static";
+
+export default async function LoginPage() {
   const { t } = await getTranslation();
 
   const oidcProvider = OIDCProvider();
@@ -51,12 +47,7 @@ export default async function LoginPage({
       <AuthPageContent>
         <LoginWithEmailForm />
         {hasAlternateLoginMethods ? <OrDivider /> : null}
-        {oidcProvider ? (
-          <LoginWithOIDC
-            name={oidcProvider.name}
-            redirectTo={searchParams?.redirectTo}
-          />
-        ) : null}
+        {oidcProvider ? <LoginWithOIDC name={oidcProvider.name} /> : null}
         {socialProviders ? (
           <div className="grid gap-4">
             {socialProviders.map((provider) =>
@@ -65,7 +56,6 @@ export default async function LoginPage({
                   key={provider.id}
                   providerId={provider.id}
                   name={provider.options?.name || provider.name}
-                  redirectTo={searchParams?.redirectTo}
                 />
               ) : null,
             )}

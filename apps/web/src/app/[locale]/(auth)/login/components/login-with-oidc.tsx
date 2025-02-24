@@ -1,21 +1,17 @@
 "use client";
 import { Button } from "@rallly/ui/button";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 import { Trans } from "@/components/trans";
 
-export async function LoginWithOIDC({
-  name,
-  redirectTo,
-}: {
-  name: string;
-  redirectTo?: string;
-}) {
+export async function LoginWithOIDC({ name }: { name: string }) {
+  const searchParams = useSearchParams();
   return (
     <Button
       onClick={() => {
         signIn("oidc", {
-          redirectTo,
+          redirectTo: searchParams?.get("redirectTo") ?? undefined,
         });
       }}
       variant="link"
