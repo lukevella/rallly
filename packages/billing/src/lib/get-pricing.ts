@@ -10,7 +10,7 @@ export async function getPricing() {
   return {
     monthly: {
       currency: monthly.currency,
-      price: monthly.unit_amount_decimal,
+      price: monthly.unit_amount,
     },
     yearly: {
       currency: yearly.currency,
