@@ -23,7 +23,7 @@ export function EmptyState({
 export function EmptyStateIcon({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-4 inline-flex rounded-full border p-4">
-      <Icon size="lg">{children}</Icon>
+      <Icon size="xl">{children}</Icon>
     </div>
   );
 }
@@ -41,5 +41,5 @@ export function EmptyStateDescription({
 }
 
 export function EmptyStateFooter({ children }: { children: React.ReactNode }) {
-  return <div className="mt-4">{children}</div>;
+  return <div className="mt-6">{children}</div>;
 }

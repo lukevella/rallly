@@ -7,7 +7,7 @@ import {
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
-} from "@/app/components/empty-state";
+} from "@/components/empty-state";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";

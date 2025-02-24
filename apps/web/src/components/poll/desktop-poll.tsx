@@ -22,7 +22,7 @@ import {
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
-} from "@/app/components/empty-state";
+} from "@/components/empty-state";
 import { TimesShownIn } from "@/components/clock";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
