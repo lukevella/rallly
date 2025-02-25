@@ -1,5 +1,6 @@
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
+import { redirect } from "next/navigation";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
 import z from "zod";
@@ -185,4 +186,12 @@ const auth = async () => {
   return getLegacySession();
 };
 
-export { auth, handlers, signIn, signOut };
+const requireUser = async () => {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+  return session?.user;
+};
+
+export { auth, handlers, requireUser, signIn, signOut };
