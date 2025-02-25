@@ -1,3 +1,4 @@
+"use client";
 import { Trans as BaseTrans, useTranslation } from "react-i18next";
 
 import type { TxKeyPath } from "../i18n/types";
