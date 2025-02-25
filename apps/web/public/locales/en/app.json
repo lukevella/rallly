@@ -302,5 +302,6 @@
   "addPaymentMethodDescription": "Please add a payment method to ensure uninterrupted service for your subscription.",
   "addPaymentMethod": "Add Payment Method",
   "needToMakeChanges": "Need to make changes?",
-  "billingPortalDescription": "Visit the billing portal to manage your subscription, update payment methods, or view billing history."
+  "billingPortalDescription": "Visit the billing portal to manage your subscription, update payment methods, or view billing history.",
+  "priceFree": "Free"
 }

@@ -136,7 +136,7 @@ export default async function Page() {
                     interval={subscription.interval}
                   />
                 ) : (
-                  "Free"
+                  <Trans i18nKey="priceFree" defaults="Free" />
                 )}
               </DescriptionDetails>
 
