@@ -1,4 +1,4 @@
-"use cient";
+"use client";
 
 import { Badge } from "@rallly/ui/badge";
 import { z } from "zod";
