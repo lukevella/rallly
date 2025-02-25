@@ -38,7 +38,7 @@ export function OTPForm({ email }: { email: string }) {
   const handleSubmit = form.handleSubmit(async (data) => {
     const url = `${
       window.location.origin
-    }/api/auth/callback/email?email=${encodeURIComponent(email)}&token=${data.otp}`;
+    }/api/auth/callback/email?email=${encodeURIComponent(email.toLowerCase())}&token=${data.otp}`;
 
     const res = await fetch(url);
     const resUrl = new URL(res.url);
