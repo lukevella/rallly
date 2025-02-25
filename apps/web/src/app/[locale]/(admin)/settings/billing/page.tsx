@@ -5,7 +5,6 @@ import { DialogTrigger } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import {
   ArrowUpRightIcon,
-  BadgeCheckIcon,
   CircleAlertIcon,
   CreditCardIcon,
   GemIcon,
