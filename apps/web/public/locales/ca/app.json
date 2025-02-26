@@ -223,5 +223,9 @@
   "back": "Torna",
   "verifyEmail": "Verifica el teu correu",
   "userNotFound": "No existeix cap usuari amb aquest correu",
-  "registerDescription": "Agilitza la programació d'esdeveniments i estalvia temps"
+  "registerDescription": "Agilitza la programació d'esdeveniments i estalvia temps",
+  "subscriptionStatusActive": "Actiu",
+  "subscriptionStatusPaused": "Pausat",
+  "billingSubscriptionPlan": "Pla",
+  "priceFree": "Gratuït"
 }
