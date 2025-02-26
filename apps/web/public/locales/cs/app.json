@@ -236,5 +236,9 @@
   "userNotFound": "Uživatel s tímto e-mailem neexistuje",
   "registerDescription": "Zjednodušte proces plánování a šetřete čas",
   "tooManyRequests": "Příliš mnoho požadavků",
-  "tooManyRequestsDescription": "Zkuste to prosím později."
+  "tooManyRequestsDescription": "Zkuste to prosím později.",
+  "subscriptionStatusActive": "Aktivní",
+  "subscriptionStatusPaused": "Pozastaveno",
+  "billingSubscriptionPlan": "Plán",
+  "priceFree": "Zdarma"
 }
