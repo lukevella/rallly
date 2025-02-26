@@ -252,5 +252,9 @@
   "back": "Назад",
   "verifyEmail": "Подтвердите ваш адрес электронной почты",
   "userNotFound": "Нет пользователя с таким адресом электронной почты",
-  "registerDescription": "Упростите планирование и сэкономьте время"
+  "registerDescription": "Упростите планирование и сэкономьте время",
+  "subscriptionStatusActive": "Активна",
+  "subscriptionStatusPaused": "Приостановлена",
+  "billingSubscriptionPlan": "Подписка",
+  "priceFree": "Бесплатный"
 }
