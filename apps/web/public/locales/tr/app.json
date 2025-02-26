@@ -240,5 +240,9 @@
   "back": "Geri",
   "verifyEmail": "E-postanızı doğrulayın",
   "userNotFound": "Bu e-posta adresi ile kayıtlı bir kullanıcı yok",
-  "registerDescription": "Planlama sürecinizi kolaylaştırın ve zamandan tasarruf edin"
+  "registerDescription": "Planlama sürecinizi kolaylaştırın ve zamandan tasarruf edin",
+  "subscriptionStatusActive": "Aktif",
+  "subscriptionStatusPaused": "Duraklatıldı",
+  "billingSubscriptionPlan": "Plan",
+  "priceFree": "Ücretsiz"
 }
