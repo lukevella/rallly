@@ -23,46 +23,36 @@ export const SubscriptionStatus = ({
     string,
     {
       label: string;
-      variant: "primary" | "default" | "destructive" | "outline" | "green";
     }
   > = {
     active: {
       label: t("subscriptionStatusActive", { defaultValue: "Active" }),
-      variant: "green",
     },
     paused: {
       label: t("subscriptionStatusPaused", { defaultValue: "Paused" }),
-      variant: "default",
     },
     trialing: {
       label: t("subscriptionStatusTrialing", { defaultValue: "Trialing" }),
-      variant: "primary",
     },
     past_due: {
       label: t("subscriptionStatusPastDue", { defaultValue: "Past due" }),
-      variant: "destructive",
     },
     canceled: {
       label: t("subscriptionStatusCanceled", { defaultValue: "Canceled" }),
-      variant: "default",
     },
     unpaid: {
       label: t("subscriptionStatusUnpaid", { defaultValue: "Unpaid" }),
-      variant: "destructive",
     },
     incomplete: {
       label: t("subscriptionStatusIncomplete", { defaultValue: "Incomplete" }),
-      variant: "outline",
     },
     incomplete_expired: {
       label: t("subscriptionStatusIncompleteExpired", {
         defaultValue: "Incomplete expired",
       }),
-      variant: "outline",
     },
     unknown: {
       label: t("subscriptionStatusUnknown", { defaultValue: "Unknown" }),
-      variant: "default",
     },
   };
 

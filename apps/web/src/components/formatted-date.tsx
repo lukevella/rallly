@@ -3,7 +3,7 @@
 import dayjs from "dayjs";
 
 const formatMap = {
-  short: "L",
+  short: "D MMM YYYY",
 };
 
 type Format = keyof typeof formatMap;
