@@ -240,5 +240,10 @@
   "back": "Powrót",
   "verifyEmail": "Zweryfikuj swój e-mail",
   "userNotFound": "Użytkownik o tym adresie e-mail nie istnieje",
-  "registerDescription": "Zoptymalizuj proces planowania i oszczędzaj czas"
+  "registerDescription": "Zoptymalizuj proces planowania i oszczędzaj czas",
+  "billingSubscriptionUpgradeToPro": "Ulepsz do Pro",
+  "subscriptionStatusActive": "Aktywny",
+  "subscriptionStatusPaused": "Wstrzymany",
+  "billingSubscriptionPlan": "Plan",
+  "priceFree": "Darmowy"
 }
