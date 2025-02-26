@@ -274,5 +274,10 @@
   "loginVerifyDescription": "Katso vahvistuskoodi sähköpostistasi",
   "createAccount": "Luo tili",
   "tooManyRequests": "Liian monta pyyntöä",
-  "tooManyRequestsDescription": "Yritä myöhemmin uudelleen."
+  "tooManyRequestsDescription": "Yritä myöhemmin uudelleen.",
+  "billingSubscriptionUpgradeToPro": "Vaihda Pro-sopimukseen",
+  "subscriptionStatusActive": "Aktiivinen",
+  "subscriptionStatusPaused": "Keskeytetty",
+  "billingSubscriptionPlan": "Sopimus",
+  "priceFree": "Ilmainen"
 }
