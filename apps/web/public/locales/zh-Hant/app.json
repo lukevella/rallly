@@ -234,5 +234,9 @@
   "subscribe": "訂閱",
   "verifyEmail": "驗證您的電子郵件地址",
   "userNotFound": "使用該電子郵件地址的用戶不存在",
-  "registerDescription": "簡化您的日程安排流程並節省時間"
+  "registerDescription": "簡化您的日程安排流程並節省時間",
+  "subscriptionStatusActive": "啟用中",
+  "subscriptionStatusPaused": "已暫停",
+  "billingSubscriptionPlan": "方案",
+  "priceFree": "免費"
 }
