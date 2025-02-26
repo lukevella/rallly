@@ -223,5 +223,9 @@
   "back": "Späť",
   "verifyEmail": "Overte svoj e-mail",
   "userNotFound": "Používateľ s týmto e-mailom neexistuje",
-  "registerDescription": "Zefektívnite svoje plánovanie a ušetrite čas"
+  "registerDescription": "Zefektívnite svoje plánovanie a ušetrite čas",
+  "subscriptionStatusActive": "Aktívna",
+  "subscriptionStatusPaused": "Pozastavená",
+  "billingSubscriptionPlan": "Plán",
+  "priceFree": "Voľný"
 }
