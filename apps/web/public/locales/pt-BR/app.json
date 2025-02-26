@@ -272,5 +272,10 @@
   "registerVerifyDescription": "Verifique seu email para obter o código de verificação",
   "loginVerifyTitle": "Finalizar o login",
   "loginVerifyDescription": "Verifique seu email para obter o código de verificação",
-  "createAccount": "Criar Conta"
+  "createAccount": "Criar Conta",
+  "billingSubscriptionUpgradeToPro": "Atualize para o plano Pro",
+  "subscriptionStatusActive": "Ativa",
+  "subscriptionStatusPaused": "Pausada",
+  "billingSubscriptionPlan": "Plano",
+  "priceFree": "Grátis"
 }
