@@ -268,5 +268,10 @@
   "registerVerifyDescription": "Revise su correo electrónico para obtener el código de verificación",
   "loginVerifyTitle": "Finalizar sesión",
   "loginVerifyDescription": "Revise su correo electrónico para obtener el código de verificación",
-  "createAccount": "Crear una cuenta"
+  "createAccount": "Crear una cuenta",
+  "billingSubscriptionUpgradeToPro": "Actualizar a Pro",
+  "subscriptionStatusActive": "Activo",
+  "subscriptionStatusPaused": "Pausado",
+  "billingSubscriptionPlan": "Plan",
+  "priceFree": "Gratuito"
 }
