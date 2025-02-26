@@ -2,6 +2,7 @@ import type { Stripe } from "@rallly/billing";
 
 import { onCheckoutSessionCompleted } from "./checkout/completed";
 import { onCheckoutSessionExpired } from "./checkout/expired";
+import { onCustomerCreated, onCustomerDeleted } from "./customer";
 import { onCustomerSubscriptionCreated } from "./customer-subscription/created";
 import { onCustomerSubscriptionDeleted } from "./customer-subscription/deleted";
 import { onCustomerSubscriptionUpdated } from "./customer-subscription/updated";
@@ -17,6 +18,10 @@ export function getEventHandler(eventType: Stripe.Event["type"]) {
       return onCheckoutSessionCompleted;
     case "checkout.session.expired":
       return onCheckoutSessionExpired;
+    case "customer.created":
+      return onCustomerCreated;
+    case "customer.deleted":
+      return onCustomerDeleted;
     case "customer.subscription.created":
       return onCustomerSubscriptionCreated;
     case "customer.subscription.deleted":
