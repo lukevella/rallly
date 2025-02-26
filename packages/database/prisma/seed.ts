@@ -142,27 +142,8 @@ async function main() {
     },
   });
 
-  const proUserLegacy = await prisma.user.create({
-    data: {
-      name: "Pro User Legacy",
-      email: "dev+prolegacy@rallly.co",
-    },
-  });
-
-  await prisma.userPaymentData.create({
-    data: {
-      userId: proUserLegacy.id,
-      status: "active",
-      endDate: dayjs().add(1, "year").toDate(),
-      planId: "pro_123",
-      updateUrl: "https://example.com/update",
-      cancelUrl: "https://example.com/cancel",
-      subscriptionId: "sub_123",
-    },
-  });
-
   await Promise.all(
-    [freeUser, proUser, proUserLegacy].map(async (user) => {
+    [freeUser, proUser].map(async (user) => {
       Array.from({ length: 20 }).forEach(async () => {
         await createPollForUser(user.id);
       });

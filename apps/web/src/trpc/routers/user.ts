@@ -24,21 +24,6 @@ const mimeToExtension = {
 } as const;
 
 export const user = router({
-  getBilling: privateProcedure.query(async ({ ctx }) => {
-    return await prisma.userPaymentData.findUnique({
-      select: {
-        subscriptionId: true,
-        status: true,
-        planId: true,
-        endDate: true,
-        updateUrl: true,
-        cancelUrl: true,
-      },
-      where: {
-        userId: ctx.user.id,
-      },
-    });
-  }),
   getByEmail: publicProcedure
     .input(z.object({ email: z.string() }))
     .query(async ({ input }) => {

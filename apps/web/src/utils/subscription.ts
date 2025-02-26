@@ -18,26 +18,6 @@ export const getSubscriptionStatus = async (userId: string) => {
   if (user?.subscription?.active === true) {
     return {
       active: true,
-      legacy: false,
-    } as const;
-  }
-
-  const userPaymentData = await prisma.userPaymentData.findFirst({
-    where: {
-      userId,
-      endDate: {
-        gt: new Date(),
-      },
-    },
-    select: {
-      endDate: true,
-    },
-  });
-
-  if (userPaymentData) {
-    return {
-      active: true,
-      legacy: true,
     } as const;
   }
 
