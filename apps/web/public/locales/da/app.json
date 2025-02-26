@@ -272,5 +272,10 @@
   "registerVerifyDescription": "Tjek din email for en bekræftelseskode",
   "loginVerifyTitle": "Afslut login",
   "loginVerifyDescription": "Tjek din email for en bekræftelseskode",
-  "createAccount": "Opret konto"
+  "createAccount": "Opret konto",
+  "billingSubscriptionUpgradeToPro": "Opgrader til Pro",
+  "subscriptionStatusActive": "Aktiv",
+  "subscriptionStatusPaused": "På pause",
+  "billingSubscriptionPlan": "Abonnementstype",
+  "priceFree": "Gratis"
 }
