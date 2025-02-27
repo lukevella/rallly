@@ -73,7 +73,6 @@ enum SubscriptionStatus {
   past_due
   canceled
   unpaid
-  deleted // @deprecated - Only used in UserPaymentData which is also deprecated
 
   @@map("subscription_status")
 }
@@ -98,18 +97,6 @@ model PaymentMethod {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("payment_methods")
-}
-
-model UserPaymentData {
-  userId         String             @id @map("user_id")
-  subscriptionId String             @map("subscription_id")
-  planId         String             @map("plan_id")
-  endDate        DateTime           @map("end_date")
-  status         SubscriptionStatus
-  updateUrl      String             @map("update_url")
-  cancelUrl      String             @map("cancel_url")
-
-  @@map("user_payment_data")
 }
 
 model Subscription {
