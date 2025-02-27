@@ -49,7 +49,6 @@ model User {
   createdAt      DateTime    @default(now()) @map("created_at")
   updatedAt      DateTime?   @updatedAt @map("updated_at")
   customerId     String?     @map("customer_id")
-  subscriptionId String?     @unique @map("subscription_id")
 
   comments       Comment[]
   polls          Poll[]
@@ -58,8 +57,7 @@ model User {
   accounts       Account[]
   participants   Participant[]
   paymentMethods PaymentMethod[]
-
-  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscription   Subscription? @relation("UserToSubscription")
 
   @@map("users")
 }
@@ -111,8 +109,9 @@ model Subscription {
   periodStart       DateTime             @map("period_start")
   periodEnd         DateTime             @map("period_end")
   cancelAtPeriodEnd Boolean              @default(false) @map("cancel_at_period_end")
+  userId            String               @unique @map("user_id")
 
-  user User?
+  user User @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("subscriptions")
 }
