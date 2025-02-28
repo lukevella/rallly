@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 
@@ -10,7 +10,7 @@ export const DateIconInner = (props: {
 }) => {
   return (
     <div
-      className={clsx(
+      className={cn(
         "inline-flex size-10 flex-col overflow-hidden rounded-md border bg-gray-50 text-center text-slate-800",
         props.className,
       )}

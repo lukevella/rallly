@@ -1,6 +1,6 @@
 import type { VoteType } from "@rallly/database";
 import { IfNeedBeIcon, NoIcon, PendingIcon, YesIcon } from "@rallly/icons";
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import * as React from "react";
 
 const VoteIcon: React.FunctionComponent<{
@@ -12,7 +12,7 @@ const VoteIcon: React.FunctionComponent<{
     case "yes":
       return (
         <YesIcon
-          className={clsx("text-green-500", className, {
+          className={cn("text-green-500", className, {
             "size-5": size === "md",
             "h-3": size === "sm",
           })}
@@ -22,7 +22,7 @@ const VoteIcon: React.FunctionComponent<{
     case "ifNeedBe":
       return (
         <IfNeedBeIcon
-          className={clsx("text-amber-400", className, {
+          className={cn("text-amber-400", className, {
             "size-5": size === "md",
             "h-3": size === "sm",
           })}
@@ -32,7 +32,7 @@ const VoteIcon: React.FunctionComponent<{
     case "no":
       return (
         <NoIcon
-          className={clsx("text-gray-400", className, {
+          className={cn("text-gray-400", className, {
             "size-5": size === "md",
             "h-3": size === "sm",
           })}
@@ -42,7 +42,7 @@ const VoteIcon: React.FunctionComponent<{
     default:
       return (
         <PendingIcon
-          className={clsx("text-gray-300", className, {
+          className={cn("text-gray-300", className, {
             "size-5": size === "md",
             "h-3": size === "sm",
           })}

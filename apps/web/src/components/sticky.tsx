@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@rallly/ui";
 import React from "react";
 
 export const useDetectSticky = <E extends HTMLElement>(
@@ -35,7 +35,7 @@ export const Sticky: React.FunctionComponent<{
   return (
     <div
       ref={ref}
-      className={clsx(
+      className={cn(
         "sticky",
         typeof className === "function" ? className(isPinned) : className,
       )}
