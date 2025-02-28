@@ -2,9 +2,7 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "edge";
 
 const regularFont = fetch(
   new URL("/public/static/fonts/inter-regular.ttf", import.meta.url),
@@ -14,13 +12,13 @@ const boldFont = fetch(
   new URL("/public/static/fonts/inter-bold.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
-export default async function handler(req: NextRequest) {
+export async function GET(req: NextRequest) {
   const [regularFontData, boldFontData] = await Promise.all([
     regularFont,
     boldFont,
   ]);
 
-  const { searchParams } = req.nextUrl;
+  const { searchParams } = new URL(req.url);
   const title = searchParams.get("title");
   const excerpt = searchParams.get("excerpt");
 
