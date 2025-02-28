@@ -272,5 +272,10 @@
   "registerVerifyDescription": "Der Bestätigungscode wurde dir per E-Mail gesendet",
   "loginVerifyTitle": "Anmeldung abschließen",
   "loginVerifyDescription": "Der Bestätigungscode wurde dir per E-Mail gesendet",
-  "createAccount": "Konto erstellen"
+  "createAccount": "Konto erstellen",
+  "billingSubscriptionUpgradeToPro": "Auf Pro upgraden",
+  "subscriptionStatusActive": "Aktiv",
+  "subscriptionStatusPaused": "Pausiert",
+  "billingSubscriptionPlan": "Plan",
+  "priceFree": "Kostenlos"
 }

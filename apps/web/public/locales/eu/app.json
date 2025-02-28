@@ -272,5 +272,10 @@
   "registerVerifyDescription": "Begiratu zure posta elektronikoan egiaztatzeko kodea",
   "loginVerifyTitle": "Amaitu saioa hastea",
   "loginVerifyDescription": "Begiratu zure posta elektronikoan egiaztatzeko kodea",
-  "createAccount": "Sortu kontua"
+  "createAccount": "Sortu kontua",
+  "billingSubscriptionUpgradeToPro": "Aldatu Pro bertsiora",
+  "subscriptionStatusActive": "Aktibo",
+  "subscriptionStatusPaused": "Pausatuta",
+  "billingSubscriptionPlan": "Plana",
+  "priceFree": "Dohakoa"
 }

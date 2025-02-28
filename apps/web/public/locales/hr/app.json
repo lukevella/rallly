@@ -223,5 +223,9 @@
   "back": "Natrag",
   "verifyEmail": "Potvrdite svoju adresu e-pošte",
   "userNotFound": "Ne postoji korisnik s tom adresom e-pošte",
-  "registerDescription": "Poboljšajte postupak zakazivanja termina i uštedite na vremenu"
+  "registerDescription": "Poboljšajte postupak zakazivanja termina i uštedite na vremenu",
+  "subscriptionStatusActive": "Aktivno",
+  "subscriptionStatusPaused": "Pauzirano",
+  "billingSubscriptionPlan": "Pretplata",
+  "priceFree": "Besplatno"
 }

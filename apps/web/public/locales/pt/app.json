@@ -237,6 +237,7 @@
   "1month": "1 mês",
   "subscribe": "Subscreva",
   "cancelAnytime": "Cancele em qualquer altura a partir da sua <a>página de faturação</a>.",
+  "emailChangeRequestSent": "Verifique o seu novo endereço de e-mail",
   "back": "Voltar",
   "verifyEmail": "Verifique o seu e-mail",
   "userNotFound": "Não existe um utilizador com este endereço de e-mail",
@@ -247,6 +248,7 @@
   "quickCreateGroupPoll": "Criar Sondagem de Grupo",
   "quickCreate": "Criação rápida",
   "quickCreateRecentlyCreated": "Criado Recentemente",
+  "registerVerifyDescription": "Verifique o código de verificação no seu e-mail",
   "loginVerifyDescription": "Verifique o código de verificação no seu e-mail",
   "createAccount": "Criar conta"
 }

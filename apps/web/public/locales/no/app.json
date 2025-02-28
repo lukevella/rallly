@@ -250,6 +250,7 @@
   "profileEmailAddressDescription": "E-postadressen brukes til å logge inn på kontoen din",
   "emailAlreadyInUse": "Denne e-postadressen er allerede tilknyttet en annen konto. Vennligst bruk en annen adresse.",
   "continueWith": "Fortsett med {provider}",
+  "continueWithProvider": "Fortsett med {provider}",
   "loginFooter": "Har du ingen konto? <a>Registrer deg</a>",
   "back": "Tilbake",
   "verifyEmail": "Bekreft e-postadressen din",
@@ -271,5 +272,9 @@
   "registerVerifyDescription": "Se etter verifiseringskoden i e-posten din",
   "loginVerifyTitle": "Fullfør innlogging",
   "loginVerifyDescription": "Se etter verifiseringskoden i e-posten din",
-  "createAccount": "Opprett konto"
+  "createAccount": "Opprett konto",
+  "subscriptionStatusActive": "Aktiv",
+  "subscriptionStatusPaused": "Midlertidig stanset",
+  "billingSubscriptionPlan": "Abonnement",
+  "priceFree": "Gratis"
 }

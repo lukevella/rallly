@@ -272,5 +272,9 @@
   "registerVerifyDescription": "Controlla la tua email per il codice verifica",
   "loginVerifyTitle": "Termina L'Accesso",
   "loginVerifyDescription": "Controlla la tua email per il codice verifica",
-  "createAccount": "Crea Utenza"
+  "createAccount": "Crea Utenza",
+  "subscriptionStatusActive": "Attivo",
+  "subscriptionStatusPaused": "In pausa",
+  "billingSubscriptionPlan": "Piano",
+  "priceFree": "Gratis"
 }

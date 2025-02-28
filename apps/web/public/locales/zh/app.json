@@ -240,5 +240,10 @@
   "back": "返回",
   "verifyEmail": "驗證您的電子郵件地址",
   "userNotFound": "使用該電子郵件地址的用戶不存在",
-  "registerDescription": "简化您日程安排的流程并节约时间"
+  "registerDescription": "简化您日程安排的流程并节约时间",
+  "billingSubscriptionUpgradeToPro": "升级至专业版",
+  "subscriptionStatusActive": "啟用中",
+  "subscriptionStatusPaused": "暫停中",
+  "billingSubscriptionPlan": "方案",
+  "priceFree": "免費版"
 }

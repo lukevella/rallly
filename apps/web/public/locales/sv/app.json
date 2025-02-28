@@ -272,5 +272,10 @@
   "registerVerifyDescription": "Kolla i din mejl efter din verifieringskod",
   "loginVerifyTitle": "Slutför inloggningen",
   "loginVerifyDescription": "Kolla i din mejl efter din verifieringskod",
-  "createAccount": "Skapa konto"
+  "createAccount": "Skapa konto",
+  "billingSubscriptionUpgradeToPro": "Uppgradera till Pro",
+  "subscriptionStatusActive": "Aktiv",
+  "subscriptionStatusPaused": "Pausad",
+  "billingSubscriptionPlan": "Plan",
+  "priceFree": "Gratis"
 }
