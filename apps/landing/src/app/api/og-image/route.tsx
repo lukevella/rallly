@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
+import * as React from "react";
 
 export const runtime = "edge";
 
