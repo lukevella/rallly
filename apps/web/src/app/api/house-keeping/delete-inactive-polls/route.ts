@@ -6,39 +6,42 @@ import { checkApiAuthorization } from "@/utils/api-auth";
 /**
  * Marks inactive polls as deleted. Polls are inactive if they have not been
  * touched in the last 30 days and all dates are in the past.
+ * Only marks polls as deleted if they belong to users without an active subscription
+ * or if they don't have a user associated with them.
  */
 export async function POST() {
   const unauthorized = checkApiAuthorization();
   if (unauthorized) return unauthorized;
 
-  const markedDeleted = await prisma.$executeRaw`
-    UPDATE polls p
-    SET
-      deleted = true,
-      deleted_at = NOW()
-    WHERE touched_at < NOW() - INTERVAL '30 days'
-    AND deleted = false
-    AND id NOT IN (
-      SELECT poll_id 
-      FROM options 
-      WHERE poll_id = p.id
-      AND start_time > NOW()
-    )
-    AND user_id NOT IN (
-      SELECT id
-      FROM users
-      WHERE id IN (
-        SELECT user_id 
-          FROM user_payment_data 
-          WHERE end_date > NOW()
-      )
-      OR subscription_id IN (
-        SELECT subscription_id 
-          FROM subscriptions
-          WHERE active = true
-      )
-    );
-  `;
+  // Mark inactive polls as deleted in a single query
+  const { count: markedDeleted } = await prisma.poll.updateMany({
+    where: {
+      touchedAt: {
+        lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+      },
+      deleted: false,
+      options: {
+        none: {
+          startTime: {
+            gt: new Date(),
+          },
+        },
+      },
+      // Include polls without a user or with users that don't have an active subscription
+      OR: [
+        { userId: null },
+        {
+          user: {
+            OR: [{ subscription: null }, { subscription: { active: false } }],
+          },
+        },
+      ],
+    },
+    data: {
+      deleted: true,
+      deletedAt: new Date(),
+    },
+  });
 
   return NextResponse.json({
     success: true,
