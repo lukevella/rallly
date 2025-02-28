@@ -13,7 +13,7 @@ test.describe("House-keeping API", () => {
   const createdUserIds: string[] = [];
 
   // API Secret for authentication
-  const API_SECRET = process.env.API_SECRET || "test-secret";
+  const API_SECRET = process.env.API_SECRET;
 
   test.beforeAll(async () => {
     // Clean up any existing test data
@@ -65,13 +65,13 @@ test.describe("House-keeping API", () => {
     });
     createdUserIds.push(regularUser.id);
 
-    const premiumUser = await prisma.user.create({
+    const proUser = await prisma.user.create({
       data: {
-        name: "Premium User",
-        email: "premium-user@example.com",
+        name: "Pro User",
+        email: "pro-user@example.com",
         subscription: {
           create: {
-            id: "sub_test_premium",
+            id: "sub_test_pro",
             priceId: "price_test",
             amount: 1000,
             status: "active",
@@ -84,7 +84,7 @@ test.describe("House-keeping API", () => {
         },
       },
     });
-    createdUserIds.push(premiumUser.id);
+    createdUserIds.push(proUser.id);
 
     // Create test polls
 
@@ -101,18 +101,18 @@ test.describe("House-keeping API", () => {
     });
     createdPollIds.push(oldPollRegularUser.id);
 
-    // 2. Old poll from premium user (should NOT be marked as deleted)
-    const oldPollPremiumUser = await prisma.poll.create({
+    // 2. Old poll from pro user (should NOT be marked as deleted)
+    const oldPollProUser = await prisma.poll.create({
       data: {
-        id: "old-poll-premium-user",
-        title: "Old Poll Premium User",
-        participantUrlId: "old-poll-premium-user-participant",
-        adminUrlId: "old-poll-premium-user-admin",
-        userId: premiumUser.id,
+        id: "old-poll-pro-user",
+        title: "Old Poll Pro User",
+        participantUrlId: "old-poll-pro-user-participant",
+        adminUrlId: "old-poll-pro-user-admin",
+        userId: proUser.id,
         touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
       },
     });
-    createdPollIds.push(oldPollPremiumUser.id);
+    createdPollIds.push(oldPollProUser.id);
 
     // 3. Recent poll from regular user (should NOT be marked as deleted)
     const recentPollRegularUser = await prisma.poll.create({
@@ -184,11 +184,11 @@ test.describe("House-keeping API", () => {
     expect(updatedOldPollRegularUser?.deleted).toBe(true);
     expect(updatedOldPollRegularUser?.deletedAt).not.toBeNull();
 
-    const updatedOldPollPremiumUser = await prisma.poll.findUnique({
-      where: { id: oldPollPremiumUser.id },
+    const updatedOldPollProUser = await prisma.poll.findUnique({
+      where: { id: oldPollProUser.id },
     });
-    expect(updatedOldPollPremiumUser?.deleted).toBe(false);
-    expect(updatedOldPollPremiumUser?.deletedAt).toBeNull();
+    expect(updatedOldPollProUser?.deleted).toBe(false);
+    expect(updatedOldPollProUser?.deletedAt).toBeNull();
 
     const updatedRecentPollRegularUser = await prisma.poll.findUnique({
       where: { id: recentPollRegularUser.id },
