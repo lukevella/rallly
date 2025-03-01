@@ -207,7 +207,7 @@
   "upcomingEventsEmptyStateDescription": "Etkinlikleri planladığınızda burada görünecekler.",
   "pastEventsEmptyStateTitle": "Geçmiş Etkinlik Yok",
   "pastEventsEmptyStateDescription": "Etkinlikleri planladığınızda burada görünecekler.",
-  "activePollCount": "{{activePollCount}} Canlı",
+  "activePollCount": "{activePollCount} Canlı",
   "createPoll": "Anket oluştur",
   "addToCalendar": "Takvime Ekle",
   "microsoft365": "Microsoft 365",

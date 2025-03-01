@@ -207,7 +207,7 @@
   "upcomingEventsEmptyStateDescription": "Når du planlegger arrangementer, vil de vises her.",
   "pastEventsEmptyStateTitle": "Ingen tidligere arrangementer",
   "pastEventsEmptyStateDescription": "Når du planlegger arrangementer, vil de vises her.",
-  "activePollCount": "{{activePollCount}} Live",
+  "activePollCount": "{activePollCount} Live",
   "createPoll": "Opprett avstemning",
   "addToCalendar": "Legg til i kalender",
   "microsoft365": "Microsoft 365",

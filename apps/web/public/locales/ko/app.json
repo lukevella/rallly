@@ -234,7 +234,7 @@
   "upcomingEventsEmptyStateDescription": "이벤트를 일정에 추가하면 여기 나타납니다.",
   "pastEventsEmptyStateTitle": "과거 이벤트가 없습니다.",
   "pastEventsEmptyStateDescription": "이벤트를 일정에 추가하면 여기 나타납니다.",
-  "activePollCount": "{{activePollCount}} 진행 중",
+  "activePollCount": "{activePollCount} 진행 중",
   "createPoll": "투표 만들기",
   "yearlyBillingDescription": "연간",
   "addToCalendar": "캘린더에 추가",

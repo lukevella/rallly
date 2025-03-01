@@ -234,7 +234,7 @@
   "upcomingEventsEmptyStateDescription": "イベントを計画すると、ここに表示されます。",
   "pastEventsEmptyStateTitle": "過去のイベントはありません",
   "pastEventsEmptyStateDescription": "イベントを計画すると、ここに表示されます。",
-  "activePollCount": "{{activePollCount}} 編集中",
+  "activePollCount": "{activePollCount} 編集中",
   "createPoll": "アンケートを作成",
   "yearlyBillingDescription": "/年",
   "addToCalendar": "カレンダーに追加",
