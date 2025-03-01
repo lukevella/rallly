@@ -18,7 +18,8 @@ const magicLinkParams = z.object({
   token: z.string(),
 });
 
-export default function Page({ searchParams }: { searchParams: SearchParams }) {
+export default async function Page(props: { searchParams: Promise<SearchParams> }) {
+  const searchParams = await props.searchParams;
   const parse = searchParamsSchema.safeParse(searchParams);
 
   if (!parse.success) {
@@ -42,11 +43,12 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
   return <LoginPage magicLink={magicLink} email={email} />;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
     title: t("login"),

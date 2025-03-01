@@ -24,12 +24,13 @@ const PermissionContext = async ({
   );
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  params: { urlId: string };
-  searchParams: { token: string };
-}) {
+export default async function Page(
+  props: {
+    params: Promise<{ urlId: string }>;
+    searchParams: Promise<{ token: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   return (
     <PermissionContext token={searchParams.token}>
       <InvitePage />
@@ -37,14 +38,21 @@ export default async function Page({
   );
 }
 
-export async function generateMetadata({
-  params: { urlId, locale },
-}: {
-  params: {
-    urlId: string;
-    locale: string;
-  };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{
+      urlId: string;
+      locale: string;
+    }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    urlId,
+    locale
+  } = params;
+
   const poll = await prisma.poll.findUnique({
     where: {
       id: urlId as string,

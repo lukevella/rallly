@@ -15,7 +15,7 @@ const oldCookieName = prefix + "next-auth.session-token";
 const newCookieName = prefix + "authjs.session-token";
 
 export async function getLegacySession(): Promise<Session | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const legacySessionCookie = cookieStore.get(oldCookieName);
   if (legacySessionCookie && legacySessionCookie.value) {
     const decodedCookie = await decodeLegacyJWT(legacySessionCookie.value);
@@ -35,7 +35,7 @@ export async function getLegacySession(): Promise<Session | null> {
 }
 
 async function getLegacyJWT() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const legacySessionCookie = cookieStore.get(oldCookieName);
   if (legacySessionCookie) {
     const decodedCookie = await decodeLegacyJWT(legacySessionCookie.value);
@@ -46,8 +46,8 @@ async function getLegacyJWT() {
   return null;
 }
 
-function deleteLegacyCookie(res: NextResponse) {
-  const cookieStore = cookies();
+async function deleteLegacyCookie(res: NextResponse) {
+  const cookieStore = await cookies();
   const oldCookie = cookieStore.get(oldCookieName);
   if (oldCookie) {
     // Delete the old cookie
@@ -86,6 +86,6 @@ export async function migrateLegacyJWT(res: NextResponse) {
 
   if (legacyJWT) {
     await setNewSessionCookie(res, legacyJWT);
-    deleteLegacyCookie(res);
+    await deleteLegacyCookie(res);
   }
 }

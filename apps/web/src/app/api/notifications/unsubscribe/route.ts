@@ -44,7 +44,7 @@ export const GET = async (req: NextRequest) => {
     });
 
     // Set a session cookie to indicate that the user has unsubscribed
-    cookies().set(`notifications-unsubscribed-${watcher.pollId}`, "1", {
+    (await cookies()).set(`notifications-unsubscribed-${watcher.pollId}`, "1", {
       path: "/",
       httpOnly: false,
       secure: false,

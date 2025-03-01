@@ -20,13 +20,14 @@ import { LoginWithOIDC } from "./components/login-with-oidc";
 import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams?: {
-    redirectTo?: string;
-  };
-}) {
+export default async function LoginPage(
+  props: {
+    searchParams?: Promise<{
+      redirectTo?: string;
+    }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const { t } = await getTranslation();
 
   const oidcProvider = OIDCProvider();
@@ -87,11 +88,12 @@ export default async function LoginPage({
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
     title: t("login"),

@@ -10,12 +10,17 @@ import { getTranslation } from "@/i18n/server";
 
 import { SettingsMenu } from "./settings-menu";
 
-export default async function ProfileLayout({
-  children,
-  params,
-}: React.PropsWithChildren<{
-  params: { locale: string };
-}>) {
+export default async function ProfileLayout(
+  props: React.PropsWithChildren<{
+    params: { locale: string };
+  }>
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>

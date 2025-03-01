@@ -25,14 +25,6 @@ const nextConfig = {
     "@rallly/posthog",
     "@rallly/emails",
   ],
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
-
-    return config;
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -58,9 +50,19 @@ const nextConfig = {
       },
     ];
   },
+  serverExternalPackages: ["@aws-sdk", "@sentry/nextjs"],
   experimental: {
-    // necessary for server actions using aws-sdk
-    serverComponentsExternalPackages: ["@aws-sdk"],
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
+  },
+  devIndicators: {
+    position: "bottom-right",
   },
 };
 

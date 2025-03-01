@@ -14,7 +14,8 @@ import {
 import { getTranslation } from "@/i18n/server";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page(props: { params: Promise<Params> }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   const helpers = await createSSRHelper();
   await helpers.dashboard.info.prefetch();
@@ -41,11 +42,12 @@ export default async function Page({ params }: { params: Params }) {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
     title: t("home", {
