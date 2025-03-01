@@ -34,7 +34,7 @@
     "@rallly/posthog": "*",
     "@rallly/tailwind-config": "*",
     "@rallly/ui": "*",
-    "@sentry/nextjs": "*",
+    "@sentry/nextjs": "^9.3.0",
     "@svgr/webpack": "^6.5.1",
     "@t3-oss/env-nextjs": "^0.11.0",
     "@tanstack/react-query": "^4.0.0",
