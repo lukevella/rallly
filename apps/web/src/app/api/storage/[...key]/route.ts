@@ -34,9 +34,9 @@ async function getAvatar(key: string) {
 
 export async function GET(
   _req: NextRequest,
-  context: { params: { key: string[] } },
+  context: { params: Promise<{ key: string[] }> },
 ) {
-  const imageKey = context.params.key.join("/");
+  const imageKey = (await context.params).key.join("/");
 
   if (!imageKey) {
     return new NextResponse("No key provided", { status: 400 });

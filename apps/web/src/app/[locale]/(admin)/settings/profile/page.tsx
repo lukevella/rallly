@@ -7,7 +7,8 @@ export default async function Page() {
   return <ProfilePage />;
 }
 
-export async function generateMetadata({ params }: { params: Params }) {
+export async function generateMetadata(props: { params: Promise<Params> }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
     title: t("profile"),

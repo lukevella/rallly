@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "build:test": "NODE_ENV=test next build",
     "analyze": "cross-env ANALYZE=true next build",
@@ -22,7 +22,7 @@
     "@aws-sdk/client-s3": "^3.645.0",
     "@aws-sdk/s3-request-presigner": "^3.645.0",
     "@hookform/resolvers": "^3.3.1",
-    "@next/bundle-analyzer": "^12.3.4",
+    "@next/bundle-analyzer": "15.2.0",
     "@panva/hkdf": "^1.2.1",
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-switch": "^1.0.2",
@@ -81,7 +81,10 @@
     "smoothscroll-polyfill": "^0.4.4",
     "spacetime": "^7.4.7",
     "superjson": "^2.0.0",
-    "timezone-soft": "^1.5.1"
+    "timezone-soft": "^1.5.1",
+    "next": "15.2.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",

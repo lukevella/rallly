@@ -5,13 +5,18 @@ import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 import Providers from "./providers";
 
-export default async function Layout({
-  children,
-  params,
-}: {
-  params: { urlId: string };
-  children: React.ReactNode;
-}) {
+export default async function Layout(
+  props: {
+    params: Promise<{ urlId: string }>;
+    children: React.ReactNode;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const trpc = await createSSRHelper();
 
   const [poll] = await Promise.all([

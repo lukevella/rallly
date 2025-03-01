@@ -4,7 +4,7 @@ import { getLocaleFromPath } from "@/utils/locale/get-locale-from-path";
 import { initI18next } from "./i18n";
 
 export async function getTranslation(localeOverride?: string) {
-  const localeFromPath = getLocaleFromPath();
+  const localeFromPath = await getLocaleFromPath();
   const locale = localeOverride || localeFromPath;
   const i18nextInstance = await initI18next(locale, defaultNS);
   return {

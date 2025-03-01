@@ -18,11 +18,8 @@ const COOKIE_CONFIG = {
   expires: new Date(Date.now() + 5 * 1000), // 5 seconds
 } as const;
 
-const setEmailChangeCookie = (
-  type: "success" | "error",
-  value: string = "1",
-) => {
-  cookies().set(`email-change-${type}`, value, COOKIE_CONFIG);
+const setEmailChangeCookie = async (type: "success" | "error", value: string = "1") => {
+  (await cookies()).set(`email-change-${type}`, value, COOKIE_CONFIG);
 };
 
 const handleEmailChange = async (token: string) => {

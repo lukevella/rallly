@@ -10,7 +10,8 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/i18n/server";
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page(props: { params: Promise<Params> }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return (
     <PageContainer>
