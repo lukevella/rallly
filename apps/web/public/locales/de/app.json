@@ -207,7 +207,6 @@
   "upcomingEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
   "pastEventsEmptyStateTitle": "Keine vergangenen Termine",
   "pastEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
-  "activePollCount": "{{activePollCount}} Live",
   "createPoll": "Umfrage erstellen",
   "addToCalendar": "Zum Kalender hinzufügen",
   "microsoft365": "Microsoft 365",
