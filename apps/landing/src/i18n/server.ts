@@ -21,13 +21,14 @@ const initI18next = async (lng: string, ns: Namespace) => {
   return i18nInstance;
 };
 
-export async function getTranslation(
+export async function getTranslation<Ns extends Namespace>(
   locale: string,
-  ns: Namespace = defaultNS,
+  ns?: Ns,
 ) {
-  const i18nextInstance = await initI18next(locale, ns);
+  const fixedNs = ns ?? defaultNS;
+  const i18nextInstance = await initI18next(locale, fixedNs);
   return {
-    t: i18nextInstance.getFixedT(locale, Array.isArray(ns) ? ns[0] : ns),
+    t: i18nextInstance.getFixedT<Ns>(locale),
     i18n: i18nextInstance,
   };
 }

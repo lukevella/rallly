@@ -6,7 +6,7 @@ import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
 
 export default async function Page({ params }: { params: { locale: string } }) {
-  const { t } = await getTranslation(params.locale, ["common", "home"]);
+  const { t } = await getTranslation(params.locale, "home");
   return (
     <Marketing>
       <MarketingHero

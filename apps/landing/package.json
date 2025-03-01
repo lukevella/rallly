@@ -23,7 +23,7 @@
     "accept-language-parser": "^1.5.0",
     "dayjs": "^1.11.10",
     "gray-matter": "^4.0.3",
-    "i18next": "^22.4.9",
+    "i18next": "^24.2.2",
     "i18next-icu": "^2.3.0",
     "intl-messageformat": "^10.3.4",
     "lodash": "^4.17.21",
@@ -31,7 +31,7 @@
     "next-i18next": "^13.0.3",
     "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
-    "react-i18next": "^12.1.4",
+    "react-i18next": "^15.4.1",
     "react-use": "^17.4.0"
   },
   "devDependencies": {
