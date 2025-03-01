@@ -207,7 +207,6 @@
   "upcomingEventsEmptyStateDescription": "Po zaplanowaniu wydarzeń pojawią się one tutaj.",
   "pastEventsEmptyStateTitle": "Brak poprzednich wydarzeń",
   "pastEventsEmptyStateDescription": "Po zaplanowaniu wydarzeń pojawią się one tutaj.",
-  "activePollCount": "Aktywnych: {{activePollCount}}",
   "createPoll": "Utwórz ankietę",
   "addToCalendar": "Dodaj do kalendarza",
   "microsoft365": "Microsoft 365",
