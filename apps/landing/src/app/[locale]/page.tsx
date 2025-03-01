@@ -4,17 +4,21 @@ import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
 
 export default async function Page({ params }: { params: { locale: string } }) {
-  const { t } = await getTranslation(params.locale, ["common", "home"]);
+  const { t } = await getTranslation(params.locale, ["home", "common"]);
   return (
     <Marketing>
       <MarketingHero
-        title={t("home:headline", {
+        title={t("headline", {
           defaultValue: "Ditch the back-and-forth emails",
+          ns: "home",
         })}
-        description={t("home:subheading", {
+        description={t("subheading", {
           defaultValue: "Streamline your scheduling process and save time",
+          ns: "home",
         })}
-        callToAction={t("getStarted")}
+        callToAction={t("getStarted", {
+          ns: "common",
+        })}
       />
       <Bonus t={t} />
       <BigTestimonial />
@@ -30,10 +34,11 @@ export async function generateMetadata({
 }) {
   const { t } = await getTranslation(params.locale, "home");
   return {
-    title: t("home:metaTitle", {
+    title: t("metaTitle", {
       defaultValue: "Rallly: Group Scheduling Tool",
+      ns: "home",
     }),
-    description: t("home:metaDescription", {
+    description: t("metaDescription", {
       defaultValue:
         "Create polls and vote to find the best day or time. A free alternative to Doodle.",
     }),

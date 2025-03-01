@@ -8,7 +8,7 @@ import { linkToApp } from "@/lib/linkToApp";
 
 import { PriceTables } from "./pricing-table";
 
-const FAQ = async ({ t }: { t: TFunction }) => {
+const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
   return (
     <section>
       <h2 className="text-2xl font-bold">
@@ -123,7 +123,7 @@ const FAQ = async ({ t }: { t: TFunction }) => {
 };
 
 export default async function Page({ params }: { params: { locale: string } }) {
-  const { t } = await getTranslation(params.locale, ["common", "pricing"]);
+  const { t } = await getTranslation(params.locale, "pricing");
   return (
     <article className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2 sm:p-6 sm:text-center">

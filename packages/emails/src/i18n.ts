@@ -20,9 +20,6 @@ const i18nDefaultConfig: InitOptions = {
   ns: ["emails"],
   fallbackNS: "emails",
   defaultNS: "emails",
-  interpolation: {
-    escapeValue: false,
-  },
 } as const;
 
 export type I18nInstance = typeof i18nInstance;
