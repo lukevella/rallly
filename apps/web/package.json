@@ -82,9 +82,9 @@
     "spacetime": "^7.4.7",
     "superjson": "^2.0.0",
     "timezone-soft": "^1.5.1",
-    "next": "15.2.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
