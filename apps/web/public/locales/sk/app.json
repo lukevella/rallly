@@ -207,7 +207,7 @@
   "upcomingEventsEmptyStateDescription": "Keď naplánujete udalosti, zobrazia sa tu.",
   "pastEventsEmptyStateTitle": "Žiadne minulé udalosti",
   "pastEventsEmptyStateDescription": "Keď naplánujete udalosti, zobrazia sa tu.",
-  "activePollCount": "{{activePollCount}} Aktívne",
+  "activePollCount": "{activePollCount} Aktívne",
   "createPoll": "Vytvoriť anketu",
   "addToCalendar": "Pridať do kalendára",
   "microsoft365": "Microsoft 365",

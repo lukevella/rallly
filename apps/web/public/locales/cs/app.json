@@ -207,7 +207,7 @@
   "upcomingEventsEmptyStateDescription": "Když naplánujete události, objeví se zde.",
   "pastEventsEmptyStateTitle": "Žádné minulé události",
   "pastEventsEmptyStateDescription": "Když naplánujete události, objeví se zde.",
-  "activePollCount": "{{activePollCount}} živé",
+  "activePollCount": "{activePollCount} živé",
   "createPoll": "Vytvořit hlasování",
   "addToCalendar": "Přidat do kalendáře",
   "microsoft365": "Microsoft 365",

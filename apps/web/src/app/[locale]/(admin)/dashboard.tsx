@@ -52,7 +52,7 @@ export default function Dashboard() {
               >
                 <Trans
                   i18nKey="activePollCount"
-                  defaults="{{activePollCount}} Live"
+                  defaults="{activePollCount} Live"
                   values={{
                     activePollCount: data.activePollCount,
                   }}
