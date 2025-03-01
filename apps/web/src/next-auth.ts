@@ -19,7 +19,7 @@ import { nextAuthConfig } from "./next-auth.config";
 
 const sessionUpdateSchema = z.object({
   locale: z.string().nullish(),
-  timeFormat: z.enum(["12h", "24h"]).nullish(),
+  timeFormat: z.enum(["hours12", "hours24"]).nullish(),
   timeZone: z.string().nullish(),
   weekStart: z.number().nullish(),
 });
