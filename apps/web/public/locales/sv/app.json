@@ -207,7 +207,6 @@
   "upcomingEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
   "pastEventsEmptyStateTitle": "Inga tidigare händelser",
   "pastEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
-  "activePollCount": "{{activePollCount}} publik(a)",
   "createPoll": "Skapa förfrågan",
   "addToCalendar": "Lägg till i kalender",
   "microsoft365": "Microsoft 365",
