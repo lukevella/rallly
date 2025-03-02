@@ -19,7 +19,7 @@ import {
 } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import dayjs from "dayjs";
-import { Trans } from "next-i18next";
+import { Trans } from "@/components/trans";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

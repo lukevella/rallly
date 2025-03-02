@@ -28,7 +28,6 @@
     "intl-messageformat": "^10.3.4",
     "lodash": "^4.17.21",
     "nanoid": "^5.0.9",
-    "next-i18next": "^13.0.3",
     "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
     "react-i18next": "^15.4.1",

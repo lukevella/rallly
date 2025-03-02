@@ -5,7 +5,6 @@ import { Form } from "@rallly/ui/form";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 
 import type { PollOptionsData } from "@/components/forms";
@@ -14,6 +13,7 @@ import { useModalContext } from "@/components/modal/modal-provider";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 import { encodeDateOption } from "@/utils/date-time-utils";
 
 const convertOptionToString = (

@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
 import { UndoIcon } from "lucide-react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 import { Controller } from "react-hook-form";
 

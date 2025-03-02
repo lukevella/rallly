@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client/trans";
 
 // export const UsedBy = () => {
 //   return (

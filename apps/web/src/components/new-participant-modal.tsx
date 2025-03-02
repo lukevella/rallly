@@ -7,7 +7,7 @@ import { FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import { useForm } from "react-hook-form";
 import z from "zod";
 

@@ -4,7 +4,7 @@ import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellOffIcon, BellRingIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 
 import { Skeleton } from "@/components/skeleton";

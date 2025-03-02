@@ -27,7 +27,7 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 

@@ -1,5 +1,5 @@
 import { cn } from "@rallly/ui";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import React from "react";
 
 export interface StepsProps {

@@ -2,7 +2,7 @@ import type { Participant, VoteType } from "@rallly/database";
 import dayjs from "dayjs";
 import { keyBy } from "lodash";
 import { TrashIcon } from "lucide-react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import React from "react";
 
 import type { GetPollApiResponse, Vote } from "@/trpc/client/types";

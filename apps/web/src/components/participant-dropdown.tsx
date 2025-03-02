@@ -29,7 +29,7 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { PencilIcon, TagIcon, TrashIcon } from "lucide-react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";

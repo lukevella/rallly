@@ -71,7 +71,6 @@
     "micro": "^10.0.1",
     "nanoid": "^5.0.9",
     "next-auth": "^5.0.0-beta.25",
-    "next-i18next": "^13.0.3",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.31",
     "react-big-calendar": "^1.8.1",

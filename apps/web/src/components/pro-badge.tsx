@@ -1,5 +1,5 @@
 import { Badge } from "@rallly/ui/badge";
-import { Trans } from "next-i18next";
+import { Trans } from "@/components/trans";
 
 export const ProBadge = ({ className }: { className?: string }) => {
   return (

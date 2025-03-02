@@ -3,7 +3,7 @@ import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 

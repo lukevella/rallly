@@ -19,7 +19,7 @@ import {
   SparklesIcon,
   XIcon,
 } from "lucide-react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 

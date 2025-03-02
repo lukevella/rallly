@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 
 /**
  * @deprecated Use form validation hook instead

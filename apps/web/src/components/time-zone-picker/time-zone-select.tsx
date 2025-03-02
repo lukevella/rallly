@@ -16,7 +16,7 @@ import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { CheckIcon, GlobeIcon } from "lucide-react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import React from "react";
 
 import { Trans } from "@/components/trans";

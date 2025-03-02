@@ -1,6 +1,6 @@
 import { Button } from "@rallly/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 
 export interface DateNavigationToolbarProps {
