@@ -1,3 +1,4 @@
+import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
@@ -45,6 +46,31 @@ export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
       code: "UNAUTHORIZED",
       message: "This method requires a user",
     });
+  }
+
+  if (!ctx.user.isGuest) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: ctx.user.id,
+      },
+      select: {
+        banned: true,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Logged in user does not exist anymore",
+      });
+    }
+
+    if (user.banned) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Your account has been banned",
+      });
+    }
   }
 
   return next({
