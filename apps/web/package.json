@@ -60,6 +60,7 @@
     "i18next-icu": "^2.3.0",
     "i18next-resources-to-backend": "^1.1.4",
     "ics": "^3.1.0",
+    "intl-messageformat": "^10.7.15",
     "iron-session": "^6.3.1",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.1",
