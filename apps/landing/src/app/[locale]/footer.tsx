@@ -21,7 +21,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 
-import { Trans, useTranslation } from "@/i18n/client";
+import { Trans } from "@/i18n/client/trans";
+import { useTranslation } from "@/i18n/client/use-translation";
 
 const LanguageSelect = () => {
   const router = useRouter();
