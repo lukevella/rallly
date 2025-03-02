@@ -7,6 +7,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 import superjson from "superjson";
 
@@ -49,6 +50,14 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
                       defaultValue: "Please try again later.",
                     }),
                   });
+                  break;
+                case "FORBIDDEN":
+                  signOut({
+                    redirect: false,
+                  }).then(() => {
+                    window.location.href = "/login";
+                  });
+
                   break;
                 default:
                   console.error(error);
