@@ -2858,45 +2858,6 @@
   dependencies:
     "@floating-ui/dom" "^1.2.7"
 
-"@formatjs/ecma402-abstract@1.14.3":
-  version "1.14.3"
-  resolved "https://registry.npmjs.org/@formatjs/ecma402-abstract/-/ecma402-abstract-1.14.3.tgz"
-  integrity sha512-SlsbRC/RX+/zg4AApWIFNDdkLtFbkq3LNoZWXZCE/nHVKqoIJyaoQyge/I0Y38vLxowUn9KTtXgusLD91+orbg==
-  dependencies:
-    "@formatjs/intl-localematcher" "0.2.32"
-    tslib "^2.4.0"
-
-"@formatjs/fast-memoize@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/@formatjs/fast-memoize/-/fast-memoize-2.0.1.tgz"
-  integrity sha512-M2GgV+qJn5WJQAYewz7q2Cdl6fobQa69S1AzSM2y0P68ZDbK5cWrJIcPCO395Of1ksftGZoOt4LYCO/j9BKBSA==
-  dependencies:
-    tslib "^2.4.0"
-
-"@formatjs/icu-messageformat-parser@2.3.1":
-  version "2.3.1"
-  resolved "https://registry.npmjs.org/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-2.3.1.tgz"
-  integrity sha512-knF2AkAKN4Upv4oIiKY4Wd/dLH68TNMPgV/tJMu/T6FP9aQwbv8fpj7U3lkyniPaNVxvia56Gxax8MKOjtxLSQ==
-  dependencies:
-    "@formatjs/ecma402-abstract" "1.14.3"
-    "@formatjs/icu-skeleton-parser" "1.3.18"
-    tslib "^2.4.0"
-
-"@formatjs/icu-skeleton-parser@1.3.18":
-  version "1.3.18"
-  resolved "https://registry.npmjs.org/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-1.3.18.tgz"
-  integrity sha512-ND1ZkZfmLPcHjAH1sVpkpQxA+QYfOX3py3SjKWMUVGDow18gZ0WPqz3F+pJLYQMpS2LnnQ5zYR2jPVYTbRwMpg==
-  dependencies:
-    "@formatjs/ecma402-abstract" "1.14.3"
-    tslib "^2.4.0"
-
-"@formatjs/intl-localematcher@0.2.32":
-  version "0.2.32"
-  resolved "https://registry.npmjs.org/@formatjs/intl-localematcher/-/intl-localematcher-0.2.32.tgz"
-  integrity sha512-k/MEBstff4sttohyEpXxCmC3MqbUn9VvHGlZ8fauLzkbwXmVrEeyzS+4uhrvAk9DWU9/7otYWxyDox4nT/KVLQ==
-  dependencies:
-    tslib "^2.4.0"
-
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
   resolved "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.3.0.tgz"
@@ -10195,16 +10156,6 @@ interpret@^1.0.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/interpret/-/interpret-1.4.0.tgz"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
-
-intl-messageformat@^10.3.4:
-  version "10.3.4"
-  resolved "https://registry.npmjs.org/intl-messageformat/-/intl-messageformat-10.3.4.tgz"
-  integrity sha512-/FxUIrlbPtuykSNX85CB5sp2FjLVeTmdD7TfRkVFPft2n4FgcSlAcilFytYiFAEmPHc+0PvpLCIPXeaGFzIvOg==
-  dependencies:
-    "@formatjs/ecma402-abstract" "1.14.3"
-    "@formatjs/fast-memoize" "2.0.1"
-    "@formatjs/icu-messageformat-parser" "2.3.1"
-    tslib "^2.4.0"
 
 invariant@^2.2.4:
   version "2.2.4"

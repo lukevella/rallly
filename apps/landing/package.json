@@ -25,7 +25,6 @@
     "gray-matter": "^4.0.3",
     "i18next": "^24.2.2",
     "i18next-icu": "^2.3.0",
-    "intl-messageformat": "^10.3.4",
     "lodash": "^4.17.21",
     "nanoid": "^5.0.9",
     "next-mdx-remote": "^5.0.0",
