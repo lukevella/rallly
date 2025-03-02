@@ -25,6 +25,7 @@ declare module "next-auth" {
     timeZone?: string | null;
     timeFormat?: TimeFormat | null;
     weekStart?: number | null;
+    banned?: boolean | null;
   }
 
   interface NextAuthRequest extends NextRequest {

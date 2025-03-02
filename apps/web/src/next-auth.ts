@@ -100,6 +100,11 @@ const {
         if (isBlocked) {
           return false;
         }
+
+        // Check if user is banned
+        if (user.banned) {
+          return false;
+        }
       }
 
       // For now, we don't allow users to login unless they have
