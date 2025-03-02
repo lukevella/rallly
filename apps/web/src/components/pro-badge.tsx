@@ -1,4 +1,5 @@
 import { Badge } from "@rallly/ui/badge";
+
 import { Trans } from "@/components/trans";
 
 export const ProBadge = ({ className }: { className?: string }) => {

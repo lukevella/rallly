@@ -27,7 +27,6 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
-import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -37,6 +36,7 @@ import { useParticipants } from "@/components/participants-provider";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 import { requiredString } from "../../utils/form-validation";

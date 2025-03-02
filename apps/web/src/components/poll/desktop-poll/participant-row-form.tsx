@@ -8,7 +8,6 @@ import {
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
 import { UndoIcon } from "lucide-react";
-import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 import { Controller } from "react-hook-form";
 
@@ -17,6 +16,7 @@ import { Participant, ParticipantName } from "@/components/participant";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 
 import { usePoll } from "../../poll-context";
 import { toggleVote, VoteSelector } from "../vote-selector";

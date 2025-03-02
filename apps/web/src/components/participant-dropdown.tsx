@@ -29,7 +29,6 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { PencilIcon, TagIcon, TrashIcon } from "lucide-react";
-import { useTranslation } from "@/i18n/client";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -39,6 +38,7 @@ import { z } from "zod";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useDeleteParticipantMutation } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { useFormValidation } from "@/utils/form-validation";
 

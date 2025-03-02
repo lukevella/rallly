@@ -11,7 +11,6 @@ import {
 } from "@rallly/ui/select";
 import { AnimatePresence, m } from "framer-motion";
 import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
-import { useTranslation } from "@/i18n/client";
 import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
@@ -24,6 +23,7 @@ import { YouAvatar } from "@/components/poll/you-avatar";
 import { useOptions, usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
+import { useTranslation } from "@/i18n/client";
 
 import { useVisibleParticipants } from "../participants-provider";
 import { useUser } from "../user-provider";

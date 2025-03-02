@@ -1,6 +1,7 @@
 import { cn } from "@rallly/ui";
-import { useTranslation } from "@/i18n/client";
 import React from "react";
+
+import { useTranslation } from "@/i18n/client";
 
 export interface StepsProps {
   current: number;
