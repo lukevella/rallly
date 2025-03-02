@@ -90,6 +90,7 @@ export const proProcedure = privateProcedure.use(async ({ ctx, next }) => {
 });
 
 export const createRateLimitMiddleware = (
+  name: string,
   requests: number,
   duration: "1 m" | "1 h",
 ) => {
@@ -98,20 +99,27 @@ export const createRateLimitMiddleware = (
       return next();
     }
 
-    if (!ctx.ip) {
+    if (!ctx.identifier) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to get client IP",
+        message: "Failed to get identifier",
       });
     }
+
     const ratelimit = new Ratelimit({
       redis: kv,
       limiter: Ratelimit.slidingWindow(requests, duration),
     });
 
-    const res = await ratelimit.limit(ctx.ip);
+    const res = await ratelimit.limit(`${name}:${ctx.identifier}`);
 
     if (!res.success) {
+      console.warn("Rate limit exceeded", {
+        identifier: ctx.identifier,
+        endpoint: name,
+        limit: requests,
+        duration,
+      });
       throw new TRPCError({
         code: "TOO_MANY_REQUESTS",
         message: "Too many requests",

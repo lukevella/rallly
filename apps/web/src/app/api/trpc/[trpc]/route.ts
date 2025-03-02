@@ -28,11 +28,16 @@ const handler = (req: NextRequest) => {
           }
         : undefined;
 
+      const ip =
+        process.env.NODE_ENV === "development" ? "127.0.0.1" : ipAddress(req);
+
+      const identifier =
+        session?.user?.id ?? req.headers.get("x-vercel-ja4-digest") ?? ip;
+
       return {
         user,
         locale,
-        ip:
-          process.env.NODE_ENV === "development" ? "127.0.0.1" : ipAddress(req),
+        identifier,
       } satisfies TRPCContext;
     },
     onError({ error }) {

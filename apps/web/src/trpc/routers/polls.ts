@@ -130,7 +130,7 @@ export const polls = router({
 
   // START LEGACY ROUTES
   create: possiblyPublicProcedure
-    .use(createRateLimitMiddleware(20, "1 h"))
+    .use(createRateLimitMiddleware("create_poll", 10, "1 h"))
     .use(requireUserMiddleware)
     .input(
       z.object({
@@ -233,7 +233,6 @@ export const polls = router({
       return { id: poll.id };
     }),
   update: possiblyPublicProcedure
-    .use(createRateLimitMiddleware(60, "1 h"))
     .input(
       z.object({
         urlId: z.string(),
@@ -306,7 +305,6 @@ export const polls = router({
       });
     }),
   delete: possiblyPublicProcedure
-    .use(createRateLimitMiddleware(30, "1 h"))
     .input(
       z.object({
         urlId: z.string(),

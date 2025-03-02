@@ -72,7 +72,7 @@ export const comments = router({
       });
     }),
   add: publicProcedure
-    .use(createRateLimitMiddleware(5, "1 m"))
+    .use(createRateLimitMiddleware("add_comment", 5, "1 m"))
     .use(requireUserMiddleware)
     .input(
       z.object({

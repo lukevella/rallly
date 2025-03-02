@@ -38,22 +38,20 @@ export const user = router({
         },
       });
     }),
-  delete: privateProcedure
-    .use(createRateLimitMiddleware(5, "1 h"))
-    .mutation(async ({ ctx }) => {
-      if (ctx.user.isGuest) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Guest users cannot be deleted",
-        });
-      }
-
-      await prisma.user.delete({
-        where: {
-          id: ctx.user.id,
-        },
+  delete: privateProcedure.mutation(async ({ ctx }) => {
+    if (ctx.user.isGuest) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Guest users cannot be deleted",
       });
-    }),
+    }
+
+    await prisma.user.delete({
+      where: {
+        id: ctx.user.id,
+      },
+    });
+  }),
   subscription: publicProcedure.query(
     async ({ ctx }): Promise<{ legacy?: boolean; active: boolean }> => {
       if (!ctx.user || ctx.user.isGuest) {
@@ -67,7 +65,6 @@ export const user = router({
     },
   ),
   changeName: privateProcedure
-    .use(createRateLimitMiddleware(20, "1 h"))
     .input(
       z.object({
         name: z.string().min(1).max(100),
@@ -84,7 +81,6 @@ export const user = router({
       });
     }),
   updatePreferences: privateProcedure
-    .use(createRateLimitMiddleware(30, "1 h"))
     .input(
       z.object({
         locale: z.string().optional(),
@@ -111,7 +107,7 @@ export const user = router({
       return { success: true };
     }),
   requestEmailChange: privateProcedure
-    .use(createRateLimitMiddleware(10, "1 h"))
+    .use(createRateLimitMiddleware("request_email_change", 10, "1 h"))
     .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input, ctx }) => {
       const currentUser = await prisma.user.findUnique({
@@ -163,7 +159,7 @@ export const user = router({
       return { success: true as const };
     }),
   getAvatarUploadUrl: privateProcedure
-    .use(createRateLimitMiddleware(20, "1 h"))
+    .use(createRateLimitMiddleware("get_avatar_upload_url", 10, "1 h"))
     .input(
       z.object({
         fileType: z.enum(["image/jpeg", "image/png"]),
@@ -209,7 +205,6 @@ export const user = router({
     }),
   updateAvatar: privateProcedure
     .input(z.object({ imageKey: z.string().max(255) }))
-    .use(createRateLimitMiddleware(10, "1 h"))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
       const oldImageKey = ctx.user.image;
