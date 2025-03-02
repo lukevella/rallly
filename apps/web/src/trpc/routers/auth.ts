@@ -29,7 +29,7 @@ export const auth = router({
       return { isRegistered: count > 0 };
     }),
   requestRegistration: publicProcedure
-    .use(createRateLimitMiddleware(5, "1 m"))
+    .use(createRateLimitMiddleware("request_registration", 5, "1 m"))
     .input(
       z.object({
         name: z.string().min(1).max(100),

@@ -11,5 +11,5 @@ type User = {
 export type TRPCContext = {
   user?: User;
   locale?: string;
-  ip?: string;
+  identifier?: string;
 };
