@@ -114,12 +114,6 @@ export const createRateLimitMiddleware = (
     const res = await ratelimit.limit(`${name}:${ctx.identifier}`);
 
     if (!res.success) {
-      console.warn("Rate limit exceeded", {
-        identifier: ctx.identifier,
-        endpoint: name,
-        limit: requests,
-        duration,
-      });
       throw new TRPCError({
         code: "TOO_MANY_REQUESTS",
         message: "Too many requests",
