@@ -52,6 +52,7 @@ export async function generateMetadata({
     select: {
       id: true,
       title: true,
+      deleted: true,
       user: {
         select: {
           name: true,
@@ -62,7 +63,7 @@ export async function generateMetadata({
 
   const { t } = await getTranslation(locale);
 
-  if (!poll) {
+  if (!poll || poll.deleted) {
     notFound();
   }
 
