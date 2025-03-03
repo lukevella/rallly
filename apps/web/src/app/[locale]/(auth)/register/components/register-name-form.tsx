@@ -51,6 +51,14 @@ export function RegisterNameForm() {
                   message: t("emailNotAllowed"),
                 });
                 break;
+              case "temporaryEmailNotAllowed":
+                form.setError("email", {
+                  message: t("temporaryEmailNotAllowed", {
+                    defaultValue:
+                      "Temporary or disposable email addresses are not allowed.",
+                  }),
+                });
+                break;
               case "userAlreadyExists":
                 form.setError("email", {
                   message: t("userAlreadyExists"),
