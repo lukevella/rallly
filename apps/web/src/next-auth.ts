@@ -137,8 +137,8 @@ const {
 
       return true;
     },
-    async jwt({ token, session, trigger }) {
-      if (trigger === "update") {
+    async jwt({ token, session }) {
+      if (session) {
         const parsed = sessionUpdateSchema.safeParse(session);
         if (parsed.success) {
           Object.entries(parsed.data).forEach(([key, value]) => {
@@ -163,12 +163,14 @@ const {
               timeFormat: true,
               timeZone: true,
               weekStart: true,
+              image: true,
             },
           });
 
           if (user) {
             token.name = user.name;
             token.email = user.email;
+            token.picture = user.image;
             token.locale = user.locale;
             token.timeFormat = user.timeFormat;
             token.timeZone = user.timeZone;
