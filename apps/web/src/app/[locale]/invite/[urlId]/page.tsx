@@ -56,6 +56,7 @@ export async function generateMetadata({
       user: {
         select: {
           name: true,
+          banned: true,
         },
       },
     },
@@ -63,7 +64,7 @@ export async function generateMetadata({
 
   const { t } = await getTranslation(locale);
 
-  if (!poll || poll.deleted) {
+  if (!poll || poll.deleted || poll.user?.banned) {
     notFound();
   }
 
