@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
+import { useToast } from "@rallly/ui/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import React from "react";
@@ -42,6 +43,7 @@ export interface CreatePollPageProps {
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
   const { user } = useUser();
+  const { toast } = useToast();
   const session = useSession();
   const form = useForm<NewEventData>({
     defaultValues: {
@@ -71,6 +73,14 @@ export const CreatePoll: React.FunctionComponent = () => {
       if (session.status !== "authenticated") {
         await signIn("guest", {
           redirect: false,
+        });
+      }
+    },
+    onError: (error) => {
+      if (error.data?.code === "BAD_REQUEST") {
+        toast({
+          title: "Error",
+          description: error.message,
         });
       }
     },
@@ -136,9 +146,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           <PollSettingsForm />
           <hr />
           <Button
-            loading={
-              form.formState.isSubmitting || form.formState.isSubmitSuccessful
-            }
+            loading={createPoll.isLoading || createPoll.isSuccess}
             size="lg"
             type="submit"
             className="w-full"

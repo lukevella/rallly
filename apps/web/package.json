@@ -18,6 +18,7 @@
     "docker:start": "./scripts/docker-start.sh"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.2.0",
     "@auth/prisma-adapter": "^2.7.4",
     "@aws-sdk/client-s3": "^3.645.0",
     "@aws-sdk/s3-request-presigner": "^3.645.0",
@@ -47,6 +48,7 @@
     "@vercel/functions": "^1.5.2",
     "@vercel/kv": "^2.0.0",
     "accept-language-parser": "^1.5.0",
+    "ai": "^4.1.50",
     "autoprefixer": "^10.4.13",
     "calendar-link": "^2.6.0",
     "class-variance-authority": "^0.7.0",
@@ -70,6 +72,7 @@
     "nanoid": "^5.0.9",
     "next-auth": "^5.0.0-beta.25",
     "next-i18next": "^13.0.3",
+    "openai": "^4.86.1",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.31",
     "react-big-calendar": "^1.8.1",
