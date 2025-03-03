@@ -1,4 +1,4 @@
-import type { PollStatus, User, VoteType } from "@rallly/database";
+import type { PollStatus, VoteType } from "@rallly/database";
 
 export type GetPollApiResponse = {
   id: string;
@@ -6,7 +6,13 @@ export type GetPollApiResponse = {
   location: string | null;
   description: string | null;
   options: { id: string; startTime: Date; duration: number }[];
-  user: User | null;
+  user: {
+    id: string;
+    name: string;
+    email: string | null;
+    image: string | null;
+    banned: boolean;
+  } | null;
   timeZone: string | null;
   adminUrlId: string;
   status: PollStatus;
