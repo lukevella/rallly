@@ -207,7 +207,6 @@
   "upcomingEventsEmptyStateDescription": "Ekitaldiak programatzen dituzunean, hemen agertuko dira.",
   "pastEventsEmptyStateTitle": "Ez dago iraganeko ekitaldirik",
   "pastEventsEmptyStateDescription": "Ekitaldiak programatzen dituzunean, hemen agertuko dira.",
-  "activePollCount": "{activePollCount} zuzenean",
   "createPoll": "Sortu galdetegi bat",
   "addToCalendar": "Gehitu egutegira",
   "microsoft365": "Microsoft 365",
