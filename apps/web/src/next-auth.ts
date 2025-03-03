@@ -55,6 +55,16 @@ const {
   session: {
     strategy: "jwt",
   },
+  jwt: {
+    maxAge: 60 * 60 * 24 * 60,
+  },
+  cookies: {
+    sessionToken: {
+      options: {
+        maxAge: 60 * 60 * 24 * 60,
+      },
+    },
+  },
   events: {
     signIn({ user, account }) {
       if (user.id) {
