@@ -9,6 +9,7 @@ import * as ics from "ics";
 import { z } from "zod";
 
 import { getEmailClient } from "@/utils/emails";
+import { moderateContent } from "@/utils/moderation";
 
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
@@ -156,6 +157,21 @@ export const polls = router({
       const participantUrlId = nanoid();
       const pollId = nanoid();
 
+      const isFlaggedContent = await moderateContent(
+        input.title,
+        input.description,
+      );
+
+      if (isFlaggedContent) {
+        console.warn(
+          `User ${ctx.user.id} attempted to create flagged content: ${input.title}`,
+        );
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Content is flagged as spam",
+        });
+      }
+
       const poll = await prisma.poll.create({
         select: {
           adminUrlId: true,
@@ -233,6 +249,7 @@ export const polls = router({
       return { id: poll.id };
     }),
   update: possiblyPublicProcedure
+    .use(requireUserMiddleware)
     .input(
       z.object({
         urlId: z.string(),
@@ -249,8 +266,22 @@ export const polls = router({
         requireParticipantEmail: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
+
+      const isFlaggedContent = await moderateContent(
+        input.title,
+        input.description,
+      );
+      if (isFlaggedContent) {
+        console.warn(
+          `User ${ctx.user.id} attempted to create flagged content: ${input.title}`,
+        );
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Content is flagged as spam",
+        });
+      }
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
         await prisma.option.deleteMany({

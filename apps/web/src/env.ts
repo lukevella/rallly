@@ -64,6 +64,11 @@ export const env = createEnv({
     S3_ACCESS_KEY_ID: z.string().optional(),
     S3_SECRET_ACCESS_KEY: z.string().optional(),
     S3_REGION: z.string().optional(),
+
+    /**
+     * OpenAI Configuration for AI moderation
+     */
+    OPENAI_API_KEY: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -113,6 +118,7 @@ export const env = createEnv({
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
     NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
