@@ -30,6 +30,7 @@
   "editVotes": "Edit votes",
   "email": "Email",
   "emailNotAllowed": "This email is not allowed.",
+  "temporaryEmailNotAllowed": "Temporary or disposable email addresses are not allowed.",
   "emailPlaceholder": "jessie.smith@example.com",
   "exportToCsv": "Export to CSV",
   "guest": "Guest",
