@@ -52,7 +52,7 @@ function containsSuspiciousPatterns(text: string) {
 export async function moderateContent(...content: Array<string | undefined>) {
   if (!env.OPENAI_API_KEY) {
     console.info("OPENAI_API_KEY not set, skipping moderation");
-    return true;
+    return false;
   }
 
   const textToModerate = content.filter(Boolean).join("\n");
@@ -68,5 +68,5 @@ export async function moderateContent(...content: Array<string | undefined>) {
     }
   }
 
-  return true;
+  return false;
 }
