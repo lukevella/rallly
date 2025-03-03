@@ -415,7 +415,15 @@ export const polls = router({
               startTime: "asc",
             },
           },
-          user: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              banned: true,
+            },
+          },
           userId: true,
           guestId: true,
           deleted: true,
