@@ -293,6 +293,8 @@
   "paymentMethodUnknown": "Ismeretlen",
   "subscriptionCancelOn": "Lemondásra kerül ekkor: {date}",
   "subscriptionStatusPaused": "Szüneteltetve",
+  "subscriptionStatusIncomplete": "Befejezetlen",
+  "subscriptionStatusIncompleteExpired": "Befejezetlen lejárt",
   "billingSubscriptionPlan": "Csomag",
   "billingSubscriptionPrice": "Ár",
   "billingSubscriptionNextPaymentDue": "Következő fizetési dátum",
