@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
 import { PermissionProvider } from "@/contexts/permissions";
-import { getTranslation } from "@/i18n/server";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 import Providers from "./providers";
@@ -58,7 +57,7 @@ export default async function Page({
 }
 
 export async function generateMetadata({
-  params: { urlId, locale },
+  params: { urlId },
 }: {
   params: {
     urlId: string;
@@ -83,20 +82,18 @@ export async function generateMetadata({
     },
   });
 
-  const { t } = await getTranslation(locale);
-
   if (!poll || poll.deleted || poll.user?.banned) {
     notFound();
   }
 
   const { title, id, user } = poll;
 
-  const author =
-    user?.name ||
-    t("guest", {
-      ns: "app",
-      defaultValue: "Guest",
-    });
+  const author = user?.name || "Guest";
+
+  const ogImageUrl = absoluteUrl("/api/og-image-poll", {
+    title,
+    author,
+  });
 
   return {
     title,
@@ -107,7 +104,7 @@ export async function generateMetadata({
       url: `/invite/${id}`,
       images: [
         {
-          url: `/invite/${id}/opengraph-image?${poll.updatedAt.getTime()}`,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: title,
