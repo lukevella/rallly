@@ -4,8 +4,6 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as React from "react";
 
-import { getTranslation } from "@/i18n/server";
-
 import Logo from "./logo-color.svg";
 
 export const contentType = "image/png";
@@ -38,27 +36,22 @@ export default async function OgImage({
     },
     select: {
       title: true,
+      deleted: true,
       user: {
         select: {
           name: true,
+          banned: true,
         },
       },
     },
   });
 
-  if (!poll) {
+  if (!poll || poll.deleted || poll.user?.banned) {
     return new Response("Not Found", { status: 404 });
   }
 
-  const { t } = await getTranslation(params.locale);
-
   const title = poll.title;
-  const author =
-    poll.user?.name ||
-    t("guest", {
-      ns: "app",
-      defaultValue: "Guest",
-    });
+  const author = poll.user?.name;
 
   return new ImageResponse(
     (
@@ -71,16 +64,18 @@ export default async function OgImage({
             </div>
           </div>
           <div tw="relative flex w-full flex-col mt-auto">
-            <div
-              tw="flex text-gray-500 text-[48px] w-[1040px] overflow-hidden"
-              style={{
-                width: 1000,
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-              }}
-            >
-              By {author}
-            </div>
+            {author ? (
+              <div
+                tw="flex text-gray-500 text-[48px] w-[1040px] overflow-hidden"
+                style={{
+                  width: 1000,
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                By {author}
+              </div>
+            ) : null}
             <div
               tw="flex mt-3 text-[64px] font-bold w-[1040px] overflow-hidden"
               style={{
