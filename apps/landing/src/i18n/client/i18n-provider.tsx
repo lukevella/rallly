@@ -15,7 +15,7 @@ async function initTranslations(lng: string) {
     .use(
       resourcesToBackend(
         (language: string, namespace: string) =>
-          import(`../../public/locales/${language}/${namespace}.json`),
+          import(`../../../public/locales/${language}/${namespace}.json`),
       ),
     );
   await i18n.init(getOptions(lng));
