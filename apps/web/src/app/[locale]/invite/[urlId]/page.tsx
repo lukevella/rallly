@@ -90,13 +90,10 @@ export async function generateMetadata({
 
   const author = user?.name || "Guest";
 
-  const ogImageUrl = new URL(
-    "/api/og-image-poll",
-    process.env.NEXT_PUBLIC_BASE_URL,
-  );
-
-  ogImageUrl.searchParams.set("title", title);
-  ogImageUrl.searchParams.set("author", author);
+  const ogImageUrl = absoluteUrl("/api/og-image-poll", {
+    title,
+    author,
+  });
 
   return {
     title,
