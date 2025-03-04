@@ -23,42 +23,34 @@ async function moderateContentWithAI(text: string) {
 function containsSuspiciousPatterns(text: string) {
   if (!text) return false;
 
-  // Check for ALL CAPS (if more than 5 consecutive capital letters)
+  // Define all patterns
+  const repetitiveCharsPattern = /(.)\1{4,}/;
   const allCapsPattern = /[A-Z]{5,}/;
-
-  // Check for excessive special characters
   const excessiveSpecialCharsPattern =
     /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{4,}/;
-
-  // Check for repetitive characters
-  const repetitiveCharsPattern = /(.)\1{4,}/;
-
-  // Check for suspicious URLs
   const suspiciousUrlPattern = /(bit\.ly|tinyurl|goo\.gl|t\.co|is\.gd)/i;
+  const suspiciousKeywords =
+    /(?:c[a@4]ll\s*g[i!1]rl|[e3][s$5]c[o0]rt|[s$5][e3]rv[i!1]c[e3]|m[a@4][s$5][s$5][a@4]g[e3]|d[a@4]t[i!1]ng|[a@4]dult|[s$5][e3]x)/i;
 
-  // Check for potential contact information - enhanced to catch international formats
-  const contactInfoPattern =
-    /(\+?\d{1,3}[-.\s]?)?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|\+\d{6,15}/i;
+  // Email address pattern
+  const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i;
 
-  // Check for non-standard characters (anything outside basic Latin alphabet, numbers, and common punctuation)
+  // Comprehensive phone number pattern covering various formats
+  const phoneNumberPattern =
+    /(\+?\d{1,3}[-.\s]?)?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}|\+\d[\d\s\-\.]{5,14}|\+\d{6,15}/i;
+
   const nonStandardCharsPattern = /[^\x20-\x7E]/;
 
-  // Check for suspicious keywords often found in spam, with character substitutions
-  const suspiciousKeywords =
-    /(?:c[a@4]ll\s*g[i!1]rl|[e3][s$5]c[o0]rt|[s$5][e3]rv[i!1]c[e3]|m[a@4][s$5][s$5][a@4]g[e3]|d[a@4]t[i!1]ng|[a@4]dult|[s$5][e3]x|dubai)/i;
-
-  // Check for international phone number patterns with various separators
-  const internationalPhonePattern = /\+\d[\d\s\-\.]{5,14}/;
-
+  // Return true if any pattern matches
   return (
+    repetitiveCharsPattern.test(text) ||
     allCapsPattern.test(text) ||
     excessiveSpecialCharsPattern.test(text) ||
-    repetitiveCharsPattern.test(text) ||
     suspiciousUrlPattern.test(text) ||
-    contactInfoPattern.test(text) ||
-    nonStandardCharsPattern.test(text) ||
     suspiciousKeywords.test(text) ||
-    internationalPhonePattern.test(text)
+    emailPattern.test(text) ||
+    phoneNumberPattern.test(text) ||
+    nonStandardCharsPattern.test(text)
   );
 }
 
