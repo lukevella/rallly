@@ -10,7 +10,7 @@ async function moderateContentWithAI(text: string) {
       {
         role: "system",
         content:
-          "You are a content moderator. Analyze the following text and determine if it is advertising illegal drugs or promoting prostitution. Respond with 'FLAGGED' if detected, otherwise 'SAFE'.",
+          "You are a content moderator for a scheduling app. Analyze the following text and determine if it is advertising illegal drugs or promoting prostitution. Respond with 'FLAGGED' if detected, otherwise 'SAFE'.",
       },
       { role: "user", content: text },
     ],
@@ -39,7 +39,9 @@ function containsSuspiciousPatterns(text: string) {
   const phoneNumberPattern =
     /(\+?\d{1,3}[-.\s]?)?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}|\+\d[\d\s\-\.]{5,14}|\+\d{6,15}/i;
 
-  const nonStandardCharsPattern = /[^\x20-\x7E]/;
+  // Detect suspicious Unicode patterns
+  const suspiciousUnicodePattern =
+    /[\u2028-\u202F\u2800-\u28FF\u3164\uFFA0\u115F\u1160\u3000\u2000-\u200F\u2028-\u202F\u205F-\u206F\uFEFF\uDB40\uDC20\uDB40\uDC21\uDB40\uDC22\uDB40\uDC23\uDB40\uDC24]/;
 
   // Return true if any pattern matches
   return (
@@ -50,7 +52,7 @@ function containsSuspiciousPatterns(text: string) {
     suspiciousKeywords.test(text) ||
     emailPattern.test(text) ||
     phoneNumberPattern.test(text) ||
-    nonStandardCharsPattern.test(text)
+    suspiciousUnicodePattern.test(text)
   );
 }
 
