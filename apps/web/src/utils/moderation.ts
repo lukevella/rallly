@@ -10,7 +10,7 @@ async function moderateContentWithAI(text: string) {
       {
         role: "system",
         content:
-          "You are a content moderator for a scheduling app. Analyze the following text and determine if it is advertising illegal drugs or promoting prostitution. Respond with 'FLAGGED' if detected, otherwise 'SAFE'.",
+          "You are a content moderator. Analyze the following text and determine if it is attempting to misuse the app to advertise illegal drugs, prostitution, or promote illegal gambling and other illicit activities. Respond with 'FLAGGED' if detected, otherwise 'SAFE'.",
       },
       { role: "user", content: text },
     ],
@@ -29,6 +29,8 @@ function containsSuspiciousPatterns(text: string) {
   const excessiveSpecialCharsPattern =
     /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{4,}/;
   const suspiciousUrlPattern = /(bit\.ly|tinyurl|goo\.gl|t\.co|is\.gd)/i;
+
+  // Enhanced suspicious keywords with more comprehensive leet speak detection
   const suspiciousKeywords =
     /(?:c[a@4]ll\s*g[i!1]rl|[e3][s$5]c[o0]rt|[s$5][e3]rv[i!1]c[e3]|m[a@4][s$5][s$5][a@4]g[e3]|d[a@4]t[i!1]ng|[a@4]dult|[s$5][e3]x)/i;
 
@@ -41,17 +43,24 @@ function containsSuspiciousPatterns(text: string) {
 
   // Detect suspicious Unicode patterns
   const suspiciousUnicodePattern =
-    /[\u2028-\u202F\u2800-\u28FF\u3164\uFFA0\u115F\u1160\u3000\u2000-\u200F\u2028-\u202F\u205F-\u206F\uFEFF\uDB40\uDC20\uDB40\uDC21\uDB40\uDC22\uDB40\uDC23\uDB40\uDC24]/;
+    /[\u2028-\u202F\u2800-\u28FF\u3164\uFFA0\u115F\u1160\u3000\u2000-\u200F\u2028-\u202F\u205F-\u206F\uFEFF\uDB40\uDC20\uDB40\uDC21\uDB40\uDC22\uDB40\uDC23\uDB40\uDC24]/u;
 
-  // Return true if any pattern matches
+  // Simple leet speak pattern that detects number-letter-number patterns
+  const leetSpeakPattern = /[a-z0-9]*[0-9][a-z][0-9][a-z0-9]*/i;
+
   return (
-    repetitiveCharsPattern.test(text) ||
+    // Simple pattern checks (least intensive)
     allCapsPattern.test(text) ||
+    repetitiveCharsPattern.test(text) ||
     excessiveSpecialCharsPattern.test(text) ||
+    // Medium complexity patterns
     suspiciousUrlPattern.test(text) ||
-    suspiciousKeywords.test(text) ||
     emailPattern.test(text) ||
+    leetSpeakPattern.test(text) ||
+    // More complex patterns
     phoneNumberPattern.test(text) ||
+    suspiciousKeywords.test(text) ||
+    // Most intensive pattern (Unicode handling)
     suspiciousUnicodePattern.test(text)
   );
 }
