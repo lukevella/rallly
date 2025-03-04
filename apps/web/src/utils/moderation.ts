@@ -20,7 +20,7 @@ async function moderateContentWithAI(text: string) {
 }
 
 // Custom pattern-based checks
-export function containsSuspiciousPatterns(text: string) {
+function containsSuspiciousPatterns(text: string) {
   if (!text) return false;
 
   // Check for ALL CAPS (if more than 5 consecutive capital letters)
