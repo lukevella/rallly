@@ -4,12 +4,12 @@ import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellOffIcon, BellRingIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
 
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 import { usePoll } from "../poll-context";

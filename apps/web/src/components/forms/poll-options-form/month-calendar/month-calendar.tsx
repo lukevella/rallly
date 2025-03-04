@@ -19,12 +19,12 @@ import {
   SparklesIcon,
   XIcon,
 } from "lucide-react";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 import type { NewEventData } from "@/components/forms";
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 
 import {
   expectTimeOption,

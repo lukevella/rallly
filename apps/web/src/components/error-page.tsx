@@ -1,8 +1,9 @@
 import { Button } from "@rallly/ui/button";
 import { FrownIcon } from "lucide-react";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
 import * as React from "react";
+
+import { useTranslation } from "@/i18n/client";
 
 export interface ComponentProps {
   icon?: React.ComponentType<{ className?: string }>;

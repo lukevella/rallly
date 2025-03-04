@@ -3,13 +3,13 @@ import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
 import { usePreferences } from "@/contexts/preferences";
+import { useTranslation } from "@/i18n/client";
 
 const formSchema = z.object({
   language: z.string(),

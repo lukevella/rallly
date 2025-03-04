@@ -16,11 +16,12 @@ import { Switch } from "@rallly/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CalendarIcon, GlobeIcon, InfoIcon, TableIcon } from "lucide-react";
-import { Trans, useTranslation } from "next-i18next";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
+import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import type { NewEventData } from "../types";

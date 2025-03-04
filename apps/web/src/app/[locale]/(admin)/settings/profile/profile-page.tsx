@@ -3,7 +3,6 @@ import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { LogOutIcon, TrashIcon } from "lucide-react";
 import Head from "next/head";
-import { useTranslation } from "next-i18next";
 
 import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
 import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
@@ -15,6 +14,7 @@ import {
 } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { useTranslation } from "@/i18n/client";
 
 import { ProfileEmailAddress } from "./profile-email-address";
 

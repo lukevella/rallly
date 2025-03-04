@@ -7,11 +7,11 @@ import { FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
-import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 import { usePoll } from "@/contexts/poll";
+import { useTranslation } from "@/i18n/client";
 
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";

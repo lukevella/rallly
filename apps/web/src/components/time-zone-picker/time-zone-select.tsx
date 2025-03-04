@@ -16,10 +16,10 @@ import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { CheckIcon, GlobeIcon } from "lucide-react";
-import { useTranslation } from "next-i18next";
 import React from "react";
 
 import { Trans } from "@/components/trans";
+import { useTranslation } from "@/i18n/client";
 import { groupedTimeZones } from "@/utils/grouped-time-zone";
 
 interface TimeZoneCommandProps {

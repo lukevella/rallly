@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import { useTranslation } from "next-i18next";
 
 import { useOptions, usePoll } from "@/components/poll-context";
+import { useTranslation } from "@/i18n/client";
 
 import { useParticipants } from "../../participants-provider";
 

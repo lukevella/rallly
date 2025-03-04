@@ -14,7 +14,8 @@ import {
   SmileIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { Trans } from "next-i18next";
+
+import { Trans } from "@/components/trans";
 
 const FeedbackButton = () => {
   return (

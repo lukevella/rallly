@@ -1,10 +1,10 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { InfoIcon } from "lucide-react";
-import { Trans } from "next-i18next";
 
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
+import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 

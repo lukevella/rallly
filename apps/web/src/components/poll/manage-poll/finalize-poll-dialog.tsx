@@ -19,7 +19,6 @@ import {
 } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import dayjs from "dayjs";
-import { Trans } from "next-i18next";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,6 +26,7 @@ import { z } from "zod";
 import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
+import { Trans } from "@/components/trans";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/trpc/client";

@@ -8,8 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
-import { Trans } from "@/components/trans";
 import { handwritten } from "@/fonts/handwritten";
+import { Trans } from "@/i18n/client/trans";
 import { linkToApp } from "@/lib/linkToApp";
 
 const Screenshot = () => {
