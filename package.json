@@ -51,7 +51,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.4",
-    "turbo": "^2.1.1",
+    "turbo": "^2.4.4",
     "typescript": "^5.2.2",
     "vitest": "^2.1.9",
     "zod": "^3.23.8"
