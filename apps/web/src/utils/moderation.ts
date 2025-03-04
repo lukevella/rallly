@@ -30,10 +30,6 @@ function containsSuspiciousPatterns(text: string) {
     /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{4,}/;
   const suspiciousUrlPattern = /(bit\.ly|tinyurl|goo\.gl|t\.co|is\.gd)/i;
 
-  // Enhanced suspicious keywords with more comprehensive leet speak detection
-  const suspiciousKeywords =
-    /(?:c[a@4]ll\s*g[i!1]rl|[e3][s$5]c[o0]rt|[s$5][e3]rv[i!1]c[e3]|m[a@4][s$5][s$5][a@4]g[e3]|d[a@4]t[i!1]ng|[a@4]dult|[s$5][e3]x)/i;
-
   // Email address pattern
   const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i;
 
@@ -59,7 +55,6 @@ function containsSuspiciousPatterns(text: string) {
     leetSpeakPattern.test(text) ||
     // More complex patterns
     phoneNumberPattern.test(text) ||
-    suspiciousKeywords.test(text) ||
     // Most intensive pattern (Unicode handling)
     suspiciousUnicodePattern.test(text)
   );
