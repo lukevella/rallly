@@ -7,7 +7,7 @@ import Logo from "./logo-color.svg";
 
 const schema = z.object({
   title: z.string().min(1),
-  author: z.string().optional(),
+  author: z.string().nullish(),
 });
 
 export const runtime = "edge";
