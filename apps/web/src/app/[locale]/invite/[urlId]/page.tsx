@@ -73,6 +73,7 @@ export async function generateMetadata({
       id: true,
       title: true,
       deleted: true,
+      updatedAt: true,
       user: {
         select: {
           name: true,
@@ -97,11 +98,6 @@ export async function generateMetadata({
       defaultValue: "Guest",
     });
 
-  const ogImageUrl = absoluteUrl("/api/og-image-poll", {
-    title,
-    author,
-  });
-
   return {
     title,
     metadataBase: new URL(absoluteUrl()),
@@ -111,11 +107,10 @@ export async function generateMetadata({
       url: `/invite/${id}`,
       images: [
         {
-          url: ogImageUrl,
+          url: `/invite/${id}/opengraph-image?${poll.updatedAt.getTime()}`,
           width: 1200,
           height: 630,
           alt: title,
-          type: "image/png",
         },
       ],
     },
