@@ -28,11 +28,6 @@ export async function moderateContent(content: Array<string | undefined>) {
 
   const textToModerate = content.filter(Boolean).join("\n");
 
-  // Log that moderation is being performed (without logging the actual content)
-  console.info(
-    `🔍 Performing content moderation check (content length: ${textToModerate.length} chars)`,
-  );
-
   // First check for suspicious patterns (faster)
   const hasSuspiciousPatterns = containsSuspiciousPatterns(textToModerate);
 
