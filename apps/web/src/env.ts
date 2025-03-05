@@ -69,11 +69,16 @@ export const env = createEnv({
      * OpenAI Configuration for AI moderation
      */
     OPENAI_API_KEY: z.string().optional(),
+    /**
+     * Enable or disable content moderation
+     * @default "true"
+     */
+    MODERATION_ENABLED: z.enum(["true", "false"]).default("false"),
   },
   /*
    * Environment variables available on the client (and server).
    *
-   * 💡 You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
+   * You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
    */
   client: {
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
@@ -84,7 +89,7 @@ export const env = createEnv({
    * Due to how Next.js bundles environment variables on Edge and Client,
    * we need to manually destructure them to make sure all are included in bundle.
    *
-   * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
+   * You'll get type errors if not all variables from `server` & `client` are included here.
    */
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
@@ -119,6 +124,7 @@ export const env = createEnv({
     NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    MODERATION_ENABLED: process.env.MODERATION_ENABLED,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
