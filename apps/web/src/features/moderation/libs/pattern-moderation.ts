@@ -4,7 +4,7 @@
  * @returns True if suspicious patterns are detected, false otherwise
  */
 export function containsSuspiciousPatterns(text: string) {
-  if (!text) return false;
+  if (!text.trim()) return false;
 
   // Define all patterns
   const repetitiveCharsPattern = /(.)\1{4,}/;
