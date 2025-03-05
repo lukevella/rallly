@@ -71,7 +71,7 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string().optional(),
     /**
      * Enable or disable content moderation
-     * @default "true"
+     * @default "false"
      */
     MODERATION_ENABLED: z.enum(["true", "false"]).default("false"),
   },
