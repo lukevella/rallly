@@ -4,27 +4,6 @@ import { moderateContentWithAI } from "./libs/ai-moderation";
 import { containsSuspiciousPatterns } from "./libs/pattern-moderation";
 
 /**
- * Log the moderation status at initialization
- * This function is automatically called when this module is imported
- */
-function initModeration() {
-  if (env.MODERATION_ENABLED === "true") {
-    if (env.OPENAI_API_KEY) {
-      console.info("✅ Content moderation is ENABLED with AI support");
-    } else {
-      console.info(
-        "⚠️ Content moderation is ENABLED but missing OPENAI_API_KEY - AI moderation will be skipped",
-      );
-    }
-  } else {
-    console.info("ℹ️ Content moderation is DISABLED");
-  }
-}
-
-// Initialize moderation and log status
-initModeration();
-
-/**
  * Moderates content to detect spam, inappropriate content, or abuse
  * Uses a two-layer approach:
  * 1. Pattern-based detection for common spam patterns
