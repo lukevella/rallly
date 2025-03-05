@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
@@ -140,6 +141,15 @@ export const createRateLimitMiddleware = (
     const res = await ratelimit.limit(`${name}:${ctx.identifier}`);
 
     if (!res.success) {
+      posthog?.capture({
+        distinctId: ctx.user?.id ?? "system",
+        event: "ratelimit_exceeded",
+        properties: {
+          name,
+          requests,
+          duration,
+        },
+      });
       throw new TRPCError({
         code: "TOO_MANY_REQUESTS",
         message: "Too many requests",

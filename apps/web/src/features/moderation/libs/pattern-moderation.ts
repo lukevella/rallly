@@ -1,27 +1,10 @@
-import { openai } from "@ai-sdk/openai";
-import { generateText } from "ai";
-
-import { env } from "@/env";
-
-async function moderateContentWithAI(text: string) {
-  const result = await generateText({
-    model: openai("gpt-4-turbo"),
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are a content moderator. Analyze the following text and determine if it is attempting to misuse the app to advertise illegal drugs, prostitution, or promote illegal gambling and other illicit activities. Respond with 'FLAGGED' if detected, otherwise 'SAFE'.",
-      },
-      { role: "user", content: text },
-    ],
-  });
-
-  return result.text.trim() === "FLAGGED";
-}
-
-// Custom pattern-based checks
-function containsSuspiciousPatterns(text: string) {
-  if (!text) return false;
+/**
+ * Checks if the provided text contains suspicious patterns that might indicate spam or abuse
+ * @param text The text to check for suspicious patterns
+ * @returns True if suspicious patterns are detected, false otherwise
+ */
+export function containsSuspiciousPatterns(text: string) {
+  if (!text.trim()) return false;
 
   // Define all patterns
   const repetitiveCharsPattern = /(.)\1{4,}/;
@@ -58,26 +41,4 @@ function containsSuspiciousPatterns(text: string) {
     // Most intensive pattern (Unicode handling)
     suspiciousUnicodePattern.test(text)
   );
-}
-
-export async function moderateContent(...content: Array<string | undefined>) {
-  if (!env.OPENAI_API_KEY) {
-    console.info("OPENAI_API_KEY not set, skipping moderation");
-    return false;
-  }
-
-  const textToModerate = content.filter(Boolean).join("\n");
-
-  const hasSuspiciousPatterns = containsSuspiciousPatterns(textToModerate);
-
-  if (hasSuspiciousPatterns) {
-    try {
-      return moderateContentWithAI(textToModerate);
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  }
-
-  return false;
 }
