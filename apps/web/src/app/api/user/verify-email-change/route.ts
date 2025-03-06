@@ -1,4 +1,6 @@
+import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import * as Sentry from "@sentry/nextjs";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -33,10 +35,23 @@ const handleEmailChange = async (token: string) => {
     return false;
   }
 
-  await prisma.user.update({
+  const user = await prisma.user.update({
     where: { email: payload.fromEmail },
     data: { email: payload.toEmail },
+    select: {
+      customerId: true,
+    },
   });
+
+  try {
+    if (user.customerId) {
+      await stripe.customers.update(user.customerId, {
+        email: payload.toEmail,
+      });
+    }
+  } catch (error) {
+    Sentry.captureException(error);
+  }
 
   setEmailChangeCookie("success");
 
