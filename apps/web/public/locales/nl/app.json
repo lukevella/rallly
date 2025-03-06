@@ -30,6 +30,7 @@
   "editVotes": "Stemmen bewerken",
   "email": "E-mail",
   "emailNotAllowed": "Dit e-mailadres is niet toegestaan.",
+  "temporaryEmailNotAllowed": "Tijdelijke (wegwerp)adressen zijn niet toegestaan.",
   "emailPlaceholder": "elckerlyc@e-mail.nl",
   "exportToCsv": "Als CSV exporteren",
   "guest": "Gast",
