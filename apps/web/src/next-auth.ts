@@ -6,7 +6,7 @@ import type { Provider } from "next-auth/providers";
 import z from "zod";
 
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
-import { isEmailBlocked } from "./auth/helpers/is-email-blocked";
+import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { getLegacySession } from "./auth/legacy/next-auth-cookie-migration";
 import { EmailProvider } from "./auth/providers/email";
@@ -104,15 +104,14 @@ const {
         });
         return false;
       }
+
+      if (user.banned) {
+        return false;
+      }
+
       // Make sure email is allowed
       if (user.email) {
-        const isBlocked = isEmailBlocked(user.email);
-        if (isBlocked) {
-          return false;
-        }
-
-        // Check if user is banned
-        if (user.banned) {
+        if (isEmailBlocked(user.email) || (await isEmailBanned(user.email))) {
           return false;
         }
       }
