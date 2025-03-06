@@ -3,6 +3,7 @@ import { posthog } from "@rallly/posthog/server";
 import { redirect } from "next/navigation";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
+import { cache } from "react";
 import z from "zod";
 
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
@@ -193,14 +194,14 @@ const {
   },
 });
 
-const auth = async () => {
+const auth = cache(async () => {
   const session = await originalAuth();
   if (session) {
     return session;
   }
 
   return getLegacySession();
-};
+});
 
 const requireUser = async () => {
   const session = await auth();
