@@ -84,6 +84,10 @@ export async function GET(req: NextRequest) {
           weight: 700,
         },
       ],
+      headers: {
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Content-Type": "image/png",
+      },
     },
   );
 }
