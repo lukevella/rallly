@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
     },
     select: {
       email: true,
+      name: true,
       customerId: true,
       subscription: {
         select: {
@@ -50,6 +51,26 @@ export async function POST(request: NextRequest) {
 
   if (!user) {
     return new NextResponse(null, { status: 404 });
+  }
+
+  let customerId = user.customerId;
+
+  if (!customerId) {
+    const customer = await stripe.customers.create({
+      email: user.email,
+      name: user.name,
+    });
+
+    await prisma.user.update({
+      where: {
+        id: userSession.user.id,
+      },
+      data: {
+        customerId: customer.id,
+      },
+    });
+
+    customerId = customer.id;
   }
 
   if (user.subscription?.active === true) {
@@ -67,16 +88,11 @@ export async function POST(request: NextRequest) {
       return_path ?? "/api/stripe/portal?session_id={CHECKOUT_SESSION_ID}",
     ),
     cancel_url: absoluteUrl(return_path),
-    ...(user.customerId
-      ? {
-          customer: user.customerId,
-          customer_update: {
-            name: "auto",
-          },
-        }
-      : {
-          customer_email: user.email,
-        }),
+    customer: customerId,
+    customer_update: {
+      name: "auto",
+      address: "auto",
+    },
     mode: "subscription",
     allow_promotion_codes: true,
     billing_address_collection: "auto",
