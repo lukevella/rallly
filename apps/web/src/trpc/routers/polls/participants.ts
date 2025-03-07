@@ -267,9 +267,24 @@ export const participants = router({
           },
         });
 
+        const options = await prisma.option.findMany({
+          where: {
+            pollId,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        const existingOptionIds = new Set(options.map((option) => option.id));
+
+        const validVotes = votes.filter(({ optionId }) =>
+          existingOptionIds.has(optionId),
+        );
+
         // Create new votes
         await tx.vote.createMany({
-          data: votes.map(({ optionId, type }) => ({
+          data: validVotes.map(({ optionId, type }) => ({
             optionId,
             type,
             pollId,
