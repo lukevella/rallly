@@ -30,7 +30,7 @@ export function OptimizedAvatarImage({
       style={{ width: sizeToWidth[size], height: sizeToWidth[size] }}
     >
       {src ? (
-        src.startsWith("https") ? (
+        src.startsWith("https") || src.startsWith("data:") ? (
           <AvatarImage src={src} alt={name} />
         ) : (
           <Image
