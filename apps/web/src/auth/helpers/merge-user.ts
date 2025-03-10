@@ -6,6 +6,17 @@ export const mergeGuestsIntoUser = async (
   userId: string,
   guestIds: string[],
 ) => {
+  const count = await prisma.user.count({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (count === 0) {
+    console.warn(`User ${userId} not found`);
+    return;
+  }
+
   try {
     await prisma.$transaction(async (tx) => {
       await Promise.all([
