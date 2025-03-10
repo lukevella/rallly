@@ -69,13 +69,6 @@ export const CreatePoll: React.FunctionComponent = () => {
   const posthog = usePostHog();
   const createPoll = trpc.polls.create.useMutation({
     networkMode: "always",
-    onMutate: async () => {
-      if (session.status !== "authenticated") {
-        await signIn("guest", {
-          redirect: false,
-        });
-      }
-    },
     onError: (error) => {
       if (error.data?.code === "BAD_REQUEST") {
         toast({
@@ -91,6 +84,11 @@ export const CreatePoll: React.FunctionComponent = () => {
       <form
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
+          if (session.status !== "authenticated") {
+            await signIn("guest", {
+              redirect: false,
+            });
+          }
           await createPoll.mutateAsync(
             {
               title: title,
