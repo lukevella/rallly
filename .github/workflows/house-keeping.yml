@@ -3,20 +3,28 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 6 * * *" # Every day at 6:00am UTC
-env:
-  API_SECRET: ${{ secrets.API_SECRET }}
 jobs:
   clean:
     name: "Clean"
     runs-on: ubuntu-latest
+    env:
+      API_SECRET: ${{ secrets.API_SECRET }}
     steps:
+      - name: Check required variables
+        run: |
+          if [ -z "${{ vars.APP_BASE_URL }}" ]; then
+            echo "Error: APP_BASE_URL is not set. Please set this variable in your GitHub repository settings."
+            exit 1
+          fi
+          echo "BASE_URL=${{ vars.APP_BASE_URL }}" >> $GITHUB_ENV
       - name: Mark inactive polls as deleted
         run: |
-          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping/delete-inactive-polls" \
+          curl -X "POST" --fail "${BASE_URL}/api/house-keeping/delete-inactive-polls" \
           -H "Authorization: Bearer ${API_SECRET}" \
+          --max-time 300
       - name: Remove deleted polls
         run: |
-          curl -X "POST" --fail "https://app.rallly.co/api/house-keeping/remove-deleted-polls" \
+          curl -X "POST" --fail "${BASE_URL}/api/house-keeping/remove-deleted-polls" \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${API_SECRET}" \
-          -d '{"take": 1000}'
+          --max-time 300
