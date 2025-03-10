@@ -5,6 +5,7 @@ import NextAuth from "next-auth";
 import { nextAuthConfig } from "@/next-auth.config";
 
 import {
+  deleteLegacyCookie,
   getLegacySession,
   migrateLegacyJWT,
 } from "../legacy/next-auth-cookie-migration";
@@ -24,6 +25,7 @@ export const withAuth = (
     }
 
     let isLegacySession = false;
+    let isExpiredLegacySession = false;
 
     if (!session) {
       try {
@@ -32,7 +34,7 @@ export const withAuth = (
           isLegacySession = true;
         }
       } catch (e) {
-        console.error(e);
+        isExpiredLegacySession = true;
       }
     }
 
@@ -54,11 +56,17 @@ export const withAuth = (
     const middlewareRes = await middleware(request);
 
     if (isLegacySession) {
+      console.warn("Found legacy session, migrating…");
       try {
         await migrateLegacyJWT(middlewareRes);
       } catch (e) {
         console.error(e);
       }
+    }
+
+    if (isExpiredLegacySession) {
+      console.warn("Found expired legacy session, deleting…");
+      deleteLegacyCookie(middlewareRes);
     }
 
     return middlewareRes;

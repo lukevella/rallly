@@ -195,12 +195,20 @@ const {
 });
 
 const auth = cache(async () => {
-  const session = await originalAuth();
-  if (session) {
-    return session;
+  try {
+    const session = await originalAuth();
+    if (session) {
+      return session;
+    }
+  } catch (e) {
+    console.error("FAILED TO GET SESSION", e);
   }
 
-  return getLegacySession();
+  try {
+    return await getLegacySession();
+  } catch (e) {
+    console.error("FAILED TO GET LEGACY SESSION", e);
+  }
 });
 
 const requireUser = async () => {

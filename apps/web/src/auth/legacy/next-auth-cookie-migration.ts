@@ -46,7 +46,7 @@ async function getLegacyJWT() {
   return null;
 }
 
-function deleteLegacyCookie(res: NextResponse) {
+export function deleteLegacyCookie(res: NextResponse) {
   const cookieStore = cookies();
   const oldCookie = cookieStore.get(oldCookieName);
   if (oldCookie) {
