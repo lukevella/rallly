@@ -201,13 +201,13 @@ const auth = cache(async () => {
       return session;
     }
   } catch (e) {
-    console.error("FAILED TO GET SESSION");
+    console.error("FAILED TO GET SESSION", e);
   }
 
   try {
     return await getLegacySession();
   } catch (e) {
-    console.error("FAILED TO GET LEGACY SESSION");
+    console.error("FAILED TO GET LEGACY SESSION", e);
   }
 });
 
