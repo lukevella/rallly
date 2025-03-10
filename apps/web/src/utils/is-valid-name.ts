@@ -5,9 +5,14 @@
  */
 export function isValidName(value: string) {
   // Check for URL patterns
-  const urlPattern =
-    /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
-  if (urlPattern.test(value)) {
+  // First check for common prefixes to avoid false positives with names like "Dr. Smith"
+  if (/(https?:\/\/|www\.|http:|https:)/.test(value)) {
+    return false;
+  }
+
+  // Common TLDs that would indicate a URL
+  const commonTLDs = /\.(com|org|net|edu|gov|io|co|me|app|dev|info)(\s|$|\/)/i;
+  if (commonTLDs.test(value)) {
     return false;
   }
 
