@@ -9,15 +9,11 @@ export async function decodeLegacyJWT(token: string): Promise<JWT | null> {
     process.env.SECRET_PASSWORD,
     "",
   );
-  try {
-    const { payload } = await jwtDecrypt(token, encryptionSecret, {
-      clockTolerance: 15,
-    });
-    return payload;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
+  const { payload } = await jwtDecrypt(token, encryptionSecret, {
+    clockTolerance: 15,
+  });
+
+  return payload;
 }
 
 async function getDerivedEncryptionKey(
