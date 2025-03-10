@@ -8,6 +8,7 @@ import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { getEmailClient } from "@/utils/emails";
+import { isValidName } from "@/utils/is-valid-name";
 import { createToken, decryptToken } from "@/utils/session";
 
 import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
@@ -33,7 +34,7 @@ export const auth = router({
     .use(createRateLimitMiddleware("request_registration", 5, "1 m"))
     .input(
       z.object({
-        name: z.string().min(1).max(100),
+        name: z.string().trim().min(1).max(100).refine(isValidName),
         email: z.string().email(),
       }),
     )
