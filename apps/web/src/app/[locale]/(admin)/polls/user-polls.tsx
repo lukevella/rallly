@@ -225,7 +225,9 @@ function PollsListView({
         >
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <GroupPollIcon size="xs" />
+              <div>
+                <GroupPollIcon size="xs" />
+              </div>
               <h2 className="truncate text-base font-medium group-hover:underline">
                 <Link
                   href={`/poll/${row.original.id}`}
