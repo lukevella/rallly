@@ -27,6 +27,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
+import { NavMain } from "./nav-main";
 
 export function AppSidebar({
   user,
@@ -57,68 +58,7 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Home">
-                <Link href="/">
-                  <Icon>
-                    <HomeIcon />
-                  </Icon>
-                  <span>Home</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Polls">
-                <Link href="/polls">
-                  <Icon>
-                    <BarChart2Icon />
-                  </Icon>
-                  <span>Polls</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Events">
-                <Link href="/events">
-                  <Icon>
-                    <CalendarIcon />
-                  </Icon>
-                  <span>Events</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            {/* <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Teams">
-                <Link href="/team">
-                  <Icon>
-                    <Users2Icon />
-                  </Icon>
-                  <span>Team</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Integrations">
-                <Link href="/integrations">
-                  <Icon>
-                    <PuzzleIcon />
-                  </Icon>
-                  <span>Integrations</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem> */}
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Settings">
-                <Link href="/settings/profile">
-                  <Icon>
-                    <Settings2 />
-                  </Icon>
-                  <span>Settings</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <NavMain />
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
