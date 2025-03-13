@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { auth } from "@/next-auth";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,11 +14,28 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@rallly/ui/sidebar";
+import { notFound } from "next/navigation";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth();
+
+  if (!session?.user || !session.user.name || !session.user.email) {
+    notFound();
+  }
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar
+        user={{
+          name: session.user.name,
+          email: session.user.email,
+          image: session.user.image ?? undefined,
+        }}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">

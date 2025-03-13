@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@rallly/ui/sidebar";
+import { OptimizedAvatarImage } from "../optimized-avatar-image";
 
 export function NavUser({
   user,
@@ -32,7 +33,7 @@ export function NavUser({
   user: {
     name: string;
     email: string;
-    avatar: string;
+    image?: string;
   };
 }) {
   const { isMobile } = useSidebar();
@@ -46,12 +47,11 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback seed={user.name} className="rounded-lg">
-                  CN
-                </AvatarFallback>
-              </Avatar>
+              <OptimizedAvatarImage
+                size="md"
+                src={user.image}
+                name={user.name}
+              />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
@@ -67,12 +67,11 @@ export function NavUser({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback seed={user.name} className="rounded-lg">
-                    CN
-                  </AvatarFallback>
-                </Avatar>
+                <OptimizedAvatarImage
+                  size="md"
+                  src={user.image}
+                  name={user.name}
+                />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
