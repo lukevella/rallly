@@ -71,7 +71,7 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <OptimizedAvatarImage
-                  size="sm"
+                  size="md"
                   src={user.image}
                   name={user.name}
                 />
@@ -82,7 +82,6 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <Link href="/settings/profile">

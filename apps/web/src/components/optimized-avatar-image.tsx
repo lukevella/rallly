@@ -7,7 +7,7 @@ import React from "react";
 const sizeToWidth = {
   xs: 20,
   sm: 24,
-  md: 36,
+  md: 32,
   lg: 48,
   xl: 56,
 };

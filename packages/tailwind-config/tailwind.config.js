@@ -68,7 +68,7 @@ module.exports = {
           foreground: colors.gray["700"],
           accent: {
             DEFAULT: colors.gray["200"],
-            foreground: colors.gray["900"],
+            foreground: colors.gray["800"],
           },
         },
       },
