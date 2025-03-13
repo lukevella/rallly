@@ -41,7 +41,7 @@ export function AppSidebar({
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <Link
-          className="inline-block p-2 transition-transform active:translate-y-1"
+          className="inline-block transition-transform active:translate-y-1"
           href="/"
         >
           <Image
@@ -99,7 +99,7 @@ export function AppSidebar({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Settings">
-                <Link href="/settings">
+                <Link href="/settings/profile">
                   <Icon>
                     <Settings2 />
                   </Icon>
