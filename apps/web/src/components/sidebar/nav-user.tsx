@@ -2,14 +2,14 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Settings2Icon,
   Sparkles,
+  UserIcon,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@rallly/ui/sidebar";
+import Link from "next/link";
 import { OptimizedAvatarImage } from "../optimized-avatar-image";
+import { Icon } from "@rallly/ui/icon";
+import { signOut } from "next-auth/react";
 
 export function NavUser({
   user,
@@ -68,7 +71,7 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <OptimizedAvatarImage
-                  size="md"
+                  size="sm"
                   src={user.image}
                   name={user.name}
                 />
@@ -79,30 +82,38 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+              <DropdownMenuItem asChild>
+                <Link href="/settings/profile">
+                  <Icon>
+                    <UserIcon />
+                  </Icon>
+                  Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings/preferences">
+                  <Icon>
+                    <Settings2Icon />
+                  </Icon>
+                  Preferences
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings/billing">
+                  <Icon>
+                    <CreditCard />
+                  </Icon>
+                  Billing
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            <DropdownMenuItem onSelect={() => signOut()}>
+              <Icon>
+                <LogOut />
+              </Icon>
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
