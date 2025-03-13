@@ -4,7 +4,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   content: [
     "./src/**/*.{ts,tsx}",
-    "../../packages/ui/**/*.{ts,tsx}",
+    "../../packages/ui/src/**/*.{ts,tsx}",
     "../../packages/tailwind-config/tailwind.config.js",
   ],
   plugins: [
@@ -62,6 +62,14 @@ module.exports = {
           DEFAULT: colors.white,
           background: colors.white,
           foreground: colors.gray["700"],
+        },
+        sidebar: {
+          DEFAULT: colors.gray["100"],
+          foreground: colors.gray["700"],
+          accent: {
+            DEFAULT: colors.gray["200"],
+            foreground: colors.gray["900"],
+          },
         },
       },
       keyframes: {
