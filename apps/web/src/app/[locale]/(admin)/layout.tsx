@@ -1,42 +1,45 @@
-import { cn } from "@rallly/ui";
-import { dehydrate, Hydrate } from "@tanstack/react-query";
-import React from "react";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@rallly/ui/breadcrumb";
+import { Separator } from "@rallly/ui/separator";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@rallly/ui/sidebar";
 
-import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
-import { ProBadge } from "@/app/[locale]/(admin)/pro-badge";
-import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
-import { LogoLink } from "@/app/components/logo-link";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
-
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const helpers = await createSSRHelper();
-  await helpers.user.subscription.prefetch();
-  const dehydratedState = dehydrate(helpers.queryClient);
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <Hydrate state={dehydratedState}>
-      <div className="flex flex-col pb-16 md:pb-0">
-        <div
-          className={cn(
-            "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-4 overflow-y-auto p-6 md:flex",
-          )}
-        >
-          <div className="flex w-full items-center justify-between gap-4">
-            <LogoLink />
-            <ProBadge />
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Building Your Application
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
-          <Sidebar />
-        </div>
-        <div className={cn("grow space-y-4 p-3 md:ml-72 md:p-4 lg:p-6")}>
-          <div className="max-w-5xl">{children}</div>
-        </div>
-        <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md md:hidden">
-          <MobileNavigation />
-        </div>
-      </div>
-    </Hydrate>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
