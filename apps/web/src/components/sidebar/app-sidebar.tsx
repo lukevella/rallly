@@ -15,6 +15,7 @@ import {
 } from "@rallly/ui/sidebar";
 import {
   AudioWaveform,
+  BarChart2Icon,
   CalendarIcon,
   Command,
   GalleryVerticalEnd,
@@ -59,11 +60,21 @@ export function AppSidebar({
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Home">
-                <Link href="/polls">
+                <Link href="/">
                   <Icon>
                     <HomeIcon />
                   </Icon>
                   <span>Home</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Polls">
+                <Link href="/polls">
+                  <Icon>
+                    <BarChart2Icon />
+                  </Icon>
+                  <span>Polls</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -77,7 +88,7 @@ export function AppSidebar({
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
+            {/* <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Teams">
                 <Link href="/team">
                   <Icon>
@@ -96,7 +107,7 @@ export function AppSidebar({
                   <span>Integrations</span>
                 </Link>
               </SidebarMenuButton>
-            </SidebarMenuItem>
+            </SidebarMenuItem> */}
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Settings">
                 <Link href="/settings/profile">
