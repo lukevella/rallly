@@ -9,7 +9,7 @@ const sizeToWidth = {
   sm: 24,
   md: 32,
   lg: 48,
-  xl: 56,
+  xl: 64,
 };
 
 export function OptimizedAvatarImage({
