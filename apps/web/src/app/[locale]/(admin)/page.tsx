@@ -1,4 +1,10 @@
-import { DotIcon, HomeIcon, InboxIcon } from "lucide-react";
+import {
+  ArrowRightSquareIcon,
+  ArrowUpRightFromSquareIcon,
+  DotIcon,
+  HomeIcon,
+  InboxIcon,
+} from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import Link from "next/link";
 import type { Params } from "@/app/[locale]/types";
@@ -15,9 +21,11 @@ import { requireUser } from "@/next-auth";
 import { prisma } from "@rallly/database";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { LocalTime } from "@/components/local-time";
-import DotPattern from "@rallly/ui/dot-pattern";
 import { FormattedDate } from "@/components/formatted-date";
 import { Button } from "@rallly/ui/button";
+import { PollCard } from "@/components/poll-card";
+import { notFound } from "next/navigation";
+import { options } from "i18next-scanner.config";
 
 function getUpcomingEvents(userId: string) {
   return prisma.event.findMany({
@@ -39,20 +47,57 @@ function getUpcomingEvents(userId: string) {
   });
 }
 
-function getRecentPolls(userId: string) {
-  return prisma.poll.findMany({
+async function getRecentPolls(userId: string) {
+  const polls = await prisma.poll.findMany({
     where: {
       userId,
+      status: "live",
     },
     select: {
       id: true,
       title: true,
       createdAt: true,
+      options: {
+        select: {
+          startTime: true,
+        },
+        orderBy: {
+          startTime: "asc",
+        },
+      },
+      participants: {
+        select: {
+          name: true,
+          user: {
+            select: {
+              image: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          participants: true,
+          comments: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
     },
     take: 3,
+  });
+
+  return polls.map((poll) => {
+    const lastOption = poll.options[poll.options.length - 1];
+    return {
+      id: poll.id,
+      title: poll.title,
+      createdAt: poll.createdAt,
+      from: poll.options[0].startTime,
+      to: lastOption.startTime,
+      participants: poll._count.participants,
+    };
   });
 }
 
@@ -90,7 +135,7 @@ export default async function Page({ params }: { params: Params }) {
             </PageTitle>
           </div>
         </PageHeader>
-        <PageContent className="space-y-6">
+        <PageContent className="grid gap-4 lg:grid-cols-2">
           <div className="relative flex flex-col items-center justify-center rounded-lg border p-8 text-center">
             <div>
               <OptimizedAvatarImage
@@ -102,24 +147,31 @@ export default async function Page({ params }: { params: Params }) {
               <div className="text-xl font-bold tracking-tight">
                 {user.name}
               </div>
-              <div className="text-muted-foreground flex items-center gap-1">
+              <div className="text-muted-foreground flex items-center justify-center gap-1">
                 <div>{user.timeZone}</div>
                 <DotIcon className="size-4" />
                 <div>
                   <LocalTime />
                 </div>
               </div>
-              <div className="mt-4">
-                <Link className="text-link" href={`/${user.id}`}>
-                  View Public Page
-                </Link>
+              <div className="mt-6">
+                <div className="inline-flex items-center gap-4 rounded-lg bg-gray-100 p-1 pl-4">
+                  https://rallly.co/lukevella
+                  <Button size="sm" variant="primary" asChild>
+                    <Link href={`/${user.id}`}>
+                      <Icon>
+                        <ArrowUpRightFromSquareIcon />
+                      </Icon>
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 rounded-lg border p-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">
-                <Trans t={t} i18nKey="recentPolls" defaults="Recent Polls" />
+                <Trans t={t} i18nKey="pendingEvents" defaults="Pending" />
               </h3>
               <Button variant="ghost" asChild>
                 <Link href="/polls">
@@ -129,24 +181,17 @@ export default async function Page({ params }: { params: Params }) {
             </div>
             <div>
               {recentPolls.length > 0 ? (
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 gap-4">
                   {recentPolls.map((poll) => (
-                    <div
+                    <PollCard
                       key={poll.id}
-                      className="hover:bg-accent hover:text-accent-foreground relative flex h-32 flex-col rounded-lg border p-3"
-                    >
-                      <div className="mt-auto">
-                        <div className="font-semibold">
-                          <Link href={`/poll/${poll.id}`}>
-                            <span className="absolute inset-0" />
-                            {poll.title}
-                          </Link>
-                        </div>
-                        <div className="text-muted-foreground">
-                          <FormattedDate date={poll.createdAt} format="short" />
-                        </div>
-                      </div>
-                    </div>
+                      pollId={poll.id}
+                      title={poll.title}
+                      createdAt={poll.createdAt}
+                      from={poll.from}
+                      to={poll.to}
+                      participants={poll.participants}
+                    />
                   ))}
                 </div>
               ) : (
@@ -156,14 +201,10 @@ export default async function Page({ params }: { params: Params }) {
               )}
             </div>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 rounded-lg border p-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">
-                <Trans
-                  t={t}
-                  i18nKey="upcomingEvents"
-                  defaults="Upcoming Events"
-                />
+                <Trans t={t} i18nKey="upcomingEvents" defaults="Upcoming" />
               </h3>
               <Button variant="ghost" asChild>
                 <Link href="/events">
@@ -173,14 +214,14 @@ export default async function Page({ params }: { params: Params }) {
             </div>
             <div>
               {upcomingEvents.length > 0 ? (
-                <div className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1 gap-4">
                   {upcomingEvents.map((event) => (
                     <div
                       key={event.id}
                       className="flex items-center justify-between rounded-lg bg-gray-50 p-4 shadow-sm"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="font-bold">{event.title}</div>
+                        <div className="text-lg font-bold">{event.title}</div>
                         <div className="text-muted-foreground">
                           <FormattedDate date={event.start} format="short" />
                         </div>
