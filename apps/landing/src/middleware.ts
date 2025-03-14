@@ -1,7 +1,7 @@
 import { supportedLngs } from "@rallly/languages";
+import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
