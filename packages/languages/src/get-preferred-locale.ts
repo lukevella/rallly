@@ -8,7 +8,7 @@ const locales = Object.keys(languages);
 export async function getPreferredLocale(req: NextRequest) {
   const preferredLanguages = new Negotiator({
     headers: {
-      "accept-language": req.headers.get("accept-language") ?? undefined,
+      "accept-language": req.headers.get("accept-language") ?? "",
     },
   }).languages();
 
