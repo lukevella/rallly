@@ -25,7 +25,7 @@ export const middleware = withAuth(async (req) => {
     newUrl.pathname = `/${locale}${newUrl.pathname}`;
   } else {
     // Check if locale is specified in header
-    locale = await getPreferredLocale(req);
+    locale = getPreferredLocale(req);
     newUrl.pathname = `/${locale}${newUrl.pathname}`;
   }
 
