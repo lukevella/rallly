@@ -6,12 +6,12 @@ import type { NextRequest } from "next/server";
 const locales = Object.keys(languages);
 
 export async function getPreferredLocale(req: NextRequest) {
-  const languages = new Negotiator({
+  const preferredLanguages = new Negotiator({
     headers: {
       "accept-language": req.headers.get("accept-language") ?? undefined,
     },
   }).languages();
 
-  const locale = match(languages, locales, defaultLocale);
+  const locale = match(preferredLanguages, locales, defaultLocale);
   return locale;
 }
