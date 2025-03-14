@@ -20,10 +20,10 @@ export function PollCard({
 }) {
   return (
     <div key={pollId} className="relative flex justify-between">
-      <div className="flex items-center gap-4">
+      <div className="flex min-w-0 items-center gap-4">
         <DateRangeIcon fromDate={from} toDate={to} />
-        <div>
-          <div className="font-medium">
+        <div className="min-w-0">
+          <div className="truncate text-sm font-medium">
             <Link href={`/poll/${pollId}`}>
               <span className="absolute inset-0" />
               {title}
@@ -52,7 +52,10 @@ function DateIcon({ date, className = "", isStacked = false }: DateIconProps) {
 
   return (
     <div
-      className={`bg-background flex flex-col items-center rounded-lg border p-1 ${className}`}
+      className={cn(
+        "bg-background flex flex-col items-center rounded-lg border p-1",
+        className,
+      )}
     >
       <div
         className={`text-muted-foreground flex items-center justify-center text-xs ${
@@ -78,11 +81,19 @@ interface DateRangeIconProps {
   className?: string;
 }
 
-function DateRangeIcon({ fromDate, className = "" }: DateRangeIconProps) {
+function DateRangeIcon({
+  fromDate,
+  toDate,
+  className = "",
+}: DateRangeIconProps) {
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative isolate", className)}>
+      {/* Back date (second date) */}
+      <div className="absolute top-1 z-20">
+        <DateIcon date={toDate} isStacked={true} />
+      </div>
       {/* Front date (first date) */}
-      <div style={{ zIndex: 3 }}>
+      <div className="relative z-10">
         <DateIcon date={fromDate} />
       </div>
     </div>
