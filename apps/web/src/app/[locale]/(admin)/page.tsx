@@ -1,14 +1,11 @@
-import {
-  ArrowRightSquareIcon,
-  ArrowUpRightFromSquareIcon,
-  DotIcon,
-  HomeIcon,
-  InboxIcon,
-} from "lucide-react";
-import { Trans } from "react-i18next/TransWithoutContext";
+import { prisma } from "@rallly/database";
+import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
+import { CalendarIcon, DotIcon, HomeIcon } from "lucide-react";
 import Link from "next/link";
+import { Trans } from "react-i18next/TransWithoutContext";
+
 import type { Params } from "@/app/[locale]/types";
-import { Icon } from "@rallly/ui/icon";
 import {
   PageContainer,
   PageContent,
@@ -16,16 +13,66 @@ import {
   PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
+import { FormattedDate } from "@/components/formatted-date";
+import { LocalTime } from "@/components/local-time";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { PollCard } from "@/components/poll-card";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
-import { prisma } from "@rallly/database";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { LocalTime } from "@/components/local-time";
-import { FormattedDate } from "@/components/formatted-date";
-import { Button } from "@rallly/ui/button";
-import { PollCard } from "@/components/poll-card";
-import { notFound } from "next/navigation";
-import { options } from "i18next-scanner.config";
+
+function CardContainer({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return <div className={cn("rounded-lg border", className)}>{children}</div>;
+}
+
+function CardContainerHeader({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn("flex items-center justify-between px-4 pt-3", className)}
+    >
+      {children}
+    </div>
+  );
+}
+
+function CardContainerTitle({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("text-lg font-semibold", className)}>{children}</div>
+  );
+}
+
+function CardContainerContent({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={cn("p-4", className)}>{children}</div>;
+}
 
 function getUpcomingEvents(userId: string) {
   return prisma.event.findMany({
@@ -136,8 +183,8 @@ export default async function Page({ params }: { params: Params }) {
           </div>
         </PageHeader>
         <PageContent className="grid gap-4 lg:grid-cols-2">
-          <div className="relative flex flex-col items-center justify-center rounded-lg border p-8 text-center">
-            <div>
+          <CardContainer className="flex items-center justify-center">
+            <div className="flex flex-col items-center text-center">
               <OptimizedAvatarImage
                 className="mx-auto mb-4"
                 src={user.image ?? undefined}
@@ -154,32 +201,20 @@ export default async function Page({ params }: { params: Params }) {
                   <LocalTime />
                 </div>
               </div>
-              <div className="mt-6">
-                <div className="inline-flex items-center gap-4 rounded-lg bg-gray-100 p-1 pl-4">
-                  https://rallly.co/lukevella
-                  <Button size="sm" variant="primary" asChild>
-                    <Link href={`/${user.id}`}>
-                      <Icon>
-                        <ArrowUpRightFromSquareIcon />
-                      </Icon>
-                    </Link>
-                  </Button>
-                </div>
-              </div>
             </div>
-          </div>
-          <div className="space-y-4 rounded-lg border p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">
+          </CardContainer>
+          <CardContainer>
+            <CardContainerHeader>
+              <CardContainerTitle>
                 <Trans t={t} i18nKey="pendingEvents" defaults="Pending" />
-              </h3>
+              </CardContainerTitle>
               <Button variant="ghost" asChild>
                 <Link href="/polls">
                   <Trans t={t} i18nKey="viewAll" defaults="View All" />
                 </Link>
               </Button>
-            </div>
-            <div>
+            </CardContainerHeader>
+            <CardContainerContent>
               {recentPolls.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4">
                   {recentPolls.map((poll) => (
@@ -199,20 +234,20 @@ export default async function Page({ params }: { params: Params }) {
                   <Trans t={t} i18nKey="noPolls" defaults="No polls" />
                 </div>
               )}
-            </div>
-          </div>
-          <div className="space-y-4 rounded-lg border p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">
+            </CardContainerContent>
+          </CardContainer>
+          <CardContainer>
+            <CardContainerHeader>
+              <CardContainerTitle>
                 <Trans t={t} i18nKey="upcomingEvents" defaults="Upcoming" />
-              </h3>
+              </CardContainerTitle>
               <Button variant="ghost" asChild>
                 <Link href="/events">
                   <Trans t={t} i18nKey="viewAll" defaults="View All" />
                 </Link>
               </Button>
-            </div>
-            <div>
+            </CardContainerHeader>
+            <CardContainerContent>
               {upcomingEvents.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4">
                   {upcomingEvents.map((event) => (
@@ -230,12 +265,24 @@ export default async function Page({ params }: { params: Params }) {
                   ))}
                 </div>
               ) : (
-                <div className="text-muted-foreground b flex h-32 items-center justify-center p-4 text-center">
-                  <Trans t={t} i18nKey="noEvents" defaults="No events" />
-                </div>
+                <EmptyState className="py-8">
+                  <EmptyStateIcon>
+                    <CalendarIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
+                    <Trans t={t} i18nKey="noEvents" defaults="No events" />
+                  </EmptyStateTitle>
+                  <EmptyStateDescription>
+                    <Trans
+                      t={t}
+                      i18nKey="noEventsDescription"
+                      defaults="When you schedule events, they will appear here."
+                    />
+                  </EmptyStateDescription>
+                </EmptyState>
               )}
-            </div>
-          </div>
+            </CardContainerContent>
+          </CardContainer>
         </PageContent>
       </PageContainer>
     </div>
