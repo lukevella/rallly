@@ -1,16 +1,7 @@
 import { supportedLngs } from "@rallly/languages";
-import languageParser from "accept-language-parser";
+import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-
-export async function getLocaleFromHeader(req: NextRequest) {
-  const headers = req.headers;
-  const acceptLanguageHeader = headers.get("accept-language");
-  const localeFromHeader = acceptLanguageHeader
-    ? languageParser.pick(supportedLngs, acceptLanguageHeader)
-    : null;
-  return localeFromHeader ?? "en";
-}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -28,7 +19,7 @@ export async function middleware(request: NextRequest) {
     return;
   }
 
-  const locale = await getLocaleFromHeader(request);
+  const locale = await getPreferredLocale(request);
   request.nextUrl.pathname = `/${locale}${pathname}`;
 
   if (locale === "en") {

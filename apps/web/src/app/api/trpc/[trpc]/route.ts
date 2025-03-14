@@ -1,9 +1,9 @@
+import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import * as Sentry from "@sentry/nextjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
-import { getLocaleFromHeader } from "@/app/guest";
 import { auth } from "@/next-auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
@@ -19,7 +19,7 @@ const handler = async (req: NextRequest) => {
     req,
     router: appRouter,
     createContext: async () => {
-      const locale = await getLocaleFromHeader(req);
+      const locale = await getPreferredLocale(req);
       const user = session?.user
         ? {
             id: session.user.id,

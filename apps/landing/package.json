@@ -20,7 +20,6 @@
     "@rallly/utils": "*",
     "@svgr/webpack": "^6.5.1",
     "@vercel/analytics": "^0.1.8",
-    "accept-language-parser": "^1.5.0",
     "dayjs": "^1.11.10",
     "gray-matter": "^4.0.3",
     "i18next": "^24.2.2",
