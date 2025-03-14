@@ -64,7 +64,7 @@ module.exports = {
           foreground: colors.gray["700"],
         },
         sidebar: {
-          DEFAULT: colors.gray["100"],
+          DEFAULT: colors.white,
           foreground: colors.gray["700"],
           accent: {
             DEFAULT: colors.gray["200"],

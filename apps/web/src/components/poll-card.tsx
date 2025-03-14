@@ -92,11 +92,11 @@ function DateRangeIcon({
   return (
     <div className={cn("relative isolate", className)}>
       {/* Back date (second date) */}
-      <div className="absolute top-1 z-20">
+      <div className="relative z-20">
         <DateIcon date={toDate} isStacked={true} />
       </div>
       {/* Front date (first date) */}
-      <div className="relative z-10">
+      <div className="absolute -bottom-1 z-10">
         <DateIcon date={fromDate} />
       </div>
     </div>

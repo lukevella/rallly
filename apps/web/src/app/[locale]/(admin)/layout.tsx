@@ -1,17 +1,4 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@rallly/ui/breadcrumb";
-import { Separator } from "@rallly/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@rallly/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@rallly/ui/sidebar";
 import { notFound } from "next/navigation";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
@@ -38,7 +25,7 @@ export default async function Layout({
         }}
       />
       <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 px-8 py-4">{children}</div>
+        <div className="flex flex-1 flex-col gap-4 p-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

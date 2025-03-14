@@ -33,7 +33,7 @@ export function PageTitle({
   return (
     <h1
       className={cn(
-        "inline-flex items-center truncate text-xl font-bold tracking-tight text-gray-700",
+        "text-foreground inline-flex items-center truncate text-xl font-bold tracking-tight",
         className,
       )}
     >
