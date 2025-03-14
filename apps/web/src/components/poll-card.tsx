@@ -1,15 +1,12 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { CalendarIcon, ClockIcon, ArrowRightIcon } from "lucide-react";
-import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
-import { cn } from "@rallly/ui";
 
 export function PollCard({
   pollId,
   title,
-  createdAt,
   from,
   to,
   participants,
@@ -21,9 +18,6 @@ export function PollCard({
   to: Date;
   participants: number;
 }) {
-  // Calculate duration in days
-  const durationDays = dayjs(to).diff(dayjs(from), "day") + 1;
-
   return (
     <div key={pollId} className="relative flex justify-between">
       <div className="flex items-center gap-4">
@@ -55,18 +49,17 @@ interface DateIconProps {
 function DateIcon({ date, className = "", isStacked = false }: DateIconProps) {
   const month = dayjs(date).format("MMM");
   const day = dayjs(date).format("D");
-  const year = dayjs(date).format("YYYY");
 
   return (
     <div
-      className={`bg-background flex flex-col items-center rounded-lg p-1 ring-2 ring-gray-200 ${className}`}
+      className={`bg-background flex flex-col items-center rounded-lg border p-1 ${className}`}
     >
       <div
         className={`text-muted-foreground flex items-center justify-center text-xs ${
           isStacked ? "opacity-90" : ""
         }`}
       >
-        {month} {year !== dayjs().format("YYYY") ? `'${year.slice(2)}` : ""}
+        {month}
       </div>
       <div
         className={`flex w-10 items-center justify-center rounded-md text-base font-bold ${
@@ -85,15 +78,7 @@ interface DateRangeIconProps {
   className?: string;
 }
 
-function DateRangeIcon({
-  fromDate,
-  toDate,
-  className = "",
-}: DateRangeIconProps) {
-  // Calculate number of days between dates to determine stack size
-  const daysBetween = dayjs(toDate).diff(dayjs(fromDate), "day");
-  const showMiddleStack = daysBetween > 1;
-
+function DateRangeIcon({ fromDate, className = "" }: DateRangeIconProps) {
   return (
     <div className={cn("relative", className)}>
       {/* Front date (first date) */}

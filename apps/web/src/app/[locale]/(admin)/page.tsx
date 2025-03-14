@@ -183,7 +183,7 @@ export default async function Page({ params }: { params: Params }) {
           </div>
         </PageHeader>
         <PageContent className="grid gap-4 lg:grid-cols-2">
-          <CardContainer className="flex items-center justify-center">
+          <CardContainer className="col-span-2 flex items-center justify-center py-16">
             <div className="flex flex-col items-center text-center">
               <OptimizedAvatarImage
                 className="mx-auto mb-4"
