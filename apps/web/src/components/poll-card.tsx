@@ -2,7 +2,10 @@
 
 import { cn } from "@rallly/ui";
 import dayjs from "dayjs";
+import { MapPinIcon } from "lucide-react";
 import Link from "next/link";
+
+import { OptimizedAvatarImage } from "./optimized-avatar-image";
 
 export function PollCard({
   pollId,
@@ -10,6 +13,9 @@ export function PollCard({
   from,
   to,
   participants,
+  location,
+  optionsCount,
+  participantsList,
 }: {
   pollId: string;
   title: string;
@@ -17,25 +23,72 @@ export function PollCard({
   from: Date;
   to: Date;
   participants: number;
+  location: string | null;
+  optionsCount: number;
+  participantsList: {
+    id: string;
+    name: string;
+    user: {
+      image: string | null;
+    } | null;
+  }[];
 }) {
+  // Format dates
+  const fromFormatted = dayjs(from).format("MMM D");
+  const toFormatted = dayjs(to).format("MMM D");
+
   return (
-    <div key={pollId} className="relative flex justify-between">
-      <div className="flex min-w-0 items-center gap-4">
-        <DateRangeIcon fromDate={from} toDate={to} />
-        <div className="min-w-0">
-          <div className="truncate text-base tracking-tight">
-            <Link href={`/poll/${pollId}`}>
-              <span className="absolute inset-0" />
-              {title}
-            </Link>
-          </div>
-          <div className="text-muted-foreground text-sm">
-            {participants} {participants === 1 ? "participant" : "participants"}
-          </div>
+    <div
+      key={pollId}
+      className="relative flex flex-col gap-2 rounded-lg border p-4 shadow-sm transition-shadow hover:shadow-md"
+    >
+      <div className="min-w-0">
+        <div className="truncate text-base font-medium tracking-tight">
+          <Link href={`/poll/${pollId}`}>
+            <span className="absolute inset-0" />
+            {title}
+          </Link>
         </div>
+
+        {location && (
+          <div className="text-muted-foreground mt-1 flex items-center gap-1 text-sm">
+            <MapPinIcon className="h-3.5 w-3.5" />
+            <span className="truncate">{location}</span>
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center gap-2"></div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <DateRangeIcon fromDate={from} toDate={to} />
+          <div className="text-muted-foreground text-sm">
+            {fromFormatted} - {toFormatted}
+            {optionsCount > 1 && (
+              <span className="ml-1 text-xs">({optionsCount} options)</span>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center">
+          <div className="flex -space-x-2">
+            {participantsList.slice(0, 5).map((participant) => (
+              <div key={participant.id} className="relative">
+                <OptimizedAvatarImage
+                  src={participant.user?.image ?? undefined}
+                  name={participant.name}
+                  size="sm"
+                  className="border-background border-2"
+                />
+              </div>
+            ))}
+          </div>
+          {participants > 5 && (
+            <div className="text-muted-foreground ml-1 text-xs">
+              +{participants - 5}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -53,7 +106,7 @@ function DateIcon({ date, className = "", isStacked = false }: DateIconProps) {
   return (
     <div
       className={cn(
-        "bg-background flex size-12 flex-col items-center justify-center rounded-lg border",
+        "bg-background flex size-10 flex-col items-center justify-center rounded-lg border",
         className,
       )}
     >
@@ -68,9 +121,12 @@ function DateIcon({ date, className = "", isStacked = false }: DateIconProps) {
         {month}
       </div>
       <div
-        className={cn("flex items-center justify-center rounded-md text-base", {
-          "opacity-90": isStacked,
-        })}
+        className={cn(
+          "flex items-center justify-center rounded-md text-sm font-medium",
+          {
+            "opacity-90": isStacked,
+          },
+        )}
       >
         {day}
       </div>

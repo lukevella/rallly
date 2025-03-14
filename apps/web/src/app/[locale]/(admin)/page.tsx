@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { CalendarIcon, DotIcon, HomeIcon } from "lucide-react";
+import { CalendarIcon, HomeIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -20,7 +20,6 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { FormattedDate } from "@/components/formatted-date";
-import { LocalTime } from "@/components/local-time";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PollCard } from "@/components/poll-card";
 import { getTranslation } from "@/i18n/server";
@@ -102,6 +101,7 @@ async function getRecentPolls(userId: string) {
       id: true,
       title: true,
       createdAt: true,
+      location: true,
       options: {
         select: {
           startTime: true,
@@ -112,6 +112,7 @@ async function getRecentPolls(userId: string) {
       },
       participants: {
         select: {
+          id: true,
           name: true,
           user: {
             select: {
@@ -119,11 +120,16 @@ async function getRecentPolls(userId: string) {
             },
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
       },
       _count: {
         select: {
           participants: true,
           comments: true,
+          options: true,
         },
       },
     },
@@ -139,9 +145,12 @@ async function getRecentPolls(userId: string) {
       id: poll.id,
       title: poll.title,
       createdAt: poll.createdAt,
+      location: poll.location,
       from: poll.options[0].startTime,
       to: lastOption.startTime,
+      optionsCount: poll._count.options,
       participants: poll._count.participants,
+      participantsList: poll.participants,
     };
   });
 }
@@ -223,6 +232,9 @@ export default async function Page({ params }: { params: Params }) {
                       from={poll.from}
                       to={poll.to}
                       participants={poll.participants}
+                      location={poll.location}
+                      optionsCount={poll.optionsCount}
+                      participantsList={poll.participantsList}
                     />
                   ))}
                 </div>
