@@ -1,19 +1,14 @@
 "use client";
 
+import { Icon } from "@rallly/ui/icon";
 import {
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
 } from "@rallly/ui/sidebar";
-import {
-  HomeIcon,
-  BarChart2Icon,
-  CalendarIcon,
-  SettingsIcon,
-  type LucideIcon,
-} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
 import Link from "next/link";
-import { Icon } from "@rallly/ui/icon";
 import { usePathname } from "next/navigation";
 
 function NavItem({
@@ -48,7 +43,6 @@ export function NavMain() {
       <NavItem href="/" icon={HomeIcon} label="Home" />
       <NavItem href="/polls" icon={BarChart2Icon} label="Polls" />
       <NavItem href="/events" icon={CalendarIcon} label="Events" />
-      <NavItem href="/settings/profile" icon={SettingsIcon} label="Settings" />
     </SidebarMenu>
   );
 }

@@ -196,10 +196,6 @@ export default async function Page({ params }: { params: Params }) {
                 </div>
                 <div className="text-muted-foreground flex items-center gap-0.5">
                   <div>{user.timeZone}</div>
-                  <DotIcon className="size-4" />
-                  <div>
-                    <LocalTime />
-                  </div>
                 </div>
               </div>
             </div>
@@ -231,9 +227,21 @@ export default async function Page({ params }: { params: Params }) {
                   ))}
                 </div>
               ) : (
-                <div className="text-muted-foreground">
-                  <Trans t={t} i18nKey="noPolls" defaults="No polls" />
-                </div>
+                <EmptyState>
+                  <EmptyStateIcon>
+                    <CalendarIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
+                    <Trans t={t} i18nKey="noPolls" defaults="No polls" />
+                  </EmptyStateTitle>
+                  <EmptyStateDescription>
+                    <Trans
+                      t={t}
+                      i18nKey="noPollsDescription"
+                      defaults="You have no polls."
+                    />
+                  </EmptyStateDescription>
+                </EmptyState>
               )}
             </CardContainerContent>
           </CardContainer>
