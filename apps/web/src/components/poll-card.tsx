@@ -23,7 +23,7 @@ export function PollCard({
       <div className="flex min-w-0 items-center gap-4">
         <DateRangeIcon fromDate={from} toDate={to} />
         <div className="min-w-0">
-          <div className="truncate text-sm font-medium">
+          <div className="truncate text-base tracking-tight">
             <Link href={`/poll/${pollId}`}>
               <span className="absolute inset-0" />
               {title}
@@ -53,21 +53,24 @@ function DateIcon({ date, className = "", isStacked = false }: DateIconProps) {
   return (
     <div
       className={cn(
-        "bg-background flex flex-col items-center rounded-lg border p-1",
+        "bg-background flex size-12 flex-col items-center justify-center rounded-lg border",
         className,
       )}
     >
       <div
-        className={`text-muted-foreground flex items-center justify-center text-xs ${
-          isStacked ? "opacity-90" : ""
-        }`}
+        className={cn(
+          "text-muted-foreground flex items-center justify-center text-xs",
+          {
+            "opacity-90": isStacked,
+          },
+        )}
       >
         {month}
       </div>
       <div
-        className={`flex w-10 items-center justify-center rounded-md text-base font-bold ${
-          isStacked ? "opacity-90" : ""
-        }`}
+        className={cn("flex items-center justify-center rounded-md text-base", {
+          "opacity-90": isStacked,
+        })}
       >
         {day}
       </div>

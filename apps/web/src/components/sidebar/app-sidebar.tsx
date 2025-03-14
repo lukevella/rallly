@@ -1,32 +1,19 @@
 "use client";
 
-import { NavUser } from "@/components/sidebar/nav-user";
-import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail,
 } from "@rallly/ui/sidebar";
-import {
-  AudioWaveform,
-  BarChart2Icon,
-  CalendarIcon,
-  Command,
-  GalleryVerticalEnd,
-  HomeIcon,
-  PuzzleIcon,
-  Settings2,
-  Users2Icon,
-} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
+
+import { NavUser } from "@/components/sidebar/nav-user";
+
 import { NavMain } from "./nav-main";
 
 export function AppSidebar({

@@ -1,5 +1,3 @@
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { auth } from "@/next-auth";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +13,9 @@ import {
   SidebarTrigger,
 } from "@rallly/ui/sidebar";
 import { notFound } from "next/navigation";
+
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { auth } from "@/next-auth";
 
 export default async function Layout({
   children,
@@ -37,7 +38,7 @@ export default async function Layout({
         }}
       />
       <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+        <div className="flex flex-1 flex-col gap-4 px-8 py-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

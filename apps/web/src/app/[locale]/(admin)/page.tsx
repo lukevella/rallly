@@ -33,7 +33,7 @@ function CardContainer({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <div className={cn("rounded-lg border", className)}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 }
 
 function CardContainerHeader({
@@ -44,9 +44,7 @@ function CardContainerHeader({
   className?: string;
 }) {
   return (
-    <div
-      className={cn("flex items-center justify-between px-4 pt-3", className)}
-    >
+    <div className={cn("mb-4 flex items-center justify-between", className)}>
       {children}
     </div>
   );
@@ -60,7 +58,7 @@ function CardContainerTitle({
   className?: string;
 }) {
   return (
-    <div className={cn("text-lg font-semibold", className)}>{children}</div>
+    <div className={cn("text-base font-semibold", className)}>{children}</div>
   );
 }
 
@@ -71,7 +69,7 @@ function CardContainerContent({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("p-4", className)}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 }
 
 function getUpcomingEvents(userId: string) {
@@ -182,23 +180,26 @@ export default async function Page({ params }: { params: Params }) {
             </PageTitle>
           </div>
         </PageHeader>
-        <PageContent className="grid gap-4 lg:grid-cols-2">
-          <CardContainer className="col-span-2 flex items-center justify-center py-16">
-            <div className="flex flex-col items-center text-center">
-              <OptimizedAvatarImage
-                className="mx-auto mb-4"
-                src={user.image ?? undefined}
-                name={user.name ?? "Guest"}
-                size="xl"
-              />
-              <div className="text-xl font-bold tracking-tight">
-                {user.name}
+        <PageContent className="grid grid-cols-1 gap-8">
+          <CardContainer>
+            <div className="flex items-center gap-4">
+              <div>
+                <OptimizedAvatarImage
+                  src={user.image ?? undefined}
+                  name={user.name ?? "Guest"}
+                  size="xl"
+                />
               </div>
-              <div className="text-muted-foreground flex items-center justify-center gap-1">
-                <div>{user.timeZone}</div>
-                <DotIcon className="size-4" />
-                <div>
-                  <LocalTime />
+              <div>
+                <div className="text-xl font-bold tracking-tight">
+                  {user.name}
+                </div>
+                <div className="text-muted-foreground flex items-center gap-0.5">
+                  <div>{user.timeZone}</div>
+                  <DotIcon className="size-4" />
+                  <div>
+                    <LocalTime />
+                  </div>
                 </div>
               </div>
             </div>

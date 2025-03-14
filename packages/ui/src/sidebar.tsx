@@ -1,15 +1,15 @@
 "use client";
 
-import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
+import * as React from "react";
 
-import { useIsMobile } from "./hooks/use-mobile";
-import { cn } from "./lib/utils";
 import { Button } from "./button";
+import { useIsMobile } from "./hooks/use-mobile";
 import { Input } from "./input";
+import { cn } from "./lib/utils";
 import { Separator } from "./separator";
 import {
   Sheet,
@@ -341,7 +341,7 @@ const SidebarInset = React.forwardRef<
     <main
       ref={ref}
       className={cn(
-        "bg-background relative flex w-full flex-1 flex-col",
+        "relative flex w-full flex-1 flex-col bg-gray-100",
         "md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
         className,
       )}
