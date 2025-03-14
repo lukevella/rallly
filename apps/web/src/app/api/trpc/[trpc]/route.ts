@@ -19,7 +19,7 @@ const handler = async (req: NextRequest) => {
     req,
     router: appRouter,
     createContext: async () => {
-      const locale = await getPreferredLocale(req);
+      const locale = getPreferredLocale(req);
       const user = session?.user
         ? {
             id: session.user.id,
