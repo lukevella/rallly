@@ -1,9 +1,9 @@
+import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import * as Sentry from "@sentry/nextjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
-import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import { auth } from "@/next-auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";

@@ -1,8 +1,8 @@
 import languages from "@rallly/languages";
+import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import { withPostHog } from "@rallly/posthog/next/middleware";
 import { NextResponse } from "next/server";
 
-import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import { withAuth } from "@/auth/edge";
 
 const supportedLocales = Object.keys(languages);
