@@ -1,6 +1,11 @@
 import type { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@rallly/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 import { CircleCheckIcon, CircleIcon, CirclePauseIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
@@ -19,11 +24,11 @@ export function PollStatusIcon({
   const icon = (() => {
     switch (status) {
       case "live":
-        return <CircleIcon className="size-4 text-pink-600" />;
+        return <CircleIcon className="size-4 text-gray-500" />;
       case "paused":
-        return <CirclePauseIcon className="size-4 text-gray-600" />;
+        return <CirclePauseIcon className="size-4 text-gray-500" />;
       case "finalized":
-        return <CircleCheckIcon className="size-4 text-green-600" />;
+        return <CircleCheckIcon className="size-4 text-gray-500" />;
     }
   })();
 

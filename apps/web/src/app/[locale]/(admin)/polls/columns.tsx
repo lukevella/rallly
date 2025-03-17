@@ -69,19 +69,29 @@ export function useColumns() {
     () => [
       {
         id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllRowsSelected()
-                ? true
-                : table.getIsSomeRowsSelected()
-                  ? "indeterminate"
-                  : false
-            }
-            onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
-            aria-label="Select all"
-          />
-        ),
+        header: ({ table }) => {
+          const isAllSelected = table.getIsAllRowsSelected();
+          const isSomeSelected = table.getIsSomeRowsSelected();
+          return (
+            <div
+              className={`transition-opacity duration-150 ${
+                isAllSelected || isSomeSelected ? "opacity-100" : "opacity-0 hover:opacity-100"
+              }`}
+            >
+              <Checkbox
+                checked={
+                  isAllSelected
+                    ? true
+                    : isSomeSelected
+                      ? "indeterminate"
+                      : false
+                }
+                onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
+                aria-label="Select all"
+              />
+            </div>
+          );
+        },
         cell: ({ row }: { row: Row<SimplifiedPoll> }) => {
           const isSelected = row.getIsSelected();
           return (
