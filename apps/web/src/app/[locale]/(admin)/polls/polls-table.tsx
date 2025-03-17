@@ -22,7 +22,6 @@ import {
   CalendarIcon,
   CheckIcon,
   LinkIcon,
-  MessageSquareIcon,
   TrashIcon,
   UserIcon,
 } from "lucide-react";
@@ -33,7 +32,7 @@ import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 import { PollStatusBadge } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
 
-import { deletePolls } from "./actions";
+import { DeletePollsDialog } from "./delete-polls-dialog";
 
 type PollWithRelations = Poll & {
   participants: Participant[];
@@ -66,12 +65,12 @@ function CopyLinkButton({ pollId }: { pollId: string }) {
     >
       {didCopy ? (
         <>
-          <CheckIcon className="mr-2 size-4" />
+          <CheckIcon className="size-4" />
           <Trans i18nKey="copied" defaults="Copied" />
         </>
       ) : (
         <>
-          <LinkIcon className="mr-2 size-4" />
+          <LinkIcon className="size-4" />
           <Trans i18nKey="copyLink" defaults="Copy Link" />
         </>
       )}
@@ -81,6 +80,8 @@ function CopyLinkButton({ pollId }: { pollId: string }) {
 
 export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
   const [rowSelection, setRowSelection] = React.useState({});
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [selectedPollIds, setSelectedPollIds] = React.useState<string[]>([]);
 
   const columns = React.useMemo(
     () => [
@@ -148,19 +149,6 @@ export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
           );
         },
       }),
-      columnHelper.accessor((row) => row.votes, {
-        id: "responseCount",
-        header: () => <span>Responses</span>,
-        cell: (info) => {
-          const votes = info.getValue();
-          return (
-            <div className="flex items-center">
-              <MessageSquareIcon className="mr-2 size-4" />
-              <span>{votes.length}</span>
-            </div>
-          );
-        },
-      }),
       columnHelper.accessor("createdAt", {
         id: "createdDate",
         header: () => <span>Created</span>,
@@ -193,25 +181,25 @@ export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const handleDeleteSelected = async () => {
+  const handleDeleteSelected = () => {
     // Get selected row IDs
     const selectedIds = Object.keys(rowSelection).map(
       (index) => polls[parseInt(index)].id,
     );
 
     if (selectedIds.length > 0) {
-      // Call the server action to delete the polls
-      const result = await deletePolls(selectedIds);
-
-      if (result.success) {
-        // After successful deletion, clear selection
-        setRowSelection({});
-      } else {
-        // Handle error case
-        console.error("Failed to delete polls:", result.error);
-      }
+      // Set the selected poll IDs and open the confirmation dialog
+      setSelectedPollIds(selectedIds);
+      setIsDeleteDialogOpen(true);
     }
   };
+
+  const handleDeleteSuccess = () => {
+    // After successful deletion, clear selection
+    setRowSelection({});
+  };
+
+  const selectedCount = Object.keys(rowSelection).length;
 
   if (polls.length === 0) {
     return (
@@ -223,8 +211,6 @@ export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
     );
   }
 
-  const selectedCount = Object.keys(rowSelection).length;
-
   return (
     <div>
       {selectedCount > 0 && (
@@ -235,16 +221,16 @@ export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
             </span>
           </div>
           <Button
-            variant="destructive"
             size="sm"
+            variant="destructive"
             onClick={handleDeleteSelected}
-            className="flex items-center"
           >
             <TrashIcon className="mr-2 size-4" />
-            <span>Delete</span>
+            <Trans i18nKey="delete" defaults="Delete" />
           </Button>
         </div>
       )}
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -276,6 +262,13 @@ export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
           </TableBody>
         </Table>
       </div>
+
+      <DeletePollsDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        pollIds={selectedPollIds}
+        onSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 }

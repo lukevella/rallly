@@ -19,12 +19,16 @@ export async function deletePolls(pollIds: string[]) {
     }
 
     // Delete polls that belong to the current user
-    const result = await prisma.poll.deleteMany({
+    const result = await prisma.poll.updateMany({
       where: {
         id: {
           in: pollIds,
         },
         userId: session.user.id,
+      },
+      data: {
+        deleted: true,
+        deletedAt: new Date(),
       },
     });
 
