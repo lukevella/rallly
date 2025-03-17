@@ -21,7 +21,15 @@ import {
 } from "@/components/empty-state";
 import { FormattedDate } from "@/components/formatted-date";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { PollCard } from "@/components/poll-card";
+import {
+  PollItem,
+  PollItemContent,
+  PollItemDateRange,
+  PollItemDetails,
+  PollItemIcon,
+  PollItemParticipants,
+  PollItemTitle,
+} from "@/components/poll-item";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
@@ -57,7 +65,14 @@ function CardContainerTitle({
   className?: string;
 }) {
   return (
-    <div className={cn("text-base font-semibold", className)}>{children}</div>
+    <div
+      className={cn(
+        "text-base font-semibold tracking-tight text-gray-900",
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -222,20 +237,30 @@ export default async function Page({ params }: { params: Params }) {
             </CardContainerHeader>
             <CardContainerContent>
               {recentPolls.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-2 gap-2">
                   {recentPolls.map((poll) => (
-                    <PollCard
-                      key={poll.id}
-                      pollId={poll.id}
-                      title={poll.title}
-                      createdAt={poll.createdAt}
-                      from={poll.from}
-                      to={poll.to}
-                      participants={poll.participants}
-                      location={poll.location}
-                      optionsCount={poll.optionsCount}
-                      participantsList={poll.participantsList}
-                    />
+                    <PollItem key={poll.id} pollId={poll.id}>
+                      <PollItemIcon fromDate={poll.from} toDate={poll.to} />
+
+                      <PollItemContent>
+                        <PollItemTitle>{poll.title}</PollItemTitle>
+                        <PollItemDetails>
+                          <PollItemDateRange
+                            from={poll.from}
+                            to={poll.to}
+                            optionsCount={poll.optionsCount}
+                          />
+                        </PollItemDetails>
+                      </PollItemContent>
+                      <div className="text-sm">
+                        <Trans
+                          t={t}
+                          i18nKey="responsesReceived"
+                          defaults="{participants, plural, one {1 response} other {# responses}}"
+                          values={{ participants: poll.participants }}
+                        />
+                      </div>
+                    </PollItem>
                   ))}
                 </div>
               ) : (

@@ -8,6 +8,7 @@ import * as React from "react";
 
 import { Button } from "./button";
 import { useIsMobile } from "./hooks/use-mobile";
+import { Icon } from "./icon";
 import { Input } from "./input";
 import { cn } from "./lib/utils";
 import { Separator } from "./separator";
@@ -297,7 +298,9 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+      <Icon>
+        <PanelLeft />
+      </Icon>
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

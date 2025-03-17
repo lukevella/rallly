@@ -49,11 +49,11 @@ export function OptimizedAvatarImage({
         <AvatarFallback
           seed={name}
           className={cn("shrink-0", {
-            "text-xs": size === "xs",
-            "text-sm": size === "sm",
+            "text-[10px]": size === "xs",
+            "text-[12px]": size === "sm",
             "text-md": size === "md",
             "text-lg": size === "lg",
-            "text-xl": size === "xl",
+            "text-3xl": size === "xl",
           })}
         >
           {name[0]?.toUpperCase()}

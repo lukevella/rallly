@@ -52,14 +52,14 @@ export default async function Layout({
 
             <div className="flex flex-1 items-center justify-end gap-x-4">
               <IfFreeUser>
-                <Button variant="primary">
+                <Button size="sm" variant="primary">
                   <Icon>
                     <SparklesIcon />
                   </Icon>
                   Upgrade
                 </Button>
               </IfFreeUser>
-              <div className="flex items-center gap-x-1">
+              <div className="flex items-center gap-x-2">
                 <Button asChild size="icon" variant="ghost">
                   <Link href="/new">
                     <Icon>
