@@ -1,3 +1,4 @@
+import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { BarChart2Icon } from "lucide-react";
 
@@ -12,32 +13,144 @@ import {
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
+import { PollFolders } from "./poll-folders";
 import { PollsTable } from "./polls-table";
 
-async function loadData() {
+type PollFilters = {
+  status?: PollStatus;
+  page?: number;
+  pageSize?: number;
+};
+
+// Define a simplified type for the polls we're returning
+type SimplifiedPoll = {
+  id: string;
+  title: string;
+  status: PollStatus;
+  createdAt: Date;
+  participants: { id: string }[];
+  options: { id: string }[];
+  votes: { id: string }[];
+};
+
+async function loadData({ status, page = 1, pageSize = 20 }: PollFilters = {}) {
   const user = await requireUser();
-  const polls = await prisma.poll.findMany({
-    where: {
-      userId: user.id,
-    },
-    include: {
-      participants: true,
-      options: true,
-      votes: true,
-    },
+
+  // Build the where clause based on filters
+  const where = {
+    userId: user.id,
+    ...(status ? { status } : {}),
+  };
+
+  // Count total polls for pagination and folder counts
+  const [totalPolls, statusCounts, paginatedPolls] = await Promise.all([
+    // Get total count for current filter
+    prisma.poll.count({ where }),
+
+    // Get counts for each status for the folder badges
+    prisma.poll.groupBy({
+      by: ["status"],
+      where: { userId: user.id },
+      _count: true,
+    }),
+
+    // Get paginated polls with the current filter
+    prisma.poll.findMany({
+      where,
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        createdAt: true,
+        participants: {
+          select: {
+            id: true,
+          },
+        },
+        options: {
+          select: {
+            id: true,
+          },
+        },
+        votes: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ]);
+
+  // Transform the selected data to match the expected format for PollsTable
+  const polls: SimplifiedPoll[] = paginatedPolls.map((poll) => ({
+    ...poll,
+    participants: poll.participants as { id: string }[],
+    options: poll.options as { id: string }[],
+    votes: poll.votes as { id: string }[],
+  }));
+
+  // Process status counts into a more usable format
+  const counts = {
+    all: await prisma.poll.count({ where: { userId: user.id } }),
+    live: 0,
+    paused: 0,
+    finalized: 0,
+  };
+
+  statusCounts.forEach((item) => {
+    if (
+      item.status === "live" ||
+      item.status === "paused" ||
+      item.status === "finalized"
+    ) {
+      counts[item.status] = item._count;
+    }
   });
 
-  return { polls };
+  return {
+    polls,
+    totalPolls,
+    statusCounts: counts,
+    totalPages: Math.ceil(totalPolls / pageSize),
+    currentPage: page,
+  };
 }
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Params;
+  searchParams: { status?: string; page?: string };
   children?: React.ReactNode;
 }) {
   const { t } = await getTranslation(params.locale);
-  const { polls } = await loadData();
+
+  // Parse page number from query params
+  const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
+
+  // Convert status string to PollStatus type if it exists and is valid
+  let status: PollStatus | undefined;
+  if (
+    searchParams.status === "live" ||
+    searchParams.status === "paused" ||
+    searchParams.status === "finalized"
+  ) {
+    status = searchParams.status;
+  }
+
+  // Load data with filters
+  const { polls, totalPolls, statusCounts, totalPages, currentPage } =
+    await loadData({
+      status,
+      page,
+    });
+
   return (
     <PageContainer>
       <PageHeader>
@@ -53,7 +166,13 @@ export default async function Page({
         </div>
       </PageHeader>
       <PageContent>
-        <PollsTable polls={polls} />
+        <PollFolders statusCounts={statusCounts} />
+        <PollsTable
+          polls={polls}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          totalPolls={totalPolls}
+        />
       </PageContent>
     </PageContainer>
   );
