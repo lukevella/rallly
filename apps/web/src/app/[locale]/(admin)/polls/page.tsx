@@ -1,6 +1,5 @@
-import { BarChart2Icon } from "lucide-react";
-
 import { prisma } from "@rallly/database";
+import { BarChart2Icon } from "lucide-react";
 
 import type { Params } from "@/app/[locale]/types";
 import {
@@ -12,6 +11,7 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
+
 import { PollsTable } from "./polls-table";
 
 async function loadData() {

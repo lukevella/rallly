@@ -2,6 +2,7 @@
 
 import type { Option, Participant, Poll, Vote } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import { Checkbox } from "@rallly/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -10,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@rallly/ui/table";
+import type { Row } from "@tanstack/react-table";
 import {
   createColumnHelper,
   flexRender,
@@ -21,6 +23,7 @@ import {
   CheckIcon,
   LinkIcon,
   MessageSquareIcon,
+  TrashIcon,
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -29,6 +32,8 @@ import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
 import { PollStatusBadge } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
+
+import { deletePolls } from "./actions";
 
 type PollWithRelations = Poll & {
   participants: Participant[];
@@ -75,8 +80,32 @@ function CopyLinkButton({ pollId }: { pollId: string }) {
 }
 
 export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
+  const [rowSelection, setRowSelection] = React.useState({});
+
   const columns = React.useMemo(
     () => [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            checked={
+              table.getIsAllRowsSelected() ||
+              (table.getIsSomeRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        ),
+        cell: ({ row }: { row: Row<PollWithRelations> }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      },
       columnHelper.accessor("title", {
         header: () => <Trans i18nKey="title" defaults="Title" />,
         cell: (info) => (
@@ -156,8 +185,33 @@ export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
   const table = useReactTable({
     data: polls,
     columns,
+    state: {
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const handleDeleteSelected = async () => {
+    // Get selected row IDs
+    const selectedIds = Object.keys(rowSelection).map(
+      (index) => polls[parseInt(index)].id,
+    );
+
+    if (selectedIds.length > 0) {
+      // Call the server action to delete the polls
+      const result = await deletePolls(selectedIds);
+
+      if (result.success) {
+        // After successful deletion, clear selection
+        setRowSelection({});
+      } else {
+        // Handle error case
+        console.error("Failed to delete polls:", result.error);
+      }
+    }
+  };
 
   if (polls.length === 0) {
     return (
@@ -169,37 +223,59 @@ export function PollsTable({ polls }: { polls: PollWithRelations[] }) {
     );
   }
 
+  const selectedCount = Object.keys(rowSelection).length;
+
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div>
+      {selectedCount > 0 && (
+        <div className="bg-muted mb-4 flex items-center justify-between rounded-md p-2">
+          <div>
+            <span className="text-sm font-medium">
+              {selectedCount} {selectedCount === 1 ? "poll" : "polls"} selected
+            </span>
+          </div>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleDeleteSelected}
+            className="flex items-center"
+          >
+            <TrashIcon className="mr-2 size-4" />
+            <span>Delete</span>
+          </Button>
+        </div>
+      )}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
