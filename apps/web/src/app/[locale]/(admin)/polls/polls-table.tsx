@@ -11,6 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from "@rallly/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import type { Row } from "@tanstack/react-table";
 import {
@@ -32,7 +38,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
-import { PollStatusBadge } from "@/components/poll-status";
+import { PollStatusIcon } from "@/components/poll-status-icon";
 import { Trans } from "@/components/trans";
 import { VisibilityTrigger } from "@/components/visibility-trigger";
 
@@ -51,39 +57,94 @@ type SimplifiedPoll = {
 
 const columnHelper = createColumnHelper<SimplifiedPoll>();
 
-function CopyLinkButton({ pollId }: { pollId: string }) {
+function PollActions({ poll }: { poll: SimplifiedPoll }) {
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+  const handleCopyLink = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      copy(`${window.location.origin}/invite/${poll.id}`);
+      setDidCopy(true);
+      setTimeout(() => {
+        setDidCopy(false);
+      }, 1000);
+    },
+    [copy, poll.id],
+  );
+
+  const handleDelete = React.useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsDeleteDialogOpen(true);
+  }, []);
+
+  const handleDeleteDialogChange = React.useCallback((open: boolean) => {
+    setIsDeleteDialogOpen(open);
+  }, []);
 
   return (
-    <Button
-      type="button"
-      variant="secondary"
-      size="sm"
-      disabled={didCopy}
-      onClick={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        copy(`${window.location.origin}/invite/${pollId}`);
-        setDidCopy(true);
-        setTimeout(() => {
-          setDidCopy(false);
-        }, 1000);
-      }}
-      className="relative z-20"
-    >
-      {didCopy ? (
-        <>
-          <CheckIcon className="size-4" />
-          <Trans i18nKey="copied" defaults="Copied" />
-        </>
-      ) : (
-        <>
-          <LinkIcon className="size-4" />
-          <Trans i18nKey="copyLink" defaults="Copy Link" />
-        </>
-      )}
-    </Button>
+    <>
+      <div
+        className="flex items-center gap-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleCopyLink}
+                className="h-8 w-8 p-0"
+              >
+                {didCopy ? (
+                  <CheckIcon className="size-4" />
+                ) : (
+                  <LinkIcon className="size-4" />
+                )}
+                <span className="sr-only">
+                  {didCopy ? "Copied" : "Copy invite link"}
+                </span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{didCopy ? "Copied!" : "Copy invite link"}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
+              >
+                <TrashIcon className="size-4" />
+                <span className="sr-only">Delete poll</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete poll</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+
+      <DeletePollsDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={handleDeleteDialogChange}
+        pollIds={[poll.id]}
+        onSuccess={() => {}}
+      />
+    </>
   );
 }
 
@@ -95,18 +156,24 @@ type PollsResponse = {
 };
 
 // Function to fetch polls from the API
-async function fetchPolls({ pageParam = 1, status }: { pageParam?: number; status?: string }) {
+async function fetchPolls({
+  pageParam = 1,
+  status,
+}: {
+  pageParam?: number;
+  status?: string;
+}) {
   const params = new URLSearchParams();
   params.set("page", pageParam.toString());
   if (status) {
     params.set("status", status);
   }
-  
+
   const response = await fetch(`/api/polls?${params.toString()}`);
   if (!response.ok) {
     throw new Error("Failed to fetch polls");
   }
-  
+
   return response.json() as Promise<PollsResponse>;
 }
 
@@ -116,7 +183,7 @@ type PollsTableProps = {
   initialHasNextPage: boolean;
 };
 
-export function PollsTable({ 
+export function PollsTable({
   initialPolls,
   initialTotalPolls,
   initialHasNextPage,
@@ -125,10 +192,10 @@ export function PollsTable({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedPollIds, setSelectedPollIds] = React.useState<string[]>([]);
   const searchParams = useSearchParams();
-  
+
   // Get status from URL if available
   const status = searchParams.get("status") || undefined;
-  
+
   // Use React Query's useInfiniteQuery for data fetching
   const {
     data,
@@ -151,7 +218,7 @@ export function PollsTable({
       pageParams: [1],
     },
   });
-  
+
   // Flatten all polls from all pages
   const allPolls = data?.pages.flatMap((page) => page.polls) || [];
   const totalPolls = data?.pages[0]?.totalPolls || 0;
@@ -183,18 +250,16 @@ export function PollsTable({
       columnHelper.accessor("title", {
         header: () => <Trans i18nKey="title" defaults="Title" />,
         cell: (info) => (
-          <Link
-            href={`/poll/${info.row.original.id}`}
-            className="font-medium hover:underline"
-          >
-            {info.getValue()}
-          </Link>
+          <div className="flex items-center gap-2">
+            <PollStatusIcon status={info.row.original.status} />
+            <Link
+              href={`/poll/${info.row.original.id}`}
+              className="font-medium hover:underline"
+            >
+              {info.getValue()}
+            </Link>
+          </div>
         ),
-      }),
-      columnHelper.accessor((row) => row.status, {
-        id: "pollStatus",
-        header: () => <span>Status</span>,
-        cell: (info) => <PollStatusBadge status={info.getValue()} />,
       }),
       columnHelper.accessor((row) => row.participants, {
         id: "participantCount",
@@ -237,7 +302,7 @@ export function PollsTable({
       columnHelper.display({
         id: "actionButtons",
         header: () => <span>Actions</span>,
-        cell: (info) => <CopyLinkButton pollId={info.row.original.id} />,
+        cell: (info) => <PollActions poll={info.row.original} />,
       }),
     ],
     [],
@@ -285,9 +350,7 @@ export function PollsTable({
   if (queryStatus === "error") {
     return (
       <div className="py-12 text-center">
-        <p className="text-red-500">
-          Error loading polls
-        </p>
+        <p className="text-red-500">Error loading polls</p>
       </div>
     );
   }
@@ -353,7 +416,7 @@ export function PollsTable({
           </TableBody>
         </Table>
       </div>
-      
+
       {/* Infinite scroll loader using VisibilityTrigger */}
       {hasNextPage && (
         <VisibilityTrigger
@@ -370,7 +433,7 @@ export function PollsTable({
           </div>
         </VisibilityTrigger>
       )}
-      
+
       {!hasNextPage && allPolls.length > 0 && (
         <div className="mt-4 text-center text-sm text-gray-500">
           Showing {allPolls.length} of {totalPolls} polls

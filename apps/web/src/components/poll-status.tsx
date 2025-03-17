@@ -1,5 +1,6 @@
 import type { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
+import { CircleCheckIcon, CircleIcon, CirclePauseIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
 
@@ -14,12 +15,9 @@ export const PollStatusLabel = ({
     case "live":
       return (
         <span
-          className={cn(
-            "inline-flex items-center gap-x-1.5 text-sm font-medium text-pink-600",
-            className,
-          )}
+          className={cn("inline-flex items-center gap-x-2 text-sm", className)}
         >
-          <span className="size-1.5 rounded-full bg-pink-600" />
+          <CircleIcon className="size-4 rounded-full text-pink-600" />
           <Trans i18nKey="pollStatusOpen" defaults="Live" />
         </span>
       );
@@ -27,11 +25,11 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 rounded-full text-sm font-medium text-gray-500",
+            "inline-flex items-center gap-x-2 rounded-full text-sm",
             className,
           )}
         >
-          <span className="size-1.5 rounded-full bg-gray-600" />
+          <CirclePauseIcon className="size-4 rounded-full text-gray-600" />
 
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
         </span>
@@ -40,11 +38,11 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 rounded-full text-sm font-medium text-green-600",
+            "inline-flex items-center gap-x-2 rounded-full text-sm",
             className,
           )}
         >
-          <span className="size-1.5 rounded-full bg-green-600" />
+          <CircleCheckIcon className="size-4 rounded-full text-green-600" />
 
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </span>
