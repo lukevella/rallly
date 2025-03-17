@@ -1,4 +1,4 @@
-import type { PollStatus } from "@rallly/database";
+import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { BarChart2Icon } from "lucide-react";
 
@@ -20,6 +20,7 @@ type PollFilters = {
   status?: PollStatus;
   page?: number;
   pageSize?: number;
+  q?: string;
 };
 
 // Define a simplified type for the polls we're returning
@@ -32,14 +33,27 @@ type SimplifiedPoll = {
   options: { id: string; startTime: Date }[];
 };
 
-async function loadData({ status, page = 1, pageSize = 10 }: PollFilters = {}) {
+async function loadData({
+  status,
+  page = 1,
+  pageSize = 10,
+  q,
+}: PollFilters = {}) {
   const user = await requireUser();
 
   // Build the where clause based on filters
-  const where = {
+  const where: Prisma.PollWhereInput = {
     userId: user.id,
     ...(status ? { status } : {}),
   };
+
+  // Add search filter if provided
+  if (q) {
+    where.title = {
+      contains: q,
+      mode: "insensitive",
+    };
+  }
 
   // Count total polls for pagination and folder counts
   const [totalPolls, statusCounts, paginatedPolls] = await Promise.all([
@@ -83,7 +97,10 @@ async function loadData({ status, page = 1, pageSize = 10 }: PollFilters = {}) {
 
   // Transform the selected data to match the expected format for PollsTable
   const polls: SimplifiedPoll[] = paginatedPolls.map((poll) => ({
-    ...poll,
+    id: poll.id,
+    title: poll.title,
+    status: poll.status,
+    createdAt: poll.createdAt,
     participants: poll.participants,
     options: poll.options,
   }));
@@ -122,28 +139,33 @@ export default async function Page({
   searchParams,
 }: {
   params: Params;
-  searchParams: { status?: string; page?: string };
-  children?: React.ReactNode;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const { t } = await getTranslation(params.locale);
 
-  // Parse page number from query params
-  const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
+  // Get page from URL if available
+  const page = searchParams.page ? parseInt(searchParams.page as string, 10) : 1;
+
+  // Get search query from URL if available
+  const q = typeof searchParams.q === 'string' ? searchParams.q : undefined;
 
   // Convert status string to PollStatus type if it exists and is valid
   let status: PollStatus | undefined;
+  const statusParam = searchParams.status;
   if (
-    searchParams.status === "live" ||
-    searchParams.status === "paused" ||
-    searchParams.status === "finalized"
+    typeof statusParam === 'string' &&
+    (statusParam === "live" ||
+     statusParam === "paused" ||
+     statusParam === "finalized")
   ) {
-    status = searchParams.status;
+    status = statusParam;
   }
 
   // Load data with filters
   const { polls, totalPolls, statusCounts, hasNextPage } = await loadData({
     status,
     page,
+    q,
   });
 
   return (
@@ -166,6 +188,7 @@ export default async function Page({
           initialPolls={polls}
           initialTotalPolls={totalPolls}
           initialHasNextPage={hasNextPage}
+          initialSearch={q}
         />
       </PageContent>
     </PageContainer>

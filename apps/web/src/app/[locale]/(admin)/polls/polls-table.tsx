@@ -23,6 +23,7 @@ import { Trans } from "@/components/trans";
 
 import { type SimplifiedPoll, useColumns } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";
+import { SearchInput } from "./search-input";
 import { SelectionActionBar } from "./selection-action-bar";
 
 // API response type
@@ -36,14 +37,19 @@ type PollsResponse = {
 async function fetchPolls({
   pageParam = 1,
   status,
+  q,
 }: {
   pageParam?: number;
   status?: string;
+  q?: string;
 }) {
   const params = new URLSearchParams();
   params.set("page", pageParam.toString());
   if (status) {
     params.set("status", status);
+  }
+  if (q) {
+    params.set("q", q);
   }
 
   const response = await fetch(`/api/polls?${params.toString()}`);
@@ -58,6 +64,7 @@ type PollsTableProps = {
   initialPolls: SimplifiedPoll[];
   initialTotalPolls: number;
   initialHasNextPage: boolean;
+  initialSearch?: string;
 };
 
 // Memoize the entire PollsTable component to prevent unnecessary re-renders
@@ -65,6 +72,7 @@ export const PollsTable = React.memo(function PollsTable({
   initialPolls,
   initialTotalPolls,
   initialHasNextPage,
+  initialSearch,
 }: PollsTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -74,6 +82,9 @@ export const PollsTable = React.memo(function PollsTable({
   // Get status from URL if available
   const status = searchParams.get("status") || undefined;
 
+  // Get search query from URL if available
+  const searchQuery = searchParams.get("q") || undefined;
+
   // Use React Query's useInfiniteQuery for data fetching
   const {
     data,
@@ -82,8 +93,9 @@ export const PollsTable = React.memo(function PollsTable({
     isFetchingNextPage,
     status: queryStatus,
   } = useInfiniteQuery({
-    queryKey: ["polls", status],
-    queryFn: ({ pageParam }) => fetchPolls({ pageParam, status }),
+    queryKey: ["polls", status, searchQuery],
+    queryFn: ({ pageParam }) =>
+      fetchPolls({ pageParam, status, q: searchQuery }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialData: {
       pages: [
@@ -168,77 +180,95 @@ export const PollsTable = React.memo(function PollsTable({
     );
   }
 
-  if (allPolls.length === 0) {
-    return (
-      <div className="py-12 text-center">
-        <p className="text-gray-500">
-          <Trans i18nKey="noPolls" defaults="You don't have any polls yet" />
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                className={`group ${row.getIsSelected() ? "bg-primary/5" : ""}`}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="mb-4">
+        <SearchInput initialValue={initialSearch} />
       </div>
 
-      {/* Load more button */}
-      {hasNextPage && (
-        <div className="mt-4 flex justify-center py-4">
-          <Button
-            variant="secondary"
-            onClick={handleLoadMore}
-            disabled={isFetchingNextPage}
-          >
-            {isFetchingNextPage ? (
-              <>
-                <Loader2Icon className="mr-2 size-4 animate-spin" />
-                Loading...
-              </>
+      {allPolls.length === 0 ? (
+        <div className="py-12 text-center">
+          <p className="text-gray-500">
+            {searchQuery ? (
+              <Trans
+                i18nKey="noPolls"
+                defaults="No polls found matching '{search}'"
+                values={{ search: searchQuery }}
+              />
             ) : (
-              "Load more"
+              <Trans
+                i18nKey="noPolls"
+                defaults="You don't have any polls yet"
+              />
             )}
-          </Button>
+          </p>
         </div>
-      )}
+      ) : (
+        <>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    className={`group ${row.getIsSelected() ? "bg-primary/5" : ""}`}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
-      {!hasNextPage && allPolls.length > 0 && (
-        <div className="mt-4 text-center text-sm text-gray-500">
-          Showing {allPolls.length} of {totalPolls} polls
-        </div>
+          {/* Load more button */}
+          {hasNextPage && (
+            <div className="mt-4 flex justify-center py-4">
+              <Button
+                variant="secondary"
+                onClick={handleLoadMore}
+                disabled={isFetchingNextPage}
+              >
+                {isFetchingNextPage ? (
+                  <>
+                    <Loader2Icon className="mr-2 size-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  "Load more"
+                )}
+              </Button>
+            </div>
+          )}
+
+          {!hasNextPage && allPolls.length > 0 && (
+            <div className="mt-4 text-center text-sm text-gray-500">
+              Showing {allPolls.length} of {totalPolls} polls
+            </div>
+          )}
+        </>
       )}
 
       <SelectionActionBar

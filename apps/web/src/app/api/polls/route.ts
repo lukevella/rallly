@@ -1,3 +1,4 @@
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { NextResponse } from "next/server";
 
@@ -12,12 +13,21 @@ export async function GET(request: Request) {
     const status = url.searchParams.get("status") as "live" | "paused" | "finalized" | null;
     const page = parseInt(url.searchParams.get("page") || "1", 10);
     const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
+    const q = url.searchParams.get("q");
     
     // Build the where clause based on filters
-    const where = {
+    const where: Prisma.PollWhereInput = {
       userId: user.id,
       ...(status ? { status } : {}),
     };
+    
+    // Add search filter if provided
+    if (q) {
+      where.title = {
+        contains: q,
+        mode: "insensitive", // Case-insensitive search
+      };
+    }
     
     // Count total polls for pagination
     const [totalPolls, paginatedPolls] = await Promise.all([
