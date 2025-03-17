@@ -40,13 +40,20 @@ export function useColumns() {
             aria-label="Select all"
           />
         ),
-        cell: ({ row }: { row: Row<SimplifiedPoll> }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
-          />
-        ),
+        cell: ({ row }: { row: Row<SimplifiedPoll> }) => {
+          const isSelected = row.getIsSelected();
+          return (
+            <div
+              className={`transition-opacity duration-150 ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+            >
+              <Checkbox
+                checked={isSelected}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+              />
+            </div>
+          );
+        },
         enableSorting: false,
         enableHiding: false,
       },
