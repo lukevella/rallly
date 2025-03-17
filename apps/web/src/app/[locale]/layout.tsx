@@ -9,6 +9,7 @@ import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { Providers } from "@/app/providers";
+import { TimezoneProvider } from "@/features/timezone";
 import { auth } from "@/next-auth";
 
 const inter = Inter({
@@ -36,8 +37,10 @@ export default async function Root({
         <Toaster />
         <SessionProvider session={session}>
           <Providers>
-            {children}
-            <TimeZoneChangeDetector />
+            <TimezoneProvider>
+              {children}
+              <TimeZoneChangeDetector />
+            </TimezoneProvider>
           </Providers>
         </SessionProvider>
       </body>

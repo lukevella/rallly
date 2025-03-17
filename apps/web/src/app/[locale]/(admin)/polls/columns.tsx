@@ -10,6 +10,7 @@ import React from "react";
 
 import { PollStatusIcon } from "@/components/poll-status-icon";
 import { Trans } from "@/components/trans";
+import { DateDisplay } from "@/features/timezone";
 
 import { PollActions } from "./poll-actions";
 
@@ -24,6 +25,44 @@ export type SimplifiedPoll = {
 };
 
 const columnHelper = createColumnHelper<SimplifiedPoll>();
+
+// Date range component that uses the user's timezone
+function DateRangeDisplay({
+  firstDate,
+  lastDate,
+}: {
+  firstDate: dayjs.Dayjs;
+  lastDate: dayjs.Dayjs;
+}) {
+  // If dates are in the same month and year, show a simplified range
+  const isSameMonthAndYear =
+    firstDate.month() === lastDate.month() &&
+    firstDate.year() === lastDate.year();
+
+  return (
+    <div className="flex items-center">
+      <CalendarIcon className="mr-2 size-4 text-gray-500" />
+      <span>
+        {isSameMonthAndYear ? (
+          <>
+            <DateDisplay date={firstDate} format="MMM D" /> -{" "}
+            <DateDisplay date={lastDate} format="D" />
+          </>
+        ) : (
+          <>
+            <DateDisplay date={firstDate} format="MMM D" /> -{" "}
+            <DateDisplay date={lastDate} format="MMM D" />
+          </>
+        )}
+      </span>
+    </div>
+  );
+}
+
+// Created date component that uses the user's timezone
+function CreatedDateDisplay({ date }: { date: Date }) {
+  return <DateDisplay date={date} format="MMM D, YYYY" />;
+}
 
 export function useColumns() {
   return React.useMemo(
@@ -71,19 +110,7 @@ export function useColumns() {
           </div>
         ),
       }),
-      columnHelper.accessor((row) => row.participants, {
-        id: "participantCount",
-        header: () => <Trans i18nKey="participants" defaults="Participants" />,
-        cell: (info) => {
-          const participants = info.getValue();
-          return (
-            <div className="flex items-center">
-              <UserIcon className="mr-2 size-4" />
-              <span>{participants.length}</span>
-            </div>
-          );
-        },
-      }),
+
       columnHelper.accessor((row) => row.options, {
         id: "dateRange",
         header: () => <span>Date Range</span>,
@@ -107,38 +134,18 @@ export function useColumns() {
             sortedOptions[sortedOptions.length - 1].startTime,
           );
 
-          // If dates are in the same month and year, show a simplified range
-          const isSameMonthAndYear =
-            firstDate.month() === lastDate.month() &&
-            firstDate.year() === lastDate.year();
-
-          return (
-            <div className="flex items-center">
-              <CalendarIcon className="mr-2 size-4 text-gray-500" />
-              <span>
-                {isSameMonthAndYear ? (
-                  <>
-                    {firstDate.format("MMM D")} - {lastDate.format("D")}
-                  </>
-                ) : (
-                  <>
-                    {firstDate.format("MMM D")} - {lastDate.format("MMM D")}
-                  </>
-                )}
-              </span>
-            </div>
-          );
+          return <DateRangeDisplay firstDate={firstDate} lastDate={lastDate} />;
         },
       }),
-      columnHelper.accessor((row) => row.options, {
-        id: "optionCount",
-        header: () => <span>Options</span>,
+      columnHelper.accessor((row) => row.participants, {
+        id: "participantCount",
+        header: () => <Trans i18nKey="participants" defaults="Participants" />,
         cell: (info) => {
-          const options = info.getValue();
+          const participants = info.getValue();
           return (
             <div className="flex items-center">
-              <CalendarIcon className="mr-2 size-4" />
-              <span>{options.length}</span>
+              <UserIcon className="mr-2 size-4" />
+              <span>{participants.length}</span>
             </div>
           );
         },
@@ -146,10 +153,7 @@ export function useColumns() {
       columnHelper.accessor("createdAt", {
         id: "createdDate",
         header: () => <span>Created</span>,
-        cell: (info) => {
-          const date = dayjs(info.getValue());
-          return date.format("MMM D, YYYY");
-        },
+        cell: (info) => <CreatedDateDisplay date={info.getValue()} />,
       }),
       columnHelper.display({
         id: "actionButtons",
