@@ -144,19 +144,21 @@ export default async function Page({
   const { t } = await getTranslation(params.locale);
 
   // Get page from URL if available
-  const page = searchParams.page ? parseInt(searchParams.page as string, 10) : 1;
+  const page = searchParams.page
+    ? parseInt(searchParams.page as string, 10)
+    : 1;
 
   // Get search query from URL if available
-  const q = typeof searchParams.q === 'string' ? searchParams.q : undefined;
+  const q = typeof searchParams.q === "string" ? searchParams.q : undefined;
 
   // Convert status string to PollStatus type if it exists and is valid
   let status: PollStatus | undefined;
   const statusParam = searchParams.status;
   if (
-    typeof statusParam === 'string' &&
+    typeof statusParam === "string" &&
     (statusParam === "live" ||
-     statusParam === "paused" ||
-     statusParam === "finalized")
+      statusParam === "paused" ||
+      statusParam === "finalized")
   ) {
     status = statusParam;
   }

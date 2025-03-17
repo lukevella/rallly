@@ -181,11 +181,10 @@ export const PollsTable = React.memo(function PollsTable({
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] flex-col">
-      <div className="mb-4">
+    <div className="flex min-h-[calc(100vh-10rem)] flex-col space-y-4">
+      <div>
         <SearchInput initialValue={initialSearch} />
       </div>
-
       {allPolls.length === 0 ? (
         <div className="py-12 text-center">
           <p className="text-gray-500">
@@ -264,7 +263,7 @@ export const PollsTable = React.memo(function PollsTable({
           )}
 
           {!hasNextPage && allPolls.length > 0 && (
-            <div className="mt-4 text-center text-sm text-gray-500">
+            <div className="py-4 text-center text-sm text-gray-500">
               Showing {allPolls.length} of {totalPolls} polls
             </div>
           )}

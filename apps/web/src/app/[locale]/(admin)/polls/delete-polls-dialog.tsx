@@ -49,7 +49,7 @@ export const DeletePollsDialog: React.FunctionComponent<
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>
             <Trans i18nKey="deletePoll" defaults="Delete Polls" />

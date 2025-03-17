@@ -98,7 +98,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "bg-muted-background -mx-4 -mb-4 flex flex-col-reverse gap-2 border-t px-3 py-2.5 sm:flex-row sm:justify-end sm:rounded-b-md",
+      "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
       className,
     )}
     {...props}

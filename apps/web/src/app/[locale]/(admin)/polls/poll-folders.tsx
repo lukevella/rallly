@@ -22,11 +22,7 @@ type FolderItem = {
   count: number;
 };
 
-export function PollFolders({
-  statusCounts,
-}: {
-  statusCounts: StatusCounts;
-}) {
+export function PollFolders({ statusCounts }: { statusCounts: StatusCounts }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -70,7 +66,7 @@ export function PollFolders({
     } else {
       params.set("status", folderId);
     }
-    
+
     // Reset to page 1 when changing filters
     params.delete("page");
 
@@ -105,7 +101,7 @@ export function PollFolders({
               <FolderIcon className="size-4" />
               <span>
                 {folder.id === "all" ? (
-                  <Trans i18nKey="polls" defaults="All Polls" />
+                  <Trans i18nKey="allPolls" defaults="All" />
                 ) : (
                   <Trans i18nKey={i18nKey} defaults={folder.label} />
                 )}
