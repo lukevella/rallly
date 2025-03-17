@@ -1,6 +1,7 @@
 import { BarChart2Icon } from "lucide-react";
 
-import { UserPolls } from "@/app/[locale]/(admin)/polls/user-polls";
+import { prisma } from "@rallly/database";
+
 import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -10,6 +11,24 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/i18n/server";
+import { requireUser } from "@/next-auth";
+import { PollsTable } from "./polls-table";
+
+async function loadData() {
+  const user = await requireUser();
+  const polls = await prisma.poll.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      participants: true,
+      options: true,
+      votes: true,
+    },
+  });
+
+  return { polls };
+}
 
 export default async function Page({
   params,
@@ -18,6 +37,7 @@ export default async function Page({
   children?: React.ReactNode;
 }) {
   const { t } = await getTranslation(params.locale);
+  const { polls } = await loadData();
   return (
     <PageContainer>
       <PageHeader>
@@ -33,7 +53,7 @@ export default async function Page({
         </div>
       </PageHeader>
       <PageContent>
-        <UserPolls />
+        <PollsTable polls={polls} />
       </PageContent>
     </PageContainer>
   );
