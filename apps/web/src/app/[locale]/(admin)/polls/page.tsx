@@ -168,10 +168,10 @@ export default async function Page({
       </PageHeader>
       <PageContent>
         <PollFolders statusCounts={statusCounts} />
-        <PollsTable 
-          initialPolls={polls} 
-          initialTotalPolls={totalPolls} 
-          initialHasNextPage={hasNextPage} 
+        <PollsTable
+          initialPolls={polls}
+          initialTotalPolls={totalPolls}
+          initialHasNextPage={hasNextPage}
         />
       </PageContent>
     </PageContainer>
