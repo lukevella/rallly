@@ -72,8 +72,11 @@ export function useColumns() {
         header: ({ table }) => (
           <Checkbox
             checked={
-              table.getIsAllRowsSelected() ||
-              (table.getIsSomeRowsSelected() && "indeterminate")
+              table.getIsAllRowsSelected()
+                ? true
+                : table.getIsSomeRowsSelected()
+                  ? "indeterminate"
+                  : false
             }
             onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
             aria-label="Select all"
