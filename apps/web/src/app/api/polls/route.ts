@@ -40,6 +40,7 @@ export async function GET(request: Request) {
           options: {
             select: {
               id: true,
+              startTime: true,
             }
           },
           votes: {

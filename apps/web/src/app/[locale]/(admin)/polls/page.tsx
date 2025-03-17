@@ -29,8 +29,7 @@ type SimplifiedPoll = {
   status: PollStatus;
   createdAt: Date;
   participants: { id: string }[];
-  options: { id: string }[];
-  votes: { id: string }[];
+  options: { id: string; startTime: Date }[];
 };
 
 async function loadData({ status, page = 1, pageSize = 10 }: PollFilters = {}) {
@@ -70,11 +69,7 @@ async function loadData({ status, page = 1, pageSize = 10 }: PollFilters = {}) {
         options: {
           select: {
             id: true,
-          },
-        },
-        votes: {
-          select: {
-            id: true,
+            startTime: true,
           },
         },
       },
@@ -89,9 +84,8 @@ async function loadData({ status, page = 1, pageSize = 10 }: PollFilters = {}) {
   // Transform the selected data to match the expected format for PollsTable
   const polls: SimplifiedPoll[] = paginatedPolls.map((poll) => ({
     ...poll,
-    participants: poll.participants as { id: string }[],
-    options: poll.options as { id: string }[],
-    votes: poll.votes as { id: string }[],
+    participants: poll.participants,
+    options: poll.options,
   }));
 
   // Process status counts into a more usable format

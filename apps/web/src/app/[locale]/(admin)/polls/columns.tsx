@@ -3,6 +3,7 @@
 import type { Poll } from "@rallly/database";
 import { Checkbox } from "@rallly/ui/checkbox";
 import { type Row, createColumnHelper } from "@tanstack/react-table";
+import dayjs from "dayjs";
 import { CalendarIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -19,8 +20,7 @@ export type SimplifiedPoll = {
   status: Poll["status"];
   createdAt: Date;
   participants: { id: string }[];
-  options: { id: string }[];
-  votes: { id: string }[];
+  options: { id: string; startTime: Date }[];
 };
 
 const columnHelper = createColumnHelper<SimplifiedPoll>();
@@ -85,6 +85,52 @@ export function useColumns() {
         },
       }),
       columnHelper.accessor((row) => row.options, {
+        id: "dateRange",
+        header: () => <span>Date Range</span>,
+        cell: (info) => {
+          const options = info.getValue();
+          // Filter out options without startTime
+          const optionsWithDates = options.filter((option) => option.startTime);
+
+          if (optionsWithDates.length === 0) {
+            return <span className="text-gray-500">No dates</span>;
+          }
+
+          // Sort options by startTime
+          const sortedOptions = [...optionsWithDates].sort((a, b) => {
+            if (!a.startTime || !b.startTime) return 0;
+            return dayjs(a.startTime).unix() - dayjs(b.startTime).unix();
+          });
+
+          const firstDate = dayjs(sortedOptions[0].startTime);
+          const lastDate = dayjs(
+            sortedOptions[sortedOptions.length - 1].startTime,
+          );
+
+          // If dates are in the same month and year, show a simplified range
+          const isSameMonthAndYear =
+            firstDate.month() === lastDate.month() &&
+            firstDate.year() === lastDate.year();
+
+          return (
+            <div className="flex items-center">
+              <CalendarIcon className="mr-2 size-4 text-gray-500" />
+              <span>
+                {isSameMonthAndYear ? (
+                  <>
+                    {firstDate.format("MMM D")} - {lastDate.format("D")}
+                  </>
+                ) : (
+                  <>
+                    {firstDate.format("MMM D")} - {lastDate.format("MMM D")}
+                  </>
+                )}
+              </span>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor((row) => row.options, {
         id: "optionCount",
         header: () => <span>Options</span>,
         cell: (info) => {
@@ -101,12 +147,8 @@ export function useColumns() {
         id: "createdDate",
         header: () => <span>Created</span>,
         cell: (info) => {
-          const date = new Date(info.getValue());
-          return new Intl.DateTimeFormat("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          }).format(date);
+          const date = dayjs(info.getValue());
+          return date.format("MMM D, YYYY");
         },
       }),
       columnHelper.display({
