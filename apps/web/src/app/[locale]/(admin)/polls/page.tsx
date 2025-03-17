@@ -33,7 +33,7 @@ type SimplifiedPoll = {
   votes: { id: string }[];
 };
 
-async function loadData({ status, page = 1, pageSize = 20 }: PollFilters = {}) {
+async function loadData({ status, page = 1, pageSize = 10 }: PollFilters = {}) {
   const user = await requireUser();
 
   // Build the where clause based on filters
@@ -112,12 +112,14 @@ async function loadData({ status, page = 1, pageSize = 20 }: PollFilters = {}) {
     }
   });
 
+  // Check if there are more polls to load
+  const hasNextPage = page * pageSize < totalPolls;
+
   return {
     polls,
     totalPolls,
     statusCounts: counts,
-    totalPages: Math.ceil(totalPolls / pageSize),
-    currentPage: page,
+    hasNextPage,
   };
 }
 
@@ -145,11 +147,10 @@ export default async function Page({
   }
 
   // Load data with filters
-  const { polls, totalPolls, statusCounts, totalPages, currentPage } =
-    await loadData({
-      status,
-      page,
-    });
+  const { polls, totalPolls, statusCounts, hasNextPage } = await loadData({
+    status,
+    page,
+  });
 
   return (
     <PageContainer>
@@ -167,11 +168,10 @@ export default async function Page({
       </PageHeader>
       <PageContent>
         <PollFolders statusCounts={statusCounts} />
-        <PollsTable
-          polls={polls}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          totalPolls={totalPolls}
+        <PollsTable 
+          initialPolls={polls} 
+          initialTotalPolls={totalPolls} 
+          initialHasNextPage={hasNextPage} 
         />
       </PageContent>
     </PageContainer>

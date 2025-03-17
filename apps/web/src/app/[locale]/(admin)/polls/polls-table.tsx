@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@rallly/ui/table";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import type { Row } from "@tanstack/react-table";
 import {
   createColumnHelper,
@@ -21,19 +22,19 @@ import {
 import {
   CalendarIcon,
   CheckIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   LinkIcon,
+  Loader2Icon,
   TrashIcon,
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
 import { PollStatusBadge } from "@/components/poll-status";
 import { Trans } from "@/components/trans";
+import { VisibilityTrigger } from "@/components/visibility-trigger";
 
 import { DeletePollsDialog } from "./delete-polls-dialog";
 
@@ -86,24 +87,74 @@ function CopyLinkButton({ pollId }: { pollId: string }) {
   );
 }
 
-type PollsTableProps = {
+// API response type
+type PollsResponse = {
   polls: SimplifiedPoll[];
-  totalPages?: number;
-  currentPage?: number;
-  totalPolls?: number;
+  totalPolls: number;
+  nextPage: number | null;
+};
+
+// Function to fetch polls from the API
+async function fetchPolls({ pageParam = 1, status }: { pageParam?: number; status?: string }) {
+  const params = new URLSearchParams();
+  params.set("page", pageParam.toString());
+  if (status) {
+    params.set("status", status);
+  }
+  
+  const response = await fetch(`/api/polls?${params.toString()}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch polls");
+  }
+  
+  return response.json() as Promise<PollsResponse>;
+}
+
+type PollsTableProps = {
+  initialPolls: SimplifiedPoll[];
+  initialTotalPolls: number;
+  initialHasNextPage: boolean;
 };
 
 export function PollsTable({ 
-  polls,
-  totalPages = 1,
-  currentPage = 1,
-  totalPolls = 0,
+  initialPolls,
+  initialTotalPolls,
+  initialHasNextPage,
 }: PollsTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedPollIds, setSelectedPollIds] = React.useState<string[]>([]);
-  const pathname = usePathname();
   const searchParams = useSearchParams();
+  
+  // Get status from URL if available
+  const status = searchParams.get("status") || undefined;
+  
+  // Use React Query's useInfiniteQuery for data fetching
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status: queryStatus,
+  } = useInfiniteQuery({
+    queryKey: ["polls", status],
+    queryFn: ({ pageParam }) => fetchPolls({ pageParam, status }),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialData: {
+      pages: [
+        {
+          polls: initialPolls,
+          totalPolls: initialTotalPolls,
+          nextPage: initialHasNextPage ? 2 : null,
+        },
+      ],
+      pageParams: [1],
+    },
+  });
+  
+  // Flatten all polls from all pages
+  const allPolls = data?.pages.flatMap((page) => page.polls) || [];
+  const totalPolls = data?.pages[0]?.totalPolls || 0;
 
   const columns = React.useMemo(
     () => [
@@ -193,7 +244,7 @@ export function PollsTable({
   );
 
   const table = useReactTable({
-    data: polls,
+    data: allPolls,
     columns,
     state: {
       rowSelection,
@@ -206,7 +257,7 @@ export function PollsTable({
   const handleDeleteSelected = () => {
     // Get selected row IDs
     const selectedIds = Object.keys(rowSelection).map(
-      (index) => polls[parseInt(index)].id,
+      (index) => allPolls[parseInt(index)].id,
     );
 
     if (selectedIds.length > 0) {
@@ -223,61 +274,25 @@ export function PollsTable({
 
   const selectedCount = Object.keys(rowSelection).length;
 
-  // Create pagination links
-  const createPageUrl = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    return `${pathname}?${params.toString()}`;
-  };
+  if (queryStatus === "loading" && allPolls.length === 0) {
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2Icon className="size-6 animate-spin text-gray-400" />
+      </div>
+    );
+  }
 
-  // Generate array of page numbers to show
-  const getPageNumbers = () => {
-    const pages = [];
-    const maxPagesToShow = 5;
-    
-    if (totalPages <= maxPagesToShow) {
-      // Show all pages if there are few
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      // Always show first page
-      pages.push(1);
-      
-      // Calculate range around current page
-      let startPage = Math.max(2, currentPage - 1);
-      let endPage = Math.min(totalPages - 1, currentPage + 1);
-      
-      // Adjust if at edges
-      if (currentPage <= 2) {
-        endPage = 3;
-      } else if (currentPage >= totalPages - 1) {
-        startPage = totalPages - 2;
-      }
-      
-      // Add ellipsis after first page if needed
-      if (startPage > 2) {
-        pages.push(-1); // -1 represents ellipsis
-      }
-      
-      // Add middle pages
-      for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-      }
-      
-      // Add ellipsis before last page if needed
-      if (endPage < totalPages - 1) {
-        pages.push(-2); // -2 represents ellipsis
-      }
-      
-      // Always show last page
-      pages.push(totalPages);
-    }
-    
-    return pages;
-  };
+  if (queryStatus === "error") {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-red-500">
+          Error loading polls
+        </p>
+      </div>
+    );
+  }
 
-  if (polls.length === 0) {
+  if (allPolls.length === 0) {
     return (
       <div className="py-12 text-center">
         <p className="text-gray-500">
@@ -339,56 +354,26 @@ export function PollsTable({
         </Table>
       </div>
       
-      {totalPages > 1 && (
-        <div className="mt-4 flex flex-col items-center space-y-2">
-          <div className="flex items-center space-x-2">
-            {currentPage > 1 && (
-              <Link
-                href={createPageUrl(currentPage - 1)}
-                className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-              >
-                <ChevronLeftIcon className="mr-1 size-4" />
-                Previous
-              </Link>
-            )}
-            
-            <div className="flex items-center space-x-1">
-              {getPageNumbers().map((page, index) => (
-                <React.Fragment key={index}>
-                  {page < 0 ? (
-                    <span className="flex h-9 w-9 items-center justify-center text-sm">
-                      ...
-                    </span>
-                  ) : (
-                    <Link
-                      href={createPageUrl(page)}
-                      className={`inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors ${
-                        page === currentPage
-                          ? "bg-primary text-primary-foreground"
-                          : "border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                    >
-                      {page}
-                    </Link>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-            
-            {currentPage < totalPages && (
-              <Link
-                href={createPageUrl(currentPage + 1)}
-                className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-              >
-                Next
-                <ChevronRightIcon className="ml-1 size-4" />
-              </Link>
-            )}
+      {/* Infinite scroll loader using VisibilityTrigger */}
+      {hasNextPage && (
+        <VisibilityTrigger
+          onVisible={() => {
+            if (!isFetchingNextPage) {
+              fetchNextPage();
+            }
+          }}
+          className="mt-4 flex justify-center py-4"
+        >
+          <div className="flex items-center">
+            <Loader2Icon className="mr-2 size-4 animate-spin" />
+            <span>Loading more polls...</span>
           </div>
-          
-          <div className="text-sm text-gray-500">
-            Showing {polls.length} of {totalPolls} polls
-          </div>
+        </VisibilityTrigger>
+      )}
+      
+      {!hasNextPage && allPolls.length > 0 && (
+        <div className="mt-4 text-center text-sm text-gray-500">
+          Showing {allPolls.length} of {totalPolls} polls
         </div>
       )}
 
