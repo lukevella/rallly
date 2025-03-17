@@ -27,7 +27,6 @@ import {
   PollItemDateRange,
   PollItemDetails,
   PollItemIcon,
-  PollItemParticipants,
   PollItemTitle,
 } from "@/components/poll-item";
 import { getTranslation } from "@/i18n/server";

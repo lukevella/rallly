@@ -8,7 +8,6 @@ import {
 import {
   ClockIcon,
   PlusIcon,
-  SearchIcon,
   SettingsIcon,
   SidebarIcon,
   SparklesIcon,
@@ -20,6 +19,9 @@ import { Clock } from "@/components/clock";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { IfFreeUser } from "@/contexts/plan";
 import { auth } from "@/next-auth";
+
+import { SearchButton } from "./polls/search-button";
+import { SearchProvider } from "./polls/search-provider";
 
 export default async function Layout({
   children,
@@ -67,11 +69,7 @@ export default async function Layout({
                     </Icon>
                   </Link>
                 </Button>
-                <Button size="icon" variant="ghost">
-                  <Icon>
-                    <SearchIcon />
-                  </Icon>
-                </Button>
+                <SearchButton />
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/settings/preferences">
                     <Icon>
@@ -79,7 +77,7 @@ export default async function Layout({
                     </Icon>
                   </Link>
                 </Button>
-                <Button variant="ghost">
+                <Button size="sm" variant="ghost">
                   <Clock />
                 </Button>
               </div>
