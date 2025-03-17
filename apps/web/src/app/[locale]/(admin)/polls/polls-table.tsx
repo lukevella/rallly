@@ -15,7 +15,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Loader2Icon, TrashIcon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
@@ -23,6 +23,7 @@ import { Trans } from "@/components/trans";
 
 import { type SimplifiedPoll, useColumns } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";
+import { SelectionActionBar } from "./selection-action-bar";
 
 // API response type
 type PollsResponse = {
@@ -136,6 +137,11 @@ export const PollsTable = React.memo(function PollsTable({
     setRowSelection({});
   }, []);
 
+  const handleClearSelection = React.useCallback(() => {
+    // Clear all row selections
+    setRowSelection({});
+  }, []);
+
   const handleLoadMore = React.useCallback(() => {
     // Only fetch if we have a next page and we're not already fetching
     // This relies on React Query's isFetchingNextPage state
@@ -173,25 +179,7 @@ export const PollsTable = React.memo(function PollsTable({
   }
 
   return (
-    <div>
-      {selectedCount > 0 && (
-        <div className="bg-muted mb-4 flex items-center justify-between rounded-md p-2">
-          <div>
-            <span className="text-sm font-medium">
-              {selectedCount} {selectedCount === 1 ? "poll" : "polls"} selected
-            </span>
-          </div>
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={handleDeleteSelected}
-          >
-            <TrashIcon className="mr-2 size-4" />
-            <Trans i18nKey="delete" defaults="Delete" />
-          </Button>
-        </div>
-      )}
-
+    <div className="flex min-h-[calc(100vh-10rem)] flex-col">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -252,6 +240,12 @@ export const PollsTable = React.memo(function PollsTable({
           Showing {allPolls.length} of {totalPolls} polls
         </div>
       )}
+
+      <SelectionActionBar
+        selectedCount={selectedCount}
+        onDelete={handleDeleteSelected}
+        onClearSelection={handleClearSelection}
+      />
 
       <DeletePollsDialog
         open={isDeleteDialogOpen}
