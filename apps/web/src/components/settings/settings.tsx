@@ -1,25 +1,6 @@
 import { cn } from "@rallly/ui";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { InfoIcon } from "lucide-react";
-
-export const Settings = ({ children }: React.PropsWithChildren) => {
-  return <div className="space-y-6">{children}</div>;
-};
-
-export const SettingsHeader = ({ children }: React.PropsWithChildren) => {
-  return (
-    <div className="mb-4 text-lg font-semibold md:mb-8">
-      <h2>{children}</h2>
-    </div>
-  );
-};
 
 export const SettingsContent = ({ children }: React.PropsWithChildren) => {
   return <div className="space-y-6">{children}</div>;
@@ -31,13 +12,13 @@ export const SettingsSection = (props: {
   children: React.ReactNode;
 }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
-        <CardDescription>{props.description}</CardDescription>
-      </CardHeader>
-      <CardContent>{props.children}</CardContent>
-    </Card>
+    <section className="rounded-lg border p-4">
+      <header className="mb-6">
+        <h2 className="mb-2 text-base font-bold leading-none">{props.title}</h2>
+        <p className="text-muted-foreground text-sm">{props.description}</p>
+      </header>
+      <div>{props.children}</div>
+    </section>
   );
 };
 

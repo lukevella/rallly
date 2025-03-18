@@ -29,7 +29,10 @@ import {
 } from "@/components/empty-state";
 import { FormattedDate } from "@/components/formatted-date";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
-import { Settings, SettingsSection } from "@/components/settings/settings";
+import {
+  SettingsContent,
+  SettingsSection,
+} from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
 import { requireUser } from "@/next-auth";
 import { isSelfHosted } from "@/utils/constants";
@@ -86,7 +89,7 @@ export default async function Page() {
   const { subscription } = data;
 
   return (
-    <Settings>
+    <SettingsContent>
       <SettingsSection
         title={
           <Trans i18nKey="billingSubscriptionTitle" defaults="Subscription" />
@@ -302,6 +305,6 @@ export default async function Page() {
           </Button>
         </div>
       </SettingsSection>
-    </Settings>
+    </SettingsContent>
   );
 }
