@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 
 interface ParticipantAvatarBarProps {
-  participants: { name: string }[];
+  participants: { name: string; image?: string }[];
   max?: number;
 }
 
@@ -20,7 +20,11 @@ export const ParticipantAvatarBar = ({
         <Tooltip key={index}>
           <TooltipTrigger asChild>
             <li className="z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
-              <OptimizedAvatarImage name={participant.name} size="xs" />
+              <OptimizedAvatarImage
+                name={participant.name}
+                src={participant.image}
+                size="xs"
+              />
             </li>
           </TooltipTrigger>
           <TooltipContent>{participant.name}</TooltipContent>

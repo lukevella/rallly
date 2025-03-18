@@ -86,7 +86,7 @@ export function useColumns() {
           return (
             <div
               className={cn(
-                "flex items-center pl-1 transition-opacity duration-150",
+                "flex h-full items-center pl-1 transition-opacity duration-150",
                 {
                   ["opacity-100"]: isAllSelected || isSomeSelected,
                   ["opacity-0 hover:opacity-100"]:
@@ -115,10 +115,10 @@ export function useColumns() {
           return (
             <div
               className={cn(
-                "flex items-center pl-1 transition-opacity duration-150",
+                "flex h-full items-center pl-1 transition-opacity duration-150",
                 {
                   ["opacity-100"]: isSelected,
-                  ["opacity-0 group-hover:opacity-100"]: !isSelected,
+                  ["opacity-0 hover:opacity-100"]: !isSelected,
                 },
               )}
             >
@@ -132,9 +132,7 @@ export function useColumns() {
         },
         enableSorting: false,
         enableHiding: false,
-        minSize: 36,
-        maxSize: 36,
-        size: 36,
+        size: 40,
       },
       columnHelper.accessor("title", {
         header: () => <Trans i18nKey="title" defaults="Title" />,
@@ -150,7 +148,7 @@ export function useColumns() {
             </Link>
           </div>
         ),
-        size: 300, // Fixed width for title column
+        minSize: 200,
       }),
 
       columnHelper.accessor((row) => row.options, {
@@ -178,7 +176,7 @@ export function useColumns() {
 
           return <DateRangeDisplay firstDate={firstDate} lastDate={lastDate} />;
         },
-        size: 200, // Fixed width for date range column
+        minSize: 150,
       }),
       columnHelper.accessor((row) => row.participants, {
         id: "participantCount",
@@ -187,7 +185,7 @@ export function useColumns() {
           const participants = info.getValue();
           return <ParticipantAvatarBar participants={participants} max={5} />;
         },
-        size: 150, // Fixed width for participants column
+        minSize: 150,
       }),
       columnHelper.accessor("createdAt", {
         id: "createdDate",
@@ -197,13 +195,13 @@ export function useColumns() {
             <CreatedDateDisplay date={info.getValue()} />
           </div>
         ),
-        size: 150, // Fixed width for created date column
+        minSize: 100,
       }),
       columnHelper.display({
         id: "actionButtons",
         header: () => <span>Actions</span>,
         cell: (info) => <PollActions poll={info.row.original} />,
-        size: 100, // Fixed width for actions column
+        minSize: 100,
       }),
     ],
     [], // Empty dependency array since columns definition doesn't depend on any props or state
