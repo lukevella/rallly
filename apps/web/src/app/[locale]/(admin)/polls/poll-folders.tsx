@@ -92,11 +92,11 @@ export function PollFolders({ statusCounts }: { statusCounts: StatusCounts }) {
                   : "border-gray-200 bg-white hover:bg-gray-50",
               )}
             >
-              <FolderIcon className="size-4" />
+              <FolderIcon className="size-4 opacity-75" />
               <span>
                 <Trans i18nKey={i18nKey} defaults={folder.label} />
               </span>
-              <span className="ml-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+              <span className="ml-1 rounded-full bg-gray-400/10 px-2 py-0.5 text-xs text-gray-600">
                 {folder.count}
               </span>
             </button>
