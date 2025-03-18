@@ -6,7 +6,9 @@ export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn(className)}>{children}</div>;
+  return (
+    <div className={cn("mx-auto w-full max-w-5xl", className)}>{children}</div>
+  );
 }
 
 export function PageIcon({
@@ -33,7 +35,7 @@ export function PageTitle({
   return (
     <h1
       className={cn(
-        "text-foreground inline-flex items-center truncate text-xl font-bold tracking-tight",
+        "text-foreground inline-flex items-center truncate text-2xl font-bold tracking-tight",
         className,
       )}
     >

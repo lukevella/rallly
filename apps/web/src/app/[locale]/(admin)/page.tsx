@@ -191,146 +191,144 @@ export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
   const { user, recentPolls, upcomingEvents } = await getData();
   return (
-    <div>
-      <PageContainer>
-        <PageHeader>
-          <div className="flex items-center gap-x-3">
-            <PageIcon>
-              <HomeIcon />
-            </PageIcon>
-            <PageTitle>
-              <Trans t={t} i18nKey="home" defaults="Home" />
-            </PageTitle>
-          </div>
-        </PageHeader>
-        <PageContent className="grid grid-cols-1 gap-8">
-          <CardContainer>
-            <div className="flex items-center gap-4">
-              <div>
-                <OptimizedAvatarImage
-                  src={user.image ?? undefined}
-                  name={user.name ?? "Guest"}
-                  size="lg"
-                />
+    <PageContainer>
+      <PageHeader>
+        <div className="flex items-center gap-x-3">
+          <PageIcon>
+            <HomeIcon />
+          </PageIcon>
+          <PageTitle>
+            <Trans t={t} i18nKey="home" defaults="Home" />
+          </PageTitle>
+        </div>
+      </PageHeader>
+      <PageContent className="grid grid-cols-1 gap-8">
+        <CardContainer>
+          <div className="flex items-center gap-4">
+            <div>
+              <OptimizedAvatarImage
+                src={user.image ?? undefined}
+                name={user.name ?? "Guest"}
+                size="lg"
+              />
+            </div>
+            <div>
+              <div className="text-xl font-bold tracking-tight">
+                {user.name}
               </div>
-              <div>
-                <div className="text-xl font-bold tracking-tight">
-                  {user.name}
-                </div>
-                <div className="text-muted-foreground flex items-center gap-0.5">
-                  <div>{user.timeZone}</div>
-                </div>
+              <div className="text-muted-foreground flex items-center gap-0.5">
+                <div>{user.timeZone}</div>
               </div>
             </div>
-          </CardContainer>
-          <CardContainer>
-            <CardContainerHeader>
-              <CardContainerTitle>
-                <Trans t={t} i18nKey="pendingEvents" defaults="Pending" />
-              </CardContainerTitle>
-              <Button variant="ghost" asChild>
-                <Link href="/polls">
-                  <Trans t={t} i18nKey="viewAll" defaults="View All" />
-                </Link>
-              </Button>
-            </CardContainerHeader>
-            <CardContainerContent>
-              {recentPolls.length > 0 ? (
-                <div className="grid grid-cols-2 gap-2">
-                  {recentPolls.map((poll) => (
-                    <PollItem key={poll.id} pollId={poll.id}>
-                      <PollItemIcon fromDate={poll.from} toDate={poll.to} />
+          </div>
+        </CardContainer>
+        <CardContainer>
+          <CardContainerHeader>
+            <CardContainerTitle>
+              <Trans t={t} i18nKey="pendingEvents" defaults="Pending" />
+            </CardContainerTitle>
+            <Button variant="ghost" asChild>
+              <Link href="/polls">
+                <Trans t={t} i18nKey="viewAll" defaults="View All" />
+              </Link>
+            </Button>
+          </CardContainerHeader>
+          <CardContainerContent>
+            {recentPolls.length > 0 ? (
+              <div className="grid grid-cols-2 gap-2">
+                {recentPolls.map((poll) => (
+                  <PollItem key={poll.id} pollId={poll.id}>
+                    <PollItemIcon fromDate={poll.from} toDate={poll.to} />
 
-                      <PollItemContent>
-                        <PollItemTitle>{poll.title}</PollItemTitle>
-                        <PollItemDetails>
-                          <PollItemDateRange
-                            from={poll.from}
-                            to={poll.to}
-                            optionsCount={poll.optionsCount}
-                          />
-                        </PollItemDetails>
-                      </PollItemContent>
-                      <div className="text-sm">
-                        <Trans
-                          t={t}
-                          i18nKey="responsesReceived"
-                          defaults="{participants, plural, one {1 response} other {# responses}}"
-                          values={{ participants: poll.participants }}
+                    <PollItemContent>
+                      <PollItemTitle>{poll.title}</PollItemTitle>
+                      <PollItemDetails>
+                        <PollItemDateRange
+                          from={poll.from}
+                          to={poll.to}
+                          optionsCount={poll.optionsCount}
                         />
-                      </div>
-                    </PollItem>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState>
-                  <EmptyStateIcon>
-                    <CalendarIcon />
-                  </EmptyStateIcon>
-                  <EmptyStateTitle>
-                    <Trans t={t} i18nKey="noPolls" defaults="No polls" />
-                  </EmptyStateTitle>
-                  <EmptyStateDescription>
-                    <Trans
-                      t={t}
-                      i18nKey="noPollsDescription"
-                      defaults="You have no polls."
-                    />
-                  </EmptyStateDescription>
-                </EmptyState>
-              )}
-            </CardContainerContent>
-          </CardContainer>
-          <CardContainer>
-            <CardContainerHeader>
-              <CardContainerTitle>
-                <Trans t={t} i18nKey="upcomingEvents" defaults="Upcoming" />
-              </CardContainerTitle>
-              <Button variant="ghost" asChild>
-                <Link href="/events">
-                  <Trans t={t} i18nKey="viewAll" defaults="View All" />
-                </Link>
-              </Button>
-            </CardContainerHeader>
-            <CardContainerContent>
-              {upcomingEvents.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
-                  {upcomingEvents.map((event) => (
-                    <div
-                      key={event.id}
-                      className="flex items-center justify-between rounded-lg bg-gray-50 p-4 shadow-sm"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="text-lg font-bold">{event.title}</div>
-                        <div className="text-muted-foreground">
-                          <FormattedDate date={event.start} format="short" />
-                        </div>
+                      </PollItemDetails>
+                    </PollItemContent>
+                    <div className="text-sm">
+                      <Trans
+                        t={t}
+                        i18nKey="responsesReceived"
+                        defaults="{participants, plural, one {1 response} other {# responses}}"
+                        values={{ participants: poll.participants }}
+                      />
+                    </div>
+                  </PollItem>
+                ))}
+              </div>
+            ) : (
+              <EmptyState>
+                <EmptyStateIcon>
+                  <CalendarIcon />
+                </EmptyStateIcon>
+                <EmptyStateTitle>
+                  <Trans t={t} i18nKey="noPolls" defaults="No polls" />
+                </EmptyStateTitle>
+                <EmptyStateDescription>
+                  <Trans
+                    t={t}
+                    i18nKey="noPollsDescription"
+                    defaults="You have no polls."
+                  />
+                </EmptyStateDescription>
+              </EmptyState>
+            )}
+          </CardContainerContent>
+        </CardContainer>
+        <CardContainer>
+          <CardContainerHeader>
+            <CardContainerTitle>
+              <Trans t={t} i18nKey="upcomingEvents" defaults="Upcoming" />
+            </CardContainerTitle>
+            <Button variant="ghost" asChild>
+              <Link href="/events">
+                <Trans t={t} i18nKey="viewAll" defaults="View All" />
+              </Link>
+            </Button>
+          </CardContainerHeader>
+          <CardContainerContent>
+            {upcomingEvents.length > 0 ? (
+              <div className="grid grid-cols-1 gap-4">
+                {upcomingEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className="flex items-center justify-between rounded-lg bg-gray-50 p-4 shadow-sm"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="text-lg font-bold">{event.title}</div>
+                      <div className="text-muted-foreground">
+                        <FormattedDate date={event.start} format="short" />
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState className="py-8">
-                  <EmptyStateIcon>
-                    <CalendarIcon />
-                  </EmptyStateIcon>
-                  <EmptyStateTitle>
-                    <Trans t={t} i18nKey="noEvents" defaults="No events" />
-                  </EmptyStateTitle>
-                  <EmptyStateDescription>
-                    <Trans
-                      t={t}
-                      i18nKey="noEventsDescription"
-                      defaults="When you schedule events, they will appear here."
-                    />
-                  </EmptyStateDescription>
-                </EmptyState>
-              )}
-            </CardContainerContent>
-          </CardContainer>
-        </PageContent>
-      </PageContainer>
-    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState className="py-8">
+                <EmptyStateIcon>
+                  <CalendarIcon />
+                </EmptyStateIcon>
+                <EmptyStateTitle>
+                  <Trans t={t} i18nKey="noEvents" defaults="No events" />
+                </EmptyStateTitle>
+                <EmptyStateDescription>
+                  <Trans
+                    t={t}
+                    i18nKey="noEventsDescription"
+                    defaults="When you schedule events, they will appear here."
+                  />
+                </EmptyStateDescription>
+              </EmptyState>
+            )}
+          </CardContainerContent>
+        </CardContainer>
+      </PageContent>
+    </PageContainer>
   );
 }
 
