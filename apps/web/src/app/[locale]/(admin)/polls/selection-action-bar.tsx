@@ -46,11 +46,10 @@ export const SelectionActionBar = React.memo(function SelectionActionBar({
                 onClick={onClearSelection}
                 className="text-primary-foreground hover:text-primary-foreground hover:bg-white/10"
               >
-                <XIcon className="mr-1 size-4" />
                 Clear
               </Button>
               <Button variant="destructive" onClick={onDelete}>
-                <TrashIcon className="mr-2 size-4" />
+                <TrashIcon className="size-4" />
                 <Trans i18nKey="delete" defaults="Delete" />
               </Button>
             </div>

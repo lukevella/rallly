@@ -8,19 +8,23 @@ export async function GET(request: Request) {
   try {
     const user = await requireUser();
     const url = new URL(request.url);
-    
+
     // Parse query parameters
-    const status = url.searchParams.get("status") as "live" | "paused" | "finalized" | null;
+    const status = url.searchParams.get("status") as
+      | "live"
+      | "paused"
+      | "finalized"
+      | null;
     const page = parseInt(url.searchParams.get("page") || "1", 10);
     const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
     const q = url.searchParams.get("q");
-    
+
     // Build the where clause based on filters
     const where: Prisma.PollWhereInput = {
       userId: user.id,
-      ...(status ? { status } : {}),
+      ...(status ? { status } : { status: "live" }),
     };
-    
+
     // Add search filter if provided
     if (q) {
       where.title = {
@@ -28,12 +32,12 @@ export async function GET(request: Request) {
         mode: "insensitive", // Case-insensitive search
       };
     }
-    
+
     // Count total polls for pagination
     const [totalPolls, paginatedPolls] = await Promise.all([
       // Get total count for current filter
       prisma.poll.count({ where }),
-      
+
       // Get paginated polls with the current filter
       prisma.poll.findMany({
         where,
@@ -45,18 +49,18 @@ export async function GET(request: Request) {
           participants: {
             select: {
               id: true,
-            }
+            },
           },
           options: {
             select: {
               id: true,
               startTime: true,
-            }
+            },
           },
           votes: {
             select: {
               id: true,
-            }
+            },
           },
         },
         orderBy: {
@@ -66,18 +70,18 @@ export async function GET(request: Request) {
         take: pageSize,
       }),
     ]);
-    
+
     // Transform the selected data to match the expected format
-    const polls = paginatedPolls.map(poll => ({
+    const polls = paginatedPolls.map((poll) => ({
       ...poll,
       participants: poll.participants,
       options: poll.options,
       votes: poll.votes,
     }));
-    
+
     // Check if there are more polls to load
     const hasNextPage = page * pageSize < totalPolls;
-    
+
     return NextResponse.json({
       polls,
       totalPolls,
@@ -87,7 +91,7 @@ export async function GET(request: Request) {
     console.error("Error fetching polls:", error);
     return NextResponse.json(
       { error: "Failed to fetch polls" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
