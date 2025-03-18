@@ -129,6 +129,11 @@ export const PollsTable = React.memo(function PollsTable({
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: "onChange",
+    defaultColumn: {
+      minSize: 50,
+      maxSize: 500,
+    },
   });
 
   const handleDeleteSelected = React.useCallback(() => {
@@ -181,7 +186,7 @@ export const PollsTable = React.memo(function PollsTable({
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] flex-col space-y-4">
+    <div className="space-y-4">
       <div>
         <SearchInput initialValue={initialSearch} />
       </div>
@@ -204,13 +209,16 @@ export const PollsTable = React.memo(function PollsTable({
         </div>
       ) : (
         <>
-          <div className="rounded-md border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
+                      <TableHead
+                        key={header.id}
+                        style={{ width: header.column.getSize() }}
+                      >
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -229,7 +237,15 @@ export const PollsTable = React.memo(function PollsTable({
                     className={`group ${row.getIsSelected() ? "bg-primary/5" : ""}`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        key={cell.id}
+                        style={{
+                          width: cell.column.getSize(),
+                          maxWidth: cell.column.getSize(),
+                          overflow: "hidden",
+                        }}
+                        className="overflow-hidden"
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),
@@ -242,9 +258,14 @@ export const PollsTable = React.memo(function PollsTable({
             </Table>
           </div>
 
-          {/* Load more button */}
+          {allPolls.length > 0 && (
+            <div className="mt-4 py-2 text-center text-sm text-gray-500">
+              Showing {allPolls.length} of {totalPolls} polls
+            </div>
+          )}
+
           {hasNextPage && (
-            <div className="mt-4 flex justify-center py-4">
+            <div className="mt-4 flex justify-center">
               <Button
                 variant="secondary"
                 onClick={handleLoadMore}
@@ -259,12 +280,6 @@ export const PollsTable = React.memo(function PollsTable({
                   "Load more"
                 )}
               </Button>
-            </div>
-          )}
-
-          {!hasNextPage && allPolls.length > 0 && (
-            <div className="py-4 text-center text-sm text-gray-500">
-              Showing {allPolls.length} of {totalPolls} polls
             </div>
           )}
         </>

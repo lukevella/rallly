@@ -1,6 +1,7 @@
 "use client";
 
 import type { Poll } from "@rallly/database";
+import { cn } from "@rallly/ui";
 import { Checkbox } from "@rallly/ui/checkbox";
 import { type Row, createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
@@ -74,9 +75,14 @@ export function useColumns() {
           const isSomeSelected = table.getIsSomeRowsSelected();
           return (
             <div
-              className={`transition-opacity duration-150 ${
-                isAllSelected || isSomeSelected ? "opacity-100" : "opacity-0 hover:opacity-100"
-              }`}
+              className={cn(
+                "flex items-center transition-opacity duration-150",
+                {
+                  ["opacity-100"]: isAllSelected || isSomeSelected,
+                  ["opacity-0 hover:opacity-100"]:
+                    !isAllSelected && !isSomeSelected,
+                },
+              )}
             >
               <Checkbox
                 checked={
@@ -86,7 +92,9 @@ export function useColumns() {
                       ? "indeterminate"
                       : false
                 }
-                onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
+                onCheckedChange={(value) =>
+                  table.toggleAllRowsSelected(!!value)
+                }
                 aria-label="Select all"
               />
             </div>
@@ -96,7 +104,13 @@ export function useColumns() {
           const isSelected = row.getIsSelected();
           return (
             <div
-              className={`transition-opacity duration-150 ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+              className={cn(
+                "flex items-center transition-opacity duration-150",
+                {
+                  ["opacity-100"]: isSelected,
+                  ["opacity-0 group-hover:opacity-100"]: !isSelected,
+                },
+              )}
             >
               <Checkbox
                 checked={isSelected}
@@ -108,6 +122,9 @@ export function useColumns() {
         },
         enableSorting: false,
         enableHiding: false,
+        minSize: 30,
+        maxSize: 30,
+        size: 30,
       },
       columnHelper.accessor("title", {
         header: () => <Trans i18nKey="title" defaults="Title" />,
@@ -116,12 +133,14 @@ export function useColumns() {
             <PollStatusIcon status={info.row.original.status} />
             <Link
               href={`/poll/${info.row.original.id}`}
-              className="font-medium hover:underline"
+              className="max-w-full truncate font-medium hover:underline"
+              title={info.getValue()} // Add title attribute for tooltip on hover
             >
               {info.getValue()}
             </Link>
           </div>
         ),
+        size: 300, // Fixed width for title column
       }),
 
       columnHelper.accessor((row) => row.options, {
@@ -149,6 +168,7 @@ export function useColumns() {
 
           return <DateRangeDisplay firstDate={firstDate} lastDate={lastDate} />;
         },
+        size: 200, // Fixed width for date range column
       }),
       columnHelper.accessor((row) => row.participants, {
         id: "participantCount",
@@ -162,16 +182,19 @@ export function useColumns() {
             </div>
           );
         },
+        size: 150, // Fixed width for participants column
       }),
       columnHelper.accessor("createdAt", {
         id: "createdDate",
         header: () => <span>Created</span>,
         cell: (info) => <CreatedDateDisplay date={info.getValue()} />,
+        size: 150, // Fixed width for created date column
       }),
       columnHelper.display({
         id: "actionButtons",
         header: () => <span>Actions</span>,
         cell: (info) => <PollActions poll={info.row.original} />,
+        size: 100, // Fixed width for actions column
       }),
     ],
     [], // Empty dependency array since columns definition doesn't depend on any props or state
