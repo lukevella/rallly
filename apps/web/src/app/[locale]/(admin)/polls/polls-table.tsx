@@ -209,7 +209,7 @@ export const PollsTable = React.memo(function PollsTable({
         </div>
       ) : (
         <>
-          <div className="rounded-lg border">
+          <div className="bg-background rounded-lg border">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (

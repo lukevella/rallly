@@ -5,62 +5,41 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@rallly/ui/sidebar";
-import {
-  ClockIcon,
-  PlusIcon,
-  SettingsIcon,
-  SidebarIcon,
-  SparklesIcon,
-} from "lucide-react";
+import { PlusIcon, SettingsIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { Clock } from "@/components/clock";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { IfFreeUser } from "@/contexts/plan";
-import { auth } from "@/next-auth";
+import { IfFreeUser, IfSubscribed } from "@/contexts/plan";
+import { requireUser } from "@/next-auth";
 
-import { SearchButton } from "./polls/search-button";
-import { SearchProvider } from "./polls/search-provider";
+import { ProBadge } from "./pro-badge";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
-  if (!session?.user || !session.user.name || !session.user.email) {
-    notFound();
-  }
+  const user = await requireUser();
 
   return (
     <SidebarProvider>
       <AppSidebar
         user={{
-          name: session.user.name,
-          email: session.user.email,
-          image: session.user.image ?? undefined,
+          name: user.name ?? "",
+          email: user.email ?? "",
+          image: user.image ?? undefined,
         }}
       />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
-          <div className="flex items-center gap-4 border-b p-3">
+          <div className="sticky top-0 z-10 flex items-center gap-4 border-b p-3">
             <div className="flex-1">
               <div className="flex items-center gap-x-2">
                 <SidebarTrigger />
               </div>
             </div>
-
             <div className="flex flex-1 items-center justify-end gap-x-4">
-              <IfFreeUser>
-                <Button size="sm" variant="primary">
-                  <Icon>
-                    <SparklesIcon />
-                  </Icon>
-                  Upgrade
-                </Button>
-              </IfFreeUser>
               <div className="flex items-center gap-x-2">
                 <Button asChild size="icon" variant="ghost">
                   <Link href="/new">
@@ -69,7 +48,6 @@ export default async function Layout({
                     </Icon>
                   </Link>
                 </Button>
-                <SearchButton />
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/settings/preferences">
                     <Icon>
@@ -80,6 +58,15 @@ export default async function Layout({
                 <Button size="sm" variant="ghost">
                   <Clock />
                 </Button>
+                <ProBadge />
+                <IfFreeUser>
+                  <Button size="sm" variant="primary">
+                    <Icon>
+                      <SparklesIcon />
+                    </Icon>
+                    Upgrade
+                  </Button>
+                </IfFreeUser>
               </div>
             </div>
           </div>

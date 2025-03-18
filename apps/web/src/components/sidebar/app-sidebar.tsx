@@ -30,7 +30,7 @@ export function AppSidebar({
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <Link
-          className="inline-block p-1 transition-transform active:translate-y-1"
+          className="inline-block px-1 py-2 transition-transform active:translate-y-1"
           href="/"
         >
           <Image

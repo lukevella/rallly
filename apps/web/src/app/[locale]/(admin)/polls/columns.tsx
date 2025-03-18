@@ -76,7 +76,7 @@ export function useColumns() {
           return (
             <div
               className={cn(
-                "flex items-center transition-opacity duration-150",
+                "flex items-center pl-1 transition-opacity duration-150",
                 {
                   ["opacity-100"]: isAllSelected || isSomeSelected,
                   ["opacity-0 hover:opacity-100"]:
@@ -105,7 +105,7 @@ export function useColumns() {
           return (
             <div
               className={cn(
-                "flex items-center transition-opacity duration-150",
+                "flex items-center pl-1 transition-opacity duration-150",
                 {
                   ["opacity-100"]: isSelected,
                   ["opacity-0 group-hover:opacity-100"]: !isSelected,
