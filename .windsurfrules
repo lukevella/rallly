@@ -3,3 +3,4 @@
 3. Use tailwindcss for styling
 4. Use react-query for data fetching
 5. Use react-hook-form for form handling
+6. Prefer implicit return values over explicit return values
