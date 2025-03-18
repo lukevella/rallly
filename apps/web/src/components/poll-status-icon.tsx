@@ -24,7 +24,7 @@ export function PollStatusIcon({
   const icon = (() => {
     switch (status) {
       case "live":
-        return <CircleIcon className="size-4 text-gray-500" />;
+        return <CircleIcon className="size-4 text-gray-400" />;
       case "paused":
         return <CirclePauseIcon className="size-4 text-gray-400" />;
       case "finalized":
