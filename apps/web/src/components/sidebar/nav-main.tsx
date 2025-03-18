@@ -6,7 +6,13 @@ import {
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
 import type { LucideIcon } from "lucide-react";
-import { BarChart2Icon, CalendarIcon, HomeIcon, UsersIcon, PuzzleIcon } from "lucide-react";
+import {
+  BarChart2Icon,
+  CalendarIcon,
+  HomeIcon,
+  PuzzleIcon,
+  UsersIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

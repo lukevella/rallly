@@ -1,11 +1,10 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
-import { LogOutIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 
 import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
 import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
-import { LogoutButton } from "@/app/components/logout-button";
 import {
   SettingsContent,
   SettingsSection,
