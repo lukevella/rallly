@@ -25,6 +25,7 @@ import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
 import { PollsTable } from "./polls/polls-table";
+import { DateDisplay } from "@/features/timezone";
 
 function CardContainer({
   className,
@@ -33,9 +34,7 @@ function CardContainer({
   className?: string;
   children: React.ReactNode;
 }) {
-  return (
-    <div className={cn("rounded-lg border p-4", className)}>{children}</div>
-  );
+  return <div className={cn(className)}>{children}</div>;
 }
 
 function CardContainerHeader({
@@ -101,15 +100,31 @@ async function getUpcomingEvents(userId: string) {
   });
 }
 
-async function getData() {
-  const user = await requireUser();
+async function getUser(id: string) {
+  return prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      timeZone: true,
+      createdAt: true,
+    },
+  });
+}
 
-  const [pollsData, upcomingEvents] = await Promise.all([
+async function getData() {
+  const userSession = await requireUser();
+
+  const [user, pollsData, upcomingEvents] = await Promise.all([
+    getUser(userSession.id),
     getPolls({
-      userId: user.id,
+      userId: userSession.id,
       pageSize: 5,
     }),
-    getUpcomingEvents(user.id),
+    getUpcomingEvents(userSession.id),
   ]);
 
   return {
@@ -135,57 +150,47 @@ export default async function Page({ params }: { params: Params }) {
         </div>
       </PageHeader>
       <PageContent className="space-y-6">
-        <CardContainer>
-          <div className="flex items-center gap-4">
-            <div>
-              <OptimizedAvatarImage
-                src={user.image ?? undefined}
-                name={user.name ?? "Guest"}
-                size="lg"
-              />
+        <div className="flex items-center gap-4">
+          <div>
+            <OptimizedAvatarImage
+              src={user.image ?? undefined}
+              name={user.name ?? "Guest"}
+              size="lg"
+            />
+          </div>
+          <div>
+            <div className="mb-1 text-lg font-bold leading-none tracking-tight">
+              {user.name}
             </div>
-            <div>
-              <div className="text-xl font-bold tracking-tight">
-                {user.name}
-              </div>
-              <div className="text-muted-foreground flex items-center gap-0.5">
-                <div>{user.timeZone}</div>
+            <div className="text-muted-foreground flex items-center gap-0.5">
+              <div>
+                <DateDisplay date={user.createdAt} format="Since MMMM YYYY" />
               </div>
             </div>
           </div>
-        </CardContainer>
-        <CardContainer>
-          <CardContainerHeader>
-            <CardContainerTitle>
-              <div className="flex items-center gap-2">
-                <ZapIcon className="text-primary size-4" />
-                <span>Quick Actions</span>
-              </div>
-            </CardContainerTitle>
-          </CardContainerHeader>
-          <CardContainerContent>
-            <div className="grid grid-cols-2 gap-3">
-              <Link
-                href="/new"
-                className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
-              >
-                <div className="text-primary bg-primary/10 rounded-full p-3">
-                  <PlusIcon className="size-5" />
-                </div>
-                <div className="font-medium">Create Poll</div>
-              </Link>
-              <Link
-                href="/settings/profile"
-                className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
-              >
-                <div className="text-primary bg-primary/10 rounded-full p-3">
-                  <UserIcon className="size-5" />
-                </div>
-                <div className="font-medium">Profile</div>
-              </Link>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <Link
+            href="/new"
+            className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
+          >
+            <div className="text-primary bg-primary/10 rounded-full p-3">
+              <PlusIcon className="size-5" />
             </div>
-          </CardContainerContent>
-        </CardContainer>
+            <div className="font-medium">Create Poll</div>
+          </Link>
+          <Link
+            href="/settings/profile"
+            className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
+          >
+            <div className="text-primary bg-primary/10 rounded-full p-3">
+              <UserIcon className="size-5" />
+            </div>
+            <div className="font-medium">Profile</div>
+          </Link>
+        </div>
+
         <CardContainer>
           <CardContainerHeader>
             <CardContainerTitle>

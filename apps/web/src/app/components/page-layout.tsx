@@ -65,7 +65,7 @@ export function PageSkeleton() {
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-8 w-32" />
         </PageTitle>
       </PageHeader>
       <PageContent>
