@@ -33,7 +33,7 @@ export default async function Layout({
       />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
-          <div className="sticky top-0 z-10 flex items-center gap-4 border-b p-3">
+          <div className="bg-background/90 sticky top-0 z-10 flex items-center gap-4 rounded-t-lg border-b p-3 backdrop-blur-md">
             <div className="flex-1">
               <div className="flex items-center gap-x-2">
                 <SidebarTrigger />

@@ -27,7 +27,7 @@ export function AppSidebar({
   };
 }) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
         <Link
           className="inline-block px-1 py-2 transition-transform active:translate-y-1"
