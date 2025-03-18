@@ -26,7 +26,7 @@ export function OptimizedAvatarImage({
   const [isLoaded, setLoaded] = React.useState(false);
   return (
     <Avatar
-      className={className}
+      className={cn("rounded-full", className)}
       style={{ width: sizeToWidth[size], height: sizeToWidth[size] }}
     >
       {src ? (
@@ -56,7 +56,7 @@ export function OptimizedAvatarImage({
             "text-3xl": size === "xl",
           })}
         >
-          {name[0]?.toUpperCase()}
+          {name?.[0]?.toUpperCase()}
         </AvatarFallback>
       ) : null}
     </Avatar>

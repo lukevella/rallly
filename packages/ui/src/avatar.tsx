@@ -12,10 +12,7 @@ const Avatar = React.forwardRef<
 >(({ className, size = 48, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn(
-      "relative flex shrink-0 overflow-hidden rounded-md",
-      className,
-    )}
+    className={cn("relative flex shrink-0 overflow-hidden", className)}
     style={{ width: size, height: size }}
     {...props}
   />
@@ -72,13 +69,12 @@ const AvatarFallback = React.forwardRef<
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        "flex h-full w-full items-center justify-center rounded-md font-medium",
+        "flex h-full w-full items-center justify-center font-medium",
         className,
       )}
       style={{
         background: `linear-gradient(135deg, ${fromColor} 0%, ${toColor} 100%)`,
-        color: "white", // White text for better contrast against gradient backgrounds
-        textShadow: "0px 1px 2px rgba(0, 0, 0, 0.2)", // Lighter text shadow for subtlety
+        color: "white",
       }}
       {...props}
     />

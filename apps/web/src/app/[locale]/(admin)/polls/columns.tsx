@@ -3,9 +3,9 @@
 import type { Poll } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Checkbox } from "@rallly/ui/checkbox";
-import { type Row, createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper, type Row } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { CalendarIcon, UserIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -15,13 +15,21 @@ import { DateDisplay } from "@/features/timezone";
 
 import { PollActions } from "./poll-actions";
 
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
+
 // Define a simplified poll type that matches what we're returning from the server
 export type SimplifiedPoll = {
   id: string;
   title: string;
   status: Poll["status"];
   createdAt: Date;
-  participants: { id: string }[];
+  participants: {
+    id: string;
+    name: string;
+    image?: string;
+  }[];
   options: { id: string; startTime: Date }[];
 };
 
@@ -44,9 +52,9 @@ function DateRangeDisplay({
     firstDate.year() === lastDate.year();
 
   return (
-    <div className="flex items-center">
-      <CalendarIcon className="mr-2 size-4 text-gray-500" />
-      <span>
+    <div className="flex items-center gap-2">
+      <CalendarIcon className="size-4 shrink-0 text-gray-500" />
+      <span className="whitespace-nowrap">
         {isSameDay ? (
           <DateDisplay date={firstDate} format="MMM D, YYYY" />
         ) : isSameMonthAndYear ? (
@@ -127,9 +135,9 @@ export function useColumns() {
         },
         enableSorting: false,
         enableHiding: false,
-        minSize: 30,
-        maxSize: 30,
-        size: 30,
+        minSize: 36,
+        maxSize: 36,
+        size: 36,
       },
       columnHelper.accessor("title", {
         header: () => <Trans i18nKey="title" defaults="Title" />,
@@ -180,19 +188,18 @@ export function useColumns() {
         header: () => <Trans i18nKey="participants" defaults="Participants" />,
         cell: (info) => {
           const participants = info.getValue();
-          return (
-            <div className="flex items-center">
-              <UserIcon className="mr-2 size-4" />
-              <span>{participants.length}</span>
-            </div>
-          );
+          return <ParticipantAvatarBar participants={participants} max={5} />;
         },
         size: 150, // Fixed width for participants column
       }),
       columnHelper.accessor("createdAt", {
         id: "createdDate",
         header: () => <span>Created</span>,
-        cell: (info) => <CreatedDateDisplay date={info.getValue()} />,
+        cell: (info) => (
+          <div className="whitespace-nowrap">
+            <CreatedDateDisplay date={info.getValue()} />
+          </div>
+        ),
         size: 150, // Fixed width for created date column
       }),
       columnHelper.display({

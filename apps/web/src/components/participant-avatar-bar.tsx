@@ -27,7 +27,7 @@ export const ParticipantAvatarBar = ({
         </Tooltip>
       ))}
       {hiddenCount > 1 ? (
-        <li className="relative z-20 inline-flex items-center justify-center rounded-full ring-2 ring-white">
+        <li className="relative z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
           <Tooltip>
             <TooltipTrigger asChild>
               <span
@@ -40,7 +40,7 @@ export const ParticipantAvatarBar = ({
                 +{hiddenCount}
               </span>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="z-30">
               <ul>
                 {participants
                   .slice(visibleCount, 10)

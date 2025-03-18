@@ -29,7 +29,7 @@ type SimplifiedPoll = {
   title: string;
   status: PollStatus;
   createdAt: Date;
-  participants: { id: string }[];
+  participants: { id: string; name: string; image?: string }[];
   options: { id: string; startTime: Date }[];
 };
 
@@ -78,6 +78,12 @@ async function loadData({
         participants: {
           select: {
             id: true,
+            name: true,
+            user: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
         options: {
@@ -101,7 +107,11 @@ async function loadData({
     title: poll.title,
     status: poll.status,
     createdAt: poll.createdAt,
-    participants: poll.participants,
+    participants: poll.participants.map((participant) => ({
+      id: participant.id,
+      name: participant.name,
+      image: participant.user?.image ?? undefined,
+    })),
     options: poll.options,
   }));
 

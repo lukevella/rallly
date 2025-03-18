@@ -49,6 +49,12 @@ export async function GET(request: Request) {
           participants: {
             select: {
               id: true,
+              name: true,
+              user: {
+                select: {
+                  image: true,
+                },
+              },
             },
           },
           options: {
@@ -74,7 +80,11 @@ export async function GET(request: Request) {
     // Transform the selected data to match the expected format
     const polls = paginatedPolls.map((poll) => ({
       ...poll,
-      participants: poll.participants,
+      participants: poll.participants.map((participant) => ({
+        id: participant.id,
+        name: participant.name,
+        image: participant.user?.image ?? undefined,
+      })),
       options: poll.options,
       votes: poll.votes,
     }));
