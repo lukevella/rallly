@@ -44,20 +44,6 @@ export const ProfilePage = () => {
       </SettingsSection>
       <hr />
 
-      <SettingsSection
-        title={<Trans i18nKey="logout" />}
-        description={
-          <Trans
-            i18nKey="logoutDescription"
-            defaults="Sign out of your existing session"
-          />
-        }
-      >
-        <LogoutButton>
-          <LogOutIcon className="size-4" />
-          <Trans i18nKey="logout" defaults="Logout" />
-        </LogoutButton>
-      </SettingsSection>
       {user.email ? (
         <>
           <hr />
