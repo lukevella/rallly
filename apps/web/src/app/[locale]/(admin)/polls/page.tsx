@@ -44,7 +44,7 @@ async function loadData({
   // Build the where clause based on filters
   const where: Prisma.PollWhereInput = {
     userId: user.id,
-    ...(status ? { status } : {}),
+    status,
   };
 
   // Add search filter if provided
@@ -106,22 +106,13 @@ async function loadData({
   }));
 
   // Process status counts into a more usable format
-  const counts = {
-    all: await prisma.poll.count({ where: { userId: user.id } }),
-    live: 0,
-    paused: 0,
-    finalized: 0,
-  };
-
-  statusCounts.forEach((item) => {
-    if (
-      item.status === "live" ||
-      item.status === "paused" ||
-      item.status === "finalized"
-    ) {
-      counts[item.status] = item._count;
-    }
-  });
+  const counts = statusCounts.reduce(
+    (acc, item) => {
+      acc[item.status] = item._count;
+      return acc;
+    },
+    { live: 0, paused: 0, finalized: 0 },
+  );
 
   // Check if there are more polls to load
   const hasNextPage = page * pageSize < totalPolls;

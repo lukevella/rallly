@@ -9,7 +9,6 @@ import React from "react";
 import { Trans } from "@/components/trans";
 
 type StatusCounts = {
-  all: number;
   live: number;
   paused: number;
   finalized: number;
