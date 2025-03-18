@@ -14,6 +14,7 @@ import { IfFreeUser, IfSubscribed } from "@/contexts/plan";
 import { requireUser } from "@/next-auth";
 
 import { ProBadge } from "./pro-badge";
+import TopBar from "./top-bar";
 
 export default async function Layout({
   children,
@@ -33,44 +34,8 @@ export default async function Layout({
       />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
-          <div className="bg-background/90 sticky top-0 z-10 flex items-center gap-4 rounded-t-lg border-b p-3 backdrop-blur-md">
-            <div className="flex-1">
-              <div className="flex items-center gap-x-2">
-                <SidebarTrigger />
-              </div>
-            </div>
-            <div className="flex flex-1 items-center justify-end gap-x-4">
-              <div className="flex items-center gap-x-2">
-                <Button asChild size="icon" variant="ghost">
-                  <Link href="/new">
-                    <Icon>
-                      <PlusIcon />
-                    </Icon>
-                  </Link>
-                </Button>
-                <Button variant="ghost" size="icon" asChild>
-                  <Link href="/settings/preferences">
-                    <Icon>
-                      <SettingsIcon />
-                    </Icon>
-                  </Link>
-                </Button>
-                <Button size="sm" variant="ghost">
-                  <Clock />
-                </Button>
-                <ProBadge />
-                <IfFreeUser>
-                  <Button size="sm" variant="primary">
-                    <Icon>
-                      <SparklesIcon />
-                    </Icon>
-                    Upgrade
-                  </Button>
-                </IfFreeUser>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-4 p-6">{children}</div>
+          <TopBar />
+          <div className="flex flex-1 flex-col p-6">{children}</div>
         </div>
       </SidebarInset>
     </SidebarProvider>
