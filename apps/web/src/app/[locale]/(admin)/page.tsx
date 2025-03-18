@@ -208,9 +208,10 @@ export default async function Page({ params }: { params: Params }) {
           <CardContainerContent>
             {recentPolls.length > 0 ? (
               <PollsTable
-                initialPolls={recentPolls}
-                initialTotalPolls={recentPolls.length}
-                initialHasNextPage={false}
+                polls={recentPolls}
+                totalPolls={recentPolls.length}
+                currentPage={1}
+                totalPages={1}
               />
             ) : (
               <EmptyState>

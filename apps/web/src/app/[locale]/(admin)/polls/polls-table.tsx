@@ -9,288 +9,194 @@ import {
   TableHeader,
   TableRow,
 } from "@rallly/ui/table";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Loader2Icon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
-
-import { Trans } from "@/components/trans";
 
 import { type SimplifiedPoll, useColumns } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";
 import { SearchInput } from "./search-input";
 import { SelectionActionBar } from "./selection-action-bar";
 
-// API response type
-type PollsResponse = {
+type PollsTableProps = {
   polls: SimplifiedPoll[];
   totalPolls: number;
-  nextPage: number | null;
+  currentPage: number;
+  totalPages: number;
 };
 
-// Function to fetch polls from the API
-async function fetchPolls({
-  pageParam = 1,
-  status,
-  q,
-}: {
-  pageParam?: number;
-  status?: string;
-  q?: string;
-}) {
-  const params = new URLSearchParams();
-  params.set("page", pageParam.toString());
-  if (status) {
-    params.set("status", status);
-  }
-  if (q) {
-    params.set("q", q);
-  }
-
-  const response = await fetch(`/api/polls?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch polls");
-  }
-
-  return response.json() as Promise<PollsResponse>;
-}
-
-type PollsTableProps = {
-  initialPolls: SimplifiedPoll[];
-  initialTotalPolls: number;
-  initialHasNextPage: boolean;
-  initialSearch?: string;
-};
-
-// Memoize the entire PollsTable component to prevent unnecessary re-renders
-export const PollsTable = function PollsTable({
-  initialPolls,
-  initialTotalPolls,
-  initialHasNextPage,
-  initialSearch,
+export function PollsTable({
+  polls,
+  totalPolls,
+  currentPage,
+  totalPages,
 }: PollsTableProps) {
-  const [rowSelection, setRowSelection] = React.useState({});
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Get page size from URL or default to 10
+  const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
+
+  // Dialog state for delete polls
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedPollIds, setSelectedPollIds] = React.useState<string[]>([]);
-  const searchParams = useSearchParams();
 
-  // Get status from URL if available
-  const status = searchParams.get("status") || undefined;
+  // Row selection state
+  const [rowSelection, setRowSelection] = React.useState({});
 
-  // Get search query from URL if available
-  const searchQuery = searchParams.get("q") || undefined;
-
-  // Use React Query's useInfiniteQuery for data fetching
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status: queryStatus,
-  } = useInfiniteQuery({
-    queryKey: ["polls", status, searchQuery],
-    queryFn: ({ pageParam }) =>
-      fetchPolls({ pageParam, status, q: searchQuery }),
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialData: {
-      pages: [
-        {
-          polls: initialPolls,
-          totalPolls: initialTotalPolls,
-          nextPage: initialHasNextPage ? 2 : null,
-        },
-      ],
-      pageParams: [1],
-    },
-  });
-
-  // Flatten all polls from all pages
-  const allPolls = React.useMemo(() => {
-    return data?.pages.flatMap((page) => page.polls) || [];
-  }, [data?.pages]);
-
-  const totalPolls = data?.pages[0]?.totalPolls || 0;
-
-  // Get columns from our custom hook
+  // Get columns for the table
   const columns = useColumns();
 
-  // Memoize the table instance
+  // Create table instance
   const table = useReactTable({
-    data: allPolls,
+    data: polls,
     columns,
+    getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       rowSelection,
     },
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    columnResizeMode: "onChange",
-    defaultColumn: {
-      minSize: 50,
-      maxSize: 500,
-    },
   });
 
-  const handleDeleteSelected = React.useCallback(() => {
-    // Get selected row IDs
+  // Calculate pagination values
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalPolls);
+
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage.toString());
+    router.push(`?${params.toString()}`);
+  };
+
+  // Handle delete selected
+  const handleDeleteSelected = () => {
     const selectedIds = Object.keys(rowSelection).map(
-      (index) => allPolls[parseInt(index)].id,
+      (index) => polls[parseInt(index)].id,
     );
 
     if (selectedIds.length > 0) {
-      // Set the selected poll IDs and open the confirmation dialog
       setSelectedPollIds(selectedIds);
       setIsDeleteDialogOpen(true);
     }
-  }, [rowSelection, allPolls]);
+  };
 
-  const handleDeleteSuccess = React.useCallback(() => {
-    // After successful deletion, clear selection
+  // Handle delete success
+  const handleDeleteSuccess = () => {
     setRowSelection({});
-  }, []);
+  };
 
-  const handleClearSelection = React.useCallback(() => {
-    // Clear all row selections
+  // Handle clear selection
+  const handleClearSelection = () => {
     setRowSelection({});
-  }, []);
+  };
 
-  const handleLoadMore = React.useCallback(() => {
-    // Only fetch if we have a next page and we're not already fetching
-    // This relies on React Query's isFetchingNextPage state
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
+  // Get selected count
   const selectedCount = Object.keys(rowSelection).length;
-
-  if (queryStatus === "loading" && allPolls.length === 0) {
-    return (
-      <div className="flex justify-center py-12">
-        <Loader2Icon className="size-6 animate-spin text-gray-400" />
-      </div>
-    );
-  }
-
-  if (queryStatus === "error") {
-    return (
-      <div className="py-12 text-center">
-        <p className="text-red-500">Error loading polls</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
-      <div>
-        <SearchInput initialValue={initialSearch} />
-      </div>
-      {allPolls.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-gray-500">
-            {searchQuery ? (
-              <Trans
-                i18nKey="noPolls"
-                defaults="No polls found matching '{search}'"
-                values={{ search: searchQuery }}
-              />
-            ) : (
-              <Trans
-                i18nKey="noPolls"
-                defaults="You don't have any polls yet"
-              />
-            )}
-          </p>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row">
+        <div className="w-full sm:w-96">
+          <SearchInput />
         </div>
-      ) : (
-        <>
-          <div className="bg-background rounded-lg border">
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead
-                        key={header.id}
-                        style={{ width: header.column.getSize() }}
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    className={`group ${row.getIsSelected() ? "bg-primary/5" : ""}`}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        style={{
-                          width: cell.column.getSize(),
-                          maxWidth: cell.column.getSize(),
-                          overflow: "hidden",
-                        }}
-                        className="overflow-hidden"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
+      </div>
+
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
                         )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                  </TableHead>
                 ))}
-              </TableBody>
-            </Table>
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {polls.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  You don&apos;t have any polls yet
+                </TableCell>
+              </TableRow>
+            ) : (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination Controls */}
+      {totalPolls > 0 && (
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            Showing {startItem} to {endItem} of {totalPolls} polls
           </div>
-
-          {allPolls.length > 0 && (
-            <div className="mt-4 py-2 text-center text-sm text-gray-500">
-              Showing {allPolls.length} of {totalPolls} polls
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
+            </Button>
+            <div className="text-sm">
+              Page {currentPage} of {totalPages}
             </div>
-          )}
-
-          {hasNextPage && (
-            <div className="mt-4 flex justify-center">
-              <Button
-                variant="secondary"
-                onClick={handleLoadMore}
-                disabled={isFetchingNextPage}
-              >
-                {isFetchingNextPage ? (
-                  <>
-                    <Loader2Icon className="mr-2 size-4 animate-spin" />
-                    Loading...
-                  </>
-                ) : (
-                  "Load more"
-                )}
-              </Button>
-            </div>
-          )}
-        </>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+            >
+              <ChevronRightIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       )}
 
-      <SelectionActionBar
-        selectedCount={selectedCount}
-        onDelete={handleDeleteSelected}
-        onClearSelection={handleClearSelection}
-      />
+      {/* Selection Action Bar */}
+      {selectedCount > 0 && (
+        <SelectionActionBar
+          selectedCount={selectedCount}
+          onDelete={handleDeleteSelected}
+          onClearSelection={handleClearSelection}
+        />
+      )}
 
+      {/* Delete Dialog */}
       <DeletePollsDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
@@ -299,4 +205,4 @@ export const PollsTable = function PollsTable({
       />
     </div>
   );
-};
+}

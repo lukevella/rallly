@@ -78,18 +78,15 @@ async function loadData({
   }
 
   // Count total polls for pagination and folder counts
-  const [{ total, data: polls, hasNextPage }, statusCounts] = await Promise.all(
-    [
-      getPolls({ userId: user.id, status, page, pageSize, q }),
-      getPollCountByStatus(user.id),
-    ],
-  );
+  const [{ total, data: polls }, statusCounts] = await Promise.all([
+    getPolls({ userId: user.id, status, page, pageSize, q }),
+    getPollCountByStatus(user.id),
+  ]);
 
   return {
     polls,
     total,
     statusCounts,
-    hasNextPage,
   };
 }
 
@@ -117,12 +114,15 @@ export default async function Page({
   };
 
   // Load data with validated filters
-  const { polls, total, statusCounts, hasNextPage } = await loadData({
+  const { polls, total, statusCounts } = await loadData({
     status: validatedParams.status,
     page: validatedParams.page,
     pageSize: validatedParams.pageSize,
     q: validatedParams.q,
   });
+
+  // Calculate total pages
+  const totalPages = Math.ceil(total / validatedParams.pageSize);
 
   return (
     <PageContainer>
@@ -141,10 +141,10 @@ export default async function Page({
       <PageContent>
         <PollFolders statusCounts={statusCounts} />
         <PollsTable
-          initialPolls={polls}
-          initialTotalPolls={total}
-          initialHasNextPage={hasNextPage}
-          initialSearch={validatedParams.q}
+          polls={polls}
+          totalPolls={total}
+          currentPage={validatedParams.page}
+          totalPages={totalPages}
         />
       </PageContent>
     </PageContainer>
