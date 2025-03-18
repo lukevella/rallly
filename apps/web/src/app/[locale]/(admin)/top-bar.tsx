@@ -1,13 +1,15 @@
-import { IfFreeUser } from "@/contexts/plan";
 import { Button } from "@rallly/ui/button";
-import { SidebarTrigger } from "@rallly/ui/sidebar";
-import Link from "next/link";
-import { PlusIcon, SettingsIcon, SparklesIcon } from "lucide-react";
+import { DialogTrigger } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { ProBadge } from "./pro-badge";
+import { SidebarTrigger } from "@rallly/ui/sidebar";
+import { PlusIcon, SettingsIcon, SparklesIcon } from "lucide-react";
+import Link from "next/link";
+
 import { Clock } from "@/components/clock";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
-import { DialogTrigger } from "@rallly/ui/dialog";
+import { IfFreeUser } from "@/contexts/plan";
+
+import { ProBadge } from "./pro-badge";
 
 export default function TopBar() {
   return (
