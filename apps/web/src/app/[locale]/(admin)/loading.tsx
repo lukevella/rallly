@@ -1,5 +1,5 @@
-import { Spinner } from "@/components/spinner";
+import { PageSkeleton } from "@/app/components/page-layout";
 
 export default async function Loading() {
-  return <Spinner />;
+  return <PageSkeleton />;
 }

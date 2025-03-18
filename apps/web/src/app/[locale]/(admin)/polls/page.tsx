@@ -1,5 +1,4 @@
 import type { PollStatus, Prisma } from "@rallly/database";
-import { BarChart2Icon } from "lucide-react";
 import { z } from "zod";
 
 import { getPollCountByStatus } from "@/api/get-poll-count-by-status";
@@ -9,7 +8,6 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/i18n/server";
@@ -128,9 +126,6 @@ export default async function Page({
     <PageContainer>
       <PageHeader>
         <div className="flex items-center gap-x-3">
-          <PageIcon>
-            <BarChart2Icon />
-          </PageIcon>
           <PageTitle>
             {t("polls", {
               defaultValue: "Polls",

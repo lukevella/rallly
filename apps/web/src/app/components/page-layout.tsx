@@ -1,6 +1,7 @@
 "use client";
-import { Slot } from "@radix-ui/react-slot";
+
 import { cn } from "@rallly/ui";
+import { Skeleton } from "@rallly/ui/skeleton";
 
 export function PageContainer({
   children,
@@ -8,20 +9,6 @@ export function PageContainer({
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
     <div className={cn("mx-auto w-full max-w-5xl", className)}>{children}</div>
-  );
-}
-
-export function PageIcon({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("hidden", className)}>
-      <Slot className="size-4">{children}</Slot>
-    </div>
   );
 }
 
@@ -71,4 +58,36 @@ export function PageContent({
   className?: string;
 }) {
   return <div className={cn("md:grow", className)}>{children}</div>;
+}
+
+export function PageSkeleton() {
+  return (
+    <PageContainer>
+      <PageHeader>
+        <PageTitle>
+          <Skeleton className="h-8 w-48" />
+        </PageTitle>
+      </PageHeader>
+      <PageContent>
+        <div className="space-y-8">
+          <Skeleton className="h-8 w-1/2" />
+          <div className="space-y-4">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-1/2" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-1/2" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-1/2" />
+          </div>
+        </div>
+      </PageContent>
+    </PageContainer>
+  );
 }

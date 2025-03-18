@@ -1,13 +1,7 @@
 import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import {
-  CalendarIcon,
-  HomeIcon,
-  PlusIcon,
-  UserIcon,
-  ZapIcon,
-} from "lucide-react";
+import { CalendarIcon, PlusIcon, UserIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -17,7 +11,6 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
 import {
@@ -134,9 +127,6 @@ export default async function Page({ params }: { params: Params }) {
     <PageContainer>
       <PageHeader>
         <div className="flex items-center gap-x-3">
-          <PageIcon>
-            <HomeIcon />
-          </PageIcon>
           <PageTitle>
             <Trans t={t} i18nKey="home" defaults="Home" />
           </PageTitle>
