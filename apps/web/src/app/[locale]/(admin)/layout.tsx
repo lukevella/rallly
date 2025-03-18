@@ -35,7 +35,7 @@ export default async function Layout({
       <SidebarInset>
         <div className="flex flex-1 flex-col">
           <TopBar />
-          <div className="flex flex-1 flex-col p-6">{children}</div>
+          <div className="flex flex-1 flex-col p-4 md:p-6">{children}</div>
         </div>
       </SidebarInset>
     </SidebarProvider>
