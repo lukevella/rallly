@@ -26,9 +26,9 @@ export function PollStatusIcon({
       case "live":
         return <CircleIcon className="size-4 text-gray-500" />;
       case "paused":
-        return <CirclePauseIcon className="size-4 text-gray-500" />;
+        return <CirclePauseIcon className="size-4 text-gray-400" />;
       case "finalized":
-        return <CircleCheckIcon className="size-4 text-gray-500" />;
+        return <CircleCheckIcon className="size-4 text-green-500" />;
     }
   })();
 

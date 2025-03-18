@@ -68,7 +68,7 @@ type PollsTableProps = {
 };
 
 // Memoize the entire PollsTable component to prevent unnecessary re-renders
-export const PollsTable = React.memo(function PollsTable({
+export const PollsTable = function PollsTable({
   initialPolls,
   initialTotalPolls,
   initialHasNextPage,
@@ -299,4 +299,4 @@ export const PollsTable = React.memo(function PollsTable({
       />
     </div>
   );
-});
+};

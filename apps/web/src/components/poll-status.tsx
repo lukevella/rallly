@@ -1,8 +1,9 @@
 import type { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { CircleCheckIcon, CircleIcon, CirclePauseIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
+
+import { PollStatusIcon } from "./poll-status-icon";
 
 export const PollStatusLabel = ({
   status,
@@ -17,7 +18,7 @@ export const PollStatusLabel = ({
         <span
           className={cn("inline-flex items-center gap-x-2 text-sm", className)}
         >
-          <CircleIcon className="size-4 rounded-full" />
+          <PollStatusIcon status={status} />
           <Trans i18nKey="pollStatusOpen" defaults="Live" />
         </span>
       );
@@ -29,8 +30,7 @@ export const PollStatusLabel = ({
             className,
           )}
         >
-          <CirclePauseIcon className="size-4 rounded-full" />
-
+          <PollStatusIcon status={status} />
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
         </span>
       );
@@ -42,8 +42,7 @@ export const PollStatusLabel = ({
             className,
           )}
         >
-          <CircleCheckIcon className="size-4 rounded-full" />
-
+          <PollStatusIcon status={status} />
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </span>
       );
