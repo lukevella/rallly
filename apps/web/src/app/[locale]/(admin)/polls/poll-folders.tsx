@@ -27,16 +27,10 @@ export function PollFolders({ statusCounts }: { statusCounts: StatusCounts }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Get current status filter from URL or default to "all"
-  const currentStatus = searchParams.get("status") || "all";
+  const currentStatus = searchParams.get("status") || "live";
 
   // Define folders
   const folders: FolderItem[] = [
-    {
-      id: "all",
-      label: "All Polls",
-      count: statusCounts.all,
-    },
     {
       id: "live",
       label: "Live",
@@ -61,7 +55,7 @@ export function PollFolders({ statusCounts }: { statusCounts: StatusCounts }) {
   const handleFolderClick = (folderId: string) => {
     const params = new URLSearchParams(searchParams);
 
-    if (folderId === "all") {
+    if (folderId === "live") {
       params.delete("status");
     } else {
       params.set("status", folderId);
@@ -100,11 +94,7 @@ export function PollFolders({ statusCounts }: { statusCounts: StatusCounts }) {
             >
               <FolderIcon className="size-4" />
               <span>
-                {folder.id === "all" ? (
-                  <Trans i18nKey="allPolls" defaults="All" />
-                ) : (
-                  <Trans i18nKey={i18nKey} defaults={folder.label} />
-                )}
+                <Trans i18nKey={i18nKey} defaults={folder.label} />
               </span>
               <span className="ml-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
                 {folder.count}

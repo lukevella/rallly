@@ -34,7 +34,7 @@ type SimplifiedPoll = {
 };
 
 async function loadData({
-  status,
+  status = "live",
   page = 1,
   pageSize = 10,
   q,
