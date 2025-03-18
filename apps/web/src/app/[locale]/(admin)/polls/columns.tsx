@@ -35,6 +35,9 @@ function DateRangeDisplay({
   firstDate: dayjs.Dayjs;
   lastDate: dayjs.Dayjs;
 }) {
+  // If dates are the same day, show a single date
+  const isSameDay = firstDate.isSame(lastDate, "day");
+
   // If dates are in the same month and year, show a simplified range
   const isSameMonthAndYear =
     firstDate.month() === lastDate.month() &&
@@ -44,7 +47,9 @@ function DateRangeDisplay({
     <div className="flex items-center">
       <CalendarIcon className="mr-2 size-4 text-gray-500" />
       <span>
-        {isSameMonthAndYear ? (
+        {isSameDay ? (
+          <DateDisplay date={firstDate} format="MMM D, YYYY" />
+        ) : isSameMonthAndYear ? (
           <>
             <DateDisplay date={firstDate} format="MMM D" /> -{" "}
             <DateDisplay date={lastDate} format="D" />
