@@ -1,5 +1,4 @@
 import type { PollStatus, Prisma } from "@rallly/database";
-import { prisma } from "@rallly/database";
 import { BarChart2Icon } from "lucide-react";
 
 import type { Params } from "@/app/[locale]/types";
@@ -15,6 +14,8 @@ import { requireUser } from "@/next-auth";
 
 import { PollFolders } from "./poll-folders";
 import { PollsTable } from "./polls-table";
+import { getPolls } from "@/api/get-polls";
+import { getPollCountByStatus } from "@/api/get-poll-count-by-status";
 
 type PollFilters = {
   status?: PollStatus;
@@ -56,81 +57,17 @@ async function loadData({
   }
 
   // Count total polls for pagination and folder counts
-  const [totalPolls, statusCounts, paginatedPolls] = await Promise.all([
-    // Get total count for current filter
-    prisma.poll.count({ where }),
-
-    // Get counts for each status for the folder badges
-    prisma.poll.groupBy({
-      by: ["status"],
-      where: { userId: user.id },
-      _count: true,
-    }),
-
-    // Get paginated polls with the current filter
-    prisma.poll.findMany({
-      where,
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        createdAt: true,
-        participants: {
-          select: {
-            id: true,
-            name: true,
-            user: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
-        options: {
-          select: {
-            id: true,
-            startTime: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    }),
-  ]);
-
-  // Transform the selected data to match the expected format for PollsTable
-  const polls: SimplifiedPoll[] = paginatedPolls.map((poll) => ({
-    id: poll.id,
-    title: poll.title,
-    status: poll.status,
-    createdAt: poll.createdAt,
-    participants: poll.participants.map((participant) => ({
-      id: participant.id,
-      name: participant.name,
-      image: participant.user?.image ?? undefined,
-    })),
-    options: poll.options,
-  }));
-
-  // Process status counts into a more usable format
-  const counts = statusCounts.reduce(
-    (acc, item) => {
-      acc[item.status] = item._count;
-      return acc;
-    },
-    { live: 0, paused: 0, finalized: 0 },
+  const [{ total, data: polls, hasNextPage }, statusCounts] = await Promise.all(
+    [
+      getPolls({ userId: user.id, status, page, pageSize, q }),
+      getPollCountByStatus(user.id),
+    ],
   );
-
-  // Check if there are more polls to load
-  const hasNextPage = page * pageSize < totalPolls;
 
   return {
     polls,
-    totalPolls,
-    statusCounts: counts,
+    total,
+    statusCounts,
     hasNextPage,
   };
 }
@@ -165,7 +102,7 @@ export default async function Page({
   }
 
   // Load data with filters
-  const { polls, totalPolls, statusCounts, hasNextPage } = await loadData({
+  const { polls, total, statusCounts, hasNextPage } = await loadData({
     status,
     page,
     q,
@@ -189,7 +126,7 @@ export default async function Page({
         <PollFolders statusCounts={statusCounts} />
         <PollsTable
           initialPolls={polls}
-          initialTotalPolls={totalPolls}
+          initialTotalPolls={total}
           initialHasNextPage={hasNextPage}
           initialSearch={q}
         />
