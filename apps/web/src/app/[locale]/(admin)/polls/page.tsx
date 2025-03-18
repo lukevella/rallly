@@ -2,6 +2,8 @@ import type { PollStatus, Prisma } from "@rallly/database";
 import { BarChart2Icon } from "lucide-react";
 import { z } from "zod";
 
+import { getPollCountByStatus } from "@/api/get-poll-count-by-status";
+import { getPolls } from "@/api/get-polls";
 import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -15,24 +17,12 @@ import { requireUser } from "@/next-auth";
 
 import { PollFolders } from "./poll-folders";
 import { PollsTable } from "./polls-table";
-import { getPolls } from "@/api/get-polls";
-import { getPollCountByStatus } from "@/api/get-poll-count-by-status";
 
 type PollFilters = {
   status?: PollStatus;
   page?: number;
   pageSize?: number;
   q?: string;
-};
-
-// Define a simplified type for the polls we're returning
-type SimplifiedPoll = {
-  id: string;
-  title: string;
-  status: PollStatus;
-  createdAt: Date;
-  participants: { id: string; name: string; image?: string }[];
-  options: { id: string; startTime: Date }[];
 };
 
 // Define Zod schema for individual search parameters
@@ -65,16 +55,6 @@ const pageSizeSchema = z
   });
 
 // Combined schema for type inference
-const searchParamsSchema = z.object({
-  page: pageSchema,
-  q: querySchema,
-  status: statusSchema,
-  pageSize: pageSizeSchema,
-});
-
-// Type for validated search params
-type ValidatedSearchParams = z.infer<typeof searchParamsSchema>;
-
 async function loadData({
   status = "live",
   page = 1,
