@@ -1,10 +1,17 @@
 import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { CalendarIcon, HomeIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  HomeIcon,
+  PlusIcon,
+  UserIcon,
+  ZapIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
+import { getPolls } from "@/api/get-polls";
 import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -21,16 +28,10 @@ import {
 } from "@/components/empty-state";
 import { FormattedDate } from "@/components/formatted-date";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import {
-  PollItem,
-  PollItemContent,
-  PollItemDateRange,
-  PollItemDetails,
-  PollItemIcon,
-  PollItemTitle,
-} from "@/components/poll-item";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
+
+import { PollsTable } from "./polls/polls-table";
 
 function CardContainer({
   className,
@@ -85,7 +86,7 @@ function CardContainerContent({
   return <div className={cn(className)}>{children}</div>;
 }
 
-function getUpcomingEvents(userId: string) {
+async function getUpcomingEvents(userId: string) {
   return prisma.event.findMany({
     where: {
       userId,
@@ -105,75 +106,14 @@ function getUpcomingEvents(userId: string) {
   });
 }
 
-async function getRecentPolls(userId: string) {
-  const polls = await prisma.poll.findMany({
-    where: {
-      userId,
-      status: "live",
-    },
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-      location: true,
-      options: {
-        select: {
-          startTime: true,
-        },
-        orderBy: {
-          startTime: "asc",
-        },
-      },
-      participants: {
-        select: {
-          id: true,
-          name: true,
-          user: {
-            select: {
-              image: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: 5,
-      },
-      _count: {
-        select: {
-          participants: true,
-          comments: true,
-          options: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 3,
-  });
-
-  return polls.map((poll) => {
-    const lastOption = poll.options[poll.options.length - 1];
-    return {
-      id: poll.id,
-      title: poll.title,
-      createdAt: poll.createdAt,
-      location: poll.location,
-      from: poll.options[0].startTime,
-      to: lastOption.startTime,
-      optionsCount: poll._count.options,
-      participants: poll._count.participants,
-      participantsList: poll.participants,
-    };
-  });
-}
-
 async function getData() {
   const user = await requireUser();
 
-  const [recentPolls, upcomingEvents] = await Promise.all([
-    getRecentPolls(user.id),
+  const [pollsData, upcomingEvents] = await Promise.all([
+    getPolls({
+      userId: user.id,
+      pageSize: 5,
+    }),
     getUpcomingEvents(user.id),
   ]);
 
@@ -182,7 +122,7 @@ async function getData() {
       ...user,
       image: user.image ?? undefined,
     },
-    recentPolls,
+    recentPolls: pollsData.data,
     upcomingEvents,
   };
 }
@@ -225,7 +165,39 @@ export default async function Page({ params }: { params: Params }) {
         <CardContainer>
           <CardContainerHeader>
             <CardContainerTitle>
-              <Trans t={t} i18nKey="pendingEvents" defaults="Pending" />
+              <div className="flex items-center gap-2">
+                <ZapIcon className="text-primary size-4" />
+                <span>Quick Actions</span>
+              </div>
+            </CardContainerTitle>
+          </CardContainerHeader>
+          <CardContainerContent>
+            <div className="grid grid-cols-2 gap-3">
+              <Link
+                href="/new"
+                className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
+              >
+                <div className="text-primary bg-primary/10 rounded-full p-3">
+                  <PlusIcon className="size-5" />
+                </div>
+                <div className="font-medium">Create Poll</div>
+              </Link>
+              <Link
+                href="/settings/profile"
+                className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
+              >
+                <div className="text-primary bg-primary/10 rounded-full p-3">
+                  <UserIcon className="size-5" />
+                </div>
+                <div className="font-medium">Profile</div>
+              </Link>
+            </div>
+          </CardContainerContent>
+        </CardContainer>
+        <CardContainer>
+          <CardContainerHeader>
+            <CardContainerTitle>
+              <Trans t={t} i18nKey="recentPolls" defaults="Recent Polls" />
             </CardContainerTitle>
             <Button variant="ghost" asChild>
               <Link href="/polls">
@@ -235,32 +207,11 @@ export default async function Page({ params }: { params: Params }) {
           </CardContainerHeader>
           <CardContainerContent>
             {recentPolls.length > 0 ? (
-              <div className="grid grid-cols-2 gap-2">
-                {recentPolls.map((poll) => (
-                  <PollItem key={poll.id} pollId={poll.id}>
-                    <PollItemIcon fromDate={poll.from} toDate={poll.to} />
-
-                    <PollItemContent>
-                      <PollItemTitle>{poll.title}</PollItemTitle>
-                      <PollItemDetails>
-                        <PollItemDateRange
-                          from={poll.from}
-                          to={poll.to}
-                          optionsCount={poll.optionsCount}
-                        />
-                      </PollItemDetails>
-                    </PollItemContent>
-                    <div className="text-sm">
-                      <Trans
-                        t={t}
-                        i18nKey="responsesReceived"
-                        defaults="{participants, plural, one {1 response} other {# responses}}"
-                        values={{ participants: poll.participants }}
-                      />
-                    </div>
-                  </PollItem>
-                ))}
-              </div>
+              <PollsTable
+                initialPolls={recentPolls}
+                initialTotalPolls={recentPolls.length}
+                initialHasNextPage={false}
+              />
             ) : (
               <EmptyState>
                 <EmptyStateIcon>
@@ -330,17 +281,4 @@ export default async function Page({ params }: { params: Params }) {
       </PageContent>
     </PageContainer>
   );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
-  return {
-    title: t("home", {
-      defaultValue: "Home",
-    }),
-  };
 }

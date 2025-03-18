@@ -3,19 +3,18 @@
 import type { Poll } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Checkbox } from "@rallly/ui/checkbox";
-import { createColumnHelper, type Row } from "@tanstack/react-table";
+import { type Row, createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusIcon } from "@/components/poll-status-icon";
 import { Trans } from "@/components/trans";
 import { DateDisplay } from "@/features/timezone";
 
 import { PollActions } from "./poll-actions";
-
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 
 // Define a simplified poll type that matches what we're returning from the server
 export type SimplifiedPoll = {

@@ -1,4 +1,5 @@
-import { prisma, type PollStatus, type Prisma } from "@rallly/database";
+import type { PollStatus, Prisma } from "@rallly/database";
+import { prisma } from "@rallly/database";
 
 type PollFilters = {
   userId: string;
@@ -38,6 +39,7 @@ export async function getPolls({
         title: true,
         status: true,
         createdAt: true,
+        updatedAt: true,
         participants: {
           select: {
             id: true,
@@ -57,7 +59,7 @@ export async function getPolls({
         },
       },
       orderBy: {
-        createdAt: "desc",
+        updatedAt: "desc",
       },
       skip: (page - 1) * pageSize,
       take: pageSize,
