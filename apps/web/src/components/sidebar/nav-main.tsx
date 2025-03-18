@@ -1,6 +1,5 @@
 "use client";
 
-import { Icon } from "@rallly/ui/icon";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -27,9 +26,7 @@ function NavItem({
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive} tooltip={label}>
         <Link href={href}>
-          <Icon>
-            <NavItemIcon />
-          </Icon>
+          <NavItemIcon className="size-4" />
           <span>{label}</span>
         </Link>
       </SidebarMenuButton>

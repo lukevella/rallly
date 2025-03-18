@@ -15,8 +15,6 @@ import { DateDisplay } from "@/features/timezone";
 
 import { PollActions } from "./poll-actions";
 
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 
 // Define a simplified poll type that matches what we're returning from the server

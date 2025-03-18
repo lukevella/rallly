@@ -57,7 +57,7 @@ export const PollActions = React.memo(function PollActions({
   return (
     <>
       <div
-        className="flex items-center gap-2"
+        className="flex items-center gap-1"
         onClick={(e) => e.stopPropagation()}
       >
         <TooltipProvider>
