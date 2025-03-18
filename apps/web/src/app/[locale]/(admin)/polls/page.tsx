@@ -1,5 +1,6 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { BarChart2Icon } from "lucide-react";
+import { z } from "zod";
 
 import type { Params } from "@/app/[locale]/types";
 import {
@@ -33,6 +34,46 @@ type SimplifiedPoll = {
   participants: { id: string; name: string; image?: string }[];
   options: { id: string; startTime: Date }[];
 };
+
+// Define Zod schema for individual search parameters
+const pageSchema = z
+  .string()
+  .nullish()
+  .transform((val) => {
+    if (!val) return 1;
+    const parsed = parseInt(val, 10);
+    return isNaN(parsed) || parsed < 1 ? 1 : parsed;
+  });
+
+const querySchema = z
+  .string()
+  .nullish()
+  .transform((val) => val?.trim() || undefined);
+
+const statusSchema = z
+  .enum(["live", "paused", "finalized"])
+  .nullish()
+  .transform((val) => val || "live");
+
+const pageSizeSchema = z
+  .string()
+  .nullish()
+  .transform((val) => {
+    if (!val) return 10;
+    const parsed = parseInt(val, 10);
+    return isNaN(parsed) || parsed < 1 ? 10 : Math.min(parsed, 100);
+  });
+
+// Combined schema for type inference
+const searchParamsSchema = z.object({
+  page: pageSchema,
+  q: querySchema,
+  status: statusSchema,
+  pageSize: pageSizeSchema,
+});
+
+// Type for validated search params
+type ValidatedSearchParams = z.infer<typeof searchParamsSchema>;
 
 async function loadData({
   status = "live",
@@ -81,31 +122,26 @@ export default async function Page({
 }) {
   const { t } = await getTranslation(params.locale);
 
-  // Get page from URL if available
-  const page = searchParams.page
-    ? parseInt(searchParams.page as string, 10)
-    : 1;
+  // Validate each parameter individually to preserve valid parameters
+  const page = pageSchema.safeParse(searchParams.page);
+  const q = querySchema.safeParse(searchParams.q);
+  const status = statusSchema.safeParse(searchParams.status);
+  const pageSize = pageSizeSchema.safeParse(searchParams.pageSize);
 
-  // Get search query from URL if available
-  const q = typeof searchParams.q === "string" ? searchParams.q : undefined;
+  // Combine the validated parameters
+  const validatedParams = {
+    page: page.success ? page.data : 1,
+    q: q.success ? q.data : undefined,
+    status: status.success ? status.data : "live",
+    pageSize: pageSize.success ? pageSize.data : 10,
+  };
 
-  // Convert status string to PollStatus type if it exists and is valid
-  let status: PollStatus | undefined;
-  const statusParam = searchParams.status;
-  if (
-    typeof statusParam === "string" &&
-    (statusParam === "live" ||
-      statusParam === "paused" ||
-      statusParam === "finalized")
-  ) {
-    status = statusParam;
-  }
-
-  // Load data with filters
+  // Load data with validated filters
   const { polls, total, statusCounts, hasNextPage } = await loadData({
-    status,
-    page,
-    q,
+    status: validatedParams.status,
+    page: validatedParams.page,
+    pageSize: validatedParams.pageSize,
+    q: validatedParams.q,
   });
 
   return (
@@ -128,7 +164,7 @@ export default async function Page({
           initialPolls={polls}
           initialTotalPolls={total}
           initialHasNextPage={hasNextPage}
-          initialSearch={q}
+          initialSearch={validatedParams.q}
         />
       </PageContent>
     </PageContainer>

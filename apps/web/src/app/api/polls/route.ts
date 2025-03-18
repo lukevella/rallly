@@ -1,101 +1,83 @@
-import type { Prisma } from "@rallly/database";
-import { prisma } from "@rallly/database";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
+import { getPolls } from "@/api/get-polls";
 import { requireUser } from "@/next-auth";
+
+// Define Zod schema for individual query parameters
+const pageSchema = z
+  .string()
+  .nullish()
+  .transform((val) => {
+    if (!val) return 1;
+    const parsed = parseInt(val, 10);
+    return isNaN(parsed) || parsed < 1 ? 1 : parsed;
+  });
+
+const querySchema = z
+  .string()
+  .nullish()
+  .transform((val) => val?.trim() || undefined);
+
+const statusSchema = z
+  .enum(["live", "paused", "finalized"])
+  .nullish()
+  .transform((val) => val || "live");
+
+const pageSizeSchema = z
+  .string()
+  .nullish()
+  .transform((val) => {
+    if (!val) return 10;
+    const parsed = parseInt(val, 10);
+    return isNaN(parsed) || parsed < 1 ? 10 : Math.min(parsed, 100);
+  });
+
+// Combined schema for type inference
+const queryParamsSchema = z.object({
+  page: pageSchema,
+  q: querySchema,
+  status: statusSchema,
+  pageSize: pageSizeSchema,
+});
+
+// Type for validated query params
+type ValidatedQueryParams = z.infer<typeof queryParamsSchema>;
 
 export async function GET(request: Request) {
   try {
     const user = await requireUser();
     const url = new URL(request.url);
 
-    // Parse query parameters
-    const status = url.searchParams.get("status") as
-      | "live"
-      | "paused"
-      | "finalized"
-      | null;
-    const page = parseInt(url.searchParams.get("page") || "1", 10);
-    const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
-    const q = url.searchParams.get("q");
+    // Validate each parameter individually to preserve valid parameters
+    const page = pageSchema.safeParse(url.searchParams.get("page"));
+    const q = querySchema.safeParse(url.searchParams.get("q"));
+    const status = statusSchema.safeParse(url.searchParams.get("status"));
+    const pageSize = pageSizeSchema.safeParse(url.searchParams.get("pageSize"));
 
-    // Build the where clause based on filters
-    const where: Prisma.PollWhereInput = {
-      userId: user.id,
-      ...(status ? { status } : { status: "live" }),
+    const validatedParams = {
+      page: page.success ? page.data : 1,
+      q: q.success ? q.data : undefined,
+      status: status.success ? status.data : "live",
+      pageSize: pageSize.success ? pageSize.data : 10,
     };
 
-    // Add search filter if provided
-    if (q) {
-      where.title = {
-        contains: q,
-        mode: "insensitive", // Case-insensitive search
-      };
-    }
-
-    // Count total polls for pagination
-    const [totalPolls, paginatedPolls] = await Promise.all([
-      // Get total count for current filter
-      prisma.poll.count({ where }),
-
-      // Get paginated polls with the current filter
-      prisma.poll.findMany({
-        where,
-        select: {
-          id: true,
-          title: true,
-          status: true,
-          createdAt: true,
-          participants: {
-            select: {
-              id: true,
-              name: true,
-              user: {
-                select: {
-                  image: true,
-                },
-              },
-            },
-          },
-          options: {
-            select: {
-              id: true,
-              startTime: true,
-            },
-          },
-          votes: {
-            select: {
-              id: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-      }),
-    ]);
-
-    // Transform the selected data to match the expected format
-    const polls = paginatedPolls.map((poll) => ({
-      ...poll,
-      participants: poll.participants.map((participant) => ({
-        id: participant.id,
-        name: participant.name,
-        image: participant.user?.image ?? undefined,
-      })),
-      options: poll.options,
-      votes: poll.votes,
-    }));
-
-    // Check if there are more polls to load
-    const hasNextPage = page * pageSize < totalPolls;
+    const {
+      total: totalPolls,
+      data: polls,
+      hasNextPage,
+    } = await getPolls({
+      userId: user.id,
+      status: validatedParams.status,
+      page: validatedParams.page,
+      pageSize: validatedParams.pageSize,
+      q: validatedParams.q,
+    });
 
     return NextResponse.json({
       polls,
       totalPolls,
-      nextPage: hasNextPage ? page + 1 : null,
+      nextPage: hasNextPage ? validatedParams.page + 1 : null,
     });
   } catch (error) {
     console.error("Error fetching polls:", error);
