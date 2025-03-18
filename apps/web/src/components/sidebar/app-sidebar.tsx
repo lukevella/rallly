@@ -29,19 +29,21 @@ export function AppSidebar({
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
-        <Link
-          className="inline-block px-1 py-2 transition-transform active:translate-y-1"
-          href="/"
-        >
-          <Image
-            src="/images/logo-mark.svg"
-            alt="Rallly"
-            width={32}
-            height={32}
-            priority={true}
-            className="shrink-0"
-          />
-        </Link>
+        <div className="p-2">
+          <Link
+            className="inline-block transition-transform active:translate-y-1"
+            href="/"
+          >
+            <Image
+              src="/images/logo-mark.svg"
+              alt="Rallly"
+              width={32}
+              height={32}
+              priority={true}
+              className="shrink-0"
+            />
+          </Link>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

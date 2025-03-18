@@ -17,7 +17,7 @@ export const PollStatusLabel = ({
         <span
           className={cn("inline-flex items-center gap-x-2 text-sm", className)}
         >
-          <CircleIcon className="size-4 rounded-full text-pink-600" />
+          <CircleIcon className="size-4 rounded-full" />
           <Trans i18nKey="pollStatusOpen" defaults="Live" />
         </span>
       );
@@ -29,7 +29,7 @@ export const PollStatusLabel = ({
             className,
           )}
         >
-          <CirclePauseIcon className="size-4 rounded-full text-gray-600" />
+          <CirclePauseIcon className="size-4 rounded-full" />
 
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
         </span>
@@ -42,7 +42,7 @@ export const PollStatusLabel = ({
             className,
           )}
         >
-          <CircleCheckIcon className="size-4 rounded-full text-green-600" />
+          <CircleCheckIcon className="size-4 rounded-full" />
 
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </span>

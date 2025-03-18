@@ -210,7 +210,7 @@ export default async function Page({ params }: { params: Params }) {
                 <OptimizedAvatarImage
                   src={user.image ?? undefined}
                   name={user.name ?? "Guest"}
-                  size="xl"
+                  size="lg"
                 />
               </div>
               <div>

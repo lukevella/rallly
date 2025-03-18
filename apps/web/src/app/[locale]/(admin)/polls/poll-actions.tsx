@@ -7,12 +7,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import { CheckIcon, LinkIcon, TrashIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ClipboardCheckIcon,
+  ClipboardCopy,
+  ClipboardIcon,
+  LinkIcon,
+  TrashIcon,
+} from "lucide-react";
 import React from "react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
 import type { SimplifiedPoll } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";
+import { Icon } from "@rallly/ui/icon";
 
 export const PollActions = React.memo(function PollActions({
   poll,
@@ -58,22 +66,19 @@ export const PollActions = React.memo(function PollActions({
               <Button
                 type="button"
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={handleCopyLink}
-                className="h-8 w-8 p-0"
               >
-                {didCopy ? (
-                  <CheckIcon className="size-4" />
-                ) : (
-                  <LinkIcon className="size-4" />
-                )}
+                <Icon>
+                  {didCopy ? <ClipboardCheckIcon /> : <ClipboardIcon />}
+                </Icon>
                 <span className="sr-only">
-                  {didCopy ? "Copied" : "Copy invite link"}
+                  {didCopy ? "Copied" : "Copy Invite Link"}
                 </span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{didCopy ? "Copied!" : "Copy invite link"}</p>
+              <p>{didCopy ? "Copied!" : "Copy Invite Link"}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -84,11 +89,12 @@ export const PollActions = React.memo(function PollActions({
               <Button
                 type="button"
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={handleDelete}
-                className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
               >
-                <TrashIcon className="size-4" />
+                <Icon>
+                  <TrashIcon />
+                </Icon>
                 <span className="sr-only">Delete poll</span>
               </Button>
             </TooltipTrigger>
