@@ -33,7 +33,9 @@ function CardContainer({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <div className={cn(className)}>{children}</div>;
+  return (
+    <div className={cn("rounded-lg border p-4", className)}>{children}</div>
+  );
 }
 
 function CardContainerHeader({
@@ -132,7 +134,7 @@ export default async function Page({ params }: { params: Params }) {
           </PageTitle>
         </div>
       </PageHeader>
-      <PageContent className="grid grid-cols-1 gap-8">
+      <PageContent className="space-y-6">
         <CardContainer>
           <div className="flex items-center gap-4">
             <div>
@@ -251,7 +253,7 @@ export default async function Page({ params }: { params: Params }) {
                 ))}
               </div>
             ) : (
-              <EmptyState className="py-8">
+              <EmptyState className="py-16">
                 <EmptyStateIcon>
                   <CalendarIcon />
                 </EmptyStateIcon>

@@ -6,7 +6,7 @@ import {
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
 import type { LucideIcon } from "lucide-react";
-import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
+import { BarChart2Icon, CalendarIcon, HomeIcon, UsersIcon, PuzzleIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -40,6 +40,8 @@ export function NavMain() {
       <NavItem href="/" icon={HomeIcon} label="Home" />
       <NavItem href="/polls" icon={BarChart2Icon} label="Polls" />
       <NavItem href="/events" icon={CalendarIcon} label="Events" />
+      <NavItem href="/team" icon={UsersIcon} label="Team" />
+      <NavItem href="/integrations" icon={PuzzleIcon} label="Integrations" />
     </SidebarMenu>
   );
 }
