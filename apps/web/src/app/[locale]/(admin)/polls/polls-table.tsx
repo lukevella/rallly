@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
   Table,
   TableBody,
@@ -14,9 +15,24 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  InboxIcon,
+  PlusIcon,
+} from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+import { Trans } from "react-i18next";
+
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateFooter,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 
 import { type SimplifiedPoll, useColumns } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";
@@ -134,9 +150,29 @@ export function PollsTable({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-96 text-center"
                 >
-                  You don&apos;t have any polls yet
+                  <EmptyState>
+                    <EmptyStateIcon>
+                      <InboxIcon />
+                    </EmptyStateIcon>
+                    <EmptyStateTitle>
+                      <Trans i18nKey="noPolls" />
+                    </EmptyStateTitle>
+                    <EmptyStateDescription>
+                      <Trans i18nKey="noPollsDescription" />
+                    </EmptyStateDescription>
+                    <EmptyStateFooter>
+                      <Button variant="primary" asChild>
+                        <Link href="/new">
+                          <Icon>
+                            <PlusIcon />
+                          </Icon>
+                          <Trans i18nKey="createPoll" />
+                        </Link>
+                      </Button>
+                    </EmptyStateFooter>
+                  </EmptyState>
                 </TableCell>
               </TableRow>
             ) : (
@@ -169,7 +205,10 @@ export function PollsTable({
       {totalPolls > 0 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            Showing {startItem} to {endItem} of {totalPolls} polls
+            <Trans
+              i18nKey="showingPolls"
+              values={{ startItem, endItem, totalPolls }}
+            />
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -181,7 +220,7 @@ export function PollsTable({
               <ChevronLeftIcon className="h-4 w-4" />
             </Button>
             <div className="text-sm">
-              Page {currentPage} of {totalPages}
+              <Trans i18nKey="page" values={{ currentPage, totalPages }} />
             </div>
             <Button
               variant="secondary"
