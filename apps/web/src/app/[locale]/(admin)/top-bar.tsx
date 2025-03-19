@@ -31,23 +31,6 @@ export default function TopBar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button asChild size="icon" variant="ghost">
-                  <Link href="/new">
-                    <Icon>
-                      <PlusIcon />
-                    </Icon>
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <Trans i18nKey="createNewPoll" defaults="Create New Poll" />
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/settings/preferences">
                     <Icon>
