@@ -1,7 +1,13 @@
 import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { CalendarIcon, PlusIcon, UserIcon, ZapIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  GlobeIcon,
+  PlusIcon,
+  UserIcon,
+  ZapIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -26,6 +32,7 @@ import { requireUser } from "@/next-auth";
 
 import { PollsTable } from "./polls/polls-table";
 import { DateDisplay } from "@/features/timezone";
+import { Icon } from "@rallly/ui/icon";
 
 function CardContainer({
   className,
@@ -150,12 +157,13 @@ export default async function Page({ params }: { params: Params }) {
         </div>
       </PageHeader>
       <PageContent className="space-y-6">
-        <div className="flex items-center gap-4">
-          <div>
+        <div className="relative isolate flex flex-col items-center gap-4 rounded-lg bg-gray-100 pb-8 text-center">
+          <div className="-mt-8">
             <OptimizedAvatarImage
+              className="ring-4 ring-white"
               src={user.image ?? undefined}
               name={user.name ?? "Guest"}
-              size="lg"
+              size="xl"
             />
           </div>
           <div>
@@ -168,27 +176,28 @@ export default async function Page({ params }: { params: Params }) {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <Link
-            href="/new"
-            className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
-          >
-            <div className="text-primary bg-primary/10 rounded-full p-3">
-              <PlusIcon className="size-5" />
-            </div>
-            <div className="font-medium">Create Poll</div>
-          </Link>
-          <Link
-            href="/settings/profile"
-            className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
-          >
-            <div className="text-primary bg-primary/10 rounded-full p-3">
-              <UserIcon className="size-5" />
-            </div>
-            <div className="font-medium">Profile</div>
-          </Link>
+          <div className="flex justify-center gap-2">
+            <Button variant="primary" asChild>
+              <Link href="/new">
+                <Icon>
+                  <PlusIcon />
+                </Icon>
+                <Trans
+                  t={t}
+                  i18nKey="createPoll"
+                  defaults="Create Group Poll"
+                />
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/settings/profile">
+                <Icon>
+                  <UserIcon />
+                </Icon>
+                <Trans t={t} i18nKey="editProfile" defaults="Edit Profile" />
+              </Link>
+            </Button>
+          </div>
         </div>
 
         <CardContainer>

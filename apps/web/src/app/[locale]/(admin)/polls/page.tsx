@@ -1,8 +1,8 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { z } from "zod";
 
-import { getPollCountByStatus } from "@/api/get-poll-count-by-status";
-import { getPolls } from "@/api/get-polls";
+import { getCachedPollCountByStatus } from "@/api/get-poll-count-by-status";
+import { getCachedPolls } from "@/api/get-polls";
 import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -77,8 +77,8 @@ async function loadData({
 
   // Count total polls for pagination and folder counts
   const [{ total, data: polls }, statusCounts] = await Promise.all([
-    getPolls({ userId: user.id, status, page, pageSize, q }),
-    getPollCountByStatus(user.id),
+    getCachedPolls({ userId: user.id, status, page, pageSize, q }),
+    getCachedPollCountByStatus(user.id),
   ]);
 
   return {

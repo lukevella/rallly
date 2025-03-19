@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { unstable_cache } from "next/cache";
 
 export async function getPollCountByStatus(userId: string) {
   const res = await prisma.poll.groupBy({
@@ -17,3 +18,11 @@ export async function getPollCountByStatus(userId: string) {
 
   return counts;
 }
+
+export const getCachedPollCountByStatus = unstable_cache(
+  getPollCountByStatus,
+  ["poll-count-by-status"],
+  {
+    revalidate: 60 * 5,
+  },
+);

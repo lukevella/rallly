@@ -16,7 +16,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "focus:ring-offset-1 border-primary-700 bg-primary hover:bg-primary-700 disabled:bg-gray-400 active:bg-primary-800 disabled:border-transparent text-primary-foreground shadow-sm",
+          "focus:ring-offset-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 border-primary active:bg-white hover:text-white bg-primary hover:bg-primary-500 disabled:bg-gray-400 active:bg-primary disabled:border-transparent text-primary-foreground shadow-sm",
         destructive:
           "focus:ring-offset-1 bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
         default:

@@ -1,5 +1,6 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { unstable_cache } from "next/cache";
 
 type PollFilters = {
   userId: string;
@@ -83,3 +84,7 @@ export async function getPolls({
     hasNextPage,
   };
 }
+
+export const getCachedPolls = unstable_cache(getPolls, ["polls"], {
+  revalidate: 60 * 5,
+});

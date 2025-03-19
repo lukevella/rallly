@@ -72,11 +72,13 @@ export default function TopBar() {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button size="sm" variant="primary">
-                        <Icon>
-                          <SparklesIcon />
-                        </Icon>
-                        Upgrade
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-primary hover:bg-primary-50"
+                      >
+                        <SparklesIcon className="size-4" />
+                        <Trans i18nKey="upgrade" defaults="Upgrade" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>

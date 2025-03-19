@@ -209,7 +209,7 @@
   "pastEventsEmptyStateTitle": "No Past Events",
   "pastEventsEmptyStateDescription": "When you schedule events, they will appear here.",
   "activePollCount": "{activePollCount} Live",
-  "createPoll": "Create poll",
+  "createPoll": "Create Group Poll",
   "addToCalendar": "Add to Calendar",
   "microsoft365": "Microsoft 365",
   "outlook": "Outlook",
