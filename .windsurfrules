@@ -5,4 +5,5 @@
 5. Use react-hook-form for form handling
 6. Prefer implicit return values over explicit return values
 7. Use zod for form validation
+8. Prefer separate imports for types
 

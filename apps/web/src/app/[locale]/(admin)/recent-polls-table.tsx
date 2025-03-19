@@ -8,7 +8,8 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 
-import { type SimplifiedPoll, useColumns } from "./polls/columns";
+import type { SimplifiedPoll } from "./polls/columns";
+import { useColumns } from "./polls/columns";
 
 type RecentPollsTableProps = {
   polls: SimplifiedPoll[];
