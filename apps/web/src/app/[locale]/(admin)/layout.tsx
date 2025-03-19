@@ -1,4 +1,4 @@
-import { ActionBarPortal } from "@rallly/ui/action-bar";
+import { ActionBar } from "@rallly/ui/action-bar";
 import { SidebarInset, SidebarProvider } from "@rallly/ui/sidebar";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
@@ -27,7 +27,7 @@ export default async function Layout({
           <TopBar />
           <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
         </div>
-        <ActionBarPortal />
+        <ActionBar />
       </SidebarInset>
     </SidebarProvider>
   );

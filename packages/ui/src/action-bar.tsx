@@ -5,40 +5,51 @@ import { cn } from "./lib/utils";
 
 const ACTION_BAR_PORTAL_ID = "action-bar-portal";
 
-const ActionBarPortal = React.forwardRef<
+const ActionBar = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    id={ACTION_BAR_PORTAL_ID}
     className={cn(
-      "pointer-events-none fixed bottom-12 left-[var(--sidebar-width,0px)] right-0 z-50 flex justify-center",
+      "pointer-events-none sticky bottom-8 flex justify-center pb-5",
       className,
     )}
+    id={ACTION_BAR_PORTAL_ID}
+    {...props}
+  />
+));
+ActionBar.displayName = "ActionBar";
+
+const ActionBarPortal = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <Portal.Root
+    container={document.getElementById(ACTION_BAR_PORTAL_ID)}
+    ref={ref}
+    className={className}
     {...props}
   />
 ));
 ActionBarPortal.displayName = "ActionBarPortal";
 
-const ActionBar = React.forwardRef<
+const ActionBarContainer = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   return (
-    <Portal.Root container={document.getElementById(ACTION_BAR_PORTAL_ID)}>
-      <div
-        ref={ref}
-        className={cn(
-          "bg-action-bar text-action-bar-foreground pointer-events-auto mx-auto flex max-w-2xl flex-1 items-center gap-4 rounded-xl p-2 shadow-lg",
-          className,
-        )}
-        {...props}
-      />
-    </Portal.Root>
+    <div
+      ref={ref}
+      className={cn(
+        "bg-action-bar text-action-bar-foreground pointer-events-auto z-50 mx-auto inline-flex w-full max-w-2xl items-center gap-4 rounded-xl p-2 shadow-lg",
+        className,
+      )}
+      {...props}
+    />
   );
 });
-ActionBar.displayName = "ActionBar";
+ActionBarContainer.displayName = "ActionBarContainer";
 
 const ActionBarContent = React.forwardRef<
   HTMLDivElement,
@@ -64,4 +75,10 @@ const ActionBarGroup = React.forwardRef<
 ));
 ActionBarGroup.displayName = "ActionBarGroup";
 
-export { ActionBar, ActionBarContent, ActionBarGroup, ActionBarPortal };
+export {
+  ActionBar,
+  ActionBarContainer,
+  ActionBarContent,
+  ActionBarGroup,
+  ActionBarPortal,
+};
