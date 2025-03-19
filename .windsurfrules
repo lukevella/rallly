@@ -7,4 +7,4 @@
 7. Use zod for form validation
 8. Prefer separate imports for types
 9. All text in the UI should be translated using either the Trans component or the useTranslation hook
-
+10. Prefer composable components in the style of shadcn UI over large monolithic components

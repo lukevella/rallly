@@ -2,10 +2,10 @@
 
 import type { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { FolderIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
+import { PollStatusIcon } from "@/components/poll-status-icon";
 import { Trans } from "@/components/trans";
 
 type StatusCounts = {
@@ -91,7 +91,7 @@ export function PollFolders({ statusCounts }: { statusCounts: StatusCounts }) {
                   : "border-gray-200 bg-white hover:bg-gray-50",
               )}
             >
-              <FolderIcon className="size-4 opacity-75" />
+              <PollStatusIcon status={folder.status || "live"} />
               <span>
                 <Trans i18nKey={i18nKey} defaults={folder.label} />
               </span>
