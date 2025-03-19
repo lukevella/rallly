@@ -78,6 +78,7 @@ export function PollsTable({
       rowSelection,
     },
     enableRowSelection: true,
+    getRowId: (row) => row.id,
   });
 
   // Calculate pagination values
@@ -93,9 +94,7 @@ export function PollsTable({
 
   // Handle delete selected
   const handleDeleteSelected = () => {
-    const selectedIds = Object.keys(rowSelection).map(
-      (index) => polls[parseInt(index)].id,
-    );
+    const selectedIds = Object.keys(rowSelection);
 
     if (selectedIds.length > 0) {
       setSelectedPollIds(selectedIds);
