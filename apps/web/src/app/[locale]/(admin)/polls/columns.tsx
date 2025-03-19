@@ -63,7 +63,7 @@ function DateRangeDisplay({
   return (
     <div className="flex items-center gap-2">
       <CalendarIcon className="size-4 shrink-0 text-gray-500" />
-      <span className="whitespace-nowrap">
+      <span>
         {isSameDay ? (
           <DateDisplay date={firstDate} format="MMM D, YYYY" />
         ) : isSameMonthAndYear ? (
@@ -98,7 +98,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
           return (
             <div
               className={cn(
-                "flex h-full items-center pl-1 transition-opacity duration-150",
+                "flex h-full w-12 min-w-[48px] max-w-[48px] items-center pl-1 transition-opacity duration-150",
                 {
                   ["opacity-100"]: isAllSelected || isSomeSelected,
                   ["opacity-0 hover:opacity-100"]:
@@ -127,7 +127,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
           return (
             <div
               className={cn(
-                "flex h-full items-center pl-1 transition-opacity duration-150",
+                "flex h-full min-w-[48px] max-w-[48px] items-center pl-1 transition-opacity duration-150",
                 {
                   ["opacity-100"]: isSelected,
                   ["opacity-0 hover:opacity-100"]: !isSelected,
@@ -144,7 +144,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         },
         enableSorting: false,
         enableHiding: false,
-        size: 40,
+        size: 48,
       },
       columnHelper.accessor("title", {
         id: "title",
@@ -155,28 +155,25 @@ export function useColumns(visibleColumns?: ColumnId[]) {
             <Link
               href={`/poll/${info.row.original.id}`}
               className="max-w-full truncate font-medium hover:underline"
-              title={info.getValue()} // Add title attribute for tooltip on hover
+              title={info.getValue()}
             >
               {info.getValue()}
             </Link>
           </div>
         ),
-        minSize: 200,
+        size: 500,
       }),
-
       columnHelper.accessor((row) => row.options, {
         id: "dateRange",
         header: () => <span>Date Range</span>,
         cell: (info) => {
           const options = info.getValue();
-          // Filter out options without startTime
           const optionsWithDates = options.filter((option) => option.startTime);
 
           if (optionsWithDates.length === 0) {
             return <span className="text-gray-500">No dates</span>;
           }
 
-          // Sort options by startTime
           const sortedOptions = [...optionsWithDates].sort((a, b) => {
             if (!a.startTime || !b.startTime) return 0;
             return dayjs(a.startTime).unix() - dayjs(b.startTime).unix();
@@ -189,7 +186,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
 
           return <DateRangeDisplay firstDate={firstDate} lastDate={lastDate} />;
         },
-        minSize: 150,
+        size: 180,
       }),
       columnHelper.accessor((row) => row.participants, {
         id: "participants",
@@ -198,23 +195,19 @@ export function useColumns(visibleColumns?: ColumnId[]) {
           const participants = info.getValue();
           return <ParticipantAvatarBar participants={participants} max={5} />;
         },
-        minSize: 150,
+        size: 200,
       }),
       columnHelper.accessor("createdAt", {
         id: "createdDate",
-        header: () => <span>Created</span>,
-        cell: (info) => (
-          <div className="whitespace-nowrap">
-            <CreatedDateDisplay date={info.getValue()} />
-          </div>
-        ),
-        minSize: 100,
+        header: () => <Trans i18nKey="create" defaults="Created" />,
+        cell: (info) => <CreatedDateDisplay date={info.getValue()} />,
+        size: 140,
       }),
       columnHelper.display({
         id: "actionButtons",
-        header: () => <span>Actions</span>,
+        header: "",
         cell: (info) => <PollActions poll={info.row.original} />,
-        minSize: 100,
+        size: 48,
       }),
     ];
 

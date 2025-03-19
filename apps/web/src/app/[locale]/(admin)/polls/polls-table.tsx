@@ -184,6 +184,7 @@ export function PollsTable({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
+                      className="whitespace-nowrap"
                       style={{
                         width: cell.column.getSize(),
                       }}
@@ -207,6 +208,7 @@ export function PollsTable({
           <div className="text-sm text-gray-500">
             <Trans
               i18nKey="showingPolls"
+              defaults="Showing {startItem} to {endItem} of {totalPolls} polls"
               values={{ startItem, endItem, totalPolls }}
             />
           </div>
@@ -220,7 +222,11 @@ export function PollsTable({
               <ChevronLeftIcon className="h-4 w-4" />
             </Button>
             <div className="text-sm">
-              <Trans i18nKey="page" values={{ currentPage, totalPages }} />
+              <Trans
+                i18nKey="page"
+                defaults="Page {currentPage} of {totalPages}"
+                values={{ currentPage, totalPages }}
+              />
             </div>
             <Button
               variant="secondary"
