@@ -13,7 +13,7 @@ const ActionBarPortal = React.forwardRef<
     ref={ref}
     id={ACTION_BAR_PORTAL_ID}
     className={cn(
-      "pointer-events-none sticky bottom-12 z-50 flex justify-center",
+      "pointer-events-none sticky bottom-12 z-50 flex h-14 justify-center",
       className,
     )}
     {...props}

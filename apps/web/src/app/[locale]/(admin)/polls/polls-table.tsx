@@ -206,7 +206,7 @@ export function PollsTable({
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-500">
             <Trans
-              i18nKey="title"
+              i18nKey="showingPolls"
               defaults="Showing {startItem} to {endItem} of {totalPolls} polls"
               values={{ startItem, endItem, totalPolls }}
             />
@@ -222,7 +222,7 @@ export function PollsTable({
             </Button>
             <div className="text-sm">
               <Trans
-                i18nKey="name"
+                i18nKey="pageXofY"
                 defaults="Page {currentPage} of {totalPages}"
                 values={{ currentPage, totalPages }}
               />

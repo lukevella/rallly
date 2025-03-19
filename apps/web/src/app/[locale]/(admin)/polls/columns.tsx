@@ -63,7 +63,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
           return (
             <div
               className={cn(
-                "flex h-full w-12 min-w-[48px] max-w-[48px] items-center pl-1 transition-opacity duration-150",
+                "flex h-full min-w-[48px] max-w-[48px] items-center pl-1 transition-opacity duration-150",
                 {
                   ["opacity-100"]: isAllSelected || isSomeSelected,
                   ["opacity-0 hover:opacity-100"]:
