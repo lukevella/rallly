@@ -82,11 +82,6 @@ function DateRangeDisplay({
   );
 }
 
-// Created date component that uses the user's timezone
-function CreatedDateDisplay({ date }: { date: Date }) {
-  return <DateDisplay date={date} format="MMM D, YYYY" />;
-}
-
 export function useColumns(visibleColumns?: ColumnId[]) {
   return React.useMemo(() => {
     const allColumns = [
