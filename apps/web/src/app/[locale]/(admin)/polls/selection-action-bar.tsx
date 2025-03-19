@@ -35,8 +35,8 @@ export const SelectionActionBar = React.memo(function SelectionActionBar({
           transition={{
             type: "spring",
             stiffness: 500,
-            damping: 20,
-            mass: 1,
+            damping: 30,
+            mass: 0.5,
           }}
         >
           <ActionBarContent>
@@ -50,11 +50,11 @@ export const SelectionActionBar = React.memo(function SelectionActionBar({
           </ActionBarContent>
           <ActionBarGroup>
             <Button
-              variant="ghost"
+              variant="actionBar"
               onClick={onClearSelection}
               className="text-action-bar-foreground"
             >
-              <Trans i18nKey="clearSelection" defaults="Clear selection" />
+              <Trans i18nKey="clearSelection" defaults="Clear" />
             </Button>
             <Button variant="destructive" onClick={onDelete}>
               <TrashIcon className="size-4" />

@@ -13,7 +13,7 @@ const ActionBarPortal = React.forwardRef<
     ref={ref}
     id={ACTION_BAR_PORTAL_ID}
     className={cn(
-      "pointer-events-none sticky bottom-12 z-50 flex h-14 justify-center",
+      "pointer-events-none fixed bottom-12 left-[var(--sidebar-width,0px)] right-0 z-50 flex justify-center",
       className,
     )}
     {...props}
@@ -30,7 +30,7 @@ const ActionBar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "bg-action-bar text-action-bar-foreground pointer-events-auto flex max-w-2xl flex-1 items-center gap-4 rounded-xl p-2 shadow-lg",
+          "bg-action-bar text-action-bar-foreground pointer-events-auto mx-auto flex max-w-2xl flex-1 items-center gap-4 rounded-xl p-2 shadow-lg",
           className,
         )}
         {...props}
