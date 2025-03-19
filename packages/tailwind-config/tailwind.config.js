@@ -49,6 +49,10 @@ module.exports = {
         accent: {
           DEFAULT: colors.gray["100"],
         },
+        "action-bar": {
+          DEFAULT: colors.gray["900"],
+          foreground: colors.white,
+        },
         muted: {
           DEFAULT: colors.gray["100"],
           background: colors.gray["50"],

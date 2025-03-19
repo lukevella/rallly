@@ -24,7 +24,6 @@ import {
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
-import { Trans } from "react-i18next";
 
 import {
   EmptyState,
@@ -33,6 +32,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { Trans } from "@/components/trans";
 
 import { type SimplifiedPoll, useColumns } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";

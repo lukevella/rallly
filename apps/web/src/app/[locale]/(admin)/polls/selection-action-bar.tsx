@@ -8,7 +8,7 @@ import {
 import { Button } from "@rallly/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import { TrashIcon } from "lucide-react";
-import React from "react";
+import * as React from "react";
 
 import { Trans } from "@/components/trans";
 
@@ -35,20 +35,24 @@ export const SelectionActionBar = React.memo(function SelectionActionBar({
           transition={{
             type: "spring",
             stiffness: 500,
-            damping: 25,
-            mass: 0.5,
+            damping: 20,
+            mass: 1,
           }}
         >
           <ActionBarContent>
             <span className="text-sm font-medium">
-              {selectedCount} {selectedCount === 1 ? "poll" : "polls"} selected
+              <Trans
+                i18nKey="pollsSelected"
+                defaults="{count} {count, plural, one {poll} other {polls}} selected"
+                values={{ count: selectedCount }}
+              />
             </span>
           </ActionBarContent>
           <ActionBarGroup>
             <Button
               variant="ghost"
               onClick={onClearSelection}
-              className="text-primary-foreground hover:text-primary-foreground hover:bg-white/10"
+              className="text-action-bar-foreground"
             >
               <Trans i18nKey="clearSelection" defaults="Clear selection" />
             </Button>

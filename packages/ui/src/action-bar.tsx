@@ -12,7 +12,10 @@ const ActionBarPortal = React.forwardRef<
   <div
     ref={ref}
     id={ACTION_BAR_PORTAL_ID}
-    className={cn("sticky bottom-12 z-50 flex justify-center", className)}
+    className={cn(
+      "pointer-events-none sticky bottom-12 z-50 flex justify-center",
+      className,
+    )}
     {...props}
   />
 ));
@@ -27,7 +30,7 @@ const ActionBar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "flex items-center justify-between gap-4 rounded-xl bg-gray-900 p-2 text-white shadow-lg",
+          "bg-action-bar text-action-bar-foreground pointer-events-auto flex max-w-2xl flex-1 items-center gap-4 rounded-xl p-2 shadow-lg",
           className,
         )}
         {...props}
@@ -43,7 +46,7 @@ const ActionBarContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center gap-4 px-2.5", className)}
+    className={cn("flex items-center px-2.5", className)}
     {...props}
   />
 ));
