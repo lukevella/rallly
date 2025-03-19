@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
   Tooltip,
   TooltipContent,
@@ -20,7 +21,6 @@ import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
 import type { SimplifiedPoll } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";
-import { Icon } from "@rallly/ui/icon";
 
 export const PollActions = React.memo(function PollActions({
   poll,

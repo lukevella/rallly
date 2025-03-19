@@ -26,7 +26,7 @@ import { DateDisplay } from "@/features/timezone";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
-import { PollsTable } from "./polls/polls-table";
+import { RecentPollsTable } from "./recent-polls-table";
 
 function CardContainer({
   className,
@@ -123,7 +123,8 @@ async function getData() {
     getUser(userSession.id),
     getPolls({
       userId: userSession.id,
-      pageSize: 5,
+      status: "live",
+      pageSize: 3,
     }),
     getUpcomingEvents(userSession.id),
   ]);
@@ -207,12 +208,7 @@ export default async function Page({ params }: { params: Params }) {
           </CardContainerHeader>
           <CardContainerContent>
             {recentPolls.length > 0 ? (
-              <PollsTable
-                polls={recentPolls}
-                totalPolls={recentPolls.length}
-                currentPage={1}
-                totalPages={1}
-              />
+              <RecentPollsTable polls={recentPolls} />
             ) : (
               <EmptyState>
                 <EmptyStateIcon>

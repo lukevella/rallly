@@ -3,7 +3,11 @@
 import type { Poll } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Checkbox } from "@rallly/ui/checkbox";
-import { type Row, createColumnHelper } from "@tanstack/react-table";
+import {
+  type Row,
+  type Table,
+  createColumnHelper,
+} from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
@@ -29,6 +33,14 @@ export type SimplifiedPoll = {
   }[];
   options: { id: string; startTime: Date }[];
 };
+
+export type ColumnId =
+  | "select"
+  | "title"
+  | "dateRange"
+  | "participants"
+  | "createdDate"
+  | "actionButtons";
 
 const columnHelper = createColumnHelper<SimplifiedPoll>();
 
@@ -75,12 +87,12 @@ function CreatedDateDisplay({ date }: { date: Date }) {
   return <DateDisplay date={date} format="MMM D, YYYY" />;
 }
 
-export function useColumns() {
-  return React.useMemo(
-    () => [
+export function useColumns(visibleColumns?: ColumnId[]) {
+  return React.useMemo(() => {
+    const allColumns = [
       {
         id: "select",
-        header: ({ table }) => {
+        header: ({ table }: { table: Table<SimplifiedPoll> }) => {
           const isAllSelected = table.getIsAllRowsSelected();
           const isSomeSelected = table.getIsSomeRowsSelected();
           return (
@@ -135,6 +147,7 @@ export function useColumns() {
         size: 40,
       },
       columnHelper.accessor("title", {
+        id: "title",
         header: () => <Trans i18nKey="title" defaults="Title" />,
         cell: (info) => (
           <div className="flex items-center gap-2">
@@ -179,7 +192,7 @@ export function useColumns() {
         minSize: 150,
       }),
       columnHelper.accessor((row) => row.participants, {
-        id: "participantCount",
+        id: "participants",
         header: () => <Trans i18nKey="participants" defaults="Participants" />,
         cell: (info) => {
           const participants = info.getValue();
@@ -203,7 +216,14 @@ export function useColumns() {
         cell: (info) => <PollActions poll={info.row.original} />,
         minSize: 100,
       }),
-    ],
-    [], // Empty dependency array since columns definition doesn't depend on any props or state
-  );
+    ];
+
+    if (!visibleColumns) {
+      return allColumns;
+    }
+
+    return allColumns.filter((column) =>
+      visibleColumns.includes(column.id as ColumnId),
+    );
+  }, [visibleColumns]);
 }
