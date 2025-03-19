@@ -1,13 +1,8 @@
 import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import {
-  CalendarIcon,
-  GlobeIcon,
-  PlusIcon,
-  UserIcon,
-  ZapIcon,
-} from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import { CalendarIcon, PlusIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -27,12 +22,11 @@ import {
 } from "@/components/empty-state";
 import { FormattedDate } from "@/components/formatted-date";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { DateDisplay } from "@/features/timezone";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
 import { PollsTable } from "./polls/polls-table";
-import { DateDisplay } from "@/features/timezone";
-import { Icon } from "@rallly/ui/icon";
 
 function CardContainer({
   className,
