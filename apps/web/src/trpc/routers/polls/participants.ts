@@ -3,6 +3,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 import { getEmailClient } from "@/utils/emails";
@@ -120,6 +121,7 @@ export const participants = router({
           deletedAt: new Date(),
         },
       });
+      revalidateTag("polls");
     }),
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 5, "1 m"))
@@ -221,6 +223,8 @@ export const participants = router({
           });
       }
 
+      revalidateTag("polls");
+
       waitUntil(
         sendNewParticipantNotifcationEmail({
           pollId,
@@ -241,8 +245,13 @@ export const participants = router({
         data: {
           name: newName,
         },
-        select: null,
+        select: {
+          userId: true,
+          guestId: true,
+        },
       });
+
+      revalidateTag("polls");
     }),
   update: publicProcedure
     .input(
@@ -302,6 +311,8 @@ export const participants = router({
           },
         });
       });
+
+      revalidateTag("polls");
 
       return participant;
     }),

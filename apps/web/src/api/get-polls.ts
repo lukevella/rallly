@@ -42,6 +42,9 @@ export async function getPolls({
         createdAt: true,
         updatedAt: true,
         participants: {
+          where: {
+            deleted: false,
+          },
           select: {
             id: true,
             name: true,
@@ -50,6 +53,9 @@ export async function getPolls({
                 image: true,
               },
             },
+          },
+          orderBy: {
+            createdAt: "desc",
           },
         },
         options: {
@@ -85,6 +91,7 @@ export async function getPolls({
   };
 }
 
-export const getCachedPolls = unstable_cache(getPolls, ["polls"], {
+export const getCachedPolls = unstable_cache(getPolls, undefined, {
   revalidate: 60 * 5,
+  tags: ["polls"],
 });

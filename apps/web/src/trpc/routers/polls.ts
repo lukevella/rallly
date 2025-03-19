@@ -6,6 +6,7 @@ import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import * as ics from "ics";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 import { moderateContent } from "@/features/moderation";
@@ -253,6 +254,7 @@ export const polls = router({
         }
       }
 
+      revalidateTag("polls");
       return { id: poll.id };
     }),
   update: possiblyPublicProcedure
@@ -351,6 +353,8 @@ export const polls = router({
           requireParticipantEmail: input.requireParticipantEmail,
         },
       });
+
+      revalidateTag("polls");
     }),
   delete: possiblyPublicProcedure
     .input(
@@ -364,6 +368,8 @@ export const polls = router({
         where: { id: pollId },
         data: { deleted: true, deletedAt: new Date() },
       });
+
+      revalidateTag("polls");
     }),
   touch: publicProcedure
     .input(
@@ -610,6 +616,8 @@ export const polls = router({
         },
       });
 
+      revalidateTag("polls");
+
       const attendees = poll.participants.filter((p) =>
         p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
       );
@@ -790,6 +798,8 @@ export const polls = router({
           },
         }),
       ]);
+
+      revalidateTag("polls");
     }),
   pause: possiblyPublicProcedure
     .input(
@@ -807,6 +817,8 @@ export const polls = router({
           status: "paused",
         },
       });
+
+      revalidateTag("polls");
     }),
   duplicate: proProcedure
     .input(
@@ -867,6 +879,7 @@ export const polls = router({
         },
       });
 
+      revalidateTag("polls");
       return newPoll;
     }),
   resume: possiblyPublicProcedure
@@ -885,5 +898,7 @@ export const polls = router({
           status: "live",
         },
       });
+
+      revalidateTag("polls");
     }),
 });

@@ -56,7 +56,7 @@ export function PollsTable({
   const router = useRouter();
 
   // Get page size from URL or default to 10
-  const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
+  const pageSize = parseInt(searchParams.get("pageSize") || "20", 10);
 
   // Dialog state for delete polls
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);

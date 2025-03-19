@@ -199,8 +199,8 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       }),
       columnHelper.accessor("createdAt", {
         id: "createdDate",
-        header: () => <Trans i18nKey="create" defaults="Created" />,
-        cell: (info) => <CreatedDateDisplay date={info.getValue()} />,
+        header: () => <Trans i18nKey="created" defaults="Created" />,
+        cell: (info) => dayjs(info.getValue()).fromNow(),
         size: 140,
       }),
       columnHelper.display({
