@@ -7,6 +7,4 @@
 7. Use zod for form validation
 8. Prefer separate imports for types
 9. All text in the UI should be translated using either the Trans component or the useTranslation hook
-10. When using the Trans component, use the `defaults` prop to set the value of the translation.
-11. When using the useTranslation hook, pass `defaultValue` as an option to the `t` function to set the translation.`
-12. Prefer composable components in the style of shadcn UI over large monolithic components
+10. Prefer composable components in the style of shadcn UI over large monolithic components

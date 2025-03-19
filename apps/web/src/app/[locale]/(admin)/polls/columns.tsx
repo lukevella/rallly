@@ -32,6 +32,14 @@ export type SimplifiedPoll = {
     image?: string;
   }[];
   options: { id: string; startTime: Date }[];
+  event?: {
+    start: Date;
+  };
+  dateOptions: {
+    first: Date;
+    last: Date;
+    count: number;
+  };
 };
 
 export type ColumnId =
@@ -43,44 +51,6 @@ export type ColumnId =
   | "actionButtons";
 
 const columnHelper = createColumnHelper<SimplifiedPoll>();
-
-// Date range component that uses the user's timezone
-function DateRangeDisplay({
-  firstDate,
-  lastDate,
-}: {
-  firstDate: dayjs.Dayjs;
-  lastDate: dayjs.Dayjs;
-}) {
-  // If dates are the same day, show a single date
-  const isSameDay = firstDate.isSame(lastDate, "day");
-
-  // If dates are in the same month and year, show a simplified range
-  const isSameMonthAndYear =
-    firstDate.month() === lastDate.month() &&
-    firstDate.year() === lastDate.year();
-
-  return (
-    <div className="flex items-center gap-2">
-      <CalendarIcon className="size-4 shrink-0 text-gray-500" />
-      <span>
-        {isSameDay ? (
-          <DateDisplay date={firstDate} format="MMM D, YYYY" />
-        ) : isSameMonthAndYear ? (
-          <>
-            <DateDisplay date={firstDate} format="MMM D" /> -{" "}
-            <DateDisplay date={lastDate} format="D" />
-          </>
-        ) : (
-          <>
-            <DateDisplay date={firstDate} format="MMM D" /> -{" "}
-            <DateDisplay date={lastDate} format="MMM D" />
-          </>
-        )}
-      </span>
-    </div>
-  );
-}
 
 export function useColumns(visibleColumns?: ColumnId[]) {
   return React.useMemo(() => {
@@ -158,30 +128,70 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         ),
         size: 500,
       }),
-      columnHelper.accessor((row) => row.options, {
+      columnHelper.accessor((row) => row.dateOptions, {
         id: "dateRange",
-        header: () => <span>Date Range</span>,
+        header: () => <Trans i18nKey="dates" defaults="Dates" />,
         cell: (info) => {
-          const options = info.getValue();
-          const optionsWithDates = options.filter((option) => option.startTime);
+          const dateOptions = info.getValue();
+          const event = info.row.original.event;
 
-          if (optionsWithDates.length === 0) {
-            return <span className="text-gray-500">No dates</span>;
+          // If event is scheduled, show it with a green icon
+          if (event) {
+            return (
+              <div className="flex items-center gap-2">
+                <CalendarIcon className="size-4 shrink-0 text-emerald-500" />
+                <span>
+                  <DateDisplay
+                    date={dayjs(event.start)}
+                    format="MMM D, YYYY h:mm A"
+                  />
+                  <span className="ml-2 text-emerald-600">
+                    <Trans i18nKey="event" defaults="Scheduled" />
+                  </span>
+                </span>
+              </div>
+            );
           }
 
-          const sortedOptions = [...optionsWithDates].sort((a, b) => {
-            if (!a.startTime || !b.startTime) return 0;
-            return dayjs(a.startTime).unix() - dayjs(b.startTime).unix();
-          });
+          if (!dateOptions.first || !dateOptions.last) {
+            return (
+              <span className="text-gray-500">
+                <Trans i18nKey="event" defaults="No dates" />
+              </span>
+            );
+          }
 
-          const firstDate = dayjs(sortedOptions[0].startTime);
-          const lastDate = dayjs(
-            sortedOptions[sortedOptions.length - 1].startTime,
+          const firstDate = dayjs(dateOptions.first);
+          const lastDate = dayjs(dateOptions.last);
+          const isSameDay = firstDate.isSame(lastDate, "day");
+          const isSameMonthAndYear =
+            firstDate.month() === lastDate.month() &&
+            firstDate.year() === lastDate.year();
+
+          return (
+            <div className="flex items-center gap-2">
+              <CalendarIcon className="size-4 shrink-0 text-gray-500" />
+              <span className="flex items-center gap-2">
+                <span>
+                  {isSameDay ? (
+                    <DateDisplay date={firstDate} format="MMM D, YYYY" />
+                  ) : isSameMonthAndYear ? (
+                    <>
+                      <DateDisplay date={firstDate} format="MMM D" /> -{" "}
+                      <DateDisplay date={lastDate} format="D, YYYY" />
+                    </>
+                  ) : (
+                    <>
+                      <DateDisplay date={firstDate} format="MMM D" /> -{" "}
+                      <DateDisplay date={lastDate} format="MMM D, YYYY" />
+                    </>
+                  )}
+                </span>
+              </span>
+            </div>
           );
-
-          return <DateRangeDisplay firstDate={firstDate} lastDate={lastDate} />;
         },
-        size: 180,
+        size: 300,
       }),
       columnHelper.accessor((row) => row.participants, {
         id: "participants",
@@ -194,7 +204,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       }),
       columnHelper.accessor("createdAt", {
         id: "createdDate",
-        header: () => <Trans i18nKey="created" defaults="Created" />,
+        header: () => <Trans i18nKey="title" defaults="Created" />,
         cell: (info) => dayjs(info.getValue()).fromNow(),
         size: 140,
       }),
