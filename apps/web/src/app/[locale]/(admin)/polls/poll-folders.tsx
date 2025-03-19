@@ -63,7 +63,7 @@ export function PollFolders({ statusCounts }: { statusCounts: StatusCounts }) {
     // Reset to page 1 when changing filters
     params.delete("page");
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (

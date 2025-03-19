@@ -30,11 +30,11 @@ export function SearchInput() {
       } else {
         params.delete("q");
       }
-      
+
       // Reset page to 1 when search changes
       params.set("page", "1");
-      
-      router.push(`${pathname}?${params.toString()}`);
+
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }, 500),
     [pathname, router, searchParams],
   );

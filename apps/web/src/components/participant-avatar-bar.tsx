@@ -1,5 +1,10 @@
 import { cn } from "@rallly/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 
@@ -44,15 +49,17 @@ export const ParticipantAvatarBar = ({
                 +{hiddenCount}
               </span>
             </TooltipTrigger>
-            <TooltipContent className="z-30">
-              <ul>
-                {participants
-                  .slice(visibleCount, 10)
-                  .map((participant, index) => (
-                    <li key={index}>{participant.name}</li>
-                  ))}
-              </ul>
-            </TooltipContent>
+            <TooltipPortal>
+              <TooltipContent className="z-10">
+                <ul>
+                  {participants
+                    .slice(visibleCount, 10)
+                    .map((participant, index) => (
+                      <li key={index}>{participant.name}</li>
+                    ))}
+                </ul>
+              </TooltipContent>
+            </TooltipPortal>
           </Tooltip>
         </li>
       ) : null}
