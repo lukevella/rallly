@@ -38,6 +38,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.1",
+    "embla-carousel-react": "^8.5.2",
     "lucide-react": "^0.479.0",
     "tailwind-merge": "^1.12.0"
   },

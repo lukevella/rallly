@@ -3,7 +3,6 @@
 import { pricingData } from "@rallly/billing/pricing";
 import { Badge } from "@rallly/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
-import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -17,6 +16,8 @@ import {
 } from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
+
+import { FeatureCarousel } from "./feature-carousel";
 
 const annualSavingsPercentage = (
   ((pricingData.monthly.amount * 12 - pricingData.yearly.amount) /
@@ -54,48 +55,13 @@ export default function UpgradePage() {
             </p>
           </div>
 
-          <div className="bg-card mb-8 rounded-lg border p-6">
+          <div className="mb-8">
             <PageSectionTitle>
               <Trans i18nKey="proFeatures" defaults="Pro Features" />
             </PageSectionTitle>
-            <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-              <li className="flex items-start">
-                <CheckIcon className="mr-2 mt-0.5 size-4 shrink-0 text-green-600" />
-                <span>
-                  <Trans
-                    i18nKey="featureNameFinalize"
-                    defaults="Finalize Poll"
-                  />
-                </span>
-              </li>
-              <li className="flex items-start">
-                <CheckIcon className="mr-2 mt-0.5 size-4 shrink-0 text-green-600" />
-                <span>
-                  <Trans
-                    i18nKey="featureNameDuplicate"
-                    defaults="Duplicate Poll"
-                  />
-                </span>
-              </li>
-              <li className="flex items-start">
-                <CheckIcon className="mr-2 mt-0.5 size-4 shrink-0 text-green-600" />
-                <span>
-                  <Trans
-                    i18nKey="featureNameAdvancedSettings"
-                    defaults="Advanced Settings"
-                  />
-                </span>
-              </li>
-              <li className="flex items-start">
-                <CheckIcon className="mr-2 mt-0.5 size-4 shrink-0 text-green-600" />
-                <span>
-                  <Trans
-                    i18nKey="featureNameExtendedPollLifetime"
-                    defaults="Extended Poll Lifetime"
-                  />
-                </span>
-              </li>
-            </ul>
+            <div className="mt-4">
+              <FeatureCarousel />
+            </div>
           </div>
 
           <div className="mb-8">
