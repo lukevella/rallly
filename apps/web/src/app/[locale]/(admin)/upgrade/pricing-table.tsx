@@ -6,11 +6,17 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { CheckIcon, PlusIcon } from "lucide-react";
+import { CheckIcon, PlusIcon, InfoIcon } from "lucide-react";
 import React from "react";
 
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 
 export type PricingPeriod = "monthly" | "yearly";
 
@@ -53,14 +59,25 @@ function PricingTableHeader({ children }: { children: React.ReactNode }) {
 }
 interface FeatureListItemProps {
   children: React.ReactNode;
+  tooltip?: React.ReactNode;
 }
 
-const FeatureListItem = ({ children }: FeatureListItemProps) => (
-  <li className="flex items-start">
+const FeatureListItem = ({ children, tooltip }: FeatureListItemProps) => (
+  <li className="flex items-center">
     <Icon>
       <CheckIcon className="text-primary mr-2 mt-0.5 h-4 w-4 shrink-0" />
     </Icon>
     <span className="text-sm">{children}</span>
+    {tooltip ? (
+      <Tooltip>
+        <TooltipTrigger className="ml-2 inline-flex">
+          <InfoIcon className="size-4 text-gray-400" />
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent className="max-w-xs">{tooltip}</TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+    ) : null}
   </li>
 );
 
@@ -192,25 +209,53 @@ export function PricingTable() {
                 </div>
               </div>
             </div>
-            <FeatureListItem>
+            <FeatureListItem
+              tooltip={
+                <Trans
+                  i18nKey="featureFinalizePollDescription"
+                  defaults="Lock your poll and notify participants when you've made your final decision."
+                />
+              }
+            >
               <Trans
                 i18nKey="featureNameFinalizePoll"
                 defaults="Finalize poll"
               />
             </FeatureListItem>
-            <FeatureListItem>
+            <FeatureListItem
+              tooltip={
+                <Trans
+                  i18nKey="featureDuplicatePollDescription"
+                  defaults="Create a copy of an existing poll to save time when creating similar events."
+                />
+              }
+            >
               <Trans
                 i18nKey="featureNameDuplicatePoll"
                 defaults="Duplicate poll"
               />
             </FeatureListItem>
-            <FeatureListItem>
+            <FeatureListItem
+              tooltip={
+                <Trans
+                  i18nKey="featureAdvancedPollSettingsDescription"
+                  defaults="Access additional options like requiring email addresses and hiding participants."
+                />
+              }
+            >
               <Trans
                 i18nKey="featureNameAdvancedPollSettings"
                 defaults="Advanced settings"
               />
             </FeatureListItem>
-            <FeatureListItem>
+            <FeatureListItem
+              tooltip={
+                <Trans
+                  i18nKey="featureExtendedLifetimeDescription"
+                  defaults="Keep your polls active for longer periods without worrying about automatic deletion."
+                />
+              }
+            >
               <Trans
                 i18nKey="featureNameExtendedLifetime"
                 defaults="Extended poll lifetime"
