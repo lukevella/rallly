@@ -172,18 +172,6 @@ export default async function Page({ params }: { params: Params }) {
             </div>
           </div>
           <div className="flex justify-center gap-2">
-            <Button variant="primary" asChild>
-              <Link href="/new">
-                <Icon>
-                  <PlusIcon />
-                </Icon>
-                <Trans
-                  t={t}
-                  i18nKey="createPoll"
-                  defaults="Create Group Poll"
-                />
-              </Link>
-            </Button>
             <Button asChild>
               <Link href="/settings/profile">
                 <Icon>

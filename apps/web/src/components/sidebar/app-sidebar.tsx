@@ -50,9 +50,7 @@ export function AppSidebar({
           <NavMain />
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={user} />
-      </SidebarFooter>
+      <SidebarFooter></SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

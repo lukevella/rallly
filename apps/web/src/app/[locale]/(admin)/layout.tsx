@@ -1,10 +1,30 @@
 import { ActionBar } from "@rallly/ui/action-bar";
-import { SidebarInset, SidebarProvider } from "@rallly/ui/sidebar";
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@rallly/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
+import { SettingsIcon } from "lucide-react";
+import Link from "next/link";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { Trans } from "@/components/trans";
+import { IfFreeUser } from "@/contexts/plan";
 import { requireUser } from "@/next-auth";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
-import TopBar from "./top-bar";
+import { UpgradeButton } from "./components/upgrade-button";
+import { UserDropdown } from "./components/user-dropdown";
+import { ProBadge } from "./pro-badge";
+import { TopBar, TopBarGroup, TopBarLeft, TopBarRight } from "./top-bar";
 
 export default async function Layout({
   children,
@@ -24,7 +44,45 @@ export default async function Layout({
       />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
-          <TopBar timeZone={user.timeZone ?? undefined} />
+          <TopBar>
+            <TopBarLeft>
+              <SidebarTrigger />
+            </TopBarLeft>
+            <TopBarRight>
+              <TopBarGroup>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href="/settings/preferences">
+                          <Icon>
+                            <SettingsIcon />
+                          </Icon>
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <Trans i18nKey="settings" defaults="Settings" />
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <Button size="sm" variant="ghost" asChild>
+                  <Link href="/settings/preferences">
+                    {user.timeZone ?? getBrowserTimeZone()}
+                  </Link>
+                </Button>
+                <ProBadge />
+                <IfFreeUser>
+                  <UpgradeButton />
+                </IfFreeUser>
+                <UserDropdown
+                  name={user.name ?? ""}
+                  image={user.image ?? undefined}
+                  email={user.email ?? ""}
+                />
+              </TopBarGroup>
+            </TopBarRight>
+          </TopBar>
           <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
         </div>
         <ActionBar />

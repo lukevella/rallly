@@ -1,16 +1,6 @@
 "use client";
 
 import {
-  BadgeCheck,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Settings2Icon,
-  Sparkles,
-  UserIcon,
-} from "lucide-react";
-
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -19,16 +9,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@rallly/ui/sidebar";
+import {
+  BadgeCheck,
+  ChevronsUpDown,
+  CreditCard,
+  LogOut,
+  Settings2Icon,
+  Sparkles,
+  UserIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { OptimizedAvatarImage } from "../optimized-avatar-image";
-import { Icon } from "@rallly/ui/icon";
 import { signOut } from "next-auth/react";
+
+import { OptimizedAvatarImage } from "../optimized-avatar-image";
 
 export function NavUser({
   user,
