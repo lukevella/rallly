@@ -11,6 +11,8 @@ import { Trans } from "@/components/trans";
 
 import { PricingTable } from "./pricing-table";
 import { ProBadge } from "./pro-badge";
+import { Icon } from "@rallly/ui/icon";
+import { DotIcon } from "lucide-react";
 
 export default function Page() {
   return (
@@ -27,10 +29,21 @@ export default function Page() {
           />
         </p>
       </PageHeader>
-      <PageContent className="mx-auto max-w-4xl">
+      <PageContent>
         <PricingTable />
-
-        <div className="mt-6 text-center">
+        <div className="mt-8 flex flex-col flex-wrap items-center gap-1 sm:flex sm:flex-row sm:justify-center">
+          <p className="text-muted-foreground text-sm">
+            <Trans
+              i18nKey="pricesShownIn"
+              defaults="Prices shown in {currency}"
+              values={{
+                currency: "USD",
+              }}
+            />
+          </p>
+          <Icon>
+            <DotIcon className="hidden sm:block" />
+          </Icon>
           <p className="text-muted-foreground text-sm">
             <Trans
               i18nKey="cancelAnytime"

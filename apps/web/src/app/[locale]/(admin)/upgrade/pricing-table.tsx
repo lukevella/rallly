@@ -6,7 +6,7 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, PlusIcon } from "lucide-react";
 import React from "react";
 
 import { Trans } from "@/components/trans";
@@ -19,17 +19,10 @@ interface PricingTableProps {
   onPeriodChange: (period: PricingPeriod) => void;
 }
 
-const yearlyPrice = (pricingData.yearly.amount / 100).toFixed(2);
 const monthlyPrice = (pricingData.monthly.amount / 100).toFixed(2);
 const monthlyPriceAnnualRate = (pricingData.yearly.amount / 100 / 12).toFixed(
   2,
 );
-
-const annualSavingsPercentage = (
-  ((pricingData.monthly.amount * 12 - pricingData.yearly.amount) /
-    (pricingData.monthly.amount * 12)) *
-  100
-).toFixed(0);
 
 interface FeatureListProps {
   children: React.ReactNode;
@@ -99,12 +92,11 @@ function PeriodTabs({ period, onPeriodChange }: PricingTableProps) {
 export function PricingTable() {
   const [period, setPeriod] = React.useState<PricingPeriod>("yearly");
   return (
-    <div className="w-full">
-      <div className="mb-8 flex justify-center">
+    <div>
+      <div className="mb-10 flex justify-center">
         <PeriodTabs period={period} onPeriodChange={setPeriod} />
       </div>
-
-      <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
+      <div className="mx-auto grid max-w-3xl gap-6 lg:grid-cols-2">
         {/* Hobby Plan */}
         <PricingTableContainer>
           <PricingTableHeader>
@@ -127,10 +119,10 @@ export function PricingTable() {
 
           <FeatureList>
             <FeatureListItem>
-              <Trans i18nKey="featureCreatePolls" defaults="Create polls" />
-            </FeatureListItem>
-            <FeatureListItem>
-              <Trans i18nKey="featureCollectVotes" defaults="Collect votes" />
+              <Trans
+                i18nKey="featureUnlimitedPolls"
+                defaults="Unlimited polls"
+              />
             </FeatureListItem>
             <FeatureListItem>
               <Trans
@@ -148,17 +140,28 @@ export function PricingTable() {
         </PricingTableContainer>
 
         {/* Pro Plan */}
-        <PricingTableContainer className="relative">
+        <PricingTableContainer className="border-primary/10 ring-primary/10 relative ring-1 ring-offset-4">
           <div className="absolute -top-4 left-4">
-            <Badge>
-              <Trans i18nKey="recommended" defaults="Recommended" />
-            </Badge>
+            {period === "yearly" ? (
+              <div className="bg-primary-background border-primary/10 text-primary rounded-full border px-2 py-1 text-xs">
+                <Trans
+                  i18nKey="nMonthsFree"
+                  defaults="{freeMonths} months free"
+                  values={{
+                    freeMonths: 4,
+                  }}
+                />
+              </div>
+            ) : null}
           </div>
 
           <PricingTableHeader>
-            <h2 className="text-xl font-bold">
-              <Trans i18nKey="planPro" defaults="Pro" />
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold">
+                <Trans i18nKey="planPro" defaults="Pro" />
+              </h2>
+            </div>
+
             <p className="text-muted-foreground mt-1 text-sm">
               <Trans
                 i18nKey="planProDescription"
@@ -166,22 +169,13 @@ export function PricingTable() {
               />
             </p>
             <div className="mt-4 flex items-baseline">
-              <span className="text-3xl font-bold">
+              <span className="text-3xl font-bold tabular-nums">
                 ${period === "monthly" ? monthlyPrice : monthlyPriceAnnualRate}
               </span>
               <span className="text-muted-foreground ml-1 text-sm">
                 <Trans i18nKey="perMonth" defaults="/mo" />
               </span>
             </div>
-            {period === "yearly" && (
-              <div className="text-muted-foreground mt-1 text-sm">
-                <Trans
-                  i18nKey="billedAnnually"
-                  defaults="Billed annually (${yearlyPrice})"
-                  values={{ yearlyPrice }}
-                />
-              </div>
-            )}
           </PricingTableHeader>
 
           <FeatureList>
@@ -191,22 +185,35 @@ export function PricingTable() {
                 defaults="Everything in Hobby"
               />
             </FeatureListItem>
-            <FeatureListItem>
-              <Trans i18nKey="featureNameFinalize" defaults="Finalize Poll" />
-            </FeatureListItem>
-            <FeatureListItem>
-              <Trans i18nKey="featureNameDuplicate" defaults="Duplicate Poll" />
-            </FeatureListItem>
+            <div className="py-2">
+              <div className="mt-2 flex items-center justify-center border-t">
+                <div className="-mt-2 bg-white px-2.5">
+                  <PlusIcon className="size-4 text-gray-400" />
+                </div>
+              </div>
+            </div>
             <FeatureListItem>
               <Trans
-                i18nKey="featureNameAdvancedSettings"
-                defaults="Advanced Settings"
+                i18nKey="featureNameFinalizePoll"
+                defaults="Finalize poll"
               />
             </FeatureListItem>
             <FeatureListItem>
               <Trans
-                i18nKey="featureNameExtendedPollLifetime"
-                defaults="Extended Poll Lifetime"
+                i18nKey="featureNameDuplicatePoll"
+                defaults="Duplicate poll"
+              />
+            </FeatureListItem>
+            <FeatureListItem>
+              <Trans
+                i18nKey="featureNameAdvancedPollSettings"
+                defaults="Advanced settings"
+              />
+            </FeatureListItem>
+            <FeatureListItem>
+              <Trans
+                i18nKey="featureNameExtendedLifetime"
+                defaults="Extended poll lifetime"
               />
             </FeatureListItem>
           </FeatureList>
