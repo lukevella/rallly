@@ -26,3 +26,5 @@ const { t } = await getTranslations();
 
 t("menu", { defaultValue: "Menu" });
 ```
+
+18. shadcn-ui components should be added to packages/ui
