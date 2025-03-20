@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import React from "react";
 
@@ -12,14 +10,14 @@ import {
 import { Trans } from "@/components/trans";
 
 import { PricingTable } from "./pricing-table";
+import { ProBadge } from "./pro-badge";
 
-export default function UpgradePage() {
-  const [period, setPeriod] = React.useState<"monthly" | "yearly">("yearly");
-
+export default function Page() {
   return (
     <PageContainer>
       <PageHeader className="text-center">
-        <PageTitle>
+        <ProBadge />
+        <PageTitle className="mt-6">
           <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
         </PageTitle>
         <p className="text-muted-foreground mt-4 text-center text-sm leading-relaxed">
@@ -30,7 +28,7 @@ export default function UpgradePage() {
         </p>
       </PageHeader>
       <PageContent className="mx-auto max-w-4xl">
-        <PricingTable period={period} onPeriodChange={setPeriod} />
+        <PricingTable />
 
         <div className="mt-6 text-center">
           <p className="text-muted-foreground text-sm">

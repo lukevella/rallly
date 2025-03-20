@@ -21,3 +21,7 @@ export function TopBarRight({ children }: { children: React.ReactNode }) {
 export function TopBarGroup({ children }: { children: React.ReactNode }) {
   return <div className="flex items-center gap-x-2">{children}</div>;
 }
+
+export function TopBarSeparator() {
+  return <div className="bg-border h-4 w-px" />;
+}

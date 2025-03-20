@@ -1,5 +1,6 @@
 "use client";
 
+import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { pricingData } from "@rallly/billing/pricing";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
@@ -36,7 +37,7 @@ interface FeatureListProps {
 }
 
 const FeatureList = ({ children, className }: FeatureListProps) => (
-  <ul className={`mb-6 space-y-3 ${className ?? ""}`}>{children}</ul>
+  <ul className={`mb-6 space-y-2 ${className ?? ""}`}>{children}</ul>
 );
 
 function PricingTableContainer({
@@ -70,42 +71,52 @@ const FeatureListItem = ({ children }: FeatureListItemProps) => (
   </li>
 );
 
-export function PricingTable({ period, onPeriodChange }: PricingTableProps) {
+function PeriodTabs({ period, onPeriodChange }: PricingTableProps) {
+  return (
+    <fieldset aria-label="Payment frequency">
+      <RadioGroup
+        value={period}
+        onValueChange={onPeriodChange}
+        className="grid grid-cols-2 gap-x-1 rounded-full p-1 text-center text-xs/5 font-semibold ring-1 ring-inset ring-gray-200"
+      >
+        <RadioGroupItem
+          value="monthly"
+          className="cursor-pointer rounded-full px-2.5 py-1 text-gray-500 data-[state=checked]:bg-indigo-600 data-[state=checked]:text-white"
+        >
+          <Trans i18nKey="monthlyBilling" defaults="Monthly" />
+        </RadioGroupItem>
+        <RadioGroupItem
+          value="yearly"
+          className="cursor-pointer rounded-full px-2.5 py-1 text-gray-500 data-[state=checked]:bg-indigo-600 data-[state=checked]:text-white"
+        >
+          <Trans i18nKey="yearlyBilling" defaults="Yearly" />
+        </RadioGroupItem>
+      </RadioGroup>
+    </fieldset>
+  );
+}
+
+export function PricingTable() {
+  const [period, setPeriod] = React.useState<PricingPeriod>("yearly");
   return (
     <div className="w-full">
-      <div className="mb-6 flex justify-center">
-        <div className="bg-muted inline-flex rounded-lg p-1">
-          <Button
-            variant={period === "monthly" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => onPeriodChange("monthly")}
-          >
-            <Trans i18nKey="monthlyBilling" defaults="Monthly" />
-          </Button>
-          <Button
-            variant={period === "yearly" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => onPeriodChange("yearly")}
-          >
-            <Trans i18nKey="yearlyBilling" defaults="Yearly" />
-            <Badge variant="green" className="ml-2">
-              <Trans
-                i18nKey="savePercentage"
-                defaults="Save {percentage}%"
-                values={{ percentage: annualSavingsPercentage }}
-              />
-            </Badge>
-          </Button>
-        </div>
+      <div className="mb-8 flex justify-center">
+        <PeriodTabs period={period} onPeriodChange={setPeriod} />
       </div>
 
       <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
         {/* Hobby Plan */}
         <PricingTableContainer>
           <PricingTableHeader>
-            <Badge variant="outline" className="mx-auto">
+            <h2 className="text-xl font-bold">
               <Trans i18nKey="planHobby" defaults="Hobby" />
-            </Badge>
+            </h2>
+            <p className="text-muted-foreground mt-1 text-sm">
+              <Trans
+                i18nKey="planHobbyDescription"
+                defaults="For casual users"
+              />
+            </p>
             <div className="mt-4">
               <span className="text-3xl font-bold">$0</span>
               <span className="text-muted-foreground ml-1 text-sm">
@@ -138,16 +149,22 @@ export function PricingTable({ period, onPeriodChange }: PricingTableProps) {
 
         {/* Pro Plan */}
         <PricingTableContainer className="relative">
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+          <div className="absolute -top-4 left-4">
             <Badge>
               <Trans i18nKey="recommended" defaults="Recommended" />
             </Badge>
           </div>
 
           <PricingTableHeader>
-            <Badge variant="primary">
+            <h2 className="text-xl font-bold">
               <Trans i18nKey="planPro" defaults="Pro" />
-            </Badge>
+            </h2>
+            <p className="text-muted-foreground mt-1 text-sm">
+              <Trans
+                i18nKey="planProDescription"
+                defaults="For power users and profressionals"
+              />
+            </p>
             <div className="mt-4 flex items-baseline">
               <span className="text-3xl font-bold">
                 ${period === "monthly" ? monthlyPrice : monthlyPriceAnnualRate}

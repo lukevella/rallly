@@ -24,7 +24,13 @@ import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { UpgradeButton } from "./components/upgrade-button";
 import { UserDropdown } from "./components/user-dropdown";
 import { ProBadge } from "./pro-badge";
-import { TopBar, TopBarGroup, TopBarLeft, TopBarRight } from "./top-bar";
+import {
+  TopBar,
+  TopBarGroup,
+  TopBarLeft,
+  TopBarRight,
+  TopBarSeparator,
+} from "./top-bar";
 
 export default async function Layout({
   children,
@@ -46,7 +52,10 @@ export default async function Layout({
         <div className="flex flex-1 flex-col">
           <TopBar>
             <TopBarLeft>
-              <SidebarTrigger />
+              <TopBarGroup>
+                <SidebarTrigger />
+                <TopBarSeparator />
+              </TopBarGroup>
             </TopBarLeft>
             <TopBarRight>
               <TopBarGroup>
@@ -71,15 +80,16 @@ export default async function Layout({
                     {user.timeZone ?? getBrowserTimeZone()}
                   </Link>
                 </Button>
-                <ProBadge />
-                <IfFreeUser>
-                  <UpgradeButton />
-                </IfFreeUser>
                 <UserDropdown
                   name={user.name ?? ""}
                   image={user.image ?? undefined}
                   email={user.email ?? ""}
                 />
+                <TopBarSeparator />
+                <ProBadge />
+                <IfFreeUser>
+                  <UpgradeButton />
+                </IfFreeUser>
               </TopBarGroup>
             </TopBarRight>
           </TopBar>
