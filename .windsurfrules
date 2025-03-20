@@ -5,6 +5,24 @@
 5. Use react-hook-form for form handling
 6. Prefer implicit return values over explicit return values
 7. Use zod for form validation
-8. Prefer separate imports for types
+8. Create separate import statements for types
 9. All text in the UI should be translated using either the Trans component or the useTranslation hook
 10. Prefer composable components in the style of shadcn UI over large monolithic components
+11. DropdownMenuItem is a flex container with a preset gap so there is no need to add margins to the children
+12. The size and colour of an icon should be set by wrapping it with the <Icon> component from @rallly/ui/icon which will give it the correct colour and size.
+13. Keep the props of a component as minimal as possible. Pass only the bare minimum amount of information needed to it.
+14. All text in the UI should be translatable.
+15. i18n keys are in camelCase.
+16. Use the <Trans> component in client components from @/components/trans. Use the `defaults` prop to provide the default text. Example:
+
+```tsx
+<Trans i18nKey="menu" defaults="Menu" />
+```
+
+17. On the server use the `getTranslations` function from @/i18n/server to get the translations. Example:
+
+```ts
+const { t } = await getTranslations();
+
+t("menu", { defaultValue: "Menu" });
+```

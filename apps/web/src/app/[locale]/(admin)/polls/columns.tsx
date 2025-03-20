@@ -208,10 +208,10 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         cell: (info) => dayjs(info.getValue()).fromNow(),
         size: 140,
       }),
-      columnHelper.display({
+      columnHelper.accessor("id", {
         id: "actionButtons",
-        header: "",
-        cell: (info) => <PollActions poll={info.row.original} />,
+        header: () => null,
+        cell: (info) => <PollActions pollId={info.getValue()} />,
         size: 48,
       }),
     ];

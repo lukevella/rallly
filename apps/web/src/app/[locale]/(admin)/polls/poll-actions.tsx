@@ -1,52 +1,47 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@rallly/ui/tooltip";
-import {
-  CheckIcon,
-  ClipboardCheckIcon,
-  ClipboardCopy,
-  ClipboardIcon,
-  LinkIcon,
+  CopyCheckIcon,
+  CopyIcon,
+  MoreVerticalIcon,
   TrashIcon,
 } from "lucide-react";
 import React from "react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
-import type { SimplifiedPoll } from "./columns";
+import { Trans } from "@/components/trans";
+
 import { DeletePollsDialog } from "./delete-polls-dialog";
 
-export const PollActions = React.memo(function PollActions({
-  poll,
-}: {
-  poll: SimplifiedPoll;
-}) {
+export function PollActions({ pollId }: { pollId: string }) {
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const handleCopyLink = React.useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      e.preventDefault();
-      copy(`${window.location.origin}/invite/${poll.id}`);
+    (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      e?.preventDefault();
+      copy(`${window.location.origin}/invite/${pollId}`);
       setDidCopy(true);
       setTimeout(() => {
         setDidCopy(false);
       }, 1000);
     },
-    [copy, poll.id],
+    [copy, pollId],
   );
 
-  const handleDelete = React.useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
+  const handleDelete = React.useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    e?.preventDefault();
     setIsDeleteDialogOpen(true);
   }, []);
 
@@ -56,61 +51,37 @@ export const PollActions = React.memo(function PollActions({
 
   return (
     <>
-      <div
-        className="flex items-center gap-1"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={handleCopyLink}
-              >
-                <Icon>
-                  {didCopy ? <ClipboardCheckIcon /> : <ClipboardIcon />}
-                </Icon>
-                <span className="sr-only">
-                  {didCopy ? "Copied" : "Copy Invite Link"}
-                </span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{didCopy ? "Copied!" : "Copy Invite Link"}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={handleDelete}
-              >
-                <Icon>
-                  <TrashIcon />
-                </Icon>
-                <span className="sr-only">Delete poll</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Delete poll</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <Icon>
+              <MoreVerticalIcon />
+            </Icon>
+            <span className="sr-only">
+              <Trans i18nKey="menu" defaults="Menu" />
+            </span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleCopyLink}>
+            <Icon>{didCopy ? <CopyCheckIcon /> : <CopyIcon />}</Icon>
+            <Trans i18nKey="copyInviteLink" defaults="Copy Invite Link" />
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDelete} className="text-red-600">
+            <Icon>
+              <TrashIcon />
+            </Icon>
+            <Trans i18nKey="delete" defaults="Delete" />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <DeletePollsDialog
         open={isDeleteDialogOpen}
         onOpenChange={handleDeleteDialogChange}
-        pollIds={[poll.id]}
+        pollIds={[pollId]}
         onSuccess={() => {}}
       />
     </>
   );
-});
+}
