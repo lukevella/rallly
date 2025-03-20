@@ -8,17 +8,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import { PlusIcon, SettingsIcon, SparklesIcon } from "lucide-react";
+import { SettingsIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Clock } from "@/components/clock";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { IfFreeUser } from "@/contexts/plan";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
 import { ProBadge } from "./pro-badge";
 
-export default function TopBar() {
+export default function TopBar({ timeZone }: { timeZone?: string }) {
   return (
     <div className="bg-background/90 sticky top-0 z-10 flex items-center gap-4 rounded-t-lg border-b p-3 backdrop-blur-md">
       <div className="flex-1">
@@ -45,8 +45,10 @@ export default function TopBar() {
             </Tooltip>
           </TooltipProvider>
 
-          <Button size="sm" variant="ghost">
-            <Clock />
+          <Button size="sm" variant="ghost" asChild>
+            <Link href="/settings/preferences">
+              {timeZone ?? getBrowserTimeZone()}
+            </Link>
           </Button>
           <ProBadge />
           <IfFreeUser>

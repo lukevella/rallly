@@ -24,7 +24,7 @@ export default async function Layout({
       />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
-          <TopBar />
+          <TopBar timeZone={user.timeZone ?? undefined} />
           <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
         </div>
         <ActionBar />
