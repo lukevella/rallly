@@ -31,7 +31,6 @@ export type SimplifiedPoll = {
     name: string;
     image?: string;
   }[];
-  options: { id: string; startTime: Date }[];
   event?: {
     start: Date;
   };

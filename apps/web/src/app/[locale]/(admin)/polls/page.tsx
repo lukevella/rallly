@@ -1,27 +1,24 @@
 import type { PollStatus, Prisma } from "@rallly/database";
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { z } from "zod";
 
 import { getCachedPollCountByStatus } from "@/api/get-poll-count-by-status";
 import { getCachedPolls } from "@/api/get-polls";
-import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
+import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
 import { PollFolders } from "./poll-folders";
 import { PollsTable } from "./polls-table";
-
-type PollFilters = {
-  status?: PollStatus;
-  page?: number;
-  pageSize?: number;
-  q?: string;
-};
 
 // Define Zod schema for individual search parameters
 const pageSchema = z
@@ -54,16 +51,21 @@ const pageSizeSchema = z
 
 // Combined schema for type inference
 async function loadData({
+  userId,
   status = "live",
   page = 1,
   pageSize = 10,
   q,
-}: PollFilters = {}) {
-  const user = await requireUser();
-
+}: {
+  userId: string;
+  status?: PollStatus;
+  page?: number;
+  pageSize?: number;
+  q?: string;
+}) {
   // Build the where clause based on filters
   const where: Prisma.PollWhereInput = {
-    userId: user.id,
+    userId,
     status,
   };
 
@@ -77,8 +79,8 @@ async function loadData({
 
   // Count total polls for pagination and folder counts
   const [{ total, data: polls }, statusCounts] = await Promise.all([
-    getCachedPolls({ userId: user.id, status, page, pageSize, q }),
-    getCachedPollCountByStatus(user.id),
+    getCachedPolls({ userId, status, page, pageSize, q }),
+    getCachedPollCountByStatus(userId),
   ]);
 
   return {
@@ -88,73 +90,61 @@ async function loadData({
   };
 }
 
+export async function generateMetadata() {
+  const { t } = await getTranslation();
+  return {
+    title: t("polls", {
+      defaultValue: "Polls",
+    }),
+  };
+}
+
 export default async function Page({
-  params,
   searchParams,
 }: {
-  params: Params;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { t } = await getTranslation(params.locale);
+  const user = await requireUser();
 
-  // Validate each parameter individually to preserve valid parameters
-  const page = pageSchema.safeParse(searchParams.page);
-  const q = querySchema.safeParse(searchParams.q);
-  const status = statusSchema.safeParse(searchParams.status);
-  const pageSize = pageSizeSchema.safeParse(searchParams.pageSize);
+  const parsedStatus = statusSchema.parse(searchParams.status);
+  const parsedPage = pageSchema.parse(searchParams.page);
+  const parsedPageSize = pageSizeSchema.parse(searchParams.pageSize);
+  const parsedQuery = querySchema.parse(searchParams.q);
 
-  // Combine the validated parameters
-  const validatedParams = {
-    page: page.success ? page.data : 1,
-    q: q.success ? q.data : undefined,
-    status: status.success ? status.data : "live",
-    pageSize: pageSize.success ? pageSize.data : 10,
-  };
-
-  // Load data with validated filters
   const { polls, total, statusCounts } = await loadData({
-    status: validatedParams.status,
-    page: validatedParams.page,
-    pageSize: validatedParams.pageSize,
-    q: validatedParams.q,
+    userId: user.id,
+    status: parsedStatus,
+    page: parsedPage,
+    pageSize: parsedPageSize,
+    q: parsedQuery,
   });
 
-  // Calculate total pages
-  const totalPages = Math.ceil(total / validatedParams.pageSize);
+  const totalPages = Math.ceil(total / parsedPageSize);
 
   return (
     <PageContainer>
-      <PageHeader>
-        <div className="flex items-center gap-x-3">
-          <PageTitle>
-            {t("polls", {
-              defaultValue: "Polls",
-            })}
-          </PageTitle>
-        </div>
+      <PageHeader className="flex justify-between gap-8">
+        <PageTitle>
+          <Trans i18nKey="polls" defaults="Polls" />
+        </PageTitle>
+        <Button variant="primary" asChild>
+          <Link href="/new">
+            <Icon>
+              <PlusIcon />
+            </Icon>
+            <Trans i18nKey="createPoll" defaults="Create Poll" />
+          </Link>
+        </Button>
       </PageHeader>
       <PageContent>
         <PollFolders statusCounts={statusCounts} />
         <PollsTable
           polls={polls}
           totalPolls={total}
-          currentPage={validatedParams.page}
+          currentPage={parsedPage}
           totalPages={totalPages}
         />
       </PageContent>
     </PageContainer>
   );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
-  return {
-    title: t("polls", {
-      defaultValue: "Polls",
-    }),
-  };
 }
