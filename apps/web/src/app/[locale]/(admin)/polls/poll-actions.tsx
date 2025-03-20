@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import { useDialog } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,8 +25,7 @@ import { DeletePollsDialog } from "./delete-polls-dialog";
 export function PollActions({ pollId }: { pollId: string }) {
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-
+  const dialog = useDialog();
   const handleCopyLink = React.useCallback(
     (e?: React.MouseEvent) => {
       e?.stopPropagation();
@@ -39,19 +39,18 @@ export function PollActions({ pollId }: { pollId: string }) {
     [copy, pollId],
   );
 
-  const handleDelete = React.useCallback((e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    e?.preventDefault();
-    setIsDeleteDialogOpen(true);
-  }, []);
-
-  const handleDeleteDialogChange = React.useCallback((open: boolean) => {
-    setIsDeleteDialogOpen(open);
-  }, []);
+  const handleDelete = React.useCallback(
+    (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      e?.preventDefault();
+      dialog.trigger();
+    },
+    [dialog],
+  );
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon">
             <Icon>
@@ -65,7 +64,7 @@ export function PollActions({ pollId }: { pollId: string }) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={handleCopyLink}>
             <Icon>{didCopy ? <CopyCheckIcon /> : <CopyIcon />}</Icon>
-            <Trans i18nKey="copyInviteLink" defaults="Copy Invite Link" />
+            <Trans i18nKey="inviteLink" defaults="Copy Invite Link" />
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleDelete} className="text-red-600">
             <Icon>
@@ -76,12 +75,7 @@ export function PollActions({ pollId }: { pollId: string }) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DeletePollsDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={handleDeleteDialogChange}
-        pollIds={[pollId]}
-        onSuccess={() => {}}
-      />
+      <DeletePollsDialog {...dialog.dialogProps} pollIds={[pollId]} />
     </>
   );
 }
