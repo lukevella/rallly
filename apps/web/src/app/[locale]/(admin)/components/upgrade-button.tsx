@@ -8,6 +8,7 @@ import {
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
 import { SparklesIcon } from "lucide-react";
+import Link from "next/link";
 import { Trans } from "react-i18next";
 
 import { PayWallDialog } from "@/components/pay-wall-dialog";
@@ -23,9 +24,12 @@ export function UpgradeButton() {
                 size="sm"
                 variant="ghost"
                 className="text-primary hover:bg-primary-50"
+                asChild
               >
-                <SparklesIcon className="size-4" />
-                <Trans i18nKey="upgrade" defaults="Upgrade" />
+                <Link href="/upgrade">
+                  <SparklesIcon className="size-4" />
+                  <Trans i18nKey="upgrade" defaults="Upgrade" />
+                </Link>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
