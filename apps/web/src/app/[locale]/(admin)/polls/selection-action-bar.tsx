@@ -56,7 +56,7 @@ export const SelectionActionBar = React.memo(function SelectionActionBar({
                 onClick={onClearSelection}
                 className="text-action-bar-foreground"
               >
-                <Trans i18nKey="clearSelection" defaults="Clear" />
+                <Trans i18nKey="unselectAll" defaults="Unselect All" />
               </Button>
               <Button variant="destructive" onClick={onDelete}>
                 <TrashIcon className="size-4" />

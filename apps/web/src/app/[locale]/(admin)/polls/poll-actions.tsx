@@ -9,35 +9,32 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import {
-  CopyCheckIcon,
-  CopyIcon,
-  MoreVerticalIcon,
-  TrashIcon,
-} from "lucide-react";
+import { CopyIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
 import { Trans } from "@/components/trans";
 
+import { useToast } from "@rallly/ui/hooks/use-toast";
 import { DeletePollsDialog } from "./delete-polls-dialog";
+import { useTranslation } from "@/i18n/client";
 
 export function PollActions({ pollId }: { pollId: string }) {
   const [, copy] = useCopyToClipboard();
-  const [didCopy, setDidCopy] = React.useState(false);
+  const { toast } = useToast();
+  const { t } = useTranslation();
   const dialog = useDialog();
-  const handleCopyLink = React.useCallback(
-    (e?: React.MouseEvent) => {
-      e?.stopPropagation();
-      e?.preventDefault();
-      copy(`${window.location.origin}/invite/${pollId}`);
-      setDidCopy(true);
-      setTimeout(() => {
-        setDidCopy(false);
-      }, 1000);
-    },
-    [copy, pollId],
-  );
+  const handleCopyLink = React.useCallback(() => {
+    copy(`${window.location.origin}/invite/${pollId}`);
+    toast({
+      title: t("copied", {
+        defaultValue: "Copied",
+      }),
+      description: t("linkCopiedToClipboard", {
+        defaultValue: "Link copied to clipboard",
+      }),
+    });
+  }, [copy, pollId, toast, t]);
 
   const handleDelete = React.useCallback(
     (e?: React.MouseEvent) => {
@@ -63,14 +60,16 @@ export function PollActions({ pollId }: { pollId: string }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={handleCopyLink}>
-            <Icon>{didCopy ? <CopyCheckIcon /> : <CopyIcon />}</Icon>
-            <Trans i18nKey="inviteLink" defaults="Copy Invite Link" />
+            <Icon>
+              <CopyIcon />
+            </Icon>
+            <Trans i18nKey="copyLink" defaults="Copy Link" />
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDelete} className="text-red-600">
+          <DropdownMenuItem onClick={handleDelete}>
             <Icon>
               <TrashIcon />
             </Icon>
-            <Trans i18nKey="delete" defaults="Delete" />
+            <Trans i18nKey="delete" defaults="Delete…" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
