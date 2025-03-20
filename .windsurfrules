@@ -28,3 +28,5 @@ t("menu", { defaultValue: "Menu" });
 ```
 
 18. shadcn-ui components should be added to packages/ui
+19. Always use a composable patterns when building components
+20. Use `cn()` from @rallly/ui to compose classes
