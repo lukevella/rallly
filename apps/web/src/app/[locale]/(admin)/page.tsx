@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getPolls } from "@/api/get-polls";
+import { getRecentlyUpdatedPolls } from "@/api/get-recently-updated-polls";
 import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
@@ -27,6 +28,7 @@ import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
 import { RecentPollsTable } from "./recent-polls-table";
+import { RecentlyUpdatedPollsGrid } from "./recently-updated-polls-grid";
 
 function CardContainer({
   className,
@@ -119,15 +121,19 @@ async function getUser(id: string) {
 async function getData() {
   const userSession = await requireUser();
 
-  const [user, pollsData, upcomingEvents] = await Promise.all([
-    getUser(userSession.id),
-    getPolls({
-      userId: userSession.id,
-      status: "live",
-      pageSize: 3,
-    }),
-    getUpcomingEvents(userSession.id),
-  ]);
+  const [user, pollsData, upcomingEvents, recentlyUpdatedPolls] =
+    await Promise.all([
+      getUser(userSession.id),
+      getPolls({
+        userId: userSession.id,
+        status: "live",
+        pageSize: 3,
+      }),
+      getUpcomingEvents(userSession.id),
+      getRecentlyUpdatedPolls({
+        userId: userSession.id,
+      }),
+    ]);
 
   return {
     user: {
@@ -136,12 +142,14 @@ async function getData() {
     },
     recentPolls: pollsData.data,
     upcomingEvents,
+    recentlyUpdatedPolls,
   };
 }
 
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
-  const { user, recentPolls, upcomingEvents } = await getData();
+  const { user, recentPolls, upcomingEvents, recentlyUpdatedPolls } =
+    await getData();
   return (
     <PageContainer>
       <PageHeader>
@@ -186,17 +194,16 @@ export default async function Page({ params }: { params: Params }) {
         <CardContainer>
           <CardContainerHeader>
             <CardContainerTitle>
-              <Trans t={t} i18nKey="recentPolls" defaults="Recent Polls" />
+              <Trans
+                t={t}
+                i18nKey="recentlyUpdatedPolls"
+                defaults="Recently Updated"
+              />
             </CardContainerTitle>
-            <Button variant="ghost" asChild>
-              <Link href="/polls">
-                <Trans t={t} i18nKey="viewAll" defaults="View All" />
-              </Link>
-            </Button>
           </CardContainerHeader>
           <CardContainerContent>
-            {recentPolls.length > 0 ? (
-              <RecentPollsTable polls={recentPolls} />
+            {recentlyUpdatedPolls.length > 0 ? (
+              <RecentlyUpdatedPollsGrid polls={recentlyUpdatedPolls} />
             ) : (
               <EmptyState>
                 <EmptyStateIcon>
@@ -209,56 +216,14 @@ export default async function Page({ params }: { params: Params }) {
                   <Trans
                     t={t}
                     i18nKey="noPollsDescription"
-                    defaults="You have no polls."
+                    defaults="You haven't created any polls yet."
                   />
                 </EmptyStateDescription>
-              </EmptyState>
-            )}
-          </CardContainerContent>
-        </CardContainer>
-        <CardContainer>
-          <CardContainerHeader>
-            <CardContainerTitle>
-              <Trans t={t} i18nKey="upcomingEvents" defaults="Upcoming" />
-            </CardContainerTitle>
-            <Button variant="ghost" asChild>
-              <Link href="/events">
-                <Trans t={t} i18nKey="viewAll" defaults="View All" />
-              </Link>
-            </Button>
-          </CardContainerHeader>
-          <CardContainerContent>
-            {upcomingEvents.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4">
-                {upcomingEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="flex items-center justify-between rounded-lg bg-gray-50 p-4 shadow-sm"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="text-lg font-bold">{event.title}</div>
-                      <div className="text-muted-foreground">
-                        <FormattedDate date={event.start} format="short" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <EmptyState className="py-16">
-                <EmptyStateIcon>
-                  <CalendarIcon />
-                </EmptyStateIcon>
-                <EmptyStateTitle>
-                  <Trans t={t} i18nKey="noEvents" defaults="No events" />
-                </EmptyStateTitle>
-                <EmptyStateDescription>
-                  <Trans
-                    t={t}
-                    i18nKey="noEventsDescription"
-                    defaults="When you schedule events, they will appear here."
-                  />
-                </EmptyStateDescription>
+                <Button asChild>
+                  <Link href="/new">
+                    <Trans t={t} i18nKey="createPoll" defaults="Create Poll" />
+                  </Link>
+                </Button>
               </EmptyState>
             )}
           </CardContainerContent>

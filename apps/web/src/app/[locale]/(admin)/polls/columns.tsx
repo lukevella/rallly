@@ -119,7 +119,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         id: "title",
         header: () => <Trans i18nKey="title" defaults="Title" />,
         cell: (info) => (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-base">
             <PollStatusIcon status={info.row.original.status} />
             <Link
               href={`/poll/${info.row.original.id}`}
@@ -130,7 +130,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
             </Link>
           </div>
         ),
-        size: 500,
+        size: 1000,
       }),
       columnHelper.accessor((row) => row.dateOptions, {
         id: "dateRange",
@@ -193,7 +193,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
             </div>
           );
         },
-        size: 300,
+        size: 250,
       }),
       columnHelper.accessor((row) => row.participants, {
         id: "participants",
@@ -208,7 +208,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         id: "createdDate",
         header: () => <Trans i18nKey="created" defaults="Created" />,
         cell: (info) => dayjs(info.getValue()).fromNow(),
-        size: 140,
+        size: 150,
       }),
       columnHelper.accessor("id", {
         id: "actionButtons",
