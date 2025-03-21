@@ -17,7 +17,7 @@ export const ParticipantAvatarBar = ({
   participants,
   max = Infinity,
 }: ParticipantAvatarBarProps) => {
-  const visibleCount = participants.length > max ? max - 1 : max;
+  const visibleCount = participants.length > max ? max : max;
   const hiddenCount = participants.length - visibleCount;
   return (
     <ul className="flex items-center -space-x-1">
