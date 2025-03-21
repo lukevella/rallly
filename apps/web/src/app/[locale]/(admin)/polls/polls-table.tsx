@@ -36,7 +36,6 @@ import { Trans } from "@/components/trans";
 import { usePollSelection } from "@/features/poll-selection/context";
 
 import { type SimplifiedPoll, useColumns } from "./columns";
-import { DeletePollsDialog } from "./delete-polls-dialog";
 import { SearchInput } from "./search-input";
 
 type PollsTableProps = {
@@ -58,16 +57,7 @@ export function PollsTable({
   // Get page size from URL or default to 10
   const pageSize = parseInt(searchParams.get("pageSize") || "20", 10);
 
-  // Dialog state for delete polls
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [selectedPollIds, setSelectedPollIds] = React.useState<string[]>([]);
-
-  const {
-    selectedPolls,
-    setSelectedPolls,
-    clearSelection,
-    getSelectedPollIds,
-  } = usePollSelection();
+  const { selectedPolls, setSelectedPolls } = usePollSelection();
   // Get columns for the table
   const columns = useColumns();
 
@@ -99,21 +89,6 @@ export function PollsTable({
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage.toString());
     router.replace(`?${params.toString()}`, { scroll: false });
-  };
-
-  // Handle delete selected
-  const handleDeleteSelected = () => {
-    const selectedIds = getSelectedPollIds();
-
-    if (selectedIds.length > 0) {
-      setSelectedPollIds(selectedIds);
-      setIsDeleteDialogOpen(true);
-    }
-  };
-
-  // Handle delete success
-  const handleDeleteSuccess = () => {
-    clearSelection();
   };
 
   return (
@@ -240,14 +215,6 @@ export function PollsTable({
           </div>
         </div>
       )}
-
-      {/* Delete Dialog */}
-      <DeletePollsDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        pollIds={selectedPollIds}
-        onSuccess={handleDeleteSuccess}
-      />
     </div>
   );
 }

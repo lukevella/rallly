@@ -94,17 +94,17 @@ function PeriodTabs({ period, onPeriodChange }: PricingTableProps) {
       <RadioGroup
         value={period}
         onValueChange={onPeriodChange}
-        className="grid grid-cols-2 gap-x-1 rounded-full p-1 text-center text-xs/5 font-semibold ring-1 ring-inset ring-gray-200"
+        className="grid grid-cols-2 gap-x-1 rounded-full p-1 text-center text-xs/5 font-medium ring-1 ring-inset ring-gray-200"
       >
         <RadioGroupItem
           value="monthly"
-          className="cursor-pointer rounded-full px-2.5 py-1 text-gray-500 data-[state=checked]:bg-indigo-600 data-[state=checked]:text-white"
+          className="data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary cursor-pointer rounded-full px-2.5 py-1 text-gray-500"
         >
           <Trans i18nKey="monthlyBilling" defaults="Monthly" />
         </RadioGroupItem>
         <RadioGroupItem
           value="yearly"
-          className="cursor-pointer rounded-full px-2.5 py-1 text-gray-500 data-[state=checked]:bg-indigo-600 data-[state=checked]:text-white"
+          className="data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary cursor-pointer rounded-full px-2.5 py-1 text-gray-500"
         >
           <Trans i18nKey="yearlyBilling" defaults="Yearly" />
         </RadioGroupItem>
@@ -117,7 +117,7 @@ export function PricingTable() {
   const [period, setPeriod] = React.useState<PricingPeriod>("yearly");
   return (
     <div>
-      <div className="mb-10 flex justify-center">
+      <div className="mb-8 flex justify-center">
         <PeriodTabs period={period} onPeriodChange={setPeriod} />
       </div>
       <div className="mx-auto grid max-w-3xl gap-6 lg:grid-cols-2">

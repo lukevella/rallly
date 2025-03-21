@@ -3,7 +3,6 @@
 import type { Poll } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Checkbox } from "@rallly/ui/checkbox";
-import type { CellContext, ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { CalendarIcon } from "lucide-react";
@@ -50,7 +49,7 @@ const columnHelper = createColumnHelper<SimplifiedPoll>();
 
 export function useColumns(visibleColumns?: ColumnId[]) {
   return React.useMemo(() => {
-    const allColumns: ColumnDef<SimplifiedPoll, unknown>[] = [
+    const allColumns = [
       columnHelper.display({
         id: "select",
         header: ({ table }) => {
@@ -119,7 +118,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       columnHelper.accessor("title", {
         id: "title",
         header: () => <Trans i18nKey="title" defaults="Title" />,
-        cell: (info: CellContext<SimplifiedPoll, string>) => (
+        cell: (info) => (
           <div className="flex items-center gap-2">
             <PollStatusIcon status={info.row.original.status} />
             <Link
@@ -136,9 +135,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       columnHelper.accessor((row) => row.dateOptions, {
         id: "dateRange",
         header: () => <Trans i18nKey="dates" defaults="Dates" />,
-        cell: (
-          info: CellContext<SimplifiedPoll, SimplifiedPoll["dateOptions"]>,
-        ) => {
+        cell: (info) => {
           const dateOptions = info.getValue();
           const event = info.row.original.event; // If event is scheduled, show it with a green icon
           if (event) {
@@ -201,9 +198,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       columnHelper.accessor((row) => row.participants, {
         id: "participants",
         header: () => <Trans i18nKey="participants" defaults="Participants" />,
-        cell: (
-          info: CellContext<SimplifiedPoll, SimplifiedPoll["participants"]>,
-        ) => {
+        cell: (info) => {
           const participants = info.getValue();
           return <ParticipantAvatarBar participants={participants} max={5} />;
         },
@@ -212,16 +207,13 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       columnHelper.accessor("createdAt", {
         id: "createdDate",
         header: () => <Trans i18nKey="title" defaults="Created" />,
-        cell: (info: CellContext<SimplifiedPoll, Date>) =>
-          dayjs(info.getValue()).fromNow(),
+        cell: (info) => dayjs(info.getValue()).fromNow(),
         size: 140,
       }),
       columnHelper.accessor("id", {
         id: "actionButtons",
         header: () => null,
-        cell: (info: CellContext<SimplifiedPoll, string>) => (
-          <PollActions pollId={info.getValue()} />
-        ),
+        cell: (info) => <PollActions pollId={info.getValue()} />,
         size: 48,
       }),
     ];

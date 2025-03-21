@@ -19,7 +19,7 @@ export function ProBadge() {
       className="text-center"
       aria-hidden="true"
     >
-      <Badge size="lg" variant="primary">
+      <Badge variant="primary">
         <Trans i18nKey="planPro" />
       </Badge>
     </motion.div>

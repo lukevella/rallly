@@ -18,8 +18,10 @@ export default function Page() {
   return (
     <PageContainer>
       <PageHeader className="text-center">
-        <ProBadge />
-        <PageTitle className="mt-6">
+        <div className="p-2">
+          <ProBadge />
+        </div>
+        <PageTitle className="mt-2">
           <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
         </PageTitle>
         <p className="text-muted-foreground mt-4 text-center text-sm leading-relaxed">
