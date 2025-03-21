@@ -33,11 +33,11 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
+import { usePollSelection } from "@/features/poll-selection/context";
 
 import { type SimplifiedPoll, useColumns } from "./columns";
 import { DeletePollsDialog } from "./delete-polls-dialog";
 import { SearchInput } from "./search-input";
-import { SelectionActionBar } from "./selection-action-bar";
 
 type PollsTableProps = {
   polls: SimplifiedPoll[];
@@ -62,9 +62,12 @@ export function PollsTable({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedPollIds, setSelectedPollIds] = React.useState<string[]>([]);
 
-  // Row selection state
-  const [rowSelection, setRowSelection] = React.useState({});
-
+  const {
+    selectedPolls,
+    setSelectedPolls,
+    clearSelection,
+    getSelectedPollIds,
+  } = usePollSelection();
   // Get columns for the table
   const columns = useColumns();
 
@@ -73,9 +76,15 @@ export function PollsTable({
     data: polls,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: (updaterOrValue) => {
+      if (typeof updaterOrValue === "function") {
+        setSelectedPolls(updaterOrValue(selectedPolls));
+      } else {
+        setSelectedPolls(updaterOrValue);
+      }
+    },
     state: {
-      rowSelection,
+      rowSelection: selectedPolls,
     },
     enableRowSelection: true,
     getRowId: (row) => row.id,
@@ -94,7 +103,7 @@ export function PollsTable({
 
   // Handle delete selected
   const handleDeleteSelected = () => {
-    const selectedIds = Object.keys(rowSelection);
+    const selectedIds = getSelectedPollIds();
 
     if (selectedIds.length > 0) {
       setSelectedPollIds(selectedIds);
@@ -104,16 +113,8 @@ export function PollsTable({
 
   // Handle delete success
   const handleDeleteSuccess = () => {
-    setRowSelection({});
+    clearSelection();
   };
-
-  // Handle clear selection
-  const handleClearSelection = () => {
-    setRowSelection({});
-  };
-
-  // Get selected count
-  const selectedCount = Object.keys(rowSelection).length;
 
   return (
     <div className="space-y-4">
@@ -122,7 +123,6 @@ export function PollsTable({
           <SearchInput />
         </div>
       </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -156,10 +156,13 @@ export function PollsTable({
                       <InboxIcon />
                     </EmptyStateIcon>
                     <EmptyStateTitle>
-                      <Trans i18nKey="noPolls" />
+                      <Trans i18nKey="polls" defaults="No polls found" />
                     </EmptyStateTitle>
                     <EmptyStateDescription>
-                      <Trans i18nKey="noPollsDescription" />
+                      <Trans
+                        i18nKey="description"
+                        defaults="You don't have any polls yet. Create one to get started!"
+                      />
                     </EmptyStateDescription>
                     <EmptyStateFooter>
                       <Button variant="primary" asChild>
@@ -167,7 +170,7 @@ export function PollsTable({
                           <Icon>
                             <PlusIcon />
                           </Icon>
-                          <Trans i18nKey="createPoll" />
+                          <Trans i18nKey="create" defaults="Create a poll" />
                         </Link>
                       </Button>
                     </EmptyStateFooter>
@@ -200,7 +203,6 @@ export function PollsTable({
           </TableBody>
         </Table>
       </div>
-
       {/* Pagination Controls */}
       {totalPolls > 0 && (
         <div className="flex items-center justify-between">
@@ -237,15 +239,6 @@ export function PollsTable({
             </Button>
           </div>
         </div>
-      )}
-
-      {/* Selection Action Bar */}
-      {selectedCount > 0 && (
-        <SelectionActionBar
-          selectedCount={selectedCount}
-          onDelete={handleDeleteSelected}
-          onClearSelection={handleClearSelection}
-        />
       )}
 
       {/* Delete Dialog */}

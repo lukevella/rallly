@@ -30,3 +30,5 @@ t("menu", { defaultValue: "Menu" });
 18. shadcn-ui components should be added to packages/ui
 19. Always use a composable patterns when building components
 20. Use `cn()` from @rallly/ui to compose classes
+21. Prefer using the React module APIs (e.g. React.useState) instead of standalone hooks (e.g. useState)
+22. Do not attempt to fix typescript issues related to missing translations. This will be handled by our tooling.

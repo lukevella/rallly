@@ -14,6 +14,7 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
+import { PollSelectionProvider } from "@/features/poll-selection/context";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
@@ -138,12 +139,14 @@ export default async function Page({
       </PageHeader>
       <PageContent>
         <PollFolders statusCounts={statusCounts} />
-        <PollsTable
-          polls={polls}
-          totalPolls={total}
-          currentPage={parsedPage}
-          totalPages={totalPages}
-        />
+        <PollSelectionProvider>
+          <PollsTable
+            polls={polls}
+            totalPolls={total}
+            currentPage={parsedPage}
+            totalPages={totalPages}
+          />
+        </PollSelectionProvider>
       </PageContent>
     </PageContainer>
   );
