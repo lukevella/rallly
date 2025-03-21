@@ -3,11 +3,8 @@
 import type { Poll } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Checkbox } from "@rallly/ui/checkbox";
-import {
-  type Row,
-  type Table,
-  createColumnHelper,
-} from "@tanstack/react-table";
+import type { CellContext, ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
@@ -53,12 +50,13 @@ const columnHelper = createColumnHelper<SimplifiedPoll>();
 
 export function useColumns(visibleColumns?: ColumnId[]) {
   return React.useMemo(() => {
-    const allColumns = [
-      {
+    const allColumns: ColumnDef<SimplifiedPoll, unknown>[] = [
+      columnHelper.display({
         id: "select",
-        header: ({ table }: { table: Table<SimplifiedPoll> }) => {
+        header: ({ table }) => {
           const isAllSelected = table.getIsAllRowsSelected();
           const isSomeSelected = table.getIsSomeRowsSelected();
+
           return (
             <div
               className={cn(
@@ -86,15 +84,23 @@ export function useColumns(visibleColumns?: ColumnId[]) {
             </div>
           );
         },
-        cell: ({ row }: { row: Row<SimplifiedPoll> }) => {
+        cell: (info) => {
+          const row = info.row;
           const isSelected = row.getIsSelected();
+          // Access the table instance from the cell info context
+          const table = info.table;
+          // Check if any row is selected in the table
+          const hasSelectedRows =
+            table.getIsSomeRowsSelected() || table.getIsAllRowsSelected();
+
           return (
             <div
               className={cn(
                 "flex h-full min-w-[48px] max-w-[48px] items-center pl-1 transition-opacity duration-150",
                 {
-                  ["opacity-100"]: isSelected,
-                  ["opacity-0 hover:opacity-100"]: !isSelected,
+                  ["opacity-100"]: isSelected || hasSelectedRows,
+                  ["opacity-0 hover:opacity-100"]:
+                    !isSelected && !hasSelectedRows,
                 },
               )}
             >
@@ -109,11 +115,11 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         enableSorting: false,
         enableHiding: false,
         size: 48,
-      },
+      }),
       columnHelper.accessor("title", {
         id: "title",
         header: () => <Trans i18nKey="title" defaults="Title" />,
-        cell: (info) => (
+        cell: (info: CellContext<SimplifiedPoll, string>) => (
           <div className="flex items-center gap-2">
             <PollStatusIcon status={info.row.original.status} />
             <Link
@@ -130,11 +136,11 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       columnHelper.accessor((row) => row.dateOptions, {
         id: "dateRange",
         header: () => <Trans i18nKey="dates" defaults="Dates" />,
-        cell: (info) => {
+        cell: (
+          info: CellContext<SimplifiedPoll, SimplifiedPoll["dateOptions"]>,
+        ) => {
           const dateOptions = info.getValue();
-          const event = info.row.original.event;
-
-          // If event is scheduled, show it with a green icon
+          const event = info.row.original.event; // If event is scheduled, show it with a green icon
           if (event) {
             return (
               <div className="flex items-center gap-2">
@@ -195,7 +201,9 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       columnHelper.accessor((row) => row.participants, {
         id: "participants",
         header: () => <Trans i18nKey="participants" defaults="Participants" />,
-        cell: (info) => {
+        cell: (
+          info: CellContext<SimplifiedPoll, SimplifiedPoll["participants"]>,
+        ) => {
           const participants = info.getValue();
           return <ParticipantAvatarBar participants={participants} max={5} />;
         },
@@ -204,13 +212,16 @@ export function useColumns(visibleColumns?: ColumnId[]) {
       columnHelper.accessor("createdAt", {
         id: "createdDate",
         header: () => <Trans i18nKey="title" defaults="Created" />,
-        cell: (info) => dayjs(info.getValue()).fromNow(),
+        cell: (info: CellContext<SimplifiedPoll, Date>) =>
+          dayjs(info.getValue()).fromNow(),
         size: 140,
       }),
       columnHelper.accessor("id", {
         id: "actionButtons",
         header: () => null,
-        cell: (info) => <PollActions pollId={info.getValue()} />,
+        cell: (info: CellContext<SimplifiedPoll, string>) => (
+          <PollActions pollId={info.getValue()} />
+        ),
         size: 48,
       }),
     ];
