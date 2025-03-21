@@ -123,7 +123,7 @@ export default async function Page({
 
   return (
     <PageContainer>
-      <PageHeader className="flex justify-between gap-8">
+      <PageHeader className="flex items-start justify-between gap-8">
         <PageTitle>
           <Trans i18nKey="polls" defaults="Polls" />
         </PageTitle>

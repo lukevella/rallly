@@ -3,20 +3,26 @@
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { pricingData } from "@rallly/billing/pricing";
 import { cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
-import { CheckIcon, PlusIcon, InfoIcon } from "lucide-react";
-import React from "react";
-
-import { Trans } from "@/components/trans";
-import { UpgradeButton } from "@/components/upgrade-button";
 import {
   Tooltip,
   TooltipContent,
   TooltipPortal,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
+import {
+  CalendarCheck2Icon,
+  CheckIcon,
+  CopyIcon,
+  InfoIcon,
+  PlusIcon,
+  Settings2Icon,
+  TimerIcon,
+} from "lucide-react";
+import React from "react";
+
+import { Trans } from "@/components/trans";
+import { UpgradeButton } from "@/components/upgrade-button";
 
 export type PricingPeriod = "monthly" | "yearly";
 
@@ -59,18 +65,19 @@ function PricingTableHeader({ children }: { children: React.ReactNode }) {
 }
 interface FeatureListItemProps {
   children: React.ReactNode;
+  icon?: React.ReactNode;
   tooltip?: React.ReactNode;
 }
 
-const FeatureListItem = ({ children, tooltip }: FeatureListItemProps) => (
-  <li className="flex items-center">
-    <Icon>
-      <CheckIcon className="text-primary mr-2 mt-0.5 h-4 w-4 shrink-0" />
-    </Icon>
+const FeatureListItem = ({ children, icon, tooltip }: FeatureListItemProps) => (
+  <li className="flex items-center gap-2">
+    <span className="text-primary">
+      {icon ? icon : <CheckIcon className="size-4" />}
+    </span>
     <span className="text-sm">{children}</span>
     {tooltip ? (
       <Tooltip>
-        <TooltipTrigger className="ml-2 inline-flex">
+        <TooltipTrigger className="inline-flex">
           <InfoIcon className="size-4 text-gray-400" />
         </TooltipTrigger>
         <TooltipPortal>
@@ -158,7 +165,7 @@ export function PricingTable() {
 
         {/* Pro Plan */}
         <PricingTableContainer className="border-primary/10 ring-primary/10 relative ring-1 ring-offset-4">
-          <div className="absolute -top-4 left-4">
+          <div className="absolute -top-4 right-4">
             {period === "yearly" ? (
               <div className="bg-primary-background border-primary/10 text-primary rounded-full border px-2 py-1 text-xs">
                 <Trans
@@ -216,11 +223,9 @@ export function PricingTable() {
                   defaults="Lock your poll and notify participants when you've made your final decision."
                 />
               }
+              icon={<CalendarCheck2Icon className="size-4" />}
             >
-              <Trans
-                i18nKey="featureNameFinalizePoll"
-                defaults="Finalize poll"
-              />
+              <Trans i18nKey="featureNameFinalizePoll" defaults="Finalize" />
             </FeatureListItem>
             <FeatureListItem
               tooltip={
@@ -229,11 +234,9 @@ export function PricingTable() {
                   defaults="Create a copy of an existing poll to save time when creating similar events."
                 />
               }
+              icon={<CopyIcon className="size-4" />}
             >
-              <Trans
-                i18nKey="featureNameDuplicatePoll"
-                defaults="Duplicate poll"
-              />
+              <Trans i18nKey="featureNameDuplicatePoll" defaults="Duplicate" />
             </FeatureListItem>
             <FeatureListItem
               tooltip={
@@ -242,6 +245,7 @@ export function PricingTable() {
                   defaults="Access additional options like requiring email addresses and hiding participants."
                 />
               }
+              icon={<Settings2Icon className="size-4" />}
             >
               <Trans
                 i18nKey="featureNameAdvancedPollSettings"
@@ -255,6 +259,7 @@ export function PricingTable() {
                   defaults="Keep your polls active for longer periods without worrying about automatic deletion."
                 />
               }
+              icon={<TimerIcon className="size-4" />}
             >
               <Trans
                 i18nKey="featureNameExtendedLifetime"

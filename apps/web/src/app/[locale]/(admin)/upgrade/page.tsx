@@ -1,3 +1,5 @@
+import { Icon } from "@rallly/ui/icon";
+import { DotIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -11,8 +13,6 @@ import { Trans } from "@/components/trans";
 
 import { PricingTable } from "./pricing-table";
 import { ProBadge } from "./pro-badge";
-import { Icon } from "@rallly/ui/icon";
-import { DotIcon } from "lucide-react";
 
 export default function Page() {
   return (
