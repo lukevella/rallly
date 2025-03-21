@@ -2,7 +2,7 @@ import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { CalendarIcon, PlusIcon, UserIcon } from "lucide-react";
+import { CalendarIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 

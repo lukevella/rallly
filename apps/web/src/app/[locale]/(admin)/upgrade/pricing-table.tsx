@@ -11,14 +11,12 @@ import {
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
 import {
-  BadgePercentIcon,
   CalendarCheck2Icon,
   CheckIcon,
   CopyIcon,
   InfoIcon,
   PlusIcon,
   Settings2Icon,
-  TagIcon,
   TimerIcon,
 } from "lucide-react";
 import React from "react";

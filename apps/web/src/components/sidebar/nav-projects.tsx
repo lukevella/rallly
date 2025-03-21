@@ -1,14 +1,6 @@
 "use client";
 
 import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon,
-} from "lucide-react";
-
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -24,6 +16,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@rallly/ui/sidebar";
+import {
+  type LucideIcon,
+  Folder,
+  Forward,
+  MoreHorizontal,
+  Trash2,
+} from "lucide-react";
 
 export function NavProjects({
   projects,

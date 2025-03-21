@@ -8,16 +8,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Icon } from "@rallly/ui/icon";
 import { CopyIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
 import { Trans } from "@/components/trans";
-
-import { useToast } from "@rallly/ui/hooks/use-toast";
-import { DeletePollsDialog } from "./delete-polls-dialog";
 import { useTranslation } from "@/i18n/client";
+
+import { DeletePollsDialog } from "./delete-polls-dialog";
 
 export function PollActions({ pollId }: { pollId: string }) {
   const [, copy] = useCopyToClipboard();
