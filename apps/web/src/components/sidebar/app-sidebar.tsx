@@ -12,8 +12,6 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
-import { NavUser } from "@/components/sidebar/nav-user";
-
 import { NavMain } from "./nav-main";
 
 export function AppSidebar({
