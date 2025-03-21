@@ -14,16 +14,7 @@ import * as React from "react";
 
 import { NavMain } from "./nav-main";
 
-export function AppSidebar({
-  user,
-  ...props
-}: React.ComponentProps<typeof Sidebar> & {
-  user: {
-    name: string;
-    email: string;
-    image?: string;
-  };
-}) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>

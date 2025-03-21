@@ -1,11 +1,7 @@
 import { ActionBar } from "@rallly/ui/action-bar";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@rallly/ui/sidebar";
+import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
@@ -16,6 +12,7 @@ import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
 import { Trans } from "@/components/trans";
 import { IfFreeUser } from "@/contexts/plan";
 import { requireUser } from "@/next-auth";
@@ -40,14 +37,8 @@ export default async function Layout({
   const user = await requireUser();
 
   return (
-    <SidebarProvider>
-      <AppSidebar
-        user={{
-          name: user.name ?? "",
-          email: user.email ?? "",
-          image: user.image ?? undefined,
-        }}
-      />
+    <AppSidebarProvider>
+      <AppSidebar />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
           <TopBar>
@@ -97,6 +88,6 @@ export default async function Layout({
         </div>
         <ActionBar />
       </SidebarInset>
-    </SidebarProvider>
+    </AppSidebarProvider>
   );
 }
