@@ -11,12 +11,14 @@ import {
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
 import {
+  BadgePercentIcon,
   CalendarCheck2Icon,
   CheckIcon,
   CopyIcon,
   InfoIcon,
   PlusIcon,
   Settings2Icon,
+  TagIcon,
   TimerIcon,
 } from "lucide-react";
 import React from "react";
@@ -165,25 +167,22 @@ export function PricingTable() {
 
         {/* Pro Plan */}
         <PricingTableContainer className="border-primary/10 ring-primary/10 relative ring-1 ring-offset-4">
-          <div className="absolute -top-4 right-4">
-            {period === "yearly" ? (
-              <div className="bg-primary-background border-primary/10 text-primary rounded-full border px-2 py-1 text-xs">
-                <Trans
-                  i18nKey="nMonthsFree"
-                  defaults="{freeMonths} months free"
-                  values={{
-                    freeMonths: 4,
-                  }}
-                />
-              </div>
-            ) : null}
-          </div>
-
           <PricingTableHeader>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-bold">
                 <Trans i18nKey="planPro" defaults="Pro" />
               </h2>
+              {period === "yearly" ? (
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-green-600/10 bg-green-50 px-2 py-1 text-xs font-medium text-green-600">
+                  <Trans
+                    i18nKey="nMonthsFree"
+                    defaults="{freeMonths} months free"
+                    values={{
+                      freeMonths: 4,
+                    }}
+                  />
+                </div>
+              ) : null}
             </div>
 
             <p className="text-muted-foreground mt-1 text-sm">

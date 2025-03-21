@@ -6,12 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import {
-  CircleCheckIcon,
-  CircleDotIcon,
-  CircleIcon,
-  CirclePauseIcon,
-} from "lucide-react";
+import { CircleCheckIcon, CircleIcon, CirclePauseIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
 
@@ -29,7 +24,7 @@ export function PollStatusIcon({
   const icon = (() => {
     switch (status) {
       case "live":
-        return <CircleDotIcon className="size-4 text-gray-400" />;
+        return <CircleIcon className="size-4 text-gray-400" />;
       case "paused":
         return <CirclePauseIcon className="size-4 text-gray-400" />;
       case "finalized":
