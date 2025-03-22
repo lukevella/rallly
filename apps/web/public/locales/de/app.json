@@ -291,7 +291,18 @@
   "subscriptionStatusUnpaid": "Ausstehend",
   "subscriptionStatusUnknown": "Unbekannt",
   "paymentMethodUnknown": "Unbekannt",
+  "subscriptionCancelOn": "Storniert {date}",
   "subscriptionStatusPaused": "Pausiert",
+  "subscriptionStatusIncomplete": "Unvollständig",
+  "subscriptionStatusIncompleteExpired": "Unvollständig abgelaufen",
   "billingSubscriptionPlan": "Plan",
+  "billingSubscriptionPrice": "Preis",
+  "billingSubscriptionNextPaymentDue": "Nächste Zahlung fällig",
+  "billingPaymentMethod": "Zahlungsmethode",
+  "noPaymentMethodSet": "Keine Zahlungsmethode festgelegt",
+  "addPaymentMethodDescription": "Bitte füge eine Zahlungsmethode hinzu, um einen ununterbrochenen Service für dein Abonnement zu gewährleisten.",
+  "addPaymentMethod": "Zahlungsmethode hinzufügen",
+  "needToMakeChanges": "Musst du Änderungen vornehmen?",
+  "billingPortalDescription": "Besuche das Rechnungsportal, um dein Abonnement zu verwalten, Zahlungsmethoden zu aktualisieren oder den Zahlungsverlauf einzusehen.",
   "priceFree": "Kostenlos"
 }
