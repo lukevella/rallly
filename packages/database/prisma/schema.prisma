@@ -151,7 +151,7 @@ model Poll {
   status                  PollStatus @default(live)
   deleted                 Boolean    @default(false)
   deletedAt               DateTime?  @map("deleted_at")
-  touchedAt               DateTime   @default(now()) @map("touched_at")
+  touchedAt               DateTime   @default(now()) @map("touched_at") // @deprecated
   participantUrlId        String     @unique @map("participant_url_id")
   adminUrlId              String     @unique @map("admin_url_id")
   eventId                 String?    @unique @map("event_id")

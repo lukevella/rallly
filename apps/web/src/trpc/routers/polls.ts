@@ -365,6 +365,9 @@ export const polls = router({
         data: { deleted: true, deletedAt: new Date() },
       });
     }),
+  /**
+   * @deprecated
+   */
   touch: publicProcedure
     .input(
       z.object({

@@ -8,7 +8,6 @@ import { PollFooter } from "@/components/poll/poll-footer";
 import { PollHeader } from "@/components/poll/poll-header";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { ScheduledEvent } from "@/components/poll/scheduled-event";
-import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
 import { VotingForm } from "@/components/poll/voting-form";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
@@ -51,7 +50,6 @@ const GoToApp = () => {
 };
 
 export function InvitePage() {
-  useTouchBeacon();
   return (
     <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
       <PollHeader />

@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 import { checkApiAuthorization } from "@/utils/api-auth";
 
 /**
- * Marks inactive polls as deleted. Polls are inactive if they have not been
- * touched in the last 30 days and all dates are in the past.
+ * Marks inactive polls as deleted. Polls are inactive if the last option is more than
+ * 30 days in the past.
  * Only marks polls as deleted if they belong to users without an active subscription
  * or if they don't have a user associated with them.
  */
@@ -16,14 +16,11 @@ export async function POST() {
   // Mark inactive polls as deleted in a single query
   const { count: markedDeleted } = await prisma.poll.updateMany({
     where: {
-      touchedAt: {
-        lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-      },
       deleted: false,
       options: {
         none: {
           startTime: {
-            gt: new Date(),
+            lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
           },
         },
       },
