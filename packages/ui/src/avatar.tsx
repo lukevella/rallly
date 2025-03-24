@@ -12,10 +12,7 @@ const Avatar = React.forwardRef<
 >(({ className, size = 48, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn(
-      "relative flex shrink-0 overflow-hidden rounded-full",
-      className,
-    )}
+    className={cn("relative flex shrink-0 overflow-hidden", className)}
     style={{ width: size, height: size }}
     {...props}
   />
@@ -34,30 +31,31 @@ const AvatarImage = React.forwardRef<
 ));
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
-const colorPairs = [
-  { bg: "#E6F4FF", text: "#0065BD" }, // Light blue
-  { bg: "#DCFCE7", text: "#15803D" }, // Light green
-  { bg: "#FFE6F4", text: "#BD007A" }, // Light pink
-  { bg: "#F4E6FF", text: "#6200BD" }, // Light purple
-  { bg: "#FFE6E6", text: "#BD0000" }, // Light red
-  { bg: "#FFE6FF", text: "#A300A3" }, // Bright pink
-  { bg: "#F0E6FF", text: "#5700BD" }, // Lavender
-  { bg: "#FFE6F9", text: "#BD0066" }, // Rose
-  { bg: "#E6E6FF", text: "#0000BD" }, // Periwinkle
-  { bg: "#FFE6EC", text: "#BD001F" }, // Salmon pink
-  { bg: "#EBE6FF", text: "#4800BD" }, // Light indigo
+const synthwaveGradients = [
+  { from: "#FF36F5", to: "#FF36F5CC" }, // Vibrant Pink to Transparent Pink
+  { from: "#B026FF", to: "#B026FFCC" }, // Vibrant Purple to Transparent Purple
+  { from: "#FF2182", to: "#FF2182CC" }, // Hot Pink to Transparent Hot Pink
+  { from: "#9D4EDD", to: "#9D4EDDCC" }, // Bright Purple to Transparent Bright Purple
+  { from: "#7B2CBF", to: "#7B2CBFCC" }, // Deep Purple to Transparent Deep Purple
+  { from: "#F72585", to: "#F72585CC" }, // Vibrant Pink to Transparent Vibrant Pink
+  { from: "#4361EE", to: "#4361EECC" }, // Bright Blue to Transparent Bright Blue
+  { from: "#FF0099", to: "#FF0099CC" }, // Neon Pink to Transparent Neon Pink
+  { from: "#6A00F4", to: "#6A00F4CC" }, // Electric Purple to Transparent Electric Purple
+  { from: "#D100D1", to: "#D100D1CC" }, // Magenta to Transparent Magenta
+  { from: "#FF61C3", to: "#FF61C3CC" }, // Bright Pink to Transparent Bright Pink
 ];
 
-export function getColor(seed: string): {
-  bgColor: string;
-  textColor: string;
+export function getGradient(seed: string): {
+  fromColor: string;
+  toColor: string;
 } {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = seed.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const colorPair = colorPairs[Math.abs(hash) % colorPairs.length];
-  return { bgColor: colorPair.bg, textColor: colorPair.text };
+  const gradient =
+    synthwaveGradients[Math.abs(hash) % synthwaveGradients.length];
+  return { fromColor: gradient.from, toColor: gradient.to };
 }
 
 const AvatarFallback = React.forwardRef<
@@ -66,15 +64,18 @@ const AvatarFallback = React.forwardRef<
     seed: string;
   }
 >(({ className, seed, ...props }, ref) => {
-  const { bgColor, textColor } = getColor(seed);
+  const { fromColor, toColor } = getGradient(seed);
   return (
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        "flex h-full w-full items-center justify-center rounded-full font-medium",
+        "flex h-full w-full items-center justify-center font-medium",
         className,
       )}
-      style={{ backgroundColor: bgColor, color: textColor }}
+      style={{
+        background: `linear-gradient(135deg, ${fromColor} 0%, ${toColor} 100%)`,
+        color: "white",
+      }}
       {...props}
     />
   );
