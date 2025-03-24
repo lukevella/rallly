@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React from "react";
 
+import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
@@ -51,6 +52,9 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
   const router = useRouter();
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
+      <div className="mb-12">
+        <Logo className="mx-auto" />
+      </div>
       <div className="w-48 space-y-8 text-center">
         <h1 className="text-xl font-bold">
           <Trans i18nKey="continueAs" defaults="Continue as" />
