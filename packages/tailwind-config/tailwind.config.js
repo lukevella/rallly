@@ -49,6 +49,10 @@ module.exports = {
         accent: {
           DEFAULT: colors.gray["100"],
         },
+        "action-bar": {
+          DEFAULT: colors.gray["800"],
+          foreground: colors.white,
+        },
         muted: {
           DEFAULT: colors.gray["100"],
           background: colors.gray["50"],
@@ -62,6 +66,14 @@ module.exports = {
           DEFAULT: colors.white,
           background: colors.white,
           foreground: colors.gray["700"],
+        },
+        sidebar: {
+          DEFAULT: colors.gray["100"],
+          foreground: colors.gray["700"],
+          accent: {
+            DEFAULT: colors.gray["200"],
+            foreground: colors.gray["800"],
+          },
         },
       },
       keyframes: {
