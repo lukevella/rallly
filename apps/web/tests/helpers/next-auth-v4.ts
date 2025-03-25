@@ -4,7 +4,7 @@ import type { JWT } from "next-auth/jwt";
 
 const now = () => (Date.now() / 1000) | 0;
 export async function getDerivedEncryptionKey(
-  keyMaterial: string | Buffer,
+  keyMaterial: string | Uint8Array,
   salt: string,
 ) {
   return await hkdf(
@@ -19,7 +19,7 @@ export async function getDerivedEncryptionKey(
 interface JWTEncodeParams {
   token?: JWT;
   salt?: string;
-  secret: string | Buffer;
+  secret: string | Uint8Array;
   maxAge?: number;
 }
 

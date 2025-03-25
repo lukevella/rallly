@@ -17,7 +17,7 @@ export async function decodeLegacyJWT(token: string): Promise<JWT | null> {
 }
 
 async function getDerivedEncryptionKey(
-  keyMaterial: string | Buffer,
+  keyMaterial: string | Uint8Array,
   salt: string,
 ) {
   return await hkdf(

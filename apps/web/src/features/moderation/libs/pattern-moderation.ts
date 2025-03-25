@@ -20,9 +20,9 @@ export function containsSuspiciousPatterns(text: string) {
   const phoneNumberPattern =
     /(\+?\d{1,3}[-.\s]?)?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}|\+\d[\d\s\-\.]{5,14}|\+\d{6,15}/i;
 
-  // Detect suspicious Unicode patterns
+  // Detect suspicious Unicode patterns - simplified version without surrogate pairs
   const suspiciousUnicodePattern =
-    /[\u2028-\u202F\u2800-\u28FF\u3164\uFFA0\u115F\u1160\u3000\u2000-\u200F\u2028-\u202F\u205F-\u206F\uFEFF\uDB40\uDC20\uDB40\uDC21\uDB40\uDC22\uDB40\uDC23\uDB40\uDC24]/u;
+    /[\u2028-\u202F\u2800-\u28FF\u3164\uFFA0\u115F\u1160\u3000\u2000-\u200F\u205F-\u206F\uFEFF]/;
 
   // Simple leet speak pattern that detects number-letter-number patterns
   const leetSpeakPattern = /[a-z0-9]*[0-9][a-z][0-9][a-z0-9]*/i;
