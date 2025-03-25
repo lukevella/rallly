@@ -39,6 +39,7 @@ export async function generateMetadata({
       ns: "home",
     }),
     description: t("metaDescription", {
+      ns: "home",
       defaultValue:
         "Create polls and vote to find the best day or time. A free alternative to Doodle.",
     }),
