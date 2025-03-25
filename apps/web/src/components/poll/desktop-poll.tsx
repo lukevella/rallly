@@ -15,6 +15,7 @@ import {
 import * as React from "react";
 import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
+import useClickAway from "react-use/lib/useClickAway";
 
 import { TimesShownIn } from "@/components/clock";
 import {
@@ -129,6 +130,12 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const { x } = useScroll(scrollRef);
 
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useClickAway(containerRef, () => {
+    collapse();
+  });
+
   function TableControls() {
     return (
       <div className="flex items-center gap-4">
@@ -240,11 +247,12 @@ const DesktopPoll: React.FunctionComponent = () => {
         >
           <div
             className={cn(
-              "flex max-h-full w-full max-w-7xl flex-col overflow-hidden rounded-md bg-white",
+              "flex max-h-full flex-col overflow-hidden rounded-md bg-white",
               {
-                "shadow-huge": expanded,
+                "shadow-huge w-full max-w-7xl": expanded,
               },
             )}
+            ref={containerRef}
           >
             <CardHeader className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-x-2.5">
