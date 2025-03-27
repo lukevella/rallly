@@ -6,6 +6,7 @@ import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { PollFooter } from "@/components/poll/poll-footer";
 import { PollHeader } from "@/components/poll/poll-header";
+import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { ScheduledEvent } from "@/components/poll/scheduled-event";
 import { useTouchBeacon } from "@/components/poll/use-touch-beacon";
@@ -52,8 +53,12 @@ const GoToApp = () => {
 
 export function InvitePage() {
   useTouchBeacon();
+  const poll = usePoll();
+
   return (
     <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
+      {/* Track poll views */}
+      <PollViewTracker pollId={poll.id} />
       <PollHeader />
       <GoToApp />
       <EventCard />
