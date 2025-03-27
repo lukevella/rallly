@@ -31,26 +31,42 @@ test.describe(() => {
   });
 
   test("should record poll view", async () => {
-    await page.clock.fastForward(10000);
-    // Verify that a record was created in the database
-    const pollViews = await prisma.pollView.findMany({
-      where: {
-        pollId,
-      },
-      orderBy: {
-        viewedAt: "desc",
-      },
+    await page.clock.fastForward(5000);
+
+    let pollViews: Array<{
+      id: string;
+      pollId: string;
+      ipAddress: string | null;
+      userId: string | null;
+      userAgent: string | null;
+      viewedAt: Date;
+    }> = [];
+
+    // Retry until we find poll views or timeout
+    await expect(async () => {
+      // Query the database for poll views
+      pollViews = await prisma.pollView.findMany({
+        where: {
+          pollId,
+        },
+        orderBy: {
+          viewedAt: "desc",
+        },
+      });
+
+      // This will throw if the condition is not met, causing a retry
+      expect(pollViews.length).toBeGreaterThan(0);
+    }).toPass({
+      timeout: 5000, // 5 second timeout
+      intervals: [100, 200, 500, 1000], // Retry intervals in milliseconds
     });
 
-    // Check that at least one view was recorded
-    expect(pollViews.length).toBeGreaterThan(0);
-
-    // Verify the most recent view has the expected properties
+    // Now that we know we have at least one poll view, verify its properties
     const latestView = pollViews[0];
-    expect(latestView).toHaveProperty("pollId", pollId);
-    expect(latestView).toHaveProperty("ipAddress");
-    expect(latestView).toHaveProperty("userAgent");
-    expect(latestView).toHaveProperty("viewedAt");
+    expect(latestView.pollId).toBe(pollId);
+    expect(latestView.ipAddress).toBeDefined();
+    expect(latestView.userAgent).toBeDefined();
+    expect(latestView.viewedAt).toBeDefined();
   });
 
   test("should be able to comment", async () => {
