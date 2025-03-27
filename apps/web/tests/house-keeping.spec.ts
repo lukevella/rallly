@@ -96,7 +96,6 @@ test.describe("House-keeping API", () => {
         participantUrlId: "old-poll-regular-user-participant",
         adminUrlId: "old-poll-regular-user-admin",
         userId: regularUser.id,
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
       },
     });
     createdPollIds.push(oldPollRegularUser.id);
@@ -109,7 +108,6 @@ test.describe("House-keeping API", () => {
         participantUrlId: "old-poll-pro-user-participant",
         adminUrlId: "old-poll-pro-user-admin",
         userId: proUser.id,
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
       },
     });
     createdPollIds.push(oldPollProUser.id);
@@ -122,7 +120,6 @@ test.describe("House-keeping API", () => {
         participantUrlId: "recent-poll-regular-user-participant",
         adminUrlId: "recent-poll-regular-user-admin",
         userId: regularUser.id,
-        touchedAt: dayjs().subtract(15, "day").toDate(), // 15 days old
       },
     });
     createdPollIds.push(recentPollRegularUser.id);
@@ -135,7 +132,6 @@ test.describe("House-keeping API", () => {
         participantUrlId: "old-poll-with-future-options-participant",
         adminUrlId: "old-poll-with-future-options-admin",
         userId: regularUser.id,
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
         options: {
           create: {
             startTime: dayjs().add(10, "day").toDate(), // Future date
@@ -153,7 +149,6 @@ test.describe("House-keeping API", () => {
         title: "Old Poll No User",
         participantUrlId: "old-poll-no-user-participant",
         adminUrlId: "old-poll-no-user-admin",
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
       },
     });
     createdPollIds.push(oldPollNoUser.id);
