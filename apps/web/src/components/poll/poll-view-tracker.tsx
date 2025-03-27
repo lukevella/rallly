@@ -33,17 +33,21 @@ export function PollViewTracker({ pollId }: { pollId: string }) {
 
       // Avoid duplicate view tracking within the same browser session
       const viewKey = `poll-view-${pollId}`;
-      const lastView = safeSessionStorage.getStorage(viewKey);
+      const lastView = safeSessionStorage.get(viewKey);
       const now = Date.now();
 
       // Only track a view if it's been more than 30 minutes since the last view
       // or if this is the first view in this session
       if (!lastView || now - parseInt(lastView) > 30 * 60 * 1000) {
         // Record the view using server action
-        trackPollView(pollId).then(() => {
-          // Update the last view timestamp
-          safeSessionStorage.setStorage(viewKey, now.toString());
-        });
+        trackPollView(pollId)
+          .then(() => {
+            // Update the last view timestamp
+            safeSessionStorage.set(viewKey, now.toString());
+          })
+          .catch(() => {
+            trackedPolls.delete(pollId);
+          });
       }
     },
     VIEW_DELAY,

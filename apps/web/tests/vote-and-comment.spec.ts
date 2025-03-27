@@ -31,6 +31,7 @@ test.describe(() => {
   });
 
   test("should record poll view", async () => {
+    // Fast forward time to trigger view tracking
     await page.clock.fastForward(5000);
 
     let pollViews: Array<{

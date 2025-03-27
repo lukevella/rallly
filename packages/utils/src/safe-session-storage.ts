@@ -1,43 +1,43 @@
-function setSessionStorage(key: string, value: string) {
-  try {
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(key, value);
-      return true;
-    }
-  } catch (error) {
-    console.warn("Error setting sessionStorage:", error);
-  }
-  return false;
-}
-
-function getSessionStorage(key: string): string | null {
-  try {
-    if (typeof window !== "undefined") {
-      return window.sessionStorage.getItem(key);
-    }
-  } catch (error) {
-    console.warn("Error getting sessionStorage:", error);
-  }
-  return null;
-}
-
 // Memory fallback when sessionStorage isn't available
 const memoryStorage = new Map<string, string>();
 
-function getStorage(key: string): string | null {
-  const value = getSessionStorage(key);
-  if (value !== null) return value;
-  return memoryStorage.get(key) || null;
-}
-
-function setStorage(key: string, value: string): void {
-  const success = setSessionStorage(key, value);
-  if (!success) {
-    memoryStorage.set(key, value);
-  }
-}
-
+/**
+ * Safe wrapper for sessionStorage with memory fallback
+ * Handles browser environments, private browsing modes, and SSR
+ */
 export const safeSessionStorage = {
-  getStorage,
-  setStorage,
+  get(key: string): string | null {
+    try {
+      return typeof window !== "undefined"
+        ? window.sessionStorage.getItem(key)
+        : memoryStorage.get(key) || null;
+    } catch (error) {
+      console.warn("Error accessing sessionStorage:", error);
+      return memoryStorage.get(key) || null;
+    }
+  },
+
+  set(key: string, value: string): void {
+    try {
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem(key, value);
+        return;
+      }
+    } catch (error) {
+      console.warn("Error setting sessionStorage:", error);
+    }
+    memoryStorage.set(key, value);
+  },
+
+  remove(key: string): void {
+    try {
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(key);
+        return;
+      }
+    } catch (error) {
+      console.warn("Error deleting sessionStorage:", error);
+    }
+    memoryStorage.delete(key);
+  },
 };
