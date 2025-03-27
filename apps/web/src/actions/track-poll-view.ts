@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@rallly/database";
+import { ipAddress } from "@vercel/functions";
 import { headers } from "next/headers";
 
 import { auth } from "@/next-auth";
@@ -13,7 +14,7 @@ export async function trackPollView(pollId: string) {
   try {
     const headersList = headers();
     const userAgent = headersList.get("user-agent");
-    const ip = headersList.get("x-forwarded-for") || "unknown";
+    const ip = ipAddress(headersList) || "unknown";
 
     const session = await auth();
     const userId = session?.user?.id;
