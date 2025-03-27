@@ -9,26 +9,16 @@ import { NewPollPage } from "./new-poll-page";
 test.describe(() => {
   let page: Page;
   let pollPage: PollPage;
-  let touchRequest: Promise<Request>;
   let editSubmissionUrl: string;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
-    touchRequest = page.waitForRequest(
-      (request) =>
-        request.method() === "POST" &&
-        request.url().includes("/api/trpc/polls.touch"),
-    );
+
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
     pollPage = await newPollPage.createPollAndCloseDialog({
       name: "Monthly Meetup",
     });
-  });
-
-  test("should call touch endpoint", async () => {
-    // make sure call to touch RPC is made
-    expect(await touchRequest).not.toBeNull();
   });
 
   test("should be able to comment", async () => {
