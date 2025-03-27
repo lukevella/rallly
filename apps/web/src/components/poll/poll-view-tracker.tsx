@@ -8,8 +8,7 @@ import { trackPollView } from "@/actions/track-poll-view";
 // Global tracking state to prevent duplicate tracking across re-renders and strict mode
 const trackedPolls = new Set<string>();
 
-// Time to wait before recording a view (in milliseconds)
-const VIEW_DELAY = 5000; // 5 seconds
+const VIEW_DELAY = 5000;
 
 /**
  * Component that tracks poll views
