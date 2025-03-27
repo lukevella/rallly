@@ -13,56 +13,35 @@ export async function POST() {
   const unauthorized = checkApiAuthorization();
   if (unauthorized) return unauthorized;
 
+  // Define the 30-day threshold once
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
   // Mark inactive polls as deleted in a single query
   const { count: markedDeleted } = await prisma.poll.updateMany({
     where: {
-      AND: [
-        {
-          deleted: false,
+      deleted: false,
+      // All poll dates are in the past
+      options: {
+        none: {
+          startTime: { gt: new Date() },
         },
+      },
+      // User is either null or doesn't have an active subscription
+      OR: [
+        { userId: null },
         {
-          options: {
-            none: {
-              startTime: {
-                gt: new Date(),
-              },
-            },
+          user: {
+            OR: [{ subscription: null }, { subscription: { active: false } }],
           },
         },
-        {
-          OR: [
-            { userId: null },
-            {
-              user: {
-                OR: [
-                  { subscription: null },
-                  { subscription: { active: false } },
-                ],
-              },
-            },
-          ],
-        },
-        {
-          AND: [
-            // Check if there are no views OR all views are older than 30 days
-            {
-              views: {
-                none: {
-                  viewedAt: {
-                    gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-                  },
-                },
-              },
-            },
-            // Check if touchedAt is older than 30 days
-            {
-              touchedAt: {
-                lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-              },
-            },
-          ],
-        },
       ],
+      // Poll is inactive (not touched AND not viewed in the last 30 days)
+      touchedAt: { lt: thirtyDaysAgo },
+      views: {
+        none: {
+          viewedAt: { gte: thirtyDaysAgo },
+        },
+      },
     },
     data: {
       deleted: true,
