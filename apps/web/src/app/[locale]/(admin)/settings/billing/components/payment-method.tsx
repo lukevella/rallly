@@ -1,9 +1,5 @@
-"use client";
-
 import { Badge } from "@rallly/ui/badge";
 import { z } from "zod";
-
-import { Trans } from "@/components/trans";
 
 const brandLabels = {
   visa: "Visa",

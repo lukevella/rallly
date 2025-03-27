@@ -5,7 +5,7 @@ async function getDatabaseStatus() {
   try {
     await prisma.$connect();
     return "connected";
-  } catch (e) {
+  } catch {
     return "disconnected";
   }
 }

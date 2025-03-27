@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
     return;
   }
 
-  const locale = await getPreferredLocale(request);
+  const locale = getPreferredLocale(request);
   request.nextUrl.pathname = `/${locale}${pathname}`;
 
   if (locale === "en") {

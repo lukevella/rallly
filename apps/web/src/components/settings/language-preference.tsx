@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { ArrowUpRight } from "lucide-react";
@@ -24,6 +25,7 @@ export const LanguagePreference = () => {
     defaultValues: {
       language: i18n.language,
     },
+    resolver: zodResolver(formSchema),
   });
   const { updatePreferences } = usePreferences();
 
