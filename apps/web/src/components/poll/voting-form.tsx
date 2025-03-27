@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogContent,
@@ -108,6 +109,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         optionId: option.id,
       })),
     },
+    resolver: zodResolver(formSchema),
   });
 
   return (

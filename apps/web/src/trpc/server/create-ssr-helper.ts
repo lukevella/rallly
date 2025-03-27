@@ -36,7 +36,7 @@ export const createSSRHelper = async () => {
       ctx: await createContext(),
       transformer: superjson,
     });
-  } catch (error) {
+  } catch {
     return redirect("/login");
   }
 };

@@ -33,7 +33,7 @@ export const withAuth = (
         if (session) {
           isLegacySession = true;
         }
-      } catch (e) {
+      } catch {
         isExpiredLegacySession = true;
       }
     }

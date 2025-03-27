@@ -18,9 +18,8 @@ import { PollDetailsForm } from "@/components/forms/poll-details-form";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
-import type { NextPageWithLayout } from "@/types";
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   const { poll } = usePoll();
   const urlId = poll.adminUrlId;
   const { mutate: updatePollMutation, isLoading: isUpdating } =

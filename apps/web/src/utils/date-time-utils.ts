@@ -26,7 +26,7 @@ export function getBrowserTimeZone() {
 function getTimeZoneOffset(timeZone: string) {
   try {
     return dayjs().tz(timeZone).utcOffset();
-  } catch (e) {
+  } catch {
     console.error(`Failed to resolve timezone ${timeZone}`);
     return 0;
   }
