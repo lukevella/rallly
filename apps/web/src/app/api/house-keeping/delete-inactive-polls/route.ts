@@ -16,16 +16,19 @@ export async function POST() {
   // Mark inactive polls as deleted in a single query
   const { count: markedDeleted } = await prisma.poll.updateMany({
     where: {
-      deleted: false,
-      options: {
-        none: {
-          startTime: {
-            gt: new Date(),
+      AND: [
+        {
+          deleted: false,
+        },
+        {
+          options: {
+            none: {
+              startTime: {
+                gt: new Date(),
+              },
+            },
           },
         },
-      },
-      // Include polls without a user or with users that don't have an active subscription
-      AND: [
         {
           OR: [
             { userId: null },
@@ -40,7 +43,7 @@ export async function POST() {
           ],
         },
         {
-          OR: [
+          AND: [
             // Check if there are no views OR all views are older than 30 days
             {
               views: {
