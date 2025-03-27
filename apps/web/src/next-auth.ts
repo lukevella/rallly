@@ -219,4 +219,13 @@ const requireUser = async () => {
   return session?.user;
 };
 
+/**
+ * If email is not set it means the user is a guest
+ * @returns
+ */
+export const getUserId = async () => {
+  const session = await auth();
+  return session?.user?.email ? session.user.id : null;
+};
+
 export { auth, handlers, requireUser, signIn, signOut };
