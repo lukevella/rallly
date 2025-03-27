@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 /**
  * This test suite tests the house-keeping API endpoints:
  * 1. delete-inactive-polls: Marks inactive polls as deleted
- * 2. remove-deleted-polls: Permanently removes polls that have been marked as deleted for more than 7 days
+ * 2. remove-deleted-polls: Permanently removes polls that have been marked as deleted for more than 30 days
  */
 test.describe("House-keeping API", () => {
   // Store created poll IDs for cleanup
@@ -14,11 +14,6 @@ test.describe("House-keeping API", () => {
 
   // API Secret for authentication
   const API_SECRET = process.env.API_SECRET;
-
-  test.beforeAll(async () => {
-    // Clean up any existing test data
-    await cleanup();
-  });
 
   test.afterAll(async () => {
     // Clean up test data
@@ -96,6 +91,18 @@ test.describe("House-keeping API", () => {
         participantUrlId: "old-poll-regular-user-participant",
         adminUrlId: "old-poll-regular-user-admin",
         userId: regularUser.id,
+        options: {
+          create: [
+            {
+              startTime: dayjs().subtract(35, "day").toDate(), // 35 days in the past
+              duration: 60,
+            },
+            {
+              startTime: dayjs().subtract(40, "day").toDate(), // 40 days in the past
+              duration: 60,
+            },
+          ],
+        },
       },
     });
     createdPollIds.push(oldPollRegularUser.id);
@@ -108,21 +115,46 @@ test.describe("House-keeping API", () => {
         participantUrlId: "old-poll-pro-user-participant",
         adminUrlId: "old-poll-pro-user-admin",
         userId: proUser.id,
+        options: {
+          create: [
+            {
+              startTime: dayjs().subtract(35, "day").toDate(), // 35 days in the past
+              duration: 60,
+            },
+            {
+              startTime: dayjs().subtract(40, "day").toDate(), // 40 days in the past
+              duration: 60,
+            },
+          ],
+        },
       },
     });
     createdPollIds.push(oldPollProUser.id);
 
-    // 3. Recent poll from regular user (should NOT be marked as deleted)
-    const recentPollRegularUser = await prisma.poll.create({
+    // 3. Old poll from guest user (should be marked as deleted)
+    const oldPollGuestUser = await prisma.poll.create({
       data: {
-        id: "recent-poll-regular-user",
-        title: "Recent Poll Regular User",
-        participantUrlId: "recent-poll-regular-user-participant",
-        adminUrlId: "recent-poll-regular-user-admin",
-        userId: regularUser.id,
+        id: "old-poll-guest-user",
+        title: "Old Poll Guest User",
+        participantUrlId: "old-poll-guest-user-participant",
+        adminUrlId: "old-poll-guest-user-admin",
+        userId: null,
+        guestId: "guest-1",
+        options: {
+          create: [
+            {
+              startTime: dayjs().subtract(35, "day").toDate(), // 35 days in the past
+              duration: 60,
+            },
+            {
+              startTime: dayjs().subtract(40, "day").toDate(), // 40 days in the past
+              duration: 60,
+            },
+          ],
+        },
       },
     });
-    createdPollIds.push(recentPollRegularUser.id);
+    createdPollIds.push(oldPollGuestUser.id);
 
     // 4. Old poll with future options from regular user (should NOT be marked as deleted)
     const oldPollWithFutureOptions = await prisma.poll.create({
@@ -142,16 +174,29 @@ test.describe("House-keeping API", () => {
     });
     createdPollIds.push(oldPollWithFutureOptions.id);
 
-    // 5. Old poll without a user (should be marked as deleted)
-    const oldPollNoUser = await prisma.poll.create({
+    // 4. Poll with some dates less than 30 days in the past (should NOT be marked as deleted)
+    const pollWithRecentPastDates = await prisma.poll.create({
       data: {
-        id: "old-poll-no-user",
-        title: "Old Poll No User",
-        participantUrlId: "old-poll-no-user-participant",
-        adminUrlId: "old-poll-no-user-admin",
+        id: "poll-with-recent-past-dates",
+        title: "Poll With Recent Past Dates",
+        participantUrlId: "poll-with-recent-past-dates-participant",
+        adminUrlId: "poll-with-recent-past-dates-admin",
+        userId: regularUser.id,
+        options: {
+          create: [
+            {
+              startTime: dayjs().subtract(15, "day").toDate(), // 15 days in the past
+              duration: 60,
+            },
+            {
+              startTime: dayjs().subtract(35, "day").toDate(), // 35 days in the past
+              duration: 60,
+            },
+          ],
+        },
       },
     });
-    createdPollIds.push(oldPollNoUser.id);
+    createdPollIds.push(pollWithRecentPastDates.id);
 
     // Call the delete-inactive-polls endpoint
     const response = await request.post(
@@ -167,9 +212,6 @@ test.describe("House-keeping API", () => {
     const responseData = await response.json();
     expect(responseData.success).toBeTruthy();
 
-    // We expect 2 polls to be marked as deleted:
-    // - Old poll from regular user
-    // - Old poll without a user
     expect(responseData.summary.markedDeleted).toBe(2);
 
     // Verify the state of each poll
@@ -185,30 +227,30 @@ test.describe("House-keeping API", () => {
     expect(updatedOldPollProUser?.deleted).toBe(false);
     expect(updatedOldPollProUser?.deletedAt).toBeNull();
 
-    const updatedRecentPollRegularUser = await prisma.poll.findUnique({
-      where: { id: recentPollRegularUser.id },
-    });
-    expect(updatedRecentPollRegularUser?.deleted).toBe(false);
-    expect(updatedRecentPollRegularUser?.deletedAt).toBeNull();
-
     const updatedOldPollWithFutureOptions = await prisma.poll.findUnique({
       where: { id: oldPollWithFutureOptions.id },
     });
     expect(updatedOldPollWithFutureOptions?.deleted).toBe(false);
     expect(updatedOldPollWithFutureOptions?.deletedAt).toBeNull();
 
-    const updatedOldPollNoUser = await prisma.poll.findUnique({
-      where: { id: oldPollNoUser.id },
+    const updatedOldPollGuestUser = await prisma.poll.findUnique({
+      where: { id: oldPollGuestUser.id },
     });
-    expect(updatedOldPollNoUser?.deleted).toBe(true);
-    expect(updatedOldPollNoUser?.deletedAt).not.toBeNull();
+    expect(updatedOldPollGuestUser?.deleted).toBe(true);
+    expect(updatedOldPollGuestUser?.deletedAt).not.toBeNull();
+
+    const updatedPollWithRecentPastDates = await prisma.poll.findUnique({
+      where: { id: pollWithRecentPastDates.id },
+    });
+    expect(updatedPollWithRecentPastDates?.deleted).toBe(false);
+    expect(updatedPollWithRecentPastDates?.deletedAt).toBeNull();
   });
 
-  test("should permanently remove polls that have been marked as deleted for more than 7 days", async ({
+  test("should permanently remove polls that have been marked as deleted for more than 30 days", async ({
     request,
     baseURL,
   }) => {
-    // Create a poll that was marked as deleted more than 7 days ago
+    // Create a poll that was marked as deleted more than 30 days ago
     const oldDeletedPoll = await prisma.poll.create({
       data: {
         id: "old-deleted-poll",
@@ -216,12 +258,12 @@ test.describe("House-keeping API", () => {
         participantUrlId: "old-deleted-poll-participant",
         adminUrlId: "old-deleted-poll-admin",
         deleted: true,
-        deletedAt: dayjs().subtract(8, "day").toDate(), // Deleted 8 days ago
+        deletedAt: dayjs().subtract(31, "day").toDate(), // Deleted 31 days ago
       },
     });
     createdPollIds.push(oldDeletedPoll.id);
 
-    // Create a poll that was marked as deleted less than 7 days ago
+    // Create a poll that was marked as deleted less than 30 days ago
     const recentDeletedPoll = await prisma.poll.create({
       data: {
         id: "recent-deleted-poll",
@@ -229,7 +271,7 @@ test.describe("House-keeping API", () => {
         participantUrlId: "recent-deleted-poll-participant",
         adminUrlId: "recent-deleted-poll-admin",
         deleted: true,
-        deletedAt: dayjs().subtract(3, "day").toDate(), // Deleted 3 days ago
+        deletedAt: dayjs().subtract(15, "day").toDate(), // Deleted 15 days ago
       },
     });
     createdPollIds.push(recentDeletedPoll.id);

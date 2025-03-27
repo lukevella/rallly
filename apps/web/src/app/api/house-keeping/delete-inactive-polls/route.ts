@@ -12,19 +12,38 @@ import { checkApiAuthorization } from "@/utils/api-auth";
 export async function POST() {
   const unauthorized = checkApiAuthorization();
   if (unauthorized) return unauthorized;
+  const polls = await prisma.poll.findMany({
+    where: {
+      deleted: false,
+      options: {
+        every: {
+          startTime: {
+            lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+          },
+        },
+      },
+      OR: [
+        { userId: null },
+        {
+          user: {
+            OR: [{ subscription: null }, { subscription: { active: false } }],
+          },
+        },
+      ],
+    },
+  });
 
   // Mark inactive polls as deleted in a single query
   const { count: markedDeleted } = await prisma.poll.updateMany({
     where: {
       deleted: false,
       options: {
-        none: {
+        every: {
           startTime: {
             lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
           },
         },
       },
-      // Include polls without a user or with users that don't have an active subscription
       OR: [
         { userId: null },
         {
@@ -44,6 +63,7 @@ export async function POST() {
     success: true,
     summary: {
       markedDeleted,
+      polls,
     },
   });
 }
