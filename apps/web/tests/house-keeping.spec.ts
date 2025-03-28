@@ -158,6 +158,24 @@ test.describe("House-keeping API", () => {
     });
     createdPollIds.push(oldPollNoUser.id);
 
+    // 6. Old poll with recent views from regular user (should NOT be marked as deleted)
+    const oldPollWithRecentViews = await prisma.poll.create({
+      data: {
+        id: "old-poll-with-recent-views",
+        title: "Old Poll With Recent Views",
+        participantUrlId: "old-poll-with-recent-views-participant",
+        adminUrlId: "old-poll-with-recent-views-admin",
+        userId: regularUser.id,
+        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
+        views: {
+          create: {
+            viewedAt: dayjs().subtract(15, "day").toDate(), // Viewed 15 days ago
+          },
+        },
+      },
+    });
+    createdPollIds.push(oldPollWithRecentViews.id);
+
     // Call the delete-inactive-polls endpoint
     const response = await request.post(
       `${baseURL}/api/house-keeping/delete-inactive-polls`,
@@ -207,6 +225,12 @@ test.describe("House-keeping API", () => {
     });
     expect(updatedOldPollNoUser?.deleted).toBe(true);
     expect(updatedOldPollNoUser?.deletedAt).not.toBeNull();
+
+    const updatedOldPollWithRecentViews = await prisma.poll.findUnique({
+      where: { id: oldPollWithRecentViews.id },
+    });
+    expect(updatedOldPollWithRecentViews?.deleted).toBe(false);
+    expect(updatedOldPollWithRecentViews?.deletedAt).toBeNull();
   });
 
   test("should permanently remove polls that have been marked as deleted for more than 7 days", async ({

@@ -13,21 +13,20 @@ export async function POST() {
   const unauthorized = checkApiAuthorization();
   if (unauthorized) return unauthorized;
 
+  // Define the 30-day threshold once
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
   // Mark inactive polls as deleted in a single query
   const { count: markedDeleted } = await prisma.poll.updateMany({
     where: {
-      touchedAt: {
-        lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-      },
       deleted: false,
+      // All poll dates are in the past
       options: {
         none: {
-          startTime: {
-            gt: new Date(),
-          },
+          startTime: { gt: new Date() },
         },
       },
-      // Include polls without a user or with users that don't have an active subscription
+      // User is either null or doesn't have an active subscription
       OR: [
         { userId: null },
         {
@@ -36,6 +35,13 @@ export async function POST() {
           },
         },
       ],
+      // Poll is inactive (not touched AND not viewed in the last 30 days)
+      touchedAt: { lt: thirtyDaysAgo },
+      views: {
+        none: {
+          viewedAt: { gte: thirtyDaysAgo },
+        },
+      },
     },
     data: {
       deleted: true,
