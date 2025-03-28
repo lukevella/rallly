@@ -12,6 +12,8 @@ import { BonusItem } from "@/components/home/bonus-item";
 
 export async function Bonus({ t }: { t: TFunction<"home" | "common"> }) {
   const userCount = await prisma.user.count();
+  const roundedUserCount =
+    userCount > 100000 ? Math.floor(userCount / 10000) * 10000 : userCount;
   return (
     <div className="mx-auto flex flex-wrap justify-center gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
       <BonusItem
@@ -23,7 +25,7 @@ export async function Bonus({ t }: { t: TFunction<"home" | "common"> }) {
           i18nKey="statsUsersRegistered"
           ns="home"
           defaults="{count, number, ::compact-short} registered users"
-          values={{ count: userCount }}
+          values={{ count: roundedUserCount }}
         />
       </BonusItem>
       <BonusItem
