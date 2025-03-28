@@ -12,8 +12,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "posthog-js": "^1.178.0",
-    "posthog-node": "^4.2.1"
+    "posthog-js": "^1.234.1",
+    "posthog-node": "^4.10.2"
   },
   "devDependencies": {
     "@rallly/eslint-config": "*",
