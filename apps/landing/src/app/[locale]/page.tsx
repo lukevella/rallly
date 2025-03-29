@@ -16,8 +16,8 @@ export default async function Page({ params }: { params: { locale: string } }) {
           defaultValue: "Streamline your scheduling process and save time",
           ns: "home",
         })}
-        callToAction={t("getStarted", {
-          ns: "common",
+        callToAction={t("createAPoll", {
+          ns: "home",
         })}
       />
       <Bonus t={t} />

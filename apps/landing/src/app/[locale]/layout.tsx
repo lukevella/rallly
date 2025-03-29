@@ -2,6 +2,7 @@ import "tailwindcss/tailwind.css";
 import "../../style.css";
 
 import languages from "@rallly/languages";
+import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Analytics } from "@vercel/analytics/react";
-import { ChevronRightIcon, MenuIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Viewport } from "next";
 import Image from "next/image";
@@ -84,15 +85,15 @@ export default async function Root({
                   >
                     <Trans t={t} i18nKey="login" defaults="Login" />
                   </Link>
-                  <Link
-                    href={linkToApp()}
-                    className="bg-primary hover:bg-primary-500 active:bg-primary-700 group inline-flex items-center gap-1 rounded-full py-1.5 pl-4 pr-3 text-sm font-medium text-white shadow-sm transition-transform"
+                  <Button
+                    asChild
+                    variant="primary"
+                    className="rounded-full px-3"
                   >
-                    <span>
-                      <Trans t={t} i18nKey="goToApp" defaults="Go to app" />
-                    </span>
-                    <ChevronRightIcon className="inline-block size-4 transition-all group-active:translate-x-1" />
-                  </Link>
+                    <Link href={linkToApp("/register")}>
+                      <Trans t={t} i18nKey="signUp" defaults="Sign up" />
+                    </Link>
+                  </Button>
                   <div className="flex items-center justify-center lg:hidden">
                     <DropdownMenu>
                       <DropdownMenuTrigger>
