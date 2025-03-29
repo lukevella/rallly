@@ -1,24 +1,25 @@
 import "tailwindcss/tailwind.css";
 import "../../style.css";
 
+import { PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/toaster";
-import type { Metadata, Viewport } from "next";
+import { TooltipProvider } from "@rallly/ui/tooltip";
+import { dehydrate, Hydrate } from "@tanstack/react-query";
+import { domAnimation, LazyMotion } from "motion/react";
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
-import { auth } from "@/next-auth";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { dehydrate, Hydrate } from "@tanstack/react-query";
-import { TRPCProvider } from "@/trpc/client/provider";
-import { I18nProvider } from "@/i18n/client";
-import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { UserProvider } from "@/components/user-provider";
-import { TooltipProvider } from "@rallly/ui/tooltip";
+import { I18nProvider } from "@/i18n/client";
+import { auth } from "@/next-auth";
+import { TRPCProvider } from "@/trpc/client/provider";
+import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { ConnectedDayjsProvider } from "@/utils/dayjs";
+
 import { PostHogPageView } from "../posthog-page-view";
-import { PostHogProvider } from "@rallly/posthog/client";
-import { domAnimation, LazyMotion } from "motion/react";
 
 const inter = Inter({
   subsets: ["latin"],
