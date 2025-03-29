@@ -111,14 +111,11 @@ export const MarketingHero = ({
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
           <Button
             size="lg"
-            className="group rounded-full px-5 hover:shadow-md active:shadow-sm"
+            className="transition-all hover:shadow-md active:translate-y-1 active:shadow-none"
             variant="primary"
             asChild
           >
-            <Link href={linkToApp("/new")}>
-              {callToAction}
-              <ChevronRightIcon className="-ml-1 size-5 transition-transform group-active:translate-x-1" />
-            </Link>
+            <Link href={linkToApp("/new")}>{callToAction}</Link>
           </Button>
           <p
             className={cn(

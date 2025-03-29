@@ -9,14 +9,14 @@ import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex border font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
+    "inline-flex border text-shadow font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
     "focus:shadow-none focus-visible:ring-2 focus-visible:ring-ring",
   ),
   {
     variants: {
       variant: {
         primary:
-          "focus:ring-offset-1 border-primary-700 bg-primary hover:bg-primary-500 disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm",
+          "focus:ring-offset-1 border-primary bg-primary hover:bg-primary-500 disabled:bg-gray-400 disabled:border-transparent text-primary-foreground shadow-sm",
         destructive:
           "focus:ring-offset-1 bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
         default:
@@ -29,8 +29,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-9 pl-2.5 pr-3 gap-x-2 text-sm rounded-md",
-        sm: "h-7 text-sm px-1.5 gap-x-1.5 rounded-md",
-        lg: "h-12 text-base gap-x-3 px-4 rounded-md",
+        sm: "h-8 text-sm px-2 gap-x-1.5 rounded-md",
+        lg: "h-12 text-base gap-x-3 px-4 rounded-lg",
       },
     },
     defaultVariants: {

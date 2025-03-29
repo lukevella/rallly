@@ -7,9 +7,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
 import { Analytics } from "@vercel/analytics/react";
 import { MenuIcon } from "lucide-react";
 import { domAnimation, LazyMotion } from "motion/react";
@@ -59,7 +61,7 @@ export default async function Root({
                       alt="rallly.co"
                     />
                   </Link>
-                  <nav className="hidden items-center space-x-8 lg:flex">
+                  <nav className="hidden items-center gap-2 lg:flex">
                     <NavLink href="https://support.rallly.co/workflow/create">
                       <Trans
                         t={t}
@@ -79,32 +81,34 @@ export default async function Root({
                   </nav>
                 </div>
                 <div className="flex items-center gap-4 sm:gap-8">
-                  <Link
-                    href={linkToApp("/login")}
-                    className="hover:text-primary text-muted-foreground hidden rounded text-sm font-medium hover:no-underline hover:underline-offset-2 lg:inline-flex"
-                  >
-                    <Trans t={t} i18nKey="login" defaults="Login" />
-                  </Link>
-                  <Button
-                    asChild
-                    variant="primary"
-                    className="rounded-full px-3"
-                  >
-                    <Link href={linkToApp("/register")}>
-                      <Trans t={t} i18nKey="signUp" defaults="Sign up" />
-                    </Link>
-                  </Button>
+                  <div className="hidden items-center gap-2 sm:flex">
+                    <Button variant="ghost" asChild>
+                      <Link href={linkToApp("/login")}>
+                        <Trans t={t} i18nKey="login" defaults="Login" />
+                      </Link>
+                    </Button>
+                    <Button asChild variant="primary">
+                      <Link href={linkToApp("/register")}>
+                        <Trans t={t} i18nKey="signUp" defaults="Sign up" />
+                      </Link>
+                    </Button>
+                  </div>
                   <div className="flex items-center justify-center lg:hidden">
                     <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <MenuIcon className="size-6" />
+                      <DropdownMenuTrigger asChild>
+                        <Button size="sm" variant="ghost">
+                          <Icon>
+                            <MenuIcon />
+                          </Icon>
+                        </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" sideOffset={16}>
+                      <DropdownMenuContent
+                        className="w-48"
+                        align="end"
+                        sideOffset={16}
+                      >
                         <DropdownMenuItem asChild>
-                          <Link
-                            className="flex items-center gap-3 p-2 text-lg"
-                            href="https://support.rallly.co/workflow/create"
-                          >
+                          <Link href="https://support.rallly.co/workflow/create">
                             <Trans
                               t={t}
                               i18nKey="howItWorks"
@@ -113,38 +117,41 @@ export default async function Root({
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link
-                            className="flex items-center gap-3 p-2 text-lg"
-                            href="/pricing"
-                          >
+                          <Link href="/pricing">
                             <Trans t={t} i18nKey="pricing" defaults="Pricing" />
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link
-                            className="flex items-center gap-3 p-2 text-lg"
-                            href="/blog"
-                          >
+                          <Link href="/blog">
                             <Trans t={t} i18nKey="blog" />
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link
-                            className="flex items-center gap-3 p-2 text-lg"
-                            href="https://support.rallly.co"
-                          >
+                          <Link href="https://support.rallly.co">
                             <Trans t={t} i18nKey="support" />
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                          <Link
-                            className="flex items-center gap-3 p-2 text-lg"
-                            href={linkToApp("/login")}
+                        <DropdownMenuLabel className="space-y-2">
+                          <Button
+                            variant="secondary"
+                            className="w-full"
+                            asChild
                           >
-                            <Trans t={t} i18nKey="login" defaults="Login" />
-                          </Link>
-                        </DropdownMenuItem>
+                            <Link href={linkToApp("/login")}>
+                              <Trans t={t} i18nKey="login" defaults="Login" />
+                            </Link>
+                          </Button>
+                          <Button variant="primary" className="w-full" asChild>
+                            <Link href={linkToApp("/register")}>
+                              <Trans
+                                t={t}
+                                i18nKey="signUp"
+                                defaults="Sign up"
+                              />
+                            </Link>
+                          </Button>
+                        </DropdownMenuLabel>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
