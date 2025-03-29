@@ -290,7 +290,6 @@
   "subscriptionStatusCanceled": "Storniert",
   "subscriptionStatusUnpaid": "Ausstehend",
   "subscriptionStatusUnknown": "Unbekannt",
-  "paymentMethodUnknown": "Unbekannt",
   "subscriptionCancelOn": "Storniert {date}",
   "subscriptionStatusPaused": "Pausiert",
   "subscriptionStatusIncomplete": "Unvollständig",
