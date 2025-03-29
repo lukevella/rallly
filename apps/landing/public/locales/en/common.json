@@ -15,7 +15,6 @@
   "notFoundTitle": "404 not found",
   "notFoundDescription": "We couldn't find the page you're looking for.",
   "goToHome": "Go to home",
-  "goToApp": "Go to app",
   "pricing": "Pricing",
   "bestDoodleAlternative": "Best Doodle Alternative",
   "freeSchedulingPoll": "Free Scheduling Poll",
@@ -25,5 +24,6 @@
   "howItWorks": "How it Works",
   "status": "Status",
   "when2MeetAlternative": "When2Meet Alternative",
-  "meetingPoll": "Meeting Poll"
+  "meetingPoll": "Meeting Poll",
+  "signUp": "Sign Up"
 }

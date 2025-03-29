@@ -111,7 +111,7 @@ export const MarketingHero = ({
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
           <Button
             size="lg"
-            className="group rounded-full hover:shadow-md active:shadow-sm"
+            className="group rounded-full px-5 hover:shadow-md active:shadow-sm"
             variant="primary"
             asChild
           >
@@ -122,7 +122,7 @@ export const MarketingHero = ({
           </Button>
           <p
             className={cn(
-              "whitespace-nowrap text-center text-sm text-gray-600",
+              "whitespace-nowrap text-center text-xs text-gray-600",
               handwritten.className,
               "decoration underline decoration-gray-300 decoration-2 underline-offset-8",
               "skew-x-[-10deg]",

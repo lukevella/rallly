@@ -290,7 +290,6 @@
   "subscriptionStatusCanceled": "Canceled",
   "subscriptionStatusUnpaid": "Unpaid",
   "subscriptionStatusUnknown": "Unknown",
-  "paymentMethodUnknown": "Unknown",
   "subscriptionCancelOn": "Cancels {date}",
   "subscriptionStatusPaused": "Paused",
   "subscriptionStatusIncomplete": "Incomplete",
