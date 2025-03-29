@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Analytics } from "@vercel/analytics/react";
-import { ChevronRightIcon, MenuIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Viewport } from "next";
 import Image from "next/image";
