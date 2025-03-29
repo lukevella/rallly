@@ -1,6 +1,6 @@
 "use client";
-import * as m from "motion/react-m";
 import { ArrowUpRight } from "lucide-react";
+import * as m from "motion/react-m";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

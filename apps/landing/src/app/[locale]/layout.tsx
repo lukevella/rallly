@@ -9,10 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { LazyMotion, domAnimation } from "motion/react";
-
 import { Analytics } from "@vercel/analytics/react";
 import { ChevronRightIcon, MenuIcon } from "lucide-react";
+import { domAnimation, LazyMotion } from "motion/react";
 import type { Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";

@@ -2,8 +2,8 @@
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import * as m from "motion/react-m";
 import { ChevronRightIcon } from "lucide-react";
+import * as m from "motion/react-m";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
