@@ -2,7 +2,7 @@
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { motion } from "framer-motion";
+import * as m from "motion/react-m";
 import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,7 +17,7 @@ const Screenshot = () => {
 
   return (
     <>
-      <motion.div
+      <m.div
         transition={{
           delay: 0.5,
           type: "spring",
@@ -42,8 +42,8 @@ const Screenshot = () => {
         <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
         <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
         <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         transition={{
           type: "spring",
           duration: 1,
@@ -67,7 +67,7 @@ const Screenshot = () => {
             setIsLoaded(true);
           }}
         />
-      </motion.div>
+      </m.div>
     </>
   );
 };

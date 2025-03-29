@@ -9,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";

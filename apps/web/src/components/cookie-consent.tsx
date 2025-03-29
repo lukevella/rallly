@@ -1,4 +1,5 @@
-import { AnimatePresence, m } from "framer-motion";
+import * as m from "motion/react-m";
+import { AnimatePresence } from "motion/react";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import * as React from "react";
