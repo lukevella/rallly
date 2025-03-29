@@ -290,7 +290,6 @@
   "subscriptionStatusCanceled": "Geannuleerd",
   "subscriptionStatusUnpaid": "Onbetaald",
   "subscriptionStatusUnknown": "Onbekend",
-  "paymentMethodUnknown": "Onbekend",
   "subscriptionCancelOn": "Verloopt op {date}",
   "subscriptionStatusPaused": "Gepauzeerd",
   "subscriptionStatusIncomplete": "Incompleet",
