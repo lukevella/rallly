@@ -290,7 +290,6 @@
   "subscriptionStatusCanceled": "Lemondva",
   "subscriptionStatusUnpaid": "Nincs fizetve",
   "subscriptionStatusUnknown": "Ismeretlen",
-  "paymentMethodUnknown": "Ismeretlen",
   "subscriptionCancelOn": "Lemondásra kerül ekkor: {date}",
   "subscriptionStatusPaused": "Szüneteltetve",
   "subscriptionStatusIncomplete": "Befejezetlen",
