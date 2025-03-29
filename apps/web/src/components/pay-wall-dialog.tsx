@@ -5,8 +5,8 @@ import { Badge } from "@rallly/ui/badge";
 import type { DialogProps } from "@rallly/ui/dialog";
 import { Dialog, DialogContent, useDialog } from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
-import { m } from "framer-motion";
 import { CheckIcon } from "lucide-react";
+import * as m from "motion/react-m";
 import Link from "next/link";
 import React from "react";
 

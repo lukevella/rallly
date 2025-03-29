@@ -68,6 +68,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.387.0",
     "micro": "^10.0.1",
+    "motion": "^12.6.2",
     "nanoid": "^5.0.9",
     "next-auth": "^5.0.0-beta.25",
     "php-serialize": "^4.1.1",

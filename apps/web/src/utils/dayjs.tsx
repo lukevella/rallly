@@ -1,3 +1,5 @@
+"use client";
+
 import type { TimeFormat } from "@rallly/database";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";

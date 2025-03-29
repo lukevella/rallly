@@ -1,6 +1,7 @@
 import { cn } from "@rallly/ui";
-import { AnimatePresence, m } from "framer-motion";
 import { User2Icon } from "lucide-react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import * as React from "react";
 import { usePrevious } from "react-use";
 

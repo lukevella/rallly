@@ -1,6 +1,6 @@
 "use client";
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import * as m from "motion/react-m";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -157,7 +157,7 @@ const Mention = ({
   delay?: number;
 }>) => {
   return (
-    <motion.div
+    <m.div
       transition={{
         delay,
         type: "spring",
@@ -170,7 +170,7 @@ const Mention = ({
     >
       <div className="flex items-start justify-between">{logo}</div>
       <p className="grow text-center text-base">{children}</p>
-    </motion.div>
+    </m.div>
   );
 };
 
@@ -257,7 +257,7 @@ export const MentionedBy = () => {
 
 export const BigTestimonial = () => {
   return (
-    <motion.div
+    <m.div
       transition={{
         duration: 1,
         type: "spring",
@@ -310,7 +310,7 @@ export const BigTestimonial = () => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 

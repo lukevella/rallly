@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@rallly/ui";
-import { motion } from "framer-motion";
+import * as m from "motion/react-m";
 
 export const BonusItem = ({
   className,
@@ -13,7 +13,7 @@ export const BonusItem = ({
   icon: React.ReactNode;
 }>) => {
   return (
-    <motion.div
+    <m.div
       transition={{
         delay,
         type: "spring",
@@ -32,6 +32,6 @@ export const BonusItem = ({
         </span>
         <div className="text-sm font-semibold">{children}</div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
