@@ -56,7 +56,10 @@ export function OTPForm({ token }: { token: string }) {
     });
 
     if (!res.user) {
-      throw new Error("Failed to authenticate user");
+      form.setError("otp", {
+        message: t("wrongVerificationCode"),
+      });
+      return;
     }
 
     queryClient.invalidate();
