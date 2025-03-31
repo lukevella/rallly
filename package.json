@@ -58,6 +58,5 @@
   "engines": {
     "node": "20.x"
   },
-  "packageManager": "yarn@1.22.22",
-  "dependencies": {}
+  "packageManager": "yarn@1.22.22"
 }
