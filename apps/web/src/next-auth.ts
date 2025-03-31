@@ -9,7 +9,6 @@ import z from "zod";
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
-import { getLegacySession } from "./auth/legacy/next-auth-cookie-migration";
 import { EmailProvider } from "./auth/providers/email";
 import { GoogleProvider } from "./auth/providers/google";
 import { GuestProvider } from "./auth/providers/guest";
@@ -202,12 +201,6 @@ const auth = cache(async () => {
     }
   } catch (e) {
     console.error("FAILED TO GET SESSION", e);
-  }
-
-  try {
-    return await getLegacySession();
-  } catch (e) {
-    console.error("FAILED TO GET LEGACY SESSION", e);
   }
 });
 
