@@ -5,6 +5,8 @@ import { XIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
+import { Button } from "./button";
+import { Icon } from "./icon";
 
 export type { DialogProps } from "@radix-ui/react-dialog";
 
@@ -59,12 +61,14 @@ const DialogContent = React.forwardRef<
     >
       {children}
       {!hideCloseButton ? (
-        <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none">
-          <>
-            <XIcon className="size-4" />
+        <DialogClose asChild className="absolute right-4 top-4">
+          <Button size="icon" variant="ghost">
+            <Icon>
+              <XIcon />
+            </Icon>
             <span className="sr-only">Close</span>
-          </>
-        </DialogPrimitive.Close>
+          </Button>
+        </DialogClose>
       ) : null}
     </DialogPrimitive.Content>
   </DialogPortal>
