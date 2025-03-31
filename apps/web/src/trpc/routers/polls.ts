@@ -365,22 +365,6 @@ export const polls = router({
         data: { deleted: true, deletedAt: new Date() },
       });
     }),
-  touch: publicProcedure
-    .input(
-      z.object({
-        pollId: z.string(),
-      }),
-    )
-    .mutation(async ({ input: { pollId } }) => {
-      await prisma.poll.update({
-        where: {
-          id: pollId,
-        },
-        data: {
-          touchedAt: new Date(),
-        },
-      });
-    }),
   // END LEGACY ROUTES
   getWatchers: publicProcedure
     .input(
