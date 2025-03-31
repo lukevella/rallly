@@ -108,7 +108,7 @@ export function Sidebar() {
               <li>
                 <PayWallDialog>
                   <DialogTrigger
-                    className="relative mb-4 flex w-full items-center gap-4 overflow-hidden rounded-md border bg-gray-50/50 px-4 py-3 text-left shadow-sm ring-gray-200 transition-transform hover:bg-gray-50 focus:border-gray-300 active:translate-y-1 active:shadow-sm"
+                    className="hover:animate-wiggle relative mb-4 flex w-full items-center gap-4 overflow-hidden rounded-md border bg-gray-50/50 px-4 py-3 text-left ring-gray-200 transition-transform hover:bg-gray-50 focus-visible:border-gray-300"
                     onClick={() =>
                       posthog?.capture("trigger paywall", { from: "sidebar" })
                     }
@@ -122,7 +122,7 @@ export function Sidebar() {
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm font-bold">
+                      <div className="mb-0.5 text-sm font-bold">
                         <Trans i18nKey="upgrade" />
                       </div>
                       <div className="text-sm leading-relaxed text-gray-500">

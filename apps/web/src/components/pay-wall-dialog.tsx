@@ -5,7 +5,7 @@ import { Badge } from "@rallly/ui/badge";
 import type { DialogProps } from "@rallly/ui/dialog";
 import { Dialog, DialogContent, useDialog } from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, SparklesIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Link from "next/link";
 import React from "react";
@@ -32,25 +32,30 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
   return (
     <Dialog {...dialog.dialogProps} {...forwardedProps}>
       {children}
-      <DialogContent className="w-[600px] p-4 sm:p-6">
+      <DialogContent className="w-[600px] overflow-hidden bg-gray-50 p-4 sm:p-6">
+        <SparklesIcon className="absolute -top-4 left-4 size-32 text-gray-500/10" />
         <div className="space-y-6">
           <header>
-            <m.div
-              transition={{
-                delay: 0.2,
-                duration: 0.4,
-                type: "spring",
-                bounce: 0.5,
-              }}
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center"
-              aria-hidden="true"
-            >
-              <Badge size="lg" variant="primary">
-                <Trans i18nKey="planPro" />
-              </Badge>
-            </m.div>
+            <div className="flex justify-center">
+              <div className="inline-flex size-14 items-center justify-center">
+                <m.div
+                  transition={{
+                    delay: 0.2,
+                    duration: 0.4,
+                    type: "spring",
+                    bounce: 0.5,
+                  }}
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center"
+                  aria-hidden="true"
+                >
+                  <Badge size="lg" variant="primary">
+                    <Trans i18nKey="planPro" />
+                  </Badge>
+                </m.div>
+              </div>
+            </div>
             <h1 className="mb-2 mt-4 text-center text-xl font-bold">
               <Trans defaults="Upgrade to Pro" i18nKey="upgradePromptTitle" />
             </h1>
