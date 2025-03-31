@@ -27,7 +27,7 @@ const monthlyPriceAnnualRate = (pricingData.yearly.amount / 100 / 12).toFixed(
 
 export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
   const dialog = useDialog();
-  const [period, setPeriod] = React.useState("yearly");
+  const [period, setPeriod] = React.useState("monthly");
 
   return (
     <Dialog {...dialog.dialogProps} {...forwardedProps}>
@@ -91,6 +91,19 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
           <section>
             <RadioGroup value={period} onValueChange={setPeriod}>
               <li className="focus-within:ring-primary relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:ring-2">
+                <div className="flex items-center gap-4">
+                  <RadioGroupItem id="monthly" value="monthly" />
+                  <label className="text-base font-semibold" htmlFor="monthly">
+                    <span role="presentation" className="absolute inset-0" />
+                    <Trans defaults="1 month" i18nKey="1month" />
+                  </label>
+                </div>
+                <p className="flex items-baseline gap-1">
+                  <span className="text-xl font-semibold">${monthlyPrice}</span>
+                  <span className="text-muted-foreground text-sm">/ mo</span>
+                </p>
+              </li>
+              <li className="focus-within:ring-primary relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:ring-2">
                 <div className="space-y-1">
                   <div className="flex items-center gap-4">
                     <RadioGroupItem id="yearly" value="yearly" />
@@ -106,7 +119,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                       />
                     </Badge>
                   </div>
-                  <p className="text-muted-foreground flex items-baseline gap-1.5 pl-8 text-sm">
+                  <p className="text-muted-foreground pointer-events-none flex items-baseline gap-1.5 pl-8 text-sm">
                     <span>${yearlyPrice}</span>
                     <span className="line-through opacity-50">
                       ${((pricingData.monthly.amount * 12) / 100).toFixed(2)}
@@ -117,19 +130,6 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                   <span className="text-xl font-semibold">
                     ${monthlyPriceAnnualRate}
                   </span>
-                  <span className="text-muted-foreground text-sm">/ mo</span>
-                </p>
-              </li>
-              <li className="focus-within:ring-primary relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:ring-2">
-                <div className="flex items-center gap-4">
-                  <RadioGroupItem id="monthly" value="monthly" />
-                  <label className="text-base font-semibold" htmlFor="monthly">
-                    <span role="presentation" className="absolute inset-0" />
-                    <Trans defaults="1 month" i18nKey="1month" />
-                  </label>
-                </div>
-                <p className="flex items-baseline gap-1">
-                  <span className="text-xl font-semibold">${monthlyPrice}</span>
                   <span className="text-muted-foreground text-sm">/ mo</span>
                 </p>
               </li>
