@@ -4,7 +4,6 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { GoogleProvider } from "@/auth/providers/google";
 import { MicrosoftProvider } from "@/auth/providers/microsoft";
 import { OIDCProvider } from "@/auth/providers/oidc";
-import { Logo } from "@/components/logo";
 import { getTranslation } from "@/i18n/server";
 
 import {

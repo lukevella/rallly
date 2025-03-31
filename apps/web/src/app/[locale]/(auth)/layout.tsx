@@ -1,7 +1,6 @@
 import { cn } from "@rallly/ui";
 import { DotPattern } from "@rallly/ui/dot-pattern";
 
-import { Logo } from "@/components/logo";
 import {
   isQuickCreateEnabled,
   QuickCreateButton,
