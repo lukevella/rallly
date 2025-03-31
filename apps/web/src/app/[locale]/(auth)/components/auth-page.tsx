@@ -1,5 +1,14 @@
+import { Logo } from "@/components/logo";
+
 export function AuthPageContainer({ children }: { children: React.ReactNode }) {
-  return <div className="space-y-8 lg:space-y-10">{children}</div>;
+  return (
+    <div className="space-y-8 lg:space-y-10">
+      <div className="mb-12">
+        <Logo className="mx-auto" />
+      </div>
+      {children}
+    </div>
+  );
 }
 
 export function AuthPageHeader({ children }: { children: React.ReactNode }) {

@@ -1,7 +1,6 @@
 import { cn } from "@rallly/ui";
 import { DotPattern } from "@rallly/ui/dot-pattern";
 
-import { Logo } from "@/components/logo";
 import {
   isQuickCreateEnabled,
   QuickCreateButton,
@@ -14,14 +13,11 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex h-dvh flex-col items-center justify-center bg-gray-100 p-2 lg:p-4">
-      <div className="z-10 flex w-full max-w-7xl flex-1 rounded-xl border bg-white shadow-sm lg:max-h-[720px] lg:p-2">
-        <div className="flex flex-1 flex-col gap-4 p-6 lg:p-16">
-          <div className="py-8">
-            <Logo className="mx-auto" />
-          </div>
-          <div className="flex h-full w-full flex-1 flex-col items-center justify-center">
-            <div className="w-full max-w-sm">{children}</div>
+    <div className="relative flex h-dvh flex-col items-center justify-center bg-gray-100">
+      <div className="z-10 flex w-full flex-1 bg-white lg:p-4">
+        <div className="flex flex-1 flex-col gap-4 p-6">
+          <div className="my-auto">
+            <div className="mx-auto w-full max-w-sm">{children}</div>
           </div>
           {isQuickCreateEnabled ? (
             <div className="flex justify-center lg:hidden">
