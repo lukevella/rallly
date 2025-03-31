@@ -4,9 +4,9 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "./lib/utils";
 import { Button } from "./button";
 import { Icon } from "./icon";
+import { cn } from "./lib/utils";
 
 export type { DialogProps } from "@radix-ui/react-dialog";
 
