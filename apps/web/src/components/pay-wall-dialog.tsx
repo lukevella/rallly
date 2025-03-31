@@ -95,7 +95,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
           </header>
           <section>
             <RadioGroup value={period} onValueChange={setPeriod}>
-              <li className="focus-within:ring-primary relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:ring-2">
+              <li className="relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:bg-gray-100 focus-within:ring-gray-300 hover:bg-gray-100">
                 <div className="flex items-center gap-4">
                   <RadioGroupItem id="monthly" value="monthly" />
                   <label className="text-base font-semibold" htmlFor="monthly">
@@ -108,21 +108,29 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                   <span className="text-muted-foreground text-sm">/ mo</span>
                 </p>
               </li>
-              <li className="focus-within:ring-primary relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:ring-2">
+              <li className="relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:bg-gray-100 focus-within:ring-gray-300 hover:bg-gray-100">
                 <div className="space-y-1">
                   <div className="flex items-center gap-4">
                     <RadioGroupItem id="yearly" value="yearly" />
-                    <label className="text-base font-semibold" htmlFor="yearly">
-                      <span role="presentation" className="absolute inset-0" />
-                      <Trans defaults="12 months" i18nKey="12months" />
-                    </label>
-                    <Badge variant="green">
-                      <Trans
-                        defaults="Save {percentage}%"
-                        i18nKey="savePercentage"
-                        values={{ percentage: annualSavingsPercentage }}
-                      />
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <label
+                        className="text-base font-semibold"
+                        htmlFor="yearly"
+                      >
+                        <span
+                          role="presentation"
+                          className="absolute inset-0"
+                        />
+                        <Trans defaults="12 months" i18nKey="12months" />
+                      </label>
+                      <Badge variant="secondary">
+                        <Trans
+                          defaults="Save {percentage}%"
+                          i18nKey="savePercentage"
+                          values={{ percentage: annualSavingsPercentage }}
+                        />
+                      </Badge>
+                    </div>
                   </div>
                   <p className="text-muted-foreground pointer-events-none flex items-baseline gap-1.5 pl-8 text-sm">
                     <span>${yearlyPrice}</span>

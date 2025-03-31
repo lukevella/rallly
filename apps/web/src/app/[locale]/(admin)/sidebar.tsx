@@ -108,14 +108,14 @@ export function Sidebar() {
               <li>
                 <PayWallDialog>
                   <DialogTrigger
-                    className="hover:animate-wiggle relative mb-4 flex w-full items-center gap-4 overflow-hidden rounded-md border bg-gray-50/50 px-4 py-3 text-left ring-gray-200 transition-transform hover:bg-gray-50 focus-visible:border-gray-300"
+                    className="relative mb-4 flex w-full items-center gap-4 overflow-hidden rounded-md border bg-gray-200/50 px-4 py-3 text-left ring-gray-200 hover:bg-gray-200 focus-visible:border-gray-300"
                     onClick={() =>
                       posthog?.capture("trigger paywall", { from: "sidebar" })
                     }
                   >
-                    <SparklesIcon className="absolute -left-2 -top-2 size-20 text-gray-500/10" />
+                    <SparklesIcon className="pointer-events-none absolute -left-2 -top-2 size-20 text-gray-500/10" />
                     <div>
-                      <div className="inline-flex size-12 items-center justify-center rounded-md">
+                      <div className="inline-flex size-12 items-center justify-center rounded-md duration-500">
                         <Badge variant="primary">
                           <Trans i18nKey="planPro" />
                         </Badge>
