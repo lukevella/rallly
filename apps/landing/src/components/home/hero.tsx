@@ -88,9 +88,9 @@ export const MarketingHero = ({
           <Link
             locale="en"
             href="/blog/introducing-quick-create"
-            className="hover:ring-primary relative inline-flex items-center gap-x-3 rounded-full border bg-gray-100 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
+            className="group relative inline-flex items-center gap-x-2 rounded-full border bg-gray-50 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-white"
           >
-            <Badge variant="green">
+            <Badge variant="secondary">
               <Trans ns="home" i18nKey="new" defaults="New" />
             </Badge>
             <span className="flex items-center gap-x-1">
@@ -98,7 +98,10 @@ export const MarketingHero = ({
                 i18nKey="home:quickCreateBlog"
                 defaults="Introducing Quick Create"
               />
-              <ChevronRightIcon className="-mr-1 size-4" aria-hidden="true" />
+              <ChevronRightIcon
+                className="-mr-1 size-4 transition-transform group-active:translate-x-0.5"
+                aria-hidden="true"
+              />
             </span>
           </Link>
         </div>
@@ -122,7 +125,6 @@ export const MarketingHero = ({
               "whitespace-nowrap text-center text-xs text-gray-600",
               handwritten.className,
               "decoration underline decoration-gray-300 decoration-2 underline-offset-8",
-              "skew-x-[-10deg]",
             )}
           >
             <Trans

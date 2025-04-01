@@ -3,7 +3,13 @@
 import { pricingData } from "@rallly/billing/pricing";
 import { Badge } from "@rallly/ui/badge";
 import type { DialogProps } from "@rallly/ui/dialog";
-import { Dialog, DialogContent, useDialog } from "@rallly/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  useDialog,
+} from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { CheckIcon, SparklesIcon } from "lucide-react";
 import * as m from "motion/react-m";
@@ -56,16 +62,18 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                 </m.div>
               </div>
             </div>
-            <h1 className="mb-2 mt-4 text-center text-xl font-bold">
+            <DialogTitle className="mb-1 mt-2 text-center text-xl font-bold">
               <Trans defaults="Upgrade to Pro" i18nKey="upgradePromptTitle" />
-            </h1>
-            <p className="text-muted-foreground mb-4 text-center text-sm leading-relaxed">
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground mb-4 text-center text-sm leading-relaxed">
               <Trans
                 i18nKey="upgradeOverlaySubtitle3"
                 defaults="Unlock these feature by upgrading to a Pro plan."
               />
-            </p>
-            <ul className="grid grid-cols-2 justify-center gap-2 text-center text-sm font-medium">
+            </DialogDescription>
+          </header>
+          <section>
+            <ul className="grid grid-cols-2 justify-center gap-2 text-sm font-medium">
               <li>
                 <CheckIcon className="mr-2 inline-block size-4 text-green-600" />
                 <Trans i18nKey="featureNameFinalize" defaults="Finalize Poll" />
@@ -92,7 +100,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                 />
               </li>
             </ul>
-          </header>
+          </section>
           <section>
             <RadioGroup value={period} onValueChange={setPeriod}>
               <li className="relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:bg-gray-100 focus-within:ring-gray-300 hover:bg-gray-100">
