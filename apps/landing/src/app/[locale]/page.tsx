@@ -9,11 +9,12 @@ export default async function Page({ params }: { params: { locale: string } }) {
     <Marketing>
       <MarketingHero
         title={t("headline", {
-          defaultValue: "Ditch the back-and-forth emails",
+          defaultValue: "Find the best time to meet",
           ns: "home",
         })}
         description={t("subheading", {
-          defaultValue: "Streamline your scheduling process and save time",
+          defaultValue:
+            "Coordinate group meetings without the back-and-forth emails",
           ns: "home",
         })}
         callToAction={t("createAPoll", {
