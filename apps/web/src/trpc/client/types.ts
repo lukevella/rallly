@@ -17,7 +17,6 @@ export type GetPollApiResponse = {
   adminUrlId: string;
   status: PollStatus;
   participantUrlId: string;
-  closed: boolean;
   createdAt: Date;
   deleted: boolean;
 };

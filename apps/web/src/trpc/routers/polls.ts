@@ -265,7 +265,6 @@ export const polls = router({
         description: z.string().optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
-        closed: z.boolean().optional(),
         hideParticipants: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         hideScores: z.boolean().optional(),
@@ -344,7 +343,6 @@ export const polls = router({
           location: input.location,
           description: input.description,
           timeZone: input.timeZone,
-          closed: input.closed,
           hideScores: input.hideScores,
           hideParticipants: input.hideParticipants,
           disableComments: input.disableComments,
@@ -431,7 +429,6 @@ export const polls = router({
           createdAt: true,
           adminUrlId: true,
           participantUrlId: true,
-          closed: true,
           status: true,
           hideParticipants: true,
           disableComments: true,
@@ -770,7 +767,6 @@ export const polls = router({
               delete: true,
             },
             status: "live",
-            closed: false, // @deprecated
           },
         }),
       ]);
@@ -787,7 +783,6 @@ export const polls = router({
           id: input.pollId,
         },
         data: {
-          closed: true, // TODO (Luke Vella) [2023-12-05]:  Remove this
           status: "paused",
         },
       });
@@ -865,7 +860,6 @@ export const polls = router({
           id: input.pollId,
         },
         data: {
-          closed: false,
           status: "live",
         },
       });
