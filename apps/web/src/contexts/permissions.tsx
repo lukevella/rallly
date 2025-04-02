@@ -29,7 +29,7 @@ export const usePermissions = () => {
   const { user, ownsObject } = useUser();
   const role = useRole();
   const { participants } = useParticipants();
-  const isClosed = poll.closed === true || poll.event !== null;
+  const isClosed = poll.event !== null;
   return {
     isUser: (userId: string) => userId === user.id || userId === context.userId,
     canAddNewParticipant: !isClosed,

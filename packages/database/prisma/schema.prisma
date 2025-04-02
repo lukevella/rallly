@@ -148,7 +148,6 @@ model Poll {
   userId                  String?    @map("user_id")
   guestId                 String?    @map("guest_id")
   timeZone                String?    @map("time_zone")
-  closed                  Boolean    @default(false) // @deprecated
   status                  PollStatus @default(live)
   deleted                 Boolean    @default(false)
   deletedAt               DateTime?  @map("deleted_at")
