@@ -14,7 +14,7 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
-    "@radix-ui/react-radio-group": "^1.2.0",
+    "@radix-ui/react-radio-group": "^1.2.3",
     "@rallly/ui": "*",
     "next": "*",
     "stripe": "^13.2.0"
