@@ -261,7 +261,7 @@ export default async function Page() {
             </EmptyStateDescription>
             <EmptyStateFooter>
               <PayWallDialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                   <Button>
                     <Icon>
                       <SparklesIcon />
