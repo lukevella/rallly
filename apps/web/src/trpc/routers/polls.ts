@@ -757,19 +757,24 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input }) => {
-      await prisma.$transaction([
-        prisma.poll.update({
+      await prisma.$transaction(async () => {
+        const poll = await prisma.poll.update({
           where: {
             id: input.pollId,
           },
           data: {
-            event: {
-              delete: true,
-            },
             status: "live",
           },
-        }),
-      ]);
+        });
+
+        if (poll.eventId) {
+          await prisma.event.delete({
+            where: {
+              id: poll.eventId,
+            },
+          });
+        }
+      });
     }),
   pause: possiblyPublicProcedure
     .input(
