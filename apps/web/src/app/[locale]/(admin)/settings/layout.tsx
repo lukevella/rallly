@@ -8,7 +8,7 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/i18n/server";
 
-import { SettingsMenu } from "./settings-menu";
+import { SettingsLayout } from "./settings-menu";
 
 export default async function ProfileLayout({
   children,
@@ -22,11 +22,8 @@ export default async function ProfileLayout({
       <PageHeader>
         <PageTitle>{t("settings")}</PageTitle>
       </PageHeader>
-      <PageContent className="space-y-3 sm:space-y-4">
-        <div className="scrollbar-none -mx-3 overflow-auto bg-gray-100 px-3 sm:mx-0 sm:px-0">
-          <SettingsMenu />
-        </div>
-        <div>{children}</div>
+      <PageContent>
+        <SettingsLayout>{children}</SettingsLayout>
       </PageContent>
     </PageContainer>
   );

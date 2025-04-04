@@ -32,7 +32,7 @@ import { PayWallDialog } from "@/components/pay-wall-dialog";
 import {
   SettingsContent,
   SettingsSection,
-} from "@/components/settings/settings";
+} from "@/app/[locale]/(admin)/settings/components/settings-layout";
 import { Trans } from "@/components/trans";
 import { requireUser } from "@/next-auth";
 import { isSelfHosted } from "@/utils/constants";
