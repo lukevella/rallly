@@ -52,6 +52,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   const form = useFormContext<NewEventData>();
 
+  const [preservedTimeZone, setPreservedTimeZone] = React.useState<string | null>(null);
+
   const optionsByDay = React.useMemo(() => {
     const res: Record<
       string,
@@ -224,7 +226,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 checked={isTimedEvent}
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    form.setValue("timeZone", getBrowserTimeZone());
+                    form.setValue("timeZone", preservedTimeZone ?? form.getValues("timeZone") ?? getBrowserTimeZone());
                     // convert dates to time slots
                     onChange(
                       options.map<DateTimeOption>((option) => {
@@ -246,6 +248,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       }),
                     );
                   } else {
+                    const currentTimeZone = form.getValues("timeZone");
+                    if (currentTimeZone) setPreservedTimeZone(currentTimeZone);
                     form.setValue("timeZone", "");
                     onChange(
                       datepicker.selection.map((date) => ({
