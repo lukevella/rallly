@@ -2,6 +2,7 @@
 import { Badge } from "@rallly/ui/badge";
 import React from "react";
 
+import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
 import { isSelfHosted } from "@/utils/constants";
@@ -44,11 +45,7 @@ export const Plan = () => {
   const plan = usePlan();
 
   if (plan === "paid") {
-    return (
-      <Badge variant="primary">
-        <Trans i18nKey="planPro" defaults="Pro" />
-      </Badge>
-    );
+    return <ProBadge />;
   }
 
   return (

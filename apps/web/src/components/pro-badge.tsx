@@ -4,7 +4,7 @@ import { Trans } from "@/components/trans";
 
 export const ProBadge = ({ className }: { className?: string }) => {
   return (
-    <Badge variant="primary" className={className}>
+    <Badge variant="secondary" className={className}>
       <Trans i18nKey="planPro" />
     </Badge>
   );
