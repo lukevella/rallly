@@ -1,53 +1,157 @@
-import { BarChart2Icon } from "lucide-react";
+import type { PollStatus, Prisma } from "@rallly/database";
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
+import { z } from "zod";
 
-import { UserPolls } from "@/app/[locale]/(admin)/polls/user-polls";
-import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
+import { Trans } from "@/components/trans";
+import { getPollCountByStatus } from "@/data/get-poll-count-by-status";
+import { getPolls } from "@/data/get-polls";
+import { PollSelectionProvider } from "@/features/poll-selection/context";
 import { getTranslation } from "@/i18n/server";
+import { requireUser } from "@/next-auth";
 
-export default async function Page({
-  params,
+import { PollsTabbedView } from "./poll-folders";
+import { PollsTable } from "./polls-table";
+import { SearchInput } from "./search-input";
+
+const pageSchema = z
+  .string()
+  .nullish()
+  .transform((val) => {
+    if (!val) return 1;
+    const parsed = parseInt(val, 10);
+    return isNaN(parsed) || parsed < 1 ? 1 : parsed;
+  });
+
+const querySchema = z
+  .string()
+  .nullish()
+  .transform((val) => val?.trim() || undefined);
+
+const statusSchema = z
+  .enum(["live", "paused", "finalized"])
+  .nullish()
+  .transform((val) => val || "live");
+
+const pageSizeSchema = z
+  .string()
+  .nullish()
+  .transform((val) => {
+    if (!val) return 10;
+    const parsed = parseInt(val, 10);
+    return isNaN(parsed) || parsed < 1 ? 10 : Math.min(parsed, 100);
+  });
+
+// Combined schema for type inference
+async function loadData({
+  userId,
+  status = "live",
+  page = 1,
+  pageSize = 10,
+  q,
 }: {
-  params: Params;
-  children?: React.ReactNode;
+  userId: string;
+  status?: PollStatus;
+  page?: number;
+  pageSize?: number;
+  q?: string;
 }) {
-  const { t } = await getTranslation(params.locale);
-  return (
-    <PageContainer>
-      <PageHeader>
-        <div className="flex items-center gap-x-3">
-          <PageIcon>
-            <BarChart2Icon />
-          </PageIcon>
-          <PageTitle>
-            {t("polls", {
-              defaultValue: "Polls",
-            })}
-          </PageTitle>
-        </div>
-      </PageHeader>
-      <PageContent>
-        <UserPolls />
-      </PageContent>
-    </PageContainer>
-  );
+  // Build the where clause based on filters
+  const where: Prisma.PollWhereInput = {
+    userId,
+    status,
+  };
+
+  // Add search filter if provided
+  if (q) {
+    where.title = {
+      contains: q,
+      mode: "insensitive",
+    };
+  }
+
+  // Count total polls for pagination and folder counts
+  const [{ total, data: polls }, statusCounts] = await Promise.all([
+    getPolls({ userId, status, page, pageSize, q }),
+    getPollCountByStatus(userId),
+  ]);
+
+  return {
+    polls,
+    total,
+    statusCounts,
+  };
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
+export async function generateMetadata() {
+  const { t } = await getTranslation();
   return {
     title: t("polls", {
       defaultValue: "Polls",
     }),
   };
+}
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const { userId } = await requireUser();
+
+  const parsedStatus = statusSchema.parse(searchParams.status);
+  const parsedPage = pageSchema.parse(searchParams.page);
+  const parsedPageSize = pageSizeSchema.parse(searchParams.pageSize);
+  const parsedQuery = querySchema.parse(searchParams.q);
+
+  const { polls, total } = await loadData({
+    userId,
+    status: parsedStatus,
+    page: parsedPage,
+    pageSize: parsedPageSize,
+    q: parsedQuery,
+  });
+
+  const totalPages = Math.ceil(total / parsedPageSize);
+
+  return (
+    <PageContainer>
+      <PageHeader className="flex items-start justify-between gap-8">
+        <PageTitle>
+          <Trans i18nKey="polls" defaults="Polls" />
+        </PageTitle>
+        <Button variant="primary" asChild>
+          <Link href="/new">
+            <Icon>
+              <PlusIcon />
+            </Icon>
+            <Trans i18nKey="newPoll" defaults="New Poll" />
+          </Link>
+        </Button>
+      </PageHeader>
+      <PageContent className="space-y-4">
+        <PollsTabbedView>
+          <div className="space-y-4">
+            <SearchInput />
+            <PollSelectionProvider>
+              <PollsTable
+                polls={polls}
+                totalPolls={total}
+                currentPage={parsedPage}
+                totalPages={totalPages}
+              />
+            </PollSelectionProvider>
+          </div>
+        </PollsTabbedView>
+      </PageContent>
+    </PageContainer>
+  );
 }

@@ -11,8 +11,8 @@ import {
 import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
+import { AppSidebar } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar";
+import { AppSidebarProvider } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar-provider";
 import { Trans } from "@/components/trans";
 import { getUser } from "@/data/get-user";
 
@@ -25,7 +25,7 @@ import {
   TopBarLeft,
   TopBarRight,
   TopBarSeparator,
-} from "./top-bar";
+} from "./components/top-bar";
 
 export default async function Layout({
   children,

@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@rallly/ui";
 import {
   Dialog,

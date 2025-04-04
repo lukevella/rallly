@@ -1,12 +1,8 @@
 "use client";
+
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@rallly/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { SparklesIcon } from "lucide-react";
 import { Trans } from "react-i18next";
 
