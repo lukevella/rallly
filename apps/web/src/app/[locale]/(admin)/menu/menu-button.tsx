@@ -2,9 +2,11 @@
 
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { MenuIcon, XIcon } from "lucide-react";
+import { ArrowLeftIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+import { Trans } from "@/components/trans";
 
 export function BackButton() {
   const router = useRouter();
@@ -15,7 +17,10 @@ export function BackButton() {
         router.back();
       }}
     >
-      <XIcon className="text-muted-foreground size-4" />
+      <ArrowLeftIcon className="text-muted-foreground size-4" />
+      <span className="hidden sm:block">
+        <Trans i18nKey="back" defaults="Back" />
+      </span>
     </Button>
   );
 }

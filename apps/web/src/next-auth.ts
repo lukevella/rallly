@@ -221,4 +221,9 @@ export const getUserId = async () => {
   return session?.user?.email ? session.user.id : null;
 };
 
+export const getLoggedIn = async () => {
+  const session = await auth();
+  return !!session?.user?.email;
+};
+
 export { auth, handlers, requireUser, signIn, signOut };

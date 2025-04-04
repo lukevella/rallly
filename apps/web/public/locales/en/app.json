@@ -236,7 +236,6 @@
   "12months": "12 months",
   "savePercentage": "Save {percentage}%",
   "1month": "1 month",
-  "subscribe": "Subscribe",
   "cancelAnytime": "Cancel anytime from your <a>billing page</a>.",
   "unsubscribeToastTitle": "You have disabled notifications",
   "unsubscribeToastDescription": "You will no longer receive notifications for this poll",
@@ -303,5 +302,6 @@
   "addPaymentMethod": "Add Payment Method",
   "needToMakeChanges": "Need to make changes?",
   "billingPortalDescription": "Visit the billing portal to manage your subscription, update payment methods, or view billing history.",
-  "priceFree": "Free"
+  "priceFree": "Free",
+  "signUp": "Sign Up"
 }
