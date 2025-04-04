@@ -1,20 +1,24 @@
-"use client";
-
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  SidebarMenu,
   SidebarRail,
 } from "@rallly/ui/sidebar";
+import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
-import { NavMain } from "./nav-main";
+import { getTranslation } from "@/i18n/server";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+import { NavItem } from "./nav-item";
+
+export async function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  const { t } = await getTranslation();
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
@@ -34,7 +38,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <NavMain />
+          <SidebarMenu>
+            <NavItem href="/" icon={<HomeIcon />} label={t("home")} />
+            <NavItem
+              href="/polls"
+              icon={<BarChart2Icon />}
+              label={t("polls")}
+            />
+            <NavItem
+              href="/events"
+              icon={<CalendarIcon />}
+              label={t("events")}
+            />
+            {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
+            {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}
+            {/* <NavItem href="/team" icon={UsersIcon} label="Team" /> */}
+            {/* <NavItem href="/integrations" icon={PuzzleIcon} label="Integrations" /> */}
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarRail />
