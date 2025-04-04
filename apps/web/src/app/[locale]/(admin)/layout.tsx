@@ -1,42 +1,82 @@
-import { cn } from "@rallly/ui";
-import { dehydrate, Hydrate } from "@tanstack/react-query";
-import React from "react";
+import { ActionBar } from "@rallly/ui/action-bar";
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
+import { SettingsIcon } from "lucide-react";
+import Link from "next/link";
 
-import { MobileNavigation } from "@/app/[locale]/(admin)/mobile-navigation";
-import { ProBadge } from "@/app/[locale]/(admin)/pro-badge";
-import { Sidebar } from "@/app/[locale]/(admin)/sidebar";
-import { LogoLink } from "@/app/components/logo-link";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
+import { Trans } from "@/components/trans";
+import { getUser } from "@/data/get-user";
+
+import { UpgradeButton } from "./components/upgrade-button";
+import { UserDropdown } from "./components/user-dropdown";
+import { ProBadge } from "@/components/pro-badge";
+import {
+  TopBar,
+  TopBarGroup,
+  TopBarLeft,
+  TopBarRight,
+  TopBarSeparator,
+} from "./top-bar";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const helpers = await createSSRHelper();
-  await helpers.user.subscription.prefetch();
-  const dehydratedState = dehydrate(helpers.queryClient);
+  const user = await getUser();
+
   return (
-    <Hydrate state={dehydratedState}>
-      <div className="flex flex-col pb-16 md:pb-0">
-        <div
-          className={cn(
-            "fixed inset-y-0 z-50 hidden w-72 shrink-0 flex-col gap-y-4 overflow-y-auto p-6 md:flex",
-          )}
-        >
-          <div className="flex w-full items-center justify-between gap-4">
-            <LogoLink />
-            <ProBadge />
-          </div>
-          <Sidebar />
+    <AppSidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <div className="flex flex-1 flex-col">
+          <TopBar>
+            <TopBarLeft>
+              <TopBarGroup className="md:hidden">
+                <SidebarTrigger />
+              </TopBarGroup>
+            </TopBarLeft>
+            <TopBarRight>
+              <TopBarGroup>
+                {user.subscription?.active ? <ProBadge /> : <UpgradeButton />}
+                <TopBarSeparator />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href="/settings/preferences">
+                          <Icon>
+                            <SettingsIcon />
+                          </Icon>
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <Trans i18nKey="settings" defaults="Settings" />
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <UserDropdown
+                  name={user.name ?? ""}
+                  image={user.image ?? undefined}
+                  email={user.email ?? ""}
+                />
+              </TopBarGroup>
+            </TopBarRight>
+          </TopBar>
+          <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
         </div>
-        <div className={cn("grow space-y-4 p-3 md:ml-72 md:p-4 lg:p-6")}>
-          <div className="max-w-5xl">{children}</div>
-        </div>
-        <div className="fixed bottom-0 z-20 flex h-16 w-full flex-col justify-center bg-gray-100/90 backdrop-blur-md md:hidden">
-          <MobileNavigation />
-        </div>
-      </div>
-    </Hydrate>
+        <ActionBar />
+      </SidebarInset>
+    </AppSidebarProvider>
   );
 }
