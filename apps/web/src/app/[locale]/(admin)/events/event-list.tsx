@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@rallly/ui/card";
+import { CardContent } from "@rallly/ui/card";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import dayjs from "dayjs";
 
@@ -18,7 +18,7 @@ export function EventList({ data }: { data: ScheduledEvent[] }) {
 
   const { adjustTimeZone } = useDayjs();
   return (
-    <Card>
+    <div className="rounded-lg border">
       <ul className="divide-y divide-gray-100">
         {table.getRowModel().rows.map((row) => {
           const start = adjustTimeZone(
@@ -31,49 +31,45 @@ export function EventList({ data }: { data: ScheduledEvent[] }) {
             !row.original.timeZone,
           );
           return (
-            <li key={row.id}>
-              <CardContent>
-                <div className="flex flex-col gap-2 sm:flex-row sm:gap-8">
-                  <div className="flex shrink-0 justify-between gap-1 sm:w-24 sm:flex-col sm:text-right">
-                    <time
-                      dateTime={start.toISOString()}
-                      className="text-sm font-medium"
-                    >
-                      {start.format("ddd, D MMM")}
-                    </time>
-                    <time
-                      dateTime={start.toISOString()}
-                      className="text-muted-foreground text-sm"
-                    >
-                      {start.format("YYYY")}
-                    </time>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-x-2">
-                      <span
-                        className="h-4 w-1 shrink-0 rounded-full"
-                        style={{
-                          background: generateGradient(row.original.id),
-                        }}
-                      ></span>
-                      <h2 className="truncate text-base font-semibold">
-                        {row.original.title}
-                      </h2>
-                    </div>
-                    <p className="text-muted-foreground mt-1 text-sm">
-                      {row.original.duration === 0 ? (
-                        <Trans i18nKey="allDay" />
-                      ) : (
-                        <span>{`${start.format("LT")} - ${end.format("LT")}`}</span>
-                      )}
-                    </p>
-                  </div>
+            <li key={row.id} className="p-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:gap-8">
+                <div className="flex shrink-0 justify-between gap-1 sm:w-24 sm:flex-col sm:text-right">
+                  <time
+                    dateTime={start.toISOString()}
+                    className="text-sm font-medium"
+                  >
+                    {start.format("ddd, D MMM")}
+                  </time>
+                  <time
+                    dateTime={start.toISOString()}
+                    className="text-muted-foreground text-sm"
+                  >
+                    {start.format("YYYY")}
+                  </time>
                 </div>
-              </CardContent>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-x-2">
+                    <span
+                      className="h-4 w-1 shrink-0 rounded-full"
+                      style={{
+                        background: generateGradient(row.original.id),
+                      }}
+                    ></span>
+                    <h2 className="truncate text-base">{row.original.title}</h2>
+                  </div>
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    {row.original.duration === 0 ? (
+                      <Trans i18nKey="allDay" />
+                    ) : (
+                      <span>{`${start.format("LT")} - ${end.format("LT")}`}</span>
+                    )}
+                  </p>
+                </div>
+              </div>
             </li>
           );
         })}
       </ul>
-    </Card>
+    </div>
   );
 }
