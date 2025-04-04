@@ -1,21 +1,31 @@
-import Link from "next/link";
+import { ActionBar } from "@rallly/ui/action-bar";
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
+import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 import { SettingsIcon } from "lucide-react";
+import Link from "next/link";
 
+import { CommandShortcut } from "@/app/[locale]/(admin)/components/command-shortcut";
 import { AppSidebar } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar";
 import { AppSidebarProvider } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar-provider";
-import { CommandShortcut } from "@/app/[locale]/(admin)/components/command-shortcut";
-import { TopBar, TopBarGroup, TopBarLeft, TopBarRight, TopBarSeparator } from "@/app/[locale]/(admin)/components/top-bar";
+import {
+  TopBar,
+  TopBarGroup,
+  TopBarLeft,
+  TopBarRight,
+  TopBarSeparator,
+} from "@/app/[locale]/(admin)/components/top-bar";
 import { UpgradeButton } from "@/app/[locale]/(admin)/components/upgrade-button";
 import { UserDropdown } from "@/app/[locale]/(admin)/components/user-dropdown";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { getUser } from "@/data/get-user";
-
-import { ActionBar } from "@rallly/ui/action-bar";
-import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
-import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@rallly/ui/tooltip";
 
 export default async function Layout({
   children,
@@ -32,7 +42,7 @@ export default async function Layout({
         <div className="flex flex-1 flex-col">
           <TopBar>
             <TopBarLeft>
-              <TopBarGroup className="md:hidden">
+              <TopBarGroup>
                 <SidebarTrigger />
               </TopBarGroup>
             </TopBarLeft>

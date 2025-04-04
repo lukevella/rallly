@@ -8,6 +8,7 @@ import {
   CommandItemShortcut,
   CommandList,
   CommandSeparator,
+  CommandShortcut,
 } from "@rallly/ui/command";
 import { Icon } from "@rallly/ui/icon";
 import {
@@ -37,7 +38,8 @@ export function CommandMenu() {
         <CommandGroup heading="Navigation">
           <CommandItemShortcut onSelect={() => router.push("/polls")}>
             <GroupPollIcon size="xs" />
-            <Trans i18nKey="polls" defaults="Polls" />
+            <Trans i18nKey="polls" defaults="Group Polls" />
+            <CommandShortcut>⌘+P</CommandShortcut>
           </CommandItemShortcut>
           <CommandItemShortcut onSelect={() => router.push("/events")}>
             <Icon>
