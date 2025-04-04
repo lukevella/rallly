@@ -14,7 +14,9 @@ export const SettingsSection = (props: {
   return (
     <section className="rounded-lg border p-4">
       <header className="mb-6">
-        <h2 className="mb-2 text-base font-bold leading-none">{props.title}</h2>
+        <h2 className="mb-2 text-base font-semibold leading-none">
+          {props.title}
+        </h2>
         <p className="text-muted-foreground text-sm">{props.description}</p>
       </header>
       <div>{props.children}</div>

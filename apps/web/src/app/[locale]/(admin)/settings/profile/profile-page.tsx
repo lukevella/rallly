@@ -3,12 +3,12 @@ import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { TrashIcon } from "lucide-react";
 
-import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
-import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
 import {
   SettingsContent,
   SettingsSection,
 } from "@/app/[locale]/(admin)/settings/components/settings-layout";
+import { DeleteAccountDialog } from "@/app/[locale]/(admin)/settings/profile/delete-account-dialog";
+import { ProfileSettings } from "@/app/[locale]/(admin)/settings/profile/profile-settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 
