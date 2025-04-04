@@ -132,6 +132,22 @@ const CommandItem = React.forwardRef<
 
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
+const CommandItemShortcut = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex h-12 cursor-default select-none items-center gap-4 rounded-md px-2 outline-none aria-selected:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+));
+
+CommandItem.displayName = CommandPrimitive.Item.displayName;
+
 const CommandShortcut = ({
   className,
   ...props
@@ -155,6 +171,7 @@ export {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandItemShortcut,
   CommandList,
   CommandSeparator,
   CommandShortcut,
