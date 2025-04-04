@@ -25,9 +25,9 @@ module.exports = {
           background: colors.indigo["50"],
         },
         secondary: {
-          background: colors.gray["100"],
-          DEFAULT: colors.gray["100"],
-          foreground: colors.gray["700"],
+          background: colors.indigo["50"],
+          DEFAULT: colors.indigo["50"],
+          foreground: colors.indigo["600"],
         },
         gray: colors.gray,
         border: colors.gray["200"],

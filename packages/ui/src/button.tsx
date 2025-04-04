@@ -22,7 +22,7 @@ const buttonVariants = cva(
         default:
           "focus:ring-offset-1 hover:bg-gray-100 bg-gray-50 active:bg-gray-200",
         secondary:
-          "focus:ring-offset-1 bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "focus:ring-offset-1 border-secondary bg-secondary hover:bg-secondary/80 text-secondary-foreground",
         ghost:
           "border-transparent bg-transparent data-[state=open]:bg-gray-500/20 text-gray-800 hover:bg-gray-500/10 active:bg-gray-500/20",
         actionBar:
