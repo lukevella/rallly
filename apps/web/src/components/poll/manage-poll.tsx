@@ -30,6 +30,7 @@ import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
+import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
@@ -37,7 +38,6 @@ import { trpc } from "@/trpc/client";
 
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
-import { ProBadge } from "@/components/pro-badge";
 
 function PauseResumeToggle() {
   const poll = usePoll();
