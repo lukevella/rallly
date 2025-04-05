@@ -16,10 +16,6 @@ export function CommandShortcut() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (cmdKey(e)) {
-        case "k":
-          e.preventDefault();
-          router.push("/");
-          break;
         case "g":
           e.preventDefault();
           router.push("/polls");

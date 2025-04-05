@@ -28,7 +28,7 @@ export function TopBarGroup({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-center gap-x-2", className)}>{children}</div>
+    <div className={cn("flex items-center gap-x-1", className)}>{children}</div>
   );
 }
 

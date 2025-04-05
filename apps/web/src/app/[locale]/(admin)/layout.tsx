@@ -12,6 +12,7 @@ import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 
 import { CommandShortcut } from "@/app/[locale]/(admin)/components/command-shortcut";
+import { SearchButton } from "@/app/[locale]/(admin)/components/search-button";
 import { AppSidebar } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar";
 import { AppSidebarProvider } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar-provider";
 import {
@@ -23,6 +24,7 @@ import {
 } from "@/app/[locale]/(admin)/components/top-bar";
 import { UpgradeButton } from "@/app/[locale]/(admin)/components/upgrade-button";
 import { UserDropdown } from "@/app/[locale]/(admin)/components/user-dropdown";
+import { CommandDialogProvider } from "@/components/command-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { getUser } from "@/data/get-user";
@@ -35,49 +37,52 @@ export default async function Layout({
   const user = await getUser();
 
   return (
-    <AppSidebarProvider>
-      <CommandShortcut />
-      <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-1 flex-col">
-          <TopBar>
-            <TopBarLeft>
-              <TopBarGroup>
-                <SidebarTrigger />
-              </TopBarGroup>
-            </TopBarLeft>
-            <TopBarRight>
-              <TopBarGroup>
-                {user.subscription?.active ? <ProBadge /> : <UpgradeButton />}
-                <TopBarSeparator />
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon-lg" asChild>
-                        <Link href="/settings/preferences">
-                          <Icon>
-                            <SettingsIcon />
-                          </Icon>
-                        </Link>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <Trans i18nKey="settings" defaults="Settings" />
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <UserDropdown
-                  name={user.name ?? ""}
-                  image={user.image ?? undefined}
-                  email={user.email ?? ""}
-                />
-              </TopBarGroup>
-            </TopBarRight>
-          </TopBar>
-          <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
-        </div>
-        <ActionBar />
-      </SidebarInset>
-    </AppSidebarProvider>
+    <CommandDialogProvider>
+      <AppSidebarProvider>
+        <CommandShortcut />
+        <AppSidebar />
+        <SidebarInset>
+          <div className="flex flex-1 flex-col">
+            <TopBar>
+              <TopBarLeft>
+                <TopBarGroup>
+                  <SidebarTrigger />
+                </TopBarGroup>
+              </TopBarLeft>
+              <TopBarRight>
+                <TopBarGroup>
+                  {user.subscription?.active ? <ProBadge /> : <UpgradeButton />}
+                  <TopBarSeparator />
+                  <SearchButton />
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon-lg" asChild>
+                          <Link href="/settings/preferences">
+                            <Icon>
+                              <SettingsIcon />
+                            </Icon>
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <Trans i18nKey="settings" defaults="Settings" />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <UserDropdown
+                    name={user.name ?? ""}
+                    image={user.image ?? undefined}
+                    email={user.email ?? ""}
+                  />
+                </TopBarGroup>
+              </TopBarRight>
+            </TopBar>
+            <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
+          </div>
+          <ActionBar />
+        </SidebarInset>
+      </AppSidebarProvider>
+    </CommandDialogProvider>
   );
 }

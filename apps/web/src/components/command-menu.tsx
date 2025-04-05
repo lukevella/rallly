@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
@@ -26,14 +25,16 @@ export function CommandMenu() {
   const router = useRouter();
 
   return (
-    <Command className="border">
+    <>
       <CommandInput
         autoFocus={true}
         placeholder="Type a command or search..."
       />
       <CommandList className="max-h-max">
         <CommandEmpty>
-          <span>No results found.</span>
+          <span>
+            <Trans i18nKey="commandMenuNoResults" defaults="No results" />
+          </span>
         </CommandEmpty>
         <CommandGroup heading="Navigation">
           <CommandItemShortcut onSelect={() => router.push("/polls")}>
@@ -76,6 +77,6 @@ export function CommandMenu() {
           </CommandItemShortcut>
         </CommandGroup>
       </CommandList>
-    </Command>
+    </>
   );
 }
