@@ -20,26 +20,6 @@ export function CommandGlobalShortcut({ trigger }: { trigger: () => void }) {
           e.preventDefault();
           trigger();
           break;
-        case "g":
-          e.preventDefault();
-          router.push("/polls");
-          break;
-        case "e":
-          e.preventDefault();
-          router.push("/events");
-          break;
-        case "b":
-          e.preventDefault();
-          router.push("/settings/billing");
-          break;
-        case "u":
-          e.preventDefault();
-          router.push("/settings/profile");
-          break;
-        case "p":
-          e.preventDefault();
-          router.push("/settings/preferences");
-          break;
       }
     };
 

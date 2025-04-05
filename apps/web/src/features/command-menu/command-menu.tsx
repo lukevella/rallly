@@ -10,7 +10,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@rallly/ui/command";
-import { useDialog } from "@rallly/ui/dialog";
+import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
@@ -53,6 +53,12 @@ export function CommandMenu() {
         </TooltipContent>
       </Tooltip>
       <CommandDialog {...dialogProps}>
+        <DialogTitle className="sr-only">
+          <Trans i18nKey="commandMenu" defaults="Command Menu" />
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          <Trans i18nKey="commandMenuDescription" defaults="Select a command" />
+        </DialogDescription>
         <CommandInput
           autoFocus={true}
           placeholder="Type a command or search..."
