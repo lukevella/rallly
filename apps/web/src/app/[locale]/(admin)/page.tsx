@@ -7,7 +7,6 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { CommandMenu } from "@/components/command-menu";
 import { getTranslation } from "@/i18n/server";
 
 export default async function Page({ params }: { params: Params }) {
@@ -18,13 +17,11 @@ export default async function Page({ params }: { params: Params }) {
       <PageHeader>
         <div className="flex items-center gap-x-3">
           <PageTitle>
-            <Trans t={t} i18nKey="search" defaults="Search" />
+            <Trans t={t} i18nKey="home" defaults="Home" />
           </PageTitle>
         </div>
       </PageHeader>
-      <PageContent className="space-y-6">
-        <CommandMenu />
-      </PageContent>
+      <PageContent className="space-y-6"></PageContent>
     </PageContainer>
   );
 }
