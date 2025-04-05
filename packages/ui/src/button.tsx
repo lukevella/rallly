@@ -34,6 +34,7 @@ const buttonVariants = cva(
         sm: "h-8 text-sm px-2 gap-x-1.5 rounded-md",
         lg: "h-12 text-base gap-x-3 px-4 rounded-lg",
         icon: "size-7 text-sm gap-x-1.5 rounded-md",
+        "icon-lg": "size-8 rounded-full",
       },
     },
     defaultVariants: {

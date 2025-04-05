@@ -53,7 +53,7 @@ export default async function Layout({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon-lg" asChild>
                         <Link href="/settings/preferences">
                           <Icon>
                             <SettingsIcon />

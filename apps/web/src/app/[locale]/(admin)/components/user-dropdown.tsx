@@ -34,9 +34,9 @@ export function UserDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon-lg">
           <OptimizedAvatarImage
-            size="xs"
+            size="sm"
             src={image ?? undefined}
             name={name}
           />

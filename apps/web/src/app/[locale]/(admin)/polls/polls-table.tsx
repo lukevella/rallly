@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
 
 import {
   EmptyState,
@@ -33,10 +32,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
-import {
-  PollSelectionProvider,
-  usePollSelection,
-} from "@/features/poll-selection/context";
+import { usePollSelection } from "@/features/poll-selection/context";
 
 import { type PollRow, useColumns } from "./columns";
 
