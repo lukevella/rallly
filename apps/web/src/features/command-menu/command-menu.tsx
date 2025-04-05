@@ -17,6 +17,7 @@ import {
   BarChart2Icon,
   CalendarIcon,
   CreditCardIcon,
+  HomeIcon,
   SearchIcon,
   SettingsIcon,
   UserIcon,
@@ -63,37 +64,31 @@ export function CommandMenu() {
             </span>
           </CommandEmpty>
           <CommandGroup heading="Navigation">
+            <CommandItem onSelect={() => handleSelect("/")}>
+              <HomeIcon />
+              <Trans i18nKey="home" defaults="Home" />
+            </CommandItem>
             <CommandItem onSelect={() => handleSelect("/polls")}>
-              <Icon>
-                <BarChart2Icon />
-              </Icon>
+              <BarChart2Icon />
               <Trans i18nKey="polls" defaults="Group Polls" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/events")}>
-              <Icon>
-                <CalendarIcon />
-              </Icon>
+              <CalendarIcon />
               <Trans i18nKey="events" defaults="Events" />
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Settings">
             <CommandItem onSelect={() => handleSelect("/settings/profile")}>
-              <Icon>
-                <UserIcon />
-              </Icon>
+              <UserIcon />
               <Trans i18nKey="profile" defaults="Profile" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/preferences")}>
-              <Icon>
-                <SettingsIcon />
-              </Icon>
+              <SettingsIcon />
               <Trans i18nKey="preferences" defaults="Preferences" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/billing")}>
-              <Icon>
-                <CreditCardIcon />
-              </Icon>
+              <CreditCardIcon />
               <Trans i18nKey="billing" defaults="Billing" />
             </CommandItem>
           </CommandGroup>
