@@ -10,12 +10,16 @@ function cmdKey(e: KeyboardEvent) {
   return false;
 }
 
-export function CommandShortcut() {
+export function CommandGlobalShortcut({ trigger }: { trigger: () => void }) {
   const router = useRouter();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (cmdKey(e)) {
+        case "k":
+          e.preventDefault();
+          trigger();
+          break;
         case "g":
           e.preventDefault();
           router.push("/polls");
@@ -44,7 +48,7 @@ export function CommandShortcut() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [router]);
+  }, [router, trigger]);
 
   // This component doesn't render anything
   return null;
