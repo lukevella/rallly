@@ -21,6 +21,7 @@ import {
 } from "@/app/[locale]/(admin)/components/top-bar";
 import { UpgradeButton } from "@/app/[locale]/(admin)/components/upgrade-button";
 import { UserDropdown } from "@/app/[locale]/(admin)/components/user-dropdown";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
 import { getUser } from "@/data/get-user";
 import { CommandMenu } from "@/features/command-menu";
@@ -34,6 +35,7 @@ export default async function Layout({
 
   return (
     <AppSidebarProvider>
+      <RouterLoadingIndicator />
       <AppSidebar />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
