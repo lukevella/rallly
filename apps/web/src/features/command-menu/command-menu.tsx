@@ -9,7 +9,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@rallly/ui/command";
 import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
@@ -26,16 +25,20 @@ import { useRouter } from "next/navigation";
 
 import { Trans } from "@/components/trans";
 
+import { CommandGlobalShortcut } from "./command-global-shortcut";
+
 export function CommandMenu() {
   const router = useRouter();
-  const { trigger, dialogProps } = useDialog();
+  const { trigger, dialogProps, dismiss } = useDialog();
 
   const handleSelect = (route: string) => {
     router.push(route);
+    dismiss();
   };
 
   return (
     <>
+      <CommandGlobalShortcut trigger={trigger} />
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="ghost" size="icon-lg" onClick={trigger}>
@@ -45,7 +48,7 @@ export function CommandMenu() {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <Trans i18nKey="searchButtonCommand" defaults="Command Menu" />
+          <Trans i18nKey="search" defaults="Search" />
         </TooltipContent>
       </Tooltip>
       <CommandDialog {...dialogProps}>
@@ -65,7 +68,6 @@ export function CommandMenu() {
                 <BarChart2Icon />
               </Icon>
               <Trans i18nKey="polls" defaults="Group Polls" />
-              <CommandShortcut>⌘+P</CommandShortcut>
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/events")}>
               <Icon>
