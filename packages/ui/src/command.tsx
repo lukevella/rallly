@@ -72,7 +72,7 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    className={cn("h-[320px] overflow-y-auto overflow-x-hidden", className)}
     {...props}
   />
 ));
@@ -99,7 +99,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-gray-500",
+      "overflow-hidden p-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-gray-500",
       className,
     )}
     {...props}
@@ -168,6 +168,12 @@ const CommandShortcut = ({
 };
 CommandShortcut.displayName = "CommandShortcut";
 
+// Renders the Command (⌘) symbol on macs and Ctrl on windows
+const CommandShortcutSymbol = ({ symbol }: { symbol: string }) => {
+  return <CommandShortcut>⌘+{symbol}</CommandShortcut>;
+};
+CommandShortcutSymbol.displayName = "CommandShortcutSymbol";
+
 export {
   Command,
   CommandDialog,
@@ -179,4 +185,5 @@ export {
   CommandList,
   CommandSeparator,
   CommandShortcut,
+  CommandShortcutSymbol,
 };

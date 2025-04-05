@@ -9,10 +9,10 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
+  CommandShortcutSymbol,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   BarChart2Icon,
   CalendarIcon,
@@ -40,18 +40,14 @@ export function CommandMenu() {
   return (
     <>
       <CommandGlobalShortcut trigger={trigger} />
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button variant="ghost" size="icon-lg" onClick={trigger}>
-            <Icon>
-              <SearchIcon />
-            </Icon>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <Trans i18nKey="search" defaults="Search" />
-        </TooltipContent>
-      </Tooltip>
+
+      <Button variant="ghost" onClick={trigger}>
+        <Icon>
+          <SearchIcon />
+        </Icon>
+        <Trans i18nKey="search" defaults="Search" />
+        <CommandShortcutSymbol symbol="K" />
+      </Button>
       <CommandDialog {...dialogProps}>
         <DialogTitle className="sr-only">
           <Trans i18nKey="commandMenu" defaults="Command Menu" />
