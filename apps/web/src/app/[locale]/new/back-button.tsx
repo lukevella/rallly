@@ -2,10 +2,12 @@
 
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { XIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function CloseButton() {
+import { Trans } from "@/components/trans";
+
+export function BackButton() {
   const router = useRouter();
 
   return (
@@ -16,8 +18,9 @@ export function CloseButton() {
       variant="ghost"
     >
       <Icon>
-        <XIcon />
+        <ArrowLeftIcon />
       </Icon>
+      <Trans i18nKey="back" defaults="Back" />
     </Button>
   );
 }

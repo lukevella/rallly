@@ -3,12 +3,13 @@ import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
-import { BackButton } from "@/app/[locale]/(admin)/menu/menu-button";
 import type { Params } from "@/app/[locale]/types";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
 import { getLoggedIn } from "@/next-auth";
+
+import { BackButton } from "./back-button";
 
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);

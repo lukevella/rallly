@@ -41,13 +41,13 @@ export function CommandMenu() {
     <>
       <CommandGlobalShortcut trigger={trigger} />
 
-      <Button variant="ghost" onClick={trigger}>
+      {/* <Button variant="ghost" onClick={trigger}>
         <Icon>
           <SearchIcon />
         </Icon>
         <Trans i18nKey="search" defaults="Search" />
         <CommandShortcutSymbol symbol="K" />
-      </Button>
+      </Button> */}
       <CommandDialog {...dialogProps}>
         <DialogTitle className="sr-only">
           <Trans i18nKey="commandMenu" defaults="Command Menu" />
