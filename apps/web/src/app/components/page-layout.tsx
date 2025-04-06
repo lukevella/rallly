@@ -7,9 +7,7 @@ export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return (
-    <div className={cn("mx-auto w-full max-w-5xl", className)}>{children}</div>
-  );
+  return <div className={cn("mx-auto w-full", className)}>{children}</div>;
 }
 
 export function PageTitle({
@@ -22,7 +20,7 @@ export function PageTitle({
   return (
     <h1
       className={cn(
-        "text-foreground inline-flex h-9 items-center truncate text-2xl font-bold tracking-tight",
+        "text-foreground inline-flex items-center truncate text-xl font-bold tracking-tight",
         className,
       )}
     >
@@ -39,7 +37,7 @@ export function PageDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("text-muted-foreground mt-1.5 text-sm", className)}>
+    <p className={cn("text-muted-foreground mt-1 text-sm", className)}>
       {children}
     </p>
   );
