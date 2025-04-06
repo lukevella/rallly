@@ -7,9 +7,18 @@ import {
   HomeIcon,
   PlusIcon,
   Settings2Icon,
+  SettingsIcon,
   UserIcon,
 } from "lucide-react";
 import React from "react";
+
+export function SettingsPageIcon() {
+  return (
+    <span className="inline-flex size-8 items-center justify-center rounded-lg bg-gray-200 text-gray-600">
+      <SettingsIcon className="size-4" />
+    </span>
+  );
+}
 
 export function HomePageIcon() {
   return (

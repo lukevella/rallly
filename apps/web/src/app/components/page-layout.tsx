@@ -7,7 +7,9 @@ export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn("mx-auto w-full", className)}>{children}</div>;
+  return (
+    <div className={cn("mx-auto w-full max-w-7xl", className)}>{children}</div>
+  );
 }
 
 export function PageTitle({
