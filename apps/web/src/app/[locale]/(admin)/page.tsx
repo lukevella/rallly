@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   CreditCardIcon,
   PlusIcon,
+  Settings2Icon,
   SettingsIcon,
   UserIcon,
 } from "lucide-react";
@@ -37,11 +38,11 @@ export default async function Page({ params }: { params: Params }) {
           </h2>
           <TileGrid>
             <Tile href="/new">
-              <TileIcon>
+              <TileIcon className="bg-gray-800">
                 <PlusIcon />
               </TileIcon>
               <TileTitle>
-                <Trans i18nKey="createPoll" defaults="Create Poll" />
+                <Trans i18nKey="create" defaults="Create" />
               </TileTitle>
             </Tile>
           </TileGrid>
@@ -53,7 +54,7 @@ export default async function Page({ params }: { params: Params }) {
           </h2>
           <TileGrid>
             <Tile href="/polls">
-              <TileIcon>
+              <TileIcon className="bg-purple-600 text-white">
                 <BarChart2Icon />
               </TileIcon>
               <TileTitle>
@@ -78,7 +79,7 @@ export default async function Page({ params }: { params: Params }) {
           </h2>
           <TileGrid>
             <Tile href="/settings/profile">
-              <TileIcon>
+              <TileIcon className="bg-blue-600">
                 <UserIcon />
               </TileIcon>
               <TileTitle>
@@ -87,8 +88,8 @@ export default async function Page({ params }: { params: Params }) {
             </Tile>
 
             <Tile href="/settings/preferences">
-              <TileIcon>
-                <SettingsIcon />
+              <TileIcon className="bg-blue-600">
+                <Settings2Icon />
               </TileIcon>
               <TileTitle>
                 <Trans i18nKey="preferences" defaults="Preferences" />
@@ -96,7 +97,7 @@ export default async function Page({ params }: { params: Params }) {
             </Tile>
 
             <Tile href="/settings/billing">
-              <TileIcon>
+              <TileIcon className="bg-blue-600">
                 <CreditCardIcon />
               </TileIcon>
               <TileTitle>

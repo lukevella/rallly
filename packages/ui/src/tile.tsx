@@ -13,7 +13,7 @@ const Tile = React.forwardRef<
   <Link
     ref={ref}
     className={cn(
-      "bg-card text-card-foreground hover:bg-accent/50 rounded-lg border p-4",
+      "text-card-foreground flex flex-col justify-end rounded-xl bg-gray-100 p-3 hover:bg-gray-200",
       className,
     )}
     {...props}
@@ -27,13 +27,16 @@ const TileIcon = React.forwardRef<
   HTMLElement,
   React.HTMLAttributes<HTMLElement>
 >(({ className, children, ...props }, ref) => (
-  <Slot
-    ref={ref}
-    className={cn("text-muted-foreground mb-3 size-4", className)}
-    {...props}
+  <span
+    className={cn(
+      "bg-primary mb-3 inline-flex size-8 items-center justify-center rounded-lg text-white",
+      className,
+    )}
   >
-    {children}
-  </Slot>
+    <Slot ref={ref} className="size-4" {...props}>
+      {children}
+    </Slot>
+  </span>
 ));
 TileIcon.displayName = "TileIcon";
 
@@ -41,7 +44,7 @@ const TileTitle = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h3 ref={ref} className={cn("text-sm font-medium", className)} {...props} />
+  <h3 ref={ref} className={cn("text-sm", className)} {...props} />
 ));
 TileTitle.displayName = "TileTitle";
 
@@ -63,7 +66,10 @@ const TileGrid = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("grid gap-4 md:grid-cols-2 lg:grid-cols-3", className)}
+    className={cn(
+      "grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+      className,
+    )}
     {...props}
   />
 ));
