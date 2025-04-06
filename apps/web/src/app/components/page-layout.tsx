@@ -78,7 +78,7 @@ export function PageSkeleton() {
   return (
     <PageContainer>
       <PageHeader>
-        <Skeleton className="size-8" />
+        <Skeleton className="mb-3 size-8" />
         <PageTitle>
           <Skeleton className="h-8 w-32" />
         </PageTitle>
