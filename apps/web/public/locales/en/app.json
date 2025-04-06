@@ -325,10 +325,11 @@
   "featureNameExtendedLifetime": "Extended poll lifetime",
   "moreParticipants": "{count} more…",
   "noDates": "No dates",
-  "search": "Search",
   "commandMenuNoResults": "No results",
   "selectedPolls": "{count} {count, plural, one {poll} other {polls}} selected",
   "unselectAll": "Unselect All",
   "deletePolls": "Delete Polls",
-  "deletePollsDescription": "Are you sure you want to delete these {count} polls? This action cannot be undone."
+  "deletePollsDescription": "Are you sure you want to delete these {count} polls? This action cannot be undone.",
+  "commandMenu": "Command Menu",
+  "commandMenuDescription": "Select a command"
 }

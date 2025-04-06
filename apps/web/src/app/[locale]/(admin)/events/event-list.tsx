@@ -1,6 +1,5 @@
 "use client";
 
-import { CardContent } from "@rallly/ui/card";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import dayjs from "dayjs";
 

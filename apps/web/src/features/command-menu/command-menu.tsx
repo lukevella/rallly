@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@rallly/ui/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -9,16 +8,13 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcutSymbol,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
 import {
   BarChart2Icon,
   CalendarIcon,
   CreditCardIcon,
   HomeIcon,
-  SearchIcon,
   SettingsIcon,
   UserIcon,
 } from "lucide-react";
