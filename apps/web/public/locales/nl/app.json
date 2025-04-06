@@ -302,5 +302,6 @@
   "addPaymentMethod": "Betalingsmethode toevoegen",
   "needToMakeChanges": "Wil je wijzigingen aanbrengen?",
   "billingPortalDescription": "Bezoek het factuurportaal voor het beheren van je abonnement, betalingsmethoden of om je facturen te bekijken.",
-  "priceFree": "Gratis"
+  "priceFree": "Gratis",
+  "signUp": "Aanmelden"
 }
