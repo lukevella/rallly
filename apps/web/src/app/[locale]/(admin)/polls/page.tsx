@@ -5,6 +5,7 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 
+import { PollPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -127,14 +128,20 @@ export default async function Page({
     <PageContainer>
       <PageHeader className="flex items-start justify-between gap-8">
         <div>
-          <PageTitle>
-            <Trans i18nKey="polls" defaults="Polls" />
-          </PageTitle>
+          <div className="flex flex-col gap-3">
+            <PollPageIcon />
+            <PageTitle>
+              <Trans i18nKey="polls" defaults="Polls" />
+            </PageTitle>
+          </div>
           <PageDescription>
-            <Trans i18nKey="pollsPageDesc" defaults="View and manage all your scheduling polls" />
+            <Trans
+              i18nKey="pollsPageDesc"
+              defaults="View and manage all your scheduling polls"
+            />
           </PageDescription>
         </div>
-        <Button variant="primary" asChild>
+        <Button asChild>
           <Link href="/new">
             <Icon>
               <PlusIcon />

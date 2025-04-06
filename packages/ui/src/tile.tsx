@@ -27,12 +27,7 @@ const TileIcon = React.forwardRef<
   HTMLElement,
   React.HTMLAttributes<HTMLElement>
 >(({ className, children, ...props }, ref) => (
-  <span
-    className={cn(
-      "bg-primary mb-3 inline-flex size-8 items-center justify-center rounded-lg text-white",
-      className,
-    )}
-  >
+  <span className={cn("mb-3", className)}>
     <Slot ref={ref} className="size-4" {...props}>
       {children}
     </Slot>
@@ -44,7 +39,7 @@ const TileTitle = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h3 ref={ref} className={cn("text-sm", className)} {...props} />
+  <h3 ref={ref} className={cn("mt-3 text-sm", className)} {...props} />
 ));
 TileTitle.displayName = "TileTitle";
 

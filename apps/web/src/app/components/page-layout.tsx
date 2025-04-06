@@ -39,12 +39,7 @@ export function PageDescription({
   className?: string;
 }) {
   return (
-    <p
-      className={cn(
-        "text-muted-foreground mt-1.5 text-sm",
-        className,
-      )}
-    >
+    <p className={cn("text-muted-foreground mt-1.5 text-sm", className)}>
       {children}
     </p>
   );
@@ -83,6 +78,7 @@ export function PageSkeleton() {
   return (
     <PageContainer>
       <PageHeader>
+        <Skeleton className="size-8" />
         <PageTitle>
           <Skeleton className="h-8 w-32" />
         </PageTitle>
