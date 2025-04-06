@@ -5,7 +5,6 @@ import {
   CreditCardIcon,
   PlusIcon,
   Settings2Icon,
-  SettingsIcon,
   UserIcon,
 } from "lucide-react";
 
@@ -13,6 +12,7 @@ import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
+  PageDescription,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
@@ -30,11 +30,17 @@ export default async function Page({ params }: { params: Params }) {
             <Trans i18nKey="home" defaults="Home" />
           </PageTitle>
         </div>
+        <PageDescription>
+          <Trans
+            i18nKey="homeDashboardDesc"
+            defaults="Manage your polls, events, and account settings"
+          />
+        </PageDescription>
       </PageHeader>
       <PageContent className="space-y-8">
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="actions" defaults="Actions" />
+            <Trans i18nKey="homeActionsTitle" defaults="Actions" />
           </h2>
           <TileGrid>
             <Tile href="/new">
@@ -50,7 +56,7 @@ export default async function Page({ params }: { params: Params }) {
 
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="navigation" defaults="Navigation" />
+            <Trans i18nKey="homeNavTitle" defaults="Navigation" />
           </h2>
           <TileGrid>
             <Tile href="/polls">

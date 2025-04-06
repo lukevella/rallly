@@ -31,6 +31,25 @@ export function PageTitle({
   );
 }
 
+export function PageDescription({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p
+      className={cn(
+        "text-muted-foreground mt-1.5 text-sm",
+        className,
+      )}
+    >
+      {children}
+    </p>
+  );
+}
+
 export function PageHeader({
   children,
   className,
@@ -67,6 +86,9 @@ export function PageSkeleton() {
         <PageTitle>
           <Skeleton className="h-8 w-32" />
         </PageTitle>
+        <PageDescription>
+          <Skeleton className="h-4 w-64" />
+        </PageDescription>
       </PageHeader>
       <PageContent>
         <div className="space-y-8">

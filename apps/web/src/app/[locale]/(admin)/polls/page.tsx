@@ -8,6 +8,7 @@ import { z } from "zod";
 import {
   PageContainer,
   PageContent,
+  PageDescription,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
@@ -125,9 +126,14 @@ export default async function Page({
   return (
     <PageContainer>
       <PageHeader className="flex items-start justify-between gap-8">
-        <PageTitle>
-          <Trans i18nKey="polls" defaults="Polls" />
-        </PageTitle>
+        <div>
+          <PageTitle>
+            <Trans i18nKey="polls" defaults="Polls" />
+          </PageTitle>
+          <PageDescription>
+            <Trans i18nKey="pollsPageDesc" defaults="View and manage all your scheduling polls" />
+          </PageDescription>
+        </div>
         <Button variant="primary" asChild>
           <Link href="/new">
             <Icon>

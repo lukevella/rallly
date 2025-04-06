@@ -3,9 +3,11 @@ import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
+  PageDescription,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
+import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 
 export default async function Page({ params }: { params: Params }) {
@@ -20,6 +22,9 @@ export default async function Page({ params }: { params: Params }) {
             })}
           </PageTitle>
         </div>
+        <PageDescription>
+          <Trans i18nKey="eventsPageDesc" defaults="View and manage your scheduled events" />
+        </PageDescription>
       </PageHeader>
       <PageContent>
         <UserScheduledEvents />
