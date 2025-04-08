@@ -39,9 +39,11 @@ export const TeamSwitcher = ({
         />
         <span className="flex-1 text-left">{currentTeam.name}</span>
         {currentTeam.pro && <ProBadge />}
-        <Icon>
-          <ChevronsUpDownIcon />
-        </Icon>
+        <span className="-mr-1 flex size-7 items-center justify-center">
+          <Icon>
+            <ChevronsUpDownIcon />
+          </Icon>
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-[var(--radix-dropdown-menu-trigger-width)]"

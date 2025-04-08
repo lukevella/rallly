@@ -1,3 +1,5 @@
+import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
   SidebarContent,
@@ -6,7 +8,14 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from "@rallly/ui/sidebar";
-import { BarChart2Icon, CalendarIcon, HomeIcon, UsersIcon } from "lucide-react";
+import {
+  BarChart2Icon,
+  CalendarIcon,
+  HomeIcon,
+  PlusIcon,
+  UsersIcon,
+} from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 
 import { LogoLink } from "@/app/components/logo-link";
@@ -25,24 +34,31 @@ export async function AppSidebar({
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <div className="p-1">
+        <div className="flex justify-between p-1">
           <LogoLink />
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/new">
+              <Icon>
+                <PlusIcon />
+              </Icon>
+            </Link>
+          </Button>
         </div>
-        <TeamSwitcher
-          currentTeamId={user.id}
-          teams={[
-            {
-              id: user.id,
-              name: user.name,
-              image: user.image ?? undefined,
-              pro: user.isPro,
-            },
-          ]}
-        />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
+            <TeamSwitcher
+              currentTeamId={user.id}
+              teams={[
+                {
+                  id: user.id,
+                  name: user.name,
+                  image: user.image ?? undefined,
+                  pro: user.isPro,
+                },
+              ]}
+            />
             <NavItem href="/" icon={<HomeIcon />} label={t("home")} />
             <NavItem
               href="/polls"
