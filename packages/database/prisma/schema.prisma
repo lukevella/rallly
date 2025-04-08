@@ -63,6 +63,8 @@ model User {
   paymentMethods PaymentMethod[]
   subscription   Subscription? @relation("UserToSubscription")
   pollViews      PollView[]
+  teamMembers    TeamMember[]
+  ownedTeams     Team[]        @relation("TeamOwner")
 
   @@map("users")
 }
@@ -300,6 +302,39 @@ model PollView {
   @@index([userId], type: Hash)
   @@index([viewedAt])
   @@map("poll_views")
+}
+
+model Team {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  image     String?
+  ownerId   String    @map("owner_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  owner     User      @relation("TeamOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members   TeamMember[]
+
+  @@index([ownerId])
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  teamId    String   @map("team_id")
+  userId    String   @map("user_id")
+  role      String   @default("member")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@index([teamId])
+  @@index([userId])
+  @@map("team_members")
 }
 
 model VerificationToken {
