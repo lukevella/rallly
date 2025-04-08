@@ -33,10 +33,7 @@ export function EventList({ data }: { data: ScheduledEvent[] }) {
             <li key={row.id} className="p-4">
               <div className="flex flex-col gap-2 sm:flex-row sm:gap-8">
                 <div className="flex shrink-0 justify-between gap-1 sm:w-24 sm:flex-col sm:text-right">
-                  <time
-                    dateTime={start.toISOString()}
-                    className="text-sm font-medium"
-                  >
+                  <time dateTime={start.toISOString()} className="text-sm">
                     {start.format("ddd, D MMM")}
                   </time>
                   <time
@@ -54,7 +51,9 @@ export function EventList({ data }: { data: ScheduledEvent[] }) {
                         background: generateGradient(row.original.id),
                       }}
                     ></span>
-                    <h2 className="truncate text-base">{row.original.title}</h2>
+                    <h2 className="truncate text-sm font-medium">
+                      {row.original.title}
+                    </h2>
                   </div>
                   <p className="text-muted-foreground mt-1 text-sm">
                     {row.original.duration === 0 ? (
