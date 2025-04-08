@@ -1,6 +1,6 @@
 import { UsersIcon } from "lucide-react";
 
-import { HomePageIcon, TeamPageIcon } from "@/app/components/page-icons";
+import { MembersPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -14,13 +14,13 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 
-export default function TeamPage() {
+export default function MembersPage() {
   return (
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <TeamPageIcon />
-          Team
+          <MembersPageIcon />
+          Members
         </PageTitle>
       </PageHeader>
       <PageContent>

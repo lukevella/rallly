@@ -126,8 +126,8 @@ export default async function Page({
 
   return (
     <PageContainer>
-      <PageHeader className="flex items-start justify-between gap-8">
-        <div>
+      <div className="flex gap-4">
+        <PageHeader className="flex-1">
           <PageTitle>
             <PollPageIcon />
             <Trans i18nKey="polls" defaults="Polls" />
@@ -138,15 +138,20 @@ export default async function Page({
               defaults="View and manage all your scheduling polls"
             />
           </PageDescription>
+        </PageHeader>
+        <div>
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/new">
+              <Icon>
+                <PlusIcon />
+              </Icon>
+              <span className="sr-only">
+                <Trans i18nKey="create" defaults="Create" />
+              </span>
+            </Link>
+          </Button>
         </div>
-        <Button variant="ghost" asChild>
-          <Link href="/new">
-            <Icon>
-              <PlusIcon />
-            </Icon>
-          </Link>
-        </Button>
-      </PageHeader>
+      </div>
       <PageContent className="space-y-4">
         <PollsTabbedView>
           <div className="space-y-4">

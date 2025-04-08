@@ -3,13 +3,12 @@ import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
 import type { Params } from "@/app/[locale]/types";
 import {
   BillingPageIcon,
-  CreatePageIcon,
   EventPageIcon,
   HomePageIcon,
+  MembersPageIcon,
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
-  TeamPageIcon,
 } from "@/app/components/page-icons";
 import {
   PageContainer,
@@ -27,12 +26,10 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex flex-col gap-3">
+        <PageTitle>
           <HomePageIcon />
-          <PageTitle>
-            <Trans i18nKey="home" defaults="Home" />
-          </PageTitle>
-        </div>
+          <Trans i18nKey="home" defaults="Home" />
+        </PageTitle>
         <PageDescription>
           <Trans
             i18nKey="homeDashboardDesc"
@@ -41,7 +38,7 @@ export default async function Page({ params }: { params: Params }) {
         </PageDescription>
       </PageHeader>
       <PageContent className="space-y-8">
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeActionsTitle" defaults="Actions" />
           </h2>
@@ -53,7 +50,7 @@ export default async function Page({ params }: { params: Params }) {
               </TileTitle>
             </Tile>
           </TileGrid>
-        </div>
+        </div> */}
 
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
@@ -74,10 +71,10 @@ export default async function Page({ params }: { params: Params }) {
               </TileTitle>
             </Tile>
 
-            <Tile href="/team">
-              <TeamPageIcon />
+            <Tile href="/members">
+              <MembersPageIcon />
               <TileTitle>
-                <Trans i18nKey="team" defaults="Team" />
+                <Trans i18nKey="members" defaults="Members" />
               </TileTitle>
             </Tile>
           </TileGrid>

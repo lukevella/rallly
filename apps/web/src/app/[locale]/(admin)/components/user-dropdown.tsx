@@ -11,6 +11,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import {
+  ChevronsUpDownIcon,
   CreditCardIcon,
   LogOutIcon,
   Settings2Icon,
@@ -33,25 +34,19 @@ export function UserDropdown({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon-lg">
-          <OptimizedAvatarImage
-            size="sm"
-            src={image ?? undefined}
-            name={name}
-          />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="flex items-center gap-2">
-          <div className="grow">
-            <div>{name}</div>
-            <div className="text-muted-foreground text-sm font-normal">
-              {email}
-            </div>
+      <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-md p-2 text-sm hover:bg-gray-200 data-[state=open]:bg-gray-200">
+        <OptimizedAvatarImage size="md" src={image ?? undefined} name={name} />
+        <div className="flex-1 truncate text-left">
+          <div>{name}</div>
+          <div className="text-muted-foreground truncate text-sm font-normal">
+            {email}
           </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        </div>
+        <Icon>
+          <ChevronsUpDownIcon />
+        </Icon>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="right" align="end">
         <DropdownMenuItem asChild>
           <Link href="/settings/profile">
             <Icon>

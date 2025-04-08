@@ -1,46 +1,85 @@
 import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
+import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
-  SidebarRail,
 } from "@rallly/ui/sidebar";
 import {
   BarChart2Icon,
   CalendarIcon,
+  ChevronsUpDownIcon,
   HomeIcon,
+  PlusIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import * as React from "react";
 
+import { LogoLink } from "@/app/components/logo-link";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
+import { UserDropdown } from "../user-dropdown";
 import { NavItem } from "./nav-item";
 
 export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const user = await getUser();
   const { t } = await getTranslation();
   return (
-    <Sidebar variant="inset" collapsible="icon" {...props}>
+    <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <Link
-          className="inline-block transition-transform active:translate-y-1"
-          href="/"
-        >
-          <Image
-            src="/images/logo-mark.svg"
-            alt="Rallly"
-            width={32}
-            height={32}
-            priority={true}
-            className="shrink-0"
-          />
-        </Link>
+        <div className="p-1">
+          <LogoLink />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex h-9 w-full items-center gap-2 rounded-md px-2 text-sm hover:bg-gray-200 data-[state=open]:bg-gray-200">
+            <OptimizedAvatarImage
+              src={user.image ?? undefined}
+              name={user.name}
+              size="xs"
+            />
+            <span className="flex-1 text-left">{user.name}</span>
+            <Icon>
+              <ChevronsUpDownIcon />
+            </Icon>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[var(--radix-dropdown-menu-trigger-width)]"
+            align="start"
+          >
+            <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
+            <DropdownMenuCheckboxItem checked>
+              <OptimizedAvatarImage
+                src={user.image ?? undefined}
+                name={user.name}
+                size="xs"
+              />
+              <span>{user.name}</span>
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Icon>
+                <PlusIcon />
+              </Icon>
+              <span>New Workspace</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -57,9 +96,9 @@ export async function AppSidebar({
               label={t("events")}
             />
             <NavItem
-              href="/team"
+              href="/members"
               icon={<UsersIcon />}
-              label={t("team", { defaultValue: "Team" })}
+              label={t("members", { defaultValue: "Members" })}
             />
             <NavItem
               href="/settings/profile"
@@ -72,7 +111,13 @@ export async function AppSidebar({
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarRail />
+      <SidebarFooter>
+        <UserDropdown
+          name={user.name}
+          image={user.image ?? undefined}
+          email={user.email}
+        />
+      </SidebarFooter>
     </Sidebar>
   );
 }

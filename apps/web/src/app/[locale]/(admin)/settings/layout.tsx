@@ -21,10 +21,10 @@ export default async function ProfileLayout({
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex flex-col gap-3">
+        <PageTitle>
           <SettingsPageIcon />
-          <PageTitle>{t("settings")}</PageTitle>
-        </div>
+          {t("settings")}
+        </PageTitle>
       </PageHeader>
       <PageContent>
         <SettingsLayout>{children}</SettingsLayout>

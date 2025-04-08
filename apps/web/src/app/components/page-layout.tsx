@@ -22,7 +22,7 @@ export function PageTitle({
   return (
     <h1
       className={cn(
-        "text-foreground flex flex-col gap-3 truncate text-xl font-bold tracking-tight",
+        "text-foreground flex gap-3 truncate text-xl font-bold tracking-tight",
         className,
       )}
     >
@@ -39,7 +39,7 @@ export function PageDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("text-muted-foreground mt-1 text-sm", className)}>
+    <p className={cn("text-muted-foreground mt-4 text-sm", className)}>
       {children}
     </p>
   );
@@ -53,7 +53,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("mb-6", className)}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {
@@ -71,7 +71,9 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("md:grow", className)}>{children}</div>;
+  return (
+    <div className={cn("mt-4 md:grow lg:mt-6", className)}>{children}</div>
+  );
 }
 
 export function PageSkeleton() {
