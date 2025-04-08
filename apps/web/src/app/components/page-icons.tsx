@@ -9,6 +9,7 @@ import {
   Settings2Icon,
   SettingsIcon,
   UserIcon,
+  UsersIcon,
 } from "lucide-react";
 import React from "react";
 
@@ -20,6 +21,13 @@ export function SettingsPageIcon() {
   );
 }
 
+export function TeamPageIcon() {
+  return (
+    <span className="inline-flex size-8 items-center justify-center rounded-lg bg-teal-600 text-white">
+      <UsersIcon className="size-4" />
+    </span>
+  );
+}
 export function HomePageIcon() {
   return (
     <span className="inline-flex size-8 items-center justify-center rounded-lg bg-gray-800 text-white">

@@ -39,7 +39,7 @@ export default async function Layout({
       <AppSidebar />
       <SidebarInset>
         <div className="flex flex-1 flex-col">
-          <TopBar>
+          {/* <TopBar>
             <TopBarLeft>
               <TopBarGroup>
                 <SidebarTrigger />
@@ -72,7 +72,7 @@ export default async function Layout({
                 />
               </TopBarGroup>
             </TopBarRight>
-          </TopBar>
+          </TopBar> */}
           <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
         </div>
         <ActionBar />

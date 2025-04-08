@@ -16,12 +16,10 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex flex-col gap-3">
+        <PageTitle>
           <EventPageIcon />
-          <PageTitle>
-            <Trans i18nKey="events" defaults="Events" />
-          </PageTitle>
-        </div>
+          <Trans i18nKey="events" defaults="Events" />
+        </PageTitle>
         <PageDescription>
           <Trans
             i18nKey="eventsPageDesc"
@@ -34,17 +32,4 @@ export default async function Page({ params }: { params: Params }) {
       </PageContent>
     </PageContainer>
   );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
-  return {
-    title: t("events", {
-      defaultValue: "Events",
-    }),
-  };
 }

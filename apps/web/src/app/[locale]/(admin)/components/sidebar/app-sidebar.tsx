@@ -11,6 +11,7 @@ import {
   CalendarIcon,
   HomeIcon,
   SettingsIcon,
+  UsersIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,13 +57,17 @@ export async function AppSidebar({
               label={t("events")}
             />
             <NavItem
+              href="/team"
+              icon={<UsersIcon />}
+              label={t("team", { defaultValue: "Team" })}
+            />
+            <NavItem
               href="/settings/profile"
               icon={<SettingsIcon />}
               label={t("settings")}
             />
             {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
             {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}
-            {/* <NavItem href="/team" icon={UsersIcon} label="Team" /> */}
             {/* <NavItem href="/integrations" icon={PuzzleIcon} label="Integrations" /> */}
           </SidebarMenu>
         </SidebarGroup>

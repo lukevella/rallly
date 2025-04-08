@@ -9,6 +9,7 @@ import {
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
+  TeamPageIcon,
 } from "@/app/components/page-icons";
 import {
   PageContainer,
@@ -70,6 +71,13 @@ export default async function Page({ params }: { params: Params }) {
               <EventPageIcon />
               <TileTitle>
                 <Trans i18nKey="events" defaults="Events" />
+              </TileTitle>
+            </Tile>
+
+            <Tile href="/team">
+              <TeamPageIcon />
+              <TileTitle>
+                <Trans i18nKey="team" defaults="Team" />
               </TileTitle>
             </Tile>
           </TileGrid>

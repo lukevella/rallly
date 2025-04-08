@@ -128,12 +128,10 @@ export default async function Page({
     <PageContainer>
       <PageHeader className="flex items-start justify-between gap-8">
         <div>
-          <div className="flex flex-col gap-3">
+          <PageTitle>
             <PollPageIcon />
-            <PageTitle>
-              <Trans i18nKey="polls" defaults="Polls" />
-            </PageTitle>
-          </div>
+            <Trans i18nKey="polls" defaults="Polls" />
+          </PageTitle>
           <PageDescription>
             <Trans
               i18nKey="pollsPageDesc"
@@ -141,12 +139,11 @@ export default async function Page({
             />
           </PageDescription>
         </div>
-        <Button asChild>
+        <Button variant="ghost" asChild>
           <Link href="/new">
             <Icon>
               <PlusIcon />
             </Icon>
-            <Trans i18nKey="newPoll" defaults="New Poll" />
           </Link>
         </Button>
       </PageHeader>

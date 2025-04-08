@@ -1,5 +1,6 @@
 import { UsersIcon } from "lucide-react";
 
+import { HomePageIcon, TeamPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -17,7 +18,10 @@ export default function TeamPage() {
   return (
     <PageContainer>
       <PageHeader>
-        <PageTitle>Team</PageTitle>
+        <PageTitle>
+          <TeamPageIcon />
+          Team
+        </PageTitle>
       </PageHeader>
       <PageContent>
         <EmptyState className="py-12">
