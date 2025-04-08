@@ -34,7 +34,7 @@ export function UserDropdown({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-md p-2 text-sm hover:bg-gray-200 data-[state=open]:bg-gray-200">
+      <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-md p-3 text-sm hover:bg-gray-200 data-[state=open]:bg-gray-200">
         <OptimizedAvatarImage size="md" src={image ?? undefined} name={name} />
         <div className="flex-1 truncate text-left">
           <div>{name}</div>

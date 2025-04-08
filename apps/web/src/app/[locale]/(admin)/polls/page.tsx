@@ -1,7 +1,7 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 
@@ -139,14 +139,18 @@ export default async function Page({
             />
           </PageDescription>
         </PageHeader>
-        <div>
-          <Button variant="ghost" size="icon" asChild>
+        <div className="flex items-start gap-2">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/settings/polls">
+              <span>
+                <Trans i18nKey="settings" defaults="Settings" />
+              </span>
+            </Link>
+          </Button>
+          <Button variant="primary" size="sm" asChild>
             <Link href="/new">
-              <Icon>
-                <PlusIcon />
-              </Icon>
-              <span className="sr-only">
-                <Trans i18nKey="create" defaults="Create" />
+              <span>
+                <Trans i18nKey="newPoll" defaults="New Poll" />
               </span>
             </Link>
           </Button>

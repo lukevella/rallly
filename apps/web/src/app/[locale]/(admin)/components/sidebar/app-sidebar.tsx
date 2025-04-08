@@ -34,6 +34,7 @@ import { getTranslation } from "@/i18n/server";
 
 import { UserDropdown } from "../user-dropdown";
 import { NavItem } from "./nav-item";
+import { TeamSwitcher } from "./team-switcher";
 
 export async function AppSidebar({
   ...props
@@ -46,40 +47,16 @@ export async function AppSidebar({
         <div className="p-1">
           <LogoLink />
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex h-9 w-full items-center gap-2 rounded-md px-2 text-sm hover:bg-gray-200 data-[state=open]:bg-gray-200">
-            <OptimizedAvatarImage
-              src={user.image ?? undefined}
-              name={user.name}
-              size="xs"
-            />
-            <span className="flex-1 text-left">{user.name}</span>
-            <Icon>
-              <ChevronsUpDownIcon />
-            </Icon>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[var(--radix-dropdown-menu-trigger-width)]"
-            align="start"
-          >
-            <DropdownMenuLabel>Teams</DropdownMenuLabel>
-            <DropdownMenuCheckboxItem checked>
-              <OptimizedAvatarImage
-                src={user.image ?? undefined}
-                name={user.name}
-                size="xs"
-              />
-              <span>{user.name}</span>
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Icon>
-                <PlusIcon />
-              </Icon>
-              <span>New Team</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TeamSwitcher
+          currentTeamId={user.id}
+          teams={[
+            {
+              id: user.id,
+              name: user.name,
+              image: user.image ?? undefined,
+            },
+          ]}
+        />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -107,11 +84,13 @@ export async function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <UserDropdown
-          name={user.name}
-          image={user.image ?? undefined}
-          email={user.email}
-        />
+        <div className="-mx-1">
+          <UserDropdown
+            name={user.name}
+            image={user.image ?? undefined}
+            email={user.email}
+          />
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
