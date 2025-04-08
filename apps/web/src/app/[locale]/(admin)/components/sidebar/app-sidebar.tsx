@@ -19,10 +19,11 @@ import Link from "next/link";
 import * as React from "react";
 
 import { LogoLink } from "@/app/components/logo-link";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { ProBadge } from "@/components/pro-badge";
 import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
-import { UserDropdown } from "../user-dropdown";
 import { NavItem } from "./nav-item";
 import { TeamSwitcher } from "./team-switcher";
 
@@ -48,33 +49,31 @@ export async function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            <TeamSwitcher
-              currentTeamId={user.id}
-              teams={[
-                {
-                  id: user.id,
-                  name: user.name,
-                  image: user.image ?? undefined,
-                  pro: user.isPro,
-                },
-              ]}
-            />
-            <NavItem href="/" icon={<HomeIcon />} label={t("home")} />
-            <NavItem
-              href="/polls"
-              icon={<BarChart2Icon />}
-              label={t("polls")}
-            />
-            <NavItem
-              href="/events"
-              icon={<CalendarIcon />}
-              label={t("events")}
-            />
-            <NavItem
-              href="/members"
-              icon={<UsersIcon />}
-              label={t("members", { defaultValue: "Members" })}
-            />
+            <NavItem href="/teams">
+              <OptimizedAvatarImage
+                size="xs"
+                src={user.image}
+                name={user.name}
+              />
+              <span className="flex-1">{user.name}</span>
+              {user.isPro && <ProBadge />}
+            </NavItem>
+            <NavItem href="/">
+              <HomeIcon className="size-4" />
+              {t("home")}
+            </NavItem>
+            <NavItem href="/polls">
+              <BarChart2Icon className="size-4" />
+              {t("polls")}
+            </NavItem>
+            <NavItem href="/events">
+              <CalendarIcon className="size-4" />
+              {t("events")}
+            </NavItem>
+            <NavItem href="/members">
+              <UsersIcon className="size-4" />
+              {t("members", { defaultValue: "Members" })}
+            </NavItem>
             {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
             {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}
             {/* <NavItem href="/integrations" icon={PuzzleIcon} label="Integrations" /> */}
@@ -82,13 +81,18 @@ export async function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <div className="-mx-1">
-          <UserDropdown
-            name={user.name}
-            image={user.image ?? undefined}
-            email={user.email}
-          />
-        </div>
+        <Link
+          href="/settings/profile"
+          className="flex w-full items-center gap-3 rounded-md p-3 text-sm hover:bg-gray-200 data-[state=open]:bg-gray-200"
+        >
+          <OptimizedAvatarImage size="md" src={user.image} name={user.name} />
+          <div className="flex-1 truncate text-left">
+            <div>{user.name}</div>
+            <div className="text-muted-foreground truncate text-sm font-normal">
+              {user.email}
+            </div>
+          </div>
+        </Link>
       </SidebarFooter>
     </Sidebar>
   );

@@ -10,16 +10,18 @@ import {
   CommandSeparator,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
-import {
-  BarChart2Icon,
-  CalendarIcon,
-  CreditCardIcon,
-  HomeIcon,
-  SettingsIcon,
-  UserIcon,
-} from "lucide-react";
+import { CreditCardIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import {
+  BillingPageIcon,
+  EventPageIcon,
+  HomePageIcon,
+  MembersPageIcon,
+  PollPageIcon,
+  PreferencesPageIcon,
+  ProfilePageIcon,
+} from "@/app/components/page-icons";
 import { Trans } from "@/components/trans";
 
 import { CommandGlobalShortcut } from "./command-global-shortcut";
@@ -63,30 +65,34 @@ export function CommandMenu() {
           </CommandEmpty>
           <CommandGroup heading="Navigation">
             <CommandItem onSelect={() => handleSelect("/")}>
-              <HomeIcon />
+              <HomePageIcon />
               <Trans i18nKey="home" defaults="Home" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/polls")}>
-              <BarChart2Icon />
+              <PollPageIcon />
               <Trans i18nKey="polls" defaults="Group Polls" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/events")}>
-              <CalendarIcon />
+              <EventPageIcon />
               <Trans i18nKey="events" defaults="Events" />
+            </CommandItem>
+            <CommandItem onSelect={() => handleSelect("/members")}>
+              <MembersPageIcon />
+              <Trans i18nKey="members" defaults="Members" />
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Settings">
             <CommandItem onSelect={() => handleSelect("/settings/profile")}>
-              <UserIcon />
+              <ProfilePageIcon />
               <Trans i18nKey="profile" defaults="Profile" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/preferences")}>
-              <SettingsIcon />
+              <PreferencesPageIcon />
               <Trans i18nKey="preferences" defaults="Preferences" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/billing")}>
-              <CreditCardIcon />
+              <BillingPageIcon />
               <Trans i18nKey="billing" defaults="Billing" />
             </CommandItem>
           </CommandGroup>

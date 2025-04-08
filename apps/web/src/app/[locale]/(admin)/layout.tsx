@@ -4,6 +4,7 @@ import { SidebarInset } from "@rallly/ui/sidebar";
 import { AppSidebar } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar";
 import { AppSidebarProvider } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar-provider";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
+import { CommandMenu } from "@/features/command-menu";
 
 export default async function Layout({
   children,
@@ -12,6 +13,7 @@ export default async function Layout({
 }) {
   return (
     <AppSidebarProvider>
+      <CommandMenu />
       <RouterLoadingIndicator />
       <AppSidebar />
       <SidebarInset>

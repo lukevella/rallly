@@ -1,28 +1,24 @@
 "use client";
 
-import { Slot } from "@radix-ui/react-slot";
 import { SidebarMenuButton, SidebarMenuItem } from "@rallly/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function NavItem({
   href,
-  icon,
-  label,
+  children,
 }: {
   href: string;
-  icon: React.ReactNode;
-  label: string;
+  children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild isActive={isActive} tooltip={label}>
+      <SidebarMenuButton asChild isActive={isActive}>
         <Link href={href} className="group">
-          <Slot className="size-4">{icon}</Slot>
-          <span>{label}</span>
+          {children}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

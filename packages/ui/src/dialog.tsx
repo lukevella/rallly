@@ -44,7 +44,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed left-[50%] top-0 z-50 grid w-full max-w-full translate-x-[-50%] gap-4 p-6 shadow-lg duration-200 sm:top-[50%] sm:translate-y-[-50%] sm:rounded-lg sm:border",
+        "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[10%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[10%] fixed left-[50%] top-0 z-50 grid w-full max-w-full translate-x-[-50%] gap-4 p-6 shadow-lg duration-200 sm:top-[50%] sm:translate-y-[-50%] sm:rounded-lg sm:border",
         {
           "sm:max-w-sm": size === "sm",
           "sm:max-w-md": size === "md",
