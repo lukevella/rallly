@@ -6,7 +6,12 @@ import {
   SidebarMenu,
   SidebarRail,
 } from "@rallly/ui/sidebar";
-import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
+import {
+  BarChart2Icon,
+  CalendarIcon,
+  HomeIcon,
+  SettingsIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
@@ -49,6 +54,11 @@ export async function AppSidebar({
               href="/events"
               icon={<CalendarIcon />}
               label={t("events")}
+            />
+            <NavItem
+              href="/settings/profile"
+              icon={<SettingsIcon />}
+              label={t("settings")}
             />
             {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
             {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}

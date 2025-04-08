@@ -2,22 +2,16 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
 
 export function SettingsLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const pathname = usePathname();
 
   return (
-    <Tabs
-      defaultValue={pathname}
-      onValueChange={(value) => {
-        router.push(value);
-      }}
-    >
+    <Tabs value={pathname}>
       <TabsList>
         <TabsTrigger asChild value="/settings/profile">
           <Link href="/settings/profile">
