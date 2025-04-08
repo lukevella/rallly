@@ -157,7 +157,6 @@ export function PollsTable({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="whitespace-nowrap"
                       style={{
                         width: cell.column.getSize(),
                       }}
@@ -175,7 +174,7 @@ export function PollsTable({
         </Table>
       </div>
       {/* Pagination Controls */}
-      {totalPolls > 0 && (
+      {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-500">
             <Trans

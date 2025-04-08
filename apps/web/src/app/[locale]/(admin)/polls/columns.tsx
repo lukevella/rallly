@@ -121,11 +121,11 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         id: "title",
         header: () => <Trans i18nKey="title" defaults="Title" />,
         cell: (info) => (
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex min-w-0 items-center gap-2 overflow-hidden text-sm">
             <PollStatusIcon status={info.row.original.status} />
             <Link
               href={`/poll/${info.row.original.id}`}
-              className="max-w-full truncate font-medium hover:underline"
+              className="truncate font-medium hover:underline"
               title={info.getValue()}
             >
               {info.getValue()}
@@ -141,7 +141,9 @@ export function useColumns(visibleColumns?: ColumnId[]) {
           const dateOptions = info.getValue();
           const event = info.row.original.event;
           return (
-            <ScheduledEventDisplay event={event} dateOptions={dateOptions} />
+            <div className="whitespace-nowrap">
+              <ScheduledEventDisplay event={event} dateOptions={dateOptions} />
+            </div>
           );
         },
         size: 250,
@@ -159,7 +161,7 @@ export function useColumns(visibleColumns?: ColumnId[]) {
         id: "createdDate",
         header: () => <Trans i18nKey="created" defaults="Created" />,
         cell: (info) => (
-          <span className="text-muted-foreground">
+          <span className="text-muted-foreground whitespace-nowrap">
             {dayjs(info.getValue()).fromNow()}
           </span>
         ),

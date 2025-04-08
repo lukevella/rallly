@@ -62,7 +62,7 @@ export async function AppSidebar({
             className="w-[var(--radix-dropdown-menu-trigger-width)]"
             align="start"
           >
-            <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
+            <DropdownMenuLabel>Teams</DropdownMenuLabel>
             <DropdownMenuCheckboxItem checked>
               <OptimizedAvatarImage
                 src={user.image ?? undefined}
@@ -76,7 +76,7 @@ export async function AppSidebar({
               <Icon>
                 <PlusIcon />
               </Icon>
-              <span>New Workspace</span>
+              <span>New Team</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -99,11 +99,6 @@ export async function AppSidebar({
               href="/members"
               icon={<UsersIcon />}
               label={t("members", { defaultValue: "Members" })}
-            />
-            <NavItem
-              href="/settings/profile"
-              icon={<SettingsIcon />}
-              label={t("settings")}
             />
             {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
             {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}

@@ -23,7 +23,7 @@ export const ScheduledEventDisplay = ({
 }: ScheduledEventDisplayProps) => {
   if (event) {
     return (
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-2 whitespace-nowrap text-sm">
         <span className="text-muted-foreground">
           {event.duration > 0 ? (
             <DateTimeDisplay date={dayjs(event.start)} />
