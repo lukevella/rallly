@@ -30,5 +30,13 @@ export const getUser = cache(async () => {
     redirect("/api/auth/invalid-session");
   }
 
-  return user;
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    image: user.image ?? undefined,
+    locale: user.locale ?? undefined,
+    timeZone: user.timeZone ?? undefined,
+    isPro: user.subscription?.active ?? false,
+  };
 });

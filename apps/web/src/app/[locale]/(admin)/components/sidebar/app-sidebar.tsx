@@ -1,14 +1,4 @@
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -16,19 +6,10 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from "@rallly/ui/sidebar";
-import {
-  BarChart2Icon,
-  CalendarIcon,
-  ChevronsUpDownIcon,
-  HomeIcon,
-  PlusIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react";
+import { BarChart2Icon, CalendarIcon, HomeIcon, UsersIcon } from "lucide-react";
 import * as React from "react";
 
 import { LogoLink } from "@/app/components/logo-link";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
@@ -54,6 +35,7 @@ export async function AppSidebar({
               id: user.id,
               name: user.name,
               image: user.image ?? undefined,
+              pro: user.isPro,
             },
           ]}
         />
