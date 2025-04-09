@@ -35,7 +35,7 @@ export async function AppSidebar({
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <div className="flex justify-between p-1">
+        <div className="flex items-center justify-between p-1">
           <LogoLink />
           <Button variant="ghost" size="icon" asChild>
             <Link href="/new">
