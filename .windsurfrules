@@ -32,7 +32,7 @@ t("menu", { defaultValue: "Menu" });
 20. Use `cn()` from @rallly/ui to compose classes
 21. Prefer using the React module APIs (e.g. React.useState) instead of standalone hooks (e.g. useState)
 22. Do not attempt to fix typescript issues related to missing translations. This will be handled by our tooling.
-23. Never manually add translations to .json files. This will be handled by out tooling.
+23. Never manually add translations to .json files. This will be handled by our tooling.
 24. Add the "use client" directive to the top of any .tsx file that requires client-side javascript
 25. i18nKeys should describe the message in camelCase. Ex. "lastUpdated": "Last Updated"
 26. Keep i18nKeys up to 25 characters

@@ -68,7 +68,7 @@ export async function getPolls({
             },
           },
           orderBy: {
-            createdAt: "desc",
+            createdAt: "asc",
           },
         },
         options: {

@@ -21,6 +21,7 @@ import { requireUser } from "@/next-auth";
 
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
+import { Pagination } from "@/components/pagination";
 import { PollStatusIcon } from "@/components/poll-status-icon";
 import {
   StackedList,
@@ -30,6 +31,8 @@ import {
 import { PollsTabbedView } from "./poll-folders";
 import { SearchInput } from "./search-input";
 import { shortUrl } from "@rallly/utils/absolute-url";
+
+const DEFAULT_PAGE_SIZE = 20;
 
 const pageSchema = z
   .string()
@@ -54,9 +57,11 @@ const pageSizeSchema = z
   .string()
   .nullish()
   .transform((val) => {
-    if (!val) return 10;
+    if (!val) return DEFAULT_PAGE_SIZE;
     const parsed = parseInt(val, 10);
-    return isNaN(parsed) || parsed < 1 ? 10 : Math.min(parsed, 100);
+    return isNaN(parsed) || parsed < 1
+      ? DEFAULT_PAGE_SIZE
+      : Math.min(parsed, 100);
   });
 
 // Combined schema for type inference
@@ -64,7 +69,7 @@ async function loadData({
   userId,
   status = "live",
   page = 1,
-  pageSize = 10,
+  pageSize = DEFAULT_PAGE_SIZE,
   q,
 }: {
   userId: string;
@@ -121,7 +126,7 @@ export default async function Page({
   const parsedPageSize = pageSizeSchema.parse(searchParams.pageSize);
   const parsedQuery = querySchema.parse(searchParams.q);
 
-  const { polls, total } = await loadData({
+  const { polls, total, statusCounts } = await loadData({
     userId,
     status: parsedStatus,
     page: parsedPage,
@@ -195,6 +200,32 @@ export default async function Page({
                 </StackedListItem>
               ))}
             </StackedList>
+            {polls.length > 0 ? (
+              <Pagination
+                currentPage={parsedPage}
+                totalPages={totalPages}
+                totalItems={total}
+                pageSize={parsedPageSize}
+                className="mt-4"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <p className="text-lg font-medium">
+                  <Trans i18nKey="noPolls" defaults="No polls found" />
+                </p>
+                <p className="text-muted-foreground mt-1">
+                  <Trans
+                    i18nKey="noPollsDescription"
+                    defaults="Try adjusting your search or create a new poll"
+                  />
+                </p>
+                <Button variant="primary" className="mt-4" asChild>
+                  <Link href="/new">
+                    <Trans i18nKey="createPoll" defaults="Create Poll" />
+                  </Link>
+                </Button>
+              </div>
+            )}
           </div>
         </PollsTabbedView>
       </PageContent>
