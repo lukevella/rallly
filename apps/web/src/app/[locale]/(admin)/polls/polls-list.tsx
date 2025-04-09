@@ -3,10 +3,13 @@
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
-import dayjs from "dayjs";
 import {
+  ArrowUpRightFromSquareIcon,
+  CalendarSearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ClockIcon,
+  CopyIcon,
   InboxIcon,
   PlusIcon,
 } from "lucide-react";
@@ -20,13 +23,14 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
-import { ScheduledEventDisplay } from "@/components/poll/scheduled-event-display";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PollStatusIcon } from "@/components/poll-status-icon";
+import { ScheduledEventDisplay } from "@/components/poll/scheduled-event-display";
 import { Trans } from "@/components/trans";
 
 import { type PollRow } from "./columns";
 import { PollActions } from "./poll-actions";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 
 type PollsListProps = {
   polls: PollRow[];
@@ -61,7 +65,7 @@ export function PollsList({
   return (
     <div className="space-y-4">
       {polls.length === 0 ? (
-        <Card className="flex h-96 items-center justify-center">
+        <div className="flex h-96 items-center justify-center rounded-lg border">
           <EmptyState>
             <EmptyStateIcon>
               <InboxIcon />
@@ -86,9 +90,9 @@ export function PollsList({
               </Button>
             </EmptyStateFooter>
           </EmptyState>
-        </Card>
+        </div>
       ) : (
-        <div className="space-y-4">
+        <div className="divide-y overflow-hidden rounded-lg border">
           {polls.map((poll) => (
             <PollCard key={poll.id} poll={poll} />
           ))}
@@ -140,51 +144,58 @@ interface PollCardProps {
 }
 
 function PollCard({ poll }: PollCardProps) {
-  const { id, title, status, createdAt, participants, event, dateOptions } =
-    poll;
+  const { id, title, status, participants, event, dateOptions, user } = poll;
+
+  // Determine if the duration is mixed (multiple different durations)
+  const hasMixedDuration = Array.isArray(dateOptions.duration);
+
+  // Format duration display
+  const formatDuration = (duration: number) => {
+    if (duration === 0) return "";
+    if (duration < 60) return `${duration}m`;
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+    return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+  };
+
+  const getDurationText = () => {
+    if (hasMixedDuration) {
+      return <Trans i18nKey="mixedDuration" defaults="Mixed" />;
+    }
+    if (typeof dateOptions.duration === "number") {
+      return formatDuration(dateOptions.duration);
+    }
+    return "";
+  };
 
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-md">
-      <Link href={`/poll/${id}`} className="block p-4">
-        <div className="flex flex-col space-y-3">
-          {/* Title and Status */}
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-2">
-              <PollStatusIcon status={status} />
-              <h3 className="text-base font-medium">{title}</h3>
-            </div>
-            <div className="flex items-center">
-              <PollActions pollId={id} />
-            </div>
+    <div className="">
+      <Link href={`/poll/${id}`} className="group block p-4 hover:bg-gray-50">
+        <div className="flex items-center gap-4">
+          <div className="flex flex-1 items-center gap-2">
+            <PollStatusIcon status={status} />
+            <h3 className="truncate text-sm font-medium group-hover:underline">
+              {title}
+            </h3>
           </div>
-
-          {/* Options Summary and Created Date */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500">
-            <div className="flex items-center gap-1">
-              <ScheduledEventDisplay event={event} dateOptions={dateOptions} />
-            </div>
-            <div className="flex items-center gap-1">
-              <span>
-                <Trans i18nKey="created" defaults="Created" />:
-              </span>
-              <span>{dayjs(createdAt).fromNow()}</span>
-            </div>
-            {event && (
-              <div className="flex items-center gap-1">
-                <span>
-                  <Trans i18nKey="scheduled" defaults="Scheduled" />:
-                </span>
-                <span>{dayjs(event.start).format("MMM D, YYYY")}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Participants */}
-          <div className="flex items-center justify-between">
+          <div>
             <ParticipantAvatarBar participants={participants} max={5} />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon">
+              <Icon>
+                <ArrowUpRightFromSquareIcon />
+              </Icon>
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Icon>
+                <CopyIcon />
+              </Icon>
+            </Button>
+            <PollActions pollId={id} />
           </div>
         </div>
       </Link>
-    </Card>
+    </div>
   );
 }

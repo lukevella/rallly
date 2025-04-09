@@ -41,6 +41,13 @@ export async function getPolls({
         status: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
         event: {
           select: {
             start: true,
@@ -92,6 +99,7 @@ export async function getPolls({
       }
       return {
         ...rest,
+        user: poll.user,
         participants: poll.participants.map((participant) => ({
           id: participant.id,
           name: participant.name,

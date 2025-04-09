@@ -21,7 +21,7 @@ import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
 import { PollsTabbedView } from "./poll-folders";
-import { PollsTable } from "./polls-table";
+import { PollsList } from "./polls-list";
 import { SearchInput } from "./search-input";
 
 const pageSchema = z
@@ -161,7 +161,7 @@ export default async function Page({
           <div className="space-y-4">
             <SearchInput />
             <PollSelectionProvider>
-              <PollsTable
+              <PollsList
                 polls={polls}
                 totalPolls={total}
                 currentPage={parsedPage}

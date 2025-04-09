@@ -22,6 +22,11 @@ export type PollRow = {
   status: PollStatus;
   createdAt: Date;
   updatedAt: Date;
+  user?: {
+    id: string;
+    name: string;
+    image?: string;
+  };
   participants: {
     id: string;
     name: string;

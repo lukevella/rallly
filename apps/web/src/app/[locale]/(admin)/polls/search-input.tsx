@@ -47,8 +47,8 @@ export function SearchInput() {
   };
 
   return (
-    <div className="relative">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+    <div className="relative w-72">
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
         <Icon>
           <SearchIcon />
         </Icon>
@@ -58,7 +58,7 @@ export function SearchInput() {
         type="search"
         autoFocus={searchParams.get("q") !== null}
         placeholder="Search polls by title..."
-        className="pl-10"
+        className="pl-8"
         value={inputValue}
         onChange={handleChange}
       />
