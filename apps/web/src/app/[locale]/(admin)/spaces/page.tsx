@@ -15,7 +15,7 @@ import {
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
 
-export default function TeamsPage() {
+export default function SpacesPage() {
   return (
     <PageContainer>
       <PageHeader>

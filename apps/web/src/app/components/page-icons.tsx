@@ -1,5 +1,7 @@
 "use client";
 
+import { Slot } from "@radix-ui/react-slot";
+import { type VariantProps, cva } from "class-variance-authority";
 import {
   BarChart2Icon,
   CalendarIcon,
@@ -14,42 +16,81 @@ import {
 } from "lucide-react";
 import React from "react";
 
+const pageIconVariants = cva(
+  "inline-flex size-7 items-center justify-center rounded-lg",
+  {
+    variants: {
+      color: {
+        indigo: "bg-indigo-500 text-white",
+        gray: "bg-gray-200 text-gray-600",
+        lime: "bg-lime-500 text-white",
+        blue: "bg-blue-500 text-white",
+        rose: "bg-rose-500 text-white",
+      },
+      size: {
+        sm: "size-5",
+        md: "size-7",
+      },
+    },
+    defaultVariants: {
+      color: "indigo",
+      size: "md",
+    },
+  },
+);
+
+type PageIconVariantProps = VariantProps<typeof pageIconVariants>;
+
+function PageIcon({
+  children,
+  color,
+  size,
+}: {
+  children: React.ReactNode;
+} & PageIconVariantProps) {
+  return (
+    <span className={pageIconVariants({ color, size })}>
+      <Slot className="size-4">{children}</Slot>
+    </span>
+  );
+}
+
 export function SettingsPageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-gray-200 text-gray-600">
+    <PageIcon color="gray" size="md">
       <SettingsIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 
 export function SpacesPageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-lime-500 text-white">
+    <PageIcon color="lime" size="md">
       <EyeIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 
 export function MembersPageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-indigo-500 text-white">
+    <PageIcon color="indigo" size="md">
       <UsersIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 
 export function HomePageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-gray-700 text-white">
+    <PageIcon color="gray" size="md">
       <HomeIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 export function CreatePageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-gray-800 text-white">
+    <PageIcon color="gray" size="md">
       <PlusIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 
@@ -63,32 +104,32 @@ export function PollPageIcon() {
 
 export function EventPageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-rose-500 text-white">
+    <PageIcon color="rose" size="md">
       <CalendarIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 
 export function ProfilePageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-blue-500 text-white">
+    <PageIcon color="blue" size="md">
       <UserIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 
 export function PreferencesPageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-blue-500 text-white">
+    <PageIcon color="blue" size="md">
       <Settings2Icon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
 
 export function BillingPageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-blue-500 text-white">
+    <PageIcon color="blue" size="md">
       <CreditCardIcon className="size-4" />
-    </span>
+    </PageIcon>
   );
 }
