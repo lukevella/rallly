@@ -10,7 +10,6 @@ import {
   CommandSeparator,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
-import { CreditCardIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -21,6 +20,7 @@ import {
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
+  SpacesPageIcon,
 } from "@/app/components/page-icons";
 import { Trans } from "@/components/trans";
 
@@ -79,6 +79,10 @@ export function CommandMenu() {
             <CommandItem onSelect={() => handleSelect("/members")}>
               <MembersPageIcon />
               <Trans i18nKey="members" defaults="Members" />
+            </CommandItem>
+            <CommandItem onSelect={() => handleSelect("/spaces")}>
+              <SpacesPageIcon />
+              <Trans i18nKey="spaces" defaults="Spaces" />
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />

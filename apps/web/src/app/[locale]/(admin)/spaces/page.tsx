@@ -1,6 +1,6 @@
-import { UsersIcon } from "lucide-react";
+import { RocketIcon } from "lucide-react";
 
-import { MembersPageIcon } from "@/app/components/page-icons";
+import { SpacesPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -13,20 +13,21 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { Trans } from "@/components/trans";
 
 export default function TeamsPage() {
   return (
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <MembersPageIcon />
-          Teams
+          <SpacesPageIcon />
+          <Trans i18nKey="spaces" defaults="Spaces" />
         </PageTitle>
       </PageHeader>
       <PageContent>
         <EmptyState className="py-12">
           <EmptyStateIcon>
-            <UsersIcon />
+            <RocketIcon />
           </EmptyStateIcon>
           <EmptyStateTitle>Team Management Coming Soon</EmptyStateTitle>
           <EmptyStateDescription>

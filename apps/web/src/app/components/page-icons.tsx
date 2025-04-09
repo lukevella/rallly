@@ -4,6 +4,7 @@ import {
   BarChart2Icon,
   CalendarIcon,
   CreditCardIcon,
+  EyeIcon,
   HomeIcon,
   PlusIcon,
   Settings2Icon,
@@ -21,6 +22,14 @@ export function SettingsPageIcon() {
   );
 }
 
+export function SpacesPageIcon() {
+  return (
+    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-lime-500 text-white">
+      <EyeIcon className="size-4" />
+    </span>
+  );
+}
+
 export function MembersPageIcon() {
   return (
     <span className="inline-flex size-7 items-center justify-center rounded-lg bg-indigo-500 text-white">
@@ -28,9 +37,10 @@ export function MembersPageIcon() {
     </span>
   );
 }
+
 export function HomePageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-gray-800 text-white">
+    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-gray-700 text-white">
       <HomeIcon className="size-4" />
     </span>
   );

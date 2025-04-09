@@ -49,7 +49,7 @@ export async function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            <NavItem href="/teams">
+            <NavItem href="/spaces">
               <OptimizedAvatarImage
                 size="xs"
                 src={user.image}
