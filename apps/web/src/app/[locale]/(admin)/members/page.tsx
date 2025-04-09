@@ -4,6 +4,7 @@ import { MembersPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
+  PageDescription,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
@@ -13,6 +14,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { Trans } from "@/components/trans";
 
 export default function MembersPage() {
   return (
@@ -20,8 +22,14 @@ export default function MembersPage() {
       <PageHeader>
         <PageTitle>
           <MembersPageIcon />
-          Members
+          <Trans i18nKey="members" defaults="Members" />
         </PageTitle>
+        <PageDescription>
+          <Trans
+            i18nKey="membersPageDesc"
+            defaults="Manage your team members and their permissions"
+          />
+        </PageDescription>
       </PageHeader>
       <PageContent>
         <EmptyState className="py-12">

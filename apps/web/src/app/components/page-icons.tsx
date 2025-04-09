@@ -21,6 +21,7 @@ const pageIconVariants = cva(
   {
     variants: {
       color: {
+        darkGray: "bg-gray-700 text-white",
         indigo: "bg-indigo-500 text-white",
         gray: "bg-gray-200 text-gray-600",
         lime: "bg-lime-500 text-white",
@@ -81,7 +82,7 @@ export function MembersPageIcon() {
 
 export function HomePageIcon() {
   return (
-    <PageIcon color="gray" size="md">
+    <PageIcon color="darkGray" size="md">
       <HomeIcon className="size-4" />
     </PageIcon>
   );
@@ -112,7 +113,7 @@ export function EventPageIcon() {
 
 export function ProfilePageIcon() {
   return (
-    <PageIcon color="blue" size="md">
+    <PageIcon color="gray" size="md">
       <UserIcon className="size-4" />
     </PageIcon>
   );
@@ -120,7 +121,7 @@ export function ProfilePageIcon() {
 
 export function PreferencesPageIcon() {
   return (
-    <PageIcon color="blue" size="md">
+    <PageIcon color="gray" size="md">
       <Settings2Icon className="size-4" />
     </PageIcon>
   );
@@ -128,7 +129,7 @@ export function PreferencesPageIcon() {
 
 export function BillingPageIcon() {
   return (
-    <PageIcon color="blue" size="md">
+    <PageIcon color="gray" size="md">
       <CreditCardIcon className="size-4" />
     </PageIcon>
   );
