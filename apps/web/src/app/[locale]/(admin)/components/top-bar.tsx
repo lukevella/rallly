@@ -1,8 +1,19 @@
 import { cn } from "@rallly/ui";
 
-export function TopBar({ children }: { children: React.ReactNode }) {
+export function TopBar({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="bg-background/90 sticky top-0 z-10 flex items-center gap-4 rounded-t-lg border-b px-4 py-3 backdrop-blur-md">
+    <div
+      className={cn(
+        "bg-background/90 sticky top-0 z-10 flex items-center gap-4 rounded-t-lg border-b px-4 py-3 backdrop-blur-md",
+        className,
+      )}
+    >
       {children}
     </div>
   );

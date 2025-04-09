@@ -11,6 +11,7 @@ import {
 import {
   BarChart2Icon,
   CalendarIcon,
+  ChevronsUpDownIcon,
   HomeIcon,
   PlusIcon,
   UsersIcon,
@@ -25,7 +26,6 @@ import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
 import { NavItem } from "./nav-item";
-import { TeamSwitcher } from "./team-switcher";
 
 export async function AppSidebar({
   ...props
@@ -57,6 +57,11 @@ export async function AppSidebar({
               />
               <span className="flex-1">{user.name}</span>
               {user.isPro && <ProBadge />}
+              <span className="-mr-1 inline-flex size-7 items-center justify-center">
+                <Icon>
+                  <ChevronsUpDownIcon />
+                </Icon>
+              </span>
             </NavItem>
             <NavItem href="/">
               <HomeIcon className="size-4" />
