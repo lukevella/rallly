@@ -37,7 +37,7 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </TabsTrigger>
       </TabsList>
-      <TabsContent value={value} key={value}>
+      <TabsContent tabIndex={-1} value={value} key={value}>
         {children}
       </TabsContent>
     </Tabs>
