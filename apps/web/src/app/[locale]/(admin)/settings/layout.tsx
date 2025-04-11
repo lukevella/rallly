@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AccountPageIcon } from "@/app/components/page-icons";
+import { SettingsPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -25,9 +25,9 @@ export default async function ProfileLayout({
         <div className="flex items-start gap-4">
           <div className="flex-1">
             <PageTitle>
-              <AccountPageIcon />
-              {t("account", {
-                defaultValue: "Account",
+              <SettingsPageIcon />
+              {t("settings", {
+                defaultValue: "Settings",
               })}
             </PageTitle>
           </div>
