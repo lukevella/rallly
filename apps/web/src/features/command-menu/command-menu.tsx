@@ -16,7 +16,6 @@ import {
   BillingPageIcon,
   EventPageIcon,
   HomePageIcon,
-  MembersPageIcon,
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
