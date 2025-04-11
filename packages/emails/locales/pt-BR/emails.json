@@ -53,5 +53,14 @@
   "changeEmailRequest_button": "Verificar endereço de email",
   "changeEmailRequest_subject": "Verifique seu novo endereço de email",
   "changeEmailRequest_text3": "Este link expirará em 10 minutos. Se você não solicitou esta alteração, por favor, ignore este e-mail.",
-  "changeEmailRequest_text1": "Recebemos um pedido de alteração do endereço de email da sua conta de <b>{fromEmail}</b> para <b>{toEmail}</b>."
+  "changeEmailRequest_text1": "Recebemos um pedido de alteração do endereço de email da sua conta de <b>{fromEmail}</b> para <b>{toEmail}</b>.",
+  "abandoned_checkout_name": "Olá {name},",
+  "abandoned_checkout_noname": "Olá,",
+  "abandoned_checkout_content": "Percebi que você estava pesquisando <b>Rallly Pro</b> mais cedo. Eu gostaria de entrar em contato para saber se você tem alguma pergunta ou precisa de ajuda com algo.",
+  "abandoned_checkout_offer": "Para ajudar você a iniciar, aqui está um desconto de <b>{discount}</b> no seu primeiro ano. Use o código abaixo na finalização da compra:",
+  "abandoned_checkout_button": "Atualize para o Rally Pro",
+  "abandoned_checkout_support": "Se você tiver alguma dúvida sobre Rallly Pro ou precisar de ajuda com qualquer coisa, basta responder a este e-mail. Estou aqui para ajudar!",
+  "abandoned_checkout_preview": "Oferta exclusiva: obtenha {discount}% de desconto em seu primeiro ano de Rallly Pro!",
+  "abandoned_checkout_subject": "Receba {discount}% de desconto no seu primeiro ano do Rallly Pro",
+  "abandoned_checkout_signoff": "Atenciosamente,"
 }
