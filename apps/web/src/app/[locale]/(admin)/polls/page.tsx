@@ -159,7 +159,7 @@ export default async function Page({
               </Icon>
             </Link>
           </Button>
-          <Button variant="primary" size="icon" asChild>
+          <Button size="icon" asChild>
             <Link href="/new">
               <Icon>
                 <PlusIcon />

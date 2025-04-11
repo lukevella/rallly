@@ -80,6 +80,13 @@ export function MembersPageIcon() {
   );
 }
 
+export function TeamsPageIcon() {
+  return (
+    <PageIcon color="indigo" size="md">
+      <UsersIcon className="size-4" />
+    </PageIcon>
+  );
+}
 export function HomePageIcon() {
   return (
     <PageIcon color="darkGray" size="md">

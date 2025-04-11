@@ -6,22 +6,21 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarMenu,
+  SidebarMenu
 } from "@rallly/ui/sidebar";
 import {
   BarChart2Icon,
   CalendarIcon,
-  ChevronsUpDownIcon,
   HomeIcon,
   PlusIcon,
-  UsersIcon,
+  SettingsIcon,
+  UsersIcon
 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 
 import { LogoLink } from "@/app/components/logo-link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { ProBadge } from "@/components/pro-badge";
 import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
@@ -50,18 +49,10 @@ export async function AppSidebar({
         <SidebarGroup>
           <SidebarMenu>
             <NavItem href="/spaces">
-              <OptimizedAvatarImage
-                size="xs"
-                src={user.image}
-                name={user.name}
-              />
-              <span className="flex-1">{user.name}</span>
-              {user.isPro && <ProBadge />}
-              <span className="-mr-1 inline-flex size-7 items-center justify-center">
-                <Icon>
-                  <ChevronsUpDownIcon />
-                </Icon>
+              <span className="inline-flex size-4 items-center justify-center rounded bg-violet-400 text-xs text-white">
+                P
               </span>
+              <span className="flex-1">Personal</span>
             </NavItem>
             <NavItem href="/">
               <HomeIcon className="size-4" />
@@ -75,9 +66,13 @@ export async function AppSidebar({
               <CalendarIcon className="size-4" />
               {t("events")}
             </NavItem>
-            <NavItem href="/members">
+            <NavItem href="/teams">
               <UsersIcon className="size-4" />
-              {t("members", { defaultValue: "Members" })}
+              {t("teams", { defaultValue: "Teams" })}
+            </NavItem>
+            <NavItem href="/settings">
+              <SettingsIcon className="size-4" />
+              {t("settings", { defaultValue: "Settings" })}
             </NavItem>
             {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
             {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}

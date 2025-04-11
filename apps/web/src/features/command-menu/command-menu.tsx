@@ -21,6 +21,7 @@ import {
   PreferencesPageIcon,
   ProfilePageIcon,
   SpacesPageIcon,
+  TeamsPageIcon,
 } from "@/app/components/page-icons";
 import { Trans } from "@/components/trans";
 
@@ -76,9 +77,9 @@ export function CommandMenu() {
               <EventPageIcon />
               <Trans i18nKey="events" defaults="Events" />
             </CommandItem>
-            <CommandItem onSelect={() => handleSelect("/members")}>
-              <MembersPageIcon />
-              <Trans i18nKey="members" defaults="Members" />
+            <CommandItem onSelect={() => handleSelect("/teams")}>
+              <TeamsPageIcon />
+              <Trans i18nKey="teams" defaults="Teams" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/spaces")}>
               <SpacesPageIcon />
