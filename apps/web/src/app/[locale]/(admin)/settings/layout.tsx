@@ -1,3 +1,4 @@
+import { Button } from "@rallly/ui/button";
 import React from "react";
 
 import { SettingsPageIcon } from "@/app/components/page-icons";
@@ -9,10 +10,8 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/i18n/server";
 
-import { SettingsLayout } from "./settings-menu";
-import { Button } from "@rallly/ui/button";
-import { Trans } from "@/components/trans";
 import { SignOutButton } from "./components/sign-out-button";
+import { SettingsLayout } from "./settings-menu";
 
 export default async function ProfileLayout({
   children,
