@@ -18,10 +18,22 @@ export const ParticipantAvatarBar = ({
   participants,
   max = Infinity,
 }: ParticipantAvatarBarProps) => {
-  const visibleParticipants = participants.slice(0, max);
-  const extraParticipants = participants.slice(max, max + 10);
-  const moreParticipants =
-    participants.length - visibleParticipants.length - extraParticipants.length;
+  const totalParticipants = participants.length;
+
+  const visibleCount = totalParticipants <= max ? totalParticipants : max - 1;
+
+  const visibleParticipants = participants.slice(0, visibleCount);
+
+  const tooltipParticipants = participants.slice(
+    visibleCount,
+    visibleCount + 10,
+  );
+
+  const remainingCount =
+    totalParticipants - visibleCount - tooltipParticipants.length;
+
+  const hiddenCount = totalParticipants - visibleCount;
+
   return (
     <ul className="flex cursor-default items-center -space-x-1">
       {visibleParticipants.map((participant, index) => (
@@ -38,7 +50,7 @@ export const ParticipantAvatarBar = ({
           <TooltipContent>{participant.name}</TooltipContent>
         </Tooltip>
       ))}
-      {extraParticipants.length > 0 ? (
+      {hiddenCount > 0 ? (
         <li className="relative z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -49,20 +61,20 @@ export const ParticipantAvatarBar = ({
                   "inline-flex h-5 items-center justify-center",
                 )}
               >
-                +{extraParticipants.length + moreParticipants}
+                +{hiddenCount}
               </span>
             </TooltipTrigger>
             <TooltipPortal>
               <TooltipContent className="z-10">
                 <ul>
-                  {extraParticipants.map((participant, index) => (
+                  {tooltipParticipants.map((participant, index) => (
                     <li key={index}>{participant.name}</li>
                   ))}
-                  {moreParticipants > 0 && (
+                  {remainingCount > 0 && (
                     <li>
                       <Trans
                         i18nKey="moreParticipants"
-                        values={{ count: moreParticipants }}
+                        values={{ count: remainingCount }}
                         defaults="{count} more…"
                       />
                     </li>
