@@ -9,12 +9,14 @@ import {
   CommandList,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
+import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
   BillingPageIcon,
   EventPageIcon,
   HomePageIcon,
+  PageIcon,
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
@@ -62,6 +64,16 @@ export function CommandMenu() {
               <Trans i18nKey="commandMenuNoResults" defaults="No results" />
             </span>
           </CommandEmpty>
+          <CommandGroup
+            heading={<Trans i18nKey="actions" defaults="Actions" />}
+          >
+            <CommandItem onSelect={() => handleSelect("/new")}>
+              <PageIcon>
+                <PlusIcon />
+              </PageIcon>
+              <Trans i18nKey="create" defaults="Create" />
+            </CommandItem>
+          </CommandGroup>
           <CommandGroup heading="Navigation">
             <CommandItem onSelect={() => handleSelect("/")}>
               <HomePageIcon />
@@ -75,14 +87,14 @@ export function CommandMenu() {
               <EventPageIcon />
               <Trans i18nKey="events" defaults="Events" />
             </CommandItem>
-            <CommandItem onSelect={() => handleSelect("/teams")}>
+            {/* <CommandItem onSelect={() => handleSelect("/teams")}>
               <TeamsPageIcon />
               <Trans i18nKey="teams" defaults="Teams" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/spaces")}>
               <SpacesPageIcon />
               <Trans i18nKey="spaces" defaults="Spaces" />
-            </CommandItem>
+            </CommandItem> */}
           </CommandGroup>
           <CommandGroup
             heading={<Trans i18nKey="account" defaults="Account" />}

@@ -1,8 +1,6 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { PlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 

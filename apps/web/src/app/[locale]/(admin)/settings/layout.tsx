@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AccountPageIcon, SettingsPageIcon } from "@/app/components/page-icons";
+import { AccountPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,

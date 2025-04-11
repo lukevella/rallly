@@ -35,7 +35,7 @@ const pageIconVariants = cva(
       },
     },
     defaultVariants: {
-      color: "indigo",
+      color: "gray",
       size: "md",
     },
   },
@@ -43,7 +43,7 @@ const pageIconVariants = cva(
 
 type PageIconVariantProps = VariantProps<typeof pageIconVariants>;
 
-function PageIcon({
+export function PageIcon({
   children,
   color,
   size,
