@@ -20,8 +20,6 @@ import {
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
-  SpacesPageIcon,
-  TeamsPageIcon,
 } from "@/app/components/page-icons";
 import { Trans } from "@/components/trans";
 
@@ -64,9 +62,7 @@ export function CommandMenu() {
               <Trans i18nKey="commandMenuNoResults" defaults="No results" />
             </span>
           </CommandEmpty>
-          <CommandGroup
-            heading={<Trans i18nKey="actions" defaults="Actions" />}
-          >
+          <CommandGroup heading={<Trans i18nKey="polls" defaults="Actions" />}>
             <CommandItem onSelect={() => handleSelect("/new")}>
               <PageIcon>
                 <PlusIcon />
