@@ -303,19 +303,6 @@
   "priceFree": "Free",
   "signUp": "Sign Up",
   "upgradeToPro": "Upgrade to Pro",
-  "pricesShownIn": "Prices shown in {currency}",
-  "monthlyBilling": "Monthly",
-  "yearlyBilling": "Yearly",
-  "perMonth": "/mo",
-  "featureEverythingInHobby": "Everything in Hobby",
-  "featureFinalizePollDescription": "Lock your poll and notify participants when you've made your final decision.",
-  "featureNameFinalizePoll": "Finalize",
-  "featureDuplicatePollDescription": "Create a copy of an existing poll to save time when creating similar events.",
-  "featureNameDuplicatePoll": "Duplicate",
-  "featureAdvancedPollSettingsDescription": "Access additional options like requiring email addresses and hiding participants.",
-  "featureNameAdvancedPollSettings": "Advanced settings",
-  "featureExtendedLifetimeDescription": "Keep your polls active for longer periods without worrying about automatic deletion.",
-  "featureNameExtendedLifetime": "Extended poll lifetime",
   "moreParticipants": "{count} more…",
   "noDates": "No dates",
   "commandMenuNoResults": "No results",
@@ -334,6 +321,5 @@
   "paginationItems": "Showing {startItem}–{endItem} of {totalItems}",
   "paginationPrevious": "Previous",
   "paginationPage": "Page {currentPage} of {totalPages}",
-  "paginationNext": "Next",
-  "actions": "Actions"
+  "paginationNext": "Next"
 }

@@ -6,12 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import {
-  CircleCheckIcon,
-  CircleIcon,
-  CirclePauseIcon,
-  CirclePlayIcon,
-} from "lucide-react";
+import { CircleCheckIcon, CirclePauseIcon, CirclePlayIcon } from "lucide-react";
 
 import { Trans } from "@/components/trans";
 

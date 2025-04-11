@@ -1,10 +1,11 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { Trans } from "@/components/trans";
-import { signOut } from "next-auth/react";
 import { Icon } from "@rallly/ui/icon";
 import { LogOutIcon } from "lucide-react";
+import { signOut } from "next-auth/react";
+
+import { Trans } from "@/components/trans";
 
 export const SignOutButton = () => {
   return (

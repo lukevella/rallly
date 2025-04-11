@@ -2,11 +2,12 @@
 
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { useCopyToClipboard } from "react-use";
-import { useTranslation } from "@/i18n/client";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
+import { useCopyToClipboard } from "react-use";
+
+import { useTranslation } from "@/i18n/client";
 
 export function CopyLinkButton({
   href,
