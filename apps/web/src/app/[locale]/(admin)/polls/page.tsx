@@ -27,7 +27,7 @@ import { getPolls } from "@/data/get-polls";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
-import { PollsTabbedView } from "./poll-folders";
+import { PollsTabbedView } from "./polls-tabbed-view";
 import { SearchInput } from "./search-input";
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -124,7 +124,7 @@ export default async function Page({
   const parsedPageSize = pageSizeSchema.parse(searchParams.pageSize);
   const parsedQuery = querySchema.parse(searchParams.q);
 
-  const { polls, total, statusCounts } = await loadData({
+  const { polls, total } = await loadData({
     userId,
     status: parsedStatus,
     page: parsedPage,

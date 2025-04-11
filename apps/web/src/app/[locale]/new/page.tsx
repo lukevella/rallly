@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <div>
       <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-x-2 sm:px-6">
+        <div className="mx-auto flex items-center justify-between gap-x-2">
           <div className="flex items-center gap-x-4 sm:flex-1">
             <BackButton />
           </div>

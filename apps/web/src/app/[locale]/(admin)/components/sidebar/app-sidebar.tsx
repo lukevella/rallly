@@ -9,25 +9,16 @@ import {
   SidebarMenu,
 } from "@rallly/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import {
-  BarChart2Icon,
-  CalendarIcon,
-  ChevronsUpDownIcon,
-  HomeIcon,
-  PlusIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react";
+import { BarChart2Icon, CalendarIcon, HomeIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 
 import { LogoLink } from "@/app/components/logo-link";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
-import { UpgradeButton } from "../upgrade-button";
 import { NavItem } from "./nav-item";
+import { NavUser } from "./nav-user";
 
 export async function AppSidebar({
   ...props
@@ -91,21 +82,12 @@ export async function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Link
-          href="/settings/profile"
-          className="flex w-full items-center gap-3 rounded-md p-3 text-sm hover:bg-gray-200 data-[state=open]:bg-gray-200"
-        >
-          <OptimizedAvatarImage size="md" src={user.image} name={user.name} />
-          <div className="flex-1 truncate text-left">
-            <div>{user.name}</div>
-            <div className="text-muted-foreground truncate text-sm font-normal">
-              {user.email}
-            </div>
-          </div>
-          <Icon>
-            <ChevronsUpDownIcon />
-          </Icon>
-        </Link>
+        <NavUser
+          name={user.name}
+          email={user.email}
+          image={user.image}
+          pro={user.isPro}
+        />
       </SidebarFooter>
     </Sidebar>
   );
