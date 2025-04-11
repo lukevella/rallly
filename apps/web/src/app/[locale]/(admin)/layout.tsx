@@ -6,7 +6,6 @@ import Link from "next/link";
 import { AppSidebar } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar";
 import { AppSidebarProvider } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar-provider";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { getUser } from "@/data/get-user";
 import { CommandMenu } from "@/features/navigation/command-menu";
 
@@ -21,7 +20,6 @@ export default async function Layout({
   return (
     <AppSidebarProvider>
       <CommandMenu />
-      <RouterLoadingIndicator />
       <AppSidebar />
       <SidebarInset>
         <TopBar className="sm:hidden">
