@@ -1,5 +1,6 @@
 import React from "react";
 
+import { SettingsPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -8,7 +9,8 @@ import {
 } from "@/app/components/page-layout";
 import { getTranslation } from "@/i18n/server";
 
-import { SettingsMenu } from "./settings-menu";
+import { SignOutButton } from "./components/sign-out-button";
+import { SettingsLayout } from "./settings-menu";
 
 export default async function ProfileLayout({
   children,
@@ -20,13 +22,22 @@ export default async function ProfileLayout({
   return (
     <PageContainer>
       <PageHeader>
-        <PageTitle>{t("settings")}</PageTitle>
-      </PageHeader>
-      <PageContent className="space-y-3 sm:space-y-4">
-        <div className="scrollbar-none -mx-3 overflow-auto bg-gray-100 px-3 sm:mx-0 sm:px-0">
-          <SettingsMenu />
+        <div className="flex items-start gap-4">
+          <div className="flex-1">
+            <PageTitle>
+              <SettingsPageIcon />
+              {t("settings", {
+                defaultValue: "Settings",
+              })}
+            </PageTitle>
+          </div>
+          <div className="flex items-center gap-2">
+            <SignOutButton />
+          </div>
         </div>
-        <div>{children}</div>
+      </PageHeader>
+      <PageContent>
+        <SettingsLayout>{children}</SettingsLayout>
       </PageContent>
     </PageContainer>
   );

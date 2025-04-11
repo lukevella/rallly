@@ -16,7 +16,7 @@ import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";
 
 import { PayWallDialog } from "@/components/pay-wall-dialog";
-import { ProFeatureBadge } from "@/components/pro-feature-badge";
+import { ProBadge } from "@/components/pro-badge";
 import { usePlan } from "@/contexts/plan";
 
 export type PollSettingsFormData = {
@@ -42,7 +42,7 @@ const SettingTitle = ({
       <div className="text-sm font-medium">{children}</div>
       {pro ? (
         <div>
-          <ProFeatureBadge />
+          <ProBadge />
         </div>
       ) : null}
     </div>

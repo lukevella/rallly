@@ -13,8 +13,12 @@ import {
   SparklesIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
+import {
+  SettingsContent,
+  SettingsSection,
+} from "@/app/[locale]/(admin)/settings/components/settings-layout";
 import {
   DescriptionDetails,
   DescriptionList,
@@ -29,7 +33,6 @@ import {
 } from "@/components/empty-state";
 import { FormattedDate } from "@/components/formatted-date";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
-import { Settings, SettingsSection } from "@/components/settings/settings";
 import { Trans } from "@/components/trans";
 import { requireUser } from "@/next-auth";
 import { isSelfHosted } from "@/utils/constants";
@@ -39,10 +42,10 @@ import { SubscriptionPrice } from "./components/subscription-price";
 import { SubscriptionStatus } from "./components/subscription-status";
 
 async function getData() {
-  const user = await requireUser();
+  const { userId } = await requireUser();
 
   const data = await prisma.user.findUnique({
-    where: { id: user.id },
+    where: { id: userId },
     select: {
       customerId: true,
       subscription: {
@@ -70,7 +73,7 @@ async function getData() {
   });
 
   if (!data) {
-    throw new Error("User not found");
+    redirect("/api/auth/invalid-session");
   }
 
   return data;
@@ -86,7 +89,7 @@ export default async function Page() {
   const { subscription } = data;
 
   return (
-    <Settings>
+    <SettingsContent>
       <SettingsSection
         title={
           <Trans i18nKey="billingSubscriptionTitle" defaults="Subscription" />
@@ -302,6 +305,6 @@ export default async function Page() {
           </Button>
         </div>
       </SettingsSection>
-    </Settings>
+    </SettingsContent>
   );
 }

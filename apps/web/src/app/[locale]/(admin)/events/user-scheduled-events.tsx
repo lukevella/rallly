@@ -1,39 +1,41 @@
 "use client";
 
-import { RadioCards, RadioCardsItem } from "@rallly/ui/radio-pills";
-import { useSearchParams } from "next/navigation";
+import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
+import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 
 import { PastEvents } from "@/app/[locale]/(admin)/events/past-events";
+import { UpcomingEvents } from "@/app/[locale]/(admin)/events/upcoming-events";
 import { Trans } from "@/components/trans";
-
-import { UpcomingEvents } from "./upcoming-events";
 
 const eventPeriodSchema = z.enum(["upcoming", "past"]).catch("upcoming");
 
 export function UserScheduledEvents() {
   const searchParams = useSearchParams();
   const period = eventPeriodSchema.parse(searchParams?.get("period"));
+  const router = useRouter();
 
   return (
     <div className="space-y-4">
-      <div>
-        <RadioCards
-          value={period}
-          onValueChange={(value) => {
-            const newParams = new URLSearchParams(searchParams?.toString());
-            newParams.set("period", value);
-            window.history.pushState(null, "", `?${newParams.toString()}`);
-          }}
-        >
-          <RadioCardsItem value="upcoming">
+      <Tabs
+        value={searchParams.get("period") ?? "upcoming"}
+        onValueChange={(value) => {
+          const params = new URLSearchParams(searchParams);
+          params.set("period", value);
+          const newUrl = `?${params.toString()}`;
+          router.replace(newUrl);
+        }}
+        aria-label="Event period"
+      >
+        <TabsList>
+          <TabsTrigger value="upcoming">
             <Trans i18nKey="upcoming" defaults="Upcoming" />
-          </RadioCardsItem>
-          <RadioCardsItem value="past">
+          </TabsTrigger>
+          <TabsTrigger value="past">
             <Trans i18nKey="past" defaults="Past" />
-          </RadioCardsItem>
-        </RadioCards>
-      </div>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
       <div>
         {period === "upcoming" && <UpcomingEvents />}
         {period === "past" && <PastEvents />}

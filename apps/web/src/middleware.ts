@@ -12,9 +12,12 @@ export const middleware = withAuth(async (req) => {
   const newUrl = nextUrl.clone();
 
   const isLoggedIn = req.auth?.user?.email;
-
   // if the user is already logged in, don't let them access the login page
-  if (/^\/(login)/.test(newUrl.pathname) && isLoggedIn) {
+  if (
+    /^\/(login)/.test(newUrl.pathname) &&
+    isLoggedIn &&
+    !newUrl.searchParams.get("invalidSession")
+  ) {
     newUrl.pathname = "/";
     return NextResponse.redirect(newUrl);
   }

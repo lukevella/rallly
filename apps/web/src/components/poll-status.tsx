@@ -3,6 +3,8 @@ import { cn } from "@rallly/ui";
 
 import { Trans } from "@/components/trans";
 
+import { PollStatusIcon } from "./poll-status-icon";
+
 export const PollStatusLabel = ({
   status,
   className,
@@ -14,12 +16,9 @@ export const PollStatusLabel = ({
     case "live":
       return (
         <span
-          className={cn(
-            "inline-flex items-center gap-x-1.5 text-sm font-medium text-pink-600",
-            className,
-          )}
+          className={cn("inline-flex items-center gap-x-2 text-sm", className)}
         >
-          <span className="size-1.5 rounded-full bg-pink-600" />
+          <PollStatusIcon status={status} />
           <Trans i18nKey="pollStatusOpen" defaults="Live" />
         </span>
       );
@@ -27,12 +26,11 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 rounded-full text-sm font-medium text-gray-500",
+            "inline-flex items-center gap-x-2 rounded-full text-sm",
             className,
           )}
         >
-          <span className="size-1.5 rounded-full bg-gray-600" />
-
+          <PollStatusIcon status={status} />
           <Trans i18nKey="pollStatusPaused" defaults="Paused" />
         </span>
       );
@@ -40,12 +38,11 @@ export const PollStatusLabel = ({
       return (
         <span
           className={cn(
-            "inline-flex items-center gap-x-1.5 rounded-full text-sm font-medium text-green-600",
+            "inline-flex items-center gap-x-2 rounded-full text-sm",
             className,
           )}
         >
-          <span className="size-1.5 rounded-full bg-green-600" />
-
+          <PollStatusIcon status={status} />
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </span>
       );
