@@ -5,8 +5,8 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
   previewFeatures = ["relationJoins"]
 }
 
@@ -38,21 +38,21 @@ model Account {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String
-  email         String      @unique() @db.Citext
-  emailVerified DateTime?   @map("email_verified")
-  image         String?
-  timeZone      String?     @map("time_zone")
-  weekStart     Int?        @map("week_start")
-  timeFormat    TimeFormat? @map("time_format")
-  locale        String?
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime?   @updatedAt @map("updated_at")
-  customerId    String?     @map("customer_id")
-  banned        Boolean     @default(false)
-  bannedAt      DateTime?   @map("banned_at")
-  banReason     String?     @map("ban_reason")
+  id             String      @id @default(cuid())
+  name           String
+  email          String      @unique() @db.Citext
+  emailVerified  DateTime?   @map("email_verified")
+  image          String?
+  timeZone       String?     @map("time_zone")
+  weekStart      Int?        @map("week_start")
+  timeFormat     TimeFormat? @map("time_format")
+  locale         String?
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime?   @updatedAt @map("updated_at")
+  customerId     String?     @map("customer_id")
+  banned         Boolean     @default(false)
+  bannedAt       DateTime?   @map("banned_at")
+  banReason      String?     @map("ban_reason")
 
   comments       Comment[]
   polls          Poll[]
@@ -61,10 +61,8 @@ model User {
   accounts       Account[]
   participants   Participant[]
   paymentMethods PaymentMethod[]
-  subscription   Subscription?   @relation("UserToSubscription")
+  subscription   Subscription? @relation("UserToSubscription")
   pollViews      PollView[]
-  spaceMembers   SpaceMember[]
-  ownedSpaces    Space[]         @relation("SpaceOwner")
 
   @@map("users")
 }
@@ -116,14 +114,10 @@ model Subscription {
   periodStart       DateTime             @map("period_start")
   periodEnd         DateTime             @map("period_end")
   cancelAtPeriodEnd Boolean              @default(false) @map("cancel_at_period_end")
-  userId            String?              @map("user_id")
-  spaceId           String?              @unique @map("space_id")
+  userId            String               @unique @map("user_id")
 
-  user  User?  @relation("UserToSubscription", fields: [userId], references: [id], onDelete: SetNull)
-  space Space? @relation("SpaceToSubscription", fields: [spaceId], references: [id], onDelete: SetNull)
+  user User @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId])
-  @@index([spaceId])
   @@map("subscriptions")
 }
 
@@ -152,7 +146,6 @@ model Poll {
   description             String?
   location                String?
   userId                  String?    @map("user_id")
-  spaceId                 String?    @map("space_id")
   guestId                 String?    @map("guest_id")
   timeZone                String?    @map("time_zone")
   status                  PollStatus @default(live)
@@ -167,8 +160,7 @@ model Poll {
   disableComments         Boolean    @default(false) @map("disable_comments")
   requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
 
-  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
-  space        Space?        @relation(fields: [spaceId], references: [id], onDelete: SetNull)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   event        Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
   options      Option[]
   participants Participant[]
@@ -178,7 +170,6 @@ model Poll {
   views        PollView[]
 
   @@index([guestId])
-  @@index([spaceId])
   @@map("polls")
 }
 
@@ -302,80 +293,13 @@ model PollView {
   userAgent String?  @map("user_agent")
   viewedAt  DateTime @default(now()) @map("viewed_at")
 
-  poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([pollId], type: Hash)
   @@index([userId], type: Hash)
   @@index([viewedAt])
   @@map("poll_views")
-}
-
-model Space {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  name        String
-  image       String?
-  description String?
-  ownerId     String   @map("owner_id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  customerId  String?  @map("customer_id")
-  isPersonal  Boolean  @default(false) @map("is_personal")
-
-  owner        User          @relation("SpaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  members      SpaceMember[]
-  subscription Subscription? @relation("SpaceToSubscription")
-  polls        Poll[]
-  invites      SpaceInvite[]
-
-  @@index([ownerId])
-  @@map("spaces")
-}
-
-enum SpaceMemberRole {
-  owner
-  admin
-  member
-
-  @@map("space_member_role")
-}
-
-model SpaceMember {
-  id        String          @id @default(cuid())
-  spaceId   String          @map("space_id")
-  userId    String          @map("user_id")
-  role      SpaceMemberRole @default(member)
-  createdAt DateTime        @default(now()) @map("created_at")
-  updatedAt DateTime        @updatedAt @map("updated_at")
-  invitedBy String?         @map("invited_by")
-  joinedAt  DateTime?       @map("joined_at")
-
-  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([spaceId, userId])
-  @@index([spaceId])
-  @@index([userId])
-  @@map("space_members")
-}
-
-model SpaceInvite {
-  id        String          @id @default(cuid())
-  email     String          @db.Citext
-  spaceId   String          @map("space_id")
-  role      SpaceMemberRole @default(member)
-  token     String          @unique
-  expires   DateTime
-  createdAt DateTime        @default(now()) @map("created_at")
-  createdBy String          @map("created_by")
-
-  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-
-  @@unique([email, spaceId])
-  @@index([spaceId])
-  @@index([token])
-  @@map("space_invites")
 }
 
 model VerificationToken {
