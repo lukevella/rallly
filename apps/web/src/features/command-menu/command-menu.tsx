@@ -7,7 +7,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
 import { useRouter } from "next/navigation";
@@ -85,8 +84,9 @@ export function CommandMenu() {
               <Trans i18nKey="spaces" defaults="Spaces" />
             </CommandItem>
           </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Settings">
+          <CommandGroup
+            heading={<Trans i18nKey="account" defaults="Account" />}
+          >
             <CommandItem onSelect={() => handleSelect("/settings/profile")}>
               <ProfilePageIcon />
               <Trans i18nKey="profile" defaults="Profile" />

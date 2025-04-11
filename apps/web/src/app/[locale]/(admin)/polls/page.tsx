@@ -1,6 +1,7 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
+import { shortUrl } from "@rallly/utils/absolute-url";
 import { PlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
@@ -13,24 +14,23 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { Trans } from "@/components/trans";
-import { getPollCountByStatus } from "@/data/get-poll-count-by-status";
-import { getPolls } from "@/data/get-polls";
-import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/next-auth";
-
 import { CopyLinkButton } from "@/components/copy-link-button";
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Pagination } from "@/components/pagination";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusIcon } from "@/components/poll-status-icon";
 import {
   StackedList,
   StackedListItem,
   StackedListItemContent,
 } from "@/components/stacked-list";
+import { Trans } from "@/components/trans";
+import { getPollCountByStatus } from "@/data/get-poll-count-by-status";
+import { getPolls } from "@/data/get-polls";
+import { getTranslation } from "@/i18n/server";
+import { requireUser } from "@/next-auth";
+
 import { PollsTabbedView } from "./poll-folders";
 import { SearchInput } from "./search-input";
-import { shortUrl } from "@rallly/utils/absolute-url";
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -152,18 +152,9 @@ export default async function Page({
           </PageDescription>
         </PageHeader>
         <div className="flex items-start gap-2">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/settings/polls">
-              <Icon>
-                <SettingsIcon />
-              </Icon>
-            </Link>
-          </Button>
-          <Button size="icon" asChild>
+          <Button size="sm" asChild>
             <Link href="/new">
-              <Icon>
-                <PlusIcon />
-              </Icon>
+              <Trans i18nKey="create" defaults="Create" />
             </Link>
           </Button>
         </div>

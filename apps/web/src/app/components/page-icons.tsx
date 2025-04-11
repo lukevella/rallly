@@ -11,6 +11,7 @@ import {
   PlusIcon,
   Settings2Icon,
   SettingsIcon,
+  UserCogIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
@@ -64,6 +65,13 @@ export function SettingsPageIcon() {
   );
 }
 
+export function AccountPageIcon() {
+  return (
+    <PageIcon color="gray" size="md">
+      <UserCogIcon className="size-4" />
+    </PageIcon>
+  );
+}
 export function SpacesPageIcon() {
   return (
     <PageIcon color="lime" size="md">

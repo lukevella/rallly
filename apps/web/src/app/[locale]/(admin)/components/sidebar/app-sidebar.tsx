@@ -6,15 +6,17 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarMenu
+  SidebarMenu,
 } from "@rallly/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   BarChart2Icon,
   CalendarIcon,
+  ChevronsUpDownIcon,
   HomeIcon,
   PlusIcon,
   SettingsIcon,
-  UsersIcon
+  UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
@@ -24,6 +26,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
+import { UpgradeButton } from "../upgrade-button";
 import { NavItem } from "./nav-item";
 
 export async function AppSidebar({
@@ -36,24 +39,31 @@ export async function AppSidebar({
       <SidebarHeader>
         <div className="flex items-center justify-between p-1">
           <LogoLink />
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/new">
-              <Icon>
-                <PlusIcon />
-              </Icon>
-            </Link>
-          </Button>
+          <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href="/new">
+                    <Icon>
+                      <PlusIcon />
+                    </Icon>
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Create</TooltipContent>
+            </Tooltip>
+          </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            <NavItem href="/spaces">
+            {/* <NavItem href="/spaces">
               <span className="inline-flex size-4 items-center justify-center rounded bg-violet-400 text-xs text-white">
                 P
               </span>
               <span className="flex-1">Personal</span>
-            </NavItem>
+            </NavItem> */}
             <NavItem href="/">
               <HomeIcon className="size-4" />
               {t("home")}
@@ -66,14 +76,14 @@ export async function AppSidebar({
               <CalendarIcon className="size-4" />
               {t("events")}
             </NavItem>
-            <NavItem href="/teams">
+            {/* <NavItem href="/teams">
               <UsersIcon className="size-4" />
               {t("teams", { defaultValue: "Teams" })}
             </NavItem>
             <NavItem href="/settings">
               <SettingsIcon className="size-4" />
               {t("settings", { defaultValue: "Settings" })}
-            </NavItem>
+            </NavItem> */}
             {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
             {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}
             {/* <NavItem href="/integrations" icon={PuzzleIcon} label="Integrations" /> */}
@@ -92,6 +102,9 @@ export async function AppSidebar({
               {user.email}
             </div>
           </div>
+          <Icon>
+            <ChevronsUpDownIcon />
+          </Icon>
         </Link>
       </SidebarFooter>
     </Sidebar>

@@ -71,18 +71,18 @@ export default async function Page({ params }: { params: Params }) {
               </TileTitle>
             </Tile>
 
-            <Tile href="/members">
+            {/* <Tile href="/members">
               <MembersPageIcon />
               <TileTitle>
                 <Trans i18nKey="members" defaults="Members" />
               </TileTitle>
-            </Tile>
+            </Tile> */}
           </TileGrid>
         </div>
 
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="settings" defaults="Settings" />
+            <Trans i18nKey="account" defaults="Account" />
           </h2>
           <TileGrid>
             <Tile href="/settings/profile">
