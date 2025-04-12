@@ -35,7 +35,7 @@ export const ParticipantAvatarBar = ({
   const hiddenCount = totalParticipants - visibleCount;
 
   return (
-    <ul className="flex cursor-default items-center -space-x-1">
+    <ul className="flex cursor-default items-center -space-x-1 rounded-full bg-white p-0.5">
       {visibleParticipants.map((participant, index) => (
         <Tooltip key={index}>
           <TooltipTrigger asChild>
